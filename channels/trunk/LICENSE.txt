@@ -1,0 +1,3 @@
+// Copyright (C) 2005 Mind-Alliance Systems LLC.
+// All rights reserved.
+
