@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Generic">
+  <bannerLeft>
+    <name>Mind-Alliance Systems</name>
+    <src>http://www.mind-alliance.com/images/mindAlliance.gif</src>
+    <href>http://www.mind-alliance.com/</href>
+	<alt>Mind-Alliance</alt>
+  </bannerLeft>
+  <body>
+    <links>
+      <item name="CodeAlliance" href="https://ranger.homelinux.net/" />
+    </links>
+
+    <menu name="Generic">
+      <item name="Introduction" href="index.html"/>
+      <item name="Download" href="download.html"/>
+    </menu>
+
+    ${reports}
+  </body>
+</project>

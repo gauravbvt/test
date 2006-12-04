@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.mindalliance</groupId>
+	<artifactId>generic</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
+	<name>Generic Mind-Alliance Project</name>
+	<description>This is a generic project with shared global settings</description>
+	<inceptionYear>2006</inceptionYear>
+	<url>https://ranger.homelinux.net/project/${project.artifactId}</url>
+	
+	<organization>
+		<name>Mind-Alliance Systems</name>
+		<url>http://www.mind-alliance.com/</url>
+	</organization>
+	
+	<developers>
+		<developer>
+			<id>denis</id>
+			<name>Denis Ranger</name>
+			<email>denis@mind-alliance.com</email>
+		</developer>
+		<developer>
+			<id>jf</id>
+			<name>Jean-François Cloutier</name>
+			<email>jf@mind-alliance.com</email>
+		</developer>
+	</developers>
+	
+	<contributors>
+		<contributor>
+			<name>David Kamien</name>
+			<email>david@mind-alliance.com</email>
+		</contributor>
+	</contributors>
+	
+	<repositories>
+		<repository>
+			<id>mindalliance</id>
+			<url>http://ranger.homelinux.net/maven</url>
+			<layout>legacy</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	
+	<distributionManagement>
+		<repository>
+			<id>mindalliance</id>
+			<name>Mind-Alliance Systems Repository</name>
+			<layout>legacy</layout>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/maven</url>
+		</repository>
+		<site>
+			<id>mindalliance</id>
+			<url>
+				scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/${project.artifactId}</url>
+		</site>
+	</distributionManagement>
+	<issueManagement>
+		<system>Bugzilla</system>
+		<url>
+			https://ranger.homelinux.net/bugzilla/query.cgi?product=${project.artifactId}</url>
+	</issueManagement>
+	
+	<scm>
+		<developerConnection>
+			scm:cvs:ext:${env.USER}@ranger.homelinux.net:/var/cvs:${project.artifactId}</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://ranger.homelinux.net/cvs/${project.artifactId}/</url>
+	</scm>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<outputEncoding>UTF-8</outputEncoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<enableRulesSummary>false</enableRulesSummary>
+					<configLocation>../generic/mas_checks.xml</configLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	
+</project>
