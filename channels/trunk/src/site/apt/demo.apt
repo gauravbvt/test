@@ -1,0 +1,20 @@
+ ------------------
+ Demo
+ ------------------
+
+Demonstration Web Site
+
+  A live demo of the latest build will be available shortly here.
+  Log in as one of the following accounts:
+
+*---------------+---------------+--------------------------------------------------+
+| <<User id>>   | <<Password>>  | <<Description>>                                  |
+*---------------+---------------+--------------------------------------------------+
+| <<<user>>>    | <<<user>>>    | A typical {{{user.html}user}} of the system      |
+*---------------+---------------+--------------------------------------------------+
+| <<<manager>>> | <<<manager>>> | A user {{{manager.html}manager}}                 |
+*---------------+---------------+--------------------------------------------------+
+| <<<admin>>>   | <<<admin>>>   | The {{{admin.html} administrator}} of the system |
+*---------------+---------------+--------------------------------------------------+
+
+  Any information you enter in the system will be lost in the next build...

@@ -1,0 +1,24 @@
+ ------------------
+ Design
+ ------------------
+ 
+Design Documents
+
+ This section will describe CAP's architecture and design. 
+ Sections will include:
+ 
+ * Distributed Java-Beans
+ 
+ * Security
+ 
+ * Rules engine
+ 
+ * OSGI
+ 
+ * Meta-model
+ 
+ * Model
+ 
+ 
+  
+ 

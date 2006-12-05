@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CAP">
+  <bannerLeft>
+    <name>Mind-Alliance</name>
+    <src>images/mindAlliance.gif</src>
+    <href>http://www.mind-alliance.com</href>
+	<alt>Mind-Alliance</alt>
+  </bannerLeft>
+  <bannerRight>
+	<name>CAP</name>
+	<src>images/cap.png</src>
+    <href>http://ranger.homelinux.net/projects/cap/index.html</href>
+	<alt>CAP</alt>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Wiki" href="https://ranger.homelinux.net/wiki/cap" />
+    </links>
+
+    <menu name="CAP">
+      <item name="Introduction" href="index.html"/>
+      <item name="Download" href="download.html"/>
+	  <item name="Demo" href="demo.html"/>
+	  <item name="Design" href="design.html"/>
+    </menu>
+    <menu name="User Documentation">
+      <item name="Overview" href="overview.html"/>
+      <item name="Users Guide" href="user.html"/>
+      <item name="Managers Guide" href="manager.html"/>
+      <item name="Administrators Guide" href="admin.html"/>
+    </menu>
+
+    ${reports}
+  </body>
+</project>
