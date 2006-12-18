@@ -1,13 +1,13 @@
  --------------------
- CAP download
+ Channels download
  --------------------
     
 Download
 
-  The CAP web application is distributed as a war file that can be deployed by an
+  The Channels web application is distributed as a war file that can be deployed by an
   administrator into a web container (such as Tomcat).
   
-  * Latest SNAPSHOT build: {{{cap-1.0-SNAPSHOT.war}cap-1.0-SNAPSHOT.war}}
+  * Latest SNAPSHOT build: {{{channels-1.0-SNAPSHOT.war}channels-1.0-SNAPSHOT.war}}
   
 Installation
 

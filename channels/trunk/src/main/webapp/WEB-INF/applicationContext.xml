@@ -2,7 +2,26 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	                       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	               http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<!-- Allow use of properties defined in web context (see WEB-INF/web.xml) -->
+	<bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
+
+	<!-- Core beans -->	
+	<bean id="guidFactory" class="com.mindalliance.channels.impl.GUIDFactoryImpl">
+		<constructor-arg value="${agencyAcronym}"/>
+	</bean>
+	
+	<bean id="model" class="com.mindalliance.channels.model.ModelImpl">
+		<property name="guidFactory" ref="guidFactory"/>
+	</bean>
+
+	<bean id="agency" class="com.mindalliance.channels.impl.LocalAgency">
+		<property name="shortName" value="${agencyAcronym}"/>
+		<property name="name" value="The Local Agency"/>
+		<property name="description" value="A sample demo agency"/>
+		<property name="localModel" ref="model"/>
+	</bean>
 	
 	
 </beans>

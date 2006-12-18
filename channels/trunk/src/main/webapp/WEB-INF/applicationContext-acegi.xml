@@ -40,7 +40,7 @@
 	
 	<!-- Web app hooks -->
 	<bean id="authenticationEntryPoint"	class="org.acegisecurity.ui.basicauth.BasicProcessingFilterEntryPoint">
-		<property name="realmName" value="CAP users"/>
+		<property name="realmName" value="Channels users"/>
 	</bean>
 	
 	<bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">

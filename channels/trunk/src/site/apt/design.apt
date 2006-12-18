@@ -4,21 +4,23 @@
  
 Design Documents
 
- This section will describe CAP's architecture and design. 
+ This section will describe Channels' architecture and design. 
  Sections will include:
+ 
+ * {{{architecture.html}Architecture Overview}}
  
  * Distributed Java-Beans
  
  * Security
+  
+ * OSGI
+  
+ * Model
+   * {{{properties.html}Model Object Properties}}
  
  * Rules engine
  
- * OSGI
+ * Clustering
  
- * Meta-model
- 
- * Model
- 
- 
-  
+ * Logging
  

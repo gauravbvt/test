@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="CAP">
+<project name="Channels">
   <bannerLeft>
     <name>Mind-Alliance</name>
     <src>images/mindAlliance.gif</src>
@@ -7,21 +7,21 @@
 	<alt>Mind-Alliance</alt>
   </bannerLeft>
   <bannerRight>
-	<name>CAP</name>
-	<src>images/cap.png</src>
-    <href>http://ranger.homelinux.net/projects/cap/index.html</href>
-	<alt>CAP</alt>
+	<name>Channels</name>
+	<src>images/channels.png</src>
+    <href>http://ranger.homelinux.net/projects/channels/index.html</href>
+	<alt>Channels</alt>
   </bannerRight>
   <body>
     <links>
-      <item name="Wiki" href="https://ranger.homelinux.net/wiki/cap" />
+      <item name="Wiki" href="https://ranger.homelinux.net/wiki/channels" />
     </links>
 
-    <menu name="CAP">
+    <menu name="Channels">
       <item name="Introduction" href="index.html"/>
       <item name="Download" href="download.html"/>
 	  <item name="Demo" href="demo.html"/>
-	  <item name="Design" href="design.html"/>
+	  <item name="Plans" href="plans.html"/>
     </menu>
     <menu name="User Documentation">
       <item name="Overview" href="overview.html"/>
@@ -29,6 +29,12 @@
       <item name="Managers Guide" href="manager.html"/>
       <item name="Administrators Guide" href="admin.html"/>
     </menu>
+	<menu name="Design Documentation">
+	  <item name="Overview" href="design.html"/>
+	  <item name="Architecture" href="architecture.html" collapse="true">
+		  <item name="Object Properties" href="properties.html"/>
+	  </item>
+	</menu>
 
     ${reports}
   </body>
