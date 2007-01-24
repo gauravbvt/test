@@ -1,0 +1,72 @@
+ ----------
+ Properties
+ ----------
+
+Properties 
+
+ Properties are defined at 3 levels:
+
+ [[1]] Core properties
+
+    * Hard coded and class level. 
+    
+    * Referenced in rules and any built-in queries.
+    
+
+ [[2]] Standard properties
+
+    * Class level
+    
+      For all x | class(x) = C, x has property P
+
+    * Type level
+    
+      For all x | class(x) = C & type(x) = T, x has property P
+
+    * Set by agencies, either
+      acting agency (as per agency A) or 
+      standards agency (as per standard S)
+
+    * Per configuration, an agency sets its own standards and selectively adopts those 
+      of other agencies.
+
+    Applicability of a ruleset may depend on adoption of property standards.
+
+ [[3]] Ad hoc properties
+
+     * Users can add (suggested) properties to objects they own or to public objects.
+     
+     * Users can define new properties.
+     
+     * Users can remove ad hoc properties.
+
+* Definitions
+
+ Properties have definitions:
+
+    * Canonical name and localized labels
+    
+    * Description (localized)
+    
+    * Required or optional
+    
+    * Data type (string, boolean, decimal, date, enumeration...)
+    
+    * Validation?
+
+* Values
+
+ Properties of public objects can have conflicting values:
+
+    * User is first presented with the value he/she 
+      entered or else 
+      endorsed or else 
+      has greatest support.
+      
+    * User can see other values and their level of support, 
+      and who supported each alternate value.
+      
+      If the values can be cast to numbers, the user can see a distribution graph of 
+      the values.
+
+    * User can do nothing, endorse a value or enter a different value.

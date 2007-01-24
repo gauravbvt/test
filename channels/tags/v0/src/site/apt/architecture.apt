@@ -1,0 +1,36 @@
+ ------------
+ Architecture 
+ ------------
+
+Architecture
+
+ Groups of agencies on a joint mission use Channels software to build a private network 
+ of inter-connected servers that communicate via HTTPS over the public Internet. 
+ Each agency is represented by a dedicated server (an Agency Server). 
+ Members of an agency access their Agency Server via an AJAX-enabled Web browser. 
+ Each Agency Server presents itself to Web browsers as a secure Web Application and 
+ to other servers as a secure HTTPS-accessible peer.
+
+ <<Agency Servers>> host profiles and scan other Agency Servers to do communications 
+ analysis and assemble profile-specific resource directories, notification protocols, 
+ information flow maps etc. Agency Servers are supported by other types of servers, 
+ namely <Registry Servers>, <Reference Servers> and <Event Servers> that also can 
+ be reached by HTTPS.
+
+ <<Registry Servers>> are located at well-known network addresses and provide a 
+ mechanism by which servers can register themselves and locate each other. 
+ <Registry Servers will eventually be replaced by a P2P server discovery protocol.>
+
+ <<Reference Servers>> publish reference content to Agency Servers such as profile 
+ templates and shared vocabularies and taxonomies. They also scan Agency Servers as 
+ permitted to see how reference content is used and extended. 
+
+ <<Event Servers>> connect to external event streams and make these events available to 
+ Agency Servers on request.
+
+ The Agency, Registry, Reference and Event Servers are collectively called 
+ Channels Servers. 
+ Note that any Channels Server can be replicated for high-availability and to respond to 
+ increasing demand.
+
+ See {{{https://ranger.homelinux.net/~jf/software_overview.pdf}Software Overview, Section 2}}

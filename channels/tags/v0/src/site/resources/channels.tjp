@@ -1,0 +1,315 @@
+/*
+ * Project files for Channels.
+ * $Revision$
+ */
+project channels "Channels" "1.0" 2006-12-18 2007-06-11 {
+  timeformat "%Y-%m-%d"
+  currency "USD"
+
+  scenario plan "Planned" {
+      scenario actual "Actual"
+  }
+}
+
+account costs "Project costs" cost
+
+# -------------------------------- Team
+resource dev "Developers" {
+  rate 350
+  resource dr  "Denis Ranger" {
+    vacation 2006-12-25 - 2007-01-02
+  }
+
+  resource jfc "Jean-François Cloutier"
+
+  resource tr  "Technical Writer"
+  resource ga  "Graphic Artist"
+}
+
+# -------------------------------- Global vacations
+vacation "Christmas" 2006-12-25
+vacation "New Year" 2007-01-01
+
+# -------------------------------- Tasks
+task channels "Channels" {
+  start 2006-12-18
+
+  account costs
+
+  task milestones "Milestones" {
+      task prototype "Prototype" {
+          milestone
+          depends !!ui, !!application
+          note "when we can actually do guided demos of the system"
+      }
+      task alpha "Alpha" {
+          depends !prototype
+          milestone
+          note "when we can install this on third-party friendly tester sites"
+      }
+      task beta "Beta" {
+          depends !!alphafeedback,
+                  !!packaging.artwork, !!packaging.documentation
+          milestone
+          note "when we can install this on less dedicated tester sites"
+      }
+      task release1 "Release 1.0" {
+          depends !beta, !!packaging
+          milestone
+          note "ready for sale/deployment"
+      }
+  }
+
+  task backend "Backend" {
+      note "Wiring of the different technologies used"
+      allocate dr
+
+      task security "Security" {
+          effort 2d
+          note "using ACEGI"
+      }
+      task rulesengine "Rules Engine" {
+          effort 3d
+          note "using DROOLS"
+      }
+      task osgi "OSGI Bundling" {
+          effort 3d
+          note "using Spring OSGI"
+      }
+      task logging "Logging" {
+          effort 1d
+          note "using commons-logging and Spring AOP wiring"
+      }
+      task persistence "Persistent Storage" {
+          depends !!milestones.alpha
+          effort 1w
+      }
+      task remoting "Distributed JavaBeans" {
+          effort 2w
+      }
+      task web "Web Application Structure" {
+          effort 2d
+      }
+      task events "Event manager" {
+          effort 1w
+          note "internal event handling"
+      }
+      task notifications "Notification hooks" {
+          depends !logging, !events
+          effort 1w
+      }
+      task caching "Caching" {
+          effort 2d
+          note "with EHCache"
+      }
+
+      task integratedmodel "Integrated model" {
+      }
+
+      task ontologies "Ontologies Import/Export" {
+          effort 1w
+          note "for prepopulating model"
+      }
+
+      task jmx "JMX control interface" {
+          effort 4d
+      }
+
+      task search "Search model" {
+          effort 2w
+          note "using something like lucene"
+      }
+  }
+
+  task application "Application Design" {
+      allocate dr { alternative jfc }
+
+      task services "Services" {
+          task registry "Agency registry" {
+              effort 3d
+          }
+          task event "Application Events server" {
+              effort 2w
+          }
+          task agency "Agency front-end" {
+              effort 1w
+          }
+      }
+
+      task security "Security Model" {
+          effort 1w
+          note "authorization model for users vs functionality"
+      }
+
+      task metamodel "Application Model" {
+          effort 1w
+      }
+
+      task model "Shared Model" {
+          effort 1w
+      }
+
+      task visibility "Model Object Dissemination Rules" {
+          effort 1w
+      }
+
+      task issuesrules "Issues Detection Rules" {
+          effort 3d
+      }
+
+      task eventrules "Event Dissemination Rules" {
+          effort 3d
+      }
+
+      task gap "Gap Reports"
+
+      task timeline "Timeline Reports"
+  }
+
+  task packaging "Packaging" {
+      depends !ui
+
+      task artwork "Artwork" {
+          allocate ga
+          effort 1w
+      }
+      task documentation "Documentation" {
+          allocate tr
+          task user "Users Guide" {
+              effort 2w
+          }
+          task admin "Administrators Guide" {
+              effort 1w
+          }
+          task manager "Managers Guide" {
+              effort 2w
+          }
+      }
+      task profiles "Target Platforms" {
+          allocate dr
+          effort 1w
+      }
+      task installer "Installers" {
+          allocate dr
+          effort 2w
+      }
+  }
+
+  task ui "User Interface" {
+      allocate jfc
+
+      task user  "Regular users UI" {
+          effort 2w
+      }
+      task admin "Administrator UI" {
+          effort 1w
+      }
+      task manager "Managers UI" {
+          effort 1w
+      }
+  }
+
+  task alphasupport "Supporting alpha users" {
+      depends !milestones.alpha
+      allocate dr {
+          alternative jfc
+          limits { dailymax 2h }
+      }
+      duration 1m
+  }
+
+  task alphafeedback "Integrating feedback from alpha" {
+      depends !alphasupport
+      task ui2 "User Interface rework" {
+          allocate jfc
+          effort 2w
+      }
+      task model "Revising model" {
+          allocate dr
+          effort 1w
+      }
+      task bugs "Bug fixing" {
+          allocate dr, jfc
+          effort 1w
+      }
+  }
+}
+
+# -------------------------------- Reports
+taskreport "Gantt Chart" {
+  headline "Project Gantt Chart"
+  columns hierarchindex, name, start, end, effort, duration, chart
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+}
+
+# A list of tasks showing the resources assigned to each task.
+taskreport "Task Usage" {
+  headline "Task Usage Report"
+  columns hierarchindex, name, start, end, effort { title "Work" }, duration,
+          cost
+  timeformat "%Y-%m-%d"
+  loadunit days
+}
+
+xmlreport "project.xml" {
+}
+
+# A list of all tasks with the percentage complete for each task
+taskreport "Tracking Gantt" {
+  headline "Tracking Gantt Chart"
+  columns hierarchindex, name, start, end, effort { title "Work" }, duration,
+          completed, chart
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+}
+
+# A graph showing resource allocation. It identifies whether each
+# resource is under- or over-allocated for.
+resourcereport "Resource Graph" {
+  headline "Resource Allocation Graph"
+  columns no, name, rate, utilization, freeload, chart
+  loadunit days
+}
+
+# A list of all project resources, both human and material resources,
+# together with the costs for each.
+resourcereport "Resource Sheet" {
+  headline "Resource Sheet"
+  columns no, name, efficiency, id, maxeffort, rate
+  loadunit days
+}
+
+# A list of resources and each task associated with each resource.
+resourcereport "Resource Usage" {
+  headline "Resource Usage Report"
+  columns no, name, utilization, freeload, cost
+  loadunit days
+}
+
+# This report looks like a regular calendar that shows the tasks by
+# their dates.
+htmlweeklycalendar "Calendar.html" {
+}
+
+# This report is a status report for the current week. It also
+# provides an outlook for the next week.
+htmlstatusreport "Status-Report.html" {
+}
+
+# A P&L report for the project.
+htmlaccountreport "Accounting.html" {
+  # Besides the number of the account and the name we have a column
+  # with the total values (at the end of the project) and the values
+  # for each month of the project.
+  columns no, name, scenario, total, monthly
+  headline "P&L for the Project"
+  caption "The table shows the profit and loss
+           analysis as well as the cashflow situation of the Accounting
+           Software Project."
+  # Since this is a cashflow calculation we show accumulated values
+  # per account.
+  accumulate
+  scenarios plan, actual
+}
+

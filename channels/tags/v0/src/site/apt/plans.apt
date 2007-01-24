@@ -1,0 +1,18 @@
+ ------------
+ Project Plan
+ ------------
+ 
+Project Plan
+
+ This page summarizes the development schedule for the project.
+ 
+ Information here is regenerated on every build and should be fairly
+ up-to-date.
+ 
+*---------------------------------------+---------------------------------------------+
+| {{{gantt.pdf}Gantt Chart}}            | Offers a view of where the project might be |
+|                                       | heading...                                  |
+*---------------------------------------+---------------------------------------------+
+| {{{Status-Report.html}Weekly Status}} | What we're up to for this week              |
+*---------------------------------------+---------------------------------------------+
+ 
