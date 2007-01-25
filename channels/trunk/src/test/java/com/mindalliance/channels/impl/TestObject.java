@@ -1,13 +1,9 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.remoting;
+package com.mindalliance.channels.impl;
 
 import java.beans.PropertyVetoException;
-
-import com.mindalliance.channels.remoting.AbstractRemotableBean;
-import com.mindalliance.channels.remoting.GUID;
-import com.mindalliance.channels.remoting.GUIDFactory;
 
 /**
  * A test object.
@@ -15,8 +11,7 @@ import com.mindalliance.channels.remoting.GUIDFactory;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public class TestObject extends AbstractRemotableBean
-    implements TestRemoteInterface {
+public class TestObject extends AbstractJavaBean {
 
     private int age;
     private String name;
@@ -26,15 +21,8 @@ public class TestObject extends AbstractRemotableBean
     /**
      * @param guid
      */
-    public TestObject( GUID guid ) {
-        super( guid );
-    }
-
-    /**
-     * @param factory
-     */
-    public TestObject( GUIDFactory factory ) {
-        super( factory );
+    public TestObject() {
+        super();
     }
 
     /* (non-Javadoc)

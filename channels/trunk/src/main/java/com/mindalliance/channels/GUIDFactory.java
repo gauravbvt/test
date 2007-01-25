@@ -1,7 +1,7 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.remoting;
+package com.mindalliance.channels;
 
 /**
  * A creator of GUIDs.

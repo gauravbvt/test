@@ -2,7 +2,7 @@
 // All rights reserved.
 
 
-package com.mindalliance.channels.remoting;
+package com.mindalliance.channels.impl;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

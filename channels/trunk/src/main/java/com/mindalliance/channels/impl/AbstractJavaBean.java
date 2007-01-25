@@ -1,14 +1,15 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.remoting;
+package com.mindalliance.channels.impl;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.beans.VetoableChangeSupport;
+
+import com.mindalliance.channels.JavaBean;
 
 /**
  * Basic common java beans functionality.
@@ -63,38 +64,6 @@ public class AbstractJavaBean implements JavaBean {
             String propertyName, PropertyChangeListener listener ) {
 
         getPcs().addPropertyChangeListener( propertyName, listener );
-    }
-
-    protected void fireIndexedPropertyChange(
-            String propertyName, int index,
-            boolean oldValue, boolean newValue ) {
-
-        if ( this.pcs != null )
-            this.pcs.fireIndexedPropertyChange(
-                    propertyName, index, oldValue, newValue );
-    }
-
-    protected void fireIndexedPropertyChange(
-            String propertyName, int index, int oldValue, int newValue ) {
-
-        if ( this.pcs != null )
-            this.pcs.fireIndexedPropertyChange(
-                    propertyName, index, oldValue, newValue );
-    }
-
-    protected void fireIndexedPropertyChange(
-            String propertyName, int index,
-            Object oldValue, Object newValue ) {
-
-        if ( this.pcs != null )
-            this.pcs.fireIndexedPropertyChange(
-                    propertyName, index, oldValue, newValue );
-    }
-
-    protected void firePropertyChange(
-            PropertyChangeEvent evt ) {
-        if ( this.pcs != null )
-            this.pcs.firePropertyChange( evt );
     }
 
     protected void firePropertyChange(
@@ -157,13 +126,6 @@ public class AbstractJavaBean implements JavaBean {
             VetoableChangeListener listener ) {
 
         getVcs().addVetoableChangeListener( listener );
-    }
-
-    protected void fireVetoableChange(
-            PropertyChangeEvent evt ) throws PropertyVetoException {
-
-        if ( this.vcs != null )
-            this.vcs.fireVetoableChange( evt );
     }
 
     protected void fireVetoableChange(

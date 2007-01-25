@@ -15,13 +15,9 @@
 	<bean id="model" class="com.mindalliance.channels.model.ModelImpl">
 		<property name="guidFactory" ref="guidFactory"/>
 	</bean>
-
-	<bean id="agency" class="com.mindalliance.channels.impl.LocalAgency">
-		<property name="shortName" value="${agencyAcronym}"/>
-		<property name="name" value="The Local Agency"/>
-		<property name="description" value="A sample demo agency"/>
-		<property name="localModel" ref="model"/>
-	</bean>
 	
+	<bean id="mof" class="com.mindalliance.channels.model.ModelObjectFactory">
+		<property name="guidFactory" ref="guidFactory"/>
+	</bean>
 	
 </beans>

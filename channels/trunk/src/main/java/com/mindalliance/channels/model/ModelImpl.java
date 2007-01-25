@@ -3,9 +3,9 @@
 
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.GUIDFactory;
 import com.mindalliance.channels.Model;
-import com.mindalliance.channels.remoting.AbstractJavaBean;
-import com.mindalliance.channels.remoting.GUIDFactory;
+import com.mindalliance.channels.impl.AbstractJavaBean;
 
 import ognl.Ognl;
 import ognl.OgnlException;
@@ -59,8 +59,8 @@ public class ModelImpl extends AbstractJavaBean implements Model {
     /**
      * Return the factory used to create new objects.
      */
-    public GUIDFactory getGuidFactory() {
-        return guidFactory;
+    public final GUIDFactory getGuidFactory() {
+        return this.guidFactory;
     }
 
     /**

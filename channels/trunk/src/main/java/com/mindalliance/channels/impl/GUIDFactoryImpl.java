@@ -5,8 +5,8 @@ package com.mindalliance.channels.impl;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.mindalliance.channels.remoting.GUID;
-import com.mindalliance.channels.remoting.GUIDFactory;
+import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.GUIDFactory;
 
 /**
  * A simple creator of globally unique IDs.
@@ -19,7 +19,7 @@ import com.mindalliance.channels.remoting.GUIDFactory;
  */
 public class GUIDFactoryImpl implements GUIDFactory {
 
-    private AtomicLong sequence = new AtomicLong(0);
+    private AtomicLong sequence = new AtomicLong( 0 );
     private String serverId;
 
     /**
@@ -47,7 +47,7 @@ public class GUIDFactoryImpl implements GUIDFactory {
 
         return new GuidImpl(
                 getServerId()
-                + "/" + sequence.getAndIncrement()
+                + "/" + this.sequence.getAndIncrement()
                 + "-" + System.currentTimeMillis() );
     }
 

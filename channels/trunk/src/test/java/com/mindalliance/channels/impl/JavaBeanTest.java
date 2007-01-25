@@ -1,13 +1,7 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.remoting;
-
-import com.mindalliance.channels.impl.GUIDFactoryImpl;
-import com.mindalliance.channels.remoting.AbstractJavaBean;
-import com.mindalliance.channels.remoting.AbstractRemotableBean;
-import com.mindalliance.channels.remoting.GUID;
-import com.mindalliance.channels.remoting.GUIDFactory;
+package com.mindalliance.channels.impl;
 
 import junit.framework.TestCase;
 
@@ -15,11 +9,9 @@ import junit.framework.TestCase;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public class RemotableBeanTest extends TestCase {
+public class JavaBeanTest extends TestCase {
 
     private TestObject testObject;
-    private GUID guid ;
-    private GUIDFactory guidFactory = new GUIDFactoryImpl( "test" );
 
 
     /* (non-Javadoc)
@@ -28,8 +20,7 @@ public class RemotableBeanTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        this.guid = this.guidFactory.newGuid();
-        this.testObject = new TestObject( this.guid );
+        this.testObject = new TestObject();
     }
 
     /* (non-Javadoc)
@@ -37,21 +28,6 @@ public class RemotableBeanTest extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-    }
-
-    /**
-     * Test method for
-     * {@link AbstractRemotableBean#AbstractRemotableBean(GUIDFactory)}.
-     */
-    public void testAbstractRemotableBeanGUIDFactory() {
-        new TestObject( this.guidFactory );
-    }
-
-    /**
-     * Test method for {@link AbstractRemotableBean#getGUID()}.
-     */
-    public void testGetGUID() {
-        assertEquals( this.guid, this.testObject.getGUID() );
     }
 
     /**
@@ -130,6 +106,8 @@ public class RemotableBeanTest extends TestCase {
         assertFalse( testObject.hasVetoableListeners( null ) );
 
         testObject.addVetoableChangeListener( l );
+        assertSame( l, testObject.getVetoableChangeListeners()[0] );
+        
         testObject.setAge( 20 );
         assertEquals( 1, l.getVetoCount() );
         assertEquals( 20, l.getLastVeto().getNewValue() );
@@ -147,6 +125,12 @@ public class RemotableBeanTest extends TestCase {
 
         testObject.setOk( true );
         assertEquals( 0, l.getVetoCount() );
+    }
+    
+    public void testGetVetoableChangeListeners() {
+        TestListener l = new TestListener();
+        testObject.addVetoableChangeListener( "age", l );
+        assertSame( l, testObject.getVetoableChangeListeners( "age" )[0] );
     }
 
     /**

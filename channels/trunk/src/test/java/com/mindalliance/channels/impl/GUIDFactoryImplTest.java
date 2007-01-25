@@ -3,8 +3,8 @@
 
 package com.mindalliance.channels.impl;
 
+import com.mindalliance.channels.GUID;
 import com.mindalliance.channels.impl.GUIDFactoryImpl;
-import com.mindalliance.channels.remoting.GUID;
 
 import junit.framework.TestCase;
 

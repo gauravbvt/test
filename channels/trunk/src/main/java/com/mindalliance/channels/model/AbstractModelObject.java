@@ -3,9 +3,8 @@
 
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.remoting.AbstractRemotableBean;
-import com.mindalliance.channels.remoting.GUID;
-import com.mindalliance.channels.remoting.GUIDFactory;
+import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.impl.AbstractJavaBean;
 
 /**
  * An object in the model.
@@ -13,21 +12,26 @@ import com.mindalliance.channels.remoting.GUIDFactory;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public abstract class AbstractModelObject extends AbstractRemotableBean {
+public abstract class AbstractModelObject extends AbstractJavaBean {
+
+    private GUID guid;
 
     /**
      * Create a new model object.
+     * This should only be called by the factory.
+     * @see ModelObjectFactory
+     *
      * @param guid the unique guid
      */
-    public AbstractModelObject( GUID guid ) {
-        super( guid );
+    AbstractModelObject( GUID guid ) {
+        super();
+        this.guid = guid ;
     }
 
     /**
-     * Convenience constructor for initializers.
-     * @param guidFactory a factory to use to obtain a guid
+     * Return the guid of this object.
      */
-    public AbstractModelObject( GUIDFactory guidFactory ) {
-        super( guidFactory );
+    public final GUID getGuid() {
+        return this.guid;
     }
 }
