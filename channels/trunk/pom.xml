@@ -153,8 +153,7 @@
 						<phase>site</phase>
 						<configuration>
 							<tasks>
-								<exec 
-									executable="/usr/bin/taskjuggler"
+								<exec executable="/usr/bin/taskjuggler"
 									failonerror="true"
 									dir="${project.build.directory}/site">
 									<arg line="channels.tjp"/>
