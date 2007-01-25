@@ -57,6 +57,13 @@
 		</repository>
 	</repositories>
 	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>apache.snapshots</id>
+			<url>http://people.apache.org/maven-snapshot-repository/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	
 	<distributionManagement>
 		<repository>
 			<id>mindalliance</id>
@@ -66,21 +73,19 @@
 		</repository>
 		<site>
 			<id>mindalliance</id>
-			<url>
-				scp://ranger.homelinux.net/var/www/localhost/htdocs/projects</url>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects</url>
 		</site>
 	</distributionManagement>
 	<issueManagement>
 		<system>Bugzilla</system>
-		<url>
-			https://ranger.homelinux.net/bugzilla/query.cgi?product=${project.artifactId}</url>
+		<url>https://ranger.homelinux.net/bugzilla/query.cgi?product=${project.artifactId}</url>
 	</issueManagement>
 	
 	<scm>
 		<developerConnection>
 			scm:cvs:ext:${env.USER}@ranger.homelinux.net:/var/cvs:${project.artifactId}</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://ranger.homelinux.net/cvs/${project.artifactId}/</url>
+		<url>https://ranger.homelinux.net/cvs/</url>
 	</scm>
 	
 	<dependencies>
@@ -146,6 +151,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changelog-plugin</artifactId>
+				<configuration>
+					<connectionType>developerConnection</connectionType>
+					<displayFileDetailUrl>${project.scm.url}/src/main/java/%FILE%?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup</displayFileDetailUrl>
+				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
