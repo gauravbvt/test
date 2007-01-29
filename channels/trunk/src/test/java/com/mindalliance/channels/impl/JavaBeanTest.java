@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.impl;
 
+import java.beans.PropertyVetoException;
 import junit.framework.TestCase;
 
 /**
@@ -12,7 +13,6 @@ import junit.framework.TestCase;
 public class JavaBeanTest extends TestCase {
 
     private TestObject testObject;
-
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
@@ -101,13 +101,13 @@ public class JavaBeanTest extends TestCase {
     /**
      * Coverage test... Make sure no errors happen there.
      */
-    public void testVetoes() throws Exception {
+    public void testVetoes_1() throws Exception {
         TestListener l = new TestListener();
         assertFalse( testObject.hasVetoableListeners( null ) );
 
         testObject.addVetoableChangeListener( l );
         assertSame( l, testObject.getVetoableChangeListeners()[0] );
-        
+
         testObject.setAge( 20 );
         assertEquals( 1, l.getVetoCount() );
         assertEquals( 20, l.getLastVeto().getNewValue() );
@@ -126,7 +126,55 @@ public class JavaBeanTest extends TestCase {
         testObject.setOk( true );
         assertEquals( 0, l.getVetoCount() );
     }
-    
+
+    /**
+     * Test actual vetoes.
+     */
+    public void testVetoes_2() throws Exception {
+        TestListener l = new TestListener();
+        testObject.addVetoableChangeListener( l );
+
+        try {
+            l.setObjecting( true );
+            testObject.setAge( 20 );
+            fail();
+        } catch ( PropertyVetoException e ) {
+            assertEquals( 2, l.getVetoCount() );
+            // note: 1 for change request, 2 for reverting to previous
+
+            assertEquals( 20, e.getPropertyChangeEvent().getNewValue() );
+            assertEquals( 0, l.getLastVeto().getNewValue() );
+            assertEquals( 0, l.getPropCount() );
+        }
+        l.reset();
+
+        try {
+            l.setObjecting( true );
+            testObject.setKey( "burp" );
+            fail();
+        } catch ( PropertyVetoException e ) {
+            assertEquals( 2, l.getVetoCount() );
+            assertEquals( null, l.getLastVeto().getNewValue() );
+            assertEquals( "burp", e.getPropertyChangeEvent().getNewValue() );
+            assertEquals( null, testObject.getKey() );
+            assertEquals( 0, l.getPropCount() );
+        }
+        l.reset();
+
+        try {
+            l.setObjecting( true );
+            testObject.setOk( true );
+            fail();
+        } catch ( PropertyVetoException e ) {
+            assertEquals( 2, l.getVetoCount() );
+            assertEquals( false, l.getLastVeto().getNewValue() );
+            assertEquals( true, e.getPropertyChangeEvent().getNewValue() );
+            assertFalse( testObject.isOk() );
+            assertEquals( 0, l.getPropCount() );
+        }
+        l.reset();
+    }
+
     public void testGetVetoableChangeListeners() {
         TestListener l = new TestListener();
         testObject.addVetoableChangeListener( "age", l );

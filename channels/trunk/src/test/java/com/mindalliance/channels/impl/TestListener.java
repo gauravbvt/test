@@ -1,7 +1,6 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-
 package com.mindalliance.channels.impl;
 
 import java.beans.PropertyChangeEvent;
@@ -17,11 +16,14 @@ public class TestListener implements PropertyChangeListener,
     private PropertyChangeEvent lastProp;
     private PropertyChangeEvent lastVeto;
 
+    private boolean objecting;
+
     public void reset() {
         this.propCount = 0;
         this.vetoCount = 0;
         this.lastProp = null;
         this.lastVeto = null;
+        this.objecting = false;
     }
 
     /*
@@ -45,6 +47,8 @@ public class TestListener implements PropertyChangeListener,
 
         this.vetoCount++;
         this.lastVeto = evt;
+        if ( isObjecting() )
+            throw new PropertyVetoException( "I object!", evt );
     }
 
     public PropertyChangeEvent getLastProp() {
@@ -61,5 +65,15 @@ public class TestListener implements PropertyChangeListener,
 
     public int getVetoCount() {
         return this.vetoCount;
+    }
+
+
+    public boolean isObjecting() {
+        return objecting;
+    }
+
+
+    public void setObjecting( boolean objecting ) {
+        this.objecting = objecting;
     }
 }
