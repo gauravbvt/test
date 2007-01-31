@@ -12,12 +12,11 @@
 		<constructor-arg value="${agencyAcronym}"/>
 	</bean>
 	
-	<bean id="model" class="com.mindalliance.channels.model.ModelImpl">
+	<bean id="mof" class="com.mindalliance.channels.model.ModelObjectFactory">
 		<property name="guidFactory" ref="guidFactory"/>
 	</bean>
 	
-	<bean id="mof" class="com.mindalliance.channels.model.ModelObjectFactory">
-		<property name="guidFactory" ref="guidFactory"/>
+	<bean id="model" class="com.mindalliance.channels.model.ModelImpl">
 	</bean>
 	
 </beans>
