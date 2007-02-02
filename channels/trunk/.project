@@ -27,4 +27,11 @@
 		<nature>org.maven.ide.eclipse.maven2Nature</nature>
 		<nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>zk-mxgraph</name>
+			<type>2</type>
+			<location>/home/jf/workspace/zk-mxgraph/src/main/java</location>
+		</link>
+	</linkedResources>
 </projectDescription>

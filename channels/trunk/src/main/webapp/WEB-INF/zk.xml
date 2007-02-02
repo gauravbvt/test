@@ -1,6 +1,6 @@
 <zk>
 	<richlet>
 		<richlet-class>com.mindalliance.channels.ui.MainRichlet</richlet-class>
-		<richlet-url>/channels</richlet-url>
+		<richlet-url>/test</richlet-url>
 	</richlet>
 </zk>

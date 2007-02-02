@@ -63,12 +63,10 @@
 		<servlet-name>zkLoader</servlet-name>
 		<url-pattern>*.zhtml</url-pattern>
 	</servlet-mapping>
-	<!-- Optional. Uncomment it if you want to use richlets.
 	<servlet-mapping>
 		<servlet-name>zkLoader</servlet-name>
 		<url-pattern>/zk/*</url-pattern>
 	</servlet-mapping>
-	-->	
 	<servlet-mapping>
 		<servlet-name>auEngine</servlet-name>
 		<url-pattern>/zkau/*</url-pattern>
