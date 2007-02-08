@@ -4,6 +4,8 @@
 package com.mindalliance.channels.impl;
 
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A test object.
@@ -17,6 +19,7 @@ public class TestObject extends AbstractJavaBean {
     private String name;
     private String key;
     private boolean ok;
+    private List<String> values = new ArrayList<String>();
 
     /**
      * @param guid
@@ -67,5 +70,31 @@ public class TestObject extends AbstractJavaBean {
 
     public void setOk( boolean ok ) throws PropertyVetoException {
         this.ok = ok;
+    }
+
+    /**
+     * Return the value of values.
+     */
+    public List<String> getValues() {
+        return this.values;
+    }
+
+    /**
+     * Set the value of values.
+     * @param values The new value of values
+     */
+    public void setValues( List<String> values ) {
+        this.values = values;
+    }
+
+    public void addValue( String value ) {
+        this.values.add( value );
+    }
+
+    public void removeValue( String value ) {
+        this.values.remove( value );
+    }
+
+    public void addSomething( String something ) {
     }
 }

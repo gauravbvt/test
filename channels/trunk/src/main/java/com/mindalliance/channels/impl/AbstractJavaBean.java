@@ -13,7 +13,6 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.beans.VetoableChangeSupport;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 
 import com.mindalliance.channels.JavaBean;
 
@@ -37,6 +36,10 @@ public class AbstractJavaBean implements JavaBean {
     }
 
     // ----------------------------
+    /**
+     * Get the bean info for this class.
+     * Cached for performance.
+     */
     private synchronized BeanInfo getBeanInfo() {
 
         if ( this.beanInfo == null )
@@ -66,8 +69,7 @@ public class AbstractJavaBean implements JavaBean {
                 return p;
         }
 
-        throw new RuntimeException(
-                MessageFormat.format( "No property found for {0}", setter ) );
+        return null;
     }
 
     // ----------------------------

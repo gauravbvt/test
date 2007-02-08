@@ -4,6 +4,8 @@
 package com.mindalliance.channels.impl;
 
 import java.beans.PropertyVetoException;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 /**
@@ -212,5 +214,35 @@ public class JavaBeanTest extends TestCase {
         assertEquals( 0, testObject.getPropertyChangeListeners("name").length );
 
         assertFalse( testObject.hasPropertyListeners("name") );
+    }
+
+    @SuppressWarnings("unchecked")
+    public void testAddValue_1() {
+        TestListener l = new TestListener();
+        testObject.addPropertyChangeListener( l );
+
+        testObject.addValue( "blah" );
+        assertEquals( 1, l.getPropCount() );
+        assertEquals( "values", l.getLastProp().getPropertyName() );
+        assertNull( l.getLastProp().getOldValue() );
+        List<String> v = (List<String>) l.getLastProp().getNewValue();
+        assertEquals( 1, v.size() );
+        assertEquals( "blah", v.get( 0 ) );
+
+        l.reset();
+        testObject.removeValue( "blah" );
+        assertEquals( 1, l.getPropCount() );
+        assertEquals( "values", l.getLastProp().getPropertyName() );
+        assertNull( l.getLastProp().getOldValue() );
+        v = (List<String>) l.getLastProp().getNewValue();
+        assertEquals( 0, v.size() );
+    }
+
+    public void testAddValue_2() {
+        TestListener l = new TestListener();
+        testObject.addPropertyChangeListener( l );
+
+        testObject.addSomething( "blah" );
+        assertEquals( 0, l.getPropCount() );
     }
 }
