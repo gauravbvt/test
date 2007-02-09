@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Specification-Title: mxGraph Components for ZK
+Specification-Version: 1.0
+Specification-Vendor: Mind-Alliance Systems
+Implementation-Title: com.mind-alliance.zk.mxgraph
+Implementation-URL: http://mind-alliance.com
+Implementation-Version: 1.0
+Implementation-Vendor: Mind-Alliance Systems
