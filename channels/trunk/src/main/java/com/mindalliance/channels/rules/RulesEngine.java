@@ -20,6 +20,7 @@ import org.drools.event.DefaultAgendaEventListener;
 import org.drools.rule.Package;
 import org.springframework.context.Lifecycle;
 
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.Model;
 
 /**
@@ -43,12 +44,18 @@ public class RulesEngine implements Lifecycle {
     public RulesEngine() {
     }
 
+    /**
+     * Return the list of DRL rules to be processed by this engine.
+     */
     public List<InputStream> getDrlPackages() {
         return this.drlPackages;
     }
 
-    public void setDrlPackages(
-            List<InputStream> drlPackages ) {
+    /**
+     * Set the DRL rules for this engine.
+     * @param drlPackages a list of input streams.
+     */
+    public void setDrlPackages( List<InputStream> drlPackages ) {
         this.drlPackages = drlPackages;
     }
 
@@ -97,14 +104,13 @@ public class RulesEngine implements Lifecycle {
                         }
                     } );
 
-            // TODO assert model
-            // workingMemory.assertObject( ..., true );
+            assertModel();
 
             this.workingMemory.fireAllRules();
 
             logger.info( "Rules engine started" );
         } catch ( Exception e ) {
-            logger.error( "Unable to add compiled package", e );
+            logger.error( "Unable to start rules engine", e );
         }
     }
 
@@ -118,6 +124,14 @@ public class RulesEngine implements Lifecycle {
             this.workingMemory = null ;
             logger.info( "Rules engine stopped" );
         }
+    }
+
+    private void assertModel() {
+        if ( getModel() == null )
+            throw new IllegalStateException( "A model is required" );
+
+        for ( JavaBean b : getModel().getAssertableObjects() )
+            this.workingMemory.assertObject( b, true );
     }
 
     /**
@@ -135,7 +149,10 @@ public class RulesEngine implements Lifecycle {
         this.model = model;
     }
 
+    /**
+     * Return the working memory behind this rules engine.
+     */
     public final WorkingMemory getWorkingMemory() {
-        return workingMemory;
+        return this.workingMemory;
     }
 }

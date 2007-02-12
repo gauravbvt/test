@@ -4,7 +4,9 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	               http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
-	<bean id="rules" class="com.mindalliance.channels.rules.RulesEngine">
+	<bean id="rules" class="com.mindalliance.channels.rules.RulesEngine" 
+			scope="application">
+		
 		<property name="drlPackages"><value>
 			classpath:com/mindalliance/channels/rules/issues.drl</value>
 		</property>

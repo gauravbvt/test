@@ -4,17 +4,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	                    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
+	<!-- This file specifies how to authenticate users. -->
+	
 	<!-- Authentication manager -->
 	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
 		<property name="providers">
 			<list>
 				<ref local="daoAuthenticationProvider"/>
-				<bean
-					class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
+				<bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
 					<property name="key" value="blah"/>
 				</bean>
-				<bean
-					class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
+				<bean class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
 					<property name="key" value="blah"/>
 				</bean>
 			</list>
@@ -29,10 +29,12 @@
 	</bean>
 	
 	<!-- The service that provides user information -->
+	<bean id="userManagerFactory" class="com.mindalliance.channels.impl.UserManagerYamlDAO"/>
+	
+	
 	<bean id="userDetailsService" class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
 		<property name="userProperties">
-			<bean
-				class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 				<property name="location" value="/WEB-INF/users.properties"/>
 			</bean>
 		</property>

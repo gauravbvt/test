@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.model.ModelException;
+import java.util.Set;
 
 /**
  * The Channels model interface.
@@ -14,19 +14,8 @@ import com.mindalliance.channels.model.ModelException;
 public interface Model {
 
     /**
-     * Get an object using an OGNL path.
-     * @param path the path
-     * @return the object
-     * @throws ModelException on errors
+     * Return components that should be asserted by the rule engine.
      */
-    Object get( Object path ) throws ModelException;
-
-    /**
-     * Set an object using an OGNL path.
-     * @param path the path
-     * @param value the new value
-     * @throws ModelException on errors
-     */
-    void set( Object path, Object value ) throws ModelException;
+    Set<JavaBean> getAssertableObjects();
 
 }

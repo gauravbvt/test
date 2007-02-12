@@ -3,20 +3,20 @@
 
 package com.mindalliance.channels.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.Model;
 import com.mindalliance.channels.impl.AbstractJavaBean;
-
-import ognl.Ognl;
-import ognl.OgnlException;
 
 /**
  * The information sharing knowledge that is captured and derived
  * during an ISNA project.
  *
- * @see <a href="http://www.ognl.org/">OGNL website</a>
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
@@ -41,39 +41,6 @@ public class ModelImpl extends AbstractJavaBean implements Model {
      */
     public ModelImpl() {
         super();
-    }
-
-    //--------------------------------
-    /**
-     * Get an object using an OGNL path.
-     * @param path the path
-     * @return the object
-     * @throws ModelException on errors
-     */
-    public Object get( Object path ) throws ModelException {
-
-        try {
-            return Ognl.getValue( path, this );
-
-        } catch ( OgnlException ex ) {
-            throw new ModelException( ex );
-        }
-    }
-
-    /**
-     * Set an object using an OGNL path.
-     * @param path the path
-     * @param value the new value
-     * @throws ModelException on errors
-     */
-    public void set( Object path, Object value ) throws ModelException {
-
-        try {
-            Ognl.setValue( path, this, value );
-
-        } catch ( OgnlException ex ) {
-            throw new ModelException( ex );
-        }
     }
 
     /**
@@ -224,5 +191,32 @@ public class ModelImpl extends AbstractJavaBean implements Model {
      */
     public void setResources( SortedSet<Resource> resources ) {
         this.resources = resources;
+    }
+
+    //--------------------------------
+    /**
+     * Return components that should be asserted by the rule engine.
+     * This recursively traverse the components to add their subcomponents.
+     */
+    public Set<JavaBean> getAssertableObjects() {
+        Set<JavaBean> result = new HashSet<JavaBean>();
+        result.add( this );
+        Collection[] parts = {
+                getAgents(),
+                getAgreements(),
+                getChannels(),
+                getDomains(),
+                getEnvironments(),
+                getMissions(),
+                getOrganizations(),
+                getPolicies(),
+                getResources(),
+        };
+
+        for ( Collection<JavaBean> part : parts )
+            for ( JavaBean bean : part )
+                result.add( bean );
+
+        return result;
     }
 }

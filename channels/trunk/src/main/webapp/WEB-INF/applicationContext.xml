@@ -19,4 +19,8 @@
 	<bean id="model" class="com.mindalliance.channels.model.ModelImpl">
 	</bean>
 	
+	<bean id="queries" class="com.mindalliance.channels.queries.OGNLQueryEngine">
+		<property name="model" ref="model"/>
+	</bean>
+	
 </beans>

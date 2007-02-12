@@ -138,8 +138,8 @@
       <version>2.0-m4</version>
     </dependency>
     <dependency>
-      <groupId>acegisecurity</groupId>
-      <artifactId>acegi-security</artifactId>
+      <groupId>org.acegisecurity</groupId>
+      <artifactId>acegi-security-tiger</artifactId>
       <version>1.0.3</version>
     </dependency>
     <dependency>
@@ -166,7 +166,7 @@
     <dependency>
       <groupId>aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.2</version>
     </dependency>
     <dependency>
       <groupId>json-lib</groupId>
@@ -177,6 +177,11 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact-manager</artifactId>
       <version>2.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ho.jyaml</groupId>
+      <artifactId>jyaml-lib</artifactId>
+      <version>1.0-beta-3</version>
     </dependency>
     <dependency>
       <groupId>zk-mxgraph</groupId>

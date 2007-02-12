@@ -6,6 +6,7 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.GUIDFactory;
 import com.mindalliance.channels.impl.GUIDFactoryImpl;
+import com.mindalliance.channels.model.ModelObjectFactory;
 
 import junit.framework.TestCase;
 
