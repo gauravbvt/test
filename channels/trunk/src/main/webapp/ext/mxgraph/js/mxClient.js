@@ -6,7 +6,7 @@
 */
 
 var mxClient={
-	VERSION:'0.9.9.8',
+	VERSION:'0.9.9.9',
 	IS_IE:navigator.appName.toUpperCase()=='MICROSOFT INTERNET EXPLORER',
 	IS_IE7:navigator.appName.toUpperCase()=='MICROSOFT INTERNET EXPLORER'&&navigator.userAgent.indexOf('MSIE 7'),
 	IS_NS:navigator.appName=='Netscape',
@@ -1055,8 +1055,8 @@ var mxUtils=
 		doc.write('<head>');
 		if(mxClient.IS_IE)
 		{
-			doc.write('<link rel="stylesheet" href="css/common.css" charset="ISO-8859-1" type="text/css"/>');
-			doc.write('<link rel="stylesheet" href="css/explorer.css" charset="ISO-8859-1" type="text/css"/>');
+			doc.write('<link rel="stylesheet" href="'+mxClient.basePath+'css/common.css" charset="ISO-8859-1" type="text/css"/>');
+			doc.write('<link rel="stylesheet" href="'+mxClient.basePath+'css/explorer.css" charset="ISO-8859-1" type="text/css"/>');
 		}
 		doc.write('</head>');
 		doc.write('<body>');
@@ -1979,12 +1979,12 @@ var mxClipboard={
 }
 
 {
-	function mxSession(model,urlInit,urlPoll,urlPost)
+	function mxSession(model,urlInit,urlPoll,urlNotify)
 	{
 		this.model=model;
 		this.urlInit=urlInit;
 		this.urlPoll=urlPoll;
-		this.urlPost=urlPost;
+		this.urlNotify=urlNotify;
 		if(model!=null)
 		{
 			
@@ -1999,7 +1999,7 @@ var mxClipboard={
 		{
 			if(changes!=null&&self.isLocal||(self.isConnected&&!self.isSuspended))
 			{
-				self.post(self.encodeChanges(changes));
+				self.notify(self.encodeChanges(changes));
 			}
 		});
 	}
@@ -2074,16 +2074,16 @@ var mxClipboard={
 			this.isPolling=false;
 		}
 	}
-	mxSession.prototype.post=function(xml,onLoad,onError)
+	mxSession.prototype.notify=function(xml,onLoad,onError)
 	{
 		if(xml!=null&&xml.length>0)
 		{
-			if(!this.isLocal&&this.urlPost!=null)
+			if(!this.isLocal&&this.urlNotify!=null)
 			{
-				mxUtils.post(this.urlPost,'xml='+xml,onLoad,onError);
+				mxUtils.post(this.urlNotify,'xml='+xml,onLoad,onError);
 			}
 			this.sent+=xml.length;
-			this.dispatchEvent('post',this,this.urlPost,xml);
+			this.dispatchEvent('notify',this,this.urlNotify,xml);
 		}
 	}
 	mxSession.prototype.get=function(url,onLoad,onError)
@@ -2107,42 +2107,45 @@ var mxClipboard={
 			
 			var req=mxUtils.get(url,function(req)
 			{
-				try
+				if(typeof(mxUtils)!='undefined')
 				{
-					if(req.isReady())
+					try
 					{
-						self.received+=req.getText().length;
-						self.dispatchEvent('get',self,url,req);
-						
-						if(req.getText().indexOf('<?php')<0)
+						if(req.isReady())
 						{
-							if(req.getText().length>0)
+							self.received+=req.getText().length;
+							self.dispatchEvent('get',self,url,req);
+							
+							if(req.getText().indexOf('<?php')<0)
 							{
-								var node=req.getXML().documentElement;
-								if(node==null)
+								if(req.getText().length>0)
 								{
-									onErrorWrapper('Invalid response: '+req.getText());
+									var node=req.getXML().documentElement;
+									if(node==null)
+									{
+										onErrorWrapper('Invalid response: '+req.getText());
+									}
+									else
+									{
+										self.receive(node);
+									}
 								}
-								else
+								if(onLoad!=null)
 								{
-									self.receive(node);
+									onLoad(req);
 								}
-							}
-							if(onLoad!=null)
-							{
-								onLoad(req);
 							}
 						}
+						else
+						{
+							onErrorWrapper('Response not ready');
+						}
 					}
-					else
+					catch(ex)
 					{
-						onErrorWrapper('Response not ready');
+						onErrorWrapper(ex);
+						throw ex;
 					}
-				}
-				catch(ex)
-				{
-					onErrorWrapper(ex);
-					throw ex;
 				}
 			},
 			
@@ -4529,60 +4532,89 @@ var mxClipboard={
 }
 
 {
-	function mxCompactTreeLayout(graph,isHorizontal){
+	function mxCompactTreeLayout(graph,isHorizontal)
+	{
 		this.graph=graph;
 		this.isHorizontal=(isHorizontal!=null)?isHorizontal:true;
 		this.levelDistance=10;
 		this.nodeDistance=20;
 	}
-	mxCompactTreeLayout.prototype.move=function(cell,x,y){
+	mxCompactTreeLayout.prototype.move=function(cell,x,y)
+	{
 		
 	}
-	mxCompactTreeLayout.prototype.execute=function(parent){
+	mxCompactTreeLayout.prototype.execute=function(parent)
+	{
 		var model=this.graph.getModel();
 		var root=null;
-		if(model.getEdgeCount(parent)>0){
+		if(model.getEdgeCount(parent)>0)
+		{
 			root=parent;
-			}else{
+		}
+		else
+		{
 			var roots=this.graph.findTreeRoots(parent);
-			if(roots.length>0){
+			if(roots.length>0)
+			{
 				root=roots[0];
 			}
 		}
-		if(root!=null){
+		if(root!=null)
+		{
 			var swimlane=this.graph.getSwimlane(root);
 			var node=this.dfs(root,swimlane);
-			if(node!=null){
+			if(node!=null)
+			{
 				model.beginUpdate();
 				try
 				{
 					this.layout(node);
 					var x0=this.graph.gridSize;
 					var y0=this.graph.gridSize;
-					if(swimlane==null){
+					if(swimlane==null)
+					{
 						var g=model.getGeometry(root);
-						if(g!=null){
+						if(g!=null)
+						{
 							x0=g.x;
 							y0=g.y;
 						}
 					}
 					var bounds=null;
-					if(this.isHorizontal){
+					if(this.isHorizontal)
+					{
 						bounds=this.horizontalLayout(node,x0,y0);
-						}else{
+					}
+					else
+					{
 						bounds=this.verticalLayout(node,null,x0,y0);
 					}
-					if(bounds!=null){
-						if(swimlane!=null){
+					if(bounds!=null)
+					{
+						var dx=0;
+						var dy=0;
+						if(bounds.x<0)
+						{
+							dx=Math.abs(x0-bounds.x);
+						}
+						if(bounds.y<0)
+						{
+							dy=Math.abs(y0-bounds.y);
+						}
+						this.moveNode(node,dx,dy);
+						if(swimlane!=null)
+						{
 							var width=bounds.width-bounds.x;
 							var height=bounds.height-bounds.y;
 							var style=this.graph.getCellStyle(swimlane);
 							var isHorizontal=style[mxConstants.STYLE_HORIZONTAL]=="true";
-							var offsetX=(isHorizontal)?40:10;
-							var offsetY=(isHorizontal)?10:40;
-							this.moveNode(node,offsetX-bounds.x,offsetY-bounds.y);
+							var size=style[mxConstants.STYLE_STARTSIZE];
+							var offsetX=(isHorizontal)?size:0;
+							var offsetY=(isHorizontal)?0:size;
+							this.moveNode(node,offsetX,offsetY);
 							var g=model.getGeometry(swimlane);
-							if(swimlane!=null&&g!=null){
+							if(swimlane!=null&&g!=null)
+							{
 								var g=g.clone();
 								g.height=(isHorizontal)?Math.max(g.height,height+20):height+60;
 								g.width=(isHorizontal)?width+60:Math.max(g.width,width+20);
@@ -5107,7 +5139,6 @@ var mxClipboard={
 				max=Math.max(max,Math.max(g.width,g.height));
 			}
 		}
-		
 		model.beginUpdate();
 		try
 		{
@@ -5885,7 +5916,7 @@ var mxClipboard={
 	mxCell.prototype.target=null;
 	mxCell.prototype.edges=null;
 	mxCell.prototype.constraints=null;
-	mxCell.prototype.transient=['_clone','id','value','states','parent','source','target','children','edges'];
+	mxCell.prototype.mxTransient=['_clone','id','value','states','parent','source','target','children','edges'];
 	mxCell.prototype.is=function(type,attr,value){
 		var value=this.getValue();
 		var nodeName=(value!=null)?value.nodeName:null;
@@ -6081,7 +6112,7 @@ var mxClipboard={
 		this.collapsed=collapsed;
 	}
 	mxCell.prototype.clone=function(){
-		var clone=mxUtils.clone(this,this.transient);
+		var clone=mxUtils.clone(this,this.mxTransient);
 		clone.setValue(this.cloneValue());
 		return clone;
 	}
@@ -6532,11 +6563,11 @@ var mxPerimeter={
 	{
 		if(this.cells.length>0)
 		{
-			this.doClear();
+			this.tryClear();
 			this.graph.dispatchEvent('select',this);
 		}
 	}
-	mxGraphSelection.prototype.doClear=function()
+	mxGraphSelection.prototype.tryClear=function()
 	{
 		for(var i=0;i<this.cells.length;i++)
 		{
@@ -6550,7 +6581,7 @@ var mxPerimeter={
 	}
 	mxGraphSelection.prototype.setCells=function(cells)
 	{
-		this.doClear();
+		this.tryClear();
 		this.addCells(cells);
 	}
 	mxGraphSelection.prototype.addCells=function(cells)
@@ -6559,7 +6590,7 @@ var mxPerimeter={
 		window.status=mxResources.get('updatingSelection');
 		for(var i=0;i<cells.length;i++)
 		{
-			this.doAddCell(cells[i]);
+			this.tryAddCell(cells[i]);
 		}
 		this.graph.dispatchEvent('select',this,cells);
 		window.status=mxResources.get('done');
@@ -6570,16 +6601,16 @@ var mxPerimeter={
 		{
 			return;
 		}
-		this.doClear();
+		this.tryClear();
 		this.addCell(cell);
 		this.graph.dispatchEvent('select',this,[cell]);
 	}
 	mxGraphSelection.prototype.addCell=function(cell)
 	{
-		this.doAddCell(cell);
+		this.tryAddCell(cell);
 		this.graph.dispatchEvent('select',this,[cell]);
 	}
-	mxGraphSelection.prototype.doAddCell=function(cell)
+	mxGraphSelection.prototype.tryAddCell=function(cell)
 	{
 		var state=this.graph.view.getState(cell);
 		if(state!=null&&!this.graph.hasHandler(state))
@@ -6601,7 +6632,7 @@ var mxPerimeter={
 					cells.push(this.cells[i]);
 				}
 			}
-			this.doClear();
+			this.tryClear();
 			this.addCells(cells);
 		}
 	}
@@ -6666,8 +6697,20 @@ var mxPerimeter={
 		var spacingRight=(parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT]||0))*scale+spacing;
 		var spacingBottom=(parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM]||0))*scale+spacing;
 		var spacingLeft=(parseInt(state.style[mxConstants.STYLE_SPACING_LEFT]||0))*scale+spacing;
-		var x=state.x+offset.x+spacingLeft;
-		var y=state.y+offset.y+spacingTop;
+		var x=0;
+		var y=0;
+		if(this.graph.getModel().isEdge(state.cell))
+		{
+			x=state.absoluteOffset.x;
+			y=state.absoluteOffset.y;
+		}
+		else
+		{
+			x=state.x;
+			y=state.y;
+		}
+		x+=offset.x+spacingLeft;
+		y+=offset.y+spacingTop;
 		var width=Math.max(minWidth,state.width-spacingLeft-spacingRight);
 		var height=Math.max(minHeight,state.height-spacingTop-spacingBottom);
 		this.textarea.style.left=x+'px';
@@ -6675,7 +6718,10 @@ var mxPerimeter={
 		this.textarea.style.width=width+'px';
 		this.textarea.style.height=height+'px';
 		this.textarea.style.zorder=1;
-		this.textarea.value=this.graph.convertValueToString(cell);
+		var value=this.graph.convertValueToString(cell);
+		
+		
+		this.textarea.value=value;
 		document.body.appendChild(this.textarea);
 		this.textarea.focus();
 		this.textarea.select();
@@ -6871,23 +6917,29 @@ var mxPerimeter={
 			});
 		}
 	}
-	mxCellRenderer.prototype.createControl=function(state){
+	mxCellRenderer.prototype.createControl=function(state)
+	{
 		var graph=state.view.graph;
 		var image=graph.getExpanderImage(state);
-		if(image!=null){
+		if(image!=null)
+		{
 			var b=new mxRectangle(0,0,9,9);
 			state.control=new mxImage(b,image);
 			state.control.dialect=state.view.graph.dialect;
 			state.control.init(state.view.getOverlayPane());
 			var node=state.control.innerNode||state.control.node;
-			if(graph.isEnabled()){
+			if(graph.isEnabled())
+			{
 				node.style.cursor='pointer';
 			}
-			mxEvent.addListener(node,'click',function(evt){
-				if(graph.isEnabled()){
+			mxEvent.addListener(node,'click',function(evt)
+			{
+				if(graph.isEnabled())
+				{
 					var cells=new Array();
 					cells[0]=state.cell;
-					if(graph.getModel().isCollapsed(state.cell)){
+					if(graph.isCellCollapsed(state.cell))
+					{
 						graph.expand(cells);
 						}else{
 						graph.collapse(cells);
@@ -6895,11 +6947,13 @@ var mxPerimeter={
 					mxEvent.consume(evt);
 				}
 			});
-			mxEvent.addListener(node,'mousedown',function(evt){
+			mxEvent.addListener(node,'mousedown',function(evt)
+			{
 				graph.dispatchGraphEvent('mousedown',evt,state.cell);
 				mxEvent.consume(evt);
 			});
-			mxEvent.addListener(node,'mousemove',function(evt){
+			mxEvent.addListener(node,'mousemove',function(evt)
+			{
 				graph.dispatchGraphEvent('mousemove',evt,state.cell,mxResources.get('collapse-expand'));
 			});
 		}
@@ -7351,7 +7405,7 @@ var mxEdgeStyle={
 				state.height=this.scale*geo.height;
 			}
 		}
-		if(!this.model.isCollapsed(cell)||cell==this.currentRoot)
+		if(!this.graph.isCellCollapsed(cell)||cell==this.currentRoot)
 		{
 			var childCount=this.model.getChildCount(cell);
 			for(var i=0;i<childCount;i++)
@@ -7402,7 +7456,7 @@ var mxEdgeStyle={
 				maxY=state.y+state.height;
 			}
 		}
-		if(!this.model.isCollapsed(cell)||cell==this.currentRoot)
+		if(!this.graph.isCellCollapsed(cell)||cell==this.currentRoot)
 		{
 			var childCount=this.model.getChildCount(cell);
 			for(var i=0;i<childCount;i++)
@@ -7421,7 +7475,6 @@ var mxEdgeStyle={
 		if(state!=null)
 		{
 			var edge=state.cell;
-			var geo=this.model.getGeometry(edge);
 			var src=this.getVisibleTerminal(edge,true);
 			var trg=this.getVisibleTerminal(edge,false);
 			var pts=new Array();
@@ -7488,7 +7541,6 @@ var mxEdgeStyle={
 	}
 	mxGraphView.prototype.updateTerminalPoint=function(state,start,end,isSource)
 	{
-		var endState=this.getState(end);
 		state.setAbsoluteTerminalPoint(this.getPerimeterPoint(state,start,end,isSource),isSource);
 	}
 	mxGraphView.prototype.getPerimeterPoint=function(state,start,end,isSource)
@@ -7544,7 +7596,7 @@ var mxEdgeStyle={
 		var best=result;
 		while(result!=null&&result!=this.currentRoot)
 		{
-			if(!this.model.isVisible(best)||this.model.isCollapsed(result))
+			if(!this.graph.isCellVisible(best)||this.graph.isCellCollapsed(result))
 			{
 				best=result;
 			}
@@ -7615,7 +7667,6 @@ var mxEdgeStyle={
 	}
 	mxGraphView.prototype.updateEdgeLabelOffset=function(state)
 	{
-		var geometry=this.model.getGeometry(state.cell);
 		var points=state.absolutePoints;
 		state.absoluteOffset.x=state.getCenterX();
 		state.absoluteOffset.y=state.getCenterY();
@@ -7629,6 +7680,7 @@ var mxEdgeStyle={
 				var dy=pe.y-p0.y;
 				var x0=0;
 				var y0=0;
+				var geometry=this.model.getGeometry(state.cell);
 				var off=geometry.offset;
 				if(off!=null)
 				{
@@ -7648,12 +7700,13 @@ var mxEdgeStyle={
 		var state=null;
 		if(cell!=null)
 		{
+
 			if(cell.states==null)
 			{
 				cell.states=new Array();
 			}
 			state=cell.states[this.id];
-			if(state==null&&create&&this.model.isVisible(cell))
+			if(state==null&&create&&this.graph.isCellVisible(cell))
 			{
 				state=this.createState(cell);
 				cell.states[this.id]=state;
@@ -7926,11 +7979,11 @@ var mxEdgeStyle={
 			this.sizeDidChange();
 			
 			this.tooltipHandler=new mxTooltipHandler(this);
-			this.tooltipHandler.isEnabled=false;
+			this.tooltipHandler.setEnabled(false);
 			this.panningHandler=new mxPanningHandler(this);
 			this.panningHandler.isPanEnabled=false;
 			this.connectionHandler=new mxConnectionHandler(this);
-			this.connectionHandler.isEnabled=false;
+			this.connectionHandler.setEnabled(false);
 			this.graphHandler=new mxGraphHandler(this);
 		}
 	}
@@ -8144,19 +8197,15 @@ var mxEdgeStyle={
 	}
 	mxGraph.prototype.sizeDidChange=function()
 	{
-		if(this.container!=null&&this.container.style.overflow=='auto'&&mxClient.IS_SVG)
+		if(this.container!=null&&(this.container.style.overflow=='visible'||this.container.style.overflow=='auto')&&mxClient.IS_SVG)
 		{
-			var width=this.container.clientWidth-30;
-			var height=this.container.clientHeight-30;
-			var w=Math.max(width,this.view.bounds.width+20)+'px';
-			var h=Math.max(height,this.view.bounds.height+20)+'px';
+			var width=this.container.clientWidth;
+			var height=this.container.clientHeight;
+			var w=Math.max(width,this.view.bounds.width+1)+'px';
+			var h=Math.max(height,this.view.bounds.height+1)+'px';
 			var root=this.view.getDrawPane().parentNode.parentNode;
 			root.setAttribute('width',w);
 			root.setAttribute('height',h);
-			
-			root=root.parentNode;
-			root.style.width=w;
-			root.style.height=h;
 		}
 		this.dispatchEvent('size',this,this.view.bounds);
 	}
@@ -8506,7 +8555,7 @@ var mxEdgeStyle={
 		}
 		return cells;
 	}
-	mxGraph.prototype.addCell=function(cell,parent,index)
+	mxGraph.prototype.addCell=function(cell,parent,index,source,target)
 	{
 		parent=parent||this.getDefaultParent();
 		index=(index!=null)?index:this.model.getChildCount(parent);
@@ -8514,6 +8563,16 @@ var mxEdgeStyle={
 		try
 		{
 			this.model.add(parent,cell,index);
+			if(source!=null)
+			{
+				this.model.setTerminal(cell,source,true);
+				this.dispatchEvent('connect',this,cell,source,true);
+			}
+			if(target!=null)
+			{
+				this.model.setTerminal(cell,target,false);
+				this.dispatchEvent('connect',this,cell,target,false);
+			}
 			this.layout(parent);
 			this.dispatchEvent('add',this,[cell]);
 		}
@@ -8523,18 +8582,32 @@ var mxEdgeStyle={
 		}
 		return cell;
 	}
+	mxGraph.prototype.addEdge=function(edge,parent,source,target,index)
+	{
+		this.addCell(edge,parent,index,source,target);
+	}
 	mxGraph.prototype.splitEdge=function(edge,cell,newEdge)
 	{
 		newEdge=newEdge||edge.clone();
 		var parent=this.model.getParent(edge);
 		var index=this.model.getChildCount(parent);
 		this.model.beginUpdate();
-		this.model.add(parent,newEdge,index);
-		this.model.setTerminals(newEdge,this.model.getTerminal(edge,true),cell);
-		this.model.setTerminal(edge,cell,true);
-		this.layout(parent);
-		this.dispatchEvent('add',this,[newEdge]);
-		this.model.endUpdate();
+		try
+		{
+			this.model.add(parent,newEdge,index);
+			var source=this.model.getTerminal(edge,true);
+			this.model.setTerminals(newEdge,source,cell);
+			this.dispatchEvent('connect',this,newEdge,source,true);
+			this.dispatchEvent('connect',this,newEdge,cell,false);
+			this.model.setTerminal(edge,cell,true);
+			this.dispatchEvent('connect',this,edge,cell,true);
+			this.layout(parent);
+			this.dispatchEvent('add',this,[newEdge]);
+		}
+		finally
+		{
+			this.model.endUpdate();
+		}
 		return newEdge;
 	}
 	
@@ -8768,7 +8841,7 @@ var mxEdgeStyle={
 	{
 		var parent=this.model.getParent(cell);
 		var p=this.model.getGeometry(parent);
-		if(this.isExtendParentOnResize&&parent!=null&&p!=null&&!this.model.isCollapsed(parent))
+		if(this.isExtendParentOnResize&&parent!=null&&p!=null&&!this.isCellCollapsed(parent))
 		{
 			var g=this.model.getGeometry(cell);
 			if(g!=null&&(p.width<g.x+g.width||p.height<g.y+g.height))
@@ -8860,12 +8933,17 @@ var mxEdgeStyle={
 				{
 					for(var j=0;j<edges.length;j++)
 					{
-						var geo=this.model.getGeometry(edges[j]);
-						if(geo!=null&&geo.points!=null&&geo.points.length>0)
+						var source=this.view.getVisibleTerminal(edges[j],true);
+						var target=this.view.getVisibleTerminal(edges[j],false);
+						if(mxUtils.indexOf(cells,source)<0||mxUtils.indexOf(cells,target)<0)
 						{
-							geo=geo.clone();
-							geo.points=new Array();
-							this.model.setGeometry(edges[j],geo);
+							var geo=this.model.getGeometry(edges[j]);
+							if(geo!=null&&geo.points!=null&&geo.points.length>0)
+							{
+								geo=geo.clone();
+								geo.points=new Array();
+								this.model.setGeometry(edges[j],geo);
+							}
 						}
 					}
 				}
@@ -9271,6 +9349,14 @@ var mxEdgeStyle={
 		return isChanged;
 	}
 	
+	mxGraph.prototype.isCellVisible=function(cell)
+	{
+		return this.model.isVisible(cell);
+	}
+	mxGraph.prototype.isCellCollapsed=function(cell)
+	{
+		return this.model.isCollapsed(cell);
+	}
 	mxGraph.prototype.collapse=function(cells)
 	{
 		if(cells==null)
@@ -9283,7 +9369,7 @@ var mxEdgeStyle={
 		{
 			for(var i=0;i<cells.length;i++)
 			{
-				if(this.isCollapsable(cells[i])&&!this.model.isCollapsed(cells[i]))
+				if(this.isCollapsable(cells[i])&&!this.isCellCollapsed(cells[i]))
 				{
 					this.model.setCollapsed(cells[i],true);
 					this.swapBounds(cells[i],true);
@@ -9315,7 +9401,7 @@ var mxEdgeStyle={
 		{
 			for(var i=0;i<cells.length;i++)
 			{
-				if(this.isExpandable(cells[i])&&this.model.isCollapsed(cells[i]))
+				if(this.isExpandable(cells[i])&&this.isCellCollapsed(cells[i]))
 				{
 					this.model.setCollapsed(cells[i],false);
 					this.swapBounds(cells[i],false);
@@ -9645,7 +9731,7 @@ var mxEdgeStyle={
 		}
 		var warning='';
 		
-		if(this.model.isCollapsed(cell)&&!isValid)
+		if(this.model.isCellCollapsed(cell)&&!isValid)
 		{
 			warning+=(mxResources.get('containsValidationErrors')||this.containsValidationErrors)+'\n';
 		}
@@ -9714,7 +9800,7 @@ var mxEdgeStyle={
 	}
 	mxGraph.prototype.getExpanderImage=function(state)
 	{
-		var tmp=this.model.isCollapsed(state.cell);
+		var tmp=this.isCellCollapsed(state.cell);
 		if((tmp&&this.isExpandable(state.cell))||(!tmp&&this.isCollapsable(state.cell)))
 		{
 			return(tmp)?this.collapsedImage:this.expandedImage;
@@ -9886,11 +9972,11 @@ var mxEdgeStyle={
 	}
 	mxGraph.prototype.setConnectable=function(connectable)
 	{
-		this.connectionHandler.isEnabled=connectable;
+		this.connectionHandler.setEnabled(connectable);
 	}
 	mxGraph.prototype.setTooltips=function(enabled)
 	{
-		this.tooltipHandler.isEnabled=enabled;
+		this.tooltipHandler.setEnabled(enabled);
 	}
 	mxGraph.prototype.setPanning=function(enabled)
 	{
@@ -9953,7 +10039,7 @@ var mxEdgeStyle={
 	{
 		if(parent!=null)
 		{
-			return this.isSwimlane(parent)||(this.model.getChildCount(parent)&&!this.model.isCollapsed(parent));
+			return this.isSwimlane(parent)||(this.model.getChildCount(parent)&&!this.isCellCollapsed(parent));
 		}
 		return false;
 	}
@@ -10045,7 +10131,7 @@ var mxEdgeStyle={
 				if(result==null)
 				{
 					var state=this.view.getState(cell);
-					if(this.model.isVisible(cell)&&state!=null&&state.x<=x&&state.y<=y&&state.x+state.width>=x&&state.y+state.height>=y)
+					if(this.isCellVisible(cell)&&state!=null&&state.x<=x&&state.y<=y&&state.x+state.width>=x&&state.y+state.height>=y)
 					{
 						result=cell;
 					}
@@ -10073,7 +10159,7 @@ var mxEdgeStyle={
 				{
 					var cell=this.model.getChildAt(parent,i);
 					var state=this.view.getState(cell);
-					if(this.model.isVisible(cell)&&state!=null)
+					if(this.isCellVisible(cell)&&state!=null)
 					{
 						if(state.x>=x&&state.y>=y&&state.x+state.width<=right&&state.y+state.height<=bottom)
 						{
@@ -10105,7 +10191,7 @@ var mxEdgeStyle={
 				{
 					var child=this.model.getChildAt(parent,i);
 					var state=this.view.getState(child);
-					if(this.model.isVisible(child)&&state!=null)
+					if(this.isCellVisible(child)&&state!=null)
 					{
 						if((!rightHalfpane||state.x>=x0)&&(!bottomHalfpane||state.y>=y0))
 						{
@@ -10355,6 +10441,11 @@ var mxEdgeStyle={
 			mxDatatransfer.consumeSourceFunction(this,evt,cell);
 		}
 		
+		if(evtName!='mousemove')
+		{
+			this.container.focus();
+		}
+		
 		
 		
 		
@@ -10388,6 +10479,11 @@ var mxEdgeStyle={
 					{
 						this.gestureHandler.mouseUp(evt,cell,index);
 						this.gestureHandler=null;
+					}
+					
+					if(mxClient.IS_IE&&document.selection.type!='None'&&evtName!='mousedown')
+					{
+						document.selection.empty();
 					}
 				}
 				else if(this.graphListeners!=null)
@@ -10611,10 +10707,18 @@ var mxEdgeStyle={
 		this.graph.addGraphListener(this);
 	}
 	mxGraphHandler.prototype.maxCells=(mxClient.IS_IE)?10:50;
-	mxGraphHandler.prototype.isEnabled=true;
+	mxGraphHandler.prototype.enabled=true;
+	mxGraphHandler.prototype.isEnabled=function()
+	{
+		return this.enabled;
+	}
+	mxGraphHandler.prototype.setEnabled=function(enabled)
+	{
+		this.enabled=enabled;
+	}
 	mxGraphHandler.prototype.mouseDown=function(evt,cell,index)
 	{
-		if(this.isEnabled&&this.graph.isEnabled()&&index==null)
+		if(this.isEnabled()&&this.graph.isEnabled()&&index==null)
 		{
 			if(cell!=null)
 			{
@@ -10778,7 +10882,7 @@ var mxEdgeStyle={
 			document.body.appendChild(this.div);
 		}
 	}
-	mxPanningHandler.prototype.MENU_TRANSPARENCY=90;
+	mxPanningHandler.prototype.MENU_TRANSPARENCY=100;
 	mxPanningHandler.prototype.addItem=function(title,image,funct){
 		var tr=document.createElement('tr');
 		tr.className='mxPopupMenuItem';
@@ -10986,12 +11090,20 @@ var mxEdgeStyle={
 		this.shape.isDashed=true;
 		this.shape.init(graph.view.getOverlayPane());
 		this.shape.node.style.display='none';
-		this.isEnabled=true;
 		this.isActive=false;
+	}
+	mxConnectionHandler.prototype.enabled=true;
+	mxConnectionHandler.prototype.isEnabled=function()
+	{
+		return this.enabled;
+	}
+	mxConnectionHandler.prototype.setEnabled=function(enabled)
+	{
+		this.enabled=enabled;
 	}
 	mxConnectionHandler.prototype.mouseDown=function(evt,cell)
 	{
-		if(this.graph.isEnabled()&&this.isEnabled){
+		if(this.graph.isEnabled()&&this.isEnabled()){
 			this.marker.init(evt,cell);
 			if(this.marker.cell!=null)
 			{
@@ -11005,7 +11117,7 @@ var mxEdgeStyle={
 	}
 	mxConnectionHandler.prototype.mouseMove=function(evt,cell)
 	{
-		if(this.graph.isEnabled()&&this.isEnabled)
+		if(this.graph.isEnabled()&&this.isEnabled())
 		{
 			this.marker.updateTerminal(evt,cell,this.isActive);
 			if(this.isActive)
@@ -11072,8 +11184,7 @@ var mxEdgeStyle={
 						{
 							parent=model.getParent(source);
 						}
-						this.graph.addCell(edge,parent);
-						model.setTerminals(edge,source,target);
+						this.graph.addEdge(edge,parent,source,target);
 					}
 					finally
 					{
@@ -11117,10 +11228,18 @@ var mxEdgeStyle={
 			graph.dispatchGraphEvent('mouseup',evt);
 		});
 		this.isActive=false;
-		this.isEnabled=true;
+	}
+	mxRubberband.prototype.enabled=true;
+	mxRubberband.prototype.isEnabled=function()
+	{
+		return this.enabled;
+	}
+	mxRubberband.prototype.setEnabled=function(enabled)
+	{
+		this.enabled=enabled;
 	}
 	mxRubberband.prototype.mouseDown=function(evt,cell,index){
-		if(this.graph.isEnabled()&&this.isEnabled&&cell==null&&index==null)
+		if(this.graph.isEnabled()&&this.isEnabled()&&cell==null&&index==null)
 		{
 			this.startX=evt.clientX+document.body.scrollLeft;
 			this.startY=evt.clientY+document.body.scrollTop;
@@ -11760,12 +11879,12 @@ var mxEdgeStyle={
 {
 	function mxKeyHandler(graph,target)
 	{
-		target=target||document;
+		this.target=target||document.documentElement;
 		this.normalKeys=new Array();
 		this.controlKeys=new Array();
 		this.graph=graph;
 		var self=this;
-		mxEvent.addListener(target,"keydown",function(evt)
+		mxEvent.addListener(this.target,"keydown",function(evt)
 		{
 			self.keyDown(evt);
 		});
@@ -11785,38 +11904,42 @@ var mxEdgeStyle={
 	}
 	mxKeyHandler.prototype.keyDown=function(evt)
 	{
-		if(this.isEnabled()&&this.graph.isEnabled())
+		var source=mxEvent.getSource(evt);
+		if(source==this.target||source==this.graph.container||source==this.graph.editor.textarea)
 		{
-			if(this.graph.isEditing()&&((evt.keyCode==13&&!evt.ctrlKey&&!evt.shiftKey)||(evt.keyCode==113)))
+			if(this.isEnabled()&&this.graph.isEnabled())
 			{
-				if(this.onEditNewline!=null)
+				if(this.graph.isEditing()&&((evt.keyCode==13&&!evt.ctrlKey&&!evt.shiftKey)||(evt.keyCode==113)))
 				{
-					this.onEditNewline(evt);
+					if(this.onEditNewline!=null)
+					{
+						this.onEditNewline(evt);
+					}
+					else
+					{
+						this.graph.editor.stopEditing(false);
+					}
 				}
-				else
+				else if(evt.keyCode==27)
 				{
-					this.graph.editor.stopEditing(false);
+					if(this.onAbort!=null)
+					{
+						this.onAbort(evt);
+					}
+					else
+					{
+						this.graph.editor.stopEditing(true);
+					}
 				}
-			}
-			else if(evt.keyCode==27)
-			{
-				if(this.onAbort!=null)
+				else if(!this.graph.isEditing())
 				{
-					this.onAbort(evt);
-				}
-				else
-				{
-					this.graph.editor.stopEditing(true);
-				}
-			}
-			else if(!this.graph.isEditing())
-			{
-				var funct=(evt.ctrlKey)?this.controlKeys[evt.keyCode]:
-				this.normalKeys[evt.keyCode];
-				if(funct!=null)
-				{
-					funct(evt);
-					mxEvent.consume(evt);
+					var funct=(evt.ctrlKey)?this.controlKeys[evt.keyCode]:
+					this.normalKeys[evt.keyCode];
+					if(funct!=null)
+					{
+						funct(evt);
+						mxEvent.consume(evt);
+					}
 				}
 			}
 		}
@@ -11942,7 +12065,15 @@ var mxEdgeStyle={
 		{
 			document.body.appendChild(this.div);
 		}
-		this.isEnabled=true;
+	}
+	mxTooltipHandler.prototype.enabled=true;
+	mxTooltipHandler.prototype.isEnabled=function()
+	{
+		return this.enabled;
+	}
+	mxTooltipHandler.prototype.setEnabled=function(enabled)
+	{
+		this.enabled=enabled;
 	}
 	mxTooltipHandler.prototype.mouseDown=function(evt,cell,index)
 	{
@@ -11955,7 +12086,7 @@ var mxEdgeStyle={
 	}
 	mxTooltipHandler.prototype.mouseMove=function(evt,cell,index)
 	{
-		if(evt!=this.lastEvent)
+		if(evt.clientX!=this.lastX||evt.clientY!=this.lastY)
 		{
 			this.reset(evt,cell,index,true);
 			
@@ -11964,7 +12095,8 @@ var mxEdgeStyle={
 				this.hide();
 			}
 		}
-		this.lastEvent=evt;
+		this.lastX=evt.clientX;
+		this.lastY=evt.clientY;
 	}
 	mxTooltipHandler.prototype.mouseUp=function(evt,cell,index)
 	{
@@ -11977,7 +12109,7 @@ var mxEdgeStyle={
 			window.clearTimeout(this.thread);
 			this.thread=null;
 		}
-		if(restart&&this.isEnabled&&cell!=null&&this.div.style.display!='inline')
+		if(restart&&this.isEnabled()&&cell!=null&&this.div.style.display!='inline')
 		{
 			var self=this;
 			var x=evt.clientX;
@@ -12048,7 +12180,7 @@ var mxEdgeStyle={
 	{
 		if(editor!=null){
 			this.editor=editor;
-			this.handler=new mxKeyHandler(editor.graph,document);
+			this.handler=new mxKeyHandler(editor.graph);
 			
 			this.handler.onAbort=function(evt)
 			{
@@ -12061,6 +12193,8 @@ var mxEdgeStyle={
 			{
 				editor.graph.editor.stopEditing(false);
 			}
+			
+			this.editor.graph.container.focus();
 		}
 	}
 	mxDefaultKeyHandler.prototype.handler=null;
@@ -12090,22 +12224,7 @@ var mxEdgeStyle={
 	mxDefaultPopupMenu.prototype.config=null;
 	mxDefaultPopupMenu.prototype.createMenu=function(editor,menu,cell,evt)
 	{
-		var model=editor.graph.getModel();
-		var childCount=model.getChildCount(cell);
-		
-		var conditions=new Array();
-		conditions['nocell']=cell==null;
-		conditions['ncells']=editor.graph.getSelectionCount()>1;
-		conditions['notRoot']=model.getRoot()!=
-		model.getParent(editor.graph.getDefaultParent());
-		conditions['cell']=cell!=null;
-		var isCell=cell!=null&&editor.graph.getSelectionCount()==1;
-		conditions['nonEmpty']=isCell&&childCount>0;
-		conditions['expandable']=isCell&&editor.graph.isExpandable(cell);
-		conditions['collapsable']=isCell&&editor.graph.isCollapsable(cell);
-		conditions['validRoot']=isCell&&editor.graph.isValidRoot(cell);
-		conditions['emptyValidRoot']=conditions['validRoot']&&childCount==0;
-		conditions['swimlane']=isCell&&editor.graph.isSwimlane(cell);
+		var conditions=this.createConditions(editor,cell,evt);
 		var addSeparator=false;
 		if(this.config!=null)
 		{
@@ -12136,6 +12255,35 @@ var mxEdgeStyle={
 				item=item.nextSibling;
 			}
 		}
+	}
+	mxDefaultPopupMenu.prototype.createConditions=function(editor,cell,evt)
+	{
+		var model=editor.graph.getModel();
+		var childCount=model.getChildCount(cell);
+		var conditions=new Array();
+		conditions['nocell']=cell==null;
+		conditions['ncells']=editor.graph.getSelectionCount()>1;
+		conditions['notRoot']=model.getRoot()!=
+		model.getParent(editor.graph.getDefaultParent());
+		conditions['cell']=cell!=null;
+		var isCell=cell!=null&&editor.graph.getSelectionCount()==1;
+		conditions['nonEmpty']=isCell&&childCount>0;
+		conditions['expandable']=isCell&&editor.graph.isExpandable(cell);
+		conditions['collapsable']=isCell&&editor.graph.isCollapsable(cell);
+		conditions['validRoot']=isCell&&editor.graph.isValidRoot(cell);
+		conditions['emptyValidRoot']=conditions['validRoot']&&childCount==0;
+		conditions['swimlane']=isCell&&editor.graph.isSwimlane(cell);
+		var condNodes=this.config.getElementsByTagName('condition');
+		for(var i=0;i<condNodes.length;i++)
+		{
+			var funct=mxUtils.eval(mxUtils.getTextContent(condNodes[i]));
+			var name=condNodes[i].getAttribute('name');
+			if(name!=null&&typeof(funct)=='function')
+			{
+				conditions[name]=funct(editor,cell,evt);
+			}
+		}
+		return conditions;
 	}
 	mxDefaultPopupMenu.prototype.addAction=function(menu,editor,label,icon,action,cell)
 	{
@@ -12180,10 +12328,10 @@ var mxEdgeStyle={
 	{
 		mxEvent.consume(evt);
 	}
-	mxDefaultToolbar.prototype.addItem=function(label,icon,actionname,pressedIcon)
+	mxDefaultToolbar.prototype.addItem=function(lab,icon,actionname,pressedIcon)
 	{
 		var editor=this.editor;
-		this.toolbar.addItem(label,icon,function()
+		this.toolbar.addItem(lab,icon,function()
 		{
 			editor.execute(actionname);
 		},pressedIcon);
@@ -12201,49 +12349,49 @@ var mxEdgeStyle={
 	{
 		return this.toolbar.addActionCombo(title);
 	}
-	mxDefaultToolbar.prototype.addActionOption=function(combo,label,actionname)
+	mxDefaultToolbar.prototype.addActionOption=function(combo,lab,actionname)
 	{
 		var editor=this.editor;
-		this.addOption(combo,label,function()
+		this.addOption(combo,lab,function()
 		{
 			editor.execute(actionname);
 		});
 	}
-	mxDefaultToolbar.prototype.addOption=function(combo,label,value)
+	mxDefaultToolbar.prototype.addOption=function(combo,lab,value)
 	{
-		return this.toolbar.addOption(combo,label,value);
+		return this.toolbar.addOption(combo,lab,value);
 	}
-	mxDefaultToolbar.prototype.addMode=function(label,icon,modename,pressedIcon,funct)
+	mxDefaultToolbar.prototype.addMode=function(lab,icon,modename,pressedIcon,funct)
 	{
 		var self=this;
-		this.toolbar.addSwitchMode(label,icon,function(evt)
+		this.toolbar.addSwitchMode(lab,icon,function(evt)
 		{
 			if(modename=='select')
 			{
 				self.editor.graph.panningHandler.isUseLeftButton=false;
-				self.editor.graph.connectionHandler.isEnabled=false;
+				self.editor.graph.connectionHandler.setEnabled(false);
 			}
 			else if(modename=='connect')
 			{
 				self.editor.graph.panningHandler.isUseLeftButton=false;
-				self.editor.graph.connectionHandler.isEnabled=true;
+				self.editor.graph.connectionHandler.setEnabled(true);
 			}
 			else if(modename=='pan')
 			{
 				self.editor.graph.panningHandler.isUseLeftButton=true;
-				self.editor.graph.connectionHandler.isEnabled=false;
+				self.editor.graph.connectionHandler.setEnabled(false);
 			}
 			if(funct!=null){
 				funct(self.editor);
 			}
 		},pressedIcon);
 	}
-	mxDefaultToolbar.prototype.addPrototype=function(label,icon,ptype,pressedIcon)
+	mxDefaultToolbar.prototype.addPrototype=function(lab,icon,ptype,pressedIcon)
 	{
 		var img=null;
 		if(ptype==null)
 		{
-			img=this.toolbar.addMode(label,icon,null,pressedIcon);
+			img=this.toolbar.addMode(lab,icon,null,pressedIcon);
 		}
 		else
 		{
@@ -12264,7 +12412,7 @@ var mxEdgeStyle={
 				var pt=mxUtils.convertPoint(self.editor.graph.container,evt.clientX,evt.clientY);
 				return self.editor.addVertex(cell,createFunction(),pt.x,pt.y);
 			};
-			img=this.toolbar.addMode(label,icon,mode,pressedIcon);
+			img=this.toolbar.addMode(lab,icon,mode,pressedIcon);
 			
 			
 			var funct=function(graph,evt,cell)
@@ -12291,11 +12439,10 @@ var mxEdgeStyle={
 							g.y+=(g.height+geo.height)/2+step+dist;
 						}
 						vertex.setGeometry(g);
-						var edge=self.editor.createEdge();
 						var parent=model.getParent(cell);
-						model.add(parent,edge);
-						model.setTerminals(edge,cell,vertex);
 						graph.addCell(vertex,parent);
+						var edge=self.editor.createEdge();
+						graph.addEdge(edge,parent,cell,vertex);
 					}
 					finally
 					{
@@ -12361,7 +12508,7 @@ var mxEdgeStyle={
 							var graph=self.editor.graph;
 							document.body.removeChild(interceptor);
 							document.body.removeChild(sprite);
-							if(Math.abs(evt.clientX-self.startX)>graph.tolerance||Math.abs(evt.clientY-self.startY)>graph.tolerance)
+							if(Math.abs(evt.clientX-self.startX)>2*graph.tolerance||Math.abs(evt.clientY-self.startY)>2*graph.tolerance)
 							{
 								var pt=mxUtils.convertPoint(graph.container,evt.clientX,evt.clientY);
 								var target=graph.getCellAt(pt.x,pt.y);
@@ -12385,7 +12532,7 @@ var mxEdgeStyle={
 						}
 					}
 				}
-				if(typeof(mxEvent)!='undefined')
+				if(typeof(mxEvent)!='undefined'&&mxClient.IS_IE)
 				{
 					mxEvent.consume(evt);
 				}
@@ -12416,219 +12563,355 @@ var mxEdgeStyle={
 }
 
 {
-	function mxEditor(config){
-		this.addAction('save',function(editor){editor.save();});
-		this.addAction('print',function(editor){mxUtils.print(editor.graph);});
-		this.addAction('preview',function(editor){mxUtils.show(editor.graph);});
-		this.addAction('refresh',function(editor){editor.graph.refresh();});
-		this.addAction('cut',function(editor){mxClipboard.cut(editor.graph);});
-		this.addAction('copy',function(editor){mxClipboard.copy(editor.graph);});
-		this.addAction('paste',function(editor){mxClipboard.paste(editor.graph);});
-		this.addAction('delete',function(editor){
+	function mxEditor(config)
+	{
+		this.addAction('save',function(editor)
+		{
+			editor.save();
+		});
+		this.addAction('print',function(editor)
+		{
+			mxUtils.print(editor.graph);
+		});
+		this.addAction('preview',function(editor)
+		{
+			mxUtils.show(editor.graph);
+		});
+		this.addAction('snapshot',function(editor)
+		{
+			if(mxClient.IS_LOCAL)
+			{
+				editor.execute('preview');
+			}
+			else
+			{
+				var enc=new mxCodec();
+				var node=enc.encode(editor.graph.view);
+				var xml=mxUtils.getXml(node,'\n');
+				var url=editor.getUrlImage();
+				mxUtils.submit(url,'xml='+xml);
+			}
+		});
+		this.addAction('refresh',function(editor)
+		{
+			editor.graph.refresh();
+		});
+		this.addAction('cut',function(editor)
+		{
+			mxClipboard.cut(editor.graph);
+		});
+		this.addAction('copy',function(editor)
+		{
+			mxClipboard.copy(editor.graph);
+		});
+		this.addAction('paste',function(editor)
+		{
+			mxClipboard.paste(editor.graph);
+		});
+		this.addAction('delete',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.remove();
 			}
 		});
-		this.addAction('group',function(editor){
+		this.addAction('group',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.group();
 			}
 		});
-		this.addAction('ungroup',function(editor){
+		this.addAction('ungroup',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.ungroup();
 			}
 		});
-		this.addAction('undo',function(editor){
+		this.addAction('undo',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.undo();
 			}
 		});
-		this.addAction('redo',function(editor){
+		this.addAction('redo',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.redo();
 			}
 		});
-		this.addAction('zoomIn',function(editor){
+		this.addAction('zoomIn',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.zoomIn();
 			}
 		});
-		this.addAction('zoomOut',function(editor){
+		this.addAction('zoomOut',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.zoomOut();
 			}
 		});
-		this.addAction('actualSize',function(editor){
+		this.addAction('actualSize',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.zoomActual();
 			}
 		});
-		this.addAction('fit',function(editor){
+		this.addAction('fit',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.fit();
 			}
 		});
-		this.addAction('showProperties',function(editor,cell){editor.showProperties(cell);});
-		this.addAction('selectAll',function(editor){
+		this.addAction('showProperties',function(editor,cell)
+		{
+			editor.showProperties(cell);
+		});
+		this.addAction('selectAll',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.selectAll();
 			}
 		});
-		this.addAction('selectNone',function(editor){
+		this.addAction('selectNone',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.selection.clear();
 			}
 		});
-		this.addAction('selectVertices',function(editor){
+		this.addAction('selectVertices',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.selectCells(true,false);
 			}
 		});
-		this.addAction('selectEdges',function(editor){
+		this.addAction('selectEdges',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.selectCells(false,true);
 			}
 		});
-		this.addAction('edit',function(editor,cell){
+		this.addAction('edit',function(editor,cell)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.edit(cell);
 			}
 		});
-		this.addAction('goInto',function(editor,cell){
+		this.addAction('goInto',function(editor,cell)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.goInto(cell);
 			}
 		});
-		this.addAction('goUp',function(editor){
+		this.addAction('goUp',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.goUp();
 			}
 		});
-		this.addAction('home',function(editor){
+		this.addAction('home',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.home();
 			}
 		});
-		this.addAction('selectPrevious',function(editor){
+		this.addAction('selectPrevious',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.select(false);
 			}
 		});
-		this.addAction('selectNext',function(editor){
+		this.addAction('selectNext',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.select(true);
 			}
 		});
-		this.addAction('selectParent',function(editor){
+		this.addAction('selectParent',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.select(false,true);
 			}
 		});
-		this.addAction('selectChild',function(editor){
+		this.addAction('selectChild',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.select(false,false,true);
 			}
 		});
-		this.addAction('collapse',function(editor){
+		this.addAction('collapse',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.collapse();
 			}
 		});
-		this.addAction('expand',function(editor){
+		this.addAction('expand',function(editor)
+		{
 			if(editor.graph.isEnabled())
 			{
 				editor.graph.expand();
 			}
 		});
-		this.addAction('bold',function(editor){
+		this.addAction('bold',function(editor)
+		{
 			editor.graph.toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE,mxConstants.FONT_BOLD);
 		});
-		this.addAction('italic',function(editor){
+		this.addAction('italic',function(editor)
+		{
 			editor.graph.toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE,mxConstants.FONT_ITALIC);
 		});
-		this.addAction('underline',function(editor){
+		this.addAction('underline',function(editor)
+		{
 			editor.graph.toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE,mxConstants.FONT_UNDERLINE);
 		});
-		this.addAction('shadow',function(editor){
+		this.addAction('shadow',function(editor)
+		{
 			editor.graph.toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE,mxConstants.FONT_SHADOW);
 		});
-		this.addAction('alignCellsLeft',function(editor){editor.graph.alignCells(mxConstants.ALIGN_LEFT);});
-		this.addAction('alignCellsCenter',function(editor){editor.graph.alignCells(mxConstants.ALIGN_CENTER);});
-		this.addAction('alignCellsRight',function(editor){editor.graph.alignCells(mxConstants.ALIGN_RIGHT);});
-		this.addAction('alignCellsTop',function(editor){editor.graph.alignCells(mxConstants.ALIGN_TOP);});
-		this.addAction('alignCellsMiddle',function(editor){editor.graph.alignCells(mxConstants.ALIGN_MIDDLE);});
-		this.addAction('alignCellsBottom',function(editor){editor.graph.alignCells(mxConstants.ALIGN_BOTTOM);});
-		this.addAction('alignFontLeft',function(editor){editor.graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_LEFT);});
-		this.addAction('alignFontCenter',function(editor){editor.graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_CENTER);});
-		this.addAction('alignFontRight',function(editor){editor.graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_RIGHT);});
-		this.addAction('alignFontTop',function(editor){editor.graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_TOP);});
-		this.addAction('alignFontMiddle',function(editor){editor.graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_MIDDLE);});
-		this.addAction('alignFontBottom',function(editor){editor.graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_BOTTOM);});
-		this.addAction('zoom',function(editor){
+		this.addAction('alignCellsLeft',function(editor)
+		{
+			editor.graph.alignCells(mxConstants.ALIGN_LEFT);
+		});
+		this.addAction('alignCellsCenter',function(editor)
+		{
+			editor.graph.alignCells(mxConstants.ALIGN_CENTER);
+		});
+		this.addAction('alignCellsRight',function(editor)
+		{
+			editor.graph.alignCells(mxConstants.ALIGN_RIGHT);
+		});
+		this.addAction('alignCellsTop',function(editor)
+		{
+			editor.graph.alignCells(mxConstants.ALIGN_TOP);
+		});
+		this.addAction('alignCellsMiddle',function(editor)
+		{
+			editor.graph.alignCells(mxConstants.ALIGN_MIDDLE);
+		});
+		this.addAction('alignCellsBottom',function(editor)
+		{
+			editor.graph.alignCells(mxConstants.ALIGN_BOTTOM);
+		});
+		this.addAction('alignFontLeft',function(editor)
+		{
+			editor.graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_LEFT);
+		});
+		this.addAction('alignFontCenter',function(editor)
+		{
+			editor.graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_CENTER);
+		});
+		this.addAction('alignFontRight',function(editor)
+		{
+			editor.graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_RIGHT);
+		});
+		this.addAction('alignFontTop',function(editor)
+		{
+			editor.graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_TOP);
+		});
+		this.addAction('alignFontMiddle',function(editor)
+		{
+			editor.graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_MIDDLE);
+		});
+		this.addAction('alignFontBottom',function(editor)
+		{
+			editor.graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_BOTTOM);
+		});
+		this.addAction('zoom',function(editor)
+		{
 			var current=editor.graph.view.scale*100;
 			var scale=parseFloat(prompt(mxResources.get('askZoom'),current))/100;
-			if(!isNaN(scale)){
+			if(!isNaN(scale))
+			{
 				editor.graph.view.setScale(scale);
 			}
 		});
-		this.addAction('toggleTasks',function(editor){
-			if(editor.tasks!=null){
+		this.addAction('toggleTasks',function(editor)
+		{
+			if(editor.tasks!=null)
+			{
 				editor.tasks.setVisible(!editor.tasks.isVisible());
-				}else{
+			}
+			else
+			{
 				editor.showTasks();
 			}
 		});
-		this.addAction('toggleHelp',function(editor){
-			if(editor.help!=null){
+		this.addAction('toggleHelp',function(editor)
+		{
+			if(editor.help!=null)
+			{
 				editor.help.setVisible(!editor.help.isVisible());
-				}else{
+			}
+			else
+			{
 				editor.showHelp();
 			}
 		});
-		this.addAction('toggleOutline',function(editor){
-			if(editor.outline!=null){
+		this.addAction('toggleOutline',function(editor)
+		{
+			if(editor.outline!=null)
+			{
 				editor.outline.setVisible(!editor.outline.isVisible());
-				}else{
+			}
+			else
+			{
 				editor.showOutline();
 			}
 		});
-		this.addAction('toggleConsole',function(editor){
+		this.addAction('toggleConsole',function(editor)
+		{
 			mxLog.setVisible(!mxLog.isVisible());
 		});
-		this.addAction('dump',function(editor){editor.dump();});
-		document.oncontextmenu=function(){
+		this.addAction('dump',function(editor)
+		{
+			editor.dump();
+		});
+		document.oncontextmenu=function()
+		{
 			return false;
 		};
 		
-		if(document.body!=null){
+		if(document.body!=null)
+		{
 			this.configure(config);
-			if(this.onInit!=null){
+			
+			if(!mxClient.IS_LOCAL&&this.urlInit!=null)
+			{
+				var session=null;
+				var self=this;
+				var sessionChanged=function(session)
+				{
+					self.dispatchEvent('session',self,session);
+				};
+				session=this.connect(this.urlInit,this.urlPoll,this.urlNotify,sessionChanged);
+			}
+			if(this.onInit!=null)
+			{
 				var tmp=document.cookie;
 				var isFirstTime=tmp.indexOf('mxgraph=seen')<0;
-				if(isFirstTime){
+				if(isFirstTime)
+				{
 					document.cookie=
 					'mxgraph=seen; expires=Fri, 27 Jul 2199 02:47:11 UTC; path=/';
 				}
@@ -12641,6 +12924,11 @@ var mxEdgeStyle={
 	mxEditor.prototype.constructor=mxEditor;
 	mxEditor.prototype.linefeed='&#xa;';
 	mxEditor.prototype.urlHelp=null;
+	mxEditor.prototype.urlPost=null;
+	mxEditor.prototype.urlImage=null;
+	mxEditor.prototype.urlInit=null;
+	mxEditor.prototype.urlNotify=null;
+	mxEditor.prototype.urlPoll=null;
 	mxEditor.prototype.helpWindowImage=null;
 	mxEditor.prototype.tasksWindowImage=null;
 	mxEditor.prototype.isValidating=false;
@@ -12674,10 +12962,13 @@ var mxEdgeStyle={
 	mxEditor.prototype.autoSaveThreshold=5;
 	mxEditor.prototype.ignoredChanges=0;
 	mxEditor.prototype.lastSnapshot=0;
-	mxEditor.prototype.configure=function(filename){
-		if(filename!=null){
+	mxEditor.prototype.configure=function(filename)
+	{
+		if(filename!=null)
+		{
 			var xml=mxUtils.load(filename).getXML().documentElement;
-			if(xml!=null){
+			if(xml!=null)
+			{
 				var baseFilename=xml.getAttribute('extend');
 				this.configure(baseFilename);
 				var dec=new mxCodec(xml.ownerDocument);
@@ -12691,36 +12982,48 @@ var mxEdgeStyle={
 			}
 		}
 	}
-	mxEditor.prototype.resetFirstTime=function(){
+	mxEditor.prototype.resetFirstTime=function()
+	{
 		document.cookie=
 		'mxgraph=seen; expires=Fri, 27 Jul 2001 02:47:11 UTC; path=/';
 	}
-	mxEditor.prototype.addAction=function(actionname,funct){
+	mxEditor.prototype.addAction=function(actionname,funct)
+	{
 		this.actions[actionname]=funct;
 	}
-	mxEditor.prototype.execute=function(actionname,cell){
+	mxEditor.prototype.execute=function(actionname,cell)
+	{
 		var action=this.actions[actionname];
-		if(action!=null){
-			try{
+		if(action!=null)
+		{
+			try
+			{
 				action(this,cell);
-				}catch(err){
+			}
+			catch(err)
+			{
 				mxUtils.error('Cannot execute '+actionname+': '+err.message,280,true);
 				throw err;
 			}
-			}else{
+		}
+		else
+		{
 			mxUtils.error('Cannot find action '+actionname,280,true);
 		}
 	}
-	mxEditor.prototype.setGraphContainer=function(container){
+	mxEditor.prototype.setGraphContainer=function(container)
+	{
 		this.graph=new mxGraph(container);
 		this.keyHandler=new mxDefaultKeyHandler(this);
 		var self=this;
-		this.graph.addListener('click',function(sender,evt,cell){
+		this.graph.addListener('click',function(sender,evt,cell)
+		{
 			if(cell==null&&self.isSelectSwimlane&&!mxEvent.isConsumed(evt))
 			{
 				var pt=mxUtils.convertPoint(self.graph.container,evt.clientX,evt.clientY);
 				var swimlane=self.graph.getSwimlaneAt(pt.x,pt.y);
-				if(swimlane!=null){
+				if(swimlane!=null)
+				{
 					self.graph.selectCellForEvent(swimlane,evt);
 					mxEvent.consume(evt);
 				}
@@ -12749,41 +13052,52 @@ var mxEdgeStyle={
 		this.graph.view.addListener('down',listener);
 		this.graph.view.addListener('up',listener);
 		
-		listener=function(sender,changes){
-			if(self.isValidating==true){
+		listener=function(sender,changes)
+		{
+			if(self.isValidating==true)
+			{
 				self.graph.validate();
 			}
 			self.modified=true;
-			if(!this.isConfiguring){
-				if(self.isAutoSave){
+			if(!this.isConfiguring)
+			{
+				if(self.isAutoSave)
+				{
 					self.autosave(changes);
 				}
 			}
 			self.dispatchEvent('root',self);
 		};
 		this.graph.getModel().addListener('change',listener);
-		listener=function(sender,cell){
+		listener=function(sender,cell)
+		{
 			if(self.isMaintainSwimlanes&&self.graph.isSwimlane(cell))
 			{
 				var model=self.graph.getModel();
 				var parent=model.getParent(cell);
-				if(parent!=null){
+				if(parent!=null)
+				{
 					var geo=model.getGeometry(cell);
 					var param=(self.isHorizontalFlow)?geo.width:geo.height;
 					var childCount=model.getChildCount(parent);
 					model.beginUpdate();
 					try
 					{
-						for(var i=0;i<childCount;i++){
+						for(var i=0;i<childCount;i++)
+						{
 							var child=model.getChildAt(parent,i);
 							if(cell!=child&&self.graph.isSwimlane(child))
 							{
 								geo=model.getGeometry(child);
-								if(geo!=null){
+								if(geo!=null)
+								{
 									geo=geo.clone();
-									if(self.isHorizontalFlow){
+									if(self.isHorizontalFlow)
+									{
 										geo.width=param;
-										}else{
+									}
+									else
+									{
 										geo.height=param;
 									}
 									model.setGeometry(child,geo);
@@ -12813,14 +13127,16 @@ var mxEdgeStyle={
 					var model=self.graph.getModel();
 					var geo=model.getGeometry(cell);
 					var param=(self.isHorizontalFlow)?geo.width:geo.height;
-					if(param==null||param==0){
+					if(param==null||param==0)
+					{
 						param=(self.isHorizontalFlow)?self.graph.container.offsetWidth-10:
 						self.graph.container.offsetHeight;
 						param-=offset;
 					}
 					var parent=self.graph.getDefaultParent();
 					var childCount=model.getChildCount(parent);
-					for(var i=0;i<childCount;i++){
+					for(var i=0;i<childCount;i++)
+					{
 						var child=model.getChildAt(parent,i);
 						geo=model.getGeometry(child);
 						if(cell!=child&&self.graph.isSwimlane(child))
@@ -12829,10 +13145,14 @@ var mxEdgeStyle={
 						}
 					}
 					geo=model.getGeometry(cell);
-					if(geo!=null){
-						if(self.isHorizontalFlow){
+					if(geo!=null)
+					{
+						if(self.isHorizontalFlow)
+						{
 							geo.width=param;
-							}else{
+						}
+						else
+						{
 							geo.height=param;
 						}
 					}
@@ -12842,12 +13162,15 @@ var mxEdgeStyle={
 		this.graph.addListener('add',listener);
 		this.graph.getLayout=function(cell){
 			var layout=null;
-			if(self.isLayoutSwimlane&&this.isSwimlane(cell)){
-				if(self.swimlaneLayout==null){
+			if(self.isLayoutSwimlane&&this.isSwimlane(cell))
+			{
+				if(self.swimlaneLayout==null)
+				{
 					self.swimlaneLayout=self.createSwimlaneLayout();
 				}
 				layout=self.swimlaneLayout;
-			}else if(self.isLayoutDiagram&&(self.graph.isValidRoot(cell)||self.graph.getModel().getParent(self.graph.getModel().getParent(cell))==null))
+			}
+			else if(self.isLayoutDiagram&&(self.graph.isValidRoot(cell)||self.graph.getModel().getParent(self.graph.getModel().getParent(cell))==null))
 			{
 				if(self.diagramLayout==null){
 					self.diagramLayout=self.createDiagramLayout();
@@ -12858,91 +13181,96 @@ var mxEdgeStyle={
 		}
 		this.graph.setTooltips(true);
 		this.graph.setPanning(true);
-		
-		
-		if(this.isModalProperties){
-			this.graph.isEditing=function(cell){
-				return(this.editor!=null&&this.editor.isEditing(cell))||self.isPropertiesVisible();
-			}
-			
-			}else{
-			this.keyHandler.handler.isEnabled=function(){
-				return self.keyHandler.handler.enabled&&!self.isPropertiesVisible();
-			}
-		}
-		if(mxClient.IS_IE){
+		if(mxClient.IS_IE)
+		{
 			new mxDivResizer(container);
-			document.onmousemove=function(){
-				if(self.graph.isEnabled()&&!self.graph.isEditing()&&!self.isPropertiesVisible())
-				{
-					document.selection.empty();
-				}
-			}
 		}
 	}
-	mxEditor.prototype.createDiagramLayout=function(){
+	mxEditor.prototype.createDiagramLayout=function()
+	{
 		var gs=this.graph.gridSize;
 		return new mxFlowLayout(this.graph,this.swimlaneSpacing,this.isHorizontalFlow,2*gs,2*gs);
 	}
-	mxEditor.prototype.createSwimlaneLayout=function(){
+	mxEditor.prototype.createSwimlaneLayout=function()
+	{
 		return new mxCompactTreeLayout(this.graph,this.isHorizontalFlow);
 	}
-	mxEditor.prototype.setToolbarContainer=function(container){
+	mxEditor.prototype.setToolbarContainer=function(container)
+	{
 		this.toolbar=new mxDefaultToolbar(container,this);
 		new mxRubberband(this.graph);
 		var self=this;
-		this.graph.panningHandler.factoryMethod=function(menu,cell,evt){
+		this.graph.panningHandler.factoryMethod=function(menu,cell,evt)
+		{
 			return self.createPopupMenu(menu,cell,evt);
 		};
-		this.graph.connectionHandler.factoryMethod=function(source,target){
+		this.graph.connectionHandler.factoryMethod=function(source,target)
+		{
 			return self.createEdge(source,target)
 		};
-		if(mxClient.IS_IE){
+		if(mxClient.IS_IE)
+		{
 			new mxDivResizer(container);
 		}
 	}
-	mxEditor.prototype.setStatusContainer=function(container){
-		if(mxClient.IS_IE){
-			new mxDivResizer(container);
-		}
-		this.addListener('save',function(sender){
+	mxEditor.prototype.setStatusContainer=function(container)
+	{
+		this.addListener('save',function(sender)
+		{
 			var tstamp=new Date().toLocaleString();
 			container.innerHTML=mxResources.get('lastSaved')+': '+tstamp;
 		});
 		
 		var self=this;
-		this.addListener('open',function(sender){
+		this.addListener('open',function(sender)
+		{
 			container.innerHTML=mxResources.get('currentFile')+': '+self.filename;
 		});
 		this.status=container;
+		if(mxClient.IS_IE)
+		{
+			new mxDivResizer(container);
+		}
 	}
-	mxEditor.prototype.setStatus=function(message){
-		if(this.status!=null){
+	mxEditor.prototype.setStatus=function(message)
+	{
+		if(this.status!=null)
+		{
 			this.status.innerHTML=message;
 		}
 	}
-	mxEditor.prototype.setMapContainer=function(tmp){
-		if(tmp!=null){
+	mxEditor.prototype.setMapContainer=function(tmp)
+	{
+		if(tmp!=null)
+		{
 			var fx=1/6000;
 			var fy=1/7000;
 			var map=new GMap2(tmp);
 			map.setCenter(new GLatLng(37.4419,-122.1419),13);
-			var listener=function(evt){
+			var listener=function(evt)
+			{
 				var dx=graph.view.translate.x*fx;
 				var dy=graph.view.translate.y*fy;
 				var s=Math.floor(5+8*graph.view.scale);
 				mxLog.debug('property changes: s='+s);
-				if(map.getCenter()!=s){
+				if(map.getCenter()!=s)
+				{
 					map.setCenter(new GLatLng(37.4569+dy,-122.1569-dx),s);
-					}else{
+				}
+				else
+				{
 					map.panTo(new GLatLng(37.4569+dy,-122.1569-dx),s);
 				}
 			}
-			graph.shift=function(dx,dy){
+			graph.shift=function(dx,dy)
+			{
 				var canvas=this.view.getCanvas();
-				if(this.dialect!=mxConstants.DIALECT_SVG){
+				if(this.dialect!=mxConstants.DIALECT_SVG)
+				{
 					canvas.setAttribute('coordorigin',(-dx)+','+(-dy));
-					}else{
+				}
+				else
+				{
 					canvas.setAttribute('transform','translate('+dx+','+dy+')');
 				}
 				dx*=fx;
@@ -12952,22 +13280,28 @@ var mxEdgeStyle={
 			editor.graph.view.addListener(null,listener);
 		}
 	}
-	mxEditor.prototype.setTitleContainer=function(container){
+	mxEditor.prototype.setTitleContainer=function(container)
+	{
 		var self=this;
-		this.addListener('root',function(sender){
+		this.addListener('root',function(sender)
+		{
 			container.innerHTML=self.getTitle();
 		});
-		if(mxClient.IS_IE){
+		if(mxClient.IS_IE)
+		{
 			new mxDivResizer(container);
 		}
 	}
-	mxEditor.prototype.treeLayout=function(cell,isHorizontal){
-		if(cell!=null){
+	mxEditor.prototype.treeLayout=function(cell,isHorizontal)
+	{
+		if(cell!=null)
+		{
 			var layout=new mxCompactTreeLayout(this.graph,isHorizontal);
 			layout.execute(cell);
 		}
 	}
-	mxEditor.prototype.getTitle=function(){
+	mxEditor.prototype.getTitle=function()
+	{
 		var title='';
 		var graph=this.graph;
 		var cell=graph.getCurrentRoot();
@@ -12982,33 +13316,43 @@ var mxEdgeStyle={
 		var prefix=this.getRootTitle();
 		return prefix+title;
 	}
-	mxEditor.prototype.getRootTitle=function(){
+	mxEditor.prototype.getRootTitle=function()
+	{
 		var root=this.graph.getModel().getRoot();
 		return this.graph.convertValueToString(root);
 	}
-	mxEditor.prototype.undo=function(){
+	mxEditor.prototype.undo=function()
+	{
 		this.undoManager.undo();
 	}
-	mxEditor.prototype.redo=function(){
+	mxEditor.prototype.redo=function()
+	{
 		this.undoManager.redo();
 	}
-	mxEditor.prototype.group=function(){
+	mxEditor.prototype.group=function()
+	{
 		this.graph.group(this.createGroup(),this.graph.gridSize);
 	}
-	mxEditor.prototype.open=function(filename){
-		if(filename!=null){
-			try{
+	mxEditor.prototype.open=function(filename)
+	{
+		if(filename!=null)
+		{
+			try
+			{
 				var xml=mxUtils.load(filename).getXML();
 				this.readGraphModel(xml.documentElement);
 				this.filename=filename;
 				this.dispatchEvent('open',this);
-				}catch(e){
+			}
+			catch(e)
+			{
 				mxUtils.error('Cannot open '+filename+': '+e.message,280,true);
 				throw e;
 			}
 		}
 	}
-	mxEditor.prototype.readGraphModel=function(node){
+	mxEditor.prototype.readGraphModel=function(node)
+	{
 		var dec=new mxCodec(node.ownerDocument);
 		dec.decode(node,this.graph.getModel());
 		this.lastSnapshot=new Date().getTime();
@@ -13016,28 +13360,50 @@ var mxEdgeStyle={
 		this.modified=false;
 		this.undoManager.reset();
 	}
-	mxEditor.prototype.save=function(isAutomatic,linefeed){
-		if(isAutomatic==null||isAutomatic==this.isAutoSave){
-			try{
+	mxEditor.prototype.save=function(isAutomatic,linefeed)
+	{
+		if(isAutomatic==null||isAutomatic==this.isAutoSave)
+		{
+			try
+			{
 				var xml=mxUtils.getXml(this.writeGraphModel(),this.linefeed);
-				if(this.urlPost!=null&&this.urlPost.length>0){
-					var url=this.urlPost;
-					if(isAutomatic){
-						url+='?draft=true';
-					}
+				var url=this.getUrlPost(isAutomatic);
+				if(url!=null&&url.length>0)
+				{
 					mxUtils.post(url,'xml='+xml);
-					}else if(!isAutomatic){
+				}
+				else if(!isAutomatic)
+				{
 					
 					
 					mxUtils.popup(xml);
 					
 				}
 				this.dispatchEvent('save',this);
-				}catch(e){
+			}
+			catch(e)
+			{
 			}
 		}
 	}
-	mxEditor.prototype.writeGraphModel=function(){
+	mxEditor.prototype.getUrlImage=function()
+	{
+		return this.urlImage;
+	}
+	mxEditor.prototype.getUrlPost=function(isAutomatic)
+	{
+		var url=this.urlPost;
+		if(url!=null&&url.length>0)
+		{
+			if(isAutomatic)
+			{
+				url+='?draft=true';
+			}
+		}
+		return url;
+	}
+	mxEditor.prototype.writeGraphModel=function()
+	{
 		var enc=new mxCodec(mxUtils.createXmlDocument());
 		var node=enc.encode(this.graph.getModel());
 		this.lastSnapshot=new Date().getTime();
@@ -13057,42 +13423,53 @@ var mxEdgeStyle={
 			this.ignoredChanges++;
 		}
 	}
-	mxEditor.prototype.connect=function(urlInit,urlPoll,urlPost,onChange){
+	mxEditor.prototype.connect=function(urlInit,urlPoll,urlNotify,onChange)
+	{
 		var session=null;
-		if(!mxClient.IS_LOCAL){
-			var session=new mxSession(this.graph.getModel(),urlInit,urlPoll,urlPost);
+		if(!mxClient.IS_LOCAL)
+		{
+			var session=new mxSession(this.graph.getModel(),urlInit,urlPoll,urlNotify);
 			
 			
 			var self=this;
-			session.addListener('receive',function(sender,node){
-				if(node.nodeName=='mxGraphModel'){
+			session.addListener('receive',function(sender,node)
+			{
+				if(node.nodeName=='mxGraphModel')
+				{
 					self.readGraphModel(node);
 				}
 			});
-			session.addListener('get',sender,onChange);
-			session.addListener('post',sender,onChange);
-			session.addListener('connect',sender,onChange);
-			session.addListener('disconnect',sender,onChange);
+			session.addListener('get',onChange);
+			session.addListener('notify',onChange);
+			session.addListener('connect',onChange);
+			session.addListener('disconnect',onChange);
 			session.start();
 		}
 		return session;
 	}
-	mxEditor.prototype.swapStyles=function(first,second){
+	mxEditor.prototype.swapStyles=function(first,second)
+	{
 		var style=this.graph.stylesheet.styles[second];
 		this.graph.view.stylesheet.putCellStyle(second,this.graph.stylesheet.styles[first]);
 		this.graph.stylesheet.putCellStyle(first,style);
 		this.graph.refresh();
 	}
-	mxEditor.prototype.showProperties=function(cell){
-		if(cell==null&&!this.graph.isSelectionEmpty()){
+	mxEditor.prototype.showProperties=function(cell)
+	{
+		if(cell==null&&!this.graph.isSelectionEmpty())
+		{
 			cell=this.graph.getSelectionCell();
-			}else if(cell==null){
+		}
+		else if(cell==null)
+		{
 			cell=this.graph.getCurrentRoot();
-			if(cell==null){
+			if(cell==null)
+			{
 				cell=this.graph.getModel().getRoot();
 			}
 		}
-		if(cell!=null){
+		if(cell!=null)
+		{
 			this.graph.editor.stopEditing();
 			var offset=mxUtils.getOffset(this.graph.container);
 			var x=offset.x+10;
@@ -13112,37 +13489,45 @@ var mxEdgeStyle={
 			}
 			this.hideProperties();
 			var node=this.createProperties(cell);
-			if(node!=null){
+			if(node!=null)
+			{
 				this.properties=new mxWindow(mxResources.get('properties'),node,x,y,this.propertiesWidth,this.propertiesHeight,false);
 				this.properties.setVisible(true);
 			}
 		}
 	}
-	mxEditor.prototype.hideProperties=function(){
-		if(this.properties!=null){
+	mxEditor.prototype.hideProperties=function()
+	{
+		if(this.properties!=null)
+		{
 			this.properties.destroy();
 			this.properties=null;
 		}
 	}
-	mxEditor.prototype.showTasks=function(tasks){
-		if(this.tasks==null){
+	mxEditor.prototype.showTasks=function(tasks)
+	{
+		if(this.tasks==null)
+		{
 			var div=document.createElement('div');
 			div.style.padding='4px';
 			div.style.paddingLeft='20px';
 			var w=document.body.clientWidth;
 			var wnd=new mxWindow(mxResources.get('tasks'),div,w-220,this.tasksTop,200);
-			wnd.setCloseAction(function(){
+			wnd.setCloseAction(function()
+			{
 				wnd.setVisible(false);
 			});
 			var self=this;
-			var funct=function(sender){
+			var funct=function(sender)
+			{
 				div.innerHTML='';
 				self.createTasks(div);
 			};
 			this.graph.addListener('select',funct);
 			this.graph.getModel().addListener('change',funct);
 			this.graph.addListener('root',funct);
-			if(this.tasksWindowImage!=null){
+			if(this.tasksWindowImage!=null)
+			{
 				wnd.setImage(this.tasksWindowImage);
 			}
 			this.tasks=wnd;
@@ -13150,10 +13535,13 @@ var mxEdgeStyle={
 		}
 		this.tasks.setVisible(true);
 	}
-	mxEditor.prototype.createTasks=function(div){
+	mxEditor.prototype.createTasks=function(div)
+	{
 	}
-	mxEditor.prototype.showHelp=function(tasks){
-		if(this.help==null){
+	mxEditor.prototype.showHelp=function(tasks)
+	{
+		if(this.help==null)
+		{
 			var frame=document.createElement('iframe');
 			frame.setAttribute('width',(this.helpWidth-8)+'px');
 			frame.setAttribute('height',(this.helpHeight-28)+'px');
@@ -13162,25 +13550,30 @@ var mxEdgeStyle={
 			var w=document.body.clientWidth;
 			var h=document.body.clientHeight;
 			var wnd=new mxWindow(mxResources.get('help'),frame,(w-this.helpWidth)/2,(h-this.helpHeight)/3,this.helpWidth,this.helpHeight);
-			wnd.setCloseAction(function(){
+			wnd.setCloseAction(function()
+			{
 				wnd.setVisible(false);
 			});
-			if(this.helpWindowImage!=null){
+			if(this.helpWindowImage!=null)
+			{
 				wnd.setImage(this.helpWindowImage);
 			}
 			this.help=wnd;
 		}
 		this.help.setVisible(true);
 	}
-	mxEditor.prototype.showOutline=function(){
-		if(this.outline==null){
+	mxEditor.prototype.showOutline=function()
+	{
+		if(this.outline==null)
+		{
 			var div=document.createElement('div');
 			div.style.width='196px';
 			div.style.height='172px';
 			div.style.background='white';
 			div.style.overflow='hidden';
 			var wnd=new mxWindow(mxResources.get('outline'),div,600,480,200,200);
-			wnd.setCloseAction(function(){
+			wnd.setCloseAction(function()
+			{
 				wnd.setVisible(false);
 			});
 			wnd.setVisible(true);
@@ -13190,12 +13583,15 @@ var mxEdgeStyle={
 		}
 		this.outline.setVisible(true);
 	}
-	mxEditor.prototype.isPropertiesVisible=function(){
+	mxEditor.prototype.isPropertiesVisible=function()
+	{
 		return this.properties!=null;
 	}
-	mxEditor.prototype.createProperties=function(cell){
+	mxEditor.prototype.createProperties=function(cell)
+	{
 		var value=this.graph.getModel().getValue(cell);
-		if(value.nodeType!=null){
+		if(value.nodeType!=null)
+		{
 			var form=new mxForm('properties');
 			var id=form.addText('ID',cell.getId());
 			id.setAttribute('readonly','true');
@@ -13203,7 +13599,8 @@ var mxEdgeStyle={
 			var style=form.addText('Style',tmp||'');
 			var attrs=value.attributes;
 			var texts=new Array(attrs.length);
-			for(var i=0;i<attrs.length;i++){
+			for(var i=0;i<attrs.length;i++)
+			{
 				var val=attrs[i].nodeValue;
 				
 				
@@ -13211,7 +13608,8 @@ var mxEdgeStyle={
 			}
 			var self=this;
 			form.addButtons(
-			function(){
+			function()
+			{
 				self.hideProperties();
 				var model=self.graph.getModel();
 				
@@ -13237,14 +13635,16 @@ var mxEdgeStyle={
 					model.endUpdate();
 				}
 			},
-			function(){
+			function()
+			{
 				self.hideProperties();
 			});
 			return form.table;
 		}
 		return null;
 	}
-	mxEditor.prototype.createPopupMenu=function(menu,cell,evt){
+	mxEditor.prototype.createPopupMenu=function(menu,cell,evt)
+	{
 		this.popupHandler.createMenu(this,menu,cell,evt);
 	}
 	mxEditor.prototype.createEdge=function(source,target)
@@ -13262,60 +13662,80 @@ var mxEdgeStyle={
 		}
 		return e;
 	}
-	mxEditor.prototype.getEdgeStyle=function(){
+	mxEditor.prototype.getEdgeStyle=function()
+	{
 		return this.defaultEdgeStyle;
 	}
-	mxEditor.prototype.createGroup=function(){
+	mxEditor.prototype.createGroup=function()
+	{
 		var model=this.graph.getModel();
 		return model.cloneCell(model.defaultGroup);
 	}
-	mxEditor.prototype.consumeCycleAttribute=function(cell){
+	mxEditor.prototype.consumeCycleAttribute=function(cell)
+	{
 		return(this.cycleAttributeValues.length>0&&this.graph.isSwimlane(cell))?this.cycleAttributeValues[this.cycleAttributeIndex++%this.cycleAttributeValues.length]:null;
 	}
-	mxEditor.prototype.cycleAttribute=function(cell){
+	mxEditor.prototype.cycleAttribute=function(cell)
+	{
 		var value=this.consumeCycleAttribute(cell);
 		if(value!=null){
 			cell.setStyle(cell.getStyle()+';'+this.cycleAttributeName+'='+value);
 		}
 	}
-	mxEditor.prototype.addVertex=function(parent,vertex,x,y){
+	mxEditor.prototype.addVertex=function(parent,vertex,x,y)
+	{
 		var model=this.graph.getModel();
-		while(parent!=null&&!this.graph.isValidDropTarget(parent)){
+		while(parent!=null&&!this.graph.isValidDropTarget(parent))
+		{
 			parent=model.getParent(parent);
 		}
 		parent=(parent!=null)?parent:this.graph.getSwimlaneAt(x,y);
 		var scale=this.graph.view.scale;
 		var geo=model.getGeometry(vertex);
 		var pgeo=model.getGeometry(parent);
-		if(!this.graph.isSwimlane(vertex)){
-			if(parent==null&&this.isSwimlaneRequired){
+		if(!this.graph.isSwimlane(vertex))
+		{
+			if(parent==null&&this.isSwimlaneRequired)
+			{
 				return null;
-				}else if(parent!=null&&pgeo!=null){
+			}
+			else if(parent!=null&&pgeo!=null)
+			{
 				var state=this.graph.view.getState(parent);
-				if(state!=null){
+				if(state!=null)
+				{
 					x-=state.origin.x*scale;
 					y-=state.origin.y*scale;
-					if(this.graph.isConstrainedMoving){
+					if(this.graph.isConstrainedMoving)
+					{
 						var width=geo.width;
 						var height=geo.height;
 						var tmp=state.x+state.width;
-						if(x+width>tmp){
+						if(x+width>tmp)
+						{
 							x-=x+width-tmp;
 						}
 						tmp=state.y+state.height;
-						if(y+height>tmp){
+						if(y+height>tmp)
+						{
 							y-=y+height-tmp;
 						}
 					}
-					}else{
-					if(pgeo!=null){
+				}
+				else
+				{
+					if(pgeo!=null)
+					{
 						x-=pgeo.x*scale;
 						y-=pgeo.y*scale;
 					}
 				}
 			}
-			}else if(this.isSelectSwimlane&&parent!=null){
-			if(!this.graph.isSwimlaneNesting){
+		}
+		else if(this.isSelectSwimlane&&parent!=null)
+		{
+			if(!this.graph.isSwimlaneNesting)
+			{
 				parent=null;
 			}
 		}
@@ -13323,7 +13743,8 @@ var mxEdgeStyle={
 		geo.x=this.graph.snap(x/scale-this.graph.view.translate.x-this.graph.gridSize/2);
 		geo.y=this.graph.snap(y/scale-this.graph.view.translate.y-this.graph.gridSize/2);
 		vertex.setGeometry(geo);
-		if(parent==null){
+		if(parent==null)
+		{
 			parent=this.graph.getDefaultParent();
 		}
 		var array=new Array();
@@ -13343,144 +13764,188 @@ var mxEdgeStyle={
 		this.graph.scrollCellToVisible(vertex);
 		return vertex;
 	}
-	mxEditor.prototype.dump=function(cell){
+	mxEditor.prototype.dump=function(cell)
+	{
 		var model=this.graph.getModel();
-		if(cell==null){
+		if(cell==null)
+		{
 			mxLog.debug('Dumping graph model:');
 			cell=model.getRoot();
 		}
 		mxLog.debug('cell='+cell.getId());
 		var childCount=model.getChildCount(cell);
-		if(childCount>0){
+		if(childCount>0)
+		{
 			mxLog.debug('{');
-				for(var i=0;i<childCount;i++){
+				for(var i=0;i<childCount;i++)
+				{
 					this.dump(model.getChildAt(cell,i));
 				}
 			mxLog.debug('}');
 		}
 	}
-	mxEditor.prototype.dumpCell=function(cell){
+	mxEditor.prototype.dumpCell=function(cell)
+	{
 		cells=cells||this.graph.getSelectionCells();
 		mxLog.debug('Dumping '+cells.length+' cell(s)');
-		for(var i=0;i<cells.length;i++){
+		for(var i=0;i<cells.length;i++)
+		{
 			mxLog.debug(i+'. Label: '+this.graph.convertValueToString(cells[i]));
 			mxLog.debug(i+'. IsRoot: '+(this.graph.getModel().isRoot(cells[i])));
 			mxLog.debug(i+'. Parent: '+cells[i].parent);
 			mxLog.debug(i+'. IsVertex: '+cells[i].isVertex());
 			mxLog.debug(i+'. IsSwimlane: '+this.graph.isSwimlane(cells[i]));
 			var geo=this.graph.getModel().getGeometry(cells[i]);
-			if(geo!=null){
+			if(geo!=null)
+			{
 				mxLog.debug(i+'.geometry.x: '+geo.x);
 				mxLog.debug(i+'.geometry.y: '+geo.y);
 				mxLog.debug(i+'.geometry.width: '+geo.width);
 				mxLog.debug(i+'.geometry.height: '+geo.height);
-				}else{
+			}
+			else
+			{
 				mxLog.debug(i+'.geometry: null');
 			}
 		}
 	}
 	
-	function mxPropertyChange(obj,property,value){
+	function mxPropertyChange(obj,property,value)
+	{
 		this.obj=obj;
 		this.property=property;
 		this.value=value;
 		this.previous=value;
 	}
-	mxPropertyChange.prototype.execute=function(){
+	mxPropertyChange.prototype.execute=function()
+	{
 		var tmp=this.obj[this.property];
 		this.obj[this.property]=this.previous;
 		this.previous=tmp;
 	}
-	function mxNodeAttributeChange(node,attribute,value){
+	function mxNodeAttributeChange(node,attribute,value)
+	{
 		this.node=node;
 		this.attribute=attribute;
 		this.value=value;
 		this.previous=value;
 	}
-	mxNodeAttributeChange.prototype.execute=function(){
+	mxNodeAttributeChange.prototype.execute=function()
+	{
 		var tmp=this.node.getAttribute(this.attribute);
-		if(this.previous==null){
+		if(this.previous==null)
+		{
 			this.node.removeAttribute(this.attribute);
-			}else{
+		}
+		else
+		{
 			this.node.setAttribute(this.attribute,this.previous);
 		}
 		this.previous=tmp;
 	}
-	function mxNodeChildChange(node,child,isRemove){
+	function mxNodeChildChange(node,child,isRemove)
+	{
 		this.node=node;
 		this.child=child;
 		this.isRemove=(isRemove!=null)?isRemove:false;
 	}
-	mxNodeChildChange.prototype.execute=function(){
-		if(this.isRemove){
-			if(this.child.parentNode!=null){
+	mxNodeChildChange.prototype.execute=function()
+	{
+		if(this.isRemove)
+		{
+			if(this.child.parentNode!=null)
+			{
 				this.child.parentNode.removeChild(this.child);
 			}
-			}else if(this.child.parentNode==null){
+		}
+		else if(this.child.parentNode==null)
+		{
 			this.node.appendChild(this.child);
 		}
 		this.isRemove=!this.isRemove;
 	}
-	function mxNodeReplaceChange(node,oldChild,newChild){
+	function mxNodeReplaceChange(node,oldChild,newChild)
+	{
 		this.node=node;
 		this.oldChild=oldChild;
 		this.newChild=newChild;
 	}
-	mxNodeReplaceChange.prototype.execute=function(){
-		if(this.newChild!=null){
-			if(this.oldChild!=null){
+	mxNodeReplaceChange.prototype.execute=function()
+	{
+		if(this.newChild!=null)
+		{
+			if(this.oldChild!=null)
+			{
 				this.node.insertBefore(this.newChild,this.oldChild);
-				}else{
+			}
+			else
+			{
 				this.node.appendChild(this.newChild);
 			}
 		}
-		if(this.oldChild!=null&&this.oldChild.parentNode==this.node){
+		if(this.oldChild!=null&&this.oldChild.parentNode==this.node)
+		{
 			this.node.removeChild(this.oldChild);
 		}
 		var tmp=this.newChild;
 		this.newChild=this.oldChild;
 		this.oldChild=tmp;
 	}
-	function mxNodeOrderChange(node,child,before){
+	function mxNodeOrderChange(node,child,before)
+	{
 		this.node=node;
 		this.child=child;
 		this.before=before;
 	}
-	mxNodeOrderChange.prototype.execute=function(){
+	mxNodeOrderChange.prototype.execute=function()
+	{
 		var tmp=this.child.nextSibling;
-		if(this.before!=null){
+		if(this.before!=null)
+		{
 			this.node.insertBefore(this.child,this.before);
-			}else{
+		}
+		else
+		{
 			this.node.appendChild(this.child);
 		}
 		this.before=tmp;
 	}
-	function mxNodeReplaceChildren(parent,holder){
+	function mxNodeReplaceChildren(parent,holder)
+	{
 		this.parent=parent;
 		this.holder=holder;
 	}
-	mxNodeReplaceChildren.prototype.execute=function(){
+	mxNodeReplaceChildren.prototype.execute=function()
+	{
 		var previous=this.parent.cloneNode(true);
-		while(this.parent.firstChild!=null){
+		while(this.parent.firstChild!=null)
+		{
 			this.parent.removeChild(this.parent.firstChild);
 		}
-		if(this.holder!=null){
+		if(this.holder!=null)
+		{
 			var tmp=this.holder.cloneNode(true);
-			while(tmp.firstChild!=null){
+			while(tmp.firstChild!=null)
+			{
 				this.parent.appendChild(tmp.firstChild);
 			}
 		}
 		this.holder=previous;
 	}
-	function mxRemoveNode(node){
+	function mxRemoveNode(node)
+	{
 		this.parent=null;
 		this.node=node;
 	}
-	mxRemoveNode.prototype.execute=function(){
-		if(this.parent==null){
+	mxRemoveNode.prototype.execute=function()
+	{
+		if(this.parent==null)
+		{
 			this.parent=this.node.parentNode;
 			this.parent.removeChild(this.node);
-			}else{
+		}
+		else
+		{
 			this.parent.appendChild(this.node);
 			this.parent=null;
 		}
@@ -13518,6 +13983,10 @@ var mxCodecRegistry=
 	mxCodec.prototype.document=null;
 	mxCodec.prototype.objects=null;
 	mxCodec.prototype.isEncodeDefaults=false;
+	mxCodec.prototype.putObject=function(id,obj)
+	{
+		this.objects[id]=obj;
+	}
 	mxCodec.prototype.getObject=function(id)
 	{
 		var obj=null;
@@ -13680,6 +14149,24 @@ var mxCodecRegistry=
 	mxObjectCodec.prototype.exclude=null;
 	mxObjectCodec.prototype.idrefs=null;
 	mxObjectCodec.prototype.mapping=null;
+	mxObjectCodec.prototype.getFieldName=function(attributename)
+	{
+		var mapped=this.reverse[attributename];
+		if(mapped!=null)
+		{
+			attributename=mapped;
+		}
+		return attributename;
+	}
+	mxObjectCodec.prototype.getAttributeName=function(fieldname)
+	{
+		var mapped=this.mapping[fieldname];
+		if(mapped!=null)
+		{
+			fieldname=mapped;
+		}
+		return fieldname;
+	}
 	mxObjectCodec.prototype.isExcluded=function(obj,attr,value,isWrite)
 	{
 		return mxUtils.indexOf(this.exclude,attr)>=0;
@@ -13693,81 +14180,120 @@ var mxCodecRegistry=
 		var name=mxUtils.getFunctionName(obj.constructor);
 		var node=enc.document.createElement(name);
 		obj=this.beforeEncode(enc,obj,node);
+		this.encodeObject(enc,obj,node);
+		return this.afterEncode(enc,obj,node);
+	}
+	mxObjectCodec.prototype.encodeObject=function(enc,obj,node)
+	{
 		enc.setAttribute(node,'id',enc.getId(obj));
-		var isArray=name=='Array';
 		for(var i in obj)
 		{
-			var value=obj[i];
-			if(value!=null&&!this.isExcluded(obj,i,value,true))
+			var name=i;
+			var value=obj[name];
+			if(value!=null&&!this.isExcluded(obj,name,value,true))
 			{
-				if(this.isReference(obj,i,value,true))
+				if(mxUtils.isNumeric(name))
 				{
-					value=enc.getId(obj[i]);
-					if(value==null)
-					{
-						mxLog.warn('mxObjectCodec.encode: No ID for '+name+'.'+i+'='+obj[i]);
-					}
+					name=null;
 				}
-				if(value!=null)
-				{
-					var attr=i;
-					var mapped=this.mapping[i];
-					if(mapped!=null)
-					{
-						attr=mapped;
-					}
-					var isImplicit=isArray&&mxUtils.isNumeric(attr);
-					var type=typeof(value);
-					if(type=='object')
-					{
-						var child=enc.encode(value);
-						if(child!=null)
-						{
-							if(!isImplicit)
-							{
-								child.setAttribute('as',i);
-							}
-							node.appendChild(child);
-						}
-						else
-						{
-							mxLog.warn('mxObjectCodec.encode: No node for '+name+'.'+i+': '+value);
-						}
-					}
-					else if(enc.isEncodeDefaults||this.template[i]!=value)
-					{
-						if(value==true||value==false)
-						{
-							
-							
-							value=(value==true)?'1':'0';
-						}
-						if(isArray)
-						{
-							var element=enc.document.createElement('add');
-							if(type=='function')
-							{
-								element.appendChild(enc.document.createTextNode(value));
-							}
-							else
-							{
-								enc.setAttribute(element,'value',value);
-							}
-							if(!isImplicit)
-							{
-								element.setAttribute('as',i);
-							}
-							node.appendChild(element);
-						}
-						else if(type!='function')
-						{
-							enc.setAttribute(node,attr,value);
-						}
-					}
-				}
+				this.encodeValue(enc,obj,name,value,node);
 			}
 		}
-		return this.afterEncode(enc,obj,node);
+	}
+	mxObjectCodec.prototype.encodeValue=function(enc,obj,name,value,node)
+	{
+		if(value!=null)
+		{
+			if(this.isReference(obj,name,value,true))
+			{
+				var tmp=enc.getId(value);
+				if(tmp==null)
+				{
+					mxLog.warn('mxObjectCodec.encode: No ID for '+mxUtils.getFunctionName(obj.constructor)+'.'+name+'='+value);
+					return;
+				}
+				value=tmp;
+			}
+			var defaultValue=this.template[name];
+			if(name==null||enc.isEncodeDefaults||defaultValue!=value)
+			{
+				name=this.getAttributeName(name);
+				this.writeAttribute(enc,obj,name,value,node)
+			}
+		}
+	}
+	mxObjectCodec.prototype.writeAttribute=function(enc,obj,attr,value,node)
+	{
+		if(typeof(value)!='object' )
+		{
+			this.writePrimitiveAttribute(enc,obj,attr,value,node);
+		}
+		else
+		{
+			this.writeComplexAttribute(enc,obj,attr,value,node);
+		}
+	}
+	mxObjectCodec.prototype.writePrimitiveAttribute=function(enc,obj,attr,value,node)
+	{
+		value=this.convertValueToXml(value);
+		if(attr==null)
+		{
+			var child=enc.document.createElement('add');
+			if(typeof(value)=='function')
+			{
+				child.appendChild(enc.document.createTextNode(value));
+			}
+			else
+			{
+				enc.setAttribute(element,'value',value);
+			}
+			node.appendChild(element);
+		}
+		else if(typeof(value)!='function')
+		{
+			enc.setAttribute(node,attr,value);
+		}
+	}
+	mxObjectCodec.prototype.writeComplexAttribute=function(enc,obj,attr,value,node)
+	{
+		var child=enc.encode(value);
+		if(child!=null)
+		{
+			if(attr!=null)
+			{
+				child.setAttribute('as',attr);
+			}
+			node.appendChild(child);
+		}
+		else
+		{
+			mxLog.warn('mxObjectCodec.encode: No node for '+mxUtils.getFunctionName(obj.constructor)+'.'+attr+': '+value);
+		}
+	}
+	mxObjectCodec.prototype.convertValueToXml=function(value)
+	{
+		if(value==true||value==false)
+		{
+			
+			
+			value=(value==true)?'1':'0';
+		}
+		return value;
+	}
+	mxObjectCodec.prototype.convertValueFromXml=function(value)
+	{
+		
+		if(value=='true'||value=='false'||value=='0'||value=='1')
+		{
+			value=value=='1'||value=='true';
+			
+			value=(value==true)?1:0;
+		}
+		else if(mxUtils.isNumeric(value))
+		{
+			value=parseFloat(value);
+		}
+		return value;
 	}
 	mxObjectCodec.prototype.beforeEncode=function(enc,obj,node)
 	{
@@ -13780,111 +14306,112 @@ var mxCodecRegistry=
 	mxObjectCodec.prototype.decode=function(dec,node,into)
 	{
 		var id=node.getAttribute('id');
-		var obj=dec.objects[id]||dec.lookup(id);
+		var obj=dec.objects[id];
 		if(obj==null)
 		{
 			obj=into||new this.template.constructor();
 			if(id!=null)
 			{
-				dec.objects[id]=obj;
+				dec.putObject(id,obj);
 			}
 		}
 		node=this.beforeDecode(dec,node,obj);
+		this.decodeNode(dec,node,obj);
+		return this.afterDecode(dec,node,obj);
+	}
+	mxObjectCodec.prototype.decodeNode=function(dec,node,obj)
+	{
 		if(node!=null)
 		{
-			var type=mxUtils.getFunctionName(obj.constructor);
-			var isArray=type=='Array';
-			var attrs=node.attributes;
-			if(attrs!=null)
+			this.decodeAttributes(dec,node,obj);
+			this.decodeChildren(dec,node,obj);
+		}
+	}
+	mxObjectCodec.prototype.decodeAttributes=function(dec,node,obj)
+	{
+		var type=mxUtils.getFunctionName(obj.constructor);
+		var isArray=type=='Array';
+		var attrs=node.attributes;
+		if(attrs!=null)
+		{
+			for(var i=0;i<attrs.length;i++)
 			{
-				for(var i=0;i<attrs.length;i++)
-				{
-					var name=attrs[i].nodeName;
-					if(name!='as'&&name!='id')
-					{
-						var value=attrs[i].nodeValue;
-						if(this.isReference(obj,name,value,false))
-						{
-							var tmp=dec.getObject(value);
-							if(tmp==null)
-							{
-								mxLog.warn('mxObjectCodec.decode: No object for '+type+'.'+name+'='+value);
-							}
-							value=tmp;
-						}
-						
-						if(value=='true'||value=='false'||value=='0'||value=='1')
-						{
-							value=value=='1'||value=='true';
-							value=(value==true)?1:0;
-							
-						}
-						else if(mxUtils.isNumeric(value))
-						{
-							value=parseFloat(value);
-						}
-						var mapped=this.reverse[name];
-						if(mapped!=null)
-						{
-							name=mapped;
-						}
-						if(!this.isExcluded(obj,name,value,false))
-						{
-							obj[name]=value;
-						}
-					}
-				}
-			}
-			var child=node.firstChild;
-			while(child!=null)
-			{
-				if(child.nodeType==1)
-				{
-					if(!this.processInclude(dec,child,obj))
-					{
-						var role=child.getAttribute('as');
-						if(isArray||(role!=null&&!this.isExcluded(obj,role,child,false)))
-						{
-							var template=(into!=null&&role!=null)?into[role]:null;
-							var tmp=null;
-							if(isArray&&child.nodeName=='add')
-							{
-								tmp=child.getAttribute('value');
-								if(tmp==null)
-								{
-									tmp=mxUtils.eval(mxUtils.getTextContent(child));
-								}
-							}
-							else if(child.nodeName=='add')
-							{
-								tmp=mxUtils.eval(mxUtils.getTextContent(child));
-							}
-							else{
-								tmp=dec.decode(child,template);
-								
-							}
-							if(tmp!=null&&tmp!=template)
-							{
-								if(role!=null)
-								{
-									obj[role]=tmp;
-								}
-								else
-								{
-									obj.push(tmp);
-								}
-							}
-						}
-					}
-				}
-				child=child.nextSibling;
+				this.decodeAttribute(dec,attrs[i],obj);
 			}
 		}
-		return this.afterDecode(dec,node,obj);
+	}
+	mxObjectCodec.prototype.decodeAttribute=function(dec,attr,obj)
+	{
+		var name=attr.nodeName;
+		if(name!='as'&&name!='id')
+		{
+			var value=this.convertValueFromXml(attr.nodeValue);
+			var fieldname=this.getFieldName(name);
+			if(this.isReference(obj,fieldname,value,false))
+			{
+				var tmp=dec.getObject(value);
+				if(tmp==null)
+				{
+					mxLog.warn('mxObjectCodec.decode: No object for '+mxUtils.getFunctionName(obj.constructor)+'.'+name+'='+value);
+					return;
+				}
+				value=tmp;
+			}
+			if(!this.isExcluded(obj,name,value,false))
+			{
+				obj[name]=value;
+			}
+		}
+	}
+	mxObjectCodec.prototype.decodeChildren=function(dec,node,obj)
+	{
+		var type=mxUtils.getFunctionName(obj.constructor);
+		var isArray=type=='Array';
+		var child=node.firstChild;
+		while(child!=null)
+		{
+			if(child.nodeType==1&&!this.processInclude(dec,child,obj))
+			{
+				this.decodeChild(dec,child,obj);
+			}
+			child=child.nextSibling;
+		}
+	}
+	mxObjectCodec.prototype.decodeChild=function(dec,child,obj)
+	{
+		var fieldname=child.getAttribute('as');
+		if(fieldname==null||!this.isExcluded(obj,fieldname,child,false))
+		{
+			var value=null;
+			var template=obj[fieldname];
+			if(child.nodeName=='add')
+			{
+				value=child.getAttribute('value');
+				if(value==null)
+				{
+					value=mxUtils.eval(mxUtils.getTextContent(child));
+				}
+			}
+			else{
+				value=dec.decode(child,template);
+				
+			}
+			if(value!=null&&value!=template)
+			{
+				if(fieldname!=null)
+				{
+					obj[fieldname]=value;
+				}
+				else
+				{
+					obj.push(value);
+				}
+			}
+		}
 	}
 	mxObjectCodec.prototype.processInclude=function(dec,node,into)
 	{
-		if(node.nodeType==1&&node.nodeName=='include')
+		if(node.nodeName=='include')
 		{
 			var name=node.getAttribute('name');
 			if(name!=null)
@@ -13911,7 +14438,7 @@ var mxCodecRegistry=
 
 mxCodecRegistry.register(function()
 {
-	var codec=new mxObjectCodec(new mxCell(),['children','edges','states','overlay','transient'],['parent','source','target']);
+	var codec=new mxObjectCodec(new mxCell(),['children','edges','states','overlay','mxTransient'],['parent','source','target']);
 	codec.isExcluded=function(obj,attr,value,isWrite)
 	{
 		return mxUtils.indexOf(this.exclude,attr)>=0||(isWrite&&attr=='value'&&value.nodeType==1);
