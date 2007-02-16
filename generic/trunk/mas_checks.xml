@@ -111,6 +111,7 @@ Description:
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="RequireThis">
+		    <property name="severity" value="warning"/>
             <property name="checkMethods" value="false"/>
         </module>
         <module name="IllegalInstantiation"/>
