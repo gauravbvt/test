@@ -83,9 +83,9 @@
 	
 	<scm>
 		<developerConnection>
-			scm:cvs:ext:${env.USER}@ranger.homelinux.net:/var/cvs:${project.artifactId}</developerConnection>
+			scm:svn:https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://ranger.homelinux.net/cvs/</url>
+		<url>https://ranger.homelinux.net/websvn/listing.php?repname=Mind-Alliance&amp;amp;path=%2F${project.artifactId}%2F</url>
 	</scm>
 	
 	<dependencies>
@@ -162,7 +162,9 @@
 				<artifactId>maven-changelog-plugin</artifactId>
 				<configuration>
 					<connectionType>developerConnection</connectionType>
-					<displayFileDetailUrl>${project.scm.url}/src/main/java/%FILE%?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup</displayFileDetailUrl>
+					<basedir>${basedir}</basedir>
+<!-- 					<scmUrl>https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
+--> 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
 				</configuration>
 			</plugin>
 		</plugins>

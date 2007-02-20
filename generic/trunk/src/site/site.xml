@@ -2,13 +2,13 @@
 <project name="Generic">
   <bannerLeft>
     <name>Mind-Alliance Systems</name>
-    <src>http://www.mind-alliance.com/images/mindAlliance.gif</src>
-    <href>http://www.mind-alliance.com/</href>
+    <src>images/mas.png</src>
+    <href>https://ranger.homelinux.net/</href>
 	<alt>Mind-Alliance</alt>
   </bannerLeft>
   <body>
     <links>
-      <item name="CodeAlliance" href="https://ranger.homelinux.net/" />
+      <item name="Mind-Alliance" href="http://www.mind-alliance.com/" />
     </links>
 
     <menu name="Generic">
