@@ -73,7 +73,7 @@
 		</repository>
 		<site>
 			<id>mindalliance</id>
-			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects</url>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/</url>
 		</site>
 	</distributionManagement>
 	<issueManagement>
@@ -83,7 +83,7 @@
 	
 	<scm>
 		<developerConnection>
-			scm:svn:https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</developerConnection>
+			scm:svn:https://ranger.homelinux.net/svn/</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://ranger.homelinux.net/websvn/listing.php?repname=Mind-Alliance&amp;amp;path=%2F${project.artifactId}%2F</url>
 	</scm>
@@ -163,8 +163,8 @@
 				<configuration>
 					<connectionType>developerConnection</connectionType>
 					<basedir>${basedir}</basedir>
-<!-- 					<scmUrl>https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
---> 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
+ 					<scmUrl>https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
+ 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
 				</configuration>
 			</plugin>
 		</plugins>
