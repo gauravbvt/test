@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+  <bannerLeft>
+    <name>CodeAlliance</name>
+    <src>/images/mas.png</src>
+    <href>https://ranger.homelinux.net/</href>
+  </bannerLeft>
+  <bannerRight>
+    <name>Zk-Mxgraph</name>
+  </bannerRight>
+  <body>
+
+    ${reports}
+
+  </body>
+</project>
