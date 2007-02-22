@@ -33,11 +33,10 @@ public class UserImpl extends AbstractJavaBean
 
     private String username;
     private String password;
-    private boolean enabled;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean accountNonDisabled;
-    private boolean credentialsNonExpired;
+    private boolean enabled = true;
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
 
     private String[] grantedAuthorities;
     private transient GrantedAuthority[] authorities;
@@ -150,16 +149,7 @@ public class UserImpl extends AbstractJavaBean
      * Return the value of accountNonDisabled.
      */
     public boolean isAccountNonDisabled() {
-        return this.accountNonDisabled;
-    }
-
-    /**
-     * Set the value of accountNonDisabled.
-     * @param accountNonDisabled The new value of accountNonDisabled
-     */
-    @Secured( { "ROLE_ADMIN" } )
-    public void setAccountNonDisabled( boolean accountNonDisabled ) {
-        this.accountNonDisabled = accountNonDisabled;
+        return isEnabled();
     }
 
     /**

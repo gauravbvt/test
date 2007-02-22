@@ -41,6 +41,10 @@ public class UserManager extends AbstractJavaBean
      */
     @Secured( {"ROLE_ADMIN" } )
     public void setUsers( Map<String, UserImpl> users ) {
+
+        if ( users == null )
+            throw new NullPointerException();
+
         this.users = users;
     }
 
