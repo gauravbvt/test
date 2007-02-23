@@ -28,6 +28,7 @@ public class MxModel {
 	public Collection<MxEdge> getEdges() {
 		return edges.values();
 	}
+	
 
 	/**
 	 * @param cells the cells to set
@@ -86,6 +87,18 @@ public class MxModel {
 		return removed;
 	}
 
+	public void setOverlay(MxCell cell, MxOverlay overlay) {
+		cell.setOverlay(overlay);
+	}
+	
+	public MxOverlay getOverlay(MxCell cell) {
+		return cell.getOverlay();
+	}
+	
+	public void removeOverlay(MxCell cell) {
+		cell.setOverlay(null);
+	}
+	
 	/**
 	 * @param edges the edges to set
 	 */
@@ -100,4 +113,5 @@ public class MxModel {
 		this.vertices = vertices;
 	}
 
+	
 }

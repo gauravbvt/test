@@ -4,13 +4,14 @@
  */
 package com.mindalliance.zk.mxgraph;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
- 
+
+import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 import org.zkoss.xml.HTMLs;
@@ -18,9 +19,17 @@ import org.zkoss.zk.au.Command;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Events;
 
-import com.mindalliance.zk.mxgraph.command.*;
+import com.mindalliance.zk.mxgraph.command.AddEdgeCommand;
+import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
+import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
+import com.mindalliance.zk.mxgraph.command.SelectCellsCommand;
+import com.mindalliance.zk.mxgraph.command.SetOverlayCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
-import com.mindalliance.zk.mxgraph.event.*;
+import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
+import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
+import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
+import com.mindalliance.zk.mxgraph.event.SetOverlayEvent;
+import com.mindalliance.zk.mxgraph.event.VertexAddedEvent;
 
 @SuppressWarnings("serial")
 public class MxGraph extends HtmlBasedComponent {
@@ -31,6 +40,7 @@ public class MxGraph extends HtmlBasedComponent {
 		new DeleteCellsCommand(MxConstants.COMMAND_DELETE, Command.IGNORE_OLD_EQUIV);
 		new AddVertexCommand(MxConstants.COMMAND_ADD_VERTEX, Command.IGNORE_OLD_EQUIV);
 		new AddEdgeCommand(MxConstants.COMMAND_ADD_EDGE, Command.IGNORE_OLD_EQUIV);
+		new SetOverlayCommand(MxConstants.COMMAND_SET_OVERLAY, Command.IGNORE_OLD_EQUIV);
 	}
 
 	
@@ -189,6 +199,15 @@ public class MxGraph extends HtmlBasedComponent {
 	public void addMenu(Menu menu, boolean requiresUpdate) {
 		menus.put(menu.getName(), menu);
 		if (requiresUpdate) smartUpdate("z:addMenu", MxGraph.encode(menu));
+	}
+	
+	public void setOverlay(MxCell cell, MxOverlay overlay) {
+		model.setOverlay(cell, overlay);
+		JSONObject obj = JSONObject.fromObject(overlay);
+		obj.put("cell", cell.getId());
+		smartUpdate("z:setOverlay", obj.toString());
+		Events.postEvent(new SetOverlayEvent(MxConstants.COMMAND_SET_OVERLAY, this, 
+														cell.getId()));
 	}
 	
 	public void setProperty(String name, Object value, boolean update) {

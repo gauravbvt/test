@@ -94,6 +94,7 @@ public class MxConstants {
 	static public final String COMMAND_DELETE = "onDeleteCells";
 	public static final String COMMAND_ADD_VERTEX = "onAddVertex";
 	public static final String COMMAND_ADD_EDGE = "onAddEdge";
+	public static final String COMMAND_SET_OVERLAY = "onSetOverlay";
 
 
 }

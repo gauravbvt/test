@@ -89,6 +89,9 @@ zkMxGraph.setAttr = function (container, command, val) {
 		case "z:select":
 			zm_select(container._graph, val);
 			return true;
+        case "z:setOverlay":
+        	zm_setOverlay(container._graph, val);
+        	return true;
 		default:
 			console.error("Invalid command " + command + " " + val);
 			return true;
@@ -213,6 +216,7 @@ function zm_initStyle(style, styleState) {
 function zm_initModel(graph, modelState) {
 	console.debug("zm_initModel");
 	console.debug(modelState);
+	console.debug(modelState.toJSONString());
 	var model = graph.getModel();
 	var parent = graph.getDefaultParent();						
 	// Adds cells to the model in a single step
@@ -220,7 +224,13 @@ function zm_initModel(graph, modelState) {
 	try {
 		for (i=0; i< modelState.vertices.length; i++) {
 			var v = modelState.vertices[i];
-			model.addVertex(parent, v.id, v.value, v.geometry.x, v.geometry.y, v.geometry.width, v.geometry.height);
+			var vertex = new mxCell(v.value, new mxGeometry(v.geometry.x, v.geometry.y, v.geometry.width, v.geometry.height), v.style);
+			vertex.vertex = true; vertex.edge = false;
+			vertex.setId(v.id);
+			graph.addCell(vertex, parent,null,null,null);
+			if (v.overlay != null) {
+				graph.setOverlay(vertex, new mxOverlay(v.overlay.image, v.overlay.tooltip, v.overlay.imageHeight, v.overlay.imageWidth));
+			}
 			console.debug("added vertex " + v.value);
 		}
 		for (i=0; i< modelState.edges.length; i++) {
@@ -400,4 +410,13 @@ function zm_select(graph, value) {
 		if (cell != null) cells.push(cell);
 	}
 	graph.setSelectionCells(cells);
+}
+
+function zm_setOverlay(graph, value) {
+	console.debug("zm_setOverlay");
+	var obj = value.parseJSON();
+	var model = graph.getModel();
+	var cell = model.getCell(obj.cell);
+	var overlay = new mxOverlay(obj.image, obj.tooltip, obj.imageWidth, obj.imageHeight);
+	graph.setOverlay(cell, overlay);
 }

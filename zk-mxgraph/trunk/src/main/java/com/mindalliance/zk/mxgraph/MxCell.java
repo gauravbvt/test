@@ -16,6 +16,7 @@ public class MxCell {
 	private String parent;
 	private boolean vertex;
 	private List<String> children = new ArrayList<String>();
+	private MxOverlay overlay = null;
 	
 	public MxCell(String value) {
 		id = MxModel.makeUid();
@@ -120,6 +121,16 @@ public class MxCell {
 	 */
 	public String getId() {
 		return id;
+	}
+
+
+	public MxOverlay getOverlay() {
+		return overlay;
+	}
+
+
+	public void setOverlay(MxOverlay overlay) {
+		this.overlay = overlay;
 	}
 
 
