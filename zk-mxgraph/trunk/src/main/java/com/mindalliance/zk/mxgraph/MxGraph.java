@@ -19,7 +19,6 @@ import org.zkoss.zk.au.Command;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Events;
 
-import com.mindalliance.zk.mxgraph.MxOverlay.OverlayClickListener;
 import com.mindalliance.zk.mxgraph.command.AddEdgeCommand;
 import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
 import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
@@ -29,6 +28,7 @@ import com.mindalliance.zk.mxgraph.dto.Menu;
 import com.mindalliance.zk.mxgraph.event.AddListenerEvent;
 import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
 import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
+import com.mindalliance.zk.mxgraph.event.OverlayClickListener;
 import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
 import com.mindalliance.zk.mxgraph.event.SetOverlayEvent;
 import com.mindalliance.zk.mxgraph.event.VertexAddedEvent;
