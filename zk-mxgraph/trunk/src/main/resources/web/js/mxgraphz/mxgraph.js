@@ -23,6 +23,8 @@ zkMxGraph = {};
 
 zm_menus = {};
 
+zm_overlays = {};
+
 zkMxGraph.init = function (container) {
 	console.debug("zkMxGraph.init");
     if (mxClient.isBrowserSupported()) {
@@ -91,6 +93,9 @@ zkMxGraph.setAttr = function (container, command, val) {
 			return true;
         case "z:setOverlay":
         	zm_setOverlay(container._graph, val);
+        	return true;
+        case "z:addListener":
+        	zm_addListener(container._graph, command, val);
         	return true;
 		default:
 			console.error("Invalid command " + command + " " + val);
@@ -418,5 +423,25 @@ function zm_setOverlay(graph, value) {
 	var model = graph.getModel();
 	var cell = model.getCell(obj.cell);
 	var overlay = new mxOverlay(obj.image, obj.tooltip, obj.imageWidth, obj.imageHeight);
+	if (overlays[obj.id] == null) {
+		overlays[obj.id] = overlay;
+	}
 	graph.setOverlay(cell, overlay);
+}
+
+function zm_addListener(container, value) {
+	console.debug("zm_addListener");
+	var obj = value.parseJSON();
+	var event = obj.event;
+	var id = obj.id;
+	switch (event) {
+		case "onClickOverlay":
+			var overlay = overlays[id];
+			overlay.addListener("click", function(sender, evt, cell) {
+  				zm_sendCommand(container, cell, event+id);
+			});
+			break;
+		default:
+			console.error("Unknown event type: " + event);
+	}
 }

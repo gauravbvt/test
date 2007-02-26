@@ -95,6 +95,8 @@ public class MxConstants {
 	public static final String COMMAND_ADD_VERTEX = "onAddVertex";
 	public static final String COMMAND_ADD_EDGE = "onAddEdge";
 	public static final String COMMAND_SET_OVERLAY = "onSetOverlay";
+	
+	public static final String EVENT_CLICK_OVERLAY = "onClickOverlay";
 
 
 }

@@ -13,6 +13,7 @@ public class DeleteCellsEvent extends Event {
 
 	public DeleteCellsEvent(String name, Component comp, String[] ids) {
 		super(name, comp);
+		this.ids=ids;
 	}
 
 	/**

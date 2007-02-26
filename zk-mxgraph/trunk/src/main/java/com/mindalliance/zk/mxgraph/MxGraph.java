@@ -19,12 +19,14 @@ import org.zkoss.zk.au.Command;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Events;
 
+import com.mindalliance.zk.mxgraph.MxOverlay.OverlayClickListener;
 import com.mindalliance.zk.mxgraph.command.AddEdgeCommand;
 import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
 import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SelectCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SetOverlayCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
+import com.mindalliance.zk.mxgraph.event.AddListenerEvent;
 import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
 import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
 import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
@@ -274,4 +276,22 @@ public class MxGraph extends HtmlBasedComponent {
 		return panningHandler;
 	}
 	
+	public void addOverlayClickListener(MxOverlay overlay, OverlayClickListener listener) {
+		String id = MxConstants.EVENT_CLICK_OVERLAY + overlay.getId();
+		JSONObject obj = new JSONObject();
+		obj.put("event", MxConstants.EVENT_CLICK_OVERLAY);
+		obj.put("id", overlay.getId());
+		this.addEventListener(id, listener);
+		smartUpdate("z:addListener", obj.toString());
+		Events.postEvent(new AddListenerEvent(MxConstants.EVENT_CLICK_OVERLAY, this, 
+				id));
+	}
+	
+	public void removeOverlayClickListener(MxOverlay overlay, OverlayClickListener listener) {
+
+		String id = MxConstants.EVENT_CLICK_OVERLAY + overlay.getId();
+		this.removeEventListener(id, listener);
+		smartUpdate("z:removeOverlayClickListener", id);
+		
+	}
 }
