@@ -16,20 +16,18 @@ public class MxOverlay {
 	private String id;
 	private String image;
 	private String tooltip;
-	private int imageWidth;
-	private int imageHeight;
+	private MxGeometry bounds;
 	private List<OverlayClickListener> clickListeners = new ArrayList<OverlayClickListener>();
 	
 
 
 	public MxOverlay(String imageUrl, String tooltip) {
-		this(imageUrl, tooltip, 16,16);
+		this(imageUrl, tooltip, 0, 0, 16, 16);
 		
 	}
 
-	public MxOverlay(String imageUrl, String tooltip, int imageWidth, int imageHeight) {
-		this.imageWidth = imageWidth;
-		this.imageHeight = imageHeight;
+	public MxOverlay(String imageUrl, String tooltip, int x, int y, int width, int height) {
+		this.bounds = new MxGeometry(x,y,width,height);
 		this.image = imageUrl;
 		this.tooltip = tooltip;
 		id = MxModel.makeUid();
@@ -50,20 +48,12 @@ public class MxOverlay {
 		this.tooltip = tooltip;
 	}
 
-	public int getImageHeight() {
-		return imageHeight;
+	public MxGeometry getBounds() {
+		return bounds;
 	}
 
-	public void setImageHeight(int imageHeight) {
-		this.imageHeight = imageHeight;
-	}
-
-	public int getImageWidth() {
-		return imageWidth;
-	}
-
-	public void setImageWidth(int imageWidth) {
-		this.imageWidth = imageWidth;
+	public void setBounds(MxGeometry bounds) {
+		this.bounds = bounds;
 	}
 
 	/**

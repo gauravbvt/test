@@ -219,20 +219,6 @@ function zm_initStyle(style, styleState) {
 	}
 }
 
-function zm_createOverlay(container, id, cell, image, tooltip, width, height) {
-	var overlay = zm_overlays[id];
-	if ( overlay == null) {
-	    overlay = new mxOverlay(image, tooltip, width, height);
-		zm_overlays[id] = overlay;
-		overlay.addListener("click", function(sender, evt, cell) {
-			var ids = new Array();
-			ids.push(cell.id);
-			zm_sendCommand(container, ids, "onClickOverlay");
-		});
-	}
-	container._graph.setOverlay(cell, overlay);
-}
-
 function zm_initModel(container, modelState) {
 	console.debug("zm_initModel");
 	console.debug(modelState);
@@ -246,20 +232,10 @@ function zm_initModel(container, modelState) {
 		for (i=0; i< modelState.vertices.length; i++) {
 			var v = modelState.vertices[i];
 			zm_createVertex(container, v);
-/*			var vertex = new mxCell(v.value, new mxGeometry(v.geometry.x, v.geometry.y, v.geometry.width, v.geometry.height), v.style);
-			vertex.vertex = true; vertex.edge = false;
-			vertex.setId(v.id);
-			graph.addCell(vertex, parent,null,null,null);
-			if (v.overlay != null) {
-				zm_createOverlay(container, v.overlay.id, vertex, v.overlay.image, v.overlay.tooltip, v.overlay.imageWidth, v.overlay.imageHeight);
-			}*/
 			console.debug("added vertex " + v.value);
 		}
 		for (i=0; i< modelState.edges.length; i++) {
 			var e = modelState.edges[i];
-/*			var edge = new mxCell()
-			model.addEdge(parent, e.id, e.value, model.getCell(e.source), model.getCell(e.target));
-			* */
 			zm_createEdge(container, e);
 			console.debug("added edge " + e.value);
 		}
@@ -387,7 +363,7 @@ function zm_createVertex(container, v) {
 	 }
 	graph.addCell(vertex, parent,null,null,null);
 	if (v.overlay != null) {
-		zm_createOverlay(container, v.overlay.id, vertex, v.overlay.image, v.overlay.tooltip, v.overlay.imageWidth, v.overlay.imageHeight);
+		zm_createOverlay(container, v.overlay.id, vertex, v.overlay);
 	}
 }
 
@@ -411,7 +387,7 @@ function zm_createEdge(container, obj) {
 	var target = graph.getModel().getCell(obj.target);
 	graph.addEdge(edge, parent, source, target, null);
 	if (obj.overlay != null) {
-		zm_createOverlay(container, obj.overlay.id, edge, obj.overlay.image, obj.overlay.tooltip, obj.overlay.imageWidth, obj.overlay.imageHeight);
+		zm_createOverlay(container, obj.overlay.id, edge, obj.overlay);
 	}
 }
 
@@ -445,20 +421,39 @@ function zm_select(graph, value) {
 	graph.setSelectionCells(cells);
 }
 
+function zm_createOverlay(container, id, cell, v) {
+	var overlay = zm_overlays[id];
+	if ( overlay == null) {
+	    overlay = new mxOverlay(v.image, v.tooltip, v.bounds.width, v.bounds.height);
+		zm_overlays[id] = overlay;
+		overlay.addListener("click", function(sender, evt, cell) {
+			var ids = new Array();
+			ids.push(cell.id);
+			zm_sendCommand(container, ids, "onClickOverlay");
+		});
+		overlay.getBounds = function(state) {
+			return new mxGeometry(state.x + v.bounds.x, state.y + v.bounds.y, v.bounds.width, v.bounds.height);
+		}
+	}
+	container._graph.setOverlay(cell, overlay);
+}
+
 function zm_setOverlay(container, value) {
 	console.debug("zm_setOverlay");
 	var obj = value.parseJSON();
 	var model = graph.getModel();
 	var cell = model.getCell(obj.cell);
-	var overlay = zm_overlays[obj.id];
-	if ( overlay == null) {
+	zm_createOverlay(container, obj.id, cell, obj);
+	/*if ( overlay == null) {
 		overlay = new mxOverlay(obj.image, obj.tooltip, obj.imageWidth, obj.imageHeight);
+		console.debug(overlay.getBounds())
 		zm_overlays[obj.id] = overlay;
 		overlay.addListener("click", function(sender, evt, cell) {
   			zm_sendCommand(container, cell, "onClickOverlay");
 		});
 	}
 	graph.setOverlay(cell, overlay);
+	* */
 }
 
 function zm_removeOverlay(graph, value) {
