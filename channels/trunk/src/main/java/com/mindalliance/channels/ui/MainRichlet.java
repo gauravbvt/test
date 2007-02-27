@@ -38,11 +38,11 @@ public class MainRichlet extends GenericRichlet {
 		graph.getPanningHandler().setProperty(MxPanningHandler.IS_SELECT_ON_POPUP, false, false);
 		MxVertex node1 = graph.addVertex("Node A", 0, 0, 60, 30);
 		MxVertex node2 = graph.addVertex("Node B", 0, 0, 60, 30);
-		MxOverlay overlay = new MxOverlay("/channels/images/16x16/add2.png", "Click to create a new node", 4, 4);
+		MxOverlay overlay = new MxOverlay("/channels/images/16x16/add2.png", "Click to create a new node", 0,0,16, 16);
 		overlay.addClickListener(new OverlayClickListener() {
 			public void onClick(MxGraph graph, MxCell cell) {
 				MxVertex vertex = new MxVertex(cell.getId(), 0,0,60,30);
-				MxOverlay overlay = new MxOverlay("/channels/images/16x16/arrow_right_green.png", "Using the same listener", 4, 4);
+				MxOverlay overlay = new MxOverlay("/channels/images/16x16/arrow_right_green.png", "Using the same listener", 0,0,16, 16);
 				overlay.addClickListener(this);
 				vertex.setOverlay(overlay);
 				graph.addVertex(vertex);
