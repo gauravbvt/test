@@ -8,8 +8,9 @@ import org.zkoss.lang.Objects;
 import org.zkoss.zk.mesg.MZk;
 import org.zkoss.zk.ui.UiException;
 
+import com.mindalliance.zk.mxgraph.MxCell;
 import com.mindalliance.zk.mxgraph.MxGraph;
-import com.mindalliance.zk.mxgraph.MxVertex;
+import com.mindalliance.zk.mxgraph.MxOverlay;
 
 public class SetOverlayCommand extends AbstractCommand {
 
@@ -18,15 +19,15 @@ public class SetOverlayCommand extends AbstractCommand {
 	}
 
 	@Override
-	// data :: {cell id, name}
+	// data :: {cell id, image, tooltip, width, height}
 	protected void processRequest(MxGraph graph, String[] data) {
-//		if (data == null || data.length != 2)
-//			throw new UiException(MZk.ILLEGAL_REQUEST_WRONG_DATA,
-//				new Object[] {Objects.toString(data), this});
-//		String name = data[1];
-//		MxVertex vertex = new MxVertex(name);
-//		graph.addVertex(vertex);
-		System.out.println("blah");
+		if (data == null || data.length != 5)
+			throw new UiException(MZk.ILLEGAL_REQUEST_WRONG_DATA,
+				new Object[] {Objects.toString(data), this});
+		String name = data[1];
+		MxCell cell = graph.getModel().getCell(name);
+		MxOverlay overlay = new MxOverlay(data[1], data[2]);
+		graph.setOverlay(cell, overlay);
 	}
 
 }

@@ -17,7 +17,6 @@ public class MxModel {
 	static private Random random = new Random();
 	private Map<String,MxVertex> vertices = new HashMap<String,MxVertex>();
 	private Map<String,MxEdge> edges = new HashMap<String,MxEdge>();
-
 	/**
 	 * @return the cells
 	 */

@@ -21,14 +21,13 @@ import org.zkoss.zk.ui.event.Events;
 
 import com.mindalliance.zk.mxgraph.command.AddEdgeCommand;
 import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
+import com.mindalliance.zk.mxgraph.command.ClickOverlayCommand;
 import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SelectCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SetOverlayCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
-import com.mindalliance.zk.mxgraph.event.AddListenerEvent;
 import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
 import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
-import com.mindalliance.zk.mxgraph.event.OverlayClickListener;
 import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
 import com.mindalliance.zk.mxgraph.event.SetOverlayEvent;
 import com.mindalliance.zk.mxgraph.event.VertexAddedEvent;
@@ -43,6 +42,7 @@ public class MxGraph extends HtmlBasedComponent {
 		new AddVertexCommand(MxConstants.COMMAND_ADD_VERTEX, Command.IGNORE_OLD_EQUIV);
 		new AddEdgeCommand(MxConstants.COMMAND_ADD_EDGE, Command.IGNORE_OLD_EQUIV);
 		new SetOverlayCommand(MxConstants.COMMAND_SET_OVERLAY, Command.IGNORE_OLD_EQUIV);
+		new ClickOverlayCommand(MxConstants.COMMAND_CLICK_OVERLAY, Command.IGNORE_OLD_EQUIV);
 	}
 
 	
@@ -77,7 +77,7 @@ public class MxGraph extends HtmlBasedComponent {
 	// Specifies if the parent cell should be resized if a child cell is being resized so that it overlaps the parent bounds.
 	static public final String IS_EXTEND_PARENT_ON_RESIZE = "isExtendParentOnResize"; // true
 	// Specifies if the siblings below a cell should be shifted downwards if a cell is being resized.
-	static public final String IS_SHIT_DOWNWARDS = "isShiftDownwards"; // false
+	static public final String IS_SHIFT_DOWNWARDS = "isShiftDownwards"; // false
 	// Specifies if the siblings to the right of a cell should be shifted rightwards if a cell is being resized.
 	static public final String IS_SHIFT_RIGHTWARDS = "isShiftRightwards"; // false
 	// Specifies if the cell's size should change to the cell's preferred size on the first collapse.
@@ -212,6 +212,13 @@ public class MxGraph extends HtmlBasedComponent {
 														cell.getId()));
 	}
 	
+	public void removeOverlay(MxCell cell) {
+		model.removeOverlay(cell);
+		smartUpdate("z:removeOverlay", cell.getId());		
+		Events.postEvent(new SetOverlayEvent(MxConstants.COMMAND_REMOVE_OVERLAY, this, 
+				cell.getId()));
+	}
+	
 	public void setProperty(String name, Object value, boolean update) {
 		properties.put(name, value);
 		if (update) smartUpdate("z:setProperty", name + ":" + MxGraph.encode(value));
@@ -276,22 +283,4 @@ public class MxGraph extends HtmlBasedComponent {
 		return panningHandler;
 	}
 	
-	public void addOverlayClickListener(MxOverlay overlay, OverlayClickListener listener) {
-		String id = MxConstants.EVENT_CLICK_OVERLAY + overlay.getId();
-		JSONObject obj = new JSONObject();
-		obj.put("event", MxConstants.EVENT_CLICK_OVERLAY);
-		obj.put("id", overlay.getId());
-		this.addEventListener(id, listener);
-		smartUpdate("z:addListener", obj.toString());
-		Events.postEvent(new AddListenerEvent(MxConstants.EVENT_CLICK_OVERLAY, this, 
-				id));
-	}
-	
-	public void removeOverlayClickListener(MxOverlay overlay, OverlayClickListener listener) {
-
-		String id = MxConstants.EVENT_CLICK_OVERLAY + overlay.getId();
-		this.removeEventListener(id, listener);
-		smartUpdate("z:removeOverlayClickListener", id);
-		
-	}
 }

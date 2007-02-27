@@ -3,10 +3,10 @@
  */
 package com.mindalliance.zk.mxgraph;
 
-import org.zkoss.zk.ui.UiException;
-import org.zkoss.zk.ui.event.Event;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.mindalliance.zk.mxgraph.event.OverlayClickEvent;
+import com.mindalliance.zk.mxgraph.event.OverlayClickListener;
 
 /**
  * @author dfeeney
@@ -18,7 +18,10 @@ public class MxOverlay {
 	private String tooltip;
 	private int imageWidth;
 	private int imageHeight;
+	private List<OverlayClickListener> clickListeners = new ArrayList<OverlayClickListener>();
 	
+
+
 	public MxOverlay(String imageUrl, String tooltip) {
 		this(imageUrl, tooltip, 16,16);
 		
@@ -62,12 +65,24 @@ public class MxOverlay {
 	public void setImageWidth(int imageWidth) {
 		this.imageWidth = imageWidth;
 	}
-	
+
 	/**
 	 * @return the id
 	 */
 	public String getId() {
 		return id;
+	}
+	
+	public void addClickListener(OverlayClickListener listener) {
+		clickListeners.add(listener);
+	}
+	
+	public List<OverlayClickListener> getClickListeners() {
+		return clickListeners;
+	}
+
+	public void setClickListeners(List<OverlayClickListener> clickListeners) {
+		this.clickListeners = clickListeners;
 	}
 	
 }
