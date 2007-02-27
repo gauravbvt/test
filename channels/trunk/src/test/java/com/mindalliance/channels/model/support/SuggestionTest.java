@@ -8,30 +8,23 @@ import static org.junit.Assert.assertSame;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.context.SecurityContextImpl;
 import org.acegisecurity.providers.AuthenticationProvider;
 import org.acegisecurity.providers.ProviderManager;
-import org.acegisecurity.providers.TestingAuthenticationProvider;
-import org.acegisecurity.providers.TestingAuthenticationToken;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.dao.DaoAuthenticationProvider;
-import org.acegisecurity.userdetails.UserDetailsService;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mindalliance.channels.impl.UserImpl;
-import com.mindalliance.channels.impl.UserManager;
 import com.mindalliance.channels.model.TestModelObject;
+import com.mindalliance.channels.system.SystemImpl;
+import com.mindalliance.channels.system.UserExistsException;
+import com.mindalliance.channels.system.UserImpl;
 
 /**
  * Test suite for Suggestions.
@@ -44,40 +37,39 @@ public class SuggestionTest {
     private static final String TEST_VALUE = "test value";
     private Suggestion<String> suggestion;
     private PropertyDescriptor property;
-    
+
     private UserImpl user1;
     private UserImpl user2;
-    private UserManager userDetails;
-
+    
+    private SystemImpl system;
+    
     /**
      * Setup before each test.
      * @throws IntrospectionException never...
      */
     @Before
-    public void setUp() throws IntrospectionException {
+    public void setUp() throws IntrospectionException, UserExistsException {
 
-        this.user1 = new UserImpl( "joe", "bla", new GrantedAuthority[]{
-            new GrantedAuthorityImpl( "ROLE_USER" ),
-        } );
-        this.user2 = new UserImpl( "bob", "blabla", new GrantedAuthority[]{
-            new GrantedAuthorityImpl( "ROLE_USER" ),
-        } );
-        this.userDetails = new UserManager();
-        this.userDetails.addUser( this.user1 );
-        userDetails.addUser( this.user2 );
+        this.user1 = new UserImpl( 
+                "joe", "bla", new String[]{ "ROLE_USER" } );
+        this.user2 = new UserImpl( 
+                "bob", "blabla", new String[]{ "ROLE_USER" } );
+
+        this.system = new SystemImpl();
+        this.system.addUser( user1 );
+        this.system.addUser( user2 );
 
         login( "bob", "blabla" );
 
         this.property = new PropertyDescriptor( "name", TestModelObject.class );
-        this.suggestion = new Suggestion<String>( this.property, TEST_VALUE );
-
+        this.suggestion = new Suggestion<String>( this.property, TEST_VALUE );        
     }
 
     private void login( String user, String password ) {
 
         DaoAuthenticationProvider daoAuthenticationProvider =
             new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService( this.userDetails );
+        daoAuthenticationProvider.setUserDetailsService( this.system );
 
         ProviderManager providerManager = new ProviderManager();
         providerManager.setProviders(

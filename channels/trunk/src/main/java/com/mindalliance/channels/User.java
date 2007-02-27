@@ -3,6 +3,8 @@
 
 package com.mindalliance.channels;
 
+import org.acegisecurity.userdetails.UserDetails;
+
 /**
  * A user of the system.
  *
@@ -12,7 +14,7 @@ package com.mindalliance.channels;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public interface User {
+public interface User extends UserDetails {
 
     /**
      * Return the display name of a user.
@@ -20,8 +22,8 @@ public interface User {
     String getName();
 
     /**
-     * Test if a user is a member of a given group.
-     * @param group the group
+     * Return the short login name of the user.
      */
-    boolean isMemberOf( Group group );
+    String getUsername();
+
 }

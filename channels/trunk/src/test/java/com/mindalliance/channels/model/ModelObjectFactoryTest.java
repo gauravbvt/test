@@ -4,9 +4,9 @@
 
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GUIDFactory;
-import com.mindalliance.channels.impl.GUIDFactoryImpl;
 import com.mindalliance.channels.model.ModelObjectFactory;
+import com.mindalliance.channels.util.GUIDFactory;
+import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 import junit.framework.TestCase;
 

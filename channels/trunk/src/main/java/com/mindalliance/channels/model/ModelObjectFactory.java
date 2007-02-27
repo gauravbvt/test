@@ -6,8 +6,8 @@ package com.mindalliance.channels.model;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import com.mindalliance.channels.GUID;
-import com.mindalliance.channels.GUIDFactory;
+import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.util.GUIDFactory;
 
 /**
  * A creator of model objects.

@@ -6,7 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A possible and significant consequence of a successful or failed task.

@@ -1,10 +1,10 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.impl;
+package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.GUID;
-import com.mindalliance.channels.impl.GUIDFactoryImpl;
+import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 import junit.framework.TestCase;
 

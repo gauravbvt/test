@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A partial or complete match between an information need and

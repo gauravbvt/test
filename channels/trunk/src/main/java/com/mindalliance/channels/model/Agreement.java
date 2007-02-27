@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * An agreement between two organizations to fulfill specified

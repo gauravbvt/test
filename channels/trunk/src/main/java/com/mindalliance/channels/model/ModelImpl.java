@@ -3,15 +3,17 @@
 
 package com.mindalliance.channels.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.Model;
-import com.mindalliance.channels.impl.AbstractJavaBean;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * The information sharing knowledge that is captured and derived
@@ -23,6 +25,7 @@ import com.mindalliance.channels.impl.AbstractJavaBean;
 public class ModelImpl extends AbstractJavaBean implements Model {
 
     private String name;
+    private List<String> objectives = new ArrayList<String>();
     private SortedSet<Domain> domains = new TreeSet<Domain>();
     private SortedSet<Mission> missions = new TreeSet<Mission>();
     private SortedSet<Organization> organizations = new TreeSet<Organization>();
@@ -191,6 +194,21 @@ public class ModelImpl extends AbstractJavaBean implements Model {
      */
     public void setResources( SortedSet<Resource> resources ) {
         this.resources = resources;
+    }
+
+    /**
+     * Return the value of objectives.
+     */
+    public List<String> getObjectives() {
+        return this.objectives;
+    }
+
+    /**
+     * Set the value of objectives.
+     * @param objectives The new value of objectives
+     */
+    public void setObjectives( List<String> objectives ) {
+        this.objectives = objectives;
     }
 
     //--------------------------------

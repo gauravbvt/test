@@ -5,7 +5,7 @@ package com.mindalliance.channels.model;
 
 import java.beans.PropertyVetoException;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * An object that has a unique name for all instances of the class.

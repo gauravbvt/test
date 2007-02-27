@@ -6,7 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * What an agent is expected to do in response to events in order

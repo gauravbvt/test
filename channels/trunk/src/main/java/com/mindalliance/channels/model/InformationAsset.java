@@ -6,7 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * The format in which some information is held in custody

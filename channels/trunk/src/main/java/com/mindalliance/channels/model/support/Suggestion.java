@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import org.acegisecurity.context.SecurityContextHolder;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.impl.AbstractJavaBean;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 import static com.mindalliance.channels.model.support.Suggestion.Vote.*;
 

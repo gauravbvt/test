@@ -5,10 +5,10 @@ package com.mindalliance.channels.model;
 
 import java.util.Set;
 
-import com.mindalliance.channels.GUID;
 import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.impl.AbstractJavaBean;
 import com.mindalliance.channels.model.support.SuggestionManager;
+import com.mindalliance.channels.util.AbstractJavaBean;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * <p>An object in the model.</p>

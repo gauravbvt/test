@@ -1,7 +1,7 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.impl;
+package com.mindalliance.channels.util;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -22,7 +22,7 @@ import com.mindalliance.channels.JavaBean;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public class AbstractJavaBean implements JavaBean {
+public abstract class AbstractJavaBean implements JavaBean {
 
     private transient PropertyChangeSupport pcs;
     private transient VetoableChangeSupport vcs;
@@ -54,18 +54,22 @@ public class AbstractJavaBean implements JavaBean {
     }
 
     /**
-     * Get a property descriptor from a setter name.
+     * Get a property descriptor from a getter or setter name.
      * For example "setX" would return property x.
-     * @param setter the setter name string
+     * @param accessor the setter name string
      * @return a property
      */
-    protected PropertyDescriptor getPropertyDescriptor( String setter ) {
+    protected PropertyDescriptor getPropertyDescriptor( String accessor ) {
 
         PropertyDescriptor[] pd = getBeanInfo().getPropertyDescriptors();
 
         for ( PropertyDescriptor p : pd ) {
             Method writeMethod = p.getWriteMethod();
-            if ( writeMethod != null && setter.equals( writeMethod.getName() ) )
+            Method readMethod = p.getReadMethod();
+            if ( writeMethod != null
+                            && accessor.equals( writeMethod.getName() )
+                    || readMethod != null
+                            && accessor.equals( readMethod.getName() ) )
                 return p;
         }
 
@@ -134,7 +138,7 @@ public class AbstractJavaBean implements JavaBean {
     /**
      * Return the current listeners to all property change events.
      */
-    protected PropertyChangeListener[] getPropertyChangeListeners() {
+    public PropertyChangeListener[] getPropertyChangeListeners() {
         return getPcs().getPropertyChangeListeners();
     }
 
@@ -142,7 +146,7 @@ public class AbstractJavaBean implements JavaBean {
      * Return the current listeners to a single property.
      * @param propertyName the property name
      */
-    protected PropertyChangeListener[] getPropertyChangeListeners(
+    public PropertyChangeListener[] getPropertyChangeListeners(
             String propertyName ) {
 
         return getPcs().getPropertyChangeListeners( propertyName );
@@ -178,7 +182,7 @@ public class AbstractJavaBean implements JavaBean {
      * @param propertyName the property. If null, test if there are listeners
      * to all properties.
      */
-    protected boolean hasPropertyListeners( String propertyName ) {
+    public boolean hasPropertyListeners( String propertyName ) {
         return this.pcs != null && this.pcs.hasListeners( propertyName );
     }
 
@@ -224,7 +228,7 @@ public class AbstractJavaBean implements JavaBean {
     /**
      * Return currently registered listeners to all properties.
      */
-    protected VetoableChangeListener[] getVetoableChangeListeners() {
+    public VetoableChangeListener[] getVetoableChangeListeners() {
         return getVcs().getVetoableChangeListeners();
     }
 
@@ -232,7 +236,7 @@ public class AbstractJavaBean implements JavaBean {
      * Return currently registered listeners to a given property.
      * @param propertyName the property.
      */
-    protected VetoableChangeListener[] getVetoableChangeListeners(
+    public VetoableChangeListener[] getVetoableChangeListeners(
             String propertyName ) {
 
         return getVcs().getVetoableChangeListeners( propertyName );
@@ -266,7 +270,7 @@ public class AbstractJavaBean implements JavaBean {
      * @param propertyName the property. If null, test is there are listeners
      * to all properties.
      */
-    protected boolean hasVetoableListeners( String propertyName ) {
+    public boolean hasVetoableListeners( String propertyName ) {
         return this.vcs != null && this.vcs.hasListeners( propertyName );
     }
 }

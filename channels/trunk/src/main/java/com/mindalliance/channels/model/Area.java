@@ -6,7 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A location of some type that may within and next to other locations.

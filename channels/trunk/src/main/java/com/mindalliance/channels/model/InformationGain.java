@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * The acquisition at some point in time of new information then held

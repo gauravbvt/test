@@ -2,7 +2,7 @@
 // All rights reserved.
 
 
-package com.mindalliance.channels.impl;
+package com.mindalliance.channels.util;
 
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyVetoException;
@@ -82,9 +82,9 @@ public aspect JavaBeans {
         try {
             proceed( b );
 
-            // Find setter... a little crude...
+            // Find getter... a little crude...
             String name = thisJoinPointStaticPart.getSignature().getName();
-            name = "set" 
+            name = "get" 
                     + name.substring( name.startsWith( "add" ) ? 3 : 6 ) 
                     + "s";
             PropertyDescriptor pd = b.getPropertyDescriptor( name );

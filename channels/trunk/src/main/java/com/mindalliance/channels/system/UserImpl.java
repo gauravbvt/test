@@ -1,20 +1,17 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.impl;
+package com.mindalliance.channels.system;
 
 import java.beans.PropertyVetoException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
 import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.userdetails.UserDetails;
 
-import com.mindalliance.channels.Group;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A user of the system.
@@ -33,17 +30,13 @@ public class UserImpl extends AbstractJavaBean
 
     private String username;
     private String password;
-    private boolean enabled = true;
-    private boolean accountNonExpired = true;
-    private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
-
-    private String[] grantedAuthorities;
-    private transient GrantedAuthority[] authorities;
 
     private String name;
     private String email;
-    private Set<Group> groups = new HashSet<Group>();
+
+    private boolean enabled = true;
+    private String[] grantedAuthorities;
+    private transient GrantedAuthority[] authorities;
 
     /**
      * Default bean constructor.
@@ -61,22 +54,12 @@ public class UserImpl extends AbstractJavaBean
      */
     public UserImpl(
             String username, String password,
-            GrantedAuthority[] authorities ) {
+            String[] authorities ) {
 
         this();
         this.username = username;
-        this.authorities = authorities;
         this.password = password;
-    }
-
-    /**
-     * Test if this user is a member of a group.
-     * @param group the group
-     * @see User#isMemberOf(Group)
-     */
-    public boolean isMemberOf( Group group ) {
-        // TODO Add public group?
-        return this.groups.contains( group );
+        setGrantedAuthorities( authorities );
     }
 
     /**
@@ -90,43 +73,9 @@ public class UserImpl extends AbstractJavaBean
      * Set the value of email.
      * @param email The new value of email
      */
-    @Secured( { "ROLE_ADMIN","ROLE_SELF" } )
+    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
     public void setEmail( String email ) {
         this.email = email;
-    }
-
-    /**
-     * Return the value of groups.
-     */
-    public final Set<Group> getGroups() {
-        return Collections.unmodifiableSet( this.groups );
-    }
-
-    /**
-     * Set the value of groups.
-     * @param groups The new value of groups
-     */
-    @Secured( { "ROLE_ADMIN" } )
-    public void setGroups( Set<Group> groups ) {
-        this.groups = groups;
-    }
-
-    /**
-     * Remove a group from the user's list.
-     * @param group the group
-     */
-    @Secured( { "ROLE_ADMIN" } )
-    public void removeGroup( Group group ) {
-        this.groups.remove( group );
-    }
-
-    /**
-     * Add a group to the user's list.
-     * @param group the group
-     */
-    @Secured( { "ROLE_ADMIN" } )
-    public void addGroup( Group group ) {
-        this.groups.add( group );
     }
 
     /**
@@ -140,52 +89,45 @@ public class UserImpl extends AbstractJavaBean
      * Set the full name of the user.
      * @param name The new value of name
      */
-    @Secured( { "ROLE_ADMIN","ROLE_SELF" } )
+    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
     public void setName( String name ) {
         this.name = name;
     }
 
     /**
      * Return the value of accountNonDisabled.
+     * @return always true
      */
     public boolean isAccountNonDisabled() {
         return isEnabled();
     }
 
     /**
-     * Return the value of accountNonLocked.
+     * Return the value of accountNonExpired.
      */
-    public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
     /**
-     * Set the value of accountNonLocked.
-     * @param accountNonLocked The new value of accountNonLocked
+     * Return the value of accountNonLocked.
+     * @return always true
      */
-    @Secured( { "ROLE_ADMIN" } )
-    public void setAccountNonLocked( boolean accountNonLocked ) {
-        this.accountNonLocked = accountNonLocked;
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
     /**
      * Return the value of credentialsNonExpired.
+     * @return always true
      */
     public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
-    }
-
-    /**
-     * Set the value of credentialsNonExpired.
-     * @param credentialsNonExpired The new value of credentialsNonExpired
-     */
-    @Secured( { "ROLE_ADMIN" } )
-    public void setCredentialsNonExpired( boolean credentialsNonExpired ) {
-        this.credentialsNonExpired = credentialsNonExpired;
+        return true;
     }
 
     /**
      * Return the value of enabled.
+     * @return true by default, may be changed by administrators
      */
     public boolean isEnabled() {
         return this.enabled;
@@ -211,7 +153,7 @@ public class UserImpl extends AbstractJavaBean
      * Set the value of password.
      * @param password The new value of password
      */
-    @Secured( { "ROLE_ADMIN", "ROLE_SELF" } )
+    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
     public void setPassword( String password ) {
         this.password = password;
     }
@@ -228,25 +170,9 @@ public class UserImpl extends AbstractJavaBean
      * @param username the username
      * @throws PropertyVetoException if user manager objects
      */
-    @Secured( { "ROLE_ADMIN" } )
+    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
     public void setUsername( String username ) throws PropertyVetoException {
         this.username = username;
-    }
-
-    /**
-     * Return the value of accountNonExpired.
-     */
-    public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
-    }
-
-    /**
-     * Set the value of accountNonExpired.
-     * @param accountNonExpired The new value of accountNonExpired
-     */
-    @Secured( { "ROLE_ADMIN" } )
-    public void setAccountNonExpired( boolean accountNonExpired ) {
-        this.accountNonExpired = accountNonExpired;
     }
 
     /**
@@ -271,28 +197,6 @@ public class UserImpl extends AbstractJavaBean
      */
     public int compareTo( UserImpl o ) {
         return getUsername().compareToIgnoreCase( o.getUsername() );
-    }
-
-    /**
-     * Return true if this is equal to another object.
-     * Tests if usernames are the same.
-     * @param obj the object to compare to
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals( Object obj ) {
-        return obj != null
-            && obj.getClass() == this.getClass()
-            && getUsername().equals( ( (UserImpl) obj ).getUsername() );
-    }
-
-    /**
-     * Return a unique code to use in hashes and maps.
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return getUsername().hashCode();
     }
 
     /**

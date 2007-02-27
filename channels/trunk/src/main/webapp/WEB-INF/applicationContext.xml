@@ -8,19 +8,58 @@
 	<bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
 
 	<!-- Core beans -->	
-	<bean id="guidFactory" class="com.mindalliance.channels.impl.GUIDFactoryImpl">
+	<bean id="guidFactory" class="com.mindalliance.channels.util.GUIDFactoryImpl">
 		<constructor-arg value="${agencyAcronym}"/>
 	</bean>
 	
-	<bean id="mof" class="com.mindalliance.channels.model.ModelObjectFactory">
-		<property name="guidFactory" ref="guidFactory"/>
+	<bean id="user" class="com.mindalliance.channels.system.UserImpl">
+		<property name="username" value="user"/>
+		<property name="password" value="user"/>
+		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
+		<property name="name" value="Regular User"/>
+		<property name="email" value="user@example.com"/>
 	</bean>
-	
-	<bean id="model" class="com.mindalliance.channels.model.ModelImpl">
+	<bean id="manager" class="com.mindalliance.channels.system.UserImpl">
+		<property name="username" value="manager"/>
+		<property name="password" value="manager"/>
+		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
+		<property name="name" value="Manager User"/>
+		<property name="email" value="manager@example.com"/>
 	</bean>
-	
-	<bean id="queries" class="com.mindalliance.channels.queries.OGNLQueryEngine">
-		<property name="model" ref="model"/>
+			
+			
+	<bean id="system" class="com.mindalliance.channels.system.SystemImpl">
+		<property name="users"><set>
+			<ref bean="user"/>		
+			<ref bean="manager"/>		
+			<bean class="com.mindalliance.channels.system.UserImpl">
+				<property name="username" value="guest"/>
+				<property name="password" value="guest"/>
+				<property name="grantedAuthorities"><value>ROLE_USER</value></property>
+				<property name="name" value="Guest User"/>
+				<property name="email" value="guest@example.com"/>
+			</bean>
+		</set></property>
+		<property name="administrators"><set>
+			<bean class="com.mindalliance.channels.system.UserImpl">
+				<property name="username" value="admin"/>
+				<property name="password" value="admin"/>
+				<property name="grantedAuthorities"><value>ROLE_USER, ROLE_ADMIN</value></property>
+				<property name="name" value="Administrator"/>
+				<property name="email" value="admin@example.com"/>
+			</bean>
+		</set></property>
+		<property name="projects"><set>
+			<bean class="com.mindalliance.channels.system.ProjectImpl">
+				<property name="name" value="Test Project"/>
+				<property name="participants"><set>
+					<ref bean="user"/>
+					</set></property>
+				<property name="managers"><set>
+					<ref bean="manager"/>
+					</set></property>
+			</bean>
+		</set></property>
+		
 	</bean>
-	
 </beans>

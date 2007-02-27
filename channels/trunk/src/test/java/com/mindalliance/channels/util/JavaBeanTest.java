@@ -1,10 +1,12 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.impl;
+package com.mindalliance.channels.util;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
+
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 import junit.framework.TestCase;
 

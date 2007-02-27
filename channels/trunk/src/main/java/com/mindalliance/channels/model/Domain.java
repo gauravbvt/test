@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GUID;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A domain or sub-domain of human endeavor.

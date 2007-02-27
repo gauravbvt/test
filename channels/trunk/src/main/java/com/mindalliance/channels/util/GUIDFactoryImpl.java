@@ -1,12 +1,9 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.impl;
+package com.mindalliance.channels.util;
 
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.mindalliance.channels.GUID;
-import com.mindalliance.channels.GUIDFactory;
 
 /**
  * A simple creator of globally unique IDs.

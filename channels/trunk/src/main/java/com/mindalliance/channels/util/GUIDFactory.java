@@ -1,7 +1,7 @@
 // Copyright (C) 2006 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels;
+package com.mindalliance.channels.util;
 
 /**
  * A creator of GUIDs.
