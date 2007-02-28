@@ -18,7 +18,6 @@ import com.mindalliance.zk.mxgraph.MxOverlay;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
 import com.mindalliance.zk.mxgraph.MxStyleSheet;
 import com.mindalliance.zk.mxgraph.MxVertex;
-import com.mindalliance.zk.mxgraph.command.ClickOverlayCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
 import com.mindalliance.zk.mxgraph.event.OverlayClickListener;
 
