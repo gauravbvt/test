@@ -5,8 +5,6 @@ package com.mindalliance.zk.mxgraph.command;
 
 import com.mindalliance.zk.mxgraph.MxCell;
 import com.mindalliance.zk.mxgraph.MxGraph;
-import com.mindalliance.zk.mxgraph.MxOverlay;
-import com.mindalliance.zk.mxgraph.event.OverlayClickListener;
 
 /**
  * @author dfeeney
@@ -28,12 +26,8 @@ public class ClickOverlayCommand extends AbstractCommand {
 	@Override
 	protected void processRequest(MxGraph graph, String[] data) {
 		String cellName = data[0];
+		String overlayID = data[1];
 		MxCell cell = graph.getModel().getCell(cellName);
-		MxOverlay ol = cell.getOverlay();
-		if (ol != null) {
-			for (OverlayClickListener ocl : ol.getClickListeners()) {
-				ocl.onClick(graph, cell);
-			}
-		}
+		cell.clickOverlay(overlayID, graph);
 	}
 }

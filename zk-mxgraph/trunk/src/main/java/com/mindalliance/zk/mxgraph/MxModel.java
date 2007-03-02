@@ -86,16 +86,20 @@ public class MxModel {
 		return removed;
 	}
 
-	public void setOverlay(MxCell cell, MxOverlay overlay) {
-		cell.setOverlay(overlay);
+	public void addOverlay(MxCell cell, MxOverlay overlay) {
+		cell.addOverlay(overlay);
 	}
 	
-	public MxOverlay getOverlay(MxCell cell) {
-		return cell.getOverlay();
+	public Collection<MxOverlay> getOverlays(MxCell cell) {
+		return cell.getOverlays();
 	}
 	
-	public void removeOverlay(MxCell cell) {
-		cell.setOverlay(null);
+	public void removeOverlay(MxCell cell, MxOverlay overlay) {
+		cell.removeOverlay(overlay.getId());
+	}
+	
+	public void clearOverlays(MxCell cell) {
+		cell.clearOverlays();
 	}
 	
 	/**

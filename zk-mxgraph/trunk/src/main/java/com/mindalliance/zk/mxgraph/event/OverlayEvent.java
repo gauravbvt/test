@@ -11,13 +11,15 @@ import org.zkoss.zk.ui.event.Event;
  * @author jf
  *
  */
-public class SetOverlayEvent extends Event {
+public class OverlayEvent extends Event {
 	
 	private String cellId;
+	private String overlayId;
 
-	public SetOverlayEvent(String name, Component target, String cellId) {
+	public OverlayEvent(String name, Component target, String cellId, String overlayId) {
 		super(name, target);
 		this.cellId = cellId;
+		this.overlayId = overlayId;
 	}
 
 	/**
@@ -27,4 +29,8 @@ public class SetOverlayEvent extends Event {
 		return cellId;
 	}
 
+	public String getOverlayId() {
+		return overlayId;
+	}
+	
 }

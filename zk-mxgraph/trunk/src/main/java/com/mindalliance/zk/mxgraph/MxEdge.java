@@ -14,13 +14,13 @@ public class MxEdge extends MxCell {
 		this.setVertex(false);
 	}
 	
-public MxEdge(String value, String source, String target) {
+	public MxEdge(String value, String source, String target) {
 		this(value);
 		this.source = source;
 		this.target = target;
 	}
 
-/**
+	/**
 	 * @return the source
 	 */
 	public String getSource() {

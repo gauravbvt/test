@@ -5,7 +5,10 @@
 package com.mindalliance.zk.mxgraph;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MxCell {
 	
@@ -16,7 +19,7 @@ public class MxCell {
 	private String parent;
 	private boolean vertex;
 	private List<String> children = new ArrayList<String>();
-	private MxOverlay overlay = null;
+	private Map<String, MxOverlay> overlays = new HashMap<String, MxOverlay>();
 	
 	public MxCell(String value) {
 		id = MxModel.makeUid();
@@ -122,16 +125,33 @@ public class MxCell {
 	public String getId() {
 		return id;
 	}
-
-
-	public MxOverlay getOverlay() {
-		return overlay;
+	
+	public MxOverlay getOverlay(String id) {
+		return overlays.get(id);
 	}
 
-
-	public void setOverlay(MxOverlay overlay) {
-		this.overlay = overlay;
+	public void setOverlays(Collection<MxOverlay> overlays) {
+		for (MxOverlay overlay: overlays) {
+			this.overlays.put(overlay.getId(), overlay);
+		}
 	}
 
-
+	public void addOverlay(MxOverlay overlay) {
+		overlays.put(overlay.getId(), overlay);
+	}
+	
+	public void removeOverlay(String id) {
+		overlays.remove(id);
+	}
+	
+	public void clickOverlay(String overlayID, MxGraph graph) {
+		getOverlay(overlayID).click(graph, this);
+	}
+	public void clearOverlays() {
+		overlays.clear();
+	}
+	
+	public Collection<MxOverlay> getOverlays() {
+		return overlays.values();
+	}
 }

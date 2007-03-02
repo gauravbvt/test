@@ -24,12 +24,12 @@ import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
 import com.mindalliance.zk.mxgraph.command.ClickOverlayCommand;
 import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SelectCellsCommand;
-import com.mindalliance.zk.mxgraph.command.SetOverlayCommand;
+import com.mindalliance.zk.mxgraph.command.AddOverlayCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
 import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
 import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
 import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
-import com.mindalliance.zk.mxgraph.event.SetOverlayEvent;
+import com.mindalliance.zk.mxgraph.event.OverlayEvent;
 import com.mindalliance.zk.mxgraph.event.VertexAddedEvent;
 
 @SuppressWarnings("serial")
@@ -41,7 +41,7 @@ public class MxGraph extends HtmlBasedComponent {
 		new DeleteCellsCommand(MxConstants.COMMAND_DELETE, Command.IGNORE_OLD_EQUIV);
 		new AddVertexCommand(MxConstants.COMMAND_ADD_VERTEX, Command.IGNORE_OLD_EQUIV);
 		new AddEdgeCommand(MxConstants.COMMAND_ADD_EDGE, Command.IGNORE_OLD_EQUIV);
-		new SetOverlayCommand(MxConstants.COMMAND_SET_OVERLAY, Command.IGNORE_OLD_EQUIV);
+		new AddOverlayCommand(MxConstants.COMMAND_ADD_OVERLAY, Command.IGNORE_OLD_EQUIV);
 		new ClickOverlayCommand(MxConstants.COMMAND_CLICK_OVERLAY, Command.IGNORE_OLD_EQUIV);
 	}
 
@@ -203,20 +203,32 @@ public class MxGraph extends HtmlBasedComponent {
 		if (requiresUpdate) smartUpdate("z:addMenu", MxGraph.encode(menu));
 	}
 	
-	public void setOverlay(MxCell cell, MxOverlay overlay) {
-		model.setOverlay(cell, overlay);
+	public void addOverlay(MxCell cell, MxOverlay overlay) {
+		model.addOverlay(cell, overlay);
 		JSONObject obj = JSONObject.fromObject(overlay);
 		obj.put("cell", cell.getId());
-		smartUpdate("z:setOverlay", obj.toString());
-		Events.postEvent(new SetOverlayEvent(MxConstants.COMMAND_SET_OVERLAY, this, 
-														cell.getId()));
+		smartUpdate("z:addOverlay", obj.toString());
+		Events.postEvent(new OverlayEvent(MxConstants.COMMAND_ADD_OVERLAY, this, 
+														cell.getId(), overlay.getId()));
 	}
 	
-	public void removeOverlay(MxCell cell) {
-		model.removeOverlay(cell);
-		smartUpdate("z:removeOverlay", cell.getId());		
-		Events.postEvent(new SetOverlayEvent(MxConstants.COMMAND_REMOVE_OVERLAY, this, 
-				cell.getId()));
+	public void removeOverlay(MxCell cell, MxOverlay overlay) {
+		model.removeOverlay(cell, overlay);
+		JSONObject obj = new JSONObject();
+		obj.put("cell", cell.getId());
+		obj.put("overlay", overlay.getId());
+		smartUpdate("z:removeOverlay", obj.toString());		
+		Events.postEvent(new OverlayEvent(MxConstants.COMMAND_REMOVE_OVERLAY, this, 
+				cell.getId(), overlay.getId()));
+	}
+	
+	public void clearOverlays(MxCell cell) {
+		model.clearOverlays(cell);
+		JSONObject obj = new JSONObject();
+		obj.put("cell", cell.getId());
+		smartUpdate("z:clearOverlays", cell.getId());		
+		Events.postEvent(new OverlayEvent(MxConstants.COMMAND_CLEAR_OVERLAYS, this, 
+				cell.getId(), ""));
 	}
 	
 	public void setProperty(String name, Object value, boolean update) {

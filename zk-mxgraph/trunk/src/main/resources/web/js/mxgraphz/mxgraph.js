@@ -78,6 +78,7 @@ zkMxGraph.setAttr = function (container, command, val) {
     		return true;
     	case "z:setPanning":
     		zm_setPanning(container._graph, val);
+    		return true;
 		case "z:addVertex":
 			zm_addVertex(container, val);
 			return true;
@@ -86,17 +87,21 @@ zkMxGraph.setAttr = function (container, command, val) {
 			return true;
 		case "z:removeCells":
 			zm_removeCells(container._graph, val);
+			return true;
 		case "z:addMenu":
 			zm_addMenu(container, val);
 			return true;
 		case "z:select":
 			zm_select(container._graph, val);
 			return true;
-        case "z:setOverlay":
+        case "z:addOverlay":
         	zm_setOverlay(container, val);
         	return true;
 		case "z:removeOverlay":
 			zm_removeOverlay(container._graph, val);
+			return true;
+		case "z:clearOverlays":
+			zm_clearOverlays(container, val);
 			return true;
 		default:
 			console.error("Invalid command " + command + " " + val);
@@ -145,7 +150,7 @@ function zm_initLayout(graph, layoutState) {
 		var layout;
 		switch (layoutState.type) {
 			case "FlowLayout":
-				layout = new FlowLayout(graph);
+				layout = new mxFlowLayout(graph);
 				layout.vertical = layoutState.vertical;
 				layout.spacing = (layoutState.spacing == -1 ? null : layoutState.spacing);
 				layout.x0 = (layoutState.x0 == -1 ? null : layoutState.x0);
@@ -181,6 +186,12 @@ function zm_initStyleSheet(graph, styleSheetState) {
 		zm_initStyle(style, cellStyles[styleName]);
 		graph.stylesheet.putCellStyle(styleName, style);
 	}
+	
+	var style = new Array(); 
+
+	style[mxConstants.STYLE_FONTSIZE] = "0"; 
+	style[mxConstants.STYLE_OPACITY] = "0";
+	graph.stylesheet.putCellStyle('overlay', style);
 }
 
 function zm_initStyle(style, styleState) {
@@ -229,13 +240,13 @@ function zm_initModel(container, modelState) {
 	// Adds cells to the model in a single step
 	model.beginUpdate();
 	try {
-		for (i=0; i< modelState.vertices.length; i++) {
-			var v = modelState.vertices[i];
-			zm_createVertex(container, v);
-			console.debug("added vertex " + v.value);
+		for (inx=0; inx< modelState.vertices.length; inx++) {
+			//var v = modelState.vertices[inx];
+			zm_createVertex(container, modelState.vertices[inx]);
+			console.debug("added vertex " + modelState.vertices[inx].value);
 		}
-		for (i=0; i< modelState.edges.length; i++) {
-			var e = modelState.edges[i];
+		for (jnx=0; jnx< modelState.edges.length; jnx++) {
+			var e = modelState.edges[jnx];
 			zm_createEdge(container, e);
 			console.debug("added edge " + e.value);
 		}
@@ -360,11 +371,12 @@ function zm_createVertex(container, v) {
 	var parent;
 	if (v.parent != null) {
 	 	parent = graph.getModel().getCell(v.parentId);
-	 }
+	} 
 	graph.addCell(vertex, parent,null,null,null);
-	if (v.overlay != null) {
-		zm_createOverlay(container, v.overlay.id, vertex, v.overlay);
+	for (i = 0 ; i < v.overlays.length ; i++) {
+		zm_createOverlay(container, v.overlays[i].id, vertex, v.overlays[i]);
 	}
+	
 }
 
 // value is json-ed MxVertex
@@ -382,12 +394,12 @@ function zm_createEdge(container, obj) {
 	var parent;
 	if (obj.parent != null) {
 		parent = graph.getModel().getCell(obj.parentId);
-	 }
+	} 
 	var source = graph.getModel().getCell(obj.source);
 	var target = graph.getModel().getCell(obj.target);
 	graph.addEdge(edge, parent, source, target, null);
-	if (obj.overlay != null) {
-		zm_createOverlay(container, obj.overlay.id, edge, obj.overlay);
+	for (i = 0 ; i < obj.overlays.length ; i++) {
+		zm_createOverlay(container, obj.overlays[i].id, edge, obj.overlays[i]);
 	}
 }
 
@@ -422,43 +434,40 @@ function zm_select(graph, value) {
 }
 
 function zm_createOverlay(container, id, cell, v) {
+	var graph = container._graph;
+	var model = graph.getModel();
 	var overlay = zm_overlays[id];
 	if ( overlay == null) {
 	    overlay = new mxOverlay(v.image, v.tooltip, v.bounds.width, v.bounds.height);
 		zm_overlays[id] = overlay;
 		overlay.addListener("click", function(sender, evt, cell) {
 			var ids = new Array();
-			ids.push(cell.id);
+			ids.push(cell.parent.id);
+			ids.push(id);
 			zm_sendCommand(container, ids, "onClickOverlay");
 		});
 		overlay.getBounds = function(state) {
-			return new mxGeometry(state.x + v.bounds.x, state.y + v.bounds.y, v.bounds.width, v.bounds.height);
+			return new mxGeometry(state.x, state.y, state.width, state.height);
 		}
 	}
-	container._graph.setOverlay(cell, overlay);
+	var v = model.addVertex(cell, cell.id+id, '', v.bounds.x, v.bounds.y, v.bounds.width, v.bounds.height);
+	model.setStyle(v, "overlay");
+	container._graph.setOverlay(v, overlay);
 }
 
-function zm_setOverlay(container, value) {
-	console.debug("zm_setOverlay");
+function zm_addOverlay(container, value) {
+	console.debug("zm_addOverlay");
 	var obj = value.parseJSON();
-	var model = graph.getModel();
+	var model = container._graph.getModel();
 	var cell = model.getCell(obj.cell);
 	zm_createOverlay(container, obj.id, cell, obj);
-	/*if ( overlay == null) {
-		overlay = new mxOverlay(obj.image, obj.tooltip, obj.imageWidth, obj.imageHeight);
-		console.debug(overlay.getBounds())
-		zm_overlays[obj.id] = overlay;
-		overlay.addListener("click", function(sender, evt, cell) {
-  			zm_sendCommand(container, cell, "onClickOverlay");
-		});
-	}
-	graph.setOverlay(cell, overlay);
-	* */
 }
 
 function zm_removeOverlay(graph, value) {
 	console.debug("zm_removeOverlay");
 	var model = graph.getModel();
-	var cell = model.getCell(value);	
-	graph.removeOverlay(cell);
+	var obj = value.parseJSON();
+	var id = obj.cell + obj.overlay;
+	var cell = model.getCell(id);
+	model.remove(cell);
 }

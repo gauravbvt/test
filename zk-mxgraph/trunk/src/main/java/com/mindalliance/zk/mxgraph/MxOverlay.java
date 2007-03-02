@@ -6,7 +6,6 @@ package com.mindalliance.zk.mxgraph;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.zk.mxgraph.event.OverlayClickListener;
 
 /**
  * @author dfeeney
@@ -17,7 +16,7 @@ public class MxOverlay {
 	private String image;
 	private String tooltip;
 	private MxGeometry bounds;
-	private List<OverlayClickListener> clickListeners = new ArrayList<OverlayClickListener>();
+	private List<MxCellListener> clickListeners = new ArrayList<MxCellListener>();
 	
 
 
@@ -63,16 +62,22 @@ public class MxOverlay {
 		return id;
 	}
 	
-	public void addClickListener(OverlayClickListener listener) {
+	public void addClickListener(MxCellListener listener) {
 		clickListeners.add(listener);
 	}
 	
-	public List<OverlayClickListener> getClickListeners() {
+	public List<MxCellListener> getClickListeners() {
 		return clickListeners;
 	}
 
-	public void setClickListeners(List<OverlayClickListener> clickListeners) {
+	public void setClickListeners(List<MxCellListener> clickListeners) {
 		this.clickListeners = clickListeners;
+	}
+	
+	public void click(MxGraph graph, MxCell cell) {
+		for (MxCellListener listener: clickListeners) {
+			listener.onEvent(graph, cell);
+		}
 	}
 	
 }

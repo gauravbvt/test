@@ -12,9 +12,9 @@ import com.mindalliance.zk.mxgraph.MxCell;
 import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxOverlay;
 
-public class SetOverlayCommand extends AbstractCommand {
+public class AddOverlayCommand extends AbstractCommand {
 
-	public SetOverlayCommand(String evtnm, int flags) {
+	public AddOverlayCommand(String evtnm, int flags) {
 		super(evtnm, flags);
 	}
 
@@ -27,7 +27,7 @@ public class SetOverlayCommand extends AbstractCommand {
 		String name = data[1];
 		MxCell cell = graph.getModel().getCell(name);
 		MxOverlay overlay = new MxOverlay(data[1], data[2]);
-		graph.setOverlay(cell, overlay);
+		graph.addOverlay(cell, overlay);
 	}
 
 }
