@@ -30,6 +30,16 @@
 			<name>Jean-François Cloutier</name>
 			<email>jf@mind-alliance.com</email>
 		</developer>
+		<developer>
+			<id>brian</id>
+			<name>Brian Sletten</name>
+			<email>brian@bosatsu.net</email>
+		</developer>
+		<developer>
+			<id>davidf</id>
+			<name>David Feeney</name>
+			<email>dfeeney@bosatsu.net</email>
+		</developer>
 	</developers>
 	
 	<contributors>
@@ -77,15 +87,15 @@
 		</site>
 	</distributionManagement>
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>https://ranger.homelinux.net/bugzilla/query.cgi?product=${project.artifactId}</url>
+		<system>TRAC</system>
+		<url>https://ranger.homelinux.net/trac/${project.artifactId}/report</url>
 	</issueManagement>
 	
 	<scm>
 		<developerConnection>
 			scm:svn:https://ranger.homelinux.net/svn/</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://ranger.homelinux.net/websvn/listing.php?repname=Mind-Alliance&amp;amp;path=%2F${project.artifactId}%2F</url>
+		<url>https://ranger.homelinux.net/tracsvn/</url>
 	</scm>
 	
 	<dependencies>
@@ -164,7 +174,8 @@
 					<connectionType>developerConnection</connectionType>
 					<basedir>${basedir}</basedir>
  					<scmUrl>https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
- 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
+<!-- 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
+  -->				<displayFileDetailUrl>https://ranger.homelinux.net/tracsvn%FILE%</displayFileDetailUrl>
 				</configuration>
 			</plugin>
 		</plugins>
