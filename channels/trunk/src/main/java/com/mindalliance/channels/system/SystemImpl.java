@@ -7,10 +7,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,6 +25,7 @@ import com.mindalliance.channels.Project;
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.util.AbstractJavaBean;
+
 import static com.mindalliance.channels.system.UserTypes.AdminType;
 import static com.mindalliance.channels.system.UserTypes.UserType;
 

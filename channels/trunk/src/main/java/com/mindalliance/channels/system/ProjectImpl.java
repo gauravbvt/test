@@ -22,7 +22,7 @@ import static com.mindalliance.channels.system.ParticipantType.*;
 /**
  * Basic project implementation.
  *
- * @todo synchronize 
+ * @todo synchronize
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */

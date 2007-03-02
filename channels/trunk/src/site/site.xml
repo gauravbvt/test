@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Channels">
   <bannerLeft>
-    <name>Mind-Alliance</name>
-    <src>images/mindAlliance.gif</src>
-    <href>http://www.mind-alliance.com</href>
-	<alt>Mind-Alliance</alt>
+    <name>Code-Alliance</name>
+    <src>images/codealliance.png</src>
+    <href>https://ranger.homelinux.net</href>
+	<alt>Code-Alliance</alt>
   </bannerLeft>
   <bannerRight>
 	<name>Channels</name>
@@ -14,7 +14,7 @@
   </bannerRight>
   <body>
     <links>
-      <item name="Wiki" href="https://ranger.homelinux.net/wiki/channels" />
+      <item name="Trac" href="https://ranger.homelinux.net/trac/channels" />
     </links>
 
     <menu name="Channels">
@@ -33,6 +33,7 @@
 	  <item name="Overview" href="design.html"/>
 	  <item name="Architecture" href="architecture.html" collapse="true">
 		  <item name="Object Properties" href="properties.html"/>
+		  <item name="Security" href="security.html"/>
 	  </item>
 	</menu>
 
