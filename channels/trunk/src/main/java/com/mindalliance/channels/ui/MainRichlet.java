@@ -12,8 +12,8 @@ import org.zkoss.zul.Window;
 
 import com.mindalliance.zk.mxgraph.MxCell;
 import com.mindalliance.zk.mxgraph.MxCellListener;
+import com.mindalliance.zk.mxgraph.MxCompactTreeLayout;
 import com.mindalliance.zk.mxgraph.MxConstants;
-import com.mindalliance.zk.mxgraph.MxFastOrganicLayout;
 import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxOverlay;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
@@ -28,11 +28,11 @@ public class MainRichlet extends GenericRichlet {
 		Window w = new Window("mxGraph", "normal", false);
 		MxGraph graph = new MxGraph();
 		//graph.setLayout(new MxCircleLayout(40));
-		graph.setLayout(new MxFastOrganicLayout());
-		//graph.setLayout(new MxCompactTreeLayout());
+		//graph.setLayout(new MxFastOrganicLayout());
+		graph.setLayout(new MxCompactTreeLayout());
 		graph.setWidth("800px");
 		graph.setHeight("800px");
-		
+		graph.setProperty(MxGraph.AUTO_SIZE, "true", true);
 		graph.setStyle("overflow:hidden; background:url('/channels/images/grid.gif');"); // overflow:hidden not needed anymore?
 		// graph.setProperty(MxGraph.BACKGROUND_IMAGE, "/channels/images/grid.gif", false);
 		// graph.setProperty(MxGraph.AUTO_SIZE, true, false);
