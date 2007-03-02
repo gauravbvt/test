@@ -35,6 +35,10 @@ zkMxGraph.init = function (container) {
         // Create graph and set default state
 		var graph = new mxGraph(container, model);
 		graph.setTooltips(true);
+		mxGraph.prototype.isExpandable = function(cell) 
+		{ 
+   			return false; /* your condition here */ 	
+		} 
 		container._graph = graph;
 		// Installs a popupmenu handler using local function (see below).
 		zm_menus[container.id] = {};
@@ -368,6 +372,7 @@ function zm_createVertex(container, v) {
 	var vertex = new mxCell(v.value, new mxGeometry(v.geometry.x, v.geometry.y, v.geometry.width, v.geometry.height), v.style);
 	vertex.vertex = true; vertex.edge = false;
 	vertex.setId(v.id);	
+	vertex.setValue(v.value);
 	var parent;
 	if (v.parent != null) {
 	 	parent = graph.getModel().getCell(v.parentId);
@@ -376,6 +381,7 @@ function zm_createVertex(container, v) {
 	for (i = 0 ; i < v.overlays.length ; i++) {
 		zm_createOverlay(container, v.overlays[i].id, vertex, v.overlays[i]);
 	}
+	graph.updateSize(vertex);
 	
 }
 

@@ -233,7 +233,15 @@ public class MxGraph extends HtmlBasedComponent {
 	
 	public void setProperty(String name, Object value, boolean update) {
 		properties.put(name, value);
-		if (update) smartUpdate("z:setProperty", name + ":" + MxGraph.encode(value));
+		if (update){ 
+			String encVal;
+			if (value instanceof String) {
+				encVal = (String)value;
+			} else {
+				encVal = MxGraph.encode(value);
+			}
+			smartUpdate("z:setProperty", name + ":" + encVal);
+		}
 	}
 	
 	public Object getProperty(String name) {
