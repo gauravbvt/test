@@ -1,17 +1,17 @@
- --------------
- Use cases
- --------------
+ 	--------------
+ 	Use cases
+ 	--------------
+ 	
+Use Cases
  
-	[[1]] {{{roles} User roles}
-	[[2]] {{{cases} What all users can do
-	[[3]] {{{participant.html}Participant use cases}
-	[[4]] {{{manager.html}Project manager use cases}
-	[[5]] {{{representative.html}Organization representative use cases}
-	[[6]] {{{expert.html}Domain expert use cases}
-	[[7]] {{{admin.html}Channels administrator use cases}
+	* {{{#user_roles} User roles}}
 	
-{roles}
-User roles
+	* {{{#any_user} What any users can do}}
+		
+	[]
+	
+	
+* {User roles}
 	
 	An authorized Channels user receives one or more privileges. These roles/privileges determine what the user is allowed
 	to see and do once logged into a Channels site.
@@ -20,39 +20,54 @@ User roles
 	
 	[Participant] (Context: project) A user belonging to an organization and authorized to take part in a project, as a certified member of an authorized organization, either as a contributor or a guest. 
 	A participant has all the privileges of a guest plus the ability to make contributions to the project.
+	
 	[Manager] (Context: Channels) A user who is authorized to create models in a project and who authorizes the participation of organizations (possibly restricted to certain roles). 
 	A manager has authority over any content in the project. A manager also has participant privileges for the project.
+
 	[Representative] (Context: Channels) A user who has authority over the description of an organization across projects and the certification of users as role players in that organization.
+
 	[Expert] (Context: Channels) A user who can authoritatively create and modify reference data in one or more assigned domains.
+
 	[Admin] (Context: Channels) A Channels site administrator responsible for creating projects, for assigning project managers, organization representatives and domain experts, and generally maintaining a Channels installation.
 	
+	[]
+
 	A Channels administrator is the gate keeper for new projects and is the ultimate authority for a Channels installation.
+
 	Channels gives a project manager the necessary privileges to act as a "benevolent dictator" who sets the direction and scope of a project without having to micro-manage it.
+
 	Channels gives the representative of an organization the rights to control how the organization is described across projects and to certify users role-playing members of the organization.
+
 	Channels empowers participants to create scenarios, to view all project content, to authoritatively edit "their" content and to enter opinions as to the rest.
 	
-{cases}
-What all users can do
+* What {any user} can do
 
-	* {{{request_user_status} Request user status}}
-	* {{{request_certification} Request certification}}
-	* {{{accept_invitation} Accept invitation}}
-	* {{{login} Login}}
-	* {{{logout} Logout}}
-	* {{{change_password} Change password}}
-	* {{{update_user_info} Update user information}}
-	* {{{configure_settings} Configure settings}}
-
-{request_user_status} 
-* Request user status
+	* {{{#request_user_status} Request user status}}
+	
+	* {{{#request_certification} Request certification}}
+	
+	* {{{#accept_invitation} Accept invitation}}
+	
+	* {{{#login} Login}}
+	
+	* {{{#logout} Logout}}
+	
+	* {{{#change_password} Change password}}
+	
+	* {{{#update_user_information} Update user information}}
+	
+	* {{{#configure_settings} Configure settings}}
+	
+	[]
+	
+** {Request user status}
 
 	Someone without user status accesses a Channels site. A login form appears offering the option to register as a new user.
 	The user selects this option and is shown a form where personal info is requested (could be simply name and email).
 	The user also completes a captchas test (transcribes a visually encoded message).
 	The user is then sent an email with a link to follow in order to complete registration.
-
-{request_certification}
-* Request certification
+	
+** {Request certification}
 
 	The user requests to be certificed as a member of a given organization.
 	The user selects an organization from a directory of all organizations represented in a Channels installation (i.e. that have representatives).
@@ -63,39 +78,34 @@ What all users can do
 	
 	The user is notified when certification is obtained. The user can then browse all projects in which he/she is now
 	participant or guest by virtue of certified membership in the organization.
-
-{accept_invitation} 
-* Accept invitation
+	
+** {Accept invitation}
 
 	Someone receives an email from a Channels participant inviting him/her to join a project.
 	The participant has already certified the user as a co-member of an organization.
 	The new user clicks on a link in the email which takes the user to a form where he/she is asked to enter and confirm a password.
 	The new user is then shown a startup desktop.
 	
-		
-{login}
-* Login
+** {Login}
 
 	The user points a browser to the Channel installation's URL. A login form appears. 
 	The user enters user id and password, and submits.
 	
 	If the user forgot his/her password, the user clicks on a link that emails a new, one time password.
 	
-	If the user logs in with a one-time password, after successfully logging in, the user is asked to {{{change_password} change the one-time password}.
+	If the user logs in with a one-time password, after successfully logging in, the user is asked to {{{change_password} change the one-time password}}.
 	If the user fails to obtain a new password (user cancelled), the participant is logged out and retains the old one-time password.
 	
 	If the user logs in successfully, the user acquires all project and application privileges. The Channels "desktop" last saved for this user appears (or else the default desktop). 
-	The users leaves the desktop after {{{logout}logging out}.
+	The users leaves the desktop after {{{logout}logging out}}.
 	
-{logout}
-* Logout
+** {Logout}
 
 	The user requests to log out. A modal dialog requests confirmation. 
 	The user is given the option to "save the desktop" (default option).
 	The user either confirms or cancels the logout.
 	
-{change_password}
-* Change password
+** {Change password}
 
 	The user is presented with a Change Password modal dialog containing instructions about devising secure passwords.
 	The user enters a new password twice.
@@ -103,8 +113,7 @@ What all users can do
 	The password is checked to see if it is secure. If not, the user is told why and asked to try again.
 	The user can cancel the operation.
 	
-{update_user_info}
-* Update user information
+** {Update user information}
 
 	When registering as a Channels user (by initiating a request or by accepting an invitation), the user provides basic user information and in return is given a user id and a (one-time) password.
 	It is the user's responsibility to maintain and update this information.
@@ -112,11 +121,27 @@ What all users can do
 	The user can:
 	
 	* Update his/her name
+	
 	* Update his/her email address
 
-
-{configure_settings}
-*Configure settings
+	[]
+	
+** {Configure settings}
 
 	TBD
+
+See also
+ 	
+ 	* {{{participant.html} Participant use cases}}
+
+	* {{{manager.html} Project manager use cases}}
+
+	* {{{representative.html} Organization representative use cases}}
+
+	* {{{expert.html} Domain expert use cases}}
+
+	* {{{admin.html} Channels administrator use cases}}
+	
+	[]
+	
 
