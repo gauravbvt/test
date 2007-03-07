@@ -71,6 +71,16 @@
 		<pluginRepository>
 			<id>apache.snapshots</id>
 			<url>http://people.apache.org/maven-snapshot-repository/</url>
+			<snapshots><updatePolicy>daily</updatePolicy></snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>mojo</id>
+			<url>http://repository.codehaus.org/org/codehaus/mojo/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>codehaus.snapshots</id>
+			<url>http://snapshots.repository.codehaus.org/</url>
+			<snapshots><updatePolicy>daily</updatePolicy></snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 	
@@ -141,6 +151,10 @@
 	
 	<reporting>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>

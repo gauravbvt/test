@@ -144,7 +144,6 @@ Description:
 		</module>
         <module name="TodoComment"/>
         <module name="UpperEll"/>
-        <module name="AbstractClassName"/>
         <module name="ImportOrder">
             <property name="groups" value="java,javax,org,com"/>
             <property name="separated" value="true"/>
