@@ -28,7 +28,7 @@
       <item name="Managers Guide" href="manager.html"/>
       <item name="Administrators Guide" href="admin.html"/>
     </menu>
-    <menu name="Analysis Documentation>
+    <menu name="Analysis Documentation">
     	<item name="Use cases" href="usecases/usecases.html" collapse="true">
     		<item name="Participant use cases" href="usecases/participant.html"/>
     		<item name="Project manager use cases" href="usecases/manager.html"/>
