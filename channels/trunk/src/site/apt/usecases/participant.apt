@@ -1,0 +1,427 @@
+----------------------
+Participant Use Cases
+----------------------
+	
+Who is a participant?
+
+A participant is a user who is authorized by the representative of an organization to participate 
+in projects in which the organization is invited, representing the role(s) he/she plays in that organization.
+A participant may be given the status of contributor or guest in a project. 
+
+The difference between a contributing participant and a guest participant is that a guest can not create, publish nor build scenarios.
+
+A user who plays many roles or roles in more than one organization would login only once but would assume one "persona" at a time within a project to indicate
+on behalf of what role and organization he/she is making each contribution. A user can set a default persona that is set after each login.
+
+	
+What can participants do?
+
+	* {{{modify_profile} Modify profile}}
+	* {{{browse_projects} Browse projects}}
+	* {{{search_projects} Search projects}}
+	* {{{assume_persona} Assume persona}}
+	* {{{create_publish_scenarios} Create and publish scenarios}}
+	* {{{build_scenario} Build scenario}}
+	* {{{view_scenario} View scenario}}
+	* {{{open_analytical_view} Open analytical view}}
+	* {{{query_project} Query project}}
+	* {{{open_dashboard} Open dashboard}}
+	* {{{generate_report} Generate report}}
+	* {{{manage_archives} Manage archives}}
+	* {{{invite_user} Invite user}}
+	* {{{chat} Chat}}
+	
+
+{modify_profile}
+* Modify profile
+
+	A participant's profile is information that describes the participant in any of the projects he/she may participate in.
+	This augments the identity information in the user profile (the user will likely manage both user and participant profiles together).
+
+	A participant can:
+	
+	* {{{view_roles}} View roles}
+	* {{{add_role}} Add role}
+	* {{{remove_role}} Remove role}
+	* {{{edit_role}} Edit role
+	* {{{edit_contact_info}} Edit contact info}
+
+{view_roles}
+** View roles
+
+	TBD
+
+{add_role}
+** Add role
+
+	TBD
+
+{remove_role}
+** Remove role
+
+	TBD
+	
+{edit_role}
+** Edit role
+
+	TBD
+
+{edit_contact_info}
+** Edit contact info
+
+	TBD
+
+{browse_projects}
+* Browse projects
+
+	The user is presented with a list of all named projects in which he/she is a manager, participant or guest.
+	The user can select a project to see all named models created in this project.
+	The user can select one, many or all models and view all named scenarios in the selected model(s).
+	
+	The participant can view:
+	
+	* the past and current popularity of a model and scenario (as contributions over time and number of contributors) 
+	* the informal description and the objectives of a selected project and model (about),
+	* the informal description of a selected scenario (about),
+	* the list of all participants in a selected project,
+	* the list of all contributors to a selected model or scenario.
+	
+	The user can do {{{search projects}keyword searches} on projects.
+	
+{search_projects}
+* Search projects
+
+	While browsing authorized projects, the user can search them using keywords. The search will retrieve projects, models, scenarios and 
+	scenario elements that contain any/all of the keywords in their descriptions.
+	
+	The search results shows the "containment path" of each result (project/model/scenario/event etc.).
+	A link to each result and let's the user open a default viewer on it or any element that contains it.
+	
+{view_scenario}
+* View a scenario
+
+	The participant can examine a scenario along multiple perspectives:
+	
+	* A timeline of events, reponse tasks, task outcomes and environments (where communication channels are restricted and/or a different set of policies apply),
+	* A geographical mapping of the above occurences and agents involved,
+	* A social network connecting the agents and organizations involved
+	* A list of information exchanges required in order to execute the above response tasks.
+	
+	The timeline is the principal view. The timeline elements can be multi-selected. Selecting elements in it
+	makes them or related elements appear in the other perspectives. Selecting none is the same as selecting all
+	(selection equates focusing).
+	
+	Selecting one or more timeline elements will make all their related agents (i.e who carries out the response tasks and
+	what organizations they are from) appear in the social net and in the map; the exchanges they necessitate also appear in
+	as a tabular list of exchanges.
+		
+{assume_persona}
+* Assume persona
+
+	A participant can "wear many hats", that is, he/she may be playing different roles in more than one organization. When making assertions, the participant can
+	authoritatively say something about himself/herself in a given role, or the participant may express an opinion about some other role, possibly not in his/her organization.
+	In both cases, the user makes a contribution to the project as someone in a given role in a given organization.
+	
+	Before making any contribution, the participant must assume as persona one of the roles he/she plays in an organization. That persona is in effect until the participant
+	changes it. The default persona is a user setting.
+	
+{create_publish_scenarios}
+* Create and publish scenarios
+
+	Any participant can create and publish a scenario in a project but only a manager for that project can close or even delete a scenario once it has been published.
+	Until a scenario is published, it is considered a draft and is visible and modifiable only by the participant who created it. 
+	
+	A participant first creates a draft scenario, describes it and minimally builds it before publishing it so that others can see it and take part in building it.
+	A draft scenario can only be deleted by the participant who created it.
+	
+	The participant can:
+	
+	* {{{create_draft_scenario} Create a draft scenario}}
+	* {{{initialize_draft_scenario} Initialize draft scenario}}
+	* {{{delete_draft_scenario} Delete a draft scenario}}
+	* {{{publish_draft_scenario} Publish a draft scenario}}
+
+
+{create_draft_scenario}
+** Create a draft scenario
+
+	The participant selects a model in a project and requests that a scenario be created. 
+	A form appears in which the user enters:
+	
+	 * a name,
+	 * an informal description,
+	 * objectives for the scenario
+	 
+	 The participant can submit the form or cancel the creation of a draft scenario. Upon submitting, the scenario viewer is opened on the draft scenario for it to be initialized.
+	 	 
+{initialize_draft_scenario}
+** Initialize draft scenario
+	 
+	 If the scenario viewer is not open on a draft scenario, the participant can access a list of draft scenarios, select one of them and open a scenario viewer on it.
+	 The participant can then add the incidents (defining events) and environments that will impose constraints on resources and alter the policy landscape.
+	 The participant can build up the scenario as much as desired while it is in draft mode.
+	 
+	 The other scenarios visible to the participant are searched for similarities (based on event types of incidents primarily) and brought to the attention of the participant,
+	 the goal being to avoid the creation of redundant scenarios.
+
+{delete_draft_scenario}
+** Delete a draft scenario
+
+	The participant selects a draft scenario and requests its deletion. The participant is asked for confirmation before permanently removing the draft scenario.
+	The participant can cancel the deletion.
+
+{publish_draft_scenario}
+** Publish a draft scenario
+
+	The participant selects one of his/her draft scenarios and requests that it be published. If the scenario is insufficiently initialized (e.g. no incident or objectives), then the request
+	is rejected and the participant is told why.
+	
+	If the scenario is successfully published, it then becomes visible to other participants. The participant retains authoritive editing rights to the elements that were defined
+	prior to publishing the scenario and to all incidents (events that don't have other scenario elements as cause). In other words, other participants are not allowed to change
+	the nature of the scenario; they are only allowed to elaborate on it.
+	
+	The publication of a scenario is an event of which all participants are notified.
+
+{build_scenario}
+* Build a scenario
+
+	A participant contributes to a scenario by making assertions about existing elements in the scenario. An element is anything that composes a scenario such as events,
+	tasks, outcomes, exchanges, and assertions made about them. This means that assertions can be made about assertions where meaningful (e.g. "I need to know if he knows")
+
+	The participant can:
+	
+	* {{{assert} Make assertions}}
+	* {{{add_event} Add event}}
+	* {{{add_outcome} Add outcome}}
+	* {{{add_agent} Add agent}}
+	* {{{add_organization} Add organization}}
+	* {{describe_element} Describe element}}
+	* {{accept_reject_suggestion} Accept or reject a suggested element
+
+{assert}
+** Make assertions
+
+	An assertion is a statement about a scenario element indicating that information is needed or available, or that a given event is to be responded to by the execution of a task,
+	or that access to given agent is authorized, or that a given information exchange is agreed to. These assertions are either made authoritatively for one of the participant's
+	persona (one of the roles he/she plays), or, meant as an opinion, for some other role in some organization.
+
+	The participant can make the following assertions:
+	
+	* {{needs_to_know} Needs to know}
+	* {{knows} Knows}
+	* {{responds_to} Responds to}
+	* {{can_access} Can access}
+	* {{agrees_to} Agrees to}
+	
+{needs_to_know}
+*** Needs to know
+
+	The participant selects a scenario element anywhere it is shown (from a timeline, map, exchanges list etc.) and "tags" it with a "needs to know".
+	The participant indicates who needs to know (default = current persona, else selects from other persona or a list of roles in organizations) and describes the need further.
+	
+	The participant can later modify or remove the assertion.
+
+{knows} 
+*** Knows
+
+	The participant selects a scenario element anywhere it is shown (from a timeline, map, exchanges list etc.) and "tags" it with a "knows".
+	The participant indicates who knows (default = current persona, else selects from other persona or a list of roles in organizations).
+	An information asset is created and is attached to the assertion.
+	The participant describes the information asset further.
+	
+	The participant can later modify or remove the assertion.
+
+{responds_to}
+*** Responds to
+
+	The participant selects an event already described in a scenario and tags it with "responds to".
+	The participant indicates who responds to the event (default = current persona, else selects from other persona or a list of roles in organizations). A task is automatically created and added to the scenario. The participant selects it and describes it.
+	
+	Alternately, the participant selects a task already described in the scenario and tags it with "also responds".
+	The participant indicates who else also responds to the event by executing this task (default = current persona, else selects from other persona or a list of roles in organizations).
+	
+	The participant can later modify or remove the assertion.
+
+{can_access}
+*** Can access
+
+	The participant selects an agent already described in a scenario and tags it with "can access" (meaning "has been granted access").
+	The participant indicates who has been granted access to the agent (default = current persona, else selects from other persona or a list of roles in organizations).
+	The participant may qualify this granted access by restricting it to one or more of the scenario's environments.
+
+	The participant can later modify or remove the assertion.
+
+{agrees_to}
+*** Agrees to
+
+	The participant selects an exchange already described in a scenario and tags it with "agree to" (meaning "has been granted access") only if one of the
+	participant's persona is one of the agents represented in the exchange. 
+	If the persona is on the receiving end, then the participant indicates willingness to receive the information.
+	If the persona is on the sending end, then the participant indicates willingness to send the information.
+	The participant may qualify this agreement to exchange information by restricting it to one or more of the scenario's environments.
+
+	The participant can later modify or remove the assertion.
+
+
+{add_event}
+** Add event
+
+	The participant selects an existing element of the scenario that can be a source of events and selects from a list of types of events that this element can generate.
+	An event is created over which the participant has authority and is attached to its causal element. 
+	The participant can further describe the event.
+
+	<<Note that only a participant with authority over a scenario (its creator or the project manager) can add an event with no scenario element as its cause (i.e. an incident).>>
+
+{add_outcome}
+** Add outcome
+
+	The participant selects an existing task in the scenario and adds an outcome to it.
+	The participant describes the outcome.
+	
+{add_agent}
+** Add agent
+
+	An agent can be a role, a person or an information resource. One may need to introduce an agent in a scenario that is not represented by a participant.
+	A participant creates a role or an information resource within a project and describes it. This may be done from anywhere in a project but the action should be readily available
+	wherever a participant makes an assertion and needs to identify an agent.
+
+	If the agent is described as belonging to an organization and there is a representative for that organization (now or later), then the representative has authority over the agent's description.
+	Otherwise the agent is a public element visible to all projects.
+	
+	If the agent is a role and a participant joins the projet for that role (the description of a role includes the identity of an organization), then this participant acquires authority over the
+	until then public agent description.
+
+
+{add_organization}
+** Add organization
+
+	One may need to introduce an organization for which there is no representative.
+	A participant creates an organization and describes it. This may be done anywhere in a project but should be readily available wherever a participant describes an agent.
+	
+	If the organization later gains a representative, that representative acquires authority over the description of the organization.
+	Until then, the description of the organization is a public system element (visible to all projects).
+
+{describe_element}
+** Describe element
+
+	A participant generally can modify the description of any editable element in Channels he/she can access.
+	When a participant creates an element, he/she must minimally describe it before it is added.
+	
+	An element is anything that appears in a scenario or is referenced by that element.
+	The participant should be able to select an element wherever and however it is shown (in a list, a map, a graph, an editor etc.) and
+	be able to request to edit it. 
+	
+	If the participant has contributor status in the current project, the editor opens as "read/write", else it opens as "read-only".
+	
+	Changes are not submitted until the participant "presses the submit button".
+	On submit, if any validation rule fail, submission fails and the participant is alerted and given a chance to make corrections.
+	
+	In the meanwhile, someone else may also be editing the same element. When that happens, the participant is notified (visual cue?) about it and can
+	access the list of these other participants. 
+	If none of the participant is authoritative, then all participants can make modifications at once with the same effect as if they were doing it sequentially.
+	If at least one of the participant has authority over the element, then the other participants are appropriately alerted  (visual cue?) since this participant's
+	edits may override the other participants' edits. When a participant hits the "reset" button, the editor is refreshed to reflect the current state of the element,
+	taking into account the latest submitted edits.
+	
+	Each property is restricted as to what kinds of values it can have. 
+	The user either enters the value by hand or selects it using some UI device (calendar for date, slider for numerical value, type tree for types, a modal editor for "complex" values etc.)
+	The changes to property values are validated.
+
+	*** Authority vs opinions
+	
+	The participant can edit an element either with or without authority.
+	The system determines whether the user has authority over an element (e.g. a participant has authority over his/her own profile).
+	Often, when a participant adds a new element, he/she automatically acquires authority over it for as long as he/she retains the privileges that allowed this addition.
+	More than one user can have authority over an element (e.g. a participant, his/her organizational representative and the project's manager).
+	<An element without authoritative user other than a project manager is said to be "public".>
+	
+	When a non-authoritative participant sets or changes the value of an element's property, this it is considered an opinion and it is recorded with other opinions.
+	When an authoritative participant sets or changes the value of an element's property, it overrides all and any opinions, or any previous authoritative value, and becomes the effective value.
+	In the absence of an authoritative property value, the majority opinion is the effective value. In case of a tie, the oldest of the tied opinions wins.
+	
+	The opinions and authoritative values are available for perusal. All opinions, their counts and their contributors can be viewed.
+	A participant can readily see his/her contribution to an element's property value and whether it differs from the effective value.
+	
+{accept_reject_suggestion} 
+** Accept or reject a suggested element
+
+	The system can infer new elements (issues, todos, exchanges etc.) on the basis of existing elements.
+	When it does, the systems can add them tentatively as suggestions to be accepted or rejected.
+	Note that the system may later retract the element if the conditions that lead to its inference are no longer present.
+	
+	<What happens then to participant-added elements that refer to a retracted element?>
+	
+	A participant with access to a suggested element can reject or accept it.
+	The participant can be authoritative or not. If not, then the participant expresses an opinion as to the validity of the suggestion. Opinions are cumulated and the
+	prevailing yeah/neah vote is the effective. If an authoritative participant accepts or rejects it, then it is so.
+	
+	Rejected, suggested elements are accessible and visible to participants (with visual cue?) so that they can weigh in (opinions) or decree (authoritative) otherwise.
+
+{open_analytical_view}
+* Open analytical view
+
+	The participant has a choice of a number of analytical views. The participant can:
+	
+	* {{{open_causal_graph} Open a causal graph}}
+	* {{{open_flow_graph} Open a flow graph}}
+	* {{{open_semantic_graph} Open a semantic graph}}
+
+{open_causal_graph}
+** Open a causal graph
+
+	The participant selects a scenario or an event and requests a causal graph.
+	The causal graph showsthe scenario's incidents or the selected event connected to all events that cause it or are caused by it.
+	The participant can select an event and expand it to reveal its caused/causing events that are not yet showing.
+	The participant can select an event and collapse it, hiding its caused/causing events that are showing.
+
+{open_flow_graph}
+** Open a flow graph
+
+	TBD
+
+{open_semantic_graph}
+** Open a semantic graph
+
+	TBD
+	
+{query_project}
+* Query project
+
+	TBD
+
+{open_dashboard}
+* Open dashboard
+
+	TBD
+
+{generate_report}
+* Generate report
+
+	TBD
+
+{manage_archives}
+* Manage archives
+
+	TBD
+
+{invite_user}
+* Invite user
+
+	A participant, i.e. a certified member of an organization, can make it easy for someone from the same organization to join in.
+	
+	The participant requests the registration of a new user.
+	The participant fills out the user registration form on behalf of user, including name but <<not>> email address.
+	The participant selects an organization he/she is a certified member of and certifies that the new user is a member of it as well. 
+	The participant then becomes the new user's mentor.
+	The participant may indentify and describe the roles the new user plays within the organization (the goal being to minimize data entry for the new user).
+	The participant then sends the invitation (here the email address is entered but is not retained) which will be received as an email 
+	with a link for the new user to access to confirm acceptance of the invitation.
+	
+	The organization's representative will receive a notification and may decide to cancel the certification.
+	<The representative either authorizes the certification before or after it is sent out (a user setting for the representative).>
+	
+{chat}
+* Chat
+
+	TBD
+	
