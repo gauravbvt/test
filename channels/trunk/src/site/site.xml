@@ -28,6 +28,15 @@
       <item name="Managers Guide" href="manager.html"/>
       <item name="Administrators Guide" href="admin.html"/>
     </menu>
+    <menu name="Analysis Documentation>
+    	<item name="Use cases" href="usecases/usecases.html" collapse="true">
+    		<item name="Participant use cases" href="usecases/participant.html"/>
+    		<item name="Project manager use cases" href="usecases/manager.html"/>
+    		<item name="Organization representative use cases" href="usecases/representative.html"/>
+    		<item name="Domain expert use cases" href="usecases/expert.html"/>
+    		<item name="System administrator use cases" href="usecases/admin.html"/>
+    	</item>
+    </menu>
 	<menu name="Design Documentation">
 	  <item name="Overview" href="design.html"/>
 	  <item name="Architecture" href="architecture.html" collapse="true">
