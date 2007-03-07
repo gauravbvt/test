@@ -2,18 +2,17 @@
 <project name="Generic">
   <bannerLeft>
     <name>Mind-Alliance Systems</name>
-    <src>images/mas.png</src>
+    <src>images/codealliance.png</src>
     <href>https://ranger.homelinux.net/</href>
-	<alt>Mind-Alliance</alt>
+	<alt>Code-Alliance</alt>
   </bannerLeft>
   <body>
     <links>
-      <item name="Mind-Alliance" href="http://www.mind-alliance.com/" />
+      <item name="Trac" href="https://ranger.homelinux.net/trac/generic" />
     </links>
 
     <menu name="Generic">
       <item name="Introduction" href="index.html"/>
-      <item name="Download" href="download.html"/>
     </menu>
 
     ${reports}
