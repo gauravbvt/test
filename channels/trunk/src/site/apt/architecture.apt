@@ -1,9 +1,89 @@
- ------------
- Architecture 
- ------------
+                              --------------------------------------
+                              Mind-Alliance Architectural Components
+                              --------------------------------------                              
 
-Architecture
+Introduction
 
-(Documented in mindpmap for now)
+    The Mind-Alliance Channels architecture reflects many modern techniques for building scalable, maintainable software systems. The particular combination of approaches elicits the architectural properties of development efficiency, flexibility, ease of maintenance and growth. While any multi-user system has an implicit need to support as many users as possible, Channels is unlikely to ever need to support more than the order of "hundreds of users". Even then, that would likely be a larger than average installation.  These users are modeling information sharing scenarios in potentially large and dynamic environments. This suggests that being able to handle large amounts of data is critical to the growth strategy of the system even if very large numbers of collaborators is not. Channels will need a simple domain model backed by an efficient event mechanism, transactional integrirty and a comprehensive data access control capability.
 
- See {{{https://ranger.homelinux.net/~jf/software_overview.pdf}Software Overview, Section 2}}
+Design Elements
+
+ The major design components include:
+
+* Layered Architecture
+
+    One view of the Channels system is as a layered architecture. This approach follows in the tradition of n-tier enterprise systems and vertical domain architectures like the OSI Reference Model. The layered approach facilitates a separation of concerns (SOC) and minimizes the visibility across the layers allowing for localized changes in the future.
+
+* Dependency Injection
+
+    The Dependency Injection (DI) approach, embraced here through the use of the Spring Framework, is an attempt to minimize coupling between software elements in order to improve maintainability. Highly-coupled systems exhibit fragility and a proneness to failure. Spring's DI minimizes this coupling by encouraging dependencies on interfaces and localizing component coupling to an external configuration file. The components are individually configured with their dependencies in a manner that prevents concrete implementation details from spreading unnecessarily keeping the system more easy to change over time.
+
+* Modularization of Cross Cutting Concerns
+
+    While DI can manage dependencies at an object-oriented (OO) class abstraction level, there are elements of a software system that do not modularize well based on their cross-cutting nature. The connection between a design element like this and everything that it touches is such that conventional OO-based systems become unwieldy messes. Design concepts touch too many implementation constructs making it hard to make changes because of far-reaching consequences. This is a process known as scattering. Additionally, too many design concepts end up in each implementation construct, a scenario known as tangling. Common design elements such as logging, persistence and security often fall into these scenarios. The Channels architecture uses AspectJ as a means of modularizing these concerns into manageable chunks.
+
+Architectural Details
+
+[images/arch.jpg] Channels Architecture
+
+* Application Layer
+
+    The top layer in the Channels architecture is the manifestation of the user functionality in the application. This includes user login, workflow management, the enforcement of role-based access controls to specific user interface functionality and the satisfaction of the system use cases. Channels will adopt a desktop metaphor to allow users to manage and manipulate data resources in ways that are familiar to them. In order to keep the amount of software and system maintenance to a minimum, Channels will be a web-based application so no software will need to be installed on the client machines. Sophisticated web-based applications are difficult to maintain in a cross-browser capacity so there may be limitations to how many different browsers can be supported. At a minimum, Internet Explorer 7 and FireFox 2.0+ should be the initial target browsers.
+
+    As is to be expected, the application layer will depend on lower, more fundamental layers to achieve the functional and non-functional requirements. As this is a multi-user system involving collaborative editing of shared content, transactional support is necessary to prevent data loss and corruption. A good balance of safety and usability will be required to avoid frustration and the need to redo work. User interface components connected to data model elements will be locked in a manner that only allows one user to modify the results at a time. The goal will be to block users from doing things that might get undone by someone else's activity whenever possible without being annoying.
+
+* UI Framework Layer
+
+    The UI framework layer will provide the coarse-grained components to the application layer and serve as the binding between the data model and the workflows developed to manipulate it. The major capabilities of this layer will be provided by the Zk framework, an open source project for providing rich client experiences using mainly the Java programming language. Additionally, third party libraries such as MxGraph will be integrated with the Zk framework at this layer to provide graph visualization and editing.
+
+    In addition to serving the requirements of the Application Layer, the UI Framework layer will be, in part, driven by the event management and rules aspects described below. Constraints, derived actions and similar occurrences that might affect the user experience will be triggered by the activity of other users. These may manifest as suggestions, disabled functionality, time-sensitive input requests, etc.
+
+* Data Model Layer
+
+    This layer represents an approximate representation of the business domain modeled by the Channels Software. Users, tasks, processes, relationships, etc. are all captured in a way that reflects both generic and specific knowledge sharing efforts within and between organizations. The goal of this layer is fidelity to the domain; it should be unencumbered from the complications of the rest of the architecture even though concerns such as persistence, data access, etc. definitely apply. This is where the use of aspect-oriented programming techniques will help the domain model to remain as clean and simple as possible. The model will be expressed as regular JavaBeans.
+
+    As mentioned before, this layer is directly influenced by the Event Management, Rules, Security, Transactions and Persistence aspects. Rules will fire in response to various application states to create new data elements (e.g. a new 'To Do' item for a user). It will be necessary to track which domain elements are specified by users directly and which are consequences of existing rules being triggered. Only user-specified data objects will be stored by the persistence aspect.
+
+    Channels will use the Spring Acegi security framework to modularize the specification and application of role-based access controls to data elements and business functionality. The permissions granted to users at the domain level will be reflected in the UI framework and application layers as options being made available/unavailable. As such there will be a dependency on these layers by the security aspect.
+    
+    Templates of data structures, partial workflows, etc. will need to be exposed at this level to reduce the data input burden on users. Larger, more complicated processes and scenarios can be built from the integration of these templates and new content. While this capability will clearly be exposed at a higher level, support for grouping domain elements arbitrarily will need to be supported at this level.
+
+* Event Management Aspect
+
+    This aspect is core to the run-time behavior of the Channels system. Events will be fired in response to user actions as well as rules being fired by the rules engines. The Event Management aspect will listen to events from the Rules Engine Aspect and normalize them into a common framework. This aspect will also respond to events from the data model layer (i.e. JavaBeans event firing), the UI framework and application layers.
+
+    Future versions of Channels will support events from external sources for simulation and integration between instances.
+
+* Rules Aspect
+
+    One of the major features of Channels is the ability to infer and derive results from the current state of the domain models. Rules fire in response to system activity to infer new actions, discover gaps, etc. The Channels system will modularize the use of the open source JBoss Rules (aka Drools) engine into an aspect. This will keep rules-oriented details from complicating the domain model as well as make it possible to switch to a different engine in the future (e.g. better scalability, more efficient RETE implementations, etc.)
+
+    One of the important considerations for adopting a rules engine in this environment is needing to keep stated assertions separate from derived assertions. As an example, the presence of certain conditions might suggest 'To Do' items for a user. Only stated facts, objects and assertions should be stored by the persistence layer. In theory the derived assertions should be recreated when the system is restarted. How this will be handled remains an open question, but it should be possible to track where in the control flow of a process these objects are being created using AspectJ aspects. This should make it straightforward to determine whether something was asserted explicitly or not without complicating the data models. Once it is determined, a simple property could be set on each instance indicating whether it should be persisted or not.
+
+* Transaction Aspect
+
+    Like any multi-user system with shared state, Channels needs to ensure the integrity of the models and databases it uses to prevent accidental corruption or loss. Databases historically provided the means for transactional integrity, although the J2EE platform has simplified the process for enterprise application developers by making it easy to integrate with a standard interface. The Java Transaction API (JTA) provides this interface to underlying TransactionManagers.
+
+    The Spring Framework, fundamental to the Channel architecture, has advanced and flexible transaction support for working with the JTA. Transactions can be applied declaratively, without direct programmatic invocation. This helps keep the transactional infrastructure out of the code it is protecting.
+    
+    The Channels system will integrate the Java Open Transaction Manager (JOTM) with Spring as the basis of its transactional support. JOTM is an open source TransactionManager capable of being integrated with a variety of application and database transactional implementations. While the JOTM/Spring declarative hooks should provide most of the coverage needed for Channels, it is possible that a transactional aspect may be necessary to work at a finer level. The two approaches should work well together and will definitely keep the infrastructure out of the domain elements.
+
+* Persistence Aspect
+
+    Any real system needs to be able to store application state in a manner that captures the work that has been done in a user session; this involves domain objects, their relationships, etc. Persistence frameworks have been traditionally problematic because of the Object Relational mismatch and the fact that domain objects usually ended up being tangled by the persistence behavior. The code to support storing and retrieving the objects complicates the simplicity of the domain model. 
+
+    Newer persistent frameworks such as Hibernate allow for clean separations between object models and the means by which the persistent data is stored and queried. In order to maintain this separation, Channels will use a persistence aspect to to modularize these features. Initial support will be implemented using Java Serialization as a quick and dirty approach to basic persistence without requiring a database. As other pieces fall into place, we will go back and roll in a persistence mechanism that interacts with the transaction aspect and a relational database for robust production deployment.
+
+* Architectural Dependencies
+
+    The key dependency remains getting the Domain Model layer sorted out. Even with the use of aspects to modularize the application of event management, security, etc., the domain model has to be understood in order to hang these hooks upon it. The domain layer can be modified over time without breaking these modularized architectural components but unit tests that engage multiple layers and aspects will help catch when they do.
+
+    Many of the aspects are self-contained or have minimal dependencies so far. Care should be given to manage the weaving so it happens in the correct order. Weaving composition remains one of the weak points of the AspectJ AOP mechanism. It is easy to declare an aspect that dominates or is dominated by other aspects (e.g. security is always woven to be the "outer layer"), but it is difficult to get multiple aspects woven against the same join points in subtle ways.
+
+Deployment Architecture
+
+    For the immediate future, Channels will be deployed on a single box fitted to the expected volume of activity in a given environment. Smaller organizations, user bases and data sets will not require expensive hardware. Larger installations will benefit from additional CPUs/Cores and large, RAID-backed storage arrays. Channels' dependence upon a rules engine necessitates as much memory as can be afforded per installation.
+
+External Interfaces
+
+    Channels will presently have no external interfaces to other systems. It is entirely likely that REST and SOAP-based web services will be useful in the next few releases to support server instance federation across domain and organizational boundaries. Such interfaces would also support adoption of different rich client interfaces and integration with other workflow products as needed.
