@@ -40,8 +40,6 @@ Participant Use Cases
 	
 	* {{{#generate_report} Generate report}}
 	
-	* {{{#manage_archives} Manage archives}}
-	
 	* {{{#invite_user} Invite user}}
 	
 	* {{{#chat} Chat}}
@@ -225,11 +223,11 @@ Participant Use Cases
 	
 	* {{{#add_organization} Add organization}}
 	
-	* {{#describe_element} Describe element}}
+	* {{{#describe_element} Describe element}}
 	
-	* {{#accept_or_reject_a_suggested_element} Accept or reject a suggested element}}
+	* {{{#accept_or_reject_a_suggested_element} Accept or reject a suggested element}}
 	
-	* {{#mark_an_element_as_relevant_or_not} Mark an element as relevant or not}}
+	* {{{#mark_an_element_as_relevant_or_not} Mark an element as relevant or not}}
 	
 	[]
 
@@ -540,7 +538,7 @@ Participant Use Cases
 	
 ** {Query project}
 
-	A project can be {{#search_projects} searched}} for specific elements via keywords. It can also be searched with a "finder" using queries expressed in terms
+	A project can be {{{#search_projects} searched}} for specific elements via keywords. It can also be searched with a "finder" using queries expressed in terms
 	of the properties of its elements.
 	
 	A finder is opened in the context of a project, model or scenario, which sets its scope. If at the project scope, the user is given a choice among the kinds of data elements that relate directly to projects. Once the choice is made, the first table appears populated with all instances of this kind that relate directly to the project. Underneath the table the user is given a choice of data element kinds for the next table and so on.
@@ -553,7 +551,7 @@ Participant Use Cases
 	
 	* Choose the kind of elements queried
 	
-	* See all such elements related to the scope of the query
+	* See all such elements related to the element that sets scope of the query
 	
 	* Filter, sort these elements, and see more or less of their properties 
 	
@@ -574,16 +572,36 @@ Participant Use Cases
 	A participant can request dashboards as authorized (a participant can not get a system dashboard or 
 	a dashboard on any organization, for example).
 
-	TBD
 
 ** {Generate report}
 
-	TBD
-
-** {Manage archives}
-
-	TBD
-
+	A report is a document that aggregates and presents data within a defined scope. 
+	A report can be generated as online in HTML (opened in another browser window) or as a PDF (opened in PDF reader as configured by browser).
+	
+	A report can be generated for different scopes: [ (all, organization, role) X ] (system, project, model, scenario).
+	For example, an Issues report can be produced for an entire organization covering a single model (i.e. meaning all organization roles in all scenarios in the model),
+	or a report can be produced for the entire system etc.
+	
+	Certain reports are available only to authorized users. 
+	Only admins can request reports at the system scope.
+	Only representatives can request reports at the scope of the organization across projects (system scope). 
+	A participant in a project can request a report about the project, models and scenarios within it.
+	
+	Simply put, a user can not ask for a report that contains information about or information derived from elements the user does not have access to.
+	
+	There are different kinds of reports:
+	
+	[Playbook] <Scopes = (all, organization, role) X (project, model, scenario).> The report organizes exchanges per events and per roles. Each accompanied with instructions (urgency, what to communicate, escalation...) 
+	and the needed contact infos etc. The report is meant to be used "in the field" and is thus appropriately indexed and provides empty fields to log communications (when , who, status).
+	
+	[Issues] <Scopes = (all, organization, role) X (project, model, scenario).> The report organizes the detected and reported issues, prioritized, together with impact analysis for each issue and proposed solution, if any.
+	
+	[Preparedness] <Scopes = (all, organization, role) X (system, project, model, scenario).> This short, executive summary type report a summary of models and scenarios, with capability metrics and key issues.
+	
+	[Audit] <Scopes = system, project, model, scenario> This report documents the state of the system (resource usage etc.) and provides metrics and aggregated data about participation and user activity.
+	
+	[]
+	
 ** {Invite user}
 
 	A participant, i.e. a certified member of an organization, can make it easy for someone from the same organization to join in.
