@@ -400,7 +400,23 @@ Participant Use Cases
 	
 *** {Mark an element as relevant or not}
 
-	TBD
+	Any participant in a project can add elements specific to a scenario (events, tasks, outcomes, assertions etc.) or global to a project (mostly organizations and agents). 
+	Just as participants may have differing opinions about the values of element properties (e.g. is this outcome likely or not?), they can also
+	have differing opinions about whether elements should be included at all in a scenario (e.g. I don't think that agent X should need to know Y).
+
+	A participant with authority over an element can impose relevance or irrelevance on that element, in spite of opposing opinions.
+	When no authoritative statement has been made about the relevance of an element, the majority opinion wins. In case of a tie, the first
+	opinion entered breaks the tie.
+	An opinion or authoritative statement made by a participant who has lost contributor status for the project is ineffective (but retained).
+	
+	An element considered irrelevant does not participate in the inferrence of other elements.
+	
+	A participant can:
+	
+	* select an element and mark it as relevant or irrelevant, possibly reversing a prior statement
+	* view metrics (how many yeahs vs neahs)
+	* view the identity of the participants who made statements, authoritative or not (and their personae)
+	* identify visually the relevance status of an element
 
 ** {Open analytical view}
 
@@ -461,7 +477,7 @@ Participant Use Cases
 	
 *** {Open a communications graph}
 
-	The participants selects an exchange and requests a communications graph. 
+	The participant selects an exchange and requests a communications graph. 
 	
 	The graph shows all alternate sequences of requests and notifications that can realize the exchange.
 	
@@ -475,7 +491,26 @@ Participant Use Cases
 	
 *** { Open an issues analysis}
 
-	TBD
+	The participant selects an element to which one or more issues are attached  (exchange, need to know, communication etc.)
+	and requests an issues analysis.
+	
+	The issues analysis graphically displays the tasks that can fail directly or indirectly via information dependencies
+	(e.g. Task A causes Agent X to know Y which is critically needed by Task B, thus failing Task A can cause Task B to fail etc.)
+	
+	The user can follow a possible chain of failure and view the consequences of each (missing outcomes), and view the aggregated, downstream consequences
+	at each point of the chain. If a suggested solution is attached to an issue, it is readily accessible for viewing.
+	
+	The participant can:
+	
+	* Expand and collapse issue or at-risk task
+	
+	* View a summary of immediate and aggregated consequences
+	
+	* Zoom-in/out and pan
+	
+	[]
+	
+	
 
 *** {Open a semantic graph}
 
@@ -486,7 +521,7 @@ Participant Use Cases
 	The centered element is the one "in focus". Expanding an element in the diagram shows those that are one degree of separation from it. 
 	An element can also be collapsed (its uniquely related elements disappear). 
 
-	The diagram can be zoomed in and out, panned etc. An element showing in the diagram can be selected as the new focus. 
+	An element showing in the diagram can be selected as the new focus. 
 
 	Different kinds of elements may be represented differently (different shapes or overlayed icons). 
 	Relationships are displayed either as edges or as overlays.
@@ -505,9 +540,39 @@ Participant Use Cases
 	
 ** {Query project}
 
-	TBD
+	A project can be {{#search_projects} searched}} for specific elements via keywords. It can also be searched with a "finder" using queries expressed in terms
+	of the properties of its elements.
+	
+	A finder is opened in the context of a project, model or scenario, which sets its scope. If at the project scope, the user is given a choice among the kinds of data elements that relate directly to projects. Once the choice is made, the first table appears populated with all instances of this kind that relate directly to the project. Underneath the table the user is given a choice of data element kinds for the next table and so on.
+
+	Each finder comes with a number of pre-defined bookmarks for common queries, such as all "my unresolved issues", "all organizations participating in a project" etc.
+	
+	The participant  can:
+
+	* Select the scope of a query (project, model or scenario)
+	
+	* Choose the kind of elements queried
+	
+	* See all such elements related to the scope of the query
+	
+	* Filter, sort these elements, and see more or less of their properties 
+	
+	* Select some/all/none (none = all) of these elements and make them the scope of the next query, etc.
+	
+	* Roll back to previous scope
+	
+	* Go backward/forward (going thru the history of "finder states")
 
 ** {Open dashboard}
+
+	A dashboard is a collection of indicators, metrics, trends that are computed within a scope and
+	displayed visually. There are different kinds of dashboards.
+	
+	Depending on the kind of dashboard, the scope can be the system, a project, a model,
+	a scenario, an organization, a user etc.
+	
+	A participant can request dashboards as authorized (a participant can not get a system dashboard or 
+	a dashboard on any organization, for example).
 
 	TBD
 
