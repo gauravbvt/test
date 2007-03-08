@@ -1,6 +1,6 @@
-----------------------
-Participant Use Cases
-----------------------
+	----------------------
+	Participant Use Cases
+	----------------------
 
 Participant Use Cases
 	
@@ -227,7 +227,9 @@ Participant Use Cases
 	
 	* {{#describe_element} Describe element}}
 	
-	* {{#accept_or_reject_a_suggestion} Accept or reject a suggested element}}
+	* {{#accept_or_reject_a_suggested_element} Accept or reject a suggested element}}
+	
+	* {{#mark_an_element_as_relevant_or_not} Mark an element as relevant or not}}
 	
 	[]
 
@@ -395,6 +397,10 @@ Participant Use Cases
 	prevailing yeah/neah vote is the effective. If an authoritative participant accepts or rejects it, then it is so.
 	
 	Rejected, suggested elements are accessible and visible to participants (with visual cue?) so that they can weigh in (opinions) or decree (authoritative) otherwise.
+	
+*** {Mark an element as relevant or not}
+
+	TBD
 
 ** {Open analytical view}
 
@@ -404,9 +410,23 @@ Participant Use Cases
 	
 	* {{{#open_a_flow_graph} Open a flow graph}}
 	
-	* {{{#open_a_semantic_graph} Open a semantic graph}}
+	* {{{#open_a_communications_graph} Open a communications graph}}
+	
+	* {{{#open_an_issues_analysis} Open an issues analysis}}
+
+	* {{{#open_a_semantic_graph} Open a semantic graph}}	
 	
 	[]
+	
+	In each analytical views, the participant can select a displayed element and:
+	
+	* open an editor to {{{#describe_element} describe it}},
+	
+	* open applicable analytical views on it,
+	
+	* make applicable {{{#make_assertions} assertions}} on it,
+	
+	* mark it as relevant or not
 
 *** {Open a causal graph}
 
@@ -421,11 +441,67 @@ Participant Use Cases
 
 *** {Open a flow graph}
 
+	The participant selects a scenario and requests a flow graph.
+	
+	The flow graph shows how agents, possibly within tasks, are connected by required exchanges in a scenario.
+	
+	The participant can:
+	
+	* Zoom in and out, and pan.
+	
+	* Select an exchange and {{{open_a_communications_graph} open a communications graph}} that shows how that exchange can be realized.
+	
+	* Select an exchange that is marked as having issues and {{{open_an_issues_analysis} open an issues analysis}} on that exchange.
+	
+	* Filter out agents by kind (Role vs Resource), by type or by organization.
+	
+	* Show only exchanges that connect to and from a sender/recipient agent.
+	
+	[]
+	
+*** {Open a communications graph}
+
+	The participants selects an exchange and requests a communications graph. 
+	
+	The graph shows all alternate sequences of requests and notifications that can realize the exchange.
+	
+	the participant can:
+	
+	* Zoom in and out, and pan.
+	
+	* See metrics (delay, security, privacy, reliability) for a sequence or an individual communication.
+
+	[]
+	
+*** { Open an issues analysis}
+
 	TBD
 
 *** {Open a semantic graph}
 
-	TBD
+	The participant selects an element and requests that a semantic graph be opened on it.
+	
+	A semantic graph is a diagrammatic view of an element and elements related to it by one or more degrees of separation. 
+
+	The centered element is the one "in focus". Expanding an element in the diagram shows those that are one degree of separation from it. 
+	An element can also be collapsed (its uniquely related elements disappear). 
+
+	The diagram can be zoomed in and out, panned etc. An element showing in the diagram can be selected as the new focus. 
+
+	Different kinds of elements may be represented differently (different shapes or overlayed icons). 
+	Relationships are displayed either as edges or as overlays.
+
+	The participant can:
+	
+	* Expand/collapse an element
+	
+	* Zoom-in/out and pan
+	
+	* Change focus
+		
+	* Go backward/forward (in focus selection and expanded/collapsed state)
+	
+	[]
 	
 ** {Query project}
 
