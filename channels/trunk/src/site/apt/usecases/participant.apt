@@ -44,6 +44,10 @@ Participant Use Cases
 	
 	* {{{#chat} Chat}}
 	
+	* {{{#todos} Todos}}
+	
+	* {{{#alerts} Alerts}}
+	
 	[]
 
 ** {Modify profile}
@@ -59,6 +63,8 @@ Participant Use Cases
 	
 	* {{{#remove_role} Remove role}}
 	
+	* {{{#request_certification_change} Request certification change}}
+	
 	* {{{#edit_role} Edit role}}
 	
 	* {{{#edit_contact_info} Edit contact info}}
@@ -67,23 +73,38 @@ Participant Use Cases
 
 *** {View roles}
 
-	TBD
+	A participant can view within his/her profile all the roles assigned to him/her. Each role may or may not have been certified by a liaison for that role's organization.
+	If not certified, the user can readily request such certification.
+	
+	The user can also request to see a list of all other participants in shared projects with any of the same role types describing a role.
 
 *** {Add role}
 
-	TBD
+	A participant can add in a profile a role played in an organization.
+	The role is not certified (unless the participant is a liaison for that organization).
+	The participant can request certification from a liaison.
 
 *** {Remove role}
 
-	TBD
+	A participant can remove a role he/she has authority over that has yet to be certified. 
+	Once certified, a participant would first request de-certification from the liasion for that role's organization.
+	
+*** {Request certification change}
+
+	A participant can select a role in a profile and request from an organization's liaison that the role be 
+	
+	* certified to indicate that the participant plays this role within this organization,
+	* decertified to indicate that the participant is no longer playing this role within this organization.
 	
 *** {Edit role}
 
-	TBD
+	A participant can describe a role as he/she would for any other element. See {{{#describe_element} Describe element}}
 
 *** {Edit contact info}
 
-	TBD
+	A participant can add/describe end points and their availabilities.
+	
+	 - More TBD -
 
 ** {Browse projects}
 
@@ -362,17 +383,31 @@ Participant Use Cases
 	The user either enters the value by hand or selects it using some UI device (calendar for date, slider for numerical value, type tree for types, a modal editor for "complex" values etc.)
 	The changes to property values are validated.
 
-**** Authority vs opinions
+**** {Authority vs opinions}
 	
 	The participant can edit an element either with or without authority.
 
-	The system determines whether the user has authority over an element (e.g. a participant has authority over his/her own profile).
+	The system determines whether the user <in a given persona> has authority over an element (e.g. a participant has authority over his/her own profile).
 
 	Often, when a participant adds a new element, he/she automatically acquires authority over it for as long as he/she retains the privileges that allowed this addition.
 
-	More than one user can have authority over an element (e.g. a participant, his/her organizational liaison and the project's manager).
+	Authority over an element can be shared, for example, a participant, his/her organizational liaison and the project's manager can all have either direct or
+	indirect authority over the description of an event in a scenario. 
 	
-	<An element without authoritative user other than a project manager is said to be "public".>
+	Authority can be <<direct>>, for example, a participant has authority over a Task he/she is said to execute, 
+	A manager has direct authority over the description of a project and the models within.
+	A liaison has direct authority over the description of an organization and of the roles within.
+	
+	Authority can be <<indirect>>:
+	
+	* A liaison for an organization has authority over all elements a participant 
+	in a given persona where he/she is member of that organization has authority over.
+	
+	* A project manager has indirect authority over all elements a participant added to that project.
+	
+	[]
+	
+	<An element for which there is no direct authority is said to be "public".>
 	
 	When a non-authoritative participant sets or changes the value of an element's property, this it is considered an opinion and it is recorded with other opinions.
 
@@ -412,9 +447,14 @@ Participant Use Cases
 	A participant can:
 	
 	* select an element and mark it as relevant or irrelevant, possibly reversing a prior statement
+
 	* view metrics (how many yeahs vs neahs)
+
 	* view the identity of the participants who made statements, authoritative or not (and their personae)
-	* identify visually the relevance status of an element
+
+	* identify visually the relevance status of an element.
+	
+	[]
 
 ** {Open analytical view}
 
@@ -441,6 +481,8 @@ Participant Use Cases
 	* make applicable {{{#make_assertions} assertions}} on it,
 	
 	* mark it as relevant or not
+	
+	[]
 
 *** {Open a causal graph}
 
@@ -627,5 +669,148 @@ Participant Use Cases
 	
 ** {Chat}
 
-	TBD
+	Whenever an element is displayed, be it in a list, a diagram, a map, a timeline etc., 
+	a participant can select it and request that a chat be opened on the element as the topic of conversation.
+	
+	The element can be "large or small", namely it can be a project, a model or a scenario down to a task, a need to know, an information asset etc.
+	An element can be within the scope of another, for example a need to know on a task in in the scope of the task which is in the scope of a scenario,
+	which is in the scope of a model which is in the scope of a project. A message added to a conversation about an element is also visible from the conversation
+	about the "enclosing" element etc. A participant wanting to see all that's being discussed in a scenario would open a chat on that scenario.
+	
+	A conversation about a topic is ongoing; previous messages are never lost and can be viewed by all participants.
+	
+	Other participants are automatically {{{#alerts} alerted}} that a conversation is initiated or is being picked up again. They are those who:
+	
+	* have already contributed to the conversation,
+	
+	* or have contributed to the addition or description of the element, 
+
+	* or have {{{#authority_vs_opinions}direct authority}} over the element,
+	
+	* or have previously {{{#signal_interest}signaled interest}} in the element,
+	
+	* <<and>> have not {{{#signal_no_interest}requested not to be alerted}} about the element.
+	
+	[]
+	
+	When in a conversation, the participant can:
+	
+	* Enter a message,
+	
+	* Scroll to other messages,
+	
+	* Search a conversation (find function)
+	
+	* See all contributing participants, and those currently online
+	
+	* Mark a message as important (the flag visible to all, not just to the participant who enters it)
+	
+	* Scroll to previous/next important message
+	
+	[]
+	
+	When a participant is alerted about a new or re-activated conversation, the participant can elect to enter the conversation.
+	
+	A participant can:
+	
+	* list all conversations he/she has ever participated in and enter any,
+	
+	* by looking at element, see if there is a conversation about this element and if the conversation is active,
+	
+	* request arbitration from someone with direct or indirect authority over an element in case of an unresolved dispute about that element (authoritative users are alerted).
+	
+	[]
+	
+** {Todos}
+
+	A participants manages a to do list containing "todos" describing about what the participant could or should do next in Channels.
+	
+	Todos are a very important mechanism by which the system and other participants can communicate with a participant.
+	
+	A participant's todo can be entered by the participant, by another participant (as an opinion) or by the system (as a suggestion).
+	A participant can confirm/accept a proposed todo, or reject it (the todo is not lost, allowing the participant to change his/her mind later).
+	
+	Todos are typed, described and prioritized. A todo may contain a link that takes the participant to where something needs to be done.
+	
+	The participant can:
+	
+	* enter and describe a todo for self, some particular participant or whoever has authority over an element (this can be done by selecting an element and creating a todo on it - the todo will then link to the element)
+	
+	* sort and filter a todo list (hide completed, show most urgent ones, hide proposed, show most recent first etc.),
+	
+	* search a todo list (find function),
+	
+	* accept/reject a proposed todo,
+	
+	* delete a todo he/she entered,
+	
+	* got to element, conversation etc. where something needs to be done,
+	
+	* add comment to a todo,
+	
+	* mark a todo as opened, then as closed.
+	
+	[]
+	
+** {Alerts}
+
+	Alerting is the mechanism by which the system brings to the attention of a participant 
+	what's happening in a Channels site that should be of immediate interest to that participant.
+	
+	Each action taken within Channels can raise one or more alerts to one or more participants.
+	The action can raise alerts either by itself (such as asserting a need to know) or 
+	because of a consequence of this action (such as an Issue being inferred by the system).
+	
+	Alerts are raised whenever:
+	
+	* an element of interest to the participant is modified,
+	
+	* a conversation in which the participant took part is re-activated,
+	
+	* a todo for a participant is proposed (either opined by another participant or suggested by the system).
+	
+	[]
+	
+	A participant is interested in an element if he/she:
+	
+	* has {{{#authority_vs_opinions} direct authority}} over that element,
+	
+	* or has explicitly signaled interest in the element and/or those within its scope,
+	
+	* and has <<not>> signaled no interest in the element and/or those within its scope.
+	
+	[]
+	
+	A participant can see a list of all alerts and
+	
+	* sort and filter the list based on type, priority, date etc.
+	
+	* select an alert and see its details,
+	
+	* mark an alert as read/unread
+	
+	* if the alert is caused by a prior explicit or implicit interest in the element, 
+	the participant can easily signal no further interest (bother me no more)
+	
+	[]
+
+	Wherever an element is listed, a participant can signal interest or signal no interest.
+
+*** Signal interest
+
+	A participant can select an element and express an explicit interest in that element.
+	The participant can limit this interest to the element itself include all elements within its scope.
+	For example, a participant can indicate interest in a scenario, and in all elements within it. Or she can
+	limit that interest to the description of the scenario itself.
+	
+	A participant should receive a visual cue when looking at a element in a list, timeline, map etc. that indicates
+	that the element is of interest to the participant.
+	
+	The participant should also be able to list all elements in which he/she has explicitly signaled an interest and no interest.
+	
+
+*** Signal no interest
+	
+	Wherever an element of interest is shown, a participant can signal no interest, possibly reversing a prior signal of interest.
+
 	
