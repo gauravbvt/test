@@ -24,11 +24,11 @@ Use Cases
 	[Manager] (Context: Channels) A user who is authorized to create models in a project and who authorizes the participation of organizations (possibly restricted to certain roles). 
 	A manager has authority over any content in the project. A manager also has participant privileges for the project.
 
-	[Representative] (Context: Channels) A user who has authority over the description of an organization across projects and the certification of users as role players in that organization.
+	[Liaison] (Context: Channels) A user who has authority over the description of an organization across projects and the certification of users as role players in that organization.
 
 	[Expert] (Context: Channels) A user who can authoritatively create and modify reference data in one or more assigned domains.
 
-	[Admin] (Context: Channels) A Channels site administrator responsible for creating projects, for assigning project managers, organization representatives and domain experts, and generally maintaining a Channels installation.
+	[Admin] (Context: Channels) A Channels site administrator responsible for creating projects, for assigning project managers, organization liaisons and domain experts, and generally maintaining a Channels installation.
 	
 	[]
 
@@ -36,7 +36,7 @@ Use Cases
 
 	Channels gives a project manager the necessary privileges to act as a "benevolent dictator" who sets the direction and scope of a project without having to micro-manage it.
 
-	Channels gives the representative of an organization the rights to control how the organization is described across projects and to certify users role-playing members of the organization.
+	Channels gives the liaison of an organization the rights to control how the organization is described across projects and to certify users role-playing members of the organization.
 
 	Channels empowers participants to create scenarios, to view all project content, to authoritatively edit "their" content and to enter opinions as to the rest.
 	
@@ -70,11 +70,11 @@ Use Cases
 ** {Request certification}
 
 	The user requests to be certificed as a member of a given organization.
-	The user selects an organization from a directory of all organizations represented in a Channels installation (i.e. that have representatives).
+	The user selects an organization from a directory of all organizations represented in a Channels installation (i.e. that have liaisons).
 	The user may specify one or more role types (from typology of roles or by naming them if not available). 
-	The user then requests to be certified by the organization's representative (or participant if representative allows) as member as playing the given roles.
+	The user then requests to be certified by the organization's liaison (or participant if liaison allows) as member as playing the given roles.
 	
-	A representative of the organization receives and processes the request and may further describe the role(s).
+	A liaison of the organization receives and processes the request and may further describe the role(s).
 	
 	The user is notified when certification is obtained. The user can then browse all projects in which he/she is now
 	participant or guest by virtue of certified membership in the organization.
@@ -136,7 +136,7 @@ See also
  	
  	* {{{manager.html} Project manager use cases}}
 
-	* {{{representative.html} Organization representative use cases}}
+	* {{{liaison.html} Organization liaison use cases}}
 
 	* {{{expert.html} Domain expert use cases}}
 

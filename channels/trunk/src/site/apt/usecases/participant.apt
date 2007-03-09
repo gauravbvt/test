@@ -6,7 +6,7 @@ Participant Use Cases
 	
 * What is a participant?
 
-	A participant is a user who is authorized by the representative of an organization to participate 
+	A participant is a user who is authorized by the liaison of an organization to participate 
 	in projects in which the organization is invited, representing the role(s) he/she plays in that organization.
 	A participant may be given the status of contributor or guest in a project. 
 	
@@ -321,7 +321,7 @@ Participant Use Cases
 	A participant creates a role or an information resource within a project and describes it. This may be done from anywhere in a project but the action should be readily available
 	wherever a participant makes an assertion and needs to identify an agent.
 
-	If the agent is described as belonging to an organization and there is a representative for that organization (now or later), then the representative has authority over the agent's description.
+	If the agent is described as belonging to an organization and there is a liaison for that organization (now or later), then the liaison has authority over the agent's description.
 	Otherwise the agent is a public element visible to all projects.
 	
 	If the agent is a role and a participant joins the projet for that role (the description of a role includes the identity of an organization), then this participant acquires authority over the
@@ -329,10 +329,10 @@ Participant Use Cases
 
 *** {Add organization}
 
-	One may need to introduce an organization for which there is no representative.
+	One may need to introduce an organization for which there is no liaison.
 	A participant creates an organization and describes it. This may be done anywhere in a project but should be readily available wherever a participant describes an agent.
 	
-	If the organization later gains a representative, that representative acquires authority over the description of the organization.
+	If the organization later gains a liaison, that liaison acquires authority over the description of the organization.
 	Until then, the description of the organization is a public system element (visible to all projects).
 
 *** {Describe element}
@@ -341,8 +341,8 @@ Participant Use Cases
 	When a participant creates an element, he/she must minimally describe it before it is added.
 	
 	An element is anything that appears in a scenario or is referenced by that element.
-	The participant should be able to select an element wherever and however it is shown (in a list, a map, a graph, an editor etc.) and
-	be able to request to edit it. 
+	<<The participant should be able to select an element wherever and however it is shown (in a list, a map, a graph, an editor etc.) and
+	be able to request to edit it.>> 
 	
 	If the participant has contributor status in the current project, the editor opens as "read/write", else it opens as "read-only".
 	
@@ -370,7 +370,7 @@ Participant Use Cases
 
 	Often, when a participant adds a new element, he/she automatically acquires authority over it for as long as he/she retains the privileges that allowed this addition.
 
-	More than one user can have authority over an element (e.g. a participant, his/her organizational representative and the project's manager).
+	More than one user can have authority over an element (e.g. a participant, his/her organizational liaison and the project's manager).
 	
 	<An element without authoritative user other than a project manager is said to be "public".>
 	
@@ -560,14 +560,16 @@ Participant Use Cases
 	* Roll back to previous scope
 	
 	* Go backward/forward (going thru the history of "finder states")
+	
+	[]
 
 ** {Open dashboard}
 
 	A dashboard is a collection of indicators, metrics, trends that are computed within a scope and
-	displayed visually. There are different kinds of dashboards.
+	displayed visually. There are different kinds of dashboards for system, organization and scenario monitoring.
 	
 	Depending on the kind of dashboard, the scope can be the system, a project, a model,
-	a scenario, an organization, a user etc.
+	a scenario, an organization, a user etc. A user can not ask for a dashboard that contains information derived from elements the user does not have access to.
 	
 	A participant can request dashboards as authorized (a participant can not get a system dashboard or 
 	a dashboard on any organization, for example).
@@ -584,7 +586,7 @@ Participant Use Cases
 	
 	Certain reports are available only to authorized users. 
 	Only admins can request reports at the system scope.
-	Only representatives can request reports at the scope of the organization across projects (system scope). 
+	Only liaisons can request reports at the scope of the organization across projects (system scope). 
 	A participant in a project can request a report about the project, models and scenarios within it.
 	
 	Simply put, a user can not ask for a report that contains information about or information derived from elements the user does not have access to.
@@ -619,9 +621,9 @@ Participant Use Cases
 	The participant then sends the invitation (here the email address is entered but is not retained) which will be received as an email 
 	with a link for the new user to access to confirm acceptance of the invitation.
 	
-	The organization's representative will receive a notification and may decide to cancel the certification.
+	The organization's liaison will receive a notification and may decide to cancel the certification.
 
-	<The representative either authorizes the certification before or after it is sent out (a user setting for the representative).>
+	<The liaison either authorizes the certification before or after it is sent out (a user setting for the liaison).>
 	
 ** {Chat}
 
