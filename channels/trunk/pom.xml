@@ -13,6 +13,32 @@
   <version>1.0-SNAPSHOT</version>
   <description>Communications Analysis and Planning</description>
   <url>https://ranger.homelinux.net/projects/channels</url>
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://ranger.homelinux.net:8081/continuum</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <configuration>
+        	<address>denis@127.0.0.1</address>
+        	</configuration>
+      </notifier>
+      <notifier>
+        <type>jabber</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <configuration>
+        	<address>DenisRanger@myjabber.net</address>
+        	</configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
   <build>
     <resources>
       <resource>
