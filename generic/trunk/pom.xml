@@ -48,7 +48,24 @@
 			<email>david@mind-alliance.com</email>
 		</contributor>
 	</contributors>
-	
+
+	<ciManagement>
+		<system>continuum</system>
+		<url>http://ranger.homelinux.net:8081/continuum/servlet/continuum/target/ProjectBuilds.vm/view/ProjectBuilds/id/2</url>
+		<notifiers>
+			<notifier>
+				<type>mail</type>
+				<sendOnError>true</sendOnError>
+				<sendOnFailure>true</sendOnFailure>
+				<sendOnSuccess>false</sendOnSuccess>
+				<sendOnWarning>false</sendOnWarning>
+				<configuration>
+					<address>denis@mind-alliance.com</address>
+				</configuration>
+			</notifier>
+		</notifiers>
+	</ciManagement>
+
 	<repositories>
 		<repository>
 			<id>mindalliance</id>
@@ -187,9 +204,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
 				<configuration>
-					<connectionType>developerConnection</connectionType>
+					<connectionType>connection</connectionType>
 					<basedir>${basedir}</basedir>
- 					<scmUrl>https://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
+ 					<scmUrl>http://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
 <!-- 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
   -->				<displayFileDetailUrl>https://ranger.homelinux.net/tracsvn%FILE%</displayFileDetailUrl>
 				</configuration>
