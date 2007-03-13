@@ -20,18 +20,26 @@ import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Events;
 
 import com.mindalliance.zk.mxgraph.command.AddEdgeCommand;
+import com.mindalliance.zk.mxgraph.command.AddOverlayCommand;
 import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
 import com.mindalliance.zk.mxgraph.command.ClickOverlayCommand;
 import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SelectCellsCommand;
-import com.mindalliance.zk.mxgraph.command.AddOverlayCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
 import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
 import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
-import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
+import com.mindalliance.zk.mxgraph.event.GroupCellsEvent;
 import com.mindalliance.zk.mxgraph.event.OverlayEvent;
+import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
+import com.mindalliance.zk.mxgraph.event.StyleAddedEvent;
+import com.mindalliance.zk.mxgraph.event.UngroupCellsEvent;
 import com.mindalliance.zk.mxgraph.event.VertexAddedEvent;
 
+/**
+ * A ZK component that wraps an mxGraph diagram.  This class handles graph initialization via a set of editable properties.
+ * The graph data model is
+ *
+ */
 @SuppressWarnings("serial")
 public class MxGraph extends HtmlBasedComponent {
 	
@@ -120,10 +128,27 @@ public class MxGraph extends HtmlBasedComponent {
 	private String[] selection = new String[0]; // array of ids
 	private Map<String,Object> properties = new HashMap<String,Object>();	
 	private Map<String,Menu> menus = new HashMap<String,Menu>();
-	
+	/**
+	 * Constructs a new graph
+	 *
+	 */
 	public MxGraph() {
+		initializeStylesheet();
 	}
 	
+	private void initializeStylesheet() {
+		styleSheet.putCellStyle(MxConstants.SHAPE_ACTOR, MxStyleHelper.getActorStyle());
+		styleSheet.putCellStyle(MxConstants.SHAPE_ARROW, MxStyleHelper.getArrowStyle());
+		styleSheet.putCellStyle(MxConstants.SHAPE_CYLINDER, MxStyleHelper.getCylinderStyle());
+		styleSheet.putCellStyle(MxConstants.SHAPE_ELLIPSE, MxStyleHelper.getEllipseStyle());
+		styleSheet.putCellStyle(MxConstants.SHAPE_SWIMLANE, MxStyleHelper.getSwimlaneStyle());
+	}
+	
+	/**
+	 * Encodes an object as a JSON string
+	 * @param object
+	 * @return the JSON string
+	 */
 	public static String encode(Object object) {
 		String encodedString = null;
 		encodedString = JSONSerializer.toJSON(object).toString();
@@ -144,7 +169,10 @@ public class MxGraph extends HtmlBasedComponent {
 		}
 		return sb.toString();
 	}
-	
+	/**
+	 * Returns a Map containing the current state of the graph
+	 * @return Map<String, Object>
+	 */
 	public Map getInitialState() {
 		Map<String,Object> state = new HashMap<String,Object>();
 		state.put("layout", layout);
@@ -156,19 +184,36 @@ public class MxGraph extends HtmlBasedComponent {
 		state.put("menus", menus);
 		return state;
 	}
-
+	/**
+	 * Adds a vertex to the graph and model.
+	 * @param vertex
+	 * @return 
+	 */
 	public MxVertex addVertex(MxVertex vertex) {
 		model.addCell(vertex);
 		smartUpdate("z:addVertex", MxGraph.encode(vertex));
 		Events.postEvent(new VertexAddedEvent(MxConstants.COMMAND_ADD_VERTEX, this, vertex.getId()));
 		return vertex;
 	}
-	
+	/**
+	 * Constructs a new vertex and adds it to the graph and model.
+	 * @param value The value to display
+	 * @param x Upper left X coordinate
+	 * @param y Upper left Y coordinate
+	 * @param width desired initial width of the vertex
+	 * @param height desired initial height of the vertex
+	 * @return the new vertex
+	 */
 	public MxVertex addVertex(String value, int x, int y, int width, int height) {
 		MxVertex vertex = new MxVertex(value, x, y, width, height);
 		return addVertex(vertex);
 	}
 	
+	/**
+	 * Adds an edge to the graph and model
+	 * @param edge
+	 * @return
+	 */
 	public MxEdge addEdge(MxEdge edge) {
 		model.addCell(edge);
 		smartUpdate("z:addEdge", MxGraph.encode(edge));
@@ -176,16 +221,31 @@ public class MxGraph extends HtmlBasedComponent {
 		return edge;
 	}
 	
+	/**
+	 * Constructs a new edge and adds it to the model
+	 * @param value the value to display on the edge
+	 * @param from the source of the edge
+	 * @param to the target of the edge
+	 * @return
+	 */
 	public MxEdge addEdge(String value, MxVertex from, MxVertex to) {
 		MxEdge edge = new MxEdge(value, from.getId(), to.getId());
 		return addEdge(edge);
 	}
 	
+	/**
+	 * Deletes a particular cell from the graph and deletes it from the model.
+	 * @param id
+	 */
 	public void deleteCell(String id) {
 		String[] ids = {id};
 		deleteCells(ids);
 	}
 	
+	/**
+	 * Removes a set of cells from the graph and deletes them from the model.
+	 * @param ids the list of unique IDs for the cells to remove
+	 */
 	public void deleteCells(String[] ids) {
 		List<String> removedIds = new ArrayList<String>();
 		for (String id : ids) {
@@ -198,11 +258,21 @@ public class MxGraph extends HtmlBasedComponent {
 														removedIds.toArray(new String[removedIds.size()])));
 	}
 	
+	/**
+	 * Adds a menu.  The change is only propagated to the client when <code>requiresUpdate</code> is true.
+	 * @param menu the menu to add
+	 * @param requiresUpdate
+	 */
 	public void addMenu(Menu menu, boolean requiresUpdate) {
 		menus.put(menu.getName(), menu);
 		if (requiresUpdate) smartUpdate("z:addMenu", MxGraph.encode(menu));
 	}
 	
+	/**
+	 * Adds an overlay to a cell.
+	 * @param cell
+	 * @param overlay
+	 */
 	public void addOverlay(MxCell cell, MxOverlay overlay) {
 		model.addOverlay(cell, overlay);
 		JSONObject obj = JSONObject.fromObject(overlay);
@@ -212,6 +282,11 @@ public class MxGraph extends HtmlBasedComponent {
 														cell.getId(), overlay.getId()));
 	}
 	
+	/**
+	 * Removes a particular overlay from being rendered on a cell.
+	 * @param cell
+	 * @param overlay
+	 */
 	public void removeOverlay(MxCell cell, MxOverlay overlay) {
 		model.removeOverlay(cell, overlay);
 		JSONObject obj = new JSONObject();
@@ -222,6 +297,10 @@ public class MxGraph extends HtmlBasedComponent {
 				cell.getId(), overlay.getId()));
 	}
 	
+	/**
+	 * Removes all overlays from a particular cell.
+	 * @param cell
+	 */
 	public void clearOverlays(MxCell cell) {
 		model.clearOverlays(cell);
 		JSONObject obj = new JSONObject();
@@ -230,7 +309,13 @@ public class MxGraph extends HtmlBasedComponent {
 		Events.postEvent(new OverlayEvent(MxConstants.COMMAND_CLEAR_OVERLAYS, this, 
 				cell.getId(), ""));
 	}
-	
+	/**
+	 * Sets a property on this graph instance.  If the update flag is enabled,
+	 * the property change will be propagated to the client.
+	 * @param name
+	 * @param value
+	 * @param update
+	 */
 	public void setProperty(String name, Object value, boolean update) {
 		properties.put(name, value);
 		if (update){ 
@@ -244,23 +329,93 @@ public class MxGraph extends HtmlBasedComponent {
 		}
 	}
 	
+	/**
+	 * Retrieves a property value by name
+	 * @param name
+	 * @return the property value
+	 */
 	public Object getProperty(String name) {
 		return properties.get(name);
 	}
 		
-	// Event-free setters
+	/**
+	 * Registers a style to be indexed by <code>key</code>.  If there is already an existing style registered 
+	 * under <code>key</code>, it will be replaced with the new style.
+	 * @param key the key to register the style under
+	 * @param style a map containing style elements.  The available elements are documented in MxConstants.STYLE_*
+	 */
+	public void putStyle(String key, Map style) {
+		styleSheet.putCellStyle(key, style);
+		JSONObject obj = new JSONObject();
+		obj.put("key", key);
+		obj.put("style", style);
+		smartUpdate("z:putStyle", obj.toString());		
+		Events.postEvent(new StyleAddedEvent(MxConstants.COMMAND_PUT_STYLE, this, 
+				key));
+	}
 	
+	/**
+	 * Adds a set of existing cells as children of a new group cell.  The parent of the group
+	 * cell will be set to the previous parent of the children cells  The group cell
+	 * should not have previously been added to the graph.
+	 * 
+	 * @param group
+	 * @param cellIds
+	 */
+	public void groupCells(MxVertex group, String[] cellIds) {
+		JSONObject obj = new JSONObject();
+		obj.put("group", MxGraph.encode(group));
+		obj.put("cells", MxGraph.encode(cellIds));   
+		smartUpdate("z:groupCells", obj.toString());
+		Events.postEvent(new GroupCellsEvent(MxConstants.COMMAND_GROUP_CELLS, this, group.getId(), cellIds));
+		for (int inx = 0 ; inx < cellIds.length ; inx++) {
+			MxCell cell = model.getCell(cellIds[inx]);
+			cell.setVertex(true);
+			group.setParent(cell.getParent());
+			cell.setParent(group.getId());
+			group.addChild(cell.getId());
+		}
+		model.addCell(group);
+	}
+	/**
+	 * Removes all children cells from a parent and deletes the parent.
+	 * @param group the parent cell
+	 */
+	public void ungroupCells(MxVertex group) {
+		clearOverlays(group);
+		smartUpdate("z:ungroupCells", group.getId());
+		Events.postEvent(new UngroupCellsEvent(MxConstants.COMMAND_UNGROUP, this, group.getId()));
+		for (String id : group.getChildren()) {
+			MxCell cell = model.getCell(id);
+			cell.setParent(group.getParent());
+		}
+		model.removeCell(group.getId());
+	}
+	
+	// Event-free setters
+
+	/**
+	 * Sets the set of selected cells.  If <code>update</code> is true, 
+	 * the selection is propagated to the client for display.
+	 * @param data the IDs of the cells to select
+	 * @param update 
+	 */
 	public void setSelection(String[] data, boolean update) {
 		selection = data;
 		if (update) smartUpdate("z:select", MxGraph.encode(selection));
         Events.postEvent(new SelectCellsEvent(MxConstants.COMMAND_SELECT, this, data));
 	}
 	
+	/**
+	 * Returns the set of currently selected cells
+	 * @return String[] of cell IDs
+	 */
 	public String[] getSelection() {
 		return selection;
 	}
 
 	/**
+	 * Returns the graph layout
 	 * @return the layout
 	 */
 	public MxLayout getLayout() {
@@ -268,6 +423,7 @@ public class MxGraph extends HtmlBasedComponent {
 	}
 
 	/**
+	 * Returns the model for the graph
 	 * @return the model
 	 */
 	public MxModel getModel() {
@@ -283,6 +439,7 @@ public class MxGraph extends HtmlBasedComponent {
 	}
 
 	/**
+	 * Returns the stylesheet
 	 * @return the styleSheet
 	 */
 	public MxStyleSheet getStyleSheet() {
@@ -290,13 +447,16 @@ public class MxGraph extends HtmlBasedComponent {
 	}
 
 	/**
+	 * Sets the stylesheet.  After initialization, the <code>putStyle()</code> method 
+	 * should be used to register new styles.
 	 * @param styleSheet the styleSheet to set
 	 */
 	public void setStyleSheet(MxStyleSheet styleSheet) {
 		this.styleSheet = styleSheet;
 	}
-
+	
 	/**
+	 * Returns the panning handler
 	 * @return the panningHandler
 	 */
 	public MxPanningHandler getPanningHandler() {

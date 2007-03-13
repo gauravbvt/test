@@ -60,6 +60,7 @@ public class MxConstants {
 	public static final String STYLE_FONTSIZE = "fontSize";
 	public static final String STYLE_FONTSTYLE = "fontStyle";
 	public static final String STYLE_SHAPE = "shape";
+	public static final String STYLE_EDGE = "edgeStyle";
 	public static final int FONT_BOLD = 1;
 	public static final int FONT_ITALIC = 2;
 	public static final int FONT_UNDERLINE = 4;
@@ -98,6 +99,9 @@ public class MxConstants {
 	public static final String COMMAND_REMOVE_OVERLAY = "onRemoveOverlay";
 	public static final String COMMAND_CLEAR_OVERLAYS = "onClearOverlays";
 	public static final String COMMAND_CLICK_OVERLAY = "onClickOverlay";
+	public static final String COMMAND_PUT_STYLE = "onPutStyle";
+	public static final String COMMAND_GROUP_CELLS = "onGroupCells";
+	public static final String COMMAND_UNGROUP = "onUngroup";
 
 
 }

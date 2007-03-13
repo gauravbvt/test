@@ -35,6 +35,7 @@ zkMxGraph.init = function (container) {
         // Create graph and set default state
 		var graph = new mxGraph(container, model);
 		graph.setTooltips(true);
+		new mxRubberband(graph);
 		mxGraph.prototype.isExpandable = function(cell) 
 		{ 
    			return false; /* your condition here */ 	
@@ -99,13 +100,19 @@ zkMxGraph.setAttr = function (container, command, val) {
 			zm_select(container._graph, val);
 			return true;
         case "z:addOverlay":
-        	zm_setOverlay(container, val);
+        	zm_addOverlay(container, val);
         	return true;
 		case "z:removeOverlay":
 			zm_removeOverlay(container._graph, val);
 			return true;
 		case "z:clearOverlays":
 			zm_clearOverlays(container, val);
+			return true;
+		case "z:groupCells":
+			zm_groupCells(container, val);
+			return true;
+		case "z:ungroupCells":
+			zm_ungroupCells(container, val);
 			return true;
 		default:
 			console.error("Invalid command " + command + " " + val);
@@ -456,7 +463,7 @@ function zm_createOverlay(container, id, cell, v) {
 			return new mxGeometry(state.x, state.y, state.width, state.height);
 		}
 	}
-	var v = model.addVertex(cell, cell.id+id, '', v.bounds.x, v.bounds.y, v.bounds.width, v.bounds.height);
+	var v = model.addVertex(cell, 'overlay' + cell.id+id, '', v.bounds.x, v.bounds.y, v.bounds.width, v.bounds.height);
 	model.setStyle(v, "overlay");
 	container._graph.setOverlay(v, overlay);
 }
@@ -473,7 +480,58 @@ function zm_removeOverlay(graph, value) {
 	console.debug("zm_removeOverlay");
 	var model = graph.getModel();
 	var obj = value.parseJSON();
-	var id = obj.cell + obj.overlay;
+	var id = 'overlay' + obj.cell + obj.overlay;
 	var cell = model.getCell(id);
 	model.remove(cell);
 }
+
+function zm_clearOverlays(container, value) {
+	var model = container._graph.getModel();
+	var cell = model.getCell(value);
+	var childCount = model.getChildCount(cell);
+	for(var j=childCount - 1 ; j > -1 ; j--) {
+		var child = model.getChildAt(cell,j);
+		if (child != null && child.id.indexOf('overlay') != -1) {
+			model.remove(child);
+		}
+	}
+}
+
+function zm_putStyle(container, value) {
+	var obj = value.parseJSON();
+	var key = obj.key;
+	var styleState = obj.style;
+	var graph = container._graph;
+	style = {};
+	zm_initStyle(style, styleState);
+	graph.stylesheet.putCellStyle(key, style);
+	
+}
+
+function zm_groupCells(container, value) {
+	var graph = container._graph;
+	var obj = value.parseJSON();
+	var ids = obj.cells;
+	var v = obj.group;
+	var cells = new Array();
+	var vertex = new mxCell(v.value, new mxGeometry(0,0,0,0), 'group');
+	vertex.vertex = true; vertex.edge = false;
+	vertex.id=v.id;
+	for (i=0; i<ids.length; i++) {
+		var id = ids[i];
+		var cell = graph.getModel().getCell(id);
+		if (cell != null) cells.push(cell);
+	}
+	graph.addGroup(vertex, cells, 20);
+}
+
+function zm_ungroupCells(container, value) {
+	var graph = container._graph;
+	var model = container._graph.getModel();
+	var cell = model.getCell(value);
+	zm_clearOverlays(container, value);
+	var cells = new Array();
+	cells.push(cell);
+	graph.ungroup(cells);
+}
+	
