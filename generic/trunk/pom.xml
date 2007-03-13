@@ -110,7 +110,7 @@
 		</repository>
 		<site>
 			<id>mindalliance</id>
-			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/</url>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/${project.artifactId}</url>
 		</site>
 	</distributionManagement>
 	<issueManagement>
