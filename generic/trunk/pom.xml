@@ -103,11 +103,11 @@
 	
 	<scm>
 		<connection>
-			scm:svn:http://ranger.homelinux.net/svn/</connection>
+			scm:svn:http://ranger.homelinux.net/svn/generic/trunk</connection>
 		<developerConnection>
-			scm:svn:https://ranger.homelinux.net/svn/</developerConnection>
+			scm:svn:https://ranger.homelinux.net/svn/generic/trunk</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://ranger.homelinux.net/tracsvn/</url>
+		<url>https://ranger.homelinux.net/tracsvn/generic</url>
 	</scm>
 	
 	<dependencies>
