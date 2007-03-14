@@ -18,95 +18,95 @@ Participant Use Cases
 	
 * What can participants do?
 
-	* {{{#modify_profile} Modify profile}}
+	* {{{#modify_profile} P-1 Modify profile}}
 	
-	* {{{#browse_projects} Browse projects}}
+	* {{{#browse_projects} P-2 Browse projects}}
 	
-	* {{{#search_projects} Search projects}}
+	* {{{#search_projects} P-3 Search projects}}
 	
-	* {{{#assume_persona} Assume persona}}
+	* {{{#assume_persona} P-4 Assume persona}}
 	
-	* {{{#create_and_publish_scenarios} Create and publish scenarios}}
+	* {{{#create_and_publish_scenarios} P-5 Create and publish scenarios}}
 	
-	* {{{#build_scenario} Build scenario}}
+	* {{{#build_scenario} P-6 Build scenario}}
 	
-	* {{{#view_scenario} View scenario}}
+	* {{{#view_scenario} P-7 View scenario}}
 	
-	* {{{#open_analytical_view} Open analytical view}}
+	* {{{#open_analytical_view} P-8 Open analytical view}}
 	
-	* {{{#query_project} Query project}}
+	* {{{#query_project} P-9 Query project}}
 	
-	* {{{#open_dashboard} Open dashboard}}
+	* {{{#open_dashboard} P-10 Open dashboard}}
 	
-	* {{{#generate_report} Generate report}}
+	* {{{#generate_report} P-11 Generate report}}
 	
-	* {{{#invite_user} Invite user}}
+	* {{{#invite_user} P- 12 Invite user}}
 	
-	* {{{#chat} Chat}}
+	* {{{#chat} P-13 Chat}}
 	
-	* {{{#todos} Todos}}
+	* {{{#todos} P-14 Todos}}
 	
-	* {{{#alerts} Alerts}}
+	* {{{#alerts} P-15 Alerts}}
 	
 	[]
 
-** {Modify profile}
+** P-1 {Modify profile}
 
 	A participant's profile is information that describes the participant in any of the projects he/she may participate in.
 	This augments the identity information in the user profile (the user will likely manage both user and participant profiles together).
 
 	A participant can:
 	
-	* {{{#view_roles} View roles}}
+	* {{{#view_roles} P-1.1 View roles}}
 	
-	* {{{#add_role} Add role}}
+	* {{{#add_role} P-1.2 Add role}}
 	
-	* {{{#remove_role} Remove role}}
+	* {{{#remove_role} P-1.3 Remove role}}
 	
-	* {{{#request_certification_change} Request certification change}}
+	* {{{#request_certification_change} P-1.4 Request certification change}}
 	
-	* {{{#edit_role} Edit role}}
+	* {{{#edit_role} P-1.5 Edit role}}
 	
-	* {{{#edit_contact_info} Edit contact info}}
+	* {{{#edit_contact_info} P-1.6 Edit contact info}}
 	
 	[]
 
-*** {View roles}
+*** P-1.1 {View roles}
 
 	A participant can view within his/her profile all the roles assigned to him/her. Each role may or may not have been certified by a liaison for that role's organization.
 	If not certified, the user can readily request such certification.
 	
 	The user can also request to see a list of all other participants in shared projects with any of the same role types describing a role.
 
-*** {Add role}
+*** P-1.2 {Add role}
 
 	A participant can add in a profile a role played in an organization.
 	The role is not certified (unless the participant is a liaison for that organization).
 	The participant can request certification from a liaison.
 
-*** {Remove role}
+*** P-1.3 {Remove role}
 
 	A participant can remove a role he/she has authority over that has yet to be certified. 
 	Once certified, a participant would first request de-certification from the liasion for that role's organization.
 	
-*** {Request certification change}
+*** P-1.4 {Request certification change}
 
 	A participant can select a role in a profile and request from an organization's liaison that the role be 
 	
 	* certified to indicate that the participant plays this role within this organization,
 	* decertified to indicate that the participant is no longer playing this role within this organization.
 	
-*** {Edit role}
+*** P-1.5 {Edit role}
 
 	A participant can describe a role as he/she would for any other element. See {{{#describe_element} Describe element}}
 
-*** {Edit contact info}
+*** P-1.6 {Edit contact info}
 
 	A participant can add/describe end points and their availabilities.
 	
 	 - More TBD -
 
-** {Browse projects}
+** P-2 {Browse projects}
 
 	The user is presented with a list of all named projects in which he/she is a manager, participant or guest.
 	The user can select a project to see all named models created in this project.
@@ -128,7 +128,7 @@ Participant Use Cases
 	
 	The user can do {{{#search projects}keyword searches}} on projects.
 	
-** {Search projects}
+** P-3 {Search projects}
 
 	While browsing authorized projects, the user can search them using keywords. The search will retrieve projects, models, scenarios and 
 	scenario elements that contain any/all of the keywords in their descriptions.
@@ -136,29 +136,7 @@ Participant Use Cases
 	The search results shows the "containment path" of each result (project/model/scenario/event etc.).
 	A link to each result and let's the user open a default viewer on it or any element that contains it.
 	
-** {View a scenario}
-
-	The participant can examine a scenario along multiple perspectives:
-	
-	* A timeline of events, reponse tasks, task outcomes and environments (where communication channels are restricted and/or a different set of policies apply),
-	
-	* A geographical mapping of the above occurences and agents involved,
-	
-	* A social network connecting the agents and organizations involved
-	
-	* A list of information exchanges required in order to execute the above response tasks.
-	
-	[]
-	
-	The timeline is the principal view. The timeline elements can be multi-selected. Selecting elements in it
-	makes them or related elements appear in the other perspectives. Selecting none is the same as selecting all
-	(selection equates focusing).
-	
-	Selecting one or more timeline elements will make all their related agents (i.e who carries out the response tasks and
-	what organizations they are from) appear in the social net and in the map; the exchanges they necessitate also appear in
-	as a tabular list of exchanges.
-		
-** {Assume persona}
+** P-4 {Assume persona}
 
 	A participant can "wear many hats", that is, he/she may be playing different roles in more than one organization. When making assertions, the participant can
 	authoritatively say something about himself/herself in a given role, or the participant may express an opinion about some other role, possibly not in his/her organization.
@@ -167,7 +145,7 @@ Participant Use Cases
 	Before making any contribution, the participant must assume as persona one of the roles he/she plays in an organization. That persona is in effect until the participant
 	changes it. The default persona is a user setting.
 	
-** {Create and publish scenarios}
+** P-5 {Create and publish scenarios}
 
 	Any participant can create and publish a scenario in a project but only a manager for that project can close or even delete a scenario once it has been published.
 	Until a scenario is published, it is considered a draft and is visible and modifiable only by the participant who created it. 
@@ -177,17 +155,17 @@ Participant Use Cases
 	
 	The participant can:
 	
-	* {{{#create_a_draft_scenario} Create a draft scenario}}
+	* {{{#create_a_draft_scenario} P-5.1 Create a draft scenario}}
 	
-	* {{{#initialize_a_draft_scenario} Initialize a draft scenario}}
+	* {{{#initialize_a_draft_scenario} P-5.2 Initialize a draft scenario}}
 	
-	* {{{#delete_a_draft_scenario} Delete a draft scenario}}
+	* {{{#delete_a_draft_scenario} P-5.3 Delete a draft scenario}}
 	
-	* {{{#publish_a_draft_scenario} Publish a draft scenario}}
+	* {{{#publish_a_draft_scenario} P-5.4 Publish a draft scenario}}
 
 	[]
 
-*** {Create a draft scenario}
+*** P-5.1 {Create a draft scenario}
 
 	The participant selects a model in a project and requests that a scenario be created. 
 	A form appears in which the user enters:
@@ -202,7 +180,7 @@ Participant Use Cases
 	 
 	 The participant can submit the form or cancel the creation of a draft scenario. Upon submitting, the scenario viewer is opened on the draft scenario for it to be initialized.
 	 	 
-*** {Initialize a draft scenario}
+*** P-5.2 {Initialize a draft scenario}
 	 
 	 If the scenario viewer is not open on a draft scenario, the participant can access a list of draft scenarios, select one of them and open a scenario viewer on it.
 	 The participant can then add the incidents (defining events) and environments that will impose constraints on resources and alter the policy landscape.
@@ -211,12 +189,12 @@ Participant Use Cases
 	 The other scenarios visible to the participant are searched for similarities (based on event types of incidents primarily) and brought to the attention of the participant,
 	 the goal being to avoid the creation of redundant scenarios.
 
-*** {Delete a draft scenario}
+*** P-5.3 {Delete a draft scenario}
 
 	The participant selects a draft scenario and requests its deletion. The participant is asked for confirmation before permanently removing the draft scenario.
 	The participant can cancel the deletion.
 
-*** {Publish a draft scenario}
+*** P-5.4 {Publish a draft scenario}
 
 	The participant selects one of his/her draft scenarios and requests that it be published. If the scenario is insufficiently initialized (e.g. no incident or objectives), then the request
 	is rejected and the participant is told why.
@@ -227,32 +205,32 @@ Participant Use Cases
 	
 	The publication of a scenario is an event of which all participants are notified.
 
-** {Build a scenario}
+** P-6 {Build a scenario}
 
 	A participant contributes to a scenario by making assertions about existing elements in the scenario. An element is anything that composes a scenario such as events,
 	tasks, outcomes, exchanges, and assertions made about them. This means that assertions can be made about assertions where meaningful (e.g. "I need to know if he knows")
 
 	The participant can:
 	
-	* {{{#make_assertions} Make assertions}}
+	* {{{#make_assertions} P-6.1 Make assertions}}
 	
-	* {{{#add_event} Add event}}
+	* {{{#add_event} P-6.2 Add event}}
 	
-	* {{{#add_outcome} Add outcome}}
+	* {{{#add_outcome} P-6.3 Add outcome}}
 	
-	* {{{#add_agent} Add agent}}
+	* {{{#add_agent} P-6.4 Add agent}}
 	
-	* {{{#add_organization} Add organization}}
+	* {{{#add_organization} P-6.5 Add organization}}
 	
-	* {{{#describe_element} Describe element}}
+	* {{{#describe_element} P-6.6 Describe element}}
 	
-	* {{{#accept_or_reject_a_suggested_element} Accept or reject a suggested element}}
+	* {{{#accept_or_reject_a_suggested_element} P-6.7 Accept or reject a suggested element}}
 	
-	* {{{#mark_an_element_as_relevant_or_not} Mark an element as relevant or not}}
+	* {{{#mark_an_element_as_relevant_or_not} P-6.8 Mark an element as relevant or not}}
 	
 	[]
 
-*** {Make assertions}
+*** P-6.1 {Make assertions}
 
 	An assertion is a statement about a scenario element indicating that information is needed or available, or that a given event is to be responded to by the execution of a task,
 	or that access to given agent is authorized, or that a given information exchange is agreed to. These assertions are either made authoritatively for one of the participant's
@@ -260,26 +238,26 @@ Participant Use Cases
 
 	The participant can make the following assertions:
 	
-	* {{{#needs_to_know} Needs to know}}
+	* {{{#needs_to_know} P-6.1.1 Needs to know}}
 	
-	* {{{#knows} Knows}}
+	* {{{#knows} P-6.1.2 Knows}}
 	
-	* {{{#responds_to} Responds to}}
+	* {{{#responds_to} P-6.1.3 Responds to}}
 	
-	* {{{#can_access} Can access}}
+	* {{{#can_access} P-6.1.4 Can access}}
 	
-	* {{{#agrees_to} Agrees to}}
+	* {{{#agrees_to} P-6.1.5 Agrees to}}
 	
 	[]
 	
-**** {Needs to know}
+**** P-6.1.1 {Needs to know}
 
 	The participant selects a scenario element anywhere it is shown (from a timeline, map, exchanges list etc.) and "tags" it with a "needs to know".
 	The participant indicates who needs to know (default = current persona, else selects from other persona or a list of roles in organizations) and describes the need further.
 	
 	The participant can later modify or remove the assertion.
 
-**** {Knows}
+**** P-6.1.2 {Knows}
 
 	The participant selects a scenario element anywhere it is shown (from a timeline, map, exchanges list etc.) and "tags" it with a "knows".
 
@@ -291,7 +269,7 @@ Participant Use Cases
 	
 	The participant can later modify or remove the assertion.
 
-**** {Responds to}
+**** P-6.1.3 {Responds to}
 
 	The participant selects an event already described in a scenario and tags it with "responds to".
 	The participant indicates who responds to the event (default = current persona, else selects from other persona or a list of roles in organizations). A task is automatically created and added to the scenario. The participant selects it and describes it.
@@ -301,7 +279,7 @@ Participant Use Cases
 	
 	The participant can later modify or remove the assertion.
 
-**** {Can access}
+**** P-6.1.4 {Can access}
 
 	The participant selects an agent already described in a scenario and tags it with "can access" (meaning "has been granted access").
 
@@ -311,7 +289,7 @@ Participant Use Cases
 
 	The participant can later modify or remove the assertion.
 
-**** {Agrees to}
+**** P-6.1.5 {Agrees to}
 
 	The participant selects an exchange already described in a scenario and tags it with "agree to" (meaning "has been granted access") only if one of the
 	participant's persona is one of the agents represented in the exchange. 
@@ -323,7 +301,7 @@ Participant Use Cases
 
 	The participant can later modify or remove the assertion.
 
-*** {Add event}
+*** P-6.2 {Add event}
 
 	The participant selects an existing element of the scenario that can be a source of events and selects from a list of types of events that this element can generate.
 	An event is created over which the participant has authority and is attached to its causal element. 
@@ -331,12 +309,12 @@ Participant Use Cases
 
 	<Note that only a participant with authority over a scenario (its creator or the project manager) can add an event with no scenario element as its cause (i.e. an incident).>
 
-*** {Add outcome}
+*** P-6.3 {Add outcome}
 
 	The participant selects an existing task in the scenario and adds an outcome to it.
 	The participant describes the outcome.
 	
-*** {Add agent}
+*** P-6.4 {Add agent}
 
 	An agent can be a role, a person or an information resource. One may need to introduce an agent in a scenario that is not represented by a participant.
 	A participant creates a role or an information resource within a project and describes it. This may be done from anywhere in a project but the action should be readily available
@@ -348,7 +326,7 @@ Participant Use Cases
 	If the agent is a role and a participant joins the projet for that role (the description of a role includes the identity of an organization), then this participant acquires authority over the
 	until then public agent description.
 
-*** {Add organization}
+*** P-6.5 {Add organization}
 
 	One may need to introduce an organization for which there is no liaison.
 	A participant creates an organization and describes it. This may be done anywhere in a project but should be readily available wherever a participant describes an agent.
@@ -356,7 +334,7 @@ Participant Use Cases
 	If the organization later gains a liaison, that liaison acquires authority over the description of the organization.
 	Until then, the description of the organization is a public system element (visible to all projects).
 
-*** {Describe element}
+*** P-6.6 {Describe element}
 
 	A participant generally can modify the description of any editable element in Channels he/she can access.
 	When a participant creates an element, he/she must minimally describe it before it is added.
@@ -417,7 +395,7 @@ Participant Use Cases
 	The opinions and authoritative values are available for perusal. All opinions, their counts and their contributors can be viewed.
 	A participant can readily see his/her contribution to an element's property value and whether it differs from the effective value.
 	
-*** {Accept or reject a suggested element}
+*** P-6.7 {Accept or reject a suggested element}
 
 	The system can infer new elements (issues, todos, exchanges etc.) on the basis of existing elements.
 	When it does, the systems can add them tentatively as suggestions to be accepted or rejected.
@@ -431,7 +409,7 @@ Participant Use Cases
 	
 	Rejected, suggested elements are accessible and visible to participants (with visual cue?) so that they can weigh in (opinions) or decree (authoritative) otherwise.
 	
-*** {Mark an element as relevant or not}
+*** P-6.8 {Mark an element as relevant or not}
 
 	Any participant in a project can add elements specific to a scenario (events, tasks, outcomes, assertions etc.) or global to a project (mostly organizations and agents). 
 	Just as participants may have differing opinions about the values of element properties (e.g. is this outcome likely or not?), they can also
@@ -456,19 +434,41 @@ Participant Use Cases
 	
 	[]
 
-** {Open analytical view}
+** P-7 {View a scenario}
+
+	The participant can examine a scenario along multiple perspectives:
+	
+	* A timeline of events, reponse tasks, task outcomes and environments (where communication channels are restricted and/or a different set of policies apply),
+	
+	* A geographical mapping of the above occurences and agents involved,
+	
+	* A social network connecting the agents and organizations involved
+	
+	* A list of information exchanges required in order to execute the above response tasks.
+	
+	[]
+	
+	The timeline is the principal view. The timeline elements can be multi-selected. Selecting elements in it
+	makes them or related elements appear in the other perspectives. Selecting none is the same as selecting all
+	(selection equates focusing).
+	
+	Selecting one or more timeline elements will make all their related agents (i.e who carries out the response tasks and
+	what organizations they are from) appear in the social net and in the map; the exchanges they necessitate also appear in
+	as a tabular list of exchanges.
+		
+** P-8 {Open analytical view}
 
 	The participant has a choice of a number of analytical views. The participant can:
 	
-	* {{{#open_a_causal_graph} Open a causal graph}}
+	* {{{#open_a_causal_graph} P-8.1 Open a causal graph}}
 	
-	* {{{#open_a_flow_graph} Open a flow graph}}
+	* {{{#open_a_flow_graph} P-8.2 Open a flow graph}}
 	
-	* {{{#open_a_communications_graph} Open a communications graph}}
+	* {{{#open_a_communications_graph} P-8.3 Open a communications graph}}
 	
-	* {{{#open_an_issues_analysis} Open an issues analysis}}
+	* {{{#open_an_issues_analysis} P-8.4 Open an issues analysis}}
 
-	* {{{#open_a_semantic_graph} Open a semantic graph}}	
+	* {{{#open_a_semantic_graph} P-8.5 Open a semantic graph}}	
 	
 	[]
 	
@@ -484,7 +484,7 @@ Participant Use Cases
 	
 	[]
 
-*** {Open a causal graph}
+*** P-8.1 {Open a causal graph}
 
 	The participant selects a scenario or an event and requests a causal graph.
 
@@ -495,7 +495,7 @@ Participant Use Cases
 	The participant can select an event and collapse it, hiding its caused/causing events that are showing.
 
 
-*** {Open a flow graph}
+*** P-8.2 {Open a flow graph}
 
 	The participant selects a scenario and requests a flow graph.
 	
@@ -515,7 +515,7 @@ Participant Use Cases
 	
 	[]
 	
-*** {Open a communications graph}
+*** P-8.3 {Open a communications graph}
 
 	The participant selects an exchange and requests a communications graph. 
 	
@@ -529,7 +529,7 @@ Participant Use Cases
 
 	[]
 	
-*** { Open an issues analysis}
+*** P-8.4 { Open an issues analysis}
 
 	The participant selects an element to which one or more issues are attached  (exchange, need to know, communication etc.)
 	and requests an issues analysis.
@@ -552,7 +552,7 @@ Participant Use Cases
 	
 	
 
-*** {Open a semantic graph}
+*** P-8.5 {Open a semantic graph}
 
 	The participant selects an element and requests that a semantic graph be opened on it.
 	
@@ -578,7 +578,7 @@ Participant Use Cases
 	
 	[]
 	
-** {Query project}
+** P-9 {Query project}
 
 	A project can be {{{#search_projects} searched}} for specific elements via keywords. It can also be searched with a "finder" using queries expressed in terms
 	of the properties of its elements.
@@ -605,7 +605,7 @@ Participant Use Cases
 	
 	[]
 
-** {Open dashboard}
+** P-10 {Open dashboard}
 
 	A dashboard is a collection of indicators, metrics, trends that are computed within a scope and
 	displayed visually. There are different kinds of dashboards for system, organization and scenario monitoring.
@@ -617,7 +617,7 @@ Participant Use Cases
 	a dashboard on any organization, for example).
 
 
-** {Generate report}
+** P-11 {Generate report}
 
 	A report is a document that aggregates and presents data within a defined scope. 
 	A report can be generated as online in HTML (opened in another browser window) or as a PDF (opened in PDF reader as configured by browser).
@@ -646,7 +646,7 @@ Participant Use Cases
 	
 	[]
 	
-** {Invite user}
+** P-12 {Invite user}
 
 	A participant, i.e. a certified member of an organization, can make it easy for someone from the same organization to join in.
 	
@@ -667,7 +667,7 @@ Participant Use Cases
 
 	<The liaison either authorizes the certification before or after it is sent out (a user setting for the liaison).>
 	
-** {Chat}
+** P-13 {Chat}
 
 	Whenever an element is displayed, be it in a list, a diagram, a map, a timeline etc., 
 	a participant can select it and request that a chat be opened on the element as the topic of conversation.
@@ -721,7 +721,7 @@ Participant Use Cases
 	
 	[]
 	
-** {Todos}
+** P-14 {Todos}
 
 	A participants manages a to do list containing "todos" describing about what the participant could or should do next in Channels.
 	
@@ -752,7 +752,7 @@ Participant Use Cases
 	
 	[]
 	
-** {Alerts}
+** P-15 {Alerts}
 
 	Alerting is the mechanism by which the system brings to the attention of a participant 
 	what's happening in a Channels site that should be of immediate interest to that participant.
@@ -794,9 +794,15 @@ Participant Use Cases
 	
 	[]
 
-	Wherever an element is listed, a participant can signal interest or signal no interest.
+	Wherever an element is listed, a participant can 
+	
+	* {{{#signal_interest} P-15.1 signal interest}},
 
-*** Signal interest
+	* {{{#signal_no_interest} P-15.2 signal no interest}}.
+	
+	[]
+
+*** P-15.1 {Signal interest}
 
 	A participant can select an element and express an explicit interest in that element.
 	The participant can limit this interest to the element itself include all elements within its scope.
@@ -809,7 +815,7 @@ Participant Use Cases
 	The participant should also be able to list all elements in which he/she has explicitly signaled an interest and no interest.
 	
 
-*** Signal no interest
+*** P-15.1 {Signal no interest}
 	
 	Wherever an element of interest is shown, a participant can signal no interest, possibly reversing a prior signal of interest.
 

@@ -42,32 +42,32 @@ Use Cases
 	
 * What {any user} can do
 
-	* {{{#request_user_status} Request user status}}
+	* {{{#request_user_status} U-1 Request user status}}
 	
-	* {{{#request_certification} Request certification}}
+	* {{{#request_certification} U-2 Request certification}}
 	
-	* {{{#accept_invitation} Accept invitation}}
+	* {{{#accept_invitation} U-3 Accept invitation}}
 	
-	* {{{#login} Login}}
+	* {{{#login} U-4 Login}}
 	
-	* {{{#logout} Logout}}
+	* {{{#logout} U-5 Logout}}
 	
-	* {{{#change_password} Change password}}
+	* {{{#change_password} U-6 Change password}}
 	
-	* {{{#update_user_information} Update user information}}
+	* {{{#update_user_information} U-7 Update user information}}
 	
-	* {{{#configure_settings} Configure settings}}
+	* {{{#configure_settings} U-8 Configure settings}}
 	
 	[]
 	
-** {Request user status}
+** U-1 {Request user status}
 
 	Someone without user status accesses a Channels site. A login form appears offering the option to register as a new user.
 	The user selects this option and is shown a form where personal info is requested (could be simply name and email).
 	The user also completes a captchas test (transcribes a visually encoded message).
 	The user is then sent an email with a link to follow in order to complete registration.
 	
-** {Request certification}
+** U-2 {Request certification}
 
 	The user requests to be certificed as a member of a given organization.
 	The user selects an organization from a directory of all organizations represented in a Channels installation (i.e. that have liaisons).
@@ -79,14 +79,14 @@ Use Cases
 	The user is notified when certification is obtained. The user can then browse all projects in which he/she is now
 	participant or guest by virtue of certified membership in the organization.
 	
-** {Accept invitation}
+** U-3 {Accept invitation}
 
 	Someone receives an email from a Channels participant inviting him/her to join a project.
 	The participant has already certified the user as a co-member of an organization.
 	The new user clicks on a link in the email which takes the user to a form where he/she is asked to enter and confirm a password.
 	The new user is then shown a startup desktop.
 	
-** {Login}
+** U-4 {Login}
 
 	The user points a browser to the Channel installation's URL. A login form appears. 
 	The user enters user id and password, and submits.
@@ -99,13 +99,13 @@ Use Cases
 	If the user logs in successfully, the user acquires all project and application privileges. The Channels "desktop" last saved for this user appears (or else the default desktop). 
 	The users leaves the desktop after {{{logout}logging out}}.
 	
-** {Logout}
+** U-5 {Logout}
 
 	The user requests to log out. A modal dialog requests confirmation. 
 	The user is given the option to "save the desktop" (default option).
 	The user either confirms or cancels the logout.
 	
-** {Change password}
+** U-6 {Change password}
 
 	The user is presented with a Change Password modal dialog containing instructions about devising secure passwords.
 	The user enters a new password twice.
@@ -113,7 +113,7 @@ Use Cases
 	The password is checked to see if it is secure. If not, the user is told why and asked to try again.
 	The user can cancel the operation.
 	
-** {Update user information}
+** U-7 {Update user information}
 
 	When registering as a Channels user (by initiating a request or by accepting an invitation), the user provides basic user information and in return is given a user id and a (one-time) password.
 	It is the user's responsibility to maintain and update this information.
@@ -126,7 +126,7 @@ Use Cases
 
 	[]
 	
-** {Configure settings}
+** U-8 {Configure settings}
 
 	TBD
 

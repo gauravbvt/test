@@ -17,6 +17,72 @@
 </richcontent>
 <edge COLOR="#808080" WIDTH="thin"/>
 <font BOLD="true" NAME="SansSerif" SIZE="19"/>
+<node COLOR="#006633" CREATED="1173570854566" ID="Freemind_Link_498156964" MODIFIED="1173570889387" POSITION="right" TEXT="Overview">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="20"/>
+<node COLOR="#006633" CREATED="1173570941537" ID="Freemind_Link_625114901" MODIFIED="1173571445645" TEXT="What it is">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="17"/>
+<node CREATED="1173571468378" ID="Freemind_Link_303104382" MODIFIED="1173571572561" TEXT="Communityware for HFNs">
+<node CREATED="1173572206440" ID="Freemind_Link_252703526" MODIFIED="1173572212554" TEXT="HFNs are everywhere"/>
+<node CREATED="1173572232650" ID="Freemind_Link_1286353397" MODIFIED="1173640989296" TEXT="IS competency is critical to HFNs">
+<node CREATED="1173641040581" ID="Freemind_Link_240893834" MODIFIED="1173641047995" TEXT="It is knowledge intensive"/>
+</node>
+<node CREATED="1173572011728" ID="Freemind_Link_528173517" MODIFIED="1173572264229" TEXT="Decentralized meta-knowledge gathering"/>
+<node CREATED="1173572097037" ID="Freemind_Link_1403197525" MODIFIED="1173572379522" TEXT="Leverages and even builds communities of agencies"/>
+</node>
+<node CREATED="1173571587270" ID="Freemind_Link_261334383" MODIFIED="1173571613050" TEXT="&quot;Web2.0&quot; application">
+<node CREATED="1173572127331" ID="Freemind_Link_222891277" MODIFIED="1173572195678" TEXT="Social software"/>
+<node CREATED="1173572152045" ID="Freemind_Link_244784936" MODIFIED="1173572170321" TEXT="Rich user interface via the Web"/>
+</node>
+<node CREATED="1173571474791" ID="Freemind_Link_1279129788" MODIFIED="1173571579010" TEXT="What-if communication preparedness">
+<node CREATED="1173571928055" ID="Freemind_Link_1457489057" MODIFIED="1173571957926" TEXT="Scenario-based IS analysis"/>
+<node CREATED="1173572876850" ID="Freemind_Link_875226174" MODIFIED="1173573019678" TEXT="Captures complex, real-life situations"/>
+<node CREATED="1173572911276" ID="Freemind_Link_1099266043" MODIFIED="1173572942886" TEXT="Does not assume any particular communication or IS technologies"/>
+<node CREATED="1173572068283" ID="Freemind_Link_1518930938" MODIFIED="1173572076541" TEXT="Continuous process"/>
+<node CREATED="1173572290569" ID="Freemind_Link_518653010" MODIFIED="1173572870209" TEXT="Automated discovery of communication opportunities and gaps"/>
+</node>
+</node>
+<node COLOR="#006633" CREATED="1173571253033" ID="Freemind_Link_172526950" MODIFIED="1173571454856" TEXT="Value proposition">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="17"/>
+<node CREATED="1173572404184" ID="Freemind_Link_258115503" MODIFIED="1173641286454" TEXT="Channels enables dynamic communities of agencies to collaboratively and pro-actively develop effective and up-to-date notification protocols. Using scenarios they themselve choose, stakeholders and responders across agencies, disciplines and jurisdictions together plan, analyze, practice, review and assess how they would communicate to fulfill their respective and joint missions in response to critical events."/>
+</node>
+<node COLOR="#006633" CREATED="1173571260577" ID="Freemind_Link_727960192" MODIFIED="1173571456944" TEXT="What&apos;s unique">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="17"/>
+</node>
+<node COLOR="#006633" CREATED="1173571289363" ID="Freemind_Link_794559819" MODIFIED="1173571458185" TEXT="User experience">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="17"/>
+</node>
+<node COLOR="#006633" CREATED="1173571305344" ID="Freemind_Link_70715330" MODIFIED="1173571459413" TEXT="Benefits and advantages">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="17"/>
+<node CREATED="1173572344101" ID="Freemind_Link_249164881" MODIFIED="1173572349267" TEXT="Costs">
+<node CREATED="1173572311147" ID="Freemind_Link_1507651206" MODIFIED="1173572323605" TEXT="Low costs of adoption"/>
+<node CREATED="1173572324171" ID="Freemind_Link_1831691093" MODIFIED="1173572331882" TEXT="Low costs of entry"/>
+</node>
+<node CREATED="1173572429090" ID="Freemind_Link_1528292524" MODIFIED="1173572432541" TEXT="Scalability">
+<node CREATED="1173572434010" ID="Freemind_Link_32756726" MODIFIED="1173572535873" TEXT="Designed for viral adoption"/>
+<node CREATED="1173572439739" ID="Freemind_Link_356372860" MODIFIED="1173572523725" TEXT="Supports very large communities"/>
+<node CREATED="1173572460068" ID="Freemind_Link_656911199" MODIFIED="1173572580900" TEXT="Handles arbitrarily large numbers of scenarios"/>
+</node>
+<node CREATED="1173572598365" ID="Freemind_Link_1200663553" MODIFIED="1173572601384" TEXT="Usability">
+<node CREATED="1173572608710" ID="Freemind_Link_1867085938" MODIFIED="1173572647790" TEXT="Designed non-IT professionals"/>
+<node CREATED="1173572651476" ID="Freemind_Link_1607604458" MODIFIED="1173572699366" TEXT="Conceived for concrete thinkers, not PH.D.s"/>
+<node CREATED="1173572747618" ID="Freemind_Link_867713641" MODIFIED="1173572765802" TEXT="Minimizes data entry">
+<node CREATED="1173572767983" ID="Freemind_Link_62549472" MODIFIED="1173572775773" TEXT="Templates"/>
+<node CREATED="1173572776492" ID="Freemind_Link_1491321790" MODIFIED="1173572824677" TEXT="System learns from its users to provide guidance and suggestions"/>
+<node CREATED="1173572832435" ID="Freemind_Link_1824863768" MODIFIED="1173572853171" TEXT="Takes advantage of enterprise directories"/>
+</node>
+</node>
+</node>
+<node COLOR="#006633" CREATED="1173571392493" ID="Freemind_Link_1503882703" MODIFIED="1173571460736" TEXT="Roadmap">
+<edge COLOR="#808080" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="17"/>
+</node>
+</node>
 <node COLOR="#006633" CREATED="1171049883653" ID="Freemind_Link_940360832" MODIFIED="1171279148012" POSITION="right" TEXT="Method">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -31,7 +97,7 @@
 </richcontent>
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="20"/>
-<node COLOR="#006633" CREATED="1167942129134" FOLDED="true" ID="Freemind_Link_1294430903" MODIFIED="1171279219760" TEXT="Process">
+<node COLOR="#006633" CREATED="1167942129134" ID="Freemind_Link_1294430903" MODIFIED="1171279219760" TEXT="Process">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1088,7 +1154,7 @@
 <node COLOR="#006633" CREATED="1172139812097" ID="Freemind_Link_934936378" MODIFIED="1172139824498" POSITION="right" TEXT="Data">
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="20"/>
-<node COLOR="#006633" CREATED="1167942138415" FOLDED="true" HGAP="43" ID="Freemind_Link_1629394418" MODIFIED="1172139832708" TEXT="Data model" VSHIFT="17">
+<node COLOR="#006633" CREATED="1167942138415" HGAP="43" ID="Freemind_Link_1629394418" MODIFIED="1172139832708" TEXT="Data model" VSHIFT="17">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1131,7 +1197,7 @@
 </richcontent>
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="17"/>
-<node COLOR="#006666" CREATED="1172226793468" ID="Freemind_Link_482006" MODIFIED="1172226804328" TEXT="Project data">
+<node COLOR="#006666" CREATED="1172226793468" FOLDED="true" ID="Freemind_Link_482006" MODIFIED="1172226804328" TEXT="Project data">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1172226807117" ID="Freemind_Link_1203749570" MODIFIED="1172226810391" TEXT="definition">
 <node CREATED="1172233076585" ID="Freemind_Link_1485993212" MODIFIED="1172233088742" TEXT="Data that is specific to a project.">
@@ -2166,7 +2232,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171472550960" ID="Freemind_Link_666594152" MODIFIED="1171472670109" TEXT="Reference data">
+<node COLOR="#006666" CREATED="1171472550960" FOLDED="true" ID="Freemind_Link_666594152" MODIFIED="1171472670109" TEXT="Reference data">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171472624729" ID="Freemind_Link_130057814" MODIFIED="1171472627443" TEXT="definition">
 <node CREATED="1171566903908" ID="Freemind_Link_896696428" MODIFIED="1172574974640" TEXT="Data used in models but which are not specific to scenario or model or project .">
@@ -2371,7 +2437,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171472597347" ID="Freemind_Link_690789715" MODIFIED="1171472671757" TEXT="System data">
+<node COLOR="#006666" CREATED="1171472597347" FOLDED="true" ID="Freemind_Link_690789715" MODIFIED="1171472671757" TEXT="System data">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171472639050" ID="Freemind_Link_788241394" MODIFIED="1171472641777" TEXT="definition">
 <node CREATED="1171566876750" ID="Freemind_Link_955661649" MODIFIED="1172226950404" TEXT="System-level data, i.e. not always specific to a project.">
@@ -3590,7 +3656,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006633" CREATED="1168295494035" FOLDED="true" ID="Freemind_Link_762656299" MODIFIED="1172143088966" TEXT="Reports">
+<node COLOR="#006633" CREATED="1168295494035" ID="Freemind_Link_762656299" MODIFIED="1172143088966" TEXT="Reports">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3619,19 +3685,6 @@
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 </node>
-<node CREATED="1168295611466" ID="Freemind_Link_1613666671" MODIFIED="1171049674316" TEXT="Preparedness plan*">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Aggregation of Agreements and Resolutions with preparedness metrics, organized by scenarios, organizations, roles etc.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
 <node CREATED="1168295535094" ID="Freemind_Link_268647215" MODIFIED="1171986956534" TEXT="Playbook*">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -3647,9 +3700,8 @@
   </body>
 </html>
 </richcontent>
-<node CREATED="1171232452642" ID="Freemind_Link_1849270642" MODIFIED="1171232466468" TEXT="Notification script export"/>
 </node>
-<node CREATED="1168295602526" ID="Freemind_Link_1284114332" MODIFIED="1168309203560" TEXT="Problem analysis*">
+<node CREATED="1168295602526" ID="Freemind_Link_1284114332" MODIFIED="1173386605689" TEXT="Issues*">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3662,7 +3714,7 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1168295552535" ID="Freemind_Link_580671640" MODIFIED="1168299617930" TEXT="Information sharing capability*">
+<node CREATED="1168295552535" ID="Freemind_Link_580671640" MODIFIED="1173386894914" TEXT="Preparedness*">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3675,6 +3727,7 @@
 </html>
 </richcontent>
 </node>
+<node CREATED="1173387375940" ID="Freemind_Link_339254935" MODIFIED="1173387423282" TEXT="Audit"/>
 </node>
 </node>
 <node COLOR="#006633" CREATED="1171050025927" ID="Freemind_Link_1500869194" MODIFIED="1172142927905" POSITION="left" TEXT="Design">
@@ -4919,23 +4972,6 @@
     </p>
     <p>
       Supports the definition and usage monitoring of reference data (templates, types, areas/gazetteer, policies)
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-</node>
-<node COLOR="#006666" CREATED="1172148316297" ID="Freemind_Link_910787462" MODIFIED="1172171599929" TEXT="Archives pane">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      [TBD]
-    </p>
-    <p>
-      Supports the management of archived reports and dashboards, plus access to audit logs.
     </p>
   </body>
 </html>
