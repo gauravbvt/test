@@ -2232,7 +2232,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171472550960" FOLDED="true" ID="Freemind_Link_666594152" MODIFIED="1171472670109" TEXT="Reference data">
+<node COLOR="#006666" CREATED="1171472550960" ID="Freemind_Link_666594152" MODIFIED="1171472670109" TEXT="Reference data">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171472624729" ID="Freemind_Link_130057814" MODIFIED="1171472627443" TEXT="definition">
 <node CREATED="1171566903908" ID="Freemind_Link_896696428" MODIFIED="1172574974640" TEXT="Data used in models but which are not specific to scenario or model or project .">
@@ -2323,7 +2323,7 @@
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1171567869956" FOLDED="true" ID="Freemind_Link_625811826" MODIFIED="1171567872885" TEXT="description">
+<node CREATED="1171567869956" ID="Freemind_Link_625811826" MODIFIED="1171567872885" TEXT="description">
 <node CREATED="1171297173131" ID="Freemind_Link_650602214" MODIFIED="1171985357047" TEXT="descriptor? &lt;Meta information&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2350,14 +2350,27 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1171534564135" ID="Freemind_Link_519929554" MODIFIED="1172505398803" TEXT="causes* [@Event type]">
+<node CREATED="1171534564135" ID="Freemind_Link_519929554" MODIFIED="1173903401816" TEXT="causes* [@Event type]">
 <richcontent TYPE="NOTE"><html>
   <head>
     
   </head>
   <body>
     <p>
-      If empty then this type of model element can not be a source of events.
+      If empty, then scenario elements of this type can not be the source of type-specific events.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node CREATED="1173902994063" ID="Freemind_Link_1602784243" MODIFIED="1173903370198" TEXT="suffers from [@Issue type]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      If empty, then scenario elements of this type do not type-specific issues.
     </p>
   </body>
 </html>
@@ -3036,8 +3049,8 @@
 </node>
 </node>
 <node CREATED="1172565838949" ID="Freemind_Link_480338066" MODIFIED="1172565842390" TEXT="0.4">
-<node CREATED="1172565844157" ID="Freemind_Link_972204739" MODIFIED="1172565846031" TEXT="???"/>
-<node CREATED="1172565847381" ID="Freemind_Link_825777671" MODIFIED="1173204074270" TEXT="Changes">
+<node CREATED="1172565844157" ID="Freemind_Link_972204739" MODIFIED="1173903493511" TEXT="2007.03.14"/>
+<node CREATED="1172565847381" ID="Freemind_Link_825777671" MODIFIED="1173903546713" TEXT="Changes">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3076,6 +3089,12 @@
       </li>
       <li>
         In Project, replaced Participants by Participation (organization + role types)
+      </li>
+      <li>
+        Removed Use Cases and now point to Channels Maven documentation on Code Alliance
+      </li>
+      <li>
+        Added &quot;suffers from&quot; property to Data Model/Reference Data/Scenario Element Type
       </li>
     </ul>
   </body>
@@ -3179,482 +3198,20 @@
 <font BOLD="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node COLOR="#006633" CREATED="1171050045252" FOLDED="true" ID="Freemind_Link_224354747" MODIFIED="1173300946781" TEXT="Use cases">
+<node COLOR="#006633" CREATED="1171050045252" ID="Freemind_Link_224354747" LINK="https://ranger.homelinux.net/projects/channels/usecases/usecases.html" MODIFIED="1173900417461" TEXT="Use cases">
 <richcontent TYPE="NOTE"><html>
   <head>
     
   </head>
   <body>
     <p>
-      [OBSOLETE] - will be updated from APT use cases
-    </p>
-    <p>
-      User roles form a hierarchy, with admin at the top with all the rights.
-    </p>
-    <ul>
-      <li>
-        Admin &gt; Expert
-      </li>
-      <li>
-        Admin &gt; Manager
-      </li>
-      <li>
-        Manager &gt; Representative (within a project)
-      </li>
-      <li>
-        Representative &gt; Participant (for organization represented)
-      </li>
-      <li>
-        Participant &gt; Guest
-      </li>
-    </ul>
-    <p>
-      The System &quot;singleton&quot; user group is its own thing.
+      See project documentation
     </p>
   </body>
 </html>
 </richcontent>
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="17"/>
-<node CREATED="1172510637497" ID="Freemind_Link_562662735" MODIFIED="1172511234081" TEXT="by user roles">
-<node COLOR="#006666" CREATED="1172169992336" FOLDED="true" ID="Freemind_Link_1369813441" MODIFIED="1172175433542" TEXT="System">
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172175369820" ID="Freemind_Link_1095134969" MODIFIED="1172175372203" TEXT="definition">
-<node CREATED="1172175446281" ID="Freemind_Link_1235221802" MODIFIED="1172219598572" TEXT="Channels as user">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172175376152" ID="Freemind_Link_1686570933" MODIFIED="1172175388397" TEXT="actions">
-<node CREATED="1172506598812" ID="Freemind_Link_1075838940" MODIFIED="1172506670705" TEXT="Infer and describe model elements"/>
-<node CREATED="1172506671989" ID="Freemind_Link_1579190630" MODIFIED="1172506677525" TEXT="Induce templates"/>
-<node CREATED="1172506679837" ID="Freemind_Link_828790072" MODIFIED="1172506786978" TEXT="Suggest property values to stated model elements"/>
-</node>
-</node>
-<node COLOR="#006666" CREATED="1172169998664" FOLDED="true" ID="Freemind_Link_746848680" MODIFIED="1172175431818" TEXT="Admin">
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172175391777" ID="Freemind_Link_1754032312" MODIFIED="1172175394344" TEXT="definition">
-<node CREATED="1172175506124" ID="Freemind_Link_1287293951" MODIFIED="1172175530570" TEXT="System administrator">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172175394821" ID="Freemind_Link_135786478" MODIFIED="1172175396704" TEXT="actions">
-<node CREATED="1172221115009" ID="Freemind_Link_840620843" MODIFIED="1172221119400" TEXT="Add project"/>
-<node CREATED="1172221124218" ID="Freemind_Link_972306104" MODIFIED="1172509666145" TEXT="Create user"/>
-<node CREATED="1172221339899" ID="Freemind_Link_1484091722" MODIFIED="1172221589330" TEXT="Assign user as project manager"/>
-<node CREATED="1172508376907" ID="Freemind_Link_1579359351" MODIFIED="1172508385086" TEXT="Assign user as expert"/>
-<node CREATED="1172221493097" ID="Freemind_Link_622696851" MODIFIED="1172221556720" TEXT="Backup and restore data"/>
-<node CREATED="1172221597963" ID="Freemind_Link_1273016215" MODIFIED="1172221604176" TEXT="Monitor system"/>
-<node CREATED="1172221612324" ID="Freemind_Link_1094398862" MODIFIED="1172221620294" TEXT="Reset password"/>
-</node>
-</node>
-<node COLOR="#006666" CREATED="1172505919578" FOLDED="true" ID="Freemind_Link_1692461023" MODIFIED="1172508411570" TEXT="Expert">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      An expert has authority over reference data.
-    </p>
-    <p>
-      Note: How can an expert be restricted to referecence data in a given domain or that defines a given standard?
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172505931150" ID="Freemind_Link_1668047748" MODIFIED="1172505933489" TEXT="definition">
-<node CREATED="1172505940775" ID="Freemind_Link_1718172272" MODIFIED="1172505949512" TEXT="A domain expert">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172505934415" ID="Freemind_Link_1341801527" MODIFIED="1172505937202" TEXT="actions">
-<node CREATED="1172505969129" ID="Freemind_Link_467830369" MODIFIED="1172505980843" TEXT="Create and describe reference data"/>
-</node>
-</node>
-<node COLOR="#006666" CREATED="1172170004280" FOLDED="true" ID="Freemind_Link_174041559" MODIFIED="1172508483383" TEXT="Manager">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A project manager has authority over project data including scenarios in the project's models.
-    </p>
-    <p>
-      A project manager also has all of the rights of a project participant.
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172175399197" ID="Freemind_Link_1236067748" MODIFIED="1172175401796" TEXT="definition">
-<node CREATED="1172175536866" ID="Freemind_Link_1026959966" MODIFIED="1172175550921" TEXT="Project manager">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172175402686" ID="Freemind_Link_1866640563" MODIFIED="1172175404934" TEXT="actions">
-<node CREATED="1172422877488" ID="Freemind_Link_1120807111" MODIFIED="1172422886011" TEXT="Describe project"/>
-<node CREATED="1172422886836" ID="Freemind_Link_820449178" MODIFIED="1172422894210" TEXT="Create and decribe model"/>
-<node CREATED="1172424083298" ID="Freemind_Link_206678648" MODIFIED="1172424088232" TEXT="Creation organization"/>
-<node CREATED="1172508803642" ID="Freemind_Link_719694071" MODIFIED="1172509408471" TEXT="Create user">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      May entail creating a Person instance
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172422923074" ID="Freemind_Link_1620488018" MODIFIED="1172509774402" TEXT="Assign user as organization representative">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Entails creating an organization instance if not already created as well as a Person and one or more Role instances
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172509754481" ID="Freemind_Link_410417991" MODIFIED="1172509764311" TEXT="Assign user as project guest"/>
-<node CREATED="1172422940419" ID="Freemind_Link_1150176447" MODIFIED="1172508870417" TEXT="Affirm/negate scenario">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A project's manager is the only user with authority over a project's scenarios.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172508979613" ID="Freemind_Link_1466153256" MODIFIED="1172509022380" TEXT="Monitor project">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Using the project dashboard(s)
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172508992114" ID="Freemind_Link_1872287869" MODIFIED="1172508998048" TEXT="Generate project report"/>
-</node>
-</node>
-<node COLOR="#006666" CREATED="1172423906127" FOLDED="true" ID="Freemind_Link_1723321906" MODIFIED="1172508655237" TEXT="Representative">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A representative has authority over the description of his/her organization and the description of the organization's agents.
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172423933737" ID="Freemind_Link_877373782" MODIFIED="1172423936150" TEXT="definition">
-<node CREATED="1172423945106" ID="Freemind_Link_1707333260" MODIFIED="1172423973108" TEXT="Official representative of a participating organization">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172423939285" ID="Freemind_Link_344723618" MODIFIED="1172423942071" TEXT="actions">
-<node CREATED="1172424041428" ID="Freemind_Link_1808670639" MODIFIED="1172509874620" TEXT="Assign user as participant">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      May entail creating a Person and Role instances if the participant is to be represented in a model.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172509875825" ID="Freemind_Link_1730814862" MODIFIED="1172509883682" TEXT="Monitor organization"/>
-<node CREATED="1172509885310" ID="Freemind_Link_853287288" MODIFIED="1172509891921" TEXT="Generate organization report"/>
-</node>
-</node>
-<node COLOR="#006666" CREATED="1172170007081" FOLDED="true" ID="Freemind_Link_461526444" MODIFIED="1172508686638" TEXT="Participant">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A participant has authority over his/her description as person and agent.
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172175407526" ID="Freemind_Link_1948371142" MODIFIED="1172175410151" TEXT="definition">
-<node CREATED="1172175559007" ID="Freemind_Link_474240931" MODIFIED="1172175596530" TEXT="Participant in a project">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172175410594" ID="Freemind_Link_1616683691" MODIFIED="1172175412638" TEXT="actions">
-<node CREATED="1172423463444" ID="Freemind_Link_1922680008" MODIFIED="1172423855382" TEXT="Suggest scenario"/>
-<node CREATED="1172423858216" ID="Freemind_Link_778651683" MODIFIED="1172510607668" TEXT="Create/describe model elements"/>
-<node CREATED="1172510609015" ID="Freemind_Link_1329108424" MODIFIED="1172510617285" TEXT="Delete model elements as authorized"/>
-<node CREATED="1172523320613" ID="Freemind_Link_1943356126" MODIFIED="1172524077883" TEXT="Describe">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <ul>
-      <li>
-        Having found a model element through search or exploration, the user opens an editor on the element.
-      </li>
-      <li>
-        If the user is more than a guest, he/she can change the property values of the element
-      </li>
-      <li>
-        If the user has authority on the element, the changes are authoritative (they take effect no matter if other opinions are expressed)
-      </li>
-      <li>
-        If the user does not have authority, the provided property values are taken as opinion and added to other opinions possibly altering the majority view and thus the effective property value.
-      </li>
-    </ul>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172523498805" ID="Freemind_Link_1603339546" MODIFIED="1172524376660" TEXT="Create">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <ul>
-      <li>
-        Having located an element, the user creates a new element as a property value of the first element
-      </li>
-      <li>
-        Having located an element, the user creates a new element that relates to it (e.g. the user creates a &quot;Task completes&quot; event related to a described Task)
-      </li>
-      <li>
-        The user then (at least minimally) describes the new element
-      </li>
-    </ul>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171124804628" ID="Freemind_Link_90514778" MODIFIED="1172524202841" TEXT="Assert">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A user makes an assertion about a model element that can receive such an assertion. There are various kinds of assertions each applicable to various kinds of model element.
-    </p>
-    <p>
-      Assertions:
-    </p>
-    <ul>
-      <li>
-        Need to know (about any scenario element - e.g. a Task - and related element that contributes to its description - e.g. an Agent executing it -)
-      </li>
-      <li>
-        In the know (ditto)
-      </li>
-      <li>
-        Respond to (about events)
-      </li>
-      <li>
-        Can access (about agents)
-      </li>
-      <li>
-        Agree to (about exchange, transmission)
-      </li>
-    </ul>
-    <p>
-      An assertion can lead to creating and describing a new scenario element (Respond to leads to creating the Task executed in repsonse to an event and to describing this Task).
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171124810076" ID="Freemind_Link_103229295" MODIFIED="1172525490367" TEXT="Classify">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A user tags an element to indicate what type it is (e.g. event types, role types etc.) Multiple tags can be used on an element. Some element properties have types (e.g. clearance type, title type etc.) as their values.
-    </p>
-    <p>
-      When an element is typed, the system will look up explicit or implied templates (generalized elements induced from stated elements) and add suggested property values to the element from these templates.
-    </p>
-    <p>
-      Users can opine that a type is implied by another (only experts can affirm anything about types). E.g. if type A (e.g. accident) is implied by type B (car crash), then tagging an element with type B also tags it with type A. Types are organized in mutually exclusive and named sets (typologies). A typology is assigned to a particular kind of model element: Events can only be tagged with &quot;event types&quot;, roles with &quot;role types&quot; etc.
-    </p>
-    <p>
-      Typologies are pre-defined and user-extendable. That's as close as Channels gets to having ontologies.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172523695621" ID="Freemind_Link_871728679" MODIFIED="1172525726870" TEXT="Delete">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      An authorized user can delete an instance if the user has authority over the instance and if the instance is not referenced by another instance.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172523714562" ID="Freemind_Link_1448276364" MODIFIED="1172526690491" TEXT="Accept suggestion">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      The system uses explicit templates (expert-defined) and implicit templates (induced from user-described model elements) to make suggestions about the description of scenario elements based on their given types. Suggested element descriptions are just that: suggestions. They are invisible to automated reasoning, to the reports and dashboards and do not contribute to the popularity of property values.
-    </p>
-    <p>
-      A participant is free to either ignore a suggestion or to accept it wholesale. The net effect is a reduction in the data entry effort and systematic reuse of other's decription efforts.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171210920405" ID="Freemind_Link_6563713" MODIFIED="1172511138062" TEXT="Report">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      User can scope and produce reports.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171234778480" ID="Freemind_Link_1887444097" MODIFIED="1172526756076" TEXT="Bookmark">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A Finder's configuration can be preserved and bookmarked for future recall.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-</node>
-</node>
-<node COLOR="#006666" CREATED="1172170014469" FOLDED="true" ID="Freemind_Link_827824040" MODIFIED="1172508731508" TEXT="Guest">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A guest to a project has no authority and has read-only access.
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1172175414718" ID="Freemind_Link_950328961" MODIFIED="1172175416314" TEXT="definition">
-<node CREATED="1172175600182" ID="Freemind_Link_1840215754" MODIFIED="1172219621349" TEXT="User who is allowed to look but not touch">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1172175416690" ID="Freemind_Link_162072689" MODIFIED="1172175420137" TEXT="actions">
-<node CREATED="1171124785735" ID="Freemind_Link_197057099" MODIFIED="1172523311262" TEXT="Search/Explore">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <ul>
-      <li>
-        Using the Project Browser, the user locates a project, model or scenario he/she participates in (or is a guest of).
-      </li>
-      <li>
-        Using a Semantic View the user locates a model element
-      </li>
-      <li>
-        Using a &quot;Finder&quot;, the user composes &quot;concrete queries&quot; to generate targeted lists of model elements.
-      </li>
-    </ul>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171180609506" ID="Freemind_Link_284250481" MODIFIED="1172526812854" TEXT="Analyze">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A user can use various analytical tools (timelines, social nets, maps, dashboards) to situate and relate model elements, and comprehend the model as a whole.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1172061302495" ID="Freemind_Link_1762587021" MODIFIED="1172565200371" TEXT="Navigate">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Certain components allow the user to go to a bookmarked state and to go back to a previous display state, and to go forth (just like with browsers).
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171375528130" ID="Freemind_Link_482008628" MODIFIED="1171375594021" TEXT="Communicate">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Communication between online participants but also outside of the application (email).
-    </p>
-  </body>
-</html>
-</richcontent>
-<node CREATED="1171375534614" ID="Freemind_Link_1417276193" MODIFIED="1171375536638" TEXT="Chat"/>
-<node CREATED="1171375537739" ID="Freemind_Link_979278702" MODIFIED="1171375540445" TEXT="Email"/>
-</node>
-</node>
-</node>
-</node>
 </node>
 <node COLOR="#006633" CREATED="1168295494035" ID="Freemind_Link_762656299" MODIFIED="1172143088966" TEXT="Reports">
 <richcontent TYPE="NOTE"><html>
