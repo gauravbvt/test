@@ -12,7 +12,7 @@
 	<name>Generic Mind-Alliance Project</name>
 	<description>This is a generic project with shared global settings</description>
 	<inceptionYear>2006</inceptionYear>
-	<url>https://ranger.homelinux.net/project/${project.artifactId}</url>
+	<url>https://ranger.homelinux.net/projects/${project.artifactId}</url>
 	
 	<organization>
 		<name>Mind-Alliance Systems</name>
@@ -51,7 +51,7 @@
 
 	<ciManagement>
 		<system>continuum</system>
-		<url>http://ranger.homelinux.net:8081/continuum/servlet/continuum/target/ProjectBuilds.vm/view/ProjectBuilds/id/2</url>
+		<url>http://ranger.homelinux.net/continuum/servlet/continuum/target/Summary.vm/fid/continuumProject</url>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
@@ -106,7 +106,7 @@
 			<id>mindalliance</id>
 			<name>Mind-Alliance Systems Repository</name>
 			<layout>legacy</layout>
-			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/maven</url>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/${project.artifactId}</url>
 		</repository>
 		<site>
 			<id>mindalliance</id>
@@ -120,11 +120,11 @@
 	
 	<scm>
 		<connection>
-			scm:svn:http://ranger.homelinux.net/svn/generic/trunk</connection>
+			scm:svn:http://ranger.homelinux.net/svn/${project.artifactId}/trunk</connection>
 		<developerConnection>
-			scm:svn:https://ranger.homelinux.net/svn/generic/trunk</developerConnection>
+			scm:svn:https://ranger.homelinux.net/svn/${project.artifactId}/trunk</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://ranger.homelinux.net/tracsvn/generic</url>
+		<url>https://ranger.homelinux.net/tracsvn/${project.artifactId}</url>
 	</scm>
 	
 	<dependencies>
