@@ -40,13 +40,17 @@ Participant Use Cases
 	
 	* {{{#generate_report} P-11 Generate report}}
 	
-	* {{{#invite_user} P- 12 Invite user}}
+	* {{{#invite_user} P-12 Invite user}}
 	
 	* {{{#chat} P-13 Chat}}
 	
 	* {{{#todos} P-14 Todos}}
 	
 	* {{{#alerts} P-15 Alerts}}
+	
+	* {{{#attach_issue} P-16 Attach issue}}
+	
+	* {{{#add_type} P-17 Add type}}
 	
 	[]
 
@@ -205,7 +209,7 @@ Participant Use Cases
 	
 	The publication of a scenario is an event of which all participants are notified.
 
-** P-6 {Build a scenario}
+** P-6 {Build scenario}
 
 	A participant contributes to a scenario by making assertions about existing elements in the scenario. An element is anything that composes a scenario such as events,
 	tasks, outcomes, exchanges, and assertions made about them. This means that assertions can be made about assertions where meaningful (e.g. "I need to know if he knows")
@@ -226,7 +230,9 @@ Participant Use Cases
 	
 	* {{{#accept_or_reject_a_suggested_element} P-6.7 Accept or reject a suggested element}}
 	
-	* {{{#mark_an_element_as_relevant_or_not} P-6.8 Mark an element as relevant or not}}
+	* {{{#mark_relevance} P-6.8 Mark relevance}}
+	
+	* {{{#branch_out_scenario} P-6.9 Branch out scenario}}
 	
 	[]
 
@@ -358,8 +364,29 @@ Participant Use Cases
 	taking into account the latest submitted edits.
 	
 	Each property is restricted as to what kinds of values it can have. 
-	The user either enters the value by hand or selects it using some UI device (calendar for date, slider for numerical value, type tree for types, a modal editor for "complex" values etc.)
+	The user either enters the value by hand or selects it using some UI device (calendar for date, slider for numerical value, a modal editor for "complex" values etc.)
 	The changes to property values are validated.
+	
+**** P-6.6.2 {Setting multi-valued properties}
+	
+	Some properties are defined as multi-valued; a participant confirms or opines about a set of values. Each user can remove from or add to a <set>
+	of values (no redundancies). When so doing, the values neither removed nor added are considered endorsed by a participant making changes to the set.
+	
+	
+**** P-6.6.1 {Typing an element}
+
+	A participant can tag an element with types applicable to that element when {{{#describe_element}describing it}}. 
+	
+	<<Note: Each class of element is associated with zero or one typology containing all types applicable to elements of this class.>>
+	
+	This is done by setting a property of the element designated for tagging the element with one or more types taken from
+	a valid typology (events are tagged with Event types, issues with Issue types etc.).
+	
+	A type may imply another (e.g. "tsunami" event type implies "natural disaster" implies "disaster" implies "event"), so adding a type to a property value may infact
+	add others implicitly.
+	
+	Type properties are multi-valued.
+	
 
 **** {Authority vs opinions}
 	
@@ -409,7 +436,7 @@ Participant Use Cases
 	
 	Rejected, suggested elements are accessible and visible to participants (with visual cue?) so that they can weigh in (opinions) or decree (authoritative) otherwise.
 	
-*** P-6.8 {Mark an element as relevant or not}
+*** P-6.8 {Mark relevance}
 
 	Any participant in a project can add elements specific to a scenario (events, tasks, outcomes, assertions etc.) or global to a project (mostly organizations and agents). 
 	Just as participants may have differing opinions about the values of element properties (e.g. is this outcome likely or not?), they can also
@@ -433,6 +460,24 @@ Participant Use Cases
 	* identify visually the relevance status of an element.
 	
 	[]
+	
+*** P-6.9 {Branch out scenario}
+
+	A scenario branches out when two or more events are said to be mutually exclusive. Branching out a scenario creates
+	alternative "courses of events". A scenario branch includes everything that is "connected" to the branching event and
+	adds to everything in the "trunk" scenario that is <not> in the alternate branch. 
+	
+	Elements in a branch
+	can not refererence elements in a mutually excluded branch (a need to know in a branch can not be matched with a know in a mutually excluded branch). 
+	They can however reference any other elements in the scenario.
+	
+	When adding an event, a participant has a choice of possibly mutually exclusive events (e.g. task succeeds vs task fails, or outcome happens vs does not).
+	If the participant selects more than one at once or over time that are mutually exclusive, then
+	scenario branches are created from these events.
+	
+	The participant is given visual cues to distinguish branches in a scenario and to indicate mutual exclusion.
+	
+	<<More TBD>>
 
 ** P-7 {View a scenario}
 
@@ -804,7 +849,8 @@ Participant Use Cases
 
 *** P-15.1 {Signal interest}
 
-	A participant can select an element and express an explicit interest in that element.
+	A participant can select an element (it could be a type)
+	and express an explicit interest in that element being modified or used to describe another element.
 	The participant can limit this interest to the element itself include all elements within its scope.
 	For example, a participant can indicate interest in a scenario, and in all elements within it. Or she can
 	limit that interest to the description of the scenario itself.
@@ -819,4 +865,52 @@ Participant Use Cases
 	
 	Wherever an element of interest is shown, a participant can signal no interest, possibly reversing a prior signal of interest.
 
+** P-16 {Attach issue}
+
+	A participant can select an element and, if that element permits the attachment of issues (the set of applicable types of issues is not empty for the element), 
+	the participant can select among the set of applicable types of issues and create and attach an issue of that type to the element.
+	The participant immediately describes the issue. The participant may cancel attachment of the issue or delete the issue later.
+	
+	The applicable types of issues are determined by types by which the element has been explicitly tagged 
+	and by its implicit type (for example all exchanges implicitly have the Exchange type).
+	
+	Another participant (or the system) can {{{#mark_relevance} mark an issue as not relevant}} if the participant (or system)
+	considers that the current state of the model does not support the conclusion that the issue represents.
+	
+	Once an issue is attached to an element, a participant viewing this element is visually alerted as to the presence of one or more issues, and
+	can easily access the description of the issue(s).
+	
+	Attachment of an issue to an element {{{#alerts}}} all participants that have an interest in the element. 
+	It should also lead to a {{{#todos}Todo}} for those with {{{#authority_vs_opinions} authority}} over the element. 
+	
+** P-17 {Add type}
+
+	A participant can {{{#typing_an_element}tag an element with types}} from the one typology, if any, that is applicable to the element's class. 
+	A participant either uses pre-defined types or introduces new types.
+	
+	To introduce a new type, the participant requests to add a new type usually but not necessarily in the context in which an existing type can be chosen. 
+	
+	When a type is added, the participant first sets its domain (a Domain type) and then names the type uniquely within this domain (and the domain's parent domain etc.). 
+	The domain of a type can only be replaced by a domain type that implies the one already given. 
+	
+	The participant immediately describes the type by giving it 
+	
+	* implied types (implied types must not subsume one another but they can cross domains, and a sub-type can not be implied of course)
+	
+	* a definition, 
+	
+	* synonyms (must they be unique within a domain? if not unique within the domain then they are disambiguated by the type's unique name?), 
+	
+	* reference urls etc.
+	
+	[]
+
+	The participant can cancel the type addition or submit it. Once the type is added, whoever added it can remove it up 
+	and until the type is used in describing an element, including another type.
+	
+	<<Note: Only the admin can modify the domain typology.>>
+	
+	The {{{#authority_vs_opinions} authority vs opinions}} principles apply here as well,
+	with domain experts having authority over type definitions within their domains. This means that participants can vote by marking
+	a type as relevant or not and offer their opinion as to the definitions of types including the type(s) another type implies.
 	

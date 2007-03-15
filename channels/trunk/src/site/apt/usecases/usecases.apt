@@ -30,6 +30,8 @@ Use Cases
 
 	[Admin] (Context: Channels) A Channels site administrator responsible for creating projects, for assigning project managers, organization liaisons and domain experts, and generally maintaining a Channels installation.
 	
+	[System] (Context: Channels) The system itself can initiate actions such as suggesting todo's, discovering potential exchanges and issues, and inducing templates from user-provided model elements across projects.
+	
 	[]
 
 	A Channels administrator is the gate keeper for new projects and is the ultimate authority for a Channels installation.
