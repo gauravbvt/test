@@ -110,11 +110,15 @@ Description:
         <module name="DoubleCheckedLocking"/>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="RequireThis">
+        
+<!--	Uncomment this when they fix the bug for static vars/constants
+
+	  	<module name="RequireThis">
 		    <property name="severity" value="warning"/>
             <property name="checkMethods" value="false"/>
         </module>
-        <module name="IllegalInstantiation"/>
+ -->
+             <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
         <module name="MissingCtor"/>
