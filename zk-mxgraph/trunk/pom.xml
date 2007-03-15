@@ -43,6 +43,23 @@
 		<url>https://ranger.homelinux.net/tracsvn/zk-mxgraph</url>
 	</scm>
 
+	<distributionManagement>
+		<repository>
+			<id>mindalliance</id>
+			<name>Mind-Alliance Systems Repository</name>
+			<url>
+				scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/${project.artifactId}
+			</url>
+			<layout>legacy</layout>
+		</repository>
+		<site>
+			<id>mindalliance</id>
+			<url>
+				scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/${project.artifactId}
+			</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.zkoss.zk</groupId>
