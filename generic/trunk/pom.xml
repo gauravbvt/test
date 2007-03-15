@@ -192,7 +192,7 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<configuration>
 					<enableRulesSummary>false</enableRulesSummary>
-					<configLocation>../generic/mas_checks.xml</configLocation>
+					<configLocation>mas_checks.xml</configLocation>
 				</configuration>
 			</plugin>
 			<plugin>
