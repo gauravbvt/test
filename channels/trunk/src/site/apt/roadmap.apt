@@ -4,7 +4,7 @@
  
 	See {{{https://ranger.homelinux.net/trac/channels/roadmap} Release tracking}}
 	
-* Version 1.0
+Version 1.0
 
 	Version 1.0 of Channels is an AJAX-enabled Web application that allows multiple users to collaborate
 	in the construction and analysis of scenarios with a strict focus on communications planning and
@@ -12,9 +12,9 @@
 	
 	<<TBD - White paper on Channels 1.0>>
  
-** {Internal Release 1} (IR1)
+* {Internal Release 1} (IR1)
 
-*** Scope
+** Scope
 
 	IR1 supports a single user. The already created user can 
 	
@@ -74,13 +74,13 @@
 	
 	[]
 	
-*** Tracking
+** Tracking
 
 	See {{{https://ranger.homelinux.net/trac/channels/milestone/internal%20release%201} IR1 tracking}}
  
-** {Internal Release 2} (IR2)
+* {Internal Release 2} (IR2)
  
-*** Scope
+** Scope
 
 	This internal release adds:
 	
@@ -99,37 +99,37 @@
 	* One or more analysis graphs
 	
 	
-*** Tracking
+** Tracking
 
 	See {{{https://ranger.homelinux.net/trac/channels/milestone/internal%20release%201} IR2 tracking}}
 	
-** {Alpha Release}
+* {Alpha Release}
  
-*** Scope
+** Scope
 
 	This releases implements all use cases, some partially. 
 	
 	<<Details TBD>>
 	
-*** Tracking
+** Tracking
 
 	See {{{https://ranger.homelinux.net/trac/channels/milestone/v1.0%20alpha} IR1 tracking}}
 	
-** {Beta Release}
+* {Beta Release}
 
 	This is in principle a full release, ready for beta trials.
  
-** {1.0 Release}
+* {1.0 Release}
 
-*** Scope
+** Scope
 	
 	The whole enchilada.
 	
-*** Tracking
+** Tracking
 
 	See {{{https://ranger.homelinux.net/trac/channels/milestone/internal%20release%201} IR1 tracking}}
  
-* {Version 1.x}
+{Version 1.x}
 
 	Enhancements to version 1.0 may include:
 	
@@ -148,7 +148,7 @@
 	
 	[] 
 	
-* {Version 2}
+{Version 2}
 
 	Channels would become a distributed environment with
 	
@@ -163,6 +163,5 @@
 	* model-informed, event-driven communications management
 	
 	* More TBD
-	
 	
 	[]
