@@ -13,25 +13,6 @@
 	<version>1.0-SNAPSHOT</version>
 	<url>http://maven.apache.org</url>
 
-	<ciManagement>
-		<system>continuum</system>
-		<url>
-			http://ranger.homelinux.net:8081/continuum/
-		</url>
-		<notifiers>
-			<notifier>
-				<type>mail</type>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>false</sendOnSuccess>
-				<sendOnWarning>false</sendOnWarning>
-				<configuration>
-					<address>denis@mind-alliance.com</address>
-				</configuration>
-			</notifier>
-		</notifiers>
-	</ciManagement>
-
 	<scm>
 		<connection>
 			scm:svn:http://ranger.homelinux.net/svn/zk-mxgraph/trunk
