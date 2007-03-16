@@ -25,6 +25,18 @@
 		<tag>HEAD</tag>
 		<url>https://ranger.homelinux.net/tracsvn/${project.artifactId}</url>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<id>mindalliance</id>
+			<name>Mind-Alliance Systems Repository</name>
+			<layout>legacy</layout>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/${project.artifactId}</url>
+		</repository>
+		<site>
+			<id>mindalliance</id>
+			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/${project.artifactId}</url>
+		</site>
+	</distributionManagement>
 
 	<build>
 		<resources>
