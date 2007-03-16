@@ -2450,7 +2450,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171472597347" FOLDED="true" ID="Freemind_Link_690789715" MODIFIED="1171472671757" TEXT="System data">
+<node COLOR="#006666" CREATED="1171472597347" ID="Freemind_Link_690789715" MODIFIED="1171472671757" TEXT="System data">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171472639050" ID="Freemind_Link_788241394" MODIFIED="1171472641777" TEXT="definition">
 <node CREATED="1171566876750" ID="Freemind_Link_955661649" MODIFIED="1172226950404" TEXT="System-level data, i.e. not always specific to a project.">
@@ -2466,14 +2466,10 @@
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1171469318406" FOLDED="true" ID="Freemind_Link_986153844" MODIFIED="1171469321664" TEXT="description">
+<node CREATED="1171469318406" ID="Freemind_Link_986153844" MODIFIED="1171469321664" TEXT="description">
 <node CREATED="1172233343102" ID="Freemind_Link_1426402068" MODIFIED="1172233359895" TEXT="type* [type]"/>
 <node CREATED="1172233391381" ID="Freemind_Link_752359281" MODIFIED="1172233400596" TEXT="about? [text]"/>
 <node CREATED="1168281841102" ID="Freemind_Link_827293391" MODIFIED="1168285495131" TEXT="contact info &lt;Contact info&gt;"/>
-<node COLOR="#000000" CREATED="1167943640865" ID="Freemind_Link_1987180926" MODIFIED="1168284322067" TEXT="availability &lt;Availability&gt;">
-<edge COLOR="#808080" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="12"/>
-</node>
 <node COLOR="#000000" CREATED="1167959614655" ID="Freemind_Link_753761502" MODIFIED="1168353701299" TEXT="alternate* [@Agent]">
 <edge COLOR="#808080" WIDTH="thin"/>
 </node>
@@ -2487,10 +2483,11 @@
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1168373516564" FOLDED="true" ID="Freemind_Link_1301227016" MODIFIED="1168373532664" TEXT="description">
+<node CREATED="1168373516564" ID="Freemind_Link_1301227016" MODIFIED="1168373532664" TEXT="description">
 <node COLOR="#000000" CREATED="1167959567192" ID="Freemind_Link_1836238380" MODIFIED="1171980336210" TEXT="title* [Title type]">
 <edge COLOR="#808080" WIDTH="thin"/>
 </node>
+<node CREATED="1174062386703" ID="Freemind_Link_1033857973" MODIFIED="1174062395141" TEXT="organization [@Organization]"/>
 <node COLOR="#000000" CREATED="1167959611303" ID="Freemind_Link_35426357" MODIFIED="1172073797905" TEXT="manager* [@Role]">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2535,8 +2532,9 @@
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1168380200599" FOLDED="true" ID="Freemind_Link_23635963" MODIFIED="1168380203793" TEXT="description">
+<node CREATED="1168380200599" ID="Freemind_Link_23635963" MODIFIED="1168380203793" TEXT="description">
 <node CREATED="1168287914617" ID="Freemind_Link_1020657133" MODIFIED="1171980384295" TEXT="administrator* [@Role]"/>
+<node CREATED="1174062479628" ID="Freemind_Link_1138429546" MODIFIED="1174062491099" TEXT="organization [@Organization]"/>
 <node CREATED="1168288005295" ID="Freemind_Link_1433984565" MODIFIED="1171980396227" TEXT="holds* &lt;Information asset&gt;"/>
 </node>
 </node>
@@ -3095,6 +3093,27 @@
       </li>
       <li>
         Added &quot;suffers from&quot; property to Data Model/Reference Data/Scenario Element Type
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node CREATED="1174062499481" ID="Freemind_Link_319291091" MODIFIED="1174062501877" TEXT="0.5">
+<node CREATED="1174062503701" ID="Freemind_Link_1331688977" MODIFIED="1174062505649" TEXT="???"/>
+<node CREATED="1174062507258" ID="Freemind_Link_901591646" MODIFIED="1174062586972" TEXT="Changes">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        Modified Agent to remove property availability (redundant with contact info availability)
+      </li>
+      <li>
+        Modified Agent/Role and Agent/Information Resource to add organization property
       </li>
     </ul>
   </body>
