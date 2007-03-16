@@ -10,36 +10,20 @@
 	<groupId>com.mindalliance.channels</groupId>
 	<artifactId>channels</artifactId>
 	<packaging>war</packaging>
-	<name>Mind-Alliance Channels</name>
+	<name>Channels</name>
 	<version>1.0-SNAPSHOT</version>
 	<description>Communications Analysis and Planning</description>
 	<url>https://ranger.homelinux.net/projects/channels</url>
-	<ciManagement>
-		<system>continuum</system>
-		<url>http://ranger.homelinux.net:8081/continuum</url>
-		<notifiers>
-			<notifier>
-				<type>mail</type>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>false</sendOnSuccess>
-				<sendOnWarning>false</sendOnWarning>
-				<configuration>
-					<address>denis@mind-alliance.com</address>
-				</configuration>
-			</notifier>
-		</notifiers>
-	</ciManagement>
 
 	<scm>
 		<connection>
-			scm:svn:http://ranger.homelinux.net/svn/channels/trunk
+			scm:svn:http://ranger.homelinux.net/svn/${project.artifactId}/trunk
 		</connection>
 		<developerConnection>
-			scm:svn:https://ranger.homelinux.net/svn/channels/trunk
+			scm:svn:https://ranger.homelinux.net/svn/${project.artifactId}/trunk
 		</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://ranger.homelinux.net/tracsvn/channels</url>
+		<url>https://ranger.homelinux.net/tracsvn/${project.artifactId}</url>
 	</scm>
 
 	<build>

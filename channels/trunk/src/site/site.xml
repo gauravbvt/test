@@ -12,6 +12,7 @@
     <href>http://ranger.homelinux.net/projects/channels/index.html</href>
 	<alt>Channels</alt>
   </bannerRight>
+  <publishDate position="left" format="yyyy-MM-dd kk:mm:ss"/>
   <body>
     <links>
       <item name="Trac" href="https://ranger.homelinux.net/trac/channels" />
