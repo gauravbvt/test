@@ -35,7 +35,8 @@ zkMxGraph.init = function (container) {
         // Create graph and set default state
 		var graph = new mxGraph(container, model);
 		graph.setTooltips(true);
-		new mxRubberband(graph);
+		graph.setPanning(true);
+		//new mxRubberband(graph);
 		mxGraph.prototype.isExpandable = function(cell) 
 		{ 
    			return false; /* your condition here */ 	
@@ -382,13 +383,14 @@ function zm_createVertex(container, v) {
 	vertex.setValue(v.value);
 	var parent;
 	if (v.parent != null) {
-	 	parent = graph.getModel().getCell(v.parentId);
+	 	parent = graph.getModel().getCell(v.parent);
 	} 
 	graph.addCell(vertex, parent,null,null,null);
 	for (i = 0 ; i < v.overlays.length ; i++) {
 		zm_createOverlay(container, v.overlays[i].id, vertex, v.overlays[i]);
 	}
 	graph.updateSize(vertex);
+	graph.updateSize(parent);
 	
 }
 
@@ -406,7 +408,7 @@ function zm_createEdge(container, obj) {
 	edge.setId(obj.id);
 	var parent;
 	if (obj.parent != null) {
-		parent = graph.getModel().getCell(obj.parentId);
+		parent = graph.getModel().getCell(obj.parent);
 	} 
 	var source = graph.getModel().getCell(obj.source);
 	var target = graph.getModel().getCell(obj.target);
@@ -514,7 +516,8 @@ function zm_groupCells(container, value) {
 	var ids = obj.cells;
 	var v = obj.group;
 	var cells = new Array();
-	var vertex = new mxCell(v.value, new mxGeometry(0,0,0,0), 'group');
+	var vertex = new mxCell(v.value);
+	vertex.setStyle('group');
 	vertex.vertex = true; vertex.edge = false;
 	vertex.id=v.id;
 	for (i=0; i<ids.length; i++) {

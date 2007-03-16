@@ -18,6 +18,7 @@ import com.mindalliance.zk.mxgraph.MxEdge;
 import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxOverlay;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
+import com.mindalliance.zk.mxgraph.MxStyleHelper;
 import com.mindalliance.zk.mxgraph.MxStyleSheet;
 import com.mindalliance.zk.mxgraph.MxVertex;
 import com.mindalliance.zk.mxgraph.dto.Menu;
@@ -38,6 +39,8 @@ public class MainRichlet extends GenericRichlet {
 		// graph.setProperty(MxGraph.BACKGROUND_IMAGE, "/channels/images/grid.gif", false);
 		// graph.setProperty(MxGraph.AUTO_SIZE, true, false);
 		graph.getPanningHandler().setProperty(MxPanningHandler.IS_SELECT_ON_POPUP, false, false);
+		graph.getPanningHandler().setProperty(MxPanningHandler.IS_USE_SHIFT_KEY, true, false);
+		graph.getPanningHandler().setProperty(MxPanningHandler.IS_PAN_ENABLED, true, false);
 		//MxVertex node1 = graph.addVertex("Node A", 0, 0, 60, 30);
 		MxVertex node1 = new MxVertex("Node A", 0,0,60,30);
 		node1.setStyle("actor");
@@ -78,7 +81,7 @@ public class MainRichlet extends GenericRichlet {
 		groupOverlay.addClickListener(new MxCellListener() {
 			public void onEvent(MxGraph graph, MxCell cell) {
 				final MxVertex group = new MxVertex("");
-				group.setStyle("swimlane");
+				//group.setStyle("swimlane");
 				graph.groupCells(group, new String[] {node1Id, node2Id, edge1Id});
 				MxOverlay ungroupOverlay = new MxOverlay("/channels/images/16x16/delete2.png", "Ungroup nodes", 0,0,16,16);
 				ungroupOverlay.addClickListener(new MxCellListener() {
@@ -115,6 +118,9 @@ public class MainRichlet extends GenericRichlet {
 		style.put(MxConstants.STYLE_PERIMETER, MxConstants.STYLE_VERTEX_ELLIPSE_PERIMETER);
 		style.put(MxConstants.STYLE_GRADIENTCOLOR, "white");
 		style.put(MxConstants.STYLE_FONTSIZE, "10");
+		
+		style = MxStyleHelper.getEllipseStyle();
+		sheet.putCellStyle("group", style);
 		graph.setParent(w);
 		w.setPage(page);
 	}
