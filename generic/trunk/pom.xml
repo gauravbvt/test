@@ -206,6 +206,7 @@
 				<configuration>
 					<connectionType>connection</connectionType>
 					<basedir>${basedir}</basedir>
+					<dateFormat>yyyy-MM-dd kk:mm:ss Z</dateFormat>
  					<scmUrl>http://ranger.homelinux.net/svn/${project.artifactId}/trunk/</scmUrl>
 <!-- 				<displayFileDetailUrl>https://ranger.homelinux.net/websvn/filedetails.php?repname=Mind-Alliance&amp;amp;path=%FILE%&amp;amp;rev=0</displayFileDetailUrl>
   -->				<displayFileDetailUrl>https://ranger.homelinux.net/tracsvn%FILE%</displayFileDetailUrl>

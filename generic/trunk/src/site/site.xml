@@ -6,6 +6,7 @@
     <href>https://ranger.homelinux.net/</href>
 	<alt>Code-Alliance</alt>
   </bannerLeft>
+  <publishDate position="left" format="yyyy-MM-dd kk:mm:ss"/>
   <body>
     <links>
       <item name="Trac" href="https://ranger.homelinux.net/trac/generic" />
