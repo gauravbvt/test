@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author dfeeney
+ * Provides a set of starter styles for the various shapes.
  *
  */
 public class MxStyleHelper {

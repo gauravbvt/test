@@ -6,9 +6,12 @@ package com.mindalliance.zk.mxgraph;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Maintains a set of properties related to graph panning.  The client will be dynamically updated with property changes.
+ *
+ */
 public class MxPanningHandler {
-	
+
 	static public final String IS_USE_SHIFT_KEY = "isUseShiftKey";	// true
 	static public final String IS_USE_POPUP_TRIGGER = "isUsePopupTrigger";	// true
 	static public final String IS_SELECT_ON_POPUP = "isSelectOnPopup";	// true

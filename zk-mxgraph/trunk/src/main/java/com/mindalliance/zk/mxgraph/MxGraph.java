@@ -25,6 +25,10 @@ import com.mindalliance.zk.mxgraph.command.AddVertexCommand;
 import com.mindalliance.zk.mxgraph.command.ClickOverlayCommand;
 import com.mindalliance.zk.mxgraph.command.DeleteCellsCommand;
 import com.mindalliance.zk.mxgraph.command.SelectCellsCommand;
+import com.mindalliance.zk.mxgraph.command.ZoomActualCommand;
+import com.mindalliance.zk.mxgraph.command.ZoomFitCommand;
+import com.mindalliance.zk.mxgraph.command.ZoomInCommand;
+import com.mindalliance.zk.mxgraph.command.ZoomOutCommand;
 import com.mindalliance.zk.mxgraph.dto.Menu;
 import com.mindalliance.zk.mxgraph.event.DeleteCellsEvent;
 import com.mindalliance.zk.mxgraph.event.EdgeAddedEvent;
@@ -34,11 +38,39 @@ import com.mindalliance.zk.mxgraph.event.SelectCellsEvent;
 import com.mindalliance.zk.mxgraph.event.StyleAddedEvent;
 import com.mindalliance.zk.mxgraph.event.UngroupCellsEvent;
 import com.mindalliance.zk.mxgraph.event.VertexAddedEvent;
+import com.mindalliance.zk.mxgraph.event.ZoomEvent;
 
 /**
- * A ZK component that wraps an mxGraph diagram.  This class handles graph initialization via a set of editable properties.
- * The graph data model is
+ * A ZK component that wraps an mxGraph diagram.  In order to maintain consistency between the client graph instance and the server model,
+ * all model and graph state changes are routed through this class.
+ * 
+ * <code>
+ *      // Construct a new 800x800 graph<br>
+ * 		MxGraph graph = new MxGraph();<br>
+ * 		graph.setLayout(new MxCompactTreeLayout());<br>
+ * 		graph.setWidth("800px");<br>
+ *		graph.setHeight("800px");<br>
+ *  </code>
+ * <p>When a graph is created, it must be configured with a layout and .
  *
+ * <p><b>Panning</b>
+ * <p>Configuring graph panning is handled by setting properties on the MxPanningHandler class.  The graph's panningHandler instance should 
+ * be retrieved via {@link #getPanningHandler()}.
+ * MxPanningHandler is also used to configure the pop up menus for the graph and individual nodes.
+ * 
+ * <p><code>
+ *      // Enable panning and associate it with shift+left click<br>
+ *		graph.getPanningHandler().setProperty(MxPanningHandler.IS_USE_SHIFT_KEY, true, false);<br>
+ * 		graph.getPanningHandler().setProperty(MxPanningHandler.IS_PAN_ENABLED, true, false);<br>
+ * </code>
+ * 
+ * <p><b>Styles</b>
+ * <p>An MxGraph maintains the set of available cell styles in a stylesheet.  The stylesheet maintains a list of named styles.  Setting the
+ * style attribute on a particular cell to one of these names will cause the cell to be rendered using the corresponding style.  Each style consists of a Map 
+ * whose keys correspond to the values in {@link MxConstants}  that start with STYLE_.  
+ * 
+ * <p>The shape of a cell can be specified by setting the MxConstants.STYLE_SHAPE style.  The available shapes are specified in {@link MxConstants} as well.
+ * A set of styles corresponding to particular shapes are available from static methods {@link MxStyleHelper}.
  */
 @SuppressWarnings("serial")
 public class MxGraph extends HtmlBasedComponent {
@@ -51,6 +83,10 @@ public class MxGraph extends HtmlBasedComponent {
 		new AddEdgeCommand(MxConstants.COMMAND_ADD_EDGE, Command.IGNORE_OLD_EQUIV);
 		new AddOverlayCommand(MxConstants.COMMAND_ADD_OVERLAY, Command.IGNORE_OLD_EQUIV);
 		new ClickOverlayCommand(MxConstants.COMMAND_CLICK_OVERLAY, Command.IGNORE_OLD_EQUIV);
+		new ZoomInCommand(MxConstants.COMMAND_ZOOM_IN, Command.IGNORE_OLD_EQUIV);
+		new ZoomOutCommand(MxConstants.COMMAND_ZOOM_OUT, Command.IGNORE_OLD_EQUIV);
+		new ZoomFitCommand(MxConstants.COMMAND_ZOOM_FIT, Command.IGNORE_OLD_EQUIV);
+		new ZoomActualCommand(MxConstants.COMMAND_ZOOM_ACTUAL, Command.IGNORE_OLD_EQUIV);
 	}
 
 	
@@ -390,6 +426,40 @@ public class MxGraph extends HtmlBasedComponent {
 			cell.setParent(group.getParent());
 		}
 		model.removeCell(group.getId());
+	}
+	
+	/**
+	 * Zooms the graph in by the value set in ZOOM_FACTOR.  By default, this is 1.2, or 120%.
+	 *
+	 */
+	public void zoomIn() {
+		smartUpdate("z:zoomIn", "");
+		Events.postEvent(new ZoomEvent(MxConstants.COMMAND_ZOOM_IN, this));
+	}
+	/**
+	 * Zooms the graph out by the value set in ZOOM_FACTOR.  By default, this is 1.2, or 120%.
+	 *
+	 */
+	public void zoomOut() {
+		smartUpdate("z:zoomOut", "");
+		Events.postEvent(new ZoomEvent(MxConstants.COMMAND_ZOOM_IN, this));
+	}
+	/**
+	 * Zooms the graph to it's default scale.
+	 *
+	 */
+	public void zoomToActual() {
+		smartUpdate("z:zoomActual", "");
+		Events.postEvent(new ZoomEvent(MxConstants.COMMAND_ZOOM_IN, this));
+	}
+	
+	/**
+	 * Zooms the graph to fit in the display.
+	 *
+	 */
+	public void zoomToFit() {
+		smartUpdate("z:zoomFit", "");
+		Events.postEvent(new ZoomEvent(MxConstants.COMMAND_ZOOM_IN, this));
 	}
 	
 	// Event-free setters

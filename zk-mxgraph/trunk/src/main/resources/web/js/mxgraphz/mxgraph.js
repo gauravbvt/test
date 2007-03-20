@@ -115,6 +115,18 @@ zkMxGraph.setAttr = function (container, command, val) {
 		case "z:ungroupCells":
 			zm_ungroupCells(container, val);
 			return true;
+		case "z:zoomIn":
+			container._graph.zoomIn();
+			return true;
+		case "z:zoomOut":
+			container._graph.zoomOut();
+			return true;
+		case "z:zoomActual":
+			container._graph.zoomActual();
+			return true;
+		case "z:zoomFit":
+			container._graph.fit();
+			return true;
 		default:
 			console.error("Invalid command " + command + " " + val);
 			return true;

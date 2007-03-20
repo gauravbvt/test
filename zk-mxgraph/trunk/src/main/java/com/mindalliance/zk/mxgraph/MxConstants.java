@@ -19,19 +19,61 @@ public class MxConstants {
 	public static final String NS_XLINK = "http = //www.w3.org/1999/xlink";
 	public static final String SVG_SHADOWCOLOR = "gray";
 	public static final String SVG_SHADOWTRANSFORM = "translate(2 3)";
+	/**
+	 * Specified as a  STYLE_VERTEX_*_PERIMETER value
+	 */
 	public static final String STYLE_PERIMETER = "perimeter";
+	/**
+	 * As a percent
+	 */
 	public static final String STYLE_OPACITY = "opacity";
+	/**
+	 * Specified from #000000 to #FFFFFF
+	 */
 	public static final String STYLE_FILLCOLOR = "fillColor";
+	/**
+	 * Specified from #000000 to #FFFFFF
+	 */
 	public static final String STYLE_GRADIENTCOLOR = "gradientColor";
+	/**
+	 * Specified from #000000 to #FFFFFF
+	 */
 	public static final String STYLE_STROKECOLOR = "strokeColor";
+	/**
+	 * Specified from #000000 to #FFFFFF
+	 */
 	public static final String STYLE_SEPARATORCOLOR = "separatorColor";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_STROKEWIDTH = "strokeWidth";
+	/**
+	 * Specified as an ALIGN_* value
+	 */
 	public static final String STYLE_ALIGN = "align";
+	/**
+	 * Specified as an ALIGN_* value
+	 */
 	public static final String STYLE_VERTICAL_ALIGN = "verticalAlign";
+	/**
+	 * Specified as an ALIGN_* value
+	 */
 	public static final String STYLE_IMAGE_ALIGN = "imageAlign";
+	/**
+	 * Specified as an ALIGN_* value
+	 */
 	public static final String STYLE_IMAGE_VERTICAL_ALIGN = "imageVerticalAlign";
+	/**
+	 * Specified as a URL
+	 */
 	public static final String STYLE_IMAGE = "image";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_IMAGE_WIDTH = "imageWidth";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_IMAGE_HEIGHT = "imageHeight";
 	public static final String STYLE_INDICATOR_SHAPE = "indicatorShape";
 	public static final String STYLE_INDICATOR_IMAGE = "indicatorImage";
@@ -41,25 +83,67 @@ public class MxConstants {
 	public static final String STYLE_INDICATOR_SPACING = "indicatorSpacing";
 	public static final String STYLE_INDICATOR_WIDTH = "indicatorWidth";
 	public static final String STYLE_INDICATOR_HEIGHT = "indicatorHeight";
+	/**
+	 * true/false
+	 */
 	public static final String STYLE_SHADOW = "shadow";
+	/**
+	 * As a shape derived from arrow, or ARROW_*
+	 */
 	public static final String STYLE_ENDARROW = "endArrow";
+	/**
+	 * As a shape derived from arrow, or ARROW_*
+	 */
 	public static final String STYLE_STARTARROW = "startArrow";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_ENDSIZE = "endSize";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_STARTSIZE = "startSize";
 	public static final String STYLE_DASHED = "dashed";
 	public static final String STYLE_ROUNDED = "rounded";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_PERIMETER_SPACING = "perimeterSpacing";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_SPACING = "spacing";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_SPACING_TOP = "spacingTop";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_SPACING_LEFT = "spacingLeft";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_SPACING_BOTTOM = "spacingBottom";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_SPACING_RIGHT = "spacingRight";
+	/**
+	 * In pixels
+	 */
 	public static final String STYLE_HORIZONTAL = "horizontal";
 	public static final String STYLE_FONTCOLOR = "fontColor";
 	public static final String STYLE_FONTFAMILY = "fontFamily";
 	public static final String STYLE_FONTSIZE = "fontSize";
 	public static final String STYLE_FONTSTYLE = "fontStyle";
+	/**
+	 * From SHAPE_*
+	 */
 	public static final String STYLE_SHAPE = "shape";
+	/**
+	 * Specified as a value from STYLE_EDGE_*
+	 */
 	public static final String STYLE_EDGE = "edgeStyle";
 	public static final int FONT_BOLD = 1;
 	public static final int FONT_ITALIC = 2;
@@ -84,11 +168,33 @@ public class MxConstants {
 	public static final String ALIGN_MIDDLE = "middle";
 	public static final String ALIGN_BOTTOM = "bottom";
 	// Extras (not defined in mxClient.js :: mxConstants)
+	/**
+	 * Value for STYLE_PERIMETER that indicates a rectangular perimeter should be used for connecting
+	 * edges to the vertex
+	 */
 	public static final String STYLE_VERTEX_RECTANGLE_PERIMETER = "RectanglePerimeter";
+	/**
+	 * Value for STYLE_PERIMETER that indicates a elliptical perimeter should be used for connecting
+	 * edges to the vertex
+	 */
 	public static final String STYLE_VERTEX_ELLIPSE_PERIMETER = "EllipsePerimeter";
+	/**
+	 * Value for STYLE_PERIMETER that indicates a rhomboid perimeter should be used for connecting
+	 * edges to the vertex
+	 */
 	public static final String STYLE_VERTEX_RHOMBUS_PERIMETER = "RhombusPerimeter";
+	/**
+	 * Value for STYLE_PERIMETER that indicates a rectangular perimeter should be used for connecting
+	 * edges to the vertex
+	 */
 	public static final String STYLE_VERTEX_RIGHT_ANGLE_RECTANGLE_PERIMETER = "RightAngleRectanglePerimeter";
+	/**
+	 * Value for STYLE_EDGE that indicates the edge should layed out from left to right
+	 */
 	public static final String STYLE_EDGE_SIDE_TO_SIDE = "SideToSide";
+	/**
+	 * Value for STYLE_EDGE that indicates the edge should layed out from top to bottom
+	 */
 	public static final String STYLE_EDGE_TOP_TO_BOTTOM = "TopToBottom";
 	
 	static public final String COMMAND_SELECT = "onSelectCells";
@@ -102,6 +208,10 @@ public class MxConstants {
 	public static final String COMMAND_PUT_STYLE = "onPutStyle";
 	public static final String COMMAND_GROUP_CELLS = "onGroupCells";
 	public static final String COMMAND_UNGROUP = "onUngroup";
+	public static final String COMMAND_ZOOM_IN = "onZoomIn";
+	public static final String COMMAND_ZOOM_OUT = "onZoomOut";
+	public static final String COMMAND_ZOOM_FIT = "onZoomFit";
+	public static final String COMMAND_ZOOM_ACTUAL = "onZoomActual";
 
 
 }
