@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.util;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -12,9 +13,12 @@ import java.util.concurrent.atomic.AtomicLong;
  * unique sequence number since the creation of this factory.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
- * @version $Revision$
+ * @version $Revision:46 $
+ *
+ * @opt attributes
+ * @depend - &lt;generates&gt; - GuidImpl
  */
-public class GUIDFactoryImpl implements GUIDFactory {
+public class GUIDFactoryImpl implements GUIDFactory, Serializable {
 
     private AtomicLong sequence = new AtomicLong( 0 );
     private String serverId;
@@ -62,6 +66,21 @@ public class GUIDFactoryImpl implements GUIDFactory {
      */
     public void setServerId( final String serverId ) {
         this.serverId = serverId;
+    }
+
+    /**
+     * Return the value of sequence.
+     */
+    public long getSequence() {
+        return this.sequence.get();
+    }
+
+    /**
+     * Set the value of sequence.
+     * @param sequence The new value of sequence
+     */
+    public void setSequence( long sequence ) {
+        this.sequence.set( sequence );
     }
 
     //========================================

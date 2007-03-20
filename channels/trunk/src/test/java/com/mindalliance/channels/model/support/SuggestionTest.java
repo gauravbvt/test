@@ -8,6 +8,7 @@ import static org.junit.Assert.assertSame;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.beans.PropertyVetoException;
 import java.util.Arrays;
 
 import junit.framework.JUnit4TestAdapter;
@@ -21,9 +22,9 @@ import org.acegisecurity.providers.dao.DaoAuthenticationProvider;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.model.TestModelObject;
 import com.mindalliance.channels.system.SystemImpl;
-import com.mindalliance.channels.system.UserExistsException;
 import com.mindalliance.channels.system.UserImpl;
 
 /**
@@ -46,14 +47,15 @@ public class SuggestionTest {
     /**
      * Setup before each test.
      * @throws IntrospectionException never...
+     * @throws PropertyVetoException 
      */
     @Before
-    public void setUp() throws IntrospectionException, UserExistsException {
+    public void setUp() throws IntrospectionException, UserExistsException, PropertyVetoException {
 
         this.user1 = new UserImpl( 
-                "joe", "bla", new String[]{ "ROLE_USER" } );
+                "Joe", "joe", "bla", new String[]{ "ROLE_USER" } );
         this.user2 = new UserImpl( 
-                "bob", "blabla", new String[]{ "ROLE_USER" } );
+                "Bob", "bob", "blabla", new String[]{ "ROLE_USER" } );
 
         this.system = new SystemImpl();
         this.system.addUser( user1 );

@@ -7,6 +7,7 @@ package com.mindalliance.channels.system;
 import static org.junit.Assert.*;
 
 import java.beans.PropertyVetoException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -18,6 +19,7 @@ import org.junit.Test;
 
 import com.mindalliance.channels.Project;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.UserExistsException;
 
 
 /**
@@ -36,15 +38,16 @@ public class SystemImplTest {
     @Before
     public void setUp() throws Exception {
         system = new SystemImpl();
-        user = new UserImpl( "user", "pass1", new String[]{ "ROLE_USER" } );
-        admin = new UserImpl( "admin", "pass2", new String[]{ "ROLE_USER", "ROLE_ADMIN" } );
+        user = new UserImpl( "User", "user", "pass1", new String[]{ "ROLE_USER" } );
+        admin = new UserImpl( "Admin", "admin", "pass2", new String[]{ "ROLE_USER", "ROLE_ADMIN" } );
     }
 
     /**
      * Test method for {@link SystemImpl#addProject(com.mindalliance.channels.Project)}.
+     * @throws PropertyVetoException 
      */
     @Test
-    public final void testAddRemoveProject() {
+    public final void testAddRemoveProject() throws PropertyVetoException {
         assertEquals( 0, system.getProjects().size() );
         ProjectImpl project = new ProjectImpl( "test" );
         
@@ -82,9 +85,10 @@ public class SystemImplTest {
 
     /**
      * Test method for {@link SystemImpl#setProjects(java.util.SortedSet)}.
+     * @throws PropertyVetoException 
      */
     @Test
-    public final void testSetProjects_1() {
+    public final void testSetProjects_1() throws PropertyVetoException {
         SortedSet<Project> projects = new TreeSet<Project>();
         
         system.setProjects( projects );
@@ -236,9 +240,10 @@ public class SystemImplTest {
     /**
      * Test method for {@link SystemImpl#getProjects(User)}.
      * @throws UserExistsException never
+     * @throws PropertyVetoException 
      */
     @Test
-    public final void testGetProjectsUser() throws UserExistsException {
+    public final void testGetProjectsUser() throws UserExistsException, PropertyVetoException {
         ProjectImpl p1 = new ProjectImpl( "project 1" );
         ProjectImpl p2 = new ProjectImpl( "project 2" );
         
@@ -295,9 +300,10 @@ public class SystemImplTest {
     
     /**
      * Test method for {@link SystemImpl#getProject(String)}.
+     * @throws PropertyVetoException 
      */
     @Test
-    public final void testgetProject_1() {
+    public final void testGetProject_1() throws PropertyVetoException {
         ProjectImpl project = new ProjectImpl( "test" );
         system.addProject( project );
 
@@ -309,9 +315,10 @@ public class SystemImplTest {
     
     /**
      * Test method for renaming of projects.
+     * @throws PropertyVetoException 
      */
     @Test
-    public final void testProjectRename_1() {
+    public final void testProjectRename_1() throws PropertyVetoException {
         ProjectImpl project1 = new ProjectImpl( "test" );
         ProjectImpl project2 = new ProjectImpl( "test2" );
         system.addProject( project1 );
@@ -386,8 +393,12 @@ public class SystemImplTest {
         assertSame( admin, system.loadUserByUsername( "admin" ) );
 
         user.setUsername( "bla" );
-        assertSame( user, system.loadUserByUsername( "bla" ) );
-        assertSame( admin, system.loadUserByUsername( "admin" ) );
+        try {
+            assertSame( user, system.loadUserByUsername( "bla" ) );
+            assertSame( admin, system.loadUserByUsername( "admin" ) );
+        } catch ( UsernameNotFoundException e ) {
+            fail();
+        }
         try {
             assertSame( admin, system.loadUserByUsername( "user" ) );
             fail();
@@ -405,6 +416,37 @@ public class SystemImplTest {
             // OK
         }
         
+    }
+    
+    @Test
+    public void testGetSetOrganizations() throws PropertyVetoException {
+        assertEquals( 0, system.getOrganizations().size() );
+
+        Organization org1 = new Organization( "MAS" );        
+        system.addOrganization( org1 );
+        assertEquals( 1, system.getOrganizations().size() );
+        assertSame( org1, system.getOrganizations().iterator().next() );
+
+        Organization org2 = new Organization( "EFF" );        
+        system.addOrganization( org2 );
+        assertEquals( 2, system.getOrganizations().size() );
+        assertTrue( system.getOrganizations().contains( org1 ) );
+        assertTrue( system.getOrganizations().contains( org2 ) );
+        
+        system.removeOrganization( org1 );
+        assertEquals( 1, system.getOrganizations().size() );
+        assertSame( org2, system.getOrganizations().iterator().next() );
+        
+        system.removeOrganization( org2 );
+        assertEquals( 0, system.getOrganizations().size() );
+        
+        Set<Organization> set = new HashSet<Organization>();
+        set.add( org1 );
+        set.add( org2 );
+        system.setOrganizations( set );
+        assertEquals( 2, system.getOrganizations().size() );
+        assertTrue( system.getOrganizations().contains( org1 ) );
+        assertTrue( system.getOrganizations().contains( org2 ) );
     }
     
 }

@@ -6,6 +6,8 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.system.MetaInformation;
+import com.mindalliance.channels.util.Duration;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -28,7 +30,7 @@ public class InformationNeed extends AbstractNamedObject {
      */
     public enum Criticality { low, medium, high }
 
-    private Information information;
+    private MetaInformation information;
     private Delivery delivery;
     private Criticality criticality;
     private Duration maximumDelay;
@@ -92,7 +94,7 @@ public class InformationNeed extends AbstractNamedObject {
     /**
      * Return the value of information.
      */
-    public Information getInformation() {
+    public MetaInformation getInformation() {
         return this.information;
     }
 
@@ -100,7 +102,7 @@ public class InformationNeed extends AbstractNamedObject {
      * Set the value of information.
      * @param information The new value of information
      */
-    public void setInformation( Information information ) {
+    public void setInformation( MetaInformation information ) {
         this.information = information;
     }
 

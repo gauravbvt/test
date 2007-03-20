@@ -3,7 +3,10 @@
 
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.system.MetaInformation;
+import com.mindalliance.channels.util.Area;
 import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.util.TimePeriod;
 
 /**
  * Something of consequence that is true for some period of time.
@@ -17,7 +20,7 @@ public class Event extends AbstractNamedObject {
     private String kind;
     private Area location;
     private TimePeriod timing;
-    private Information details;
+    private MetaInformation details;
 
     /**
      * Default constructor.
@@ -30,7 +33,7 @@ public class Event extends AbstractNamedObject {
     /**
      * Return the value of details.
      */
-    public Information getDetails() {
+    public MetaInformation getDetails() {
         return this.details;
     }
 
@@ -38,7 +41,7 @@ public class Event extends AbstractNamedObject {
      * Set the value of details.
      * @param details The new value of details
      */
-    public void setDetails( Information details ) {
+    public void setDetails( MetaInformation details ) {
         this.details = details;
     }
 

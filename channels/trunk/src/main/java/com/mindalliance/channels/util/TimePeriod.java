@@ -1,8 +1,9 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.util;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,8 +11,10 @@ import java.util.Date;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
  */
-public class TimePeriod {
+public class TimePeriod implements Serializable {
 
     private Date start;
     private Date end;

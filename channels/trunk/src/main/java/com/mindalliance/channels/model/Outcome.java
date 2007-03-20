@@ -6,6 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.system.MetaInformation;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -24,7 +25,7 @@ public class Outcome extends AbstractNamedObject {
     private float likelihood;
     private List<Event> raisedEvents = new ArrayList<Event>();
     private List<Event> terminatedEvents = new ArrayList<Event>();
-    private Information details;
+    private MetaInformation details;
     private Impact impact;
 
     /**
@@ -38,7 +39,7 @@ public class Outcome extends AbstractNamedObject {
     /**
      * Return the value of details.
      */
-    public Information getDetails() {
+    public MetaInformation getDetails() {
         return this.details;
     }
 
@@ -46,7 +47,7 @@ public class Outcome extends AbstractNamedObject {
      * Set the value of details.
      * @param details The new value of details
      */
-    public void setDetails( Information details ) {
+    public void setDetails( MetaInformation details ) {
         this.details = details;
     }
 

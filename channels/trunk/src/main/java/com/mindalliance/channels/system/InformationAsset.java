@@ -1,12 +1,14 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.system;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.reference.ClearanceType;
+import com.mindalliance.channels.reference.FormatType;
+import com.mindalliance.channels.reference.TitleType;
 
 /**
  * The format in which some information is held in custody
@@ -14,20 +16,22 @@ import com.mindalliance.channels.util.GUID;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
+ * @composed - - 1 MetaInformation
+ * @composed - - * DisseminationConstraint
  */
-public class InformationAsset extends AbstractNamedObject {
+public class InformationAsset {
 
-    private Information information;
-    private List<String> formats = new ArrayList<String>();
+    private MetaInformation content;
+    private List<FormatType> formats = new ArrayList<FormatType>();
     private List<DisseminationConstraint> disseminationConstraints =
                   new ArrayList<DisseminationConstraint>();
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    InformationAsset( GUID guid ) {
-        super( guid );
+    InformationAsset() {
     }
 
     /**
@@ -49,7 +53,7 @@ public class InformationAsset extends AbstractNamedObject {
     /**
      * Return the value of formats.
      */
-    public List<String> getFormats() {
+    public List<FormatType> getFormats() {
         return this.formats;
     }
 
@@ -57,34 +61,54 @@ public class InformationAsset extends AbstractNamedObject {
      * Set the value of formats.
      * @param formats The new value of formats
      */
-    public void setFormats( List<String> formats ) {
+    public void setFormats( List<FormatType> formats ) {
         this.formats = formats;
+    }
+
+    /**
+     * Add a format.
+     * @param format the format
+     */
+    public void addFormat( FormatType format ) {
+        this.formats.add( format );
+    }
+
+    /**
+     * Remove a format.
+     * @param format the format
+     */
+    public void removeFormat( FormatType format ) {
+        this.formats.remove( format );
     }
 
     /**
      * Return the value of information.
      */
-    public Information getInformation() {
-        return this.information;
+    public MetaInformation getContent() {
+        return this.content;
     }
 
     /**
      * Set the value of information.
      * @param information The new value of information
      */
-    public void setInformation( Information information ) {
-        this.information = information;
+    public void setContent( MetaInformation information ) {
+        this.content = information;
     }
 
     //==========================================
     /**
      * Constraint on how far information can flow and who
      * is authorized to view it.
+     *
+     * @opt attributes
+     * @composed - - 0..1 SecrecyConstraint
+     * @composed - - * PrivacyConstraint
      */
     public static class DisseminationConstraint {
 
-        private List<SecrecyConstraint> secrecy;
-        private List<PrivacyConstraint> privacy;
+        private SecrecyConstraint secrecyConstraint;
+        private List<PrivacyConstraint> privacyConstraints;
 
         /**
          * Default constructor.
@@ -95,46 +119,60 @@ public class InformationAsset extends AbstractNamedObject {
         /**
          * Return the value of privacy.
          */
-        public List<PrivacyConstraint> getPrivacy() {
-            return this.privacy;
+        public List<PrivacyConstraint> getPrivacyConstraints() {
+            return this.privacyConstraints;
         }
 
         /**
          * Set the value of privacy.
          * @param privacy The new value of privacy
          */
-        public void setPrivacy( List<PrivacyConstraint> privacy ) {
-            this.privacy = privacy;
+        public void setPrivacyConstraints( List<PrivacyConstraint> privacy ) {
+            this.privacyConstraints = privacy;
+        }
+
+        /**
+         * Add a privacy constraint.
+         * @param privacy the constraint
+         */
+        public void addPrivacyConstraint( PrivacyConstraint privacy ) {
+            this.privacyConstraints.add( privacy );
+        }
+
+        /**
+         * Remove a privacy constraint.
+         * @param privacy the constraint
+         */
+        public void removePrivacyConstraint( PrivacyConstraint privacy ) {
+            this.privacyConstraints.remove( privacy );
         }
 
         /**
          * Return the value of secrecy.
          */
-        public List<SecrecyConstraint> getSecrecy() {
-            return this.secrecy;
+        public SecrecyConstraint getSecrecyConstraint() {
+            return this.secrecyConstraint;
         }
 
         /**
          * Set the value of secrecy.
          * @param secrecy The new value of secrecy
          */
-        public void setSecrecy( List<SecrecyConstraint> secrecy ) {
-            this.secrecy = secrecy;
+        public void setSecrecyConstraint( SecrecyConstraint secrecy ) {
+            this.secrecyConstraint = secrecy;
         }
     }
 
     //==========================================
     /**
      * Restriction on information propagation.
+     *
+     * @opt attributes
      */
     public static class SecrecyConstraint {
 
-        // TODO clearance types
-        private String classification;
+        private ClearanceType classification;
         private Channel.Security channelSecurity;
-        private Organization organization;
-        // TODO title types
-        private String title;
 
         /**
          * Default constructor.
@@ -161,7 +199,7 @@ public class InformationAsset extends AbstractNamedObject {
         /**
          * Return the value of classification.
          */
-        public String getClassification() {
+        public ClearanceType getClassification() {
             return this.classification;
         }
 
@@ -169,57 +207,22 @@ public class InformationAsset extends AbstractNamedObject {
          * Set the value of classification.
          * @param classification The new value of classification
          */
-        public void setClassification( String classification ) {
+        public void setClassification( ClearanceType classification ) {
             this.classification = classification;
-        }
-
-        /**
-         * Return the value of organization.
-         */
-        public Organization getOrganization() {
-            return this.organization;
-        }
-
-        /**
-         * Set the value of organization.
-         * @param organization The new value of organization
-         */
-        public void setOrganization( Organization organization ) {
-            this.organization = organization;
-        }
-
-        /**
-         * Return the value of title.
-         */
-        public String getTitle() {
-            return this.title;
-        }
-
-        /**
-         * Set the value of title.
-         * @param title The new value of title
-         */
-        public void setTitle( String title ) {
-            this.title = title;
         }
     }
 
     //==========================================
     /**
      * Restrictions on who is allowed to view information.
+     *
+     * @opt attributes
+     * @navassoc - - 1 Role
      */
     public static class PrivacyConstraint {
 
-        /**
-         * Privacy constraint types.
-         */
-        public enum Constraint { allow, prohibit }
-
-        private Constraint constraint;
-        // TODO organization types
-        private String organizationKind;
-        // TODO role types
-        private String agentKind;
+        private TitleType title;
+        private Role role;
 
         /**
          * Default constructor.
@@ -229,48 +232,33 @@ public class InformationAsset extends AbstractNamedObject {
         }
 
         /**
-         * Return the value of agentKind.
+         * Return the value of role.
          */
-        public String getAgentKind() {
-            return this.agentKind;
+        public Role getRole() {
+            return this.role;
         }
 
         /**
-         * Set the value of agentKind.
-         * @param agentKind The new value of agentKind
+         * Set the value of role.
+         * @param role The new value of role
          */
-        public void setAgentKind( String agentKind ) {
-            this.agentKind = agentKind;
+        public void setRole( Role role ) {
+            this.role = role;
         }
 
         /**
-         * Return the value of constraint.
+         * Return the value of title.
          */
-        public Constraint getConstraint() {
-            return this.constraint;
+        public TitleType getTitle() {
+            return this.title;
         }
 
         /**
-         * Set the value of constraint.
-         * @param constraint The new value of constraint
+         * Set the value of title.
+         * @param title The new value of title
          */
-        public void setConstraint( Constraint constraint ) {
-            this.constraint = constraint;
-        }
-
-        /**
-         * Return the value of organizationKind.
-         */
-        public String getOrganizationKind() {
-            return this.organizationKind;
-        }
-
-        /**
-         * Set the value of organizationKind.
-         * @param organizationKind The new value of organizationKind
-         */
-        public void setOrganizationKind( String organizationKind ) {
-            this.organizationKind = organizationKind;
+        public void setTitle( TitleType title ) {
+            this.title = title;
         }
     }
 }

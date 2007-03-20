@@ -11,7 +11,6 @@ import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.userdetails.UserDetails;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A user of the system.
@@ -24,14 +23,15 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @extends User
  */
-public class UserImpl extends AbstractJavaBean
-    implements User, UserDetails, Comparable<UserImpl> {
+public class UserImpl extends SystemObject
+    implements User, UserDetails {
 
     private String username;
     private String password;
 
-    private String name;
     private String email;
 
     private boolean enabled = true;
@@ -46,17 +46,21 @@ public class UserImpl extends AbstractJavaBean
 
     /**
      * Default constructor.
+     * @param name the full name of the user
      * @param username the login id of the user
      * @param password the original password.
      * User may change it later.
      * @param authorities the initial granted roles.
      * Supervisor may adjust later.
+     * @throws PropertyVetoException if name conflicts with others
      */
     public UserImpl(
+            String name,
             String username, String password,
-            String[] authorities ) {
+            String[] authorities )
+        throws PropertyVetoException {
 
-        this();
+        super( name );
         this.username = username;
         this.password = password;
         setGrantedAuthorities( authorities );
@@ -76,22 +80,6 @@ public class UserImpl extends AbstractJavaBean
     @Secured( { "ROLE_ADMIN", "THIS_USER" } )
     public void setEmail( String email ) {
         this.email = email;
-    }
-
-    /**
-     * Return the value of name.
-     */
-    public final String getName() {
-        return this.name;
-    }
-
-    /**
-     * Set the full name of the user.
-     * @param name The new value of name
-     */
-    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
-    public void setName( String name ) {
-        this.name = name;
     }
 
     /**
@@ -153,7 +141,7 @@ public class UserImpl extends AbstractJavaBean
      * Set the value of password.
      * @param password The new value of password
      */
-    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
+    @Secured( { "ROLE_ADMIN", "USER" } )
     public void setPassword( String password ) {
         this.password = password;
     }
@@ -170,7 +158,7 @@ public class UserImpl extends AbstractJavaBean
      * @param username the username
      * @throws PropertyVetoException if user manager objects
      */
-    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
+    @Secured( { "ROLE_ADMIN", "USER" } )
     public void setUsername( String username ) throws PropertyVetoException {
         this.username = username;
     }
@@ -188,24 +176,6 @@ public class UserImpl extends AbstractJavaBean
         }
 
         return this.authorities;
-    }
-
-    /**
-     * Sort alphabetically ignoring case.
-     * @param o a user to compare to.
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo( UserImpl o ) {
-        return getUsername().compareToIgnoreCase( o.getUsername() );
-    }
-
-    /**
-     * Return a string representation of this user (the username).
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return getUsername();
     }
 
     /**

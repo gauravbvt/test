@@ -15,9 +15,9 @@ import java.util.TreeSet;
 import com.mindalliance.channels.Model;
 import com.mindalliance.channels.Project;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.util.AbstractJavaBean;
 
-import static com.mindalliance.channels.system.ParticipantType.*;
+import static com.mindalliance.channels.system.ParticipantType.Manager;
+import static com.mindalliance.channels.system.ParticipantType.Participant;
 
 /**
  * Basic project implementation.
@@ -25,11 +25,13 @@ import static com.mindalliance.channels.system.ParticipantType.*;
  * @todo synchronize
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
+ *
+ * @opt attributes
+ * @composed - - * Model
  */
-public class ProjectImpl extends AbstractJavaBean
-        implements Project, Comparable<ProjectImpl> {
+public class ProjectImpl extends SystemObject
+        implements Project {
 
-    private String name;
     private Set<Model> models = new HashSet<Model>();
     private Map<User,ParticipantType> participants =
                         Collections.synchronizedMap(
@@ -39,16 +41,16 @@ public class ProjectImpl extends AbstractJavaBean
      * Default constructor.
      */
     public ProjectImpl() {
-        this( "No Name" );
+        super();
     }
 
     /**
      * Default constructor.
      * @param name name of the project
+     * @throws PropertyVetoException on name clashes
      */
-    public ProjectImpl( String name ) {
-        super();
-        this.name = name;
+    public ProjectImpl( String name ) throws PropertyVetoException {
+        super( name );
     }
 
     //---------------------------------
@@ -135,6 +137,7 @@ public class ProjectImpl extends AbstractJavaBean
 
     /**
      * Remove a manager from this project.
+     * Actually demotes the manager to a simple participant
      * @param manager the manager to remove.
      */
     public void removeManager( User manager ) {
@@ -188,41 +191,5 @@ public class ProjectImpl extends AbstractJavaBean
         return type != null
             && ( Participant.equals( type )
                  || Manager.equals( type ) );
-    }
-
-    //---------------------------------
-    /**
-     * Return the value of name.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Set the value of name.
-     * @param name The new value of name
-     * @throws PropertyVetoException if name conflicts with others.
-     */
-    public void setName( String name ) throws PropertyVetoException {
-        if ( name == null )
-            throw new NullPointerException();
-        this.name = name;
-    }
-
-    //---------------------------------
-    /**
-     * Compares this object with the specified object for order.
-     * @param o the specified object
-     */
-    public int compareTo( ProjectImpl o ) {
-        return getName().trim().compareToIgnoreCase( o.getName().trim() );
-    }
-
-    /**
-     * Return  a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return getName();
     }
 }

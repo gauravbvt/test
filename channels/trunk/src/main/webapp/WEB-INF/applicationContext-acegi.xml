@@ -5,30 +5,37 @@
 	                    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
 	<!-- This file specifies how to authenticate users. -->
+	<!-- $Revision$ -->
 	
-	<!-- Authentication manager -->
+	<!-- **************************************************** Authentication manager -->
 	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
 		<property name="providers">
 			<list>
-				<ref local="daoAuthenticationProvider"/>
+				<bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+					<property name="userDetailsService" ref="system"/>
+					<property name="userCache">
+						<bean class="org.acegisecurity.providers.dao.cache.NullUserCache"/>
+					</property>
+				</bean>
 				<bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
 					<property name="key" value="blah"/>
 				</bean>
 				<bean class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
 					<property name="key" value="blah"/>
 				</bean>
+				<bean class="org.acegisecurity.runas.RunAsImplAuthenticationProvider">
+					<property name="key" value="blah"/>
+				</bean>
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-		<property name="userDetailsService" ref="system"/>
-		<property name="userCache">
-			<bean class="org.acegisecurity.providers.dao.cache.NullUserCache"/>
-		</property>
+
+	<!-- ***************************************************** RUN_AS manager -->
+	<bean id="runAsManager" class="org.acegisecurity.runas.RunAsManagerImpl">
+		<property name="key" value="blah"/>
 	</bean>
-		
-	<!-- Web app hooks -->
+	
+	<!-- ***************************************************** Web requests setup -->
 	<bean id="authenticationEntryPoint"	class="org.acegisecurity.ui.basicauth.BasicProcessingFilterEntryPoint">
 		<property name="realmName" value="Channels users"/>
 	</bean>
@@ -82,7 +89,6 @@
 			<value>
 				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
 				PATTERN_TYPE_APACHE_ANT
-				/manager/**=ROLE_MANAGER
 				/admin/**=ROLE_ADMIN
 				/**=ROLE_USER
 			</value>

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.mindalliance.channels.system.Organization;
 import com.mindalliance.channels.util.GUID;
 
 /**

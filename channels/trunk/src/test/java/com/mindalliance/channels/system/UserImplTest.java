@@ -5,6 +5,8 @@ package com.mindalliance.channels.system;
 
 import static org.junit.Assert.*;
 
+import java.beans.PropertyVetoException;
+
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
 import org.junit.Before;
@@ -23,7 +25,7 @@ public class UserImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        user = new UserImpl( "user", "password", new String[]{ "ROLE_USER" } );
+        user = new UserImpl( "User", "user", "password", new String[]{ "ROLE_USER" } );
     }
 
     /**
@@ -63,10 +65,10 @@ public class UserImplTest {
     
     /**
      * Test method for {@link UserImpl#setName()}.
+     * @throws PropertyVetoException 
      */
     @Test
-    public final void testGetSetName() {
-        assertNull( user.getName() );
+    public final void testGetSetName() throws PropertyVetoException {
         user.setName( "Joe Bob" );
         assertEquals( "Joe Bob", user.getName() );
     }
@@ -97,7 +99,7 @@ public class UserImplTest {
      */
     @Test
     public final void testToString() {
-        assertEquals( "user", user.toString() );
+        assertEquals( "User", user.toString() );
     }
 
 }

@@ -1,37 +1,42 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.util;
 
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.reference.AreaType;
 
 /**
  * A location of some type that may within and next to other locations.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
+ * @navassoc * partOf 0..1 Area
+ * @navassoc * nextTo * Area
  */
-public class Area extends AbstractNamedObject {
+public class Area extends AbstractJavaBean {
 
-    private String kind;
+    private AreaType kind;
+    private String name;
     private Area partOf;
-    private SortedSet<Area> nextTo = new TreeSet<Area>();
+    private Set<Area> nextTo = new TreeSet<Area>();
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    Area( GUID guid ) {
-        super( guid );
+    Area() {
+        super();
     }
 
     /**
      * Return the value of kind.
      */
-    public String getKind() {
+    public AreaType getKind() {
         return this.kind;
     }
 
@@ -39,14 +44,14 @@ public class Area extends AbstractNamedObject {
      * Set the value of kind.
      * @param kind The new value of kind
      */
-    public void setKind( String kind ) {
+    public void setKind( AreaType kind ) {
         this.kind = kind;
     }
 
     /**
      * Return the value of nextTo.
      */
-    public SortedSet<Area> getNextTo() {
+    public Set<Area> getNextTo() {
         return this.nextTo;
     }
 
@@ -71,5 +76,20 @@ public class Area extends AbstractNamedObject {
      */
     public void setPartOf( Area partOf ) {
         this.partOf = partOf;
+    }
+
+    /**
+     * Return the value of name.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Set the value of name.
+     * @param name The new value of name
+     */
+    public void setName( String name ) {
+        this.name = name;
     }
 }

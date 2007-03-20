@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.system;
+package com.mindalliance.channels;
 
 /**
  * Exception raised when trying to add a user with the same

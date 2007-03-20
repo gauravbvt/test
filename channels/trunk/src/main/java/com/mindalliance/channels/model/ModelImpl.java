@@ -13,6 +13,11 @@ import java.util.TreeSet;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.Model;
+import com.mindalliance.channels.project.Domain;
+import com.mindalliance.channels.system.Agent;
+import com.mindalliance.channels.system.Channel;
+import com.mindalliance.channels.system.Organization;
+import com.mindalliance.channels.system.InformationResource;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
@@ -33,7 +38,7 @@ public class ModelImpl extends AbstractJavaBean implements Model {
     private SortedSet<Policy> policies = new TreeSet<Policy>();
     private SortedSet<Environment> environments = new TreeSet<Environment>();
     private SortedSet<Agent> agents = new TreeSet<Agent>();
-    private SortedSet<Resource> resources = new TreeSet<Resource>();
+    private SortedSet<InformationResource> resources = new TreeSet<InformationResource>();
     private SortedSet<Agreement> agreements = new TreeSet<Agreement>();
 
 //    private SortedSet<Resolution> resolutions;
@@ -184,7 +189,7 @@ public class ModelImpl extends AbstractJavaBean implements Model {
     /**
      * Return the value of resources.
      */
-    public SortedSet<Resource> getResources() {
+    public SortedSet<InformationResource> getResources() {
         return this.resources;
     }
 
@@ -192,7 +197,7 @@ public class ModelImpl extends AbstractJavaBean implements Model {
      * Set the value of resources.
      * @param resources The new value of resources
      */
-    public void setResources( SortedSet<Resource> resources ) {
+    public void setResources( SortedSet<InformationResource> resources ) {
         this.resources = resources;
     }
 

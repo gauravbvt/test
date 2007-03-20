@@ -12,6 +12,7 @@
 		<constructor-arg value="${agencyAcronym}"/>
 	</bean>
 	
+	<!-- Users -->
 	<bean id="user" class="com.mindalliance.channels.system.UserImpl">
 		<property name="username" value="user"/>
 		<property name="password" value="user"/>
@@ -19,44 +20,71 @@
 		<property name="name" value="Regular User"/>
 		<property name="email" value="user@example.com"/>
 	</bean>
+
 	<bean id="manager" class="com.mindalliance.channels.system.UserImpl">
 		<property name="username" value="manager"/>
 		<property name="password" value="manager"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
-		<property name="name" value="Manager User"/>
+		<property name="name" value="Ms Management"/>
 		<property name="email" value="manager@example.com"/>
 	</bean>
 			
+	<bean id="liaison" class="com.mindalliance.channels.system.UserImpl">
+		<property name="username" value="liaison"/>
+		<property name="password" value="liaison"/>
+		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
+		<property name="name" value="Mr. Spook"/>
+		<property name="email" value="spook@example.com"/>
+	</bean>
 			
+	<bean id="admin" class="com.mindalliance.channels.system.UserImpl">
+		<property name="username" value="admin"/>
+		<property name="password" value="admin"/>
+		<property name="grantedAuthorities"><value>ROLE_USER, ROLE_ADMIN</value></property>
+		<property name="name" value="Administrator"/>
+		<property name="email" value="admin@example.com"/>
+	</bean>
+			
+	<bean id="guest" class="com.mindalliance.channels.system.UserImpl">
+		<property name="username" value="guest"/>
+		<property name="password" value="guest"/>
+		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
+		<property name="name" value="Guest User"/>
+		<property name="email" value="guest@example.com"/>
+	</bean>
+
+	<!-- The system -->
 	<bean id="system" class="com.mindalliance.channels.system.SystemImpl">
 		<property name="users"><set>
 			<ref bean="user"/>		
 			<ref bean="manager"/>		
-			<bean class="com.mindalliance.channels.system.UserImpl">
-				<property name="username" value="guest"/>
-				<property name="password" value="guest"/>
-				<property name="grantedAuthorities"><value>ROLE_USER</value></property>
-				<property name="name" value="Guest User"/>
-				<property name="email" value="guest@example.com"/>
-			</bean>
+			<ref bean="guest"/>		
 		</set></property>
 		<property name="administrators"><set>
-			<bean class="com.mindalliance.channels.system.UserImpl">
-				<property name="username" value="admin"/>
-				<property name="password" value="admin"/>
-				<property name="grantedAuthorities"><value>ROLE_USER, ROLE_ADMIN</value></property>
-				<property name="name" value="Administrator"/>
-				<property name="email" value="admin@example.com"/>
-			</bean>
+			<ref bean="admin"/>
 		</set></property>
 		<property name="projects"><set>
-			<bean class="com.mindalliance.channels.system.ProjectImpl">
+			<bean class="com.mindalliance.channels.project.ProjectImpl">
 				<property name="name" value="Test Project"/>
 				<property name="participants"><set>
 					<ref bean="user"/>
 					</set></property>
 				<property name="managers"><set>
 					<ref bean="manager"/>
+					</set></property>
+			</bean>
+		</set></property>
+		<property name="organizations"><set>
+			<bean class="com.mindalliance.channels.system.Organization">
+				<property name="name" value="The Agency"/>
+				<property name="agents"><set>
+					<bean class="com.mindalliance.channels.system.Person">
+						<property name="name" value="John B. User"/>
+						<property name="user" ref="user"/>
+					</bean>
+					</set></property>
+				<property name="liaisons"><set>
+					<ref bean="liaison"/>
 					</set></property>
 			</bean>
 		</set></property>

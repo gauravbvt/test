@@ -6,6 +6,8 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.system.MetaInformation;
+import com.mindalliance.channels.util.Duration;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -24,7 +26,7 @@ public class Task extends AbstractNamedObject {
     private List<InformationGain> output = new ArrayList<InformationGain>();
     private List<Outcome> successOutcomes = new ArrayList<Outcome>();
     private List<Outcome> failureOutcomes = new ArrayList<Outcome>();
-    private Information details;
+    private MetaInformation details;
 
     /**
      * Default constructor.
@@ -37,7 +39,7 @@ public class Task extends AbstractNamedObject {
     /**
      * Return the value of details.
      */
-    public Information getDetails() {
+    public MetaInformation getDetails() {
         return this.details;
     }
 
@@ -45,7 +47,7 @@ public class Task extends AbstractNamedObject {
      * Set the value of details.
      * @param details The new value of details
      */
-    public void setDetails( Information details ) {
+    public void setDetails( MetaInformation details ) {
         this.details = details;
     }
 

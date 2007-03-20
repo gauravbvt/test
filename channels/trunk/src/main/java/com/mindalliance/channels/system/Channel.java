@@ -1,20 +1,25 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.system;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.reference.ChannelType;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A communication medium over which information can be transmitted.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
+ * @opt useimports
+ * @assoc * - * Channel
  */
-public class Channel extends AbstractNamedObject {
+public class Channel extends AbstractJavaBean {
 
     /**
      * Channel security classification.
@@ -31,7 +36,8 @@ public class Channel extends AbstractNamedObject {
      */
     public enum Reliability { Low, Medium, High }
 
-    private String kind;
+    private ChannelType type;
+    private String description;
     private Security security;
     private Privacy privacy;
     private Reliability reliability;
@@ -39,10 +45,9 @@ public class Channel extends AbstractNamedObject {
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    Channel( GUID guid ) {
-        super( guid );
+    public Channel() {
+        super();
     }
 
     /**
@@ -58,21 +63,6 @@ public class Channel extends AbstractNamedObject {
      */
     public void setInteroperatibleWith( List<Channel> interoperatibleWith ) {
         this.interoperatibleWith = interoperatibleWith;
-    }
-
-    /**
-     * Return the value of kind.
-     */
-    public String getKind() {
-        return this.kind;
-    }
-
-    /**
-     * Set the value of kind.
-     * @param kind The new value of kind
-     */
-    public void setKind( String kind ) {
-        this.kind = kind;
     }
 
     /**
@@ -118,5 +108,35 @@ public class Channel extends AbstractNamedObject {
      */
     public void setSecurity( Security security ) {
         this.security = security;
+    }
+
+    /**
+     * Return the value of description.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Set the value of description.
+     * @param description The new value of description
+     */
+    public void setDescription( String description ) {
+        this.description = description;
+    }
+
+    /**
+     * Return the value of type.
+     */
+    public ChannelType getType() {
+        return this.type;
+    }
+
+    /**
+     * Set the value of type.
+     * @param type The new value of type
+     */
+    public void setType( ChannelType type ) {
+        this.type = type;
     }
 }

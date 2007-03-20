@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.system.InformationAsset;
 import com.mindalliance.channels.util.GUID;
 
 /**

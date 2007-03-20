@@ -12,6 +12,7 @@ import java.beans.PropertyDescriptor;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.beans.VetoableChangeSupport;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.mindalliance.channels.JavaBean;
@@ -20,9 +21,9 @@ import com.mindalliance.channels.JavaBean;
  * Basic common java beans functionality.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
- * @version $Revision$
+ * @version $Revision:46 $
  */
-public abstract class AbstractJavaBean implements JavaBean {
+public abstract class AbstractJavaBean implements JavaBean, Serializable {
 
     private transient PropertyChangeSupport pcs;
     private transient VetoableChangeSupport vcs;

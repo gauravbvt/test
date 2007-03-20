@@ -6,6 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.system.Channel;
 import com.mindalliance.channels.util.GUID;
 
 /**

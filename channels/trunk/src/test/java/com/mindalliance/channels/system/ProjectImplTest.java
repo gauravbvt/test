@@ -1,7 +1,6 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-
 package com.mindalliance.channels.system;
 
 import static org.junit.Assert.*;
@@ -20,8 +19,9 @@ import org.junit.Test;
 
 import com.mindalliance.channels.Model;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.system.ProjectImpl;
+import com.mindalliance.channels.system.UserImpl;
 import com.mindalliance.channels.util.TestListener;
-
 
 /**
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
@@ -49,8 +49,8 @@ public class ProjectImplTest {
         project.addPropertyChangeListener( listener );
         project.addVetoableChangeListener( listener );
     
-        user1 = new UserImpl( "user1", "pass1", new String[]{ "ROLE_USER" } );
-        user2 = new UserImpl( "user2", "pass2", new String[]{ "ROLE_USER" } );
+        user1 = new UserImpl( "User 1", "user1", "pass1", new String[]{ "ROLE_USER" } );
+        user2 = new UserImpl( "User 2", "user2", "pass2", new String[]{ "ROLE_USER" } );
         model1 = createNiceMock( Model.class );
         model2 = createNiceMock( Model.class );
     }
@@ -391,9 +391,6 @@ public class ProjectImplTest {
         assertTrue( project.isManager( user1 ) );
         assertFalse( project.isManager( user2 ) );
         assertTrue( project.isParticipant( user1 ) );
-        assertTrue( project.isParticipant( user2 ) );
-        
+        assertTrue( project.isParticipant( user2 ) );   
     }
-
-    
 }

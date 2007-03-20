@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.acegisecurity.annotation.Secured;
 
-import com.mindalliance.channels.system.UserExistsException;
-
 /**
  * Convenience wrapper for system-level objects.
  *

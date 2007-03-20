@@ -1,12 +1,12 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.system;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.util.Duration;
 
 /**
  * How an agent, organization or information resource can be
@@ -14,24 +14,28 @@ import com.mindalliance.channels.util.GUID;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
+ * @composed - - * ContactInfoDetails
+ * @navassoc * indirect * Agent
  */
-public class ContactInfo extends AbstractModelObject {
+public class ContactInfo {
 
-    private List<DirectContactInfo> direct = new ArrayList<DirectContactInfo>();
+    private List<ContactInfoDetails> direct =
+            new ArrayList<ContactInfoDetails>();
     private List<Agent> indirect = new ArrayList<Agent>();
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    ContactInfo( GUID guid ) {
-        super( guid );
+    ContactInfo() {
+        super();
     }
 
     /**
      * Return the value of direct.
      */
-    public List<DirectContactInfo> getDirect() {
+    public List<ContactInfoDetails> getDirect() {
         return this.direct;
     }
 
@@ -39,7 +43,7 @@ public class ContactInfo extends AbstractModelObject {
      * Set the value of direct.
      * @param direct The new value of direct
      */
-    public void setDirect( List<DirectContactInfo> direct ) {
+    public void setDirect( List<ContactInfoDetails> direct ) {
         this.direct = direct;
     }
 
@@ -61,8 +65,13 @@ public class ContactInfo extends AbstractModelObject {
     //====================================
     /**
      * A direct way of contacting someone.
+     *
+     * @opt attributes
+     * @composed - - 1 Channel
+     * @composed - - 1 Delay
+     * @composed - - 1 Availability
      */
-    public static class DirectContactInfo {
+    public static class ContactInfoDetails {
 
         private Channel channel;
         private String endPoint;
@@ -73,7 +82,7 @@ public class ContactInfo extends AbstractModelObject {
         /**
          * Default constructor.
          */
-        public DirectContactInfo() {
+        public ContactInfoDetails() {
             super();
         }
 
@@ -156,6 +165,8 @@ public class ContactInfo extends AbstractModelObject {
     //====================================
     /**
      * Delays involved when contacting someone.
+     *
+     * @opt attributes
      */
     public static class Delay {
 

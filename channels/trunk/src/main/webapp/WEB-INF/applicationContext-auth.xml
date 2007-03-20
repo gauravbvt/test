@@ -13,4 +13,34 @@
      $Revision$
 -->
 
+<!-- TODO... the following does not quite work... -->
+<!-- 
+<bean id="channelsSecurity" class="org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor">
+  <property name="validateConfigAttributes" value="true"/>
+  <property name="authenticationManager" ref="authenticationManager"/>
+  <property name="accessDecisionManager">
+		<bean class="org.acegisecurity.vote.AffirmativeBased">
+			<property name="allowIfAllAbstainDecisions" value="false"/>
+			<property name="decisionVoters">
+				<list>
+					<bean class="org.acegisecurity.vote.RoleVoter"/>
+					<bean class="org.acegisecurity.vote.AuthenticatedVoter"/>
+					<bean class="com.mindalliance.channels.system.SelfVoter"/>
+				</list>
+			</property>
+		</bean>
+  </property>
+  <property name="runAsManager" ref="runAsManager"/>
+  <property name="objectDefinitionSource">
+    <value>
+    </value>
+  </property>
+</bean> 
+
+<bean id="channelsSecurityAspect" 
+    class="com.mindalliance.channels.system.SystemSecurity"
+    factory-method="aspectOf">
+  <property name="securityInterceptor" ref="channelsSecurity"/>
+</bean>
+-->
 </beans>

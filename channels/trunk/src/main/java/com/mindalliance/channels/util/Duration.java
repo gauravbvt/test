@@ -1,15 +1,19 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.util;
+
+import java.io.Serializable;
 
 /**
  * A duration in time.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
  */
-public class Duration {
+public class Duration implements Serializable {
 
     /**
      * A unit of time.

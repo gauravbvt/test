@@ -16,7 +16,7 @@ import org.acegisecurity.annotation.Secured;
  * @assoc "*" - "*" User
  * @composed "" - "0..*" Model
  */
-public interface Project {
+public interface Project extends JavaBean {
 
     /**
      * Return a descriptive name for the project.

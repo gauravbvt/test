@@ -6,6 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.mindalliance.channels.project.Domain;
 import com.mindalliance.channels.util.GUID;
 
 /**

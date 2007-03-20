@@ -9,6 +9,7 @@ import java.beans.VetoableChangeListener;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -24,6 +25,7 @@ import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.Project;
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 import static com.mindalliance.channels.system.UserTypes.AdminType;
@@ -36,6 +38,9 @@ import static com.mindalliance.channels.system.UserTypes.UserType;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
+ *
+ * @composed - - * SystemObject
+ * @composed - - * Alert
  */
 public class SystemImpl extends AbstractJavaBean
         implements System, UserDetailsService {
@@ -45,6 +50,8 @@ public class SystemImpl extends AbstractJavaBean
     private Map<User,UserTypes> userRight = new HashMap<User,UserTypes>();
     private Map<String,User> usernames = new HashMap<String,User>();
     private Map<String,Project> projects = new HashMap<String,Project>();
+    private Set<Organization> organizations = new TreeSet<Organization>();
+    private Set<Alert> alerts = new HashSet<Alert>();
 
     /**
      * Listen and approve project name changes to ensure uniqueness.
@@ -104,16 +111,18 @@ public class SystemImpl extends AbstractJavaBean
     /**
      * Return the value of projects.
      */
+    @Secured( { "ROLE_USER" } )
     public Set<Project> getProjects() {
         return Collections.unmodifiableSortedSet(
                 new TreeSet<Project>( this.projects.values() ) );
     }
 
     /**
-     * Get the projects for which a given is participating.
+     * Get the projects for which a given user is participating.
      * @param user the given user
      * @return the appropriate projects
      */
+    @Secured( { "ROLE_USER" } )
     public Set<Project> getProjects( User user ) {
         SortedSet<Project> result = new TreeSet<Project>();
         for ( Project project : this.projects.values() )
@@ -176,6 +185,7 @@ public class SystemImpl extends AbstractJavaBean
     /**
      * Return the value of administrators.
      */
+    @Secured( { "ROLE_USER" } )
     public Set<User> getAdministrators() {
         SortedSet<User> result = new TreeSet<User>();
         for (  Entry<User,UserTypes> entry : this.userRight.entrySet() ) {
@@ -213,6 +223,7 @@ public class SystemImpl extends AbstractJavaBean
      * @throws UserExistsException if a user by the same username
      * already exists
      */
+    @Secured( { "ROLE_ADMIN" } )
     public void addAdministrator( User user ) throws UserExistsException {
         addUser( user, AdminType );
     }
@@ -231,6 +242,7 @@ public class SystemImpl extends AbstractJavaBean
      * @param user the given user
      * @return true if an administrator.
      */
+    @Secured( { "ROLE_USER" } )
     public boolean isAdministrator( User user ) {
         return AdminType.equals( this.userRight.get( user ) );
     }
@@ -238,6 +250,7 @@ public class SystemImpl extends AbstractJavaBean
     /**
      * Return the value of userRight.
      */
+    @Secured( { "ROLE_USER" } )
     public Set<User> getUsers() {
         return Collections.unmodifiableSortedSet(
                 new TreeSet<User>(
@@ -304,6 +317,7 @@ public class SystemImpl extends AbstractJavaBean
      * @param user the given user
      * @return true if the user is known to the system.
      */
+    @Secured( { "ROLE_USER" } )
     public boolean isUser( User user ) {
         return this.userRight.containsKey( user );
     }
@@ -327,7 +341,78 @@ public class SystemImpl extends AbstractJavaBean
      * @param name the given name
      * @return null if not found.
      */
+    @Secured( { "ROLE_USER" } )
     public Project getProject( String name ) {
         return this.projects.get( name );
+    }
+
+    /**
+     * Return the value of organizations.
+     */
+    @Secured( { "ROLE_USER" } )
+    public Set<Organization> getOrganizations() {
+        return Collections.unmodifiableSet( this.organizations );
+    }
+
+    /**
+     * Set the value of organizations.
+     * @param organizations The new value of organizations
+     */
+    @Secured( { "ROLE_ADMIN" } )
+    public void setOrganizations( Set<Organization> organizations ) {
+        this.organizations = new TreeSet<Organization>( organizations );
+    }
+
+    /**
+     * Add an organization to the system.
+     * @param organization the organization to add
+     */
+    @Secured( { "ROLE_ADMIN" } )
+    public void addOrganization( Organization organization ) {
+        this.organizations.add( organization );
+    }
+
+    /**
+     * Remove an organization from the system.
+     * @param organization the organization to remove
+     */
+    @Secured( { "ROLE_ADMIN" } )
+    public void removeOrganization( Organization organization ) {
+        this.organizations.remove( organization );
+    }
+
+    /**
+     * Return the value of alerts.
+     */
+    @Secured( { "ROLE_USER" } )
+    public Set<Alert> getAlerts() {
+        return this.alerts;
+    }
+
+    /**
+     * Set the value of alerts.
+     * @param alerts The new value of alerts
+     */
+    @Secured( { "ROLE_ADMIN" } )
+    public void setAlerts( Set<Alert> alerts ) {
+        this.alerts = alerts;
+    }
+
+    /**
+     * Add an alert.
+     * @param alert the new alert
+     */
+    @Secured( { "ROLE_ADMIN", "ROLE_RUN_AS_SERVER" } )
+    public void addAlert( Alert alert ) {
+        this.alerts.add( alert );
+    }
+
+    /**
+     * Remove an alert.
+     * @param alert the alert
+     */
+    @Secured( { "ROLE_ADMIN", "ROLE_RUN_AS_SERVER" } )
+    public void deleteAlert( Alert alert ) {
+        this.alerts.remove( alert );
     }
 }

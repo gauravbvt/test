@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @composed "" - "*" JavaBean
  */
-public interface Model {
+public interface Model extends JavaBean {
 
     /**
      * Return the name of this model.
