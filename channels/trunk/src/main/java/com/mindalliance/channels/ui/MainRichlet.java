@@ -51,7 +51,7 @@ public class MainRichlet extends GenericRichlet {
 		
 		final MxOverlay addOverlay = new MxOverlay("/channels/images/16x16/add2.png", "Create a new node", 0,0,16, 16);
 		final MxOverlay deleteOverlay = new MxOverlay("/channels/images/16x16/delete2.png", "Delete this node", 0,16,16, 16);
-		final MxOverlay removeOverlay = new MxOverlay("/channels/images/16x16/arrow_right_green.png", "Remove Overlays", 16,0,16,16);
+		final MxOverlay zoomOverlay = new MxOverlay("/channels/images/16x16/arrow_right_green.png", "Zoom In", 16,0,16,16);
 		final MxOverlay groupOverlay = new MxOverlay("/channels/images/16x16/arrow_right_green.png", "Group nodes", 16,16,16,16);
 		deleteOverlay.addClickListener(new MxCellListener() {
 			public void onEvent(MxGraph graph, MxCell cell) {
@@ -70,9 +70,9 @@ public class MainRichlet extends GenericRichlet {
 				}
 			}
 		});
-		removeOverlay.addClickListener(new MxCellListener() {
+		zoomOverlay.addClickListener(new MxCellListener() {
 			public void onEvent(MxGraph graph, MxCell cell) {
-				graph.clearOverlays(cell);
+				graph.zoomIn();
 			}
 		});
 		final String node1Id = node1.getId();
@@ -102,14 +102,21 @@ public class MainRichlet extends GenericRichlet {
 		graph.addOverlay(node1, groupOverlay);
 		graph.addOverlay(node2, addOverlay);
 		graph.addOverlay(node2, deleteOverlay);
-		graph.addOverlay(node2, removeOverlay);
+		graph.addOverlay(node2, zoomOverlay);
 
 		// Define default vertex menu
+		
 		Menu menu = Menu.named(Menu.CELL)
 						.item("Delete", "/channels/images/16x16/delete2.png", MxConstants.COMMAND_DELETE)
 						.separator()
 						.item("Add vertex", "/channels/images/16x16/add2.png", MxConstants.COMMAND_ADD_VERTEX, "Node C")
 						.item("Add edge", "/channels/images/16x16/arrow_right_green.png", MxConstants.COMMAND_ADD_EDGE, "New");
+		graph.addMenu(menu, false);
+		menu = Menu.named(Menu.ALL).separator()
+						.item("Zoom In","/channels/images/16x16/arrow_right_green.png", MxConstants.COMMAND_ZOOM_IN)
+						.item("Zoom Out","/channels/images/16x16/arrow_right_green.png", MxConstants.COMMAND_ZOOM_OUT)
+						.item("Zoom Fit","/channels/images/16x16/arrow_right_green.png", MxConstants.COMMAND_ZOOM_FIT)
+						.item("Zoom Actual","/channels/images/16x16/arrow_right_green.png", MxConstants.COMMAND_ZOOM_ACTUAL);
 		graph.addMenu(menu, false);
 		// Define default vertex style
 		MxStyleSheet sheet = graph.getStyleSheet();
@@ -120,6 +127,8 @@ public class MainRichlet extends GenericRichlet {
 		style.put(MxConstants.STYLE_FONTSIZE, "10");
 		
 		style = MxStyleHelper.getEllipseStyle();
+		
+		style.put(MxConstants.STYLE_VERTICAL_ALIGN, MxConstants.ALIGN_BOTTOM);
 		sheet.putCellStyle("group", style);
 		graph.setParent(w);
 		w.setPage(page);
