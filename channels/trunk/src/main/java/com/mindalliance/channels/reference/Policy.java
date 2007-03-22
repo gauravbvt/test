@@ -1,13 +1,14 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.reference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.model.Exchange;
 import com.mindalliance.channels.system.Organization;
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * Obligations and prohibitions imposed by an organization on
@@ -15,27 +16,29 @@ import com.mindalliance.channels.util.GUID;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attribute
+ * @navassoc - - 1 Organization
  */
-public class Policy extends AbstractNamedObject {
+public class Policy extends AbstractJavaBean {
 
     private Organization organization;
-    private List<ExchangeRequirement> forbiddenExchanges =
-                new ArrayList<ExchangeRequirement>();
-    private List<ExchangeRequirement> requiredExchanges =
-                new ArrayList<ExchangeRequirement>();
+    private List<Exchange> forbiddenExchanges =
+                new ArrayList<Exchange>();
+    private List<Exchange> requiredExchanges =
+                new ArrayList<Exchange>();
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    Policy( GUID guid ) {
-        super( guid );
+    Policy() {
+        super();
     }
 
     /**
      * Return the value of forbiddenExchanges.
      */
-    public List<ExchangeRequirement> getForbiddenExchanges() {
+    public List<Exchange> getForbiddenExchanges() {
         return this.forbiddenExchanges;
     }
 
@@ -44,7 +47,7 @@ public class Policy extends AbstractNamedObject {
      * @param forbiddenExchanges The new value of forbiddenExchanges
      */
     public void setForbiddenExchanges(
-            List<ExchangeRequirement> forbiddenExchanges ) {
+            List<Exchange> forbiddenExchanges ) {
 
         this.forbiddenExchanges = forbiddenExchanges;
     }
@@ -67,7 +70,7 @@ public class Policy extends AbstractNamedObject {
     /**
      * Return the value of requiredExchanges.
      */
-    public List<ExchangeRequirement> getRequiredExchanges() {
+    public List<Exchange> getRequiredExchanges() {
         return this.requiredExchanges;
     }
 
@@ -76,7 +79,7 @@ public class Policy extends AbstractNamedObject {
      * @param requiredExchanges The new value of requiredExchanges
      */
     public void setRequiredExchanges(
-            List<ExchangeRequirement> requiredExchanges ) {
+            List<Exchange> requiredExchanges ) {
 
         this.requiredExchanges = requiredExchanges;
     }

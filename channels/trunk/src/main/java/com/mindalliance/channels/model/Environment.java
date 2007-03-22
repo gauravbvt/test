@@ -6,8 +6,8 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.reference.Policy;
 import com.mindalliance.channels.system.Channel;
-import com.mindalliance.channels.util.GUID;
 
 /**
  * A change in applicable policies and/or channel availability for
@@ -15,10 +15,11 @@ import com.mindalliance.channels.util.GUID;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
  */
-public class Environment extends AbstractNamedObject {
+public class Environment extends Occurence {
 
-    private List<Event> triggers = new ArrayList<Event>();
     private List<Channel> disabledChannels = new ArrayList<Channel>();
     private List<Channel> enabledChannels = new ArrayList<Channel>();
     private List<Policy> suspendedPolicies = new ArrayList<Policy>();
@@ -26,10 +27,17 @@ public class Environment extends AbstractNamedObject {
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    Environment( GUID guid ) {
-        super( guid );
+    Environment() {
+        super();
+    }
+
+    /**
+     * Convenience constructor.
+     * @param scenario the scenario
+     */
+    public Environment( Scenario scenario ) {
+        super( scenario );
     }
 
     /**
@@ -90,20 +98,5 @@ public class Environment extends AbstractNamedObject {
      */
     public void setSuspendedPolicies( List<Policy> suspendedPolicies ) {
         this.suspendedPolicies = suspendedPolicies;
-    }
-
-    /**
-     * Return the value of triggers.
-     */
-    public List<Event> getTriggers() {
-        return this.triggers;
-    }
-
-    /**
-     * Set the value of triggers.
-     * @param triggers The new value of triggers
-     */
-    public void setTriggers( List<Event> triggers ) {
-        this.triggers = triggers;
     }
 }

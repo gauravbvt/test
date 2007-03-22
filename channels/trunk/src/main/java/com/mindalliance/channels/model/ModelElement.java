@@ -3,12 +3,9 @@
 
 package com.mindalliance.channels.model;
 
-import java.util.Set;
-
-import com.mindalliance.channels.JavaBean;
+import com.mindalliance.channels.Model;
 import com.mindalliance.channels.model.support.SuggestionManager;
 import com.mindalliance.channels.util.AbstractJavaBean;
-import com.mindalliance.channels.util.GUID;
 
 /**
  * <p>An object in the model.</p>
@@ -24,16 +21,16 @@ import com.mindalliance.channels.util.GUID;
  *      <li>Save or delete using the DAO.</li>
  * </ol>
  *
- * @see com.mindalliance.channels.model.ModelObjectFactory
- * @see com.mindalliance.channels.model.support.ModelObjectDAO
- * @see com.mindalliance.channels.queries.QueryEngine
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
  */
-public abstract class AbstractModelObject extends AbstractJavaBean
+public abstract class ModelElement extends AbstractJavaBean
         implements Cloneable {
 
-    private GUID guid;
+    private String about;
+    private Model model;
     private SuggestionManager suggestions;
 
     //--------------------------------------
@@ -41,19 +38,18 @@ public abstract class AbstractModelObject extends AbstractJavaBean
      * Create a new model object.
      * This should only be called by the factory.
      * @see ModelObjectFactory
-     *
-     * @param guid the unique guid
      */
-    AbstractModelObject( GUID guid ) {
+    ModelElement() {
         super();
-        this.guid = guid ;
     }
 
     /**
-     * Return the guid of this object.
+     * Default constructor.
+     * @param model the model
      */
-    public final GUID getGuid() {
-        return this.guid;
+    public ModelElement( Model model ) {
+        this();
+        setModel( model );
     }
 
     //--------------------------------------
@@ -67,14 +63,33 @@ public abstract class AbstractModelObject extends AbstractJavaBean
         return this.suggestions;
     }
 
-    //--------------------------------------
     /**
-     * Add sub-objects that should be asserted by the rules engine
-     * when this object is asserted.
-     * This should be overloaded by subclasses.
-     *
-     * @param objects the set to add to.
+     * Return the value of about.
      */
-    public void contributeAssertableObjects( Set<JavaBean> objects ) {
+    public String getAbout() {
+        return this.about;
+    }
+
+    /**
+     * Set the value of about.
+     * @param about The new value of about
+     */
+    public void setAbout( String about ) {
+        this.about = about;
+    }
+
+    /**
+     * Return the value of model.
+     */
+    public Model getModel() {
+        return this.model;
+    }
+
+    /**
+     * Set the value of model.
+     * @param model The new value of model
+     */
+    public void setModel( Model model ) {
+        this.model = model;
     }
 }

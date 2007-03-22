@@ -1,17 +1,13 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-
 package com.mindalliance.channels.model;
-
-import com.mindalliance.channels.util.GUID;
-
 
 /**
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public class TestModelObject extends AbstractModelObject {
+public class TestModelObject extends ModelElement {
 
     private String name;
     private int age;
@@ -19,8 +15,8 @@ public class TestModelObject extends AbstractModelObject {
     /**
      * @param guid
      */
-    TestModelObject( GUID guid ) {
-        super( guid );
+    TestModelObject() {
+        super();
     }
 
     public int getAge() {

@@ -26,6 +26,7 @@ import com.mindalliance.channels.Project;
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.project.ProjectImpl;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 import static com.mindalliance.channels.system.UserTypes.AdminType;

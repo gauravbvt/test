@@ -29,15 +29,6 @@ public class ModelObjectFactoryTest extends TestCase {
     }
 
     /**
-     * Test method for {@link ModelObjectFactory#newInstance(java.lang.Class)}.
-     */
-    public final void testNewInstance() {
-        factory.setGuidFactory( guidFactory );
-        TestModelObject t = factory.newInstance( TestModelObject.class );
-        assertNotNull( t.getGuid() );
-    }
-
-    /**
      * Test method for {@link ModelObjectFactory#getGuidFactory()}.
      */
     public final void testGetGuidFactory() {

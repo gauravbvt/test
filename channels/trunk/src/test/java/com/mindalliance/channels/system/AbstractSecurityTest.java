@@ -19,6 +19,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.project.ProjectImpl;
 
 /**
  * A little harness to setup acegi security in unit tests.

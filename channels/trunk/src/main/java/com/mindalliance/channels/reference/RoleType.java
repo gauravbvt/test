@@ -4,25 +4,24 @@
 package com.mindalliance.channels.reference;
 
 /**
- * A kind of domain.
+ * A kind of role.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */
-public abstract class DomainType extends Type {
+public abstract class RoleType extends Type {
 
     /**
      * Default constructor.
      */
-    public DomainType() {
-        super();
+    public RoleType() {
     }
 
     /**
      * Default constructor.
-     * @param name the name of this domain
+     * @param name the name of the role type
      */
-    public DomainType( String name ) {
+    public RoleType( String name ) {
         super( name );
     }
 }

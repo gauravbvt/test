@@ -4,26 +4,27 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.system.InformationAsset;
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.util.Duration;
 
 /**
- * A partial or complete match between an information need and
- * information asset.
+ * The acquisition at some point in time of new information then held
+ * in custody.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
  */
-public class ExchangeRequirement extends AbstractModelObject {
+public class Knows extends Assertion {
 
     private InformationAsset asset;
-    private InformationNeed need;
+    private Duration delay;
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    ExchangeRequirement( GUID guid ) {
-        super( guid );
+    Knows() {
+        super();
     }
 
     /**
@@ -42,17 +43,17 @@ public class ExchangeRequirement extends AbstractModelObject {
     }
 
     /**
-     * Return the value of need.
+     * Return the value of delay.
      */
-    public InformationNeed getNeed() {
-        return this.need;
+    public Duration getDelay() {
+        return this.delay;
     }
 
     /**
-     * Set the value of need.
-     * @param need The new value of need
+     * Set the value of delay.
+     * @param delay The new value of delay
      */
-    public void setNeed( InformationNeed need ) {
-        this.need = need;
+    public void setDelay( Duration delay ) {
+        this.delay = delay;
     }
 }

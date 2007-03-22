@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import com.mindalliance.channels.Model;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.system.ProjectImpl;
+import com.mindalliance.channels.project.ProjectImpl;
 import com.mindalliance.channels.system.UserImpl;
 import com.mindalliance.channels.util.TestListener;
 

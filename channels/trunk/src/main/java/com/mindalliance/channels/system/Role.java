@@ -21,7 +21,7 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  * @opt attributes
  * @navassoc * managers * Role
  */
-public class Role extends AbstractJavaBean {
+public class Role extends AbstractJavaBean implements Comparable<Role> {
 
     private List<TitleType> titles = new ArrayList<TitleType>();
     private Set<Role> managers = new TreeSet<Role>();
@@ -129,5 +129,13 @@ public class Role extends AbstractJavaBean {
      */
     public void setName( String name ) throws PropertyVetoException {
         this.name = name;
+    }
+
+    /**
+     * Compares this object with the specified object for order.
+     * @param o the role to compare to.
+     */
+    public int compareTo( Role o ) {
+        return getName().compareToIgnoreCase( o.getName() );
     }
 }

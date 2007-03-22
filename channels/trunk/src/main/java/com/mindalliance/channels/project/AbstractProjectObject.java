@@ -17,10 +17,9 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  * @opt attributes
  */
 public abstract class AbstractProjectObject
-    extends AbstractJavaBean implements Comparable<AbstractProjectObject> {
+    extends AbstractJavaBean {
 
     private Project project;
-    private String name;
 
     /**
      * Default constructor.
@@ -53,29 +52,5 @@ public abstract class AbstractProjectObject
     @Secured( { "ROLE_ADMIN" } )
     public void setProject( Project project ) {
         this.project = project;
-    }
-
-    /**
-     * Return the value of name.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Set the value of name.
-     * @param name The new value of name
-     */
-    @Secured( { "ROLE_ADMIN", "PROJECT_MANAGER" } )
-    public void setName( String name ) {
-        this.name = name;
-    }
-
-    /**
-     * Compares this object with the specified object for order.
-     * @param o the object
-     */
-    public int compareTo( AbstractProjectObject o ) {
-        return getName().compareTo( o.getName() );
     }
 }

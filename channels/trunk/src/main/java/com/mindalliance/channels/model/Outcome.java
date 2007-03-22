@@ -6,49 +6,32 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.system.MetaInformation;
-import com.mindalliance.channels.util.GUID;
-
 /**
- * A possible and significant consequence of a successful or failed task.
+ * A possible change in the world caused or prevented by a task's successful
+ * execution.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
+ * @navassoc - terminates * Event
  */
-public class Outcome extends AbstractNamedObject {
+public class Outcome extends Occurence {
 
     /**
      * Repercussions of an outcome.
      */
-    public enum Impact { none, low, moderate, elevated, high, severe }
+    public enum Impact { none, low, moderate, elevated, high, severe };
 
     private float likelihood;
-    private List<Event> raisedEvents = new ArrayList<Event>();
     private List<Event> terminatedEvents = new ArrayList<Event>();
-    private MetaInformation details;
     private Impact impact;
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    Outcome( GUID guid ) {
-        super( guid );
-    }
-
-    /**
-     * Return the value of details.
-     */
-    public MetaInformation getDetails() {
-        return this.details;
-    }
-
-    /**
-     * Set the value of details.
-     * @param details The new value of details
-     */
-    public void setDetails( MetaInformation details ) {
-        this.details = details;
+    Outcome() {
+        super();
     }
 
     /**
@@ -82,21 +65,6 @@ public class Outcome extends AbstractNamedObject {
     }
 
     /**
-     * Return the value of raisedEvents.
-     */
-    public List<Event> getRaisedEvents() {
-        return this.raisedEvents;
-    }
-
-    /**
-     * Set the value of raisedEvents.
-     * @param raisedEvents The new value of raisedEvents
-     */
-    public void setRaisedEvents( List<Event> raisedEvents ) {
-        this.raisedEvents = raisedEvents;
-    }
-
-    /**
      * Return the value of terminatedEvents.
      */
     public List<Event> getTerminatedEvents() {
@@ -109,5 +77,21 @@ public class Outcome extends AbstractNamedObject {
      */
     public void setTerminatedEvents( List<Event> terminatedEvents ) {
         this.terminatedEvents = terminatedEvents;
+    }
+
+    /**
+     * Add a terminated event.
+     * @param event the event
+     */
+    public void addTerminatedEvent( Event event ) {
+        this.terminatedEvents.add( event );
+    }
+
+    /**
+     * Remove a terminated event.
+     * @param event the event
+     */
+    public void removeTerminatedEvent( Event event ) {
+        this.terminatedEvents.remove( event );
     }
 }

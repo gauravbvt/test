@@ -59,9 +59,8 @@ public class RulesEngine implements Lifecycle {
         this.drlPackages = drlPackages;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.context.Lifecycle#isRunning()
+    /**
+     * Test if rules engine is running.
      */
     public synchronized boolean isRunning() {
         return this.workingMemory != null ;
@@ -85,9 +84,8 @@ public class RulesEngine implements Lifecycle {
         return builder.getPackage();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.context.Lifecycle#start()
+    /**
+     * Start the rules engine.
      */
     public synchronized void start() {
 
@@ -107,16 +105,15 @@ public class RulesEngine implements Lifecycle {
             assertModel();
 
             this.workingMemory.fireAllRules();
-
             logger.info( "Rules engine started" );
+            
         } catch ( Exception e ) {
             logger.error( "Unable to start rules engine", e );
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.context.Lifecycle#stop()
+    /**
+     * Stop the rules engine.
      */
     public synchronized void stop() {
         if ( isRunning() ) {

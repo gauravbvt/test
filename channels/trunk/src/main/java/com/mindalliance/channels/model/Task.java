@@ -6,123 +6,82 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.system.MetaInformation;
-import com.mindalliance.channels.util.Duration;
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.reference.Type;
 
 /**
- * A task of some kind that would be carried out by one or more
- * agents in response to some event in order to fulfill role-based
- * responsibilities; a task may have outcomes if it fails or succeeds
- * and may require and generate information.
+ * A task carried out by one or more agents in response to an event
+ * in order to fulfill role-based responsibilities. A task can
+ * have outcomes.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
+ * @composed - - * Outcome
  */
-public class Task extends AbstractNamedObject {
+public class Task extends Occurence {
 
-    private Duration duration;
-    private List<InformationNeed> input = new ArrayList<InformationNeed>();
-    private List<InformationGain> output = new ArrayList<InformationGain>();
-    private List<Outcome> successOutcomes = new ArrayList<Outcome>();
-    private List<Outcome> failureOutcomes = new ArrayList<Outcome>();
-    private MetaInformation details;
+    private List<Outcome> outcomes = new ArrayList<Outcome>();
+    private List<Type> responsibilities = new ArrayList<Type>();
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    Task( GUID guid ) {
-        super( guid );
+    Task() {
+        super();
     }
 
     /**
-     * Return the value of details.
+     * Convenience constructor.
+     * @param scenario the scenario
      */
-    public MetaInformation getDetails() {
-        return this.details;
+    public Task( Scenario scenario ) {
+        super( scenario );
     }
 
     /**
-     * Set the value of details.
-     * @param details The new value of details
+     * Return the value of outcomes.
      */
-    public void setDetails( MetaInformation details ) {
-        this.details = details;
+    public List<Outcome> getOutcomes() {
+        return this.outcomes;
     }
 
     /**
-     * Return the value of duration.
+     * Set the value of outcomes.
+     * @param outcomes The new value of outcomes
      */
-    public Duration getDuration() {
-        return this.duration;
+    public void setOutcomes( List<Outcome> outcomes ) {
+        this.outcomes = outcomes;
     }
 
     /**
-     * Set the value of duration.
-     * @param duration The new value of duration
+     * Return the value of responsibilities.
      */
-    public void setDuration( Duration duration ) {
-        this.duration = duration;
+    public List<Type> getResponsibilities() {
+        return this.responsibilities;
     }
 
     /**
-     * Return the value of failureOutcomes.
+     * Set the value of responsibilities.
+     * @param responsibilities The new value of responsibilities
      */
-    public List<Outcome> getFailureOutcomes() {
-        return this.failureOutcomes;
+    public void setResponsibilities( List<Type> responsibilities ) {
+        this.responsibilities = responsibilities;
     }
 
     /**
-     * Set the value of failureOutcomes.
-     * @param failureOutcomes The new value of failureOutcomes
+     * Add a responsibility.
+     * @param responsibility the responsibility
      */
-    public void setFailureOutcomes( List<Outcome> failureOutcomes ) {
-        this.failureOutcomes = failureOutcomes;
+    public void addResponsibility( Type responsibility ) {
+        this.responsibilities.add( responsibility );
     }
 
     /**
-     * Return the value of input.
+     * Remove a responsibility.
+     * @param responsibility the responsibility
      */
-    public List<InformationNeed> getInput() {
-        return this.input;
-    }
-
-    /**
-     * Set the value of input.
-     * @param input The new value of input
-     */
-    public void setInput( List<InformationNeed> input ) {
-        this.input = input;
-    }
-
-    /**
-     * Return the value of output.
-     */
-    public List<InformationGain> getOutput() {
-        return this.output;
-    }
-
-    /**
-     * Set the value of output.
-     * @param output The new value of output
-     */
-    public void setOutput( List<InformationGain> output ) {
-        this.output = output;
-    }
-
-    /**
-     * Return the value of successOutcomes.
-     */
-    public List<Outcome> getSuccessOutcomes() {
-        return this.successOutcomes;
-    }
-
-    /**
-     * Set the value of successOutcomes.
-     * @param successOutcomes The new value of successOutcomes
-     */
-    public void setSuccessOutcomes( List<Outcome> successOutcomes ) {
-        this.successOutcomes = successOutcomes;
+    public void removeResponsibility( Type responsibility ) {
+        this.responsibilities.remove( responsibility );
     }
 }

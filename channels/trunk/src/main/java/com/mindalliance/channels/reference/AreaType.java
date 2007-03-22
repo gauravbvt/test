@@ -9,7 +9,7 @@ package com.mindalliance.channels.reference;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */
-public class AreaType extends Type {
+public abstract class AreaType extends Type {
 
     /**
      * Default constructor.

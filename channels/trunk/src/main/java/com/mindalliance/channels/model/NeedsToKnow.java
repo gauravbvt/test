@@ -6,9 +6,9 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.reference.FormatType;
 import com.mindalliance.channels.system.MetaInformation;
 import com.mindalliance.channels.util.Duration;
-import com.mindalliance.channels.util.GUID;
 
 /**
  * The specification of a need for information, more or less critical
@@ -17,8 +17,10 @@ import com.mindalliance.channels.util.GUID;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ *
+ * @opt attributes
  */
-public class InformationNeed extends AbstractNamedObject {
+public class NeedsToKnow extends Assertion {
 
     /**
      * How the information should be delivered.
@@ -33,17 +35,22 @@ public class InformationNeed extends AbstractNamedObject {
     private MetaInformation information;
     private Delivery delivery;
     private Criticality criticality;
-    private Duration maximumDelay;
-
-    // TODO format types
-    private List<String> formats = new ArrayList<String>();
+    private Duration window;
+    private List<FormatType> formats = new ArrayList<FormatType>();
 
     /**
      * Default constructor.
-     * @param guid the unique ID for this object
      */
-    InformationNeed( GUID guid ) {
-        super( guid );
+    NeedsToKnow() {
+        super();
+    }
+
+    /**
+     * Convenience constructor.
+     * @param scenario the scenario
+     */
+    public NeedsToKnow( Scenario scenario ) {
+        super( scenario );
     }
 
     /**
@@ -79,7 +86,7 @@ public class InformationNeed extends AbstractNamedObject {
     /**
      * Return the value of formats.
      */
-    public List<String> getFormats() {
+    public List<FormatType> getFormats() {
         return this.formats;
     }
 
@@ -87,8 +94,24 @@ public class InformationNeed extends AbstractNamedObject {
      * Set the value of formats.
      * @param formats The new value of formats
      */
-    public void setFormats( List<String> formats ) {
+    public void setFormats( List<FormatType> formats ) {
         this.formats = formats;
+    }
+
+    /**
+     * Add a format.
+     * @param format the format
+     */
+    public void addFormat( FormatType format ) {
+        this.formats.add( format );
+    }
+
+    /**
+     * Remove a format.
+     * @param format the format
+     */
+    public void removeFormat( FormatType format ) {
+        this.formats.remove( format );
     }
 
     /**
@@ -109,15 +132,15 @@ public class InformationNeed extends AbstractNamedObject {
     /**
      * Return the value of maximumDelay.
      */
-    public Duration getMaximumDelay() {
-        return this.maximumDelay;
+    public Duration getWindow() {
+        return this.window;
     }
 
     /**
      * Set the value of maximumDelay.
      * @param maximumDelay The new value of maximumDelay
      */
-    public void setMaximumDelay( Duration maximumDelay ) {
-        this.maximumDelay = maximumDelay;
+    public void setWindow( Duration maximumDelay ) {
+        this.window = maximumDelay;
     }
 }

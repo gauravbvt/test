@@ -31,7 +31,7 @@ public class ModelObjectFactory {
      * @param modelObjectClass a subclass of AbstractModelObject
      * @return the new instance
      */
-    public <T extends AbstractModelObject> T newInstance(
+    public <T extends ModelElement> T newInstance(
             Class<T> modelObjectClass ) {
 
         try {
