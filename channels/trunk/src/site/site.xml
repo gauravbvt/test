@@ -14,10 +14,6 @@
   </bannerRight>
   <publishDate position="left" format="yyyy-MM-dd kk:mm:ss"/>
   <body>
-    <links>
-      <item name="Trac" href="https://ranger.homelinux.net/trac/channels" />
-    </links>
-
     <menu name="Channels">
       <item name="Introduction" href="index.html"/>
       <item name="Roadmap" href="roadmap.html"/>
