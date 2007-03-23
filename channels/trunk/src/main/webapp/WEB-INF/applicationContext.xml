@@ -64,7 +64,7 @@
 			<ref bean="admin"/>
 		</set></property>
 		<property name="projects"><set>
-			<bean class="com.mindalliance.channels.project.ProjectImpl">
+			<bean class="com.mindalliance.channels.system.ProjectImpl">
 				<property name="name" value="Test Project"/>
 				<property name="participants"><set>
 					<ref bean="user"/>

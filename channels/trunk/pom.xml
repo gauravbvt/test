@@ -181,6 +181,11 @@
       <version>2.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.zkoss.zkforge</groupId>
+      <artifactId>timelinez</artifactId>
+      <version>1.1-ma</version>
+    </dependency>
   </dependencies>
   <distributionManagement>
     <repository>
