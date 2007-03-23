@@ -18,6 +18,10 @@
     <developerConnection>scm:svn:https://ranger.homelinux.net/svn/${project.artifactId}/trunk</developerConnection>
     <url>https://ranger.homelinux.net/tracsvn/${project.artifactId}</url>
   </scm>
+  <issueManagement>
+	<system>TRAC</system>
+	<url>https://ranger.homelinux.net/trac/${project.artifactId}/report</url>
+  </issueManagement>
   <build>
     <resources>
       <resource>
@@ -38,6 +42,7 @@
               <filtering>true</filtering>
               <includes>
                 <include>**/*.xml</include>
+                <include>**/*.jsp</include>
               </includes>
             </resource>
           </webResources>
@@ -183,7 +188,7 @@
     </dependency>
     <dependency>
       <groupId>org.zkoss.zkforge</groupId>
-      <artifactId>timelinez</artifactId>
+      <artifactId>zk-timeline</artifactId>
       <version>1.1-ma</version>
     </dependency>
   </dependencies>
