@@ -2,7 +2,7 @@ package org.zkforge.timeline.decorator;
 
 import java.util.Date;
 
-import org.json.simple.JSONObject;
+import net.sf.json.JSONObject;
 
 public class PointHighlightDecorator implements HighlightDecorator {
 	private static int count = 0;

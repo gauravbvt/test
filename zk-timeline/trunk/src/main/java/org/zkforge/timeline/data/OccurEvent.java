@@ -2,7 +2,8 @@ package org.zkforge.timeline.data;
 
 import java.util.Date;
 
-import org.json.simple.JSONObject;
+import net.sf.json.JSONObject;
+
 import org.zkforge.timeline.util.TimelineUtil;
 
 public class OccurEvent {

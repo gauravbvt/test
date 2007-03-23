@@ -30,6 +30,8 @@ zkTimeline.invert = function (list){
 
 };
 
+
+
 /** Init (and re-init) a timeline. */
 zkTimeline.init = function (cmp) {
 	//setup orient
@@ -50,6 +52,7 @@ zkTimeline.init = function (cmp) {
 	
 	//create a simile timeline instance
 
+	zkTimeline.initTimeline(cmp);
 	cmp.instance  = Timeline.create(document.getElementById(cmp.id+"!timeline"), cmp.bandInfos,cmp.orient);
 
 	for(i=0;i<cmp.bandInfos.length;i++){
@@ -166,6 +169,7 @@ zkTimeline.setAttr = function (cmp, name, value) {
     			
         		var text = evt.getText();
         		var description = evt.getDescription();
+        		var id = evt._id
         		for (var x = 0; x < regexes.length; x++) {
             		var regex = regexes[x];
             		
@@ -193,7 +197,16 @@ zkTimeline.setAttr = function (cmp, name, value) {
 			}
 			cmp.instance.paint();
 			return true;
-
+		case "z.select":
+			var matchers=eval('('+value+')');
+			
+   			var ids = [];
+     		for (var x = 0; x < matchers.length; x++) {
+     			var input=matchers[x];
+     			ids.push(input);
+    		}
+    		zkTimeline.select(cmp,ids);
+			return true;		
 				
 		}
 	}
@@ -380,7 +393,7 @@ zkBandInfo.removeOccurEvent=function(uuid,eventId){
  	while(iter.hasNext()){
  		var e=iter.next();
  		if(e==null) continue;
- 		if(e._id=="dynaEvent"+eventId){
+ 		if(e._id==eventId){
  			band.bandinfo.eventSource._events._events.remove(e);
  		}
  	}
@@ -413,7 +426,7 @@ zkBandInfo.newEvent=function(cmp,params){
 			params.color,
 			params.textColor
 		);
-	evt._id="dynaEvent"+params.id;
+	evt._id=params.id;
 
 	return evt;
 };
@@ -542,5 +555,79 @@ zkHotZone.setAttr = function (cmp, name, value) {
 };
 
 
+zkTimeline.initTimeline = function(cmp) {
+//// Modifications to timeline to support selection
+	Timeline._Band.prototype._onShiftClick = Timeline._Band.prototype._onMouseDown;
+	Timeline._Band.prototype._onMouseDown = function(innerFrame, evt, target) {
+	    this.closeBubble();
+	    if (evt.shiftKey) {
+	    	this._onShiftClick(innerFrame, evt, target);
+	    }
+	};
 
+	Timeline.DurationEventPainter.prototype._onShiftClickInstantEvent = Timeline.DurationEventPainter.prototype._onClickInstantEvent;
+	Timeline.DurationEventPainter.prototype._onShiftClickDurationEvent = Timeline.DurationEventPainter.prototype._onClickDurationEvent;
+	Timeline.DurationEventPainter.prototype._onClickOverride = function(duration, icon, domEvt, evt) {
+    	var tl = this._timeline;
+    	var id = evt._id;
+    	var sel = new Array();
+    	domEvt.cancelBubble = true;
+    	if (domEvt.altKey || domEvt.metaKey || domEvt.ctrlKey) {
+    		var prev = tl.selection;
+    		var selected = false;
+    		if (prev != null) {
+	    		for (i = 0 ; i < prev.length ; i++) {
+	    			if (prev[i] != id) {
+	    				sel.push(prev[i]);
+	    			} else {
+	    				selected = true;
+	    			}
+	    		}
+    		}
+    		if (!selected) {
+    			sel.push(id);
+    		}
+    	} else {
+    		sel.push(evt._id);
+    		if (domEvt.shiftKey) {
+    			if (duration) {
+    				this._onShiftClickDurationEvent(icon, domEvt, evt);
+    			} else {
+    				this._onShiftClickInstantEvent(icon, domEvt, evt);
+    			}
+    		}
+    	}
+    	zkTimeline.select(cmp, sel);
+	};
+	Timeline.DurationEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
+		this._onClickOverride(false, icon, domEvt, evt);
+	};
+	Timeline.DurationEventPainter.prototype._onClickDurationEvent = function(icon, domEvt, evt) {
+		this._onClickOverride(true, icon, domEvt, evt);
+	};
 
+};
+
+zkTimeline.select = function(cmp, ids) {
+	var timeline = cmp.instance;
+	timeline.selection = ids;
+	var highlightMatcher = function(evt) {
+		var id = evt._id
+		for (var x = 0; x < ids.length; x++) {
+    		if (ids[x] != null && ids[x]==id) {
+        		return 0;
+    		}
+		}
+		return -1;
+	};
+	for(i=0;i<timeline.getBandCount();i++){
+		timeline.getBand(i).getEventPainter().setHighlightMatcher(highlightMatcher);
+	}
+	timeline.paint();
+	zkau.send({uuid:cmp.id,cmd:"onSelectEvent",data:ids},5);
+	return true;	
+};
+
+zkTimeline.clearSelection = function(cmp) {
+	this.select(cmp, new Array());
+}

@@ -3,17 +3,14 @@
  */
 package org.zkforge.timeline;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
-import org.json.simple.JSONArray;
+import net.sf.json.JSONArray;
+
 import org.zkforge.timeline.data.OccurEvent;
 import org.zkforge.timeline.decorator.HighlightDecorator;
 import org.zkforge.timeline.impl.TimelineComponent;
@@ -25,7 +22,6 @@ import org.zkoss.zk.au.AuScript;
 import org.zkoss.zk.au.Command;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
-import org.zkoss.zk.ui.WrongValueException;
 
 /** The Bandinfo component.
  *
@@ -345,7 +341,7 @@ public class Bandinfo extends TimelineComponent {
 		JSONArray list = new JSONArray();
 		while (iter.hasNext()) {
 			OccurEvent e = (OccurEvent) iter.next();
-			list.add(e);
+			list.put(e);
 		}
 
 		response("addManyOccurEvent" + events.hashCode(), new AuScript(this,

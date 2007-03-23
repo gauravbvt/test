@@ -2,7 +2,7 @@ package org.zkforge.timeline.decorator;
 
 import java.util.Date;
 
-import org.json.simple.JSONObject;
+import net.sf.json.JSONObject;
 
 public class SpanHighlightDecorator implements HighlightDecorator {
 

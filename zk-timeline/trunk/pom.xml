@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
+	<parent>
+		<artifactId>generic</artifactId>
+		<groupId>com.mindalliance</groupId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../generic/pom.xml</relativePath>
+	</parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.zkoss.zkforge</groupId>
   <artifactId>timelinez</artifactId>
-  <version>1.1-1</version>
+  <version>1.1-ma</version>
   <packaging>jar</packaging>
   <name>The Timeline Component for ZK</name>
   <url>http://www.zkoss.org</url>
-  <description>The Timeline Component for ZK 2.2.0 or later</description>
+  <description>The Timeline Component for ZK 2.2.1 or later</description>
   <licenses>
     <license>
       <name>GNU General Public License, Version 2.0</name>
@@ -23,22 +29,27 @@
     <dependency>
       <groupId>org.zkoss.common</groupId>
       <artifactId>zcommon</artifactId>
-      <version>2.2.0</version>
+      <version>2.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.zkoss.common</groupId>
       <artifactId>zweb</artifactId>
-      <version>2.2.0</version>
+      <version>2.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zk</artifactId>
-      <version>2.2.0</version>
+      <version>2.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zul</artifactId>
-      <version>2.2.0</version>
+      <version>2.2.1</version>
     </dependency>
+    <dependency>
+		<groupId>json-lib</groupId>
+		<artifactId>json-lib</artifactId>
+		<version>1.0b2-jdk15</version>
+	</dependency>
   </dependencies>
 </project> 

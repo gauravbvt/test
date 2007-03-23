@@ -3,9 +3,11 @@
  */
 package org.zkforge.timeline;
 
-import org.json.simple.JSONArray;
+import net.sf.json.JSONArray;
+
 import org.zkforge.timeline.impl.TimelineComponent;
 import org.zkoss.lang.Objects;
+import org.zkoss.zk.au.Command;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.WrongValueException;
@@ -17,12 +19,20 @@ import org.zkoss.zk.ui.WrongValueException;
  * @author WeiXing Gu, China
  */
 public class Timeline extends TimelineComponent {
-
+	
+	private static final String SELECT_EVENT_COMMAND = "onSelectEvent";
+	
+	static {
+		new SelectCommand(SELECT_EVENT_COMMAND, Command.IGNORE_OLD_EQUIV);
+	}
+	
 	private String _orient = "horizontal";// default
 
 	private String _height = "150px";// default
 
 	private String _width = "100%";// default
+	
+	private String[] selection = new String[0];
 
 	/**
 	 * Returns the orientation of {@link Timeline}.
@@ -101,16 +111,38 @@ public class Timeline extends TimelineComponent {
 	public void clearFilter() {
 		smartUpdate("z.clearFilter", "");
 	}
-	public void performHighlitht(String highlightText[]) {
+	public void performHighlight(String highlightText[]) {
 		JSONArray matchers = new JSONArray();
 		for (int i = 0; i < highlightText.length; i++) {
-			matchers.add(highlightText[i]);
+			matchers.put(highlightText[i]);
 		}
-		// System.out.println(matchers.toString());
+		 System.out.println(matchers.toString());
 		smartUpdate("z.highlight", matchers.toString());
 	}
 
 	public void clearHighlight() {
 		smartUpdate("z.clearHighlight", "");
 	}
+	
+	public String[] getSelection() {
+		return selection;
+	}
+	
+	public void setSelection(String[] selection) {
+		JSONArray ids = new JSONArray();
+		for (int i = 0; i < selection.length; i++) {
+			ids.put(selection[i]);
+		}
+		smartUpdate("z.select", ids.toString());
+		setLocalSelection(selection);
+	}
+	
+	public void setLocalSelection(String[] selection) {
+		this.selection = selection;
+	}
+	
+	public void clearSelection() {
+		setSelection(new String[0]);
+	}
+	
 }

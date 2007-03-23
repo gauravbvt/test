@@ -3,10 +3,7 @@
  */
 package org.zkforge.timeline;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import org.zkforge.timeline.impl.TimelineComponent;
 import org.zkforge.timeline.util.TimelineUtil;
@@ -14,7 +11,6 @@ import org.zkoss.lang.Objects;
 import org.zkoss.xml.HTMLs;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
-import org.zkoss.zk.ui.WrongValueException;
 
 /** The hotzone component.
  *
