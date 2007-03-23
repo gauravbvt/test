@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Specification-Title: The ZK TimeLine Components
+Specification-Version: 1.0
+Specification-Vendor: Potix Corporation
+Implementation-Title: org.zkforge.timeline
+Implementation-URL: http://www.zkforge.org/timeline
+Implementation-Version: 1.0
+Implementation-Vendor: Potix Corporation
