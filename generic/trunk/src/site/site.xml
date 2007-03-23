@@ -9,7 +9,7 @@
   <publishDate position="left" format="yyyy-MM-dd kk:mm:ss"/>
   <body>
     <links>
-      <item name="Trac" href="https://ranger.homelinux.net/trac/generic" />
+      <item name="Trac" href="https://ranger.homelinux.net/trac/" />
     </links>
 
     <menu name="Generic">

@@ -113,10 +113,6 @@
 			<url>scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/${project.artifactId}</url>
 		</site>
 	</distributionManagement>
-	<issueManagement>
-		<system>TRAC</system>
-		<url>https://ranger.homelinux.net/trac/${project.artifactId}/report</url>
-	</issueManagement>
 	
 	<scm>
 		<connection>
