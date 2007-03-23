@@ -9,7 +9,7 @@
 	</parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.zkoss.zkforge</groupId>
-  <artifactId>timelinez</artifactId>
+  <artifactId>zk-timeline</artifactId>
   <version>1.1-ma</version>
   <packaging>jar</packaging>
   <name>The Timeline Component for ZK</name>
@@ -22,9 +22,18 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  <scm>
-    <url>http://zkforge.svn.sourceforge.net/viewvc/zkforge/trunk/timelinez</url>
-  </scm>
+        <inceptionYear>2007</inceptionYear>
+        <scm>
+                <connection>
+                        scm:svn:http://ranger.homelinux.net/svn/${project.artifactId}/trunk
+                </connection>
+                <developerConnection>
+                        scm:svn:https://ranger.homelinux.net/svn/${project.artifactId}/trunk
+                </developerConnection>
+                <url>
+                        https://ranger.homelinux.net/tracsvn/${project.artifactId}
+                </url>
+        </scm>
   <dependencies>
     <dependency>
       <groupId>org.zkoss.common</groupId>
@@ -52,4 +61,20 @@
 		<version>1.0b2-jdk15</version>
 	</dependency>
   </dependencies>
+        <distributionManagement>
+                <repository>
+                        <id>mindalliance</id>
+                        <name>Mind-Alliance Systems Repository</name>
+                        <url>
+                                scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/${project.artifactId}
+                        </url>
+                        <layout>legacy</layout>
+                </repository>
+                <site>
+                        <id>mindalliance</id>
+                        <url>
+                                scp://ranger.homelinux.net/var/www/localhost/htdocs/projects/${project.artifactId}
+                        </url>
+                </site>
+        </distributionManagement>
 </project> 
