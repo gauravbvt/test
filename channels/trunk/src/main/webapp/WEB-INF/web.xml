@@ -2,16 +2,22 @@
 	"http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-	<display-name>${pom.name} v${pom.version}</display-name>
-	<description>${pom.description}</description>
+	<icon>
+		<small-icon>/images/favicon.ico</small-icon>
+	</icon>
+	<display-name>Channels</display-name>
 	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/applicationContext*.xml</param-value>
 	</context-param>
 	<context-param>
-		<param-name>agencyAcronym</param-name>
-		<param-value>TLA</param-value>
+		<param-name>adminEmail</param-name>
+		<param-value>admin@example.com</param-value>
+	</context-param>
+	<context-param>
+		<param-name>securityKey</param-name>
+		<param-value>blah</param-value>
 	</context-param>
 	
 	<filter>
@@ -83,7 +89,7 @@
 	</mime-mapping>
 
 	<welcome-file-list>
-		<welcome-file>index.zul</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	
 </web-app>

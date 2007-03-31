@@ -9,7 +9,7 @@
 
 	<!-- Core beans -->	
 	<bean id="guidFactory" class="com.mindalliance.channels.util.GUIDFactoryImpl">
-		<constructor-arg value="${agencyAcronym}"/>
+		<constructor-arg value="${securityKey}"/>
 	</bean>
 	
 	<!-- Users -->

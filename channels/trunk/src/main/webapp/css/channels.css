@@ -1,0 +1,99 @@
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+#contents {
+	font-family: Georgia,serif;
+	width: 400px;
+	margin: 2em auto 2em 1.5in; 
+}
+
+h1 {
+	height: 90px;
+	width: 100%;
+	background-image: url("../images/banner.png");
+	background-position: left;
+	background-repeat: no-repeat;
+	background-color: #7e747f;
+}
+
+h1 span {
+	display: none;
+}
+
+form {
+	width: 60%;
+	margin: 2em auto;
+}
+
+th {
+	text-align: right;
+}
+
+table .channels_toolbar {
+	padding: 0px 10px 0px 10px;
+	background-color: transparent;
+	background: url("../images/3d-tb-m.gif");
+	background-repeat: repeat-x;
+	color: rgb(80, 0, 96);
+	border-bottom: 1px solid rgb(170, 170, 187);
+}
+
+div .listbox-body {
+	width: 100%;
+	background-color: white;
+	color: black;
+	border: none;
+}
+
+.channels_toolbar button, .tabpanel-accordion button {
+	border: none;
+	margin: 1px;
+	background-color: transparent;
+}
+
+.tabpanel-accordion button:hover {
+	background-color: highlight;
+}
+
+.channels_toolbar button:hover {
+	border: 1px outset activeborder;
+	margin: 0px;
+	background-color: transparent;
+}
+
+div .channels_main {
+	margins: 0px 5px 5px 5px;
+}
+
+.channels_main .hbox {
+	padding: 0px 5px 0px 5px;
+}
+
+.channels_alerts {
+	border-top: 1px solid rgb(170, 170, 187);
+	padding: 5px;
+	margins: 5px 5px 0px 5px;
+}
+
+.channels_min {
+	border: 1px inset windowframe;
+	background-color: window;
+	color: windowtext; 
+	padding: 5px;
+}
+
+.channels_min span {
+	font-size: smaller;
+}
+
+.channels_min td.vbox {
+	padding: 0px;
+}
+
+div .listbox {
+	background-color: white;
+	color: black;
+	border: 1px inset windowframe;
+}

@@ -16,6 +16,7 @@ Security overview
 
  * *ROLE_ADMIN*,  any administrator.
  * *ROLE_USER*,   any authentified users of the system.
+ * *ROLE_ANONYMOUS*, any user from the website before login.
  * *SELF*,        the user himself. This is used to allow
                   the user to change his/her own password, etc. Applies
                   to the user object, or the user passed as a parameter.

@@ -1,4 +1,11 @@
 <zk>
+	<desktop-config>
+		<theme-uri>/css/channels.css</theme-uri>
+	</desktop-config>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.DesktopRichlet</richlet-class>
+		<richlet-url>/desktop</richlet-url>
+	</richlet>
 	<richlet>
 		<richlet-class>com.mindalliance.channels.ui.MainRichlet</richlet-class>
 		<richlet-url>/test</richlet-url>

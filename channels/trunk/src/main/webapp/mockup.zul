@@ -1,0 +1,59 @@
+<vbox xmlns:h="http://www.w3.org/1999/xhtml"
+	valign="top" width="100%">
+
+<!-- Toolbar -->
+<hbox sclass="channels_toolbar" height="60px" width="100%" spacing="0px" valign="middle">
+	<h:a href="profile.jsp">User</h:a>
+	Acting as
+	<listbox>
+		<listitem label="Employee"/>
+		<listitem label="Fire Warden"/>
+		<listitem label="Group Manager"/>
+	</listbox>
+	<h:a href="logout.jsp">Logout</h:a>
+	<hbox spacing="0px">
+		<button orient="vertical" label="Cut" image="/images/16x16/cut.png"/>
+		<button orient="vertical" label="Copy" image="/images/16x16/copy.png"/>
+		<button orient="vertical" label="Paste" image="/images/16x16/paste.png"/>
+		<button orient="vertical" label="Undo" image="/images/16x16/undo.png"/>
+		<button orient="vertical" label="Redo" image="/images/16x16/redo.png"/>
+		<button orient="vertical" label="Agree" image="/images/16x16/nav_up_green.png"/>
+		<button orient="vertical" label="Disagree" image="/images/16x16/nav_down_red.png"/>
+		<button orient="vertical" label="Chat" image="/images/16x16/find.png"/>
+		<button orient="vertical" label="Search" image="/images/16x16/messages.png"/>
+		<button orient="vertical" label="To-do's" image="/images/16x16/note_pinned.png"/>
+		<button orient="vertical" label="Help" image="/images/16x16/help.png"/>
+	</hbox>
+</hbox>
+
+<vbox width="100%" valign="top">
+	<hbox width="100%" widths="20%,80%" height="250px">
+		<tabbox width="100%" mold="accordion">
+			<tabs>
+				<tab image="images/16x16/user_building.png" label="People and Places" />
+				<tab image="images/16x16/branch_element.png" label="Scenarios" />
+				<tab image="images/16x16/books.png" label="Library" />
+				<tab image="images/16x16/preferences.png" label="Settings (1)" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>The first panel.</tabpanel>
+				<tabpanel>The second panel</tabpanel>
+				<tabpanel>The third panel</tabpanel>
+				<tabpanel>The fourth panel</tabpanel>
+			</tabpanels>
+		</tabbox>
+		<splitter collapse="before"/>
+		<box width="100%">
+			<window title="when"></window>
+			<window title="what"></window>
+			<window title="who"></window>
+		</box>
+	</hbox>
+
+	<vbox height="110px" width="100%">
+		<box sclass="channels_alerts" height="90px" width="100%">Alerts</box>
+		<box sclass="channels_min"  width="100%">Minimized</box>
+	</vbox>
+
+</vbox>
+</vbox>
