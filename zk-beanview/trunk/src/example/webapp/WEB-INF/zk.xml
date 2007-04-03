@@ -1,0 +1,14 @@
+<zk>
+	<richlet>
+		<richlet-class>com.mindalliance.zk.beanview.example.BeanViewZkRichlet</richlet-class>
+		<richlet-url>/beanview</richlet-url>
+	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.zk.beanview.example.CollectionZkRichlet</richlet-class>
+		<richlet-url>/collection</richlet-url>
+	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.zk.beanview.example.ComplexPanelRichlet</richlet-class>
+		<richlet-url>/complex</richlet-url>
+	</richlet>
+</zk>
