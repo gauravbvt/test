@@ -1552,7 +1552,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171471503091" FOLDED="true" ID="Freemind_Link_1838846277" MODIFIED="1171565649469" TEXT="Scenario element">
+<node COLOR="#006666" CREATED="1171471503091" ID="Freemind_Link_1838846277" MODIFIED="1171565649469" TEXT="Scenario element">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1587,7 +1587,7 @@
 <node CREATED="1171535608976" ID="Freemind_Link_1269394960" MODIFIED="1171535619162" TEXT="type* [type]"/>
 <node CREATED="1171551200582" ID="Freemind_Link_1519941186" MODIFIED="1171551205172" TEXT="name [text]"/>
 </node>
-<node CREATED="1171471516008" FOLDED="true" ID="Freemind_Link_813704822" MODIFIED="1171471519379" TEXT="generalizes">
+<node CREATED="1171471516008" ID="Freemind_Link_813704822" MODIFIED="1171471519379" TEXT="generalizes">
 <node COLOR="#006666" CREATED="1171464130886" FOLDED="true" ID="Freemind_Link_1242064837" MODIFIED="1171980584311" TEXT="Assertion">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -1917,7 +1917,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171471524852" FOLDED="true" ID="Freemind_Link_21915136" MODIFIED="1171550236157" TEXT="Occurrence">
+<node COLOR="#006666" CREATED="1171471524852" ID="Freemind_Link_21915136" MODIFIED="1171550236157" TEXT="Occurrence">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -2006,7 +2006,7 @@
 </node>
 <node CREATED="1171549468710" ID="Freemind_Link_831358563" MODIFIED="1171549476054" TEXT="where [@Area]"/>
 </node>
-<node CREATED="1171471772548" FOLDED="true" ID="Freemind_Link_1685910964" MODIFIED="1171471775631" TEXT="generalizes">
+<node CREATED="1171471772548" ID="Freemind_Link_1685910964" MODIFIED="1171471775631" TEXT="generalizes">
 <node COLOR="#006666" CREATED="1168119871079" FOLDED="true" ID="Freemind_Link_114809084" MODIFIED="1171555351016" TEXT="Communication">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2259,30 +2259,6 @@
 </node>
 </node>
 <node CREATED="1171472631005" ID="Freemind_Link_690386461" MODIFIED="1171472633653" TEXT="generalizes">
-<node COLOR="#006666" CREATED="1171292476074" ID="Freemind_Link_852466726" MODIFIED="1171990333875" TEXT="Template">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A template is an incompletely defined model element where undefined property values impose no matching constraint. A template can serve as an example to draw from or as a basis for standard compliance.
-    </p>
-  </body>
-</html>
-</richcontent>
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1171292855797" FOLDED="true" ID="Freemind_Link_498124228" MODIFIED="1171292857806" TEXT="definition">
-<node CREATED="1171292879599" ID="Freemind_Link_1261927131" MODIFIED="1171567084677" TEXT="A partially described, thus generalized, model element.">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1171292858525" ID="Freemind_Link_484989241" MODIFIED="1171292861293" TEXT="description">
-<node CREATED="1171293406596" ID="Freemind_Link_1811438191" MODIFIED="1171293606432" TEXT="class [text]"/>
-<node CREATED="1171293120666" ID="Freemind_Link_1433453174" MODIFIED="1171293186769" TEXT="standard [text]"/>
-<node CREATED="1171293187890" ID="Freemind_Link_1345076990" MODIFIED="1171990346563" TEXT="content &lt;Model element&gt;"/>
-</node>
-</node>
 <node COLOR="#006666" CREATED="1171292471797" ID="Freemind_Link_264626802" MODIFIED="1171294908991" TEXT="Type">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171292864290" ID="Freemind_Link_1474581862" MODIFIED="1171292866740" TEXT="definition">
@@ -2309,7 +2285,7 @@
 <node CREATED="1171534508855" ID="Freemind_Link_1915617309" MODIFIED="1171534511554" TEXT="generalizes">
 <node COLOR="#006666" CREATED="1171567853107" ID="Freemind_Link_85366081" MODIFIED="1171568412806" TEXT="Scenario element type">
 <edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1171567867188" FOLDED="true" ID="Freemind_Link_1975563223" MODIFIED="1171567869470" TEXT="definition">
+<node CREATED="1171567867188" ID="Freemind_Link_1975563223" MODIFIED="1171567869470" TEXT="definition">
 <node CREATED="1171567901158" ID="Freemind_Link_414846681" MODIFIED="1171567908338" TEXT="A type of scenario element">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
@@ -2323,19 +2299,6 @@
   <body>
     <p>
       The information that could be communicated about an instance labelled by this type. Descriptors of types and super-types (thru implies) are cumulative.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1171535916183" ID="Freemind_Link_9640734" MODIFIED="1171536007123" TEXT="template* [@Template]">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Templates containing descriptions common of model elements of this type.
     </p>
   </body>
 </html>
@@ -2405,35 +2368,37 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1167967066577" ID="Freemind_Link_1935931494" MODIFIED="1168310512062" TEXT="forbidden">
-<node CREATED="1168310518258" ID="Freemind_Link_1206379985" MODIFIED="1171985412150" TEXT="exchange* &lt;Exchange template&gt;">
+<node CREATED="1167967066577" ID="Freemind_Link_1935931494" MODIFIED="1175630642403" TEXT="forbidden*">
+<node CREATED="1168310518258" ID="Freemind_Link_1206379985" MODIFIED="1175630704474" TEXT="exchange &lt;Exchange pattern&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
     
   </head>
   <body>
     <p>
-      The template describes a range of Exchanges that are forbidden.
+      The pattern matches Exchanges that are forbidden.
     </p>
   </body>
 </html>
 </richcontent>
 </node>
+<node CREATED="1175630667335" ID="Freemind_Link_812961109" MODIFIED="1175630680025" TEXT="per [text]"/>
 </node>
-<node CREATED="1168310546520" ID="Freemind_Link_1542358442" MODIFIED="1168310564416" TEXT="required">
-<node CREATED="1168310566785" ID="Freemind_Link_530818567" MODIFIED="1171985419913" TEXT="exchange* &lt;Exchange template&gt;">
+<node CREATED="1168310546520" ID="Freemind_Link_1542358442" MODIFIED="1175630721732" TEXT="obligated*">
+<node CREATED="1168310566785" ID="Freemind_Link_530818567" MODIFIED="1175630730990" TEXT="exchange &lt;Exchange pattern&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
     
   </head>
   <body>
     <p>
-      The template describes a range of Exchanges that are required.
+      The pattern matches Exchanges that are obligated.
     </p>
   </body>
 </html>
 </richcontent>
 </node>
+<node CREATED="1175630682347" ID="Freemind_Link_194527324" MODIFIED="1175630686402" TEXT="per [text]"/>
 </node>
 </node>
 </node>
