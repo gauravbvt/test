@@ -3,11 +3,16 @@
 
 package com.mindalliance.channels.ui;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
 import org.acegisecurity.context.SecurityContextHolder;
+import org.springframework.context.ApplicationContext;
 import org.zkoss.zhtml.Text;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
+import org.zkoss.zk.ui.Session;
 import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
@@ -20,9 +25,13 @@ import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Tabpanels;
 import org.zkoss.zul.Tabs;
 import org.zkoss.zul.Tree;
+import org.zkoss.zul.Treechildren;
+import org.zkoss.zul.Treecol;
+import org.zkoss.zul.Treecols;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
+import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
 
 /**
@@ -41,37 +50,50 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
+     * Get the system object given a page.
+     * @param page the page
+     * @return the current system object
+     */
+    private System getSystem( Page page ) {
+        Session zkSession = page.getDesktop().getSession();
+        HttpSession httpSession = (HttpSession) zkSession.getNativeSession();
+        ServletContext servletContext = httpSession.getServletContext();
+        ApplicationContext appContext =
+            (ApplicationContext) servletContext.getAttribute(
+                "org.springframework.web.context.WebApplicationContext.ROOT" );
+
+        return (System) appContext.getBean( "system" );
+    }
+
+    /**
      * Initialize the page.
      * @param page the page
      */
-    public void service( Page page ) {
-        User user = (User) SecurityContextHolder.getContext().
-                        getAuthentication().getPrincipal();
+    public void service( final Page page ) {
+        final User user = (User) SecurityContextHolder.getContext().
+                            getAuthentication().getPrincipal();
+        final System system = getSystem( page );
 
         page.setTitle( "Channels" );
 
         Hbox split = new Hbox();
         split.setSclass( "channels_main" );
         split.setWidth( "100%" );
-        split.setHeight( "250px" );
+        split.setHeight( "400px" );
         split.setWidths( "20%,80%" );
-        split.appendChild( createAccordion( user ) );
+        split.appendChild( createAccordion( user, system ) );
         split.appendChild( newSplitter( true ) );
         split.appendChild( createCanvas( user ) );
-
-        Vbox main = new Vbox();
-        main.setWidth( "100%" );
-        main.setValign( "top" );
-        main.setSpacing( "0px" );
-        main.appendChild( split );
-        main.appendChild( createAlertPane( user ) );
-        main.appendChild( createMinimizeBar( user ) );
 
         Vbox window = new Vbox();
         window.setWidth( "100%" );
         window.setValign( "top" );
         window.appendChild( createToolbar( user ) );
-        window.appendChild( main );
+        window.setSpacing( "0px" );
+        window.appendChild( split );
+        window.appendChild( createAlertPane( user, page ) );
+        window.appendChild( createMinimizeBar( user ) );
+
         window.setPage( page );
     }
 
@@ -101,7 +123,6 @@ public class DesktopRichlet extends GenericRichlet {
         toolbar.appendChild( roles );
 
         Html html = new Html( "<a href=\"logout.jsp\">Logout</a>" );
-//        html.setWidth( "50%" );
         toolbar.appendChild( html );
 
         Hbox iconbar = new Hbox();
@@ -133,8 +154,9 @@ public class DesktopRichlet extends GenericRichlet {
     /**
      * Create the accordion pane.
      * @param user the current user
+     * @param system the system
      */
-    private Component createAccordion( User user ) {
+    private Component createAccordion( User user, System system ) {
         Tabs tabs = new Tabs();
         tabs.appendChild(
             new Tab( "People & Places", "images/16x16/user_building.png" ) );
@@ -149,7 +171,7 @@ public class DesktopRichlet extends GenericRichlet {
         tabpanels.appendChild( createPeopleTab( user ) );
         tabpanels.appendChild( createScenarioTab( user ) );
         tabpanels.appendChild( createLibraryTab( user ) );
-        tabpanels.appendChild( createSettingsTab( user ) );
+        tabpanels.appendChild( createSettingsTab( user, system ) );
 
         Tabbox accordion = new Tabbox();
         accordion.setWidth( "100%" );
@@ -195,7 +217,14 @@ public class DesktopRichlet extends GenericRichlet {
      * @param user the user
      */
     private Tabpanel createScenarioTab( User user ) {
+        Treecols treeColumns = new Treecols();
+        treeColumns.appendChild( new Treecol() );
+
+        Treechildren treeChildren = new Treechildren();
+
         Tree tree = new Tree();
+        tree.appendChild( treeColumns );
+        tree.appendChild( treeChildren );
 
         Tabpanel tabpanel = new Tabpanel();
         tabpanel.appendChild( tree );
@@ -233,9 +262,41 @@ public class DesktopRichlet extends GenericRichlet {
     /**
      * Create the settings tab.
      * @param user the user
+     * @param system the system
      */
-    private Tabpanel createSettingsTab( User user ) {
+    private Tabpanel createSettingsTab( User user, System system ) {
+        String[][] userButtons = new String[][] {
+            { "My preferences",  "images/24x24/user1_preferences.png",
+                "Your personal settings" },
+            { "Activity log", "images/24x24/step.png",
+                "What's going on on this server" },
+            { "Users management", "images/24x24/users3_preferences.png",
+                "Keep track of users" },
+        };
+
+        String[][] adminButtons = new String[][] {
+            { "Users management", "images/24x24/users3_preferences.png",
+                "Keep track of users" },
+            { "System configuration", "images/24x24/server_preferences.png",
+                "Administer channels" },
+            { "System monitoring", "images/24x24/oszillograph.png",
+                "Keep an eye on things" },
+        };
+
         Vbox vbox = new Vbox();
+        for ( String[] def : userButtons ) {
+            Button button = new Button( def[0], def[1] );
+            button.setTooltiptext( def[2] );
+            vbox.appendChild( button );
+        }
+
+        if ( system.isAdministrator( user ) )
+            for ( String[] def : adminButtons ) {
+                Button button = new Button( def[0], def[1] );
+                button.setTooltiptext( def[2] );
+                vbox.appendChild( button );
+            }
+
         Tabpanel tabpanel = new Tabpanel();
         tabpanel.appendChild( vbox );
         return tabpanel;
@@ -259,7 +320,7 @@ public class DesktopRichlet extends GenericRichlet {
      * Create the alert pane.
      * @param user the user
      */
-    private Component createAlertPane( User user ) {
+    private Component createAlertPane( User user, Page page ) {
         Box box = new Box();
         box.setSclass( "channels_alerts" );
         box.setHeight( "90px" );
@@ -288,7 +349,6 @@ public class DesktopRichlet extends GenericRichlet {
      */
     private Splitter newSplitter( boolean before ) {
         Splitter splitter = new Splitter();
-//        splitter.setCollapse( before? "before" : "after" );
         splitter.setCollapse( "none" );
         splitter.setWidth( "1px" );
         return splitter;
