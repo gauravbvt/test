@@ -1345,7 +1345,7 @@
 <node CREATED="1172155551365" ID="Freemind_Link_1451020776" MODIFIED="1172155585077" TEXT="message* [@Message]"/>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1172155392099" FOLDED="true" ID="Freemind_Link_1188828379" MODIFIED="1172155429016" TEXT="Message">
+<node COLOR="#006666" CREATED="1172155392099" ID="Freemind_Link_1188828379" MODIFIED="1172155429016" TEXT="Message">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1172155412992" ID="Freemind_Link_147384669" MODIFIED="1172155415420" TEXT="definition">
 <node CREATED="1172155591508" ID="Freemind_Link_91497500" MODIFIED="1172155610543" TEXT="A comment made by a user in a conversation."/>
@@ -1414,7 +1414,7 @@
 <node COLOR="#006666" CREATED="1167959309976" ID="Freemind_Link_876684985" MODIFIED="1171485272330" TEXT="Exchange">
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="12"/>
-<node CREATED="1168379124180" FOLDED="true" ID="Freemind_Link_772625530" MODIFIED="1168379126995" TEXT="definition">
+<node CREATED="1168379124180" ID="Freemind_Link_772625530" MODIFIED="1168379126995" TEXT="definition">
 <node CREATED="1168379190672" ID="Freemind_Link_1043204778" MODIFIED="1171979867752" TEXT="A partial or complete match between a Know and a Need to know determining an exchange of information.">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
@@ -2237,14 +2237,29 @@
 </node>
 <node COLOR="#006666" CREATED="1171472550960" ID="Freemind_Link_666594152" MODIFIED="1171472670109" TEXT="Reference data">
 <edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1171472624729" FOLDED="true" ID="Freemind_Link_130057814" MODIFIED="1171472627443" TEXT="definition">
+<node CREATED="1171472624729" ID="Freemind_Link_130057814" MODIFIED="1171472627443" TEXT="definition">
 <node CREATED="1171566903908" ID="Freemind_Link_896696428" MODIFIED="1172574974640" TEXT="Data used in models but which are not specific to scenario or model or project .">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1171472627885" ID="Freemind_Link_699346798" MODIFIED="1171472630472" TEXT="description"/>
+<node CREATED="1171472627885" ID="Freemind_Link_699346798" MODIFIED="1171472630472" TEXT="description">
+<node CREATED="1168279052872" ID="Freemind_Link_383568231" MODIFIED="1168279057722" TEXT="name [text]"/>
+<node CREATED="1171359793620" ID="Freemind_Link_869272890" MODIFIED="1171359833140" TEXT="reference* [url]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Documentation about this type.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
 <node CREATED="1171472631005" ID="Freemind_Link_690386461" MODIFIED="1171472633653" TEXT="generalizes">
-<node COLOR="#006666" CREATED="1171292476074" FOLDED="true" ID="Freemind_Link_852466726" MODIFIED="1171990333875" TEXT="Template">
+<node COLOR="#006666" CREATED="1171292476074" ID="Freemind_Link_852466726" MODIFIED="1171990333875" TEXT="Template">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -2262,8 +2277,7 @@
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1171292858525" FOLDED="true" ID="Freemind_Link_484989241" MODIFIED="1171292861293" TEXT="description">
-<node CREATED="1171293529259" ID="Freemind_Link_1024606870" MODIFIED="1171293535277" TEXT="name [text]"/>
+<node CREATED="1171292858525" ID="Freemind_Link_484989241" MODIFIED="1171292861293" TEXT="description">
 <node CREATED="1171293406596" ID="Freemind_Link_1811438191" MODIFIED="1171293606432" TEXT="class [text]"/>
 <node CREATED="1171293120666" ID="Freemind_Link_1433453174" MODIFIED="1171293186769" TEXT="standard [text]"/>
 <node CREATED="1171293187890" ID="Freemind_Link_1345076990" MODIFIED="1171990346563" TEXT="content &lt;Model element&gt;"/>
@@ -2271,25 +2285,12 @@
 </node>
 <node COLOR="#006666" CREATED="1171292471797" ID="Freemind_Link_264626802" MODIFIED="1171294908991" TEXT="Type">
 <edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1171292864290" FOLDED="true" ID="Freemind_Link_1474581862" MODIFIED="1171292866740" TEXT="definition">
+<node CREATED="1171292864290" ID="Freemind_Link_1474581862" MODIFIED="1171292866740" TEXT="definition">
 <node CREATED="1171294482315" ID="Freemind_Link_1068299374" MODIFIED="1172043974738" TEXT="A label meant to categorize elements of a scenario.">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1171292867366" FOLDED="true" ID="Freemind_Link_435502494" MODIFIED="1171292870651" TEXT="description">
-<node CREATED="1171294539775" ID="Freemind_Link_1687043277" MODIFIED="1171294833589" TEXT="name [text]">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A type has a unique name within a domain. Soon enough we will need to worry about internationalization (translations).
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
+<node CREATED="1171292867366" ID="Freemind_Link_435502494" MODIFIED="1171292870651" TEXT="description">
 <node CREATED="1171294578049" ID="Freemind_Link_21489630" MODIFIED="1171546559887" TEXT="domain [Domain type]">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2304,29 +2305,16 @@
 </richcontent>
 </node>
 <node CREATED="1171294554171" ID="Freemind_Link_826835128" MODIFIED="1171294576925" TEXT="implies* [@Type]"/>
-<node CREATED="1171359793620" ID="Freemind_Link_869272890" MODIFIED="1171359833140" TEXT="reference* [url]">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Documentation about this type.
-    </p>
-  </body>
-</html>
-</richcontent>
 </node>
-</node>
-<node CREATED="1171534508855" FOLDED="true" ID="Freemind_Link_1915617309" MODIFIED="1171534511554" TEXT="generalizes">
-<node COLOR="#006666" CREATED="1171567853107" FOLDED="true" ID="Freemind_Link_85366081" MODIFIED="1171568412806" TEXT="Scenario element type">
+<node CREATED="1171534508855" ID="Freemind_Link_1915617309" MODIFIED="1171534511554" TEXT="generalizes">
+<node COLOR="#006666" CREATED="1171567853107" ID="Freemind_Link_85366081" MODIFIED="1171568412806" TEXT="Scenario element type">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171567867188" FOLDED="true" ID="Freemind_Link_1975563223" MODIFIED="1171567869470" TEXT="definition">
 <node CREATED="1171567901158" ID="Freemind_Link_414846681" MODIFIED="1171567908338" TEXT="A type of scenario element">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1171567869956" FOLDED="true" ID="Freemind_Link_625811826" MODIFIED="1171567872885" TEXT="description">
+<node CREATED="1171567869956" ID="Freemind_Link_625811826" MODIFIED="1171567872885" TEXT="description">
 <node CREATED="1171297173131" ID="Freemind_Link_650602214" MODIFIED="1171985357047" TEXT="descriptor? &lt;Meta information&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2384,13 +2372,12 @@
 </node>
 </node>
 <node COLOR="#006666" CREATED="1168278633021" ID="Freemind_Link_1059267935" MODIFIED="1168356732236" TEXT="Area">
-<node CREATED="1168373907429" FOLDED="true" ID="Freemind_Link_224571057" MODIFIED="1168373910028" TEXT="definition">
+<node CREATED="1168373907429" ID="Freemind_Link_224571057" MODIFIED="1168373910028" TEXT="definition">
 <node CREATED="1168373921418" ID="Freemind_Link_373502513" MODIFIED="1168374012892" TEXT="A location of some type that may within and next to other locations.">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1168373910473" FOLDED="true" ID="Freemind_Link_1263745839" MODIFIED="1168373913124" TEXT="description">
-<node CREATED="1168279052872" ID="Freemind_Link_383568231" MODIFIED="1168279057722" TEXT="name [text]"/>
+<node CREATED="1168373910473" ID="Freemind_Link_1263745839" MODIFIED="1168373913124" TEXT="description">
 <node CREATED="1168279085585" ID="Freemind_Link_170545952" MODIFIED="1171985204893" TEXT="type* [type]"/>
 <node CREATED="1168279110403" ID="Freemind_Link_391173940" MODIFIED="1168308036663" TEXT="part of* [@Area]"/>
 <node CREATED="1168373970057" ID="Freemind_Link_1288977883" MODIFIED="1168373979546" TEXT="next to* [@Area]"/>
@@ -2399,13 +2386,12 @@
 <node COLOR="#006666" CREATED="1167942348168" ID="Freemind_Link_465728775" MODIFIED="1168356732237" TEXT="Policy">
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="12"/>
-<node CREATED="1168381688676" FOLDED="true" ID="Freemind_Link_738934772" MODIFIED="1168381692732" TEXT="definition">
+<node CREATED="1168381688676" ID="Freemind_Link_738934772" MODIFIED="1168381692732" TEXT="definition">
 <node CREATED="1168381748292" ID="Freemind_Link_456280437" MODIFIED="1172044007971" TEXT="Obligations and prohibitions imposed by an organization on other organization regarding exchanges of information.">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
-<node CREATED="1168381693288" FOLDED="true" ID="Freemind_Link_313651135" MODIFIED="1168381696535" TEXT="description">
-<node CREATED="1167967043639" ID="Freemind_Link_801531945" MODIFIED="1168279022181" TEXT="name [text]"/>
+<node CREATED="1168381693288" ID="Freemind_Link_313651135" MODIFIED="1168381696535" TEXT="description">
 <node CREATED="1167967053676" ID="Freemind_Link_678290175" MODIFIED="1172567446103" TEXT="authority [@Organization]">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2419,7 +2405,7 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1167967066577" FOLDED="true" ID="Freemind_Link_1935931494" MODIFIED="1168310512062" TEXT="forbidden">
+<node CREATED="1167967066577" ID="Freemind_Link_1935931494" MODIFIED="1168310512062" TEXT="forbidden">
 <node CREATED="1168310518258" ID="Freemind_Link_1206379985" MODIFIED="1171985412150" TEXT="exchange* &lt;Exchange template&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2434,7 +2420,7 @@
 </richcontent>
 </node>
 </node>
-<node CREATED="1168310546520" FOLDED="true" ID="Freemind_Link_1542358442" MODIFIED="1168310564416" TEXT="required">
+<node CREATED="1168310546520" ID="Freemind_Link_1542358442" MODIFIED="1168310564416" TEXT="required">
 <node CREATED="1168310566785" ID="Freemind_Link_530818567" MODIFIED="1171985419913" TEXT="exchange* &lt;Exchange template&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
