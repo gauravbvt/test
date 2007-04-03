@@ -4,8 +4,10 @@
 package com.mindalliance.zk.component;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IllegalFormatConversionException;
+import java.util.List;
 
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Listbox;
@@ -55,7 +57,15 @@ public class SettableZkList extends Listbox implements MultipleSelectComponent {
 
 		ConvertingSelectionModel converter = (ConvertingSelectionModel) this.getModel();
 
-		return converter.returnSelection(this.getSelectedItems().toArray());
+		List<Object> selection = new ArrayList<Object>();
+		for (Object obj : this.getSelectedItems()) {
+			if (obj instanceof Listitem) {
+				selection.add(((Listitem)obj).getValue());
+			} else {
+				selection.add(obj);
+			}
+		}
+		return converter.returnSelection(selection.toArray());
 	}
 
 	/* (non-Javadoc)

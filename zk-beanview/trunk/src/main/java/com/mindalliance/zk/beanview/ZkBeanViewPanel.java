@@ -16,7 +16,9 @@ import com.mindalliance.zk.component.ZkError;
  * bean properties to be manipulated by the bean vertically in a grid.  Each property has a label, 
  * an editable field appropriate to the property type, and a column for indicating errors.
  * 
- * <p>In order to 
+ * <p>In order to create an editor for a particular class, simply instantiate a new instance of ZkBeanViewPanel<ClassName>.
+ * The properties that are edited by a particular panel instance can be constrained using the {@link #setSubView(String[], boolean, boolean)}
+ * method. 
  */
 public class ZkBeanViewPanel<V> extends ZkBeanViewPanelBase<V> implements BeanView {
 

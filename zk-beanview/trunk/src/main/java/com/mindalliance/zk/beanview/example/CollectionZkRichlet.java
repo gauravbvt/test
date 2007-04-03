@@ -15,7 +15,9 @@ import org.zkoss.zul.Window;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
 /**
- * @author dfeeney
+ * A BeanView example illustrating the use of a picker bean to choose 
+ * one or more instances of another bean from a filtered list.  The lists are
+ * filtered using PropertyOption annotations on the PeoplePicker bean.
  *
  */
 public class CollectionZkRichlet extends GenericRichlet {

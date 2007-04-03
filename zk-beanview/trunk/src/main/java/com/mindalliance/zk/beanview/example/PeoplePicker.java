@@ -7,8 +7,8 @@ import com.beanview.BeanView;
 import com.beanview.annotation.PropertyOptions;
 
 /**
- * @author $Author$
- * @version $Revision$, $Date$
+ * Illustrates the use of annotations to determine the candidates for inclusion in a Collection bean
+ * property. 
  */
 
 public class PeoplePicker

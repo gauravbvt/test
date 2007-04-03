@@ -9,12 +9,18 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Grid;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
 
 import com.beanview.BeanViewGroup;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
 /**
- * @author dfeeney
+ * An example ZK BeanView panel that illustrates the use of BeanViewGroups for
+ * associating multiple ZkBeanViewPanel's with a single bean instance.  This is 
+ * handy for customizing the layout of a bean editor.  Each ZkBeanViewPanel is constrained
+ * to edit a subset of the properties of the bean to be edited.
  *
  */
 public class ComplexPanel extends Box {
@@ -55,12 +61,25 @@ public class ComplexPanel extends Box {
 		super();
 		setUpBeanViewPanels();
 		initButtons();
-		this.appendChild(addressPanel);
-		this.appendChild(agentIdPanel);
-		this.appendChild(marketInfoPanel);
-		this.appendChild(descriptiveInfoPanel);
-		this.appendChild(offerPendingPanel);
-		this.appendChild(referenceNumberPanel);
+		Grid grid = new Grid();
+		Rows rows = new Rows();
+		Row row = new Row();
+		row.appendChild(addressPanel);
+		row.appendChild(agentIdPanel);
+		rows.appendChild(row);
+		//this.appendChild(addressPanel);
+		//this.appendChild(agentIdPanel);
+		row = new Row();
+		row.appendChild(marketInfoPanel);
+		row.appendChild(descriptiveInfoPanel);
+		rows.appendChild(row);
+		row = new Row();
+		row.appendChild(offerPendingPanel);
+		row.appendChild(referenceNumberPanel);
+		rows.appendChild(row);
+		grid.appendChild(rows);
+		this.appendChild(grid);
+		
 		this.appendChild(updateButton);
 		this.appendChild(togglePersonButton);
 
