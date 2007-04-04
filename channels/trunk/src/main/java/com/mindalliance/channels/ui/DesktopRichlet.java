@@ -26,8 +26,7 @@ import org.zkoss.zul.Tabpanels;
 import org.zkoss.zul.Tabs;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.Treechildren;
-import org.zkoss.zul.Treecol;
-import org.zkoss.zul.Treecols;
+import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -178,7 +177,7 @@ public class DesktopRichlet extends GenericRichlet {
         accordion.setMold( "accordion" );
         accordion.appendChild( tabs );
         accordion.appendChild( tabpanels );
-        accordion.setSelectedIndex( 0 );
+        accordion.setSelectedIndex( 1 );
         return accordion;
     }
 
@@ -212,18 +211,67 @@ public class DesktopRichlet extends GenericRichlet {
         return tabpanel;
     }
 
+    private Treeitem newTreeitem(
+            boolean collapsed, String icon, String label,
+            Treeitem... subs ) {
+
+        Treeitem result = new Treeitem( label );
+        result.setImage( icon );
+
+        if ( subs.length > 0 ) {
+            result.setOpen( !collapsed );
+            Treechildren kids = new Treechildren();
+            for ( Treeitem sub : subs )
+                kids.appendChild( sub );
+            result.appendChild( kids );
+        }
+
+        return result;
+    }
+
     /**
      * Create the scenario tab.
      * @param user the user
      */
     private Tabpanel createScenarioTab( User user ) {
-        Treecols treeColumns = new Treecols();
-        treeColumns.appendChild( new Treecol() );
+
+        final String project  = "images/16x16/environment.png";
+        final String model    = "images/16x16/cube_molecule.png";
+        final String scenario = "images/16x16/branch.png";
+        final String report1  = "images/16x16/document_chart.png";
+        final String report2  = "images/16x16/chart.png";
+        final String report3  = "images/16x16/dot-chart.png";
 
         Treechildren treeChildren = new Treechildren();
+        treeChildren.appendChild(
+            newTreeitem( false, project, "ACME Business Continuity",
+                newTreeitem( false, model, "Headquarters",
+                    newTreeitem( true, scenario, "Blackout",
+                        newTreeitem( false, report1, "Playbook" ),
+                        newTreeitem( false, report1, "Issues Analysis" ),
+                        newTreeitem( false, report2, "Dashboard" ),
+                        newTreeitem( false, report3, "Info Flow" ) ),
+                    newTreeitem( false, scenario, "Building Fire",
+                        newTreeitem( false, report1, "Playbook" ),
+                        newTreeitem( false, report1, "Issues Analysis" ),
+                        newTreeitem( false, report2, "Dashboard" ),
+                        newTreeitem( false, report3, "Info Flow" ) ),
+                    newTreeitem( true, scenario, "Firewall Breach",
+                        newTreeitem( false, report1, "Playbook" ),
+                        newTreeitem( false, report1, "Issues Analysis" ),
+                        newTreeitem( false, report2, "Dashboard" ),
+                        newTreeitem( false, report3, "Info Flow" ) ) ),
+                newTreeitem( true, model, "Supply Chain",
+                    newTreeitem( false, scenario, "Some scenario" ) )
+            ) );
+        treeChildren.appendChild(
+            newTreeitem( true, project, "CDC Avian Flu Preparedness",
+                newTreeitem( false, model, "Some model" ) ) );
+        treeChildren.appendChild(
+            newTreeitem( true, project, "International Markets",
+                newTreeitem( false, model, "Some other model" ) ) );
 
         Tree tree = new Tree();
-        tree.appendChild( treeColumns );
         tree.appendChild( treeChildren );
 
         Tabpanel tabpanel = new Tabpanel();
@@ -350,7 +398,6 @@ public class DesktopRichlet extends GenericRichlet {
     private Splitter newSplitter( boolean before ) {
         Splitter splitter = new Splitter();
         splitter.setCollapse( "none" );
-        splitter.setWidth( "1px" );
         return splitter;
     }
 }
