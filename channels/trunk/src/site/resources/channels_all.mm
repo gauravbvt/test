@@ -1154,10 +1154,10 @@
 </node>
 </node>
 </node>
-<node COLOR="#006633" CREATED="1172139812097" ID="Freemind_Link_934936378" MODIFIED="1172139824498" POSITION="right" TEXT="Data">
+<node COLOR="#006633" CREATED="1172139812097" ID="Freemind_Link_934936378" MODIFIED="1175695137575" POSITION="right" TEXT="Data Model">
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="20"/>
-<node COLOR="#006633" CREATED="1167942138415" HGAP="43" ID="Freemind_Link_1629394418" MODIFIED="1172139832708" TEXT="Data model" VSHIFT="17">
+<node COLOR="#006633" CREATED="1167942138415" HGAP="43" ID="Freemind_Link_1629394418" MODIFIED="1175695128604" TEXT="Element" VSHIFT="17">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1200,7 +1200,7 @@
 </richcontent>
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="17"/>
-<node COLOR="#006666" CREATED="1172226793468" ID="Freemind_Link_482006" MODIFIED="1172226804328" TEXT="Project data">
+<node COLOR="#006666" CREATED="1172226793468" ID="Freemind_Link_482006" MODIFIED="1175695105620" TEXT="Project element">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1172226807117" ID="Freemind_Link_1203749570" MODIFIED="1172226810391" TEXT="definition">
 <node CREATED="1172233076585" ID="Freemind_Link_1485993212" MODIFIED="1172233088742" TEXT="Data that is specific to a project.">
@@ -2235,7 +2235,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171472550960" ID="Freemind_Link_666594152" MODIFIED="1171472670109" TEXT="Reference data">
+<node COLOR="#006666" CREATED="1171472550960" ID="Freemind_Link_666594152" MODIFIED="1175695158970" TEXT="Reference element">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171472624729" ID="Freemind_Link_130057814" MODIFIED="1171472627443" TEXT="definition">
 <node CREATED="1171566903908" ID="Freemind_Link_896696428" MODIFIED="1172574974640" TEXT="Data used in models but which are not specific to scenario or model or project .">
@@ -2281,16 +2281,6 @@
 </richcontent>
 </node>
 <node CREATED="1171294554171" ID="Freemind_Link_826835128" MODIFIED="1171294576925" TEXT="implies* [@Type]"/>
-</node>
-<node CREATED="1171534508855" ID="Freemind_Link_1915617309" MODIFIED="1171534511554" TEXT="generalizes">
-<node COLOR="#006666" CREATED="1171567853107" ID="Freemind_Link_85366081" MODIFIED="1171568412806" TEXT="Scenario element type">
-<edge COLOR="#808080" WIDTH="thin"/>
-<node CREATED="1171567867188" ID="Freemind_Link_1975563223" MODIFIED="1171567869470" TEXT="definition">
-<node CREATED="1171567901158" ID="Freemind_Link_414846681" MODIFIED="1171567908338" TEXT="A type of scenario element">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-</node>
-<node CREATED="1171567869956" ID="Freemind_Link_625811826" MODIFIED="1171567872885" TEXT="description">
 <node CREATED="1171297173131" ID="Freemind_Link_650602214" MODIFIED="1171985357047" TEXT="descriptor? &lt;Meta information&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2317,20 +2307,31 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1173902994063" ID="Freemind_Link_1602784243" MODIFIED="1173903370198" TEXT="suffers from [@Issue type]">
+<node CREATED="1173902994063" ID="Freemind_Link_1602784243" MODIFIED="1175695851933" TEXT="suffers from [@Issue type]">
 <richcontent TYPE="NOTE"><html>
   <head>
     
   </head>
   <body>
     <p>
-      If empty, then scenario elements of this type do not type-specific issues.
+      If empty, then scenario elements of this type do not have type-specific issues.
     </p>
   </body>
 </html>
 </richcontent>
 </node>
-</node>
+<node CREATED="1175695813433" ID="Freemind_Link_1431967524" MODIFIED="1175695868255" TEXT="subject to [@Policy type]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      If empty, then scenario elements of this type are not subject to type-specific policies.
+    </p>
+  </body>
+</html>
+</richcontent>
 </node>
 </node>
 </node>
@@ -2350,11 +2351,12 @@
 <edge COLOR="#808080" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="12"/>
 <node CREATED="1168381688676" ID="Freemind_Link_738934772" MODIFIED="1168381692732" TEXT="definition">
-<node CREATED="1168381748292" ID="Freemind_Link_456280437" MODIFIED="1172044007971" TEXT="Obligations and prohibitions imposed by an organization on other organization regarding exchanges of information.">
+<node CREATED="1168381748292" ID="Freemind_Link_456280437" MODIFIED="1175696951532" TEXT="Obligations and prohibitions imposed through regulation by an organization on other organization regarding their behaviors.">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
 <node CREATED="1168381693288" ID="Freemind_Link_313651135" MODIFIED="1168381696535" TEXT="description">
+<node CREATED="1175695285793" ID="Freemind_Link_111366318" MODIFIED="1175695299959" TEXT="type* [@Type]"/>
 <node CREATED="1167967053676" ID="Freemind_Link_678290175" MODIFIED="1172567446103" TEXT="authority [@Organization]">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -2369,7 +2371,7 @@
 </richcontent>
 </node>
 <node CREATED="1167967066577" ID="Freemind_Link_1935931494" MODIFIED="1175630642403" TEXT="forbidden*">
-<node CREATED="1168310518258" ID="Freemind_Link_1206379985" MODIFIED="1175630704474" TEXT="exchange &lt;Exchange pattern&gt;">
+<node CREATED="1168310518258" ID="Freemind_Link_1206379985" MODIFIED="1175695067483" TEXT="element &lt;Element pattern&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -2382,10 +2384,50 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1175630667335" ID="Freemind_Link_812961109" MODIFIED="1175630680025" TEXT="per [text]"/>
+<node CREATED="1175630667335" ID="Freemind_Link_812961109" MODIFIED="1175696994833" TEXT="per [text]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The name of the section, paragraph segment etc. of the policy that applies.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node CREATED="1175706214235" ID="Freemind_Link_1868419060" MODIFIED="1175706219885" TEXT="not forbidden">
+<node CREATED="1168310518258" ID="Freemind_Link_1850059144" MODIFIED="1175706270779" TEXT="element &lt;Element pattern&gt;">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The pattern matches Exchanges that are exception to the list of forbidden.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node CREATED="1175630667335" ID="Freemind_Link_434982013" MODIFIED="1175696994833" TEXT="per [text]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The name of the section, paragraph segment etc. of the policy that applies.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 </node>
 <node CREATED="1168310546520" ID="Freemind_Link_1542358442" MODIFIED="1175630721732" TEXT="obligated*">
-<node CREATED="1168310566785" ID="Freemind_Link_530818567" MODIFIED="1175630730990" TEXT="exchange &lt;Exchange pattern&gt;">
+<node CREATED="1168310566785" ID="Freemind_Link_530818567" MODIFIED="1175695074004" TEXT="element &lt;Element pattern&gt;">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -2398,13 +2440,53 @@
 </html>
 </richcontent>
 </node>
-<node CREATED="1175630682347" ID="Freemind_Link_194527324" MODIFIED="1175630686402" TEXT="per [text]"/>
+<node CREATED="1175630667335" ID="Freemind_Link_1272557373" MODIFIED="1175697002776" TEXT="per [text]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The name of the section, paragraph segment etc. of the policy that applies.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node CREATED="1175706225940" ID="Freemind_Link_761237616" MODIFIED="1175706231437" TEXT="not obligated">
+<node CREATED="1168310518258" ID="Freemind_Link_1211217081" MODIFIED="1175706280541" TEXT="element &lt;Element pattern&gt;">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The pattern matches Exchanges that are exception to the list of obligated.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node CREATED="1175630667335" ID="Freemind_Link_1301225652" MODIFIED="1175696994833" TEXT="per [text]">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The name of the section, paragraph segment etc. of the policy that applies.
+    </p>
+  </body>
+</html>
+</richcontent>
 </node>
 </node>
 </node>
 </node>
 </node>
-<node COLOR="#006666" CREATED="1171472597347" ID="Freemind_Link_690789715" MODIFIED="1171472671757" TEXT="System data">
+</node>
+<node COLOR="#006666" CREATED="1171472597347" ID="Freemind_Link_690789715" MODIFIED="1175695165642" TEXT="System element">
 <edge COLOR="#808080" WIDTH="thin"/>
 <node CREATED="1171472639050" FOLDED="true" ID="Freemind_Link_788241394" MODIFIED="1171472641777" TEXT="definition">
 <node CREATED="1171566876750" ID="Freemind_Link_955661649" MODIFIED="1172226950404" TEXT="System-level data, i.e. not always specific to a project.">
