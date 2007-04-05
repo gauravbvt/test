@@ -1,3 +1,6 @@
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.command;
 
 import java.beans.PropertyChangeEvent;
