@@ -9,7 +9,7 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  * @author brian
  *
  */
-abstract public class AbstractCommand extends AbstractJavaBean implements Command, CommandListener {
+abstract public class AbstractCommand extends AbstractJavaBean implements Command {
 	private String name;
 	private String displayName;
 	private boolean enabled = true;
