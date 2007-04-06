@@ -29,7 +29,7 @@
 			<id>mindalliance</id>
 			<name>Mind-Alliance Systems Repository</name>
 			<url>
-				scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/${project.artifactId}
+				scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/
 			</url>
 			<layout>legacy</layout>
 		</repository>
