@@ -184,7 +184,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.4</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.zkoss.zkforge</groupId>
@@ -196,7 +196,7 @@
     <repository>
       <id>mindalliance</id>
       <name>Mind-Alliance Systems Repository</name>
-      <url>scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/${project.artifactId}</url>
+      <url>scp://ranger.homelinux.net/var/www/localhost/htdocs/maven/</url>
       <layout>legacy</layout>
     </repository>
     <site>
