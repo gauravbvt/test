@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.mindalliance.channels.JavaBean;
+import com.mindalliance.channels.Model;
 import com.mindalliance.channels.Project;
 import com.mindalliance.channels.project.AbstractProjectObject;
 import com.mindalliance.channels.reference.Policy;
@@ -30,7 +32,8 @@ import com.mindalliance.channels.system.Role;
  * @composed - - * Environment
  * @composed - - * Scenario
  */
-public class ModelImpl extends AbstractProjectObject {
+public class ModelImpl extends AbstractProjectObject
+        implements Model {
 
     private String name;
     private List<String> objectives = new ArrayList<String>();
@@ -174,5 +177,12 @@ public class ModelImpl extends AbstractProjectObject {
      */
     public void setScenarios( Set<Scenario> scenarios ) {
         this.scenarios = scenarios;
+    }
+
+    /**
+     * Return components that should be asserted by the rule engine.
+     */
+    public Set<JavaBean> getAssertableObjects() {
+        return null;
     }
 }

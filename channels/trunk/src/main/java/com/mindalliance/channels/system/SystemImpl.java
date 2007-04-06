@@ -16,7 +16,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.acegisecurity.Authentication;
 import org.acegisecurity.annotation.Secured;
+import org.acegisecurity.context.SecurityContext;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
@@ -111,16 +114,24 @@ public class SystemImpl extends AbstractJavaBean
 
     /**
      * Return the value of projects.
+     * <b>Note:</b> This is filtered by the current user's permissions.
      */
     @Secured( { "ROLE_USER" } )
     public Set<Project> getProjects() {
-        return Collections.unmodifiableSortedSet(
-                new TreeSet<Project>( this.projects.values() ) );
+        User user = null ;
+        SecurityContext context = SecurityContextHolder.getContext();
+        if ( context != null ) {
+            Authentication authentication = context.getAuthentication();
+            if ( authentication != null )
+                user = (User) authentication.getPrincipal();
+        }
+
+        return getProjects( user );
     }
 
     /**
      * Get the projects for which a given user is participating.
-     * @param user the given user
+     * @param user the given user. If null, no projects are returned.
      * @return the appropriate projects
      */
     @Secured( { "ROLE_USER" } )

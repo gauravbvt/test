@@ -40,7 +40,7 @@
 	<bean id="admin" class="com.mindalliance.channels.system.UserImpl">
 		<property name="username" value="admin"/>
 		<property name="password" value="admin"/>
-		<property name="grantedAuthorities"><value>ROLE_USER, ROLE_ADMIN</value></property>
+		<property name="grantedAuthorities"><value>ROLE_USER,ROLE_ADMIN</value></property>
 		<property name="name" value="Administrator"/>
 		<property name="email" value="admin@example.com"/>
 	</bean>
@@ -63,14 +63,96 @@
 		<property name="administrators"><set>
 			<ref bean="admin"/>
 		</set></property>
+		
+<!-- 
+//        treeChildren.appendChild(
+//            newTreeitem( false, project, "ACME Business Continuity",
+//                newTreeitem( false, model, "Headquarters",
+//                    newTreeitem( true, scenario, "Blackout",
+//                        newTreeitem( false, report1, "Playbook" ),
+//                        newTreeitem( false, report1, "Issues Analysis" ),
+//                        newTreeitem( false, report2, "Dashboard" ),
+//                        newTreeitem( false, report3, "Info Flow" ) ),
+//                    newTreeitem( false, scenario, "Building Fire",
+//                        newTreeitem( false, report1, "Playbook" ),
+//                        newTreeitem( false, report1, "Issues Analysis" ),
+//                        newTreeitem( false, report2, "Dashboard" ),
+//                        newTreeitem( false, report3, "Info Flow" ) ),
+//                    newTreeitem( true, scenario, "Firewall Breach",
+//                        newTreeitem( false, report1, "Playbook" ),
+//                        newTreeitem( false, report1, "Issues Analysis" ),
+//                        newTreeitem( false, report2, "Dashboard" ),
+//                        newTreeitem( false, report3, "Info Flow" ) ) ),
+//                newTreeitem( true, model, "Supply Chain",
+//                    newTreeitem( false, scenario, "Some scenario" ) )
+//            ) );
+//        treeChildren.appendChild(
+//            newTreeitem( true, project, "CDC Avian Flu Preparedness",
+//                newTreeitem( false, model, "Some model" ) ) );
+//        treeChildren.appendChild(
+//            newTreeitem( true, project, "International Markets",
+//                newTreeitem( false, model, "Some other model" ) ) );
+-->
 		<property name="projects"><set>
 			<bean class="com.mindalliance.channels.project.ProjectImpl">
-				<property name="name" value="Test Project"/>
+				<property name="name" value="ACME Business Continuity"/>
 				<property name="participants"><set>
 					<ref bean="user"/>
 					</set></property>
 				<property name="managers"><set>
 					<ref bean="manager"/>
+					</set></property>
+				<property name="models"><set value-type="com.mindalliance.channels.Model">
+					<bean class="com.mindalliance.channels.model.ModelImpl">
+						<property name="name" value="Headquarters"/>
+						<property name="scenarios"><set>
+							<bean class="com.mindalliance.channels.model.Scenario">
+								<property name="name" value="Blackout"/>
+							</bean>
+							<bean class="com.mindalliance.channels.model.Scenario">
+								<property name="name" value="Building Fire"/>
+							</bean>
+							<bean class="com.mindalliance.channels.model.Scenario">
+								<property name="name" value="Firewall Breach"/>
+							</bean>
+							</set></property>
+					</bean>
+					<bean class="com.mindalliance.channels.model.ModelImpl">
+						<property name="name" value="Supply Chain"/>
+						<property name="scenarios"><set>
+							<bean class="com.mindalliance.channels.model.Scenario">
+								<property name="name" value="Some scenario"/>
+							</bean>
+							</set></property>
+					</bean>
+					</set></property>
+			</bean>
+			<bean class="com.mindalliance.channels.project.ProjectImpl">
+				<property name="name" value="CDC Avian Flu Preparedness"/>
+				<property name="participants"><set>
+					<ref bean="user"/>
+					</set></property>
+				<property name="managers"><set>
+					<ref bean="manager"/>
+					</set></property>
+				<property name="models"><set>
+					<bean class="com.mindalliance.channels.model.ModelImpl">
+						<property name="name" value="Some model"/>
+					</bean>
+					</set></property>
+			</bean>
+			<bean class="com.mindalliance.channels.project.ProjectImpl">
+				<property name="name" value="International Markets"/>
+				<property name="participants"><set>
+					<ref bean="user"/>
+					</set></property>
+				<property name="managers"><set>
+					<ref bean="manager"/>
+					</set></property>
+				<property name="models"><set>
+					<bean class="com.mindalliance.channels.model.ModelImpl">
+						<property name="name" value="Some other model"/>
+					</bean>
 					</set></property>
 			</bean>
 		</set></property>

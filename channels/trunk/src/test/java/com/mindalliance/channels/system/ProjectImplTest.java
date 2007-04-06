@@ -118,7 +118,7 @@ public class ProjectImplTest {
         models.add( model2 );
         
         project.setModels( models );
-        assertSame( models, project.getModels() );
+        assertEquals( models, project.getModels() );
         
         assertEquals( 1, listener.getPropCount() );
         assertEquals( "models", listener.getLastProp().getPropertyName() );

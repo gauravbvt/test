@@ -3,9 +3,14 @@
 
 package com.mindalliance.channels.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
+import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.context.ApplicationContext;
 import org.zkoss.zhtml.Text;
@@ -13,11 +18,12 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Html;
-import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Splitter;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
@@ -28,10 +34,13 @@ import org.zkoss.zul.Tree;
 import org.zkoss.zul.Treechildren;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.Vbox;
-import org.zkoss.zul.Window;
 
+import com.mindalliance.channels.Model;
+import com.mindalliance.channels.Project;
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.model.ModelImpl;
+import com.mindalliance.channels.model.Scenario;
 
 /**
  * The user desktop.
@@ -46,6 +55,14 @@ public class DesktopRichlet extends GenericRichlet {
      */
     public DesktopRichlet() {
         super();
+    }
+
+    /**
+     * Get the current logged in user.
+     */
+    private User getUser() {
+        return (User) SecurityContextHolder.getContext().
+                            getAuthentication().getPrincipal();
     }
 
     /**
@@ -69,108 +86,158 @@ public class DesktopRichlet extends GenericRichlet {
      * @param page the page
      */
     public void service( final Page page ) {
-        final User user = (User) SecurityContextHolder.getContext().
-                            getAuthentication().getPrincipal();
+        final User user = getUser();
         final System system = getSystem( page );
 
         page.setTitle( "Channels" );
+
+        Component canvas = createCanvas( user );
 
         Hbox split = new Hbox();
         split.setSclass( "channels_main" );
         split.setWidth( "100%" );
         split.setHeight( "400px" );
         split.setWidths( "20%,80%" );
-        split.appendChild( createAccordion( user, system ) );
+        split.appendChild( createAccordion( user, system, canvas ) );
         split.appendChild( newSplitter( true ) );
-        split.appendChild( createCanvas( user ) );
+        split.appendChild( canvas );
 
         Vbox window = new Vbox();
         window.setWidth( "100%" );
         window.setValign( "top" );
-        window.appendChild( createToolbar( user ) );
+        window.appendChild( new Toolbar( user, system ) );
         window.setSpacing( "0px" );
         window.appendChild( split );
-        window.appendChild( createAlertPane( user, page ) );
+        window.appendChild( new AlertPane( user, system ) );
         window.appendChild( createMinimizeBar( user ) );
 
         window.setPage( page );
     }
 
     /**
-     * Create a new toolbar for a given user.
-     * @param the user
-     */
-    private Component createToolbar( User user ) {
-        Hbox toolbar = new Hbox();
-        toolbar.setSclass( "channels_toolbar" );
-        toolbar.setHeight( "60px" );
-        toolbar.setWidth( "100%" );
-        toolbar.setValign( "middle" );
-
-        toolbar.appendChild(
-            new Html( "<a class=\"logo\" href=\"profile.jsp\">"
-                + user.getName() + "</a>" ) );
-
-        toolbar.appendChild(
-            new Text( " Acting as " ) );
-
-        Listbox roles = new Listbox();
-        roles.setWidth( null );
-        for ( String role : new String[]{
-            "Employee", "Fire Warden", "Group Manager" } )
-                roles.appendItem( role, role );
-        toolbar.appendChild( roles );
-
-        Html html = new Html( "<a href=\"logout.jsp\">Logout</a>" );
-        toolbar.appendChild( html );
-
-        Hbox iconbar = new Hbox();
-        iconbar.setSpacing( "0px" );
-
-        String[][] icons = new String[][]{
-            { "Cut", "/images/16x16/cut.png" },
-            { "Copy", "/images/16x16/copy.png" },
-            { "Paste", "/images/16x16/paste.png" },
-            { "Undo", "/images/16x16/undo.png" },
-            { "Redo", "/images/16x16/redo.png" },
-            { "Agree", "/images/16x16/nav_up_green.png" },
-            { "Disagree", "/images/16x16/nav_down_red.png" },
-            { "Chat", "/images/16x16/messages.png" },
-            { "Search", "/images/16x16/find.png" },
-            { "Todos", "/images/16x16/note_pinned.png" },
-            { "Help", "/images/16x16/help.png" },
-        };
-        for ( String[] spec : icons ) {
-            Button button = new Button( spec[0], spec[1] );
-            button.setOrient( "vertical" );
-            iconbar.appendChild( button );
-        }
-
-        toolbar.appendChild( iconbar );
-        return toolbar;
-    }
-
-    /**
      * Create the accordion pane.
      * @param user the current user
      * @param system the system
+     * @param canvas the canvas to control
      */
-    private Component createAccordion( User user, System system ) {
-        Tabs tabs = new Tabs();
-        tabs.appendChild(
-            new Tab( "People & Places", "images/16x16/user_building.png" ) );
-        tabs.appendChild(
-            new Tab( "Scenarios", "images/16x16/branch_element.png" ) );
-        tabs.appendChild(
-            new Tab( "Library", "images/16x16/books.png" ) );
-        tabs.appendChild(
-            new Tab( "Settings", "images/16x16/preferences.png" ) );
+    private Component createAccordion(
+            User user, System system, Component canvas ) {
 
+        AccordionTab[] tabDefs = new AccordionTab[] {
+            new AccordionTab(
+                "images/16x16/user_building.png",
+                "People & Places",
+                "Phonebook and locators",
+                new SelectionTab( user, canvas,
+                    new Selection(
+                        "images/24x24/id_card.png",
+                        "My profile",
+                        "Your profile",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/users-phone.png",
+                        "My contacts",
+                        "Your social network",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/orgs.png",
+                        "Organizations",
+                        "All organizational profiles",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/systems.png",
+                        "Systems & resources",
+                        "Profiles of systems and information resources",
+                        "ROLE_USER",
+                        null, null )
+                ) ),
+
+            new AccordionTab(
+                "images/16x16/branch_element.png",
+                "Scenarios",
+                "Projects, Models and Scenarios",
+                createScenarioTab( canvas, user, system ) ),
+
+            new AccordionTab(
+                "images/16x16/books.png",
+                "Library",
+                "Reference section",
+                new SelectionTab( user, canvas,
+                    new Selection(
+                        "images/24x24/book_open2.png",
+                        "Dictionary",
+                        "Typologies",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/branch_element.png",
+                        "Common scenarios",
+                        "Parameterized scenarios",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/scroll.png",
+                        "Policies",
+                        "Policies that impact information sharing",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/earth_find.png",
+                        "Gazetteer",
+                        "Location, location, location...",
+                        "ROLE_USER",
+                        null, null )
+                ) ),
+
+            new AccordionTab(
+                "images/16x16/preferences.png",
+                "Settings",
+                "Projects, Models and Scenarios",
+                new SelectionTab( user, canvas,
+                    new Selection(
+                        "images/24x24/user1_preferences.png",
+                        "My preferences",
+                        "Your personal settings",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/step.png",
+                        "Activity log",
+                        "What's going on on this server",
+                        "ROLE_USER",
+                        null, null ),
+                    new Selection(
+                        "images/24x24/users3_preferences.png",
+                        "Users management",
+                        "Keep track of users",
+                        "ROLE_ADMIN",
+                        null, null  ),
+                    new Selection(
+                        "images/24x24/server_preferences.png",
+                        "System configuration",
+                        "Administer channels",
+                        "ROLE_ADMIN",
+                        null, null  ),
+                    new Selection(
+                        "images/24x24/oszillograph.png",
+                        "System monitoring",
+                        "Keep an eye on things",
+                        "ROLE_ADMIN",
+                        null, null  )
+                ) ),
+        };
+
+        Tabs tabs = new Tabs();
         Tabpanels tabpanels = new Tabpanels();
-        tabpanels.appendChild( createPeopleTab( user ) );
-        tabpanels.appendChild( createScenarioTab( user ) );
-        tabpanels.appendChild( createLibraryTab( user ) );
-        tabpanels.appendChild( createSettingsTab( user, system ) );
+        for ( AccordionTab def : tabDefs ) {
+            Tab tab = new Tab( def.getLabel(), def.getIcon() );
+            tab.setTooltip( def.getTooltip() );
+            tabs.appendChild( tab );
+            tabpanels.appendChild( def.getContent() );
+        }
 
         Tabbox accordion = new Tabbox();
         accordion.setWidth( "100%" );
@@ -181,98 +248,49 @@ public class DesktopRichlet extends GenericRichlet {
         return accordion;
     }
 
-    /**
-     * Create the people tab.
-     * @param user the user
-     */
-    private Tabpanel createPeopleTab( User user ) {
-        String[][] buttons = new String[][] {
-            { "My profile",  "images/24x24/id_card.png",
-                "Your profile" },
-            { "My contacts", "images/24x24/users-phone.png",
-                "Your social network" },
-            { "People", "images/24x24/village-people.png",
-                "All people profiles" },
-            { "Organizations", "images/24x24/orgs.png",
-                "All organizational profiles" },
-            { "Systems & resources", "images/24x24/systems.png",
-                "Profiles of systems and information resources" },
-        };
+    private Treeitem newTreeitem( Selection selection, Treechildren kids ) {
 
-        Vbox vbox = new Vbox();
-        for ( String[] def : buttons ) {
-            Button button = new Button( def[0], def[1] );
-            button.setTooltiptext( def[2] );
-            vbox.appendChild( button );
-        }
+        Treeitem result = new Treeitem( selection.getLabel() );
+        result.setImage( selection.getIcon() );
+        result.setTooltip( selection.getTooltip() );
+        result.setOpen( false );
+        result.setValue( selection );
 
-        Tabpanel tabpanel = new Tabpanel();
-        tabpanel.appendChild( vbox );
-        return tabpanel;
-    }
-
-    private Treeitem newTreeitem(
-            boolean collapsed, String icon, String label,
-            Treeitem... subs ) {
-
-        Treeitem result = new Treeitem( label );
-        result.setImage( icon );
-
-        if ( subs.length > 0 ) {
-            result.setOpen( !collapsed );
-            Treechildren kids = new Treechildren();
-            for ( Treeitem sub : subs )
-                kids.appendChild( sub );
+        if ( kids != null )
             result.appendChild( kids );
-        }
 
         return result;
     }
 
     /**
      * Create the scenario tab.
+     * @param canvas the canvas to tie to selections
      * @param user the user
+     * @param system the system
      */
-    private Tabpanel createScenarioTab( User user ) {
-
-        final String project  = "images/16x16/environment.png";
-        final String model    = "images/16x16/cube_molecule.png";
-        final String scenario = "images/16x16/branch.png";
-        final String report1  = "images/16x16/document_chart.png";
-        final String report2  = "images/16x16/chart.png";
-        final String report3  = "images/16x16/dot-chart.png";
+    private Tabpanel createScenarioTab(
+            Component canvas, User user, System system ) {
 
         Treechildren treeChildren = new Treechildren();
-        treeChildren.appendChild(
-            newTreeitem( false, project, "ACME Business Continuity",
-                newTreeitem( false, model, "Headquarters",
-                    newTreeitem( true, scenario, "Blackout",
-                        newTreeitem( false, report1, "Playbook" ),
-                        newTreeitem( false, report1, "Issues Analysis" ),
-                        newTreeitem( false, report2, "Dashboard" ),
-                        newTreeitem( false, report3, "Info Flow" ) ),
-                    newTreeitem( false, scenario, "Building Fire",
-                        newTreeitem( false, report1, "Playbook" ),
-                        newTreeitem( false, report1, "Issues Analysis" ),
-                        newTreeitem( false, report2, "Dashboard" ),
-                        newTreeitem( false, report3, "Info Flow" ) ),
-                    newTreeitem( true, scenario, "Firewall Breach",
-                        newTreeitem( false, report1, "Playbook" ),
-                        newTreeitem( false, report1, "Issues Analysis" ),
-                        newTreeitem( false, report2, "Dashboard" ),
-                        newTreeitem( false, report3, "Info Flow" ) ) ),
-                newTreeitem( true, model, "Supply Chain",
-                    newTreeitem( false, scenario, "Some scenario" ) )
-            ) );
-        treeChildren.appendChild(
-            newTreeitem( true, project, "CDC Avian Flu Preparedness",
-                newTreeitem( false, model, "Some model" ) ) );
-        treeChildren.appendChild(
-            newTreeitem( true, project, "International Markets",
-                newTreeitem( false, model, "Some other model" ) ) );
+        for ( Project p : system.getProjects() )
+            treeChildren.appendChild(
+                    createProjectNode( canvas, p, user, system ) );
 
         Tree tree = new Tree();
         tree.appendChild( treeChildren );
+        tree.addEventListener( "onSelect", new EventListener() {
+            public boolean isAsap() {
+                return true;
+            }
+
+            public void onEvent( Event event ) {
+                SelectEvent e = (SelectEvent) event;
+                Treeitem i = (Treeitem) e.getSelectedItems().iterator().next();
+                Selection s = (Selection) i.getValue();
+                if ( s != null )
+                    s.select();
+            }
+        } );
 
         Tabpanel tabpanel = new Tabpanel();
         tabpanel.appendChild( tree );
@@ -280,101 +298,132 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
-     * Create the library tab.
-     * @param user the user
+     * Create a project node in the tree.
+     *
+     * @param canvas the canvas to associate with
+     * @param project the project
+     * @param user the current user
+     * @param system the system
+     * @return a tree node, collapsed
      */
-    private Tabpanel createLibraryTab( User user ) {
-        String[][] buttons = new String[][] {
-            { "Dictionary",  "images/24x24/book_open2.png",
-                "Typologies" },
-            { "Common scenarios", "images/24x24/branch_element.png",
-                "Parameterized scenarios" },
-            { "Policies", "images/24x24/scroll.png",
-                "Policies that impact information sharing" },
-            { "Gazetteer", "images/24x24/earth_find.png",
-                "Location" },
-        };
+    private Treeitem createProjectNode(
+            Component canvas, Project project, User user, System system ) {
 
-        Vbox vbox = new Vbox();
-        for ( String[] def : buttons ) {
-            Button button = new Button( def[0], def[1] );
-            button.setTooltiptext( def[2] );
-            vbox.appendChild( button );
-        }
+        Treechildren models = new Treechildren();
+        for ( Model m : project.getModels() )
+            models.appendChild( createModelNode( canvas, m, user, system ) );
 
-        Tabpanel tabpanel = new Tabpanel();
-        tabpanel.appendChild( vbox );
-        return tabpanel;
+        return newTreeitem(
+            new Selection(
+                "images/16x16/environment.png",
+                project.getName(),
+                "Project properties",
+                "ROLE_USER",
+                null,
+                canvas ),
+            models );
     }
 
     /**
-     * Create the settings tab.
-     * @param user the user
+     * Create a model node in the tree.
+     *
+     * @param canvas the canvas to associate with
+     * @param model the model
+     * @param user the current user
+     * @param system the system
+     * @return a tree node, collapsed
+     */
+    private Treeitem createModelNode(
+            Component canvas, Model model, User user, System system ) {
+
+        Treechildren scenarios = new Treechildren();
+        for ( Scenario s : ( (ModelImpl) model ).getScenarios() )
+            scenarios.appendChild(
+                    createScenarioNode( canvas, s, user, system ) );
+
+        return newTreeitem(
+            new Selection(
+                "images/16x16/cube_molecule.png",
+                model.getName(),
+                "Model properties",
+                "ROLE_USER",
+                null,
+                canvas ),
+            scenarios );
+    }
+
+    /**
+     * Create a scenario node.
+     *
+     * @param canvas the associated canvas
+     * @param scenario the scenario
+     * @param user the current user
      * @param system the system
      */
-    private Tabpanel createSettingsTab( User user, System system ) {
-        String[][] userButtons = new String[][] {
-            { "My preferences",  "images/24x24/user1_preferences.png",
-                "Your personal settings" },
-            { "Activity log", "images/24x24/step.png",
-                "What's going on on this server" },
-            { "Users management", "images/24x24/users3_preferences.png",
-                "Keep track of users" },
-        };
+    private Treeitem createScenarioNode(
+            Component canvas, Scenario scenario, User user, System system ) {
 
-        String[][] adminButtons = new String[][] {
-            { "Users management", "images/24x24/users3_preferences.png",
-                "Keep track of users" },
-            { "System configuration", "images/24x24/server_preferences.png",
-                "Administer channels" },
-            { "System monitoring", "images/24x24/oszillograph.png",
-                "Keep an eye on things" },
-        };
+        Treechildren reports = new Treechildren();
+        reports.appendChild( newTreeitem(
+            new Selection(
+                    "images/16x16/document_chart.png",
+                    "Playbook",
+                    "View playbook",
+                    "ROLE_USER",
+                    null,
+                    canvas ),
+            null ) );
 
-        Vbox vbox = new Vbox();
-        for ( String[] def : userButtons ) {
-            Button button = new Button( def[0], def[1] );
-            button.setTooltiptext( def[2] );
-            vbox.appendChild( button );
-        }
+        reports.appendChild( newTreeitem(
+            new Selection(
+                    "images/16x16/document_chart.png",
+                    "Issues Analysis",
+                    "View issues",
+                    "ROLE_USER",
+                    null,
+                    canvas ),
+            null ) );
 
-        if ( system.isAdministrator( user ) )
-            for ( String[] def : adminButtons ) {
-                Button button = new Button( def[0], def[1] );
-                button.setTooltiptext( def[2] );
-                vbox.appendChild( button );
-            }
+        reports.appendChild( newTreeitem(
+            new Selection(
+                    "images/16x16/chart.png",
+                    "Dashboard",
+                    "View dashboard",
+                    "ROLE_USER",
+                    null,
+                    canvas ),
+            null ) );
 
-        Tabpanel tabpanel = new Tabpanel();
-        tabpanel.appendChild( vbox );
-        return tabpanel;
+        reports.appendChild( newTreeitem(
+            new Selection(
+                    "images/16x16/dot-chart.png",
+                    "Info Flow",
+                    "View information flows",
+                    "ROLE_USER",
+                    null,
+                    canvas ),
+            null ) );
+
+        return newTreeitem(
+                new Selection(
+                    "images/16x16/branch.png",
+                    scenario.getName(),
+                    "Scenario viewer",
+                    "ROLE_USER",
+                    new ScenarioViewer( system, scenario, user ),
+                    canvas ),
+                reports );
     }
 
     /**
      * Create the main canvas for a given user.
+     * This component gets filled by the current selection from
+     * the accordion pane.
      * @param user the user
      */
     private Component createCanvas( User user ) {
         Box box = new Box();
         box.setWidth( "100%" );
-        box.appendChild( new Window( "when", "normal", false ) );
-        box.appendChild( new Window( "what", "normal", false ) );
-        box.appendChild( new Window( "who", "normal", false ) );
-
-        return box;
-    }
-
-    /**
-     * Create the alert pane.
-     * @param user the user
-     */
-    private Component createAlertPane( User user, Page page ) {
-        Box box = new Box();
-        box.setSclass( "channels_alerts" );
-        box.setHeight( "90px" );
-        box.setWidth( "100%" );
-        box.appendChild( new Text( "Alerts" ) );
-
         return box;
     }
 
@@ -399,5 +448,218 @@ public class DesktopRichlet extends GenericRichlet {
         Splitter splitter = new Splitter();
         splitter.setCollapse( "none" );
         return splitter;
+    }
+
+    //===================================================
+    /**
+     * Summary of what happens when the user selects an item in a tab
+     * in the accordion pane.
+     */
+    private static class Selection {
+
+        private String icon;
+        private String label;
+        private Component pane;
+        private String tooltip;
+        private String roles;
+        private Component canvas;
+
+        /**
+         * Default constructor.
+         *
+         * @param icon path to the icon to display in lists
+         * @param label the label of the selection
+         * @param tooltip the tooltip of the selection
+         * @param roles authorized roles for this selection
+         * @param pane the pane to display in the canvas when selected
+         * @param canvas the associated canvas
+         */
+        public Selection(
+                String icon, String label, String tooltip, String roles,
+                Component pane, Component canvas ) {
+
+            this.icon = icon;
+            this.label = label;
+            this.pane = pane;
+            this.tooltip = tooltip;
+            this.roles = roles;
+            this.canvas = canvas;
+        }
+
+        /**
+         * Return the value of icon.
+         */
+        public String getIcon() {
+            return this.icon;
+        }
+
+        /**
+         * Return the value of label.
+         */
+        public String getLabel() {
+            return this.label;
+        }
+
+        /**
+         * Return the value of pane.
+         */
+        public Component getPane() {
+            return this.pane;
+        }
+
+        /**
+         * Return the value of tooltip.
+         */
+        public String getTooltip() {
+            return this.tooltip;
+        }
+
+        /**
+         * Perform the action associated with this selection.
+         */
+        @SuppressWarnings( "unchecked" )
+        public void select() {
+            List children = new ArrayList( canvas.getChildren() );
+            for ( Object child : children )
+                canvas.removeChild( (Component) child );
+
+            canvas.appendChild( pane != null ? pane
+                                             : new Text( "TBD: " + label ) );
+            canvas.invalidate();
+        }
+
+        public String getRoles() {
+            return this.roles;
+        }
+
+        /**
+         * Test if a user is authorized to perform this selection.
+         * @param user the user
+         */
+        public boolean isAuthorized( User user ) {
+            StringTokenizer tokenizer = new StringTokenizer( getRoles(), ", " );
+            while ( tokenizer.hasMoreTokens() ) {
+                String role = tokenizer.nextToken();
+                for ( GrantedAuthority a : user.getAuthorities() ) {
+                    if ( a.getAuthority().equals( role ) )
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * Get the canvas associated with this selection.
+         */
+        public Component getCanvas() {
+            return this.canvas;
+        }
+
+        /**
+         * Set the value of canvas.
+         * @param canvas The new value of canvas
+         */
+        public void setCanvas( Component canvas ) {
+            this.canvas = canvas;
+        }
+    }
+
+    //===================================================
+    /**
+     * Definition of an accordion tab.
+     */
+    private static class AccordionTab {
+
+        private String icon;
+        private String label;
+        private String tooltip;
+        private Component content;
+
+        /**
+         * Default constructor.
+         *
+         * @param icon the tab's icon
+         * @param label the tab's label
+         * @param tooltip the tooltip
+         * @param content the content when selected
+         */
+        public AccordionTab(
+                String icon, String label, String tooltip,
+                Component content ) {
+
+            super();
+            this.icon = icon;
+            this.label = label;
+            this.tooltip = tooltip;
+            this.content = content;
+        }
+
+        /**
+         * Return the value of content.
+         */
+        public Component getContent() {
+            return this.content;
+        }
+
+        /**
+         * Return the value of icon.
+         */
+        public String getIcon() {
+            return this.icon;
+        }
+
+        /**
+         * Return the value of label.
+         */
+        public String getLabel() {
+            return this.label;
+        }
+
+        /**
+         * Return the value of tooltip.
+         */
+        public String getTooltip() {
+            return this.tooltip;
+        }
+    }
+
+    //===================================================
+    /**
+     * A simple tab containing a flat list of selections.
+     */
+    private static class SelectionTab extends Tabpanel {
+
+        /**
+         * Default constructor.
+         * @param user the current user
+         * @param canvas the canvas to map the selections to
+         * @param selections the selectionable items in the pane
+         */
+        public SelectionTab(
+                User user, Component canvas, Selection... selections ) {
+            super();
+
+            Vbox vbox = new Vbox();
+            for ( final Selection sel : selections ) {
+                if ( sel.isAuthorized( user ) ) {
+                    sel.setCanvas( canvas );
+
+                    Button button = new Button( sel.getLabel(), sel.getIcon() );
+                    button.setTooltiptext( sel.getTooltip() );
+                    button.addEventListener( "onClick", new EventListener() {
+                        public boolean isAsap() {
+                            return true;
+                        }
+
+                        public void onEvent( Event event ) {
+                            sel.select();
+                        }
+                    } );
+                    vbox.appendChild( button );
+                }
+            }
+
+            appendChild( vbox );
+        }
     }
 }

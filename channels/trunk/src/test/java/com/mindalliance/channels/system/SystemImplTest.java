@@ -46,33 +46,41 @@ public class SystemImplTest {
     /**
      * Test method for {@link SystemImpl#addProject(com.mindalliance.channels.Project)}.
      * @throws PropertyVetoException 
+     * @throws UserExistsException 
      */
     @Test
-    public final void testAddRemoveProject() throws PropertyVetoException {
-        assertEquals( 0, system.getProjects().size() );
+    public final void testAddRemoveProject() throws PropertyVetoException, UserExistsException {
+        assertEquals( 0, system.getProjects( admin ).size() );
         ProjectImpl project = new ProjectImpl( "test" );
-        
+
+        system.addUser( user );
+        system.addAdministrator( admin );
         system.addProject( project );
-        assertEquals( 1, system.getProjects().size() );
-        assertTrue( system.getProjects().contains( project ) );
+        assertEquals( 1, system.getProjects( admin ).size() );
+        assertEquals( 0, system.getProjects( user ).size() );
+        
+        project.addParticipant( user );
+        assertEquals( 1, system.getProjects( user ).size() );
+
+        assertTrue( system.getProjects( admin ).contains( project ) );
         assertEquals( 1, project.getVetoableChangeListeners( "name" ).length );
 
         system.addProject( project );
         assertEquals( 1, project.getVetoableChangeListeners( "name" ).length );
-        assertEquals( 1, system.getProjects().size() );
-        assertTrue( system.getProjects().contains( project ) );
+        assertEquals( 1, system.getProjects( admin ).size() );
+        assertTrue( system.getProjects( admin ).contains( project ) );
 
         ProjectImpl project2 = new ProjectImpl( "test2" );
         
         system.addProject( project2 );
-        assertEquals( 2, system.getProjects().size() );
-        assertTrue( system.getProjects().contains( project ) );
-        assertTrue( system.getProjects().contains( project2 ) );
+        assertEquals( 2, system.getProjects( admin ).size() );
+        assertTrue( system.getProjects( admin ).contains( project ) );
+        assertTrue( system.getProjects( admin ).contains( project2 ) );
         
         system.removeProject( project );
         assertEquals( 0, project.getVetoableChangeListeners( "name" ).length );
-        assertEquals( 1, system.getProjects().size() );
-        assertTrue( system.getProjects().contains( project2 ) );
+        assertEquals( 1, system.getProjects( admin ).size() );
+        assertTrue( system.getProjects( admin ).contains( project2 ) );
     }
 
     /**
@@ -87,27 +95,28 @@ public class SystemImplTest {
     /**
      * Test method for {@link SystemImpl#setProjects(java.util.SortedSet)}.
      * @throws PropertyVetoException 
+     * @throws UserExistsException 
      */
     @Test
-    public final void testSetProjects_1() throws PropertyVetoException {
+    public final void testSetProjects_1() throws PropertyVetoException, UserExistsException {
         SortedSet<Project> projects = new TreeSet<Project>();
-        
+        system.addAdministrator( admin );
         system.setProjects( projects );
         assertEquals( 0, system.getProjects().size() );
         
         ProjectImpl p = new ProjectImpl( "test" );
         projects.add( p );
-        assertEquals( 0, system.getProjects().size() );
+        assertEquals( 0, system.getProjects( admin ).size() );
         assertEquals( 0, p.getVetoableChangeListeners( "name" ).length );
 
         system.setProjects( projects );
-        assertEquals( 1, system.getProjects().size() );
-        assertTrue( system.getProjects().contains( p ) );
+        assertEquals( 1, system.getProjects( admin ).size() );
+        assertTrue( system.getProjects( admin ).contains( p ) );
         assertEquals( 1, p.getVetoableChangeListeners( "name" ).length );
         
         system.setProjects( projects );
-        assertEquals( 1, system.getProjects().size() );
-        assertTrue( system.getProjects().contains( p ) );
+        assertEquals( 1, system.getProjects( admin ).size() );
+        assertTrue( system.getProjects( admin ).contains( p ) );
         assertEquals( 1, p.getVetoableChangeListeners( "name" ).length );
     }
 

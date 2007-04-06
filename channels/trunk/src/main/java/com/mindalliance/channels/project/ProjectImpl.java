@@ -79,7 +79,7 @@ public class ProjectImpl extends SystemObject
     public synchronized void setModels( Set<Model> models ) {
         if ( models == null )
             throw new NullPointerException();
-        this.models = models;
+        this.models = new HashSet<Model>( models );
     }
 
     /**
@@ -88,6 +88,14 @@ public class ProjectImpl extends SystemObject
      */
     public synchronized void addModel( Model model ) {
         this.models.add( model );
+    }
+
+    /**
+     * Remove a model from this project.
+     * @param model the model to remove.
+     */
+    public synchronized void removeModel( Model model ) {
+        this.models.remove( model );
     }
 
     //---------------------------------
@@ -107,14 +115,6 @@ public class ProjectImpl extends SystemObject
      */
     public boolean isManager( User user ) {
         return Manager.equals( this.participants.get( user ) );
-    }
-
-    /**
-     * Remove a model from this project.
-     * @param model the model to remove.
-     */
-    public synchronized void removeModel( Model model ) {
-        this.models.remove( model );
     }
 
     /**
