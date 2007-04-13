@@ -1,0 +1,6 @@
+<zk>
+	<richlet>
+		<richlet-class>com.beanview.zk.TestProxyRichlet</richlet-class>
+		<richlet-url>/test</richlet-url>
+	</richlet>
+</zk>
