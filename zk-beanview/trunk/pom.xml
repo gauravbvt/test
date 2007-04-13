@@ -65,14 +65,19 @@
 	<dependency>
 		<groupId>org.mortbay.jetty</groupId> 
 		<artifactId>jetty</artifactId>
-		<version>6.1-SNAPSHOT</version>
+		<version>6.1.1</version>
       <scope>test</scope>
 	</dependency>
 	<dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jsp-api-2.1</artifactId>
-      <version>6.1-SNAPSHOT</version>
+      <version>6.1.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.5.2</version>
     </dependency>
     <dependency>
       <groupId>commons-el</groupId>
@@ -138,7 +143,7 @@
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
-		<version>6.1-SNAPSHOT</version>
+		<version>6.1.1</version>
         <configuration>
           <webAppSourceDirectory>${basedir}/src/example/webapp</webAppSourceDirectory> 
           <scanIntervalSeconds>10</scanIntervalSeconds>
