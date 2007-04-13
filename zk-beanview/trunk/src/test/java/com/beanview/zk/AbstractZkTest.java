@@ -16,7 +16,6 @@ import org.zkoss.zk.ui.Richlet;
 import org.zkoss.zk.ui.RichletConfig;
 import org.zkoss.zk.ui.metainfo.LanguageDefinition;
 
-import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 
@@ -69,6 +68,7 @@ public abstract class AbstractZkTest extends TestCase implements Richlet {
         server.addLifeCycle(deployer);
         server.start();
 
+    	TestProxyRichlet.setProxied(this);
         selenium = new DefaultSelenium("localhost",
                 4444, "*firefox", "http://localhost:4000/zk/test");
         selenium.start();
