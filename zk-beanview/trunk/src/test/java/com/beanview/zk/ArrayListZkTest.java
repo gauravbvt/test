@@ -16,7 +16,8 @@ public class ArrayListZkTest extends AbstractZkTest
 	private static ZkBeanViewPanel<ArrayListTestPerson> test;
     private static Button updateObjectButton;
     private static Button updatePanelButton;
-    
+	
+    @Override
 	public void service(Page page) {
 
         test = new ZkBeanViewPanel<ArrayListTestPerson>();

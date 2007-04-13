@@ -16,9 +16,12 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
  */
 public class MenuSelectionTest extends AbstractZkTest
 {
+	
+	
     /* (non-Javadoc)
 	 * @see com.beanview.zk.TestRichletInterface#service(org.zkoss.zk.ui.Page)
-	 */
+	 */	
+	@Override
 	public void service(Page page) {
         panel = new ZkBeanViewPanel<Person>();
         Person person = new Person();
@@ -74,10 +77,10 @@ public class MenuSelectionTest extends AbstractZkTest
         assertEquals(FavoriteColor.Violet, selected);
     }
 
-     public void testSelectFieldUpdatePanelFromObject() throws Exception
+     public void testSelectFieldUpdatePanelFromObject() 
     {
         System.out.println("Testing Echo popup menu panel from object");
-        Person object = panel.getDataObject();
+        Person object = (Person)panel.getDataObject();
         object.setFavoriteColor(FavoriteColor.Indigo);
 
         Listbox selectField;
@@ -93,7 +96,7 @@ public class MenuSelectionTest extends AbstractZkTest
         assertEquals(FavoriteColor.Indigo, selected.getValue());
     }
     
-    public void testSelectFieldUpdateObjectFromPanel() throws Exception
+    public void testSelectFieldUpdateObjectFromPanel()
     {
         System.out.println("Testing Echo popup menu object from panel");
 
@@ -105,7 +108,7 @@ public class MenuSelectionTest extends AbstractZkTest
 
         updateObject();
 
-        Person object = panel.getDataObject();
+        Person object = (Person)panel.getDataObject();
         
         assertEquals(FavoriteColor.Red, object.getFavoriteColor());
 
@@ -117,14 +120,23 @@ public class MenuSelectionTest extends AbstractZkTest
         assertEquals(FavoriteColor.Green, selectField.getSelectedItem().getValue());
     }
     
-    private void updateObject()  throws Exception {
-        selenium.click("id=" + updateObjectButton.getUuid());
-        Thread.sleep(500);
+    private void updateObject() {
+        try {
+			selenium.click("id=" + updateObjectButton.getUuid());
+			Thread.sleep(500);
+		} catch (Exception e) {
+			fail();
+		}
     }
 
-    private void updatePanel() throws Exception {
-        selenium.click("id=" + updatePanelButton.getUuid());
-        Thread.sleep(500);
+    private void updatePanel() {
+        try {
+			selenium.click("id=" + updatePanelButton.getUuid());
+			Thread.sleep(500);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     

@@ -26,9 +26,6 @@ public class TestProxyRichlet extends GenericRichlet {
 		return proxied;
 	}
 	
-//	public static void setProxied(TestRichletInterface proxied) {
-//		TestProxyRichlet.proxied = proxied;
-//	}
 
 	public static void setProxied(Richlet proxied) {
 		TestProxyRichlet.proxied = proxied;
