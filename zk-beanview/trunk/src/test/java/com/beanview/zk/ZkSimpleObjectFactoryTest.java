@@ -2,6 +2,7 @@ package com.beanview.zk;
 
 import java.util.Collection;
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 
 import com.beanview.test.PeoplePicker;
@@ -10,24 +11,25 @@ import com.beanview.test.SimpleObjectFactory;
 import com.beanview.util.FactoryResolver;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
-public class ZkSimpleObjectFactoryTest extends AbstractZkTest
+public class ZkSimpleObjectFactoryTest extends AbstractZkTest<ZkSimpleObjectFactoryTest.TestRichlet>
 {
-
-	private static ZkBeanViewPanel<PeoplePicker> bean;
-
-    private static PeoplePicker picker;
-    /* (non-Javadoc)
-	 * @see com.beanview.zk.AbstractZkTest#service(org.zkoss.zk.ui.Page)
-	 */
-	@Override
-	public void service(Page page) {
-		bean = new ZkBeanViewPanel<PeoplePicker>();
-		bean.setPage(page);
-		picker = new PeoplePicker();
-		bean.setDataObject(picker);
+	public ZkSimpleObjectFactoryTest() {
+		super(new TestRichlet());
 	}
 	
+	private static class TestRichlet extends GenericRichlet {
+		protected ZkBeanViewPanel<PeoplePicker> bean;
+	
+	    protected PeoplePicker picker;
 
+		public void service(Page page) {
+			bean = new ZkBeanViewPanel<PeoplePicker>();
+			bean.setPage(page);
+			picker = new PeoplePicker();
+			bean.setDataObject(picker);
+		}
+	
+	}
     public void testInitPotentialObjects()
     {
         Collection<SimpleObject> result = SimpleObjectFactory
@@ -62,52 +64,52 @@ public class ZkSimpleObjectFactoryTest extends AbstractZkTest
 	public void testFactoryResolverStaticMethod()
     {
 
-        assertNotNull(factoryResolver.getValues("allPeople", bean));
-        assertEquals(20, factoryResolver.getValues("allPeople", bean).size());
+        assertNotNull(factoryResolver.getValues("allPeople", richlet.bean));
+        assertEquals(20, factoryResolver.getValues("allPeople", richlet.bean).size());
 
-        assertNotNull(factoryResolver.getValues("peopleByObjectMethod", bean));
+        assertNotNull(factoryResolver.getValues("peopleByObjectMethod", richlet.bean));
         assertEquals(20, factoryResolver
-                .getValues("peopleByObjectMethod", bean).size());
+                .getValues("peopleByObjectMethod", richlet.bean).size());
 
         assertNotNull(factoryResolver
-                .getValues("favoriteLastNameMPeople", bean));
+                .getValues("favoriteLastNameMPeople", richlet.bean));
         assertEquals(4, factoryResolver.getValues("favoriteLastNameMPeople",
-                bean).size());
+        		richlet.bean).size());
 
         assertNotNull(factoryResolver.getValues("peopleLetterMByObjectMethod",
-                bean));
+        		richlet.bean));
         assertEquals(4, factoryResolver.getValues(
-                "peopleLetterMByObjectMethod", bean).size());
+                "peopleLetterMByObjectMethod", richlet.bean).size());
     }
 
     public void testFactoryResolverContextualMethod()
     {
-        assertNotNull(factoryResolver.getValues("peopleByContext", bean));
-        assertEquals(20, factoryResolver.getValues("peopleByContext", bean)
+        assertNotNull(factoryResolver.getValues("peopleByContext", richlet.bean));
+        assertEquals(20, factoryResolver.getValues("peopleByContext", richlet.bean)
                 .size());
 
-        bean.setContext("userID", "1");
+        richlet.bean.setContext("userID", "1");
         factoryResolver = new FactoryResolver();
 
-        assertNotNull(factoryResolver.getValues("peopleByContext", bean));
-        assertEquals(2, factoryResolver.getValues("peopleByContext", bean)
+        assertNotNull(factoryResolver.getValues("peopleByContext", richlet.bean));
+        assertEquals(2, factoryResolver.getValues("peopleByContext", richlet.bean)
                 .size());
 
         assertNotNull(factoryResolver.getValues(
-                "peopleByObjectMethodWithContext", bean));
+                "peopleByObjectMethodWithContext", richlet.bean));
         assertEquals(2, factoryResolver.getValues(
-                "peopleByObjectMethodWithContext", bean).size());
+                "peopleByObjectMethodWithContext", richlet.bean).size());
 
-        bean.setContext("userID", "2");
+        richlet.bean.setContext("userID", "2");
         factoryResolver = new FactoryResolver();
 
-        assertNotNull(factoryResolver.getValues("peopleByContext", bean));
-        assertEquals(4, factoryResolver.getValues("peopleByContext", bean)
+        assertNotNull(factoryResolver.getValues("peopleByContext", richlet.bean));
+        assertEquals(4, factoryResolver.getValues("peopleByContext", richlet.bean)
                 .size());
 
         assertNotNull(factoryResolver.getValues(
-                "peopleByObjectMethodWithContext", bean));
+                "peopleByObjectMethodWithContext", richlet.bean));
         assertEquals(4, factoryResolver.getValues(
-                "peopleByObjectMethodWithContext", bean).size());
+                "peopleByObjectMethodWithContext", richlet.bean).size());
     }
 }

@@ -3,6 +3,7 @@ package com.beanview.zk;
 
 
 import org.zkoss.zk.ui.AbstractComponent;
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zul.Textbox;
 
@@ -10,39 +11,28 @@ import com.beanview.test.ConfigurationTestObject;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
 
-public class ZkConfigurationTest extends AbstractZkTest
+public class ZkConfigurationTest extends AbstractZkTest<ZkConfigurationTest.TestRichlet>
 {
-	
-	private static ZkBeanViewPanel bean;
-	
-	/* (non-Javadoc)
-	 * @see com.beanview.zk.AbstractZkTest#service(org.zkoss.zk.ui.Page)
-	 */
-	@Override
-	public void service(Page page) {
-		bean = new ZkBeanViewPanel();
-		ConfigurationTestObject temp = new ConfigurationTestObject();
-		bean.setDataObject(temp);
+	public ZkConfigurationTest() {
+		super(new TestRichlet());
 	}
+	private static class TestRichlet extends GenericRichlet {
+		private static ZkBeanViewPanel bean;
 
-	/*
-	 * @see TestCase#setUp()
-	 */
-	@SuppressWarnings("unchecked")
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-
-
+		public void service(Page page) {
+			bean = new ZkBeanViewPanel();
+			ConfigurationTestObject temp = new ConfigurationTestObject();
+			bean.setDataObject(temp);
+		}
 	}
-
+	
 	/**
 	 * The components are managed inside a Grid, this method is used to simplify
 	 * this.
 	 */
 	AbstractComponent[] getComponents()
 	{
-		return (AbstractComponent[])((ZkBeanViewPanel) bean).getChildren().toArray(new AbstractComponent[0]);
+		return (AbstractComponent[])((ZkBeanViewPanel) richlet.bean).getChildren().toArray(new AbstractComponent[0]);
 	}
 
 	/*public void testFirstNameLabel()
@@ -90,14 +80,14 @@ public class ZkConfigurationTest extends AbstractZkTest
 	public void testEditable()
 	{
         System.out.println("TEST: testEditable");
-        assertTrue(((Textbox) bean
+        assertTrue(((Textbox) richlet.bean
                 .getPropertyComponent("dontTouchThisField")).isDisabled());
 	}
 
 	public void testReadOnly()
 	{
             System.out.println("TEST: testReadOnly");
-            assertTrue(((Textbox) bean.getPropertyComponent("readOnly"))
+            assertTrue(((Textbox) richlet.bean.getPropertyComponent("readOnly"))
                     .isDisabled());
 	}
 
@@ -105,6 +95,6 @@ public class ZkConfigurationTest extends AbstractZkTest
 	public void testIgnore()
 	{
 		System.out.println("TEST: testIgnore");
-		assertNull(bean.getPropertyComponent("ignoreThisField"));
+		assertNull(richlet.bean.getPropertyComponent("ignoreThisField"));
 	}
 }

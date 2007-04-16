@@ -1,5 +1,6 @@
 package com.beanview.zk;
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -8,42 +9,44 @@ import org.zkoss.zul.Button;
 import com.beanview.test.SortExample;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
-public class ZkSortOptionsTest extends AbstractZkTest
+public class ZkSortOptionsTest extends AbstractZkTest<ZkSortOptionsTest.TestRichlet>
 {
-	private static ZkBeanViewPanel bean;
+	public ZkSortOptionsTest() {
+		super(new TestRichlet());
+	}
 	
 	private static String[] subview;
 	private static boolean includeAll;
 	private static boolean sortAll;
 	
-	private static Button setSubViewButton;
-    /* (non-Javadoc)
-	 * @see com.beanview.zk.AbstractZkTest#service(org.zkoss.zk.ui.Page)
-	 */
-	@Override
-	public void service(Page page) {
-        bean = new ZkBeanViewPanel<SortExample>();
-        bean.setDataObject(new SortExample());
-        bean.setPage(page);
-        setSubViewButton = new Button();
-        setSubViewButton.addEventListener("onClick", new EventListener() {
-
-			public boolean isAsap() {
-				return false;
-			}
-
-			public void onEvent(Event arg0) {
-		        bean.setSubView(subview, includeAll, sortAll);
-			}});
-        setSubViewButton.setPage(page);
+	private static class TestRichlet extends GenericRichlet {
+		protected Button setSubViewButton;
+		protected ZkBeanViewPanel bean;
+		
+		public void service(Page page) {
+	        bean = new ZkBeanViewPanel<SortExample>();
+	        bean.setDataObject(new SortExample());
+	        bean.setPage(page);
+	        setSubViewButton = new Button();
+	        setSubViewButton.addEventListener("onClick", new EventListener() {
+	
+				public boolean isAsap() {
+					return false;
+				}
+	
+				public void onEvent(Event arg0) {
+			        bean.setSubView(subview, includeAll, sortAll);
+				}});
+	        setSubViewButton.setPage(page);
+		}
 	}
 	   public void testDefault() throws Exception
 	    {
-	        System.out.println("TEST: Default sort test " + bean.getClass().getSimpleName());
+	        System.out.println("TEST: Default sort test " + richlet.bean.getClass().getSimpleName());
 	        String[] values =
 	        { "alpha", "beta", "delta", "gamma", "zeta" };
 
-	        String[] keys = bean.getBeanViewConfiguration().keys();
+	        String[] keys = richlet.bean.getBeanViewConfiguration().keys();
 
 	        for (int i = 0; i < keys.length; i++)
 	            assertEquals(values[i], keys[i]);
@@ -57,9 +60,9 @@ public class ZkSortOptionsTest extends AbstractZkTest
 	        String[] exclude =
 	        { "alpha", "gamma", "class" };
 
-	        bean.setExcludeProperties(exclude);
+	        richlet.bean.setExcludeProperties(exclude);
 
-	        String[] keys = bean.getBeanViewConfiguration().keys();
+	        String[] keys = richlet.bean.getBeanViewConfiguration().keys();
 
 	        for (int i = 0; i < values.length; i++)
 	            assertEquals(values[i], keys[i]);
@@ -74,7 +77,7 @@ public class ZkSortOptionsTest extends AbstractZkTest
 	        { "alpha", "beta", "delta", "zeta" };
 	        setSubView(subview, false, true);
 
-	        String[] keys = bean.getBeanViewConfiguration().keys();
+	        String[] keys = richlet.bean.getBeanViewConfiguration().keys();
 
 	        for (int i = 0; i < values.length; i++)
 	            assertEquals(values[i], keys[i]);
@@ -87,7 +90,7 @@ public class ZkSortOptionsTest extends AbstractZkTest
 	        { "alpha", "delta", "zeta", "beta" };
 	        setSubView(subview, false, false);
 
-	        String[] keys = bean.getBeanViewConfiguration().keys();
+	        String[] keys = richlet.bean.getBeanViewConfiguration().keys();
 
 	        for (int i = 0; i < keys.length; i++)
 	            assertEquals(subview[i], keys[i]);
@@ -104,7 +107,7 @@ public class ZkSortOptionsTest extends AbstractZkTest
 
 	        setSubView(subview, true, false);
 
-	        String[] keys = bean.getBeanViewConfiguration().keys();
+	        String[] keys = richlet.bean.getBeanViewConfiguration().keys();
 
 	        for (int i = 0; i < keys.length; i++)
 	            assertEquals(values[i], keys[i]);
@@ -121,7 +124,7 @@ public class ZkSortOptionsTest extends AbstractZkTest
 
 	        setSubView(subview, true, true);
 
-	        String[] keys = bean.getBeanViewConfiguration().keys();
+	        String[] keys = richlet.bean.getBeanViewConfiguration().keys();
 
 	        for (int i = 0; i < keys.length; i++)
 	            assertEquals(values[i], keys[i]);
@@ -132,7 +135,7 @@ public class ZkSortOptionsTest extends AbstractZkTest
 				subview = sub;
 				includeAll = include;
 				sortAll = sort;
-				selenium.click("id=" + setSubViewButton.getUuid());
+				selenium.click("id=" + richlet.setSubViewButton.getUuid());
 				Thread.sleep(500);
 			} catch (Exception e) {
 				fail();

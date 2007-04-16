@@ -3,6 +3,7 @@ package com.beanview.zk;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -11,45 +12,50 @@ import org.zkoss.zul.Button;
 import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
-public class ArrayListZkTest extends AbstractZkTest 
+public class ArrayListZkTest extends AbstractZkTest<ArrayListZkTest.TestRichlet> 
 {
-	private static ZkBeanViewPanel<ArrayListTestPerson> test;
-    private static Button updateObjectButton;
-    private static Button updatePanelButton;
-	
-    @Override
-	public void service(Page page) {
-
-        test = new ZkBeanViewPanel<ArrayListTestPerson>();
-        test.setPage(page);
-        ArrayListTestPerson testObj = new ArrayListTestPerson(1,
-                "Robert Indigo", "BI");
-        test.setDataObject(testObj);
-        
-		updateObjectButton = new Button();
-		updateObjectButton.addEventListener("onClick", new EventListener() {
-			public boolean isAsap() {
-				return true;
-			}
-			public void onEvent(Event arg0) {
-				test.updateObjectFromPanel();
-			}
-		
-		});
-		updateObjectButton.setPage(page);
-		
-		updatePanelButton = new Button();
-		updatePanelButton.addEventListener("onClick", new EventListener() {
-			public boolean isAsap() {
-				return true;
-			}
-			public void onEvent(Event arg0) {
-				test.updatePanelFromObject();
-			}
-		
-		});
-		updatePanelButton.setPage(page);
+	public ArrayListZkTest() {
+		super(new TestRichlet());
 	}
+	
+    static public class TestRichlet extends GenericRichlet {
+    	private ZkBeanViewPanel<ArrayListTestPerson> test;
+        private Button updateObjectButton;
+        private Button updatePanelButton;
+
+		public void service(Page page) {
+	
+	        test = new ZkBeanViewPanel<ArrayListTestPerson>();
+	        test.setPage(page);
+	        ArrayListTestPerson testObj = new ArrayListTestPerson(1,
+	                "Robert Indigo", "BI");
+	        test.setDataObject(testObj);
+	        
+			updateObjectButton = new Button();
+			updateObjectButton.addEventListener("onClick", new EventListener() {
+				public boolean isAsap() {
+					return true;
+				}
+				public void onEvent(Event arg0) {
+					test.updateObjectFromPanel();
+				}
+			
+			});
+			updateObjectButton.setPage(page);
+			
+			updatePanelButton = new Button();
+			updatePanelButton.addEventListener("onClick", new EventListener() {
+				public boolean isAsap() {
+					return true;
+				}
+				public void onEvent(Event arg0) {
+					test.updatePanelFromObject();
+				}
+			
+			});
+			updatePanelButton.setPage(page);
+		}
+    }
 	@SuppressWarnings("unchecked")
     protected void setUp() throws Exception
     {
@@ -59,7 +65,7 @@ public class ArrayListZkTest extends AbstractZkTest
     {
 
 
-        assertNotNull(test.getDataObject());
+        assertNotNull(richlet.test.getDataObject());
 
         updateObject();
         updatePanel(); 
@@ -68,7 +74,7 @@ public class ArrayListZkTest extends AbstractZkTest
     
     private void updateObject(){
         try {
-			selenium.click("id=" + updateObjectButton.getUuid());
+			selenium.click("id=" + richlet.updateObjectButton.getUuid());
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			fail();
@@ -77,13 +83,13 @@ public class ArrayListZkTest extends AbstractZkTest
 
     private void updatePanel(){
         try {
-			selenium.click("id=" + updatePanelButton.getUuid());
+			selenium.click("id=" + richlet.updatePanelButton.getUuid());
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			fail();
 		}
     }
-    protected class ArrayListTestPerson
+    protected static class ArrayListTestPerson
     {
 
         private int id = 0;

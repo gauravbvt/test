@@ -2,6 +2,7 @@ package com.beanview.zk;
 
 import java.util.List;
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 
 import com.beanview.base.FieldCheckUtil;
@@ -10,41 +11,30 @@ import com.beanview.test.Person;
 import com.beanview.test.PersonFactory;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
-/**
- * @author $Author: wiverson $
- * @version $Revision: 1.1.1.1 $, $Date: 2006/09/19 04:41:57 $
- */
-
-public class ZkPeopleFactoryTest extends AbstractZkTest
+public class ZkPeopleFactoryTest extends AbstractZkTest<ZkPeopleFactoryTest.TestRichlet>
 {
 
-	/* (non-Javadoc)
-	 * @see com.beanview.zk.AbstractZkTest#service(org.zkoss.zk.ui.Page)
-	 */
-	@Override
-	public void service(Page page) {
-		bean = new ZkBeanViewPanel<PeoplePicker>();
-		picker = new PeoplePicker();
-		bean.setDataObject(picker);
-		bean.setPage(page);
+	public ZkPeopleFactoryTest() {
+		super(new TestRichlet());
 	}
-
-	private static PeoplePicker picker;
-
-	private static ZkBeanViewPanel<PeoplePicker> bean;
-
-	@SuppressWarnings("unchecked")
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-
+	private static class TestRichlet extends GenericRichlet {
+		public void service(Page page) {
+			bean = new ZkBeanViewPanel<PeoplePicker>();
+			picker = new PeoplePicker();
+			bean.setDataObject(picker);
+			bean.setPage(page);
+		}
+	
+		protected PeoplePicker picker;
+	
+		protected ZkBeanViewPanel<PeoplePicker> bean;
 	}
 
 	public void testBeanViewPanelComponents()
 	{
 		System.out.println("TEST: testBeanViewPanelComponents");
 
-		FieldCheckUtil.checkFields(bean, picker);
+		FieldCheckUtil.checkFields(richlet.bean, richlet.picker);
 	}
 
 	public void testGetPersonArray()

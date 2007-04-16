@@ -1,5 +1,6 @@
 package com.beanview.zk;
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -14,38 +15,47 @@ import com.mindalliance.zk.component.SettableZkList;
  * @version $Revision: 1.1.1.1 $, $Date: 2006/09/19 04:41:57 $
  */
 
-public class ZkCollectionSupportTest extends AbstractZkTest
+public class ZkCollectionSupportTest extends AbstractZkTest<ZkCollectionSupportTest.TestRichlet>
 {
-	private static ZkBeanViewPanel<PeoplePicker> bean;
-    private static Button updateObjectButton;
-    
-	/* (non-Javadoc)
-	 * @see com.beanview.zk.AbstractZkTest#service(org.zkoss.zk.ui.Page)
-	 */
-	@Override
-	public void service(Page page) {
-		bean = new ZkBeanViewPanel<PeoplePicker>();
-
-		bean.setDataObject(new PeoplePicker());
-		updateObjectButton = new Button();
-		updateObjectButton.addEventListener("onClick", new EventListener() {
-			public boolean isAsap() {
-				return true;
-			}
-			public void onEvent(Event arg0) {
-				updateObject();
-			}
-		
-		});
-		updateObjectButton.setPage(page);
-		
+	public ZkCollectionSupportTest() {
+		super(new TestRichlet());
 	}
-
+	private static class TestRichlet extends GenericRichlet {
+		private static ZkBeanViewPanel<PeoplePicker> bean;
+	    private static Button updateObjectButton;
+	
+		public void service(Page page) {
+			bean = new ZkBeanViewPanel<PeoplePicker>();
+	
+			bean.setDataObject(new PeoplePicker());
+			updateObjectButton = new Button();
+			updateObjectButton.addEventListener("onClick", new EventListener() {
+				public boolean isAsap() {
+					return true;
+				}
+				public void onEvent(Event arg0) {
+					updateObject();
+				}
+			
+			});
+			updateObjectButton.setPage(page);
+	
+		}
+	    protected void updateObject() {
+	        try {
+				selenium.click("id=" + updateObjectButton.getUuid());
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				fail();
+			}
+	    }
+	}
+	
 	SettableZkList prop;
 
 	SettableZkList getProp(String in)
 	{
-		return (SettableZkList) bean.getPropertyComponent(in);
+		return (SettableZkList) richlet.bean.getPropertyComponent(in);
 	}
 
 	int getCount(SettableZkList in)
@@ -58,7 +68,7 @@ public class ZkCollectionSupportTest extends AbstractZkTest
 		prop = getProp("allPeople");
 		assertNotNull(prop);
 
-		updateObject();
+		richlet.updateObject();
 		assertEquals(20, getCount(prop));
 	}
 
@@ -67,7 +77,7 @@ public class ZkCollectionSupportTest extends AbstractZkTest
 		prop = getProp("favoriteLastNameMPeople");
 		assertNotNull(prop);
 
-		updateObject();
+		richlet.updateObject();
 		assertEquals(4, getCount(prop));
 	}
 
@@ -76,7 +86,7 @@ public class ZkCollectionSupportTest extends AbstractZkTest
 		prop = getProp("peopleByContext");
 		assertNotNull(prop);
 
-		updateObject();
+		richlet.updateObject();
 		assertEquals(20, getCount(prop));
 	}
 
@@ -85,7 +95,7 @@ public class ZkCollectionSupportTest extends AbstractZkTest
 		prop = getProp("peopleByObjectMethod");
 		assertNotNull(prop);
 
-		updateObject();
+		richlet.updateObject();
 		assertEquals(20, getCount(prop));
 	}
 
@@ -94,7 +104,7 @@ public class ZkCollectionSupportTest extends AbstractZkTest
 		prop = getProp("peopleLetterMByObjectMethod");
 		assertNotNull(prop);
 
-		updateObject();
+		richlet.updateObject();
 		assertEquals(4, getCount(prop));
 	}
 
@@ -103,17 +113,10 @@ public class ZkCollectionSupportTest extends AbstractZkTest
 		prop = getProp("peopleByObjectMethodWithContext");
 		assertNotNull(prop);
 
-		updateObject();
+		richlet.updateObject();
 		assertEquals(20, getCount(prop));
 	}
 	
-    private void updateObject() {
-        try {
-			selenium.click("id=" + updateObjectButton.getUuid());
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			fail();
-		}
-    }
+
 
 }

@@ -27,7 +27,6 @@ public class ZkAllTests
 		suite.addTestSuite(ZkCollectionSupportTest.class);
 		suite.addTestSuite(ZkConfigurationTest.class);
 		suite.addTestSuite(MenuSelectionTest.class);
-		suite.addTestSuite(ZkPerformanceTest.class);
 		suite.addTestSuite(ZkBeanViewGroupTest.class);
 		//$JUnit-END$
 		return suite;

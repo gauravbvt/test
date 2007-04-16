@@ -21,8 +21,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Base class for testing ZK components with JUnit.  The setUp() method starts an embedded jetty server with a 
- * basic ZK application that serves as a proxy for the service that sub-classes implement.  Extending classes should implement
- * the service() method to associate the components to be tested with that service.  Since the tested service and the 
+ * basic ZK application that serves as a proxy for the service that sub-classes provide. Since the tested service and the 
  * tests themselves will be running in separate instances, subclasses should maintain the components statically.
  * 
  * <p>Once the service has been started, a session is established using selenium.  This should be used to model UI events.  The 
@@ -30,17 +29,21 @@ import com.thoughtworks.selenium.Selenium;
  * location.
  *
  */
-public abstract class AbstractZkTest extends TestCase implements Richlet {
-	protected static Server server;
+public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
+	
+	
+	protected Server server;
 	protected static Selenium  selenium;
-
-
-	public AbstractZkTest() {
-    	super();
-    	TestProxyRichlet.setProxied(this);
-    }
+	protected T richlet;
     
-	abstract public void service(Page page); 
+	public AbstractZkTest(T richlet) {
+		super();
+		setRichlet(richlet);
+	}
+	
+	public void setRichlet(T richlet) {
+		this.richlet = richlet;
+	}
     
 	@Override
     protected void setUp() throws Exception
@@ -68,7 +71,7 @@ public abstract class AbstractZkTest extends TestCase implements Richlet {
         server.addLifeCycle(deployer);
         server.start();
 
-    	TestProxyRichlet.setProxied(this);
+    	TestProxyRichlet.setProxied(richlet);
         selenium = new DefaultSelenium("localhost",
                 4444, "*firefox", "http://localhost:4000/zk/test");
         selenium.start();
@@ -85,29 +88,5 @@ public abstract class AbstractZkTest extends TestCase implements Richlet {
     	selenium.stop();
     	selenium = null;
     }
-	
-    
-    /* (non-Javadoc)
-	 * @see org.zkoss.zk.ui.Richlet#destroy()
-	 */
-	public void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	/* (non-Javadoc)
-	 * @see org.zkoss.zk.ui.Richlet#getLanguageDefinition()
-	 */
-	public LanguageDefinition getLanguageDefinition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.zkoss.zk.ui.Richlet#init(org.zkoss.zk.ui.RichletConfig)
-	 */
-	public void init(RichletConfig arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -1,5 +1,6 @@
 package com.beanview.zk;
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -14,61 +15,61 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 /**
  * Tests for ZK BeanView drop down menus
  */
-public class MenuSelectionTest extends AbstractZkTest
+public class MenuSelectionTest extends AbstractZkTest<MenuSelectionTest.TestRichlet>
 {
 	
-	
-    /* (non-Javadoc)
-	 * @see com.beanview.zk.TestRichletInterface#service(org.zkoss.zk.ui.Page)
-	 */	
-	@Override
-	public void service(Page page) {
-        panel = new ZkBeanViewPanel<Person>();
-        Person person = new Person();
-        person.setFavoriteColor(FavoriteColor.Violet);
-        panel.setDataObject(person);
-		panel.setPage(page);
-		updateObjectButton = new Button();
-		updateObjectButton.addEventListener("onClick", new EventListener() {
-			public boolean isAsap() {
-				return true;
-			}
-			public void onEvent(Event arg0) {
-				panel.updateObjectFromPanel();
-			}
-		
-		});
-		updateObjectButton.setPage(page);
-		
-		updatePanelButton = new Button();
-		updatePanelButton.addEventListener("onClick", new EventListener() {
-			public boolean isAsap() {
-				return true;
-			}
-			public void onEvent(Event arg0) {
-				panel.updatePanelFromObject();
-			}
-		
-		});
-		updatePanelButton.setPage(page);
+	public MenuSelectionTest() {
+		super(new TestRichlet());
 	}
-	
-    private static ZkBeanViewPanel<Person> panel;
-    private static Button updateObjectButton;
-    private static Button updatePanelButton;
+
+	public static class TestRichlet extends GenericRichlet {
+	    private ZkBeanViewPanel<Person> panel;
+	    private Button updateObjectButton;
+	    private Button updatePanelButton;
+		public void service(Page page) {
+	        panel = new ZkBeanViewPanel<Person>();
+	        Person person = new Person();
+	        person.setFavoriteColor(FavoriteColor.Violet);
+	        panel.setDataObject(person);
+			panel.setPage(page);
+			updateObjectButton = new Button();
+			updateObjectButton.addEventListener("onClick", new EventListener() {
+				public boolean isAsap() {
+					return true;
+				}
+				public void onEvent(Event arg0) {
+					panel.updateObjectFromPanel();
+				}
+			
+			});
+			updateObjectButton.setPage(page);
+			
+			updatePanelButton = new Button();
+			updatePanelButton.addEventListener("onClick", new EventListener() {
+				public boolean isAsap() {
+					return true;
+				}
+				public void onEvent(Event arg0) {
+					panel.updatePanelFromObject();
+				}
+			
+			});
+			updatePanelButton.setPage(page);
+		}
+	}
+
     
     String _favoriteColorProperty = "favoriteColor";
-    String _favoriteColorComponent = _favoriteColorProperty + "_entry";
 
     /*
      * Test to check ZK popup menus
      */
     public void testSelectFieldBase()
     {
-        System.out.println("Testing Echo popup menu base");
+        System.out.println("Testing ZK popup menu base");
 
         Listbox selectField;
-        selectField = (Listbox) panel.getPropertyComponent(_favoriteColorProperty);
+        selectField = (Listbox) richlet.panel.getPropertyComponent(_favoriteColorProperty);
 
         assertNotNull(selectField);
         Object selected = selectField.getSelectedItem().getValue();
@@ -79,17 +80,17 @@ public class MenuSelectionTest extends AbstractZkTest
 
      public void testSelectFieldUpdatePanelFromObject() 
     {
-        System.out.println("Testing Echo popup menu panel from object");
-        Person object = (Person)panel.getDataObject();
+        System.out.println("Testing ZK popup menu panel from object");
+        Person object = (Person)richlet.panel.getDataObject();
         object.setFavoriteColor(FavoriteColor.Indigo);
 
         Listbox selectField;
-        selectField = (Listbox) panel.getPropertyComponent(_favoriteColorProperty);
+        selectField = (Listbox) richlet.panel.getPropertyComponent(_favoriteColorProperty);
         Listitem selected = selectField.getSelectedItem();
 
         updatePanel();
 
-        selectField = (Listbox) panel.getPropertyComponent(_favoriteColorProperty);
+        selectField = (Listbox) richlet.panel.getPropertyComponent(_favoriteColorProperty);
         selected = selectField.getSelectedItem();
         assertNotNull(selected);
 
@@ -98,31 +99,31 @@ public class MenuSelectionTest extends AbstractZkTest
     
     public void testSelectFieldUpdateObjectFromPanel()
     {
-        System.out.println("Testing Echo popup menu object from panel");
+        System.out.println("Testing ZK popup menu object from panel");
 
         Listbox selectField;        
-        selectField = (Listbox) panel.getPropertyComponent(_favoriteColorProperty);
+        selectField = (Listbox) richlet.panel.getPropertyComponent(_favoriteColorProperty);
         Listitem item = (Listitem)selectField.getItems().get(0);
 
         selenium.select("id=" + selectField.getUuid(), "id=" + item.getUuid());
 
         updateObject();
 
-        Person object = (Person)panel.getDataObject();
+        Person object = (Person)richlet.panel.getDataObject();
         
         assertEquals(FavoriteColor.Red, object.getFavoriteColor());
 
         object.setFavoriteColor(FavoriteColor.Green);
         updatePanel();
         
-        selectField = (Listbox) panel.getPropertyComponent(_favoriteColorProperty);
+        selectField = (Listbox) richlet.panel.getPropertyComponent(_favoriteColorProperty);
 
         assertEquals(FavoriteColor.Green, selectField.getSelectedItem().getValue());
     }
     
     private void updateObject() {
         try {
-			selenium.click("id=" + updateObjectButton.getUuid());
+			selenium.click("id=" + richlet.updateObjectButton.getUuid());
 			Thread.sleep(500);
 		} catch (Exception e) {
 			fail();
@@ -131,7 +132,7 @@ public class MenuSelectionTest extends AbstractZkTest
 
     private void updatePanel() {
         try {
-			selenium.click("id=" + updatePanelButton.getUuid());
+			selenium.click("id=" + richlet.updatePanelButton.getUuid());
 			Thread.sleep(500);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

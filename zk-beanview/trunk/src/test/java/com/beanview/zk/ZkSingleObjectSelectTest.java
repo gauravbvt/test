@@ -1,6 +1,7 @@
 package com.beanview.zk;
 
 
+import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -16,39 +17,40 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
  * @version $Revision: 1.1.1.1 $, $Date: 2006/09/19 04:41:57 $
  */
 
-public class ZkSingleObjectSelectTest extends AbstractZkTest
+public class ZkSingleObjectSelectTest extends AbstractZkTest<ZkSingleObjectSelectTest.TestRichlet>
 {
-
-	private static ZkBeanViewPanel<SinglePersonPicker> bean;
-	private static Button updateObjectButton;
+	public ZkSingleObjectSelectTest() {
+		super(new TestRichlet());
+	}
 	
-	/* (non-Javadoc)
-	 * @see com.beanview.zk.AbstractZkTest#service(org.zkoss.zk.ui.Page)
-	 */
-	@Override
-	public void service(Page page) {
-		bean = new ZkBeanViewPanel<SinglePersonPicker>();
+	private static class TestRichlet extends GenericRichlet {
+		protected ZkBeanViewPanel<SinglePersonPicker> bean;
+		protected Button updateObjectButton;
 
-		bean.setDataObject(new SinglePersonPicker());
-		bean.setPage(page);
-		updateObjectButton = new Button();
-		updateObjectButton.addEventListener("onClick", new EventListener() {
-			public boolean isAsap() {
-				return true;
-			}
-			public void onEvent(Event arg0) {
-				bean.updateObjectFromPanel();
-			}
-		
-		});
-		updateObjectButton.setPage(page);
+		public void service(Page page) {
+			bean = new ZkBeanViewPanel<SinglePersonPicker>();
+	
+			bean.setDataObject(new SinglePersonPicker());
+			bean.setPage(page);
+			updateObjectButton = new Button();
+			updateObjectButton.addEventListener("onClick", new EventListener() {
+				public boolean isAsap() {
+					return true;
+				}
+				public void onEvent(Event arg0) {
+					bean.updateObjectFromPanel();
+				}
+			
+			});
+			updateObjectButton.setPage(page);
+		}
 	}
 
 	Listbox prop;
 
 	Listbox getProp(String in)
 	{
-		return (Listbox) bean.getPropertyComponent(in);
+		return (Listbox) richlet.bean.getPropertyComponent(in);
 	}
 	
 	public void testAllPeople() throws Exception
@@ -90,7 +92,7 @@ public class ZkSingleObjectSelectTest extends AbstractZkTest
 	{
 		prop = getProp("peopleByObjectMethod");
 		assertNotNull(prop);
-		bean.updateObjectFromPanel();
+		richlet.bean.updateObjectFromPanel();
 		assertEquals(20, getCount(prop));
 	}
 
@@ -111,7 +113,7 @@ public class ZkSingleObjectSelectTest extends AbstractZkTest
 	}
 	
     private void updateObject()  throws Exception {
-        selenium.click("id=" + updateObjectButton.getUuid());
+        selenium.click("id=" + richlet.updateObjectButton.getUuid());
         Thread.sleep(500);
     }
 }
