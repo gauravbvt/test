@@ -87,6 +87,7 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
     protected void tearDown() throws Exception {
     	super.tearDown();
     	server.stop();
+    	server.join();
     	server = null;
     	selenium.stop();
     	selenium = null;
