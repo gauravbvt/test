@@ -54,11 +54,13 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
     	
         super.setUp();
 
-        
+        if (server != null) {
+        	stopServer();
+        }
         server = new Server();
                     
         Connector connector=new SelectChannelConnector();
-        connector.setPort(4445);
+        connector.setPort(port);
         server.setConnectors(new Connector[]{connector});
          
         HandlerCollection handlers = new HandlerCollection();
@@ -83,15 +85,20 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
 
     }
 
+	
+	
     @Override
     protected void tearDown() throws Exception {
     	super.tearDown();
-    	server.stop();
-    	server.join();
-    	server = null;
+    	stopServer();
     	selenium.stop();
     	selenium = null;
     	Thread.sleep(1000);
     }
 
+    public void stopServer() throws Exception {
+    	server.stop();
+    	server.join();
+    	server = null;
+    }
 }
