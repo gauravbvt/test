@@ -36,6 +36,9 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
 	protected static Selenium  selenium;
 	protected T richlet;
     
+	protected int port = 4445;
+	protected String serviceUrl = "http://localhost:" + port + "/zk/test";
+	
 	public AbstractZkTest(T richlet) {
 		super();
 		setRichlet(richlet);
@@ -55,7 +58,7 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
         server = new Server();
                     
         Connector connector=new SelectChannelConnector();
-        connector.setPort(4000);
+        connector.setPort(4445);
         server.setConnectors(new Connector[]{connector});
          
         HandlerCollection handlers = new HandlerCollection();
@@ -73,10 +76,10 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
 
     	TestProxyRichlet.setProxied(richlet);
         selenium = new DefaultSelenium("localhost",
-                4444, "*firefox", "http://localhost:4000/zk/test");
+                4444, "*firefox", serviceUrl);
         selenium.start();
 
-        selenium.open("http://localhost:4000/zk/test");
+        selenium.open(serviceUrl);
 
     }
 
@@ -87,6 +90,7 @@ public abstract class AbstractZkTest<T extends Richlet> extends TestCase {
     	server = null;
     	selenium.stop();
     	selenium = null;
+    	Thread.sleep(1000);
     }
 
 }
