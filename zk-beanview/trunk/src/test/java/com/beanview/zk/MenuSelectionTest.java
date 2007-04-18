@@ -23,9 +23,9 @@ public class MenuSelectionTest extends AbstractZkTest<MenuSelectionTest.TestRich
 	}
 
 	public static class TestRichlet extends GenericRichlet {
-	    private ZkBeanViewPanel<Person> panel;
-	    private Button updateObjectButton;
-	    private Button updatePanelButton;
+	    protected ZkBeanViewPanel<Person> panel;
+	    protected Button updateObjectButton;
+	    protected Button updatePanelButton;
 		public void service(Page page) {
 	        panel = new ZkBeanViewPanel<Person>();
 	        Person person = new Person();
@@ -135,8 +135,7 @@ public class MenuSelectionTest extends AbstractZkTest<MenuSelectionTest.TestRich
 			selenium.click("id=" + richlet.updatePanelButton.getUuid());
 			Thread.sleep(500);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail();
 		}
     }
     

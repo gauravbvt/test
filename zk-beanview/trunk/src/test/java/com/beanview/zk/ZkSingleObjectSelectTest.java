@@ -92,7 +92,7 @@ public class ZkSingleObjectSelectTest extends AbstractZkTest<ZkSingleObjectSelec
 	{
 		prop = getProp("peopleByObjectMethod");
 		assertNotNull(prop);
-		richlet.bean.updateObjectFromPanel();
+		updateObject();
 		assertEquals(20, getCount(prop));
 	}
 

@@ -21,13 +21,14 @@ public class ZkCollectionSupportTest extends AbstractZkTest<ZkCollectionSupportT
 		super(new TestRichlet());
 	}
 	private static class TestRichlet extends GenericRichlet {
-		private static ZkBeanViewPanel<PeoplePicker> bean;
-	    private static Button updateObjectButton;
+		protected ZkBeanViewPanel<PeoplePicker> bean;
+	    protected Button updateObjectButton;
 	
 		public void service(Page page) {
 			bean = new ZkBeanViewPanel<PeoplePicker>();
 	
 			bean.setDataObject(new PeoplePicker());
+			bean.setPage(page);
 			updateObjectButton = new Button();
 			updateObjectButton.addEventListener("onClick", new EventListener() {
 				public boolean isAsap() {

@@ -17,12 +17,14 @@ public class ZkConfigurationTest extends AbstractZkTest<ZkConfigurationTest.Test
 		super(new TestRichlet());
 	}
 	private static class TestRichlet extends GenericRichlet {
-		private static ZkBeanViewPanel bean;
+		private ZkBeanViewPanel bean;
 
 		public void service(Page page) {
 			bean = new ZkBeanViewPanel();
+			
 			ConfigurationTestObject temp = new ConfigurationTestObject();
 			bean.setDataObject(temp);
+			bean.setPage(page);
 		}
 	}
 	
