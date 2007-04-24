@@ -41,10 +41,24 @@ table .channels_toolbar {
 	border-bottom: 1px solid rgb(170, 170, 187);
 }
 
-div.listbox, div.tree, div.grid, div.grid-no-striped,
-div.tree-body, div.listbox-body, div.grid-body, div.listbox-paging, div.grid-paging { 
+div.tree, div.grid, div.grid-no-striped, div.tree-body, 
+div.listbox-body, div.grid-body, div.listbox-paging, div.grid-paging { 
 	background-color: white; 
 	border: none;
+}
+
+.logo img {
+	padding-right: 10px;
+}
+
+.logo a {
+	padding-top: 5px;
+	vertical-align: middle;
+}
+
+div.tabpanel-accordion div {
+	overflow-y: auto;
+	height: inherit;
 }
 
 .channels_toolbar button, .tabpanel-accordion button {
@@ -74,7 +88,48 @@ div .channels_main {
 .channels_alerts {
 	border-top: 1px solid rgb(170, 170, 187);
 	padding: 5px;
-	margins: 5px 5px 0px 5px;
+	margin: 5px 0px 0px 0px;
+}
+
+.channels_alerts button {
+	background-color: transparent;
+	border: none;
+}
+
+td .red_alert {
+	background-image: url( "../images/16x16/flag_red.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+td .yellow_alert {
+	background-image: url( "../images/16x16/flag_yellow.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+td .green_alert {
+	background-image: url( "../images/16x16/flag_green.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+td .blue_alert {
+	background-image: url( "../images/16x16/flag_blue.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
 }
 
 .channels_min {
@@ -88,14 +143,14 @@ div .channels_main {
 	font-size: smaller;
 }
 
-.channels_min td.vbox {
+td.hbox, td.vbox {
 	padding: 0px;
 }
 
 div .listbox {
 	background-color: white;
 	color: black;
-	border: 1px inset windowframe;
+	border: none;
 }
 
 tr.itemsel, tr.itemsel a, tr.itemsel a:visited {

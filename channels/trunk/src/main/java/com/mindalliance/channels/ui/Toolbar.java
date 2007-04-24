@@ -3,11 +3,9 @@
 
 package com.mindalliance.channels.ui;
 
-import org.zkoss.zhtml.Text;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Html;
-import org.zkoss.zul.Listbox;
 
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
@@ -35,30 +33,19 @@ public class Toolbar extends Hbox {
         this.system = system;
 
         setSclass( "channels_toolbar" );
-        setHeight( "60px" );
+        setHeight( "40px" );
         setWidth( "100%" );
         setValign( "middle" );
 
-        appendChild(
-            new Html( "<a class=\"logo\" href=\"profile.jsp\">"
-                + user.getName() + "</a>" ) );
-
-        appendChild( new Text( " Acting as " ) );
-        appendChild( createRoleSelector() );
-        appendChild( new Html( "<a href=\"logout.jsp\">Logout</a>" ) );
+        Html html = new Html(
+            "<img align=\"middle\" src=\"images/channels.png\"></img>"
+                + "<a href=\"profile.jsp\">"
+                + user.getName() + "</a>"
+                + " <a href=\"logout.jsp\">(logout)</a>" );
+        html.setWidth( "100%" );
+        html.setSclass( "logo" );
+        appendChild( html );
         appendChild( createIcons() );
-    }
-
-    /**
-     * Create the role selection list box for the current user.
-     */
-    private Listbox createRoleSelector() {
-        Listbox roles = new Listbox();
-        roles.setWidth( null );
-        for ( String role : new String[]{
-            "Employee", "Fire Warden", "Group Manager" } )
-                roles.appendItem( role, role );
-        return roles;
     }
 
     /**
@@ -102,5 +89,4 @@ public class Toolbar extends Hbox {
     public User getUser() {
         return this.user;
     }
-
 }

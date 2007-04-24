@@ -64,35 +64,6 @@
 			<ref bean="admin"/>
 		</set></property>
 		
-<!-- 
-//        treeChildren.appendChild(
-//            newTreeitem( false, project, "ACME Business Continuity",
-//                newTreeitem( false, model, "Headquarters",
-//                    newTreeitem( true, scenario, "Blackout",
-//                        newTreeitem( false, report1, "Playbook" ),
-//                        newTreeitem( false, report1, "Issues Analysis" ),
-//                        newTreeitem( false, report2, "Dashboard" ),
-//                        newTreeitem( false, report3, "Info Flow" ) ),
-//                    newTreeitem( false, scenario, "Building Fire",
-//                        newTreeitem( false, report1, "Playbook" ),
-//                        newTreeitem( false, report1, "Issues Analysis" ),
-//                        newTreeitem( false, report2, "Dashboard" ),
-//                        newTreeitem( false, report3, "Info Flow" ) ),
-//                    newTreeitem( true, scenario, "Firewall Breach",
-//                        newTreeitem( false, report1, "Playbook" ),
-//                        newTreeitem( false, report1, "Issues Analysis" ),
-//                        newTreeitem( false, report2, "Dashboard" ),
-//                        newTreeitem( false, report3, "Info Flow" ) ) ),
-//                newTreeitem( true, model, "Supply Chain",
-//                    newTreeitem( false, scenario, "Some scenario" ) )
-//            ) );
-//        treeChildren.appendChild(
-//            newTreeitem( true, project, "CDC Avian Flu Preparedness",
-//                newTreeitem( false, model, "Some model" ) ) );
-//        treeChildren.appendChild(
-//            newTreeitem( true, project, "International Markets",
-//                newTreeitem( false, model, "Some other model" ) ) );
--->
 		<property name="projects"><set>
 			<bean class="com.mindalliance.channels.project.ProjectImpl">
 				<property name="name" value="ACME Business Continuity"/>
@@ -170,6 +141,20 @@
 					</set></property>
 			</bean>
 		</set></property>
-		
+
+		<property name="alerts"><set>
+			<bean class="com.mindalliance.channels.system.Alert">
+				<property name="priority" value="High"/>
+				<property name="what" value="Knowledge issue detected in &quot;Building Fire&quot; scenario"/>
+			</bean>
+			<bean class="com.mindalliance.channels.system.Alert">
+				<property name="priority" value="Medium"/>
+				<property name="what" value="New todo - confirm suggested response to new &quot;e-commerce server offline&quot; event in scenario &quot;Blackout&quot;"/>
+			</bean>
+			<bean class="com.mindalliance.channels.system.Alert">
+				<property name="priority" value="Low"/>
+				<property name="what" value="Peter Jones suggested a change to your profile"/>
+			</bean>
+		</set></property>		
 	</bean>
 </beans>
