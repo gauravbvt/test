@@ -14,4 +14,8 @@
 		<richlet-class>com.mindalliance.channels.ui.TimelineRichlet</richlet-class>
 		<richlet-url>/timeline</richlet-url>
 	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.CommandTestRichlet</richlet-class>
+		<richlet-url>/command</richlet-url>
+	</richlet>
 </zk>
