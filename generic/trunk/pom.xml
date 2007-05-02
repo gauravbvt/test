@@ -40,6 +40,11 @@
 			<name>David Feeney</name>
 			<email>dfeeney@bosatsu.net</email>
 		</developer>
+		<developer>
+			<id>eric</id>
+			<name>Eric Bax</name>
+			<email>bax@dslextreme.com</email>
+		</developer>
 	</developers>
 	
 	<contributors>
