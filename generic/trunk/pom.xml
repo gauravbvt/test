@@ -197,6 +197,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>6.1.2</version>
 				<configuration>
 					<enableRulesSummary>false</enableRulesSummary>
 					<configLocation>../generic/mas_checks.xml</configLocation>
