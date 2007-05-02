@@ -45,8 +45,8 @@ public class SearcherTest {
     public final void testSearch() throws IOException, ParseException {
     	Hits hits = searcher.search("sunshine");
     	assertEquals(2, hits.length());
-    	assertEquals("hello", hits.doc(0).get("guid"));
-    	assertEquals("sunshine", hits.doc(1).get("guid"));
+    	assertEquals("sunshine", hits.doc(0).get("guid"));
+    	assertEquals("hello", hits.doc(1).get("guid"));
     }
 
     /**

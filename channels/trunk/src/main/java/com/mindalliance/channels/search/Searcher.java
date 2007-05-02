@@ -45,7 +45,7 @@ public class Searcher {
 	 */
 	public void insert(Searchable obj) throws IOException {
 		Document doc = new Document();
-		doc.add(new Field("guid", obj.getGUID(), Field.Store.YES, Field.Index.NO));
+		doc.add(new Field("guid", obj.getGUID(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 		doc.add(new Field("text", obj.getText(), Field.Store.NO, Field.Index.TOKENIZED));
     
 		IndexWriter writer = new IndexWriter(dir, new StandardAnalyzer());
