@@ -18,7 +18,7 @@ public abstract class AccessibleResource extends AbstractResource implements
 		Accessible {
 	
 	class AccessAuthorization {
-		private Pattern<Contactable> authorization;
+		private Pattern<Contactable> accessAuthorization;
 	}
 	
 	private List<AccessAuthorization> accessAuthorizations;

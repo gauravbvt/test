@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.mindalliance.channels.data.Caused;
 import com.mindalliance.channels.data.Level;
-import com.mindalliance.channels.data.StatedOccurrence;
 import com.mindalliance.channels.data.beans.Cause;
 import com.mindalliance.channels.util.Duration;
 

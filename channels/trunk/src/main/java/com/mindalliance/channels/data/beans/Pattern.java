@@ -4,6 +4,7 @@
  */
 package com.mindalliance.channels.data.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.JavaBean;
@@ -13,15 +14,19 @@ import com.mindalliance.channels.util.AbstractJavaBean;
 /**
  * A javabean pattern that is matched against javabeans of a given class. 
  * The pattern matches if all its attribute constraints are satisfied.
- * TODO: Rethink using generics.
  * @author jf
  *
  * @param <T>
  */
-public class Pattern<T extends JavaBean> extends AbstractJavaBean {
+public class Pattern<T> extends AbstractJavaBean {
 	
-	private Class klass; // the class to match. Must inherit from T.
+	private Class<T> beanClass;
 	private List<AttributeConstraint> constraints;
+	
+	public Pattern(Class<T> beanClass) {
+		this.beanClass = beanClass;
+		constraints = new ArrayList<AttributeConstraint>();
+	}
 
 	/**
 	 * A constraint on an attribute of a javabean being matched.
@@ -39,8 +44,11 @@ public class Pattern<T extends JavaBean> extends AbstractJavaBean {
 
 	}
 	
+	public Class<T> getbeanClass() {
+		return beanClass;
+	}
 	
-	public boolean matches(T bean) {
+	public boolean matches(JavaBean bean) {
 		return false;
 	}
 

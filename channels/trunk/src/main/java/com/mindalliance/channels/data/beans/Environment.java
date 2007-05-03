@@ -17,7 +17,7 @@ import com.mindalliance.channels.data.elements.Event;
  */
 public class Environment extends ReferenceData {
 	
-	private List<Pattern<Event>> triggerConditions;
+	private List<Pattern<Event>> triggerConditions; // Event patterns
 	private List<Resource> availableResources;
 	private List<Resource> unavailableResources;
 	private List<Policy> enforcedPolicies;

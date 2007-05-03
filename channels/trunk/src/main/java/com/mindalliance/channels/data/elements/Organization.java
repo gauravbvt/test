@@ -7,6 +7,7 @@ package com.mindalliance.channels.data.elements;
 import java.util.List;
 
 import com.mindalliance.channels.data.Located;
+import com.mindalliance.channels.data.beans.Agreement;
 import com.mindalliance.channels.data.beans.Location;
 import com.mindalliance.channels.data.beans.Mission;
 
