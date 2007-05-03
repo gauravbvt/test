@@ -7,7 +7,9 @@ package com.mindalliance.channels.data.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.data.Accessible;
 import com.mindalliance.channels.data.Actor;
+import com.mindalliance.channels.data.Contactable;
 
 
 /**
@@ -16,7 +18,7 @@ import com.mindalliance.channels.data.Actor;
  * @author jf
  *
  */
-public class Role extends InformationResource implements Actor {
+public class Role extends AccessibleResource implements Actor {
 	
 	private Organization organization;
 	// Either persons or group is set, not both.
@@ -33,4 +35,5 @@ public class Role extends InformationResource implements Actor {
 		roles.add(this);
 		return roles;
 	}
+
 }

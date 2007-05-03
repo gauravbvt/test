@@ -9,11 +9,11 @@ import java.util.List;
 import com.mindalliance.channels.data.Actor;
 
 /**
- * A team is composed of roles possibly across organizations.
+ * A team aggregates roles possibly across organizations.
  * @author jf
  *
  */
-public class Team extends AbstractResource implements Actor {
+public class Team extends AccessibleResource implements Actor {
 	
 	class Membership {
 		

@@ -6,7 +6,7 @@ package com.mindalliance.channels.data.elements;
 
 import java.net.URL;
 
-public class Person extends InformationResource {
+public class Person extends ContactableResource {
 
 	private String firstName;
 	private String middleName;
