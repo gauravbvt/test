@@ -41,7 +41,7 @@ import static com.mindalliance.channels.system.ParticipantType.Participant;
 public class ProjectImpl extends SystemObject
         implements Project {
 
-    private Set<Model> models = new HashSet<Model>();
+    private Set<Model> models = new TreeSet<Model>();
     private Map<User,ParticipantType> participants =
                         Collections.synchronizedMap(
                                 new HashMap<User,ParticipantType>() );
@@ -79,7 +79,9 @@ public class ProjectImpl extends SystemObject
     public synchronized void setModels( Set<Model> models ) {
         if ( models == null )
             throw new NullPointerException();
-        this.models = new HashSet<Model>( models );
+        this.models = new TreeSet<Model>( models );
+        for ( Model model : models )
+            model.setProject( this );
     }
 
     /**
@@ -88,6 +90,7 @@ public class ProjectImpl extends SystemObject
      */
     public synchronized void addModel( Model model ) {
         this.models.add( model );
+        model.setProject( this );
     }
 
     /**
@@ -96,6 +99,7 @@ public class ProjectImpl extends SystemObject
      */
     public synchronized void removeModel( Model model ) {
         this.models.remove( model );
+        model.setProject( null );
     }
 
     //---------------------------------

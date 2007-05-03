@@ -176,7 +176,27 @@ public class ModelImpl extends AbstractProjectObject
      * @param scenarios The new value of scenarios
      */
     public void setScenarios( Set<Scenario> scenarios ) {
-        this.scenarios = scenarios;
+        this.scenarios = new TreeSet<Scenario>( scenarios );
+        for ( Scenario scenario : scenarios )
+            scenario.setModel( this );
+    }
+
+    /**
+     * Add a scenario to this model.
+     * @param scenario the new scenario
+     */
+    public void addScenario( Scenario scenario ) {
+        this.scenarios.add( scenario );
+        scenario.setModel( this );
+    }
+
+    /**
+     * Remove a scenario.
+     * @param scenario the scenario
+     */
+    public void removeScenario( Scenario scenario ) {
+        this.scenarios.remove( scenario );
+        scenario.setModel( null );
     }
 
     /**
@@ -184,5 +204,13 @@ public class ModelImpl extends AbstractProjectObject
      */
     public Set<JavaBean> getAssertableObjects() {
         return null;
+    }
+
+    /**
+     * Compares this object with the specified object for order.
+     * @param o the other model
+     */
+    public int compareTo( Model o ) {
+        return getName().compareTo( o.getName() );
     }
 }

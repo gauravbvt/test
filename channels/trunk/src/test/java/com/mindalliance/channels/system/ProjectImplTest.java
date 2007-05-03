@@ -3,7 +3,11 @@
 
 package com.mindalliance.channels.system;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
@@ -11,16 +15,14 @@ import java.beans.VetoableChangeListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.easymock.EasyMock.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.mindalliance.channels.Model;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.model.ModelImpl;
 import com.mindalliance.channels.project.ProjectImpl;
-import com.mindalliance.channels.system.UserImpl;
 import com.mindalliance.channels.util.TestListener;
 
 /**
@@ -35,8 +37,8 @@ public class ProjectImplTest {
     private User user1;
     private User user2;
     
-    private Model model1;
-    private Model model2;
+    private ModelImpl model1;
+    private ModelImpl model2;
         
     /**
      * @throws java.lang.Exception
@@ -51,8 +53,10 @@ public class ProjectImplTest {
     
         user1 = new UserImpl( "User 1", "user1", "pass1", new String[]{ "ROLE_USER" } );
         user2 = new UserImpl( "User 2", "user2", "pass2", new String[]{ "ROLE_USER" } );
-        model1 = createNiceMock( Model.class );
-        model2 = createNiceMock( Model.class );
+        model1 = new ModelImpl();
+        model1.setName( "a" );
+        model2 = new ModelImpl();
+        model2.setName( "b" );
     }
     
     @After
@@ -79,7 +83,6 @@ public class ProjectImplTest {
         project.addParticipant( user2 );
         assertEquals( 1, project.getManagers().size() );
         assertTrue( project.getManagers().contains( user1 ) );
-        
     }
 
     /**
@@ -111,20 +114,23 @@ public class ProjectImplTest {
         } catch ( NullPointerException e ) {
             // OK
         }
-
-        replay( model1, model2 );
+        
         Set<Model> models = new HashSet<Model>();
+        ModelImpl model1 = new ModelImpl();
+        model1.setName( "a" );
         models.add( model1 );
+        ModelImpl model2 = new ModelImpl();
+        model2.setName( "b" );
         models.add( model2 );
         
         project.setModels( models );
-        assertEquals( models, project.getModels() );
+        Set<Model> models2 = project.getModels();
+        assertEquals( 2, models2.size() );
+        assertTrue( models2.containsAll( models ) );
         
         assertEquals( 1, listener.getPropCount() );
         assertEquals( "models", listener.getLastProp().getPropertyName() );
         assertEquals( models, listener.getLastProp().getNewValue() );
-
-        verify( model1, model2 );
     }
 
     /**
@@ -166,13 +172,17 @@ public class ProjectImplTest {
         assertNotNull( project.getModels() );
         assertEquals( 0, project.getModels().size() );
         
-        project.addModel( model1 );
+        ModelImpl m1 = new ModelImpl();
+        m1.setName( "b" );
+        project.addModel( m1 );
         assertEquals( 1, project.getModels().size() );
         assertEquals( 1, listener.getPropCount() );
         assertEquals( "models", listener.getLastProp().getPropertyName() );
         
         listener.reset();
-        project.addModel( model2 );
+        ModelImpl m = new ModelImpl();
+        m.setName( "a" );
+        project.addModel( m );
         assertEquals( 2, project.getModels().size() );
         assertEquals( 1, listener.getPropCount() );
         assertEquals( "models", listener.getLastProp().getPropertyName() );        

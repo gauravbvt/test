@@ -3,14 +3,9 @@
 
 package com.mindalliance.channels.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.context.ApplicationContext;
 import org.zkoss.zhtml.Text;
@@ -22,7 +17,6 @@ import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.event.ClientInfoEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
@@ -32,17 +26,10 @@ import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Tabpanels;
 import org.zkoss.zul.Tabs;
-import org.zkoss.zul.Tree;
-import org.zkoss.zul.Treechildren;
-import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.Vbox;
 
-import com.mindalliance.channels.Model;
-import com.mindalliance.channels.Project;
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.model.ModelImpl;
-import com.mindalliance.channels.model.Scenario;
 
 /**
  * The user desktop.
@@ -53,6 +40,16 @@ import com.mindalliance.channels.model.Scenario;
 public class DesktopRichlet extends GenericRichlet {
 
     /**
+     * Session attribute name of the current tab selection.
+     */
+    public static final String TAB_SELECTION = "TabSelection" ;
+
+    /**
+     * Session attribute name of the current accordion selection.
+     */
+    public static final String CURRENT_SELECTION = "AccordionSelection" ;
+
+    /**
      * The fixed real estate height of the accordion pane.
      * 4*28 + 11...
      */
@@ -60,9 +57,9 @@ public class DesktopRichlet extends GenericRichlet {
 
     /**
      * The total height of the fixed parts of the desktop.
-     * 45 + 87 + 25...
+     * 46 + 87 + 25...
      */
-    private static final int FIXED_HEIGHT = 157;
+    private static final int FIXED_HEIGHT = 158;
     private static final int DEFAULT_CANVAS_HEIGHT = 100;
     private static final String DESKTOP_HEIGHT = "DesktopHeight";
 
@@ -107,6 +104,7 @@ public class DesktopRichlet extends GenericRichlet {
 
         page.setTitle( "Channels" );
 
+        // Display the screen in 2 phases to minimize resizing flicker...
         Component window = getDesktopHeight( page ) == -1 ?
                 new Text( "Loading..." )
               : createDesktop( page, user, system );
@@ -132,35 +130,27 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
-     * Return the available height of the desktop.
-     * @param page the page
-     * @return the height, or -1 if unknown
-     */
-    private int getDesktopHeight( Page page ) {
-        Session session = page.getDesktop().getSession();
-        Integer oldH = (Integer) session.getAttribute( DESKTOP_HEIGHT );
-        return oldH == null ? -1 : oldH.intValue();
-    }
-
-    /**
      * Create the desktop.
      * @param page the page
      * @param user the current user
      * @param system the system
      */
     private Vbox createDesktop( Page page, User user, System system ) {
-        Component canvas = createCanvas( user );
+        Box canvas = createCanvas( user );
+        canvas.setPage( page );
         int canvasHeight = getCanvasHeight( page );
+        canvas.setHeight( canvasHeight + "px" );
+        canvas.setWidth( "100%" );
 
         Hbox split = new Hbox();
         split.setSclass( "channels_main" );
         split.setWidth( "100%" );
         split.setHeight( canvasHeight + "px" );
-        split.setWidths( "264px,*" );
         split.appendChild(
                 createAccordion( canvasHeight, user, system, canvas ) );
         split.appendChild( newSplitter( true ) );
         split.appendChild( canvas );
+        split.setWidths( "30%,70%" );
 
         final Vbox window = new Vbox();
         window.setWidth( "100%" );
@@ -175,17 +165,6 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
-     * Figure out the height of the canvas component given what we know of the
-     * desktop's size.
-     * @return the size in pixels
-     */
-    private int getCanvasHeight( Page page ) {
-        int height = getDesktopHeight( page );
-        return height == -1 ? DEFAULT_CANVAS_HEIGHT
-                            : ( height - FIXED_HEIGHT );
-    }
-
-    /**
      * Create the accordion pane.
      * @param maxHeight height at which scollbar will appear
      * @param user the current user
@@ -194,7 +173,7 @@ public class DesktopRichlet extends GenericRichlet {
      */
     private Component createAccordion(
             int maxHeight,
-            User user, System system, Component canvas ) {
+            User user, System system, Box canvas ) {
 
         final int tabContentHeight = maxHeight - FIXED_ACCORDION_HEIGHT;
         AccordionTab[] tabDefs = new AccordionTab[] {
@@ -203,25 +182,25 @@ public class DesktopRichlet extends GenericRichlet {
                 "People & Places",
                 "Phonebook and locators",
                 new SelectionTab( tabContentHeight, user, canvas,
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/id_card.png",
                         "My profile",
                         "Your profile",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/users-phone.png",
                         "My contacts",
                         "Your social network",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/orgs.png",
                         "Organizations",
                         "All organizational profiles",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/systems.png",
                         "Systems & resources",
                         "Profiles of systems and information resources",
@@ -233,32 +212,33 @@ public class DesktopRichlet extends GenericRichlet {
                 "images/16x16/branch_element.png",
                 "Scenarios",
                 "Projects, Models and Scenarios",
-                createScenarioTab( tabContentHeight, canvas, user, system ) ),
+                new ScenariosTab(
+                    maxHeight, tabContentHeight, canvas, user, system ) ),
 
             new AccordionTab(
                 "images/16x16/books.png",
                 "Library",
                 "Reference section",
                 new SelectionTab( tabContentHeight, user, canvas,
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/book_open2.png",
                         "Dictionary",
                         "Typologies",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/branch_element.png",
                         "Common scenarios",
                         "Parameterized scenarios",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/scroll.png",
                         "Policies",
                         "Policies that impact information sharing",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/earth_find.png",
                         "Gazetteer",
                         "Location, location, location...",
@@ -269,33 +249,33 @@ public class DesktopRichlet extends GenericRichlet {
             new AccordionTab(
                 "images/16x16/preferences.png",
                 "Settings",
-                "Projects, Models and Scenarios",
+                "Preferences, Logs, etc.",
                 new SelectionTab( tabContentHeight, user, canvas,
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/user1_preferences.png",
                         "My preferences",
                         "Your personal settings",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/step.png",
                         "Activity log",
                         "What's going on on this server",
                         "ROLE_USER",
                         null, null ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/users3_preferences.png",
                         "Users management",
                         "Keep track of users",
                         "ROLE_ADMIN",
                         null, null  ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/server_preferences.png",
                         "System configuration",
                         "Administer channels",
                         "ROLE_ADMIN",
                         null, null  ),
-                    new Selection(
+                    new AccordionSelection(
                         "images/24x24/oszillograph.png",
                         "System monitoring",
                         "Keep an eye on things",
@@ -315,183 +295,36 @@ public class DesktopRichlet extends GenericRichlet {
             tabpanels.appendChild( content );
         }
 
-        Tabbox accordion = new Tabbox();
+        final Tabbox accordion = new Tabbox();
         accordion.setMold( "accordion" );
         accordion.setWidth( "100%" );
         accordion.appendChild( tabs );
         accordion.appendChild( tabpanels );
-        accordion.setSelectedIndex( 1 );
-        return accordion;
-    }
-
-    private Treeitem newTreeitem( Selection selection, Treechildren kids ) {
-
-        Treeitem result = new Treeitem( selection.getLabel() );
-        result.setImage( selection.getIcon() );
-        result.setTooltip( selection.getTooltip() );
-        result.setOpen( false );
-        result.setValue( selection );
-
-        if ( kids != null )
-            result.appendChild( kids );
-
-        return result;
-    }
-
-    /**
-     * Create the scenario tab.
-     * @param height the available height for the tree
-     * @param canvas the canvas to tie to selections
-     * @param user the user
-     * @param system the system
-     */
-    private Tabpanel createScenarioTab(
-            int height,
-            Component canvas, User user, System system ) {
-
-        Treechildren treeChildren = new Treechildren();
-        for ( Project p : system.getProjects() )
-            treeChildren.appendChild(
-                    createProjectNode( canvas, p, user, system ) );
-
-        Tree tree = new Tree();
-        tree.setHeight( height + "px" );
-        tree.appendChild( treeChildren );
-        tree.addEventListener( "onSelect", new EventListener() {
+        accordion.addEventListener( "onSelect", new EventListener() {
             public boolean isAsap() {
                 return true;
             }
 
             public void onEvent( Event event ) {
-                SelectEvent e = (SelectEvent) event;
-                Treeitem i = (Treeitem) e.getSelectedItems().iterator().next();
-                Selection s = (Selection) i.getValue();
-                if ( s != null )
-                    s.select();
+                Integer sel = Integer.valueOf( accordion.getSelectedIndex() );
+                accordion.getDesktop().getSession().setAttribute(
+                        TAB_SELECTION,
+                        sel );
             }
         } );
-
-        Tabpanel tabpanel = new Tabpanel();
-        tabpanel.appendChild( tree );
-        return tabpanel;
+        accordion.setSelectedIndex( getTabSelection( canvas ) );
+        return accordion;
     }
 
     /**
-     * Create a project node in the tree.
-     *
-     * @param canvas the canvas to associate with
-     * @param project the project
-     * @param user the current user
-     * @param system the system
-     * @return a tree node, collapsed
+     * Get the current tab selection.
+     * @param component a component to get to the session
+     * @return the current selection, or 1 if unspecified.
      */
-    private Treeitem createProjectNode(
-            Component canvas, Project project, User user, System system ) {
-
-        Treechildren models = new Treechildren();
-        for ( Model m : project.getModels() )
-            models.appendChild( createModelNode( canvas, m, user, system ) );
-
-        return newTreeitem(
-            new Selection(
-                "images/16x16/environment.png",
-                project.getName(),
-                "Project properties",
-                "ROLE_USER",
-                null,
-                canvas ),
-            models );
-    }
-
-    /**
-     * Create a model node in the tree.
-     *
-     * @param canvas the canvas to associate with
-     * @param model the model
-     * @param user the current user
-     * @param system the system
-     * @return a tree node, collapsed
-     */
-    private Treeitem createModelNode(
-            Component canvas, Model model, User user, System system ) {
-
-        Treechildren scenarios = new Treechildren();
-        for ( Scenario s : ( (ModelImpl) model ).getScenarios() )
-            scenarios.appendChild(
-                    createScenarioNode( canvas, s, user, system ) );
-
-        return newTreeitem(
-            new Selection(
-                "images/16x16/cube_molecule.png",
-                model.getName(),
-                "Model properties",
-                "ROLE_USER",
-                null,
-                canvas ),
-            scenarios );
-    }
-
-    /**
-     * Create a scenario node.
-     *
-     * @param canvas the associated canvas
-     * @param scenario the scenario
-     * @param user the current user
-     * @param system the system
-     */
-    private Treeitem createScenarioNode(
-            Component canvas, Scenario scenario, User user, System system ) {
-
-        Treechildren reports = new Treechildren();
-        reports.appendChild( newTreeitem(
-            new Selection(
-                    "images/16x16/document_chart.png",
-                    "Playbook",
-                    "View playbook",
-                    "ROLE_USER",
-                    null,
-                    canvas ),
-            null ) );
-
-        reports.appendChild( newTreeitem(
-            new Selection(
-                    "images/16x16/document_chart.png",
-                    "Issues Analysis",
-                    "View issues",
-                    "ROLE_USER",
-                    null,
-                    canvas ),
-            null ) );
-
-        reports.appendChild( newTreeitem(
-            new Selection(
-                    "images/16x16/chart.png",
-                    "Dashboard",
-                    "View dashboard",
-                    "ROLE_USER",
-                    null,
-                    canvas ),
-            null ) );
-
-        reports.appendChild( newTreeitem(
-            new Selection(
-                    "images/16x16/dot-chart.png",
-                    "Info Flow",
-                    "View information flows",
-                    "ROLE_USER",
-                    null,
-                    canvas ),
-            null ) );
-
-        return newTreeitem(
-                new Selection(
-                    "images/16x16/branch.png",
-                    scenario.getName(),
-                    "Scenario viewer",
-                    "ROLE_USER",
-                    new ScenarioViewer( system, scenario, user ),
-                    canvas ),
-                reports );
+    public int getTabSelection( Component component ) {
+        Integer sel = (Integer) component.getDesktop().getSession()
+                        .getAttribute( TAB_SELECTION );
+        return sel == null ? 1 : sel.intValue();
     }
 
     /**
@@ -500,7 +333,7 @@ public class DesktopRichlet extends GenericRichlet {
      * the accordion pane.
      * @param user the user
      */
-    private Component createCanvas( User user ) {
+    private Box createCanvas( User user ) {
         return new Box();
     }
 
@@ -519,6 +352,28 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
+     * Return the available height of the desktop.
+     * @param page the page
+     * @return the height, or -1 if unknown
+     */
+    private int getDesktopHeight( Page page ) {
+        Session session = page.getDesktop().getSession();
+        Integer oldH = (Integer) session.getAttribute( DESKTOP_HEIGHT );
+        return oldH == null ? -1 : oldH.intValue();
+    }
+
+    /**
+     * Figure out the height of the canvas component given what we know of the
+     * desktop's size.
+     * @return the size in pixels
+     */
+    private int getCanvasHeight( Page page ) {
+        int height = getDesktopHeight( page );
+        return height == -1 ? DEFAULT_CANVAS_HEIGHT
+                            : ( height - FIXED_HEIGHT );
+    }
+
+    /**
      * Create a splitter.
      * @param before if true collapse arrow point to previous pane.
      */
@@ -526,120 +381,6 @@ public class DesktopRichlet extends GenericRichlet {
         Splitter splitter = new Splitter();
         splitter.setCollapse( "none" );
         return splitter;
-    }
-
-    //===================================================
-    /**
-     * Summary of what happens when the user selects an item in a tab
-     * in the accordion pane.
-     */
-    private static class Selection {
-
-        private String icon;
-        private String label;
-        private Component pane;
-        private String tooltip;
-        private String roles;
-        private Component canvas;
-
-        /**
-         * Default constructor.
-         *
-         * @param icon path to the icon to display in lists
-         * @param label the label of the selection
-         * @param tooltip the tooltip of the selection
-         * @param roles authorized roles for this selection
-         * @param pane the pane to display in the canvas when selected
-         * @param canvas the associated canvas
-         */
-        public Selection(
-                String icon, String label, String tooltip, String roles,
-                Component pane, Component canvas ) {
-
-            this.icon = icon;
-            this.label = label;
-            this.pane = pane;
-            this.tooltip = tooltip;
-            this.roles = roles;
-            this.canvas = canvas;
-        }
-
-        /**
-         * Return the value of icon.
-         */
-        public String getIcon() {
-            return this.icon;
-        }
-
-        /**
-         * Return the value of label.
-         */
-        public String getLabel() {
-            return this.label;
-        }
-
-        /**
-         * Return the value of pane.
-         */
-        public Component getPane() {
-            return this.pane;
-        }
-
-        /**
-         * Return the value of tooltip.
-         */
-        public String getTooltip() {
-            return this.tooltip;
-        }
-
-        /**
-         * Perform the action associated with this selection.
-         */
-        @SuppressWarnings( "unchecked" )
-        public void select() {
-            List children = new ArrayList( canvas.getChildren() );
-            for ( Object child : children )
-                canvas.removeChild( (Component) child );
-
-            canvas.appendChild( pane != null ? pane
-                                             : new Text( "TBD: " + label ) );
-            canvas.invalidate();
-        }
-
-        public String getRoles() {
-            return this.roles;
-        }
-
-        /**
-         * Test if a user is authorized to perform this selection.
-         * @param user the user
-         */
-        public boolean isAuthorized( User user ) {
-            StringTokenizer tokenizer = new StringTokenizer( getRoles(), ", " );
-            while ( tokenizer.hasMoreTokens() ) {
-                String role = tokenizer.nextToken();
-                for ( GrantedAuthority a : user.getAuthorities() ) {
-                    if ( a.getAuthority().equals( role ) )
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         * Get the canvas associated with this selection.
-         */
-        public Component getCanvas() {
-            return this.canvas;
-        }
-
-        /**
-         * Set the value of canvas.
-         * @param canvas The new value of canvas
-         */
-        public void setCanvas( Component canvas ) {
-            this.canvas = canvas;
-        }
     }
 
     //===================================================
@@ -716,14 +457,15 @@ public class DesktopRichlet extends GenericRichlet {
          */
         public SelectionTab(
                 int height,
-                User user, Component canvas, Selection... selections ) {
+                User user, Component canvas,
+                AccordionSelection... selections ) {
             super();
             setHeight( height + "px" );
 
             Vbox vbox = new Vbox();
             vbox.setWidth( "100%" );
 
-            for ( final Selection sel : selections ) {
+            for ( final AccordionSelection sel : selections ) {
                 if ( sel.isAuthorized( user ) ) {
                     sel.setCanvas( canvas );
 

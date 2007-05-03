@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @composed "" - "*" JavaBean
  */
-public interface Model extends JavaBean {
+public interface Model extends JavaBean, Comparable<Model> {
 
     /**
      * Return the name of this model.
@@ -32,4 +32,14 @@ public interface Model extends JavaBean {
      */
     Set<JavaBean> getAssertableObjects();
 
+    /**
+     * Return the project containing this model.
+     */
+    Project getProject();
+
+    /**
+     * Set the project containing this model.
+     * @param project the new project container
+     */
+    void setProject( Project project );
 }

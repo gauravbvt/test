@@ -23,7 +23,8 @@ import com.mindalliance.channels.Model;
  * @composed - - * ScenarioElement
  * @composed - - * Issue
  */
-public class Scenario extends ModelElement {
+public class Scenario extends ModelElement
+        implements Comparable<Scenario> {
 
     private String name;
     private List<String> objectives = new ArrayList<String>();
@@ -199,5 +200,13 @@ public class Scenario extends ModelElement {
      */
     public void setTasks( Set<Task> tasks ) {
         this.tasks = tasks;
+    }
+
+    /**
+     * Compares this object with the specified object for order.
+     * @param o the other scenario
+     */
+    public int compareTo( Scenario o ) {
+        return getName().compareTo( o.getName() );
     }
 }
