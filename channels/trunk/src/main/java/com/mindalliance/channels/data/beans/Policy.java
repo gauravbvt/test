@@ -2,19 +2,19 @@
  * Created on Apr 26, 2007
  *
  */
-package com.mindalliance.channels.data.elements;
+package com.mindalliance.channels.data.beans;
 
 import java.util.List;
 
 import com.mindalliance.channels.data.Regulatable;
-import com.mindalliance.channels.data.beans.Pattern;
+import com.mindalliance.channels.data.elements.Organization;
 
 /**
  * A policy issued by some organization and enforced possibly by another.
  * @author jf
  *
  */
-public class Policy extends AbstractElement {
+public class Policy extends ReferenceData {
 	
 	class Target {
 		private Pattern<Regulatable> targetSpecs;

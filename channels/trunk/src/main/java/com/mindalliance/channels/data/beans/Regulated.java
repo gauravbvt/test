@@ -5,8 +5,6 @@
 package com.mindalliance.channels.data.beans;
 
 import com.mindalliance.channels.data.Regulatable;
-import com.mindalliance.channels.data.elements.Environment;
-import com.mindalliance.channels.data.elements.Policy;
 
 /**
  * Assertion that some occurrence is regulated by a policy.

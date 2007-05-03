@@ -7,6 +7,8 @@ package com.mindalliance.channels.data.elements;
 import java.util.List;
 
 import com.mindalliance.channels.data.Resource;
+import com.mindalliance.channels.data.beans.Environment;
+import com.mindalliance.channels.data.beans.Policy;
 
 /**
  * A realized environment, triggered by an event and in effect for the duration of the event.

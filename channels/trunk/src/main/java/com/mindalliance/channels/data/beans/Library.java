@@ -6,11 +6,9 @@ package com.mindalliance.channels.data.beans;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.elements.Location;
-import com.mindalliance.channels.data.elements.Policy;
 
 /**
- * Access to all reference data: typologies, locations, policies and templates
+ * Access to all reference data: environment, typologies, locations, policies and templates
  * @author jf
  *
  */
@@ -19,6 +17,7 @@ public class Library extends AbstractQueryable {
 	private List<Typology> typologies;
 	private List<Location> locations;
 	private List<Policy> policies;
+	private List<Environment> environments;
 	private List<Template> templates;
 	
 	/**

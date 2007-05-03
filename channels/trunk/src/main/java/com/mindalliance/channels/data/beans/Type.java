@@ -2,19 +2,17 @@
  * Created on Apr 25, 2007
  *
  */
-package com.mindalliance.channels.data.elements;
+package com.mindalliance.channels.data.beans;
 
 import com.mindalliance.channels.data.Describable;
 import com.mindalliance.channels.data.TypeSet;
-import com.mindalliance.channels.data.beans.Information;
-import com.mindalliance.channels.data.beans.Typology;
 
 /**
  * A categorization of an element.
  * @author jf
  *
  */
-public class Type extends AbstractElement implements Describable {
+public class Type extends ReferenceData implements Describable {
 
 	public static final String MISSION = "Mission";
 	public static final String OBJECTIVE = "Objective";

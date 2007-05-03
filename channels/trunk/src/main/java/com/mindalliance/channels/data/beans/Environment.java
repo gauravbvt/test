@@ -2,12 +2,12 @@
  * Created on Apr 26, 2007
  *
  */
-package com.mindalliance.channels.data.elements;
+package com.mindalliance.channels.data.beans;
 
 import java.util.List;
 
 import com.mindalliance.channels.data.Resource;
-import com.mindalliance.channels.data.beans.Pattern;
+import com.mindalliance.channels.data.elements.Event;
 
 /**
  * A specification for situations; during what event they occur, what resources become (un)available 
@@ -15,7 +15,7 @@ import com.mindalliance.channels.data.beans.Pattern;
  * @author jf
  *
  */
-public class Environment extends AbstractElement {
+public class Environment extends ReferenceData {
 	
 	private List<Pattern<Event>> triggerConditions;
 	private List<Resource> availableResources;

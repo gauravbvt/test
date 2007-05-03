@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.mindalliance.channels.data.Described;
 import com.mindalliance.channels.data.Named;
-import com.mindalliance.channels.data.elements.Type;
 import com.mindalliance.channels.util.AbstractJavaBean;
 /**
  * A taxonomy

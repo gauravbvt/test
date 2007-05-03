@@ -5,7 +5,6 @@
 package com.mindalliance.channels.data.beans;
 
 import com.mindalliance.channels.data.Agreeable;
-import com.mindalliance.channels.data.elements.Environment;
 import com.mindalliance.channels.data.elements.Organization;
 
 /**

@@ -9,6 +9,7 @@ import java.util.List;
 import com.mindalliance.channels.data.Latency;
 import com.mindalliance.channels.data.Level;
 import com.mindalliance.channels.data.TypeSet;
+import com.mindalliance.channels.data.beans.Type;
 
 /**
  * A communication medium with a security level, restrictions as to formats it can transmit,

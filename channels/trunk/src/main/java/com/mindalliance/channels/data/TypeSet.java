@@ -7,8 +7,8 @@ package com.mindalliance.channels.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.data.beans.Type;
 import com.mindalliance.channels.data.beans.Typology;
-import com.mindalliance.channels.data.elements.Type;
 
 /**
  * A collection of types from a given typology.

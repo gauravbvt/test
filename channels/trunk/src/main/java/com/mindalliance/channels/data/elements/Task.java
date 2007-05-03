@@ -11,6 +11,7 @@ import com.mindalliance.channels.data.Regulatable;
 import com.mindalliance.channels.data.TypeSet;
 import com.mindalliance.channels.data.beans.Cause;
 import com.mindalliance.channels.data.beans.Regulated;
+import com.mindalliance.channels.data.beans.Type;
 
 /**
  * A specification of activities. It is carried out by agents which specify roles or teams. 

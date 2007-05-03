@@ -2,19 +2,20 @@
  * Created on Apr 26, 2007
  *
  */
-package com.mindalliance.channels.data.elements;
+package com.mindalliance.channels.data.beans;
 
 import java.util.List;
 
 import com.mindalliance.channels.data.Distance;
 import com.mindalliance.channels.data.LatLong;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A place, position etc.
  * @author jf
  *
  */
-public class Location extends AbstractElement {
+public class Location extends ReferenceData {
 
 	private LatLong latLong;
 	private Distance radius;

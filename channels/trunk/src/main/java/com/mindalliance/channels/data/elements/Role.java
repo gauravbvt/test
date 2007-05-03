@@ -10,6 +10,7 @@ import java.util.List;
 import com.mindalliance.channels.data.Accessible;
 import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.Contactable;
+import com.mindalliance.channels.data.beans.Location;
 
 
 /**

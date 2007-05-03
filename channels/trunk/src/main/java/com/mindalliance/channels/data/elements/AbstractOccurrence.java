@@ -5,6 +5,7 @@
 package com.mindalliance.channels.data.elements;
 
 import com.mindalliance.channels.data.Occurrence;
+import com.mindalliance.channels.data.beans.Location;
 import com.mindalliance.channels.util.Duration;
 
 /**

@@ -6,6 +6,8 @@ package com.mindalliance.channels.data.elements;
 
 import java.util.List;
 
+import com.mindalliance.channels.data.beans.Environment;
+
 public class Model extends AbstractElement {
 	
 	private Project project;

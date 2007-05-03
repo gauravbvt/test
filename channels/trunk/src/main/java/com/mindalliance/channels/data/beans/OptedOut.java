@@ -6,7 +6,6 @@ package com.mindalliance.channels.data.beans;
 
 import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.OptOutable;
-import com.mindalliance.channels.data.elements.Environment;
 
 /**
  * Assertion on agents that excludes a role, a person or a team from being implied by an agent.
