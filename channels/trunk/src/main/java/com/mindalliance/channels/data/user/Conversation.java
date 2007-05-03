@@ -1,0 +1,11 @@
+/*
+ * Created on Apr 30, 2007
+ *
+ */
+package com.mindalliance.channels.data.user;
+
+import com.mindalliance.channels.util.AbstractJavaBean;
+// TODO
+public class Conversation extends AbstractJavaBean {
+
+}

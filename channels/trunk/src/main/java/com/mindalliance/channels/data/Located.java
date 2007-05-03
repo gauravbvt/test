@@ -4,7 +4,7 @@
  */
 package com.mindalliance.channels.data;
 
-import com.mindalliance.channels.data.beans.Location;
+import com.mindalliance.channels.data.elements.reference.Location;
 
 /**
  * A knowable element that has a location.

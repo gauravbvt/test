@@ -4,7 +4,7 @@
  */
 package com.mindalliance.channels.data;
 
-import com.mindalliance.channels.data.beans.Cause;
+import com.mindalliance.channels.data.components.Cause;
 
 /**
  * Caused by something.
