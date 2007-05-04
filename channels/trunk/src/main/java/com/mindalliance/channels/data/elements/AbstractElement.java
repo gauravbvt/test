@@ -18,41 +18,6 @@ import com.mindalliance.channels.util.GUID;
  */
 abstract public class AbstractElement extends AbstractJavaBean implements Element {
 
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Element#getIssues()
-	 */
-	public List<Issue> getIssues() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Unique#getGuid()
-	 */
-	public GUID getGuid() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Described#getDescription()
-	 */
-	public String getDescription() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Named#getName()
-	 */
-	public String getName() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Typed#getTypes()
-	 */
-	public TypeSet getTypes() {
-		return null;
-	}
-
 	private GUID guid;
 	private String name;
 	private String description;
@@ -68,5 +33,40 @@ abstract public class AbstractElement extends AbstractJavaBean implements Elemen
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.mindalliance.channels.data.Element#getIssues()
+	 */
+	public List<Issue> getIssues() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.mindalliance.channels.data.Unique#getGuid()
+	 */
+	public GUID getGuid() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.mindalliance.channels.data.Typed#getTypes()
+	 */
+	public TypeSet getTypes() {
+		return null;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @return the named
+	 */
+	public String getName() {
+		return name;
+	}
+
 
 }

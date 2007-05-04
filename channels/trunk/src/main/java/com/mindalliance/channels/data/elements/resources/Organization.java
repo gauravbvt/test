@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.mindalliance.channels.data.Located;
 import com.mindalliance.channels.data.components.Mission;
-import com.mindalliance.channels.data.elements.Agreement;
 import com.mindalliance.channels.data.elements.reference.Location;
 
 /**

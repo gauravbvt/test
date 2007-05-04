@@ -18,7 +18,7 @@ import com.mindalliance.channels.data.elements.analysis.Issue;
  * @author jf
  *
  */
-public interface Element extends Unique, Named, Described, Typed, JavaBean {
+public interface Element extends Unique, Typed, Named, Described, JavaBean {
 	
 	List<Issue> getIssues();
 	
