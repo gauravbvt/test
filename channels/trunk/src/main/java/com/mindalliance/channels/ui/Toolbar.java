@@ -10,6 +10,8 @@ import org.zkoss.zul.Html;
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
 
+import com.mindalliance.channels.search.ui.SearchWindowManager;
+
 /**
  * The main desktop's toolbar.
  *
@@ -71,6 +73,9 @@ public class Toolbar extends Hbox {
         for ( String[] spec : icons ) {
             Button button = new Button( spec[0], spec[1] );
             button.setOrient( "vertical" );
+            if ( spec[0].equals("Search") ) {
+            	button.addEventListener("onClick", new SearchWindowManager());
+            }
             iconbar.appendChild( button );
         }
         return iconbar;

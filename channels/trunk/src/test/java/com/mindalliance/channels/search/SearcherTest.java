@@ -26,7 +26,7 @@ public class SearcherTest {
 	public void setUp() throws Exception {
 		Searchable[] ss = new Searchable[] {
 			new Phrase("hello", "hello old friend sunshine"),
-		    new Phrase("goodbye", "goodbye old bear"),
+		    new Phrase("goodbye moo", "goodbye old bear"),
 		    new Phrase("tree", "trees are tall"),
 		    new Phrase("sunshine", "sunshine on the trees")
 		};
@@ -57,7 +57,7 @@ public class SearcherTest {
         Hits hits = searcher.search("bear");
         assertEquals(1, hits.length());
         
-        searcher.delete("goodbye");
+        searcher.delete("goodbye moo");
         
         hits = searcher.search("bear");
         assertEquals(0, hits.length()); 
