@@ -99,7 +99,8 @@ zkTimeline.init = function (cmp) {
 	}
 	
 	//load events from .xml document
-	for(var s in cmp.eventSources){
+	// Disabled because it causes conflicts with MxGraph JSON code
+	/*for(var s in cmp.eventSources){
 		//alert(s);
 		Timeline.loadXML(s,
 				function(xml, url) {
@@ -109,7 +110,7 @@ zkTimeline.init = function (cmp) {
 						}
 					}
 			});
-	}
+	}*/
 };
 /** Cleanup a timeline called before element being removed. */
 zkTimeline.cleanup = function (cmp) {
