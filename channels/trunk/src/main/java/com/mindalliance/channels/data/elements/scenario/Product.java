@@ -7,7 +7,7 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.List;
 
 import com.mindalliance.channels.data.Caused;
-import com.mindalliance.channels.data.components.TaskCause;
+import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.assertions.Storable;
 import com.mindalliance.channels.data.elements.assertions.StoredIn;
 
@@ -16,7 +16,7 @@ abstract public class Product extends AbstractScenarioElement implements Caused,
 	/* (non-Javadoc)
 	 * @see com.mindalliance.channels.data.Storable#getStoredInAssertions()
 	 */
-	private TaskCause taskCause;
+	private Cause<Task> cause;
 
 	/* (non-Javadoc)
 	 * @see com.mindalliance.channels.data.Storable#getStoredInAssertions()
@@ -25,8 +25,8 @@ abstract public class Product extends AbstractScenarioElement implements Caused,
 		return null;
 	}
 
-	public TaskCause getCause() {
-		return taskCause;
+	public Cause<Task> getCause() {
+		return (Cause<Task>)cause;
 	}
 
 }

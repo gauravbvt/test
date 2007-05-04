@@ -4,6 +4,7 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
+import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.reference.Location;
 import com.mindalliance.channels.util.Duration;
 
@@ -17,7 +18,14 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
 	
 	private Duration duration;
 	private Location location;
+	private Cause cause;
 
+	/** 
+	 * Get cause
+	 */
+	public Cause getCause() {
+		return cause;
+	}
 
 	/**
 	 * @param duration the duration to set

@@ -4,15 +4,17 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
+import com.mindalliance.channels.data.Caused;
 import com.mindalliance.channels.data.Located;
 import com.mindalliance.channels.util.Duration;
 
 /**
  * Something in a scenario that can happen somewhere and after, before or during some other occurrence, or after "time zero".
+ * An occurrence may have a known cause.
  * @author jf
  *
  */
-public interface Occurrence extends ScenarioElement, Located {
+public interface Occurrence extends ScenarioElement, Located, Caused {
 	
 	public Duration getDuration();
 	

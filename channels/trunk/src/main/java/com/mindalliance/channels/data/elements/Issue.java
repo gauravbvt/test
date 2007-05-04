@@ -2,12 +2,10 @@
  * Created on Apr 30, 2007
  *
  */
-package com.mindalliance.channels.data.elements.analysis;
+package com.mindalliance.channels.data.elements;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.elements.Element;
 
 
 /**

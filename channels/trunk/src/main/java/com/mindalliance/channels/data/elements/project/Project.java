@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.elements.Issue;
 import com.mindalliance.channels.data.elements.UserProfile;
-import com.mindalliance.channels.data.elements.analysis.Issue;
 import com.mindalliance.channels.data.elements.reference.Type;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Role;

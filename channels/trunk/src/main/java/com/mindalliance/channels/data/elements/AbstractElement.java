@@ -7,7 +7,6 @@ package com.mindalliance.channels.data.elements;
 import java.util.List;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.analysis.Issue;
 import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.AbstractJavaBean;
 import com.mindalliance.channels.util.GUID;

@@ -21,15 +21,8 @@ import com.mindalliance.channels.util.Duration;
 public class Event extends AbstractOccurrence implements Caused {
 
 	private Level probability; // LOW, MEDIUM or HIGH
-	private Cause cause; // Set if a task or event causes it (after some delay from starting or ending)
 	private List<Task> terminatedBy; // Set if a task terminates it
 	private Duration duration; // Set if event is self-terminating
 
-	/** 
-	 * Get cause
-	 */
-	public Cause getCause() {
-		return null;
-	}
 	
 }

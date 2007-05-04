@@ -10,7 +10,7 @@ import com.mindalliance.channels.util.GUID;
 import com.mindalliance.channels.util.GUIDFactory;
 
 /**
- * A creator of model objects.
+ * A creator of elements.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision: 106 $

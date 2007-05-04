@@ -2,15 +2,13 @@
  * Created on Apr 26, 2007
  *
  */
-package com.mindalliance.channels.data.elements.analysis;
+package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.List;
 
 import com.mindalliance.channels.data.elements.reference.Environment;
 import com.mindalliance.channels.data.elements.reference.Policy;
 import com.mindalliance.channels.data.elements.resources.Resource;
-import com.mindalliance.channels.data.elements.scenario.AbstractOccurrence;
-import com.mindalliance.channels.data.elements.scenario.Event;
 
 /**
  * A realized environment, triggered by an event and in effect for the duration of the event.

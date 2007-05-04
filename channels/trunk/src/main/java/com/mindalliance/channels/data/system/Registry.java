@@ -6,11 +6,12 @@ package com.mindalliance.channels.data.system;
 
 
 import java.util.List;
+import java.util.Map;
 
-import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.analysis.Alert;
-import com.mindalliance.channels.data.elements.analysis.Todo;
+import com.mindalliance.channels.data.elements.UserProfile;
+import com.mindalliance.channels.data.user.Alert;
 import com.mindalliance.channels.data.user.Conversation;
+import com.mindalliance.channels.data.user.Todo;
 
 /**
  * All user related data; their profiles and alerts/todos targeted at them.
@@ -19,65 +20,10 @@ import com.mindalliance.channels.data.user.Conversation;
  */
 public class Registry extends AbstractQueryable {
 	
-	private List<User> users;
+	private Map<String,UserProfile> userProfiles; // username => user profile
 	private List<Conversation> conversations;
 	private List<Alert> alerts;
 	private List<Todo> todos;
 
-	/**
-	 * @return the alerts
-	 */
-	public List<Alert> getAlerts() {
-		return alerts;
-	}
-
-	/**
-	 * @param alerts the alerts to set
-	 */
-	public void setAlerts(List<Alert> alerts) {
-		this.alerts = alerts;
-	}
-
-	/**
-	 * @return the todos
-	 */
-	public List<Todo> getTodos() {
-		return todos;
-	}
-
-	/**
-	 * @param todos the todos to set
-	 */
-	public void setTodos(List<Todo> todos) {
-		this.todos = todos;
-	}
-
-	/**
-	 * @return the users
-	 */
-	public List<User> getUsers() {
-		return users;
-	}
-
-	/**
-	 * @param users the users to set
-	 */
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
-	/**
-	 * @return the conversations
-	 */
-	public List<Conversation> getConversations() {
-		return conversations;
-	}
-
-	/**
-	 * @param conversations the conversations to set
-	 */
-	public void setConversations(List<Conversation> conversations) {
-		this.conversations = conversations;
-	}
 
 }

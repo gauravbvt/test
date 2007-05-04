@@ -8,7 +8,7 @@ import com.mindalliance.channels.data.Describable;
 import com.mindalliance.channels.data.Described;
 import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.data.elements.Element;
-import com.mindalliance.channels.data.elements.analysis.Situation;
+import com.mindalliance.channels.data.elements.scenario.Situation;
 
 /**
  * Something that may or may not be operational by default or in a given situation.

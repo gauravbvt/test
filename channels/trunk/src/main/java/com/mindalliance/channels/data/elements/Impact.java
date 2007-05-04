@@ -2,9 +2,8 @@
  * Created on May 2, 2007
  *
  */
-package com.mindalliance.channels.data.elements.analysis;
+package com.mindalliance.channels.data.elements;
 
-import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.scenario.Occurrence;
 /**
  * An effect on an occurrence traceable to an issue, possibly caused indirectly by another impact of that issue. 

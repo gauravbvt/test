@@ -23,7 +23,6 @@ import com.mindalliance.channels.data.support.TypeSet;
  */
 public class Task extends AbstractOccurrence implements Caused, Regulatable {
 	
-	private Cause cause; // The task is in response to an event or caused by another task (sub-task)
 	private List<Agent> agents;
 	private TypeSet objectives = new TypeSet(Type.OBJECTIVE);
 
@@ -31,11 +30,5 @@ public class Task extends AbstractOccurrence implements Caused, Regulatable {
 		return null;
 	}
 	
-	/**
-	 * Get cause
-	 */
-	public Cause getCause() {
-		return cause;
-	}
 
 }
