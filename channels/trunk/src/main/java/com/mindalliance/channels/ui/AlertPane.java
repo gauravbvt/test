@@ -29,7 +29,7 @@ import com.mindalliance.channels.system.SystemImpl;
  */
 public class AlertPane extends Box {
 
-    private static final String LIST_HEIGHT = "69px";
+    private static final String LIST_HEIGHT = "52px";
     private User user;
     private System system;
 
@@ -44,7 +44,7 @@ public class AlertPane extends Box {
         this.system = system;
 
         setSclass( "channels_alerts" );
-        setHeight( "82px" );
+        setHeight( "65px" );
         setWidth( "100%" );
 
         final Hbox hbox = new Hbox();

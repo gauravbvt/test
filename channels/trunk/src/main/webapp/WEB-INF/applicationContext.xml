@@ -79,12 +79,15 @@
 						<property name="scenarios"><set>
 							<bean class="com.mindalliance.channels.model.Scenario">
 								<property name="name" value="Blackout"/>
+								<property name="about" value="Lights out..."/>
 							</bean>
 							<bean class="com.mindalliance.channels.model.Scenario">
 								<property name="name" value="Building Fire"/>
+								<property name="about" value="A fire happens in the building"/>
 							</bean>
 							<bean class="com.mindalliance.channels.model.Scenario">
 								<property name="name" value="Firewall Breach"/>
+								<property name="about" value="A hacker made it through"/>
 							</bean>
 							</set></property>
 					</bean>

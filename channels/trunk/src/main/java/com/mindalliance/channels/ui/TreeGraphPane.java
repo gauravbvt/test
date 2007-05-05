@@ -1,6 +1,6 @@
-/**
- * 
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.ui;
 
 import org.zkoss.zul.Tab;
@@ -19,79 +19,123 @@ import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
 
 /**
+ * A scenario element viewer.
+ *
  * @author dfeeney
- * 
+ * @version $Revision$
  */
 public class TreeGraphPane extends Tabbox {
 
+    /**
+     * Height of the title, in pixels.
+     */
+    private static final int TITLE_HEIGHT = 35;
+    private static final int BORDERS = 10;
+
     private System system;
-
     private Scenario scenario;
-    
     private User user;
-    
     private MxGraph graph;
-
     private Tree tree;
+    private ScenarioElement rootElement;
 
-    private ScenarioElement root;
+    /**
+     * Default constructor.
+     *
+     * @param height the available height
+     * @param system the system
+     * @param scenario the current scenario
+     * @param user the current user
+     */
+    public TreeGraphPane(
+            int height, System system, Scenario scenario, User user ) {
 
-    public TreeGraphPane(System system, Scenario scenario, User user) {
         this.system = system;
         this.scenario = scenario;
         this.user = user;
+
+        int contentHeight = height - TITLE_HEIGHT - BORDERS;
+
+        Tab treeTab = new Tab( "Tree" );
+
         Tabs tabs = new Tabs();
+        tabs.appendChild( new Tab( "Net" ) );
+        tabs.appendChild( treeTab );
+        tabs.setWidth( "30px" );
+        tabs.setHeight( "16px" );
+
+        this.graph = generateGraph();
+        Tabpanel graphPanel = new Tabpanel();
+        graphPanel.appendChild( graph );
+        graphPanel.setHeight( contentHeight + "px" );
+
+        this.tree = new Tree();
+        Tabpanel treePanel = new Tabpanel();
+        treePanel.setHeight( contentHeight + "px" );
+        treePanel.appendChild( tree );
+
         Tabpanels tabPanels = new Tabpanels();
-        Tab treeTab = new Tab("Tree");
+        tabPanels.appendChild( graphPanel );
+        tabPanels.appendChild( treePanel );
 
-        tabs.appendChild(new Tab("Net"));
-        tabs.appendChild(treeTab);
-        generateGraph();
-        Tabpanel panel = new Tabpanel();
-        panel.appendChild(graph);
-        tabPanels.appendChild(panel);
-        tree = new Tree();
-        tree.setWidth("200px");
-        // tree.setHeight("200px");
-        panel = new Tabpanel();
-        panel.appendChild(tree);
-        tabPanels.appendChild(panel);
-        this.appendChild(tabs);
-        this.appendChild(tabPanels);
-        this.setSelectedTab(treeTab);
+        this.appendChild( tabs );
+        this.appendChild( tabPanels );
+        this.setOrient( "vertical" );
+        this.setSelectedTab( treeTab );
+        this.setWidth( "100%" );
     }
 
-    private void generateGraph() {
-        graph = new MxGraph();
-        graph.setLayout(new MxFastOrganicLayout());
-        graph.setWidth("200px");
-        // graph.setHeight("200px");
-        graph.setProperty(MxGraph.AUTO_SIZE, "true", true);
-        graph.setStyle("overflow:hidden; " +
-                "background:url('/channels/images/grid.gif');");
+    private MxGraph generateGraph() {
+        MxGraph graph = new MxGraph();
+        graph.setLayout( new MxFastOrganicLayout() );
+        graph.setWidth( "100%" );
+        graph.setProperty( MxGraph.AUTO_SIZE, "true", true );
+        graph.setStyle( "overflow:hidden; "
+                + "background:url('/channels/images/grid.gif');" );
 
         graph.getPanningHandler().setProperty(
-                MxPanningHandler.IS_SELECT_ON_POPUP, false, false);
+                MxPanningHandler.IS_SELECT_ON_POPUP, false, false );
         graph.getPanningHandler().setProperty(
-                MxPanningHandler.IS_USE_SHIFT_KEY, true, false);
-        graph.getPanningHandler().setProperty(MxPanningHandler.IS_PAN_ENABLED,
-                true, false);
+                MxPanningHandler.IS_USE_SHIFT_KEY, true, false );
+        graph.getPanningHandler().setProperty(
+                MxPanningHandler.IS_PAN_ENABLED, true, false );
+
+        return graph;
     }
 
-    public void setRoot(ScenarioElement root) {
-        this.root = root;
+    /**
+     * Return the value of rootElement.
+     */
+    public final ScenarioElement getRootElement() {
+        return this.rootElement;
     }
 
-    public void setWidth(String width) {
-        super.setWidth(width);
-        graph.setWidth(width);
-        tree.setWidth(width);
+    /**
+     * Set the root element to display in this pane.
+     * @param root a scenario element
+     */
+    public void setRootElement( ScenarioElement root ) {
+        this.rootElement = root;
     }
 
-    public void setHeight(String height) {
-        super.setHeight(height);
-        graph.setHeight(height);
-        tree.setHeight(height);
+    /**
+     * Return the value of scenario.
+     */
+    public final Scenario getScenario() {
+        return this.scenario;
     }
 
+    /**
+     * Return the value of system.
+     */
+    public final System getSystem() {
+        return this.system;
+    }
+
+    /**
+     * Return the value of user.
+     */
+    public final User getUser() {
+        return this.user;
+    }
 }

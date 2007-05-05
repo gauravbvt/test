@@ -68,7 +68,8 @@ public class ScenariosTab extends Tabpanel {
         super();
         this.user = user;
         this.system = system;
-        this.session = canvas.getPage().getDesktop().getSession();
+        setPage( canvas.getPage() );
+        this.session = getDesktop().getSession();
 
         Treechildren treeChildren = new Treechildren();
         for ( Project p : system.getProjects() )
@@ -222,7 +223,7 @@ public class ScenariosTab extends Tabpanel {
                     scenario.getName(),
                     "Scenario viewer",
                     "ROLE_USER",
-                    new ScenarioViewer( system, scenario, user ),
+                    new ScenarioViewer( maxHeight, system, scenario, user ),
                     canvas,
                     scenario ),
                 reports );

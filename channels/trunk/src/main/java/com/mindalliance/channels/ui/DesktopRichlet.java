@@ -57,9 +57,9 @@ public class DesktopRichlet extends GenericRichlet {
 
     /**
      * The total height of the fixed parts of the desktop.
-     * 46 + 87 + 25...
+     * 46 + 75 + 25...
      */
-    private static final int FIXED_HEIGHT = 158;
+    private static final int FIXED_HEIGHT = 141;
     private static final int DEFAULT_CANVAS_HEIGHT = 100;
     private static final String DESKTOP_HEIGHT = "DesktopHeight";
 
@@ -109,6 +109,7 @@ public class DesktopRichlet extends GenericRichlet {
                 new Text( "Loading..." )
               : createDesktop( page, user, system );
 
+        window.setPage( page );
         window.addEventListener( "onClientInfo", new EventListener() {
 
             public boolean isAsap() {
@@ -126,7 +127,6 @@ public class DesktopRichlet extends GenericRichlet {
                 }
             }
         } );
-        window.setPage( page );
     }
 
     /**
@@ -136,6 +136,11 @@ public class DesktopRichlet extends GenericRichlet {
      * @param system the system
      */
     private Vbox createDesktop( Page page, User user, System system ) {
+        final Vbox window = new Vbox();
+        window.setPage( page );
+        window.setWidth( "100%" );
+        window.setValign( "top" );
+
         Box canvas = createCanvas( user );
         canvas.setPage( page );
         int canvasHeight = getCanvasHeight( page );
@@ -150,11 +155,8 @@ public class DesktopRichlet extends GenericRichlet {
                 createAccordion( canvasHeight, user, system, canvas ) );
         split.appendChild( newSplitter( true ) );
         split.appendChild( canvas );
-        split.setWidths( "30%,70%" );
+        split.setWidths( "236px,auto" );
 
-        final Vbox window = new Vbox();
-        window.setWidth( "100%" );
-        window.setValign( "top" );
         window.appendChild( new Toolbar( user, system ) );
         window.setSpacing( "0px" );
         window.appendChild( split );

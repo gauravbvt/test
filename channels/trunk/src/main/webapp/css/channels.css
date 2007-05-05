@@ -163,3 +163,31 @@ div.paging a, div.paging a:visited, .tabsel a:hover, a.tabsel:hover,
 .tab a:hover, a.tab:hover, tr.itemsel a:hover {
 	text-decoration: none;
 }
+
+div.wc-embedded, div.wc-wndcyan {
+	padding: 5px;
+}
+
+input.description {
+	border: none;
+	padding: 2px 0px 0px 2px;
+	font-style: italic;
+}
+
+.bottom-pane .hbox {
+	padding: 0px 0px 0px 5px;
+}
+
+.bottom-pane td.hbox:first-child {
+	padding: 0px;
+}
+
+.tabpanel {
+	overflow: auto;
+}
+
+div.google-map {
+	border: solid 1px #aaa;
+	height: inherit;
+	overflow: auto;
+}
