@@ -91,7 +91,7 @@ public class TreeGraphPane extends Tabbox {
         graph.setWidth( "100%" );
         graph.setProperty( MxGraph.AUTO_SIZE, "true", true );
         graph.setStyle( "overflow:hidden; "
-                + "background:url('/channels/images/grid.gif');" );
+                + "background:url('images/grid.gif');" );
 
         graph.getPanningHandler().setProperty(
                 MxPanningHandler.IS_SELECT_ON_POPUP, false, false );

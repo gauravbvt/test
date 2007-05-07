@@ -62,6 +62,7 @@ public class DesktopRichlet extends GenericRichlet {
     private static final int FIXED_HEIGHT = 141;
     private static final int DEFAULT_CANVAS_HEIGHT = 100;
     private static final String DESKTOP_HEIGHT = "DesktopHeight";
+    private static final int MIN_DESKTOP_HEIGHT = 435;
 
     /**
      * Default constructor.
@@ -119,7 +120,8 @@ public class DesktopRichlet extends GenericRichlet {
             public void onEvent( Event event ) {
                 ClientInfoEvent cie = (ClientInfoEvent) event;
                 int oldH = getDesktopHeight( page );
-                int newH = cie.getDesktopHeight();
+                int newH = Math.max(
+                        MIN_DESKTOP_HEIGHT, cie.getDesktopHeight() );
                 if ( oldH != newH ) {
                     page.getDesktop().getSession().setAttribute(
                             DESKTOP_HEIGHT, newH );

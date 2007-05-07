@@ -3,12 +3,15 @@
 
 package com.mindalliance.channels.ui;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 import org.zkforge.timeline.Bandinfo;
 import org.zkforge.timeline.Timeline;
-import org.zkforge.timeline.data.OccurEvent;
+import org.zkforge.timeline.event.SelectEvent;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 
 import com.mindalliance.channels.model.Scenario;
 
@@ -22,7 +25,6 @@ import com.mindalliance.channels.model.Scenario;
  */
 public class ScenarioTimeline extends Timeline {
 
-    private static final float TRACK_HEIGHT = 0.5f;
     private Scenario scenario;
     private Date start = new Date();
 
@@ -35,52 +37,81 @@ public class ScenarioTimeline extends Timeline {
         super();
         this.scenario = scenario;
 
-        TimeZone timeZone = TimeZone.getTimeZone( "GMT-04" );
+        TimeZone timeZone = TimeZone.getTimeZone( "EDT" );
+        Calendar date = Calendar.getInstance();
+        date.setTimeZone( timeZone );
+        date.set( 2007, 5, 5, 13, 0 );
+        setStart( date.getTime() );
 
-        final Bandinfo b1 = new Bandinfo();
-        b1.setDate( getStart() );
-        b1.setTimeZone( timeZone );
-        b1.setIntervalUnit( "minute" );
-        b1.setTrackHeight( TRACK_HEIGHT );
+        final Bandinfo top = new Bandinfo();
+        top.setTimeZone( timeZone );
+        top.setDate( getStart() );
+        top.setTrackHeight( 1.0f );
+        top.setIntervalUnit( "minute" );
+        top.setIntervalPixels( 20 );
+        top.setEventSourceUrl( "scenario.jsp" );
 
-        final Bandinfo b2 = new Bandinfo();
-        b2.setDate( getStart() );
-        b2.setTimeZone( timeZone );
-        b2.setIntervalUnit( "hour" );
-        b2.setTrackHeight( TRACK_HEIGHT );
-        b2.setSyncWith( b1.getId() );
-        b2.setShowEventText( false );
+        final Bandinfo bottom = new Bandinfo();
+        bottom.setTimeZone( timeZone );
+        bottom.setDate( getStart() );
+        bottom.setIntervalUnit( "hour" );
+        bottom.setTrackHeight( 0.4f );
+        bottom.setTrackGap( 0.1f );
+        bottom.setEventSourceUrl( "scenario.jsp" );
+        bottom.setShowEventText( false );
+        bottom.setSyncWith( top.getId() );
 
         // The following sets the *heights* of the tracks
-        b1.setWidth( "70%" );
-        b2.setWidth( "30%" );
+        top.setWidth( "70%" );
+        bottom.setWidth( "30%" );
 
-        appendChild( b1 );
-        appendChild( b2 );
+        appendChild( top );
+        appendChild( bottom );
         setHeight( height + "px" );
         setWidth( null );
         setSclass( "timeline" );
+        addEventListener( "onSelectEvent", new EventListener() {
+            public boolean isAsap() {
+                return false;
+            }
 
-        // TODO Initialize or or both?
-        populateTimeline( b1 );
-        populateTimeline( b2 );
+            public void onEvent( Event event ) {
+                SelectEvent se = (SelectEvent) event;
+                se.getData();
+            }
+        } );
+
+//        populateTimeline( top );
+//        populateTimeline( bottom );
     }
 
-    /**
-     * Put some events in that timeline.
-     */
-    private void populateTimeline( Bandinfo band ) {
-        // TODO figure out how to make something like the following work
-
-        OccurEvent ev1 = new OccurEvent();
-        ev1.setText( "Fire alarm triggered" );
-        ev1.setDescription( "Flee!" );
-        ev1.setIconUrl( "images/16x16/nav_plain_red.png" );
-        ev1.setStart( getStart() );
-        ev1.setDuration( false );
-
-        band.addOccurEvent( ev1 );
-    }
+//    /**
+//     * Put some events in that timeline.
+//     */
+//    private void populateTimeline( Bandinfo band ) {
+//        // TODO figure out how to make something like the following work
+//
+//        OccurEvent ev1 = new OccurEvent();
+//        ev1.setText( "Fire alarm triggered" );
+//        ev1.setDescription( "Flee!" );
+//        ev1.setIconUrl( "images/16x16/nav_plain_red.png" );
+//        ev1.setStart( getStart() );
+//        ev1.setDuration( false );
+//
+//        OccurEvent ev2 = new OccurEvent();
+//        ev2.setText( "Verify cause of alarm" );
+//        ev2.setDuration( true );
+//        ev2.setDescription( "Flee!" );
+//        ev2.setIconUrl( "images/16x16/forbidden.png" );
+//        Date s = new Date( getStart().getTime() + 60000 );
+//        ev2.setStart( s );
+//        ev2.setEnd( new Date( s.getTime() + 5*60000 ) );
+//
+//        band.addManyOccureEvents(
+//            new ArrayList<OccurEvent>( Arrays.asList( new OccurEvent[] {
+//                ev1, ev2
+//            } ) ) );
+//    }
 
     /**
      * Return the value of scenario.
