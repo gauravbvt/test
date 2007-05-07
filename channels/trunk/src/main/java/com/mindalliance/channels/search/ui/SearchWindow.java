@@ -5,8 +5,6 @@ package com.mindalliance.channels.search.ui;
 
 import com.mindalliance.channels.search.SearchResult;
 
-import org.apache.lucene.search.Hits;
-
 import org.zkoss.zhtml.Text;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
@@ -30,7 +28,8 @@ public final class SearchWindow extends Window {
     private Textbox queryText;
     private Vbox content;
     private Vbox resultBox;
-    private int k = 5; // For testing only.
+    private int k = 0; // For testing only.
+    private static int maxResults = 15; // Maximum number of search results to display.
 
     /**
      * Default constructor.
@@ -93,16 +92,17 @@ public final class SearchWindow extends Window {
      * Perform a search and display the results.
      */
     private void search(String query) {
-    	List<SearchResult> results = SearchResult.test(k++); // Searcher.search(query);
+    	List<SearchResult> results = SearchResult.test(k++); // Searcher.search(query, maxResults);
     	
     	if ( resultBox != null ) content.removeChild(resultBox);
     	
+    	resultBox = new Vbox();
+    	
     	if (results.size()>0) {
-    		resultBox = new Vbox();
-    		
     		for (SearchResult r: results) {
     			Button goButton = new Button( "Go" );
-    	        goButton.addEventListener( "onClick", new EventListener() {
+    			goButton.addEventListener( "onClick", new SearchResultListener(r) );
+    	        /* goButton.addEventListener( "onClick", new EventListener() {
     	            public boolean isAsap() {
     	                return true;
     	            }
@@ -110,7 +110,7 @@ public final class SearchWindow extends Window {
     	            public void onEvent( Event event ) {
     	            	System.out.println("go");
     	            }
-    	        } ); 
+    	        } ); */
     			
     			
     			Hbox line = new Hbox();
@@ -118,9 +118,11 @@ public final class SearchWindow extends Window {
     			line.appendChild(goButton);
     			resultBox.appendChild(line);
     		}
-    		
-    		content.appendChild(resultBox);
     	}
-  
+    	else {
+    		resultBox.appendChild(new Text( "No results. Please try a different query." ));
+    	}
+    	
+		content.appendChild(resultBox);
     }
 }

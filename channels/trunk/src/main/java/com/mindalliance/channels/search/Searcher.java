@@ -16,6 +16,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.store.RAMDirectory;
 
 import java.io.IOException;
+import java.util.*;
 
 /**
  * A Searcher manages an in-memory index of Searchable objects. The fundamental 
@@ -46,6 +47,10 @@ public class Searcher {
 	public void insert(Searchable obj) throws IOException {
 		Document doc = new Document();
 		doc.add(new Field("guid", obj.getGUID(), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field("name", obj.getName(), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field("kind", obj.getKind(), Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field("project", obj.getProject(), Field.Store.YES, Field.Index.NO));
+		doc.add(new Field("projectGuid", obj.getProjectGUID(), Field.Store.YES, Field.Index.NO));
 		doc.add(new Field("text", obj.getText(), Field.Store.NO, Field.Index.TOKENIZED));
     
 		IndexWriter writer = new IndexWriter(dir, new StandardAnalyzer());
@@ -53,6 +58,20 @@ public class Searcher {
 		writer.close();
 	}
 
+	/**
+	 * Perform a search. Return a list of SearchResults. 
+	 * @param query a query using syntax accepted by Lucene's QueryParser.
+	 * @param maxResults maximum number of search results to return.
+	 * @return search results
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public List<SearchResult> search(String query, int maxResults) throws IOException, ParseException {
+		Hits hits = search(query);
+		
+		return SearchResult.fromHits(hits, maxResults);
+	}
+	
 	/**
 	 * Perform a search.
 	 * @param query a query using syntax accepted by Lucene's QueryParser.
@@ -64,7 +83,9 @@ public class Searcher {
 		QueryParser parser = new QueryParser("text", new StandardAnalyzer());
 		Query q = parser.parse(query);
 		IndexSearcher is = new IndexSearcher(dir);
-		return is.search(q);
+		Hits hits = is.search(q);
+		is.close();
+		return hits;
 	}
 
 	/**

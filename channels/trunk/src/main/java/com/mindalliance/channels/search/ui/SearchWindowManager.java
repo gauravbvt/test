@@ -1,13 +1,7 @@
 package com.mindalliance.channels.search.ui;
 
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Window;
-import org.zkoss.zul.Button;
-
-import com.mindalliance.channels.ui.Prompter;
 
 public class SearchWindowManager implements EventListener {
 

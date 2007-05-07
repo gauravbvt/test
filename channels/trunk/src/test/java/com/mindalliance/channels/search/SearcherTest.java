@@ -1,8 +1,6 @@
 package com.mindalliance.channels.search;
 
-
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +8,7 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.queryParser.ParseException;
 
 import java.io.IOException;
+import java.util.*;
 
 /**
  * Tests Searcher functionality. 
@@ -35,7 +34,7 @@ public class SearcherTest {
 
 		for (Searchable s: ss) searcher.insert(s);
 
-		searcher.showHits(searcher.search("bear")); 
+		// searcher.showHits(searcher.search("bear")); 
 	}
 
     /**
@@ -49,6 +48,27 @@ public class SearcherTest {
     	assertEquals("hello", hits.doc(1).get("guid"));
     }
 
+    /**
+     * Test method for {@link Searcher#search()}.
+     */
+    @Test
+    public final void testSearch2() throws IOException, ParseException {
+    	List<SearchResult> results = searcher.search("sunshine", 10);
+    	assertEquals(2, results.size());
+    	assertEquals("sunshine", results.get(0).getGuid());
+    	assertEquals("hello", results.get(1).getGuid());
+    }
+    
+    /**
+     * Test method for {@link Searcher#search()}.
+     */
+    @Test
+    public final void testSearch3() throws IOException, ParseException {
+    	List<SearchResult> results = searcher.search("sunshine", 1);
+    	assertEquals(1, results.size());
+    	assertEquals("sunshine", results.get(0).getGuid());
+    }
+    
     /**
      * Test method for {@link Searcher#delete()}.
      */

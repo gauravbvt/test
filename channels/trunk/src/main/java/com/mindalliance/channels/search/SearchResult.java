@@ -38,7 +38,7 @@ public class SearchResult {
 	public String getProject() {return project;}
 	public String getProjectGuid() {return projectGuid;}
 	
-	public static List<SearchResult> convert(Hits hits, int maxResults) {
+	public static List<SearchResult> fromHits(Hits hits, int maxResults) {
 		ArrayList<SearchResult> out = new ArrayList<SearchResult>();
 		
 		for (int i=0; i<maxResults && i<hits.length(); i++) {
