@@ -13,7 +13,7 @@ import org.zkoss.zk.ui.event.Event;
 public class SelectEvent extends Event {
 	private String[] ids;
 	public SelectEvent(String name, Component target, String[] ids) {
-		super(name, target);
+		super(name, target, ids);
 		this.ids=ids;
 	}
 	
