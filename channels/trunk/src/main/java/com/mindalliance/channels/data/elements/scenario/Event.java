@@ -7,9 +7,10 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.List;
 
 import com.mindalliance.channels.data.Caused;
-import com.mindalliance.channels.data.components.Cause;
+import com.mindalliance.channels.data.elements.assertions.Excludable;
+import com.mindalliance.channels.data.elements.assertions.Excluded;
 import com.mindalliance.channels.data.support.Level;
-import com.mindalliance.channels.util.Duration;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * An event in a scenario that occurs possibly with some delay. The event may be caused by a task
@@ -18,11 +19,15 @@ import com.mindalliance.channels.util.Duration;
  * @author jf
  *
  */
-public class Event extends AbstractOccurrence implements Caused {
+public class Event extends AbstractOccurrence implements Caused, Excludable {
 
 	private Level probability; // LOW, MEDIUM or HIGH
 	private List<Task> terminatedBy; // Set if a task terminates it
 	private Duration duration; // Set if event is self-terminating
+
+	public List<Excluded> getExcludedAssertions() {
+		return null;
+	}
 
 	
 }

@@ -6,7 +6,7 @@ package com.mindalliance.channels.data.support;
 
 import java.io.Serializable;
 
-import com.mindalliance.channels.util.Duration;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * A composite measure of latency, with minimum, average and maximum.

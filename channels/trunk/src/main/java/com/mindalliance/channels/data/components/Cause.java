@@ -6,7 +6,7 @@ package com.mindalliance.channels.data.components;
 
 import com.mindalliance.channels.data.elements.scenario.Occurrence;
 import com.mindalliance.channels.util.AbstractJavaBean;
-import com.mindalliance.channels.util.Duration;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * The cause of an occurrence which is either the start or end of an occurrence.

@@ -28,8 +28,8 @@ public class Scenario extends AbstractElement {
 	
 	private Model model;
 	private List<Occurrence> occurrences; // What happens
-	private List<Product> products;
-	private List<Assertion> assertions;
+	private List<Product> products; // What gets produced
+	private List<Assertion> assertions; // What's asserted
 	private List<SharingNeed> sharingNeeds; // Information sharing needs
 	private List<Flow> flows; // Realized sharingNeeds
 	

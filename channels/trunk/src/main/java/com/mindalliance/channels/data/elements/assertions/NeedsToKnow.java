@@ -7,7 +7,7 @@ package com.mindalliance.channels.data.elements.assertions;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.scenario.ScenarioElement;
 import com.mindalliance.channels.data.support.Level;
-import com.mindalliance.channels.util.Duration;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * Assertion made about someone needing information, possibly about a scenario element,

@@ -15,10 +15,11 @@ import com.mindalliance.channels.data.elements.assertions.Regulated;
 
 /**
  * A match between a need to know and a know denoting a requirement for communication.
+ * A SharingNeed is an occurrence; it exists for a period of time.
  * @author jf
  *
  */
-public class SharingNeed extends AbstractScenarioElement implements Regulatable, Agreeable {
+public class SharingNeed extends AbstractOccurrence implements Regulatable, Agreeable {
 
 	private NeedsToKnow needToKnow;
 	private Known known;

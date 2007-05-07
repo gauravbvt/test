@@ -5,7 +5,7 @@
 package com.mindalliance.channels.data.elements.assertions;
 
 import com.mindalliance.channels.data.elements.resources.Repository;
-import com.mindalliance.channels.util.Duration;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * Assertion about created knowledge or produced artefact being stored in a repository.

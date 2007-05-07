@@ -6,7 +6,7 @@ package com.mindalliance.channels.data.elements.scenario;
 
 import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.reference.Location;
-import com.mindalliance.channels.util.Duration;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * Something that happens in a scenario.
@@ -16,6 +16,7 @@ import com.mindalliance.channels.util.Duration;
 public abstract class AbstractOccurrence extends AbstractScenarioElement
 		implements Occurrence {
 	
+	private Duration time; // when the occurence begins as a time interval from "time zero"
 	private Duration duration;
 	private Location location;
 	private Cause cause;
@@ -63,6 +64,13 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
 
 	public Location getLocation() {
 		return location;
+	}
+
+	/**
+	 * @return the time
+	 */
+	public Duration getTime() {
+		return time;
 	}
 
 }
