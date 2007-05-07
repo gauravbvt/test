@@ -20,7 +20,6 @@ public class SelectCommand extends Command {
 
 	protected SelectCommand(String arg0, int arg1) {
 		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
 	}
 	/* (non-Javadoc)
 	 * @see org.zkoss.zk.au.Command#process(org.zkoss.zk.au.AuRequest)
@@ -33,12 +32,12 @@ public class SelectCommand extends Command {
 		if (!(comp instanceof Timeline))
 			throw new UiException(MZk.ILLEGAL_REQUEST_COMPONENT_REQUIRED, this);
 		Timeline timeline = (Timeline)comp;
-		String[] data = request.getData();
-		if (data == null){
-			data = new String[0];
+		String[] ids = request.getData();
+		if (ids == null){
+			ids = new String[0];
 		}
-		timeline.setLocalSelection(data);
-		Events.postEvent(new SelectEvent(getId(), comp,data));
+		timeline.setLocalSelection(ids);
+		Events.postEvent(new SelectEvent(getId(), comp,timeline.getSelectedData(), ids));
 	}
 
 	

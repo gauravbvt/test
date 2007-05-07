@@ -3,8 +3,14 @@
  */
 package org.zkforge.timeline;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.sf.json.JSONArray;
 
+import org.zkforge.timeline.data.OccurEvent;
 import org.zkforge.timeline.impl.TimelineComponent;
 import org.zkoss.lang.Objects;
 import org.zkoss.zk.au.Command;
@@ -34,6 +40,8 @@ public class Timeline extends TimelineComponent {
 	
 	private String[] selection = new String[0];
 
+    private Map<String, OccurEvent> events  = new HashMap<String, OccurEvent>();
+    
 	/**
 	 * Returns the orientation of {@link Timeline}.
 	 */
@@ -145,4 +153,37 @@ public class Timeline extends TimelineComponent {
 		setSelection(new String[0]);
 	}
 	
+    public void addOccurEvent(OccurEvent event) {
+        events.put(event.getId(), event);
+        for (Object child: this.getChildren()) {
+            if (child instanceof Bandinfo) {
+                ((Bandinfo)child).addOccurEvent(event);
+            }
+        }
+    }
+    
+    public void removeOccurEvent(OccurEvent event) {
+        events.remove(event.getId());
+        for (Object child: this.getChildren()) {
+            if (child instanceof Bandinfo) {
+                ((Bandinfo)child).removeOccurEvent(event);
+            }
+        }
+    }
+    
+    public List<Object> getSelectedData() {
+        ArrayList<Object> results = new ArrayList<Object>();
+        for (int inx = 0 ; inx < selection.length ; inx++) {
+            OccurEvent event = events.get(selection[inx]);
+            if (event != null) {
+                results.add(event.getData());
+            }
+        }
+        
+        return results;
+    }
+    
+    public Map<String, OccurEvent> getOccurEvents() {
+        return events;
+    }
 }

@@ -6,7 +6,7 @@ import net.sf.json.JSONObject;
 
 import org.zkforge.timeline.util.TimelineUtil;
 
-public class OccurEvent {
+public class OccurEvent<T> {
 	private static int count = 0;
 
 //	@Override
@@ -69,6 +69,8 @@ public class OccurEvent {
 
 	private int _id = count++;
 
+    private T _data = null;
+    
 	public String getColor() {
 		return _color;
 	}
@@ -183,4 +185,12 @@ public class OccurEvent {
 		return String.valueOf(_id);
 	}
 
+    public void setData(T data) {
+        this._data = data;
+    }
+    
+    public T getData() {
+        return _data;
+    }
+    
 }
