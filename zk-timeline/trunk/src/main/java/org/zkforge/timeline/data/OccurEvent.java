@@ -175,12 +175,6 @@ public class OccurEvent<T> {
 		this._iconUrl = iconUrl;
 	}
 
-	public boolean isInRange(Date min, Date max) {
-		if (min.compareTo(getStart()) < 0 && max.compareTo(getEnd()) > 0)
-			return true;
-		return false;
-	}
-
 	public String getId() {
 		return String.valueOf(_id);
 	}

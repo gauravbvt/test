@@ -1,12 +1,12 @@
 /* Version.java
 
 {{IS_NOTE
-	Purpose:
-		
-	Description:
-		
-	History:
-		Tue Jul 25 11:57:16     2006, Created by tomyeh
+    Purpose:
+        
+    Description:
+        
+    History:
+        Tue Jul 25 11:57:16     2006, Created by tomyeh
 }}IS_NOTE
 
 Copyright (C) 2006 Potix Corporation. All Rights Reserved.
@@ -23,7 +23,7 @@ package org.zkforge.timeline;
  * @author Gu WeiXing
  */
 public class Version {
-	/** Returns the version UID.
-	 */
-	public static final String UID = "1.1-1";
+    /** Returns the version UID.
+     */
+    public static final String UID = "1.1_3";
 }

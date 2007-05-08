@@ -23,13 +23,13 @@
 
 	<version>
 		<version-class>org.zkforge.timeline.Version</version-class>
-		<version-uid>1.1-1</version-uid>
+		<version-uid>1.1_3</version-uid>
 	</version>
 
 	<!-- [Optional, Multiple] Define a JavaScript module.
 		Change the version if JS files are modified, such that
 		browsers will reload them. 	-->
-	<javascript-module name="timelinez.timeline" version="1.1-1" />
+	<javascript-module name="timelinez.timeline" version="1.1_3" />
 
 	<!-- The higher the number, the earlier this addon is loaded.
 		Default: 0

@@ -29,11 +29,21 @@ zkTimeline.invert = function (list){
 	}
 
 };
+/** Load events from XML*/
+zkTimeline.loadAllXML = function (n){
+	for(i=0;i<n.bandInfos.length;i++){
+		var func="var callback=function (xml, url){n.bandInfos["+i+"].eventSource.loadXML(xml,url);}";
+		eval(func);
+		if(n.bandInfos[i].eventSourceUrl){
+			Timeline.loadXML(n.bandInfos[i].eventSourceUrl,callback);
+		}
+	}
+	
+};
+/** Setup orient and syncWith for timeline*/
+zkTimeline.preInit = function (cmp){
+	zkTimeline.initTimeline(cmp);
 
-
-
-/** Init (and re-init) a timeline. */
-zkTimeline.init = function (cmp) {
 	//setup orient
 	var value=getZKAttr(cmp,"orient");
 	if("horizontal"==value)
@@ -45,16 +55,19 @@ zkTimeline.init = function (cmp) {
 	//set layout for syncWith band
 	for(i=0;i<cmp.bandInfos.length;i++){
 		cmp.bandInfos[i].bandIndex=i;
-		if(cmp.bandInfos[i].syncWith && cmp.zones) {
-			cmp.bandInfos[i].eventPainter.setLayout(cmp.bandInfos[parseInt(cmp.bandInfos[i].syncWith)].eventPainter.getLayout());
+		if(cmp.bandInfos[i].syncWith) {
+			var target=parseInt(cmp.bandInfos[i].syncWith);
+			if(cmp.bandInfos[i].eventSourceUrl==cmp.bandInfos[target].eventSourceUrl){
+				cmp.bandInfos[i].eventSourceUrl=null;
+				cmp.bandInfos[i].eventSource=cmp.bandInfos[target].eventSource;
+				cmp.bandInfos[i].eventPainter.setLayout(cmp.bandInfos[target].eventPainter.getLayout());
+			}
 		}
 	}
 	
-	//create a simile timeline instance
-
-	zkTimeline.initTimeline(cmp);
-	cmp.instance  = Timeline.create(document.getElementById(cmp.id+"!timeline"), cmp.bandInfos,cmp.orient);
-
+};
+/** Add a ScrollListener to each band*/
+zkTimeline.addScrollListener = function (cmp){
 	for(i=0;i<cmp.bandInfos.length;i++){
 	//set uuid for band
 		cmp.instance.getBand(i).uuid=cmp.bandInfos[i].uuid;
@@ -78,13 +91,6 @@ zkTimeline.init = function (cmp) {
 					band.currentMaxVisiableDate=band.getMaxVisibleDate();
 					zkau.send({uuid:uuid,cmd:"onBandScroll",data:val},5);
 				}
-				//var uuid=band.uuid;
-				//var val=[
-				//	band.currentMinVisiableDate.toGMTString(),//min
-				//	band.currentMaxVisiableDate.toGMTString(),//max
-				//];
-				//zkau.send({uuid:uuid,cmd:"onBandScroll",data:val},5);
-				
 			};
 		cmp.instance.getBand(i).addOnScrollListener(doScroll);
 		if(cmp.instance.getBand(i).currentMinVisiableDate==null)
@@ -97,20 +103,32 @@ zkTimeline.init = function (cmp) {
 		];
 		zkau.send({uuid:cmp.instance.getBand(i).uuid,cmd:"onBandScroll",data:val},5);
 	}
+
+};
+/** Init (and re-init) a timeline. */
+zkTimeline.init = function (cmp) {
+	//cmp.instance=null;
+	zkTimeline.preInit(cmp);
+	//create a simile timeline instance
+	var timelineDiv=$e(cmp.id+"!timeline");
+	if(timelineDiv.offsetHeight==0){
+		//timelineDiv is invisible
+		return;
+	}
+	cmp.instance  = Timeline.create(timelineDiv, cmp.bandInfos,cmp.orient);
 	
-	//load events from .xml document
-	// Disabled because it causes conflicts with MxGraph JSON code
-	/*for(var s in cmp.eventSources){
-		//alert(s);
-		Timeline.loadXML(s,
-				function(xml, url) {
-					for(i=0;i<cmp.bandInfos.length;i++){
-						if(cmp.bandInfos[i].eventSourceUrl==url){
-							cmp.bandInfos[i].eventSource.loadXML(xml,url);
-						}
-					}
-			});
-	}*/
+	zkTimeline.addScrollListener(cmp);
+	zkTimeline.loadAllXML(cmp);
+};
+
+/** re-init a timeline */
+zkTimeline.onVisi = function (cmp){
+	if(cmp.instance!=null) return;
+	var timelineDiv=$e(cmp.id+"!timeline");
+	cmp.instance  = Timeline.create(timelineDiv, cmp.bandInfos,cmp.orient);
+	zkTimeline.addScrollListener(cmp);
+	zkTimeline.loadAllXML(cmp);
+
 };
 /** Cleanup a timeline called before element being removed. */
 zkTimeline.cleanup = function (cmp) {
@@ -284,8 +302,8 @@ zkBandInfo.init = function (cmp) {
 	}
 	//setup eventSourceUrl for this band
 	cmp.bandinfo.eventSourceUrl=getZKAttr(cmp,"eventSourceUrl");
-	if(timeline.eventSources==null) timeline.eventSources={};
-	if(cmp.bandinfo.eventSourceUrl) timeline.eventSources[cmp.bandinfo.eventSourceUrl]=cmp.bandinfo.eventSourceUrl;
+	//if(timeline.eventSources==null) timeline.eventSources={};
+	//if(cmp.bandinfo.eventSourceUrl) timeline.eventSources[cmp.bandinfo.eventSourceUrl]=cmp.bandinfo.eventSourceUrl;
 	
 	cmp.bandinfo.uuid=cmp.id;
 	
@@ -349,13 +367,12 @@ zkBandInfo.setAttr = function (cmp, name, value) {
 				if(cmp.bandinfo.eventSourceUrl) timeline.eventSources[cmp.bandinfo.eventSourceUrl]=cmp.bandinfo.eventSourceUrl;
 				cmp.bandinfo.eventSource.clear();
 				if(cmp.dynaEvents!=null){//add dynamic event to event source 
-					for(i=0;i<cmp.dynaEvents.length;i++){
-						var e=cmp.dynaEvents[i];
+					for(var e in cmp.dynaEvents){
+						//var e=cmp.dynaEvents[i];
 				    	cmp.bandinfo.eventSource.add(e);
    						if( cmp.bandinfo.eventPainter.getLayout()._tracks==null)
    							cmp.bandinfo.eventPainter.getLayout()._tracks=[];//for IE
-    					
-					}
+ 					}
 					cmp.bandinfo.eventPainter.getLayout()._layout();
 				}
 				zkBandInfo.loadXML(timeline,cmp,value);
@@ -396,6 +413,7 @@ zkBandInfo.removeOccurEvent=function(uuid,eventId){
  		if(e==null) continue;
  		if(e._id==eventId){
  			band.bandinfo.eventSource._events._events.remove(e);
+ 			band.dynaEvents[e._id]=null;
  		}
  	}
 
@@ -407,7 +425,6 @@ zkBandInfo.parseDateTime=function(dateString){
     try {
         return new Date(Date.parse(dateString));
     } catch (e) {
-    	
         return null;
     }
 }
@@ -438,10 +455,10 @@ zkBandInfo.addManyOccurEvent=function(uuid,data){
 	if(data.length==0) return;
 	timeline.instance.showLoadingMessage();
     var events=[];
-    if(band.dynaEvents==null) band.dynaEvents=[];
+    if(band.dynaEvents==null) band.dynaEvents={};
     for(i=0;i<data.length;i++){
-		var evt=zkBandInfo.newEvent(band,data[i]);
-    	band.dynaEvents[band.dynaEvents.length]=evt;
+    	var evt=zkBandInfo.newEvent(band,data[i]);
+    	band.dynaEvents[evt._id]=evt;
     	events[events.length]=evt;
 	}
 
