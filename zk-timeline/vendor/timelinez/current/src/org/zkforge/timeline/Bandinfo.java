@@ -338,7 +338,7 @@ public class Bandinfo extends TimelineComponent {
 			getParent().invalidate();
 	}
 
-	public void addManyOccureEvents(ArrayList events) {
+	public void addManyOccureEvents(List events) {
 		if (events == null)
 			return;
 		Iterator iter = events.iterator();

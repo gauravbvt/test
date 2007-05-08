@@ -25,5 +25,5 @@ package org.zkforge.timeline;
 public class Version {
 	/** Returns the version UID.
 	 */
-	public static final String UID = "1.1-1";
+	public static final String UID = "1.1_3";
 }

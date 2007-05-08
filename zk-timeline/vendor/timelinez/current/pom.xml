@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.zkoss.zkforge</groupId>
   <artifactId>timelinez</artifactId>
-  <version>1.1-1</version>
+  <version>{version}</version>
   <packaging>jar</packaging>
   <name>The Timeline Component for ZK</name>
   <url>http://www.zkoss.org</url>

@@ -8,7 +8,7 @@ import org.zkforge.timeline.util.TimelineUtil;
 public class OccurEvent {
 	private static int count = 0;
 
-//	@Override
+	// @Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		JSONObject json = new JSONObject();
@@ -170,12 +170,6 @@ public class OccurEvent {
 
 	public void setIconUrl(String iconUrl) {
 		this._iconUrl = iconUrl;
-	}
-
-	public boolean isInRange(Date min, Date max) {
-		if (min.compareTo(getStart()) < 0 && max.compareTo(getEnd()) > 0)
-			return true;
-		return false;
 	}
 
 	public String getId() {
