@@ -153,11 +153,28 @@ public class Timeline extends TimelineComponent {
 		setSelection(new String[0]);
 	}
 	
+    public void addManyOccurEvents(List<OccurEvent> events) {
+        for (OccurEvent event : events) {
+            this.events.put(event.getId(), event);
+        }
+        for (Object child: this.getChildren()) {
+            if (child instanceof Bandinfo) {
+                Bandinfo band = (Bandinfo)child;
+                if (band.getSyncWith() != null) {
+                    band.addManyOccureEvents(events);
+                }
+            }
+        }
+    }
+    
     public void addOccurEvent(OccurEvent event) {
         events.put(event.getId(), event);
         for (Object child: this.getChildren()) {
             if (child instanceof Bandinfo) {
-                ((Bandinfo)child).addOccurEvent(event);
+                Bandinfo band = (Bandinfo)child;
+                if (band.getSyncWith() != null) {
+                    band.addOccurEvent(event);
+                }
             }
         }
     }
