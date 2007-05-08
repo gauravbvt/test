@@ -160,7 +160,7 @@ public class Timeline extends TimelineComponent {
         for (Object child: this.getChildren()) {
             if (child instanceof Bandinfo) {
                 Bandinfo band = (Bandinfo)child;
-                if (band.getSyncWith() != null) {
+                if (band.getSyncWith() == null) {
                     band.addManyOccureEvents(events);
                 }
             }
@@ -172,7 +172,7 @@ public class Timeline extends TimelineComponent {
         for (Object child: this.getChildren()) {
             if (child instanceof Bandinfo) {
                 Bandinfo band = (Bandinfo)child;
-                if (band.getSyncWith() != null) {
+                if (band.getSyncWith() == null) {
                     band.addOccurEvent(event);
                 }
             }
@@ -182,9 +182,13 @@ public class Timeline extends TimelineComponent {
     public void removeOccurEvent(OccurEvent event) {
         events.remove(event.getId());
         for (Object child: this.getChildren()) {
-            if (child instanceof Bandinfo) {
-                ((Bandinfo)child).removeOccurEvent(event);
+            Bandinfo band = (Bandinfo)child;
+            if (band.getSyncWith() == null) {
+                band.removeOccurEvent(event);
             }
+//            if (child instanceof Bandinfo) {
+//                ((Bandinfo)child).removeOccurEvent(event);
+//            }
         }
     }
     
