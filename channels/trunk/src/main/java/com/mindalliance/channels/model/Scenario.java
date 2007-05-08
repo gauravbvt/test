@@ -27,6 +27,7 @@ public class Scenario extends ModelElement
         implements Comparable<Scenario> {
 
     private String name;
+    private List<Occurence> occurences = new ArrayList<Occurence>();
     private List<String> objectives = new ArrayList<String>();
     private List<Event> incidents = new ArrayList<Event>();
     private Set<Event> events = new TreeSet<Event>();
@@ -208,5 +209,42 @@ public class Scenario extends ModelElement
      */
     public int compareTo( Scenario o ) {
         return getName().compareTo( o.getName() );
+    }
+
+    /**
+     * Return the value of occurences.
+     */
+    public List<Occurence> getOccurences() {
+        return this.occurences;
+    }
+
+    /**
+     * Set the value of occurences.
+     * @param occurences The new value of occurences
+     */
+    public void setOccurences( List<Occurence> occurences ) {
+        for ( Occurence o : this.occurences )
+            o.setScenario( null );
+        this.occurences = new ArrayList<Occurence>( occurences );
+        for ( Occurence o : this.occurences )
+            o.setScenario( this );
+    }
+
+    /**
+     * Add a new occurence.
+     * @param occurence the occurence
+     */
+    public void addOccurence( Occurence occurence ) {
+        this.occurences.add( occurence );
+        occurence.setScenario( this );
+    }
+
+    /**
+     * Remove an occurence.
+     * @param occurence the occurence
+     */
+    public void removeOccurence( Occurence occurence ) {
+        this.occurences.remove( occurence );
+        occurence.setScenario( null );
     }
 }

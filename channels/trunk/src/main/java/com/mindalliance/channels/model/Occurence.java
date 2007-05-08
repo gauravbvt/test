@@ -20,8 +20,8 @@ import com.mindalliance.channels.util.Duration;
  */
 public abstract class Occurence extends ScenarioElement {
 
-    private TimePoint when;
-    private TimePoint until;
+    private RelativeTimePoint when;
+    private RelativeTimePoint until;
     private Area where;
 
     /**
@@ -42,7 +42,7 @@ public abstract class Occurence extends ScenarioElement {
     /**
      * Return the value of until.
      */
-    public TimePoint getUntil() {
+    public RelativeTimePoint getUntil() {
         return this.until;
     }
 
@@ -50,14 +50,14 @@ public abstract class Occurence extends ScenarioElement {
      * Set the value of until.
      * @param until The new value of until
      */
-    public void setUntil( TimePoint until ) {
+    public void setUntil( RelativeTimePoint until ) {
         this.until = until;
     }
 
     /**
      * Return the value of when.
      */
-    public TimePoint getWhen() {
+    public RelativeTimePoint getWhen() {
         return this.when;
     }
 
@@ -65,7 +65,7 @@ public abstract class Occurence extends ScenarioElement {
      * Set the value of when.
      * @param when The new value of when
      */
-    public void setWhen( TimePoint when ) {
+    public void setWhen( RelativeTimePoint when ) {
         this.when = when;
     }
 
@@ -89,6 +89,29 @@ public abstract class Occurence extends ScenarioElement {
      * A point in time.
      */
     public abstract static class TimePoint {
+
+        private Duration duration = new Duration( 0, Duration.Unit.seconds );
+
+        /**
+         * Test if this time point is relative to another event.
+         */
+        public abstract boolean isRelative();
+
+        /**
+         * Return the value of duration.
+         */
+        public Duration getDuration() {
+            return this.duration;
+        }
+
+        /**
+         * Set the value of duration.
+         * @param duration The new value of duration
+         */
+        public void setDuration( Duration duration ) {
+            this.duration = duration;
+        }
+
     }
 
     //=============================================
@@ -130,6 +153,14 @@ public abstract class Occurence extends ScenarioElement {
         public void setTime( Timestamp time ) {
             this.time = time;
         }
+
+        /**
+         * Test if this time point is relative to another event.
+         * @return false
+         */
+        public boolean isRelative() {
+            return false;
+        }
     }
 
     //=============================================
@@ -148,27 +179,12 @@ public abstract class Occurence extends ScenarioElement {
 
         private Occurence to;
         private Boundary timepoint;
-        private Duration delta;
 
         /**
          * Default constructor.
          */
         public RelativeTimePoint() {
-        }
-
-        /**
-         * Return the value of delta.
-         */
-        public Duration getDelta() {
-            return this.delta;
-        }
-
-        /**
-         * Set the value of delta.
-         * @param delta The new value of delta
-         */
-        public void setDelta( Duration delta ) {
-            this.delta = delta;
+            super();
         }
 
         /**
@@ -199,6 +215,14 @@ public abstract class Occurence extends ScenarioElement {
          */
         public void setTo( Occurence to ) {
             this.to = to;
+        }
+
+        /**
+         * Test if this time point is relative to another event.
+         * @return true
+         */
+        public boolean isRelative() {
+            return getTo() != null ;
         }
     }
 }

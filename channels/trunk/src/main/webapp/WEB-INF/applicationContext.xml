@@ -53,6 +53,53 @@
 		<property name="email" value="guest@example.com"/>
 	</bean>
 
+	<bean id="ev1" class="com.mindalliance.channels.model.Event">
+		<property name="name" value="Fire alarm triggered"/>
+		<property name="description" value="Everybody remain calm..."/>
+		</bean>
+		
+	<bean id="ev2" class="com.mindalliance.channels.model.Task">
+		<property name="name" value="Verify cause of alarm"/>
+		<property name="description" value="Pranksters abound..."/>
+		<property name="when">
+			<bean class="com.mindalliance.channels.model.Occurence$RelativeTimePoint">
+				<property name="to" ref="ev1"/>
+				<property name="duration">
+					<bean class="com.mindalliance.channels.util.Duration">
+						<property name="number" value="5"/>
+						<property name="unit" value="minutes"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		</bean>
+		
+	<bean id="ev3" class="com.mindalliance.channels.model.Event">
+		<property name="name" value="Fire verified"/>
+		<property name="description" value="Flee!"/>
+		<property name="when">
+			<bean class="com.mindalliance.channels.model.Occurence$RelativeTimePoint">
+				<property name="to" ref="ev2"/>
+			</bean>
+		</property>
+		</bean>
+
+	<bean id="ev4" class="com.mindalliance.channels.model.Task">
+		<property name="name" value="Notify fire department"/>
+		<property name="description" value="Please hold..."/>
+		<property name="when">
+			<bean class="com.mindalliance.channels.model.Occurence$RelativeTimePoint">
+				<property name="to" ref="ev3"/>
+				<property name="duration">
+					<bean class="com.mindalliance.channels.util.Duration">
+						<property name="number" value="15"/>
+						<property name="unit" value="minutes"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
 	<!-- The system -->
 	<bean id="system" class="com.mindalliance.channels.system.SystemImpl">
 		<property name="users"><set>
@@ -84,6 +131,12 @@
 							<bean class="com.mindalliance.channels.model.Scenario">
 								<property name="name" value="Building Fire"/>
 								<property name="about" value="A fire happens in the building"/>
+								<property name="occurences"><set>
+									<ref bean="ev1"/>
+									<ref bean="ev2"/>
+									<ref bean="ev3"/>
+									<ref bean="ev4"/>
+									</set></property>
 							</bean>
 							<bean class="com.mindalliance.channels.model.Scenario">
 								<property name="name" value="Firewall Breach"/>

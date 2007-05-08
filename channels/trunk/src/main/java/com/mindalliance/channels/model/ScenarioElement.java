@@ -22,6 +22,7 @@ public abstract class ScenarioElement extends ModelElement
 
     private Scenario scenario;
     private String name;
+    private String description;
     private Set<Type> types = new TreeSet<Type>();
 
     /**
@@ -107,5 +108,20 @@ public abstract class ScenarioElement extends ModelElement
      */
     public int compareTo( ScenarioElement o ) {
         return getName().compareToIgnoreCase( o.getName() );
+    }
+
+    /**
+     * Return the value of description.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Set the value of description.
+     * @param description The new value of description
+     */
+    public void setDescription( String description ) {
+        this.description = description;
     }
 }

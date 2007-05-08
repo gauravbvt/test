@@ -223,7 +223,8 @@ public class ScenariosTab extends Tabpanel {
                     scenario.getName(),
                     "Scenario viewer",
                     "ROLE_USER",
-                    new ScenarioViewer( maxHeight, system, scenario, user ),
+                    new ScenarioViewer(
+                        maxHeight, canvas.getPage(), system, scenario, user ),
                     canvas,
                     scenario ),
                 reports );

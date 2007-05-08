@@ -5,6 +5,7 @@ package com.mindalliance.channels.ui;
 
 import java.text.MessageFormat;
 
+import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.InputEvent;
@@ -39,12 +40,13 @@ public class ScenarioViewer extends Window {
      * Default constructor.
      *
      * @param height the available height
+     * @param page the page
      * @param system the system
      * @param scenario the scenario
      * @param user the user
      */
     public ScenarioViewer(
-            int height,
+            int height, Page page,
             System system, Scenario scenario, User user ) {
 
         super();
@@ -56,8 +58,8 @@ public class ScenarioViewer extends Window {
 
         Hbox bottom = new Hbox();
         bottom.appendChild( createWherePane( kidHeight ) );
-        bottom.appendChild( createBottomPane( "What", kidHeight ) );
-        bottom.appendChild( createBottomPane( "Who", kidHeight ) );
+        bottom.appendChild( createWhatPane( kidHeight ) );
+        bottom.appendChild( createWhoPane( kidHeight ) );
         bottom.setWidth( "100%" );
         bottom.setWidths( "33%,33%" );
         bottom.setSclass( "bottom-pane" );
@@ -65,7 +67,7 @@ public class ScenarioViewer extends Window {
         Vbox contents = new Vbox();
         contents.appendChild( createDescription() );
         contents.appendChild(
-                new ScenarioTimeline( TIMELINE_HEIGHT, scenario ) );
+                new ScenarioTimeline( TIMELINE_HEIGHT, page, scenario ) );
         contents.appendChild( bottom );
         contents.setWidth( "100%" );
         contents.setHeights( "50%,50%" );
@@ -79,13 +81,26 @@ public class ScenarioViewer extends Window {
     }
 
     /**
-     * Create a funky bottom pane.
-     * @param title the title
+     * Create a "what" bottom pane.
      * @param height the initial height
      */
-    private Window createBottomPane( String title, int height ) {
+    private Window createWhatPane( int height ) {
 
-        Window window = new Window( title, "normal", false );
+        Window window = new Window( "What", "normal", false );
+        TreeGraphPane tgp = new TreeGraphPane(
+                height, getSystem(), getScenario(), getUser() );
+        window.appendChild( tgp );
+        window.setHeight( height + "px" );
+        return window;
+    }
+
+    /**
+     * Create a "who" bottom pane.
+     * @param height the initial height
+     */
+    private Window createWhoPane( int height ) {
+
+        Window window = new Window( "Who", "normal", false );
         TreeGraphPane tgp = new TreeGraphPane(
                 height, getSystem(), getScenario(), getUser() );
         window.appendChild( tgp );

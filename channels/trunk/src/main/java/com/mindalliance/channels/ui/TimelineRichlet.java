@@ -29,7 +29,7 @@ public class TimelineRichlet extends GenericRichlet {
     public void service(Page page) {
         page.setTitle("Timeline test");
 
-        final ScenarioTimeline timeline = new ScenarioTimeline(300,null);
+        final ScenarioTimeline timeline = new ScenarioTimeline(300,page,null);
         Window w = new Window("Timeline", "normal", false);
 //        TimeZone timeZone = TimeZone.getTimeZone("EDT");
 //        Calendar date = Calendar.getInstance();
@@ -63,8 +63,8 @@ public class TimelineRichlet extends GenericRichlet {
         timeline.setParent(w);
         w.setPage(page);
 
-        timeline.populateTimeline();
         Calendar date = Calendar.getInstance();
+        timeline.populateTimeline( date.getTime() );
         //date.setTimeZone( timeZone );
         //date.set( 2007, 5, 8, 13, 0 );
         final OccurEvent e = new OccurEvent();
