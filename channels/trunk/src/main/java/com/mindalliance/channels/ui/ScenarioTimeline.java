@@ -3,12 +3,15 @@
 
 package com.mindalliance.channels.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 import org.zkforge.timeline.Bandinfo;
 import org.zkforge.timeline.Timeline;
+import org.zkforge.timeline.data.OccurEvent;
 import org.zkforge.timeline.event.SelectEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -27,6 +30,8 @@ public class ScenarioTimeline extends Timeline {
 
     private Scenario scenario;
     private Date start = new Date();
+    private Bandinfo top;
+    private Bandinfo bottom;
 
     /**
      * Default constructor.
@@ -40,24 +45,25 @@ public class ScenarioTimeline extends Timeline {
         TimeZone timeZone = TimeZone.getTimeZone( "EDT" );
         Calendar date = Calendar.getInstance();
         date.setTimeZone( timeZone );
-        date.set( 2007, 5, 5, 13, 0 );
+        //date.set( 2007, 5, 8, 13, 0 );
         setStart( date.getTime() );
 
-        final Bandinfo top = new Bandinfo();
+        top = new Bandinfo();
         top.setTimeZone( timeZone );
         top.setDate( getStart() );
-        top.setTrackHeight( 1.0f );
+        top.setTrackHeight( 1.2f );
+        top.setTrackGap(0.1f);
         top.setIntervalUnit( "minute" );
         top.setIntervalPixels( 20 );
-        top.setEventSourceUrl( "scenario.jsp" );
+        //top.setEventSourceUrl( "scenario.jsp" );
 
-        final Bandinfo bottom = new Bandinfo();
+        bottom = new Bandinfo();
         bottom.setTimeZone( timeZone );
         bottom.setDate( getStart() );
         bottom.setIntervalUnit( "hour" );
         bottom.setTrackHeight( 0.4f );
         bottom.setTrackGap( 0.1f );
-        bottom.setEventSourceUrl( "scenario.jsp" );
+        //bottom.setEventSourceUrl( "scenario.jsp" );
         bottom.setShowEventText( false );
         bottom.setSyncWith( top.getId() );
 
@@ -81,37 +87,38 @@ public class ScenarioTimeline extends Timeline {
             }
         } );
 
-//        populateTimeline( top );
+        populateTimeline();
 //        populateTimeline( bottom );
     }
 
 //    /**
 //     * Put some events in that timeline.
 //     */
-//    private void populateTimeline( Bandinfo band ) {
-//        // TODO figure out how to make something like the following work
-//
-//        OccurEvent ev1 = new OccurEvent();
-//        ev1.setText( "Fire alarm triggered" );
-//        ev1.setDescription( "Flee!" );
-//        ev1.setIconUrl( "images/16x16/nav_plain_red.png" );
-//        ev1.setStart( getStart() );
-//        ev1.setDuration( false );
-//
-//        OccurEvent ev2 = new OccurEvent();
-//        ev2.setText( "Verify cause of alarm" );
-//        ev2.setDuration( true );
-//        ev2.setDescription( "Flee!" );
-//        ev2.setIconUrl( "images/16x16/forbidden.png" );
-//        Date s = new Date( getStart().getTime() + 60000 );
-//        ev2.setStart( s );
-//        ev2.setEnd( new Date( s.getTime() + 5*60000 ) );
-//
-//        band.addManyOccureEvents(
+    public void populateTimeline() {
+        // TODO figure out how to make something like the following work
+
+        OccurEvent ev1 = new OccurEvent();
+        ev1.setText( "Fire alarm triggered" );
+        ev1.setDescription( "Flee!" );
+        ev1.setIconUrl( "/channels/images/16x16/add2.png" );
+        ev1.setStart( getStart() );
+        ev1.setDuration( false );
+
+        OccurEvent ev2 = new OccurEvent();
+        ev2.setText( "Verify cause of alarm" );
+        ev2.setDuration( true );
+        ev2.setDescription( "Flee!" );
+        ev2.setIconUrl( "/channels/images/16x16/add2.png" );
+        Date s = new Date( getStart().getTime() + 60000 );
+        ev2.setStart( s );
+        ev2.setEnd( new Date( s.getTime() + 5*60000 ) );
+        addOccurEvent(ev1);
+        addOccurEvent(ev2);
+//        addManyOccureEvents(
 //            new ArrayList<OccurEvent>( Arrays.asList( new OccurEvent[] {
 //                ev1, ev2
 //            } ) ) );
-//    }
+    }
 
     /**
      * Return the value of scenario.
