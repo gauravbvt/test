@@ -108,8 +108,9 @@ public class ScenarioTimeline extends Timeline {
 
         List<ResolvedEvent> events = new ArrayList<ResolvedEvent>();
 
-        for ( Occurence event : getScenario().getOccurences() )
-            events.add( new ResolvedEvent( event, start ) );
+        if ( getScenario() != null && getScenario().getOccurences() != null )
+            for ( Occurence event : getScenario().getOccurences() )
+                events.add( new ResolvedEvent( event, start ) );
 
         for ( ResolvedEvent event : events ) {
             OccurEvent occurence = new OccurEvent();
