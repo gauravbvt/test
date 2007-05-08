@@ -4,10 +4,15 @@
  */
 package com.mindalliance.channels.data.user;
 
+import java.util.List;
 
-
-
-// TODO
-public class Todo extends Attribution {
+/**
+ * An action item targeting selected users and that may depend on other action items being completed.
+ * @author jf
+ *
+ */
+public class Todo extends Announcement {
+	
+	private List<Todo> dependencies;
 
 }

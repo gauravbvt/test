@@ -16,21 +16,21 @@ import com.mindalliance.channels.util.GUID;
  */
 public class History extends AbstractQueryable {
 
-	private Map<GUID,VersionHistory> elementHistories;
+	private Map<GUID,VersionHistory> versionHistories;
 	
 	// TODO Access to system usage log, system metrics over time, system events etc
 
 	/**
 	 * @return the elementHistories
 	 */
-	public Map<GUID, VersionHistory> getElementHistories() {
-		return elementHistories;
+	public Map<GUID, VersionHistory> getVersionHistories() {
+		return versionHistories;
 	}
 
 	/**
 	 * @param elementHistories the elementHistories to set
 	 */
-	public void setElementHistories(Map<GUID, VersionHistory> elementHistories) {
-		this.elementHistories = elementHistories;
+	public void setElementHistories(Map<GUID, VersionHistory> versionHistories) {
+		this.versionHistories = versionHistories;
 	}
 }

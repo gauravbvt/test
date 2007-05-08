@@ -5,7 +5,14 @@
 package com.mindalliance.channels.data.user;
 
 
-// TODO
+/**
+ * Request to add and invite a new user to join Channels.
+ * @author jf
+ *
+ */
 public class NewUserRequest extends UserRequest {
+	
+	private String name;
+	private String emailAddress;
 
 }
