@@ -43,6 +43,8 @@ public class ScenarioTimeline extends Timeline {
     private List<TimelineListener> selectionListeners;
     private Map<String,Occurence> idMap;
 
+    private boolean initialized;
+
     /**
      * Default constructor.
      * @param height the available height in pixels
@@ -96,7 +98,18 @@ public class ScenarioTimeline extends Timeline {
             }
         } );
 
-        populateTimeline( new Date() );
+        top.addEventListener( "onBandScroll", new EventListener() {
+            public boolean isAsap() {
+                return true;
+            }
+
+            public void onEvent( org.zkoss.zk.ui.event.Event event ) {
+                if ( !initialized ) {
+                    initialized = true;
+                    populateTimeline( new Date() );
+                }
+            }
+        } );
     }
 
     /**
