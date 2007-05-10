@@ -4,9 +4,13 @@
  */
 package com.mindalliance.channels.data.elements.reference;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.mindalliance.channels.data.Describable;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A categorization of an element.
@@ -26,12 +30,18 @@ public class Type extends ReferenceElement implements Describable {
 
 	private Typology typology;
 	private Information descriptor;
-	private TypeSet domain = new TypeSet(Type.DOMAIN, TypeSet.SINGLETON);// the domain of this type
+	private TypeSet domains = new TypeSet(Type.DOMAIN, TypeSet.SINGLETON);// the domain of this type
 	private TypeSet standards = new TypeSet(Type.STANDARD); // the standard where this type is defined
 	private TypeSet implied = new TypeSet(typology); // types this one implies, other than the root of the typology
 	private TypeSet eventTypes = new TypeSet(Type.EVENT); // types of events that can be raised by elements of this type
 	private TypeSet issueTypes = new TypeSet(Type.ISSUE); // types of issues that can be associated with elements of this type
 
+	public Type() {
+		super();
+	}
+	public Type(GUID guid) {
+		super(guid);
+	}
 	/**
 	 * @return the descriptor
 	 */
@@ -47,14 +57,14 @@ public class Type extends ReferenceElement implements Describable {
 	/**
 	 * @return the domain
 	 */
-	public TypeSet getDomain() {
-		return domain;
+	public TypeSet getDomains() {
+		return domains;
 	}
 	/**
 	 * @param domain the domain to set
 	 */
-	public void setDomain(TypeSet domain) {
-		this.domain = domain;
+	public void setDomains(TypeSet domains) {
+		this.domains = domains;
 	}
 	/**
 	 * @return the implied
@@ -115,5 +125,21 @@ public class Type extends ReferenceElement implements Describable {
 	 */
 	public void setIssueTypes(TypeSet issueTypes) {
 		this.issueTypes = issueTypes;
+	}
+	/**
+	 * Get all domains, including those of implied types
+	 * @return
+	 */
+	public Set<Type> getAllDomains() {
+		Set<Type> allDomains = new HashSet<Type>();
+		if (domains != null) {
+			allDomains.addAll(domains.getTypes());
+			if (implied != null) {
+				for (Type type : implied.getTypes()) {
+					allDomains.addAll(type.getAllDomains());
+				}
+			}
+		}
+		return allDomains;
 	}
 }

@@ -24,4 +24,46 @@ public class Latency implements Serializable {
 		return average;
 	}
 
+	/**
+	 * @return the average
+	 */
+	public Duration getAverage() {
+		return average;
+	}
+
+	/**
+	 * @param average the average to set
+	 */
+	public void setAverage(Duration average) {
+		this.average = average;
+	}
+
+	/**
+	 * @return the maximum
+	 */
+	public Duration getMaximum() {
+		return maximum;
+	}
+
+	/**
+	 * @param maximum the maximum to set
+	 */
+	public void setMaximum(Duration maximum) {
+		this.maximum = maximum;
+	}
+
+	/**
+	 * @return the minimum
+	 */
+	public Duration getMinimum() {
+		return minimum;
+	}
+
+	/**
+	 * @param minimum the minimum to set
+	 */
+	public void setMinimum(Duration minimum) {
+		this.minimum = minimum;
+	}
+
 }

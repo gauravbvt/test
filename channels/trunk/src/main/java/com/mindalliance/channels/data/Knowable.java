@@ -2,9 +2,11 @@
  * Created on Apr 25, 2007
  *
  */
-package com.mindalliance.channels.data.elements.assertions;
+package com.mindalliance.channels.data;
 
 import java.util.List;
+
+import com.mindalliance.channels.data.elements.assertions.Known;
 
 
 
@@ -14,7 +16,10 @@ import java.util.List;
  *
  */
 public interface Knowable extends Assertable {
-		
+	/**
+	 * Return Known assertions
+	 * @return
+	 */
 	List<Known> getKnownAssertions();
 	
 }

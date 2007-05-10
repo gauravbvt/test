@@ -8,12 +8,12 @@ package com.mindalliance.channels.data.system;
 import java.util.List;
 import java.util.Map;
 
-import com.mindalliance.channels.data.elements.UserProfile;
 import com.mindalliance.channels.data.user.Alert;
 import com.mindalliance.channels.data.user.Certification;
 import com.mindalliance.channels.data.user.Conversation;
 import com.mindalliance.channels.data.user.NotificationRequest;
 import com.mindalliance.channels.data.user.Todo;
+import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.user.UserRequest;
 
 /**
@@ -23,7 +23,7 @@ import com.mindalliance.channels.data.user.UserRequest;
  */
 public class Registry extends AbstractQueryable {
 	
-	private Map<String,UserProfile> userProfiles; // username => user profile
+	private Map<String,User> users; // username => user profile
 	private List<Conversation> conversations;
 	private List<Alert> alerts;
 	private List<Todo> todos;

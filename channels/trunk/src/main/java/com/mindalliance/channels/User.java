@@ -3,7 +3,12 @@
 
 package com.mindalliance.channels;
 
+import java.util.List;
+
 import org.acegisecurity.userdetails.UserDetails;
+
+import com.mindalliance.channels.data.Named;
+import com.mindalliance.channels.data.elements.resources.Role;
 
 /**
  * A user of the system.
@@ -14,16 +19,15 @@ import org.acegisecurity.userdetails.UserDetails;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public interface User extends UserDetails {
-
-    /**
-     * Return the display name of a user.
-     */
-    String getName();
+public interface User extends UserDetails, Named {
 
     /**
      * Return the short login name of the user.
      */
     String getUsername();
-
+    /**
+     * Return the roles played by the user, if any.
+     * @return
+     */
+    List<Role> getRoles();
 }

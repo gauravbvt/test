@@ -17,4 +17,22 @@ public class CertificationRequest extends UserRequest {
 	
 	private GUID target; // GUID of either UserProfile or Person
 
+	public CertificationRequest() {
+		super();
+	}
+
+	/**
+	 * @return the target
+	 */
+	public GUID getTarget() {
+		return target;
+	}
+
+	/**
+	 * @param target the target to set
+	 */
+	public void setTarget(GUID target) {
+		this.target = target;
+	}
+
 }

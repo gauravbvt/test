@@ -8,13 +8,21 @@ import java.util.List;
 
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.reference.Environment;
+import com.mindalliance.channels.util.GUID;
 
 public class Model extends AbstractElement {
 	
-	private Project project;
+	private Project project; // backpointer
 	private List<Scenario> scenarios;
 	private List<Environment> environments;
 	
+	
+	public Model() {
+		super();
+	}
+	public Model(GUID guid) {
+		super(guid);
+	}
 	/**
 	 * @return the environments
 	 */
@@ -50,6 +58,34 @@ public class Model extends AbstractElement {
 	 */
 	public void setProject(Project project) {
 		this.project = project;
+	}
+	/**
+	 * 
+	 * @param scenario
+	 */
+	public void addScenario(Scenario scenario) {
+		scenarios.add(scenario);
+	}
+	/**
+	 * 
+	 * @param scenario
+	 */
+	public void removeScenario(Scenario scenario) {
+		scenarios.remove(scenario);
+	}
+	/**
+	 * 
+	 * @param environment
+	 */
+	public void addEnvironment(Environment environment) {
+		environments.add(environment);
+	}
+	/**
+	 * 
+	 * @param environment
+	 */
+	public void removeEnvironment(Environment environment) {
+		environments.remove(environment);
 	}
 
 }

@@ -4,9 +4,11 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
+import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.reference.Location;
 import com.mindalliance.channels.data.support.Duration;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * Something that happens in a scenario.
@@ -20,6 +22,15 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
 	private Duration duration;
 	private Location location;
 	private Cause cause;
+
+	
+	public AbstractOccurrence() {
+		super();
+	}
+
+	public AbstractOccurrence(GUID guid) {
+		super(guid);
+	}
 
 	/** 
 	 * Get cause
@@ -71,6 +82,20 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
 	 */
 	public Duration getTime() {
 		return time;
+	}
+
+	/**
+	 * @param cause the cause to set
+	 */
+	public void setCause(Cause cause) {
+		this.cause = cause;
+	}
+
+	/**
+	 * @param time the time to set
+	 */
+	public void setTime(Duration time) {
+		this.time = time;
 	}
 
 }

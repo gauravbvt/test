@@ -13,9 +13,36 @@ import com.mindalliance.channels.data.support.Duration;
  */
 public interface Timed {
 	/**
-	 * How much time passed since time zero and this.
-	 * @return
+	 * Gets the duration
+	 * @return Duration
 	 */
-	Duration getTime();
+	public Duration getDuration();
+	
+	/**
+	 * Returns the delta from the scenario time zero.
+	 * @return Duration
+	 */
+	public Duration getTime();
+	
+	/**
+	 * 
+	 * @param occurrence
+	 * @return whether this occurrence starts after another starts
+	 */
+	public boolean isAfter(Occurrence occurrence);
+	
+	/**
+	 * 
+	 * @param occurrence
+	 * @return whether this occurrence starts after another starts
+	 */
+	public boolean isBefore(Occurrence occurrence);
+	
+	/**
+	 * 
+	 * @param occurrence
+	 * @return whether this occurrence overlaps another
+	 */
+	public boolean isDuring(Occurrence occurrence);
 
 }

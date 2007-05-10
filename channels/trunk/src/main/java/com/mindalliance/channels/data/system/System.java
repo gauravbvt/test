@@ -7,17 +7,28 @@ package com.mindalliance.channels.data.system;
 import java.util.List;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.Element;
+import com.mindalliance.channels.data.Element;
+import com.mindalliance.channels.data.elements.ElementFactory;
+import com.mindalliance.channels.util.GUIDFactory;
+import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 
 /**
- * The Channels data model's root bean
+ * The System data model's root bean
  * @author jf
  *
  */
 @SuppressWarnings("serial")
-public class Channels extends AbstractQueryable {
+public class System extends AbstractQueryable {
 	
+	public static ElementFactory elementFactory;
+	public static GUIDFactory guidFactory;
+	
+	static {
+		guidFactory = new GUIDFactoryImpl();
+		elementFactory = new ElementFactory();
+		elementFactory.setGuidFactory(guidFactory);
+	}
 
     private Registry registry;
 	private Directory directory;
@@ -71,6 +82,42 @@ public class Channels extends AbstractQueryable {
 	 */
 	public void setRegistry(Registry registry) {
 		this.registry = registry;
+	}
+
+
+
+	/**
+	 * @param directory the directory to set
+	 */
+	public void setDirectory(Directory directory) {
+		this.directory = directory;
+	}
+
+
+
+	/**
+	 * @param history the history to set
+	 */
+	public void setHistory(History history) {
+		this.history = history;
+	}
+
+
+
+	/**
+	 * @param library the library to set
+	 */
+	public void setLibrary(Library library) {
+		this.library = library;
+	}
+
+
+
+	/**
+	 * @param portfolio the portfolio to set
+	 */
+	public void setPortfolio(Portfolio portfolio) {
+		this.portfolio = portfolio;
 	}
 	
 

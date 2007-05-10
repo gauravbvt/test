@@ -12,7 +12,10 @@ import com.mindalliance.channels.util.GUID;
  *
  */
 public interface Unique {
-	
+	/**
+	 * Get globally unique id
+	 * @return
+	 */
 	GUID getGuid();
 
 }

@@ -6,10 +6,12 @@ package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.List;
 
+import com.mindalliance.channels.data.ScenarioElement;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.assertions.Known;
 import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * An element in a scenario.
@@ -19,6 +21,12 @@ import com.mindalliance.channels.data.elements.project.Scenario;
 abstract public class AbstractScenarioElement extends AbstractElement implements ScenarioElement {
 	
 	private Scenario scenario;
+
+	public AbstractScenarioElement() {}
+	
+	public AbstractScenarioElement(GUID guid) {
+		super(guid);
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mindalliance.channels.data.Knowable#getKnownAssertions()

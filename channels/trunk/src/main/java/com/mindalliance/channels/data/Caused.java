@@ -11,7 +11,7 @@ import com.mindalliance.channels.data.components.Cause;
  * @author jf
  *
  */
-public interface Caused {
+public interface Caused extends Timed {
 	
 	/**
 	 * Get cause.

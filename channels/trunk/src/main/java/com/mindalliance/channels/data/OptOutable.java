@@ -2,9 +2,11 @@
  * Created on May 1, 2007
  *
  */
-package com.mindalliance.channels.data.elements.assertions;
+package com.mindalliance.channels.data;
 
 import java.util.List;
+
+import com.mindalliance.channels.data.elements.assertions.OptedOut;
 
 
 /**
@@ -13,7 +15,10 @@ import java.util.List;
  *
  */
 public interface OptOutable extends Assertable {
-
+	/**
+	 * Return OptedOut assertions
+	 * @return
+	 */
 	List<OptedOut> getOptedOutAssertions();
 	
 }

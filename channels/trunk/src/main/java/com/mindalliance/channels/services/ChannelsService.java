@@ -5,7 +5,7 @@
 package com.mindalliance.channels.services;
 
 /**
- * Overall Channels functions and access to all Channels services.
+ * Overall System functions and access to all System services.
  * @author jf
  *
  */

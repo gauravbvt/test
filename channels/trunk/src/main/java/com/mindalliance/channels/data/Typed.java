@@ -13,6 +13,10 @@ import com.mindalliance.channels.data.support.TypeSet;
  */
 public interface Typed {
 	
-	TypeSet getTypes();
+	/**
+	 * Get the type set
+	 * @return
+	 */
+	TypeSet getTypeSet();
 
 }

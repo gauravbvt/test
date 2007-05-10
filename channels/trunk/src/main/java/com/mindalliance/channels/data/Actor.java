@@ -2,10 +2,11 @@
  * Created on May 2, 2007
  *
  */
-package com.mindalliance.channels.data.elements;
+package com.mindalliance.channels.data;
 
 import java.util.List;
 
+import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.data.elements.resources.Role;
 
 
@@ -16,6 +17,10 @@ import com.mindalliance.channels.data.elements.resources.Role;
  */
 public interface Actor extends Element {
 
-	List<Role> getRoles();
+	/**
+	 * Get the roles implied by the actor within the scope of a project .
+	 * @return
+	 */
+	List<Role> getRoles(Project project);
 	
 }

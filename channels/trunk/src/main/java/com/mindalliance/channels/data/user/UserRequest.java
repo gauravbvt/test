@@ -13,4 +13,22 @@ public abstract class UserRequest extends Statement {
 	
 	private boolean active; // whether the request is in effect
 
+	public UserRequest() {
+		super();
+	}
+
+	/**
+	 * @return the active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 }

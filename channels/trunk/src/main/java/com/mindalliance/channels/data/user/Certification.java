@@ -15,5 +15,23 @@ import java.util.Date;
 abstract public class Certification extends Statement {
 
 	private Date expirationDate; // null if no expiration	
+
+	public Certification() {
+		super();
+	}
+
+	/**
+	 * @return the expirationDate
+	 */
+	public Date getExpirationDate() {
+		return expirationDate;
+	}
+
+	/**
+	 * @param expirationDate the expirationDate to set
+	 */
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
+	}
 	
 }

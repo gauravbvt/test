@@ -2,11 +2,8 @@
  * Created on Apr 28, 2007
  *
  */
-package com.mindalliance.channels.data.elements.scenario;
+package com.mindalliance.channels.data;
 
-import com.mindalliance.channels.data.Describable;
-import com.mindalliance.channels.data.elements.Element;
-import com.mindalliance.channels.data.elements.assertions.Knowable;
 import com.mindalliance.channels.data.elements.project.Scenario;
 
 /**

@@ -40,6 +40,42 @@ public class Pattern<T> implements Serializable {
 		private String path; // to an attribute
 		private String regex; // to match against value attributes
 		private TypeSet types; // to match against reference attributes and TypeSet attributes
+		/**
+		 * @return the path
+		 */
+		public String getPath() {
+			return path;
+		}
+		/**
+		 * @param path the path to set
+		 */
+		public void setPath(String path) {
+			this.path = path;
+		}
+		/**
+		 * @return the regex
+		 */
+		public String getRegex() {
+			return regex;
+		}
+		/**
+		 * @param regex the regex to set
+		 */
+		public void setRegex(String regex) {
+			this.regex = regex;
+		}
+		/**
+		 * @return the types
+		 */
+		public TypeSet getTypes() {
+			return types;
+		}
+		/**
+		 * @param types the types to set
+		 */
+		public void setTypes(TypeSet types) {
+			this.types = types;
+		}
 
 	}
 	
@@ -49,6 +85,48 @@ public class Pattern<T> implements Serializable {
 	
 	public boolean matches(JavaBean bean) {
 		return false;
+	}
+
+	/**
+	 * @return the beanClass
+	 */
+	public Class<T> getBeanClass() {
+		return beanClass;
+	}
+
+	/**
+	 * @param beanClass the beanClass to set
+	 */
+	public void setBeanClass(Class<T> beanClass) {
+		this.beanClass = beanClass;
+	}
+
+	/**
+	 * @return the constraints
+	 */
+	public List<AttributeConstraint> getConstraints() {
+		return constraints;
+	}
+
+	/**
+	 * @param constraints the constraints to set
+	 */
+	public void setConstraints(List<AttributeConstraint> constraints) {
+		this.constraints = constraints;
+	}
+	/**
+	 * 
+	 * @param constraint
+	 */
+	public void addConstraint(AttributeConstraint constraint) {
+		constraints.add(constraint);
+	}
+	/**
+	 * 
+	 * @param constraint
+	 */
+	public void removeConstraint(AttributeConstraint constraint) {
+		constraints.remove(constraint);
 	}
 
 }

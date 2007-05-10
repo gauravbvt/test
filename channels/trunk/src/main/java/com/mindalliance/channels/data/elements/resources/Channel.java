@@ -10,10 +10,11 @@ import com.mindalliance.channels.data.elements.reference.Type;
 import com.mindalliance.channels.data.support.Latency;
 import com.mindalliance.channels.data.support.Level;
 import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A communication medium with a security level, restrictions as to formats it can transmit,
- * and possibly interoperable with other channels. A Channel has a latency.
+ * and possibly interoperable with other system. A Channel has a latency.
  * @author jf
  *
  */
@@ -24,5 +25,72 @@ public class Channel extends AbstractResource {
 	private List<Channel> interoperables; // information can travel from this one to the other
 	private TypeSet supportedFormats = new TypeSet(Type.FORMAT);
 	private Latency latency;
+	
+	public Channel() {
+		super();
+	}
+	public Channel(GUID guid) {
+		super(guid);
+	}
+	/**
+	 * @return the interoperables
+	 */
+	public List<Channel> getInteroperables() {
+		return interoperables;
+	}
+	/**
+	 * @param interoperables the interoperables to set
+	 */
+	public void setInteroperables(List<Channel> interoperables) {
+		this.interoperables = interoperables;
+	}
+	/**
+	 * @return the latency
+	 */
+	public Latency getLatency() {
+		return latency;
+	}
+	/**
+	 * @param latency the latency to set
+	 */
+	public void setLatency(Latency latency) {
+		this.latency = latency;
+	}
+	/**
+	 * @return the reliability
+	 */
+	public Level getReliability() {
+		return reliability;
+	}
+	/**
+	 * @param reliability the reliability to set
+	 */
+	public void setReliability(Level reliability) {
+		this.reliability = reliability;
+	}
+	/**
+	 * @return the security
+	 */
+	public Level getSecurity() {
+		return security;
+	}
+	/**
+	 * @param security the security to set
+	 */
+	public void setSecurity(Level security) {
+		this.security = security;
+	}
+	/**
+	 * @return the supportedFormats
+	 */
+	public TypeSet getSupportedFormats() {
+		return supportedFormats;
+	}
+	/**
+	 * @param supportedFormats the supportedFormats to set
+	 */
+	public void setSupportedFormats(TypeSet supportedFormats) {
+		this.supportedFormats = supportedFormats;
+	}
 	
 }

@@ -20,6 +20,8 @@ public class Duration implements Serializable {
      */
     public enum Unit { years, months, weeks, days, hours, minutes, seconds }
 
+	public static final Duration NONE = new Duration();
+
     private int number;
     private Unit unit;
 
@@ -27,6 +29,8 @@ public class Duration implements Serializable {
      * Default constructor.
      */
     public Duration() {
+    	this.number = 0;
+    	unit = Unit.seconds;
     }
 
     /**

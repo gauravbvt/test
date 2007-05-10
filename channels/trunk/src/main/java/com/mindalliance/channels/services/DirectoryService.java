@@ -4,6 +4,6 @@
  */
 package com.mindalliance.channels.services;
 
-public interface DirectoryService {
+public interface DirectoryService extends Service {
 
 }

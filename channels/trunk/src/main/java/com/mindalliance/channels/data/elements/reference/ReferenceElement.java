@@ -5,6 +5,7 @@
 package com.mindalliance.channels.data.elements.reference;
 
 import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.util.GUID;
 
 /**
  * ReferenceElement data
@@ -12,6 +13,13 @@ import com.mindalliance.channels.data.elements.AbstractElement;
  *
  */
 public class ReferenceElement extends AbstractElement {
-	
 
+	public ReferenceElement() {
+		super();
+	}
+
+	public ReferenceElement(GUID guid) {
+		super(guid);
+	}
+	
 }

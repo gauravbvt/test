@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.mindalliance.channels.data.elements.UserProfile;
+import com.mindalliance.channels.User;
 import com.mindalliance.channels.util.GUID;
 
 /** 
@@ -18,26 +18,68 @@ import com.mindalliance.channels.util.GUID;
  */
 public class VersionHistory implements Serializable {
 
-	private GUID guid; // guid of element
+	private GUID elementGUID; // guid of element
 	private List<Version> priorVersions;
 	
 	public boolean isDeleted() {
-		return false;
+		return false; // TODO
 	}
 
 	public boolean isFrozen() {
-		return false;
+		return false; // TODO
 	}
 	
 	public Date whenLastChanged() {
-		return null;
+		return null; // TODO
 	}
 	
 	public Date whenCreated() {
-		return null;
+		return null; // TODO
 	}
 	
-	public List<UserProfile> getContributors() {
-		return null;
+	public List<User> getContributors() {
+		return null; // TODO
+	}
+
+	/**
+	 * @return the elementGUID
+	 */
+	public GUID getElementGUID() {
+		return elementGUID;
+	}
+
+	/**
+	 * @param elementGUID the elementGUID to set
+	 */
+	public void setElementGUID(GUID elementGUID) {
+		this.elementGUID = elementGUID;
+	}
+
+	/**
+	 * @return the priorVersions
+	 */
+	public List<Version> getPriorVersions() {
+		return priorVersions;
+	}
+
+	/**
+	 * @param priorVersions the priorVersions to set
+	 */
+	public void setPriorVersions(List<Version> priorVersions) {
+		this.priorVersions = priorVersions;
+	}
+	/**
+	 * 
+	 * @param version
+	 */
+	public void addPriorVersion(Version version) {
+		priorVersions.add(version);
+	}
+	/**
+	 * 
+	 * @param version
+	 */
+	public void removePriorVersion(Version version) {
+		priorVersions.remove(version);
 	}
 }

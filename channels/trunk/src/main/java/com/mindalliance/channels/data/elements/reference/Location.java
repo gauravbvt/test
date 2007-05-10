@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.mindalliance.channels.data.support.Distance;
 import com.mindalliance.channels.data.support.LatLong;
-import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A place, position etc.
@@ -47,6 +46,20 @@ public class Location extends ReferenceElement {
 		this.nextTo = nextTo;
 	}
 	/**
+	 * 
+	 * @param location
+	 */
+	public void addNextTo(Location location) {
+		nextTo.add(location);
+	}
+	/**
+	 * 
+	 * @param location
+	 */
+	public void removeNextTo(Location location) {
+		nextTo.remove(location);
+	}
+	/**
 	 * @return the radius
 	 */
 	public Distance getRadius() {
@@ -69,6 +82,20 @@ public class Location extends ReferenceElement {
 	 */
 	public void setWithin(List<Location> within) {
 		this.within = within;
+	}
+	/**
+	 * 
+	 * @param location
+	 */
+	public void addWithin(Location location) {
+		within.add(location);
+	}
+	/**
+	 * 
+	 * @param location
+	 */
+	public void removeWithin(Location location) {
+		within.remove(location);
 	}
 	
 }

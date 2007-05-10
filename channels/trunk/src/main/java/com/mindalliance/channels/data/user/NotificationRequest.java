@@ -44,4 +44,80 @@ public class NotificationRequest extends UserRequest {
 	private GUID userScopeGUID; // guid of user profile, role type, organization, domain type etc., or null
 	private ElementScope elementScope;
 	private GUID elementScopeGUID; // guid of project, scenario, model, organization, element etc., or null
+
+	public NotificationRequest() {
+		super();
+	}
+	/**
+	 * @return the elementEvent
+	 */
+	public ElementEvent getElementEvent() {
+		return elementEvent;
+	}
+	/**
+	 * @param elementEvent the elementEvent to set
+	 */
+	public void setElementEvent(ElementEvent elementEvent) {
+		this.elementEvent = elementEvent;
+	}
+	/**
+	 * @return the elementScope
+	 */
+	public ElementScope getElementScope() {
+		return elementScope;
+	}
+	/**
+	 * @param elementScope the elementScope to set
+	 */
+	public void setElementScope(ElementScope elementScope) {
+		this.elementScope = elementScope;
+	}
+	/**
+	 * @return the elementScopeGUID
+	 */
+	public GUID getElementScopeGUID() {
+		return elementScopeGUID;
+	}
+	/**
+	 * @param elementScopeGUID the elementScopeGUID to set
+	 */
+	public void setElementScopeGUID(GUID elementScopeGUID) {
+		this.elementScopeGUID = elementScopeGUID;
+	}
+	/**
+	 * @return the include
+	 */
+	public boolean isInclude() {
+		return include;
+	}
+	/**
+	 * @param include the include to set
+	 */
+	public void setInclude(boolean include) {
+		this.include = include;
+	}
+	/**
+	 * @return the userScope
+	 */
+	public UserScope getUserScope() {
+		return userScope;
+	}
+	/**
+	 * @param userScope the userScope to set
+	 */
+	public void setUserScope(UserScope userScope) {
+		this.userScope = userScope;
+	}
+	/**
+	 * @return the userScopeGUID
+	 */
+	public GUID getUserScopeGUID() {
+		return userScopeGUID;
+	}
+	/**
+	 * @param userScopeGUID the userScopeGUID to set
+	 */
+	public void setUserScopeGUID(GUID userScopeGUID) {
+		this.userScopeGUID = userScopeGUID;
+	}
 }

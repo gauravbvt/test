@@ -4,6 +4,6 @@
  */
 package com.mindalliance.channels.services;
 
-public interface LibraryService {
+public interface LibraryService extends Service {
 
 }

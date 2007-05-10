@@ -10,7 +10,7 @@ import com.mindalliance.channels.data.support.VersionHistory;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * Channels' audit log and element lifecycle.
+ * System' audit log and element lifecycle.
  * @author jf
  *
  */

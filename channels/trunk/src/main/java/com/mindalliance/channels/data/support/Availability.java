@@ -27,4 +27,32 @@ public class Availability implements Serializable {
 		 return false;
 	 }
 
+	/**
+	 * @return the days
+	 */
+	public Days getDays() {
+		return days;
+	}
+
+	/**
+	 * @param days the days to set
+	 */
+	public void setDays(Days days) {
+		this.days = days;
+	}
+
+	/**
+	 * @return the hours
+	 */
+	public Hours getHours() {
+		return hours;
+	}
+
+	/**
+	 * @param hours the hours to set
+	 */
+	public void setHours(Hours hours) {
+		this.hours = hours;
+	}
+
 }

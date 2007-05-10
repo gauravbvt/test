@@ -4,6 +4,7 @@
  */
 package com.mindalliance.channels.services.base;
 
+import com.mindalliance.channels.data.system.Directory;
 import com.mindalliance.channels.services.DirectoryService;
 
 /**
@@ -13,5 +14,10 @@ import com.mindalliance.channels.services.DirectoryService;
  */
 public class DirectoryServiceImpl extends AbstractService implements
 		DirectoryService {
+	
+	
+	private Directory getDirectory() {
+		return getSystem().getDirectory();
+	}
 
 }

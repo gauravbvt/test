@@ -20,4 +20,56 @@ public class ContactInfo extends AbstractJavaBean {
 	private String endPoint;
 	private Level privacy;
 	private Availability availability;
+	
+	public ContactInfo() {};
+	
+	
+	/**
+	 * @return the availability
+	 */
+	public Availability getAvailability() {
+		return availability;
+	}
+	/**
+	 * @param availability the availability to set
+	 */
+	public void setAvailability(Availability availability) {
+		this.availability = availability;
+	}
+	/**
+	 * @return the channel
+	 */
+	public Channel getChannel() {
+		return channel;
+	}
+	/**
+	 * @param channel the channel to set
+	 */
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
+	/**
+	 * @return the endPoint
+	 */
+	public String getEndPoint() {
+		return endPoint;
+	}
+	/**
+	 * @param endPoint the endPoint to set
+	 */
+	public void setEndPoint(String endPoint) {
+		this.endPoint = endPoint;
+	}
+	/**
+	 * @return the privacy
+	 */
+	public Level getPrivacy() {
+		return privacy;
+	}
+	/**
+	 * @param privacy the privacy to set
+	 */
+	public void setPrivacy(Level privacy) {
+		this.privacy = privacy;
+	}
 }

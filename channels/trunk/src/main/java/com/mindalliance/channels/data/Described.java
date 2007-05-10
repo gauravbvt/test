@@ -11,6 +11,10 @@ package com.mindalliance.channels.data;
  */
 public interface Described {
 	
+	/**
+	 * Get free-form text description.
+	 * @return
+	 */
 	String getDescription();
 	
 }

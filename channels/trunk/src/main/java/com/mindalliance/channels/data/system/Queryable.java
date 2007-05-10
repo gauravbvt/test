@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.data.elements.Element;
+import com.mindalliance.channels.data.Element;
 import com.mindalliance.channels.data.support.Query;
 
 /**

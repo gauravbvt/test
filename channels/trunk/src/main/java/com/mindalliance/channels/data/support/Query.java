@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.mindalliance.channels.data.elements.Element;
+import com.mindalliance.channels.data.Element;
 
 /**
  * A query in some language.
@@ -28,6 +28,34 @@ public class Query implements Serializable {
 
 	public Element findOne(Element context, Map bindings) {
 		return null;
+	}
+
+	/**
+	 * @return the expression
+	 */
+	public String getExpression() {
+		return expression;
+	}
+
+	/**
+	 * @param expression the expression to set
+	 */
+	public void setExpression(String expression) {
+		this.expression = expression;
+	}
+
+	/**
+	 * @return the language
+	 */
+	public Language getLanguage() {
+		return language;
+	}
+
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(Language language) {
+		this.language = language;
 	}
 
 }

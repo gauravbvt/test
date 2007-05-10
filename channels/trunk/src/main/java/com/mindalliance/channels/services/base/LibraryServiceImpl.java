@@ -4,6 +4,7 @@
  */
 package com.mindalliance.channels.services.base;
 
+import com.mindalliance.channels.data.system.Library;
 import com.mindalliance.channels.services.LibraryService;
 
 /**
@@ -13,5 +14,9 @@ import com.mindalliance.channels.services.LibraryService;
  */
 public class LibraryServiceImpl extends AbstractService implements
 		LibraryService {
+	
+	private Library getLibrary() {
+		return getSystem().getLibrary();
+	}
 
 }

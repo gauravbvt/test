@@ -2,9 +2,11 @@
  * Created on May 1, 2007
  *
  */
-package com.mindalliance.channels.data.elements.assertions;
+package com.mindalliance.channels.data;
 
 import java.util.List;
+
+import com.mindalliance.channels.data.elements.assertions.Regulated;
 
 
 /**
@@ -13,7 +15,10 @@ import java.util.List;
  *
  */
 public interface Regulatable extends Assertable {
-
+	/**
+	 * Return Regulated assertions
+	 * @return
+	 */
 	List<Regulated> getRegulatedAssertions();
 	
 }

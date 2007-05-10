@@ -12,7 +12,10 @@ import com.mindalliance.channels.data.components.Information;
  *
  */
 public interface Describable {
-	
+	/**
+	 * Get information that can be known about something
+	 * @return
+	 */
 	Information getDescriptor();
 
 }

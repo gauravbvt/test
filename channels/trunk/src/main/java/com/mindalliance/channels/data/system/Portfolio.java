@@ -4,12 +4,8 @@
  */
 package com.mindalliance.channels.data.system;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.acegisecurity.annotation.Secured;
-
-import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.project.Project;
 
 /** 
@@ -21,48 +17,27 @@ import com.mindalliance.channels.data.elements.project.Project;
 public class Portfolio extends AbstractQueryable {
 	
 	private List<Project> projects;
-	
-	public List<Project>getProjects() {
-		return getProjects(getAuthenticatedUser());
+
+	/**
+	 * @return the projects
+	 */
+	public List<Project> getProjects() {
+		return projects;
 	}
-	
-	@Secured( { "ROLE_ADMIN" } )
+
+	/**
+	 * @param projects the projects to set
+	 */
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
 	}
 
-	private List<Project> getProjects(User authenticatedUser) {
-		List<Project> visible = new ArrayList<Project>();
-		if (authenticatedUser != null) {
-			for(Project project : projects) {
-				if (project.hasParticipant(authenticatedUser)) {
-					visible.add(project);
-				}
-			}
-		}
-		// caching?
-		return visible;
-	}
-	
-    @Secured( { "ROLE_ADMIN" } )
 	public void addProject(Project project) {
-		projects.add(project);
 	}
-	
-    @Secured( { "ROLE_ADMIN" } )
-	public boolean removeProject(Project project) {
-		return projects.remove(project);
+
+	public void remove(Project project) {
 	}
-    
-    public List<User> getProjectManagers(Project project) {
-    	List<User> managers = new ArrayList<User>();
-    	for (User user : getAuthoritativeUsers(project)) {{
-    			managers.add(user);
-    		}
-    	}
-    	// caching?
-    	return managers;
-    }
+
 
 
 }

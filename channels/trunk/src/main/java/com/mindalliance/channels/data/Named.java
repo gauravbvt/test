@@ -11,6 +11,10 @@ package com.mindalliance.channels.data;
  */
 public interface Named {
 
+	/**
+	 * Return a name
+	 * @return
+	 */
 	String getName();
 	
 }

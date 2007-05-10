@@ -2,7 +2,7 @@
  * Created on May 2, 2007
  *
  */
-package com.mindalliance.channels.data.elements.resources;
+package com.mindalliance.channels.data;
 
 import java.util.List;
 

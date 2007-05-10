@@ -1,10 +1,11 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.system;
 
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
@@ -12,6 +13,7 @@ import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.userdetails.UserDetails;
 
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.elements.resources.Role;
 
 /**
@@ -24,17 +26,18 @@ import com.mindalliance.channels.data.elements.resources.Role;
  *                .getAuthentication().getPrincipal();</pre>
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
- * @version $Revision$
+ * @version $Revision: 103 $
  *
  * @extends User
  */
-public class UserImpl extends SystemObject
-    implements User, UserDetails {
+public class UserImpl implements User, UserDetails {
 
     private String username;
     private String password;
-
-    private String email;
+    private String name; // redundant with Person
+    private String email;  // ditto
+	private Properties preferences;
+	private Person person; // who the user is and the roles he/she plays in what organizations etc.
 
     private boolean enabled = true;
     private String[] grantedAuthorities;
@@ -62,7 +65,7 @@ public class UserImpl extends SystemObject
             String[] authorities )
         throws PropertyVetoException {
 
-        super( name );
+        this.name = name;
         this.username = username;
         this.password = password;
         setGrantedAuthorities( authorities );
@@ -199,7 +202,18 @@ public class UserImpl extends SystemObject
         this.authorities = null;
     }
 
+	/* (non-Javadoc)
+	 * @see com.mindalliance.channels.User#getName()
+	 */
+	public String getName() {
+		return name;
+	}
+
 	public List<Role> getRoles() {
-		return null;
+		if (person == null)
+			return new ArrayList<Role>();
+		else
+			return person.getRoles();
 	}
 }
+
