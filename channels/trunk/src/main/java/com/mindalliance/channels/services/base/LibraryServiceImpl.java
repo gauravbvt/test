@@ -5,6 +5,8 @@
 package com.mindalliance.channels.services.base;
 
 import com.mindalliance.channels.data.system.Library;
+import com.mindalliance.channels.data.system.System;
+import com.mindalliance.channels.services.ChannelsService;
 import com.mindalliance.channels.services.LibraryService;
 
 /**
@@ -15,8 +17,12 @@ import com.mindalliance.channels.services.LibraryService;
 public class LibraryServiceImpl extends AbstractService implements
 		LibraryService {
 	
+	public LibraryServiceImpl(ChannelsService channelsService, System system) {
+		super(channelsService, system);
+	}
+
 	private Library getLibrary() {
-		return getSystem().getLibrary();
+		return system.getLibrary();
 	}
 
 }

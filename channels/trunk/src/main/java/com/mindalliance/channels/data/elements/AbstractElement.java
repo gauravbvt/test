@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Element;
+import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.AbstractJavaBean;
@@ -32,6 +33,14 @@ abstract public class AbstractElement extends AbstractJavaBean implements Elemen
 	public AbstractElement(GUID guid) {
 		this.guid = guid;
 	}
+	
+    /**
+     * Compares this named object with the specified named object for order.
+     * @param o the named object to compare to
+     */
+    public int compareTo( Named named ) {
+        return getName().compareTo( named.getName() );
+    }
 	
 	/* (non-Javadoc)
 	 * @see com.mindalliance.channels.data.Element#getDomains()

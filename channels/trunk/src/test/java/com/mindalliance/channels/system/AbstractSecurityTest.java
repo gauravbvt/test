@@ -19,6 +19,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.user.UserImpl;
 import com.mindalliance.channels.project.ProjectImpl;
 
 /**

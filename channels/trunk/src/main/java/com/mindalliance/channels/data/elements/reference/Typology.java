@@ -30,6 +30,14 @@ public class Typology extends AbstractJavaBean implements Named {
 		types.add(root);
 	}
 	
+    /**
+     * Compares this named object with the specified named object for order.
+     * @param o the named object to compare to
+     */
+    public int compareTo( Named named ) {
+        return getName().compareTo( named.getName() );
+    }
+
 	/**
 	 * @return the root
 	 */

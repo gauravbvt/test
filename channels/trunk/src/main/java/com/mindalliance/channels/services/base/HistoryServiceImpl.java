@@ -5,6 +5,8 @@
 package com.mindalliance.channels.services.base;
 
 import com.mindalliance.channels.data.system.History;
+import com.mindalliance.channels.data.system.System;
+import com.mindalliance.channels.services.ChannelsService;
 import com.mindalliance.channels.services.HistoryService;
 
 /**
@@ -15,8 +17,12 @@ import com.mindalliance.channels.services.HistoryService;
 public class HistoryServiceImpl extends AbstractService implements
 		HistoryService {
 	
+	public HistoryServiceImpl(ChannelsService channelsService, System system) {
+		super(channelsService, system);
+	}
+
 	private History getHistory() {
-		return getSystem().getHistory();
+		return system.getHistory();
 	}
 
 }

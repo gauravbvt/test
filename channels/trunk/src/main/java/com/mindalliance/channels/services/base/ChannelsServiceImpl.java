@@ -28,6 +28,12 @@ public class ChannelsServiceImpl extends AbstractService implements
 	
 	public ChannelsServiceImpl() {
 		channelsService = this; // needed to implement the Service interface
+		this.system = new System();
+		directoryService = new DirectoryServiceImpl(channelsService, system);
+		historyService = new HistoryServiceImpl(channelsService, system);
+		portfolioService = new PortfolioServiceImpl(channelsService, system);
+		libraryService = new LibraryServiceImpl(channelsService, system);
+		registryService = new RegistryServiceImpl(channelsService, system);
 	}
 
 
@@ -74,8 +80,6 @@ public class ChannelsServiceImpl extends AbstractService implements
 	 */
 	public void setDirectoryService(DirectoryService directoryService) {
 		this.directoryService = directoryService;
-		this.directoryService.setSystem(system);
-		this.directoryService.setChannelsService(this);
 	}
 
 
@@ -84,8 +88,6 @@ public class ChannelsServiceImpl extends AbstractService implements
 	 */
 	public void setHistoryService(HistoryService historyService) {
 		this.historyService = historyService;
-		this.historyService.setSystem(system);
-		this.historyService.setChannelsService(this);
 	}
 
 
@@ -94,8 +96,6 @@ public class ChannelsServiceImpl extends AbstractService implements
 	 */
 	public void setLibraryService(LibraryService libraryService) {
 		this.libraryService = libraryService;
-		this.libraryService.setSystem(system);
-		this.libraryService.setChannelsService(this);
 	}
 
 
@@ -104,8 +104,6 @@ public class ChannelsServiceImpl extends AbstractService implements
 	 */
 	public void setPortfolioService(PortfolioService portfolioService) {
 		this.portfolioService = portfolioService;
-		this.portfolioService.setSystem(system);
-		this.portfolioService.setChannelsService(this);
 	}
 
 
@@ -114,8 +112,22 @@ public class ChannelsServiceImpl extends AbstractService implements
 	 */
 	public void setRegistryService(RegistryService registryService) {
 		this.registryService = registryService;
-		this.registryService.setSystem(system);
-		this.registryService.setChannelsService(this);
+	}
+
+
+	/**
+	 * @return the system
+	 */
+	System getSystem() {
+		return system;
+	}
+
+
+	/**
+	 * @param system the system to set
+	 */
+	public void setSystem(System system) {
+		this.system = system;
 	}
 
 

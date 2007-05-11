@@ -8,6 +8,7 @@ import java.beans.PropertyVetoException;
 import org.junit.Test;
 
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.user.UserImpl;
 
 /**
  * A test for the security contracts of SystemImpl.

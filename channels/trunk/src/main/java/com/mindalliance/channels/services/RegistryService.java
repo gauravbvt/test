@@ -7,29 +7,55 @@ package com.mindalliance.channels.services;
 import java.util.List;
 import java.util.Set;
 
-import org.acegisecurity.Authentication;
 import org.acegisecurity.annotation.Secured;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.userdetails.UserDetailsService;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.data.Element;
 
-public interface RegistryService extends Service {
+public interface RegistryService extends Service, UserDetailsService {
 
+	/**
+	 * Logs a user in.
+	 * @param user
+	 * @param password
+	 */
+	@Secured("ROLE_RUN_AS_SYSTEM")
+    void login( String user, String password );
+	
+	/**
+	 * Logs current user out.
+	 *
+	 */
+	void logout();
+		
     /**
      * Return the users of this system.
      */
     Set<User> getUsers();
-
+    
+    /**
+     * Initialize all users
+     * @param users
+     * @throws UserExistsException 
+     */
+    @Secured("ROLE_RUN_AS_SYSTEM")
+    void setUsers(Set<User> users) throws UserExistsException; // thrown if duplicate user names
+    
+    /**
+     * Initialize all admins
+     * @param users
+     */
+    @Secured("ROLE_RUN_AS_SYSTEM")
+    void setAdministrators(Set<User> users) throws UserExistsException; // thrown if duplicate user names;
+    
     /**
      * Add a user to the system.
      * Note: once added, users cannot be removed, just disabled.
      * @param user the new user.
      * @throws UserExistsException on duplicate usernames
      */
-    @Secured( "ROLE_ADMIN" )
     void addUser( User user ) throws UserExistsException;
 
     /**
@@ -71,12 +97,5 @@ public interface RegistryService extends Service {
      * Find all users who have authority over an element
      */
 	List<User> getAuthoritativeUsers(Element element);
-
-	
-	/**
-	 * Get authenticated user in current thread or null if none.
-	 * @return
-	 */
-	User getAuthenticatedUser();
 
 }

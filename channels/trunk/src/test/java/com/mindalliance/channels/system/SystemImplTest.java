@@ -20,6 +20,7 @@ import org.junit.Test;
 import com.mindalliance.channels.Project;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.user.UserImpl;
 import com.mindalliance.channels.project.ProjectImpl;
 
 

@@ -1,6 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
+package com.mindalliance.channels.data.user;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
@@ -13,8 +14,10 @@ import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.userdetails.UserDetails;
 
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.elements.resources.Role;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A user of the system.
@@ -30,7 +33,7 @@ import com.mindalliance.channels.data.elements.resources.Role;
  *
  * @extends User
  */
-public class UserImpl implements User, UserDetails {
+public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     private String username;
     private String password;
@@ -47,6 +50,7 @@ public class UserImpl implements User, UserDetails {
      * Default bean constructor.
      */
     public UserImpl() {
+    	preferences = new Properties();
     }
 
     /**
@@ -69,6 +73,14 @@ public class UserImpl implements User, UserDetails {
         this.username = username;
         this.password = password;
         setGrantedAuthorities( authorities );
+    }
+    
+    /**
+     * Compares this named object with the specified named object for order.
+     * @param o the named object to compare to
+     */
+    public int compareTo( Named named ) {
+        return getName().compareTo( named.getName() );
     }
 
     /**
@@ -215,5 +227,41 @@ public class UserImpl implements User, UserDetails {
 		else
 			return person.getRoles();
 	}
+
+	/**
+	 * @return the preferences
+	 */
+	public Properties getPreferences() {
+		return preferences;
+	}
+
+	/**
+	 * @param preferences the preferences to set
+	 */
+	public void setPreferences(Properties preferences) {
+		this.preferences = preferences;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the person
+	 */
+	public Person getPerson() {
+		return person;
+	}
+
+	/**
+	 * @param person the person to set
+	 */
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+
 }
 

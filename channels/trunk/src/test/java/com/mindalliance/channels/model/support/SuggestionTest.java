@@ -25,7 +25,7 @@ import org.junit.Test;
 import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.model.TestModelObject;
 import com.mindalliance.channels.system.SystemImpl;
-import com.mindalliance.channels.system.UserImpl;
+import com.mindalliance.channels.data.user.UserImpl;
 
 /**
  * Test suite for Suggestions.

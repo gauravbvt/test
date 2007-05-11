@@ -8,6 +8,8 @@ import org.acegisecurity.ConfigAttribute;
 import org.acegisecurity.ConfigAttributeDefinition;
 import org.acegisecurity.vote.AccessDecisionVoter;
 
+import com.mindalliance.channels.data.user.UserImpl;
+
 /**
  * Voter for SELF tag.
  * Vote to authorize the users to modify their own record, or calls

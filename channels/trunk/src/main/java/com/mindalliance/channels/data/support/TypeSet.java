@@ -6,9 +6,7 @@ package com.mindalliance.channels.data.support;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.reference.Type;

@@ -13,6 +13,8 @@ import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.project.Model;
 import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.data.system.Portfolio;
+import com.mindalliance.channels.data.system.System;
+import com.mindalliance.channels.services.ChannelsService;
 import com.mindalliance.channels.services.PortfolioService;
 
 /**
@@ -24,11 +26,16 @@ public class PortfolioServiceImpl extends AbstractService implements
 		PortfolioService {
 	
 
+	public PortfolioServiceImpl(ChannelsService channelsService, System system) {
+		super(channelsService, system);
+	}
+
+
 	/**
 	 * @return the portfolio
 	 */
 	private Portfolio getPortfolio() {
-		return getSystem().getPortfolio();
+		return system.getPortfolio();
 	}
 
 

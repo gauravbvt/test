@@ -36,16 +36,22 @@ public class System extends AbstractQueryable {
 	private Library library;
 	private Portfolio portfolio;
 	
+	public System() {
+		setRegistry(new Registry());
+		setDirectory(new Directory());
+		setHistory(new History());
+		setLibrary(new Library());
+		setPortfolio(new Portfolio());
+	}
+		
 	/**
 	 * Find all users with authority over an element.
 	 * @param project
 	 * @return
 	 */
 	public List<User> findAuthoritativeUsers(Element element) {
-		return null;
+		return null; // TODO
 	}
-
-	
 
 	/**
 	 * @return the directory

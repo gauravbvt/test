@@ -2,13 +2,12 @@
  * Created on Apr 28, 2007
  *
  */
-package com.mindalliance.channels.data.system;
+package com.mindalliance.channels.data;
 
 import java.util.Iterator;
 import java.util.Map;
 
 import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.data.Element;
 import com.mindalliance.channels.data.support.Query;
 
 /**

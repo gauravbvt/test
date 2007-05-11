@@ -12,6 +12,8 @@ import org.acegisecurity.GrantedAuthorityImpl;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mindalliance.channels.data.user.UserImpl;
+
 /**
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$

@@ -23,12 +23,16 @@ import com.mindalliance.channels.services.Service;
  */
 abstract public class AbstractService implements Service {
 	
-	/**
-	 * @return the system
-	 */
-	
-	protected System system;
 	protected ChannelsService channelsService;
+	protected System system;
+	
+	protected AbstractService() {}
+	
+	protected AbstractService(ChannelsService channelsService, System system) {
+		this.channelsService = channelsService;
+		this.system = system;
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.mindalliance.channels.services.Service#hasAuthority(com.mindalliance.channels.User, com.mindalliance.channels.data.elements.Element)
@@ -58,25 +62,12 @@ abstract public class AbstractService implements Service {
 	}
 
 	/**
-	 * @return the system
-	 */
-	public System getSystem() {
-		return system;
-	}
-
-	/**
 	 * @return the channelsService
 	 */
 	public ChannelsService getChannelsService() {
 		return channelsService;
 	}
 
-	/**
-	 * @param system the system to set
-	 */
-	public void setSystem(System system) {
-		this.system = system;
-	}
 
 	/**
 	 * @param channelsService the channelsService to set
