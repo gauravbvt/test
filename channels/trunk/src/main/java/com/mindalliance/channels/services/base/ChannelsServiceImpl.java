@@ -4,6 +4,8 @@
  */
 package com.mindalliance.channels.services.base;
 
+import org.acegisecurity.annotation.Secured;
+
 import com.mindalliance.channels.data.system.System;
 import com.mindalliance.channels.services.ChannelsService;
 import com.mindalliance.channels.services.DirectoryService;
@@ -60,22 +62,6 @@ public class ChannelsServiceImpl extends AbstractService implements
 
 
 	/**
-	 * @return the system
-	 */
-	public System getChannels() {
-		return system;
-	}
-
-
-	/**
-	 * @param system the system to set
-	 */
-	public void setChannels(System system) {
-		this.system = system;
-	}
-
-
-	/**
 	 * @param directoryService the directoryService to set
 	 */
 	public void setDirectoryService(DirectoryService directoryService) {
@@ -116,16 +102,18 @@ public class ChannelsServiceImpl extends AbstractService implements
 
 
 	/**
-	 * @return the system
+	 * @return the system (initialization only)
 	 */
-	System getSystem() {
+	@Secured( "ROLE_RUN_AS_SYSTEM")
+	public System getSystem() {
 		return system;
 	}
 
 
 	/**
-	 * @param system the system to set
+	 * @param system the system to set  (initialization only)
 	 */
+	@Secured( "ROLE_RUN_AS_SYSTEM")
 	public void setSystem(System system) {
 		this.system = system;
 	}

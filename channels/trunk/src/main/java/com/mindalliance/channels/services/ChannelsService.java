@@ -4,6 +4,10 @@
  */
 package com.mindalliance.channels.services;
 
+import org.acegisecurity.annotation.Secured;
+
+import com.mindalliance.channels.data.system.System;
+
 /**
  * Overall System functions and access to all System services.
  * @author jf
@@ -11,6 +15,19 @@ package com.mindalliance.channels.services;
  */
 public interface ChannelsService extends Service {
 
+	/**
+	 * @return the system (initialization only)
+	 */
+	@Secured( "ROLE_RUN_AS_SYSTEM")
+	System getSystem();
+
+
+	/**
+	 * @param system the system to set  (initialization only)
+	 */
+	@Secured( "ROLE_RUN_AS_SYSTEM")
+	public void setSystem(System system);
+	
 	/**
 	 * Get access to the RegistryService service.
 	 * @return the RegistryService
