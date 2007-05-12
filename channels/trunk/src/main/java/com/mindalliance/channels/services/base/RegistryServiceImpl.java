@@ -7,7 +7,6 @@ package com.mindalliance.channels.services.base;
 import java.util.Arrays;
 import java.util.Set;
 
-import org.acegisecurity.Authentication;
 import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.context.SecurityContextImpl;
@@ -22,15 +21,14 @@ import org.springframework.dao.DataAccessException;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.data.system.Registry;
-import com.mindalliance.channels.data.system.System;
 import com.mindalliance.channels.services.ChannelsService;
 import com.mindalliance.channels.services.RegistryService;
 
 public class RegistryServiceImpl extends AbstractService implements
 		RegistryService {
 	
-	public RegistryServiceImpl(ChannelsService channelsService, System system) {
-		super(channelsService, system);
+	public RegistryServiceImpl(ChannelsService channelsService) {
+		super(channelsService);
 	}
 	/**
 	 * Logs a user in.
@@ -92,7 +90,7 @@ public class RegistryServiceImpl extends AbstractService implements
 	 * @return the registry
 	 */
 	private Registry getRegistry() {
-		return system.getRegistry();
+		return getSystem().getRegistry();
 	}
 
 	@Secured( { "ROLE_ADMIN" } )

@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Element;
+import com.mindalliance.channels.data.system.System;
 
 /**
  * A service implements methods to be invoked via commands. Each service implies a context (a JavaBean) for its queries.
@@ -16,6 +17,12 @@ import com.mindalliance.channels.data.Element;
  *
  */
 public interface Service {
+	
+	/**
+	 * Get the data layer's root
+	 * @return
+	 */
+	System getSystem();
 
 	/**
 	 * Get the top service

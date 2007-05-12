@@ -5,7 +5,6 @@
 package com.mindalliance.channels.services.base;
 
 import com.mindalliance.channels.data.system.Directory;
-import com.mindalliance.channels.data.system.System;
 import com.mindalliance.channels.services.ChannelsService;
 import com.mindalliance.channels.services.DirectoryService;
 
@@ -19,12 +18,12 @@ public class DirectoryServiceImpl extends AbstractService implements
 	
 	
 
-	public DirectoryServiceImpl(ChannelsService channelsService, System system) {
-		super(channelsService, system);
+	public DirectoryServiceImpl(ChannelsService channelsService) {
+		super(channelsService);
 	}
 
 	private Directory getDirectory() {
-		return system.getDirectory();
+		return getSystem().getDirectory();
 	}
 
 }

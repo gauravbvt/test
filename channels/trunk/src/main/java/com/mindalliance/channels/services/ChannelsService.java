@@ -16,9 +16,8 @@ import com.mindalliance.channels.data.system.System;
 public interface ChannelsService extends Service {
 
 	/**
-	 * @return the system (initialization only)
+	 * @return the system
 	 */
-	@Secured( "ROLE_RUN_AS_SYSTEM")
 	System getSystem();
 
 

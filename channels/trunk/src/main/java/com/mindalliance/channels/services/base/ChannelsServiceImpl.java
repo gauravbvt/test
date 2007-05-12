@@ -27,15 +27,15 @@ public class ChannelsServiceImpl extends AbstractService implements
 	private PortfolioService portfolioService;
 	private LibraryService libraryService;
 	private RegistryService registryService;
+	private System system;
 	
 	public ChannelsServiceImpl() {
 		channelsService = this; // needed to implement the Service interface
-		this.system = new System();
-		directoryService = new DirectoryServiceImpl(channelsService, system);
-		historyService = new HistoryServiceImpl(channelsService, system);
-		portfolioService = new PortfolioServiceImpl(channelsService, system);
-		libraryService = new LibraryServiceImpl(channelsService, system);
-		registryService = new RegistryServiceImpl(channelsService, system);
+		directoryService = new DirectoryServiceImpl(channelsService);
+		historyService = new HistoryServiceImpl(channelsService);
+		portfolioService = new PortfolioServiceImpl(channelsService);
+		libraryService = new LibraryServiceImpl(channelsService);
+		registryService = new RegistryServiceImpl(channelsService);
 	}
 
 
@@ -104,7 +104,6 @@ public class ChannelsServiceImpl extends AbstractService implements
 	/**
 	 * @return the system (initialization only)
 	 */
-	@Secured( "ROLE_RUN_AS_SYSTEM")
 	public System getSystem() {
 		return system;
 	}

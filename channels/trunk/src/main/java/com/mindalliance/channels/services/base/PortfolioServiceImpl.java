@@ -26,8 +26,8 @@ public class PortfolioServiceImpl extends AbstractService implements
 		PortfolioService {
 	
 
-	public PortfolioServiceImpl(ChannelsService channelsService, System system) {
-		super(channelsService, system);
+	public PortfolioServiceImpl(ChannelsService channelsService) {
+		super(channelsService);
 	}
 
 
@@ -35,7 +35,7 @@ public class PortfolioServiceImpl extends AbstractService implements
 	 * @return the portfolio
 	 */
 	private Portfolio getPortfolio() {
-		return system.getPortfolio();
+		return getSystem().getPortfolio();
 	}
 
 

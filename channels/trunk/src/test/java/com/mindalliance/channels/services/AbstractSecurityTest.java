@@ -4,17 +4,10 @@
 package com.mindalliance.channels.services;
 
 import java.beans.PropertyVetoException;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.acegisecurity.annotation.Secured;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.context.SecurityContextImpl;
-import org.acegisecurity.providers.AuthenticationProvider;
-import org.acegisecurity.providers.ProviderManager;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import org.acegisecurity.providers.dao.DaoAuthenticationProvider;
 import org.junit.Before;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +17,7 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.data.user.UserImpl;
+import com.mindalliance.channels.data.system.System;
 import com.mindalliance.channels.services.base.ChannelsServiceImpl;
 
 public class AbstractSecurityTest {
@@ -40,6 +34,7 @@ public class AbstractSecurityTest {
     public void setUp() throws PropertyVetoException, UserExistsException {
         
     	channelsService = new ChannelsServiceImpl();
+    	channelsService.setSystem(new System());
     	registryService = channelsService.getRegistryService();
     	
         admin       = new UserImpl( "An all-powerful administrator", "admin", "admin", 

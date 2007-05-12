@@ -24,13 +24,11 @@ import com.mindalliance.channels.services.Service;
 abstract public class AbstractService implements Service {
 	
 	protected ChannelsService channelsService;
-	protected System system;
 	
 	protected AbstractService() {}
 	
-	protected AbstractService(ChannelsService channelsService, System system) {
+	protected AbstractService(ChannelsService channelsService) {
 		this.channelsService = channelsService;
-		this.system = system;
 	}
 	
 	
@@ -42,7 +40,7 @@ abstract public class AbstractService implements Service {
 	}
 
 	public List<User> getAuthoritativeUsers(Element element) {
-		return system.findAuthoritativeUsers(element);
+		return getSystem().findAuthoritativeUsers(element);
 	}
 
 	
@@ -66,6 +64,10 @@ abstract public class AbstractService implements Service {
 	 */
 	public ChannelsService getChannelsService() {
 		return channelsService;
+	}
+	
+	public System getSystem() {
+		return getChannelsService().getSystem();
 	}
 
 
