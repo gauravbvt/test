@@ -26,12 +26,12 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  * The current user is obtainable from the acegi security context by
  * using the following code from anywhere:
  * </p>
- * 
+ *
  * <pre>
  * (User) SecurityContextHolder.getContext()
  *                 .getAuthentication().getPrincipal();
  * </pre>
- * 
+ *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision: 103 $
  * @extends User
@@ -59,7 +59,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Default constructor.
-     * 
+     *
      * @param name the full name of the user
      * @param username the login id of the user
      * @param password the original password. User may change it
@@ -80,7 +80,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     /**
      * Compares this named object with the specified named object for
      * order.
-     * 
+     *
      * @param o the named object to compare to
      */
     public int compareTo( Named named ) {
@@ -96,7 +96,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of email.
-     * 
+     *
      * @param email The new value of email
      */
     @Secured( { "ROLE_ADMIN", "THIS_USER" })
@@ -106,7 +106,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of accountNonDisabled.
-     * 
+     *
      * @return always true
      */
     public boolean isAccountNonDisabled() {
@@ -122,7 +122,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of accountNonLocked.
-     * 
+     *
      * @return always true
      */
     public boolean isAccountNonLocked() {
@@ -131,7 +131,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of credentialsNonExpired.
-     * 
+     *
      * @return always true
      */
     public boolean isCredentialsNonExpired() {
@@ -140,7 +140,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of enabled.
-     * 
+     *
      * @return true by default, may be changed by administrators
      */
     public boolean isEnabled() {
@@ -149,7 +149,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of enabled.
-     * 
+     *
      * @param enabled The new value of enabled
      */
     @Secured( { "ROLE_ADMIN" })
@@ -166,7 +166,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of password.
-     * 
+     *
      * @param password The new value of password
      */
     @Secured( { "ROLE_ADMIN", "USER" })
@@ -183,7 +183,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the username.
-     * 
+     *
      * @param username the username
      * @throws PropertyVetoException if user manager objects
      */
@@ -215,7 +215,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of grantedAuthorities.
-     * 
+     *
      * @param grantedAuthorities The new value of grantedAuthorities
      */
     @Secured( { "ROLE_ADMIN" })
@@ -227,7 +227,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.mindalliance.channels.User#getName()
      */
     public String getName() {
@@ -284,6 +284,14 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     public boolean hasUserRole() {
         return Arrays.asList( this.getGrantedAuthorities() ).contains(
                 User.USER_ROLE );
+    }
+
+    /**
+     * Return a String representation of the User. For now this is
+     * the username.
+     */
+    public String toString() {
+    	return getName();
     }
 
 }
