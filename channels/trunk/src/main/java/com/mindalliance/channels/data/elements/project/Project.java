@@ -10,9 +10,9 @@ import org.apache.commons.collections.Predicate;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.elements.reference.Type;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Role;
+import com.mindalliance.channels.data.reference.Type;
 import com.mindalliance.channels.data.support.Pattern;
 import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;

@@ -1,25 +1,21 @@
 /*
  * Created on Apr 26, 2007
  */
-package com.mindalliance.channels.data.elements.reference;
+package com.mindalliance.channels.data.reference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.data.Named;
-import com.mindalliance.channels.data.system.System;
 import com.mindalliance.channels.services.LibraryService;
-import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A taxonomy of types
  * 
  * @author jf
  */
-public class Typology extends AbstractJavaBean implements Named {
+public class Typology extends ReferenceData {
 
-    private String name;
     private List<Type> types;
     private Type root; // The type all types imply by default.
 
@@ -27,22 +23,8 @@ public class Typology extends AbstractJavaBean implements Named {
     }
 
     public Typology( String name ) {
-        this.name = name;
-        root = System.elementFactory.newInstance( Type.class );
-        root.setName( name );
-        root.setDescription( "Root type for typology " + name );
+        setName(name);
         types = new ArrayList<Type>();
-        types.add( root );
-    }
-
-    /**
-     * Compares this named object with the specified named object for
-     * order.
-     * 
-     * @param o the named object to compare to
-     */
-    public int compareTo( Named named ) {
-        return getName().compareTo( named.getName() );
     }
 
     public static Typology named( String name ) {
@@ -54,6 +36,13 @@ public class Typology extends AbstractJavaBean implements Named {
      * @return the root
      */
     public Type getRoot() {
+        if (root == null) {
+            root = new Type();
+            root.setName( getName() );
+            root.setDescription( "Root type for typology " + getName() );
+            root.setTypology( this );
+            types.add( root );            
+        }
         return root;
     }
 
@@ -92,18 +81,5 @@ public class Typology extends AbstractJavaBean implements Named {
         types.remove( type );
     }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName( String name ) {
-        this.name = name;
-    }
 
 }

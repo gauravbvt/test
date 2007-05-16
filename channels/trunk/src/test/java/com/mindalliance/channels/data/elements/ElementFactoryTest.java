@@ -7,20 +7,18 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.data.elements.resources.Person;
-import com.mindalliance.channels.util.GUIDFactory;
-import com.mindalliance.channels.util.GUIDFactoryImpl;
+import com.mindalliance.channels.data.reference.Type;
 
 public class ElementFactoryTest {
 
     private ElementFactory factory;
-    private GUIDFactory guidFactory;
 
     @Before
     public void createFactory() throws Exception {
-        factory = new ElementFactory();
-        guidFactory = new GUIDFactoryImpl( "bla" );
-        factory.setGuidFactory( guidFactory );
+        factory = Channels.getElementFactory();
+        assertNotNull(factory);
     }
 
     /**
@@ -28,13 +26,16 @@ public class ElementFactoryTest {
      */
     @Test
     public final void testGetGuidFactory() {
-        assertSame( guidFactory, factory.getGuidFactory() );
+        assertNotNull( factory.getGuidFactory() );
     }
 
     @Test
     public final void createElement() {
         Person person = (Person) factory.newInstance( Person.class );
         assertNotNull( person );
+        Type root = person.getTypeSet().getTypology().getRoot();
+        assertEquals(root.getName(), person.getClass().getSimpleName());
+        assertEquals(root.getName(), root.getTypology().getName());
     }
 
 }

@@ -3,7 +3,7 @@
  */
 package com.mindalliance.channels.data;
 
-import com.mindalliance.channels.data.elements.reference.Location;
+import com.mindalliance.channels.data.reference.Location;
 
 /**
  * Something that has a location.

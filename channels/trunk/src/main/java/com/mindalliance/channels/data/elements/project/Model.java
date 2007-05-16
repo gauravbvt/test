@@ -6,7 +6,7 @@ package com.mindalliance.channels.data.elements.project;
 import java.util.List;
 
 import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.elements.reference.Environment;
+import com.mindalliance.channels.data.reference.Environment;
 import com.mindalliance.channels.util.GUID;
 
 public class Model extends AbstractElement {

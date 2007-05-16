@@ -19,15 +19,6 @@ import com.mindalliance.channels.util.GUIDFactoryImpl;
 @SuppressWarnings( "serial")
 public class System extends AbstractQueryable {
 
-    public static ElementFactory elementFactory;
-    public static GUIDFactory guidFactory;
-
-    static {
-        guidFactory = new GUIDFactoryImpl();
-        elementFactory = new ElementFactory();
-        elementFactory.setGuidFactory( guidFactory );
-    }
-
     private Registry registry;
     private Directory directory;
     private History history;
@@ -41,7 +32,7 @@ public class System extends AbstractQueryable {
         setLibrary( new Library() );
         setPortfolio( new Portfolio() );
     }
-
+    
     /**
      * Find all users with authority over an element.
      * 

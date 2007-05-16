@@ -3,7 +3,7 @@
  */
 package com.mindalliance.channels.services;
 
-import com.mindalliance.channels.data.elements.reference.Typology;
+import com.mindalliance.channels.data.reference.Typology;
 
 public interface LibraryService extends Service {
 

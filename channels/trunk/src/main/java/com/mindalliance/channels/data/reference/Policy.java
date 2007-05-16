@@ -1,7 +1,7 @@
 /*
  * Created on Apr 26, 2007
  */
-package com.mindalliance.channels.data.elements.reference;
+package com.mindalliance.channels.data.reference;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import com.mindalliance.channels.data.support.Pattern;
  * 
  * @author jf
  */
-public class Policy extends ReferenceElement {
+public class Policy extends ReferenceData {
 
     public class Target {
 

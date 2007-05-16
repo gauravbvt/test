@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.mindalliance.channels.data.components.Information;
-import com.mindalliance.channels.data.elements.reference.Type;
-import com.mindalliance.channels.data.elements.reference.Typology;
+import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.reference.Typology;
 
 /**
  * A collection of types from a given typology.

@@ -5,7 +5,7 @@ package com.mindalliance.channels.data.elements.resources;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.elements.reference.Type;
+import com.mindalliance.channels.data.reference.Type;
 import com.mindalliance.channels.data.support.Latency;
 import com.mindalliance.channels.data.support.Level;
 import com.mindalliance.channels.data.support.TypeSet;

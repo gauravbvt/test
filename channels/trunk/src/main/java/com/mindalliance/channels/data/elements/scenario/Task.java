@@ -12,7 +12,7 @@ import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.Excluded;
 import com.mindalliance.channels.data.elements.assertions.Regulated;
-import com.mindalliance.channels.data.elements.reference.Type;
+import com.mindalliance.channels.data.reference.Type;
 import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;
 

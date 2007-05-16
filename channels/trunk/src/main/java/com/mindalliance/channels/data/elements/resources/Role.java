@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.data.elements.reference.Location;
+import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.util.GUID;
 
 /**

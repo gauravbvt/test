@@ -3,15 +3,17 @@
  */
 package com.mindalliance.channels.data.system;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mindalliance.channels.data.elements.reference.Environment;
-import com.mindalliance.channels.data.elements.reference.Location;
-import com.mindalliance.channels.data.elements.reference.Policy;
-import com.mindalliance.channels.data.elements.reference.Template;
-import com.mindalliance.channels.data.elements.reference.Typology;
+import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.reference.Location;
+import com.mindalliance.channels.data.reference.Policy;
+import com.mindalliance.channels.data.reference.Template;
+import com.mindalliance.channels.data.reference.Typology;
 
 /**
  * Access to all reference data: environment, typologies, locations,
@@ -27,6 +29,14 @@ public class Library extends AbstractQueryable {
     private List<Environment> environments;
     private List<Template> templates;
 
+    public Library() {
+        typologies = new HashMap<String, Typology>();
+        locations = new ArrayList<Location>();
+        policies = new ArrayList<Policy>();
+        environments = new ArrayList<Environment>();
+        templates = new ArrayList<Template>();
+    }
+    
     /**
      * @return the locations
      */
@@ -81,7 +91,7 @@ public class Library extends AbstractQueryable {
      */
     public void setTypologies( Collection<Typology> typologies ) {
         for ( Typology typology : typologies ) {
-            this.typologies.put( typology.getName(), typology );
+            addTypology(typology );
         }
     }
 
@@ -90,6 +100,7 @@ public class Library extends AbstractQueryable {
     }
 
     public void addTypology( Typology typology ) {
+        typologies.put( typology.getName(), typology );
     }
 
 }

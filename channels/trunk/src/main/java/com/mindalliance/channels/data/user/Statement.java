@@ -5,7 +5,7 @@ package com.mindalliance.channels.data.user;
 
 import java.io.Serializable;
 import java.util.Date;
-import com.mindalliance.channels.data.system.System;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Unique;
 import com.mindalliance.channels.util.GUID;
@@ -24,7 +24,7 @@ public abstract class Statement implements Serializable, Unique {
 
     public Statement() {
         super();
-        guid = System.guidFactory.newGuid();
+        guid = Channels.getGUIDFactory().newGuid();
     }
 
     /**

@@ -6,8 +6,8 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.List;
 
 import com.mindalliance.channels.data.Resource;
-import com.mindalliance.channels.data.elements.reference.Environment;
-import com.mindalliance.channels.data.elements.reference.Policy;
+import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.reference.Policy;
 import com.mindalliance.channels.util.GUID;
 
 /**

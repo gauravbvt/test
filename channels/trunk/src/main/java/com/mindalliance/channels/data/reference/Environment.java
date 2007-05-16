@@ -1,7 +1,7 @@
 /*
  * Created on Apr 26, 2007
  */
-package com.mindalliance.channels.data.elements.reference;
+package com.mindalliance.channels.data.reference;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import com.mindalliance.channels.util.GUID;
  * 
  * @author jf
  */
-public class Environment extends ReferenceElement {
+public class Environment extends ReferenceData {
 
     public class TriggerCondition {
 
@@ -50,14 +50,6 @@ public class Environment extends ReferenceElement {
     private List<Resource> unavailableResources;
     private List<Policy> enforcedPolicies;
     private List<Policy> unenforcedPolicies;
-
-    public Environment() {
-        super();
-    }
-
-    public Environment( GUID guid ) {
-        super( guid );
-    }
 
     /**
      * Whether an event matches one of the trigger conditions for this
