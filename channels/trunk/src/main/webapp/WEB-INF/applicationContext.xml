@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	               http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-	
+
 	<!-- Allow use of properties defined in web context (see WEB-INF/web.xml) -->
 	<bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
 
-	<!-- Core beans -->	
+	<!-- Core beans -->
 	<bean id="guidFactory" class="com.mindalliance.channels.util.GUIDFactoryImpl">
 		<constructor-arg value="${securityKey}"/>
 	</bean>
-	
+
 	<!-- Users -->
-	<bean id="user" class="com.mindalliance.channels.system.UserImpl">
+ 	<bean id="user" class="com.mindalliance.channels.data.user.UserImpl">
 		<property name="username" value="user"/>
 		<property name="password" value="user"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
@@ -21,31 +21,31 @@
 		<property name="email" value="user@example.com"/>
 	</bean>
 
-	<bean id="manager" class="com.mindalliance.channels.system.UserImpl">
+  <bean id="manager" class="com.mindalliance.channels.data.user.UserImpl">
 		<property name="username" value="manager"/>
 		<property name="password" value="manager"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
 		<property name="name" value="Ms Management"/>
 		<property name="email" value="manager@example.com"/>
 	</bean>
-			
-	<bean id="liaison" class="com.mindalliance.channels.system.UserImpl">
+
+	<bean id="liaison" class="com.mindalliance.channels.data.user.UserImpl">
 		<property name="username" value="liaison"/>
 		<property name="password" value="liaison"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
 		<property name="name" value="Mr. Spook"/>
 		<property name="email" value="spook@example.com"/>
 	</bean>
-			
-	<bean id="admin" class="com.mindalliance.channels.system.UserImpl">
+
+	<bean id="admin" class="com.mindalliance.channels.data.user.UserImpl">
 		<property name="username" value="admin"/>
 		<property name="password" value="admin"/>
 		<property name="grantedAuthorities"><value>ROLE_USER,ROLE_ADMIN</value></property>
 		<property name="name" value="Administrator"/>
 		<property name="email" value="admin@example.com"/>
 	</bean>
-			
-	<bean id="guest" class="com.mindalliance.channels.system.UserImpl">
+
+	<bean id="guest" class="com.mindalliance.channels.data.user.UserImpl">
 		<property name="username" value="guest"/>
 		<property name="password" value="guest"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
@@ -57,7 +57,7 @@
 		<property name="name" value="Fire alarm triggered"/>
 		<property name="description" value="Everybody remain calm..."/>
 		</bean>
-		
+
 	<bean id="ev2" class="com.mindalliance.channels.model.Task">
 		<property name="name" value="Verify cause of alarm"/>
 		<property name="description" value="Pranksters abound..."/>
@@ -73,7 +73,7 @@
 			</bean>
 		</property>
 		</bean>
-		
+
 	<bean id="ev3" class="com.mindalliance.channels.model.Event">
 		<property name="name" value="Fire verified"/>
 		<property name="description" value="Flee!"/>
@@ -103,14 +103,14 @@
 	<!-- The system -->
 	<bean id="system" class="com.mindalliance.channels.system.SystemImpl">
 		<property name="users"><set>
-			<ref bean="user"/>		
-			<ref bean="manager"/>		
-			<ref bean="guest"/>		
+			<ref bean="user"/>
+			<ref bean="manager"/>
+			<ref bean="guest"/>
 		</set></property>
 		<property name="administrators"><set>
 			<ref bean="admin"/>
 		</set></property>
-		
+
 		<property name="projects"><set>
 			<bean class="com.mindalliance.channels.project.ProjectImpl">
 				<property name="name" value="ACME Business Continuity"/>
@@ -211,6 +211,104 @@
 				<property name="priority" value="Low"/>
 				<property name="what" value="Peter Jones suggested a change to your profile"/>
 			</bean>
-		</set></property>		
+		</set></property>
 	</bean>
+
+		<!-- New Data Model -->
+
+	<bean name="registry" class="com.mindalliance.channels.data.system.Registry">
+		<property name="users"><set>
+			<ref bean="user"/>
+			<ref bean="manager"/>
+			<ref bean="guest"/>
+			<ref bean="liaison"/>
+		</set></property>
+		<property name="administrators"><set>
+			<ref bean="admin"/>
+		</set></property>
+	</bean>
+
+	<bean name="location1" class="com.mindalliance.channels.data.reference.Location">
+	</bean>
+	<bean name="location2" class="com.mindalliance.channels.data.reference.Location">
+	</bean>
+
+	<bean name="organization1" class="com.mindalliance.channels.data.elements.resources.Organization">
+	</bean>
+
+	<bean name="organization2" class="com.mindalliance.channels.data.elements.resources.Organization">
+	</bean>
+
+
+	<bean name="directory" class="com.mindalliance.channels.data.system.Directory">
+		<property name="organizations">
+			<list>
+				<ref bean="organization1"/>
+				<ref bean="organization2"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="history" class="com.mindalliance.channels.data.system.History"/>
+
+	<bean name="library" class="com.mindalliance.channels.data.system.Library">
+		<property name="locations">
+			<list>
+				<ref bean="location1"/>
+				<ref bean="location2"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="portfolio" class="com.mindalliance.channels.data.system.Portfolio">
+		<property name="projects">
+			<list>
+				<bean class="com.mindalliance.channels.data.elements.project.Project">
+					<property name="name" value="ACME Business Continuity"/>
+					<property name="models">
+						<list>
+							<bean class="com.mindalliance.channels.data.elements.project.Model">
+								<property name="name" value="Some model"/>
+							</bean>
+						</list>
+					</property>
+				</bean>
+				<bean class="com.mindalliance.channels.data.elements.project.Project">
+					<property name="name" value="CDC Avian Flu Preparedness"/>
+					<property name="models">
+						<list>
+							<bean class="com.mindalliance.channels.data.elements.project.Model">
+								<property name="name" value="Another model"/>
+							</bean>
+						</list>
+					</property>
+				</bean>
+				<bean class="com.mindalliance.channels.data.elements.project.Project">
+					<property name="name" value="International Markets"/>
+					<property name="models">
+						<list>
+							<bean class="com.mindalliance.channels.data.elements.project.Model">
+								<property name="name" value="Some other model"/>
+							</bean>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="system.new" class="com.mindalliance.channels.data.system.System">
+		<property name="registry"><ref bean="registry"/></property>
+		<property name="directory"><ref bean="directory"/></property>
+		<property name="history"><ref bean="history"/></property>
+		<property name="library"><ref bean="library"/></property>
+		<property name="portfolio"><ref bean="portfolio"/></property>
+	</bean>
+
+	<!--  Service Models -->
+
+	<bean name="systemservice" class="com.mindalliance.channels.services.base.SystemServiceImpl">
+		<property name="system"><ref bean="system.new"/></property>
+	</bean>
+
 </beans>

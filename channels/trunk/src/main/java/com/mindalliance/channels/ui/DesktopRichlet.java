@@ -30,6 +30,7 @@ import org.zkoss.zul.Vbox;
 
 import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.services.SystemService;
 
 /**
  * The user desktop.
@@ -96,12 +97,28 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
+     * Get the SystemService instance associated with the page.
+     * @return the SystemService instance
+     */
+
+    private SystemService getSystemService() {
+        Session zkSession = Executions.getCurrent().getDesktop().getSession();
+        HttpSession httpSession = (HttpSession) zkSession.getNativeSession();
+        ServletContext servletContext = httpSession.getServletContext();
+        ApplicationContext appContext =
+            (ApplicationContext) servletContext.getAttribute(
+                "org.springframework.web.context.WebApplicationContext.ROOT" );
+        return (SystemService) appContext.getBean("systemservice");
+    }
+
+    /**
      * Initialize the page.
      * @param page the page
      */
     public void service( final Page page ) {
         final User user = getUser();
         final System system = getSystem( page );
+        final SystemService sysService = getSystemService();
 
         page.setTitle( "Channels" );
 
