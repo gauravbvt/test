@@ -20,6 +20,9 @@ import com.mindalliance.channels.data.elements.resources.Role;
  * @version $Revision$
  */
 public interface User extends UserDetails, Named {
+    
+    public static final String USER_ROLE = "USER_ROLE";
+    public static final String ADMIN_ROLE = "ADMIN_ROLE";
 
     /**
      * Return the short login name of the user.
@@ -30,4 +33,8 @@ public interface User extends UserDetails, Named {
      * @return
      */
     List<Role> getRoles();
+    
+    boolean hasUserRole();
+    
+    boolean hasAdminRole();
 }

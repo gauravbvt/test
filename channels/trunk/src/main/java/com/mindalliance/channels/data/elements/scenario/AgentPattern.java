@@ -1,6 +1,5 @@
 /*
  * Created on May 1, 2007
- *
  */
 package com.mindalliance.channels.data.elements.scenario;
 
@@ -13,46 +12,44 @@ import com.mindalliance.channels.data.support.Pattern;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * All matching roles in project scope execute the task as separate activities.
+ * All matching roles in project scope execute the task as separate
+ * activities.
+ * 
  * @author jf
- *
  */
 public class AgentPattern extends Agent implements OptOutable {
 
-	private Pattern<Role> pattern;
-	
-	
-	
-	public AgentPattern() {
-		super();
-	}
+    private Pattern<Role> pattern;
 
-	public AgentPattern(GUID guid) {
-		super(guid);
-	}
+    public AgentPattern() {
+        super();
+    }
 
-	public List<Role> getMatchedRoles() {
-		return null;
-	}
+    public AgentPattern( GUID guid ) {
+        super( guid );
+    }
 
-	@Override
-	public List<Role> getRoles(Project project) {
-		return null; //TODO
-	}
+    public List<Role> getMatchedRoles() {
+        return null;
+    }
 
-	/**
-	 * @return the pattern
-	 */
-	public Pattern<Role> getPattern() {
-		return pattern;
-	}
+    @Override
+    public List<Role> getRoles( Project project ) {
+        return null; // TODO
+    }
 
-	/**
-	 * @param pattern the pattern to set
-	 */
-	public void setPattern(Pattern<Role> pattern) {
-		this.pattern = pattern;
-	}
+    /**
+     * @return the pattern
+     */
+    public Pattern<Role> getPattern() {
+        return pattern;
+    }
 
+    /**
+     * @param pattern the pattern to set
+     */
+    public void setPattern( Pattern<Role> pattern ) {
+        this.pattern = pattern;
+    }
 
 }

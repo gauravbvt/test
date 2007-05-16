@@ -11,7 +11,7 @@ import com.mindalliance.channels.util.GUIDFactory;
 
 /**
  * A creator of elements.
- *
+ * 
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision: 106 $
  */
@@ -27,29 +27,27 @@ public class ElementFactory {
 
     /**
      * Create a new model object.
+     * 
      * @param <T> the return type
      * @param elementClass a subclass of AbstractElement
      * @return the new instance
      */
-    public <T extends AbstractElement> T newInstance(
-            Class<T> elementClass ) {
+    public <T extends AbstractElement> T newInstance( Class<T> elementClass ) {
 
         try {
 
-            Constructor<T> constructor =
-            	elementClass.getDeclaredConstructor(
-                        new Class[]{ GUID.class } );
+            Constructor<T> constructor = elementClass.getDeclaredConstructor( new Class[] { GUID.class } );
 
-            return constructor.newInstance(
-                    new Object[] { getGuidFactory().newGuid() } );
+            return constructor.newInstance( new Object[] { getGuidFactory().newGuid() } );
 
         } catch ( NoSuchMethodException e ) {
-            // Will not happen:  constructor implemented in AbstractElement
+            // Will not happen: constructor implemented in
+            // AbstractElement
             // but just in case...
             throw new RuntimeException( e );
 
         } catch ( IllegalAccessException e ) {
-            // Will not happen:  constructor is visible by package
+            // Will not happen: constructor is visible by package
             // but just in case...
             throw new RuntimeException( e );
 
@@ -72,6 +70,7 @@ public class ElementFactory {
 
     /**
      * Set the GUID factory used when creating new model objects.
+     * 
      * @param guidFactory the GUID factory.
      */
     public void setGuidFactory( GUIDFactory guidFactory ) {

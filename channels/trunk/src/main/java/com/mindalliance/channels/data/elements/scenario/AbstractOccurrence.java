@@ -1,6 +1,5 @@
 /*
  * Created on Apr 26, 2007
- *
  */
 package com.mindalliance.channels.data.elements.scenario;
 
@@ -12,90 +11,97 @@ import com.mindalliance.channels.util.GUID;
 
 /**
  * Something that happens in a scenario.
+ * 
  * @author jf
- *
  */
 public abstract class AbstractOccurrence extends AbstractScenarioElement
-		implements Occurrence {
-	
-	private Duration time; // when the occurence begins as a time interval from "time zero"
-	private Duration duration;
-	private Location location;
-	private Cause cause;
+        implements Occurrence {
 
-	
-	public AbstractOccurrence() {
-		super();
-	}
+    private Duration duration;
+    private Location location;
+    private Cause cause;
 
-	public AbstractOccurrence(GUID guid) {
-		super(guid);
-	}
+    public AbstractOccurrence() {
+        super();
+    }
 
-	/** 
-	 * Get cause
-	 */
-	public Cause getCause() {
-		return cause;
-	}
+    public AbstractOccurrence( GUID guid ) {
+        super( guid );
+        cause = new Cause();
+    }
 
-	/**
-	 * @param duration the duration to set
-	 */
-	public void setDuration(Duration duration) {
-		this.duration = duration;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.data.Occurrence#isIncident()
+     */
+    public boolean isIncident() {
+        return cause.getOccurrence() == null;
+    }
 
-	/**
-	 * @param location the location to set
-	 */
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.data.Occurrence#getEnd()
+     */
+    public Duration getEnd() {
+        return getTime().add( duration );
+    }
 
-	public Duration getDuration() {
-		return duration;
-	}
+    /**
+     * Get cause
+     */
+    public Cause getCause() {
+        return cause;
+    }
 
-	public Duration getStart() {
-		return null;
-	}
+    /**
+     * @param duration the duration to set
+     */
+    public void setDuration( Duration duration ) {
+        this.duration = duration;
+    }
 
-	public boolean isAfter(Occurrence occurrence) {
-		return false;
-	}
+    /**
+     * @param location the location to set
+     */
+    public void setLocation( Location location ) {
+        this.location = location;
+    }
 
-	public boolean isBefore(Occurrence occurrence) {
-		return false;
-	}
+    public Duration getDuration() {
+        return duration;
+    }
 
-	public boolean isDuring(Occurrence occurrence) {
-		return false;
-	}
+    public boolean isAfter( Occurrence occurrence ) {
+        return getTime().getMsecs() > occurrence.getEnd().getMsecs();
+    }
 
-	public Location getLocation() {
-		return location;
-	}
+    public boolean isBefore( Occurrence occurrence ) {
+        return getTime().getMsecs() < occurrence.getEnd().getMsecs();
+    }
 
-	/**
-	 * @return the time
-	 */
-	public Duration getTime() {
-		return time;
-	}
+    public boolean isDuring( Occurrence occurrence ) {
+        return getTime().getMsecs() >= occurrence.getTime().getMsecs()
+                && getEnd().getMsecs() <= occurrence.getEnd().getMsecs();
+    }
 
-	/**
-	 * @param cause the cause to set
-	 */
-	public void setCause(Cause cause) {
-		this.cause = cause;
-	}
+    public Location getLocation() {
+        return location;
+    }
 
-	/**
-	 * @param time the time to set
-	 */
-	public void setTime(Duration time) {
-		this.time = time;
-	}
+    /**
+     * @return the time
+     */
+    public Duration getTime() {
+        return getCause().getTime();
+    }
+
+    /**
+     * @param cause the cause to set
+     */
+    public void setCause( Cause cause ) {
+        this.cause = cause;
+    }
 
 }

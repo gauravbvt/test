@@ -1,6 +1,5 @@
 /*
  * Created on Apr 27, 2007
- *
  */
 package com.mindalliance.channels.data.elements.assertions;
 
@@ -11,51 +10,52 @@ import com.mindalliance.channels.util.GUID;
 
 /**
  * Assertion that someone has been granted access to someone else.
+ * 
  * @author jf
- *
  */
 public class CanAccess extends Assertion {
-	
-	private Contactable contact; // access to what
-	private Environment environment; // in what environment (null if all environments)
-	
-	public CanAccess() {
-	}
 
-	public CanAccess(GUID guid) {
-		super(guid);
-	}
+    private Contactable contact; // access to what
+    private Environment environment; // in what environment (null
+                                        // if all environments)
 
-	public Connected getConnected() {
-		return (Connected)getAbout();
-	}
+    public CanAccess() {
+    }
 
-	/**
-	 * @return the contact
-	 */
-	public Contactable getContact() {
-		return contact;
-	}
+    public CanAccess( GUID guid ) {
+        super( guid );
+    }
 
-	/**
-	 * @param contact the contact to set
-	 */
-	public void setContact(Contactable contact) {
-		this.contact = contact;
-	}
+    public Connected getConnected() {
+        return (Connected) getAbout();
+    }
 
-	/**
-	 * @return the environment
-	 */
-	public Environment getEnvironment() {
-		return environment;
-	}
+    /**
+     * @return the contact
+     */
+    public Contactable getContact() {
+        return contact;
+    }
 
-	/**
-	 * @param environment the environment to set
-	 */
-	public void setEnvironment(Environment environment) {
-		this.environment = environment;
-	}
+    /**
+     * @param contact the contact to set
+     */
+    public void setContact( Contactable contact ) {
+        this.contact = contact;
+    }
+
+    /**
+     * @return the environment
+     */
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    /**
+     * @param environment the environment to set
+     */
+    public void setEnvironment( Environment environment ) {
+        this.environment = environment;
+    }
 
 }

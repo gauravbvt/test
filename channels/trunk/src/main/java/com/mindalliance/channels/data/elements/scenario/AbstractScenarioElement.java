@@ -1,6 +1,5 @@
 /*
  * Created on Apr 26, 2007
- *
  */
 package com.mindalliance.channels.data.elements.scenario;
 
@@ -15,46 +14,51 @@ import com.mindalliance.channels.util.GUID;
 
 /**
  * An element in a scenario.
+ * 
  * @author jf
- *
  */
-abstract public class AbstractScenarioElement extends AbstractElement implements ScenarioElement {
-	
-	private Scenario scenario;
+abstract public class AbstractScenarioElement extends AbstractElement implements
+        ScenarioElement {
 
-	public AbstractScenarioElement() {}
-	
-	public AbstractScenarioElement(GUID guid) {
-		super(guid);
-	}
+    private Scenario scenario; // backpointer
 
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Knowable#getKnownAssertions()
-	 */
-	public List<Known> getKnownAssertions() {
-		return null;
-	}
+    public AbstractScenarioElement() {
+    }
 
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.data.Describable#getDescriptor()
-	 */
-	public Information getDescriptor() {
-		return null;
-	}
+    public AbstractScenarioElement( GUID guid ) {
+        super( guid );
+    }
 
-	/**
-	 * @return the scenario
-	 */
-	public Scenario getScenario() {
-		return scenario;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.data.Knowable#getKnownAssertions()
+     */
+    public List<Known> getKnownAssertions() {
+        return null;
+    }
 
-	/**
-	 * @param scenario the scenario to set
-	 */
-	public void setScenario(Scenario scenario) {
-		this.scenario = scenario;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.data.Describable#getDescriptor()
+     */
+    public Information getDescriptor() {
+        return null;
+    }
 
+    /**
+     * @return the scenario
+     */
+    public Scenario getScenario() {
+        return scenario;
+    }
+
+    /**
+     * @param scenario the scenario to set
+     */
+    public void setScenario( Scenario scenario ) {
+        this.scenario = scenario;
+    }
 
 }

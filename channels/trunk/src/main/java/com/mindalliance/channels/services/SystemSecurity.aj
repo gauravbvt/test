@@ -4,8 +4,9 @@
 package com.mindalliance.channels.services;
 
 /**
- * Weaving for @Secured() methods.
+ * Weaving for
  * 
+ * @Secured() methods.
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */
@@ -25,7 +26,7 @@ public aspect SystemSecurity implements InitializingBean {
       && !within( SystemSecurity )
       ;
   
-  //----------------------------------
+  // ----------------------------------
   Object around(): securedMethods() {
       
     if ( this.securityInterceptor != null ) {
@@ -40,7 +41,7 @@ public aspect SystemSecurity implements InitializingBean {
             return proceed();
   }
 
-  //----------------------------------
+  // ----------------------------------
   public AspectJSecurityInterceptor getSecurityInterceptor() {
     return securityInterceptor;
   }

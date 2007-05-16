@@ -5,6 +5,7 @@ package com.mindalliance.channels.data.user;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,16 +22,18 @@ import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * A user of the system.
- *
- * <p>The current user is obtainable from the acegi security
- * context by using the following code from anywhere:</p>
- *
- * <pre>(User) SecurityContextHolder.getContext()
- *                .getAuthentication().getPrincipal();</pre>
- *
+ * <p>
+ * The current user is obtainable from the acegi security context by
+ * using the following code from anywhere:
+ * </p>
+ * 
+ * <pre>
+ * (User) SecurityContextHolder.getContext()
+ *                 .getAuthentication().getPrincipal();
+ * </pre>
+ * 
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision: 103 $
- *
  * @extends User
  */
 public class UserImpl extends AbstractJavaBean implements User, UserDetails {
@@ -38,9 +41,10 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     private String username;
     private String password;
     private String name; // redundant with Person
-    private String email;  // ditto
-	private Properties preferences;
-	private Person person; // who the user is and the roles he/she plays in what organizations etc.
+    private String email; // ditto
+    private Properties preferences;
+    private Person person; // who the user is and the roles he/she
+                            // plays in what organizations etc.
 
     private boolean enabled = true;
     private String[] grantedAuthorities;
@@ -50,33 +54,33 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
      * Default bean constructor.
      */
     public UserImpl() {
-    	preferences = new Properties();
+        preferences = new Properties();
     }
 
     /**
      * Default constructor.
+     * 
      * @param name the full name of the user
      * @param username the login id of the user
-     * @param password the original password.
-     * User may change it later.
-     * @param authorities the initial granted roles.
-     * Supervisor may adjust later.
+     * @param password the original password. User may change it
+     *            later.
+     * @param authorities the initial granted roles. Supervisor may
+     *            adjust later.
      * @throws PropertyVetoException if name conflicts with others
      */
-    public UserImpl(
-            String name,
-            String username, String password,
-            String[] authorities )
-        throws PropertyVetoException {
+    public UserImpl( String name, String username, String password,
+            String[] authorities ) {
 
         this.name = name;
         this.username = username;
         this.password = password;
         setGrantedAuthorities( authorities );
     }
-    
+
     /**
-     * Compares this named object with the specified named object for order.
+     * Compares this named object with the specified named object for
+     * order.
+     * 
      * @param o the named object to compare to
      */
     public int compareTo( Named named ) {
@@ -92,15 +96,17 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of email.
+     * 
      * @param email The new value of email
      */
-    @Secured( { "ROLE_ADMIN", "THIS_USER" } )
+    @Secured( { "ROLE_ADMIN", "THIS_USER" })
     public void setEmail( String email ) {
         this.email = email;
     }
 
     /**
      * Return the value of accountNonDisabled.
+     * 
      * @return always true
      */
     public boolean isAccountNonDisabled() {
@@ -116,6 +122,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of accountNonLocked.
+     * 
      * @return always true
      */
     public boolean isAccountNonLocked() {
@@ -124,6 +131,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of credentialsNonExpired.
+     * 
      * @return always true
      */
     public boolean isCredentialsNonExpired() {
@@ -132,6 +140,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Return the value of enabled.
+     * 
      * @return true by default, may be changed by administrators
      */
     public boolean isEnabled() {
@@ -140,9 +149,10 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of enabled.
+     * 
      * @param enabled The new value of enabled
      */
-    @Secured( { "ROLE_ADMIN" } )
+    @Secured( { "ROLE_ADMIN" })
     public void setEnabled( boolean enabled ) {
         this.enabled = enabled;
     }
@@ -156,9 +166,10 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of password.
+     * 
      * @param password The new value of password
      */
-    @Secured( { "ROLE_ADMIN", "USER" } )
+    @Secured( { "ROLE_ADMIN", "USER" })
     public void setPassword( String password ) {
         this.password = password;
     }
@@ -172,10 +183,11 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the username.
+     * 
      * @param username the username
      * @throws PropertyVetoException if user manager objects
      */
-    @Secured( { "ROLE_ADMIN", "USER" } )
+    @Secured( { "ROLE_ADMIN", "USER" })
     public void setUsername( String username ) throws PropertyVetoException {
         this.username = username;
     }
@@ -185,11 +197,10 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
      */
     public synchronized GrantedAuthority[] getAuthorities() {
         if ( this.authorities == null ) {
-            this.authorities =
-                new GrantedAuthority[ this.grantedAuthorities.length ];
-            for ( int i = 0 ; i < this.grantedAuthorities.length ; i++ )
-                this.authorities[ i ] =
-                    new GrantedAuthorityImpl( this.grantedAuthorities[ i ] );
+            this.authorities = new GrantedAuthority[this.grantedAuthorities.length];
+            for ( int i = 0; i < this.grantedAuthorities.length; i++ )
+                this.authorities[i] = new GrantedAuthorityImpl(
+                        this.grantedAuthorities[i] );
         }
 
         return this.authorities;
@@ -204,64 +215,75 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
 
     /**
      * Set the value of grantedAuthorities.
+     * 
      * @param grantedAuthorities The new value of grantedAuthorities
      */
-    @Secured( { "ROLE_ADMIN" } )
-    public synchronized void setGrantedAuthorities(
-            String[] grantedAuthorities ) {
+    @Secured( { "ROLE_ADMIN" })
+    public synchronized void setGrantedAuthorities( String[] grantedAuthorities ) {
 
         this.grantedAuthorities = grantedAuthorities;
         this.authorities = null;
     }
 
-	/* (non-Javadoc)
-	 * @see com.mindalliance.channels.User#getName()
-	 */
-	public String getName() {
-		return name;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.User#getName()
+     */
+    public String getName() {
+        return name;
+    }
 
-	public List<Role> getRoles() {
-		if (person == null)
-			return new ArrayList<Role>();
-		else
-			return person.getRoles();
-	}
+    public List<Role> getRoles() {
+        if ( person == null )
+            return new ArrayList<Role>();
+        else
+            return person.getRoles();
+    }
 
-	/**
-	 * @return the preferences
-	 */
-	public Properties getPreferences() {
-		return preferences;
-	}
+    /**
+     * @return the preferences
+     */
+    public Properties getPreferences() {
+        return preferences;
+    }
 
-	/**
-	 * @param preferences the preferences to set
-	 */
-	public void setPreferences(Properties preferences) {
-		this.preferences = preferences;
-	}
+    /**
+     * @param preferences the preferences to set
+     */
+    public void setPreferences( Properties preferences ) {
+        this.preferences = preferences;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param name the name to set
+     */
+    public void setName( String name ) {
+        this.name = name;
+    }
 
-	/**
-	 * @return the person
-	 */
-	public Person getPerson() {
-		return person;
-	}
+    /**
+     * @return the person
+     */
+    public Person getPerson() {
+        return person;
+    }
 
-	/**
-	 * @param person the person to set
-	 */
-	public void setPerson(Person person) {
-		this.person = person;
-	}
+    /**
+     * @param person the person to set
+     */
+    public void setPerson( Person person ) {
+        this.person = person;
+    }
+
+    public boolean hasAdminRole() {
+        return Arrays.asList( this.getGrantedAuthorities() ).contains(
+                User.ADMIN_ROLE );
+    }
+
+    public boolean hasUserRole() {
+        return Arrays.asList( this.getGrantedAuthorities() ).contains(
+                User.USER_ROLE );
+    }
 
 }
-

@@ -1,6 +1,5 @@
 /*
  * Created on Apr 26, 2007
- *
  */
 package com.mindalliance.channels.data.elements.scenario;
 
@@ -18,75 +17,76 @@ import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * A specification of activities. It is carried out by agents which specify roles or teams. 
- * A task is caused either by an event or a task (sub-task). 
- * It can create knowledge, produce artefacts and cause events and tasks. A Task represents
- * a separate activity for each role or team that matches one of its agents.
-  * @author jf
- *
+ * A specification of activities. It is carried out by agents which
+ * specify roles or teams. A task is caused either by an event or a
+ * task (sub-task). It can create knowledge, produce artefacts and
+ * cause events and tasks. A Task represents a separate activity for
+ * each role or team that matches one of its agents.
+ * 
+ * @author jf
  */
 public class Task extends AbstractOccurrence implements Caused, Regulatable {
-	
-	private List<Agent> agents;
-	private TypeSet objectives = new TypeSet(Type.OBJECTIVE);
 
-	public Task() {
-		super();
-	}
+    private List<Agent> agents;
+    private TypeSet objectives = new TypeSet( Type.OBJECTIVE );
 
-	public Task(GUID guid) {
-		super(guid);
-	}
+    public Task() {
+        super();
+    }
 
-	public List<Regulated> getRegulatedAssertions() {
-		List<Regulated> regulatedAssertions = new ArrayList<Regulated>();
-		for (Assertion assertion : getAssertions()) {
-			if (assertion instanceof Regulated)
-				regulatedAssertions.add((Regulated)assertion);
-		}
-		return regulatedAssertions;
-	}
+    public Task( GUID guid ) {
+        super( guid );
+    }
 
-	/**
-	 * @return the agents
-	 */
-	public List<Agent> getAgents() {
-		return agents;
-	}
+    public List<Regulated> getRegulatedAssertions() {
+        List<Regulated> regulatedAssertions = new ArrayList<Regulated>();
+        for ( Assertion assertion : getAssertions() ) {
+            if ( assertion instanceof Regulated )
+                regulatedAssertions.add( (Regulated) assertion );
+        }
+        return regulatedAssertions;
+    }
 
-	/**
-	 * @param agents the agents to set
-	 */
-	public void setAgents(List<Agent> agents) {
-		this.agents = agents;
-	}
-	/**
-	 * 
-	 * @param agent
-	 */
-	public void addAgent(Agent agent) {
-		agents.add(agent);
-	}
-	/**
-	 * 
-	 * @param agent
-	 */
-	public void removeAgent(Agent agent) {
-		agents.remove(agent);
-	}
-	/**
-	 * @return the objectives
-	 */
-	public TypeSet getObjectives() {
-		return objectives;
-	}
+    /**
+     * @return the agents
+     */
+    public List<Agent> getAgents() {
+        return agents;
+    }
 
-	/**
-	 * @param objectives the objectives to set
-	 */
-	public void setObjectives(TypeSet objectives) {
-		this.objectives = objectives;
-	}
-	
+    /**
+     * @param agents the agents to set
+     */
+    public void setAgents( List<Agent> agents ) {
+        this.agents = agents;
+    }
+
+    /**
+     * @param agent
+     */
+    public void addAgent( Agent agent ) {
+        agents.add( agent );
+    }
+
+    /**
+     * @param agent
+     */
+    public void removeAgent( Agent agent ) {
+        agents.remove( agent );
+    }
+
+    /**
+     * @return the objectives
+     */
+    public TypeSet getObjectives() {
+        return objectives;
+    }
+
+    /**
+     * @param objectives the objectives to set
+     */
+    public void setObjectives( TypeSet objectives ) {
+        this.objectives = objectives;
+    }
 
 }

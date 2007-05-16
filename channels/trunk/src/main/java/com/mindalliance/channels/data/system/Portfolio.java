@@ -1,6 +1,5 @@
 /*
  * Created on Apr 28, 2007
- *
  */
 package com.mindalliance.channels.data.system;
 
@@ -8,36 +7,34 @@ import java.util.List;
 
 import com.mindalliance.channels.data.elements.project.Project;
 
-/** 
+/**
  * Queryable project data
+ * 
  * @author jf
- *
  */
-@SuppressWarnings("serial")
+@SuppressWarnings( "serial")
 public class Portfolio extends AbstractQueryable {
-	
-	private List<Project> projects;
 
-	/**
-	 * @return the projects
-	 */
-	public List<Project> getProjects() {
-		return projects;
-	}
+    private List<Project> projects;
 
-	/**
-	 * @param projects the projects to set
-	 */
-	public void setProjects(List<Project> projects) {
-		this.projects = projects;
-	}
+    /**
+     * @return the projects
+     */
+    public List<Project> getProjects() {
+        return projects;
+    }
 
-	public void addProject(Project project) {
-	}
+    /**
+     * @param projects the projects to set
+     */
+    public void setProjects( List<Project> projects ) {
+        this.projects = projects;
+    }
 
-	public void remove(Project project) {
-	}
+    public void addProject( Project project ) {
+    }
 
-
+    public void remove( Project project ) {
+    }
 
 }
