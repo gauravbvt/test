@@ -9,7 +9,6 @@ import org.zkoss.zk.ui.WebApp;
 import com.mindalliance.channels.data.elements.ElementFactory;
 import com.mindalliance.channels.data.system.System;
 import com.mindalliance.channels.services.SystemService;
-import com.mindalliance.channels.services.base.SystemServiceImpl;
 import com.mindalliance.channels.util.GUIDFactory;
 import com.mindalliance.channels.util.GUIDFactoryImpl;
 
