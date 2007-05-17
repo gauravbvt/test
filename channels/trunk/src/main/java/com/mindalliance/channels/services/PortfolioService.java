@@ -23,6 +23,11 @@ public interface PortfolioService extends Service {
     List<Project> getProjects( User user );
 
     /**
+     * Return the projects of the authenticated user
+     */
+   public List<Project> getUserProjects();
+    
+    /**
      * Test if given user is a manager of this project.
      * 
      * @param user the user to consider.
@@ -56,8 +61,4 @@ public interface PortfolioService extends Service {
     @Secured( "ROLE_ADMIN")
     void removeProject( Project project );
 
-    // TODO obsolete
-    void addModel( Project project, Model model );
-
-    void removeModel( Model model );
 }

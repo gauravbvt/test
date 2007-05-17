@@ -3,9 +3,15 @@
  */
 package com.mindalliance.channels.data.system;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import org.acegisecurity.annotation.Secured;
+
+import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.project.Project;
+import com.mindalliance.channels.services.PortfolioService;
 
 /**
  * Queryable project data
@@ -13,28 +19,83 @@ import com.mindalliance.channels.data.elements.project.Project;
  * @author jf
  */
 @SuppressWarnings( "serial")
-public class Portfolio extends AbstractQueryable {
+public class Portfolio extends AbstractQueryable implements PortfolioService {
 
-    private List<Project> projects;
+    private Set<Project> projects;
+
+    public Portfolio() {}
+    
+    protected Portfolio( System system ) {
+        super(system);
+    }
 
     /**
      * @return the projects
      */
-    public List<Project> getProjects() {
+    @Secured("ROLE_RUN_AS_SYSTEM")
+    public Set<Project> getProjects() {
         return projects;
+    }
+    
+    /**
+     * Return the projects of the authenticated user
+     */
+    public List<Project> getUserProjects() {
+        return getProjects( getAuthenticatedUser() );
+    }
+
+    public List<User> getProjectManagers( Project project ) {
+        List<User> managers = new ArrayList<User>();
+        for ( User user : system.getAuthoritativeUsers( project ) ) {
+            {
+                managers.add( user );
+            }
+        }
+        // caching?
+        return managers;
     }
 
     /**
      * @param projects the projects to set
      */
-    public void setProjects( List<Project> projects ) {
+    @Secured("ROLE_RUN_AS_SYSTEM")
+    public void setProjects( Set<Project> projects ) {
         this.projects = projects;
     }
 
+    @Secured("ROLE_ADMIN")
     public void addProject( Project project ) {
+        projects.add(project);
     }
 
-    public void remove( Project project ) {
+    /**
+     * Get the projects a user participates in
+     */
+    @Secured("ROLE_ADMIN")
+    public List<Project> getProjects( User user ) {
+        List<Project> visible = new ArrayList<Project>();
+        if ( user != null ) {
+            for ( Project project : projects ) {
+                if ( project.hasParticipant( user ) ) {
+                    visible.add( project );
+                }
+            }
+        }
+        // caching?
+        return visible;
+    }
+
+    public boolean isManager( User user, Project project ) {
+        return system.hasAuthority( user, project );
+    }
+
+    public boolean isParticipant( User user, Project project ) {
+        return project.hasParticipant( user );
+    }
+
+    @Secured("ROLE_ADMIN")
+    public void removeProject( Project project ) {
+        projects.remove( project );
     }
 
 }

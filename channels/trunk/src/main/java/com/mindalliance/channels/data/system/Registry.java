@@ -11,6 +11,7 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,12 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.acegisecurity.annotation.Secured;
+import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.context.SecurityContextImpl;
+import org.acegisecurity.providers.AuthenticationProvider;
+import org.acegisecurity.providers.ProviderManager;
+import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
+import org.acegisecurity.providers.dao.DaoAuthenticationProvider;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 
@@ -28,11 +35,13 @@ import com.mindalliance.channels.data.user.Alert;
 import com.mindalliance.channels.data.user.Certification;
 import com.mindalliance.channels.data.user.Conversation;
 import com.mindalliance.channels.data.user.Todo;
+import com.mindalliance.channels.data.user.UserImpl;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.data.user.UserRequest;
 import com.mindalliance.channels.data.user.UserTypes;
+import com.mindalliance.channels.services.RegistryService;
 
 /**
  * All user related data; their profiles and alerts/todos targeted at
@@ -40,7 +49,7 @@ import com.mindalliance.channels.data.user.UserTypes;
  * 
  * @author jf
  */
-public class Registry extends AbstractQueryable {
+public class Registry extends AbstractQueryable implements RegistryService {
 
     private Map<String, User> usernames; // username => user
                                             // profile
@@ -52,6 +61,10 @@ public class Registry extends AbstractQueryable {
     private List<Certification> certifications;
 
     public Registry() {
+    }
+
+    public Registry( System system ) {
+        super(system);
         usernames = new HashMap<String, User>();
         userRights = new HashMap<User, UserTypes>();
         conversations = new ArrayList<Conversation>();
@@ -216,7 +229,7 @@ public class Registry extends AbstractQueryable {
      * @return true if the user is known to the system.
      */
     @Secured( { "ROLE_USER" })
-    public boolean isUser( User user ) {
+    public boolean isUserRegistered( User user ) {
         return this.userRights.containsKey( user );
     }
 
@@ -257,6 +270,68 @@ public class Registry extends AbstractQueryable {
      */
     public boolean isUserNameTaken( String username ) {
         return usernames.containsKey( username );
+    }
+
+    /**
+     * Logs a user in.
+     * 
+     * @param user
+     * @param password
+     */
+    @Secured( "ROLE_RUN_AS_SYSTEM")
+    public void login( String user, String password ) {
+
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService( this );
+
+        ProviderManager providerManager = new ProviderManager();
+        providerManager.setProviders( Arrays.asList( new AuthenticationProvider[] { daoAuthenticationProvider } ) );
+
+        // Create and store the Acegi SecureContext into the
+        // ContextHolder.
+        SecurityContextImpl secureContext = new SecurityContextImpl();
+        secureContext.setAuthentication( providerManager.doAuthentication( new UsernamePasswordAuthenticationToken(
+                user, password ) ) );
+        SecurityContextHolder.setContext( secureContext );
+    }
+
+    /**
+     * Logs current user out.
+     */
+    public void logout() {
+        SecurityContextHolder.clearContext();
+    }
+
+    public void makeAdministrator( User user ) throws UserExistsException {
+        addAdministrator(user);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.services.RegistryService#registerAdministrator(java.lang.String,
+     *      java.lang.String, java.lang.String)
+     */
+    public User registerAdministrator( String name, String username,
+            String password ) throws UserExistsException {
+        UserImpl user = new UserImpl( name, username, password, new String[] {
+            "ROLE_USER", "ROLE_ADMIN" } );
+        addAdministrator( user );
+        return user;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.mindalliance.channels.services.RegistryService#registerUser(java.lang.String,
+     *      java.lang.String, java.lang.String)
+     */
+    public User registerUser( String name, String username, String password )
+            throws UserExistsException {
+        UserImpl user = new UserImpl( name, username, password,
+                new String[] { "ROLE_USER" } );
+        addUser( user );
+        return user;
     }
 
 }

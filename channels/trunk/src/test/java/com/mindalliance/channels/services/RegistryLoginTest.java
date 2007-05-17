@@ -6,7 +6,6 @@ package com.mindalliance.channels.services;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.acegisecurity.context.SecurityContextHolder;
 
 import com.mindalliance.channels.User;
 

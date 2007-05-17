@@ -14,6 +14,7 @@ import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.data.reference.Policy;
 import com.mindalliance.channels.data.reference.Template;
 import com.mindalliance.channels.data.reference.Typology;
+import com.mindalliance.channels.services.LibraryService;
 
 /**
  * Access to all reference data: environment, typologies, locations,
@@ -21,7 +22,7 @@ import com.mindalliance.channels.data.reference.Typology;
  * 
  * @author jf
  */
-public class Library extends AbstractQueryable {
+public class Library extends AbstractQueryable implements LibraryService {
 
     private Map<String, Typology> typologies;
     private List<Location> locations;
@@ -30,13 +31,17 @@ public class Library extends AbstractQueryable {
     private List<Template> templates;
 
     public Library() {
+    }
+    
+    protected Library( System system ) {
+        super(system);
         typologies = new HashMap<String, Typology>();
         locations = new ArrayList<Location>();
         policies = new ArrayList<Policy>();
         environments = new ArrayList<Environment>();
         templates = new ArrayList<Template>();
     }
-    
+
     /**
      * @return the locations
      */
@@ -96,7 +101,13 @@ public class Library extends AbstractQueryable {
     }
 
     public Typology getTypology( String name ) {
-        return typologies.get( name );
+        Typology typology = typologies.get( name );
+        if ( typology == null ) {
+            typology = new Typology( name );
+            addTypology( typology );
+        }
+        return typology;
+
     }
 
     public void addTypology( Typology typology ) {

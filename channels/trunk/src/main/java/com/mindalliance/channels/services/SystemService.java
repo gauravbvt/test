@@ -3,9 +3,10 @@
  */
 package com.mindalliance.channels.services;
 
-import org.acegisecurity.annotation.Secured;
+import java.util.List;
 
-import com.mindalliance.channels.data.system.System;
+import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.Element;
 
 /**
  * Overall System functions and access to all System services.
@@ -15,15 +16,21 @@ import com.mindalliance.channels.data.system.System;
 public interface SystemService extends Service {
 
     /**
-     * @return the system
+     * Get all users that have authority over an element.
+     * 
+     * @param element
+     * @return
      */
-    System getSystem();
+    List<User> getAuthoritativeUsers( Element element );
 
     /**
-     * @param system the system to set (initialization only)
+     * Whether a user has authority over an element.
+     * 
+     * @param user
+     * @param element
+     * @return
      */
-    @Secured( "ROLE_RUN_AS_SYSTEM")
-    public void setSystem( System system );
+    boolean hasAuthority( User user, Element element );
 
     /**
      * Get access to the RegistryService service.

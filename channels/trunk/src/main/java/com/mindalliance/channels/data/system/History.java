@@ -6,6 +6,7 @@ package com.mindalliance.channels.data.system;
 import java.util.Map;
 
 import com.mindalliance.channels.data.support.VersionHistory;
+import com.mindalliance.channels.services.HistoryService;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -13,12 +14,18 @@ import com.mindalliance.channels.util.GUID;
  * 
  * @author jf
  */
-public class History extends AbstractQueryable {
+public class History extends AbstractQueryable implements HistoryService {
 
     private Map<GUID, VersionHistory> versionHistories;
 
     // TODO Access to system usage log, system metrics over time,
     // system events etc
+
+    public History() {}
+    
+    public History( System system ) {
+        super(system);
+    }
 
     /**
      * @return the elementHistories

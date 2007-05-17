@@ -54,8 +54,7 @@ public class Channels {
             systemService = SingletonSystemService;
         }
         if (systemService == null) {
-            systemService = new SystemServiceImpl();
-            systemService.setSystem(new System());
+            systemService = new System();
            if (webApp != null) {
                 synchronized(webApp) { webApp.setAttribute(SYSTEM_SERVICE, systemService); }
             }

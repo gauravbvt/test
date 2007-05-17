@@ -7,9 +7,12 @@ import java.util.List;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Element;
-import com.mindalliance.channels.data.elements.ElementFactory;
-import com.mindalliance.channels.util.GUIDFactory;
-import com.mindalliance.channels.util.GUIDFactoryImpl;
+import com.mindalliance.channels.services.DirectoryService;
+import com.mindalliance.channels.services.HistoryService;
+import com.mindalliance.channels.services.LibraryService;
+import com.mindalliance.channels.services.PortfolioService;
+import com.mindalliance.channels.services.RegistryService;
+import com.mindalliance.channels.services.SystemService;
 
 /**
  * The System data model's root bean
@@ -17,7 +20,7 @@ import com.mindalliance.channels.util.GUIDFactoryImpl;
  * @author jf
  */
 @SuppressWarnings( "serial")
-public class System extends AbstractQueryable {
+public class System extends AbstractQueryable implements SystemService {
 
     private Registry registry;
     private Directory directory;
@@ -26,23 +29,13 @@ public class System extends AbstractQueryable {
     private Portfolio portfolio;
 
     public System() {
-        setRegistry( new Registry() );
-        setDirectory( new Directory() );
-        setHistory( new History() );
-        setLibrary( new Library() );
-        setPortfolio( new Portfolio() );
+        setRegistry( new Registry(this) );
+        setDirectory( new Directory(this) );
+        setHistory( new History(this) );
+        setLibrary( new Library(this) );
+        setPortfolio( new Portfolio(this) );
     }
     
-    /**
-     * Find all users with authority over an element.
-     * 
-     * @param project
-     * @return
-     */
-    public List<User> findAuthoritativeUsers( Element element ) {
-        return null; // TODO
-    }
-
     /**
      * @return the directory
      */
@@ -111,6 +104,34 @@ public class System extends AbstractQueryable {
      */
     public void setPortfolio( Portfolio portfolio ) {
         this.portfolio = portfolio;
+    }
+
+    public DirectoryService getDirectoryService() {
+        return directory;
+    }
+
+    public HistoryService getHistoryService() {
+        return history;
+    }
+
+    public LibraryService getLibraryService() {
+        return library;
+    }
+
+    public PortfolioService getPortfolioService() {
+        return portfolio;
+    }
+
+    public RegistryService getRegistryService() {
+        return registry;
+    }
+
+    public List<User> getAuthoritativeUsers( Element element ) {
+        return null;
+    }
+
+    public boolean hasAuthority( User user, Element element ) {
+        return false;
     }
 
 }

@@ -75,11 +75,6 @@ public interface RegistryService extends Service, UserDetailsService {
     void removeAdministrator( User user );
 
     /**
-     * Find all users who have authority over an element
-     */
-    List<User> getAuthoritativeUsers( Element element );
-
-    /**
      * Register a new user
      * 
      * @param name

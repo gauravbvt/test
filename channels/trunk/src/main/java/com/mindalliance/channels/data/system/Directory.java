@@ -9,18 +9,25 @@ import com.mindalliance.channels.data.elements.resources.Channel;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.elements.resources.Team;
+import com.mindalliance.channels.services.DirectoryService;
 
 /**
  * All resources (organizations, persons and teams.
  * 
  * @author jf
  */
-public class Directory extends AbstractQueryable {
+public class Directory extends AbstractQueryable implements DirectoryService {
 
     private List<Organization> organizations;
     private List<Person> persons;
     private List<Team> teams;
     private List<Channel> channels;
+
+    public Directory() {}
+    
+    protected Directory( System system ) {
+        super(system);
+    }
 
     /**
      * @return the system
@@ -77,5 +84,6 @@ public class Directory extends AbstractQueryable {
     public void setTeams( List<Team> teams ) {
         this.teams = teams;
     }
+
 
 }
