@@ -3,10 +3,11 @@
  */
 package com.mindalliance.channels.data.elements.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Accessible;
 import com.mindalliance.channels.data.Contactable;
+import com.mindalliance.channels.data.components.ContactInfo;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.util.GUID;
 
@@ -15,7 +16,7 @@ import com.mindalliance.channels.util.GUID;
  * 
  * @author jf
  */
-public class Repository extends ContactableResource implements Accessible {
+public class Repository extends AccessibleResource implements Contactable {
 
     private Organization organization;
     // A specification of what assets the repository can be expected
@@ -23,6 +24,7 @@ public class Repository extends ContactableResource implements Accessible {
     private List<Information> contents;
     private Role administrator; // Role within the administration
                                 // normally
+    private List<ContactInfo> contactInfos;
 
     public Repository() {
         super();
@@ -30,10 +32,8 @@ public class Repository extends ContactableResource implements Accessible {
 
     public Repository( GUID guid ) {
         super( guid );
-    }
-
-    public boolean hasAccess( Contactable contactable ) {
-        return false;
+        contactInfos = new ArrayList<ContactInfo>();
+        contents = new ArrayList<Information>();
     }
 
     /**
@@ -91,5 +91,37 @@ public class Repository extends ContactableResource implements Accessible {
     public void setOrganization( Organization organization ) {
         this.organization = organization;
     }
+
+    
+    /**
+     * Return the value of contactInfos.
+     */
+    public List<ContactInfo> getContactInfos() {
+        return contactInfos;
+    }
+
+    
+    /**
+     * Set the value of contactInfos.
+     * @param contactInfos The new value of contactInfos
+     */
+    public void setContactInfos( List<ContactInfo> contactInfos ) {
+        this.contactInfos = contactInfos;
+    }
+    
+    /**
+     * @param contactInfo
+     */
+    public void addContactInfo( ContactInfo contactInfo ) {
+        contactInfos.add( contactInfo );
+    }
+
+    /**
+     * @param contactInfo
+     */
+    public void removeContactInfo( ContactInfo contactInfo ) {
+        contactInfos.remove( contactInfo );
+    }
+
 
 }

@@ -37,7 +37,6 @@ public class Scenario extends AbstractElement {
     private Model model; // backpointer
     private List<Occurrence> occurrences; // What happens
     private List<Product> products; // What gets produced
-    private List<Assertion> assertions; // What's asserted
     private List<SharingNeed> sharingNeeds; // Information sharing
                                             // needs
     private List<Flow> flows; // Realized sharingNeeds
@@ -101,34 +100,6 @@ public class Scenario extends AbstractElement {
     // TODO
     public List<Situation> getSituations() {
         return null;
-    }
-
-    /**
-     * @return the assertions
-     */
-    public List<Assertion> getAssertions() {
-        return assertions;
-    }
-
-    /**
-     * @param assertions the assertions to set
-     */
-    public void setAssertions( List<Assertion> assertions ) {
-        this.assertions = assertions;
-    }
-
-    /**
-     * @param assertion
-     */
-    public void addAssertion( Assertion assertion ) {
-        assertions.add( assertion );
-    }
-
-    /**
-     * @param assertion
-     */
-    public void removeAssertion( Assertion assertion ) {
-        assertions.remove( assertion );
     }
 
     /**

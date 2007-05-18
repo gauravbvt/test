@@ -4,8 +4,11 @@
 package com.mindalliance.channels.data.elements.resources;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;
 
 public class Person extends ContactableResource {
@@ -15,6 +18,7 @@ public class Person extends ContactableResource {
     private String lastName;
     private URL photo;
     private List<Role> roles;
+    private TypeSet clearances;
 
     public Person() {
         super();
@@ -22,6 +26,8 @@ public class Person extends ContactableResource {
 
     public Person( GUID guid ) {
         super( guid );
+        roles = new ArrayList<Role>();
+        clearances = new TypeSet(Type.CLEARANCE);
     }
 
     /**
@@ -107,5 +113,23 @@ public class Person extends ContactableResource {
     public void removeRole( Role role ) {
         roles.remove( role );
     }
+
+    
+    /**
+     * Return the value of clearances.
+     */
+    public TypeSet getClearances() {
+        return clearances;
+    }
+
+    
+    /**
+     * Set the value of clearances.
+     * @param clearances The new value of clearances
+     */
+    public void setClearances( TypeSet clearances ) {
+        this.clearances = clearances;
+    }
+    
 
 }

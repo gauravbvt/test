@@ -5,7 +5,6 @@ package com.mindalliance.channels.data;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.data.elements.resources.Role;
 
 /**
@@ -13,14 +12,13 @@ import com.mindalliance.channels.data.elements.resources.Role;
  * 
  * @author jf
  */
-public interface Actor extends Element {
+public interface Actor extends Element, Knowledgeable, Needy, Connected, Accessible {
 
     /**
-     * Get the roles implied by the actor within the scope of a
-     * project .
+     * Get the roles implied by the actor.
      * 
      * @return
      */
-    List<Role> getRoles( Project project );
+    List<Role> getRoles();
 
 }

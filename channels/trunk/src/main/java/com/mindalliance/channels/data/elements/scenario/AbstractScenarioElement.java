@@ -3,11 +3,13 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.data.ScenarioElement;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.Known;
 import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.util.GUID;
@@ -35,7 +37,10 @@ abstract public class AbstractScenarioElement extends AbstractElement implements
      * @see com.mindalliance.channels.data.Knowable#getKnownAssertions()
      */
     public List<Known> getKnownAssertions() {
-        return null;
+        List<Known> list = new ArrayList<Known>();
+        for (Assertion assertion : getAssertions())
+                if (assertion instanceof  Known) list.add( (Known) assertion);
+        return list;
     }
 
     /*

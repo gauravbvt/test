@@ -3,18 +3,19 @@
  */
 package com.mindalliance.channels.data.elements.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Actor;
+import com.mindalliance.channels.data.components.Mission;
 import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * A team aggregates roles possibly across organizations.
+ * A team aggregates roles possibly across organizations and acts as a unit.
  * 
  * @author jf
  */
-public class Team extends AccessibleResource implements Actor {
+public class Team extends AbstractActor {
 
     public class Membership {
 
@@ -67,6 +68,7 @@ public class Team extends AccessibleResource implements Actor {
     }
 
     private List<Membership> memberships;
+    private List<Mission> missions;
 
     public Team() {
         super();
@@ -77,7 +79,11 @@ public class Team extends AccessibleResource implements Actor {
     }
 
     public List<Role> getRoles() {
-        return null; // TODO
+        List<Role> roles = new ArrayList<Role>();
+        for (Membership membership : memberships) {
+            roles.add( membership.getRole() );
+        }
+        return roles;
     }
 
     /**
@@ -108,7 +114,34 @@ public class Team extends AccessibleResource implements Actor {
         memberships.remove( membership );
     }
 
-    public List<Role> getRoles( Project project ) {
-        return null; // TODO
+    /**
+     * Return the value of missions.
+     */
+    public List<Mission> getMissions() {
+        return missions;
     }
+
+    
+    /**
+     * Set the value of missions.
+     * @param missions The new value of missions
+     */
+    public void setMissions( List<Mission> missions ) {
+        this.missions = missions;
+    }
+    /**
+     * Add a mission
+     * @param mission
+     */
+    public void addMission(Mission mission) {
+        missions.add( mission );
+    }
+    /**
+     * Remove a mission
+     * @param mission
+     */
+    public void removeMission(Mission mission) {
+        missions.remove( mission );
+    }
+
 }

@@ -3,8 +3,8 @@
  */
 package com.mindalliance.channels.data.elements.assertions;
 
-import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.Knowable;
+import com.mindalliance.channels.data.Knowledgeable;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.util.GUID;
 
@@ -16,7 +16,7 @@ import com.mindalliance.channels.util.GUID;
 public class Known extends Assertion {
 
     private Information information; // what's known
-    private Actor actor; // know by whom: an agent ("whoever does
+    private Knowledgeable knower; // know by whom: an agent ("whoever does
                             // this task knows this"), role ("anyone
                             // in this role knows this") or team who
                             // knows this
@@ -34,20 +34,6 @@ public class Known extends Assertion {
     }
 
     /**
-     * @return the actor
-     */
-    public Actor getActor() {
-        return actor;
-    }
-
-    /**
-     * @param actor the actor to set
-     */
-    public void setActor( Actor actor ) {
-        this.actor = actor;
-    }
-
-    /**
      * @return the information
      */
     public Information getInformation() {
@@ -59,6 +45,23 @@ public class Known extends Assertion {
      */
     public void setInformation( Information information ) {
         this.information = information;
+    }
+
+    
+    /**
+     * Return the value of knower.
+     */
+    public Knowledgeable getKnower() {
+        return knower;
+    }
+
+    
+    /**
+     * Set the value of knower.
+     * @param knower The new value of knower
+     */
+    public void setKnower( Knowledgeable knower ) {
+        this.knower = knower;
     }
 
 }

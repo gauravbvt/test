@@ -3,6 +3,7 @@
  */
 package com.mindalliance.channels.data.elements.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.data.Contactable;
@@ -20,6 +21,7 @@ public abstract class ContactableResource extends AbstractResource implements
 
     public ContactableResource( GUID guid ) {
         super( guid );
+        contactInfos = new ArrayList<ContactInfo>();
     }
 
     /*

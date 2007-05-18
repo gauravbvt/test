@@ -4,11 +4,11 @@
 package com.mindalliance.channels.data;
 
 /**
- * A resource that controls access to itself.
+ * A contactable resource that controls access to itself.
  * 
  * @author jf
  */
-public interface Accessible extends Resource {
+public interface Accessible {
 
     boolean hasAccess( Contactable contactable );
 

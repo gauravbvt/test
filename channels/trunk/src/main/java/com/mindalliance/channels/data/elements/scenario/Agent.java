@@ -7,26 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.data.Actor;
-import com.mindalliance.channels.data.Connected;
 import com.mindalliance.channels.data.Knowledgeable;
-import com.mindalliance.channels.data.Needy;
 import com.mindalliance.channels.data.OptOutable;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.CanAccess;
 import com.mindalliance.channels.data.elements.assertions.NeedsToKnow;
 import com.mindalliance.channels.data.elements.assertions.OptedOut;
-import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.data.elements.resources.Role;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * A specification of who is executing a task, together or separately.
+ * A specification of which actors execute a task, together or separately.
  * 
  * @author jf
  */
-abstract public class Agent extends AbstractScenarioElement implements Actor,
-        Needy, Connected, OptOutable, Knowledgeable {
+abstract public class Agent extends AbstractScenarioElement implements Knowledgeable,
+        OptOutable {
 
     private Task task;
 
@@ -38,12 +34,10 @@ abstract public class Agent extends AbstractScenarioElement implements Actor,
         super( guid );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Actor#getRoles()
+    /**
+     * Return the actors specified by this agent
      */
-    abstract public List<Role> getRoles( Project project );
+    abstract public List<Actor> getActors();
 
     /*
      * (non-Javadoc)

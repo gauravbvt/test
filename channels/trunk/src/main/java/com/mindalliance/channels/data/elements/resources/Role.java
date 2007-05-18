@@ -6,8 +6,6 @@ package com.mindalliance.channels.data.elements.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Actor;
-import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.util.GUID;
 
@@ -19,7 +17,7 @@ import com.mindalliance.channels.util.GUID;
  * 
  * @author jf
  */
-public class Role extends AccessibleResource implements Actor {
+public class Role extends AbstractActor {
 
     private Organization organization;
     // Either persons or group is set, not both.
@@ -33,11 +31,8 @@ public class Role extends AccessibleResource implements Actor {
     private Location jurisdiction; // Area of jurisdiction for the
                                     // role
 
-    public List<Role> getRoles( Project project ) { // TODO Check if
-                                                    // role still in
-                                                    // scope of
-                                                    // project
-        List<Role> roles = new ArrayList();
+    public List<Role> getRoles( ) { 
+        List<Role> roles = new ArrayList<Role>();
         roles.add( this );
         return roles;
     }

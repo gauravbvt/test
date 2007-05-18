@@ -3,10 +3,10 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.data.elements.resources.Role;
+import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.elements.resources.Team;
 import com.mindalliance.channels.util.GUID;
 
@@ -27,9 +27,13 @@ public class TeamAgent extends Agent {
         super( guid );
     }
 
-    @Override
-    public List<Role> getRoles( Project project ) {
-        return team.getRoles( project );
+    /**
+     * Return the team as sole actor.
+     */
+    public List<Actor> getActors() {
+        List<Actor> actors = new ArrayList<Actor>();
+        actors.add(team);
+        return actors;
     }
 
     /**
@@ -45,4 +49,5 @@ public class TeamAgent extends Agent {
     public void setTeam( Team team ) {
         this.team = team;
     }
+
 }
