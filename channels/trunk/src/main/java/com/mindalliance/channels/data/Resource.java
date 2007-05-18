@@ -3,22 +3,22 @@
  */
 package com.mindalliance.channels.data;
 
-import com.mindalliance.channels.data.elements.scenario.Situation;
+import com.mindalliance.channels.data.elements.scenario.Circumstance;
 
 /**
  * Something that may or may not be operational by default or in a
- * given situation.
+ * given circumstance.
  * 
  * @author jf
  */
 public interface Resource extends Element, Describable {
 
     /**
-     * @param situation
+     * @param circumstance
      * @return whether the resource is operational in a given
-     *         situation.
+     *         circumstance.
      */
-    boolean isOperationalIn( Situation situation );
+    boolean isOperationalIn( Circumstance circumstance );
 
     /**
      * @return whether the resource is operation by default.

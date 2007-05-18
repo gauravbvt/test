@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.data.components.Mission;
-import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.util.GUID;
 
 /**

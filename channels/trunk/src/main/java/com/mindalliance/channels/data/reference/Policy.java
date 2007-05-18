@@ -16,7 +16,7 @@ import com.mindalliance.channels.data.support.Pattern;
  * 
  * @author jf
  */
-public class Policy extends ReferenceData {
+public class Policy extends TypedReferenceData {
 
     public class Target {
 

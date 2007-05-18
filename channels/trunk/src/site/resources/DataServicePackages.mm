@@ -146,13 +146,16 @@
 </html>
 </richcontent>
 <font BOLD="true" NAME="SansSerif" SIZE="13"/>
-<node CREATED="1177436983411" ID="Freemind_Link_1735839830" MODIFIED="1177436987377" TEXT="Agreement"/>
+<node CREATED="1179455696563" ID="Freemind_Link_272872800" MODIFIED="1179455716733" TEXT="AbstractActor">
+<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
+</node>
 <node CREATED="1177428201442" ID="Freemind_Link_1767659668" MODIFIED="1178222531957" TEXT="AbstractResource">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 <node CREATED="1178193405947" ID="Freemind_Link_481297226" MODIFIED="1178222538628" TEXT="AccessibleResource">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
+<node CREATED="1177436983411" ID="Freemind_Link_1735839830" MODIFIED="1177436987377" TEXT="Agreement"/>
 <node CREATED="1177428172024" ID="Freemind_Link_63646752" MODIFIED="1178222541564" TEXT="Channel"/>
 <node CREATED="1178191335622" ID="Freemind_Link_311700437" MODIFIED="1178222548781" TEXT="ContactableResourcs">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
@@ -224,7 +227,10 @@
 <node CREATED="1177425533399" ID="Freemind_Link_569785657" MODIFIED="1177425536809" TEXT="Environment"/>
 <node CREATED="1177425306521" ID="Freemind_Link_528954313" MODIFIED="1177425308996" TEXT="Location"/>
 <node CREATED="1177441058854" ID="Freemind_Link_90013419" MODIFIED="1177441061399" TEXT="Policy"/>
-<node CREATED="1178195623010" ID="Freemind_Link_1805602643" MODIFIED="1178222513381" TEXT="ReferenceElement">
+<node CREATED="1178195623010" ID="Freemind_Link_1805602643" MODIFIED="1179496896050" TEXT="ReferenceData">
+<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
+</node>
+<node CREATED="1179496883390" ID="Freemind_Link_336518402" MODIFIED="1179496897174" TEXT="TypedReferenceData">
 <font ITALIC="true" NAME="SansSerif" SIZE="12"/>
 </node>
 <node CREATED="1177441482040" ID="Freemind_Link_1357674281" MODIFIED="1178222517355" TEXT="Template"/>
@@ -345,29 +351,6 @@
 <node COLOR="#006666" CREATED="1177460049853" ID="Freemind_Link_570495989" MODIFIED="1178222655215" TEXT="PortfolioService"/>
 <node COLOR="#006666" CREATED="1177945945019" ID="Freemind_Link_1396359360" MODIFIED="1178222658458" TEXT="RegistryService"/>
 <node COLOR="#006666" CREATED="1177694798330" ID="Freemind_Link_1295872659" MODIFIED="1178222662077" TEXT="Service"/>
-<node CREATED="1178206301329" ID="Freemind_Link_1295329661" MODIFIED="1178219424734" TEXT="base">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Service implementations.
-    </p>
-  </body>
-</html>
-</richcontent>
-<font BOLD="true" NAME="SansSerif" SIZE="13"/>
-<node CREATED="1177694891863" ID="Freemind_Link_1668283964" MODIFIED="1178222666501" TEXT="AbstractService">
-<font ITALIC="true" NAME="SansSerif" SIZE="12"/>
-</node>
-<node CREATED="1177446078927" ID="Freemind_Link_256917958" MODIFIED="1177806630769" TEXT="ChannelsServiceImpl"/>
-<node CREATED="1177460040392" ID="Freemind_Link_897592146" MODIFIED="1177795703155" TEXT="DirectoryServiceImpl"/>
-<node CREATED="1177532290583" ID="Freemind_Link_1333291908" MODIFIED="1177795729307" TEXT="HistoryServiceImpl"/>
-<node CREATED="1177460057497" ID="Freemind_Link_281102779" MODIFIED="1177795710818" TEXT="LibraryServiceImpl"/>
-<node CREATED="1177460049853" ID="Freemind_Link_248610176" MODIFIED="1177795707541" TEXT="PortfolioServiceImpl"/>
-<node CREATED="1177945883027" ID="Freemind_Link_323682580" MODIFIED="1177951056056" TEXT="RegistryServiceImpl"/>
-</node>
 </node>
 <node CREATED="1178211926413" ID="Freemind_Link_343374923" MODIFIED="1178211957920" POSITION="right" TEXT="util">
 <edge COLOR="#808080" WIDTH="thin"/>

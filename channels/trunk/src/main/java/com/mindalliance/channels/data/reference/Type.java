@@ -9,7 +9,6 @@ import java.util.Set;
 import com.mindalliance.channels.data.Describable;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.support.TypeSet;
-import com.mindalliance.channels.util.GUID;
 
 /**
  * A categorization of an element.
@@ -26,6 +25,7 @@ public class Type extends ReferenceData implements Describable {
     public static final String STANDARD = "Standard";
     public static final String CLEARANCE = "Clearance";
     public static final String FORMAT = "Format";
+    public static final String LOCATION = "Location";
 
     private Typology typology;
     private Information descriptor;

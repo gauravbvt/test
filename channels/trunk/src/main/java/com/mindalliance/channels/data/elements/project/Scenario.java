@@ -18,7 +18,7 @@ import com.mindalliance.channels.data.elements.scenario.Event;
 import com.mindalliance.channels.data.elements.scenario.Flow;
 import com.mindalliance.channels.data.elements.scenario.Product;
 import com.mindalliance.channels.data.elements.scenario.SharingNeed;
-import com.mindalliance.channels.data.elements.scenario.Situation;
+import com.mindalliance.channels.data.elements.scenario.Circumstance;
 import com.mindalliance.channels.data.elements.scenario.Task;
 import com.mindalliance.channels.util.GUID;
 
@@ -27,7 +27,7 @@ import com.mindalliance.channels.util.GUID;
  * with causes external to the scenario) that drives responses with
  * their attendant information needs and productions, and generated
  * events that drive further responses etc. The analysis of a scenario
- * uncovers situations, activities, sharing needs and flows, as well
+ * uncovers circumstances, activities, sharing needs and flows, as well
  * as issues (attached to elements).
  * 
  * @author jf
@@ -98,7 +98,7 @@ public class Scenario extends AbstractElement {
     }
 
     // TODO
-    public List<Situation> getSituations() {
+    public List<Circumstance> getCircumstances() {
         return null;
     }
 

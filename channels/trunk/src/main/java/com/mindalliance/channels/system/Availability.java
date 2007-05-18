@@ -16,8 +16,8 @@ import com.mindalliance.channels.util.TimePeriod;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  *
- * @composed - normal    * Situation
- * @composed - exception * Situation
+ * @composed - normal    * Circumstance
+ * @composed - exception * Circumstance
  */
 public class Availability {
 

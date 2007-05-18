@@ -6,9 +6,14 @@ package com.mindalliance.channels.data.elements.resources;
 import com.mindalliance.channels.data.Resource;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.elements.scenario.Situation;
+import com.mindalliance.channels.data.elements.scenario.Circumstance;
 import com.mindalliance.channels.util.GUID;
 
+/**
+ * Base implementation for resources
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
+ */
 public abstract class AbstractResource extends AbstractElement implements
         Resource {
 
@@ -38,7 +43,7 @@ public abstract class AbstractResource extends AbstractElement implements
         return getTypeSet().getDescriptor();
     }
 
-    public boolean isOperationalIn( Situation situation ) {
+    public boolean isOperationalIn( Circumstance circumstance ) {
         return false;
     }
 

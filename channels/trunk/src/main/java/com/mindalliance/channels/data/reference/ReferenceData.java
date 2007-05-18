@@ -12,11 +12,13 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  * 
  * @author jf
  */
-public class ReferenceData extends AbstractJavaBean implements Named, Described {
+abstract public class ReferenceData extends AbstractJavaBean implements Named, Described {
     
     private String name;
     private String description;
-
+    
+    public ReferenceData() {}
+    
     public int compareTo( Named o ) {
         return name.compareTo( o.getName() );
     }
@@ -54,7 +56,6 @@ public class ReferenceData extends AbstractJavaBean implements Named, Described 
     public void setName( String name ) {
         this.name = name;
     }
-
 
 
 }

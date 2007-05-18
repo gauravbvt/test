@@ -13,7 +13,7 @@ import com.mindalliance.channels.data.support.LatLong;
  * 
  * @author jf
  */
-public class Location extends ReferenceData {
+public class Location extends TypedReferenceData {
 
     private LatLong latLong;
     private Distance radius;

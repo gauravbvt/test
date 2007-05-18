@@ -5,13 +5,11 @@ package com.mindalliance.channels.data.reference;
 
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-
 import com.mindalliance.channels.data.Resource;
 import com.mindalliance.channels.data.elements.scenario.Event;
+import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.data.support.Pattern;
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.data.support.TypeSet;
 
 /**
  * A specification for situations; during what event they occur, what
@@ -19,36 +17,21 @@ import com.mindalliance.channels.util.GUID;
  * 
  * @author jf
  */
-public class Environment extends ReferenceData {
+public class Environment extends TypedReferenceData {
 
-    public class TriggerCondition {
-
-        private Pattern<Event> eventPattern;
-
-        public boolean isTriggeredBy( Event event ) {
-            return eventPattern.matches( event );
-        }
-
-        /**
-         * @return the eventPattern
-         */
-        public Pattern<Event> getEventPattern() {
-            return eventPattern;
-        }
-
-        /**
-         * @param eventPattern the eventPattern to set
-         */
-        public void setEventPattern( Pattern<Event> eventPattern ) {
-            this.eventPattern = eventPattern;
-        }
-    }
-
-    private List<TriggerCondition> triggerConditions; // Event
-                                                        // patterns
+    // What kind of event triggers this environment
+    private Pattern<Event> triggerCondition;  // An event pattern
+    // How long this environment stays in effect
+    private Duration duration; // if null, then use the trigger event's duration
+    // The type of location that minimally encompasses the location of the trigger event.
+    private TypeSet compasss = new TypeSet(Type.LOCATION, TypeSet.SINGLETON);
+    // The normally inoperational resources that become operational
     private List<Resource> availableResources;
+    // The normally operational resources that become inoperational
     private List<Resource> unavailableResources;
+    // The normally inoperative policies that become operative
     private List<Policy> enforcedPolicies;
+    // The normally operative policies that become inoperative
     private List<Policy> unenforcedPolicies;
 
     /**
@@ -59,13 +42,7 @@ public class Environment extends ReferenceData {
      * @return
      */
     public boolean isTriggeredBy( final Event event ) {
-        return CollectionUtils.exists( triggerConditions, new Predicate() {
-
-            public boolean evaluate( Object object ) {
-                TriggerCondition triggerCondition = (TriggerCondition) object;
-                return triggerCondition.isTriggeredBy( event );
-            }
-        } );
+        return triggerCondition.matches( event );
     }
 
     /**
@@ -180,32 +157,55 @@ public class Environment extends ReferenceData {
         unenforcedPolicies.remove( policy );
     }
 
+    
     /**
-     * @return the triggerConditions
+     * Return the value of triggerCondition.
      */
-    public List<TriggerCondition> getTriggerConditions() {
-        return triggerConditions;
+    public Pattern<Event> getTriggerCondition() {
+        return triggerCondition;
     }
 
+    
     /**
-     * @param triggerConditions the triggerConditions to set
+     * Set the value of triggerCondition.
+     * @param triggerCondition The new value of triggerCondition
      */
-    public void setTriggerConditions( List<TriggerCondition> triggerConditions ) {
-        this.triggerConditions = triggerConditions;
+    public void setTriggerCondition( Pattern<Event> triggerCondition ) {
+        this.triggerCondition = triggerCondition;
     }
 
+    
     /**
-     * @param triggerCondition
+     * Return the value of compasss.
      */
-    public void addTriggerCondition( TriggerCondition triggerCondition ) {
-        triggerConditions.add( triggerCondition );
+    public TypeSet getCompasss() {
+        return compasss;
     }
 
+    
     /**
-     * @param triggerCondition
+     * Set the value of compasss.
+     * @param compasss The new value of compasss
      */
-    public void removeTriggerCondition( TriggerCondition triggerCondition ) {
-        triggerConditions.remove( triggerCondition );
+    public void setCompasss( TypeSet compasss ) {
+        this.compasss = compasss;
+    }
+
+    
+    /**
+     * Return the value of duration.
+     */
+    public Duration getDuration() {
+        return duration;
+    }
+
+    
+    /**
+     * Set the value of duration.
+     * @param duration The new value of duration
+     */
+    public void setDuration( Duration duration ) {
+        this.duration = duration;
     }
 
 }

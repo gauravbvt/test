@@ -12,33 +12,32 @@ import com.mindalliance.channels.util.GUID;
 
 /**
  * A realized environment, triggered by an event and in effect for the
- * duration of the event. For the duration of the situation, the
+ * duration of the event. For the duration of the circumstance, the
  * operationality of some resources and the activation of some
- * policies differ from the default case. Situations can be composed
+ * policies differ from the default case. Circumstances can be composed
  * (commutatively) when they co-occur to determine what the resulting
  * resource and policy environment is.
  * 
  * @author jf
  */
-public class Situation extends AbstractOccurrence {
+public class Circumstance extends AbstractOccurrence {
 
     /**
      * The realized environment
      */
-    private Environment environment; // set for "atomic" situations
-    private Event trigger; // set for "atomic" situations
-    private List<Situation> components; // set for "composed"
-                                        // situations
+    private Environment environment; // set for "atomic" circumstances
+    private Event trigger; // set for "atomic" circumstances
+    private List<Circumstance> components; // set for "composed" circumstances
 
-    public Situation() {
+    public Circumstance() {
         super();
     }
 
-    public Situation( GUID guid ) {
+    public Circumstance( GUID guid ) {
         super( guid );
     }
 
-    public Situation composeWith( Situation situation ) {
+    public Circumstance composeWith( Circumstance circumstance ) {
         return null;
     }
 
@@ -53,14 +52,14 @@ public class Situation extends AbstractOccurrence {
     /**
      * @return the components
      */
-    public List<Situation> getComponents() {
+    public List<Circumstance> getComponents() {
         return components;
     }
 
     /**
      * @param components the components to set
      */
-    public void setComponents( List<Situation> components ) {
+    public void setComponents( List<Circumstance> components ) {
         this.components = components;
     }
 
