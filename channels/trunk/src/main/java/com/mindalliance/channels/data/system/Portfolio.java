@@ -6,6 +6,7 @@ package com.mindalliance.channels.data.system;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.acegisecurity.annotation.Secured;
 
@@ -32,7 +33,7 @@ public class Portfolio extends AbstractQueryable implements PortfolioService {
     /**
      * @return the projects
      */
-    @Secured("ROLE_RUN_AS_SYSTEM")
+    @Secured( {"ROLE_ADMIN", "ROLE_RUN_AS_SYSTEM"})
     public Set<Project> getProjects() {
         return projects;
     }
@@ -40,7 +41,7 @@ public class Portfolio extends AbstractQueryable implements PortfolioService {
     /**
      * Return the projects of the authenticated user
      */
-    public List<Project> getUserProjects() {
+    public Set<Project> getUserProjects() {
         return getProjects( getAuthenticatedUser() );
     }
 
@@ -72,8 +73,8 @@ public class Portfolio extends AbstractQueryable implements PortfolioService {
      * Get the projects a user participates in
      */
     @Secured("ROLE_ADMIN")
-    public List<Project> getProjects( User user ) {
-        List<Project> visible = new ArrayList<Project>();
+    public Set<Project> getProjects( User user ) {
+        Set<Project> visible = new TreeSet<Project>();
         if ( user != null ) {
             for ( Project project : projects ) {
                 if ( project.hasParticipant( user ) ) {

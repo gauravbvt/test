@@ -13,11 +13,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.project.Model;
 import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.data.system.Portfolio;
 import com.mindalliance.channels.data.system.Registry;
+import com.mindalliance.channels.services.PortfolioService;
+import com.mindalliance.channels.services.RegistryService;
 import com.mindalliance.channels.services.SystemService;
 
 
@@ -50,9 +53,9 @@ public class ApplicationContextTest {
 		Assert.assertNotNull("Got a HistoryService", ss.getHistoryService());
 		Assert.assertNotNull("Got a LibraryService", ss.getLibraryService());
 
-        com.mindalliance.channels.data.system.System system = ss.getSystem();
+        SystemService systemService = Channels.getSystemService();
 
-        Registry r = system.getRegistry();
+        RegistryService r = systemService.getRegistryService();
         Set<User> admins = r.getAdministrators();
         Iterator<User> adminItor = admins.iterator();
 
@@ -70,21 +73,14 @@ public class ApplicationContextTest {
         	java.lang.System.out.println(userItor.next().getName());
         }
 
-        java.lang.System.out.println("system of the new: " + system );
-        java.lang.System.out.println("registry: " + system.getRegistry() );
-        java.lang.System.out.println("directory: " + system.getDirectory() );
-        java.lang.System.out.println("history: " + system.getHistory() );
-        java.lang.System.out.println("library: " + system.getLibrary() );
-        java.lang.System.out.println("portfolio: " + system.getPortfolio() );
+        PortfolioService p = ss.getPortfolioService();
 
-        Portfolio p = system.getPortfolio();
-
-        List<Project> projs = p.getProjects();
+        Set<Project> projs = p.getProjects();
         Iterator<Project> pItor = projs.iterator();
         while(pItor.hasNext()) {
         	Project proj = pItor.next();
         	java.lang.System.out.println("Project: " + proj.getName());
-        	List<Model> models = proj.getModels();
+        	Set<Model> models = proj.getModels();
         	Iterator<Model> modelsItor = models.iterator();
 
         	while(modelsItor.hasNext()) {

@@ -3,7 +3,10 @@
  */
 package com.mindalliance.channels.data.elements.project;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -115,7 +118,7 @@ public class Project extends AbstractElement {
     }
 
     private TypeSet missions = new TypeSet( Type.MISSION );
-    private List<Model> models;
+    private Set<Model> models;
     private List<Participation> participations;
     private List<InScope> inScopes;
 
@@ -125,6 +128,9 @@ public class Project extends AbstractElement {
 
     public Project( GUID guid ) {
         super( guid );
+        models = new TreeSet<Model>();
+        participations = new ArrayList<Participation>();
+        inScopes = new ArrayList<InScope>();
     }
 
     /**
@@ -189,14 +195,14 @@ public class Project extends AbstractElement {
     /**
      * @return the models
      */
-    public List<Model> getModels() {
+    public Set<Model> getModels() {
         return models;
     }
 
     /**
      * @param models the models to set
      */
-    public void setModels( List<Model> models ) {
+    public void setModels( Set<Model> models ) {
         this.models = models;
     }
 

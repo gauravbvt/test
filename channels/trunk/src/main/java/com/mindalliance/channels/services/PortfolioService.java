@@ -4,15 +4,20 @@
 package com.mindalliance.channels.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.acegisecurity.annotation.Secured;
 
-import com.mindalliance.channels.data.elements.project.Model;
 import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.User;
 
 public interface PortfolioService extends Service {
 
+    /**
+     * Get all projects
+     */
+    @Secured( {"ROLE_ADMIN", "ROLE_RUN_AS_SYSTEM"})
+    public Set<Project>getProjects();
     /**
      * Get all projects visible to a user.
      * 
@@ -20,12 +25,13 @@ public interface PortfolioService extends Service {
      * @return
      */
     @Secured( "ROLE_USER")
-    List<Project> getProjects( User user );
+    Set<Project> getProjects( User user );
 
     /**
      * Return the projects of the authenticated user
      */
-   public List<Project> getUserProjects();
+    @Secured( "ROLE_USER")
+   public Set<Project> getUserProjects();
     
     /**
      * Test if given user is a manager of this project.
