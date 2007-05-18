@@ -21,7 +21,7 @@ import org.drools.rule.Package;
 import org.springframework.context.Lifecycle;
 
 import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.Model;
+import com.mindalliance.channels.data.elements.project.Model;
 
 /**
  * Encapsulation of the DROOLS engine.
@@ -106,7 +106,7 @@ public class RulesEngine implements Lifecycle {
 
             this.workingMemory.fireAllRules();
             logger.info( "Rules engine started" );
-            
+
         } catch ( Exception e ) {
             logger.error( "Unable to start rules engine", e );
         }
@@ -127,7 +127,7 @@ public class RulesEngine implements Lifecycle {
         if ( getModel() == null )
             throw new IllegalStateException( "A model is required" );
 
-        for ( JavaBean b : getModel().getAssertableObjects() )
+        for ( JavaBean b : getModel().getAssertions() )
             this.workingMemory.assertObject( b, true );
     }
 

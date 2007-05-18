@@ -1,4 +1,4 @@
-package com.mindalliance.channels.system;
+package com.mindalliance.channels;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -18,7 +18,6 @@ import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.services.PortfolioService;
 import com.mindalliance.channels.services.RegistryService;
 import com.mindalliance.channels.services.SystemService;
-
 
 /**
  * A Unit Test for exploring the new data model structure as
@@ -53,16 +52,16 @@ public class ApplicationContextTest {
         Set<User> admins = r.getAdministrators();
         Iterator<User> adminItor = admins.iterator();
 
-        System.out.println("Administrators:");
-        System.out.println("---------------");
+        java.lang.System.out.println("Administrators:");
+        java.lang.System.out.println("---------------");
         while(adminItor.hasNext()) {
         	java.lang.System.out.println(adminItor.next().getName());
         }
 
         Set<User> users = r.getUsers();
         Iterator<User> userItor = users.iterator();
-        System.out.println("Users:");
-        System.out.println("------");
+        java.lang.System.out.println("Users:");
+        java.lang.System.out.println("------");
         while(userItor.hasNext()) {
         	java.lang.System.out.println(userItor.next().getName());
         }

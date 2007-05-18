@@ -6,8 +6,8 @@ package com.mindalliance.channels.reference;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.model.Exchange;
-import com.mindalliance.channels.system.Organization;
+import com.mindalliance.channels.data.elements.resources.Organization;
+import com.mindalliance.channels.rules.Exchange;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**

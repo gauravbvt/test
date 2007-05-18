@@ -1,9 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.system;
-
-import static org.junit.Assert.*;
+package com.mindalliance.channels.data.user;
 
 import java.beans.PropertyVetoException;
 
@@ -12,7 +10,7 @@ import org.acegisecurity.GrantedAuthorityImpl;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mindalliance.channels.data.user.UserImpl;
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
