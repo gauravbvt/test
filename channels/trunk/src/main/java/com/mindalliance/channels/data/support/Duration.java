@@ -7,12 +7,12 @@ import java.io.Serializable;
 
 /**
  * A duration in time.
- * 
+ *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision: 103 $
  * @opt attributes
  */
-public class Duration implements Serializable, Comparable {
+public class Duration implements Serializable, Comparable<Duration> {
 
     /**
      * A unit of time. Default is msecs.
@@ -34,6 +34,11 @@ public class Duration implements Serializable, Comparable {
         unit = Unit.msec;
     }
 
+    /**
+     * Default constructor.
+     * @param number a number
+     * @param unit the unit
+     */
     public Duration( double number, Unit unit ) {
         this.number = number;
         this.unit = unit;
@@ -48,10 +53,9 @@ public class Duration implements Serializable, Comparable {
 
     /**
      * Set the value of number.
-     * 
      * @param number The new value of number
      */
-    public void setNumber( int number ) {
+    public void setNumber( double number ) {
         this.number = number;
     }
 
@@ -64,7 +68,6 @@ public class Duration implements Serializable, Comparable {
 
     /**
      * Set the value of unit.
-     * 
      * @param unit The new value of unit
      */
     public void setUnit( Unit unit ) {
@@ -72,39 +75,48 @@ public class Duration implements Serializable, Comparable {
     }
 
     /**
-     * Get duration in milliseconds
-     * 
-     * @return
+     * Get the duration in milliseconds.
      */
-    public double getMsecs() {
+    public long getMsecs() {
+        long factor;
         switch ( unit ) {
-        case msec:
-            return number;
-        case second:
-            return number * 1000;
-        case minute:
-            return number * 60 * 1000;
-        case hour:
-            return number * 60 * 60 * 1000;
-        case day:
-            return number * 24 * 60 * 60 * 1000;
-        default:
-            return number;
+            case second:
+                factor = 1000;
+                break;
+            case minute:
+                factor = 60 * 1000;
+                break;
+            case hour:
+                factor = 60 * 60 * 1000;
+                break;
+            case day:
+                factor = 24 * 60 * 60 * 1000;
+                break;
+            default:
+                factor = 1;
         }
 
+        return (long) ( number * factor );
     }
 
+    /**
+     * Add a duration to this one.
+     * @param duration the duration to add
+     * @return a new duration
+     */
     public Duration add( Duration duration ) {
         return new Duration( getMsecs() + duration.getMsecs(), Unit.msec );
     }
 
-    public int compareTo( Object obj ) {
+    /**
+     * Compare with another duration.
+     * @param other the duration
+     */
+    public int compareTo( Duration other ) {
         double msecs = getMsecs();
-        double otherMsecs = ( (Duration) obj ).getMsecs();
-        if ( msecs < otherMsecs )
-            return -1;
-        if ( msecs > otherMsecs )
-            return 1;
-        return 0;
+        double otherMsecs = other.getMsecs();
+        return msecs < otherMsecs ? -1
+             : msecs > otherMsecs ?  1
+             : 0;
     }
 }

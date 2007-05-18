@@ -3,8 +3,8 @@
 
 package com.mindalliance.channels.ui;
 
-import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.Date;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Box;
@@ -16,10 +16,10 @@ import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 
-import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.system.Alert;
-import com.mindalliance.channels.system.SystemImpl;
+import com.mindalliance.channels.data.user.Alert;
+import com.mindalliance.channels.services.RegistryService;
+import com.mindalliance.channels.services.SystemService;
 
 /**
  * The alert portion of the desktop.
@@ -31,14 +31,14 @@ public class AlertPane extends Box {
 
     private static final String LIST_HEIGHT = "52px";
     private User user;
-    private System system;
+    private SystemService system;
 
     /**
      * Default constructor.
      * @param user the user
      * @param system the system
      */
-    public AlertPane( User user, System system ) {
+    public AlertPane( User user, SystemService system ) {
         super();
         this.user = user;
         this.system = system;
@@ -49,7 +49,7 @@ public class AlertPane extends Box {
 
         final Hbox hbox = new Hbox();
         hbox.setWidth( "100%" );
-        hbox.appendChild( createList( system, user ) );
+        hbox.appendChild( createList() );
         hbox.appendChild( createIcon() );
         appendChild( hbox );
     }
@@ -67,10 +67,8 @@ public class AlertPane extends Box {
 
     /**
      * Create the list of alerts.
-     * @param system the system
-     * @param user the current user
      */
-    private Listbox createList( System system, User user ) {
+    private Listbox createList() {
         final Listbox listbox = new Listbox();
         listbox.setHeight( LIST_HEIGHT );
 
@@ -81,24 +79,23 @@ public class AlertPane extends Box {
         listhead.appendChild( listheader );
         listbox.appendChild( listhead );
 
-        Timestamp now =
-            new Timestamp( java.lang.System.currentTimeMillis() );
+        Date now = new Date( java.lang.System.currentTimeMillis() );
 
-        // TODO remove cast, fix interfaces, etc...
-        for ( Alert alert : ( (SystemImpl) system ).getAlerts() ) {
+        final RegistryService registry = getSystem().getRegistryService();
+        for ( Alert alert : registry.getAlerts( getUser() ) ) {
             final Listitem listitem = new Listitem();
-            Listcell time = new Listcell( delta( now, alert.getWhen() ) );
+            Listcell time = new Listcell( delta( now, alert.getTimestamp() ) );
             switch ( alert.getPriority() ) {
-                case Medium:
+                case MEDIUM:
                     time.setSclass( "yellow_alert" ); break;
-                case High:
+                case HIGH:
                     time.setSclass( "red_alert" ); break;
                 default:
                     time.setSclass( "green_alert" ); break;
             }
 
             listitem.appendChild( time );
-            listitem.appendChild( new Listcell( alert.getWhat() ) );
+            listitem.appendChild( new Listcell( alert.getDescription() ) );
             listbox.appendChild( listitem );
         }
 
@@ -110,7 +107,7 @@ public class AlertPane extends Box {
      * @param now the current time
      * @param when the relative time
      */
-    private String delta( Timestamp now, Timestamp when ) {
+    private String delta( Date now, Date when ) {
         long number = now.getTime() - when.getTime();
 
         final long[] chunks = new long[]{
@@ -137,14 +134,14 @@ public class AlertPane extends Box {
     /**
      * Get the system object.
      */
-    public final System getSystem() {
+    public final SystemService getSystem() {
         return this.system;
     }
 
     /**
      * Get the current user.
      */
-    public User getUser() {
+    public final User getUser() {
         return this.user;
     }
 }

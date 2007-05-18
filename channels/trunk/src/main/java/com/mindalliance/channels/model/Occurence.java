@@ -5,6 +5,7 @@ package com.mindalliance.channels.model;
 
 import java.sql.Timestamp;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.util.Area;
 import com.mindalliance.channels.util.Duration;
 
@@ -23,6 +24,7 @@ public abstract class Occurence extends ScenarioElement {
     private RelativeTimePoint when;
     private RelativeTimePoint until;
     private Area where;
+    private ScenarioElement cause;
 
     /**
      * Default constructor.
@@ -72,6 +74,11 @@ public abstract class Occurence extends ScenarioElement {
     /**
      * Return the value of where.
      */
+    @DisplayAs(
+            direct = "located in {1}",
+            reverse = "has occurence {1}",
+            reverseMany = "has occurences:"
+            )
     public Area getWhere() {
         return this.where;
     }
@@ -82,6 +89,26 @@ public abstract class Occurence extends ScenarioElement {
      */
     public void setWhere( Area where ) {
         this.where = where;
+    }
+
+    /**
+     * Return the value of cause.
+     */
+    @DisplayAs(
+            direct = "caused by {1}",
+            reverse = "causes {1}",
+            reverseMany = "causes:"
+            )
+    public ScenarioElement getCause() {
+        return this.cause;
+    }
+
+    /**
+     * Set the value of cause.
+     * @param cause The new value of cause
+     */
+    public void setCause( ScenarioElement cause ) {
+        this.cause = cause;
     }
 
     //=============================================

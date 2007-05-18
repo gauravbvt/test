@@ -7,10 +7,9 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Html;
 
-import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
-
 import com.mindalliance.channels.search.ui.SearchWindowManager;
+import com.mindalliance.channels.services.SystemService;
 
 /**
  * The main desktop's toolbar.
@@ -20,19 +19,14 @@ import com.mindalliance.channels.search.ui.SearchWindowManager;
  */
 public class Toolbar extends Hbox {
 
-    private User user;
-    private System system;
-
     /**
      * Default constructor.
      *
      * @param user the user of this toolbar
      * @param system the system behind the scene
      */
-    public Toolbar( User user, System system ) {
+    public Toolbar( final User user, final SystemService system ) {
         super();
-        this.user = user;
-        this.system = system;
 
         setSclass( "channels_toolbar" );
         setHeight( "40px" );
@@ -73,25 +67,12 @@ public class Toolbar extends Hbox {
         for ( String[] spec : icons ) {
             Button button = new Button( spec[0], spec[1] );
             button.setOrient( "vertical" );
-            if ( spec[0].equals("Search") ) {
-            	button.addEventListener("onClick", new SearchWindowManager());
-            }
+            if ( spec[0].equals( "Search" ) )
+                button.addEventListener(
+                    "onClick", new SearchWindowManager() );
+
             iconbar.appendChild( button );
         }
         return iconbar;
-    }
-
-    /**
-     * Return the value of system.
-     */
-    public System getSystem() {
-        return this.system;
-    }
-
-    /**
-     * Return the value of user.
-     */
-    public User getUser() {
-        return this.user;
     }
 }

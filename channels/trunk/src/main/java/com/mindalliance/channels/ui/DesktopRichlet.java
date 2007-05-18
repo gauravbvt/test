@@ -28,7 +28,6 @@ import org.zkoss.zul.Tabpanels;
 import org.zkoss.zul.Tabs;
 import org.zkoss.zul.Vbox;
 
-import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.services.SystemService;
 
@@ -81,26 +80,9 @@ public class DesktopRichlet extends GenericRichlet {
     }
 
     /**
-     * Get the system object given a page.
-     * @param page the page
-     * @return the current system object
-     */
-    private System getSystem( Page page ) {
-        Session zkSession = page.getDesktop().getSession();
-        HttpSession httpSession = (HttpSession) zkSession.getNativeSession();
-        ServletContext servletContext = httpSession.getServletContext();
-        ApplicationContext appContext =
-            (ApplicationContext) servletContext.getAttribute(
-                "org.springframework.web.context.WebApplicationContext.ROOT" );
-
-        return (System) appContext.getBean( "system" );
-    }
-
-    /**
      * Get the SystemService instance associated with the page.
      * @return the SystemService instance
      */
-
     private SystemService getSystemService() {
         Session zkSession = Executions.getCurrent().getDesktop().getSession();
         HttpSession httpSession = (HttpSession) zkSession.getNativeSession();
@@ -108,7 +90,7 @@ public class DesktopRichlet extends GenericRichlet {
         ApplicationContext appContext =
             (ApplicationContext) servletContext.getAttribute(
                 "org.springframework.web.context.WebApplicationContext.ROOT" );
-        return (SystemService) appContext.getBean("systemservice");
+        return (SystemService) appContext.getBean( "systemservice" );
     }
 
     /**
@@ -117,8 +99,7 @@ public class DesktopRichlet extends GenericRichlet {
      */
     public void service( final Page page ) {
         final User user = getUser();
-        final System system = getSystem( page );
-        final SystemService sysService = getSystemService();
+        final SystemService system = getSystemService();
 
         page.setTitle( "Channels" );
 
@@ -154,7 +135,7 @@ public class DesktopRichlet extends GenericRichlet {
      * @param user the current user
      * @param system the system
      */
-    private Vbox createDesktop( Page page, User user, System system ) {
+    private Vbox createDesktop( Page page, User user, SystemService system ) {
         final Vbox window = new Vbox();
         window.setPage( page );
         window.setWidth( "100%" );
@@ -194,7 +175,7 @@ public class DesktopRichlet extends GenericRichlet {
      */
     private Component createAccordion(
             int maxHeight,
-            User user, System system, Box canvas ) {
+            User user, SystemService system, Box canvas ) {
 
         final int tabContentHeight = maxHeight - FIXED_ACCORDION_HEIGHT;
         AccordionTab[] tabDefs = new AccordionTab[] {

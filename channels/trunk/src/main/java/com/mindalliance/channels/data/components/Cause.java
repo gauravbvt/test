@@ -1,27 +1,34 @@
-/*
- * Created on May 1, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.components;
 
 import com.mindalliance.channels.data.Occurrence;
-import com.mindalliance.channels.util.AbstractJavaBean;
 import com.mindalliance.channels.data.support.Duration;
+import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
  * The cause of an occurrence which is either the start or end of an
  * occurrence. The creation of the effect may be delayed (e.g. event
- * begins 2 minutes after the task starts)
- * 
- * @author jf
+ * begins 2 minutes after the task starts).
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
+ * @param <T> the specific type of occurence
  */
 public class Cause<T extends Occurrence> extends AbstractJavaBean {
 
-    private boolean start; // Is the cause the start of the
-                            // occurrence or the end?
-    private Duration delay; // How long after the start or end of the
-                            // occurrence before the event begins
+    /** Is the cause the start of the occurrence or the end? */
+    private boolean start;
+
+    /** How long after the start or end of the occurrence before
+     * the event begins. */
+    private Duration delay;
     private T occurrence;
 
+    /**
+     * Default constructor.
+     */
     public Cause() {
         start = true;
         delay = new Duration();
@@ -29,14 +36,13 @@ public class Cause<T extends Occurrence> extends AbstractJavaBean {
 
     /**
      * Get the occurrence that caused this.
-     * 
-     * @return
      */
     public T getOccurrence() {
         return occurrence;
     }
 
     /**
+     * Set the occurrence.
      * @param occurrence the occurrence to set
      */
     public void setOccurrence( T occurrence ) {
@@ -44,13 +50,14 @@ public class Cause<T extends Occurrence> extends AbstractJavaBean {
     }
 
     /**
-     * @return the delay
+     * Return the delay.
      */
     public Duration getDelay() {
         return delay;
     }
 
     /**
+     * Set the delay.
      * @param delay the delay to set
      */
     public void setDelay( Duration delay ) {
@@ -58,29 +65,37 @@ public class Cause<T extends Occurrence> extends AbstractJavaBean {
     }
 
     /**
-     * @return the isStart
+     * Return if this is a start cause.
      */
     public boolean isStart() {
-        return start == true;
+        return start;
     }
 
     /**
-     * @param isStart the isStart to set
+     * Set the start.
+     * @param start the isStart to set
      */
     public void setStart( boolean start ) {
         this.start = start;
     }
 
+    /**
+     * Get the time.
+     */
     public Duration getTime() {
         if ( occurrence == null )
             return delay;
         else {
             Duration occTime = occurrence.getTime();
-            if ( start )
-                return occTime.add( delay );
-            else
-                return occTime.add( occurrence.getDuration().add( delay ) );
+            return start ?
+                   occTime.add( delay )
+                 : occTime.add( occurrence.getDuration().add( delay ) );
         }
     }
 
+    /** Provide a nice printed form. */
+    @Override
+    public String toString() {
+        return getOccurrence().toString();
+    }
 }

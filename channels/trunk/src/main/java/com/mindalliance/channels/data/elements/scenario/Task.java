@@ -1,6 +1,6 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.ArrayList;
@@ -8,9 +8,7 @@ import java.util.List;
 
 import com.mindalliance.channels.data.Caused;
 import com.mindalliance.channels.data.Regulatable;
-import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
-import com.mindalliance.channels.data.elements.assertions.Excluded;
 import com.mindalliance.channels.data.elements.assertions.Regulated;
 import com.mindalliance.channels.data.reference.Type;
 import com.mindalliance.channels.data.support.TypeSet;
@@ -22,22 +20,33 @@ import com.mindalliance.channels.util.GUID;
  * task (sub-task). It can create knowledge, produce artefacts and
  * cause events and tasks. A Task represents a separate activity for
  * each role or team that matches one of its agents.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Task extends AbstractOccurrence implements Caused, Regulatable {
 
-    private List<Agent> agents;
+    private List<Agent> agents = new ArrayList<Agent>();
     private TypeSet objectives = new TypeSet( Type.OBJECTIVE );
 
+    /**
+     * Default constructor.
+     */
     public Task() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Task( GUID guid ) {
         super( guid );
     }
 
+    /**
+     * Get a list of regulated assertions.
+     */
     public List<Regulated> getRegulatedAssertions() {
         List<Regulated> regulatedAssertions = new ArrayList<Regulated>();
         for ( Assertion assertion : getAssertions() ) {
@@ -48,13 +57,14 @@ public class Task extends AbstractOccurrence implements Caused, Regulatable {
     }
 
     /**
-     * @return the agents
+     * Return the agents.
      */
     public List<Agent> getAgents() {
         return agents;
     }
 
     /**
+     * Set the agents.
      * @param agents the agents to set
      */
     public void setAgents( List<Agent> agents ) {
@@ -62,27 +72,30 @@ public class Task extends AbstractOccurrence implements Caused, Regulatable {
     }
 
     /**
-     * @param agent
+     * Add an agent.
+     * @param agent the agent
      */
     public void addAgent( Agent agent ) {
         agents.add( agent );
     }
 
     /**
-     * @param agent
+     * Remove an agent.
+     * @param agent the agent
      */
     public void removeAgent( Agent agent ) {
         agents.remove( agent );
     }
 
     /**
-     * @return the objectives
+     * Return the objectives.
      */
     public TypeSet getObjectives() {
         return objectives;
     }
 
     /**
+     * Set the objectives.
      * @param objectives the objectives to set
      */
     public void setObjectives( TypeSet objectives ) {

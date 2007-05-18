@@ -1,6 +1,6 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.project;
 
 import java.util.ArrayList;
@@ -20,148 +20,92 @@ import com.mindalliance.channels.data.support.Pattern;
 import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;
 
+/**
+ * A project.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
+ */
 public class Project extends AbstractElement {
 
-    public class Participation {
-
-        private Pattern<Role> rolePattern;
-
-        /**
-         * Whether a role matches the pattern for participation in the
-         * project.
-         * 
-         * @param role
-         * @return
-         */
-        public boolean allows( Role role ) {
-            return rolePattern.matches( role );
-        }
-
-        /**
-         * Whether any of the roles matches the pattern for
-         * participation in the project.
-         * 
-         * @param roles
-         * @return
-         */
-        public boolean allows( User user ) {
-            List<Role> roles = user.getRoles();
-            return CollectionUtils.exists( roles, new Predicate() {
-
-                public boolean evaluate( Object object ) {
-                    Role role = (Role) object;
-                    return allows( role );
-                }
-            } );
-        }
-
-        /**
-         * @return the rolePattern
-         */
-        public Pattern<Role> getRolePattern() {
-            return rolePattern;
-        }
-
-        /**
-         * @param rolePattern the rolePattern to set
-         */
-        public void setRolePattern( Pattern<Role> rolePattern ) {
-            this.rolePattern = rolePattern;
-        }
-    }
-
-    public class InScope {
-
-        private Pattern<Organization> organizationPattern;
-
-        public boolean includes( Organization organization ) {
-            if ( organizationPattern.matches( organization ) ) {
-                return true;
-            }
-            else {
-                return CollectionUtils.exists( organization.getParents(),
-                        new Predicate() {
-
-                            public boolean evaluate( Object object ) {
-                                Organization organization = (Organization) object;
-                                return organizationPattern.matches( organization );
-                            }
-                        } );
-            }
-        }
-
-        /**
-         * Whether the organization falls within the scope of the
-         * project.
-         * 
-         * @param organization
-         * @return
-         */
-        public boolean isInScope( Organization organization ) {
-            return organizationPattern.matches( organization );
-        }
-
-        /**
-         * @return the organizationPattern
-         */
-        public Pattern<Organization> getOrganizationPattern() {
-            return organizationPattern;
-        }
-
-        /**
-         * @param organizationPattern the organizationPattern to set
-         */
-        public void setOrganizationPattern(
-                Pattern<Organization> organizationPattern ) {
-            this.organizationPattern = organizationPattern;
-        }
-    }
-
     private TypeSet missions = new TypeSet( Type.MISSION );
-    private Set<Model> models;
-    private List<Participation> participations;
-    private List<InScope> inScopes;
+    private Set<Model> models = new TreeSet<Model>();
+    private List<Participation> participations =
+                                    new ArrayList<Participation>();
+    private List<InScope> inScopes = new ArrayList<InScope>();
 
+    /**
+     * Default constructor.
+     */
     public Project() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid for the project
+     */
     public Project( GUID guid ) {
         super( guid );
-        models = new TreeSet<Model>();
-        participations = new ArrayList<Participation>();
-        inScopes = new ArrayList<InScope>();
     }
 
     /**
-     * Return whether the user matches at least one of the
-     * participation criteria.
-     * 
-     * @param authenticatedUser
-     * @return
+     * Return the missions.
      */
-    public boolean hasParticipant( final User authenticatedUser ) {
-        if ( participations == null || participations.isEmpty() ) {
-            return true; // empty or null means no restriction
-        }
-        else {
-            return CollectionUtils.exists( participations, new Predicate() {
-
-                public boolean evaluate( Object object ) {
-                    Participation participation = (Participation) object;
-                    return participation.allows( authenticatedUser );
-                }
-            } );
-        }
+    public TypeSet getMissions() {
+        return missions;
     }
 
+    /**
+     * Set the missions.
+     * @param missions the missions to set
+     */
+    public void setMissions( TypeSet missions ) {
+        this.missions = missions;
+    }
+
+    /**
+     * Return the models.
+     */
+    public Set<Model> getModels() {
+        return models;
+    }
+
+    /**
+     * Set the models.
+     * @param models the models to set
+     */
+    public void setModels( Set<Model> models ) {
+        this.models = new TreeSet<Model>( models );
+    }
+
+    /**
+     * Add a model.
+     * @param model the model
+     */
+    public void addModel( Model model ) {
+        models.add( model );
+    }
+
+    /**
+     * Remove a model.
+     * @param model the model
+     */
+    public void removeModel( Model model ) {
+        models.remove( model );
+    }
+
+    /**
+     * Test if an organization participates in this project.
+     * @param organization the organization
+     */
     public boolean includes( final Organization organization ) {
         if ( inScopes == null || inScopes.isEmpty() ) {
-            return true; // empty or null means no restriction
-        }
-        else {
-            return CollectionUtils.exists( inScopes, new Predicate() {
+            // empty or null means no restriction
+            return true;
 
+        } else {
+            return CollectionUtils.exists( inScopes, new Predicate() {
                 public boolean evaluate( Object object ) {
                     InScope inScope = (InScope) object;
                     return inScope.includes( organization );
@@ -170,50 +114,15 @@ public class Project extends AbstractElement {
         }
     }
 
-    public void addModel( Model model ) {
-        models.add( model );
-    }
-
-    public void removeModel( Model model ) {
-        models.remove( model );
-    }
-
     /**
-     * @return the missions
-     */
-    public TypeSet getMissions() {
-        return missions;
-    }
-
-    /**
-     * @param missions the missions to set
-     */
-    public void setMissions( TypeSet missions ) {
-        this.missions = missions;
-    }
-
-    /**
-     * @return the models
-     */
-    public Set<Model> getModels() {
-        return models;
-    }
-
-    /**
-     * @param models the models to set
-     */
-    public void setModels( Set<Model> models ) {
-        this.models = models;
-    }
-
-    /**
-     * @return the inScopes
+     * Return the organization criterias.
      */
     public List<InScope> getInScopes() {
         return inScopes;
     }
 
     /**
+     * Set the organization criterias.
      * @param inScopes the inScopes to set
      */
     public void setInScopes( List<InScope> inScopes ) {
@@ -221,27 +130,51 @@ public class Project extends AbstractElement {
     }
 
     /**
-     * @param inScope
+     * Add an organization criteria.
+     * @param inScope the criteria
      */
     public void addInScope( InScope inScope ) {
         inScopes.add( inScope );
     }
 
     /**
-     * @param inScope
+     * Remove an organization criteria.
+     * @param inScope the criteria
      */
     public void removeInScope( InScope inScope ) {
         inScopes.remove( inScope );
     }
 
     /**
-     * @return the participations
+     * Return whether the user matches at least one of the
+     * participation criteria.
+     *
+     * @param authenticatedUser the user
+     */
+    public boolean hasParticipant( final User authenticatedUser ) {
+        if ( participations == null || participations.isEmpty() ) {
+            // empty or null means no restriction
+            return true;
+
+        } else {
+            return CollectionUtils.exists( participations, new Predicate() {
+                public boolean evaluate( Object object ) {
+                    Participation participation = (Participation) object;
+                    return participation.allows( authenticatedUser );
+                }
+            } );
+        }
+    }
+
+    /**
+     * Return the role-based admission criterias.
      */
     public List<Participation> getParticipations() {
         return participations;
     }
 
     /**
+     * Set the role-based admission criterias.
      * @param participations the participations to set
      */
     public void setParticipations( List<Participation> participations ) {
@@ -249,17 +182,131 @@ public class Project extends AbstractElement {
     }
 
     /**
-     * @param participation
+     * Add a role-based admission criteria.
+     * @param participation the participation
      */
     public void addParticipation( Participation participation ) {
         participations.add( participation );
     }
 
     /**
-     * @param participation
+     * Remove a role-based admission criteria.
+     * @param participation the participation
      */
     public void removeParticipation( Participation participation ) {
         participations.remove( participation );
     }
 
+    /**
+     * Generic criteria for allowing participation in a project
+     * based on a user's roles.
+     */
+    public class Participation {
+
+        private Pattern<Role> rolePattern;
+
+        /**
+         * Default constructor.
+         */
+        public Participation() {
+        }
+
+        /**
+         * Whether a role matches the pattern for participation in the
+         * project.
+         *
+         * @param role the role
+         */
+        public boolean allows( Role role ) {
+            return rolePattern.matches( role );
+        }
+
+        /**
+         * Whether any of the roles matches the pattern for
+         * participation in the project for a user.
+         *
+         * @param user the user.
+         */
+        public boolean allows( User user ) {
+            List<Role> roles = user.getRoles();
+            return CollectionUtils.exists( roles, new Predicate() {
+                public boolean evaluate( Object object ) {
+                    Role role = (Role) object;
+                    return allows( role );
+                }
+            } );
+        }
+
+        /**
+         * Return the role pattern.
+         */
+        public Pattern<Role> getRolePattern() {
+            return rolePattern;
+        }
+
+        /**
+         * Set the role pattern.
+         * @param rolePattern the rolePattern to set
+         */
+        public void setRolePattern( Pattern<Role> rolePattern ) {
+            this.rolePattern = rolePattern;
+        }
+    }
+
+    /**
+     * Generic criteria for allowing users in a project.
+     */
+    public class InScope {
+
+        private Pattern<Organization> organizationPattern;
+
+        /**
+         * Default constructor.
+         */
+        public InScope() {
+        }
+
+        /**
+         * Test if an organization is matched by this pattern.
+         * @param organization the organization
+         */
+        public boolean includes( Organization organization ) {
+            if ( organizationPattern.matches( organization ) )
+                return true;
+
+            else {
+                return CollectionUtils.exists( organization.getParents(),
+                        new Predicate() {
+                            public boolean evaluate( Object object ) {
+                                Organization org = (Organization) object;
+                                return organizationPattern.matches( org );
+                            }
+                        } );
+            }
+        }
+
+        /**
+         * Whether the organization falls within the scope of the project.
+         * @param organization the organization
+         */
+        public boolean isInScope( Organization organization ) {
+            return organizationPattern.matches( organization );
+        }
+
+        /**
+         * Return the organizationPattern.
+         */
+        public Pattern<Organization> getOrganizationPattern() {
+            return organizationPattern;
+        }
+
+        /**
+         * Set the organization pattern.
+         * @param organizationPattern the organizationPattern to set
+         */
+        public void setOrganizationPattern(
+                Pattern<Organization> organizationPattern ) {
+            this.organizationPattern = organizationPattern;
+        }
+    }
 }

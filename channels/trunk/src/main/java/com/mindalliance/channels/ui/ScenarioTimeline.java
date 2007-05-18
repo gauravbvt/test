@@ -9,7 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.zkforge.timeline.Bandinfo;
 import org.zkforge.timeline.Timeline;
@@ -18,10 +19,11 @@ import org.zkforge.timeline.event.SelectEvent;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.EventListener;
 
-import com.mindalliance.channels.model.Occurence;
-import com.mindalliance.channels.model.Occurence.RelativeTimePoint;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Task;
+import com.mindalliance.channels.data.Caused;
+import com.mindalliance.channels.data.Occurrence;
+import com.mindalliance.channels.data.components.Cause;
+import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.data.elements.scenario.Product;
 
 /**
  * A timeline view of a scenario. Displays when events/tasks/etc... in
@@ -39,36 +41,44 @@ public class ScenarioTimeline extends Timeline {
     private static final float TRACK_GAP = 0.1f;
 
     private Scenario scenario;
-    private Occurence selectedOccurence;
+    private Caused selectedObject;
     private List<TimelineListener> selectionListeners;
-    private Map<String,Occurence> idMap;
+    private Map<String,Caused> idMap;
 
     private boolean initialized;
+    private IconManager iconManager;
 
     /**
      * Default constructor.
      * @param height the available height in pixels
+     * @param im the icon manager
      * @param page the page
      * @param scenario the scenario
      */
-    public ScenarioTimeline( int height,  Page page, Scenario scenario ) {
+    public ScenarioTimeline(
+            int height, IconManager im, Page page, Scenario scenario ) {
+
         super();
         this.scenario = scenario;
+        this.iconManager = im;
         setPage( page );
 
-        TimeZone timeZone = TimeZone.getTimeZone( "EDT" );
-        Date start = new Date();
+//        TimeZone timeZone = TimeZone.getTimeZone( "EDT" );
+        final Date start = new Date();
 
         final Bandinfo top = new Bandinfo();
-        top.setTimeZone( timeZone );
+//        top.setTimeZone( timeZone );
         top.setDate( start );
         top.setTrackHeight( TOP_TRACK_HEIGHT );
         top.setTrackGap( TRACK_GAP );
         top.setIntervalUnit( "minute" );
         top.setIntervalPixels( TOP_INTERVAL );
 
+//        final Hotzone topHz = new Hotzone();
+//        topHz.setMagnify( 5 );
+
         final Bandinfo bottom = new Bandinfo();
-        bottom.setTimeZone( timeZone );
+//        bottom.setTimeZone( timeZone );
         bottom.setDate( start );
         bottom.setIntervalUnit( "hour" );
         bottom.setTrackHeight( BOTTOM_TRACK_HEIGHT );
@@ -93,8 +103,7 @@ public class ScenarioTimeline extends Timeline {
             public void onEvent( org.zkoss.zk.ui.event.Event event ) {
                 SelectEvent se = (SelectEvent) event;
                 String id = se.getIds()[0];
-                java.lang.System.err.println( "id == " + id );
-                setSelectedOccurence( idMap.get( id ) );
+                setSelectedObject( idMap.get( id ) );
             }
         } );
 
@@ -106,7 +115,7 @@ public class ScenarioTimeline extends Timeline {
             public void onEvent( org.zkoss.zk.ui.event.Event event ) {
                 if ( !initialized ) {
                     initialized = true;
-                    populateTimeline( new Date() );
+                    populateTimeline( start );
                 }
             }
         } );
@@ -117,26 +126,32 @@ public class ScenarioTimeline extends Timeline {
      * @param start the origin of the timeline
      */
     void populateTimeline( Date start ) {
-        this.idMap = new HashMap<String,Occurence>();
+        this.idMap = new HashMap<String,Caused>();
 
-        List<ResolvedEvent> events = new ArrayList<ResolvedEvent>();
+        Set<ResolvedEvent> events = new TreeSet<ResolvedEvent>();
 
-        if ( getScenario() != null && getScenario().getOccurences() != null )
-            for ( Occurence event : getScenario().getOccurences() )
-                events.add( new ResolvedEvent( event, start ) );
+        if ( getScenario() != null ) {
+            if ( getScenario().getOccurrences() != null )
+                for ( Occurrence t : getScenario().getOccurrences() )
+                    events.add( new ResolvedEvent( t, start ) );
+            if ( getScenario().getProducts() != null )
+                for ( Product t : getScenario().getProducts() )
+                    events.add( new ResolvedEvent( t, start ) );
+        }
 
         for ( ResolvedEvent event : events ) {
-            OccurEvent occurence = new OccurEvent();
-            occurence.setText( event.getName() );
-            occurence.setDescription( event.getDescription() );
-            occurence.setIconUrl( event.getIcon() );
-            occurence.setStart( event.getStart() );
-            occurence.setDuration( event.isDuration() );
+            OccurEvent occurrence = new OccurEvent();
+            occurrence.setText( event.getName() );
+            occurrence.setDescription( event.getDescription() );
+            occurrence.setIconUrl(
+                getIconManager().getSmallIcon( event.getObject() ) );
+            occurrence.setStart( event.getStart() );
+            occurrence.setDuration( event.isDuration() );
             if ( event.isDuration() )
-                occurence.setEnd( event.getEnd() );
+                occurrence.setEnd( event.getEnd() );
 
-            idMap.put( occurence.getId(), event.getOccurence() );
-            addOccurEvent( occurence );
+            idMap.put( occurrence.getId(), event.getObject() );
+            addOccurEvent( occurrence );
         }
     }
 
@@ -148,19 +163,26 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
+     * Return the value of iconManager.
+     */
+    public IconManager getIconManager() {
+        return this.iconManager;
+    }
+
+    /**
      * Return the value of selection.
      */
-    public Occurence getSelectedOccurence() {
-        return this.selectedOccurence;
+    public Caused getSelectedObject() {
+        return this.selectedObject;
     }
 
     /**
      * Set the value of selection.
      * @param selection The new value of selection
      */
-    public void setSelectedOccurence( Occurence selection ) {
-        Occurence old = this.selectedOccurence;
-        this.selectedOccurence = selection;
+    public void setSelectedObject( Caused selection ) {
+        Caused old = this.selectedObject;
+        this.selectedObject = selection;
         fireSelectionChanged( old, selection );
     }
 
@@ -189,7 +211,7 @@ public class ScenarioTimeline extends Timeline {
     }
 
     private void fireSelectionChanged(
-            Occurence oldSelection, Occurence newSelection ) {
+            Caused oldSelection, Caused newSelection ) {
         if ( selectionListeners != null && oldSelection != newSelection ) {
             synchronized ( selectionListeners ) {
                 for ( TimelineListener listener : selectionListeners )
@@ -204,47 +226,59 @@ public class ScenarioTimeline extends Timeline {
      * Wrapper around an event to resolve actual dates/times to put relative
      * events in a absolute timeline.
      */
-    private static class ResolvedEvent  {
+    private static class ResolvedEvent implements Comparable<ResolvedEvent> {
 
-        private Occurence occurence;
+        private Caused object;
         private Date origin;
         private Date start;
         private Date end;
+        private String name;
+        private String description;
 
         /**
          * Default constructor.
-         * @param occurence the original event
+         * @param caused the model object
          * @param origin a fixed point in time
          */
-        public ResolvedEvent( Occurence occurence, Date origin ) {
+        public ResolvedEvent( Product caused, Date origin ) {
 
-            if ( occurence == null )
+            if ( caused == null )
                 throw new NullPointerException();
 
-            this.occurence = occurence;
+            this.object = caused;
             this.origin = origin;
+            this.description = caused.getDescription();
+            this.name = caused.getName();
         }
 
         /**
-         * Return an icon url for this event.
+         * Default constructor.
+         * @param caused the model object
+         * @param origin a fixed point in time
          */
-        public String getIcon() {
-            // TODO make the icon depend on the actual event type
-            return isDuration()? null : "images/16x16/nav_plain_red.png";
+        public ResolvedEvent( Occurrence caused, Date origin ) {
+
+            if ( caused == null )
+                throw new NullPointerException();
+
+            this.object = caused;
+            this.origin = origin;
+            this.description = caused.getDescription();
+            this.name = caused.getName();
         }
 
         /**
          * Return the label of this event.
          */
         public String getName() {
-            return getOccurence().getName();
+            return this.name;
         }
 
         /**
          * Return the description for the event.
          */
         public String getDescription() {
-            return getOccurence().getAbout();
+            return this.description;
         }
 
         /**
@@ -253,33 +287,27 @@ public class ScenarioTimeline extends Timeline {
         public Date getEnd() {
             if ( end == null )
                 end = isDuration() ?
-                    new Date(
-                        getStart().getTime()
-                        + getOccurence().getWhen().getDuration()
-                            .getMilliseconds()
-                    )
+                    new Date( getStart().getTime()
+                        + getObject().getDuration().getMsecs() )
                     : getStart();
 
             return end;
         }
 
         /**
-         * Return the endpoint for this event.
+         * Return the starting point for this event.
          */
         public Date getStart() {
-
             if ( start == null ) {
-                RelativeTimePoint when = getOccurence().getWhen();
-                if ( when != null && when.isRelative() ) {
+                Cause cause = getObject().getCause();
+                if ( cause != null ) {
                     // Relative to another occurence
-                    ResolvedEvent another =
-                        new ResolvedEvent( when.getTo(), origin );
+                    Occurrence basis = getObject().getCause().getOccurrence();
+                    ResolvedEvent another = new ResolvedEvent( basis, origin );
                     start = another.getEnd();
 
-                } else {
-                    // TODO Absolute... Use origin?
+                } else
                     start = origin;
-                }
             }
 
             return start;
@@ -290,14 +318,27 @@ public class ScenarioTimeline extends Timeline {
          * single point in time.
          */
         public boolean isDuration() {
-            return Task.class.isAssignableFrom( getOccurence().getClass() );
+            return getObject().getDuration().getMsecs() > 0;
         }
 
         /**
          * Return the value of occurence.
          */
-        public final Occurence getOccurence() {
-            return this.occurence;
+        public final Caused getObject() {
+            return this.object;
+        }
+
+        /**
+         * Sort by start, then reverse end, then name.
+         */
+        public int compareTo( ResolvedEvent o ) {
+            int result = getStart().compareTo( o.getStart() );
+            if ( result == 0 ) {
+                result = -1 * getEnd().compareTo( o.getEnd() );
+                if ( result == 0 )
+                    result = getName().compareTo( o.getName() );
+            }
+            return result;
         }
     }
 }

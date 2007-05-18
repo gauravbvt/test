@@ -1,8 +1,9 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.reference.Location;
@@ -11,51 +12,43 @@ import com.mindalliance.channels.util.GUID;
 
 /**
  * Something that happens in a scenario.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public abstract class AbstractOccurrence extends AbstractScenarioElement
         implements Occurrence {
 
-    private Duration duration;
+    private Duration duration = Duration.NONE;
     private Location location;
     private Cause cause;
 
+    /**
+     * Default constructor.
+     */
     public AbstractOccurrence() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public AbstractOccurrence( GUID guid ) {
         super( guid );
         cause = new Cause();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Occurrence#isIncident()
+    /**
+     * Test if this is an incident.
      */
     public boolean isIncident() {
-        return cause.getOccurrence() == null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Occurrence#getEnd()
-     */
-    public Duration getEnd() {
-        return getTime().add( duration );
+        return getCause() == null
+            || getCause().getOccurrence() == null;
     }
 
     /**
-     * Get cause
-     */
-    public Cause getCause() {
-        return cause;
-    }
-
-    /**
+     * Set the duration.
      * @param duration the duration to set
      */
     public void setDuration( Duration duration ) {
@@ -63,45 +56,87 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
     }
 
     /**
+     * Get the duration.
+     */
+    public Duration getDuration() {
+        return duration;
+    }
+
+    /**
+     * Test if this occurence starts after the end of another occurrence.
+     * @param occurrence the other occurrence
+     */
+    public boolean isAfter( Occurrence occurrence ) {
+        return getTime().getMsecs() > occurrence.getEnd().getMsecs();
+    }
+
+    /**
+     * Test if this occurence starts before the end of another occurrence.
+     * @param occurrence the other occurrence
+     */
+    public boolean isBefore( Occurrence occurrence ) {
+        return getTime().getMsecs() < occurrence.getEnd().getMsecs();
+    }
+
+    /**
+     * Test if this occurence starts and ends within the life of another
+     * occurrence.
+     * @param occurrence the other occurrence
+     */
+    public boolean isDuring( Occurrence occurrence ) {
+        return getTime().getMsecs() >= occurrence.getTime().getMsecs()
+                && getEnd().getMsecs() <= occurrence.getEnd().getMsecs();
+    }
+
+    /**
+     * Set the location.
      * @param location the location to set
      */
     public void setLocation( Location location ) {
         this.location = location;
     }
 
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public boolean isAfter( Occurrence occurrence ) {
-        return getTime().getMsecs() > occurrence.getEnd().getMsecs();
-    }
-
-    public boolean isBefore( Occurrence occurrence ) {
-        return getTime().getMsecs() < occurrence.getEnd().getMsecs();
-    }
-
-    public boolean isDuring( Occurrence occurrence ) {
-        return getTime().getMsecs() >= occurrence.getTime().getMsecs()
-                && getEnd().getMsecs() <= occurrence.getEnd().getMsecs();
-    }
-
+    /**
+     * Get the location of this occurrence.
+     */
+    @DisplayAs( direct = "located in {1}",
+                reverse = "includes {1}",
+                reverseMany = "includes:" )
     public Location getLocation() {
         return location;
     }
 
     /**
-     * @return the time
+     * Return the end time.
      */
-    public Duration getTime() {
-        return getCause().getTime();
+    public Duration getEnd() {
+        return getTime().add( duration );
     }
 
     /**
+     * Return the time.
+     */
+    public Duration getTime() {
+        return getCause() == null ?
+                Duration.NONE : getCause().getTime();
+    }
+
+    /**
+     * Set the cause.
      * @param cause the cause to set
      */
     public void setCause( Cause cause ) {
         this.cause = cause;
+    }
+
+    /**
+     * Get the cause.
+     */
+    @DisplayAs( direct = "caused by {1}",
+                reverse = "causes {1}",
+                reverseMany = "causes:" )
+    public Cause getCause() {
+        return this.cause;
     }
 
 }

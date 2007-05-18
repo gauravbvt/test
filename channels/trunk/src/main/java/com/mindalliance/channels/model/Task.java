@@ -6,6 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.reference.Type;
 
 /**
@@ -42,6 +43,12 @@ public class Task extends Occurence {
     /**
      * Return the value of outcomes.
      */
+    @DisplayAs(
+            direct = "has outcome {0}",
+            reverse = "outcome of {0}",
+            directMany = "outcomes:",
+            reverseMany = "outcome of:"
+            )
     public List<Outcome> getOutcomes() {
         return this.outcomes;
     }
@@ -55,8 +62,30 @@ public class Task extends Occurence {
     }
 
     /**
+     * Remove an outcome.
+     * @param outcome the outcome
+     */
+    public void removeOutcome( Outcome outcome ) {
+        this.outcomes.add( outcome );
+    }
+
+    /**
+     * Add an outcome.
+     * @param outcome the outcome
+     */
+    public void addOutcome( Outcome outcome ) {
+        this.outcomes.add( outcome );
+    }
+
+    /**
      * Return the value of responsibilities.
      */
+    @DisplayAs(
+            direct = "responsibility of {0}",
+            reverse = "responsible for {0}",
+            directMany = "responsibilities:",
+            reverseMany = "responsible for:"
+            )
     public List<Type> getResponsibilities() {
         return this.responsibilities;
     }

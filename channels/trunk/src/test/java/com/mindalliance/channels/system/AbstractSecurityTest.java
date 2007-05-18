@@ -15,12 +15,14 @@ import org.acegisecurity.providers.dao.DaoAuthenticationProvider;
 import org.junit.Before;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.web.context.support.StaticWebApplicationContext;
 
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.elements.project.Project;
+import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.user.UserImpl;
-import com.mindalliance.channels.project.ProjectImpl;
+import com.mindalliance.channels.services.SystemService;
 
 /**
  * A little harness to setup acegi security in unit tests.
@@ -38,13 +40,13 @@ import com.mindalliance.channels.project.ProjectImpl;
  */
 public abstract class AbstractSecurityTest {
     
-    protected SystemImpl system;
-    protected ProjectImpl project;
+    protected SystemService system;
+    protected Project project;
     protected Organization organization;
     protected UserImpl admin;
     protected UserImpl user;
     protected UserImpl manager;
-    protected UserImpl participant;
+    protected UserImpl guest;
     protected UserImpl liaison;
     
     protected ApplicationContext context;
@@ -52,45 +54,28 @@ public abstract class AbstractSecurityTest {
     @Before
     public void setUp() throws PropertyVetoException, UserExistsException {
         
-        admin       = new UserImpl( "Administrator", "admin", "admin", 
-                        new String[]{ "ROLE_USER", "ROLE_ADMIN" } );
-        user        = new UserImpl( "Joe User", "user", "user", 
-                        new String[]{ "ROLE_USER" } );
-        manager     = new UserImpl( "Ms Management", "manager", "manager", 
-                        new String[]{ "ROLE_USER" } );
-        participant = new UserImpl( "Participant", "participant", "participant", 
-                        new String[]{ "ROLE_USER" } );
-        liaison     = new UserImpl( "Liaison", "liaison", "liaison", 
-                        new String[]{ "ROLE_USER" } );
-        
-        
-        project = new ProjectImpl( "The Project" );
-        project.addManager( manager );
-        project.addParticipant( participant );
-        
-        organization = new Organization( "The Agency" );
-        organization.addLiaision( liaison );
-
-        StaticWebApplicationContext ctx = new StaticWebApplicationContext();
-        ctx.registerSingleton( "system", SystemImpl.class );
-
-        system = (SystemImpl) ctx.getBean( "system" );
-        system.addAdministrator( admin );
-        system.addUser( user );
-        system.addUser( manager );
-        system.addUser( participant );
-        system.addUser( liaison );
-        system.addProject( project );
-        system.addOrganization( organization );
+        StaticApplicationContext ctx = new StaticApplicationContext();
                 
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader( ctx );
+        xmlReader.loadBeanDefinitions(
+                new FileSystemResource( "src/main/webapp/WEB-INF/applicationContext.xml" ) );        
         xmlReader.loadBeanDefinitions(
                 new FileSystemResource( "src/main/webapp/WEB-INF/applicationContext-acegi.xml" ) );        
         xmlReader.loadBeanDefinitions(
                 new FileSystemResource( "src/main/webapp/WEB-INF/applicationContext-auth.xml" ) );        
 
-        // TODO make this work
         ctx.refresh();
+
+        system = (SystemService) ctx.getBean( "systemservice" );
+        admin = (UserImpl) ctx.getBean( "admin" );
+        user = (UserImpl) ctx.getBean( "user" );
+        manager = (UserImpl) ctx.getBean( "manager" );
+        liaison = (UserImpl) ctx.getBean( "liaison" );
+        guest = (UserImpl) ctx.getBean( "guest" );
+        organization = (Organization) ctx.getBean( "organization1" );
+
+        // TODO get a project managed by the manager
+//        project = system.getPortfolioService().getProjects( manager ).iterator().next();
         
         context = ctx;
     }
@@ -99,7 +84,7 @@ public abstract class AbstractSecurityTest {
 
         DaoAuthenticationProvider daoAuthenticationProvider =
             new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService( this.system );
+        daoAuthenticationProvider.setUserDetailsService( this.system.getRegistryService() );
 
         ProviderManager providerManager = new ProviderManager();
         providerManager.setProviders(

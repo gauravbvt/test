@@ -1,7 +1,6 @@
 package com.mindalliance.channels.system;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -13,12 +12,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.project.Model;
 import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.data.system.Portfolio;
-import com.mindalliance.channels.data.system.Registry;
 import com.mindalliance.channels.services.PortfolioService;
 import com.mindalliance.channels.services.RegistryService;
 import com.mindalliance.channels.services.SystemService;
@@ -53,22 +49,20 @@ public class ApplicationContextTest {
 		Assert.assertNotNull("Got a HistoryService", ss.getHistoryService());
 		Assert.assertNotNull("Got a LibraryService", ss.getLibraryService());
 
-        SystemService systemService = Channels.getSystemService();
-
-        RegistryService r = systemService.getRegistryService();
+        RegistryService r = ss.getRegistryService();
         Set<User> admins = r.getAdministrators();
         Iterator<User> adminItor = admins.iterator();
 
-        java.lang.System.out.println("Administrators:");
-        java.lang.System.out.println("---------------");
+        System.out.println("Administrators:");
+        System.out.println("---------------");
         while(adminItor.hasNext()) {
         	java.lang.System.out.println(adminItor.next().getName());
         }
 
         Set<User> users = r.getUsers();
         Iterator<User> userItor = users.iterator();
-        java.lang.System.out.println("Users:");
-        java.lang.System.out.println("------");
+        System.out.println("Users:");
+        System.out.println("------");
         while(userItor.hasNext()) {
         	java.lang.System.out.println(userItor.next().getName());
         }

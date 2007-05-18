@@ -6,6 +6,7 @@ package com.mindalliance.channels.model;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.reference.Type;
 
 /**
@@ -59,6 +60,10 @@ public abstract class ScenarioElement extends ModelElement
     /**
      * Return the value of scenario.
      */
+    @DisplayAs( direct = "in scenario {1}",
+                reverse = "contains {1}",
+                reverseMany = "contains:"
+                )
     public Scenario getScenario() {
         return this.scenario;
     }
@@ -123,5 +128,13 @@ public abstract class ScenarioElement extends ModelElement
      */
     public void setDescription( String description ) {
         this.description = description;
+    }
+
+    /**
+     * Provide a useful printed representation.
+     */
+    @Override
+    public String toString() {
+        return getName();
     }
 }

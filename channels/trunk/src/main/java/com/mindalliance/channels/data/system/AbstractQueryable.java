@@ -1,6 +1,6 @@
-/*
- * Created on Apr 28, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.system;
 
 import java.util.Iterator;
@@ -19,31 +19,51 @@ import com.mindalliance.channels.util.AbstractJavaBean;
 /**
  * Holds queryable, top-level javabeans (i.e. not contained in
  * others).
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
-abstract public class AbstractQueryable extends AbstractJavaBean implements
-        Queryable {
-    
-    protected System system;
-    
-    public AbstractQueryable() {}
-    
-    protected AbstractQueryable(System system) {
+public abstract class AbstractQueryable extends AbstractJavaBean
+    implements Queryable {
+
+    private System system;
+
+    /**
+     * Default constructor.
+     */
+    public AbstractQueryable() {
+    }
+
+    /**
+     * Default constructor.
+     * @param system the system
+     */
+    protected AbstractQueryable( System system ) {
         this.system = system;
     }
 
+    /**
+     * Iterate over elements matching the query.
+     * @param query the query
+     * @param bindings the bindings
+     */
     public Iterator<Element> findAll( Query query, Map bindings ) {
+        // TODO
         return null;
     }
 
+    /**
+     * Iterate over elements matching the query.
+     * @param query the query
+     * @param bindings the bindings
+     */
     public Element findOne( Query query, Map bindings ) {
+        // TODO
         return null;
     }
-    
+
     /**
-     * Returns the authenticated user 
-     * @return
+     * Returns the authenticated user.
      */
     public User getAuthenticatedUser() {
         User user = null;
@@ -55,11 +75,19 @@ abstract public class AbstractQueryable extends AbstractJavaBean implements
         }
         return user;
     }
-    
-    public System getSystem() {
+
+    /**
+     * Return the system.
+     */
+    public final System getSystem() {
         return system;
     }
 
-
-
+    /**
+     * Set the system attached to this object.
+     * @param system the system
+     */
+    void setSystem( System system ) {
+        this.system = system;
+    }
 }

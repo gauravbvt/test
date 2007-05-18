@@ -4,8 +4,15 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	               http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<!-- Allow use of properties defined in web context (see WEB-INF/web.xml) -->
-	<bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
+	<!-- Allow use of properties defined in web context (see WEB-INF/web.xml)
+	     Default values are provided if not defined.
+	-->
+	<bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+		<property name="properties"><value>
+			securityKey=bla
+			adminEmail=admin@example.com
+		</value></property>
+	</bean>
 
 	<!-- Core beans -->
 	<bean id="guidFactory" class="com.mindalliance.channels.util.GUIDFactoryImpl">
@@ -42,7 +49,7 @@
 		<property name="password" value="admin"/>
 		<property name="grantedAuthorities"><value>ROLE_USER,ROLE_ADMIN</value></property>
 		<property name="name" value="Administrator"/>
-		<property name="email" value="admin@example.com"/>
+		<property name="email" value="${adminEmail}"/>
 	</bean>
 
 	<bean id="guest" class="com.mindalliance.channels.data.user.UserImpl">
@@ -53,169 +60,69 @@
 		<property name="email" value="guest@example.com"/>
 	</bean>
 
-	<bean id="ev1" class="com.mindalliance.channels.model.Event">
+	<bean id="ev1" class="com.mindalliance.channels.data.elements.scenario.Event">
 		<property name="name" value="Fire alarm triggered"/>
 		<property name="description" value="Everybody remain calm..."/>
+		<property name="location">
+			<bean class="com.mindalliance.channels.data.reference.Location">
+				<property name="name" value="Livingston"/>
+				<property name="within"><list>
+					<bean class="com.mindalliance.channels.data.reference.Location">
+						<property name="name" value="Morris County"/>
+						<property name="within"><list>
+							<bean class="com.mindalliance.channels.data.reference.Location">
+								<property name="name" value="New Jersey"/>
+							</bean>
+						</list></property>
+					</bean>
+				</list></property>
+			</bean>
+		</property>
 		</bean>
 
-	<bean id="ev2" class="com.mindalliance.channels.model.Task">
+	<bean id="ev2" class="com.mindalliance.channels.data.elements.scenario.Task">
 		<property name="name" value="Verify cause of alarm"/>
 		<property name="description" value="Pranksters abound..."/>
-		<property name="when">
-			<bean class="com.mindalliance.channels.model.Occurence$RelativeTimePoint">
-				<property name="to" ref="ev1"/>
-				<property name="duration">
-					<bean class="com.mindalliance.channels.util.Duration">
-						<property name="number" value="5"/>
-						<property name="unit" value="minutes"/>
-					</bean>
-				</property>
+		<property name="cause">
+			<bean class="com.mindalliance.channels.data.components.Cause">
+				<property name="occurrence" ref="ev1"/>
+			</bean>
+		</property>
+		<property name="duration">
+			<bean class="com.mindalliance.channels.data.support.Duration">
+				<constructor-arg value="20"/>
+				<constructor-arg value="minute"/>
 			</bean>
 		</property>
 		</bean>
 
-	<bean id="ev3" class="com.mindalliance.channels.model.Event">
+	<bean id="ev3" class="com.mindalliance.channels.data.elements.scenario.Event">
 		<property name="name" value="Fire verified"/>
 		<property name="description" value="Flee!"/>
-		<property name="when">
-			<bean class="com.mindalliance.channels.model.Occurence$RelativeTimePoint">
-				<property name="to" ref="ev2"/>
+		<property name="cause">
+			<bean class="com.mindalliance.channels.data.components.Cause">
+				<property name="occurrence" ref="ev2"/>
 			</bean>
 		</property>
 		</bean>
 
-	<bean id="ev4" class="com.mindalliance.channels.model.Task">
+	<bean id="ev4" class="com.mindalliance.channels.data.elements.scenario.Task">
 		<property name="name" value="Notify fire department"/>
 		<property name="description" value="Please hold..."/>
-		<property name="when">
-			<bean class="com.mindalliance.channels.model.Occurence$RelativeTimePoint">
-				<property name="to" ref="ev3"/>
-				<property name="duration">
-					<bean class="com.mindalliance.channels.util.Duration">
-						<property name="number" value="15"/>
-						<property name="unit" value="minutes"/>
-					</bean>
-				</property>
+		<property name="cause">
+			<bean class="com.mindalliance.channels.data.components.Cause">
+				<property name="occurrence" ref="ev3"/>
+			</bean>
+		</property>
+		<property name="duration">
+			<bean class="com.mindalliance.channels.data.support.Duration">
+				<constructor-arg value="5"/>
+				<constructor-arg value="minute"/>
 			</bean>
 		</property>
 	</bean>
 
-	<!-- The system -->
-	<bean id="system" class="com.mindalliance.channels.system.SystemImpl">
-		<property name="users"><set>
-			<ref bean="user"/>
-			<ref bean="manager"/>
-			<ref bean="guest"/>
-		</set></property>
-		<property name="administrators"><set>
-			<ref bean="admin"/>
-		</set></property>
-
-		<property name="projects"><set>
-			<bean class="com.mindalliance.channels.project.ProjectImpl">
-				<property name="name" value="ACME Business Continuity"/>
-				<property name="participants"><set>
-					<ref bean="user"/>
-					</set></property>
-				<property name="managers"><set>
-					<ref bean="manager"/>
-					</set></property>
-				<property name="models"><set value-type="com.mindalliance.channels.Model">
-					<bean class="com.mindalliance.channels.model.ModelImpl">
-						<property name="name" value="Headquarters"/>
-						<property name="scenarios"><set>
-							<bean class="com.mindalliance.channels.model.Scenario">
-								<property name="name" value="Blackout"/>
-								<property name="about" value="Lights out..."/>
-							</bean>
-							<bean class="com.mindalliance.channels.model.Scenario">
-								<property name="name" value="Building Fire"/>
-								<property name="about" value="A fire happens in the building"/>
-								<property name="occurences"><set>
-									<ref bean="ev1"/>
-									<ref bean="ev2"/>
-									<ref bean="ev3"/>
-									<ref bean="ev4"/>
-									</set></property>
-							</bean>
-							<bean class="com.mindalliance.channels.model.Scenario">
-								<property name="name" value="Firewall Breach"/>
-								<property name="about" value="A hacker made it through"/>
-							</bean>
-							</set></property>
-					</bean>
-					<bean class="com.mindalliance.channels.model.ModelImpl">
-						<property name="name" value="Supply Chain"/>
-						<property name="scenarios"><set>
-							<bean class="com.mindalliance.channels.model.Scenario">
-								<property name="name" value="Some scenario"/>
-							</bean>
-							</set></property>
-					</bean>
-					</set></property>
-			</bean>
-			<bean class="com.mindalliance.channels.project.ProjectImpl">
-				<property name="name" value="CDC Avian Flu Preparedness"/>
-				<property name="participants"><set>
-					<ref bean="user"/>
-					</set></property>
-				<property name="managers"><set>
-					<ref bean="manager"/>
-					</set></property>
-				<property name="models"><set>
-					<bean class="com.mindalliance.channels.model.ModelImpl">
-						<property name="name" value="Some model"/>
-					</bean>
-					</set></property>
-			</bean>
-			<bean class="com.mindalliance.channels.project.ProjectImpl">
-				<property name="name" value="International Markets"/>
-				<property name="participants"><set>
-					<ref bean="user"/>
-					</set></property>
-				<property name="managers"><set>
-					<ref bean="manager"/>
-					</set></property>
-				<property name="models"><set>
-					<bean class="com.mindalliance.channels.model.ModelImpl">
-						<property name="name" value="Some other model"/>
-					</bean>
-					</set></property>
-			</bean>
-		</set></property>
-		<property name="organizations"><set>
-			<bean class="com.mindalliance.channels.system.Organization">
-				<property name="name" value="The Agency"/>
-				<property name="agents"><set>
-					<bean class="com.mindalliance.channels.system.Person">
-						<property name="name" value="John B. User"/>
-						<property name="user" ref="user"/>
-					</bean>
-					</set></property>
-				<property name="liaisons"><set>
-					<ref bean="liaison"/>
-					</set></property>
-			</bean>
-		</set></property>
-
-		<property name="alerts"><set>
-			<bean class="com.mindalliance.channels.system.Alert">
-				<property name="priority" value="High"/>
-				<property name="what" value="Knowledge issue detected in &quot;Building Fire&quot; scenario"/>
-			</bean>
-			<bean class="com.mindalliance.channels.system.Alert">
-				<property name="priority" value="Medium"/>
-				<property name="what" value="New todo - confirm suggested response to new &quot;e-commerce server offline&quot; event in scenario &quot;Blackout&quot;"/>
-			</bean>
-			<bean class="com.mindalliance.channels.system.Alert">
-				<property name="priority" value="Low"/>
-				<property name="what" value="Peter Jones suggested a change to your profile"/>
-			</bean>
-		</set></property>
-	</bean>
-
-		<!-- New Data Model -->
-
+	<!-- New Data Model -->
 	<bean name="registry" class="com.mindalliance.channels.data.system.Registry">
 		<property name="users"><set>
 			<ref bean="user"/>
@@ -226,6 +133,20 @@
 		<property name="administrators"><set>
 			<ref bean="admin"/>
 		</set></property>
+		<property name="alerts"><list>
+			<bean class="com.mindalliance.channels.data.user.Alert">
+				<property name="priority" value="HIGH"/>
+				<property name="description" value="Knowledge issue detected in &quot;Building Fire&quot; scenario"/>
+			</bean>
+			<bean class="com.mindalliance.channels.data.user.Alert">
+				<property name="priority" value="MEDIUM"/>
+				<property name="description" value="New todo - confirm suggested response to new &quot;e-commerce server offline&quot; event in scenario &quot;Blackout&quot;"/>
+			</bean>
+			<bean class="com.mindalliance.channels.data.user.Alert">
+				<property name="priority" value="LOW"/>
+				<property name="description" value="Peter Jones suggested a change to your profile"/>
+			</bean>
+		</list></property>
 	</bean>
 
 	<bean name="location1" class="com.mindalliance.channels.data.reference.Location">
@@ -261,54 +182,84 @@
 	</bean>
 
 	<bean name="portfolio" class="com.mindalliance.channels.data.system.Portfolio">
-		<property name="projects">
-			<list>
-				<bean class="com.mindalliance.channels.data.elements.project.Project">
-					<property name="name" value="ACME Business Continuity"/>
-					<property name="models">
-						<list>
-							<bean class="com.mindalliance.channels.data.elements.project.Model">
-								<property name="name" value="Some model"/>
+		<property name="projects"><list>
+			<bean class="com.mindalliance.channels.data.elements.project.Project">
+				<property name="name" value="ACME Business Continuity" />
+				<property name="models"><set>
+					<bean class="com.mindalliance.channels.data.elements.project.Model">
+						<property name="name" value="Headquarters" />
+						<property name="scenarios"><set>
+							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+								<property name="name" value="Blackout" />
+								<property name="description" value="Lights out..." />
 							</bean>
-						</list>
-					</property>
-				</bean>
-				<bean class="com.mindalliance.channels.data.elements.project.Project">
-					<property name="name" value="CDC Avian Flu Preparedness"/>
-					<property name="models">
-						<list>
-							<bean class="com.mindalliance.channels.data.elements.project.Model">
-								<property name="name" value="Another model"/>
+							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+								<property name="name" value="Building Fire" />
+								<property name="description" value="A fire happens in the building" />
+								<property name="occurrences"><set>
+									<ref bean="ev1" />
+									<ref bean="ev2" />
+									<ref bean="ev3" />
+									<ref bean="ev4" /></set>
+								</property>
 							</bean>
-						</list>
-					</property>
-				</bean>
-				<bean class="com.mindalliance.channels.data.elements.project.Project">
-					<property name="name" value="International Markets"/>
-					<property name="models">
-						<list>
-							<bean class="com.mindalliance.channels.data.elements.project.Model">
-								<property name="name" value="Some other model"/>
-							</bean>
-						</list>
-					</property>
-				</bean>
-			</list>
+							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+								<property name="name" value="Firewall Breach" />
+								<property name="description" value="A hacker made it through" />
+							</bean></set>
+						</property>
+					</bean>
+					<bean class="com.mindalliance.channels.data.elements.project.Model">
+						<property name="name" value="Supply Chain" />
+						<property name="scenarios"><set>
+							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+								<property name="name" value="Some scenario" />
+							</bean></set>
+						</property>
+					</bean></set>
+				</property>
+			</bean>
+			<bean class="com.mindalliance.channels.data.elements.project.Project">
+				<property name="name" value="CDC Avian Flu Preparedness" />
+				<property name="models"><list>
+					<bean class="com.mindalliance.channels.data.elements.project.Model">
+						<property name="name" value="Another model" />
+					</bean></list>
+				</property>
+			</bean>
+			<bean class="com.mindalliance.channels.data.elements.project.Project">
+				<property name="name" value="International Markets" />
+				<property name="models"><list>
+					<bean class="com.mindalliance.channels.data.elements.project.Model">
+						<property name="name" value="Some other model" />
+					</bean></list>
+				</property>
+			</bean></list>
 		</property>
 	</bean>
 
-	<bean name="system.new" class="com.mindalliance.channels.data.system.System">
+	<bean name="systemservice" class="com.mindalliance.channels.data.system.System">
 		<property name="registry"><ref bean="registry"/></property>
 		<property name="directory"><ref bean="directory"/></property>
 		<property name="history"><ref bean="history"/></property>
 		<property name="library"><ref bean="library"/></property>
 		<property name="portfolio"><ref bean="portfolio"/></property>
 	</bean>
-
-	<!--  Service Models -->
-
-	<bean name="systemservice" class="com.mindalliance.channels.services.base.SystemServiceImpl">
-		<property name="system"><ref bean="system.new"/></property>
+	
+	<!-- Icon manager for the UI -->
+	<bean id="iconManager" class="com.mindalliance.channels.ui.IconManager">
+		<property name="smallPrefix" value="images/16x16/"/>
+		<property name="bigPrefix" value="images/24x24/"/>
+		<property name="defaultIcon" value="unknown.png"/>
+		<property name="icons"><map>
+			<entry key="com.mindalliance.channels.data.elements.project.Project" value="environment.png"/>
+			<entry key="com.mindalliance.channels.data.elements.project.Model" value="cube_molecule.png"/>
+			<entry key="com.mindalliance.channels.data.elements.project.Scenario" value="branch.png"/>
+			<entry key="com.mindalliance.channels.data.elements.scenario.Task" value="gears.png"/>
+			<entry key="com.mindalliance.channels.data.elements.scenario.Event" value="nav_plain_red.png"/>
+			<entry key="com.mindalliance.channels.data.reference.Location" value="earth.png"/>
+			<entry key="com.mindalliance.channels.data.components.Cause" value="redo.png"/>
+		</map></property>
 	</bean>
 
 </beans>

@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.Model;
 import com.mindalliance.channels.model.support.SuggestionManager;
 import com.mindalliance.channels.util.AbstractJavaBean;
@@ -81,6 +82,9 @@ public abstract class ModelElement extends AbstractJavaBean
     /**
      * Return the value of model.
      */
+    @DisplayAs( direct = "in model {1}",
+                reverse = "contains {1}",
+                reverseMany = "contains:" )
     public Model getModel() {
         return this.model;
     }

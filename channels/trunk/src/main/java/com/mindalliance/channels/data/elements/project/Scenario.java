@@ -1,6 +1,6 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.project;
 
 import java.util.ArrayList;
@@ -11,14 +11,13 @@ import org.apache.commons.collections.Predicate;
 
 import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.scenario.Activity;
+import com.mindalliance.channels.data.elements.scenario.Circumstance;
 import com.mindalliance.channels.data.elements.scenario.Communication;
 import com.mindalliance.channels.data.elements.scenario.Event;
 import com.mindalliance.channels.data.elements.scenario.Flow;
 import com.mindalliance.channels.data.elements.scenario.Product;
 import com.mindalliance.channels.data.elements.scenario.SharingNeed;
-import com.mindalliance.channels.data.elements.scenario.Circumstance;
 import com.mindalliance.channels.data.elements.scenario.Task;
 import com.mindalliance.channels.util.GUID;
 
@@ -29,31 +28,44 @@ import com.mindalliance.channels.util.GUID;
  * events that drive further responses etc. The analysis of a scenario
  * uncovers circumstances, activities, sharing needs and flows, as well
  * as issues (attached to elements).
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Scenario extends AbstractElement {
 
-    private Model model; // backpointer
-    private List<Occurrence> occurrences; // What happens
-    private List<Product> products; // What gets produced
-    private List<SharingNeed> sharingNeeds; // Information sharing
-                                            // needs
-    private List<Flow> flows; // Realized sharingNeeds
+    private Model model;
 
+    /** What happens. */
+    private List<Occurrence> occurrences = new ArrayList<Occurrence>();
+
+    /** What gets produced. */
+    private List<Product> products = new ArrayList<Product>();
+
+    /** Information sharing needs. */
+    private List<SharingNeed> sharingNeeds = new ArrayList<SharingNeed>();
+
+    /** Realized sharing needs. */
+    private List<Flow> flows = new ArrayList<Flow>();
+
+    /**
+     * Default constructor.
+     */
     public Scenario() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Scenario( GUID guid ) {
         super( guid );
     }
 
     /**
      * Return the list of all incidents (occurrences without stated
-     * causes)
-     * 
-     * @return
+     * causes).
      */
     public List<Occurrence> getIncidents() {
         List<Occurrence> incidents = new ArrayList<Occurrence>();
@@ -67,6 +79,9 @@ public class Scenario extends AbstractElement {
         return incidents;
     }
 
+    /**
+     * Get the events associated with this scenario.
+     */
     public List<Event> getEvents() {
         List<Event> events = new ArrayList<Event>();
         for ( Occurrence occ : getOccurrences() ) {
@@ -77,6 +92,9 @@ public class Scenario extends AbstractElement {
         return events;
     }
 
+    /**
+     * Get the tasks associated with this scenario.
+     */
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<Task>();
         for ( Occurrence occ : getOccurrences() ) {
@@ -87,29 +105,39 @@ public class Scenario extends AbstractElement {
         return tasks;
     }
 
-    // TODO
+    /**
+     * Get the activities associated with this scenario.
+     */
     public List<Activity> getActivities() {
-        return null;
-    }
-
-    // TODO
-    public List<Communication> getCommunications() {
-        return null;
-    }
-
-    // TODO
-    public List<Circumstance> getCircumstances() {
-        return null;
+        // TODO
+        return new ArrayList<Activity>();
     }
 
     /**
-     * @return the flows
+     * Get the communications associated with this scenario.
+     */
+    public List<Communication> getCommunications() {
+        // TODO
+        return new ArrayList<Communication>();
+    }
+
+    /**
+     * Get the circumstances associated with this scenario.
+     */
+    public List<Circumstance> getCircumstances() {
+        // TODO
+        return new ArrayList<Circumstance>();
+    }
+
+    /**
+     * Return the flows.
      */
     public List<Flow> getFlows() {
         return flows;
     }
 
     /**
+     * Set the flows.
      * @param flows the flows to set
      */
     public void setFlows( List<Flow> flows ) {
@@ -117,27 +145,30 @@ public class Scenario extends AbstractElement {
     }
 
     /**
-     * @param flow
+     * Add a flow.
+     * @param flow the flow
      */
     public void addFlows( Flow flow ) {
         flows.add( flow );
     }
 
     /**
-     * @param flow
+     * Remove a flow.
+     * @param flow the flow
      */
     public void removeFlows( Flow flow ) {
         flows.remove( flow );
     }
 
     /**
-     * @return the model
+     * Return the model.
      */
     public Model getModel() {
         return model;
     }
 
     /**
+     * Set the model.
      * @param model the model to set
      */
     public void setModel( Model model ) {
@@ -145,13 +176,14 @@ public class Scenario extends AbstractElement {
     }
 
     /**
-     * @return the occurrences
+     * Return the occurrences.
      */
     public List<Occurrence> getOccurrences() {
         return occurrences;
     }
 
     /**
+     * Set the occurrences.
      * @param occurrences the occurrences to set
      */
     public void setOccurrences( List<Occurrence> occurrences ) {
@@ -159,27 +191,30 @@ public class Scenario extends AbstractElement {
     }
 
     /**
-     * @param occurrence
+     * Add an occurrence.
+     * @param occurrence the occurrence
      */
     public void addOccurrence( Occurrence occurrence ) {
         occurrences.add( occurrence );
     }
 
     /**
-     * @param occurrence
+     * Remove an occurrence.
+     * @param occurrence the occurrence
      */
     public void removeOccurrence( Occurrence occurrence ) {
         occurrences.remove( occurrence );
     }
 
     /**
-     * @return the products
+     * Return the products.
      */
     public List<Product> getProducts() {
         return products;
     }
 
     /**
+     * Set the products.
      * @param products the products to set
      */
     public void setProducts( List<Product> products ) {
@@ -187,37 +222,48 @@ public class Scenario extends AbstractElement {
     }
 
     /**
-     * @param product
+     * Add a product.
+     * @param product the product
      */
     public void addProduct( Product product ) {
         products.add( product );
     }
 
     /**
-     * @param product
+     * Remove a product.
+     * @param product the product
      */
     public void removeProduct( Product product ) {
         products.remove( product );
     }
 
     /**
-     * @return the sharingNeeds
+     * Return the sharingNeeds.
      */
     public List<SharingNeed> getSharingNeeds() {
         return sharingNeeds;
     }
 
     /**
+     * Set the sharing needs.
      * @param sharingNeeds the sharingNeeds to set
      */
     public void setSharingNeeds( List<SharingNeed> sharingNeeds ) {
         this.sharingNeeds = sharingNeeds;
     }
 
+    /**
+     * Add a sharing need.
+     * @param sharingNeed the sharing need
+     */
     public void addSharingNeed( SharingNeed sharingNeed ) {
         sharingNeeds.add( sharingNeed );
     }
 
+    /**
+     * Remove a sharing need.
+     * @param sharingNeed the sharing need
+     */
     public void removeSharingNeed( SharingNeed sharingNeed ) {
         sharingNeeds.remove( sharingNeed );
     }

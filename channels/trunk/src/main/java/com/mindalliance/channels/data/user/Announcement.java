@@ -23,7 +23,7 @@ public abstract class Announcement extends AbstractElement {
 
     private Pattern<User> audience; // Who this announcement is meant
                                     // for
-    private Date timestamp;
+    private Date timestamp = new Date( System.currentTimeMillis() );
     private User createdBy; // null if system
     private Element about;
     private List<User> acknowledgers; // Users who have acknowledged

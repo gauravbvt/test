@@ -12,7 +12,7 @@
 		<property name="providers">
 			<list>
 				<bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-					<property name="userDetailsService" ref="system"/>
+					<property name="userDetailsService" ref="registry"/>
 					<property name="userCache">
 						<bean class="org.acegisecurity.providers.dao.cache.NullUserCache"/>
 					</property>
@@ -73,7 +73,7 @@
 	<bean id="rememberMeService" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
 		<property name="key" value="${securityKey}"/>
 		<property name="parameter" value="j_remember_me"/>
-		<property name="userDetailsService" ref="system"/>
+		<property name="userDetailsService" ref="registry"/>
 		<property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
 	</bean>
 	

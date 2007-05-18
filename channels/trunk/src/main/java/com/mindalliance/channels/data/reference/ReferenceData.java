@@ -1,6 +1,6 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.reference;
 
 import com.mindalliance.channels.data.Described;
@@ -8,22 +8,31 @@ import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**
- * ReferenceData data
- * 
- * @author jf
+ * ReferenceData data.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
-abstract public class ReferenceData extends AbstractJavaBean implements Named, Described {
-    
+public abstract class ReferenceData extends AbstractJavaBean
+    implements Named, Described {
+
     private String name;
     private String description;
-    
-    public ReferenceData() {}
-    
+
+    /**
+     * Default constructor.
+     */
+    public ReferenceData() {
+    }
+
+    /**
+     * Sort according to name.
+     * @param o the other data to compare to.
+     */
     public int compareTo( Named o ) {
         return name.compareTo( o.getName() );
     }
 
-    
     /**
      * Return the value of description.
      */
@@ -31,7 +40,6 @@ abstract public class ReferenceData extends AbstractJavaBean implements Named, D
         return description;
     }
 
-    
     /**
      * Set the value of description.
      * @param description The new value of description
@@ -40,7 +48,6 @@ abstract public class ReferenceData extends AbstractJavaBean implements Named, D
         this.description = description;
     }
 
-    
     /**
      * Return the value of name.
      */
@@ -48,7 +55,6 @@ abstract public class ReferenceData extends AbstractJavaBean implements Named, D
         return name;
     }
 
-    
     /**
      * Set the value of name.
      * @param name The new value of name
@@ -57,5 +63,10 @@ abstract public class ReferenceData extends AbstractJavaBean implements Named, D
         this.name = name;
     }
 
+    /** Provide a printed form. */
+    @Override
+    public String toString() {
+        return getName();
+    }
 
 }

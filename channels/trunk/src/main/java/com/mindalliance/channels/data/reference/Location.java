@@ -1,17 +1,19 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.reference;
 
 import java.util.List;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.data.support.Distance;
 import com.mindalliance.channels.data.support.LatLong;
 
 /**
  * A place, position etc.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Location extends TypedReferenceData {
 
@@ -21,13 +23,20 @@ public class Location extends TypedReferenceData {
     private List<Location> nextTo;
 
     /**
-     * @return the latLong
+     * Default constructor.
+     */
+    public Location() {
+    }
+
+    /**
+     * Return the Latitude/Longitude.
      */
     public LatLong getLatLong() {
         return latLong;
     }
 
     /**
+     * Set the Latitude/Longitude.
      * @param latLong the latLong to set
      */
     public void setLatLong( LatLong latLong ) {
@@ -35,13 +44,14 @@ public class Location extends TypedReferenceData {
     }
 
     /**
-     * @return the nextTo
+     * Return a list of close-by locations.
      */
     public List<Location> getNextTo() {
         return nextTo;
     }
 
     /**
+     * Set the list of close-by locations.
      * @param nextTo the nextTo to set
      */
     public void setNextTo( List<Location> nextTo ) {
@@ -49,27 +59,30 @@ public class Location extends TypedReferenceData {
     }
 
     /**
-     * @param location
+     * Add a close-by location.
+     * @param location the location
      */
     public void addNextTo( Location location ) {
         nextTo.add( location );
     }
 
     /**
-     * @param location
+     * Remove a close-by location.
+     * @param location the location
      */
     public void removeNextTo( Location location ) {
         nextTo.remove( location );
     }
 
     /**
-     * @return the radius
+     * Return the radius.
      */
     public Distance getRadius() {
         return radius;
     }
 
     /**
+     * Set the radius.
      * @param radius the radius to set
      */
     public void setRadius( Distance radius ) {
@@ -77,13 +90,19 @@ public class Location extends TypedReferenceData {
     }
 
     /**
+     * Get the enclosing locations.
      * @return the within
      */
+    @DisplayAs( direct = "located in {1}",
+                reverse = "includes {1}",
+                directMany = "located in:",
+                reverseMany = "includes:" )
     public List<Location> getWithin() {
         return within;
     }
 
     /**
+     * Set the enclosing locations.
      * @param within the within to set
      */
     public void setWithin( List<Location> within ) {
@@ -91,14 +110,16 @@ public class Location extends TypedReferenceData {
     }
 
     /**
-     * @param location
+     * Add an enclosed location.
+     * @param location the location
      */
     public void addWithin( Location location ) {
         within.add( location );
     }
 
     /**
-     * @param location
+     * Remove an enclosed location.
+     * @param location the location
      */
     public void removeWithin( Location location ) {
         within.remove( location );

@@ -1,6 +1,6 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.ArrayList;
@@ -9,10 +9,8 @@ import java.util.List;
 import com.mindalliance.channels.data.Caused;
 import com.mindalliance.channels.data.Excludable;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
-import com.mindalliance.channels.data.elements.assertions.CanAccess;
 import com.mindalliance.channels.data.elements.assertions.Excluded;
 import com.mindalliance.channels.data.support.Level;
-import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -21,24 +19,35 @@ import com.mindalliance.channels.util.GUID;
  * implicitly by the start of the scenario it's in). An event may be
  * terminated by any of one or more tasks, or it may terminate on its
  * own after some time.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Event extends AbstractOccurrence implements Caused, Excludable {
 
-    private Level probability; // LOW, MEDIUM or HIGH
-    private List<Task> terminatingTasks; // Set if a task
-                                            // terminates it
-    private Duration duration; // Set if event is self-terminating
+    private Level probability;
 
+    /** Set if a task terminates it. */
+    private List<Task> terminatingTasks = new ArrayList<Task>();
+
+    /**
+     * Default constructor.
+     */
     public Event() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Event( GUID guid ) {
         super( guid );
     }
 
+    /**
+     * Get a list of excluded assertions.
+     */
     public List<Excluded> getExcludedAssertions() {
         List<Excluded> excludedAssertions = new ArrayList<Excluded>();
         for ( Assertion assertion : getAssertions() ) {
@@ -49,27 +58,14 @@ public class Event extends AbstractOccurrence implements Caused, Excludable {
     }
 
     /**
-     * @return the duration
-     */
-    public Duration getDuration() {
-        return duration;
-    }
-
-    /**
-     * @param duration the duration to set
-     */
-    public void setDuration( Duration duration ) {
-        this.duration = duration;
-    }
-
-    /**
-     * @return the probability
+     * Return the probability.
      */
     public Level getProbability() {
         return probability;
     }
 
     /**
+     * Set the probability.
      * @param probability the probability to set
      */
     public void setProbability( Level probability ) {
@@ -77,13 +73,14 @@ public class Event extends AbstractOccurrence implements Caused, Excludable {
     }
 
     /**
-     * @return the terminatingTasks
+     * Return the terminating tasks.
      */
     public List<Task> getTerminatingTasks() {
         return terminatingTasks;
     }
 
     /**
+     * Set the terminating tasks.
      * @param terminatingTasks the terminatingTasks to set
      */
     public void setTerminatingTasks( List<Task> terminatingTasks ) {
@@ -91,17 +88,18 @@ public class Event extends AbstractOccurrence implements Caused, Excludable {
     }
 
     /**
-     * @param task
+     * Add a terminating task.
+     * @param task the task
      */
     public void addTerminatingTask( Task task ) {
         terminatingTasks.add( task );
     }
 
     /**
-     * @param task
+     * Remove a terminating task.
+     * @param task the task
      */
     public void removeTerminatingTask( Task task ) {
         terminatingTasks.remove( task );
     }
-
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.reference.AreaType;
 
 /**
@@ -66,6 +67,9 @@ public class Area extends AbstractJavaBean {
     /**
      * Return the value of partOf.
      */
+    @DisplayAs( direct = "part of {1}",
+                reverse = "contains {1}",
+                reverseMany = "sub-areas:" )
     public Area getPartOf() {
         return this.partOf;
     }
@@ -91,5 +95,13 @@ public class Area extends AbstractJavaBean {
      */
     public void setName( String name ) {
         this.name = name;
+    }
+
+    /**
+     * Provide a decent enough printed value.
+     */
+    @Override
+    public String toString() {
+        return getName();
     }
 }

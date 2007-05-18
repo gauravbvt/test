@@ -8,7 +8,6 @@ import java.beans.PropertyVetoException;
 import org.junit.Test;
 
 import com.mindalliance.channels.UserExistsException;
-import com.mindalliance.channels.data.user.UserImpl;
 
 /**
  * A test for the security contracts of SystemImpl.
@@ -19,19 +18,13 @@ import com.mindalliance.channels.data.user.UserImpl;
 public class SystemImplSecurityTest extends AbstractSecurityTest {
 
     @Test
-    public void testAddUser_1() throws PropertyVetoException, UserExistsException {
-        UserImpl u = new UserImpl("User2","user2","user2",new String[]{ 
-                "ROLE_USER" } );
-        
-        system.addUser( u );
+    public void testAddUser_1() throws PropertyVetoException, UserExistsException {        
+        system.getRegistryService().registerUser( "User2", "user2", "user2" );
     }
     
     @Test
-    public void testAddUser_2() throws PropertyVetoException, UserExistsException {
-        UserImpl u = new UserImpl("User2","user2","user2",new String[]{ 
-                "ROLE_USER" } );
-        
+    public void testAddUser_2() throws PropertyVetoException, UserExistsException {        
         login( "admin", "admin" );
-        system.addUser( u );
+        system.getRegistryService().registerUser( "User2", "user2", "user2" );
     }
 }

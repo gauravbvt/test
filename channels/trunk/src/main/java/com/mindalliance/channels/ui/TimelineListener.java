@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.ui;
 
-import com.mindalliance.channels.model.Occurence;
+import com.mindalliance.channels.data.Caused;
 
 /**
  * Listener to selections in a scenario timeline.
@@ -22,6 +22,6 @@ public interface TimelineListener {
      */
     void selectionChanged(
             ScenarioTimeline timeline,
-            Occurence oldSelection, Occurence newSelection );
+            Caused oldSelection, Caused newSelection );
 
 }

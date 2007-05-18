@@ -30,7 +30,7 @@ public class Outcome extends Occurence {
     /**
      * Default constructor.
      */
-    Outcome() {
+    public Outcome() {
         super();
     }
 

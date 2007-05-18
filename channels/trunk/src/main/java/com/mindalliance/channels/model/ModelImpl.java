@@ -213,4 +213,12 @@ public class ModelImpl extends AbstractProjectObject
     public int compareTo( Model o ) {
         return getName().compareTo( o.getName() );
     }
+
+    /**
+     * Provide a printed representation.
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

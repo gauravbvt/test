@@ -247,4 +247,12 @@ public class Scenario extends ModelElement
         this.occurences.remove( occurence );
         occurence.setScenario( null );
     }
+
+    /**
+     * Provide some useful printed form.
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

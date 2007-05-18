@@ -3,7 +3,6 @@
 
 package com.mindalliance.channels.ui;
 
-import java.beans.PropertyVetoException;
 import java.text.MessageFormat;
 
 import org.apache.commons.logging.Log;
@@ -24,13 +23,13 @@ import org.zkoss.zul.Tree;
 import org.zkoss.zul.Treechildren;
 import org.zkoss.zul.Treeitem;
 
-import com.mindalliance.channels.Model;
-import com.mindalliance.channels.Project;
-import com.mindalliance.channels.System;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.model.ModelImpl;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.project.ProjectImpl;
+import com.mindalliance.channels.data.elements.project.Model;
+import com.mindalliance.channels.data.elements.project.Project;
+import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.services.PortfolioService;
+import com.mindalliance.channels.services.RegistryService;
+import com.mindalliance.channels.services.SystemService;
 
 /**
  * The scenarios, models and projects tab.
@@ -49,7 +48,7 @@ public class ScenariosTab extends Tabpanel {
     private static final String MODEL_ICON = "images/16x16/cube_molecule.png";
     private static final String PROJECT_ICON = "images/16x16/environment.png";
 
-    private System system ;
+    private SystemService system ;
     private User user;
     private Session session;
 
@@ -63,7 +62,8 @@ public class ScenariosTab extends Tabpanel {
      * @param system the system
      */
     public ScenariosTab(
-            int maxHeight, int height, Box canvas, User user, System system ) {
+            int maxHeight, int height, Box canvas,
+            User user, SystemService system ) {
 
         super();
         this.user = user;
@@ -72,9 +72,9 @@ public class ScenariosTab extends Tabpanel {
         this.session = getDesktop().getSession();
 
         Treechildren treeChildren = new Treechildren();
-        for ( Project p : system.getProjects() )
+        for ( Project p : system.getPortfolioService().getProjects( user ) )
             treeChildren.appendChild(
-                createProjectNode( maxHeight, canvas, p, user, system ) );
+                createProjectNode( maxHeight, canvas, p ) );
 
         Tree tree = new Tree();
         tree.appendChild( treeChildren );
@@ -106,18 +106,15 @@ public class ScenariosTab extends Tabpanel {
      * @param maxHeight the available height for the canvas
      * @param canvas the canvas to associate with
      * @param project the project
-     * @param user the current user
-     * @param system the system
      * @return a tree node, collapsed
      */
     private Treeitem createProjectNode(
-            int maxHeight,
-            Box canvas, Project project, User user, System system ) {
+            int maxHeight, Box canvas, Project project ) {
 
         Treechildren models = new Treechildren();
         for ( Model m : project.getModels() )
             models.appendChild(
-                    createModelNode( maxHeight, canvas, m, user, system ) );
+                    createModelNode( maxHeight, canvas, m ) );
 
         Treeitem result = newTreeitem(
                     new AccordionSelection(
@@ -138,18 +135,15 @@ public class ScenariosTab extends Tabpanel {
      * @param maxHeight the available height for the canvas
      * @param canvas the canvas to associate with
      * @param model the model
-     * @param user the current user
-     * @param system the system
      * @return a tree node, collapsed
      */
     private Treeitem createModelNode(
-            int maxHeight,
-            Box canvas, Model model, User user, System system ) {
+            int maxHeight, Box canvas, Model model ) {
 
         Treechildren scenarios = new Treechildren();
-        for ( Scenario s : ( (ModelImpl) model ).getScenarios() )
+        for ( Scenario s : model.getScenarios() )
             scenarios.appendChild(
-                    createScenarioNode( maxHeight, canvas, s, user, system ) );
+                    createScenarioNode( maxHeight, canvas, s ) );
 
         return newTreeitem(
             new AccordionSelection(
@@ -169,12 +163,9 @@ public class ScenariosTab extends Tabpanel {
      * @param maxHeight the available height for the canvas
      * @param canvas the associated canvas
      * @param scenario the scenario
-     * @param user the current user
-     * @param system the system
      */
     private Treeitem createScenarioNode(
-            int maxHeight,
-            Box canvas, Scenario scenario, User user, System system ) {
+            int maxHeight, Box canvas, Scenario scenario ) {
 
         Treechildren reports = new Treechildren();
         reports.appendChild( newTreeitem(
@@ -224,7 +215,8 @@ public class ScenariosTab extends Tabpanel {
                     "Scenario viewer",
                     "ROLE_USER",
                     new ScenarioViewer(
-                        maxHeight, canvas.getPage(), system, scenario, user ),
+                        maxHeight, canvas.getPage(), scenario,
+                        getSystem(), getUser() ),
                     canvas,
                     scenario ),
                 reports );
@@ -251,7 +243,7 @@ public class ScenariosTab extends Tabpanel {
                         (AccordionSelection) session.getAttribute(
                                 DesktopRichlet.CURRENT_SELECTION );
 
-                    resetMenu( menu, selection, getUser() );
+                    resetMenu( menu, selection );
                 }
             }
         } );
@@ -263,36 +255,38 @@ public class ScenariosTab extends Tabpanel {
      * Adjust the popup menu for the given selection and user.
      * @param menu the popup menu
      * @param selection the current selection
-     * @param user the user
      */
     protected void resetMenu(
-        Menupopup menu, AccordionSelection selection, User user ) {
+            Menupopup menu, AccordionSelection selection ) {
+
+        final RegistryService registry = getSystem().getRegistryService();
+        final PortfolioService portfolio = getSystem().getPortfolioService();
 
         menu.getChildren().clear();
         if ( selection == null ) {
-            if ( getSystem().isAdministrator( user ) )
+            if ( registry.isAdministrator( getUser() ) )
                 menu.appendChild( newAddProjectItem() );
 
         } else if ( selection.getIcon().equals( PROJECT_ICON ) ) {
-            final ProjectImpl project = (ProjectImpl) selection.getObject();
+            final Project project = (Project) selection.getObject();
 
-            if ( getSystem().isAdministrator( user ) ) {
+            if ( registry.isAdministrator( getUser() ) ) {
                 menu.appendChild( newAddProjectItem() );
                 menu.appendChild( new Menuseparator() );
                 menu.appendChild( newDeleteProjectItem( project ) );
             }
-            if ( project.isManager( user )
-                    || system.isAdministrator( user ) ) {
+            if ( portfolio.isManager( getUser(), project )
+                    || registry.isAdministrator( getUser() ) ) {
                 menu.appendChild( newRenameProjectItem( project ) );
                 menu.appendChild( newAddModelItem( project ) );
             }
 
         } else if ( selection.getIcon().equals( MODEL_ICON ) ) {
-            ModelImpl model = (ModelImpl) selection.getObject();
-            ProjectImpl project = (ProjectImpl) model.getProject();
+            Model model = (Model) selection.getObject();
+            Project project = model.getProject();
 
-            if ( project.isManager( user )
-                    || system.isAdministrator( user ) ) {
+            if ( portfolio.isManager( getUser(), project )
+                    || registry.isAdministrator( getUser() ) ) {
                 menu.appendChild( newAddModelItem( project ) );
                 menu.appendChild( new Menuseparator() );
                 menu.appendChild( newDeleteModelItem( model ) );
@@ -302,11 +296,9 @@ public class ScenariosTab extends Tabpanel {
 
         } else if ( selection.getIcon().equals( SCENARIO_ICON ) ) {
             Scenario scenario = (Scenario) selection.getObject();
-            ModelImpl model = (ModelImpl) scenario.getModel();
-            Project project = model.getProject();
-
-            if ( project.isManager( user )
-                    || system.isAdministrator( user ) ) {
+            Model model = scenario.getModel();
+            if ( portfolio.isManager( getUser(), model.getProject() )
+                    || registry.isAdministrator( getUser() ) ) {
                 menu.appendChild( newAddScenarioItem( model ) );
                 menu.appendChild( new Menuseparator() );
                 menu.appendChild( newDeleteScenarioItem( scenario ) );
@@ -330,7 +322,8 @@ public class ScenariosTab extends Tabpanel {
                             Messagebox.OK | Messagebox.CANCEL,
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
-                            getSystem().removeProject( project );
+                            getSystem().getPortfolioService()
+                                .removeProject( project );
                             session.setAttribute(
                                 DesktopRichlet.CURRENT_SELECTION, null );
                             Executions.sendRedirect( null );
@@ -343,7 +336,7 @@ public class ScenariosTab extends Tabpanel {
         return deleteProjectItem;
     }
 
-    private Menuitem newDeleteModelItem( final ModelImpl model ) {
+    private Menuitem newDeleteModelItem( final Model model ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Delete this model...",
@@ -386,8 +379,7 @@ public class ScenariosTab extends Tabpanel {
                             Messagebox.OK | Messagebox.CANCEL,
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
-                            ModelImpl model = (ModelImpl) scenario.getModel();
-                            model.removeScenario( scenario );
+                            scenario.getModel().removeScenario( scenario );
                             session.setAttribute(
                                     DesktopRichlet.CURRENT_SELECTION, null );
                             Executions.sendRedirect( null );
@@ -411,17 +403,13 @@ public class ScenariosTab extends Tabpanel {
                             "Project name?",
                             "Enter the name of the new project",
                             "" );
-                        if ( projectName != null )
-                            try {
-                                ProjectImpl project = new ProjectImpl();
-                                project.setName( projectName );
-                                getSystem().addProject( project );
-                                Executions.sendRedirect( null );
-                            } catch ( PropertyVetoException e ) {
-                                Messagebox.show(
-                                    e.getMessage(), null,
-                                    Messagebox.OK, Messagebox.ERROR );
-                            }
+                        if ( projectName != null ) {
+                            Project project = new Project();
+                            project.setName( projectName );
+                            getSystem().getPortfolioService()
+                                .addProject( project );
+                            Executions.sendRedirect( null );
+                        }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
                     }
@@ -430,7 +418,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newAddModelItem( final ProjectImpl project ) {
+    private Menuitem newAddModelItem( final Project project ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Add a model...",
@@ -442,7 +430,7 @@ public class ScenariosTab extends Tabpanel {
                             "Enter the name of the new model",
                             "" );
                         if ( modelName != null ) {
-                            ModelImpl model = new ModelImpl();
+                            Model model = new Model();
                             model.setName( modelName );
                             project.addModel( model );
                             Executions.sendRedirect( null );
@@ -455,7 +443,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newAddScenarioItem( final ModelImpl model ) {
+    private Menuitem newAddScenarioItem( final Model model ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Add a scenario...",
@@ -480,7 +468,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newRenameProjectItem( final ProjectImpl project ) {
+    private Menuitem newRenameProjectItem( final Project project ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Rename this project...",
@@ -491,16 +479,10 @@ public class ScenariosTab extends Tabpanel {
                             "New project name?",
                             "Enter the new name of the project",
                             project.getName() );
-                        if ( projectName != null )
-                            try {
-                                project.setName( projectName );
-                                getSystem().addProject( project );
-                                Executions.sendRedirect( null );
-                            } catch ( PropertyVetoException e ) {
-                                Messagebox.show(
-                                    e.getMessage(), null,
-                                    Messagebox.OK, Messagebox.ERROR );
-                            }
+                        if ( projectName != null ) {
+                            project.setName( projectName );
+                            Executions.sendRedirect( null );
+                        }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
                     }
@@ -509,7 +491,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newRenameModelItem( final ModelImpl model ) {
+    private Menuitem newRenameModelItem( final Model model ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Rename this model...",
@@ -598,7 +580,7 @@ public class ScenariosTab extends Tabpanel {
     /**
      * Return the value of system.
      */
-    public final System getSystem() {
+    public final SystemService getSystem() {
         return this.system;
     }
 
