@@ -7,7 +7,8 @@ import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * Created information.
+ * Information produced by a task. It may incorporate elements of information needed and
+ * presumably received by the task's agents.
  * 
  * @author jf
  */
