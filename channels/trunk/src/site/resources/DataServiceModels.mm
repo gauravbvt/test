@@ -195,6 +195,19 @@
 </html>
 </richcontent>
 </node>
+<node CREATED="1177617398207" ID="Freemind_Link_1178169284" MODIFIED="1179501163578" TEXT="Circumstance">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      A realized environment
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 <node CREATED="1177439970370" ID="Freemind_Link_775435948" MODIFIED="1178292947149" TEXT="Communication">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -262,19 +275,6 @@
   <body>
     <p>
       Implements Occurrence
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node CREATED="1177617398207" ID="Freemind_Link_1178169284" MODIFIED="1177617429717" TEXT="Situation">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A realized environment
     </p>
   </body>
 </html>
