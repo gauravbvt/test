@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.mindalliance.channels.data.Describable;
 import com.mindalliance.channels.data.elements.resources.Role;
+import com.mindalliance.channels.data.reference.Type;
 import com.mindalliance.channels.data.support.Level;
 import com.mindalliance.channels.data.support.Pattern;
 import com.mindalliance.channels.data.support.TypeSet;
@@ -122,6 +123,7 @@ public class Information extends AbstractJavaBean implements Describable {
         private List<Segment> subSegments;
         private Level confidence;
         private List<PrivacyConstraint> privacyConstraints;
+        private TypeSet classification = new TypeSet(Type.CLEARANCE);
 
         /**
          * @return the privacyConstraints
@@ -206,6 +208,23 @@ public class Information extends AbstractJavaBean implements Describable {
          */
         public void removeSubSegment( Segment segment ) {
             subSegments.remove( segment );
+        }
+
+        
+        /**
+         * Return the value of classifications.
+         */
+        public TypeSet getClassification() {
+            return classification;
+        }
+
+        
+        /**
+         * Set the value of classifications.
+         * @param classifications The new value of classifications
+         */
+        public void setClassification( TypeSet classification ) {
+            this.classification = classification;
         }
     }
 
