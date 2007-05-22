@@ -23,6 +23,7 @@ import com.mindalliance.channels.data.elements.project.Project;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.user.UserImpl;
 import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.util.GUIDFactory;
 
 /**
  * A little harness to setup acegi security in unit tests.
@@ -48,6 +49,7 @@ public abstract class AbstractSecurityTest {
     protected UserImpl manager;
     protected UserImpl guest;
     protected UserImpl liaison;
+    protected GUIDFactory guidFactory;
     
     protected ApplicationContext context;
     
@@ -73,9 +75,10 @@ public abstract class AbstractSecurityTest {
         liaison = (UserImpl) ctx.getBean( "liaison" );
         guest = (UserImpl) ctx.getBean( "guest" );
         organization = (Organization) ctx.getBean( "organization1" );
+        guidFactory = (GUIDFactory) ctx.getBean( "guidFactory" );
 
         // TODO get a project managed by the manager
-//        project = system.getPortfolioService().getProjects( manager ).iterator().next();
+        project = system.getPortfolioService().getProjects().iterator().next();
         
         context = ctx;
     }

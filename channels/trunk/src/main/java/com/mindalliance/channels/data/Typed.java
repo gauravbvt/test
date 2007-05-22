@@ -3,7 +3,7 @@
  */
 package com.mindalliance.channels.data;
 
-import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.data.reference.TypeSet;
 
 /**
  * Categorized with types

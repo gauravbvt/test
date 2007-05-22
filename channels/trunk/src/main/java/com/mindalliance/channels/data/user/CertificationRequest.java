@@ -1,39 +1,57 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
 import com.mindalliance.channels.util.GUID;
 
 /**
- * Request for certification by an applicable authority
- * 
- * @author jf
+ * Request for certification by an applicable authority.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision$
  */
 public class CertificationRequest extends UserRequest {
 
+    /**
+     * KInd of certification request.
+     */
     enum Kind {
-        IDENTIY, ROLE
+        /** An identity certification request. */
+        IDENTIY,
+
+        /** A role certification request. */
+        ROLE
     };
 
-    private GUID target; // GUID of either UserProfile or Person
+    private GUID target;
 
+    /**
+     * Default constructor.
+     */
     public CertificationRequest() {
         super();
     }
 
     /**
-     * @return the target
+     * Default constructor.
+     * @param guid the guid
+     */
+    public CertificationRequest( GUID guid ) {
+        super( guid );
+    }
+    /**
+     * Return the GUID of either UserProfile or Person.
      */
     public GUID getTarget() {
         return target;
     }
 
     /**
+     * Set the target guid.
      * @param target the target to set
      */
     public void setTarget( GUID target ) {
         this.target = target;
     }
-
 }

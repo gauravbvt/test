@@ -34,6 +34,7 @@ import com.mindalliance.channels.services.SystemService;
 public class ScenarioViewer extends Window {
 
     private static final int TOP_MARGIN = 42;
+    private static final int BOTTOM_MARGIN = 35;
     private static final int PADDING = 20;
     private static final int TIMELINE_HEIGHT = 128;
 
@@ -140,9 +141,13 @@ public class ScenarioViewer extends Window {
         Div div = new Div();
         div.appendChild( new Image( "images/map.png" ) );
         div.setSclass( "google-map" );
+        div.setHeight( ( height - BOTTOM_MARGIN ) + "px" );
+
+        Hbox box = new Hbox();
+        box.appendChild( div );
 
         Window window = new Window( "Where", "normal", false );
-        window.appendChild( div );
+        window.appendChild( box );
         window.setHeight( height + "px" );
         return window;
     }

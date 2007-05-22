@@ -11,6 +11,7 @@ import java.beans.VetoableChangeListener;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
+ * @opt operations
  */
 public interface JavaBean {
 

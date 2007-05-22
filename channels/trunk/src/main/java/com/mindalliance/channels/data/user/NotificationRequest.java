@@ -1,6 +1,6 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
 import com.mindalliance.channels.data.elements.ElementEvent;
@@ -25,42 +25,59 @@ import com.mindalliance.channels.util.GUID;
  * "exclude" notification request means: do *not* notify me about any
  * such that..., and it overrides overlapping "include" notification
  * requests.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class NotificationRequest extends UserRequest {
 
+    /**
+     * The user scope of a notification request.
+     */
     enum UserScope {
+        /** Notify all users. */
         ALL, USER, ROLE, ORGANIZATION, DOMAIN
     };
 
+    /**
+     * The element scope of a notification request.
+     */
     enum ElementScope {
+        /** Notify for all elements. */
         ALL, ELEMENT, ORGANIZATION, SCENARIO, MODEL, PROJECT, DOMAIN
     };
 
     private ElementEvent elementEvent;
-    private boolean include = true; // else exclude
+    private boolean include = true;
     private UserScope userScope;
-    private GUID userScopeGUID; // guid of user profile, role type,
-                                // organization, domain type etc., or
-                                // null
+    private GUID userScopeGUID;
     private ElementScope elementScope;
-    private GUID elementScopeGUID; // guid of project, scenario,
-                                    // model, organization, element
-                                    // etc., or null
+    private GUID elementScopeGUID;
 
+    /**
+     * Default constructor.
+     */
     public NotificationRequest() {
         super();
     }
 
     /**
-     * @return the elementEvent
+     * Default constructor.
+     * @param guid the guid
+     */
+    public NotificationRequest( GUID guid ) {
+        super( guid );
+    }
+
+    /**
+     * Return the element event.
      */
     public ElementEvent getElementEvent() {
         return elementEvent;
     }
 
     /**
+     * Set the element event.
      * @param elementEvent the elementEvent to set
      */
     public void setElementEvent( ElementEvent elementEvent ) {
@@ -68,13 +85,14 @@ public class NotificationRequest extends UserRequest {
     }
 
     /**
-     * @return the elementScope
+     * Return the element scope.
      */
     public ElementScope getElementScope() {
         return elementScope;
     }
 
     /**
+     * Set the element scope.
      * @param elementScope the elementScope to set
      */
     public void setElementScope( ElementScope elementScope ) {
@@ -82,13 +100,15 @@ public class NotificationRequest extends UserRequest {
     }
 
     /**
-     * @return the elementScopeGUID
+     * Return the guid of project, scenario, model, organization,
+     * element etc., or null.
      */
     public GUID getElementScopeGUID() {
         return elementScopeGUID;
     }
 
     /**
+     * Set the element scope guid.
      * @param elementScopeGUID the elementScopeGUID to set
      */
     public void setElementScopeGUID( GUID elementScopeGUID ) {
@@ -96,13 +116,14 @@ public class NotificationRequest extends UserRequest {
     }
 
     /**
-     * @return the include
+     * If this request is included.
      */
     public boolean isInclude() {
         return include;
     }
 
     /**
+     * Mark this request as included.
      * @param include the include to set
      */
     public void setInclude( boolean include ) {
@@ -110,13 +131,14 @@ public class NotificationRequest extends UserRequest {
     }
 
     /**
-     * @return the userScope
+     * Return the user scope.
      */
     public UserScope getUserScope() {
         return userScope;
     }
 
     /**
+     * Set the user scope.
      * @param userScope the userScope to set
      */
     public void setUserScope( UserScope userScope ) {
@@ -124,13 +146,15 @@ public class NotificationRequest extends UserRequest {
     }
 
     /**
-     * @return the userScopeGUID
+     * Return the guid of user profile, role type, organization,
+     * domain type etc.
      */
     public GUID getUserScopeGUID() {
         return userScopeGUID;
     }
 
     /**
+     * Set the user scope GUID.
      * @param userScopeGUID the userScopeGUID to set
      */
     public void setUserScopeGUID( GUID userScopeGUID ) {

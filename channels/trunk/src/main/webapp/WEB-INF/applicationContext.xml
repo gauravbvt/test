@@ -60,8 +60,42 @@
 		<property name="email" value="guest@example.com"/>
 	</bean>
 
+	<bean name="countyType" class="com.mindalliance.channels.data.reference.Type">
+		<property name="name" value="County"/>
+		<property name="category" value="Location"/>
+	</bean>
+
+	<bean name="stateType" class="com.mindalliance.channels.data.reference.Type">
+		<property name="name" value="State"/>
+		<property name="category" value="Location"/>
+	</bean>
+
+	<bean name="fireType" class="com.mindalliance.channels.data.reference.Type">
+		<property name="name" value="Fire"/>
+		<property name="category" value="Event"/>
+	</bean>
+
+	<bean name="typology" class="com.mindalliance.channels.data.reference.Typology">
+		<property name="name" value="Default"/>
+		<property name="types"><list>
+			<ref bean="stateType"/>
+			<ref bean="countyType"/>
+			<ref bean="fireType"/>
+		</list></property>
+	</bean>
+
 	<bean id="ev1" class="com.mindalliance.channels.data.elements.scenario.Event">
 		<property name="name" value="Fire alarm triggered"/>
+		<property name="typeSet">
+			<bean class="com.mindalliance.channels.data.reference.TypeSet">
+				<constructor-arg ref="typology"/>
+				<constructor-arg value="Event"/>
+				<constructor-arg value="false"/>
+				<property name="types"><set>
+					<ref bean="fireType"/>
+				</set></property>
+			</bean>
+		</property>
 		<property name="description" value="Everybody remain calm..."/>
 		<property name="location">
 			<bean class="com.mindalliance.channels.data.reference.Location">
@@ -69,9 +103,29 @@
 				<property name="within"><list>
 					<bean class="com.mindalliance.channels.data.reference.Location">
 						<property name="name" value="Morris County"/>
+						<property name="typeSet">
+							<bean class="com.mindalliance.channels.data.reference.TypeSet">
+								<constructor-arg ref="typology"/>
+								<constructor-arg value="Location"/>
+								<constructor-arg value="false"/>
+								<property name="types"><set>
+									<ref bean="countyType"/>
+								</set></property>
+							</bean>
+						</property>
 						<property name="within"><list>
 							<bean class="com.mindalliance.channels.data.reference.Location">
 								<property name="name" value="New Jersey"/>
+								<property name="typeSet">
+									<bean class="com.mindalliance.channels.data.reference.TypeSet">
+										<constructor-arg ref="typology"/>
+										<constructor-arg value="Location"/>
+										<constructor-arg value="false"/>
+										<property name="types"><set>
+											<ref bean="stateType"/>
+										</set></property>
+									</bean>
+								</property>
 							</bean>
 						</list></property>
 					</bean>
@@ -82,6 +136,13 @@
 
 	<bean id="ev2" class="com.mindalliance.channels.data.elements.scenario.Task">
 		<property name="name" value="Verify cause of alarm"/>
+		<property name="typeSet">
+			<bean class="com.mindalliance.channels.data.reference.TypeSet">
+				<constructor-arg ref="typology"/>
+				<constructor-arg value="Any"/>
+				<constructor-arg value="false"/>
+			</bean>
+		</property>
 		<property name="description" value="Pranksters abound..."/>
 		<property name="cause">
 			<bean class="com.mindalliance.channels.data.components.Cause">
@@ -98,6 +159,13 @@
 
 	<bean id="ev3" class="com.mindalliance.channels.data.elements.scenario.Event">
 		<property name="name" value="Fire verified"/>
+		<property name="typeSet">
+			<bean class="com.mindalliance.channels.data.reference.TypeSet">
+				<constructor-arg ref="typology"/>
+				<constructor-arg value="Event"/>
+				<constructor-arg value="false"/>
+			</bean>
+		</property>
 		<property name="description" value="Flee!"/>
 		<property name="cause">
 			<bean class="com.mindalliance.channels.data.components.Cause">
@@ -108,6 +176,13 @@
 
 	<bean id="ev4" class="com.mindalliance.channels.data.elements.scenario.Task">
 		<property name="name" value="Notify fire department"/>
+		<property name="typeSet">
+			<bean class="com.mindalliance.channels.data.reference.TypeSet">
+				<constructor-arg ref="typology"/>
+				<constructor-arg value="Any"/>
+				<constructor-arg value="false"/>
+			</bean>
+		</property>
 		<property name="description" value="Please hold..."/>
 		<property name="cause">
 			<bean class="com.mindalliance.channels.data.components.Cause">
@@ -179,6 +254,9 @@
 				<ref bean="location2"/>
 			</list>
 		</property>
+		<property name="typologies"><list>
+			<ref bean="typology"/>
+		</list></property>
 	</bean>
 
 	<bean name="portfolio" class="com.mindalliance.channels.data.system.Portfolio">
@@ -259,6 +337,11 @@
 			<entry key="com.mindalliance.channels.data.elements.scenario.Event" value="nav_plain_red.png"/>
 			<entry key="com.mindalliance.channels.data.reference.Location" value="earth.png"/>
 			<entry key="com.mindalliance.channels.data.components.Cause" value="redo.png"/>
+			<entry key="com.mindalliance.channels.data.reference.Policy" value="scroll.png"/>
+			<entry key="com.mindalliance.channels.data.reference.Typology" value="scroll.png"/>
+			<entry key="com.mindalliance.channels.data.reference.Typology$Category" value="scroll.png"/>
+			<entry key="com.mindalliance.channels.data.reference.TypeSet" value="bookmarks.png"/>
+			<entry key="com.mindalliance.channels.data.reference.Type" value="bookmark.png"/>
 		</map></property>
 	</bean>
 

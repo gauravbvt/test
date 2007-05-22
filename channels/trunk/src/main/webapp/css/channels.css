@@ -45,6 +45,7 @@ div.tree, div.grid, div.grid-no-striped, div.tree-body,
 div.listbox-body, div.grid-body, div.listbox-paging, div.grid-paging { 
 	background-color: white; 
 	border: none;
+	overflow: visible;
 }
 
 .logo img {
@@ -182,12 +183,18 @@ input.description {
 	padding: 0px;
 }
 
+/*
 .tabpanel {
+	overflow: auto;
+}
+*/
+
+.what-pane {
+	height: inherit;
 	overflow: auto;
 }
 
 div.google-map {
-	border: solid 1px #aaa;
-	height: inherit;
-	overflow: auto;
+	border: 1px solid #5C6C7C;
+	overflow: scroll;
 }

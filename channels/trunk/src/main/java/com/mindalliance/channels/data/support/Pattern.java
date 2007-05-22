@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.JavaBean;
+import com.mindalliance.channels.data.reference.TypeSet;
 
 /**
  * A javabean pattern that is matched against javabeans of a given

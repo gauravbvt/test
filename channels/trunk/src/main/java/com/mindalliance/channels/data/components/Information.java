@@ -8,9 +8,9 @@ import java.util.List;
 import com.mindalliance.channels.data.Describable;
 import com.mindalliance.channels.data.elements.resources.Role;
 import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.support.Level;
 import com.mindalliance.channels.data.support.Pattern;
-import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.AbstractJavaBean;
 import com.mindalliance.channels.util.GUID;
 
@@ -123,7 +123,7 @@ public class Information extends AbstractJavaBean implements Describable {
         private List<Segment> subSegments;
         private Level confidence;
         private List<PrivacyConstraint> privacyConstraints;
-        private TypeSet classification = new TypeSet(Type.CLEARANCE);
+        private TypeSet classification;
 
         /**
          * @return the privacyConstraints

@@ -6,11 +6,12 @@ package com.mindalliance.channels.data.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Element;
 import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
-import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.util.AbstractJavaBean;
 import com.mindalliance.channels.util.GUID;
 
@@ -27,7 +28,7 @@ public abstract class AbstractElement extends AbstractJavaBean
     private GUID guid;
     private String name;
     private String description;
-    private TypeSet typeSet = new TypeSet( this.getClass().getSimpleName() );
+    private TypeSet typeSet;
     private boolean inferred;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     private List<Issue> issues = new ArrayList<Issue>();
@@ -60,7 +61,7 @@ public abstract class AbstractElement extends AbstractJavaBean
      * Get the domains.
      */
     public TypeSet getDomains() {
-        return typeSet.getDomains();
+        return getTypeSet().getDomains();
     }
 
     /**
@@ -91,13 +92,17 @@ public abstract class AbstractElement extends AbstractJavaBean
      * Set the types.
      * @param typeSet the types to set
      */
-    public void setTypes( TypeSet typeSet ) {
+    public void setTypeSet( TypeSet typeSet ) {
         this.typeSet = typeSet;
     }
 
     /**
      * Return the type set.
      */
+    @DisplayAs( direct = "types:",
+                reverse = "type set for {1}",
+                reverseMany = "type set for:"
+                )
     public TypeSet getTypeSet() {
         return typeSet;
     }

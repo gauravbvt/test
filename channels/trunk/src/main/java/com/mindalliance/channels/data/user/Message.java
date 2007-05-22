@@ -1,33 +1,51 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.mindalliance.channels.util.GUID;
 
 /**
  * A statement made in the context of a conversation, possibly in
- * reply to another message
- * 
- * @author jf
+ * reply to another message.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision$
  */
 public class Message extends Statement {
 
-    private List<Message> replies; // can be null
-    private boolean retracted = false; // true if issuer retracted it
+    private List<Message> replies;
+    private boolean retracted;
 
+    /**
+     * Default constructor.
+     */
     public Message() {
         super();
     }
 
     /**
-     * @return the replies
+     * Default constructor.
+     * @param guid the guid
      */
-    public List<Message> getReplies() {
+    public Message( GUID guid ) {
+        super( guid );
+    }
+
+    /**
+     * Return the replies to this message.
+     */
+    public synchronized List<Message> getReplies() {
+        if ( replies == null )
+            replies = new ArrayList<Message>();
         return replies;
     }
 
     /**
+     * Set the replies.
      * @param replies the replies to set
      */
     public void setReplies( List<Message> replies ) {
@@ -35,28 +53,31 @@ public class Message extends Statement {
     }
 
     /**
-     * @param message
+     * Add a reply.
+     * @param message the message
      */
     public void addReply( Message message ) {
-        replies.add( message );
+        getReplies().add( message );
     }
 
     /**
-     * @param message
+     * Remove a reply.
+     * @param message the reply
      */
     public void removeReply( Message message ) {
-        replies.remove( message );
+        getReplies().remove( message );
     }
 
     /**
-     * @return the retracted
+     * Tells if this statement was retracted.
      */
     public boolean isRetracted() {
         return retracted;
     }
 
     /**
-     * @param retracted the retracted to set
+     * Retract/unrectract this statement.
+     * @param retracted the retracted state
      */
     public void setRetracted( boolean retracted ) {
         this.retracted = retracted;

@@ -1,16 +1,21 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.resources;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.reference.Type;
-import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.data.reference.TypeSet;
+import com.mindalliance.channels.data.reference.Typology.Category;
 import com.mindalliance.channels.util.GUID;
 
+/**
+ * A person.
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
+ */
 public class Person extends ContactableResource {
 
     private String firstName;
@@ -20,24 +25,31 @@ public class Person extends ContactableResource {
     private List<Role> roles;
     private TypeSet clearances;
 
+    /**
+     * Default constructor.
+     */
     public Person() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Person( GUID guid ) {
         super( guid );
         roles = new ArrayList<Role>();
-        clearances = new TypeSet(Type.CLEARANCE);
     }
 
     /**
-     * @return the firstName
+     * Return the first name.
      */
     public String getFirstName() {
         return firstName;
     }
 
     /**
+     * Set the first name.
      * @param firstName the firstName to set
      */
     public void setFirstName( String firstName ) {
@@ -45,13 +57,14 @@ public class Person extends ContactableResource {
     }
 
     /**
-     * @return the lastName
+     * Return the last name.
      */
     public String getLastName() {
         return lastName;
     }
 
     /**
+     * Set the last name.
      * @param lastName the lastName to set
      */
     public void setLastName( String lastName ) {
@@ -59,13 +72,14 @@ public class Person extends ContactableResource {
     }
 
     /**
-     * @return the middleName
+     * Return the middle name.
      */
     public String getMiddleName() {
         return middleName;
     }
 
     /**
+     * Set the middle name.
      * @param middleName the middleName to set
      */
     public void setMiddleName( String middleName ) {
@@ -73,13 +87,14 @@ public class Person extends ContactableResource {
     }
 
     /**
-     * @return the photo
+     * Return the photo.
      */
     public URL getPhoto() {
         return photo;
     }
 
     /**
+     * Set the photo.
      * @param photo the photo to set
      */
     public void setPhoto( URL photo ) {
@@ -87,13 +102,14 @@ public class Person extends ContactableResource {
     }
 
     /**
-     * @return the roles
+     * Return the roles.
      */
     public List<Role> getRoles() {
         return roles;
     }
 
     /**
+     * Set the roles.
      * @param roles the roles to set
      */
     public void setRoles( List<Role> roles ) {
@@ -101,20 +117,21 @@ public class Person extends ContactableResource {
     }
 
     /**
-     * @param role
+     * Add a role.
+     * @param role the role
      */
     public void addRole( Role role ) {
         roles.add( role );
     }
 
     /**
-     * @param role
+     * Remove a role.
+     * @param role the role
      */
     public void removeRole( Role role ) {
         roles.remove( role );
     }
 
-    
     /**
      * Return the value of clearances.
      */
@@ -122,14 +139,14 @@ public class Person extends ContactableResource {
         return clearances;
     }
 
-    
     /**
      * Set the value of clearances.
      * @param clearances The new value of clearances
      */
     public void setClearances( TypeSet clearances ) {
+        if ( clearances.getCategory() != Category.Clearance )
+            throw new IllegalArgumentException();
+
         this.clearances = clearances;
     }
-    
-
 }

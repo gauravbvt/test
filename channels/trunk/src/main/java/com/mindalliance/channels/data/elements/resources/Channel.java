@@ -6,9 +6,9 @@ package com.mindalliance.channels.data.elements.resources;
 import java.util.List;
 
 import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.support.Latency;
 import com.mindalliance.channels.data.support.Level;
-import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -25,7 +25,7 @@ public class Channel extends AbstractResource {
     private List<Channel> interoperables; // information can travel
                                             // from this one to the
                                             // other
-    private TypeSet supportedFormats = new TypeSet( Type.FORMAT );
+    private TypeSet supportedFormats;
     private Latency latency;
 
     public Channel() {

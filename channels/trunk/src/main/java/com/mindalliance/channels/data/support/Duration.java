@@ -18,10 +18,18 @@ public class Duration implements Serializable, Comparable<Duration> {
      * A unit of time. Default is msecs.
      */
     public enum Unit {
-        day, hour, minute, second, msec
+        /** 7 days. */
+        week, day, hour, minute, second, msec
     }
 
+    /**
+     * A default duration of zero milliiseconds.
+     */
     public static final Duration NONE = new Duration();
+
+    private static final long[] VALUES = new long[] {
+        604800000, 86400000, 3600000, 60000, 1000, 1
+    };
 
     private double number;
     private Unit unit;
@@ -78,25 +86,7 @@ public class Duration implements Serializable, Comparable<Duration> {
      * Get the duration in milliseconds.
      */
     public long getMsecs() {
-        long factor;
-        switch ( unit ) {
-            case second:
-                factor = 1000;
-                break;
-            case minute:
-                factor = 60 * 1000;
-                break;
-            case hour:
-                factor = 60 * 60 * 1000;
-                break;
-            case day:
-                factor = 24 * 60 * 60 * 1000;
-                break;
-            default:
-                factor = 1;
-        }
-
-        return (long) ( number * factor );
+        return (long) ( VALUES[ getUnit().ordinal() ] * getNumber() );
     }
 
     /**

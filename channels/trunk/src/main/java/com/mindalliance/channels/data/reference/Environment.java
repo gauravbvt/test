@@ -1,6 +1,6 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.reference;
 
 import java.util.List;
@@ -9,50 +9,50 @@ import com.mindalliance.channels.data.Resource;
 import com.mindalliance.channels.data.elements.scenario.Event;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.data.support.Pattern;
-import com.mindalliance.channels.data.support.TypeSet;
 
 /**
  * A specification for situations; during what event they occur, what
  * resources become (un)available and what policies (do not) apply.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision$
  */
 public class Environment extends TypedReferenceData {
 
-    // What kind of event triggers this environment
-    private Pattern<Event> triggerCondition;  // An event pattern
-    // How long this environment stays in effect
-    private Duration duration; // if null, then use the trigger event's duration
-    // The type of location that minimally encompasses the location of the trigger event.
-    private TypeSet compasss = new TypeSet(Type.LOCATION, TypeSet.SINGLETON);
-    // The normally inoperational resources that become operational
+    private Pattern<Event> triggerCondition;
+    private Duration duration;
+    private TypeSet compass;
     private List<Resource> availableResources;
-    // The normally operational resources that become inoperational
     private List<Resource> unavailableResources;
-    // The normally inoperative policies that become operative
     private List<Policy> enforcedPolicies;
-    // The normally operative policies that become inoperative
     private List<Policy> unenforcedPolicies;
+
+    /**
+     * Default constructor.
+     */
+    public Environment() {
+        super();
+    }
 
     /**
      * Whether an event matches one of the trigger conditions for this
      * environment.
-     * 
-     * @param event
-     * @return
+     *
+     * @param event the event
      */
     public boolean isTriggeredBy( final Event event ) {
         return triggerCondition.matches( event );
     }
 
     /**
-     * @return the availableResources
+     * Return the normally inoperational resources that become operational.
      */
     public List<Resource> getAvailableResources() {
         return availableResources;
     }
 
     /**
+     * Set the available resources.
      * @param availableResources the availableResources to set
      */
     public void setAvailableResources( List<Resource> availableResources ) {
@@ -60,27 +60,30 @@ public class Environment extends TypedReferenceData {
     }
 
     /**
-     * @param resource
+     * Add an available resource.
+     * @param resource the resource
      */
     public void addAvailableResource( Resource resource ) {
         availableResources.add( resource );
     }
 
     /**
-     * @param resource
+     * Remove an available resource.
+     * @param resource the resource
      */
     public void removeAvailableResource( Resource resource ) {
         availableResources.remove( resource );
     }
 
     /**
-     * @return the enforcedPolicies
+     * Return the normally inoperative policies that become operative.
      */
     public List<Policy> getEnforcedPolicies() {
         return enforcedPolicies;
     }
 
     /**
+     * Set the enforced policies.
      * @param enforcedPolicies the enforcedPolicies to set
      */
     public void setEnforcedPolicies( List<Policy> enforcedPolicies ) {
@@ -88,27 +91,30 @@ public class Environment extends TypedReferenceData {
     }
 
     /**
-     * @param policy
+     * Add an enforced policy.
+     * @param policy the policy
      */
     public void addEnforcedPolicy( Policy policy ) {
         enforcedPolicies.add( policy );
     }
 
     /**
-     * @param policy
+     * Remove an enforced policy.
+     * @param policy the policy
      */
     public void removeEnforcedPolicy( Policy policy ) {
         enforcedPolicies.remove( policy );
     }
 
     /**
-     * @return the unavailableResources
+     * Return the normally operational resources that become inoperational.
      */
     public List<Resource> getUnavailableResources() {
         return unavailableResources;
     }
 
     /**
+     * Set the unavailable resources.
      * @param unavailableResources the unavailableResources to set
      */
     public void setUnavailableResources( List<Resource> unavailableResources ) {
@@ -116,27 +122,30 @@ public class Environment extends TypedReferenceData {
     }
 
     /**
-     * @param resource
+     * Add an unavailable resource.
+     * @param resource the resource
      */
     public void addUnavailableResource( Resource resource ) {
         unavailableResources.add( resource );
     }
 
     /**
-     * @param resource
+     * Remove an unavailable resource.
+     * @param resource the resource
      */
     public void removeUnavailableResource( Resource resource ) {
         unavailableResources.remove( resource );
     }
 
     /**
-     * @return the unenforcedPolicies
+     * Return the normally operative policies that become inoperative.
      */
     public List<Policy> getUnenforcedPolicies() {
         return unenforcedPolicies;
     }
 
     /**
+     * Set the unenforced policies.
      * @param unenforcedPolicies the unenforcedPolicies to set
      */
     public void setUnenforcedPolicies( List<Policy> unenforcedPolicies ) {
@@ -144,28 +153,28 @@ public class Environment extends TypedReferenceData {
     }
 
     /**
-     * @param policy
+     * Add an unenforced policy.
+     * @param policy the policy
      */
     public void addUnenforcedPolicy( Policy policy ) {
         unenforcedPolicies.add( policy );
     }
 
     /**
-     * @param policy
+     * Remove an unenforced policy.
+     * @param policy the policy
      */
     public void removeUnenforcedPolicy( Policy policy ) {
         unenforcedPolicies.remove( policy );
     }
 
-    
     /**
-     * Return the value of triggerCondition.
+     * Return what kind of event triggers this environment.
      */
     public Pattern<Event> getTriggerCondition() {
         return triggerCondition;
     }
 
-    
     /**
      * Set the value of triggerCondition.
      * @param triggerCondition The new value of triggerCondition
@@ -174,32 +183,30 @@ public class Environment extends TypedReferenceData {
         this.triggerCondition = triggerCondition;
     }
 
-    
     /**
-     * Return the value of compasss.
+     * Return the type of location that minimally encompasses the location
+     * of the trigger event.
      */
-    public TypeSet getCompasss() {
-        return compasss;
+    public TypeSet getCompass() {
+        return compass;
     }
 
-    
     /**
      * Set the value of compasss.
-     * @param compasss The new value of compasss
+     * @param compass The new value of compass
      */
-    public void setCompasss( TypeSet compasss ) {
-        this.compasss = compasss;
+    public void setCompass( TypeSet compass ) {
+        this.compass = compass;
     }
 
-    
     /**
-     * Return the value of duration.
+     * Return how long this environment stays in effect.
+     * If null, then use the trigger event's duration.
      */
     public Duration getDuration() {
         return duration;
     }
 
-    
     /**
      * Set the value of duration.
      * @param duration The new value of duration
@@ -207,5 +214,4 @@ public class Environment extends TypedReferenceData {
     public void setDuration( Duration duration ) {
         this.duration = duration;
     }
-
 }

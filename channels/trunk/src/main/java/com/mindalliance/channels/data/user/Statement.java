@@ -1,19 +1,20 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
 import java.io.Serializable;
 import java.util.Date;
-import com.mindalliance.channels.Channels;
+
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Unique;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * A statement made by a user
- * 
- * @author jf
+ * A statement made by a user.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public abstract class Statement implements Serializable, Unique {
 
@@ -22,26 +23,38 @@ public abstract class Statement implements Serializable, Unique {
     private Date when;
     private String content;
 
+    /**
+     * Default constructor.
+     */
     public Statement() {
         super();
-        guid = Channels.getGUIDFactory().newGuid();
     }
 
     /**
-     * @return the guid
+     * Default constructor.
+     * @param guid the guid of the statement.
+     */
+    public Statement( GUID guid ) {
+        this();
+        setGuid( guid );
+    }
+
+    /**
+     * Return the guid.
      */
     public GUID getGuid() {
         return guid;
     }
 
     /**
-     * @return the content
+     * Return the content.
      */
     public String getContent() {
         return content;
     }
 
     /**
+     * Set the content.
      * @param content the content to set
      */
     public void setContent( String content ) {
@@ -49,13 +62,14 @@ public abstract class Statement implements Serializable, Unique {
     }
 
     /**
-     * @return the user
+     * Return the user.
      */
     public User getUser() {
         return user;
     }
 
     /**
+     * Set the user.
      * @param user the user to set
      */
     public void setUser( User user ) {
@@ -63,13 +77,14 @@ public abstract class Statement implements Serializable, Unique {
     }
 
     /**
-     * @return the when
+     * Return the date of this statement.
      */
     public Date getWhen() {
         return when;
     }
 
     /**
+     * Set the date of this statement.
      * @param when the when to set
      */
     public void setWhen( Date when ) {
@@ -77,6 +92,8 @@ public abstract class Statement implements Serializable, Unique {
     }
 
     /**
+     * Set the guid.
+     * <p>This method should only be called by the persistency layer.</p>
      * @param guid the guid to set
      */
     public void setGuid( GUID guid ) {

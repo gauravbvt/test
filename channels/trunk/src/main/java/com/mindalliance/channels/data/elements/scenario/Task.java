@@ -10,8 +10,7 @@ import com.mindalliance.channels.data.Caused;
 import com.mindalliance.channels.data.Regulatable;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.Regulated;
-import com.mindalliance.channels.data.reference.Type;
-import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -27,7 +26,7 @@ import com.mindalliance.channels.util.GUID;
 public class Task extends AbstractOccurrence implements Caused, Regulatable {
 
     private List<Agent> agents = new ArrayList<Agent>();
-    private TypeSet objectives = new TypeSet( Type.OBJECTIVE );
+    private TypeSet objectives;
 
     /**
      * Default constructor.

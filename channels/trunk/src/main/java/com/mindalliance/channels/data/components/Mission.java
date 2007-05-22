@@ -5,7 +5,7 @@ package com.mindalliance.channels.data.components;
 
 import com.mindalliance.channels.data.Described;
 import com.mindalliance.channels.data.Typed;
-import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 public class Mission extends AbstractJavaBean implements Described, Typed {

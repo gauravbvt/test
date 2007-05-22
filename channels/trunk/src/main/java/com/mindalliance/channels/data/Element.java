@@ -8,7 +8,7 @@ import java.util.List;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.Issue;
-import com.mindalliance.channels.data.support.TypeSet;
+import com.mindalliance.channels.data.reference.TypeSet;
 
 /**
  * An event-enabled bean, stated or inferred, with a unique id, a

@@ -15,9 +15,8 @@ import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Role;
-import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.support.Pattern;
-import com.mindalliance.channels.data.support.TypeSet;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -28,7 +27,7 @@ import com.mindalliance.channels.util.GUID;
  */
 public class Project extends AbstractElement {
 
-    private TypeSet missions = new TypeSet( Type.MISSION );
+    private TypeSet missions;
     private Set<Model> models = new TreeSet<Model>();
     private List<Participation> participations =
                                     new ArrayList<Participation>();

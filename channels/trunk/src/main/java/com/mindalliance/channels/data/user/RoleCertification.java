@@ -1,8 +1,9 @@
-/*
- * Created on May 8, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.data.elements.resources.Organization;
@@ -12,8 +13,9 @@ import com.mindalliance.channels.util.GUID;
 /**
  * Certification that a person does in fact play given roles in an
  * organization.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class RoleCertification extends Certification {
 
@@ -21,18 +23,30 @@ public class RoleCertification extends Certification {
     private Organization organization;
     private List<GUID> roleGUIDs;
 
+    /**
+     * Default constructor.
+     */
     public RoleCertification() {
         super();
     }
 
     /**
-     * @return the organization
+     * Default constructor.
+     * @param guid the guid
+     */
+    public RoleCertification( GUID guid ) {
+        super( guid );
+    }
+
+    /**
+     * Return the organization.
      */
     public Organization getOrganization() {
         return organization;
     }
 
     /**
+     * Set the organization.
      * @param organization the organization to set
      */
     public void setOrganization( Organization organization ) {
@@ -40,13 +54,14 @@ public class RoleCertification extends Certification {
     }
 
     /**
-     * @return the person
+     * Return the person.
      */
     public Person getPerson() {
         return person;
     }
 
     /**
+     * Set the person.
      * @param person the person to set
      */
     public void setPerson( Person person ) {
@@ -54,13 +69,16 @@ public class RoleCertification extends Certification {
     }
 
     /**
-     * @return the roleGUIDs
+     * Return the role guid list.
      */
-    public List<GUID> getRoleGUIDs() {
+    public synchronized List<GUID> getRoleGUIDs() {
+        if ( roleGUIDs == null )
+            roleGUIDs = new ArrayList<GUID>();
         return roleGUIDs;
     }
 
     /**
+     * Set the role guid list.
      * @param roleGUIDs the roleGUIDs to set
      */
     public void setRoleGUIDs( List<GUID> roleGUIDs ) {
@@ -68,16 +86,18 @@ public class RoleCertification extends Certification {
     }
 
     /**
-     * @param guid
+     * Add a role guid.
+     * @param guid the guid
      */
     public void addRoleGUID( GUID guid ) {
-        roleGUIDs.add( guid );
+        getRoleGUIDs().add( guid );
     }
 
     /**
-     * @param guid
+     * Remove a role guid.
+     * @param guid the guid
      */
     public void removeRoleGUID( GUID guid ) {
-        roleGUIDs.remove( guid );
+        getRoleGUIDs().remove( guid );
     }
 }

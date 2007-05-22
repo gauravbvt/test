@@ -5,12 +5,25 @@ package com.mindalliance.channels.services;
 
 import static org.junit.Assert.*;
 
+import java.beans.PropertyVetoException;
+
+import org.junit.Before;
 import org.junit.Test;
 
+import com.mindalliance.channels.AbstractSecurityTest;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.UserExistsException;
 
 public class RegistryLoginTest extends AbstractSecurityTest {
 
+    private RegistryService registryService;
+    
+    @Before
+    public void setUp()  throws PropertyVetoException, UserExistsException {
+        super.setUp();
+        registryService = system.getRegistryService();
+    }
+    
     /**
      * Tests that the login is effective.
      */

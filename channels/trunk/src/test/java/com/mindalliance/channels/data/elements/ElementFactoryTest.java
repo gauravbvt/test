@@ -3,22 +3,31 @@
 
 package com.mindalliance.channels.data.elements;
 
-import static org.junit.Assert.*;
+import java.beans.PropertyVetoException;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.AbstractSecurityTest;
+import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.reference.Typology.Category;
 
-public class ElementFactoryTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class ElementFactoryTest extends AbstractSecurityTest {
 
     private ElementFactory factory;
 
     @Before
-    public void createFactory() throws Exception {
-        factory = Channels.getElementFactory();
-        assertNotNull(factory);
+    public void setUp() throws PropertyVetoException, UserExistsException {
+        super.setUp();
+        factory = new ElementFactory();
+        factory.setGuidFactory( guidFactory );
+        factory.setTypology(
+            system.getLibraryService().getTypologies().iterator().next() );
     }
 
     /**
@@ -31,11 +40,10 @@ public class ElementFactoryTest {
 
     @Test
     public final void createElement() {
-        Person person = (Person) factory.newInstance( Person.class );
+        Person person = (Person) factory.newInstance( Person.class, Category.Any );
         assertNotNull( person );
         Type root = person.getTypeSet().getTypology().getRoot();
-        assertEquals(root.getName(), person.getClass().getSimpleName());
-        assertEquals(root.getName(), root.getTypology().getName());
+        assertEquals("", root.getName());
     }
 
 }

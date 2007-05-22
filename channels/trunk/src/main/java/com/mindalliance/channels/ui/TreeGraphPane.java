@@ -48,6 +48,11 @@ import static com.mindalliance.channels.ui.TreeGraphPane.Arc.Direction.to;
 public class TreeGraphPane extends Tabbox implements TimelineListener {
 
     /**
+     * How deep to build the tree.
+     */
+    private static final int MAX_LEVEL = 2;
+
+    /**
      * Height of the title, in pixels.
      */
     private static final int TITLE_HEIGHT = 35;
@@ -89,11 +94,13 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         tabs.setHeight( "16px" );
 
         this.graph = generateGraph();
+        graph.setSclass( "what-pane" );
         Tabpanel graphPanel = new Tabpanel();
         graphPanel.appendChild( graph );
         graphPanel.setHeight( contentHeight + "px" );
 
         this.tree = new Tree();
+        tree.setSclass( "what-pane" );
         Tabpanel treePanel = new Tabpanel();
         treePanel.setHeight( contentHeight + "px" );
         treePanel.appendChild( tree );
@@ -152,7 +159,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     @SuppressWarnings( "unchecked" )
     private void rebuildTree( Caused root ) {
         Treechildren trees = new Treechildren();
-        trees.appendChild( createItem( root, getName( root ), 2 ) );
+        trees.appendChild( createItem( root, getName( root ), MAX_LEVEL ) );
 
         tree.getChildren().clear();
         tree.getChildren().add( trees );
@@ -274,8 +281,8 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         BeanWrapper bw = new BeanWrapperImpl( occurence );
         for ( PropertyDescriptor pd : bw.getPropertyDescriptors() ) {
             // Only process readable properties
-            if ( pd.getReadMethod() != null ) {
-                String name = pd.getName();
+            String name = pd.getName();
+            if ( pd.getReadMethod() != null && pd.getWriteMethod() != null ) {
                 Class<?> type = pd.getPropertyType();
                 Object value = bw.getPropertyValue( name );
                 if ( value != null ) {

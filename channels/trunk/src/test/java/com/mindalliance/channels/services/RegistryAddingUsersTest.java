@@ -7,10 +7,12 @@ import static org.junit.Assert.*;
 
 import java.beans.PropertyVetoException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.AbstractSecurityTest;
 
 /**
  * Tests for the security contracts of the Registry service.
@@ -20,6 +22,14 @@ import com.mindalliance.channels.UserExistsException;
  */
 public class RegistryAddingUsersTest extends AbstractSecurityTest {
 
+    private RegistryService registryService;
+    
+    @Before
+    public void setUp()  throws PropertyVetoException, UserExistsException {
+        super.setUp();
+        registryService = system.getRegistryService();
+    }
+    
     /**
      * Adding a new user with logged in user.
      * 
@@ -48,12 +58,12 @@ public class RegistryAddingUsersTest extends AbstractSecurityTest {
      * @throws UserExistsException
      */
     @Test( expected = UserExistsException.class)
-    public void testAddUserAgainByUser() throws PropertyVetoException,
-            UserExistsException {
+    public void testAddUserAgainByUser() 
+        throws PropertyVetoException, UserExistsException {
+        
         registryService.login( "user", "user" );
-        User u;
         try {
-            u = registryService.registerUser( "A plain old user", "user",
+            registryService.registerUser( "A plain old user", "user",
                     "user" );
         }
         finally {

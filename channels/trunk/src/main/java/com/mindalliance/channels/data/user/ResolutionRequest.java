@@ -1,6 +1,6 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
 import com.mindalliance.channels.util.GUID;
@@ -8,28 +8,31 @@ import com.mindalliance.channels.util.GUID;
 /**
  * Request to the proper authority to resolve a conflict about some
  * element.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class ResolutionRequest extends UserRequest {
 
     private GUID elementGUID;
-    private boolean escalate; // indicates that prior resolution
-                                // requests about the same element
-                                // were not addressed to satisfaction.
+    private boolean escalate;
 
+    /**
+     * Default constructor.
+     */
     public ResolutionRequest() {
         super();
     }
 
     /**
-     * @return the elementGUID
+     * Return the element GUID.
      */
     public GUID getElementGUID() {
         return elementGUID;
     }
 
     /**
+     * Set the element GUID.
      * @param elementGUID the elementGUID to set
      */
     public void setElementGUID( GUID elementGUID ) {
@@ -37,14 +40,16 @@ public class ResolutionRequest extends UserRequest {
     }
 
     /**
-     * @return the escalate
+     * Return an indication that prior resolution requests about the
+     * same element were not addressed to satisfaction.
      */
     public boolean isEscalate() {
         return escalate;
     }
 
     /**
-     * @param escalate the escalate to set
+     * Set the escalation state.
+     * @param escalate the state
      */
     public void setEscalate( boolean escalate ) {
         this.escalate = escalate;

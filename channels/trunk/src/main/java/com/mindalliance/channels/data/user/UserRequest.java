@@ -1,33 +1,47 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
+
+import com.mindalliance.channels.util.GUID;
 
 /**
  * Request made by a user. A request is either active or inactive.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public abstract class UserRequest extends Statement {
 
-    private boolean active; // whether the request is in effect
+    private boolean active;
 
+    /**
+     * Default constructor.
+     */
     public UserRequest() {
         super();
     }
 
     /**
-     * @return the active
+     * Default constructor.
+     * @param guid the guid
+     */
+    public UserRequest( GUID guid ) {
+        super( guid );
+    }
+
+    /**
+     * Return whether the request is in effect.
      */
     public boolean isActive() {
         return active;
     }
 
     /**
-     * @param active the active to set
+     * Set whether the request is in effect.
+     * @param active the active state
      */
     public void setActive( boolean active ) {
         this.active = active;
     }
-
 }

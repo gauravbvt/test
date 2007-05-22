@@ -1,33 +1,46 @@
-/*
- * Created on May 8, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.user;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.util.GUID;
 
 /**
- * Identity certification
- * 
- * @author jf
+ * Identity certification.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class IdentityCertification extends Certification {
 
-    private User userCertified; // the user being certified
-    private GUID personGUID; // the certified personification
+    private User userCertified;
+    private GUID personGUID;
 
+    /**
+     * Default constructor.
+     */
     public IdentityCertification() {
         super();
     }
 
     /**
-     * @return the personGUID
+     * Default constructor.
+     * @param guid the guid
+     */
+    public IdentityCertification( GUID guid ) {
+        super( guid );
+    }
+
+    /**
+     * Return the certified personification.
      */
     public GUID getPersonGUID() {
         return personGUID;
     }
 
     /**
+     * Set the certified personification.
      * @param personGUID the personGUID to set
      */
     public void setPersonGUID( GUID personGUID ) {
@@ -35,17 +48,17 @@ public class IdentityCertification extends Certification {
     }
 
     /**
-     * @return the userCertified
+     * Return the user being certified.
      */
     public User getUserCertified() {
         return userCertified;
     }
 
     /**
+     * Set the user being certified.
      * @param userCertified the userCertified to set
      */
     public void setUserCertified( User userCertified ) {
         this.userCertified = userCertified;
     }
-
 }

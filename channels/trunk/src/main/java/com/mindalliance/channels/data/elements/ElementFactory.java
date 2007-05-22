@@ -6,18 +6,22 @@ package com.mindalliance.channels.data.elements;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import com.mindalliance.channels.data.reference.TypeSet;
+import com.mindalliance.channels.data.reference.Typology;
+import com.mindalliance.channels.data.reference.Typology.Category;
 import com.mindalliance.channels.util.GUID;
 import com.mindalliance.channels.util.GUIDFactory;
 
 /**
  * A creator of elements.
- * 
+ *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision: 106 $
  */
 public class ElementFactory {
 
     private GUIDFactory guidFactory;
+    private Typology typology;
 
     /**
      * Default constructor.
@@ -27,7 +31,7 @@ public class ElementFactory {
 
     /**
      * Create a new model object.
-     * 
+     *
      * @param <T> the return type
      * @param elementClass a subclass of AbstractElement
      * @return the new instance
@@ -36,14 +40,16 @@ public class ElementFactory {
 
         try {
 
-            Constructor<T> constructor = elementClass.getDeclaredConstructor( new Class[] { GUID.class } );
+            Constructor<T> constructor =
+                elementClass.getDeclaredConstructor(
+                    new Class[] { GUID.class } );
 
-            return constructor.newInstance( new Object[] { getGuidFactory().newGuid() } );
+            return constructor.newInstance(
+                    new Object[] { getGuidFactory().newGuid() } );
 
         } catch ( NoSuchMethodException e ) {
             // Will not happen: constructor implemented in
-            // AbstractElement
-            // but just in case...
+            // AbstractElement but just in case...
             throw new RuntimeException( e );
 
         } catch ( IllegalAccessException e ) {
@@ -62,6 +68,22 @@ public class ElementFactory {
     }
 
     /**
+     * Create a new instance with a typeset of given category.
+     * @param <T> the return type
+     * @param elementClass a subclass of AbstractElement
+     * @param category the category of the typeset
+     */
+    public <T extends AbstractElement> T newInstance(
+            Class<T> elementClass, Category category ) {
+
+        T result = newInstance( elementClass );
+        TypeSet ts = new TypeSet( typology, category, false );
+        result.setTypeSet( ts );
+
+        return result;
+    }
+
+    /**
      * Get the GUID factory used for beans created by this factory.
      */
     public final GUIDFactory getGuidFactory() {
@@ -70,10 +92,24 @@ public class ElementFactory {
 
     /**
      * Set the GUID factory used when creating new model objects.
-     * 
      * @param guidFactory the GUID factory.
      */
     public void setGuidFactory( GUIDFactory guidFactory ) {
         this.guidFactory = guidFactory;
+    }
+
+    /**
+     * Return the value of typology.
+     */
+    public Typology getTypology() {
+        return this.typology;
+    }
+
+    /**
+     * Set the value of typology.
+     * @param typology The new value of typology
+     */
+    public void setTypology( Typology typology ) {
+        this.typology = typology;
     }
 }
