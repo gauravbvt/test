@@ -97,7 +97,7 @@ public class ZkBeanViewPanel<V> extends ZkBeanViewPanelBase<V> implements BeanVi
 		Label keyLabel = new Label();
 		Configuration config = new Configuration(this);
 		keyLabel.setValue(config.getLabel(key));
-		keyLabel.setId(key + "_label");
+		//keyLabel.setId(key + "_label");
 		currentRow.appendChild(keyLabel);
 	}
 

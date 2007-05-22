@@ -16,7 +16,7 @@ public abstract class ZkBeanViewPanelBase<V> extends Box implements BeanView {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unchecked")
-	BeanViewConfiguration<V> helper = new BeanViewConfiguration<V>(this);
+	protected BeanViewConfiguration<V> helper = new BeanViewConfiguration<V>(this);
 
 	private Locale locale = Locale.ENGLISH;
 

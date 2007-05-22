@@ -26,9 +26,9 @@ public class ZkComponentFactory {
 
     private BeanView bean;
 
-    private List<PropertyComponentFactory> factories = new ArrayList<PropertyComponentFactory>();
+    protected List<PropertyComponentFactory> factories = new ArrayList<PropertyComponentFactory>();
 
-    private void installDefaultFactories()
+    protected void installDefaultFactories()
     {
         factories.add(new ZkPrimitiveFactory());
         factories.add(new ZkArrayFactory());
@@ -55,7 +55,7 @@ public class ZkComponentFactory {
             settable = factory.getComponent(key, type, bean);
             
             if (settable != null) {
-            	((AbstractComponent)settable).setId(key);
+            	//((AbstractComponent)settable).setId(key);
                 return;
             }
         }
