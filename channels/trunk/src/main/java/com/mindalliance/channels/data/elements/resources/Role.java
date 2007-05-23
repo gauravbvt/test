@@ -6,7 +6,9 @@ package com.mindalliance.channels.data.elements.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.reference.Location;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -31,6 +33,7 @@ public class Role extends AbstractActor {
     private Location jurisdiction; // Area of jurisdiction for the
                                     // role
 
+    @PropertyOptions(ignore=true)
     public List<Role> getRoles( ) { 
         List<Role> roles = new ArrayList<Role>();
         roles.add( this );
@@ -48,13 +51,14 @@ public class Role extends AbstractActor {
     /**
      * @return the alternates
      */
+    @CollectionType(type=Role.class)
     public List<Role> getAlternates() {
         return alternates;
     }
 
     /**
      * @param alternates the alternates to set
-     */
+     */    
     public void setAlternates( List<Role> alternates ) {
         this.alternates = alternates;
     }
@@ -104,6 +108,7 @@ public class Role extends AbstractActor {
     /**
      * @return the managers
      */
+    @CollectionType(type=Role.class)
     public List<Role> getManagers() {
         return managers;
     }

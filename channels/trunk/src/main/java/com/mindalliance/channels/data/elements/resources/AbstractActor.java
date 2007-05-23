@@ -6,12 +6,14 @@ package com.mindalliance.channels.data.elements.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.Contactable;
 import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.CanAccess;
 import com.mindalliance.channels.data.elements.assertions.NeedsToKnow;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -44,14 +46,14 @@ abstract public class AbstractActor extends AccessibleResource implements Actor 
     public boolean needsToKnow( Information information ) {
         return false; // TODO
     }
-
+    @PropertyOptions(ignore=true)
     public List<NeedsToKnow> getNeedsToKnowAssertions() {
         List<NeedsToKnow> list = new ArrayList<NeedsToKnow>();
         for (Assertion assertion : getAssertions())
                 if (assertion instanceof  NeedsToKnow) list.add( (NeedsToKnow) assertion);
         return list;
     }
-
+    @PropertyOptions(ignore=true)
     public List<CanAccess> getCanAccessAssertions() {
         List<CanAccess> list = new ArrayList<CanAccess>();
         for (Assertion assertion : getAssertions())
@@ -66,6 +68,7 @@ abstract public class AbstractActor extends AccessibleResource implements Actor 
     /**
      * Return the value of expertise.
      */
+    @CollectionType(type=Information.class)
     public List<Information> getExpertise() {
         return expertise;
     }

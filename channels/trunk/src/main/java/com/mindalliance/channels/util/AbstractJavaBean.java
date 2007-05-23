@@ -15,6 +15,7 @@ import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.JavaBean;
 
 /**
@@ -41,6 +42,7 @@ public abstract class AbstractJavaBean implements JavaBean, Serializable {
      * Get the bean info for this class.
      * Cached for performance.
      */
+    @PropertyOptions(ignore=true)
     private synchronized BeanInfo getBeanInfo() {
 
         if ( this.beanInfo == null )
@@ -139,6 +141,7 @@ public abstract class AbstractJavaBean implements JavaBean, Serializable {
     /**
      * Return the current listeners to all property change events.
      */
+    @PropertyOptions(ignore=true)
     public PropertyChangeListener[] getPropertyChangeListeners() {
         return getPcs().getPropertyChangeListeners();
     }
@@ -229,6 +232,7 @@ public abstract class AbstractJavaBean implements JavaBean, Serializable {
     /**
      * Return currently registered listeners to all properties.
      */
+    @PropertyOptions(ignore=true)
     public VetoableChangeListener[] getVetoableChangeListeners() {
         return getVcs().getVetoableChangeListeners();
     }
@@ -237,6 +241,7 @@ public abstract class AbstractJavaBean implements JavaBean, Serializable {
      * Return currently registered listeners to a given property.
      * @param propertyName the property.
      */
+    @PropertyOptions(ignore=true)
     public VetoableChangeListener[] getVetoableChangeListeners(
             String propertyName ) {
 

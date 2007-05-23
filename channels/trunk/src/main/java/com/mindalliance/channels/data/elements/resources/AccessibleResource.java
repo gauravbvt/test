@@ -11,6 +11,7 @@ import org.apache.commons.collections.Predicate;
 import com.mindalliance.channels.data.Accessible;
 import com.mindalliance.channels.data.Contactable;
 import com.mindalliance.channels.data.support.Pattern;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -68,6 +69,7 @@ public abstract class AccessibleResource extends AbstractResource implements
     /**
      * @return the accessAuthorizations
      */
+    @CollectionType(type=AccessAuthorization.class)
     public List<AccessAuthorization> getAccessAuthorizations() {
         return accessAuthorizations;
     }

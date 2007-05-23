@@ -6,6 +6,7 @@ package com.mindalliance.channels.data.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.Element;
@@ -13,6 +14,7 @@ import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.util.AbstractJavaBean;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -60,6 +62,7 @@ public abstract class AbstractElement extends AbstractJavaBean
     /**
      * Get the domains.
      */
+    @PropertyOptions(ignore=true)
     public TypeSet getDomains() {
         return getTypeSet().getDomains();
     }
@@ -84,6 +87,7 @@ public abstract class AbstractElement extends AbstractJavaBean
     /**
      * Return the guid.
      */
+    @PropertyOptions(ignore=true)
     public GUID getGuid() {
         return guid;
     }
@@ -103,6 +107,7 @@ public abstract class AbstractElement extends AbstractJavaBean
                 reverse = "type set for {1}",
                 reverseMany = "type set for:"
                 )
+    @PropertyOptions(ignore=true)
     public TypeSet getTypeSet() {
         return typeSet;
     }
@@ -155,6 +160,7 @@ public abstract class AbstractElement extends AbstractJavaBean
     /**
      * Get the issues attached to this element.
      */
+    @CollectionType(type=Issue.class)
     public List<Issue> getIssues() {
         return issues;
     }
@@ -187,6 +193,7 @@ public abstract class AbstractElement extends AbstractJavaBean
      * Get the assertions.
      * @return the assertions
      */
+    @CollectionType(type=Assertion.class)
     public List<Assertion> getAssertions() {
         return assertions;
     }
