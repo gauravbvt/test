@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
 import org.zkforge.timeline.Bandinfo;
+import org.zkforge.timeline.Hotzone;
 import org.zkforge.timeline.Timeline;
 import org.zkforge.timeline.data.OccurEvent;
 import org.zkforge.timeline.event.SelectEvent;
@@ -35,18 +37,83 @@ import com.mindalliance.channels.data.elements.scenario.Product;
  */
 public class ScenarioTimeline extends Timeline {
 
+    /**
+     * Minimum duration of a timeline, in milliseconds.
+     */
+    private static final int MIN_DURATION = 15000;
+
     private static final float TOP_TRACK_HEIGHT = 1.4f;
     private static final float BOTTOM_TRACK_HEIGHT = 0.4f;
-    private static final int TOP_INTERVAL = 20;
     private static final float TRACK_GAP = 0.1f;
+    private static final int BOTTOM_MARGINS = 5;
+
+    /**
+     * The size of a tick in a band.
+     * This affect the zoom level.
+     */
+    private static final int INTERVAL = 35;
+
+    /**
+     * Allowed scales for the timelines.
+     * @todo Scales need to be tested for practicality and looks
+     */
+    private enum Scale {
+        MS10  ( 10, 10,  "millisecond", 1,   "millisecond" ),
+        MS500 ( 50, 50,  "millisecond", 10,  "millisecond" ),
+        S     ( 2,  100, "millisecond", 20,  "millisecond" ),
+        S10   ( 10, 1,   "second",      100, "millisecond" ),
+        S30   ( 3,  5,   "second",      500, "millisecond" ),
+        M     ( 2,  10,  "second",      1,   "second" ),
+        M5    ( 5,  1,   "minute",      5,   "second" ),
+        M15   ( 3,  1,   "minute",      20,  "second" ),
+        M30   ( 2,  5,   "minute",      1,   "minute" ),
+        H     ( 2,  15,  "minute",      5,   "minute" ),
+        H6    ( 6,  1,   "hour",        10,  "minute" ),
+        H12   ( 2,  2,   "hour",        30,  "minute" ),
+        D     ( 2,  3,   "hour",        45,  "minute" ),
+        W     ( 7,  1,   "day",         6,   "hour" ),
+        W4    ( 4,  1,   "week",        1,   "day" );
+
+        private int scale;
+        private String bottomUnit;
+        private int bottomMultiple;
+        private String topUnit;
+        private int topMultiple;
+
+        private Scale(
+                int scale, int bottomMultiple, String bottomUnit,
+                int topMultiple, String topUnit ) {
+
+            this.scale = scale;
+            this.bottomMultiple = bottomMultiple;
+            this.bottomUnit = bottomUnit;
+            this.topMultiple = topMultiple;
+            this.topUnit = topUnit;
+        }
+
+        int bottomInterval() {
+            return Math.max( 1, INTERVAL / bottomMultiple );
+        }
+
+        int topInterval() {
+            return Math.max( 1, INTERVAL / topMultiple );
+        }
+
+        long milliseconds() {
+            long result = 1;
+            for ( int i = 0 ; i <= ordinal() ; i++ )
+                result *= values()[ i ].scale ;
+            return result;
+        }
+    }
 
     private Scenario scenario;
     private Caused selectedObject;
     private List<TimelineListener> selectionListeners;
     private Map<String,Caused> idMap;
-
     private boolean initialized;
     private IconManager iconManager;
+    private Set<ResolvedEvent> events;
 
     /**
      * Default constructor.
@@ -61,30 +128,13 @@ public class ScenarioTimeline extends Timeline {
         super();
         this.scenario = scenario;
         this.iconManager = im;
+        this.events = getResolvedEvents( new Date( 0 ) );
         setPage( page );
 
-//        TimeZone timeZone = TimeZone.getTimeZone( "EDT" );
-        final Date start = new Date();
-
-        final Bandinfo top = new Bandinfo();
-//        top.setTimeZone( timeZone );
-        top.setDate( start );
-        top.setTrackHeight( TOP_TRACK_HEIGHT );
-        top.setTrackGap( TRACK_GAP );
-        top.setIntervalUnit( "minute" );
-        top.setIntervalPixels( TOP_INTERVAL );
-
-//        final Hotzone topHz = new Hotzone();
-//        topHz.setMagnify( 5 );
-
-        final Bandinfo bottom = new Bandinfo();
-//        bottom.setTimeZone( timeZone );
-        bottom.setDate( start );
-        bottom.setIntervalUnit( "hour" );
-        bottom.setTrackHeight( BOTTOM_TRACK_HEIGHT );
-        bottom.setTrackGap( TRACK_GAP );
-        bottom.setShowEventText( false );
-        bottom.setSyncWith( top.getId() );
+        Date middle = getMiddleDate();
+        TimeZone tz = TimeZone.getTimeZone( "UTC" );
+        Bandinfo top = createTop( middle, tz );
+        Bandinfo bottom = createBottom( middle, tz, top.getId() );
 
         // The following sets the *heights* of the tracks
         top.setWidth( "70%" );
@@ -92,9 +142,15 @@ public class ScenarioTimeline extends Timeline {
 
         appendChild( top );
         appendChild( bottom );
+
         setHeight( height + "px" );
         setWidth( null );
         setSclass( "timeline" );
+
+        // Set initial selection to first object in the timeline.
+        if ( events.size() > 0 )
+            setSelectedObject( events.iterator().next().getObject() );
+
         addEventListener( "onSelectEvent", new EventListener() {
             public boolean isAsap() {
                 return false;
@@ -115,19 +171,153 @@ public class ScenarioTimeline extends Timeline {
             public void onEvent( org.zkoss.zk.ui.event.Event event ) {
                 if ( !initialized ) {
                     initialized = true;
-                    populateTimeline( start );
+                    populateTimeline();
                 }
             }
         } );
     }
 
     /**
-     * Put some events in that timeline.
-     * @param start the origin of the timeline
+     * Create the top band.
+     * @param middle the middle date
+     * @param tz the time zome
      */
-    void populateTimeline( Date start ) {
+    private Bandinfo createTop( Date middle, TimeZone tz ) {
+        Scale slice = getScale();
+        long ms = slice.milliseconds();
+
+        Hotzone hz = new Hotzone();
+        final long t = getStartDate().getTime();
+        hz.setStart( new Date( t - ms ) );
+        hz.setEnd( new Date( getEndDate().getTime() + ms ) );
+        hz.setUnit( slice.topUnit );
+        hz.setMagnify( 1 );
+        hz.setMultiple( slice.topMultiple );
+
+        Bandinfo top = new Bandinfo();
+        top.setTimeZone( tz );
+        top.setDate( middle );
+        top.setTrackHeight( TOP_TRACK_HEIGHT );
+        top.setTrackGap( TRACK_GAP );
+        top.setIntervalUnit( slice.topUnit );
+        top.setIntervalPixels( slice.topInterval() );
+        top.appendChild( hz );
+        return top;
+    }
+
+    /**
+     * Create the bottom band.
+     * @param middle the middle date
+     * @param tz the timezone
+     * @param id the id of the top pane to synchronize with.
+     */
+    private Bandinfo createBottom( Date middle, TimeZone tz, String id ) {
+        Scale slice = getScale();
+        long ms = BOTTOM_MARGINS * slice.milliseconds();
+
+        Hotzone hz = new Hotzone();
+        final long t = getStartDate().getTime();
+        hz.setStart( new Date( t - ms ) );
+        hz.setEnd( new Date( t + ms ) );
+        hz.setUnit( slice.bottomUnit );
+        hz.setMagnify( 1 );
+        hz.setMultiple( slice.bottomMultiple );
+
+        final Bandinfo bottom = new Bandinfo();
+        bottom.setTimeZone( tz );
+        bottom.setDate( middle );
+        bottom.setIntervalUnit( slice.bottomUnit );
+        bottom.setIntervalPixels( slice.bottomInterval() );
+        bottom.setTrackHeight( BOTTOM_TRACK_HEIGHT );
+        bottom.setTrackGap( TRACK_GAP );
+        bottom.setShowEventText( false );
+        bottom.setSyncWith( id );
+        bottom.appendChild( hz );
+
+        return bottom;
+    }
+
+    /**
+     * Return a scale that holds the entire scenario.
+     */
+    private Scale getScale() {
+        long ms = getEndDate().getTime() - getStartDate().getTime();
+        final Scale[] scales = Scale.values();
+        for ( Scale s : scales ) {
+            long milliseconds = s.milliseconds();
+            if ( ms < milliseconds )
+                return s;
+        }
+
+        return scales[ scales.length - 1 ];
+    }
+
+    /**
+     * Return the middle date of the scenario.
+     */
+    private Date getMiddleDate() {
+        final long stime = getStartDate().getTime();
+        final long etime = getEndDate().getTime();
+        return new Date( stime + ( etime - stime ) / 2 );
+    }
+
+    /**
+     * Return the start date of the scenario.
+     */
+    private Date getStartDate() {
+        Date result = null ;
+        if ( events != null && events.size() > 0 )
+            for ( ResolvedEvent e : events )
+                if ( result == null || result.after( e.getStart() ) )
+                    result = e.getStart();
+
+        return result == null ?
+                new Date( 0 )
+              : result ;
+    }
+
+    /**
+     * Return the end date of the scenario.
+     */
+    private Date getEndDate() {
+        Date result = new Date( getStartDate().getTime() + MIN_DURATION ) ;
+        if ( events != null && events.size() > 0 )
+            for ( ResolvedEvent e : events )
+                if ( result.before( e.getEnd() ) )
+                    result = e.getEnd();
+
+        return result ;
+    }
+
+    /**
+     * Put the events in the timeline.
+     */
+    void populateTimeline() {
         this.idMap = new HashMap<String,Caused>();
 
+        for ( ResolvedEvent event : events ) {
+            OccurEvent occurrence = new OccurEvent();
+            occurrence.setText( event.getName() );
+            occurrence.setDescription( event.getDescription() );
+            occurrence.setIconUrl(
+                getIconManager().getSmallIcon( event.getObject() ) );
+            occurrence.setStart( event.getStart() );
+            occurrence.setDuration( event.isDuration() );
+
+            if ( event.isDuration() )
+                occurrence.setEnd( event.getEnd() );
+
+            idMap.put( occurrence.getId(), event.getObject() );
+            addOccurEvent( occurrence );
+        }
+    }
+
+    /**
+     * Resolve the occurrences/products in the scenario starting at
+     * a given date.
+     * @param start the starting date
+     */
+    private Set<ResolvedEvent> getResolvedEvents( Date start ) {
         Set<ResolvedEvent> events = new TreeSet<ResolvedEvent>();
 
         if ( getScenario() != null ) {
@@ -139,20 +329,7 @@ public class ScenarioTimeline extends Timeline {
                     events.add( new ResolvedEvent( t, start ) );
         }
 
-        for ( ResolvedEvent event : events ) {
-            OccurEvent occurrence = new OccurEvent();
-            occurrence.setText( event.getName() );
-            occurrence.setDescription( event.getDescription() );
-            occurrence.setIconUrl(
-                getIconManager().getSmallIcon( event.getObject() ) );
-            occurrence.setStart( event.getStart() );
-            occurrence.setDuration( event.isDuration() );
-            if ( event.isDuration() )
-                occurrence.setEnd( event.getEnd() );
-
-            idMap.put( occurrence.getId(), event.getObject() );
-            addOccurEvent( occurrence );
-        }
+        return events;
     }
 
     /**

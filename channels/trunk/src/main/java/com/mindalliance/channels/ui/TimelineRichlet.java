@@ -80,7 +80,7 @@ public class TimelineRichlet extends GenericRichlet {
         w.setPage( page );
 
         Calendar date = Calendar.getInstance();
-        timeline.populateTimeline( date.getTime() );
+        timeline.populateTimeline();
         // date.setTimeZone( timeZone );
         // date.set( 2007, 5, 8, 13, 0 );
         final OccurEvent<String> e = new OccurEvent<String>();
