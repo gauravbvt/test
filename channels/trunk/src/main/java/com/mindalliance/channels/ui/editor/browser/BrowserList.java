@@ -28,10 +28,16 @@ public class BrowserList extends SettableZkList {
     private static final long serialVersionUID = -3921775129440642578L;
 
     public BrowserList() {
-        this.setRows(10);
-        this.setWidth( "100px" );
+        this.setRows(12);
+        this.setWidth( "200px" );
+        //this.setHeight( "100px" );
+        this.setMold( "paging" );
+        this.setPageSize( 10 );
         Listhead lh = new Listhead();
-        lh.appendChild( new Listheader("Name") );
+        
+        Listheader name = new Listheader("Name");
+        name.setSort( "auto" );
+        lh.appendChild( name);
         appendChild(lh);
     }
 

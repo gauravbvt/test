@@ -5,10 +5,11 @@ package com.mindalliance.channels.data.elements.resources;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.reference.Type;
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.support.Latency;
 import com.mindalliance.channels.data.support.Level;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -39,6 +40,7 @@ public class Channel extends AbstractResource {
     /**
      * @return the interoperables
      */
+    @CollectionType(type=Channel.class)
     public List<Channel> getInteroperables() {
         return interoperables;
     }
@@ -95,6 +97,7 @@ public class Channel extends AbstractResource {
     /**
      * @return the supportedFormats
      */
+    @PropertyOptions(ignore=true)
     public TypeSet getSupportedFormats() {
         return supportedFormats;
     }

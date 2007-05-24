@@ -31,31 +31,23 @@ public class BrowserFactory implements PropertyComponentFactory {
             Class parent = (Class) bv.getContext( "class" );
             if ( AbstractJavaBean.class.isAssignableFrom( (Class) bv.getContext( "class" ) ) ) {
                 try {
-                    // We need to extract the CollectionType annotation
-                    // for this field
-                    String methodName = "get" + key.substring( 0, 1 ).toUpperCase()
-                            + key.substring( 1 );
-                    Method m = parent.getMethod( methodName, new Class[0] );
-                    Annotation[] a = m.getAnnotations();
-                    CollectionType ct = m.getAnnotation( CollectionType.class );
-                    if ( ct != null ) {
-                        BrowserList result = new BrowserList();
 
-                        Collection temp = new FactoryResolver().getValues(key, bv);
-                        if (temp == null)
-                            throw new IllegalArgumentException(
-                                    "Unable to find factory for collection.");
-                        result.setMultipleSelectOptions(new BrowserListModel(temp, type,
-                                null, false));
+                    BrowserList result = new BrowserList();
 
-                        //result.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
-                        result.setMultiple(true);
-                        Configuration configuration = new Configuration(bv);
-                        result.setDisabled(!configuration.editable(key));
+                    Collection temp = new FactoryResolver().getValues(key, bv);
+                    if (temp == null)
+                        throw new IllegalArgumentException(
+                                "Unable to find factory for collection.");
+                    result.setMultipleSelectOptions(new BrowserListModel(temp, type,
+                            null, false));
 
-                        return result;
+                    //result.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
+                    result.setMultiple(true);
+                    Configuration configuration = new Configuration(bv);
+                    result.setDisabled(!configuration.editable(key));
 
-                    }
+                    return result;
+
                 } catch ( Exception e ) {
                     // The appropriate method or annotation wasn't found -- Fall through to the general Collection handler
                 }

@@ -35,7 +35,7 @@ public class ElementBrowserPanel<V> extends ZkBeanViewPanel<V> {
     @Override
     protected void setUpEntryField(String key, Row currentRow) {
         // Set up entry field
-        ElementComponentFactory factory = new ElementComponentFactory(key, helper
+        ElementBrowserComponentFactory factory = new ElementBrowserComponentFactory(key, helper
                 .getPropertyType(key), this);
 
         PropertyComponent newComponent = factory.getSettable();

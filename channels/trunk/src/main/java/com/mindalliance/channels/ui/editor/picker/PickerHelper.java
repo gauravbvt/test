@@ -17,15 +17,15 @@ import com.mindalliance.channels.data.elements.resources.Role;
  */
 public class PickerHelper {
 
-    public PickerHelper() {
-        
-    }
+    public PickerHelper() { }
     
     public Collection<Role> findRole(BeanView bean) {
         Collection<Role> results = new ArrayList<Role>();
-        Role role = new Role();
-        role.setName( "Test" );
-        results.add( role );
+        for (int inx = 0 ; inx < 100 ; inx++) {
+            Role role = new Role();
+            role.setName( "Role " + inx );
+            results.add( role );
+        }
         return results;
     }
 }

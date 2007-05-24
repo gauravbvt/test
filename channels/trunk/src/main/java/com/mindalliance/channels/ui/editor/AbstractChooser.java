@@ -38,19 +38,23 @@ public abstract class AbstractChooser<T extends AbstractJavaBean, PickerType ext
     protected Class c;
 
     public AbstractChooser(Class<T> c, System system, Scenario scenario, User user) {
+        this(c, system, scenario, user, new ZkBeanViewPanel<PickerType>());
+    }
+    
+    public AbstractChooser(Class<T> c, System system, Scenario scenario, User user, ZkBeanViewPanel panel) {
         this.user = user;
         this.scenario = scenario;
         this.system = system;
         this.c = c;
-        init();
-    }
-
-    private void init() {
-        browser = new ZkBeanViewPanel<PickerType>();
+        browser = panel;
         browser.setContext("user", user);
         browser.setContext("system", system);
         browser.setContext("scenario", scenario);
+        browser.setContext( "class", c );
+        init();
+    }  
 
+    private void init() {
         createButton = new Toolbarbutton();
         createButton.setImage("images/16x16/add2.png");
         createButton.setTooltiptext("Create a new person");
