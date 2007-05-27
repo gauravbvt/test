@@ -3,12 +3,7 @@
 
 package com.mindalliance.channels;
 
-import java.util.List;
-
 import org.acegisecurity.userdetails.UserDetails;
-
-import com.mindalliance.channels.data.Named;
-import com.mindalliance.channels.data.elements.resources.Role;
 
 /**
  * A user of the system.
@@ -19,7 +14,7 @@ import com.mindalliance.channels.data.elements.resources.Role;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public interface User extends UserDetails, Named {
+public interface User extends UserDetails, JavaBean, Named {
 
     /**
      * The standard user role.
@@ -37,18 +32,12 @@ public interface User extends UserDetails, Named {
     String getUsername();
 
     /**
-     * Return the roles played by the user, if any.
-     * @return
-     */
-    List<Role> getRoles();
-
-    /**
      * Return if a user is a standard user.
      */
-    boolean hasUserRole();
+    boolean isStandardUser();
 
     /**
      * Return if a user is an administrator.
      */
-    boolean hasAdminRole();
+    boolean isAdmin();
 }

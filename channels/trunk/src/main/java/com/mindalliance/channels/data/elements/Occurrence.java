@@ -1,8 +1,10 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.data;
+package com.mindalliance.channels.data.elements;
 
+import com.mindalliance.channels.data.components.Caused;
+import com.mindalliance.channels.data.reference.Located;
 import com.mindalliance.channels.data.support.Duration;
 
 /**

@@ -6,8 +6,8 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Caused;
 import com.mindalliance.channels.data.Excludable;
+import com.mindalliance.channels.data.components.Caused;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.Excluded;
 import com.mindalliance.channels.data.support.Level;

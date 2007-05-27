@@ -6,8 +6,6 @@ package com.mindalliance.channels.data.reference;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.mindalliance.channels.data.Describable;
-import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.reference.Typology.Category;
 
 import static com.mindalliance.channels.data.reference.Typology.Category.*;

@@ -29,7 +29,10 @@ import org.zkoss.zul.Tabs;
 import org.zkoss.zul.Vbox;
 
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.elements.resources.Organization;
+import com.mindalliance.channels.services.DirectoryService;
 import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.ui.editor.EditorFactory;
 
 /**
  * The user desktop.
@@ -168,121 +171,97 @@ public class DesktopRichlet extends GenericRichlet {
 
     /**
      * Create the accordion pane.
+     * @todo Hook to actual objects in the model
      * @param maxHeight height at which scollbar will appear
      * @param user the current user
      * @param system the system
      * @param canvas the canvas to control
      */
     private Component createAccordion(
-            int maxHeight,
-            User user, SystemService system, Box canvas ) {
+            int maxHeight, User user, SystemService system, Box canvas ) {
+
+        EditorFactory ef = new EditorFactory();
+        ef.setPage( canvas.getPage() );
+        ef.setSystem( system );
+        ef.setUser( user );
 
         final int tabContentHeight = maxHeight - FIXED_ACCORDION_HEIGHT;
         AccordionTab[] tabDefs = new AccordionTab[] {
-            new AccordionTab(
-                "images/16x16/user_building.png",
-                "People & Places",
-                "Phonebook and locators",
-                new SelectionTab( tabContentHeight, user, canvas,
-                    new AccordionSelection(
-                        "images/24x24/id_card.png",
-                        "My profile",
-                        "Your profile",
-                        "ROLE_USER",
-                        null, null ),
-                    new AccordionSelection(
-                        "images/24x24/users-phone.png",
-                        "My contacts",
-                        "Your social network",
-                        "ROLE_USER",
-                        null, null ),
-                    new AccordionSelection(
-                        "images/24x24/orgs.png",
-                        "Organizations",
-                        "All organizational profiles",
-                        "ROLE_USER",
-                        null, null ),
-                    new AccordionSelection(
-                        "images/24x24/systems.png",
-                        "Systems & resources",
-                        "Profiles of systems and information resources",
-                        "ROLE_USER",
-                        null, null )
-                ) ),
+            createPeoplePlaceTab( canvas, ef, tabContentHeight ),
 
             new AccordionTab(
                 "images/16x16/branch_element.png",
                 "Scenarios",
                 "Projects, Models and Scenarios",
                 new ScenariosTab(
-                    maxHeight, tabContentHeight, canvas, user, system ) ),
+                    maxHeight, tabContentHeight, canvas, ef ) ),
 
             new AccordionTab(
                 "images/16x16/books.png",
                 "Library",
                 "Reference section",
-                new SelectionTab( tabContentHeight, user, canvas,
+                new SelectionTab( tabContentHeight, user,
                     new AccordionSelection(
                         "images/24x24/book_open2.png",
                         "Dictionary",
                         "Typologies",
                         "ROLE_USER",
-                        null, null ),
+                        canvas, ef.createEditor( null ) ),
                     new AccordionSelection(
                         "images/24x24/branch_element.png",
                         "Common scenarios",
                         "Parameterized scenarios",
                         "ROLE_USER",
-                        null, null ),
+                        canvas, ef.createEditor( null ) ),
                     new AccordionSelection(
                         "images/24x24/scroll.png",
                         "Policies",
                         "Policies that impact information sharing",
                         "ROLE_USER",
-                        null, null ),
+                        canvas, ef.createEditor( null ) ),
                     new AccordionSelection(
                         "images/24x24/earth_find.png",
                         "Gazetteer",
                         "Location, location, location...",
                         "ROLE_USER",
-                        null, null )
+                        canvas, ef.createEditor( null ) )
                 ) ),
 
             new AccordionTab(
                 "images/16x16/preferences.png",
                 "Settings",
                 "Preferences, Logs, etc.",
-                new SelectionTab( tabContentHeight, user, canvas,
+                new SelectionTab( tabContentHeight, user,
                     new AccordionSelection(
                         "images/24x24/user1_preferences.png",
                         "My preferences",
                         "Your personal settings",
                         "ROLE_USER",
-                        null, null ),
+                        canvas, ef.createEditor( null ) ),
                     new AccordionSelection(
                         "images/24x24/step.png",
                         "Activity log",
                         "What's going on on this server",
                         "ROLE_USER",
-                        null, null ),
+                        canvas, ef.createEditor( null ) ),
                     new AccordionSelection(
                         "images/24x24/users3_preferences.png",
                         "Users management",
                         "Keep track of users",
                         "ROLE_ADMIN",
-                        null, null  ),
+                        canvas, ef.createEditor( null )  ),
                     new AccordionSelection(
                         "images/24x24/server_preferences.png",
                         "System configuration",
                         "Administer channels",
                         "ROLE_ADMIN",
-                        null, null  ),
+                        canvas, ef.createEditor( null )  ),
                     new AccordionSelection(
                         "images/24x24/oszillograph.png",
                         "System monitoring",
                         "Keep an eye on things",
                         "ROLE_ADMIN",
-                        null, null  )
+                        canvas, ef.createEditor( null )  )
                 ) ),
         };
 
@@ -316,6 +295,55 @@ public class DesktopRichlet extends GenericRichlet {
         } );
         accordion.setSelectedIndex( getTabSelection( canvas ) );
         return accordion;
+    }
+
+    /**
+     * Create the people and places tab.
+     * @param canvas the canvas
+     * @param ef the editor factory
+     * @param tabContentHeight the content height
+     */
+    private AccordionTab createPeoplePlaceTab(
+            Box canvas, EditorFactory ef, final int tabContentHeight ) {
+
+        User user = ef.getUser();
+        DirectoryService directory = ef.getSystem().getDirectoryService();
+
+        return new AccordionTab(
+            "images/16x16/user_building.png",
+            "People & Places",
+            "Phonebook and locators",
+            new SelectionTab( tabContentHeight, user,
+                new AccordionSelection(
+                    "images/24x24/id_card.png",
+                    "My profile",
+                    "Your profile",
+                    "ROLE_USER",
+                    canvas, ef.createEditor( user ) ),
+                new AccordionSelection(
+                    "images/24x24/users-phone.png",
+                    "My contacts",
+                    "Your social network",
+                    "ROLE_USER",
+                    canvas, ef.createEditor( null ) ),
+                new AccordionSelection(
+                    "images/24x24/orgs.png",
+                    "Organizations",
+                    "All organizational profiles",
+                    "ROLE_USER",
+                    canvas,
+                    ef.createBrowser(
+                        directory.getOrganizations(),
+                        Organization.class,
+                        null
+                    ) ),
+                new AccordionSelection(
+                    "images/24x24/systems.png",
+                    "Systems & resources",
+                    "Profiles of systems and information resources",
+                    "ROLE_USER",
+                    canvas, ef.createEditor( null ) )
+            ) );
     }
 
     /**
@@ -454,12 +482,10 @@ public class DesktopRichlet extends GenericRichlet {
          * Default constructor.
          * @param height the available height for the content
          * @param user the current user
-         * @param canvas the canvas to map the selections to
          * @param selections the selectionable items in the pane
          */
         public SelectionTab(
-                int height,
-                User user, Component canvas,
+                int height, User user,
                 AccordionSelection... selections ) {
             super();
             setHeight( height + "px" );
@@ -469,8 +495,6 @@ public class DesktopRichlet extends GenericRichlet {
 
             for ( final AccordionSelection sel : selections ) {
                 if ( sel.isAuthorized( user ) ) {
-                    sel.setCanvas( canvas );
-
                     Button button = new Button( sel.getLabel(), sel.getIcon() );
                     button.setTooltiptext( sel.getTooltip() );
                     button.addEventListener( "onClick", new EventListener() {

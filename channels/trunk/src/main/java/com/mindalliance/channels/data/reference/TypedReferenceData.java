@@ -4,7 +4,6 @@
 package com.mindalliance.channels.data.reference;
 
 import com.mindalliance.channels.DisplayAs;
-import com.mindalliance.channels.data.Typed;
 
 /**
  * A reference data with a type.

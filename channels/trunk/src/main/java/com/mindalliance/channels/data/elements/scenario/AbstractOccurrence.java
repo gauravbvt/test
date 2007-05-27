@@ -4,8 +4,8 @@
 package com.mindalliance.channels.data.elements.scenario;
 
 import com.mindalliance.channels.DisplayAs;
-import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.components.Cause;
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.util.GUID;

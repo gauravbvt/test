@@ -4,8 +4,8 @@
 package com.mindalliance.channels.data.elements.assertions;
 
 import com.mindalliance.channels.data.Needy;
-import com.mindalliance.channels.data.ScenarioElement;
-import com.mindalliance.channels.data.components.Information;
+import com.mindalliance.channels.data.elements.ScenarioElement;
+import com.mindalliance.channels.data.reference.Information;
 import com.mindalliance.channels.data.support.Level;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.util.GUID;

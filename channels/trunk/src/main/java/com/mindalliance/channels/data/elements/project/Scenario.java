@@ -9,8 +9,8 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.scenario.Activity;
 import com.mindalliance.channels.data.elements.scenario.Circumstance;
 import com.mindalliance.channels.data.elements.scenario.Communication;

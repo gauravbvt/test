@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.Element;
+import com.mindalliance.channels.data.elements.Element;
 import com.mindalliance.channels.services.DirectoryService;
 import com.mindalliance.channels.services.HistoryService;
 import com.mindalliance.channels.services.LibraryService;

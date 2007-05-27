@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.data.components;
 
-import com.mindalliance.channels.data.Occurrence;
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.util.AbstractJavaBean;
 

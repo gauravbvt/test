@@ -1,48 +1,54 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Actor;
-import com.mindalliance.channels.data.Knowledgeable;
 import com.mindalliance.channels.data.OptOutable;
-import com.mindalliance.channels.data.components.Information;
+import com.mindalliance.channels.data.components.Knowledgeable;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.CanAccess;
 import com.mindalliance.channels.data.elements.assertions.NeedsToKnow;
 import com.mindalliance.channels.data.elements.assertions.OptedOut;
+import com.mindalliance.channels.data.elements.resources.Actor;
+import com.mindalliance.channels.data.reference.Information;
 import com.mindalliance.channels.util.GUID;
 
 /**
  * A specification of which actors execute a task, together or separately.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
-abstract public class Agent extends AbstractScenarioElement implements Knowledgeable,
-        OptOutable {
+public abstract class Agent extends AbstractScenarioElement
+    implements Knowledgeable, OptOutable {
 
     private Task task;
 
+    /**
+     * Default constructor.
+     */
     public Agent() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Agent( GUID guid ) {
         super( guid );
     }
 
     /**
-     * Return the actors specified by this agent
+     * Return the actors specified by this agent.
      */
-    abstract public List<Actor> getActors();
+    public abstract List<Actor> getActors();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Connected#getCanAccessAssertions()
+    /**
+     * Get the list of CanAccess assertions.
      */
     public List<CanAccess> getCanAccessAssertions() {
         List<CanAccess> canAccessAssertions = new ArrayList<CanAccess>();
@@ -53,10 +59,8 @@ abstract public class Agent extends AbstractScenarioElement implements Knowledge
         return canAccessAssertions;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Needy#getNeedsToKnowAssertions()
+    /**
+     * Get the list of NeedToKnow assertions.
      */
     public List<NeedsToKnow> getNeedsToKnowAssertions() {
         List<NeedsToKnow> needsToKnowAssertions = new ArrayList<NeedsToKnow>();
@@ -68,7 +72,7 @@ abstract public class Agent extends AbstractScenarioElement implements Knowledge
     }
 
     /**
-     * @return the optedOutAssertions
+     * Return the optedOut assertions.
      */
     public List<OptedOut> getOptedOutAssertions() {
         List<OptedOut> optedOutAssertions = new ArrayList<OptedOut>();
@@ -79,32 +83,33 @@ abstract public class Agent extends AbstractScenarioElement implements Knowledge
         return optedOutAssertions;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Knowledgeable#knows(com.mindalliance.channels.data.beans.Information)
+    /**
+     * Test if this agent knows of an information.
+     * @param information the information
      */
     public boolean knows( Information information ) {
-        return false; // TODO
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Knowledgeable#needsToKnow(com.mindalliance.channels.data.beans.Information)
-     */
-    public boolean needsToKnow( Information information ) {
-        return false; // TODO
+        // TODO
+        return false;
     }
 
     /**
-     * @return the task
+     * Test if this agent needs to know an information.
+     * @param information the information
+     */
+    public boolean needsToKnow( Information information ) {
+        // TODO
+        return false;
+    }
+
+    /**
+     * Return the task.
      */
     public Task getTask() {
         return task;
     }
 
     /**
+     * Set the task.
      * @param task the task to set
      */
     public void setTask( Task task ) {

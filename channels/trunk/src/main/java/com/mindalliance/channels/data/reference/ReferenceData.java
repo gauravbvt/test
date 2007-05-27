@@ -3,8 +3,8 @@
 
 package com.mindalliance.channels.data.reference;
 
+import com.mindalliance.channels.Named;
 import com.mindalliance.channels.data.Described;
-import com.mindalliance.channels.data.Named;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
 /**

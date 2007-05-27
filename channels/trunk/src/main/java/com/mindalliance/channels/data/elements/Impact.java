@@ -3,7 +3,6 @@
  */
 package com.mindalliance.channels.data.elements;
 
-import com.mindalliance.channels.data.Timed;
 import com.mindalliance.channels.util.GUID;
 
 /**

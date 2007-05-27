@@ -30,6 +30,7 @@ import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.services.PortfolioService;
 import com.mindalliance.channels.services.RegistryService;
 import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.ui.editor.EditorFactory;
 
 /**
  * The scenarios, models and projects tab.
@@ -48,8 +49,7 @@ public class ScenariosTab extends Tabpanel {
     private static final String MODEL_ICON = "images/16x16/cube_molecule.png";
     private static final String PROJECT_ICON = "images/16x16/environment.png";
 
-    private SystemService system ;
-    private User user;
+    private EditorFactory editorFactory;
     private Session session;
 
     /**
@@ -58,21 +58,19 @@ public class ScenariosTab extends Tabpanel {
      * @param maxHeight the maximum height of the canvas
      * @param height the height of the tab's content
      * @param canvas the canvas
-     * @param user the current user
-     * @param system the system
+     * @param factory the editor creator
      */
     public ScenariosTab(
-            int maxHeight, int height, Box canvas,
-            User user, SystemService system ) {
+            int maxHeight, int height, Box canvas, EditorFactory factory ) {
 
         super();
-        this.user = user;
-        this.system = system;
+        this.editorFactory = factory;
         setPage( canvas.getPage() );
         this.session = getDesktop().getSession();
 
         Treechildren treeChildren = new Treechildren();
-        for ( Project p : system.getPortfolioService().getProjects( user ) )
+        PortfolioService portfolio = factory.getSystem().getPortfolioService();
+        for ( Project p : portfolio.getProjects( factory.getUser() ) )
             treeChildren.appendChild(
                 createProjectNode( maxHeight, canvas, p ) );
 
@@ -122,9 +120,8 @@ public class ScenariosTab extends Tabpanel {
                         project.getName(),
                         "Project properties",
                         "ROLE_USER",
-                        null,
                         canvas,
-                        project ),
+                        getEditorFactory().createEditor( project ) ),
                     models );
         return result;
     }
@@ -151,9 +148,8 @@ public class ScenariosTab extends Tabpanel {
                 model.getName(),
                 "Model properties",
                 "ROLE_USER",
-                null,
                 canvas,
-                model ),
+                getEditorFactory().createEditor( model ) ),
             scenarios );
     }
 
@@ -174,8 +170,8 @@ public class ScenariosTab extends Tabpanel {
                     "Playbook",
                     "View playbook",
                     "ROLE_USER",
-                    null,
-                    canvas ),
+                    canvas,
+                    getEditorFactory().createEditor( null ) ),
             null ) );
 
         reports.appendChild( newTreeitem(
@@ -184,8 +180,8 @@ public class ScenariosTab extends Tabpanel {
                     "Issues Analysis",
                     "View issues",
                     "ROLE_USER",
-                    null,
-                    canvas ),
+                    canvas,
+                    getEditorFactory().createEditor( null ) ),
             null ) );
 
         reports.appendChild( newTreeitem(
@@ -194,8 +190,8 @@ public class ScenariosTab extends Tabpanel {
                     "Dashboard",
                     "View dashboard",
                     "ROLE_USER",
-                    null,
-                    canvas ),
+                    canvas,
+                    getEditorFactory().createEditor( null ) ),
             null ) );
 
         reports.appendChild( newTreeitem(
@@ -204,22 +200,22 @@ public class ScenariosTab extends Tabpanel {
                     "Info Flow",
                     "View information flows",
                     "ROLE_USER",
-                    null,
-                    canvas ),
+                    canvas,
+                    getEditorFactory().createEditor( null ) ),
             null ) );
 
         return newTreeitem(
-                new AccordionSelection(
-                    SCENARIO_ICON,
-                    scenario.getName(),
-                    "Scenario viewer",
-                    "ROLE_USER",
-                    new ScenarioViewer(
-                        maxHeight, canvas.getPage(), scenario,
-                        getSystem(), getUser() ),
-                    canvas,
-                    scenario ),
-                reports );
+            new AccordionSelection(
+                SCENARIO_ICON,
+                scenario.getName(),
+                "Scenario viewer",
+                "ROLE_USER",
+                canvas,
+                new ScenarioViewer(
+                    maxHeight, scenario, getEditorFactory()
+                )
+            ),
+            reports );
     }
 
     /**
@@ -259,34 +255,37 @@ public class ScenariosTab extends Tabpanel {
     protected void resetMenu(
             Menupopup menu, AccordionSelection selection ) {
 
-        final RegistryService registry = getSystem().getRegistryService();
-        final PortfolioService portfolio = getSystem().getPortfolioService();
+        SystemService system = getEditorFactory().getSystem();
+        final RegistryService registry = system.getRegistryService();
+        final PortfolioService portfolio = system.getPortfolioService();
 
         menu.getChildren().clear();
+        User user = getEditorFactory().getUser();
         if ( selection == null ) {
-            if ( registry.isAdministrator( getUser() ) )
+            if ( registry.isAdministrator( user ) )
                 menu.appendChild( newAddProjectItem() );
 
         } else if ( selection.getIcon().equals( PROJECT_ICON ) ) {
-            final Project project = (Project) selection.getObject();
+            final Project project =
+                (Project) selection.getEditor().getObject();
 
-            if ( registry.isAdministrator( getUser() ) ) {
+            if ( registry.isAdministrator( user ) ) {
                 menu.appendChild( newAddProjectItem() );
                 menu.appendChild( new Menuseparator() );
                 menu.appendChild( newDeleteProjectItem( project ) );
             }
-            if ( portfolio.isManager( getUser(), project )
-                    || registry.isAdministrator( getUser() ) ) {
+            if ( portfolio.isManager( user, project )
+                    || registry.isAdministrator( user ) ) {
                 menu.appendChild( newRenameProjectItem( project ) );
                 menu.appendChild( newAddModelItem( project ) );
             }
 
         } else if ( selection.getIcon().equals( MODEL_ICON ) ) {
-            Model model = (Model) selection.getObject();
+            Model model = (Model) selection.getEditor().getObject();
             Project project = model.getProject();
 
-            if ( portfolio.isManager( getUser(), project )
-                    || registry.isAdministrator( getUser() ) ) {
+            if ( portfolio.isManager( user, project )
+                    || registry.isAdministrator( user ) ) {
                 menu.appendChild( newAddModelItem( project ) );
                 menu.appendChild( new Menuseparator() );
                 menu.appendChild( newDeleteModelItem( model ) );
@@ -295,10 +294,10 @@ public class ScenariosTab extends Tabpanel {
             }
 
         } else if ( selection.getIcon().equals( SCENARIO_ICON ) ) {
-            Scenario scenario = (Scenario) selection.getObject();
+            Scenario scenario = (Scenario) selection.getEditor().getObject();
             Model model = scenario.getModel();
-            if ( portfolio.isManager( getUser(), model.getProject() )
-                    || registry.isAdministrator( getUser() ) ) {
+            if ( portfolio.isManager( user, model.getProject() )
+                    || registry.isAdministrator( user ) ) {
                 menu.appendChild( newAddScenarioItem( model ) );
                 menu.appendChild( new Menuseparator() );
                 menu.appendChild( newDeleteScenarioItem( scenario ) );
@@ -322,8 +321,9 @@ public class ScenariosTab extends Tabpanel {
                             Messagebox.OK | Messagebox.CANCEL,
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
-                            getSystem().getPortfolioService()
-                                .removeProject( project );
+                            getEditorFactory().getSystem()
+                                .getPortfolioService()
+                                    .removeProject( project );
                             session.setAttribute(
                                 DesktopRichlet.CURRENT_SELECTION, null );
                             Executions.sendRedirect( null );
@@ -406,8 +406,8 @@ public class ScenariosTab extends Tabpanel {
                         if ( projectName != null ) {
                             Project project = new Project();
                             project.setName( projectName );
-                            getSystem().getPortfolioService()
-                                .addProject( project );
+                            getEditorFactory().getSystem()
+                                .getPortfolioService().addProject( project );
                             Executions.sendRedirect( null );
                         }
                     } catch ( InterruptedException e1 ) {
@@ -578,16 +578,9 @@ public class ScenariosTab extends Tabpanel {
     }
 
     /**
-     * Return the value of system.
+     * Return the value of editorFactory.
      */
-    public final SystemService getSystem() {
-        return this.system;
-    }
-
-    /**
-     * Return the value of user.
-     */
-    public final User getUser() {
-        return this.user;
+    public EditorFactory getEditorFactory() {
+        return this.editorFactory;
     }
 }

@@ -1,39 +1,51 @@
-/*
- * Created on May 3, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.resources;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Contactable;
 import com.mindalliance.channels.data.components.ContactInfo;
+import com.mindalliance.channels.data.components.Contactable;
 import com.mindalliance.channels.util.GUID;
 
-public abstract class ContactableResource extends AbstractResource implements
-        Contactable {
+/**
+ * A contactable resource.
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
+ */
+public abstract class ContactableResource extends AbstractResource
+    implements Contactable {
 
     private List<ContactInfo> contactInfos;
 
+    /**
+     * Default constructor.
+     */
     public ContactableResource() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public ContactableResource( GUID guid ) {
         super( guid );
         contactInfos = new ArrayList<ContactInfo>();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.mindalliance.channels.data.Contactable#getContactInfos()
+    /**
+     * Return the contact infos.
      */
     public List<ContactInfo> getContactInfos() {
         return contactInfos;
     }
 
     /**
+     * Set the contact infos.
      * @param contactInfos the contactInfos to set
      */
     public void setContactInfos( List<ContactInfo> contactInfos ) {
@@ -41,17 +53,18 @@ public abstract class ContactableResource extends AbstractResource implements
     }
 
     /**
-     * @param contactInfo
+     * Add a contact info.
+     * @param contactInfo the info
      */
     public void addContactInfo( ContactInfo contactInfo ) {
         contactInfos.add( contactInfo );
     }
 
     /**
-     * @param contactInfo
+     * Remove a contact info.
+     * @param contactInfo the info
      */
     public void removeContactInfo( ContactInfo contactInfo ) {
         contactInfos.remove( contactInfo );
     }
-
 }

@@ -21,9 +21,9 @@ import org.zkforge.timeline.event.SelectEvent;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.EventListener;
 
-import com.mindalliance.channels.data.Caused;
-import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.components.Cause;
+import com.mindalliance.channels.data.components.Caused;
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.data.elements.scenario.Product;
 

@@ -1,6 +1,6 @@
-/*
- * Created on Apr 28, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data;
 
 import java.util.Iterator;
@@ -10,30 +10,31 @@ import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.data.support.Query;
 
 /**
- * A queryable JavaBean
- * 
- * @author jf
+ * A queryable JavaBean.
+ *
+ * @author <a href="mailto:denis@mind-alliance.com">denis</a>
+ * @version $Revision:$
+ * @param <T> the type of the results
  */
-public interface Queryable extends JavaBean {
+public interface Queryable<T> extends JavaBean {
 
     /**
      * Execute the query in the context of itself with variable
      * bindings and return all resulting elements.
-     * 
+     *
      * @param query A Query
      * @param bindings Bindings for variables referenced in the query
      * @return An iterator on resulting elements
      */
-    Iterator<Element> findAll( Query query, Map bindings );
+    Iterator<T> findAll( Query query, Map bindings );
 
     /**
      * Execute the query in the context of itself with variable
      * bindings and return first resulting element.
-     * 
+     *
      * @param query A Query
      * @param bindings Bindings for variables referenced in the query
      * @return An element
      */
-    Element findOne( Query query, Map bindings );
-
+    T findOne( Query query, Map bindings );
 }

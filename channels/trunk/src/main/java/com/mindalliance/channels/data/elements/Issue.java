@@ -5,7 +5,6 @@ package com.mindalliance.channels.data.elements;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.Element;
 import com.mindalliance.channels.util.GUID;
 
 /**

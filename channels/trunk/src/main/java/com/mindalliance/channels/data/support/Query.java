@@ -1,44 +1,70 @@
-/*
- * Created on Apr 27, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.support;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.mindalliance.channels.data.Element;
-
 /**
  * A query in some language.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Query implements Serializable {
 
+    /**
+     * Supported languages.
+     */
     enum Language {
-        JXPATH, OGNL
+        /** JxPath support. */
+        JXPATH,
+
+        /** OGNL support. */
+        OGNL
     };
 
     private Language language;
     private String expression;
 
-    public Iterator findAll( Element context, Map bindings ) {
-        return null;
+    /**
+     * Default constructor.
+     */
+    public Query() {
     }
 
-    public Element findOne( Element context, Map bindings ) {
+    /**
+     * Iterate on results.
+     * @param context the query's starting point
+     * @param bindings other bindings
+     */
+    public Iterator findAll( Object context, Map bindings ) {
+        // TODO
         return null;
     }
 
     /**
-     * @return the expression
+     * Return the first result of a query.
+     * @param context
+     * @param context the query's starting point
+     * @param bindings other bindings
+     */
+    public Object findOne( Object context, Map bindings ) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * Return the expression.
      */
     public String getExpression() {
         return expression;
     }
 
     /**
+     * Set the expression.
      * @param expression the expression to set
      */
     public void setExpression( String expression ) {
@@ -46,17 +72,17 @@ public class Query implements Serializable {
     }
 
     /**
-     * @return the language
+     * Return the language.
      */
     public Language getLanguage() {
         return language;
     }
 
     /**
+     * Set the language.
      * @param language the language to set
      */
     public void setLanguage( Language language ) {
         this.language = language;
     }
-
 }

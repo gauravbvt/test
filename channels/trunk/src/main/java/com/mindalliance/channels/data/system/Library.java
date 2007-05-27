@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.elements.scenario.Environment;
 import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.data.reference.Policy;
 import com.mindalliance.channels.data.reference.Template;

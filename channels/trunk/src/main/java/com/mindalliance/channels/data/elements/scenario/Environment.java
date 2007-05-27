@@ -1,14 +1,16 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.data.reference;
+package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.Resource;
-import com.mindalliance.channels.data.elements.scenario.Event;
+import com.mindalliance.channels.data.elements.resources.Resource;
+import com.mindalliance.channels.data.reference.Pattern;
+import com.mindalliance.channels.data.reference.Policy;
+import com.mindalliance.channels.data.reference.TypeSet;
+import com.mindalliance.channels.data.reference.TypedReferenceData;
 import com.mindalliance.channels.data.support.Duration;
-import com.mindalliance.channels.data.support.Pattern;
 
 /**
  * A specification for situations; during what event they occur, what

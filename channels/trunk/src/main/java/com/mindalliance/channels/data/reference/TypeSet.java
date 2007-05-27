@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.mindalliance.channels.DisplayAs;
-import com.mindalliance.channels.data.components.Information;
 import com.mindalliance.channels.data.reference.Typology.Category;
 
 import static com.mindalliance.channels.data.reference.Typology.Category.*;

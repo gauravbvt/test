@@ -3,9 +3,9 @@
  */
 package com.mindalliance.channels.data.elements.assertions;
 
-import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.OptOutable;
-import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.elements.resources.Actor;
+import com.mindalliance.channels.data.elements.scenario.Environment;
 import com.mindalliance.channels.util.GUID;
 
 /**

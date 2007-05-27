@@ -3,10 +3,10 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
-import com.mindalliance.channels.data.Caused;
-import com.mindalliance.channels.data.Contactable;
-import com.mindalliance.channels.data.components.Information;
+import com.mindalliance.channels.data.components.Caused;
+import com.mindalliance.channels.data.components.Contactable;
 import com.mindalliance.channels.data.elements.resources.Channel;
+import com.mindalliance.channels.data.reference.Information;
 import com.mindalliance.channels.util.GUID;
 
 /**

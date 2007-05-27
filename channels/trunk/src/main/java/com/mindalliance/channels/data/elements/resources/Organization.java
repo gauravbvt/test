@@ -1,14 +1,14 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.resources;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Located;
 import com.mindalliance.channels.data.components.Mission;
 import com.mindalliance.channels.data.elements.Agreement;
+import com.mindalliance.channels.data.reference.Located;
 import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.util.GUID;
 
@@ -16,8 +16,9 @@ import com.mindalliance.channels.util.GUID;
  * A resource composed of roles and repositories. An organization may
  * be within a larger organization. An organization also has sharing
  * agreements.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Organization extends AbstractResource implements Located {
 
@@ -30,22 +31,23 @@ public class Organization extends AbstractResource implements Located {
     private List<Agreement> agreements;
     private List<Group> groups;
 
+    /**
+     * Default constructor.
+     */
     public Organization() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Organization( GUID guid ) {
         super( guid );
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
     /**
      * Get all parent organizations.
-     * 
-     * @return
      */
     public List<Organization> getParents() {
         List<Organization> parents = new ArrayList<Organization>();
@@ -59,13 +61,14 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @return the agreements
+     * Return the agreements.
      */
     public List<Agreement> getAgreements() {
         return agreements;
     }
 
     /**
+     * Set the agreements.
      * @param agreements the agreements to set
      */
     public void setAgreements( List<Agreement> agreements ) {
@@ -73,27 +76,30 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @param agreement
+     * Add an agreement.
+     * @param agreement the agreement
      */
     public void addAgreement( Agreement agreement ) {
         agreements.add( agreement );
     }
 
     /**
-     * @param agreement
+     * Remove an agreement.
+     * @param agreement the agreement
      */
     public void removeAgreement( Agreement agreement ) {
         agreements.remove( agreement );
     }
 
     /**
-     * @return the groups
+     * Return the groups.
      */
     public List<Group> getGroups() {
         return groups;
     }
 
     /**
+     * Set the groups.
      * @param groups the groups to set
      */
     public void setGroups( List<Group> groups ) {
@@ -101,27 +107,30 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @param group
+     * Add a group.
+     * @param group the group
      */
     public void addGroup( Group group ) {
         groups.add( group );
     }
 
     /**
-     * @param group
+     * Remove a group.
+     * @param group the group
      */
     public void removeGroup( Group group ) {
         groups.remove( group );
     }
 
     /**
-     * @return the jurisdiction
+     * Return the jurisdiction.
      */
     public Location getJurisdiction() {
         return jurisdiction;
     }
 
     /**
+     * Set the jurisdiction.
      * @param jurisdiction the jurisdiction to set
      */
     public void setJurisdiction( Location jurisdiction ) {
@@ -129,13 +138,14 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @return the missions
+     * Return the missions.
      */
     public List<Mission> getMissions() {
         return missions;
     }
 
     /**
+     * Set the missions.
      * @param missions the missions to set
      */
     public void setMissions( List<Mission> missions ) {
@@ -143,27 +153,30 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @param mission
+     * Add a mission.
+     * @param mission the mission
      */
     public void addMission( Mission mission ) {
         missions.add( mission );
     }
 
     /**
-     * @param mission
+     * Remove a mission.
+     * @param mission the mission
      */
     public void removeMission( Mission mission ) {
         missions.remove( mission );
     }
 
     /**
-     * @return the parent
+     * Return the parent organization.
      */
     public Organization getParent() {
         return parent;
     }
 
     /**
+     * Set the parent organization.
      * @param parent the parent to set
      */
     public void setParent( Organization parent ) {
@@ -171,13 +184,14 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @return the repositories
+     * Return the repositories.
      */
     public List<Repository> getRepositories() {
         return repositories;
     }
 
     /**
+     * Set the repositories.
      * @param repositories the repositories to set
      */
     public void setRepositories( List<Repository> repositories ) {
@@ -185,27 +199,30 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @param repository
+     * Add a repository.
+     * @param repository the repository
      */
     public void addRepository( Repository repository ) {
         repositories.add( repository );
     }
 
     /**
-     * @param repository
+     * Remove a repository.
+     * @param repository the repository
      */
     public void removeRepository( Repository repository ) {
         repositories.remove( repository );
     }
 
     /**
-     * @return the roles
+     * Return the roles.
      */
     public List<Role> getRoles() {
         return roles;
     }
 
     /**
+     * Set the roles.
      * @param roles the roles to set
      */
     public void setRoles( List<Role> roles ) {
@@ -213,23 +230,33 @@ public class Organization extends AbstractResource implements Located {
     }
 
     /**
-     * @param role
+     * Add a role.
+     * @param role the role
      */
     public void addRole( Role role ) {
         roles.add( role );
     }
 
     /**
-     * @param role
+     * Remove a role.
+     * @param role the role
      */
     public void removeRole( Role role ) {
         roles.remove( role );
     }
 
     /**
+     * Set the location.
      * @param location the location to set
      */
     public void setLocation( Location location ) {
         this.location = location;
+    }
+
+    /**
+     * Get the location.
+     */
+    public Location getLocation() {
+        return location;
     }
 }

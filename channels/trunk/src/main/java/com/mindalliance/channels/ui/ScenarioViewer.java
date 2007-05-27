@@ -21,9 +21,9 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
-import com.mindalliance.channels.User;
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.data.elements.project.Scenario;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.ui.editor.EditorFactory;
 
 /**
  * The world-famous scenario viewer.
@@ -31,34 +31,31 @@ import com.mindalliance.channels.services.SystemService;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */
-public class ScenarioViewer extends Window {
+public class ScenarioViewer extends Window
+    implements ObjectEditor {
 
     private static final int TOP_MARGIN = 42;
     private static final int BOTTOM_MARGIN = 35;
     private static final int PADDING = 20;
     private static final int TIMELINE_HEIGHT = 128;
 
-    private SystemService system;
+    private EditorFactory editorFactory;
     private Scenario scenario;
-    private User user;
 
     /**
      * Default constructor.
      *
      * @param height the available height
-     * @param page the page
-     * @param system the system
      * @param scenario the scenario
-     * @param user the user
+     * @param editorFactory the editor creator
      */
     public ScenarioViewer(
-            int height, Page page,
-            Scenario scenario, SystemService system, User user ) {
+            int height, Scenario scenario, EditorFactory editorFactory ) {
 
         super();
-        this.system = system;
         this.scenario = scenario;
-        this.user = user;
+        this.editorFactory = editorFactory;
+        Page page = editorFactory.getPage();
         IconManager im = getIconManager( page );
 
         int kidHeight = height - TOP_MARGIN - PADDING - TIMELINE_HEIGHT;
@@ -99,7 +96,7 @@ public class ScenarioViewer extends Window {
             int height, IconManager im, ScenarioTimeline timeline ) {
 
         TreeGraphPane tgp = new TreeGraphPane(
-                height, getScenario(), getSystem(), getUser() );
+                height, getScenario(), getEditorFactory() );
         tgp.setIconManager( im );
         timeline.addTimelineListener( tgp );
 
@@ -119,7 +116,7 @@ public class ScenarioViewer extends Window {
             int height, IconManager im, ScenarioTimeline timeline ) {
 
         TreeGraphPane tgp = new TreeGraphPane(
-                height, getScenario(), getSystem(), getUser() );
+                height, getScenario(), getEditorFactory() );
         tgp.setIconManager( im );
 //        timeline.addTimelineListener( tgp );
 
@@ -182,20 +179,6 @@ public class ScenarioViewer extends Window {
     }
 
     /**
-     * Return the value of system.
-     */
-    public final SystemService getSystem() {
-        return this.system;
-    }
-
-    /**
-     * Return the value of user.
-     */
-    public final User getUser() {
-        return this.user;
-    }
-
-    /**
      * Get a hold of the icon manager in the application context.
      * @param page the page
      */
@@ -210,4 +193,17 @@ public class ScenarioViewer extends Window {
         return (IconManager) appContext.getBean( "iconManager" );
     }
 
+    /**
+     * Return the object edited by this editor.
+     */
+    public JavaBean getObject() {
+        return getScenario();
+    }
+
+    /**
+     * Return the value of editorFactory.
+     */
+    public EditorFactory getEditorFactory() {
+        return this.editorFactory;
+    }
 }

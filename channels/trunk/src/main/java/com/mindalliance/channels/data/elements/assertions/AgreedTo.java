@@ -5,7 +5,7 @@ package com.mindalliance.channels.data.elements.assertions;
 
 import com.mindalliance.channels.data.Agreeable;
 import com.mindalliance.channels.data.elements.resources.Organization;
-import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.elements.scenario.Environment;
 import com.mindalliance.channels.util.GUID;
 
 /**

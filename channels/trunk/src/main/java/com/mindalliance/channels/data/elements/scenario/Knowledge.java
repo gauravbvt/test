@@ -3,7 +3,7 @@
  */
 package com.mindalliance.channels.data.elements.scenario;
 
-import com.mindalliance.channels.data.components.Information;
+import com.mindalliance.channels.data.reference.Information;
 import com.mindalliance.channels.util.GUID;
 
 /**

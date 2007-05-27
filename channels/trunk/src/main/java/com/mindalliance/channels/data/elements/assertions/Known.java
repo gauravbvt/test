@@ -4,8 +4,8 @@
 package com.mindalliance.channels.data.elements.assertions;
 
 import com.mindalliance.channels.data.Knowable;
-import com.mindalliance.channels.data.Knowledgeable;
-import com.mindalliance.channels.data.components.Information;
+import com.mindalliance.channels.data.components.Knowledgeable;
+import com.mindalliance.channels.data.reference.Information;
 import com.mindalliance.channels.util.GUID;
 
 /**

@@ -1,12 +1,11 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.Resource;
-import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.elements.resources.Resource;
 import com.mindalliance.channels.data.reference.Policy;
 import com.mindalliance.channels.util.GUID;
 
@@ -17,46 +16,71 @@ import com.mindalliance.channels.util.GUID;
  * policies differ from the default case. Circumstances can be composed
  * (commutatively) when they co-occur to determine what the resulting
  * resource and policy environment is.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Circumstance extends AbstractOccurrence {
 
     /**
-     * The realized environment
+     * The realized environment, set for "atomic" circumstances.
      */
-    private Environment environment; // set for "atomic" circumstances
-    private Event trigger; // set for "atomic" circumstances
-    private List<Circumstance> components; // set for "composed" circumstances
+    private Environment environment;
 
+    /** Set for "atomic" circumstances. */
+    private Event trigger;
+
+    /** Set for "composed" circumstances. */
+    private List<Circumstance> components;
+
+    /**
+     * Default constructor.
+     */
     public Circumstance() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Circumstance( GUID guid ) {
         super( guid );
     }
 
+    /**
+     * Compose with another circumstance.
+     * @param circumstance the other circumstance
+     */
     public Circumstance composeWith( Circumstance circumstance ) {
         return null;
     }
 
+    /**
+     * Test if a resource is operational.
+     * @param resource the resource
+     */
     public boolean isResourceOperational( Resource resource ) {
         return false;
     }
 
+    /**
+     * Test if given policy is in effect.
+     * @param policy the policy
+     */
     public boolean isPolicyInEffect( Policy policy ) {
         return false;
     }
 
     /**
-     * @return the components
+     * Return the components.
      */
     public List<Circumstance> getComponents() {
         return components;
     }
 
     /**
+     * Set the components.
      * @param components the components to set
      */
     public void setComponents( List<Circumstance> components ) {
@@ -64,13 +88,14 @@ public class Circumstance extends AbstractOccurrence {
     }
 
     /**
-     * @return the environment
+     * Return the environment.
      */
     public Environment getEnvironment() {
         return environment;
     }
 
     /**
+     * Set the environment.
      * @param environment the environment to set
      */
     public void setEnvironment( Environment environment ) {
@@ -78,13 +103,14 @@ public class Circumstance extends AbstractOccurrence {
     }
 
     /**
-     * @return the trigger
+     * Return the trigger.
      */
     public Event getTrigger() {
         return trigger;
     }
 
     /**
+     * Set the trigger.
      * @param trigger the trigger to set
      */
     public void setTrigger( Event trigger ) {

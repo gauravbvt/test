@@ -11,8 +11,8 @@ import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.Element;
 import com.mindalliance.channels.data.Queryable;
+import com.mindalliance.channels.data.elements.Element;
 import com.mindalliance.channels.data.support.Query;
 import com.mindalliance.channels.util.AbstractJavaBean;
 

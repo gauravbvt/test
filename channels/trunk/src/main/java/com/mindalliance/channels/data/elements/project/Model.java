@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.elements.scenario.Environment;
 import com.mindalliance.channels.util.GUID;
 
 /**

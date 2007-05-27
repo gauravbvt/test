@@ -5,10 +5,10 @@ package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.List;
 
-import com.mindalliance.channels.data.Caused;
-import com.mindalliance.channels.data.Occurrence;
 import com.mindalliance.channels.data.Storable;
 import com.mindalliance.channels.data.components.Cause;
+import com.mindalliance.channels.data.components.Caused;
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.assertions.StoredIn;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.util.GUID;

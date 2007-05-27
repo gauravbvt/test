@@ -4,7 +4,7 @@
 package com.mindalliance.channels.data.elements.assertions;
 
 import com.mindalliance.channels.data.Regulatable;
-import com.mindalliance.channels.data.reference.Environment;
+import com.mindalliance.channels.data.elements.scenario.Environment;
 import com.mindalliance.channels.data.reference.Policy;
 import com.mindalliance.channels.util.GUID;
 

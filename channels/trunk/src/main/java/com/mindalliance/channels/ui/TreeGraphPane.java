@@ -27,12 +27,11 @@ import org.zkoss.zul.Treechildren;
 import org.zkoss.zul.Treeitem;
 
 import com.mindalliance.channels.DisplayAs;
-import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.Caused;
-import com.mindalliance.channels.data.Occurrence;
+import com.mindalliance.channels.data.components.Caused;
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.data.elements.scenario.Product;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.ui.editor.EditorFactory;
 import com.mindalliance.zk.mxgraph.MxFastOrganicLayout;
 import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
@@ -58,9 +57,8 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     private static final int TITLE_HEIGHT = 35;
     private static final int BORDERS = 10;
 
-    private SystemService system;
+    private EditorFactory editorFactory;
     private Scenario scenario;
-    private User user;
     private MxGraph graph;
     private Tree tree;
     private Caused rootElement;
@@ -73,15 +71,13 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
      *
      * @param height the available height
      * @param scenario the current scenario
-     * @param system the system
-     * @param user the current user
+     * @param editorFactory the editor factory
      */
     public TreeGraphPane(
-            int height, Scenario scenario, SystemService system, User user ) {
+            int height, Scenario scenario, EditorFactory editorFactory ) {
 
-        this.system = system;
         this.scenario = scenario;
-        this.user = user;
+        this.editorFactory = editorFactory;
 
         int contentHeight = height - TITLE_HEIGHT - BORDERS;
 
@@ -331,17 +327,10 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     }
 
     /**
-     * Return the value of system.
+     * Return the value of editorFactory.
      */
-    public final SystemService getSystem() {
-        return this.system;
-    }
-
-    /**
-     * Return the value of user.
-     */
-    public final User getUser() {
-        return this.user;
+    public EditorFactory getEditorFactory() {
+        return this.editorFactory;
     }
 
     /**

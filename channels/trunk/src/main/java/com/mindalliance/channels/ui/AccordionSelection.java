@@ -8,18 +8,16 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.acegisecurity.GrantedAuthority;
-import org.zkoss.zhtml.Text;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Session;
 
 import com.mindalliance.channels.User;
 
-// TODO Make this a bonified action
-
 /**
  * Summary of what happens when the user selects an item in a tab
  * in the accordion pane.
  *
+ * @todo Make this a bonified command
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
@@ -27,11 +25,11 @@ public class AccordionSelection {
 
     private String icon;
     private String label;
-    private Component pane;
     private String tooltip;
     private String roles;
     private Component canvas;
-    private Object object;
+    private ObjectEditor editor;
+    private ObjectBrowser browser;
 
     /**
      * Default constructor.
@@ -40,19 +38,22 @@ public class AccordionSelection {
      * @param label the label of the selection
      * @param tooltip the tooltip of the selection
      * @param roles authorized roles for this selection
-     * @param pane the pane to display in the canvas when selected
      * @param canvas the associated canvas
+     * @param editor the pane to display in the canvas when selected
      */
     public AccordionSelection(
             String icon, String label, String tooltip, String roles,
-            Component pane, Component canvas ) {
+            Component canvas, ObjectEditor editor ) {
+
+        if ( editor == null )
+            throw new NullPointerException();
 
         this.icon = icon;
         this.label = label;
-        this.pane = pane;
         this.tooltip = tooltip;
         this.roles = roles;
         this.canvas = canvas;
+        this.editor = editor;
     }
 
     /**
@@ -62,16 +63,22 @@ public class AccordionSelection {
      * @param label the label of the selection
      * @param tooltip the tooltip of the selection
      * @param roles authorized roles for this selection
-     * @param pane the pane to display in the canvas when selected
      * @param canvas the associated canvas
-     * @param object the model object behind this selection item
+     * @param browser the pane to display in the canvas when selected
      */
     public AccordionSelection(
             String icon, String label, String tooltip, String roles,
-            Component pane, Component canvas, Object object ) {
+            Component canvas, ObjectBrowser browser ) {
 
-        this( icon, label, tooltip, roles, pane, canvas );
-        this.object = object;
+        if ( browser == null )
+            throw new NullPointerException();
+
+        this.icon = icon;
+        this.label = label;
+        this.tooltip = tooltip;
+        this.roles = roles;
+        this.canvas = canvas;
+        this.browser = browser;
     }
 
     /**
@@ -86,13 +93,6 @@ public class AccordionSelection {
      */
     public String getLabel() {
         return this.label;
-    }
-
-    /**
-     * Return the value of pane.
-     */
-    public Component getPane() {
-        return this.pane;
     }
 
     /**
@@ -111,8 +111,8 @@ public class AccordionSelection {
         for ( Object child : children )
             canvas.removeChild( (Component) child );
 
-        canvas.appendChild( pane != null ? pane
-                                         : new Text( "TBD: " + label ) );
+        canvas.appendChild(
+            (Component) ( getEditor() == null ? getBrowser() : getEditor() ) );
         canvas.invalidate();
 
         Session session = canvas.getRoot().getDesktop().getSession();
@@ -150,25 +150,16 @@ public class AccordionSelection {
     }
 
     /**
-     * Set the value of canvas.
-     * @param canvas The new value of canvas
+     * Return the value of editor.
      */
-    public void setCanvas( Component canvas ) {
-        this.canvas = canvas;
+    public ObjectEditor getEditor() {
+        return this.editor;
     }
 
     /**
-     * Return the value of the underlying object for this selection.
+     * Return the value of browser.
      */
-    public Object getObject() {
-        return this.object;
-    }
-
-    /**
-     * Set the value of object.
-     * @param object The new value of object
-     */
-    public void setObject( Object object ) {
-        this.object = object;
+    public ObjectBrowser getBrowser() {
+        return this.browser;
     }
 }

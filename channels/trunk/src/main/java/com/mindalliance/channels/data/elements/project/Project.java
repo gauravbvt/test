@@ -14,9 +14,11 @@ import org.apache.commons.collections.Predicate;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.resources.Organization;
+import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.elements.resources.Role;
+import com.mindalliance.channels.data.reference.Pattern;
 import com.mindalliance.channels.data.reference.TypeSet;
-import com.mindalliance.channels.data.support.Pattern;
+import com.mindalliance.channels.data.user.UserImpl;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -227,7 +229,9 @@ public class Project extends AbstractElement {
          * @param user the user.
          */
         public boolean allows( User user ) {
-            List<Role> roles = user.getRoles();
+            // TODO remove cycle dependency on UserImpl
+            Person person = ( (UserImpl) user ).getPerson();
+            List<Role> roles = person.getRoles();
             return CollectionUtils.exists( roles, new Predicate() {
                 public boolean evaluate( Object object ) {
                     Role role = (Role) object;

@@ -6,7 +6,6 @@ package com.mindalliance.channels.ui;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyVetoException;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +18,7 @@ import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.data.elements.scenario.Event;
 import com.mindalliance.channels.data.elements.scenario.Task;
 import com.mindalliance.channels.ui.TreeGraphPane.Arc;
+import com.mindalliance.channels.ui.editor.EditorFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -38,6 +38,7 @@ public class TreeGraphPaneTest extends AbstractSecurityTest {
     private Event event1;
     private Task task1;
     private Scenario scenario;
+    private EditorFactory editorFactory;
     
     /**
      * @throws java.lang.Exception
@@ -56,9 +57,11 @@ public class TreeGraphPaneTest extends AbstractSecurityTest {
         assertEquals( "Building Fire", scenario.getName() );
         event1 = scenario.getEvents().iterator().next();
         task1 = scenario.getTasks().iterator().next();
-        this.tgp = new TreeGraphPane( 200, scenario, system, null );
+        this.editorFactory = new EditorFactory();
+        editorFactory.setSystem( system );
+        editorFactory.setUser( user );
+        this.tgp = new TreeGraphPane( 200, scenario, editorFactory );
         this.tgp.setIconManager( new IconManager() );
-                
     }
 
     @Test

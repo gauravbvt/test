@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.ui;
 
-import com.mindalliance.channels.data.Caused;
+import com.mindalliance.channels.data.components.Caused;
 
 /**
  * Listener to selections in a scenario timeline.

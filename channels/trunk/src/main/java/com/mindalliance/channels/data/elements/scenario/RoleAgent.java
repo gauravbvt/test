@@ -6,8 +6,8 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.data.Actor;
 import com.mindalliance.channels.data.elements.project.Project;
+import com.mindalliance.channels.data.elements.resources.Actor;
 import com.mindalliance.channels.data.elements.resources.Role;
 import com.mindalliance.channels.util.GUID;
 
