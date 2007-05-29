@@ -6,10 +6,12 @@ package com.mindalliance.channels.data.elements.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.components.Mission;
 import com.mindalliance.channels.data.elements.Agreement;
 import com.mindalliance.channels.data.reference.Located;
 import com.mindalliance.channels.data.reference.Location;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -49,6 +51,7 @@ public class Organization extends AbstractResource implements Located {
     /**
      * Get all parent organizations.
      */
+    @PropertyOptions(ignore=true)
     public List<Organization> getParents() {
         List<Organization> parents = new ArrayList<Organization>();
         if ( parent == null )
@@ -63,6 +66,7 @@ public class Organization extends AbstractResource implements Located {
     /**
      * Return the agreements.
      */
+    @CollectionType(type=Agreement.class)
     public List<Agreement> getAgreements() {
         return agreements;
     }
@@ -94,6 +98,7 @@ public class Organization extends AbstractResource implements Located {
     /**
      * Return the groups.
      */
+    @CollectionType(type=Group.class)
     public List<Group> getGroups() {
         return groups;
     }
@@ -140,6 +145,7 @@ public class Organization extends AbstractResource implements Located {
     /**
      * Return the missions.
      */
+    @CollectionType(type=Mission.class)
     public List<Mission> getMissions() {
         return missions;
     }
@@ -186,6 +192,7 @@ public class Organization extends AbstractResource implements Located {
     /**
      * Return the repositories.
      */
+    @CollectionType(type=Repository.class)
     public List<Repository> getRepositories() {
         return repositories;
     }
@@ -217,6 +224,7 @@ public class Organization extends AbstractResource implements Located {
     /**
      * Return the roles.
      */
+    @CollectionType(type=Role.class)
     public List<Role> getRoles() {
         return roles;
     }

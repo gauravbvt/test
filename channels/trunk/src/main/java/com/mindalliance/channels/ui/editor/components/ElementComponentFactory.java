@@ -2,7 +2,7 @@
 // All rights reserved.
 
 
-package com.mindalliance.channels.ui.editor;
+package com.mindalliance.channels.ui.editor.components;
 
 import com.beanview.BeanView;
 import com.mindalliance.zk.beanview.ZkComponentFactory;

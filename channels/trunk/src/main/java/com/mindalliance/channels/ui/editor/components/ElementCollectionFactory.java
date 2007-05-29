@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.ui.editor;
+package com.mindalliance.channels.ui.editor.components;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -12,6 +12,7 @@ import com.beanview.PropertyComponent;
 import com.beanview.PropertyComponentFactory;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.ui.editor.ElementMultiChooser;
 import com.mindalliance.channels.util.AbstractJavaBean;
 import com.mindalliance.channels.util.CollectionType;
 
@@ -30,7 +31,7 @@ public class ElementCollectionFactory implements PropertyComponentFactory {
     public PropertyComponent getComponent( String key, Class type, BeanView bv ) {
         if ( Collection.class.isAssignableFrom( type ) ) {
             Class parent = (Class) bv.getContext( "class" );
-            if ( AbstractJavaBean.class.isAssignableFrom( (Class) bv.getContext( "class" ) ) ) {
+            //if ( AbstractJavaBean.class.isAssignableFrom( (Class) bv.getContext( "class" ) ) ) {
                 try {
                     // We need to extract the CollectionType annotation
                     // for this field
@@ -40,16 +41,15 @@ public class ElementCollectionFactory implements PropertyComponentFactory {
                     Annotation[] a = m.getAnnotations();
                     CollectionType ct = m.getAnnotation( CollectionType.class );
                     if ( ct != null ) {
-                        return new ElementMultiChooser( ct.type(),
+                        return new ElementList( ct.type(),
                                 (System) bv.getContext( "system" ),
-                                (Scenario) bv.getContext( "scenario" ),
                                 (User) bv.getContext( "user" ) );
 
                     }
                 } catch ( Exception e ) {
                     // The appropriate method or annotation wasn't found -- Fall through to the general Collection handler
                 }
-            }
+            //}
         }
         return null;
     }

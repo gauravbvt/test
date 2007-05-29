@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.scenario.Environment;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -42,6 +43,7 @@ public class Model extends AbstractElement {
     /**
      * Return the environments where this model applies.
      */
+    @CollectionType(type=Environment.class)
     public List<Environment> getEnvironments() {
         return environments;
     }
@@ -73,6 +75,7 @@ public class Model extends AbstractElement {
     /**
      * Return the scenarios in this model.
      */
+    @CollectionType(type=Scenario.class)
     public Set<Scenario> getScenarios() {
         return scenarios;
     }

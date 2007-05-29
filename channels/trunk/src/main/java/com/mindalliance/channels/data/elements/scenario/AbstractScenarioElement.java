@@ -6,6 +6,7 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.ScenarioElement;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
@@ -44,6 +45,7 @@ public abstract class AbstractScenarioElement extends AbstractElement
     /**
      * Get the known assertions.
      */
+    @PropertyOptions(ignore=true)
     public List<Known> getKnownAssertions() {
         List<Known> list = new ArrayList<Known>();
         for ( Assertion assertion : getAssertions() )

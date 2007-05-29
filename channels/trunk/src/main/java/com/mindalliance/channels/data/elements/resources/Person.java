@@ -7,8 +7,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
+import com.beanview.validation.WebsiteUrl;
 import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.reference.Typology.Category;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -89,6 +92,7 @@ public class Person extends ContactableResource {
     /**
      * Return the photo.
      */
+    @WebsiteUrl
     public URL getPhoto() {
         return photo;
     }
@@ -104,6 +108,7 @@ public class Person extends ContactableResource {
     /**
      * Return the roles.
      */
+    @CollectionType(type=Role.class)
     public List<Role> getRoles() {
         return roles;
     }

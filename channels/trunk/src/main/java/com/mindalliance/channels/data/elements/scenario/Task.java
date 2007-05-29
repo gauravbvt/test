@@ -6,11 +6,13 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Regulatable;
 import com.mindalliance.channels.data.components.Caused;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.Regulated;
 import com.mindalliance.channels.data.reference.TypeSet;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -46,6 +48,7 @@ public class Task extends AbstractOccurrence implements Caused, Regulatable {
     /**
      * Get a list of regulated assertions.
      */
+    @PropertyOptions(ignore=true)
     public List<Regulated> getRegulatedAssertions() {
         List<Regulated> regulatedAssertions = new ArrayList<Regulated>();
         for ( Assertion assertion : getAssertions() ) {
@@ -58,6 +61,7 @@ public class Task extends AbstractOccurrence implements Caused, Regulatable {
     /**
      * Return the agents.
      */
+    @CollectionType(type=Agent.class)
     public List<Agent> getAgents() {
         return agents;
     }

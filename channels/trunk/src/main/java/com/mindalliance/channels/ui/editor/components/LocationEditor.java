@@ -9,7 +9,7 @@ import java.util.IllegalFormatConversionException;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
-import com.mindalliance.channels.data.support.Latency;
+import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.ui.editor.ElementBeanViewPanel;
 
 
@@ -17,14 +17,13 @@ import com.mindalliance.channels.ui.editor.ElementBeanViewPanel;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class LatencyEditor extends Vbox implements PropertyComponent {
+public class LocationEditor extends Vbox implements PropertyComponent {
 
-    private ElementBeanViewPanel<Latency> panel;
+    private ElementBeanViewPanel<Location> panel;
     
-    public LatencyEditor() {
-        panel = new ElementBeanViewPanel<Latency>(Latency.class);
-        panel.setSubView( new String[]{"minimum", "maximum", "average"}, false, false );
-        this.appendChild(panel);
+    public LocationEditor() {
+        panel = new ElementBeanViewPanel<Location>(Location.class);
+        appendChild(panel);
     }
     
     /* (non-Javadoc)
@@ -39,7 +38,11 @@ public class LatencyEditor extends Vbox implements PropertyComponent {
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
     public void setValue( Object arg0 ) throws IllegalFormatConversionException {
-        panel.setDataObject( arg0 );
+        if (arg0 == null) {
+            panel.setDataObject( new Location() );
+        } else {
+            panel.setDataObject( arg0 );
+        }
     }
 
 }

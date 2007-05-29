@@ -9,29 +9,27 @@ import java.util.IllegalFormatConversionException;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
-import com.mindalliance.channels.data.support.Latency;
-import com.mindalliance.channels.ui.editor.ElementBeanViewPanel;
+import com.mindalliance.channels.data.support.LatLong;
+import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
 
 /**
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class LatencyEditor extends Vbox implements PropertyComponent {
+public class LatLongEditor extends Vbox implements PropertyComponent {
 
-    private ElementBeanViewPanel<Latency> panel;
+    private ZkBeanViewPanel<LatLong> panel;
     
-    public LatencyEditor() {
-        panel = new ElementBeanViewPanel<Latency>(Latency.class);
-        panel.setSubView( new String[]{"minimum", "maximum", "average"}, false, false );
-        this.appendChild(panel);
+    public LatLongEditor() {
+        panel = new ZkBeanViewPanel<LatLong>();
+        appendChild(panel);
     }
     
     /* (non-Javadoc)
      * @see com.beanview.PropertyComponent#getValue()
      */
     public Object getValue() {
-        panel.updateObjectFromPanel();
         return panel.getDataObject();
     }
 
@@ -39,7 +37,11 @@ public class LatencyEditor extends Vbox implements PropertyComponent {
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
     public void setValue( Object arg0 ) throws IllegalFormatConversionException {
-        panel.setDataObject( arg0 );
+        if (arg0 == null) {
+            panel.setDataObject( new LatLong() );
+        } else {
+            panel.setDataObject( arg0 );
+        }
     }
 
 }

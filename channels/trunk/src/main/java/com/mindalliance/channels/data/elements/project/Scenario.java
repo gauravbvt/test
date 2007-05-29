@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.scenario.Activity;
@@ -19,6 +20,7 @@ import com.mindalliance.channels.data.elements.scenario.Flow;
 import com.mindalliance.channels.data.elements.scenario.Product;
 import com.mindalliance.channels.data.elements.scenario.SharingNeed;
 import com.mindalliance.channels.data.elements.scenario.Task;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -67,6 +69,7 @@ public class Scenario extends AbstractElement {
      * Return the list of all incidents (occurrences without stated
      * causes).
      */
+    @PropertyOptions(ignore=true)
     public List<Occurrence> getIncidents() {
         List<Occurrence> incidents = new ArrayList<Occurrence>();
         CollectionUtils.select( occurrences, new Predicate() {
@@ -82,6 +85,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the events associated with this scenario.
      */
+    @PropertyOptions(ignore=true)
     public List<Event> getEvents() {
         List<Event> events = new ArrayList<Event>();
         for ( Occurrence occ : getOccurrences() ) {
@@ -95,6 +99,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the tasks associated with this scenario.
      */
+    @PropertyOptions(ignore=true)
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<Task>();
         for ( Occurrence occ : getOccurrences() ) {
@@ -108,6 +113,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the activities associated with this scenario.
      */
+    @CollectionType(type=Activity.class)
     public List<Activity> getActivities() {
         // TODO
         return new ArrayList<Activity>();
@@ -116,6 +122,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the communications associated with this scenario.
      */
+    @CollectionType(type=Communication.class)
     public List<Communication> getCommunications() {
         // TODO
         return new ArrayList<Communication>();
@@ -124,6 +131,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the circumstances associated with this scenario.
      */
+    @CollectionType(type=Circumstance.class)
     public List<Circumstance> getCircumstances() {
         // TODO
         return new ArrayList<Circumstance>();
@@ -132,6 +140,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the flows.
      */
+    @CollectionType(type=Flow.class)
     public List<Flow> getFlows() {
         return flows;
     }
@@ -178,6 +187,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the occurrences.
      */
+    @CollectionType(type=Occurrence.class)
     public List<Occurrence> getOccurrences() {
         return occurrences;
     }
@@ -209,6 +219,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the products.
      */
+    @CollectionType(type=Product.class)
     public List<Product> getProducts() {
         return products;
     }
@@ -240,6 +251,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the sharingNeeds.
      */
+    @CollectionType(type=SharingNeed.class)
     public List<SharingNeed> getSharingNeeds() {
         return sharingNeeds;
     }

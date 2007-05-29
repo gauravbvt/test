@@ -8,6 +8,7 @@ import java.util.List;
 import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.data.support.Distance;
 import com.mindalliance.channels.data.support.LatLong;
+import com.mindalliance.channels.util.CollectionType;
 
 /**
  * A place, position etc.
@@ -46,6 +47,7 @@ public class Location extends TypedReferenceData {
     /**
      * Return a list of close-by locations.
      */
+    @CollectionType(type=Location.class)
     public List<Location> getNextTo() {
         return nextTo;
     }
@@ -93,6 +95,7 @@ public class Location extends TypedReferenceData {
      * Get the enclosing locations.
      * @return the within
      */
+    @CollectionType(type=Location.class)
     @DisplayAs( direct = "located in {1}",
                 reverse = "includes {1}",
                 directMany = "located in:",

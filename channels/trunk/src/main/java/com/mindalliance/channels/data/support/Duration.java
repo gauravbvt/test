@@ -5,6 +5,8 @@ package com.mindalliance.channels.data.support;
 
 import java.io.Serializable;
 
+import com.beanview.annotation.PropertyOptions;
+
 /**
  * A duration in time.
  *
@@ -55,6 +57,7 @@ public class Duration implements Serializable, Comparable<Duration> {
     /**
      * Return the value of number.
      */
+    @PropertyOptions(label=" ")
     public double getNumber() {
         return this.number;
     }
@@ -70,6 +73,7 @@ public class Duration implements Serializable, Comparable<Duration> {
     /**
      * Return the value of unit.
      */
+    @PropertyOptions(label=" ")
     public Unit getUnit() {
         return this.unit;
     }
@@ -85,6 +89,7 @@ public class Duration implements Serializable, Comparable<Duration> {
     /**
      * Get the duration in milliseconds.
      */
+    //@PropertyOptions(ignore=true)
     public long getMsecs() {
         return (long) ( VALUES[ getUnit().ordinal() ] * getNumber() );
     }

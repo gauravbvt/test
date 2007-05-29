@@ -5,8 +5,8 @@
 package com.mindalliance.channels.ui.editor.browser;
 
 import com.beanview.BeanView;
-import com.mindalliance.channels.ui.editor.ElementCollectionFactory;
-import com.mindalliance.channels.ui.editor.ElementFactory;
+import com.mindalliance.channels.ui.editor.components.ElementCollectionFactory;
+import com.mindalliance.channels.ui.editor.components.ElementFactory;
 import com.mindalliance.zk.beanview.ZkComponentFactory;
 
 

@@ -9,6 +9,7 @@ import java.util.List;
 import com.mindalliance.channels.data.components.ContactInfo;
 import com.mindalliance.channels.data.components.Contactable;
 import com.mindalliance.channels.data.reference.Information;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -67,6 +68,7 @@ public class Repository extends AccessibleResource implements Contactable {
     /**
      * Return the contents.
      */
+    @CollectionType(type=Information.class)
     public List<Information> getContents() {
         return contents;
     }
@@ -113,6 +115,7 @@ public class Repository extends AccessibleResource implements Contactable {
     /**
      * Return the value of contactInfos.
      */
+    @CollectionType(type=ContactInfo.class)
     public List<ContactInfo> getContactInfos() {
         return contactInfos;
     }

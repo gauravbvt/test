@@ -27,7 +27,7 @@ public class Channel extends AbstractResource {
                                             // from this one to the
                                             // other
     private TypeSet supportedFormats;
-    private Latency latency;
+    private Latency latency = new Latency();
 
     public Channel() {
         super();

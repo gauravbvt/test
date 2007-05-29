@@ -19,6 +19,7 @@ import com.mindalliance.channels.data.elements.resources.Role;
 import com.mindalliance.channels.data.reference.Pattern;
 import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.user.UserImpl;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -68,6 +69,7 @@ public class Project extends AbstractElement {
     /**
      * Return the models.
      */
+    @CollectionType(type=Model.class)
     public Set<Model> getModels() {
         return models;
     }
@@ -118,6 +120,7 @@ public class Project extends AbstractElement {
     /**
      * Return the organization criterias.
      */
+    @CollectionType(type=InScope.class)
     public List<InScope> getInScopes() {
         return inScopes;
     }
@@ -170,6 +173,7 @@ public class Project extends AbstractElement {
     /**
      * Return the role-based admission criterias.
      */
+    @CollectionType(type=Participation.class)
     public List<Participation> getParticipations() {
         return participations;
     }

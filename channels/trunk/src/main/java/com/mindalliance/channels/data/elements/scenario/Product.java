@@ -5,6 +5,7 @@ package com.mindalliance.channels.data.elements.scenario;
 
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Storable;
 import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.components.Caused;
@@ -81,6 +82,7 @@ abstract public class Product extends AbstractScenarioElement implements
      * 
      * @see com.mindalliance.channels.data.Storable#getStoredInAssertions()
      */
+    @PropertyOptions(ignore=true)
     public List<StoredIn> getStoredInAssertions() {
         return null;
     }

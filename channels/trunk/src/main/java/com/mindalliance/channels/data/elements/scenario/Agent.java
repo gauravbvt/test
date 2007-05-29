@@ -6,6 +6,7 @@ package com.mindalliance.channels.data.elements.scenario;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.OptOutable;
 import com.mindalliance.channels.data.components.Knowledgeable;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
@@ -50,6 +51,7 @@ public abstract class Agent extends AbstractScenarioElement
     /**
      * Get the list of CanAccess assertions.
      */
+    @PropertyOptions(ignore=true)
     public List<CanAccess> getCanAccessAssertions() {
         List<CanAccess> canAccessAssertions = new ArrayList<CanAccess>();
         for ( Assertion assertion : getAssertions() ) {
@@ -62,6 +64,8 @@ public abstract class Agent extends AbstractScenarioElement
     /**
      * Get the list of NeedToKnow assertions.
      */
+
+    @PropertyOptions(ignore=true)
     public List<NeedsToKnow> getNeedsToKnowAssertions() {
         List<NeedsToKnow> needsToKnowAssertions = new ArrayList<NeedsToKnow>();
         for ( Assertion assertion : getAssertions() ) {
@@ -74,6 +78,7 @@ public abstract class Agent extends AbstractScenarioElement
     /**
      * Return the optedOut assertions.
      */
+    @PropertyOptions(ignore=true)
     public List<OptedOut> getOptedOutAssertions() {
         List<OptedOut> optedOutAssertions = new ArrayList<OptedOut>();
         for ( Assertion assertion : getAssertions() ) {

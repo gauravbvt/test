@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.mindalliance.channels.data.components.ContactInfo;
 import com.mindalliance.channels.data.components.Contactable;
+import com.mindalliance.channels.util.CollectionType;
 import com.mindalliance.channels.util.GUID;
 
 /**
@@ -40,6 +41,7 @@ public abstract class ContactableResource extends AbstractResource
     /**
      * Return the contact infos.
      */
+    @CollectionType(type=ContactInfo.class)
     public List<ContactInfo> getContactInfos() {
         return contactInfos;
     }

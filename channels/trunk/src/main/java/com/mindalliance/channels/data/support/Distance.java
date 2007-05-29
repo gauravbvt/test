@@ -5,6 +5,8 @@ package com.mindalliance.channels.data.support;
 
 import java.io.Serializable;
 
+import com.beanview.annotation.PropertyOptions;
+
 /**
  * A distance
  * 
@@ -22,6 +24,7 @@ public class Distance implements Serializable {
     /**
      * @return the unit
      */
+    @PropertyOptions(label=" ")
     public Unit getUnit() {
         return unit;
     }
@@ -36,6 +39,7 @@ public class Distance implements Serializable {
     /**
      * @return the value
      */
+    @PropertyOptions(label=" ")
     public Double getValue() {
         return value;
     }

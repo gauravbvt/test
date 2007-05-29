@@ -11,6 +11,7 @@ import org.zkoss.zul.Textbox;
 
 import com.beanview.BeanViewGroup;
 import com.beanview.PropertyComponent;
+import com.mindalliance.channels.data.support.Distance;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
@@ -19,25 +20,25 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class DurationEditor extends Hbox implements PropertyComponent {
+public class DistanceEditor extends Hbox implements PropertyComponent {
 
-    private BeanViewGroup<Duration> group;
-    private ZkBeanViewPanel<Duration> numberPanel;
-    private ZkBeanViewPanel<Duration> unitPanel;
+    private BeanViewGroup<Distance> group;
+    private ZkBeanViewPanel<Distance> numberPanel;
+    private ZkBeanViewPanel<Distance> unitPanel;
     
     
-    private Duration duration;
+    private Distance duration;
     
-    public DurationEditor() {
-        group = new BeanViewGroup<Duration>();
+    public DistanceEditor() {
+        group = new BeanViewGroup<Distance>();
         
-        numberPanel = new ZkBeanViewPanel<Duration>();
-        numberPanel.setSubView( new String[] {"number"}, false, false );
+        numberPanel = new ZkBeanViewPanel<Distance>();
+        numberPanel.setSubView( new String[] {"value"}, false, false );
         group.addBeanView( numberPanel );
 
         this.appendChild( numberPanel );
         
-        unitPanel = new ZkBeanViewPanel<Duration>();
+        unitPanel = new ZkBeanViewPanel<Distance>();
         unitPanel.setSubView( new String[]{"unit"}, false, false );
 
         group.addBeanView( unitPanel );
@@ -48,7 +49,7 @@ public class DurationEditor extends Hbox implements PropertyComponent {
      */
     public Object getValue() {
         group.updateObjectFromPanels();
-        if (duration.getUnit() == Duration.Unit.msec && duration.getNumber() == 0.0) {
+        if (duration.getUnit() == null && duration.getValue() == null) {
             return null;
         }
         return duration;
@@ -59,16 +60,16 @@ public class DurationEditor extends Hbox implements PropertyComponent {
      */
     public void setValue( Object arg0 ) throws IllegalFormatConversionException {
         if (!(arg0 instanceof Duration) && arg0 != null) {
-            throw new IllegalFormatConversionException('d', Duration.class);
+            throw new IllegalFormatConversionException('d', Distance.class);
         } 
-        duration = (Duration)arg0;
+        duration = (Distance)arg0;
         
         if (duration == null) {
-            duration = new Duration();
+            duration = new Distance();
         }
         
         group.setDataObject(duration);
-        Textbox box = (Textbox)numberPanel.getPropertyComponent( "number" );
+        Textbox box = (Textbox)numberPanel.getPropertyComponent( "value" );
         box.setCols( 5 );
     }
 
