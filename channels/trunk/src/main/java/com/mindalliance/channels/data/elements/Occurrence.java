@@ -13,8 +13,10 @@ import com.mindalliance.channels.data.support.Duration;
  *
  * @author jf
  * @version $Revision$
+ * @param <T> the type of the causes
  */
-public interface Occurrence extends ScenarioElement, Located, Caused {
+public interface Occurrence<T extends Occurrence>
+    extends ScenarioElement, Located, Caused<T> {
 
     /**
      * An incident is an occurrence with no stated cause.

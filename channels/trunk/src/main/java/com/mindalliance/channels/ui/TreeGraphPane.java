@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,6 +18,13 @@ import java.util.TreeSet;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Menu;
+import org.zkoss.zul.Menuitem;
+import org.zkoss.zul.Menupopup;
+import org.zkoss.zul.Menuseparator;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
@@ -27,11 +35,15 @@ import org.zkoss.zul.Treechildren;
 import org.zkoss.zul.Treeitem;
 
 import com.mindalliance.channels.DisplayAs;
+import com.mindalliance.channels.JavaBean;
+import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.components.Caused;
 import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.data.elements.scenario.Event;
 import com.mindalliance.channels.data.elements.scenario.Product;
 import com.mindalliance.channels.ui.editor.EditorFactory;
+import com.mindalliance.channels.util.GUID;
 import com.mindalliance.zk.mxgraph.MxFastOrganicLayout;
 import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
@@ -47,11 +59,6 @@ import static com.mindalliance.channels.ui.TreeGraphPane.Arc.Direction.to;
 public class TreeGraphPane extends Tabbox implements TimelineListener {
 
     /**
-     * How deep to build the tree.
-     */
-    private static final int MAX_LEVEL = 2;
-
-    /**
      * Height of the title, in pixels.
      */
     private static final int TITLE_HEIGHT = 35;
@@ -64,7 +71,14 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     private Caused rootElement;
     private IconManager iconManager;
 
-    private Map<Object,Set<Arc>> arcCache = new HashMap<Object,Set<Arc>>();
+    private Map<Object,Set<Arc>> arcCache;
+    private Set<Object> expandedNodes;
+
+    private Object treeSelection;
+
+    /** One popup menu, reused for all items in the tree/graph. */
+    private Menupopup menu;
+    private ScenarioTimeline timeline;
 
     /**
      * Default constructor.
@@ -97,6 +111,16 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
 
         this.tree = new Tree();
         tree.setSclass( "what-pane" );
+        tree.addEventListener( "onSelect", new EventListener() {
+            public boolean isAsap() {
+                return true;
+            }
+
+            public void onEvent( org.zkoss.zk.ui.event.Event e ) {
+                setTreeSelection( tree.getSelectedItem().getValue() );
+            }
+        } );
+
         Tabpanel treePanel = new Tabpanel();
         treePanel.setHeight( contentHeight + "px" );
         treePanel.appendChild( tree );
@@ -144,22 +168,19 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     public void setRootElement( Caused root ) {
         this.rootElement = root;
 
+        arcCache = new HashMap<Object,Set<Arc>>();
+        expandedNodes = new HashSet<Object>();
+
+        if ( menu == null ) {
+            menu = new Menupopup();
+            menu.setId( "tree-popup-" + hashCode() );
+            menu.setPage( editorFactory.getPage() );
+            resetTreePopup( root );
+            tree.setContext( menu.getId() );
+        }
+
         // TODO repopulate graph
         rebuildTree( root );
-    }
-
-    /**
-     * Rebuild and redisplay the tree given a selected node.
-     * @param root the root element
-     */
-    @SuppressWarnings( "unchecked" )
-    private void rebuildTree( Caused root ) {
-        Treechildren trees = new Treechildren();
-        trees.appendChild( createItem( root, getName( root ), MAX_LEVEL ) );
-
-        tree.getChildren().clear();
-        tree.getChildren().add( trees );
-        tree.invalidate();
     }
 
     /**
@@ -174,51 +195,205 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     }
 
     /**
+     * Create a new scenario event.
+     */
+    private Event createEvent() {
+        GUID guid = getEditorFactory().getSystem().getGuidFactory().newGuid();
+        Event event = new Event( guid );
+        event.setName( "Some new event" );
+        event.setScenario( scenario );
+        return event;
+    }
+
+    private Menuitem newItem( String label, final Runnable action ) {
+        Menuitem result = new Menuitem( label );
+        if ( action != null )
+            result.addEventListener( "onClick", new EventListener() {
+                public boolean isAsap() {
+                    return true;
+                }
+
+                public void onEvent( org.zkoss.zk.ui.event.Event arg0 ) {
+                    action.run();
+                }
+            } );
+        return result;
+    }
+
+    private Menu newMenu( String label, Component... children ) {
+        Menu menu = new Menu( label );
+        Menupopup popup = new Menupopup();
+        for ( Component child : children )
+            popup.appendChild( child );
+        menu.appendChild( popup );
+        return menu;
+    }
+
+    private void resetTreePopup( Object object ) {
+        menu.getChildren().clear();
+        if ( scenario.getOccurrences().size() == 0 )
+            menu.appendChild( newMenu( "New",
+                newItem( "Event...", new Runnable() {
+                    public void run() {
+                        Event event = (Event) getEditorFactory().popupEditor(
+                                createEvent() );
+                        if ( event != null )
+                            scenario.addOccurrence( event );
+                        invalidate();
+                    }
+                } ),
+                newItem( "Task...", null ) ) );
+
+        if ( getEditorFactory().supports( getTreeSelection() ) )
+            menu.appendChild( newItem( "Edit...", new Runnable() {
+                public void run() {
+                    editSelection();
+                }
+            } ) );
+
+        if ( object == rootElement ) {
+            menu.appendChild( new Menuseparator() );
+            if ( isCaused( object ) && ( (Caused) object ).getCause() == null )
+                menu.appendChild( newMenu( "Set cause",
+                    newItem( "Event...", new Runnable() {
+                            public void run() {
+                                setCause(
+                                    createEvent(),
+                                    (Caused) getTreeSelection() );
+                            }
+                        } ),
+                    newItem( "Task...", null ) ) );
+            menu.appendChild( newMenu( "Add a consequence",
+                newItem( "Event...", null ),
+                newItem( "Task...", null ),
+                newItem( "Product...", null ) ) );
+
+            menu.appendChild( newItem( "Delete", null ) );
+        }
+        menu.invalidate();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void setCause( Occurrence cause, Caused caused ) {
+        Event event =
+            (Event) getEditorFactory().popupEditor( cause );
+        if ( event != null ) {
+            caused.setCause( new Cause( cause ) );
+            scenario.addOccurrence( event );
+            timeline.invalidate();
+            invalidate();
+        }
+    }
+
+    /**
+     * Test if an object can have a cause.
+     * @param object the object
+     */
+    private boolean isCaused( Object object ) {
+        return object != null
+            && Caused.class.isAssignableFrom( object.getClass() );
+    }
+
+    /**
+     * Rebuild and redisplay the tree given a selected node.
+     * @param root the root element
+     */
+    @SuppressWarnings( "unchecked" )
+    private void rebuildTree( Caused root ) {
+        Treechildren trees = new Treechildren();
+        Treeitem rootItem = createItem( root, getName( root ), true );
+        trees.appendChild( rootItem );
+
+        List<Object> children = (List<Object>) tree.getChildren();
+        children.clear();
+        children.add( trees );
+        tree.invalidate();
+    }
+
+    /**
      * Create a tree item on an element and its first-level
      * children.
      * @param element the element underlying element
      * @param label how to label the root item
-     * @param level how deep to dig
+     * @param open true if children are visible. If false, user
+     * expansion will create childrens
      */
-    private Treeitem createItem( Object element, String label, int level ) {
+    private Treeitem createItem(
+            final Object element, String label, boolean open ) {
 
-        Treeitem result = new Treeitem( label, element );
+        final Treeitem result = new Treeitem( label, element );
+        final Treechildren children = new Treechildren();
         result.setImage( getIconManager().getSmallIcon( element ) );
+        result.setOpen( open );
+        result.appendChild( children );
         result.setTooltiptext( MessageFormat.format(
                 "an instance of {0}",
                 element.getClass().getSimpleName().toLowerCase() ) );
 
-        if ( level > 0 ) {
-            Treechildren kids = new Treechildren();
-            Map<String, Set<Arc>> groups = separate( getArcs( element ) );
-            for ( Entry<String,Set<Arc>> e : groups.entrySet() ) {
-                Set<Arc> arcs = e.getValue();
-                Arc firstArc = arcs.iterator().next();
-                if ( arcs.size() == 1 ) {
-                    Treeitem item = createItem(
-                                        firstArc.getNode(),
-                                        firstArc.getLabel( false ),
-                                        level - 1 );
-                    item.setOpen( false );
-                    kids.appendChild( item );
+        if ( open ) {
+            expandedNodes.add( element );
+            appendChildren( children, element );
 
-                } else {
-                    Treeitem group =
-                        new Treeitem( firstArc.getLabel( true ) );
-                    group.setOpen( false );
-                    Treechildren grandKids = new Treechildren();
-                    for ( Arc a : arcs )
-                        grandKids.appendChild( createItem(
-                            a.getNode(), a.getNode().toString(), level - 1 ) );
+        } else {
+            result.addEventListener( "onOpen", new EventListener() {
+                    public boolean isAsap() {
+                        return true;
+                    }
 
-                    group.appendChild( grandKids );
-                    kids.appendChild( group );
-                }
-            }
-            result.appendChild( kids );
+                    public void onEvent( org.zkoss.zk.ui.event.Event arg0 ) {
+                        if ( !expandedNodes.contains( element ) ) {
+                            expandedNodes.add( element );
+                            appendChildren( children, element );
+                        }
+                    }
+                } );
         }
+        result.addEventListener( Events.ON_DOUBLE_CLICK, new EventListener() {
+            public boolean isAsap() {
+                return true;
+            }
+
+            public void onEvent( org.zkoss.zk.ui.event.Event arg0 ) {
+                if ( getEditorFactory().supports( getTreeSelection() ) )
+                    editSelection();
+            }
+        } );
 
         return result;
+    }
+
+    /**
+     * Create all children tree item of a given element.
+     * @param kids the children to populate
+     * @param element the element
+     */
+    private Treechildren appendChildren(
+            Treechildren kids, Object element ) {
+
+        Map<String, Set<Arc>> groups = separate( getArcs( element ) );
+        for ( Entry<String,Set<Arc>> e : groups.entrySet() ) {
+            Set<Arc> arcs = e.getValue();
+            Arc firstArc = arcs.iterator().next();
+            if ( arcs.size() == 1 ) {
+                kids.appendChild(
+                    createItem(
+                        firstArc.getNode(),
+                        firstArc.getLabel( false ),
+                        false ) );
+
+            } else {
+                Treechildren grandKids = new Treechildren();
+                for ( Arc a : arcs )
+                    grandKids.appendChild( createItem(
+                        a.getNode(), a.getNode().toString(), false ) );
+
+                Treeitem group = new Treeitem( firstArc.getLabel( true ) );
+                group.setOpen( false );
+                group.appendChild( grandKids );
+                kids.appendChild( group );
+            }
+        }
+        return kids;
     }
 
     /**
@@ -312,7 +487,6 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
      * @param type the given class
      */
     private boolean isArcNode( Class<?> type ) {
-//        return type != null && ScenarioElement.class.isAssignableFrom( type );
         return type != null
             && type.getName().startsWith( "com.mindalliance.channels." )
             && !type.getName().startsWith(
@@ -349,7 +523,26 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     }
 
     /**
-     * React to a selection from the timeline.
+     * Set the tree selection.
+     * @param treeSelection The new value of treeSelection
+     */
+    public void setTreeSelection( Object treeSelection ) {
+        this.treeSelection = treeSelection;
+        resetTreePopup( treeSelection );
+
+        // TODO set the tree selection if not already set.
+    }
+
+    /**
+     * Return the value of treeSelection.
+     */
+    public Object getTreeSelection() {
+        return this.treeSelection == null ?
+                getRootElement() : this.treeSelection;
+    }
+
+    /**
+     * React to a selection from the *timeline*.
      * @param timeline the timeline
      * @param oldSelection the previous selected item
      * @param newSelection the new selected item
@@ -359,6 +552,29 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
             Caused oldSelection, Caused newSelection ) {
 
         setRootElement( newSelection );
+    }
+
+    /**
+     * Return the value of timeline.
+     */
+    public ScenarioTimeline getTimeline() {
+        return this.timeline;
+    }
+
+    /**
+     * Set the value of timeline.
+     * @param timeline The new value of timeline
+     */
+    public void setTimeline( ScenarioTimeline timeline ) {
+        this.timeline = timeline;
+    }
+
+    /**
+     * Popup an editor on the current tree selection.
+     */
+    private void editSelection() {
+        // TODO make Caused extend JavaBean
+        getEditorFactory().popupEditor( (JavaBean) getTreeSelection() );
     }
 
     //=================================================

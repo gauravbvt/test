@@ -35,6 +35,15 @@ public class Cause<T extends Occurrence> extends AbstractJavaBean {
     }
 
     /**
+     * Convenience constructor.
+     * @param occurrence the occurrence
+     */
+    public Cause( T occurrence ) {
+        this();
+        this.occurrence = occurrence;
+    }
+
+    /**
      * Get the occurrence that caused this.
      */
     public T getOccurrence() {

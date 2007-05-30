@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.data.components;
 
+import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.Timed;
 
 /**
@@ -10,12 +11,19 @@ import com.mindalliance.channels.data.elements.Timed;
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
+ * @param <T> the type of the cause
  */
-public interface Caused extends Timed {
+public interface Caused<T extends Occurrence> extends Timed {
 
     /**
      * Get the cause.
      */
-    Cause getCause();
+    Cause<T> getCause();
+
+    /**
+     * Set the cause.
+     * @param cause the cause
+     */
+    void setCause( Cause<T> cause );
 
 }

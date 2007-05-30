@@ -1,39 +1,32 @@
-/*
- * Created on May 4, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
-import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.util.GUID;
 
 /**
  * A response is a sharing of information prompted by a request. Note
  * that upon being responded, the recipient implicitly asserts a Known
  * on the Knowledge caused by the response.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
-public class Response extends Communication {
+public class Response extends Communication<Request> {
 
-    private Cause<Request> cause; // can not be null
-
+    /**
+     * Default constructor.
+     */
     public Response() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Response( GUID guid ) {
         super( guid );
     }
-
-    public Cause<Request> getCause() {
-        return cause;
-    }
-
-    /**
-     * @param cause the cause to set
-     */
-    public void setCause( Cause cause ) {
-        this.cause = (Cause<Request>) cause;
-    }
-
 }

@@ -14,6 +14,7 @@ import com.mindalliance.channels.services.LibraryService;
 import com.mindalliance.channels.services.PortfolioService;
 import com.mindalliance.channels.services.RegistryService;
 import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.util.GUIDFactory;
 
 /**
  * The System data model's root bean.
@@ -29,6 +30,7 @@ public class System extends AbstractQueryable implements SystemService {
     private History history;
     private Library library;
     private Portfolio portfolio;
+    private GUIDFactory guidFactory;
 
     /**
      * Default constructor.
@@ -177,4 +179,18 @@ public class System extends AbstractQueryable implements SystemService {
         return false;
     }
 
+    /**
+     * Return the value of guidFactory.
+     */
+    public GUIDFactory getGuidFactory() {
+        return this.guidFactory;
+    }
+
+    /**
+     * Set the value of guidFactory.
+     * @param guidFactory The new value of guidFactory
+     */
+    public void setGuidFactory( GUIDFactory guidFactory ) {
+        this.guidFactory = guidFactory;
+    }
 }

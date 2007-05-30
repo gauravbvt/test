@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Excludable;
-import com.mindalliance.channels.data.components.Caused;
 import com.mindalliance.channels.data.elements.assertions.Assertion;
 import com.mindalliance.channels.data.elements.assertions.Excluded;
 import com.mindalliance.channels.data.support.Level;
@@ -25,7 +24,7 @@ import com.mindalliance.channels.util.GUID;
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
  */
-public class Event extends AbstractOccurrence implements Caused, Excludable {
+public class Event extends AbstractOccurrence implements Excludable {
 
     private Level probability;
 
@@ -50,7 +49,7 @@ public class Event extends AbstractOccurrence implements Caused, Excludable {
     /**
      * Get a list of excluded assertions.
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     public List<Excluded> getExcludedAssertions() {
         List<Excluded> excludedAssertions = new ArrayList<Excluded>();
         for ( Assertion assertion : getAssertions() ) {
@@ -78,7 +77,7 @@ public class Event extends AbstractOccurrence implements Caused, Excludable {
     /**
      * Return the terminating tasks.
      */
-    @CollectionType(type=Task.class)
+    @CollectionType( type = Task.class )
     public List<Task> getTerminatingTasks() {
         return terminatingTasks;
     }

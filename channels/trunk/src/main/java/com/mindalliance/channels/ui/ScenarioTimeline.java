@@ -51,7 +51,7 @@ public class ScenarioTimeline extends Timeline {
      * The size of a tick in a band.
      * This affect the zoom level.
      */
-    private static final int INTERVAL = 35;
+    private static final int INTERVAL = 30;
 
     /**
      * Allowed scales for the timelines.
@@ -148,8 +148,8 @@ public class ScenarioTimeline extends Timeline {
         setSclass( "timeline" );
 
         // Set initial selection to first object in the timeline.
-        if ( events.size() > 0 )
-            setSelectedObject( events.iterator().next().getObject() );
+//        if ( events.size() > 0 )
+//            setSelectedObject( events.iterator().next().getObject() );
 
         addEventListener( "onSelectEvent", new EventListener() {
             public boolean isAsap() {

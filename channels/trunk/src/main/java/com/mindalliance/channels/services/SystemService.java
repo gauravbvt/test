@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.Element;
+import com.mindalliance.channels.util.GUIDFactory;
 
 /**
  * Overall System functions and access to all System services.
@@ -61,4 +62,8 @@ public interface SystemService extends Service {
      */
     HistoryService getHistoryService();
 
+    /**
+     * Get the official GUID factory.
+     */
+    GUIDFactory getGuidFactory();
 }

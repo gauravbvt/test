@@ -41,6 +41,7 @@ public class ScenarioViewer extends Window
 
     private EditorFactory editorFactory;
     private Scenario scenario;
+    private ScenarioTimeline timeline;
 
     /**
      * Default constructor.
@@ -60,9 +61,7 @@ public class ScenarioViewer extends Window
 
         int kidHeight = height - TOP_MARGIN - PADDING - TIMELINE_HEIGHT;
 
-        ScenarioTimeline timeline =
-            new ScenarioTimeline( TIMELINE_HEIGHT, im, page, scenario );
-
+        timeline = new ScenarioTimeline( TIMELINE_HEIGHT, im, page, scenario );
         Hbox bottom = new Hbox();
         bottom.appendChild( createWherePane( kidHeight, im, timeline ) );
         bottom.appendChild( createWhatPane( kidHeight, im, timeline ) );
@@ -98,6 +97,7 @@ public class ScenarioViewer extends Window
         TreeGraphPane tgp = new TreeGraphPane(
                 height, getScenario(), getEditorFactory() );
         tgp.setIconManager( im );
+        tgp.setTimeline( this.timeline );
         timeline.addTimelineListener( tgp );
 
         Window window = new Window( "What", "normal", false );
@@ -118,6 +118,7 @@ public class ScenarioViewer extends Window
         TreeGraphPane tgp = new TreeGraphPane(
                 height, getScenario(), getEditorFactory() );
         tgp.setIconManager( im );
+        tgp.setTimeline( this.timeline );
 //        timeline.addTimelineListener( tgp );
 
         Window window = new Window( "Who", "normal", false );

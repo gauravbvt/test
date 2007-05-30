@@ -15,13 +15,15 @@ import com.mindalliance.channels.util.GUID;
  *
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
+ * @param <T> the type of the cause of the occurrence
  */
-public abstract class AbstractOccurrence extends AbstractScenarioElement
-        implements Occurrence {
+public abstract class AbstractOccurrence<T extends Occurrence>
+    extends AbstractScenarioElement
+    implements Occurrence<T> {
 
     private Duration duration = Duration.NONE;
     private Location location;
-    private Cause cause;
+    private Cause<T> cause;
 
     /**
      * Default constructor.
@@ -36,7 +38,6 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
      */
     public AbstractOccurrence( GUID guid ) {
         super( guid );
-        cause = new Cause();
     }
 
     /**
@@ -125,7 +126,7 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
      * Set the cause.
      * @param cause the cause to set
      */
-    public void setCause( Cause cause ) {
+    public void setCause( Cause<T> cause ) {
         this.cause = cause;
     }
 
@@ -135,7 +136,7 @@ public abstract class AbstractOccurrence extends AbstractScenarioElement
     @DisplayAs( direct = "caused by {1}",
                 reverse = "causes {1}",
                 reverseMany = "causes:" )
-    public Cause getCause() {
+    public Cause<T> getCause() {
         return this.cause;
     }
 

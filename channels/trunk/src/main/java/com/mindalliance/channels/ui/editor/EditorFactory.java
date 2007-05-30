@@ -6,7 +6,14 @@ package com.mindalliance.channels.ui.editor;
 import java.util.Collection;
 
 import org.zkoss.zhtml.Text;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Page;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Vbox;
+import org.zkoss.zul.Window;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
@@ -31,6 +38,14 @@ public class EditorFactory {
      * Default constructor.
      */
     public EditorFactory() {
+    }
+
+    /**
+     * Test if a kind of object can be edited.
+     * @param object the object
+     */
+    public boolean supports( Object object ) {
+        return object != null ;
     }
 
     /**
@@ -60,9 +75,10 @@ public class EditorFactory {
             Collection<T> objects, Class<T> beanClass,
             ObjectBrowserListener<T> listener ) {
 
-        ObjectBrowserImpl<T> browser = new ObjectBrowserImpl<T>(beanClass, system, user);
+        ObjectBrowserImpl<T> browser =
+            new ObjectBrowserImpl<T>( beanClass, system, user );
         browser.setObjects( objects );
-        
+
         if ( listener != null )
             browser.addObjectBrowserListener( listener );
 
@@ -71,14 +87,26 @@ public class EditorFactory {
 
     /**
      * Popup an editor dialog on the given object.
+     * Blocks until the user saves or cancels.
      * @param object the object
-     * @throws UserCancelledException when user cancels the dialog
+     * @return the edited object or null if the user cancelled.
      */
-    public void popupEditor( JavaBean object ) throws UserCancelledException {
-        if ( object == null )
-            throw new NullPointerException();
+    public JavaBean popupEditor( JavaBean object ) {
+        JavaBean result = null;
+        if ( supports( object ) )
+            try {
+                PopupWrapper wrapper =
+                    new PopupWrapper( createEditor( object ) );
+                wrapper.doModal();
+                if ( wrapper.isOk() )
+                    result = object;
 
-        // TODO implement popup
+            } catch ( InterruptedException e ) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        return result;
     }
 
     /**
@@ -230,6 +258,84 @@ public class EditorFactory {
          */
         public JavaBean getObject() {
             return this.object;
+        }
+    }
+
+    /**
+     * Popup wrapper around an editor/browser.
+     */
+    public class PopupWrapper extends Window {
+
+        private static final String WIDTH = "50%";
+
+        private Component content;
+        private boolean ok;
+
+        /**
+         * Default constructor.
+         * @param content the actual editor
+         */
+        public PopupWrapper( Component content ) {
+            super( "Editor", "normal", false );
+            this.content = content;
+            this.setSizable( true );
+
+            Button okButton = new Button( "Ok" );
+            okButton.addEventListener( "onClick", new EventListener() {
+                public boolean isAsap() {
+                    return true;
+                }
+
+                public void onEvent( Event event ) {
+                    setVisible( false );
+                    setOk( true );
+                }
+            } );
+
+            Button cancelButton = new Button( "Cancel" );
+            cancelButton.addEventListener( "onClick", new EventListener() {
+                public boolean isAsap() {
+                    return true;
+                }
+
+                public void onEvent( Event event ) {
+                    setVisible( false );
+                }
+            } );
+
+            Hbox buttons = new Hbox();
+            buttons.appendChild( okButton );
+            buttons.appendChild( cancelButton );
+
+            Vbox vbox = new Vbox();
+            vbox.appendChild( content );
+            vbox.appendChild( buttons );
+
+            this.appendChild( vbox );
+            this.setPage( EditorFactory.this.getPage() );
+            this.setWidth( WIDTH );
+        }
+
+        /**
+         * Return the value of ok.
+         */
+        public boolean isOk() {
+            return this.ok;
+        }
+
+        /**
+         * Set the value of ok.
+         * @param ok The new value of ok
+         */
+        public void setOk( boolean ok ) {
+            this.ok = ok;
+        }
+
+        /**
+         * Return the value of content.
+         */
+        public Component getContent() {
+            return this.content;
         }
     }
 }

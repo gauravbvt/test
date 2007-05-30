@@ -1,39 +1,31 @@
-/*
- * Created on May 4, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.elements.scenario;
 
-import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.util.GUID;
 
 /**
  * A request is a prompt to share information. A request can be passed
  * along through intermediates.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
-public class Request extends Communication {
+public class Request extends Communication<Request> {
 
-    private Cause<Request> cause; // if not null then a request is
-                                    // being passed along
-
+    /**
+     * Default constructor.
+     */
     public Request() {
         super();
     }
 
+    /**
+     * Default constructor.
+     * @param guid the guid
+     */
     public Request( GUID guid ) {
         super( guid );
     }
-
-    public Cause<Request> getCause() {
-        return cause;
-    }
-
-    /**
-     * @param cause the cause to set
-     */
-    public void setCause( Cause cause ) {
-        this.cause = (Cause<Request>) cause;
-    }
-
 }

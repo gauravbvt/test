@@ -191,7 +191,11 @@ input.description {
 
 .what-pane {
 	height: inherit;
-	overflow: auto;
+	overflow: auto
+}
+
+.what-pane tr.item td, .what-pane tr.itemsel td {
+	white-space: nowrap;
 }
 
 div.google-map {

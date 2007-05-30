@@ -317,11 +317,12 @@
 	</bean>
 
 	<bean name="systemservice" class="com.mindalliance.channels.data.system.System">
-		<property name="registry"><ref bean="registry"/></property>
-		<property name="directory"><ref bean="directory"/></property>
-		<property name="history"><ref bean="history"/></property>
-		<property name="library"><ref bean="library"/></property>
-		<property name="portfolio"><ref bean="portfolio"/></property>
+		<property name="registry" ref="registry"/>
+		<property name="directory" ref="directory"/>
+		<property name="history" ref="history"/>
+		<property name="library" ref="library"/>
+		<property name="portfolio" ref="portfolio"/>
+		<property name="guidFactory" ref="guidFactory"/>
 	</bean>
 	
 	<!-- Icon manager for the UI -->
