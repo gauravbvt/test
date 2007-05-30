@@ -313,6 +313,16 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
+     * Force a full redraw of the timeline.
+     */
+    @Override
+    public void invalidate() {
+        this.initialized = false;
+        this.events = getResolvedEvents( new Date( 0 ) );
+        super.invalidate();
+    }
+
+    /**
      * Resolve the occurrences/products in the scenario starting at
      * a given date.
      * @param start the starting date

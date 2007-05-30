@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -42,6 +42,8 @@ import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.data.elements.scenario.Event;
 import com.mindalliance.channels.data.elements.scenario.Product;
+import com.mindalliance.channels.data.elements.scenario.Task;
+import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 import com.mindalliance.channels.util.GUID;
 import com.mindalliance.zk.mxgraph.MxFastOrganicLayout;
@@ -57,6 +59,11 @@ import static com.mindalliance.channels.ui.TreeGraphPane.Arc.Direction.to;
  * @version $Revision$
  */
 public class TreeGraphPane extends Tabbox implements TimelineListener {
+
+    /**
+     * Default duration for new tasks (in minutes).
+     */
+    private static final int TASK_DURATION = 15;
 
     /**
      * Height of the title, in pixels.
@@ -205,6 +212,27 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         return event;
     }
 
+    /**
+     * Create a new product.
+     */
+    private Product createProduct() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * Create a new scenario task.
+     */
+    private Task createTask() {
+        GUID guid = getEditorFactory().getSystem().getGuidFactory().newGuid();
+        Task task = new Task( guid );
+        task.setName( "Some new task" );
+        task.setDuration(
+                new Duration( TASK_DURATION, Duration.Unit.minute ) );
+        task.setScenario( scenario );
+        return task;
+    }
+
     private Menuitem newItem( String label, final Runnable action ) {
         Menuitem result = new Menuitem( label );
         if ( action != null )
@@ -229,6 +257,13 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         return menu;
     }
 
+    /**
+     * Cause the tree and timeline to get repainted with new data.
+     */
+    private void refresh() {
+        timeline.invalidate();
+    }
+
     private void resetTreePopup( Object object ) {
         menu.getChildren().clear();
         if ( scenario.getOccurrences().size() == 0 )
@@ -237,12 +272,22 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
                     public void run() {
                         Event event = (Event) getEditorFactory().popupEditor(
                                 createEvent() );
-                        if ( event != null )
+                        if ( event != null ) {
                             scenario.addOccurrence( event );
-                        invalidate();
+                            refresh();
+                        }
                     }
                 } ),
-                newItem( "Task...", null ) ) );
+                newItem( "Task...", new Runnable() {
+                    public void run() {
+                        Task task = (Task) getEditorFactory().popupEditor(
+                                createTask() );
+                        if ( task != null ) {
+                            scenario.addOccurrence( task );
+                            refresh();
+                        }
+                    }
+                } ) ) );
 
         if ( getEditorFactory().supports( getTreeSelection() ) )
             menu.appendChild( newItem( "Edit...", new Runnable() {
@@ -253,24 +298,60 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
 
         if ( object == rootElement ) {
             menu.appendChild( new Menuseparator() );
+
             if ( isCaused( object ) && ( (Caused) object ).getCause() == null )
                 menu.appendChild( newMenu( "Set cause",
                     newItem( "Event...", new Runnable() {
-                            public void run() {
-                                setCause(
-                                    createEvent(),
-                                    (Caused) getTreeSelection() );
-                            }
-                        } ),
-                    newItem( "Task...", null ) ) );
-            menu.appendChild( newMenu( "Add a consequence",
-                newItem( "Event...", null ),
-                newItem( "Task...", null ),
-                newItem( "Product...", null ) ) );
+                        public void run() {
+                            setCause(
+                                createEvent(),
+                                (Caused) getTreeSelection() );
+                        }
+                    } ),
+                    newItem( "Task...", new Runnable() {
+                        public void run() {
+                            setCause(
+                                createTask(),
+                                (Caused) getTreeSelection() );
+                        }
+                    } ) ) );
 
-            menu.appendChild( newItem( "Delete", null ) );
+            if ( Occurrence.class.isAssignableFrom( object.getClass() ) )
+                menu.appendChild( newMenu( "Add a consequence",
+                    newItem( "Event...", new Runnable() {
+                        public void run() {
+                            addConsequence(
+                                (Occurrence) getTreeSelection(),
+                                createEvent() );
+                        }
+                    } ),
+                    newItem( "Task...", new Runnable() {
+                        public void run() {
+                            addConsequence(
+                                (Occurrence) getTreeSelection(),
+                                createTask() );
+                        }
+                    } ),
+                    newItem( "Product...", new Runnable() {
+                        public void run() {
+                            addConsequence(
+                                (Occurrence) getTreeSelection(),
+                                createProduct() );
+                        }
+                    } )
+                ) );
+
+            menu.appendChild( newItem( "Delete", new Runnable() {
+                public void run() {
+                    deleteObject( getTreeSelection() );
+                }
+            } ) );
         }
         menu.invalidate();
+    }
+
+    private void deleteObject( Object treeSelection ) {
+        // TODO Auto-generated method stub
     }
 
     @SuppressWarnings( "unchecked" )
@@ -280,8 +361,22 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         if ( event != null ) {
             caused.setCause( new Cause( cause ) );
             scenario.addOccurrence( event );
-            timeline.invalidate();
-            invalidate();
+            refresh();
+        }
+    }
+
+    private void addConsequence(
+            Occurrence causeObject, JavaBean consequence ) {
+
+        JavaBean editedObject = getEditorFactory().popupEditor( consequence );
+        if ( editedObject != null ) {
+            Caused<Occurrence> c = (Caused<Occurrence>) consequence;
+            c.setCause( new Cause<Occurrence>( causeObject ) );
+            if ( Product.class.isAssignableFrom( consequence.getClass() ) )
+                scenario.addProduct( (Product) consequence );
+            else
+                scenario.addOccurrence( (Occurrence) consequence );
+            refresh();
         }
     }
 

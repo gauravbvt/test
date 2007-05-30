@@ -55,7 +55,8 @@ public abstract class AbstractElement extends AbstractJavaBean
      * @param named the named object to compare to
      */
     public int compareTo( Named named ) {
-        return getName().compareTo( named.getName() );
+        int names = getName().compareTo( named.getName() );
+        return names;
     }
 
     /**
