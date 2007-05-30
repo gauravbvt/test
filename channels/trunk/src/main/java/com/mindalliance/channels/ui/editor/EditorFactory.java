@@ -60,14 +60,13 @@ public class EditorFactory {
             Collection<T> objects, Class<T> beanClass,
             ObjectBrowserListener<T> listener ) {
 
-        // TODO Create a real browser
-        PlaceHolderBrowser<T> result =
-            new PlaceHolderBrowser<T>( objects, beanClass );
-
+        ObjectBrowserImpl<T> browser = new ObjectBrowserImpl<T>(beanClass, system, user);
+        browser.setObjects( objects );
+        
         if ( listener != null )
-            result.addObjectBrowserListener( listener );
+            browser.addObjectBrowserListener( listener );
 
-        return result;
+        return browser;
     }
 
     /**
