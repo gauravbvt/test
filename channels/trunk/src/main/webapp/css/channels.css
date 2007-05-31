@@ -202,3 +202,8 @@ div.google-map {
 	border: 1px solid #5C6C7C;
 	overflow: scroll;
 }
+
+div.wc-modal {
+	max-height: 400px;
+	overflow: auto;
+}
