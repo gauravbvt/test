@@ -38,9 +38,14 @@ import com.mindalliance.channels.data.elements.scenario.Product;
 public class ScenarioTimeline extends Timeline {
 
     /**
+     * How far to extends the modified scales.
+     */
+    private static final int RANGE = 2;
+
+    /**
      * Minimum duration of a timeline, in milliseconds.
      */
-    private static final int MIN_DURATION = 15000;
+    private static final int MIN_DURATION = 300000;
 
     private static final float TOP_TRACK_HEIGHT = 1.4f;
     private static final float BOTTOM_TRACK_HEIGHT = 0.4f;
@@ -52,60 +57,6 @@ public class ScenarioTimeline extends Timeline {
      * This affect the zoom level.
      */
     private static final int INTERVAL = 30;
-
-    /**
-     * Allowed scales for the timelines.
-     * @todo Scales need to be tested for practicality and looks
-     */
-    private enum Scale {
-        MS10  ( 10, 10,  "millisecond", 1,   "millisecond" ),
-        MS500 ( 50, 50,  "millisecond", 10,  "millisecond" ),
-        S     ( 2,  100, "millisecond", 20,  "millisecond" ),
-        S10   ( 10, 1,   "second",      100, "millisecond" ),
-        S30   ( 3,  5,   "second",      500, "millisecond" ),
-        M     ( 2,  10,  "second",      1,   "second" ),
-        M5    ( 5,  1,   "minute",      5,   "second" ),
-        M15   ( 3,  1,   "minute",      20,  "second" ),
-        M30   ( 2,  5,   "minute",      1,   "minute" ),
-        H     ( 2,  15,  "minute",      5,   "minute" ),
-        H6    ( 6,  1,   "hour",        10,  "minute" ),
-        H12   ( 2,  2,   "hour",        30,  "minute" ),
-        D     ( 2,  3,   "hour",        45,  "minute" ),
-        W     ( 7,  1,   "day",         6,   "hour" ),
-        W4    ( 4,  1,   "week",        1,   "day" );
-
-        private int scale;
-        private String bottomUnit;
-        private int bottomMultiple;
-        private String topUnit;
-        private int topMultiple;
-
-        private Scale(
-                int scale, int bottomMultiple, String bottomUnit,
-                int topMultiple, String topUnit ) {
-
-            this.scale = scale;
-            this.bottomMultiple = bottomMultiple;
-            this.bottomUnit = bottomUnit;
-            this.topMultiple = topMultiple;
-            this.topUnit = topUnit;
-        }
-
-        int bottomInterval() {
-            return Math.max( 1, INTERVAL / bottomMultiple );
-        }
-
-        int topInterval() {
-            return Math.max( 1, INTERVAL / topMultiple );
-        }
-
-        long milliseconds() {
-            long result = 1;
-            for ( int i = 0 ; i <= ordinal() ; i++ )
-                result *= values()[ i ].scale ;
-            return result;
-        }
-    }
 
     private Scenario scenario;
     private Caused selectedObject;
@@ -184,7 +135,7 @@ public class ScenarioTimeline extends Timeline {
      */
     private Bandinfo createTop( Date middle, TimeZone tz ) {
         Scale slice = getScale();
-        long ms = slice.milliseconds();
+        long ms = RANGE * slice.milliseconds();
 
         Hotzone hz = new Hotzone();
         final long t = getStartDate().getTime();
@@ -388,6 +339,17 @@ public class ScenarioTimeline extends Timeline {
         getSelectionListeners().add( listener );
     }
 
+    private void fireSelectionChanged(
+            Caused oldSelection, Caused newSelection ) {
+        if ( selectionListeners != null && oldSelection != newSelection ) {
+            synchronized ( selectionListeners ) {
+                for ( TimelineListener listener : selectionListeners )
+                    listener.selectionChanged(
+                            this, oldSelection, newSelection );
+            }
+        }
+    }
+
     /**
      * Remove a selection listener from this timeline.
      * @param listener the listener
@@ -397,14 +359,57 @@ public class ScenarioTimeline extends Timeline {
             getSelectionListeners().remove( listener );
     }
 
-    private void fireSelectionChanged(
-            Caused oldSelection, Caused newSelection ) {
-        if ( selectionListeners != null && oldSelection != newSelection ) {
-            synchronized ( selectionListeners ) {
-                for ( TimelineListener listener : selectionListeners )
-                    listener.selectionChanged(
-                            this, oldSelection, newSelection );
-            }
+    /**
+     * Allowed scales for the timelines.
+     * @todo Scales need to be tested for practicality and looks
+     */
+    private enum Scale {
+        MS10  ( 10, 10,  "millisecond", 1,   "millisecond" ),
+        MS500 ( 50, 50,  "millisecond", 10,  "millisecond" ),
+        S     ( 2,  100, "millisecond", 20,  "millisecond" ),
+        S10   ( 10, 1,   "second",      100, "millisecond" ),
+        S30   ( 3,  5,   "second",      500, "millisecond" ),
+        M     ( 2,  10,  "second",      1,   "second" ),
+        M5    ( 5,  1,   "minute",      5,   "second" ),
+        M15   ( 3,  1,   "minute",      30,  "second" ),
+        M30   ( 2,  5,   "minute",      1,   "minute" ),
+        H     ( 2,  15,  "minute",      5,   "minute" ),
+        H6    ( 6,  1,   "hour",        10,  "minute" ),
+        H12   ( 2,  2,   "hour",        30,  "minute" ),
+        D     ( 2,  3,   "hour",        45,  "minute" ),
+        W     ( 7,  1,   "day",         6,   "hour" ),
+        W4    ( 4,  1,   "week",        1,   "day" );
+
+        private int scale;
+        private String bottomUnit;
+        private int bottomMultiple;
+        private String topUnit;
+        private int topMultiple;
+
+        private Scale(
+                int scale, int bottomMultiple, String bottomUnit,
+                int topMultiple, String topUnit ) {
+
+            this.scale = scale;
+            this.bottomMultiple = bottomMultiple;
+            this.bottomUnit = bottomUnit;
+            this.topMultiple = topMultiple;
+            this.topUnit = topUnit;
+        }
+
+        int bottomInterval() {
+            return Math.max( 1, INTERVAL / bottomMultiple );
+        }
+
+        int topInterval() {
+            return Math.max( 1, INTERVAL / topMultiple );
+        }
+
+        long milliseconds() {
+            long result = 1;
+            for ( int i = 0 ; i <= ordinal() ; i++ )
+                result *= values()[ i ].scale ;
+            return result;
         }
     }
 

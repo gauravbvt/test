@@ -20,4 +20,10 @@ public interface ScenarioElement extends Element, Describable, Knowable {
      * Return the scenario this element is in.
      */
     Scenario getScenario();
+
+    /**
+     * Set the scenario.
+     * @param scenario the scenario
+     */
+    void setScenario( Scenario scenario );
 }

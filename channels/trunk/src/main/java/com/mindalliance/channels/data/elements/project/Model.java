@@ -15,7 +15,6 @@ import com.mindalliance.channels.util.GUID;
 
 /**
  * The model.
- *
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
  */
@@ -43,7 +42,7 @@ public class Model extends AbstractElement {
     /**
      * Return the environments where this model applies.
      */
-    @CollectionType(type=Environment.class)
+    @CollectionType( type = Environment.class )
     public List<Environment> getEnvironments() {
         return environments;
     }
@@ -75,7 +74,7 @@ public class Model extends AbstractElement {
     /**
      * Return the scenarios in this model.
      */
-    @CollectionType(type=Scenario.class)
+    @CollectionType( type = Scenario.class )
     public Set<Scenario> getScenarios() {
         return scenarios;
     }
@@ -85,7 +84,11 @@ public class Model extends AbstractElement {
      * @param scenarios the scenarios to set
      */
     public void setScenarios( Set<Scenario> scenarios ) {
+        for ( Scenario s : this.scenarios )
+            s.setModel( null );
         this.scenarios = new TreeSet<Scenario>( scenarios );
+        for ( Scenario s : scenarios )
+            s.setModel( this );
     }
 
     /**
@@ -94,6 +97,7 @@ public class Model extends AbstractElement {
      */
     public void addScenario( Scenario scenario ) {
         scenarios.add( scenario );
+        scenario.setModel( this );
     }
 
     /**
@@ -102,6 +106,7 @@ public class Model extends AbstractElement {
      */
     public void removeScenario( Scenario scenario ) {
         scenarios.remove( scenario );
+        scenario.setModel( null );
     }
 
     /**

@@ -584,6 +584,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     private boolean isArcNode( Class<?> type ) {
         return type != null
             && type.getName().startsWith( "com.mindalliance.channels." )
+            && !type.getSimpleName().equals( "TypeSet" )
             && !type.getName().startsWith(
                     "com.mindalliance.channels.data.support." );
     }
@@ -669,7 +670,11 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
      */
     private void editSelection() {
         // TODO make Caused extend JavaBean
-        getEditorFactory().popupEditor( (JavaBean) getTreeSelection() );
+        JavaBean result = getEditorFactory().popupEditor(
+            (JavaBean) getTreeSelection() );
+
+        if ( result != null )
+            refresh();
     }
 
     //=================================================

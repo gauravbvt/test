@@ -32,8 +32,7 @@ public class Project extends AbstractElement {
 
     private TypeSet missions;
     private Set<Model> models = new TreeSet<Model>();
-    private List<Participation> participations =
-                                    new ArrayList<Participation>();
+    private List<Participation> participations = new ArrayList<Participation>();
     private List<InScope> inScopes = new ArrayList<InScope>();
 
     /**
@@ -69,7 +68,7 @@ public class Project extends AbstractElement {
     /**
      * Return the models.
      */
-    @CollectionType(type=Model.class)
+    @CollectionType( type = Model.class )
     public Set<Model> getModels() {
         return models;
     }
@@ -79,7 +78,11 @@ public class Project extends AbstractElement {
      * @param models the models to set
      */
     public void setModels( Set<Model> models ) {
+        for ( Model m : this.models )
+            m.setProject( null );
         this.models = new TreeSet<Model>( models );
+        for ( Model m : models )
+            m.setProject( this );
     }
 
     /**
@@ -88,6 +91,7 @@ public class Project extends AbstractElement {
      */
     public void addModel( Model model ) {
         models.add( model );
+        model.setProject( this );
     }
 
     /**
@@ -96,6 +100,7 @@ public class Project extends AbstractElement {
      */
     public void removeModel( Model model ) {
         models.remove( model );
+        model.setProject( null );
     }
 
     /**
@@ -109,6 +114,7 @@ public class Project extends AbstractElement {
 
         } else {
             return CollectionUtils.exists( inScopes, new Predicate() {
+
                 public boolean evaluate( Object object ) {
                     InScope inScope = (InScope) object;
                     return inScope.includes( organization );
@@ -120,7 +126,7 @@ public class Project extends AbstractElement {
     /**
      * Return the organization criterias.
      */
-    @CollectionType(type=InScope.class)
+    @CollectionType( type = InScope.class )
     public List<InScope> getInScopes() {
         return inScopes;
     }
@@ -162,6 +168,7 @@ public class Project extends AbstractElement {
 
         } else {
             return CollectionUtils.exists( participations, new Predicate() {
+
                 public boolean evaluate( Object object ) {
                     Participation participation = (Participation) object;
                     return participation.allows( authenticatedUser );
@@ -173,7 +180,7 @@ public class Project extends AbstractElement {
     /**
      * Return the role-based admission criterias.
      */
-    @CollectionType(type=Participation.class)
+    @CollectionType( type = Participation.class )
     public List<Participation> getParticipations() {
         return participations;
     }
@@ -237,6 +244,7 @@ public class Project extends AbstractElement {
             Person person = ( (UserImpl) user ).getPerson();
             List<Role> roles = person.getRoles();
             return CollectionUtils.exists( roles, new Predicate() {
+
                 public boolean evaluate( Object object ) {
                     Role role = (Role) object;
                     return allows( role );
@@ -284,6 +292,7 @@ public class Project extends AbstractElement {
             else {
                 return CollectionUtils.exists( organization.getParents(),
                         new Predicate() {
+
                             public boolean evaluate( Object object ) {
                                 Organization org = (Organization) object;
                                 return organizationPattern.matches( org );

@@ -28,8 +28,8 @@ import com.mindalliance.channels.util.GUID;
  * with causes external to the scenario) that drives responses with
  * their attendant information needs and productions, and generated
  * events that drive further responses etc. The analysis of a scenario
- * uncovers circumstances, activities, sharing needs and flows, as well
- * as issues (attached to elements).
+ * uncovers circumstances, activities, sharing needs and flows, as
+ * well as issues (attached to elements).
  *
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
@@ -55,6 +55,7 @@ public class Scenario extends AbstractElement {
      */
     public Scenario() {
         super();
+        addDefaultEvent();
     }
 
     /**
@@ -63,13 +64,23 @@ public class Scenario extends AbstractElement {
      */
     public Scenario( GUID guid ) {
         super( guid );
+        addDefaultEvent();
+    }
+
+    /**
+     * Initialize new scenario with a default starting event.
+     */
+    private void addDefaultEvent() {
+        Event event = new Event();
+        event.setName( "Something happened" );
+        addOccurrence( event );
     }
 
     /**
      * Return the list of all incidents (occurrences without stated
      * causes).
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     public List<Occurrence> getIncidents() {
         List<Occurrence> incidents = new ArrayList<Occurrence>();
         CollectionUtils.select( occurrences, new Predicate() {
@@ -85,7 +96,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the events associated with this scenario.
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     public List<Event> getEvents() {
         List<Event> events = new ArrayList<Event>();
         for ( Occurrence occ : getOccurrences() ) {
@@ -99,7 +110,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the tasks associated with this scenario.
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<Task>();
         for ( Occurrence occ : getOccurrences() ) {
@@ -113,8 +124,8 @@ public class Scenario extends AbstractElement {
     /**
      * Get the activities associated with this scenario.
      */
-    @PropertyOptions(ignore=true)
-    @CollectionType(type=Activity.class)
+    @PropertyOptions( ignore = true )
+    @CollectionType( type = Activity.class )
     public List<Activity> getActivities() {
         // TODO
         return new ArrayList<Activity>();
@@ -123,8 +134,8 @@ public class Scenario extends AbstractElement {
     /**
      * Get the communications associated with this scenario.
      */
-    @PropertyOptions(ignore=true)
-    @CollectionType(type=Communication.class)
+    @PropertyOptions( ignore = true )
+    @CollectionType( type = Communication.class )
     public List<Communication> getCommunications() {
         // TODO
         return new ArrayList<Communication>();
@@ -133,8 +144,8 @@ public class Scenario extends AbstractElement {
     /**
      * Get the circumstances associated with this scenario.
      */
-    @PropertyOptions(ignore=true)
-    @CollectionType(type=Circumstance.class)
+    @PropertyOptions( ignore = true )
+    @CollectionType( type = Circumstance.class )
     public List<Circumstance> getCircumstances() {
         // TODO
         return new ArrayList<Circumstance>();
@@ -143,7 +154,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the flows.
      */
-    @CollectionType(type=Flow.class)
+    @CollectionType( type = Flow.class )
     public List<Flow> getFlows() {
         return flows;
     }
@@ -190,7 +201,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the occurrences.
      */
-    @CollectionType(type=Occurrence.class)
+    @CollectionType( type = Occurrence.class )
     public List<Occurrence> getOccurrences() {
         return occurrences;
     }
@@ -200,7 +211,13 @@ public class Scenario extends AbstractElement {
      * @param occurrences the occurrences to set
      */
     public void setOccurrences( List<Occurrence> occurrences ) {
-        this.occurrences = occurrences;
+        for ( Occurrence o : this.occurrences )
+            o.setScenario( null );
+
+        this.occurrences = new ArrayList<Occurrence>( occurrences );
+
+        for ( Occurrence o : occurrences )
+            o.setScenario( this );
     }
 
     /**
@@ -209,6 +226,7 @@ public class Scenario extends AbstractElement {
      */
     public void addOccurrence( Occurrence occurrence ) {
         occurrences.add( occurrence );
+        occurrence.setScenario( this );
     }
 
     /**
@@ -217,12 +235,13 @@ public class Scenario extends AbstractElement {
      */
     public void removeOccurrence( Occurrence occurrence ) {
         occurrences.remove( occurrence );
+        occurrence.setScenario( null );
     }
 
     /**
      * Return the products.
      */
-    @CollectionType(type=Product.class)
+    @CollectionType( type = Product.class )
     public List<Product> getProducts() {
         return products;
     }
@@ -254,7 +273,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the sharingNeeds.
      */
-    @CollectionType(type=SharingNeed.class)
+    @CollectionType( type = SharingNeed.class )
     public List<SharingNeed> getSharingNeeds() {
         return sharingNeeds;
     }

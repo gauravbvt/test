@@ -336,7 +336,7 @@
 			<entry key="com.mindalliance.channels.data.elements.project.Model" value="cube_molecule.png"/>
 			<entry key="com.mindalliance.channels.data.elements.project.Scenario" value="branch.png"/>
 			<entry key="com.mindalliance.channels.data.elements.scenario.Task" value="gears.png"/>
-			<entry key="com.mindalliance.channels.data.elements.scenario.Event" value="nav_plain_red.png"/>
+			<entry key="com.mindalliance.channels.data.elements.scenario.Event" value="warning.png"/>
 			<entry key="com.mindalliance.channels.data.reference.Location" value="earth.png"/>
 			<entry key="com.mindalliance.channels.data.components.Cause" value="redo.png"/>
 			<entry key="com.mindalliance.channels.data.reference.Policy" value="scroll.png"/>
