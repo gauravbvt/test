@@ -5,14 +5,7 @@ package com.mindalliance.channels.ui.editor;
 
 import java.util.Collection;
 
-import org.zkoss.zhtml.Text;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Page;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
 import com.mindalliance.channels.JavaBean;
@@ -72,6 +65,7 @@ public class EditorFactory {
 //            throw new NullPointerException();
 
         // TODO Create a real editor
+
         return new ElementEditorPanel( object, system, user );
     }
 

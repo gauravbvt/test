@@ -47,32 +47,34 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
     private boolean ok;
 
     public ElementEditorPanel( T edited, SystemService system, User user ) {
-        super(edited.getClass().getSimpleName() + " Editor", "normal", false);
-        this.edited = edited;
-        this.type = edited.getClass();
-        this.system = system;
-        this.user = user;
-
-        exclude.add( "class" );
-        exclude.add( "incident" );
-        group = new BeanViewGroup<T>();
-
-        tabbox = new Tabbox();
-        tabs = new Tabs();
-        tabpanels = new Tabpanels();
-        tabs.appendChild( new Tab( type.getSimpleName() ) );
-        mainpanel = new Tabpanel();
-        tabpanels.appendChild( mainpanel );
-
-        initializeGroups();
-
-        tabbox.appendChild( tabs );
-        tabbox.appendChild( tabpanels );
-        group.setDataObject( edited );
-        appendChild( tabbox );
-        tabbox.setSelectedPanel( mainpanel );
-        appendChild( initializeButtons() );
-        this.setWidth( "50%" );
+        super("Editor", "normal", false);
+        if (edited != null) {
+            this.edited = edited;
+            this.type = edited.getClass();
+            this.system = system;
+            this.user = user;
+    
+            exclude.add( "class" );
+            exclude.add( "incident" );
+            group = new BeanViewGroup<T>();
+    
+            tabbox = new Tabbox();
+            tabs = new Tabs();
+            tabpanels = new Tabpanels();
+            tabs.appendChild( new Tab( type.getSimpleName() ) );
+            mainpanel = new Tabpanel();
+            tabpanels.appendChild( mainpanel );
+    
+            initializeGroups();
+    
+            tabbox.appendChild( tabs );
+            tabbox.appendChild( tabpanels );
+            group.setDataObject( edited );
+            appendChild( tabbox );
+            tabbox.setSelectedPanel( mainpanel );
+            appendChild( initializeButtons() );
+            this.setWidth( "50%" );
+        }
     }
 
     private Box initializeButtons() {
@@ -116,6 +118,7 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
 
     private void initializeGroups() {
         createAbstractElement();
+        createUser();
         mainpanel.appendChild( createExclusionGroup() );
     }
 
@@ -144,6 +147,19 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
         }
     }
 
+    private void createUser() {
+        if (User.class.isAssignableFrom( type )) {
+            exclude.add( "accountNonDisabled" );
+            exclude.add( "accountNonExpired" );
+            exclude.add( "accountNonLocked" );
+            exclude.add( "admin" );
+
+            exclude.add( "credentialsNonExpired" );
+            exclude.add( "standardUser" );
+            
+        }
+    }
+    
     private ElementBeanViewPanel<T> createGroup( String[] members ) {
         ElementBeanViewPanel<T> panel = new ElementBeanViewPanel<T>( type,
                 system, user );

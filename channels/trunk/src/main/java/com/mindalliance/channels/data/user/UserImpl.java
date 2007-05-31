@@ -12,6 +12,7 @@ import org.acegisecurity.GrantedAuthorityImpl;
 import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.userdetails.UserDetails;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.Named;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.resources.Person;
@@ -119,6 +120,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
      *
      * @return always true
      */
+    @PropertyOptions(ignore=true)
     public boolean isAccountNonDisabled() {
         return isEnabled();
     }
@@ -126,6 +128,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     /**
      * Return the value of accountNonExpired.
      */
+    @PropertyOptions(ignore=true)
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -135,6 +138,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
      *
      * @return always true
      */
+    @PropertyOptions(ignore=true)
     public boolean isAccountNonLocked() {
         return true;
     }
@@ -144,6 +148,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
      *
      * @return always true
      */
+    @PropertyOptions(ignore=true)
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -205,6 +210,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     /**
      * Return the value of attached to this user.
      */
+    @PropertyOptions(ignore=true)
     public synchronized GrantedAuthority[] getAuthorities() {
         if ( this.authorities == null ) {
             this.authorities =
@@ -220,6 +226,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     /**
      * Return the value of grantedAuthorities.
      */
+    @PropertyOptions(ignore=true)
     public String[] getGrantedAuthorities() {
         return this.grantedAuthorities;
     }
@@ -256,7 +263,9 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
      * Return the user's preferences.
      * @return the preferences
      */
+    @PropertyOptions(ignore=true)
     public Properties getPreferences() {
+        // TODO  add a proper property editor
         return preferences;
     }
 
@@ -288,6 +297,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     /**
      * Test if this user has administrator rights.
      */
+    @PropertyOptions(ignore=true)
     public boolean isAdmin() {
         return Arrays.asList(
                 this.getGrantedAuthorities() ).contains( User.ADMIN_ROLE );
@@ -296,6 +306,7 @@ public class UserImpl extends AbstractJavaBean implements User, UserDetails {
     /**
      * Test if this user is a standard user.
      */
+    @PropertyOptions(ignore=true)
     public boolean isStandardUser() {
         return Arrays.asList(
                 this.getGrantedAuthorities() ).contains( User.USER_ROLE )

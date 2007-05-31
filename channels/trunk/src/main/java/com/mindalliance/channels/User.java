@@ -5,6 +5,8 @@ package com.mindalliance.channels;
 
 import org.acegisecurity.userdetails.UserDetails;
 
+import com.beanview.annotation.PropertyOptions;
+
 /**
  * A user of the system.
  *
@@ -34,10 +36,12 @@ public interface User extends UserDetails, JavaBean, Named {
     /**
      * Return if a user is a standard user.
      */
+    @PropertyOptions(ignore=true)
     boolean isStandardUser();
 
     /**
      * Return if a user is an administrator.
      */
+    @PropertyOptions(ignore=true)
     boolean isAdmin();
 }
