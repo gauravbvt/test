@@ -353,12 +353,34 @@ public class DesktopRichlet extends GenericRichlet {
     private ObjectBrowser<Organization> createOrgBrowser(
             EditorFactory ef, final DirectoryService directory ) {
 
-        final ObjectBrowser<Organization> browser =
-            ef.createBrowser(
-                directory.getOrganizations(),
-                Organization.class,
-                null
-            );
+        final ObjectBrowser<Organization> browser = ef.createBrowser(
+            directory.getOrganizations(),
+            Organization.class,
+            new ObjectBrowserListener<Organization>() {
+                public void objectAdded(
+                    ObjectBrowser<Organization> browser,
+                    Organization newObject ) {
+
+                    directory.addOrganization( newObject );
+                }
+
+                public void objectRemoved(
+                    ObjectBrowser<Organization> browser,
+                    Organization removedObject ) {
+
+                    directory.removeOrganization( removedObject );
+                }
+
+                public void objectsChanged(
+                    ObjectBrowser<Organization> browser ) {
+                }
+
+                public void selectionChanged(
+                    ObjectBrowser<Organization> browser,
+                    Organization oldSelection, Organization newSelection ) {
+                }
+            }
+        );
 
         // React to backgound modifications to list
         directory.addPropertyChangeListener( "organizations",

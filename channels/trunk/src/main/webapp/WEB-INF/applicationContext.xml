@@ -230,11 +230,12 @@
 	</bean>
 
 	<bean name="organization1" class="com.mindalliance.channels.data.elements.resources.Organization">
+		<property name="name" value="The Agency"/>
 	</bean>
 
 	<bean name="organization2" class="com.mindalliance.channels.data.elements.resources.Organization">
+		<property name="name" value="The Company"/>
 	</bean>
-
 
 	<bean name="directory" class="com.mindalliance.channels.data.system.Directory">
 		<property name="organizations">

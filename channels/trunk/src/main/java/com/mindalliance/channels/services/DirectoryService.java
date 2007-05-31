@@ -21,4 +21,16 @@ public interface DirectoryService extends Service, JavaBean {
      */
     List<Organization> getOrganizations();
 
+    /**
+     * Add an organization to the list.
+     * @param organization the organization
+     */
+    void addOrganization( Organization organization );
+
+    /**
+     * Remove an organization from the list.
+     * @param organization the organization
+     */
+    void removeOrganization( Organization organization );
+
 }
