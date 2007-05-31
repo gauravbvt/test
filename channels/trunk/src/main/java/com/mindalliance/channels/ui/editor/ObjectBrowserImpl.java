@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.IllegalFormatConversionException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ import com.beanview.PropertyComponent;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.reference.Type;
+import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.ObjectBrowser;
 import com.mindalliance.channels.ui.ObjectBrowserListener;
@@ -135,6 +138,10 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
                         panel.setDialog(true);
                         panel.setPage( ObjectBrowserImpl.this.getPage() );
                         panel.doModal();
+                        if (panel.isOk()) {
+                            //browser.renderAll();
+                            setObjects(getObjects());
+                        }
                     } catch ( InterruptedException e ) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -314,7 +321,7 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
                     generateLabel( "" ).setParent( row );
                 }
                 else {
-                    generateLabel( el.getTypeSet().toString() ).setParent( row );
+                    generateLabel( generateTypeList(el.getTypeSet()) ).setParent( row );
                 }
             }
             else {
@@ -335,6 +342,18 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             return label;
         }
 
+        private String generateTypeList(TypeSet typeset) {
+            String result = "";
+            for (Iterator<Type> it = typeset.getTypes().iterator() ; it.hasNext() ; ) {
+                Type type = it.next();
+                result += type.getName();
+                if (it.hasNext()) {
+                    result += ", ";
+                }
+            }
+            return result; 
+        }
+        
     }
 
     private class BrowserListModel<T> extends ListModelList implements

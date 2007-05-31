@@ -117,6 +117,7 @@ public class TypeSetEditor extends Vbox implements PropertyComponent {
      * @see com.beanview.PropertyComponent#getValue()
      */
     public Object getValue() {
+        set.setTypes( model.getInnerSet() );
         return set;
     }
 
