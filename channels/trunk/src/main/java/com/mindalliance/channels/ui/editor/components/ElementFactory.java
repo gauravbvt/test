@@ -23,46 +23,50 @@ import com.mindalliance.channels.util.AbstractJavaBean;
 
 
 /**
+ * BeanView component factory for channels data elements.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
 public class ElementFactory implements PropertyComponentFactory {
 
-    /* (non-Javadoc)
+    /**
+     * 
+     * Default constructor.
+     */
+    public ElementFactory() {
+        
+    }
+    /**
+     * Generates custom editorrs for channels data elements.
+     * @param key the name of the field to generate an editor for
+     * @param type the name of the class to generate and editor for
+     * @param bv the beanview to use
      * @see com.beanview.PropertyComponentFactory#getComponent(java.lang.String, java.lang.Class, com.beanview.BeanView)
      */
     public PropertyComponent getComponent(String key, Class type,
             BeanView bv) {
 
+        PropertyComponent result = null;
         if (Duration.class.isAssignableFrom(type)) {
-            return new DurationEditor();
+            result = new DurationEditor();
+        } else if (Distance.class.isAssignableFrom(type)) {
+            result = new DistanceEditor();
+        } else if (Latency.class.isAssignableFrom(type)) {
+            result = new LatencyEditor();
+        } else if (Availability.class.isAssignableFrom(type)) {
+            result = new AvailabilityEditor();
+        } else if (URL.class.isAssignableFrom(type)) {
+            result = new UrlEditor();
+        } else if (LatLong.class.isAssignableFrom(type)) {
+            result = new LatLongEditor();
+        } else if (Location.class.isAssignableFrom(type)) {
+            result = new LocationEditor();
+        } else if (TypeSet.class.isAssignableFrom(type)) {
+            result = new TypeSetEditor();
+        } else if (AbstractJavaBean.class.isAssignableFrom(type)) {
+            result = new ElementChooser(type, (System)bv.getContext( "system"), (Scenario)bv.getContext( "scenario" ), (User)bv.getContext( "user" ));
         }
-        if (Distance.class.isAssignableFrom(type)) {
-            return new DistanceEditor();
-        }
-        if (Latency.class.isAssignableFrom(type)) {
-            return new LatencyEditor();
-        }
-        if (Availability.class.isAssignableFrom(type)) {
-            return new AvailabilityEditor();
-        }
-        if (URL.class.isAssignableFrom(type)) {
-            return new UrlEditor();
-        }
-        if (LatLong.class.isAssignableFrom(type)) {
-            return new LatLongEditor();
-        }
-        if (Location.class.isAssignableFrom(type)) {
-            return new LocationEditor();
-        }
-        if (TypeSet.class.isAssignableFrom(type)) {
-            return new TypeSetEditor();
-        }
-        
-        if (AbstractJavaBean.class.isAssignableFrom(type)) {
-            return new ElementChooser(type, (System)bv.getContext( "system"), (Scenario)bv.getContext( "scenario" ), (User)bv.getContext( "user" ));
-        }
-        return null;
+        return result;
     }
 
 }

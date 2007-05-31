@@ -14,20 +14,25 @@ import com.mindalliance.channels.ui.editor.ElementBeanViewPanel;
 
 
 /**
+ * BeanView editor for availability instances.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
 public class AvailabilityEditor extends Vbox implements PropertyComponent {
 
-    ElementBeanViewPanel<Availability> panel;
+    private ElementBeanViewPanel<Availability> panel;
     
-    
+    /**
+     * 
+     * Default constructor.
+     */
     public AvailabilityEditor() {
         panel = new ElementBeanViewPanel<Availability>(Availability.class);
         this.appendChild(panel);
     }
     
-    /* (non-Javadoc)
+    /**
+     * Retrieves the edited Availability instance.
      * @see com.beanview.PropertyComponent#getValue()
      */
     public Object getValue() {
@@ -35,15 +40,17 @@ public class AvailabilityEditor extends Vbox implements PropertyComponent {
         return panel.getDataObject();
     }
 
-    /* (non-Javadoc)
+    /**
+     * Sets the Availability instance to be edited.
+     * @param instance the Availability instance to be edited
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
-    public void setValue( Object arg0 ) throws IllegalFormatConversionException {
+    public void setValue( Object instance ) {
         Availability val;
-        if (arg0 == null) {
+        if (instance == null) {
             val = new Availability();
-        } else if (arg0 instanceof Availability) {
-            val = (Availability)arg0;
+        } else if (instance instanceof Availability) {
+            val = (Availability)instance;
         } else {
             throw new IllegalFormatConversionException('d', Availability.class);
         }

@@ -10,8 +10,11 @@ import java.util.IllegalFormatConversionException;
 import java.util.List;
 import java.util.Set;
 
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
-import org.zkoss.zul.Label;
+import org.zkoss.zul.Hbox;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
@@ -20,7 +23,6 @@ import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
-import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
@@ -41,49 +43,110 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
     private SystemService system;
     private User user;
     private BrowserListModel<T> model;
-    //protected ListModelList model;
-    protected Toolbarbutton createButton;
-    protected Toolbarbutton deleteButton;
-    protected Button editButton;
-    protected Listbox browser;
-    protected T selection = null;
+    private Listbox browser;
+    private T selection;
 
     public ObjectBrowserImpl( Class<T> type, SystemService system, User user ) {
         this.system = system;
         this.user = user;
         model = new BrowserListModel<T>( type );
-        //model = new ListModelList();
+        // model = new ListModelList();
         init();
     }
 
-    private void init() {
-        browser = new Listbox();
-        
-        createButton = new Toolbarbutton();
-        createButton.setImage( "images/16x16/add2.png" );
-        createButton.setTooltiptext( " Add a " + model.getObjectClass().getSimpleName() );
-
-        deleteButton = new Toolbarbutton();
-        deleteButton.setImage( "images/16x16/delete2.png" );
-        deleteButton.setTooltiptext( "Remove the selected " + model.getObjectClass().getSimpleName() );
-
-        org.zkoss.zul.Toolbar toolbar = new org.zkoss.zul.Toolbar();
-        toolbar.appendChild( createButton );
-        toolbar.appendChild( deleteButton );
-
-        appendChild( browser );
-        appendChild( toolbar );
-        
-        browser.appendChild( generateHeader() );
-        browser.setModel( model );
-        browser.setItemRenderer(new BrowserListitemRenderer(model.getObjectClass()));
-        browser.setRows( 6 );
-        browser.setWidth("400px");
-        browser.setMold( "paging" );
-        browser.setPageSize( 5 );
-
+    public ObjectBrowserImpl( Class<T> type, Class<T> collectionType,
+            SystemService system, User user ) {
+        this( type, system, user );
+        model.setCollectionType( collectionType );
     }
 
+    private void init() {
+        browser = createBrowser();
+        appendChild( browser );
+        appendChild( createButtons() );
+    }
+
+
+
+    private Listbox createBrowser() {
+        final Listbox browser = new Listbox();
+        browser.appendChild( generateHeader() );
+        browser.setModel( model );
+        browser.setItemRenderer( new BrowserListitemRenderer(
+                model.getObjectClass() ) );
+        browser.setRows( 6 );
+        browser.setWidth( "400px" );
+        browser.setMold( "paging" );
+        browser.setPageSize( 5 );
+        browser.addEventListener( "onSelect", new EventListener() {
+            public boolean isAsap() {
+                return false;
+            }
+            public void onEvent( Event arg0 ) {
+                int index = browser.getSelectedIndex();
+                T oldSelection = selection;
+                if (index >= 0) {
+                    selection = (T)model.getElementAt( index );
+                } else {
+                    selection = null;
+                }
+                for ( ObjectBrowserListener<T> l : listeners ) {
+                    l.selectionChanged( ObjectBrowserImpl.this, oldSelection, selection );
+                }
+            }
+            
+        });
+        return browser;
+    }
+
+    private Box createButtons() {
+        Hbox buttonBox = new Hbox();
+        buttonBox.appendChild( createAddButton() );
+        buttonBox.appendChild( createEditButton() );
+        buttonBox.appendChild( createRemoveButton() );
+        return buttonBox;
+    }
+    
+    private Button createAddButton() {
+        Button addButton = new Button( "Add" );
+        addButton.setImage( "images/16x16/add2.png" );
+        addButton.setTooltiptext( " Add a "
+                + model.getObjectClass().getSimpleName() );
+        return addButton;
+    }
+
+    private Button createEditButton() {
+        Button editButton = new Button( "Edit" );
+        editButton.setImage( "images/16x16/preferences.png" );
+        editButton.setTooltiptext( "Edit the selected " + model.getObjectClass().getSimpleName() );
+        return editButton;
+    }
+
+    private Button createRemoveButton() {
+        Button removeButton = new Button( "Remove" );
+        removeButton.setImage( "images/16x16/delete2.png" );
+        removeButton.setTooltiptext( "Remove the selected "
+                + model.getObjectClass().getSimpleName() );
+
+        removeButton.addEventListener( "onClick", new EventListener() {
+
+            public boolean isAsap() {
+                return false;
+            }
+
+            public void onEvent( Event arg0 ) {
+                int index = browser.getSelectedIndex();
+                if ( index >= 0 ) {
+                    model.remove( model.getElementAt( index ) );
+                }
+            }
+
+        } );
+        return removeButton;
+    }
+
+    
+    
     /*
      * (non-Javadoc)
      * 
@@ -194,8 +257,10 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             header.appendChild( name );
             header.appendChild( new Listheader( "Description" ) );
             header.appendChild( new Listheader( "Types" ) );
-        } else {
-            Listheader name = new Listheader(model.getObjectClass().getSimpleName());
+        }
+        else {
+            Listheader name = new Listheader(
+                    model.getObjectClass().getSimpleName() );
             name.setSort( "auto" );
             header.appendChild( name );
         }
@@ -205,42 +270,51 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
     private class BrowserListitemRenderer<T> implements ListitemRenderer {
 
         private Class<T> type;
-        
-        public BrowserListitemRenderer(Class<T> type) {
+
+        public BrowserListitemRenderer( Class<T> type ) {
             this.type = type;
         }
-        
-        /* (non-Javadoc)
-         * @see org.zkoss.zul.RowRenderer#render(org.zkoss.zul.Row, java.lang.Object)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.zkoss.zul.RowRenderer#render(org.zkoss.zul.Row,
+         *      java.lang.Object)
          */
         public void render( Listitem row, Object obj ) throws Exception {
             if ( AbstractElement.class.isAssignableFrom( type ) ) {
-              AbstractElement el = (AbstractElement) obj;
-              generateLabel(el.getName()).setParent( row );
-              generateLabel(el.getDescription()).setParent( row );
-              if (el.getTypeSet() == null) {
-                  generateLabel("").setParent(row);
-              } else {
-                  generateLabel(el.getTypeSet().toString()).setParent( row );
-              }
-            }else {
-              generateLabel(obj.toString()).setParent( row );
-          }
-        }
-        
-        private Listcell generateLabel(String val) {
-            String truncVal = val;
-            if (truncVal.length() > 23) {
-                truncVal = truncVal.substring(0,20)+"...";
+                AbstractElement el = (AbstractElement) obj;
+                generateLabel( el.getName() ).setParent( row );
+                generateLabel( el.getDescription() ).setParent( row );
+                if ( el.getTypeSet() == null ) {
+                    generateLabel( "" ).setParent( row );
+                }
+                else {
+                    generateLabel( el.getTypeSet().toString() ).setParent( row );
+                }
             }
-            Listcell label = new Listcell(truncVal);
+            else {
+                generateLabel( obj.toString() ).setParent( row );
+            }
+        }
+
+        private Listcell generateLabel( String val ) {
+            String truncVal = val;
+            if ( truncVal == null ) {
+                truncVal = "";
+            }
+            if ( truncVal.length() > 23 ) {
+                truncVal = truncVal.substring( 0, 20 ) + "...";
+            }
+            Listcell label = new Listcell( truncVal );
             label.setTooltiptext( val );
             return label;
         }
-        
+
     }
-    
-    private class BrowserListModel<T> extends ListModelList implements ListModel {
+
+    private class BrowserListModel<T> extends ListModelList implements
+            ListModel {
 
         private Class<T> type;
         private Class collType;
@@ -248,10 +322,14 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         public BrowserListModel( Class<T> type ) {
             this.type = type;
         }
+
         @Override
-        public boolean addAll(Collection c) {
-            collType = c.getClass();
-            return super.addAll(c);
+        public boolean addAll( Collection c ) {
+            if ( c != null ) {
+                collType = c.getClass();
+                return super.addAll( c );
+            }
+            return false;
         }
 
         public Collection<T> getData() {
@@ -271,6 +349,9 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             return type;
         }
 
+        public void setCollectionType( Class type ) {
+            collType = type;
+        }
 
     }
 

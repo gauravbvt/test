@@ -9,12 +9,10 @@ import org.zkoss.zul.Row;
 
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.components.ElementComponentFactory;
-import com.mindalliance.channels.ui.editor.picker.ElementPicker;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 import com.mindalliance.zk.beanview.ZkBeanViewPanelBase;
-import com.mindalliance.zk.beanview.ZkComponentFactory;
 
 
 /**
@@ -23,10 +21,9 @@ import com.mindalliance.zk.beanview.ZkComponentFactory;
  */
 public class ElementBeanViewPanel<V> extends ZkBeanViewPanel<V> {
     
-    public ElementBeanViewPanel(Class<V> c, System system, Scenario scenario, User user) {
+    public ElementBeanViewPanel(Class<V> c, SystemService system, User user) {
         this.setContext( "class", c );
         this.setContext( "system", system );
-        this.setContext( "scenario", scenario );
         this.setContext( "user", user );
     }
     

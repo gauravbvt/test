@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.beanview.BeanView;
+import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Role;
+import com.mindalliance.channels.services.SystemService;
 
 
 /**
@@ -17,7 +19,9 @@ import com.mindalliance.channels.data.elements.resources.Role;
  */
 public class PickerHelper {
 
-    public PickerHelper() { }
+    public PickerHelper() { 
+        
+    }
     
     public Collection<Role> findRole(BeanView bean) {
         Collection<Role> results = new ArrayList<Role>();
@@ -26,6 +30,16 @@ public class PickerHelper {
             role.setName( "Role " + inx );
             results.add( role );
         }
+        return results;
+    }
+    
+    public Collection<Organization> findOrganization(BeanView bean) {
+        Collection<Organization> results = new ArrayList<Organization>();
+        SystemService system = (SystemService)bean.getContext( "system" );
+        if (system != null) {
+            results.addAll( system.getDirectoryService().getOrganizations() );
+        }
+        
         return results;
     }
 }

@@ -16,6 +16,7 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
 
 /**
+ * Editor for a Duration instance.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
@@ -24,10 +25,13 @@ public class DurationEditor extends Hbox implements PropertyComponent {
     private BeanViewGroup<Duration> group;
     private ZkBeanViewPanel<Duration> numberPanel;
     private ZkBeanViewPanel<Duration> unitPanel;
-    
-    
     private Duration duration;
+    private final int editorCols = 5;
     
+    /**
+     * 
+     * Default constructor.
+     */
     public DurationEditor() {
         group = new BeanViewGroup<Duration>();
         
@@ -43,7 +47,9 @@ public class DurationEditor extends Hbox implements PropertyComponent {
         group.addBeanView( unitPanel );
         this.appendChild( unitPanel );
     }
-    /* (non-Javadoc)
+    /**
+     * Retrieves the Duration instance being edited.
+     * @return the Duration instance
      * @see com.beanview.PropertyComponent#getValue()
      */
     public Object getValue() {
@@ -54,10 +60,12 @@ public class DurationEditor extends Hbox implements PropertyComponent {
         return duration;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Sets the edited Duration instance.
+     * @param arg0 the instance to be edited
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
-    public void setValue( Object arg0 ) throws IllegalFormatConversionException {
+    public void setValue( Object arg0 ) {
         if (!(arg0 instanceof Duration) && arg0 != null) {
             throw new IllegalFormatConversionException('d', Duration.class);
         } 
@@ -69,7 +77,7 @@ public class DurationEditor extends Hbox implements PropertyComponent {
         
         group.setDataObject(duration);
         Textbox box = (Textbox)numberPanel.getPropertyComponent( "number" );
-        box.setCols( 5 );
+        box.setCols( editorCols );
     }
 
 }

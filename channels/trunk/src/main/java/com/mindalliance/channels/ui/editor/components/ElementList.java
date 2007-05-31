@@ -18,6 +18,7 @@ import com.mindalliance.channels.User;
 
 
 /**
+ * 
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */

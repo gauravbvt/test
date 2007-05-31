@@ -114,4 +114,8 @@ public class Duration implements Serializable, Comparable<Duration> {
              : msecs > otherMsecs ?  1
              : 0;
     }
+    @Override
+    public String toString() {
+        return Double.toString( number ) + " " + unit;
+    }
 }

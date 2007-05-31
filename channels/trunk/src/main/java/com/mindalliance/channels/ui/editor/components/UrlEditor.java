@@ -8,46 +8,59 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.IllegalFormatConversionException;
 
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Textbox;
 
 import com.beanview.PropertyComponent;
 
-
 /**
+ * BeanView property editor for URL's.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
 public class UrlEditor extends Hbox implements PropertyComponent {
 
+    private Textbox box;
+
+    /**
+     * Default constructor.
+     */
     public UrlEditor() {
         box = new Textbox();
-        appendChild(box);
+        appendChild( box );
     }
-    
-    private Textbox box;
-    
-    public void setValue(Object obj) throws IllegalFormatConversionException {
-        
-        if (obj == null) {
+
+    /**
+     * Sets the URL to edit.
+     * @param obj the URL to edit
+     */
+    public void setValue( Object obj )  {
+
+        if ( obj == null ) {
             box.setText( "" );
-        } else if (obj instanceof URL) {
+        } else if ( obj instanceof URL ) {
             box.setText( obj.toString() );
         } else {
-            throw new IllegalFormatConversionException('u', URL.class);
+            throw new IllegalFormatConversionException( 'u', URL.class );
         }
     }
-    
-    
+
+    /**
+     * Retrieves the edited URL.
+     * @return the edited URL
+     */
     public Object getValue() {
+
         try {
-            if (box.getText() == null) {
-                return null;
+            URL result = null;
+            if ( box.getText() != null ) {
+                result = new URL( box.getText() );
             }
-            return new URL(box.getText());
-        } catch ( Exception e ) {
+            return result;
+
+        } catch ( MalformedURLException e ) {
             return null;
         }
+
     }
 }

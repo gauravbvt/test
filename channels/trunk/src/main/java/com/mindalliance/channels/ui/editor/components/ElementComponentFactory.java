@@ -6,25 +6,30 @@ package com.mindalliance.channels.ui.editor.components;
 
 import com.beanview.BeanView;
 import com.mindalliance.zk.beanview.ZkComponentFactory;
-import com.mindalliance.zk.component.ZkArrayFactory;
-import com.mindalliance.zk.component.ZkClassOptionsFactory;
-import com.mindalliance.zk.component.ZkCollectionFactory;
-import com.mindalliance.zk.component.ZkEnumFactory;
-import com.mindalliance.zk.component.ZkPrimitiveFactory;
 
 
 /**
+ * Extends the ZkComponentFactory to insert component factories specific to Channels.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
 public class ElementComponentFactory extends ZkComponentFactory {
 
+    /**
+     * 
+     * Default constructor.
+     * @param key the key to generate a factory for
+     * @param c the type of the class to generate a factory for
+     * @param bv the Beanview instance
+     */
     public ElementComponentFactory( String key, Class c, BeanView bv ) {
         super(key, c, bv);
     }
 
-    protected void installDefaultFactories()
-    {
+    /**
+     * Installs the Channel specific factories ahead of the default factories.
+     */
+    protected void installDefaultFactories() {
         factories.add(new ElementFactory());
         factories.add(new ElementCollectionFactory());
         super.installDefaultFactories();

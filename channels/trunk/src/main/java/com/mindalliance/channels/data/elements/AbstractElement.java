@@ -107,7 +107,6 @@ public abstract class AbstractElement extends AbstractJavaBean
                 reverse = "type set for {1}",
                 reverseMany = "type set for:"
                 )
-    @PropertyOptions( ignore = true )
     public TypeSet getTypeSet() {
         return typeSet;
     }

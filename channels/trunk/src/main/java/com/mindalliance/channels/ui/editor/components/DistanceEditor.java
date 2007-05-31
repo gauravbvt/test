@@ -17,6 +17,7 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 
 
 /**
+ * BeanView editor for Distance instances.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
@@ -25,10 +26,13 @@ public class DistanceEditor extends Hbox implements PropertyComponent {
     private BeanViewGroup<Distance> group;
     private ZkBeanViewPanel<Distance> numberPanel;
     private ZkBeanViewPanel<Distance> unitPanel;
-    
-    
     private Distance duration;
+    private final int editorCols = 5;
     
+    /**
+     * 
+     * Default constructor.
+     */
     public DistanceEditor() {
         group = new BeanViewGroup<Distance>();
         
@@ -44,7 +48,9 @@ public class DistanceEditor extends Hbox implements PropertyComponent {
         group.addBeanView( unitPanel );
         this.appendChild( unitPanel );
     }
-    /* (non-Javadoc)
+    /**
+     * Returns the Distance instance being edited.
+     * @return the Distance instance
      * @see com.beanview.PropertyComponent#getValue()
      */
     public Object getValue() {
@@ -55,10 +61,12 @@ public class DistanceEditor extends Hbox implements PropertyComponent {
         return duration;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Sets the Distance instance to be edited.
+     * @param arg0 the instance to be edited
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
-    public void setValue( Object arg0 ) throws IllegalFormatConversionException {
+    public void setValue( Object arg0 ) {
         if (!(arg0 instanceof Duration) && arg0 != null) {
             throw new IllegalFormatConversionException('d', Distance.class);
         } 
@@ -70,7 +78,7 @@ public class DistanceEditor extends Hbox implements PropertyComponent {
         
         group.setDataObject(duration);
         Textbox box = (Textbox)numberPanel.getPropertyComponent( "value" );
-        box.setCols( 5 );
+        box.setCols( editorCols );
     }
 
 }
