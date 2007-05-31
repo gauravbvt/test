@@ -7,7 +7,7 @@ import java.util.IllegalFormatConversionException;
 
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.picker.ElementPicker;
 import com.mindalliance.channels.util.AbstractJavaBean;
 
@@ -18,9 +18,9 @@ import com.mindalliance.channels.util.AbstractJavaBean;
 public class ElementChooser<T extends AbstractJavaBean> extends
         AbstractChooser<T, ElementPicker<T>> implements PropertyComponent {
 
-    public ElementChooser( Class<T> c, System system, Scenario scenario,
+    public ElementChooser( Class<T> c, SystemService system,
             User user ) {
-        super( c, system, scenario, user );
+        super( c, system, user );
         setDataObject( new ElementPicker<T>( c ) );
     }
 

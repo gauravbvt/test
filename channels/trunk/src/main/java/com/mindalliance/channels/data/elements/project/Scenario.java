@@ -113,6 +113,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the activities associated with this scenario.
      */
+    @PropertyOptions(ignore=true)
     @CollectionType(type=Activity.class)
     public List<Activity> getActivities() {
         // TODO
@@ -122,6 +123,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the communications associated with this scenario.
      */
+    @PropertyOptions(ignore=true)
     @CollectionType(type=Communication.class)
     public List<Communication> getCommunications() {
         // TODO
@@ -131,6 +133,7 @@ public class Scenario extends AbstractElement {
     /**
      * Get the circumstances associated with this scenario.
      */
+    @PropertyOptions(ignore=true)
     @CollectionType(type=Circumstance.class)
     public List<Circumstance> getCircumstances() {
         // TODO

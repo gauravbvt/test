@@ -41,6 +41,18 @@ public class EditorFactory {
     }
 
     /**
+     * Convenience constructor.
+     * @param page
+     * @param system
+     * @param user
+     */
+    public EditorFactory(Page page, SystemService system, User user) {
+        setSystem(system);
+        setUser(user);
+        setPage(page);
+    }
+    
+    /**
      * Test if a kind of object can be edited.
      * @param object the object
      */
@@ -60,7 +72,7 @@ public class EditorFactory {
 //            throw new NullPointerException();
 
         // TODO Create a real editor
-        return new PlaceHolderEditor( object );
+        return new ElementEditorPanel( object, system, user );
     }
 
     /**
@@ -95,10 +107,11 @@ public class EditorFactory {
         JavaBean result = null;
         if ( supports( object ) )
             try {
-                PopupWrapper wrapper =
-                    new PopupWrapper( createEditor( object ) );
-                wrapper.doModal();
-                if ( wrapper.isOk() )
+                ElementEditorPanel panel = new ElementEditorPanel(object, system, user);
+                panel.setDialog(true);
+                panel.setPage( this.getPage() );
+                panel.doModal();
+                if ( panel.isOk() )
                     result = object;
 
             } catch ( InterruptedException e ) {
@@ -152,107 +165,5 @@ public class EditorFactory {
      */
     public void setSystem( SystemService system ) {
         this.system = system;
-    }
-
-    /**
-     * Temporary bogus editor...
-     */
-    public class PlaceHolderEditor extends Text implements ObjectEditor {
-
-        private JavaBean object;
-
-        /**
-         * Default constructor.
-         * @param object the edited object
-         */
-        public PlaceHolderEditor( JavaBean object ) {
-            super( "TBD: " + object );
-            this.object = object;
-        }
-
-        /**
-         * Return the value of object.
-         */
-        public JavaBean getObject() {
-            return this.object;
-        }
-    }
-
-    /**
-     * Popup wrapper around an editor/browser.
-     */
-    public class PopupWrapper extends Window {
-
-        private static final String WIDTH = "50%";
-
-        private Component content;
-        private boolean ok;
-
-        /**
-         * Default constructor.
-         * @param content the actual editor
-         */
-        public PopupWrapper( Component content ) {
-            super( "Editor", "normal", false );
-            this.content = content;
-            this.setSizable( true );
-
-            Button okButton = new Button( "Ok" );
-            okButton.addEventListener( "onClick", new EventListener() {
-                public boolean isAsap() {
-                    return true;
-                }
-
-                public void onEvent( Event event ) {
-                    setVisible( false );
-                    setOk( true );
-                }
-            } );
-
-            Button cancelButton = new Button( "Cancel" );
-            cancelButton.addEventListener( "onClick", new EventListener() {
-                public boolean isAsap() {
-                    return true;
-                }
-
-                public void onEvent( Event event ) {
-                    setVisible( false );
-                }
-            } );
-
-            Hbox buttons = new Hbox();
-            buttons.appendChild( okButton );
-            buttons.appendChild( cancelButton );
-
-            Vbox vbox = new Vbox();
-            vbox.appendChild( content );
-            vbox.appendChild( buttons );
-
-            this.appendChild( vbox );
-            this.setPage( EditorFactory.this.getPage() );
-            this.setWidth( WIDTH );
-        }
-
-        /**
-         * Return the value of ok.
-         */
-        public boolean isOk() {
-            return this.ok;
-        }
-
-        /**
-         * Set the value of ok.
-         * @param ok The new value of ok
-         */
-        public void setOk( boolean ok ) {
-            this.ok = ok;
-        }
-
-        /**
-         * Return the value of content.
-         */
-        public Component getContent() {
-            return this.content;
-        }
     }
 }

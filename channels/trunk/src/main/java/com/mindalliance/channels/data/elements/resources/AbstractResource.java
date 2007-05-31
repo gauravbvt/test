@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.data.elements.resources;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.scenario.Circumstance;
 import com.mindalliance.channels.data.reference.Information;
@@ -37,6 +38,7 @@ public abstract class AbstractResource extends AbstractElement
     /**
      * Get the descriptor.
      */
+    @PropertyOptions(ignore=true)
     public Information getDescriptor() {
         return getTypeSet().getDescriptor();
     }

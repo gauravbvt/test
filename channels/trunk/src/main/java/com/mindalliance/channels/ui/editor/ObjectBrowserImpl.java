@@ -26,6 +26,7 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.services.SystemService;
@@ -119,6 +120,29 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         Button editButton = new Button( "Edit" );
         editButton.setImage( "images/16x16/preferences.png" );
         editButton.setTooltiptext( "Edit the selected " + model.getObjectClass().getSimpleName() );
+        editButton.addEventListener( "onClick", new EventListener() {
+
+            public boolean isAsap() {
+                return false;
+            }
+
+            public void onEvent( Event arg0 ) {
+                int index = browser.getSelectedIndex();
+                if ( index >= 0 ) {
+                    try {
+                        Object object = model.getElementAt( index );
+                        ElementEditorPanel panel = new ElementEditorPanel((JavaBean)object, system, user);
+                        panel.setDialog(true);
+                        panel.setPage( ObjectBrowserImpl.this.getPage() );
+                        panel.doModal();
+                    } catch ( InterruptedException e ) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        } );
         return editButton;
     }
 

@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.data.elements;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.components.Caused;
 import com.mindalliance.channels.data.reference.Located;
 import com.mindalliance.channels.data.support.Duration;
@@ -21,6 +22,7 @@ public interface Occurrence<T extends Occurrence>
     /**
      * An incident is an occurrence with no stated cause.
      */
+    @PropertyOptions(ignore=true, editable=false)
     boolean isIncident();
 
     /**

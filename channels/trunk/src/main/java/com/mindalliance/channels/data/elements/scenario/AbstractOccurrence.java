@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.data.elements.scenario;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.data.components.Cause;
 import com.mindalliance.channels.data.elements.Occurrence;
@@ -43,6 +44,7 @@ public abstract class AbstractOccurrence<T extends Occurrence>
     /**
      * Test if this is an incident.
      */
+    @PropertyOptions(ignore=true, editable=false)
     public boolean isIncident() {
         return getCause() == null
             || getCause().getOccurrence() == null;
@@ -67,6 +69,7 @@ public abstract class AbstractOccurrence<T extends Occurrence>
      * Test if this occurence starts after the end of another occurrence.
      * @param occurrence the other occurrence
      */
+    @PropertyOptions(ignore=true)
     public boolean isAfter( Occurrence occurrence ) {
         return getTime().getMsecs() > occurrence.getEnd().getMsecs();
     }
@@ -75,6 +78,7 @@ public abstract class AbstractOccurrence<T extends Occurrence>
      * Test if this occurence starts before the end of another occurrence.
      * @param occurrence the other occurrence
      */
+    @PropertyOptions(ignore=true)
     public boolean isBefore( Occurrence occurrence ) {
         return getTime().getMsecs() < occurrence.getEnd().getMsecs();
     }
@@ -84,6 +88,7 @@ public abstract class AbstractOccurrence<T extends Occurrence>
      * occurrence.
      * @param occurrence the other occurrence
      */
+    @PropertyOptions(ignore=true)
     public boolean isDuring( Occurrence occurrence ) {
         return getTime().getMsecs() >= occurrence.getTime().getMsecs()
                 && getEnd().getMsecs() <= occurrence.getEnd().getMsecs();
@@ -110,6 +115,7 @@ public abstract class AbstractOccurrence<T extends Occurrence>
     /**
      * Return the end time.
      */
+    @PropertyOptions(ignore=true)
     public Duration getEnd() {
         return getTime().add( duration );
     }
@@ -117,6 +123,7 @@ public abstract class AbstractOccurrence<T extends Occurrence>
     /**
      * Return the time.
      */
+    @PropertyOptions(ignore=true)
     public Duration getTime() {
         return getCause() == null ?
                 Duration.NONE : getCause().getTime();

@@ -92,6 +92,7 @@ public class Person extends ContactableResource {
     /**
      * Return the photo.
      */
+    @PropertyOptions(ignore=true)
     @WebsiteUrl
     public URL getPhoto() {
         return photo;

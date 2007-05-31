@@ -9,8 +9,7 @@ import org.zkoss.zul.Row;
 
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.project.Scenario;
-import com.mindalliance.channels.ui.editor.components.ElementComponentFactory;
+import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 import com.mindalliance.zk.beanview.ZkBeanViewPanelBase;
 
@@ -20,10 +19,9 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanelBase;
  * @version $Revision:$
  */
 public class ElementBrowserPanel<V> extends ZkBeanViewPanel<V> {
-    public ElementBrowserPanel(Class<V> c, System system, Scenario scenario, User user) {
+    public ElementBrowserPanel(Class<V> c, SystemService system,  User user) {
         this.setContext( "class", c );
         this.setContext( "system", system );
-        this.setContext( "scenario", scenario );
         this.setContext( "user", user );
     }
     

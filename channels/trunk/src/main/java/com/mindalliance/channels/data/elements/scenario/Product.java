@@ -45,6 +45,7 @@ public abstract class Product extends AbstractScenarioElement
      * Get the duration.
      * @return NONE
      */
+    @PropertyOptions(ignore=true)
     public Duration getDuration() {
         return Duration.NONE;
     }
@@ -79,6 +80,7 @@ public abstract class Product extends AbstractScenarioElement
     /**
      * Get the delta time since time 0.
      */
+    @PropertyOptions(ignore=true)
     public Duration getTime() {
         return null;
     }

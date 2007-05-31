@@ -10,7 +10,7 @@ import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Toolbarbutton;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.picker.AbstractPicker;
 import com.mindalliance.channels.util.AbstractJavaBean;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
@@ -29,27 +29,23 @@ public abstract class AbstractChooser<T extends AbstractJavaBean, PickerType ext
 
     protected Button editButton;
 
-    protected System system;
-
-    protected Scenario scenario;
+    protected SystemService system;
 
     protected User user;
     
     protected Class c;
 
-    public AbstractChooser(Class<T> c, System system, Scenario scenario, User user) {
-        this(c, system, scenario, user, new ZkBeanViewPanel<PickerType>());
+    public AbstractChooser(Class<T> c, SystemService system, User user) {
+        this(c, system, user, new ZkBeanViewPanel<PickerType>());
     }
     
-    public AbstractChooser(Class<T> c, System system, Scenario scenario, User user, ZkBeanViewPanel panel) {
+    public AbstractChooser(Class<T> c, SystemService system, User user, ZkBeanViewPanel panel) {
         this.user = user;
-        this.scenario = scenario;
         this.system = system;
         this.c = c;
         browser = panel;
         browser.setContext("user", user);
         browser.setContext("system", system);
-        browser.setContext("scenario", scenario);
         browser.setContext( "class", c );
         init();
     }  
