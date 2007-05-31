@@ -49,6 +49,7 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
     private BrowserListModel<T> model;
     private Listbox browser;
     private T selection;
+    private EditorFactory factory;
 
     public ObjectBrowserImpl( Class<T> type, SystemService system, User user ) {
         this.system = system;
@@ -132,19 +133,9 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             public void onEvent( Event arg0 ) {
                 int index = browser.getSelectedIndex();
                 if ( index >= 0 ) {
-                    try {
-                        Object object = model.getElementAt( index );
-                        ElementEditorPanel panel = new ElementEditorPanel((JavaBean)object, system, user);
-                        panel.setDialog(true);
-                        panel.setPage( ObjectBrowserImpl.this.getPage() );
-                        panel.doModal();
-                        if (panel.isOk()) {
-                            //browser.renderAll();
-                            setObjects(getObjects());
-                        }
-                    } catch ( InterruptedException e ) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    JavaBean result = getEditorFactory().popupEditor(  (JavaBean)model.getElementAt( index ) );
+                    if (result != null) {
+                        setObjects(getObjects());
                     }
                 }
             }
@@ -153,6 +144,13 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         return editButton;
     }
 
+    private EditorFactory getEditorFactory() {
+        if (factory == null) {
+            factory = new EditorFactory(getPage(), system, user);
+        }
+        return factory;
+    }
+    
     private Button createRemoveButton() {
         Button removeButton = new Button( "Remove" );
         removeButton.setImage( "images/16x16/delete2.png" );
