@@ -3,6 +3,9 @@
 
 package com.mindalliance.channels.ui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
@@ -332,11 +335,7 @@ public class DesktopRichlet extends GenericRichlet {
                     "All organizational profiles",
                     "ROLE_USER",
                     canvas,
-                    ef.createBrowser(
-                        directory.getOrganizations(),
-                        Organization.class,
-                        null
-                    ) ),
+                    createOrgBrowser( ef, directory ) ),
                 new AccordionSelection(
                     "images/24x24/systems.png",
                     "Systems & resources",
@@ -344,6 +343,32 @@ public class DesktopRichlet extends GenericRichlet {
                     "ROLE_USER",
                     canvas, ef.createEditor( null ) )
             ) );
+    }
+
+    /**
+     * Hook up the organizations browser.
+     * @param ef the editor factory
+     * @param directory the directory
+     */
+    private ObjectBrowser<Organization> createOrgBrowser(
+            EditorFactory ef, final DirectoryService directory ) {
+
+        final ObjectBrowser<Organization> browser =
+            ef.createBrowser(
+                directory.getOrganizations(),
+                Organization.class,
+                null
+            );
+
+        // React to backgound modifications to list
+        directory.addPropertyChangeListener( "organizations",
+            new PropertyChangeListener() {
+                public void propertyChange( PropertyChangeEvent evt ) {
+                    browser.setObjects( directory.getOrganizations() );
+                }
+            } );
+
+        return browser;
     }
 
     /**

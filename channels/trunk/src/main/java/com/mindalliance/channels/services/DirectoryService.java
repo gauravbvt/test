@@ -5,6 +5,7 @@ package com.mindalliance.channels.services;
 
 import java.util.List;
 
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.data.elements.resources.Organization;
 
 /**
@@ -13,7 +14,7 @@ import com.mindalliance.channels.data.elements.resources.Organization;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */
-public interface DirectoryService extends Service {
+public interface DirectoryService extends Service, JavaBean {
 
     /**
      * Return the organizations knows to this service.

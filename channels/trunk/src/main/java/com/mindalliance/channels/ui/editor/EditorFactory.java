@@ -6,7 +6,6 @@ package com.mindalliance.channels.ui.editor;
 import java.util.Collection;
 
 import org.zkoss.zk.ui.Page;
-import org.zkoss.zul.Window;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
@@ -35,22 +34,22 @@ public class EditorFactory {
 
     /**
      * Convenience constructor.
-     * @param page
-     * @param system
-     * @param user
+     * @param page the page
+     * @param system the system
+     * @param user the user
      */
-    public EditorFactory(Page page, SystemService system, User user) {
-        setSystem(system);
-        setUser(user);
-        setPage(page);
+    public EditorFactory( Page page, SystemService system, User user ) {
+        setSystem( system );
+        setUser( user );
+        setPage( page );
     }
-    
+
     /**
      * Test if a kind of object can be edited.
      * @param object the object
      */
     public boolean supports( Object object ) {
-        return object != null ;
+        return object != null;
     }
 
     /**
@@ -59,30 +58,28 @@ public class EditorFactory {
      */
     public ObjectEditor createEditor( JavaBean object ) {
 
-// Uncomment the following to catch all the missing hooks to the model.
-//
-//        if ( object == null )
-//            throw new NullPointerException();
+        // Uncomment the following to catch all the missing hooks to
+        // the model.
+        //
+        // if ( object == null )
+        // throw new NullPointerException();
 
-        // TODO Create a real editor
-
-        return new ElementEditorPanel( object, system, user );
+        return new ElementEditorPanel<JavaBean>( object, system, user );
     }
 
     /**
      * Create a browser on a list of objects.
-     * @param objects the objects. The collection may be added to or deleted
-     * (this may not be a good idea...)
+     * @param objects the objects. The collection may be added to or
+     *            deleted (this may not be a good idea...)
      * @param beanClass the class of the objects in the collection
      * @param listener an initial listener (maybe null)
      * @param <T> the type of the objects
      */
-    public <T> ObjectBrowser<T> createBrowser(
-            Collection<T> objects, Class<T> beanClass,
-            ObjectBrowserListener<T> listener ) {
+    public <T> ObjectBrowser<T> createBrowser( Collection<T> objects,
+            Class<T> beanClass, ObjectBrowserListener<T> listener ) {
 
-        ObjectBrowserImpl<T> browser =
-            new ObjectBrowserImpl<T>( beanClass, system, user );
+        ObjectBrowserImpl<T> browser = new ObjectBrowserImpl<T>( beanClass,
+                system, user );
         browser.setObjects( objects );
 
         if ( listener != null )
@@ -92,8 +89,8 @@ public class EditorFactory {
     }
 
     /**
-     * Popup an editor dialog on the given object.
-     * Blocks until the user saves or cancels.
+     * Popup an editor dialog on the given object. Blocks until the
+     * user saves or cancels.
      * @param object the object
      * @return the edited object or null if the user cancelled.
      */
@@ -101,8 +98,9 @@ public class EditorFactory {
         JavaBean result = null;
         if ( supports( object ) )
             try {
-                ElementEditorPanel panel = new ElementEditorPanel(object, system, user);
-                panel.setDialog(true);
+                ElementEditorPanel panel =
+                    new ElementEditorPanel<JavaBean>( object, system, user );
+                panel.setDialog( true );
                 panel.setPage( this.getPage() );
                 panel.doModal();
                 if ( panel.isOk() )
