@@ -33,7 +33,9 @@ import org.zkoss.zul.Vbox;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.resources.Organization;
+import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.services.DirectoryService;
+import com.mindalliance.channels.services.RegistryService;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 
@@ -311,6 +313,7 @@ public class DesktopRichlet extends GenericRichlet {
 
         User user = ef.getUser();
         DirectoryService directory = ef.getSystem().getDirectoryService();
+        RegistryService registry = ef.getSystem().getRegistryService();
 
         return new AccordionTab(
             "images/16x16/user_building.png",
@@ -330,12 +333,19 @@ public class DesktopRichlet extends GenericRichlet {
                     "ROLE_USER",
                     canvas, ef.createEditor( null ) ),
                 new AccordionSelection(
-                    "images/24x24/orgs.png",
-                    "Organizations",
-                    "All organizational profiles",
-                    "ROLE_USER",
-                    canvas,
-                    createOrgBrowser( ef, directory ) ),
+                        "images/24x24/orgs.png",
+                        "Organizations",
+                        "All organizational profiles",
+                        "ROLE_USER",
+                        canvas,
+                        createOrgBrowser( ef, directory ) ),
+                new AccordionSelection(
+                        "images/24x24/village-people.png",
+                        "White pages",
+                        "All known persons",
+                        "ROLE_USER",
+                        canvas,
+                        createPersonBrowser( ef, registry ) ),
                 new AccordionSelection(
                     "images/24x24/systems.png",
                     "Systems & resources",
@@ -387,6 +397,54 @@ public class DesktopRichlet extends GenericRichlet {
             new PropertyChangeListener() {
                 public void propertyChange( PropertyChangeEvent evt ) {
                     browser.setObjects( directory.getOrganizations() );
+                }
+            } );
+
+        return browser;
+    }
+
+    /**
+     * Hook up the white pages.
+     * @param ef the editor factory
+     * @param directory the directory
+     */
+    private ObjectBrowser<Person> createPersonBrowser(
+            EditorFactory ef, final RegistryService registry ) {
+
+        final ObjectBrowser<Person> browser = ef.createBrowser(
+            registry.getPersons(),
+            Person.class,
+            new ObjectBrowserListener<Person>() {
+                public void objectAdded(
+                    ObjectBrowser<Person> browser,
+                    Person newObject ) {
+
+                    registry.addPerson( newObject );
+                }
+
+                public void objectRemoved(
+                    ObjectBrowser<Person> browser,
+                    Person removedObject ) {
+
+                    registry.removePerson( removedObject );
+                }
+
+                public void objectsChanged(
+                    ObjectBrowser<Person> browser ) {
+                }
+
+                public void selectionChanged(
+                    ObjectBrowser<Person> browser,
+                    Person oldSelection, Person newSelection ) {
+                }
+            }
+        );
+
+        // React to backgound modifications to list
+        registry.addPropertyChangeListener( "persons",
+            new PropertyChangeListener() {
+                public void propertyChange( PropertyChangeEvent evt ) {
+                    browser.setObjects( registry.getPersons() );
                 }
             } );
 

@@ -9,6 +9,7 @@ import java.util.Set;
 import org.acegisecurity.annotation.Secured;
 import org.acegisecurity.userdetails.UserDetailsService;
 
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
 import com.mindalliance.channels.data.elements.resources.Person;
@@ -20,7 +21,8 @@ import com.mindalliance.channels.data.user.Alert;
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
  */
-public interface RegistryService extends Service, UserDetailsService {
+public interface RegistryService
+    extends Service, UserDetailsService, JavaBean {
 
     /**
      * Logs a user in.
