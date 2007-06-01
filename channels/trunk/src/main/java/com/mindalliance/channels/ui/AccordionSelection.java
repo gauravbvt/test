@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import org.acegisecurity.GrantedAuthority;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.Session;
 
 import com.mindalliance.channels.User;
@@ -27,7 +28,7 @@ public class AccordionSelection {
     private String label;
     private String tooltip;
     private String roles;
-    private Component canvas;
+    private HtmlBasedComponent canvas;
     private ObjectEditor editor;
     private ObjectBrowser browser;
 
@@ -43,7 +44,7 @@ public class AccordionSelection {
      */
     public AccordionSelection(
             String icon, String label, String tooltip, String roles,
-            Component canvas, ObjectEditor editor ) {
+            HtmlBasedComponent canvas, ObjectEditor editor ) {
 
         if ( editor == null )
             throw new NullPointerException();
@@ -54,6 +55,8 @@ public class AccordionSelection {
         this.roles = roles;
         this.canvas = canvas;
         this.editor = editor;
+
+        tweakContent( canvas, editor );
     }
 
     /**
@@ -68,7 +71,7 @@ public class AccordionSelection {
      */
     public AccordionSelection(
             String icon, String label, String tooltip, String roles,
-            Component canvas, ObjectBrowser browser ) {
+            HtmlBasedComponent canvas, ObjectBrowser browser ) {
 
         if ( browser == null )
             throw new NullPointerException();
@@ -79,6 +82,25 @@ public class AccordionSelection {
         this.roles = roles;
         this.canvas = canvas;
         this.browser = browser;
+
+        tweakContent( canvas, browser );
+    }
+
+    /**
+     * Adjust the parameters of the content to fit nicely in
+     * the allotted space.
+     * @param canvas the canvas
+     * @param content the content
+     */
+    private void tweakContent(
+        HtmlBasedComponent canvas, Object content ) {
+
+        if ( HtmlBasedComponent.class.isAssignableFrom( content.getClass() ) ) {
+            HtmlBasedComponent c = (HtmlBasedComponent) content;
+            c.setHeight( canvas.getHeight() );
+            c.setWidth( canvas.getWidth() );
+//            c.setSclass( "canvas-content" );
+        }
     }
 
     /**
@@ -145,7 +167,7 @@ public class AccordionSelection {
     /**
      * Get the canvas associated with this selection.
      */
-    public Component getCanvas() {
+    public HtmlBasedComponent getCanvas() {
         return this.canvas;
     }
 

@@ -6,10 +6,12 @@ package com.mindalliance.channels.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
@@ -26,11 +28,14 @@ import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.ObjectEditor;
 
 /**
+ * An embedded or popup object editor.
+ *
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
+ * @param <T> the type of the object being edited
  */
-public class ElementEditorPanel<T extends JavaBean> extends Window implements
-        ObjectEditor {
+public class ElementEditorPanel<T extends JavaBean> extends Window
+    implements ObjectEditor {
 
     private BeanViewGroup<T> group;
     private Tabbox tabbox;
@@ -42,38 +47,56 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
     private List<String> exclude = new ArrayList<String>();
     private SystemService system;
     private User user;
-    private boolean dialog = false;
+    private boolean dialog;
     private Button cancelButton;
     private boolean ok;
 
-    public ElementEditorPanel( T edited, SystemService system, User user ) {
-        super("Editor", "normal", false);
-        if (edited != null) {
+    /**
+     * Default constructor.
+     * @param edited the edited object
+     * @param system the system
+     * @param user the user
+     * @param embedded true if embedded in another component, false
+     * if standalone
+     */
+    public ElementEditorPanel( T edited, SystemService system, User user,
+            boolean embedded ) {
+
+        super( embedded ? "" : "Editor", embedded ? "none" : "normal", false );
+
+        if ( embedded ) {
+            setSclass( "embedded-editor" );
+        } else {
+            setSizable( true );
+            setWidth( "50%" );
+        }
+
+        if ( edited != null ) {
             this.edited = edited;
             this.type = edited.getClass();
             this.system = system;
             this.user = user;
-    
+
             exclude.add( "class" );
             exclude.add( "incident" );
             group = new BeanViewGroup<T>();
-    
+
             tabbox = new Tabbox();
+            tabbox.setWidth( "100%" );
             tabs = new Tabs();
             tabpanels = new Tabpanels();
             tabs.appendChild( new Tab( type.getSimpleName() ) );
-            mainpanel = new Tabpanel();
+            mainpanel = new WrappedTabpanel();
             tabpanels.appendChild( mainpanel );
-    
+
             initializeGroups();
-    
+
             tabbox.appendChild( tabs );
             tabbox.appendChild( tabpanels );
             group.setDataObject( edited );
             appendChild( tabbox );
             tabbox.setSelectedPanel( mainpanel );
             appendChild( initializeButtons() );
-            this.setWidth( "50%" );
         }
     }
 
@@ -130,17 +153,18 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
 
             Tab tab = new Tab( "Types" );
             tabs.appendChild( tab );
-            Tabpanel tabpanel = new Tabpanel();
+            Tabpanel tabpanel = new WrappedTabpanel();
             tabpanel.appendChild( createGroup( new String[] { "typeSet" } ) );
             tabpanels.appendChild( tabpanel );
             tab = new Tab( "Assertions" );
             tabs.appendChild( tab );
-            tabpanel = new Tabpanel();
-            tabpanel.appendChild( createGroup( new String[] { "assertions" } ) );
+            tabpanel = new WrappedTabpanel();
+            tabpanel.appendChild(
+                    createGroup( new String[] { "assertions" } ) );
             tabpanels.appendChild( tabpanel );
             tab = new Tab( "Issues" );
             tabs.appendChild( tab );
-            tabpanel = new Tabpanel();
+            tabpanel = new WrappedTabpanel();
             tabpanel.appendChild( createGroup( new String[] { "issues" } ) );
 
             tabpanels.appendChild( tabpanel );
@@ -148,7 +172,7 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
     }
 
     private void createUser() {
-        if (User.class.isAssignableFrom( type )) {
+        if ( User.class.isAssignableFrom( type ) ) {
             exclude.add( "accountNonDisabled" );
             exclude.add( "accountNonExpired" );
             exclude.add( "accountNonLocked" );
@@ -156,13 +180,14 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
 
             exclude.add( "credentialsNonExpired" );
             exclude.add( "standardUser" );
-            
+
         }
     }
-    
+
+    @SuppressWarnings( "unchecked" )
     private ElementBeanViewPanel<T> createGroup( String[] members ) {
-        ElementBeanViewPanel<T> panel = new ElementBeanViewPanel<T>( type,
-                system, user );
+        ElementBeanViewPanel<T> panel =
+            new ElementBeanViewPanel<T>( type, system, user );
         panel.setSubView( members, false, false );
         group.addBeanView( panel );
         for ( String s : members ) {
@@ -171,17 +196,17 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
         return panel;
     }
 
+    @SuppressWarnings( "unchecked" )
     private ElementBeanViewPanel<T> createExclusionGroup() {
-        ElementBeanViewPanel<T> panel = new ElementBeanViewPanel<T>( type,
-                system, user );
+        ElementBeanViewPanel<T> panel =
+            new ElementBeanViewPanel<T>( type, system, user );
         panel.setExcludeProperties( exclude.toArray( new String[0] ) );
         group.addBeanView( panel );
         return panel;
     }
 
     /**
-     * (non-Javadoc)
-     * 
+     * Get the object.
      * @see com.mindalliance.channels.ui.ObjectEditor#getObject()
      */
     public JavaBean getObject() {
@@ -197,7 +222,6 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
 
     /**
      * Set the value of dialog.
-     * 
      * @param dialog The new value of dialog
      */
     public void setDialog( boolean dialog ) {
@@ -214,11 +238,40 @@ public class ElementEditorPanel<T extends JavaBean> extends Window implements
 
     /**
      * Set the value of ok.
-     * 
      * @param ok The new value of ok
      */
     public void setOk( boolean ok ) {
         this.ok = ok;
     }
 
+    /**
+     * A tab panel that wraps its children in a div.
+     */
+    public static class WrappedTabpanel extends Tabpanel {
+
+        private Div div;
+
+        /**
+         * Default constructor.
+         */
+        public WrappedTabpanel() {
+            super();
+
+            div = new Div();
+            div.setSclass( "wrapped-panel" );
+            super.insertBefore( div, null );
+        }
+
+        /**
+         * Overriden from WrappedTabPanel.
+         * Redirects to internal div.
+         * @see AbstractComponent#insertBefore(Component, Component)
+         * @param newChild the new child to add
+         * @param refChild the reference child (ignored)
+         */
+        @Override
+        public boolean insertBefore( Component newChild, Component refChild ) {
+            return div.appendChild( newChild );
+        }
+    }
 }

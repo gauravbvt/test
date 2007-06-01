@@ -68,7 +68,7 @@ public class DesktopRichlet extends GenericRichlet {
     private static final int FIXED_HEIGHT = 141;
     private static final int DEFAULT_CANVAS_HEIGHT = 100;
     private static final String DESKTOP_HEIGHT = "DesktopHeight";
-    private static final int MIN_DESKTOP_HEIGHT = 435;
+    private static final int MIN_DESKTOP_HEIGHT = 594;
 
     /**
      * Default constructor.

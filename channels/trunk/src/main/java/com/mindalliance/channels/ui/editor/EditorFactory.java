@@ -64,7 +64,7 @@ public class EditorFactory {
         // if ( object == null )
         // throw new NullPointerException();
 
-        return new ElementEditorPanel<JavaBean>( object, system, user );
+        return new ElementEditorPanel<JavaBean>( object, system, user, true );
     }
 
     /**
@@ -78,8 +78,8 @@ public class EditorFactory {
     public <T> ObjectBrowser<T> createBrowser( Collection<T> objects,
             Class<T> beanClass, ObjectBrowserListener<T> listener ) {
 
-        ObjectBrowserImpl<T> browser = new ObjectBrowserImpl<T>( beanClass,
-                system, user );
+        ObjectBrowserImpl<T> browser = new ObjectBrowserImpl<T>(
+                beanClass, system, user );
         browser.setObjects( objects );
 
         if ( listener != null )
@@ -99,7 +99,8 @@ public class EditorFactory {
         if ( supports( object ) )
             try {
                 ElementEditorPanel panel =
-                    new ElementEditorPanel<JavaBean>( object, system, user );
+                    new ElementEditorPanel<JavaBean>(
+                        object, system, user, false );
                 panel.setDialog( true );
                 panel.setPage( this.getPage() );
                 panel.doModal();
