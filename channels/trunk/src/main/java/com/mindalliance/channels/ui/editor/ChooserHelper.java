@@ -2,7 +2,7 @@
 // All rights reserved.
 
 
-package com.mindalliance.channels.ui.editor.picker;
+package com.mindalliance.channels.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,9 +18,9 @@ import com.mindalliance.channels.services.SystemService;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class PickerHelper {
+public class ChooserHelper {
 
-    public PickerHelper() { 
+    public ChooserHelper() { 
         
     }
     

@@ -34,15 +34,17 @@ public class ElementBrowser<T> extends AbstractBrowser<T> {
 
     protected void performRemoveAction() {
         int index = getBrowser().getSelectedIndex();
+        
         if ( index >= 0 ) {
-            getModel().remove( getModel().getElementAt( index ) );
+            getModel().remove( index );
         }
     }
 
     protected void performAddAction() {
         T result = getEditorFactory().popupChooser( getModel().getObjectClass() );
-        if (result != null) {
+        if (result != null && !getModel().contains( result )) {
             getModel().add( result );
+            
         }
     }
 

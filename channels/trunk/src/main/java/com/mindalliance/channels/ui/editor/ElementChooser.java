@@ -16,7 +16,6 @@ import org.zkoss.zul.Window;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.services.SystemService;
-import com.mindalliance.channels.ui.editor.picker.PickerHelper;
 
 /**
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
@@ -30,11 +29,12 @@ public class ElementChooser<T> extends Window {
     private User user;
     private SystemService system;
     private Class<T> type;
-    private PickerHelper pickerHelper;
+    private ChooserHelper chooserHelper;
     private boolean ok = false;
     
     public ElementChooser( Class<T> c, SystemService system,
             User user ) {
+        super("Chooser", "normal", false);
         this.system = system;
         this.user = user;
         type = c;
@@ -43,7 +43,7 @@ public class ElementChooser<T> extends Window {
 
     private void init() {
         browser = new ChooserBrowser<T>(type, system, user);
-        pickerHelper = new PickerHelper();
+        chooserHelper = new ChooserHelper();
         browser.setValue( findObjects() );
         appendChild(browser);
         okButton = new Button("OK");
@@ -70,6 +70,7 @@ public class ElementChooser<T> extends Window {
         box.appendChild(okButton);
         box.appendChild(cancelButton);
         appendChild(box);
+        this.setWidth( "415px" );
     }
     
     public T getSelection() {
@@ -82,9 +83,9 @@ public class ElementChooser<T> extends Window {
         try {
             Class[] paramTypes = { SystemService.class, User.class };
             Object[] args = new Object[] { system, user };
-            Method m = pickerHelper.getClass().getMethod(
+            Method m = chooserHelper.getClass().getMethod(
                     "find" + type.getSimpleName(), paramTypes );
-            result = (Collection<T>) m.invoke( pickerHelper, args );
+            result = (Collection<T>) m.invoke( chooserHelper, args );
         } catch ( Exception e ) {
             // Do nothing -- This class hasn't been mapped yet.
             // Return an empty list.

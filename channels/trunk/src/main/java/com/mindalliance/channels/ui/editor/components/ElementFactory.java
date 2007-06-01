@@ -64,7 +64,7 @@ public class ElementFactory implements PropertyComponentFactory {
         } else if (TypeSet.class.isAssignableFrom(type)) {
             result = new TypeSetEditor();
         } else if (AbstractJavaBean.class.isAssignableFrom(type)) {
-            result = new SingleElementEditor(type, (SystemService)bv.getContext( "system"), (User)bv.getContext( "user" ));
+            result = new SingleElementBrowser(type, (SystemService)bv.getContext( "system"), (User)bv.getContext( "user" ));
         }
         return result;
     }

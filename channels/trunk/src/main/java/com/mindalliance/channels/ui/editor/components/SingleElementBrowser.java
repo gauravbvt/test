@@ -6,10 +6,11 @@ package com.mindalliance.channels.ui.editor.components;
 
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Toolbar;
+import org.zkoss.zul.Toolbarbutton;
 
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.JavaBean;
@@ -22,18 +23,18 @@ import com.mindalliance.channels.ui.editor.EditorFactory;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class SingleElementEditor<T> extends Hbox implements PropertyComponent {
+public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
     private SystemService system;
     private User user;
     private Class<T> type;
     private Object edited;
     private Label label;
-    private Button editButton;
-    private Button createButton;
-    private Button removeButton;
+    private Toolbarbutton editButton;
+    private Toolbarbutton createButton;
+    private Toolbarbutton removeButton;
     private EditorFactory factory;
     
-    public SingleElementEditor( Class<T> type, SystemService system, User user ) {
+    public SingleElementBrowser( Class<T> type, SystemService system, User user ) {
         this.system = system;
         this.user = user;
         this.type = type;
@@ -46,8 +47,8 @@ public class SingleElementEditor<T> extends Hbox implements PropertyComponent {
         appendChild(createButtons());
     }
     
-    private Box createButtons() {
-        Hbox buttonBox = new Hbox();
+    private Toolbar createButtons() {
+        Toolbar buttonBox = new Toolbar();
         createButton = createChooseButton();
         buttonBox.appendChild( createButton );
         editButton = createEditButton();
@@ -57,15 +58,30 @@ public class SingleElementEditor<T> extends Hbox implements PropertyComponent {
         return buttonBox;
     }
     
-    private Button createChooseButton() {
-        Button addButton = new Button( "Choose" );
+    private Toolbarbutton createChooseButton() {
+        Toolbarbutton addButton = new Toolbarbutton( "Choose" );
         addButton.setImage( "images/16x16/add2.png" );
         addButton.setTooltiptext( "Choose a "
-                + type.getSimpleName() );
+                + type.getSimpleName() );        
+        addButton.addEventListener( "onClick", new EventListener() {
+
+                    public boolean isAsap() {
+                        return false;
+                    }
+
+                    public void onEvent( Event arg0 ) {
+                        T result = getEditorFactory().popupChooser(  type );
+                        if (result != null) {
+                            edited = result;
+                            refreshLabel();
+                        }
+                    }
+
+                } );
         return addButton;
     }
-    private Button createEditButton() {
-        Button editButton = new Button( "Edit" );
+    private Toolbarbutton createEditButton() {
+        Toolbarbutton editButton = new Toolbarbutton( "Edit" );
         editButton.setImage( "images/16x16/preferences.png" );
         editButton.setTooltiptext( "Edit the selected " + type.getSimpleName() );
         editButton.addEventListener( "onClick", new EventListener() {
@@ -85,8 +101,8 @@ public class SingleElementEditor<T> extends Hbox implements PropertyComponent {
         return editButton;
     }
     
-    private Button createRemoveButton() {
-        Button removeButton = new Button( "Remove" );
+    private Toolbarbutton createRemoveButton() {
+        Toolbarbutton removeButton = new Toolbarbutton( "Remove" );
         removeButton.setImage( "images/16x16/delete2.png" );
         removeButton.setTooltiptext( "Remove the selected "
                 + type.getSimpleName() );
@@ -123,10 +139,10 @@ public class SingleElementEditor<T> extends Hbox implements PropertyComponent {
         String labelVal;
         if (edited == null) {
             labelVal = "<None Selected>";
-            editButton.setDisabled( true );
+            editButton.setVisible( true );
         } else {
             labelVal = edited.toString();
-            editButton.setDisabled( false );
+            editButton.setVisible( false );
         }
         label.setValue( labelVal );
     }
@@ -134,8 +150,8 @@ public class SingleElementEditor<T> extends Hbox implements PropertyComponent {
     /* (non-Javadoc)
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
-    public void setValue( Object arg0 ) {
-        this.edited = arg0;
+    public void setValue( Object edited ) {
+        this.edited = edited;
         refreshLabel();
     }
 

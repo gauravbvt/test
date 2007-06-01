@@ -13,9 +13,6 @@ import java.util.Set;
 
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Box;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Hbox;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
@@ -24,10 +21,11 @@ import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Toolbar;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
-import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.reference.Type;
@@ -70,9 +68,9 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
     }
 
     private void init() {
+        appendChild( createButtons() );
         browser = createBrowser();
         appendChild( browser );
-        appendChild( createButtons() );
     }
 
 
@@ -83,10 +81,9 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
         browser.setModel( model );
         browser.setItemRenderer( new BrowserListitemRenderer(
                 model.getObjectClass() ) );
-        browser.setRows( 6 );
-        browser.setWidth( "400px" );
         browser.setMold( "paging" );
-        browser.setPageSize( 5 );
+        setPageSize(5);
+        setBrowserWidth("400px");
         browser.addEventListener( "onSelect", new EventListener() {
             public boolean isAsap() {
                 return false;
@@ -108,17 +105,25 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
         return browser;
     }
 
+    public void setPageSize(int size) {
+        browser.setPageSize( size );
+        browser.setRows( size+1 );
+    }
 
-    private Box createButtons() {
-        Hbox buttonBox = new Hbox();
+    public void setBrowserWidth(String width) {
+        browser.setWidth( width );
+    }
+    
+    private Toolbar createButtons() {
+        Toolbar buttonBox = new Toolbar();
         buttonBox.appendChild( createAddButton() );
         buttonBox.appendChild( createEditButton() );
         buttonBox.appendChild( createRemoveButton() );
         return buttonBox;
     }
     
-    private Button createAddButton() {
-        Button addButton = new Button( "Add" );
+    private Toolbarbutton createAddButton() {
+        Toolbarbutton addButton = new Toolbarbutton( "Add" );
         addButton.setImage( "images/16x16/add2.png" );
         addButton.setTooltiptext( " Add a "
                 + model.getObjectClass().getSimpleName() );
@@ -137,8 +142,8 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
         return addButton;
     }
 
-    private Button createEditButton() {
-        Button editButton = new Button( "Edit" );
+    private Toolbarbutton createEditButton() {
+        Toolbarbutton editButton = new Toolbarbutton( "Edit" );
         editButton.setImage( "images/16x16/preferences.png" );
         editButton.setTooltiptext( "Edit the selected " + model.getObjectClass().getSimpleName() );
         editButton.addEventListener( "onClick", new EventListener() {
@@ -162,8 +167,8 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
         return factory;
     }
     
-    private Button createRemoveButton() {
-        Button removeButton = new Button( "Remove" );
+    private Toolbarbutton createRemoveButton() {
+        Toolbarbutton removeButton = new Toolbarbutton( "Remove" );
         removeButton.setImage( "images/16x16/delete2.png" );
         removeButton.setTooltiptext( "Remove the selected "
                 + model.getObjectClass().getSimpleName() );
