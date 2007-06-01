@@ -78,7 +78,7 @@ public class EditorFactory {
     public <T> ObjectBrowser<T> createBrowser( Collection<T> objects,
             Class<T> beanClass, ObjectBrowserListener<T> listener ) {
 
-        ObjectBrowserImpl<T> browser = new ObjectBrowserImpl<T>(
+        ElementBrowser<T> browser = new ElementBrowser<T>(
                 beanClass, system, user );
         browser.setObjects( objects );
 
@@ -108,13 +108,34 @@ public class EditorFactory {
                     result = object;
 
             } catch ( InterruptedException e ) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
         return result;
     }
 
+    /**
+     * Popup a chooser for the provided type.  Blocks until the
+     * user clicks OK or cancel.
+     * @param <T> the type for which to specialize the editor
+     * @param type the Class object for the type
+     * @return the chosen instance
+     */
+    public <T> T popupChooser( Class<T> type ) {
+        T result = null;
+        try {
+            ElementChooser<T> chooser = new ElementChooser<T>(type, system, user);
+            chooser.setPage( this.getPage() );
+            chooser.doModal();
+            if (chooser.isOk()) {
+                result = chooser.getSelection();
+            }
+        } catch ( InterruptedException e ) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
     /**
      * Return the value of page.
      */

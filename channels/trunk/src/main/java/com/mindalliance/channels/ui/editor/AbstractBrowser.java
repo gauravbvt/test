@@ -40,7 +40,7 @@ import com.mindalliance.channels.ui.ObjectBrowserListener;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
+public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T>,
         PropertyComponent {
 
     private final List<ObjectBrowserListener> listeners = new ArrayList<ObjectBrowserListener>();
@@ -51,7 +51,11 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
     private T selection;
     private EditorFactory factory;
 
-    public ObjectBrowserImpl( Class<T> type, SystemService system, User user ) {
+    protected abstract void performEditAction();
+    protected abstract void performAddAction();
+    protected abstract void performRemoveAction();
+    
+    public AbstractBrowser( Class<T> type, SystemService system, User user ) {
         this.system = system;
         this.user = user;
         model = new BrowserListModel<T>( type );
@@ -59,7 +63,7 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         init();
     }
 
-    public ObjectBrowserImpl( Class<T> type, Class<T> collectionType,
+    public AbstractBrowser( Class<T> type, Class<T> collectionType,
             SystemService system, User user ) {
         this( type, system, user );
         model.setCollectionType( collectionType );
@@ -96,13 +100,14 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
                     selection = null;
                 }
                 for ( ObjectBrowserListener<T> l : listeners ) {
-                    l.selectionChanged( ObjectBrowserImpl.this, oldSelection, selection );
+                    l.selectionChanged( AbstractBrowser.this, oldSelection, selection );
                 }
             }
             
         });
         return browser;
     }
+
 
     private Box createButtons() {
         Hbox buttonBox = new Hbox();
@@ -117,6 +122,18 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         addButton.setImage( "images/16x16/add2.png" );
         addButton.setTooltiptext( " Add a "
                 + model.getObjectClass().getSimpleName() );
+        
+        addButton.addEventListener( "onClick", new EventListener() {
+
+            public boolean isAsap() {
+                return false;
+            }
+
+            public void onEvent( Event arg0 ) {
+                performAddAction();
+            }
+
+        } );
         return addButton;
     }
 
@@ -131,20 +148,14 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             }
 
             public void onEvent( Event arg0 ) {
-                int index = browser.getSelectedIndex();
-                if ( index >= 0 ) {
-                    JavaBean result = getEditorFactory().popupEditor(  (JavaBean)model.getElementAt( index ) );
-                    if (result != null) {
-                        setObjects(getObjects());
-                    }
-                }
+                performEditAction();
             }
 
         } );
         return editButton;
     }
 
-    private EditorFactory getEditorFactory() {
+    protected EditorFactory getEditorFactory() {
         if (factory == null) {
             factory = new EditorFactory(getPage(), system, user);
         }
@@ -164,10 +175,7 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             }
 
             public void onEvent( Event arg0 ) {
-                int index = browser.getSelectedIndex();
-                if ( index >= 0 ) {
-                    model.remove( model.getElementAt( index ) );
-                }
+                performRemoveAction();
             }
 
         } );
@@ -296,7 +304,7 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         return header;
     }
 
-    private class BrowserListitemRenderer<T> implements ListitemRenderer {
+    protected class BrowserListitemRenderer<T> implements ListitemRenderer {
 
         private Class<T> type;
 
@@ -354,7 +362,7 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
         
     }
 
-    private class BrowserListModel<T> extends ListModelList implements
+    protected class BrowserListModel<T> extends ListModelList implements
             ListModel {
 
         private Class<T> type;
@@ -394,6 +402,82 @@ public class ObjectBrowserImpl<T> extends Vbox implements ObjectBrowser<T>,
             collType = type;
         }
 
+    }
+
+    
+    /**
+     * Return the value of browser.
+     */
+    protected Listbox getBrowser() {
+        return browser;
+    }
+
+    
+    /**
+     * Set the value of browser.
+     * @param browser The new value of browser
+     */
+    protected void setBrowser( Listbox browser ) {
+        this.browser = browser;
+    }
+    
+    /**
+     * Return the value of model.
+     */
+    protected BrowserListModel<T> getModel() {
+        return model;
+    }
+
+    
+    /**
+     * Set the value of model.
+     * @param model The new value of model
+     */
+    protected void setModel( BrowserListModel<T> model ) {
+        this.model = model;
+    }
+
+    
+    /**
+     * Return the value of system.
+     */
+    protected SystemService getSystem() {
+        return system;
+    }
+
+    
+    /**
+     * Set the value of system.
+     * @param system The new value of system
+     */
+    protected void setSystem( SystemService system ) {
+        this.system = system;
+    }
+
+    
+    /**
+     * Return the value of user.
+     */
+    protected User getUser() {
+        return user;
+    }
+
+    
+    /**
+     * Set the value of user.
+     * @param user The new value of user
+     */
+    protected void setUser( User user ) {
+        this.user = user;
+    }
+
+    
+    /**
+     * Set the value of selection.
+     * @param selection The new value of selection
+     */
+    protected void setSelection( T selection ) {
+        this.selection = selection;
     }
 
 }

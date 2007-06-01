@@ -4,11 +4,15 @@
 
 package com.mindalliance.channels.ui.editor;
 
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Box;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Window;
 
+import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.picker.AbstractPicker;
@@ -20,14 +24,14 @@ import com.mindalliance.zk.beanview.ZkBeanViewPanel;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public abstract class AbstractChooser<T extends AbstractJavaBean, PickerType extends AbstractPicker> extends Box {
+public abstract class AbstractChooser<T extends AbstractJavaBean, PickerType extends AbstractPicker> extends Window {
     protected ZkBeanViewPanel<PickerType> browser;
 
     protected Toolbarbutton createButton;
 
     protected Toolbarbutton deleteButton;
 
-    protected Button editButton;
+    protected Toolbarbutton editButton;
 
     protected SystemService system;
 
@@ -40,6 +44,7 @@ public abstract class AbstractChooser<T extends AbstractJavaBean, PickerType ext
     }
     
     public AbstractChooser(Class<T> c, SystemService system, User user, ZkBeanViewPanel panel) {
+        super("chooser", "normal", false);
         this.user = user;
         this.system = system;
         this.c = c;
@@ -73,5 +78,68 @@ public abstract class AbstractChooser<T extends AbstractJavaBean, PickerType ext
 
     protected final void setDataObject(AbstractPicker<T> picker) {
         browser.setDataObject(picker);
+    }
+    
+    private Box createButtons() {
+        Hbox buttonBox = new Hbox();
+        buttonBox.appendChild( createAddButton() );
+        buttonBox.appendChild( createEditButton() );
+        buttonBox.appendChild( createRemoveButton() );
+        return buttonBox;
+    }
+    
+    private Button createAddButton() {
+        Button addButton = new Button( "Add" );
+//        addButton.setImage( "images/16x16/add2.png" );
+//        addButton.setTooltiptext( " Add a "
+//                + model.getObjectClass().getSimpleName() );
+        return addButton;
+    }
+
+    private Button createEditButton() {
+        Button editButton = new Button( "Edit" );
+//        editButton.setImage( "images/16x16/preferences.png" );
+//        editButton.setTooltiptext( "Edit the selected " + model.getObjectClass().getSimpleName() );
+        editButton.addEventListener( "onClick", new EventListener() {
+
+            public boolean isAsap() {
+                return false;
+            }
+
+            public void onEvent( Event arg0 ) {
+//                int index = browser.getSelectedIndex();
+//                if ( index >= 0 ) {
+//                    JavaBean result = getEditorFactory().popupEditor(  (JavaBean)model.getElementAt( index ) );
+//                    if (result != null) {
+//                        setObjects(getObjects());
+//                    }
+//                }
+            }
+
+        } );
+        return editButton;
+    }
+    
+    private Button createRemoveButton() {
+        Button removeButton = new Button( "Remove" );
+        removeButton.setImage( "images/16x16/delete2.png" );
+//        removeButton.setTooltiptext( "Remove the selected "
+//                + model.getObjectClass().getSimpleName() );
+
+        removeButton.addEventListener( "onClick", new EventListener() {
+
+            public boolean isAsap() {
+                return false;
+            }
+
+            public void onEvent( Event arg0 ) {
+//                int index = browser.getSelectedIndex();
+//                if ( index >= 0 ) {
+//                    model.remove( model.getElementAt( index ) );
+//                }
+            }
+
+        } );
+        return removeButton;
     }
 }

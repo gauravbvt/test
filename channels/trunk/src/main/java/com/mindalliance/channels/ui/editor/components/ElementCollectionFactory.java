@@ -12,7 +12,7 @@ import com.beanview.PropertyComponent;
 import com.beanview.PropertyComponentFactory;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.services.SystemService;
-import com.mindalliance.channels.ui.editor.ObjectBrowserImpl;
+import com.mindalliance.channels.ui.editor.ElementBrowser;
 import com.mindalliance.channels.util.CollectionType;
 
 /**
@@ -54,7 +54,7 @@ public class ElementCollectionFactory implements PropertyComponentFactory {
                 Annotation[] a = m.getAnnotations();
                 CollectionType ct = m.getAnnotation( CollectionType.class );
                 if ( ct != null ) {
-                    result = new ObjectBrowserImpl( ct.type(), type,
+                    result = new ElementBrowser( ct.type(), type,
                             (SystemService) bv.getContext( "system" ),
                             (User) bv.getContext( "user" ) );
 

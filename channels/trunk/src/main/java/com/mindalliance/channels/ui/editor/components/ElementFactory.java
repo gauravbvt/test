@@ -59,12 +59,12 @@ public class ElementFactory implements PropertyComponentFactory {
             result = new UrlEditor();
         } else if (LatLong.class.isAssignableFrom(type)) {
             result = new LatLongEditor();
-        } else if (Location.class.isAssignableFrom(type)) {
-            result = new LocationEditor();
+//        } else if (Location.class.isAssignableFrom(type)) {
+//            result = new LocationEditor();
         } else if (TypeSet.class.isAssignableFrom(type)) {
             result = new TypeSetEditor();
         } else if (AbstractJavaBean.class.isAssignableFrom(type)) {
-            result = new ElementChooser(type, (SystemService)bv.getContext( "system"), (User)bv.getContext( "user" ));
+            result = new SingleElementEditor(type, (SystemService)bv.getContext( "system"), (User)bv.getContext( "user" ));
         }
         return result;
     }

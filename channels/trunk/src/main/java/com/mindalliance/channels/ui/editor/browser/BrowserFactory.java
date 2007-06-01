@@ -4,8 +4,6 @@
 
 package com.mindalliance.channels.ui.editor.browser;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Collection;
 
 import com.beanview.BeanView;
@@ -13,8 +11,9 @@ import com.beanview.PropertyComponent;
 import com.beanview.PropertyComponentFactory;
 import com.beanview.util.Configuration;
 import com.beanview.util.FactoryResolver;
+import com.mindalliance.channels.User;
+import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.util.AbstractJavaBean;
-import com.mindalliance.channels.util.CollectionType;
 
 
 /**
@@ -32,21 +31,18 @@ public class BrowserFactory implements PropertyComponentFactory {
             if ( AbstractJavaBean.class.isAssignableFrom( (Class) bv.getContext( "class" ) ) ) {
                 try {
 
-                    BrowserList result = new BrowserList();
+                    ChooserBrowser browser = new ChooserBrowser(parent, (SystemService)bv.getContext("system"), (User)bv.getContext( "user" ));
 
                     Collection temp = new FactoryResolver().getValues(key, bv);
                     if (temp == null)
                         throw new IllegalArgumentException(
                                 "Unable to find factory for collection.");
-                    result.setMultipleSelectOptions(new BrowserListModel(temp, type,
-                            null, false));
+                    browser.setValue( temp );
 
-                    //result.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
-                    result.setMultiple(true);
                     Configuration configuration = new Configuration(bv);
-                    result.setDisabled(!configuration.editable(key));
+                    //browser.setDisabled(!configuration.editable(key));
 
-                    return result;
+                    return browser;
 
                 } catch ( Exception e ) {
                     // The appropriate method or annotation wasn't found -- Fall through to the general Collection handler

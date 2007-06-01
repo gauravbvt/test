@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.beanview.BeanView;
+import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Role;
 import com.mindalliance.channels.services.SystemService;
@@ -23,7 +24,7 @@ public class PickerHelper {
         
     }
     
-    public Collection<Role> findRole(BeanView bean) {
+    public Collection<Role> findRole(SystemService system, User user) {
         Collection<Role> results = new ArrayList<Role>();
         for (int inx = 0 ; inx < 100 ; inx++) {
             Role role = new Role();
@@ -33,9 +34,8 @@ public class PickerHelper {
         return results;
     }
     
-    public Collection<Organization> findOrganization(BeanView bean) {
+    public Collection<Organization> findOrganization(SystemService system, User user) {
         Collection<Organization> results = new ArrayList<Organization>();
-        SystemService system = (SystemService)bean.getContext( "system" );
         if (system != null) {
             results.addAll( system.getDirectoryService().getOrganizations() );
         }
