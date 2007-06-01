@@ -1,6 +1,6 @@
 // JavaScript extensions
 
-console.info("Top of script");
+//console.info("Top of script");
 
 String.prototype.trim = function() { return this.replace(/^\s+|\s+$/, ''); };
 
@@ -26,7 +26,7 @@ zm_menus = {};
 zm_overlays = {};
 
 zkMxGraph.init = function (container) {
-	console.debug("zkMxGraph.init");
+	//console.debug("zkMxGraph.init");
     if (mxClient.isBrowserSupported()) {
 	    if (mxClient.IS_IE) { new mxDivResizer(container);}
         //create the graph model
@@ -49,7 +49,7 @@ zkMxGraph.init = function (container) {
 			};
 		//init the graph
 		var initValue = zm_unescape(getZKAttr(container, "init"));
-		console.debug("init = " + initValue);
+		//console.debug("init = " + initValue);
 		var init = initValue.parseJSON();
 		zm_initProperties(graph, init.properties);
 		zm_initLayout(graph, init.layout);
@@ -67,7 +67,7 @@ zkMxGraph.init = function (container) {
 };
 
 zkMxGraph.cleanup = function (container) {
-	console.debug("zkMxGraph.cleanup");
+	//console.debug("zkMxGraph.cleanup");
 	zm_menus[container.id] = null;
     if (container._graph != null) {
         zm_deregisterEvents(container._graph);
@@ -77,7 +77,7 @@ zkMxGraph.cleanup = function (container) {
 // Command handling
 
 zkMxGraph.setAttr = function (container, command, val) {
-	console.debug("setAttr " + command, + " " + val);
+	//console.debug("setAttr " + command, + " " + val);
     switch (command) {
     	case "z:setProperty":
     		zm_setProperty(container._graph, val);
@@ -128,7 +128,7 @@ zkMxGraph.setAttr = function (container, command, val) {
 			container._graph.fit();
 			return true;
 		default:
-			console.error("Invalid command " + command + " " + val);
+			//console.error("Invalid command " + command + " " + val);
 			return true;
 	}
     return false;
@@ -198,8 +198,8 @@ function zm_initLayout(graph, layoutState) {
 }
 
 function zm_initStyleSheet(graph, styleSheetState) {
-	console.debug("zm_initStyleSheet");
-	console.debug(styleSheetState);
+	//console.debug("zm_initStyleSheet");
+	//console.debug(styleSheetState);
 	var style = graph.stylesheet.getDefaultVertexStyle();
 	zm_initStyle(style, styleSheetState.defaultVertexStyle);
 	style = graph.stylesheet.getDefaultEdgeStyle();
@@ -219,8 +219,8 @@ function zm_initStyleSheet(graph, styleSheetState) {
 }
 
 function zm_initStyle(style, styleState) {
-	console.debug("zm_initStyle");
-	console.debug(styleState);
+	//console.debug("zm_initStyle");
+	//console.debug(styleState);
 	for (attr in styleState) {
 		if (attr == mxConstants.STYLE_PERIMETER) {
 			switch(styleState[attr]) {
@@ -255,9 +255,9 @@ function zm_initStyle(style, styleState) {
 }
 
 function zm_initModel(container, modelState) {
-	console.debug("zm_initModel");
-	console.debug(modelState);
-	console.debug(modelState.toJSONString());
+	//console.debug("zm_initModel");
+	//console.debug(modelState);
+	//console.debug(modelState.toJSONString());
 	var graph = container._graph;
 	var model = graph.getModel();
 	var parent = graph.getDefaultParent();						
@@ -267,12 +267,12 @@ function zm_initModel(container, modelState) {
 		for (inx=0; inx< modelState.vertices.length; inx++) {
 			//var v = modelState.vertices[inx];
 			zm_createVertex(container, modelState.vertices[inx]);
-			console.debug("added vertex " + modelState.vertices[inx].value);
+			//console.debug("added vertex " + modelState.vertices[inx].value);
 		}
 		for (jnx=0; jnx< modelState.edges.length; jnx++) {
 			var e = modelState.edges[jnx];
 			zm_createEdge(container, e);
-			console.debug("added edge " + e.value);
+			//console.debug("added edge " + e.value);
 		}
 		graph.getLayout(parent).execute(parent);
 	}
@@ -348,7 +348,7 @@ function zm_sendCommand(container, data, command) {
 // Event handling
 
 function zm_registerEvents(container) {
-	console.debug("zm_registerEvents");
+	//console.debug("zm_registerEvents");
 	// for each event type...
 	var graph = container._graph;
 	graph.addListener("select", 
@@ -408,7 +408,7 @@ function zm_createVertex(container, v) {
 
 // value is json-ed MxVertex
 function zm_addVertex(container, value) {
-	console.debug("addVertex " + value);
+	//console.debug("addVertex " + value);
 	var obj = value.parseJSON();
 	zm_createVertex(container, obj);
 }
@@ -432,7 +432,7 @@ function zm_createEdge(container, obj) {
 
 // value is json-ed MxEdge
 function zm_addEdge(container, value) {
-	console.debug("addEdge " + value);
+	////console.debug("addEdge " + value);
 	var obj = value.parseJSON();
 	zm_createEdge(container, obj);
 }
@@ -483,7 +483,7 @@ function zm_createOverlay(container, id, cell, v) {
 }
 
 function zm_addOverlay(container, value) {
-	console.debug("zm_addOverlay");
+	//console.debug("zm_addOverlay");
 	var obj = value.parseJSON();
 	var model = container._graph.getModel();
 	var cell = model.getCell(obj.cell);
@@ -491,7 +491,7 @@ function zm_addOverlay(container, value) {
 }
 
 function zm_removeOverlay(graph, value) {
-	console.debug("zm_removeOverlay");
+	//console.debug("zm_removeOverlay");
 	var model = graph.getModel();
 	var obj = value.parseJSON();
 	var id = 'overlay' + obj.cell + obj.overlay;
