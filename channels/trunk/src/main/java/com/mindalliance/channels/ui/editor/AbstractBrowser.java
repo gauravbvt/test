@@ -76,7 +76,7 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
 
 
     private Listbox createBrowser() {
-        final Listbox browser = new Listbox();
+        browser = new Listbox();
         browser.appendChild( generateHeader() );
         browser.setModel( model );
         browser.setItemRenderer( new BrowserListitemRenderer(
