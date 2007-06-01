@@ -266,28 +266,27 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
 
     private void resetTreePopup( Object object ) {
         menu.getChildren().clear();
-        if ( scenario.getOccurrences().size() == 0 )
-            menu.appendChild( newMenu( "New",
-                newItem( "Event...", new Runnable() {
-                    public void run() {
-                        Event event = (Event) getEditorFactory().popupEditor(
-                                createEvent() );
-                        if ( event != null ) {
-                            scenario.addOccurrence( event );
-                            refresh();
-                        }
+        menu.appendChild( newMenu( "New",
+            newItem( "Event...", new Runnable() {
+                public void run() {
+                    Event event = (Event) getEditorFactory().popupEditor(
+                            createEvent() );
+                    if ( event != null ) {
+                        scenario.addOccurrence( event );
+                        refresh();
                     }
-                } ),
-                newItem( "Task...", new Runnable() {
-                    public void run() {
-                        Task task = (Task) getEditorFactory().popupEditor(
-                                createTask() );
-                        if ( task != null ) {
-                            scenario.addOccurrence( task );
-                            refresh();
-                        }
+                }
+            } ),
+            newItem( "Task...", new Runnable() {
+                public void run() {
+                    Task task = (Task) getEditorFactory().popupEditor(
+                            createTask() );
+                    if ( task != null ) {
+                        scenario.addOccurrence( task );
+                        refresh();
                     }
-                } ) ) );
+                }
+            } ) ) );
 
         if ( getEditorFactory().supports( getTreeSelection() ) )
             menu.appendChild( newItem( "Edit...", new Runnable() {
