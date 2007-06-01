@@ -11,6 +11,7 @@ import org.acegisecurity.userdetails.UserDetailsService;
 
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.user.Alert;
 
 /**
@@ -114,4 +115,27 @@ public interface RegistryService extends Service, UserDetailsService {
      * @param user the user
      */
     List<Alert> getAlerts( User user );
+
+    /**
+     * Return the persons.
+     */
+    Set<Person> getPersons();
+
+    /**
+     * Set the persons.
+     * @param persons the persons
+     */
+    void setPersons( Set<Person> persons );
+
+    /**
+     * Add a person.
+     * @param person the person
+     */
+    void addPerson( Person person );
+
+    /**
+     * Remove a person.
+     * @param person the person
+     */
+    void removePerson( Person person );
 }

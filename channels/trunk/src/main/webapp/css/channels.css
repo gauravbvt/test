@@ -197,20 +197,9 @@ div.google-map {
 	overflow: scroll;
 }
 
-div.wc-modal, div.wc-modal-none {
-	max-height: 400px;
-	overflow: auto;
-}
-
 div.wc-embedded, div.wc-embedded-none, div.wc-wndcyan {
 	background: transparent;
 	padding: 0px;
-}
-
-div.embedded-editor tr.tabpanel {
-}
-
-div.embedded-editor td.tabpanel-hr {
 }
 
 div.wrapped-panel {

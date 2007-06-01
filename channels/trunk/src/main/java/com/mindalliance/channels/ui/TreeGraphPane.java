@@ -585,7 +585,9 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
             && type.getName().startsWith( "com.mindalliance.channels." )
             && !type.getSimpleName().equals( "TypeSet" )
             && !type.getName().startsWith(
-                    "com.mindalliance.channels.data.support." );
+                "com.mindalliance.channels.data.support." )
+            && !type.getName().startsWith(
+                "com.mindalliance.channels.util." );
     }
 
     /**

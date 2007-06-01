@@ -26,6 +26,7 @@ import com.mindalliance.channels.data.components.Caused;
 import com.mindalliance.channels.data.elements.Occurrence;
 import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.data.elements.scenario.Product;
+import com.mindalliance.channels.data.support.Duration;
 
 /**
  * A timeline view of a scenario. Displays when events/tasks/etc... in
@@ -82,25 +83,11 @@ public class ScenarioTimeline extends Timeline {
         this.events = getResolvedEvents( new Date( 0 ) );
         setPage( page );
 
-        Date middle = getMiddleDate();
-        TimeZone tz = TimeZone.getTimeZone( "UTC" );
-        Bandinfo top = createTop( middle, tz );
-        Bandinfo bottom = createBottom( middle, tz, top.getId() );
-
-        // The following sets the *heights* of the tracks
-        top.setWidth( "70%" );
-        bottom.setWidth( "30%" );
-
-        appendChild( top );
-        appendChild( bottom );
+        createBands();
 
         setHeight( height + "px" );
         setWidth( null );
         setSclass( "timeline" );
-
-        // Set initial selection to first object in the timeline.
-//        if ( events.size() > 0 )
-//            setSelectedObject( events.iterator().next().getObject() );
 
         addEventListener( "onSelectEvent", new EventListener() {
             public boolean isAsap() {
@@ -113,6 +100,26 @@ public class ScenarioTimeline extends Timeline {
                 setSelectedObject( idMap.get( id ) );
             }
         } );
+
+    }
+
+    /**
+     * Initialize the bands and scales.
+     */
+    private void createBands() {
+        getChildren().clear();
+
+        Date middle = getMiddleDate();
+        TimeZone tz = TimeZone.getTimeZone( "UTC" );
+        Bandinfo top = createTop( middle, tz );
+        Bandinfo bottom = createBottom( middle, tz, top.getId() );
+
+        // The following sets the *heights* of the tracks
+        top.setWidth( "70%" );
+        bottom.setWidth( "30%" );
+
+        appendChild( top );
+        appendChild( bottom );
 
         top.addEventListener( "onBandScroll", new EventListener() {
             public boolean isAsap() {
@@ -270,6 +277,7 @@ public class ScenarioTimeline extends Timeline {
     public void invalidate() {
         this.initialized = false;
         this.events = getResolvedEvents( new Date( 0 ) );
+        createBands();
         super.invalidate();
     }
 
@@ -510,7 +518,8 @@ public class ScenarioTimeline extends Timeline {
          * single point in time.
          */
         public boolean isDuration() {
-            return getObject().getDuration().getMsecs() > 0;
+            Duration duration = getObject().getDuration();
+            return duration != null && duration.getMsecs() > 0;
         }
 
         /**

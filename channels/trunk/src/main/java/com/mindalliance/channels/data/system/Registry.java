@@ -32,6 +32,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.elements.resources.Person;
 import com.mindalliance.channels.data.user.Alert;
 import com.mindalliance.channels.data.user.Certification;
 import com.mindalliance.channels.data.user.Conversation;
@@ -56,6 +57,7 @@ public class Registry extends AbstractQueryable implements RegistryService {
      * Users, indexed by username.
      */
     private Map<String,User> usernames = new TreeMap<String,User>();
+    private Set<Person> persons = new TreeSet<Person>();
     private Map<User,UserTypes> userRights = new TreeMap<User,UserTypes>();
     private List<Conversation> conversations = new ArrayList<Conversation>();
     private List<Alert> alerts = new ArrayList<Alert>();
@@ -469,5 +471,36 @@ public class Registry extends AbstractQueryable implements RegistryService {
      */
     public void setUserRequests( List<UserRequest> userRequests ) {
         this.userRequests = userRequests;
+    }
+
+    /**
+     * Return the persons.
+     */
+    public Set<Person> getPersons() {
+        return this.persons;
+    }
+
+    /**
+     * Set the persons.
+     * @param persons the persons
+     */
+    public void setPersons( Set<Person> persons ) {
+        this.persons = persons;
+    }
+
+    /**
+     * Add a person.
+     * @param person the person
+     */
+    public void addPerson( Person person ) {
+        this.persons.add( person );
+    }
+
+    /**
+     * Remove a person.
+     * @param person the person
+     */
+    public void removePerson( Person person ) {
+        this.persons.remove( person );
     }
 }

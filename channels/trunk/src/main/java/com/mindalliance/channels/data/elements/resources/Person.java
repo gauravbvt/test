@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.beanview.annotation.PropertyOptions;
 import com.beanview.validation.WebsiteUrl;
+import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.reference.Typology.Category;
 import com.mindalliance.channels.util.CollectionType;
@@ -27,6 +28,7 @@ public class Person extends ContactableResource {
     private URL photo;
     private List<Role> roles;
     private TypeSet clearances;
+    private User user;
 
     /**
      * Default constructor.
@@ -92,7 +94,7 @@ public class Person extends ContactableResource {
     /**
      * Return the photo.
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     @WebsiteUrl
     public URL getPhoto() {
         return photo;
@@ -109,7 +111,7 @@ public class Person extends ContactableResource {
     /**
      * Return the roles.
      */
-    @CollectionType(type=Role.class)
+    @CollectionType( type = Role.class )
     public List<Role> getRoles() {
         return roles;
     }
@@ -154,5 +156,21 @@ public class Person extends ContactableResource {
             throw new IllegalArgumentException();
 
         this.clearances = clearances;
+    }
+
+    /**
+     * Return the system user corresponding to this person.
+     * @return null if there are no corresponding user.
+     */
+    public User getUser() {
+        return this.user;
+    }
+
+    /**
+     * Set the user.
+     * @param user the user
+     */
+    public void setUser( User user ) {
+        this.user = user;
     }
 }
