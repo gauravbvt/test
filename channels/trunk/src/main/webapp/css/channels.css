@@ -202,7 +202,85 @@ div.wc-embedded, div.wc-embedded-none, div.wc-wndcyan {
 	padding: 0px;
 }
 
+div.wc-modal, div.wc-modal-none {
+	background: white;
+}
+
 div.wrapped-panel {
-	height: 393px;
+	height: 390px;
 	overflow: auto;
+}
+
+div.embedded-editor tbody.tabpanels, div.wc-modal tbody.tabpanels {
+	background: #EED;
+}
+
+.grid, div.embedded-editor div.grid-body {
+	background: inherit !important;
+}
+
+table.editor-buttons td.hbox {
+	padding: 5px 0px 0px 0px;
+}
+
+button.editor-button, div.wrapped-panel button {
+	margin: 0px 5px 0px 0px;
+	background-image: url(../zkau/web/zul/img/tab/3d-mm-sel.gif);
+	background-repeat: repeat-x;
+	border: 1px solid #5C6C7C;
+	font-color: #500060;
+}
+
+tr.grid td.gc, tr.grid-od td.gc, tr.grid-no-striped td.gc,
+tr.grid-no-striped-od td.gc {
+	border: none;
+	padding: 0px 5px 5px 0px;
+	background: inherit;
+}
+
+.toolbar {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 5px 0px 5px;
+	background-image: url(../zkau/web/zul/img/tab/3d-mm-uns.gif);
+	background-repeat: repeat-x;
+	border: 1px outset #AAA;
+	text-align: right;
+}
+
+.toolbar a, .toolbar a:visited {
+	background: transparent;
+	border: none;
+	margin: 1px 1px 1px 6px;
+}
+
+.toolbar a:hover {
+	background: transparent;
+	border: 1px dotted #5C6C7C;
+	margin: 0px 0px 0px 5px;
+}
+
+table.browser-list {
+	border-left: 1px outset #AAA;
+	border-right: 1px outset #AAA;
+}
+
+table.browser-list th, table.browser-list th.sort {
+	height: 18px;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 5px 0px 5px;
+	background: transparent;
+	background-position: top left;
+	background-image: url(../zkau/web/zul/img/tab/3d-mm-sel.gif);
+	background-repeat: repeat-x;
+	border:1px solid #5C6C7C;
+	font-color: #500060;
+	font-family: Tahoma,Arial,Helvetica,sans-serif;
+	font-size: x-small;
+	font-weight: normal;
+	text-decoration: none;
+	text-align: left; 
+}
+
+tr.grid > td.gc, tr.grid-od > td.gc {
+	vertical-align: top;
 }

@@ -68,9 +68,10 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
     }
 
     private void init() {
-        appendChild( createButtons() );
         browser = createBrowser();
+        setSclass( "browser-list" );
         appendChild( browser );
+        appendChild( createButtons() );
     }
 
 
