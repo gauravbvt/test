@@ -175,6 +175,11 @@ input.description {
 	font-style: italic;
 }
 
+input {
+	border: 1px inset #AAA;
+	padding: 0px 2px 0px 2px;
+}
+
 .bottom-pane .hbox {
 	padding: 0px 0px 0px 5px;
 }
@@ -215,7 +220,7 @@ div.embedded-editor tbody.tabpanels, div.wc-modal tbody.tabpanels {
 	background: #EED;
 }
 
-.grid, div.embedded-editor div.grid-body {
+.grid, div.embedded-editor div.grid-body, div.wc-modal div.grid-body {
 	background: inherit !important;
 }
 
@@ -223,7 +228,7 @@ table.editor-buttons td.hbox {
 	padding: 5px 0px 0px 0px;
 }
 
-button.editor-button, div.wrapped-panel button {
+button.editor-button, .wrapped-panel button, .wc-modal button {
 	margin: 0px 5px 0px 0px;
 	background-image: url(../zkau/web/zul/img/tab/3d-mm-sel.gif);
 	background-repeat: repeat-x;
@@ -236,6 +241,22 @@ tr.grid-no-striped-od td.gc {
 	border: none;
 	padding: 0px 5px 5px 0px;
 	background: inherit;
+}
+
+tr.grid td.gc:first-child span, tr.grid-od td.gc:first-child span {
+	display: block;
+	width: 100px;
+	padding: 1px 5px 0px 0px;
+	font-weight: bold;
+	text-align: right;
+	background-image: url(../images/colon.png);
+	background-repeat: no-repeat;
+	background-position: 101px 7px;
+}
+
+.single-element-label .hbox {
+	vertical-align: top;
+	padding-top: 1px;
 }
 
 .toolbar {
@@ -259,9 +280,19 @@ tr.grid-no-striped-od td.gc {
 	margin: 0px 0px 0px 5px;
 }
 
+.toolbar input {
+	font-family:Tahoma,Arial,Helvetica,sans-serif;
+	font-size:x-small;
+	font-weight:normal;
+}
+
 table.browser-list {
-	border-left: 1px outset #AAA;
-	border-right: 1px outset #AAA;
+	border-left: 1px inset #AAA;
+	border-right: 1px inset #AAA;
+}
+
+table.browser-list div.listbox-pgi, table.browser-list div.grid-pgi {
+	border-top: none;
 }
 
 table.browser-list th, table.browser-list th.sort {
@@ -273,6 +304,7 @@ table.browser-list th, table.browser-list th.sort {
 	background-image: url(../zkau/web/zul/img/tab/3d-mm-sel.gif);
 	background-repeat: repeat-x;
 	border:1px solid #5C6C7C;
+	border-left: none;
 	font-color: #500060;
 	font-family: Tahoma,Arial,Helvetica,sans-serif;
 	font-size: x-small;

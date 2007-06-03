@@ -1,12 +1,10 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-
 package com.mindalliance.channels.ui.editor.components;
 
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbar;
@@ -18,12 +16,15 @@ import com.mindalliance.channels.User;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 
-
 /**
+ * A single-element picker.
+ *
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
+ * @param <T> the type of the elements
  */
 public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
+
     private SystemService system;
     private User user;
     private Class<T> type;
@@ -33,20 +34,28 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
     private Toolbarbutton createButton;
     private Toolbarbutton removeButton;
     private EditorFactory factory;
-    
-    public SingleElementBrowser( Class<T> type, SystemService system, User user ) {
+
+    /**
+     * Default constructor.
+     * @param type the class of the elements
+     * @param system the system
+     * @param user the user
+     */
+    public SingleElementBrowser(
+            Class<T> type, SystemService system, User user ) {
         this.system = system;
         this.user = user;
         this.type = type;
         init();
     }
-    
+
     private void init() {
         label = new Label();
-        appendChild(label);
-        appendChild(createButtons());
+        setSclass( "single-element-label" );
+        appendChild( label );
+        appendChild( createButtons() );
     }
-    
+
     private Toolbar createButtons() {
         Toolbar buttonBox = new Toolbar();
         createButton = createChooseButton();
@@ -57,33 +66,34 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
         buttonBox.appendChild( removeButton );
         return buttonBox;
     }
-    
+
     private Toolbarbutton createChooseButton() {
         Toolbarbutton addButton = new Toolbarbutton( "Choose" );
         addButton.setImage( "images/16x16/add2.png" );
-        addButton.setTooltiptext( "Choose a "
-                + type.getSimpleName() );        
+        addButton.setTooltiptext( "Choose a " + type.getSimpleName() );
         addButton.addEventListener( "onClick", new EventListener() {
 
-                    public boolean isAsap() {
-                        return false;
-                    }
+            public boolean isAsap() {
+                return false;
+            }
 
-                    public void onEvent( Event arg0 ) {
-                        T result = getEditorFactory().popupChooser(  type );
-                        if (result != null) {
-                            edited = result;
-                            refreshLabel();
-                        }
-                    }
+            public void onEvent( Event arg0 ) {
+                T result = getEditorFactory().popupChooser( type );
+                if ( result != null ) {
+                    edited = result;
+                    refreshLabel();
+                }
+            }
 
-                } );
+        } );
         return addButton;
     }
+
     private Toolbarbutton createEditButton() {
         Toolbarbutton editButton = new Toolbarbutton( "Edit" );
         editButton.setImage( "images/16x16/preferences.png" );
-        editButton.setTooltiptext( "Edit the selected " + type.getSimpleName() );
+        editButton.setTooltiptext(
+                "Edit the selected " + type.getSimpleName() );
         editButton.addEventListener( "onClick", new EventListener() {
 
             public boolean isAsap() {
@@ -91,8 +101,9 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
             }
 
             public void onEvent( Event arg0 ) {
-                JavaBean result = getEditorFactory().popupEditor(  (JavaBean)edited );
-                if (result != null) {
+                JavaBean result =
+                    getEditorFactory().popupEditor( (JavaBean) edited );
+                if ( result != null ) {
                     refreshLabel();
                 }
             }
@@ -100,7 +111,7 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
         } );
         return editButton;
     }
-    
+
     private Toolbarbutton createRemoveButton() {
         Toolbarbutton removeButton = new Toolbarbutton( "Remove" );
         removeButton.setImage( "images/16x16/delete2.png" );
@@ -114,21 +125,22 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
             }
 
             public void onEvent( Event arg0 ) {
-                setValue(null);
+                setValue( null );
             }
 
         } );
         return removeButton;
     }
-    
+
     private EditorFactory getEditorFactory() {
-        if (factory == null) {
-            factory = new EditorFactory(getPage(), system, user);
+        if ( factory == null ) {
+            factory = new EditorFactory( getPage(), system, user );
         }
         return factory;
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * Overriden from SingleElementBrowser.
      * @see com.beanview.PropertyComponent#getValue()
      */
     public Object getValue() {
@@ -137,7 +149,7 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
 
     private void refreshLabel() {
         String labelVal;
-        if (edited == null) {
+        if ( edited == null ) {
             labelVal = "<None Selected>";
             editButton.setVisible( true );
         } else {
@@ -146,9 +158,11 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
         }
         label.setValue( labelVal );
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * Overriden from SingleElementBrowser.
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
+     * @param edited the edited object
      */
     public void setValue( Object edited ) {
         this.edited = edited;

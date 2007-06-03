@@ -262,6 +262,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
      */
     private void refresh() {
         timeline.invalidate();
+        tree.invalidate();
     }
 
     private void resetTreePopup( Object object ) {
@@ -674,8 +675,11 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         JavaBean result = getEditorFactory().popupEditor(
             (JavaBean) getTreeSelection() );
 
-        if ( result != null )
+        if ( result != null ) {
+            if ( result == getRootElement() )
+                tree.getSelectedItem().setLabel( getName( getRootElement() ) );
             refresh();
+        }
     }
 
     //=================================================

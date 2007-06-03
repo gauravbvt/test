@@ -82,8 +82,6 @@ public class AccordionSelection {
         this.roles = roles;
         this.canvas = canvas;
         this.browser = browser;
-
-        tweakContent( canvas, browser );
     }
 
     /**
@@ -92,14 +90,12 @@ public class AccordionSelection {
      * @param canvas the canvas
      * @param content the content
      */
-    private void tweakContent(
-        HtmlBasedComponent canvas, Object content ) {
+    private void tweakContent( HtmlBasedComponent canvas, Object content ) {
 
         if ( HtmlBasedComponent.class.isAssignableFrom( content.getClass() ) ) {
             HtmlBasedComponent c = (HtmlBasedComponent) content;
             c.setHeight( canvas.getHeight() );
             c.setWidth( canvas.getWidth() );
-//            c.setSclass( "canvas-content" );
         }
     }
 

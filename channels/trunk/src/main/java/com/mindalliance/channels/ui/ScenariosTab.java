@@ -4,10 +4,12 @@
 package com.mindalliance.channels.ui;
 
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -50,7 +52,11 @@ public class ScenariosTab extends Tabpanel {
     private static final String PROJECT_ICON = "images/16x16/environment.png";
 
     private EditorFactory editorFactory;
-    private Session session;
+    private Box canvas;
+    private int maxHeight;
+    private Tree tree;
+
+    private Set<Object> expandedNodes = new HashSet<Object>();
 
     /**
      * Convenience constructor.
@@ -65,16 +71,30 @@ public class ScenariosTab extends Tabpanel {
 
         super();
         this.editorFactory = factory;
+        this.maxHeight = maxHeight;
+        this.canvas = canvas;
+
         setPage( canvas.getPage() );
-        this.session = getDesktop().getSession();
+
+        rebuildTree();
+        setHeight( height + "px" );
+    }
+
+    /**
+     * Rebuild the tree and popup menu.
+     */
+    private void rebuildTree() {
+        getChildren().clear();
 
         Treechildren treeChildren = new Treechildren();
-        PortfolioService portfolio = factory.getSystem().getPortfolioService();
-        for ( Project p : portfolio.getProjects( factory.getUser() ) )
+        PortfolioService portfolio =
+            getEditorFactory().getSystem().getPortfolioService();
+        User user = getEditorFactory().getUser();
+        for ( Project p : portfolio.getProjects( user ) )
             treeChildren.appendChild(
-                createProjectNode( maxHeight, canvas, p ) );
+                createProjectNode( p ) );
 
-        Tree tree = new Tree();
+        tree = new Tree();
         tree.appendChild( treeChildren );
         tree.addEventListener( "onSelect", new EventListener() {
             public boolean isAsap() {
@@ -89,30 +109,51 @@ public class ScenariosTab extends Tabpanel {
                     s.select();
             }
         } );
+        tree.addEventListener( "onOpen", new EventListener() {
+            public boolean isAsap() {
+                return true;
+            }
+
+            public void onEvent( Event event ) {
+                SelectEvent e = (SelectEvent) event;
+                Treeitem i = (Treeitem) e.getSelectedItems().iterator().next();
+                if ( i.isOpen() )
+                    expandedNodes.add( i.getValue() );
+                else
+                    expandedNodes.remove( i.getValue() );
+            }
+        } );
 
         Menupopup menu = createPopup();
+        menu.setParent( this );
         appendChild( tree );
         appendChild( menu );
         setContext( menu.getId() );
-        menu.setParent( this );
-        setHeight( height + "px" );
+    }
+
+    /**
+     * Refresh the tree.
+     * @todo keep current selection
+     */
+    private void refresh() {
+        // Executions.sendRedirect( null );
+        expandedNodes = new HashSet<Object>();
+        rebuildTree();
+        tree.invalidate();
     }
 
     /**
      * Create a project node in the tree.
-     *
-     * @param maxHeight the available height for the canvas
-     * @param canvas the canvas to associate with
      * @param project the project
+     *
      * @return a tree node, collapsed
      */
-    private Treeitem createProjectNode(
-            int maxHeight, Box canvas, Project project ) {
+    private Treeitem createProjectNode( Project project ) {
 
         Treechildren models = new Treechildren();
         for ( Model m : project.getModels() )
             models.appendChild(
-                    createModelNode( maxHeight, canvas, m ) );
+                    createModelNode( m ) );
 
         Treeitem result = newTreeitem(
                     new AccordionSelection(
@@ -120,7 +161,7 @@ public class ScenariosTab extends Tabpanel {
                         project.getName(),
                         "Project properties",
                         "ROLE_USER",
-                        canvas,
+                        getCanvas(),
                         getEditorFactory().createEditor( project ) ),
                     models );
         return result;
@@ -128,19 +169,15 @@ public class ScenariosTab extends Tabpanel {
 
     /**
      * Create a model node in the tree.
-     *
-     * @param maxHeight the available height for the canvas
-     * @param canvas the canvas to associate with
      * @param model the model
      * @return a tree node, collapsed
      */
-    private Treeitem createModelNode(
-            int maxHeight, Box canvas, Model model ) {
+    private Treeitem createModelNode( Model model ) {
 
         Treechildren scenarios = new Treechildren();
         for ( Scenario s : model.getScenarios() )
             scenarios.appendChild(
-                    createScenarioNode( maxHeight, canvas, s ) );
+                    createScenarioNode( s ) );
 
         return newTreeitem(
             new AccordionSelection(
@@ -148,20 +185,16 @@ public class ScenariosTab extends Tabpanel {
                 model.getName(),
                 "Model properties",
                 "ROLE_USER",
-                canvas,
+                getCanvas(),
                 getEditorFactory().createEditor( model ) ),
             scenarios );
     }
 
     /**
      * Create a scenario node.
-     *
-     * @param maxHeight the available height for the canvas
-     * @param canvas the associated canvas
      * @param scenario the scenario
      */
-    private Treeitem createScenarioNode(
-            int maxHeight, Box canvas, Scenario scenario ) {
+    private Treeitem createScenarioNode( Scenario scenario ) {
 
         Treechildren reports = new Treechildren();
         reports.appendChild( newTreeitem(
@@ -170,7 +203,7 @@ public class ScenariosTab extends Tabpanel {
                     "Playbook",
                     "View playbook",
                     "ROLE_USER",
-                    canvas,
+                    getCanvas(),
                     getEditorFactory().createEditor( null ) ),
             null ) );
 
@@ -180,7 +213,7 @@ public class ScenariosTab extends Tabpanel {
                     "Issues Analysis",
                     "View issues",
                     "ROLE_USER",
-                    canvas,
+                    getCanvas(),
                     getEditorFactory().createEditor( null ) ),
             null ) );
 
@@ -190,7 +223,7 @@ public class ScenariosTab extends Tabpanel {
                     "Dashboard",
                     "View dashboard",
                     "ROLE_USER",
-                    canvas,
+                    getCanvas(),
                     getEditorFactory().createEditor( null ) ),
             null ) );
 
@@ -200,7 +233,7 @@ public class ScenariosTab extends Tabpanel {
                     "Info Flow",
                     "View information flows",
                     "ROLE_USER",
-                    canvas,
+                    getCanvas(),
                     getEditorFactory().createEditor( null ) ),
             null ) );
 
@@ -210,9 +243,9 @@ public class ScenariosTab extends Tabpanel {
                 scenario.getName(),
                 "Scenario viewer",
                 "ROLE_USER",
-                canvas,
+                getCanvas(),
                 new ScenarioViewer(
-                    maxHeight, scenario, getEditorFactory()
+                    getMaxHeight(), scenario, getEditorFactory()
                 )
             ),
             reports );
@@ -236,7 +269,7 @@ public class ScenariosTab extends Tabpanel {
                     Menupopup menu = (Menupopup) oe.getTarget();
 
                     AccordionSelection selection =
-                        (AccordionSelection) session.getAttribute(
+                        (AccordionSelection) getSession().getAttribute(
                                 DesktopRichlet.CURRENT_SELECTION );
 
                     resetMenu( menu, selection );
@@ -252,7 +285,7 @@ public class ScenariosTab extends Tabpanel {
      * @param menu the popup menu
      * @param selection the current selection
      */
-    protected void resetMenu(
+    private void resetMenu(
             Menupopup menu, AccordionSelection selection ) {
 
         SystemService system = getEditorFactory().getSystem();
@@ -300,10 +333,28 @@ public class ScenariosTab extends Tabpanel {
                     || registry.isAdministrator( user ) ) {
                 menu.appendChild( newAddScenarioItem( model ) );
                 menu.appendChild( new Menuseparator() );
+                menu.appendChild( newEditScenarioItem( scenario ) );
                 menu.appendChild( newDeleteScenarioItem( scenario ) );
                 menu.appendChild( newRenameScenarioItem( scenario ) );
             }
         }
+    }
+
+    /**
+     * Open an editor on the selected scenario.
+     * @param scenario the scenario
+     */
+    private Component newEditScenarioItem( final Scenario scenario ) {
+        // TODO make this a command
+        Menuitem result = newMenuitem(
+            "Edit scenario...",
+            new Runnable() {
+                public void run() {
+                    if ( getEditorFactory().popupEditor( scenario ) != null )
+                        refresh();
+                }
+            } );
+        return result;
     }
 
     private Menuitem newDeleteProjectItem( final Project project ) {
@@ -324,9 +375,9 @@ public class ScenariosTab extends Tabpanel {
                             getEditorFactory().getSystem()
                                 .getPortfolioService()
                                     .removeProject( project );
-                            session.setAttribute(
+                            getSession().setAttribute(
                                 DesktopRichlet.CURRENT_SELECTION, null );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -352,9 +403,9 @@ public class ScenariosTab extends Tabpanel {
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
                             model.getProject().removeModel( model );
-                            session.setAttribute(
+                            getSession().setAttribute(
                                     DesktopRichlet.CURRENT_SELECTION, null );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -380,9 +431,9 @@ public class ScenariosTab extends Tabpanel {
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
                             scenario.getModel().removeScenario( scenario );
-                            session.setAttribute(
+                            getSession().setAttribute(
                                     DesktopRichlet.CURRENT_SELECTION, null );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -408,7 +459,7 @@ public class ScenariosTab extends Tabpanel {
                             project.setName( projectName );
                             getEditorFactory().getSystem()
                                 .getPortfolioService().addProject( project );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -433,7 +484,7 @@ public class ScenariosTab extends Tabpanel {
                             Model model = new Model();
                             model.setName( modelName );
                             project.addModel( model );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -458,7 +509,7 @@ public class ScenariosTab extends Tabpanel {
                             Scenario scenario = new Scenario();
                             scenario.setName( scenarioName );
                             model.addScenario( scenario );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -481,7 +532,7 @@ public class ScenariosTab extends Tabpanel {
                             project.getName() );
                         if ( projectName != null ) {
                             project.setName( projectName );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -504,7 +555,7 @@ public class ScenariosTab extends Tabpanel {
                             model.getName() );
                         if ( modelName != null ) {
                             model.setName( modelName );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -527,7 +578,7 @@ public class ScenariosTab extends Tabpanel {
                             scenario.getName() );
                         if ( scenarioName != null ) {
                             scenario.setName( scenarioName );
-                            Executions.sendRedirect( null );
+                            refresh();
                         }
                     } catch ( InterruptedException e1 ) {
                         logger.warn( "Dialog was interrupted", e1 );
@@ -580,7 +631,28 @@ public class ScenariosTab extends Tabpanel {
     /**
      * Return the value of editorFactory.
      */
-    public EditorFactory getEditorFactory() {
+    public final EditorFactory getEditorFactory() {
         return this.editorFactory;
+    }
+
+    /**
+     * Return the canvas.
+     */
+    public final Box getCanvas() {
+        return this.canvas;
+    }
+
+    /**
+     * Return the maxHeight.
+     */
+    public final int getMaxHeight() {
+        return this.maxHeight;
+    }
+
+    /**
+     * Return the session.
+     */
+    public final Session getSession() {
+        return getDesktop().getSession();
     }
 }

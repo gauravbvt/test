@@ -103,6 +103,7 @@ public class ElementEditorPanel<T extends JavaBean> extends Window
     private Box initializeButtons() {
         Hbox buttons = new Hbox();
         Button saveButton = new Button( "Save" );
+        saveButton.setSclass( "editor-button" );
         saveButton.addEventListener( "onClick", new EventListener() {
 
             public boolean isAsap() {
@@ -135,7 +136,9 @@ public class ElementEditorPanel<T extends JavaBean> extends Window
             }
         } );
         cancelButton.setVisible( dialog );
+        cancelButton.setSclass( "editor-button" );
         buttons.appendChild( cancelButton );
+        buttons.setSclass(  "editor-buttons" );
         return buttons;
     }
 
