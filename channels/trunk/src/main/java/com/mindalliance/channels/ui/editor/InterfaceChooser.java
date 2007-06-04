@@ -18,8 +18,6 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Window;
 
-import com.mindalliance.channels.data.elements.AbstractElement;
-
 
 /**
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
@@ -35,7 +33,7 @@ public class InterfaceChooser<T> extends Window {
     private boolean ok = false;
     
     public InterfaceChooser(Class<T> type, Class[] options) {
-        super(type.getSimpleName(), "normal", false);
+        super("Choose " + type.getSimpleName() + " Type", "normal", false);
         list = new Listbox();
         list.setRows( 11 );
         list.setMold( "paging" );

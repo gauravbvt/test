@@ -6,6 +6,7 @@ package com.mindalliance.channels.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zkoss.zk.ui.AbstractComponent;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -23,7 +24,7 @@ import org.zkoss.zul.Window;
 import com.beanview.BeanViewGroup;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.elements.Element;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.ObjectEditor;
 
@@ -155,7 +156,7 @@ public class ElementEditorPanel<T extends JavaBean> extends Window
     }
 
     private void createAbstractElement() {
-        if ( AbstractElement.class.isAssignableFrom( type ) ) {
+        if ( Element.class.isAssignableFrom( type ) ) {
             ElementBeanViewPanel<T> panel = createGroup( new String[] { "name",
                 "description" } );
             mainpanel.appendChild( panel );

@@ -3,6 +3,7 @@
  */
 package com.mindalliance.channels.data.elements.assertions;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Knowable;
 import com.mindalliance.channels.data.components.Knowledgeable;
 import com.mindalliance.channels.data.reference.Information;
@@ -29,6 +30,7 @@ public class Known extends Assertion {
         super( guid );
     }
 
+    @PropertyOptions(ignore=true)
     public Knowable getKnowable() {
         return (Knowable) getAbout();
     }

@@ -3,6 +3,7 @@
  */
 package com.mindalliance.channels.data.elements.assertions;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Assertable;
 import com.mindalliance.channels.data.elements.scenario.AbstractScenarioElement;
 import com.mindalliance.channels.util.GUID;
@@ -28,6 +29,7 @@ abstract public class Assertion extends AbstractScenarioElement {
      * 
      * @return
      */
+    @PropertyOptions(ignore=true)
     public Assertable getAbout() {
         return about;
     }

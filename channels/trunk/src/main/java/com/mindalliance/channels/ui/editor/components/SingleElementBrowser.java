@@ -16,6 +16,7 @@ import com.beanview.PropertyComponent;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.elements.Element;
 import com.mindalliance.channels.data.elements.ElementFactory;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
@@ -74,7 +75,7 @@ public class SingleElementBrowser<T extends JavaBean> extends Hbox implements Pr
     }
 
     private Toolbarbutton createChooseButton() {
-        String buttonLabel = AbstractElement.class.isAssignableFrom( type ) 
+        String buttonLabel = Element.class.isAssignableFrom( type ) 
                              ? "Choose" : "New";
         
         Toolbarbutton addButton = new Toolbarbutton( buttonLabel );
@@ -87,7 +88,7 @@ public class SingleElementBrowser<T extends JavaBean> extends Hbox implements Pr
             }
 
             public void onEvent( Event arg0 ) {
-                if (AbstractElement.class.isAssignableFrom(type)) {
+                if (Element.class.isAssignableFrom(type)) {
                     T result = getEditorFactory().popupChooser( type );
                     if ( result != null ) {
                         setValue(result);
