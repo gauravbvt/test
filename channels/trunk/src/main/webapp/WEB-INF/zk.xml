@@ -18,4 +18,8 @@
 		<richlet-class>com.mindalliance.channels.ui.CommandTestRichlet</richlet-class>
 		<richlet-url>/command</richlet-url>
 	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.EditorTestRichlet</richlet-class>
+		<richlet-url>/editor</richlet-url>
+	</richlet>
 </zk>

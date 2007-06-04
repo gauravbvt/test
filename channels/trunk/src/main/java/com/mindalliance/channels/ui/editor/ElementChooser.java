@@ -4,6 +4,7 @@
 package com.mindalliance.channels.ui.editor;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,7 +16,9 @@ import org.zkoss.zul.Window;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.elements.ElementFactory;
 import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 /**
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
@@ -31,6 +34,7 @@ public class ElementChooser<T> extends Window {
     private Class<T> type;
     private ChooserHelper chooserHelper;
     private boolean ok = false;
+    private ElementFactory elementFactory;
     
     public ElementChooser( Class<T> c, SystemService system,
             User user ) {
@@ -102,6 +106,14 @@ public class ElementChooser<T> extends Window {
         return ok;
     }
     
+    private ElementFactory getElementFactory() {
+        if (elementFactory == null) {
+            elementFactory = new ElementFactory();
+            elementFactory.setGuidFactory( new GUIDFactoryImpl() );
+        }
+        return elementFactory;
+    }
+    
     private class ChooserBrowser<T> extends AbstractBrowser<T> {
 
         public ChooserBrowser( Class<T> type, Class collectionType, SystemService system, User user ) {
@@ -117,15 +129,19 @@ public class ElementChooser<T> extends Window {
          */
         @Override
         protected void performAddAction() {
-            try {
-                JavaBean result = getEditorFactory().popupEditor( (JavaBean) getModel().getObjectClass().newInstance());
-                if (result != null) {
-                    getModel().add( result );
+            //JavaBean result = getEditorFactory().popupEditor( (JavaBean) getModel().getObjectClass().newInstance());
+            JavaBean instance;
+            Class concrete = type;
+            if (type.isInterface() || Modifier.isAbstract(type.getModifiers())) {
+                concrete = getEditorFactory().popupInterfaceChooser( type );
+            }
+            if (concrete != null) {
+                
+                //instance = getEditorFactory().popupEditor( getElementFactory().newInstance( concrete ) );
+                instance = getEditorFactory().popupEditor( newInstance( concrete ) );
+                if (instance != null) {
+                    getModel().add( instance );
                 }
-            } catch ( InstantiationException e ) {
-                e.printStackTrace();
-            } catch ( IllegalAccessException e ) {
-                e.printStackTrace();
             }
         }
 
@@ -158,6 +174,19 @@ public class ElementChooser<T> extends Window {
             // TODO update the global data model
         }
 
+    }
+    
+    private JavaBean newInstance(Class type) {
+        try {
+            return (JavaBean)type.newInstance();
+        } catch ( InstantiationException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch ( IllegalAccessException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
     
 }

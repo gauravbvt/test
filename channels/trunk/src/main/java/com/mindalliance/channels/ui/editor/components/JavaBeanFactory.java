@@ -27,13 +27,13 @@ import com.mindalliance.channels.util.AbstractJavaBean;
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
-public class ElementFactory implements PropertyComponentFactory {
+public class JavaBeanFactory implements PropertyComponentFactory {
 
     /**
      * 
      * Default constructor.
      */
-    public ElementFactory() {
+    public JavaBeanFactory() {
         
     }
     /**

@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.data.elements.AbstractElement;
 import com.mindalliance.channels.data.elements.resources.Organization;
@@ -126,6 +127,7 @@ public class Project extends AbstractElement {
     /**
      * Return the organization criterias.
      */
+    @PropertyOptions(ignore=true)
     @CollectionType( type = InScope.class )
     public List<InScope> getInScopes() {
         return inScopes;

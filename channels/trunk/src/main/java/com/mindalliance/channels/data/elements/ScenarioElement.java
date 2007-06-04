@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.data.elements;
 
+import com.beanview.annotation.PropertyOptions;
 import com.mindalliance.channels.data.Knowable;
 import com.mindalliance.channels.data.elements.project.Scenario;
 import com.mindalliance.channels.data.reference.Describable;
@@ -19,6 +20,7 @@ public interface ScenarioElement extends Element, Describable, Knowable {
     /**
      * Return the scenario this element is in.
      */
+    @PropertyOptions(ignore=true)
     Scenario getScenario();
 
     /**

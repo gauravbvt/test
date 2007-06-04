@@ -152,6 +152,7 @@ public abstract class AbstractElement extends AbstractJavaBean
     /**
      * Test if this element is inferred.
      */
+    @PropertyOptions(ignore=true)
     public boolean isInferred() {
         return inferred;
     }

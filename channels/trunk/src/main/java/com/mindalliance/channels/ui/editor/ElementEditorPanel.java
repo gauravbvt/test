@@ -76,9 +76,9 @@ public class ElementEditorPanel<T extends JavaBean> extends Window
             this.type = edited.getClass();
             this.system = system;
             this.user = user;
-
-            exclude.add( "class" );
-            exclude.add( "incident" );
+            
+            setupExclusions();
+            
             group = new BeanViewGroup<T>();
 
             tabbox = new Tabbox();
@@ -100,6 +100,12 @@ public class ElementEditorPanel<T extends JavaBean> extends Window
         }
     }
 
+    private void setupExclusions() {
+        exclude.add( "class" );
+        exclude.add( "incident" );
+        exclude.add( "inferred" );
+    }
+    
     private Box initializeButtons() {
         Hbox buttons = new Hbox();
         Button saveButton = new Button( "Save" );
@@ -151,7 +157,7 @@ public class ElementEditorPanel<T extends JavaBean> extends Window
     private void createAbstractElement() {
         if ( AbstractElement.class.isAssignableFrom( type ) ) {
             ElementBeanViewPanel<T> panel = createGroup( new String[] { "name",
-                "description", "inferred" } );
+                "description" } );
             mainpanel.appendChild( panel );
 
             Tab tab = new Tab( "Types" );

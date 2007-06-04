@@ -57,6 +57,7 @@ public abstract class AbstractScenarioElement extends AbstractElement
     /**
      * Return the descriptor.
      */
+    @PropertyOptions(ignore=true)
     public Information getDescriptor() {
         return this.descriptor;
     }
@@ -65,6 +66,7 @@ public abstract class AbstractScenarioElement extends AbstractElement
      * Set the value of descriptor.
      * @param descriptor The new value of descriptor
      */
+    @PropertyOptions(ignore=true)
     public void setDescriptor( Information descriptor ) {
         this.descriptor = descriptor;
     }
@@ -72,6 +74,7 @@ public abstract class AbstractScenarioElement extends AbstractElement
     /**
      * Return the scenario.
      */
+    @PropertyOptions(ignore=true)
     public Scenario getScenario() {
         return scenario;
     }

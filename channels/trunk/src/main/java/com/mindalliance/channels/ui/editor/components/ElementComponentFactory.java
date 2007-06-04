@@ -9,29 +9,31 @@ import com.mindalliance.zk.beanview.ZkComponentFactory;
 
 
 /**
- * Extends the ZkComponentFactory to insert component factories specific to Channels.
+ * Extends the ZkComponentFactory to insert component factories 
+ * specific to Channels.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
 public class ElementComponentFactory extends ZkComponentFactory {
 
     /**
-     * 
      * Default constructor.
      * @param key the key to generate a factory for
      * @param c the type of the class to generate a factory for
      * @param bv the Beanview instance
      */
     public ElementComponentFactory( String key, Class c, BeanView bv ) {
-        super(key, c, bv);
+        super( key, c, bv );
     }
 
     /**
      * Installs the Channel specific factories ahead of the default factories.
      */
     protected void installDefaultFactories() {
-        factories.add(new ElementFactory());
-        factories.add(new ElementCollectionFactory());
+        factories.add( new ElementCollectionFactory() );
+        factories.add( new InterfaceFactory() );
+        factories.add( new JavaBeanFactory() );
+        
         super.installDefaultFactories();
     }
 }

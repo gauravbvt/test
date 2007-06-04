@@ -3,7 +3,9 @@
 
 package com.mindalliance.channels.ui.editor;
 
+import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Set;
 
 import org.zkoss.zk.ui.Page;
 
@@ -133,6 +135,36 @@ public class EditorFactory {
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
+        return result;
+    }
+    
+    /**
+     * Popup a chooser for Concrete classes that implement a particular interface.
+     * @param type the interface to search
+     * @return the selected Class
+     */
+    public Class popupInterfaceChooser( Class type ) {
+        Class result = null;
+        try {
+            if (!type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+                result = type;
+            } else {
+                Class[] types = InterfaceHelper.retrieveTypes(type);
+                if (types.length == 1) {
+                    result = types[0];
+                } else {
+                    InterfaceChooser chooser = new InterfaceChooser(type, types);
+                    chooser.setPage( this.getPage() );
+                    chooser.doModal();
+                    if (chooser.isOk()) {
+                        result = chooser.getSelectedType();
+                    }
+                }
+            }
+        } catch ( InterruptedException e ) {
+            e.printStackTrace();
+        }
+        
         return result;
     }
     

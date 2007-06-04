@@ -186,6 +186,7 @@ public class Scenario extends AbstractElement {
     /**
      * Return the model.
      */
+    @PropertyOptions(ignore=true)
     public Model getModel() {
         return model;
     }

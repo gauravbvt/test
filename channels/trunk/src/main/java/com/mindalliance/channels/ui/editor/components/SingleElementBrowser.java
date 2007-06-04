@@ -3,6 +3,8 @@
 
 package com.mindalliance.channels.ui.editor.components;
 
+import java.lang.reflect.Modifier;
+
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Hbox;
@@ -13,8 +15,11 @@ import org.zkoss.zul.Toolbarbutton;
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.elements.AbstractElement;
+import com.mindalliance.channels.data.elements.ElementFactory;
 import com.mindalliance.channels.services.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
+import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 /**
  * A single-element picker.
@@ -23,7 +28,7 @@ import com.mindalliance.channels.ui.editor.EditorFactory;
  * @version $Revision:$
  * @param <T> the type of the elements
  */
-public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
+public class SingleElementBrowser<T extends JavaBean> extends Hbox implements PropertyComponent {
 
     private SystemService system;
     private User user;
@@ -33,7 +38,8 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
     private Toolbarbutton editButton;
     private Toolbarbutton createButton;
     private Toolbarbutton removeButton;
-    private EditorFactory factory;
+    private EditorFactory editorFactory;
+    private ElementFactory elementFactory;
 
     /**
      * Default constructor.
@@ -68,7 +74,10 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
     }
 
     private Toolbarbutton createChooseButton() {
-        Toolbarbutton addButton = new Toolbarbutton( "Choose" );
+        String buttonLabel = AbstractElement.class.isAssignableFrom( type ) 
+                             ? "Choose" : "New";
+        
+        Toolbarbutton addButton = new Toolbarbutton( buttonLabel );
         addButton.setImage( "images/16x16/add2.png" );
         addButton.setTooltiptext( "Choose a " + type.getSimpleName() );
         addButton.addEventListener( "onClick", new EventListener() {
@@ -78,10 +87,25 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
             }
 
             public void onEvent( Event arg0 ) {
-                T result = getEditorFactory().popupChooser( type );
-                if ( result != null ) {
-                    edited = result;
-                    refreshLabel();
+                if (AbstractElement.class.isAssignableFrom(type)) {
+                    T result = getEditorFactory().popupChooser( type );
+                    if ( result != null ) {
+                        setValue(result);
+                    }   
+                } else {
+                    JavaBean instance;
+                    Class concrete = type;
+                    if (type.isInterface() || Modifier.isAbstract(type.getModifiers())) {
+                        concrete = getEditorFactory().popupInterfaceChooser( type );
+                    }
+                    if (concrete != null) {
+                        
+                        //instance = getEditorFactory().popupEditor( getElementFactory().newInstance( concrete ) );
+                        instance = getEditorFactory().popupEditor( newInstance( concrete ) );
+                        if (instance != null) {
+                            edited = instance;
+                        }
+                    }
                 }
             }
 
@@ -133,12 +157,20 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
     }
 
     private EditorFactory getEditorFactory() {
-        if ( factory == null ) {
-            factory = new EditorFactory( getPage(), system, user );
+        if ( editorFactory == null ) {
+            editorFactory = new EditorFactory( getPage(), system, user );
         }
-        return factory;
+        return editorFactory;
     }
 
+    private ElementFactory getElementFactory() {
+        if (elementFactory == null) {
+            elementFactory = new ElementFactory();
+            elementFactory.setGuidFactory( new GUIDFactoryImpl() );
+        }
+        return elementFactory;
+    }
+    
     /**
      * Overriden from SingleElementBrowser.
      * @see com.beanview.PropertyComponent#getValue()
@@ -168,5 +200,16 @@ public class SingleElementBrowser<T> extends Hbox implements PropertyComponent {
         this.edited = edited;
         refreshLabel();
     }
-
+    private JavaBean newInstance(Class type) {
+        try {
+            return (JavaBean)type.newInstance();
+        } catch ( InstantiationException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch ( IllegalAccessException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
