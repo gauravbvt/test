@@ -12,9 +12,13 @@ import org.zkoss.zul.Hbox;
 import org.zkoss.zul.ListModelArray;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Window;
+
+import com.mindalliance.channels.data.elements.AbstractElement;
 
 
 /**
@@ -38,6 +42,7 @@ public class InterfaceChooser<T> extends Window {
         list.setPageSize( 10 );
         list.setWidth( "400px" );
         model = new ListModelArray(options);
+        list.appendChild( generateHeader() );
         list.setModel( model );
         list.setItemRenderer( new ClassListitemRenderer() );
         appendChild(list);
@@ -84,6 +89,14 @@ public class InterfaceChooser<T> extends Window {
         box.appendChild(cancelButton);
         appendChild(box);
         this.setWidth( "415px" );
+    }
+    
+    private Listhead generateHeader() {
+        Listhead header = new Listhead();
+        Listheader name = new Listheader( "Type" );
+        name.setSort( "auto" );
+        header.appendChild( name );
+        return header;
     }
     
     public boolean isOk() {

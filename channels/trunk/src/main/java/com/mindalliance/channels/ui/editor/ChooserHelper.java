@@ -7,8 +7,8 @@ package com.mindalliance.channels.ui.editor;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.beanview.BeanView;
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.elements.resources.Channel;
 import com.mindalliance.channels.data.elements.resources.Organization;
 import com.mindalliance.channels.data.elements.resources.Role;
 import com.mindalliance.channels.services.SystemService;
@@ -38,6 +38,15 @@ public class ChooserHelper {
         Collection<Organization> results = new ArrayList<Organization>();
         if (system != null) {
             results.addAll( system.getDirectoryService().getOrganizations() );
+        }
+        
+        return results;
+    }
+    
+    public Collection<Channel>findChannel(SystemService system, User user) {
+        Collection<Channel> results = new ArrayList<Channel>();
+        if (system != null) {
+            results.addAll( system.getDirectoryService().getChannels() );
         }
         
         return results;

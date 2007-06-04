@@ -10,7 +10,6 @@ import com.beanview.BeanView;
 import com.beanview.PropertyComponent;
 import com.beanview.PropertyComponentFactory;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.reference.Location;
 import com.mindalliance.channels.data.reference.TypeSet;
 import com.mindalliance.channels.data.support.Availability;
 import com.mindalliance.channels.data.support.Distance;
@@ -18,8 +17,8 @@ import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.data.support.LatLong;
 import com.mindalliance.channels.data.support.Latency;
 import com.mindalliance.channels.services.SystemService;
-import com.mindalliance.channels.ui.editor.ElementChooser;
 import com.mindalliance.channels.util.AbstractJavaBean;
+import com.mindalliance.zk.component.SettableZkTextbox;
 
 
 /**
@@ -65,7 +64,15 @@ public class JavaBeanFactory implements PropertyComponentFactory {
             result = new TypeSetEditor();
         } else if (AbstractJavaBean.class.isAssignableFrom(type)) {
             result = new SingleElementBrowser(type, (SystemService)bv.getContext( "system"), (User)bv.getContext( "user" ));
+        } else if ("description".equals( key ) && String.class.isAssignableFrom( type )) {
+            result = new SettableZkTextbox();
+            ((SettableZkTextbox)result).setRows( 4 );
+            ((SettableZkTextbox)result).setCols( 40 );
+        } else if ("name".equals( key ) && String.class.isAssignableFrom( type )) {
+            result = new SettableZkTextbox();
+            ((SettableZkTextbox)result).setCols( 40 );
         }
+        
         return result;
     }
 
