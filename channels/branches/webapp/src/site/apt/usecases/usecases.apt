@@ -1,0 +1,149 @@
+ 	--------------
+ 	Use cases
+ 	--------------
+ 	
+Use Cases
+ 
+	* {{{#user_roles} User roles}}
+	
+	* {{{#any_user} What any users can do}}
+		
+	[]
+	
+	
+* {User roles}
+	
+	An authorized Channels user receives one or more privileges. These roles/privileges determine what the user is allowed
+	to see and do once logged into a Channels site.
+	
+	A user need only login once into Channels.
+	
+	[Participant] (Context: project) A user belonging to an organization and authorized to take part in a project, as a certified member of an authorized organization, either as a contributor or a guest. 
+	A participant has all the privileges of a guest plus the ability to make contributions to the project.
+	
+	[Manager] (Context: Channels) A user who is authorized to create models in a project and who authorizes the participation of organizations (possibly restricted to certain roles). 
+	A manager has authority over any content in the project. A manager also has participant privileges for the project.
+
+	[Liaison] (Context: Channels) A user who has authority over the description of an organization across projects and the certification of users as role players in that organization.
+
+	[Expert] (Context: Channels) A user who can authoritatively create and modify reference data in one or more assigned domains.
+
+	[Admin] (Context: Channels) A Channels site administrator responsible for creating projects, for assigning project managers, organization liaisons and domain experts, and generally maintaining a Channels installation.
+	
+	[System] (Context: Channels) The system itself can initiate actions such as suggesting todo's, discovering potential exchanges and issues, and inducing templates from user-provided model elements across projects.
+	
+	[]
+
+	A Channels administrator is the gate keeper for new projects and is the ultimate authority for a Channels installation.
+
+	Channels gives a project manager the necessary privileges to act as a "benevolent dictator" who sets the direction and scope of a project without having to micro-manage it.
+
+	Channels gives the liaison of an organization the rights to control how the organization is described across projects and to certify users role-playing members of the organization.
+
+	Channels empowers participants to create scenarios, to view all project content, to authoritatively edit "their" content and to enter opinions as to the rest.
+	
+* What {any user} can do
+
+	* {{{#request_user_status} U-1 Request user status}}
+	
+	* {{{#request_certification} U-2 Request certification}}
+	
+	* {{{#accept_invitation} U-3 Accept invitation}}
+	
+	* {{{#login} U-4 Login}}
+	
+	* {{{#logout} U-5 Logout}}
+	
+	* {{{#change_password} U-6 Change password}}
+	
+	* {{{#update_user_information} U-7 Update user information}}
+	
+	* {{{#configure_settings} U-8 Configure settings}}
+	
+	[]
+	
+** U-1 {Request user status}
+
+	Someone without user status accesses a Channels site. A login form appears offering the option to register as a new user.
+	The user selects this option and is shown a form where personal info is requested (could be simply name and email).
+	The user also completes a captchas test (transcribes a visually encoded message).
+	The user is then sent an email with a link to follow in order to complete registration.
+	
+** U-2 {Request certification}
+
+	The user requests to be certificed as a member of a given organization.
+	The user selects an organization from a directory of all organizations represented in a Channels installation (i.e. that have liaisons).
+	The user may specify one or more role types (from typology of roles or by naming them if not available). 
+	The user then requests to be certified by the organization's liaison (or participant if liaison allows) as member as playing the given roles.
+	
+	A liaison of the organization receives and processes the request and may further describe the role(s).
+	
+	The user is notified when certification is obtained. The user can then browse all projects in which he/she is now
+	participant or guest by virtue of certified membership in the organization.
+	
+** U-3 {Accept invitation}
+
+	Someone receives an email from a Channels participant inviting him/her to join a project.
+	The participant has already certified the user as a co-member of an organization.
+	The new user clicks on a link in the email which takes the user to a form where he/she is asked to enter and confirm a password.
+	The new user is then shown a startup desktop.
+	
+** U-4 {Login}
+
+	The user points a browser to the Channel installation's URL. A login form appears. 
+	The user enters user id and password, and submits.
+	
+	If the user forgot his/her password, the user clicks on a link that emails a new, one time password.
+	
+	If the user logs in with a one-time password, after successfully logging in, the user is asked to {{{change_password} change the one-time password}}.
+	If the user fails to obtain a new password (user cancelled), the participant is logged out and retains the old one-time password.
+	
+	If the user logs in successfully, the user acquires all project and application privileges. The Channels "desktop" last saved for this user appears (or else the default desktop). 
+	The users leaves the desktop after {{{logout}logging out}}.
+	
+** U-5 {Logout}
+
+	The user requests to log out. A modal dialog requests confirmation. 
+	The user is given the option to "save the desktop" (default option).
+	The user either confirms or cancels the logout.
+	
+** U-6 {Change password}
+
+	The user is presented with a Change Password modal dialog containing instructions about devising secure passwords.
+	The user enters a new password twice.
+	
+	The password is checked to see if it is secure. If not, the user is told why and asked to try again.
+	The user can cancel the operation.
+	
+** U-7 {Update user information}
+
+	When registering as a Channels user (by initiating a request or by accepting an invitation), the user provides basic user information and in return is given a user id and a (one-time) password.
+	It is the user's responsibility to maintain and update this information.
+	
+	The user can:
+	
+	* Update his/her name
+	
+	* Update his/her email address
+
+	[]
+	
+** U-8 {Configure settings}
+
+	TBD
+
+See also
+ 	
+ 	* {{{participant.html} Participant use cases}}
+ 	
+ 	* {{{manager.html} Project manager use cases}}
+
+	* {{{liaison.html} Organization liaison use cases}}
+
+	* {{{expert.html} Domain expert use cases}}
+
+	* {{{admin.html} Channels administrator use cases}}
+	
+	[]
+	
+

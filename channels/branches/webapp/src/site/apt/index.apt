@@ -1,0 +1,162 @@
+  -------------------
+  About Channels 1.0
+  -------------------
+  
+About Channels 1.0
+
+	Channels 1.0 is a collaborative Web application for scenario-based communications planning and analysis. 
+	Organizations and their members use Channels to jointly build communication protocols, detect preventable 
+	communication gaps and prioritize their resolutions.
+
+* Why Channels
+
+	Channels is predicated on the following assumptions:
+
+ 	* Organizations are increasingly inter-dependent and need to communicate across discipline and jurisdiction 
+ 	boundaries. They often operate in dynamic and demanding environments. To accomplish their respective missions, 
+ 	they must quickly learn to better communicate with organizations they may never have dealt with in the past. 
+
+ 	* The requirements that drive intra and inter-organization communications are often too complex to be known, 
+ 	comprehended or managed by any one individual or group.
+
+ 	* Communication preparedness is best conceived of as an ongoing community effort that involves stakeholders and 
+ 	responders, and not as projects carried out infrequently by a few administrators or planners.
+
+ 	* Information sharing needs analysis (who knows what and who needs to know it, when, how and why) is central to 
+ 	communications preparedness. Being an information-rich process, it requires a methodical approach and robust 
+ 	software support.
+
+ 	* What-if scenarios that emphasize role-based responses to events provide a focused and productive context in 
+ 	which to elicit the information needs and capabilities that drive information sharing.
+
+ 	* Scenarios developed in a specific environment can be generalized and successfully re-applied by different 
+ 	organizations in their own particular environments.
+
+ 	* It is impossible to anticipate and plan for every possible eventuality, yet planning for predictable events 
+ 	helps prepare for unpredictable events. "The plan is nothing. Planning is everything." - Gen. Dwight E. Eisenhower.
+
+	[]
+	
+* What Channels is not
+
+	Channels 1.0 is <not>:
+
+	 * a general resource planning and allocation tool; only communications are planned based on the analysis of 
+	 role-based information needs, availability and accessibility.
+	
+	 * an emergency management platform; Channels 1.0 helps organizations hone their communication protocols ahead of 
+	 anticipated events, not manage actual responses.
+	
+	 * a notification management system; Channels 1.0 is designed to work with existing notification systems as a 
+	 source of up-to-date notification scripts derived from the ongoing analysis of information sharing needs.
+	
+	 * a workflow system; while Channels 1.0 uncovers desirable information flows, it does not implement them.
+	
+	 * an information sharing environment; what is shared vi Channels 1.0 are the needs for and the availability of 
+	 information, not the information itself.
+
+* What Channels 1.0 is
+
+	Channels is a collaborative environment for the continuous, community-driven capture and analysis of information 
+	sharing requirements.
+	
+	Participants in a Channels project create and contribute to scenarios where they describe how they would 
+	respond to certain events to fulfill their role-based responsibilities.  Participants state what they would 
+	then need to know and what new information they would acquire. Participants also register, as part of their 
+	personal profiles, how they can be contacted, when and how. 
+	
+	Channels matches information needs and capabilities to identify what information should be exchanged, between 
+	whom and when. These exchanges may or may not be possible either due to privacy policies, unavailable respondents 
+	or information sources, security gaps, absence of sharing agreements or because communication and information 
+	resources are presumed unavailable for some duration of time. Channels uncovers these issues and then evaluates 
+	their impacts within the scope of each scenario.
+	
+	Channels delivers a rich, desktop-like user experience and uses interactive maps, timelines, social networks, 
+	flow graphs etc. to display scenarios and the results of their analysis.
+	
+	Channels is "social software" in that in engages a community of users as they pool their knowledge and experience 
+	to create an outcome, here communication preparedness and planning, that no single individual could achieve.
+	
+	Channels is designed to minimize the barriers of entry for new users (users can freely invite friends and 
+	colleagues to join a Channels site) while allowing each project to closely control who can gain access to its 
+	scenarios and their analysis. The goal is to enable viral growth of Channels' user base while maintaining full 
+	authorization control at the project level.
+	
+	Channels recognizes five types of users:
+	
+	 * Participants who are invited to join communications preparedness projects and contribute to scenarios;
+	
+	 * Project managers who define such projects, set their objectives and determine who can participate;
+	
+	 * Liaisons who represent organizations and certify their members and vouch for their profiles;
+	
+	 * Domain experts who define and validate shared reference data that is used throughout Channels;
+	
+	 * Administrators who supervize a Channels installation and authorize managers, liaisons and experts.
+	 
+	 []
+	
+	Any authorized user can:
+	
+	 * Define a personal profile, describing the various roles played in possibly multiple organizations and providing 
+	 contact and availability information (profile information is obtained from enterprise directories whenever possible);
+	
+	 * Request that elements of his/her profile, as it relates to an organization, be certified by a liaison for that 
+	 organization;
+	
+	 * Invite by email a colleague or friend to become a Channels user by completing a simple registration process;
+	
+	 * Become participant in one or more projects based on a certified profile.
+	 
+	 []
+	
+	A project manager is a user who is given authority by a Channels site administrator over a project. 
+	A project manager can:
+	
+	 * Set the objectives of the project;
+	
+	 * Determine who can participate in the project based on user profiles and organizations;
+	 
+	 * Break-up the project into models, each containing closely related scenarios.
+	 
+	 []
+	
+	A participant in a project can:
+	
+	 * Describe tasks executed in response to events;
+	
+	 * Describe information needed to execute these tasks and the information acquired from them;
+	
+	 * Describe possible outcomes;
+	
+	 * Specify what events of significance arise from responses and their outcomes;
+	
+	 * Identify what events, tasks, outcomes, exchanges etc. they would need to know about;
+	
+	 * Validate exchanges of information and issues uncovered by Channels.
+	 
+	 []
+
+* Tangible deliverables
+
+	Users of Channels gain access to the following outputs, both online and as printed documents:
+	
+	 * Directories of information sources;
+	
+	 * Event and role-based communication playbooks;
+	
+	 * Analysis of information flows in scenarios;
+	
+	 * Impact analysis of communication gaps.
+	
+	[]
+
+* More
+	
+	* See the {{{overview.html} overview}} for more details.
+	
+	* See the {{{roadmap.html} scope descriptions}} for the planned releases
+	
+	* See the {{{https://ranger.homelinux.net/trac/channels/wiki/UIDesign} UI design}}
+	
+	[]

@@ -1,0 +1,25 @@
+<zk>
+	<desktop-config>
+		<theme-uri>/css/channels.css</theme-uri>
+	</desktop-config>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.DesktopRichlet</richlet-class>
+		<richlet-url>/desktop</richlet-url>
+	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.MainRichlet</richlet-class>
+		<richlet-url>/test</richlet-url>
+	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.TimelineRichlet</richlet-class>
+		<richlet-url>/timeline</richlet-url>
+	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.CommandTestRichlet</richlet-class>
+		<richlet-url>/command</richlet-url>
+	</richlet>
+	<richlet>
+		<richlet-class>com.mindalliance.channels.ui.EditorTestRichlet</richlet-class>
+		<richlet-url>/editor</richlet-url>
+	</richlet>
+</zk>

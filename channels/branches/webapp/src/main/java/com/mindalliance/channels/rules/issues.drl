@@ -1,0 +1,25 @@
+#created on: Dec 12, 2006
+package com.mindalliance.channels.rules
+
+#list any import classes here.
+import com.mindalliance.channels.model.* ;
+
+#declare any global variables here
+
+rule "Your First Rule"
+	
+	when
+		#conditions
+	then 
+		#actions
+		
+end
+
+rule "Your Second Rule"
+	#include attributes such as "salience" here...
+	when
+		#conditions
+	then 
+		#actions
+		
+end

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	                    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<!-- This file specifies how to authenticate users. -->
+	<!-- $Revision$ -->
+	
+	<!-- **************************************************** Authentication manager -->
+	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+		<property name="providers">
+			<list>
+				<bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+					<property name="userDetailsService" ref="registry"/>
+					<property name="userCache">
+						<bean class="org.acegisecurity.providers.dao.cache.NullUserCache"/>
+					</property>
+				</bean>
+				<bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
+					<property name="key" value="${securityKey}"/>
+				</bean>
+				<bean class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
+					<property name="key" value="${securityKey}"/>
+				</bean>
+				<bean class="org.acegisecurity.runas.RunAsImplAuthenticationProvider">
+					<property name="key" value="${securityKey}"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- ***************************************************** RUN_AS manager -->
+	<bean id="runAsManager" class="org.acegisecurity.runas.RunAsManagerImpl">
+		<property name="key" value="${securityKey}"/>
+	</bean>
+	
+	<!-- ***************************************************** Web requests setup -->
+	<bean id="authenticationEntryPoint"	class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+		<property name="loginFormUrl" value="/login/login.jsp"/>
+	</bean>
+	<bean id="authenticationDetailsSource" class="org.acegisecurity.ui.AuthenticationDetailsSourceImpl"/>
+	
+	<bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+		<property name="filterInvocationDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON 
+				PATTERN_TYPE_APACHE_ANT
+				/login/**=httpSessionContext,anonymousFilter,exceptionTranslationFilter,filterSecurityInterceptor
+				/**=httpSessionContext,formProcessingFilter,rememberMeFilter,anonymousFilter,logoutFilter,exceptionTranslationFilter,filterSecurityInterceptor
+				</value>
+		</property>
+	</bean>
+	
+	<bean id="httpSessionContext" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter">
+		<property name="allowSessionCreation" value="false"/>
+	</bean>
+	
+	<bean id="formProcessingFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+	  <property name="authenticationManager" ref="authenticationManager"/>
+	  <property name="authenticationFailureUrl" value="/login/login.jsp?login_error=1"/>
+	  <property name="defaultTargetUrl" value="/"/>
+	  <property name="filterProcessesUrl" value="/j_acegi_security_check.jsp"/>
+	  <property name="rememberMeServices" ref="rememberMeService"/>
+	</bean>
+
+	<bean id="anonymousFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
+		<property name="key" value="${securityKey}"/>
+		<property name="userAttribute"><value>anonymousUser,ROLE_ANONYMOUS</value></property>
+		<property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
+	</bean>
+	
+	<bean id="rememberMeService" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
+		<property name="key" value="${securityKey}"/>
+		<property name="parameter" value="j_remember_me"/>
+		<property name="userDetailsService" ref="registry"/>
+		<property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
+	</bean>
+	
+	<bean id="rememberMeFilter" class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="rememberMeServices" ref="rememberMeService"/>
+	</bean>
+	
+	<bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
+		<constructor-arg value="/"/>
+		<constructor-arg><list>
+			<ref bean="rememberMeService"/>
+			<bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler"/>
+			</list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/logout.jsp"/>
+	</bean>
+
+	<bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
+		<property name="portResolver">
+			<bean class="org.acegisecurity.util.PortResolverImpl">
+				<property name="portMapper">
+					<bean class="org.acegisecurity.util.PortMapperImpl"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="filterSecurityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="accessDecisionManager">
+			<bean class="org.acegisecurity.vote.AffirmativeBased">
+				<property name="allowIfAllAbstainDecisions" value="false"/>
+				<property name="decisionVoters">
+					<list>
+						<bean class="org.acegisecurity.vote.RoleVoter"/>
+						<bean class="org.acegisecurity.vote.AuthenticatedVoter"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="objectDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/css/**=ROLE_USER,ROLE_ANONYMOUS
+				/images/**=ROLE_USER,ROLE_ANONYMOUS
+				/login/**=ROLE_ANONYMOUS
+				/**=ROLE_USER
+			</value>
+		</property>
+	</bean>
+</beans>

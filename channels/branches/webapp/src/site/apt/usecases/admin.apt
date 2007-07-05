@@ -1,0 +1,36 @@
+ -------------------------
+ Administrators Use Cases
+ -------------------------
+ 
+Who is an administrator?
+
+A participant is a user that was authorized by the representative of an organization. 
+A user who plays roles in different organizations could login under different user ids, each associated to a different participant.
+
+	
+What can an administrator do?
+
+	* {{{manage connectors}} Manage connectors}
+	* {{{create projects}} Create projects}
+	* {{{assign experts}} Assign domain experts}
+	* {{{assign managers}} Assign project managers}
+	* {{{backup recover}} Backup and recover data}
+	* {{{monitor system}} Monitor the system}
+
+{manage connectors}
+* Manage connectors
+
+{create projects}
+* Create projects
+
+{assign experts}
+* Assign domain experts
+
+{assign managers}
+* Assign project managers
+
+{backup recover}
+* Backup and recover data
+
+{monitor system}
+* Monitor the system}

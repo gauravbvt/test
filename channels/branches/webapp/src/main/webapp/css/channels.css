@@ -1,0 +1,318 @@
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+#contents {
+	font-family: Georgia,serif;
+	width: 400px;
+	margin: 2em auto 2em 1.5in; 
+}
+
+h1 {
+	height: 90px;
+	width: 100%;
+	background-image: url("../images/banner.png");
+	background-position: left;
+	background-repeat: no-repeat;
+	background-color: #7e747f;
+}
+
+h1 span {
+	display: none;
+}
+
+form {
+	width: 60%;
+	margin: 2em auto;
+}
+
+th {
+	text-align: right;
+}
+
+table .channels_toolbar {
+	padding: 0px 10px 0px 10px;
+	margin: 0px 0px 5px 0px;
+	background-color: transparent;
+	background: url("../images/3d-tb-m.gif");
+	background-repeat: repeat-x;
+	color: rgb(80, 0, 96);
+	border-bottom: 1px solid rgb(170, 170, 187);
+}
+
+div.tree, div.grid, div.grid-no-striped, div.tree-body, 
+div.listbox-body, div.grid-body, div.listbox-paging, div.grid-paging { 
+	background-color: white; 
+	border: none;
+	overflow: visible;
+}
+
+.logo img {
+	padding-right: 10px;
+}
+
+.logo a {
+	padding-top: 5px;
+	vertical-align: middle;
+}
+
+div.tabpanel-accordion > div {
+	overflow-x: hidden; 
+	overflow-y: auto;
+	height: inherit;
+}
+
+.channels_toolbar button, .tabpanel-accordion button {
+	border: none;
+	margin: 1px;
+	background-color: transparent;
+}
+
+.tabpanel-accordion button:hover {
+	background-color: highlight;
+}
+
+.channels_toolbar button:hover {
+	border: 1px outset activeborder;
+	margin: 0px;
+	background-color: transparent;
+}
+
+div .channels_main {
+	margins: 0px 5px 5px 5px;
+}
+
+.channels_main .hbox {
+	padding: 0px 5px 0px 5px;
+}
+
+.channels_alerts {
+	border-top: 1px solid rgb(170, 170, 187);
+	padding: 5px;
+	margin: 5px 0px 0px 0px;
+}
+
+.channels_alerts button {
+	background-color: transparent;
+	border: none;
+}
+
+td .red_alert {
+	background-image: url( "../images/16x16/flag_red.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+td .yellow_alert {
+	background-image: url( "../images/16x16/flag_yellow.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+td .green_alert {
+	background-image: url( "../images/16x16/flag_green.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+td .blue_alert {
+	background-image: url( "../images/16x16/flag_blue.png" );
+	background-position: top left;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	height: 16px;
+	padding: 1px 3px 1px 20px  !important;
+}
+
+.channels_min {
+	border: 1px inset windowframe;
+	background-color: window;
+	color: windowtext; 
+	padding: 5px;
+}
+
+.channels_min span {
+	font-size: smaller;
+}
+
+td.hbox, td.vbox {
+	padding: 0px;
+}
+
+div .listbox {
+	background-color: white;
+	color: black;
+	border: none;
+}
+
+tr.itemsel, tr.itemsel a, tr.itemsel a:visited {
+	background: highlight; color: highlighttext;
+	text-decoration: none;
+}
+
+div.paging a, div.paging a:visited, .tabsel a:hover, a.tabsel:hover, 
+.tab a:hover, a.tab:hover, tr.itemsel a:hover {
+	text-decoration: none;
+}
+
+div.wc-embedded, div.wc-wndcyan {
+	padding: 5px;
+}
+
+input.description {
+	border: none;
+	padding: 2px 0px 0px 2px;
+	font-style: italic;
+}
+
+input {
+	border: 1px inset #AAA;
+	padding: 0px 2px 0px 2px;
+}
+
+.bottom-pane .hbox {
+	padding: 0px 0px 0px 5px;
+}
+
+.bottom-pane td.hbox:first-child {
+	padding: 0px;
+}
+
+.what-pane {
+	height: inherit;
+	overflow: auto
+}
+
+.what-pane tr.item td, .what-pane tr.itemsel td {
+	white-space: nowrap;
+}
+
+div.google-map {
+	border: 1px solid #5C6C7C;
+	overflow: scroll;
+}
+
+div.wc-embedded, div.wc-embedded-none, div.wc-wndcyan {
+	background: transparent;
+	padding: 0px;
+}
+
+div.wc-modal, div.wc-modal-none {
+	background: white;
+}
+
+div.wrapped-panel {
+	height: 390px;
+	overflow: auto;
+}
+
+div.embedded-editor tbody.tabpanels, div.wc-modal tbody.tabpanels {
+	background: #EED;
+}
+
+.grid, div.embedded-editor div.grid-body, div.wc-modal div.grid-body {
+	background: inherit !important;
+}
+
+table.editor-buttons td.hbox {
+	padding: 5px 0px 0px 0px;
+}
+
+button.editor-button, .wrapped-panel button, .wc-modal button {
+	margin: 0px 5px 0px 0px;
+	background-image: url(../zkau/web/zul/img/tab/3d-mm-sel.gif);
+	background-repeat: repeat-x;
+	border: 1px solid #5C6C7C;
+	font-color: #500060;
+}
+
+tr.grid td.gc, tr.grid-od td.gc, tr.grid-no-striped td.gc,
+tr.grid-no-striped-od td.gc {
+	border: none;
+	padding: 0px 5px 5px 0px;
+	background: inherit;
+}
+
+tr.grid td.gc:first-child span, tr.grid-od td.gc:first-child span {
+	display: block;
+	width: 100px;
+	padding: 1px 5px 0px 0px;
+	font-weight: bold;
+	text-align: right;
+	background-image: url(../images/colon.png);
+	background-repeat: no-repeat;
+	background-position: 101px 7px;
+}
+
+.single-element-label .hbox {
+	vertical-align: top;
+	padding-top: 1px;
+}
+
+.toolbar {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 5px 0px 5px;
+	background-image: url(../zkau/web/zul/img/tab/3d-mm-uns.gif);
+	background-repeat: repeat-x;
+	border: 1px outset #AAA;
+	text-align: right;
+}
+
+.toolbar a, .toolbar a:visited {
+	background: transparent;
+	border: none;
+	margin: 1px 1px 1px 6px;
+}
+
+.toolbar a:hover {
+	background: transparent;
+	border: 1px dotted #5C6C7C;
+	margin: 0px 0px 0px 5px;
+}
+
+.toolbar input {
+	font-family:Tahoma,Arial,Helvetica,sans-serif;
+	font-size:x-small;
+	font-weight:normal;
+}
+
+table.browser-list {
+	border-left: 1px inset #AAA;
+	border-right: 1px inset #AAA;
+}
+
+table.browser-list div.listbox-pgi, table.browser-list div.grid-pgi {
+	border-top: none;
+}
+
+table.browser-list th, table.browser-list th.sort {
+	height: 18px;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 5px 0px 5px;
+	background: transparent;
+	background-position: top left;
+	background-image: url(../zkau/web/zul/img/tab/3d-mm-sel.gif);
+	background-repeat: repeat-x;
+	border:1px solid #5C6C7C;
+	border-left: none;
+	font-color: #500060;
+	font-family: Tahoma,Arial,Helvetica,sans-serif;
+	font-size: x-small;
+	font-weight: normal;
+	text-decoration: none;
+	text-align: left; 
+}
+
+tr.grid > td.gc, tr.grid-od > td.gc {
+	vertical-align: top;
+}
