@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="Mind-Alliance NetKernel Modules">
+    
+    <target name="init">
+        <property name="dist.dir" value="${basedir}/dist"/>
+    </target>
+    
+    <macrodef name="build-subdir">
+        <attribute name="dir"/>
+        <attribute name="target" default="all"/>
+        <sequential>
+            <ant antfile="@{dir}/build/build.xml" target="@{target}"
+                inheritAll="false">
+                <property name="dist.dir" value="${dist.dir}"/>
+            </ant>
+        </sequential>
+    </macrodef>
+    
+	<target description="Build everything." name="all" depends="init">
+        <mkdir dir="${dist.dir}"/>
+        <build-subdir dir="mod-template"/>
+    </target>
+    
+    <target description="Clean up the derived objects" name="clean" depends="init">
+        <delete dir="${dist.dir}"/>
+        <build-subdir dir="mod-template" target="clean"/>
+    </target>
+</project>
