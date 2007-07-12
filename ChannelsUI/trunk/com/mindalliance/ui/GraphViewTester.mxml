@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:Comp="*"
+    applicationComplete="init()">
+    <mx:XML id="yFilesLicenseXML" source="lib/license.xml" />
+    <mx:Script>
+      <![CDATA[
+    
+        import com.yworks.util.Util;
+    
+        private function init():void {
+          Util.registerLicense( yFilesLicenseXML );
+        }
+      ]]>
+    </mx:Script>
+
+    <Comp:FlowMapView/>
+</mx:Application>

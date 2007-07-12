@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:mas="com.mindalliance.ui.*">
+    <mx:DataGrid id="dgCategories" click="btnSetAddRemoveItem.itemClickHandler(event)">
+        <mx:columns>
+            <mx:DataGridColumn headerText="Label"/>
+            <mx:DataGridColumn headerText="Discipline"/>
+        </mx:columns>
+    </mx:DataGrid>
+    <mas:ItemAddRemoveButtonSet id="btnSetAddRemoveItem"/>
+</mx:VBox>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+    title="Categories" status="searching..."
+    mouseDownOutside="PopUpManager.removePopUp(this)"
+    keyDown="handleKeyDown(event)"
+    minWidth="600" minHeight="400">
+    
+    <mx:XMLListCollection id="Categories">
+         <mx:XMLList>
+            <folder label="Animal">
+               <folder label="Bovine"/>
+               <folder label="Feline">
+                  <Pfolder label="Tom" />
+                  <Pfolder label="Felix" /> 
+                     <Pfolder label="Felix2" isBranch="true" /> 
+                     <Pfolder label="Felix3" /> 
+                  </folder>
+                  <folder label="Canine" />
+                  <folder label="Quarantine" />
+            </folder>
+         </mx:XMLList>
+    </mx:XMLListCollection>
+    
+    <mx:ArrayCollection id="Disciplines">
+        <mx:Object label="Public Health"/>
+        <mx:Object label="Counter-Terrorism"/>
+        <mx:Object label="Police"/>
+    </mx:ArrayCollection>
+     
+    <mx:ArrayCollection id="CategoriesToAdd">
+        <mx:Object label="blah"/>
+    </mx:ArrayCollection>
+          
+    <mx:Script>
+        <![CDATA[
+            import mx.managers.PopUpManager;
+            
+            public var dataHandler:Function ;
+            
+            private function setupTreeEvents():void {
+                treeCategories.addEventListener(MouseEvent.CLICK, updateBtnAddSelectedCategoryStatus);
+                updateBtnAddSelectedCategoryStatus(null);
+            }
+            
+            private function updateBtnAddSelectedCategoryStatus(event:MouseEvent):void {
+                btnAddSelectedCategory.enabled = (treeCategories.selectedItems.length > 0) ;
+            }
+            
+            private function handleListCategoriesToAddKeyUp(event:KeyboardEvent):void {
+                if (!listCategoriesToAdd.selectedItems.length > 0)
+                    return ;
+                if (event.keyCode == Keyboard.DELETE) {
+                    var si:Array = listCategoriesToAdd.selectedIndices ;
+                    for (var i:int = 0 ; i < si.length ; i++)
+                        CategoriesToAdd.removeItemAt(si[i]);
+                }
+            }
+            
+            private function btnDoneClicked():void {
+               if (dataHandler != null) {
+                   dataHandler(CategoriesToAdd.toArray());
+               }
+               PopUpManager.removePopUp(this); 
+            }
+            
+            private function handleKeyDown(event:KeyboardEvent):void {
+                if (event.keyCode == Keyboard.ESCAPE)
+                    PopUpManager.removePopUp(this);
+            }
+            
+            private function btnAddSelectedCategoryClicked():void {
+                var si:Array =  treeCategories.selectedItems ;
+                for (var i:int = 0 ; i < si.length ; i++)
+                    if (!CategoriesToAdd.contains(si[i]))
+                            CategoriesToAdd.addItem(si[i]);
+            }
+            
+        ]]>
+    </mx:Script>
+    
+    <mx:HBox width="100%" horizontalGap="0">
+        <mx:Label text="Search:"/>
+        <mx:Spacer width="10"/>
+        <mx:TextInput id="txtInputSearch" width="100%"/>
+        <mx:Button label="X" width="20" click="txtInputSearch.text=''" cornerRadius="0"/>
+    </mx:HBox>
+    <mx:Label text="Location &gt; In &gt; Tree &gt; Of &gt; Selected &gt; Category" width="100%"/>
+    <mx:HDividedBox width="100%" height="100%">
+        <mx:VBox height="100%">
+            <mx:Label text="Discipline"/>
+            <mx:List height="100%" dataProvider="{Disciplines}"/>
+        </mx:VBox>
+        <mx:VBox height="100%" width="100%">
+            <mx:Label text="Categories"/>
+            <mx:Tree height="100%" id="treeCategories" width="100%" 
+                dataProvider="{Categories}" labelField="@label" creationComplete="setupTreeEvents()"/>
+        </mx:VBox>
+        <mx:VBox height="100%" horizontalAlign="center" verticalAlign="middle">
+            <mx:CheckBox id="cbLink" label="&lt;- link"/>
+            <mx:Spacer height="100%"/>
+            <mx:Button id="btnAddSelectedCategory" label="&gt;&gt;" click="btnAddSelectedCategoryClicked()"/>
+            <mx:Spacer height="100%"/>
+        </mx:VBox>
+        <mx:VBox height="100%" width="100%">
+            <mx:Label text="Selected"/>
+            <mx:List id="listCategoriesToAdd" editable="false" dataProvider="{CategoriesToAdd}"
+                keyUp="handleListCategoriesToAddKeyUp(event)" width="100%" height="100%"/>
+        </mx:VBox>
+    </mx:HDividedBox>
+    
+    <mx:ControlBar>
+        <mx:Spacer width="100%"/>
+        <mx:Button label="Done" click="btnDoneClicked()"/>
+    </mx:ControlBar>
+    
+</mx:TitleWindow>

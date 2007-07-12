@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mas:CustomPanel
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:mas="com.mindalliance.ui.*"
+    title="-current selection-" status="-summary info-">
+    
+    <mx:Script>
+        <![CDATA[
+            private var _propertyEditor:PropertyEditor ;
+            
+            public function get propertyEditor():PropertyEditor {
+                return _propertyEditor ;
+            }
+            
+            public function set propertyEditor(propertyEditor:PropertyEditor):void {
+                _propertyEditor = propertyEditor ;
+            }
+            
+            private function tabNavigatorChanged():void {
+                if (_propertyEditor == null)
+                    return ;
+                switch (tabNavigator.selectedIndex) {
+                    case 2:
+                        _propertyEditor.viewStack.selectedIndex = 0 ;
+                        break ;
+                    case 3:
+                        _propertyEditor.viewStack.selectedIndex = 1 ;
+                        break ;
+                }
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:TabNavigator id="tabNavigator" width="100%" height="100%" change="tabNavigatorChanged()">
+        <mas:FlowMapView label="Flow Map" width="100%" height="100%"/>
+        <mx:Canvas label="Disciplines" width="100%" height="100%"/>
+        <mx:Box label="Organizations" width="100%" height="100%" horizontalAlign="center">
+            <mx:Image source="assets/exampleagencyview.png" scaleContent="false"/>		
+        </mx:Box>
+        <mx:Canvas label="Roles" width="100%" height="100%"/>
+        <mx:Canvas label="People" width="100%" height="100%"/>
+    </mx:TabNavigator>
+    <mx:ControlBar>
+        <mx:Button label="Export"/>
+        <mx:Button label="Print"/>
+    </mx:ControlBar>
+</mas:CustomPanel>

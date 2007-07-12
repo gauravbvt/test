@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:mas="com.mindalliance.ui.*"
+    horizontalGap="2"
+    horizontalAlign="left">
+    
+    <mx:Script>
+        <![CDATA[
+            
+            public final function itemClickHandler(selectedItem:Object):void {
+                btnRemoveItem.enabled = (selectedItem != null);
+            }
+            
+            public var btnAddClickHandler:Function ;
+            
+            public var btnRemoveClickHandler:Function ;
+            
+            private function _btnAddClickHandler(event:MouseEvent):void {
+                if (btnAddClickHandler != null)
+                    btnAddClickHandler(event) ;
+            }
+            
+            private function _btnRemoveClickHandler(event:MouseEvent):void {
+                if (btnRemoveClickHandler != null)
+                    btnRemoveClickHandler(event) ;
+            }
+            
+        ]]>
+    </mx:Script>
+	<mas:AddButton id="btnAddItem" click="_btnAddClickHandler(event)"/>
+	<mas:RemoveButton id="btnRemoveItem" click="_btnRemoveClickHandler(event)"/>
+</mx:HBox>    
