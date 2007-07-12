@@ -10,6 +10,7 @@
 		<property name="lib" value="${base}/lib"/>
 		<property name="src" value="${base}/modules/test-mod-template/"/>
 		<property name="dst" value="${src}"/>
+		<property name="dist.dir" value="../../dist"/>
 	</target>
     
     <target depends="init" name="compile">

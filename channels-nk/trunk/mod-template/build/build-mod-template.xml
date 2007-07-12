@@ -13,6 +13,7 @@
 		<property name="dst" value="${src}"/>
 		<property name="lib" value="${base}/lib"/>
 		<property name="mod-template-lib" value="${src}/lib"/>
+		<property name="dist.dir" value="../../dist"/>
 	</target>
 
     <target depends="init" name="compile">
