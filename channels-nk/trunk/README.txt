@@ -12,7 +12,7 @@ MD5 (/Users/brian/Desktop/1060-NetKernel-SE-DK-3.2.0.jar) = c01a30fbe5844b9ef5bd
 
 4) We also need to hand edit two files in your NetKernel installation to bootstrap the rest of the templates. We need to expose the mod-control module to NetKernel and the front end fulcrum.
 
-Please edit the etc/deployedModules.xml in your NetKernel installation directory to include the following line (replaing <svn-co-dir> with wherever you checked it out):
+Please edit the etc/deployedModules.xml in your NetKernel installation directory to include the following line (replacing <svn-co-dir> with wherever you checked it out):
 
 <module>file:<svn-co-dir>/channels-nk/deploy/mod-control-0.0.1.jar</module>
 
