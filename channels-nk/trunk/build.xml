@@ -30,29 +30,17 @@
     
     <target description="Deploy everything" name="deploy" depends="all">
         <mkdir dir="${deploy.dir}"/>
-        <filter filtersFile="mod-control/build/version.properties"/>
-        <filter filtersFile="mod-session/build/version.properties"/>
-        <filter filtersFile="mod-template/build/version.properties"/>                
-		<copy todir="${deploy.dir}" filtering="true" overwrite="true">
-		    <filterset>
-		        <filter token="deploy-dir" value="${deploy.dir}"/>
-		    </filterset>
-			<fileset dir="./config">
-				<include name="appDeployment.xml"/>
-			</fileset>
-		</copy>
 		<copy todir="${deploy.dir}">
 			<fileset dir="${dist.dir}">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
-<!--        <build-subdir dir="mod-control" target="deploy"/>
-        <build-subdir dir="mod-template" target="deploy"/>         -->
     </target>
     
     <target description="Clean up the derived objects" name="clean" depends="init">
         <delete dir="${dist.dir}"/>
         <delete dir="${deploy.dir}"/>
+        <delete file="mod-control/modules/mod-control/etc/appDeployment.xml"/>
         <build-subdir dir="mod-control" target="clean"/>        
         <build-subdir dir="mod-session" target="clean"/>
         <build-subdir dir="mod-template" target="clean"/>        

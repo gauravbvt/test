@@ -6,7 +6,7 @@
 	-->
     <identity>
 		<uri>urn:com:mindalliance:session</uri>
-		<version>0.0.2</version>
+		<version>0.0.1</version>
     </identity>
 	<info>
 		<name>Mind-Alliance Session Module</name>
