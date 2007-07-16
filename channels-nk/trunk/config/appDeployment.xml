@@ -12,4 +12,8 @@
 		<match>@mod-template-name@</match>
 		<uri>file:@deploy-dir@/@mod-template-name@-@mod-template-version@.jar</uri>
 	</update>
+	<update>
+		<match>@test-mod-template-name@</match>
+		<uri>file:@deploy-dir@/@test-mod-template-name@-@test-mod-template-version@.jar</uri>
+	</update>	
 </appModules>
