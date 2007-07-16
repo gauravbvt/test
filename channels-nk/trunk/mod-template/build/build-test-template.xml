@@ -2,7 +2,7 @@
 <project basedir="." default="all" name="Template Test Module">
 	
 	<target name="init">
-		<property file="./versions.properties"/>
+		<property file="./version.properties"/>
 		<echo message="Building: ${test-template-name} version ${test-template-version}"/>
 		<property name="app" value="${test-template-name}"/>
 		<property name="version" value="${test-template-version}"/>
@@ -26,7 +26,8 @@
     <target depends="init,compile" name="jar">
         <jar basedir="${dst}" compress="true" destfile="${dist.dir}/${app}-${version}.jar">
 	    <include name="**/*"/>
-	    <exclude name="**/.nbattrs*"/>
+	        <exclude name="**/.nbattrs*"/>
+	        <exclude name="**/.svn"/>
         </jar>
     </target>
 	

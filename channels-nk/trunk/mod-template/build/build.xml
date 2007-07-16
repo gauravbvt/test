@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="all" name="Mind-Alliance Template Module">
-	<target description="Build everything." name="all">
+    
+    <target name="init">
+        <property name="deploy.dir" value="deploy"/>
+        <mkdir dir="${deploy.dir}"/>
+    </target>
+    
+	<target description="Build everything." name="all" depends="init">
 		<ant antfile="build-mod-template.xml"/>
 		<ant antfile="build-test-template.xml"/>
         <echo message="Mind-Alliance Template Module build completed."/>
@@ -14,4 +20,7 @@
             <fileset dir="../modules/mod-template/" includes="**/*.class"/>
         </delete>
     </target>
+	
+
+    
 </project>
