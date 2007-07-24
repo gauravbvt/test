@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:mas="com.mindalliance.ui.*" horizontalAlign="center" width="100%" height="100%">
+
+    <mx:ArrayCollection id="Organizations">
+        <mx:Object Name="Department of Homeland Security" Abbrv="DHS" Discipline="Homeland Security"/>
+    </mx:ArrayCollection>
+    
+    <mx:Script>
+        <![CDATA[
+            import mx.events.DataGridEvent;
+            import mx.managers.PopUpManager;
+            import mx.events.ListEvent;
+            import mx.events.ItemClickEvent;
+            import mx.controls.dataGridClasses.DataGridColumn;
+            
+            public function fillData(name:String):void {
+                txtProjectName.text = name ;
+            }
+            
+            public function beginEdit():void {
+                txtProjectName.setFocus();
+            }
+            
+            private function dgMissionsItemClicked(event:DataGridEvent):void {
+                if (event.columnIndex == 0)
+                    return ;
+                if (event.columnIndex == 1)
+                    event.preventDefault();
+                var cc:CategoryChooser = CategoryChooser(PopUpManager.createPopUp(dgMissions, CategoryChooser, false));
+                cc.x = dgMissions.mouseX ;
+                cc.y = dgMissions.mouseY ;
+                //TODO fill in category chooser with categories from the item being edited
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:Label text="Project" fontWeight="bold"/>
+    <mx:HDividedBox width="100%" height="100%">
+        <mx:Form>
+            <mx:FormItem label="Name">
+                <mx:TextInput id="txtProjectName"/>
+            </mx:FormItem>
+            <mx:FormItem label="Description">
+                <mx:TextArea id="txtProjectDescription"/>
+            </mx:FormItem>
+            <mx:FormItem label="Missions">
+                <mx:VBox width="100%" height="100%" creationPolicy="all">
+                    <mx:DataGrid id="dgMissions" click="btnSetAddRemoveMission.itemClickHandler(dgMissions.selectedItem)" itemEditBeginning="dgMissionsItemClicked(event)">
+                        <mx:columns>
+                            <mx:DataGridColumn headerText="Description"/>
+                            <mx:DataGridColumn headerText="Categories" editable="false"/>
+                        </mx:columns>
+                    </mx:DataGrid>
+                    <mas:ItemAddRemoveButtonSet id="btnSetAddRemoveMission"/>
+                </mx:VBox>
+            </mx:FormItem>
+        </mx:Form>
+        <mx:Form>
+            <mx:FormItem label="Roles">
+                <mx:VBox width="100%" height="100%">
+                    <mx:DataGrid id="dgRoles" click="btnSetAddRemoveRole.itemClickHandler(dgRoles.selectedItem)"/>
+                    <mas:ItemAddRemoveButtonSet id="btnSetAddRemoveRole"/>
+                </mx:VBox>
+            </mx:FormItem>
+            <mx:FormItem label="Organizations">
+                <mx:VBox width="100%" height="100%">
+                    <mx:DataGrid id="dgOrganizations" click="btnSetAddRemoveOrganization.itemClickHandler(dgOrganizations.selectedItem)" dataProvider="{Organizations}"/>
+                    <mas:ItemAddRemoveButtonSet id="btnSetAddRemoveOrganization"/>
+                </mx:VBox>
+            </mx:FormItem>
+        </mx:Form>
+    </mx:HDividedBox>
+</mx:VBox>

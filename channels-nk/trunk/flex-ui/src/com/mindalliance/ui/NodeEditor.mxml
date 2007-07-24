@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+    xmlns:mas="com.mindalliance.ui.*"
+    title="-node name-" status="-add new- or -edit-">
+    
+    <mx:Form>
+        <mx:FormItem label="Roles">
+            <mx:VBox width="100%" height="100%">
+                    <mx:DataGrid id="dgRoles" click="btnSetAddRemoveItem.itemClickHandler(event)"/>
+                    <mas:ItemAddRemoveButtonSet id="btnSetAddRemoveItem"/>
+                </mx:VBox>
+        </mx:FormItem>
+        
+    </mx:Form>
+    
+</mx:TitleWindow>

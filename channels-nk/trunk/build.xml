@@ -5,14 +5,15 @@
         <property name="dist.dir" value="${basedir}/dist"/>
         <property name="deploy.dir" value="${basedir}/deploy"/>
         <property name="versions.properties" value="${basedir}/config/deploy.properties"/>
-        <property name="netkernel.home.dir" value="/usr/local/M-A-NK"/>
+        <property name="netkernel.home.dir" value="/Volumes/Data/Users/dfeeney/netkernel"/>
     </target>
     
     <macrodef name="build-subdir">
         <attribute name="dir"/>
         <attribute name="target" default="all"/>
+		<attribute name="build.xml" default="build/build.xml"/>
         <sequential>
-            <ant antfile="@{dir}/build/build.xml" target="@{target}"
+            <ant antfile="@{dir}/@{build.xml}" target="@{target}"
                 inheritAll="false">
                 <property name="dist.dir" value="${dist.dir}"/>
                 <property name="deploy.dir" value="${deploy.dir}"/>  
@@ -26,6 +27,7 @@
         <build-subdir dir="mod-control"/> 
         <build-subdir dir="mod-session"/>               
         <build-subdir dir="mod-template"/>
+		<build-subdir dir="channels-ui" build.xml="build.xml"/>
     </target>
     
     <target description="Deploy everything" name="deploy" depends="all">
@@ -43,7 +45,8 @@
         <delete file="mod-control/modules/mod-control/etc/appDeployment.xml"/>
         <build-subdir dir="mod-control" target="clean"/>        
         <build-subdir dir="mod-session" target="clean"/>
-        <build-subdir dir="mod-template" target="clean"/>        
+        <build-subdir dir="mod-template" target="clean"/>
+        <build-subdir dir="channels-ui" target="clean" build.xml="build.xml"/>   
     </target>
     
     <target name="prepare-app-deployment">

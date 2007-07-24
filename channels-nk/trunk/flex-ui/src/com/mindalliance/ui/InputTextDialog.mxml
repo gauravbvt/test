@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+    keyUp="handleKeyEvent(event)"
+    mouseDownOutside="PopUpManager.removePopUp(this);">
+    <mx:Script>
+    
+        <![CDATA[
+            import mx.managers.PopUpManager;
+            
+            public var okEventHandler:Function ;
+            
+            private function handleKeyEvent(event:KeyboardEvent):void {
+                if (event.keyCode == Keyboard.ESCAPE) {
+                    PopUpManager.removePopUp(this);
+                } else if (event.keyCode == Keyboard.ENTER) {
+                    okEventHandler(textInput.text) ;
+                    PopUpManager.removePopUp(this);
+                }
+            }
+            
+        ]]>
+    </mx:Script>
+    <mx:TextInput id="textInput"/>
+</mx:TitleWindow>

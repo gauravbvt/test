@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:mas="com.mindalliance.ui.*"
+    initialize="init()" horizontalAlign="center">
+    
+    <mx:ArrayCollection id="StoryLines">
+        <mx:Object Name="Story 1" Description="This is a short description about Story 1" Categories="Category A, Category B"/>
+    </mx:ArrayCollection>
+    
+    <mx:Script>
+        <![CDATA[
+            import mx.controls.Alert;
+            import mx.events.ListEvent;
+            
+            public function fillData(name:String):void {
+                formScenarioDetails.txtName.text = name ;
+            }
+            
+            public function beginEdit():void {
+                formScenarioDetails.txtName.setFocus();
+            }
+            
+            private function init():void {
+                listStoryLines.list.editable = false ;
+                listStoryLines.list.addEventListener(ListEvent.ITEM_CLICK, storyLineItemClicked);
+            }
+            
+            private function storyLineItemClicked(event:ListEvent):void {
+               formStoryLineDetails.includeInLayout = true ;
+               formStoryLineDetails.visible = true ;
+               fillFormStoryLineDetails(listStoryLines.list.selectedItem);
+            }
+            
+            private function fillFormStoryLineDetails(item:Object):void {
+                formStoryLineDetails.txtName.text = item.toString();
+            }
+        ]]>
+    </mx:Script>
+    <mx:Label text="Scenario" fontWeight="bold"/>
+    <mx:HBox>
+        <mas:NameDescribeCategorize id="formScenarioDetails"/>
+        <mx:Form>
+            <mx:FormItem label="Story Lines">
+                <mx:HBox>
+                    <mas:MultiValueEditableList id="listStoryLines"/>
+                    <mas:NameDescribeCategorize id="formStoryLineDetails" visible="false" includeInLayout="false"/>
+                </mx:HBox>
+            </mx:FormItem>
+        </mx:Form>
+    </mx:HBox>
+</mx:VBox>
