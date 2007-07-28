@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.util.AbstractJavaBean;
+import com.mindalliance.channels.data.support.AbstractJavaBean;
 
 /**
  * An abstract base command that maintains basic state for

@@ -5,20 +5,18 @@ package com.mindalliance.channels.ui.editor;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.Set;
 
 import org.zkoss.zk.ui.Page;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.ObjectBrowser;
 import com.mindalliance.channels.ui.ObjectBrowserListener;
 import com.mindalliance.channels.ui.ObjectEditor;
 
 /**
  * General purpose editor creator.
- *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
  */
@@ -80,8 +78,8 @@ public class EditorFactory {
     public <T> ObjectBrowser<T> createBrowser( Collection<T> objects,
             Class<T> beanClass, ObjectBrowserListener<T> listener ) {
 
-        ElementBrowser<T> browser = new ElementBrowser<T>(
-                beanClass, system, user );
+        ElementBrowser<T> browser = new ElementBrowser<T>( beanClass, system,
+                user );
         browser.setObjects( objects );
 
         if ( listener != null )
@@ -100,8 +98,7 @@ public class EditorFactory {
         JavaBean result = null;
         if ( supports( object ) )
             try {
-                ElementEditorPanel panel =
-                    new ElementEditorPanel<JavaBean>(
+                ElementEditorPanel panel = new ElementEditorPanel<JavaBean>(
                         object, system, user, false );
                 panel.setDialog( true );
                 panel.setPage( this.getPage() );
@@ -117,8 +114,8 @@ public class EditorFactory {
     }
 
     /**
-     * Popup a chooser for the provided type.  Blocks until the
-     * user clicks OK or cancel.
+     * Popup a chooser for the provided type. Blocks until the user
+     * clicks OK or cancel.
      * @param <T> the type for which to specialize the editor
      * @param type the Class object for the type
      * @return the chosen instance
@@ -126,10 +123,11 @@ public class EditorFactory {
     public <T> T popupChooser( Class<T> type ) {
         T result = null;
         try {
-            ElementChooser<T> chooser = new ElementChooser<T>(type, system, user);
+            ElementChooser<T> chooser = new ElementChooser<T>( type, system,
+                    user );
             chooser.setPage( this.getPage() );
             chooser.doModal();
-            if (chooser.isOk()) {
+            if ( chooser.isOk() ) {
                 result = chooser.getSelection();
             }
         } catch ( InterruptedException e ) {
@@ -137,26 +135,30 @@ public class EditorFactory {
         }
         return result;
     }
-    
+
     /**
-     * Popup a chooser for Concrete classes that implement a particular interface.
+     * Popup a chooser for Concrete classes that implement a
+     * particular interface.
      * @param type the interface to search
      * @return the selected Class
      */
+    @SuppressWarnings("unchecked")
     public Class popupInterfaceChooser( Class type ) {
         Class result = null;
         try {
-            if (!type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+            if ( !type.isInterface()
+                    && !Modifier.isAbstract( type.getModifiers() ) ) {
                 result = type;
             } else {
-                Class[] types = InterfaceHelper.retrieveTypes(type);
-                if (types.length == 1) {
+                Class[] types = InterfaceHelper.retrieveTypes( type );
+                if ( types.length == 1 ) {
                     result = types[0];
                 } else {
-                    InterfaceChooser chooser = new InterfaceChooser(type, types);
+                    InterfaceChooser chooser =
+                        new InterfaceChooser( type, types );
                     chooser.setPage( this.getPage() );
                     chooser.doModal();
-                    if (chooser.isOk()) {
+                    if ( chooser.isOk() ) {
                         result = chooser.getSelectedType();
                     }
                 }
@@ -164,10 +166,10 @@ public class EditorFactory {
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
-        
+
         return result;
     }
-    
+
     /**
      * Return the value of page.
      */

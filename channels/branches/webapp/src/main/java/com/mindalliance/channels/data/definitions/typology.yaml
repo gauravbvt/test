@@ -1,0 +1,56 @@
+--- 
+defaultDiscipline: &3 
+  categories: 
+    - &5 !com.mindalliance.channels.data.definitions.Category
+      implications: 
+        - &1 !com.mindalliance.channels.data.definitions.Category
+          name: State
+          taxonomy: &6 Location
+      name: County
+      taxonomy: *6
+    - !com.mindalliance.channels.data.definitions.Category
+      implications: 
+        - *5
+      name: Municipality
+      taxonomy: *6
+    - !com.mindalliance.channels.data.definitions.Category
+      name: Operation
+      taxonomy: &8 Task
+    - !com.mindalliance.channels.data.definitions.Category
+      name: Investigation
+      taxonomy: *8
+    - *1
+  description: Common vocabulary across all disciplines
+  name: Common Sense
+disciplines: 
+  - *3
+  - !com.mindalliance.channels.data.definitions.Discipline
+    categories: 
+      - !com.mindalliance.channels.data.definitions.Category
+        name: Plague
+        taxonomy: &4 Event
+    name: Health
+    parents: 
+      - *3
+  - !com.mindalliance.channels.data.definitions.Discipline
+    categories: 
+      - &2 !com.mindalliance.channels.data.definitions.Category
+        name: Accident
+        taxonomy: *4
+      - !com.mindalliance.channels.data.definitions.Category
+        implications: 
+          - *2
+        name: Plane crash
+        taxonomy: *4
+      - !com.mindalliance.channels.data.definitions.Category
+        implications: 
+          - *2
+        name: Train derailment
+        taxonomy: *4
+      - !com.mindalliance.channels.data.definitions.Category
+        name: Fire
+        taxonomy: *4
+    name: Law Enforcement
+    parents: 
+      - *3
+name: Default

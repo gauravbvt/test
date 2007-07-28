@@ -24,8 +24,8 @@ import org.zkoss.zul.Window;
 import com.beanview.BeanViewGroup;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.Element;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.support.Element;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.ObjectEditor;
 
 /**

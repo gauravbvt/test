@@ -10,6 +10,8 @@ import org.acegisecurity.GrantedAuthorityImpl;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mindalliance.channels.data.system.UserImpl;
+
 import static org.junit.Assert.*;
 
 /**

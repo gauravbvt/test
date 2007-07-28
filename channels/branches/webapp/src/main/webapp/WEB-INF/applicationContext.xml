@@ -20,7 +20,7 @@
 	</bean>
 
 	<!-- Users -->
- 	<bean id="user" class="com.mindalliance.channels.data.user.UserImpl">
+ 	<bean id="user" class="com.mindalliance.channels.data.system.UserImpl">
 		<property name="username" value="user"/>
 		<property name="password" value="user"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
@@ -28,7 +28,7 @@
 		<property name="email" value="user@example.com"/>
 	</bean>
 
-  <bean id="manager" class="com.mindalliance.channels.data.user.UserImpl">
+  <bean id="manager" class="com.mindalliance.channels.data.system.UserImpl">
 		<property name="username" value="manager"/>
 		<property name="password" value="manager"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
@@ -36,7 +36,7 @@
 		<property name="email" value="manager@example.com"/>
 	</bean>
 
-	<bean id="liaison" class="com.mindalliance.channels.data.user.UserImpl">
+	<bean id="liaison" class="com.mindalliance.channels.data.system.UserImpl">
 		<property name="username" value="liaison"/>
 		<property name="password" value="liaison"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
@@ -44,7 +44,7 @@
 		<property name="email" value="spook@example.com"/>
 	</bean>
 
-	<bean id="admin" class="com.mindalliance.channels.data.user.UserImpl">
+	<bean id="admin" class="com.mindalliance.channels.data.system.UserImpl">
 		<property name="username" value="admin"/>
 		<property name="password" value="admin"/>
 		<property name="grantedAuthorities"><value>ROLE_USER,ROLE_ADMIN</value></property>
@@ -52,7 +52,7 @@
 		<property name="email" value="${adminEmail}"/>
 	</bean>
 
-	<bean id="guest" class="com.mindalliance.channels.data.user.UserImpl">
+	<bean id="guest" class="com.mindalliance.channels.data.system.UserImpl">
 		<property name="username" value="guest"/>
 		<property name="password" value="guest"/>
 		<property name="grantedAuthorities"><value>ROLE_USER</value></property>
@@ -60,70 +60,40 @@
 		<property name="email" value="guest@example.com"/>
 	</bean>
 
-	<bean name="countyType" class="com.mindalliance.channels.data.reference.Type">
-		<property name="name" value="County"/>
-		<property name="category" value="Location"/>
+	<bean name="typologyFactory" class="com.mindalliance.channels.data.definitions.TypologyFactory">
+		<constructor-arg type="java.io.InputStream" value="classpath:com/mindalliance/channels/data/definitions/typology.yaml"/>
 	</bean>
 
-	<bean name="stateType" class="com.mindalliance.channels.data.reference.Type">
-		<property name="name" value="State"/>
-		<property name="category" value="Location"/>
-	</bean>
+	<bean name="typology" factory-bean="typologyFactory" factory-method="getTypology"/>
 
-	<bean name="fireType" class="com.mindalliance.channels.data.reference.Type">
-		<property name="name" value="Fire"/>
-		<property name="category" value="Event"/>
-	</bean>
-
-	<bean name="typology" class="com.mindalliance.channels.data.reference.Typology">
-		<property name="name" value="Default"/>
-		<property name="types"><list>
-			<ref bean="stateType"/>
-			<ref bean="countyType"/>
-			<ref bean="fireType"/>
-		</list></property>
-	</bean>
-
-	<bean id="ev1" class="com.mindalliance.channels.data.elements.scenario.Event">
+	<bean id="ev1" class="com.mindalliance.channels.data.models.Event">
 		<property name="name" value="Fire alarm triggered"/>
-		<property name="typeSet">
-			<bean class="com.mindalliance.channels.data.reference.TypeSet">
-				<constructor-arg ref="typology"/>
-				<constructor-arg value="Event"/>
-				<constructor-arg value="false"/>
-				<property name="types"><set>
-					<ref bean="fireType"/>
-				</set></property>
+		<property name="categorySet">
+			<bean factory-bean="typologyFactory" factory-method="getCategorySet">
+				<constructor-arg value="Law Enforcement"/>
+				<constructor-arg value="Fire"/>
 			</bean>
 		</property>
 		<property name="description" value="Everybody remain calm..."/>
 		<property name="location">
-			<bean class="com.mindalliance.channels.data.reference.Location">
+			<bean class="com.mindalliance.channels.data.definitions.Location">
 				<property name="name" value="Livingston"/>
 				<property name="within"><list>
-					<bean class="com.mindalliance.channels.data.reference.Location">
+					<bean class="com.mindalliance.channels.data.definitions.Location">
 						<property name="name" value="Morris County"/>
-						<property name="typeSet">
-							<bean class="com.mindalliance.channels.data.reference.TypeSet">
-								<constructor-arg ref="typology"/>
-								<constructor-arg value="Location"/>
-								<constructor-arg value="false"/>
-								<property name="types"><set>
-									<ref bean="countyType"/>
-								</set></property>
+						<property name="categorySet">
+							<bean factory-bean="typologyFactory" factory-method="getCategorySet">
+								<constructor-arg value="Law Enforcement"/>
+								<constructor-arg value="County"/>
 							</bean>
 						</property>
 						<property name="within"><list>
-							<bean class="com.mindalliance.channels.data.reference.Location">
+							<bean class="com.mindalliance.channels.data.definitions.Location">
 								<property name="name" value="New Jersey"/>
-								<property name="typeSet">
-									<bean class="com.mindalliance.channels.data.reference.TypeSet">
-										<constructor-arg ref="typology"/>
-										<constructor-arg value="Location"/>
-										<constructor-arg value="false"/>
-										<property name="types"><set>
-											<ref bean="stateType"/>
-										</set></property>
+								<property name="categorySet">
+									<bean factory-bean="typologyFactory" factory-method="getCategorySet">
+										<constructor-arg value="Law Enforcement"/>
+										<constructor-arg value="State"/>
 									</bean>
 								</property>
 							</bean>
@@ -134,18 +104,17 @@
 		</property>
 		</bean>
 
-	<bean id="ev2" class="com.mindalliance.channels.data.elements.scenario.Task">
+	<bean id="ev2" class="com.mindalliance.channels.data.models.Task">
 		<property name="name" value="Verify cause of alarm"/>
-		<property name="typeSet">
-			<bean class="com.mindalliance.channels.data.reference.TypeSet">
-				<constructor-arg ref="typology"/>
-				<constructor-arg value="Any"/>
-				<constructor-arg value="false"/>
+		<property name="categorySet">
+			<bean factory-bean="typologyFactory" factory-method="getCategorySet">
+				<constructor-arg value="Common Sense"/>
+				<constructor-arg value="Investigation"/>
 			</bean>
 		</property>
 		<property name="description" value="Pranksters abound..."/>
 		<property name="cause">
-			<bean class="com.mindalliance.channels.data.components.Cause">
+			<bean class="com.mindalliance.channels.data.models.Cause">
 				<property name="occurrence" ref="ev1"/>
 			</bean>
 		</property>
@@ -157,35 +126,33 @@
 		</property>
 		</bean>
 
-	<bean id="ev3" class="com.mindalliance.channels.data.elements.scenario.Event">
+	<bean id="ev3" class="com.mindalliance.channels.data.models.Event">
 		<property name="name" value="Fire verified"/>
-		<property name="typeSet">
-			<bean class="com.mindalliance.channels.data.reference.TypeSet">
-				<constructor-arg ref="typology"/>
-				<constructor-arg value="Event"/>
-				<constructor-arg value="false"/>
+		<property name="categorySet">
+			<bean factory-bean="typologyFactory" factory-method="getCategorySet">
+				<constructor-arg value="Common Sense"/>
+				<constructor-arg value="Investigation"/>
 			</bean>
 		</property>
 		<property name="description" value="Flee!"/>
 		<property name="cause">
-			<bean class="com.mindalliance.channels.data.components.Cause">
+			<bean class="com.mindalliance.channels.data.models.Cause">
 				<property name="occurrence" ref="ev2"/>
 			</bean>
 		</property>
 		</bean>
 
-	<bean id="ev4" class="com.mindalliance.channels.data.elements.scenario.Task">
+	<bean id="ev4" class="com.mindalliance.channels.data.models.Task">
 		<property name="name" value="Notify fire department"/>
-		<property name="typeSet">
-			<bean class="com.mindalliance.channels.data.reference.TypeSet">
-				<constructor-arg ref="typology"/>
-				<constructor-arg value="Any"/>
-				<constructor-arg value="false"/>
+		<property name="categorySet">
+			<bean factory-bean="typologyFactory" factory-method="getCategorySet">
+				<constructor-arg value="Common Sense"/>
+				<constructor-arg value="Operation"/>
 			</bean>
 		</property>
 		<property name="description" value="Please hold..."/>
 		<property name="cause">
-			<bean class="com.mindalliance.channels.data.components.Cause">
+			<bean class="com.mindalliance.channels.data.models.Cause">
 				<property name="occurrence" ref="ev3"/>
 			</bean>
 		</property>
@@ -209,35 +176,35 @@
 			<ref bean="admin"/>
 		</set></property>
 		<property name="alerts"><list>
-			<bean class="com.mindalliance.channels.data.user.Alert">
+			<bean class="com.mindalliance.channels.data.system.Alert">
 				<property name="priority" value="HIGH"/>
 				<property name="description" value="Knowledge issue detected in &quot;Building Fire&quot; scenario"/>
 			</bean>
-			<bean class="com.mindalliance.channels.data.user.Alert">
+			<bean class="com.mindalliance.channels.data.system.Alert">
 				<property name="priority" value="MEDIUM"/>
 				<property name="description" value="New todo - confirm suggested response to new &quot;e-commerce server offline&quot; event in scenario &quot;Blackout&quot;"/>
 			</bean>
-			<bean class="com.mindalliance.channels.data.user.Alert">
+			<bean class="com.mindalliance.channels.data.system.Alert">
 				<property name="priority" value="LOW"/>
 				<property name="description" value="Peter Jones suggested a change to your profile"/>
 			</bean>
 		</list></property>
 	</bean>
 
-	<bean name="location1" class="com.mindalliance.channels.data.reference.Location">
+	<bean name="location1" class="com.mindalliance.channels.data.definitions.Location">
 	</bean>
-	<bean name="location2" class="com.mindalliance.channels.data.reference.Location">
+	<bean name="location2" class="com.mindalliance.channels.data.definitions.Location">
 	</bean>
 
-	<bean name="organization1" class="com.mindalliance.channels.data.elements.resources.Organization">
+	<bean name="organization1" class="com.mindalliance.channels.data.profiles.OrganizationImpl">
 		<property name="name" value="The Agency"/>
 	</bean>
 
-	<bean name="organization2" class="com.mindalliance.channels.data.elements.resources.Organization">
+	<bean name="organization2" class="com.mindalliance.channels.data.profiles.OrganizationImpl">
 		<property name="name" value="The Company"/>
 	</bean>
 
-	<bean name="directory" class="com.mindalliance.channels.data.system.Directory">
+	<bean name="directory" class="com.mindalliance.channels.data.profiles.Directory">
 		<property name="organizations">
 			<list>
 				<ref bean="organization1"/>
@@ -248,7 +215,7 @@
 
 	<bean name="history" class="com.mindalliance.channels.data.system.History"/>
 
-	<bean name="library" class="com.mindalliance.channels.data.system.Library">
+	<bean name="library" class="com.mindalliance.channels.data.definitions.Library">
 		<property name="locations">
 			<list>
 				<ref bean="location1"/>
@@ -260,19 +227,19 @@
 		</list></property>
 	</bean>
 
-	<bean name="portfolio" class="com.mindalliance.channels.data.system.Portfolio">
+	<bean name="portfolio" class="com.mindalliance.channels.data.frames.Portfolio">
 		<property name="projects"><list>
-			<bean class="com.mindalliance.channels.data.elements.project.Project">
+			<bean class="com.mindalliance.channels.data.frames.Project">
 				<property name="name" value="ACME Business Continuity" />
-				<property name="models"><set>
-					<bean class="com.mindalliance.channels.data.elements.project.Model">
+				<property name="scenarios"><set>
+					<bean class="com.mindalliance.channels.data.models.Scenario">
 						<property name="name" value="Headquarters" />
-						<property name="scenarios"><set>
-							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+						<property name="storylines"><set>
+							<bean class="com.mindalliance.channels.data.models.Storyline">
 								<property name="name" value="Blackout" />
 								<property name="description" value="Lights out..." />
 							</bean>
-							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+							<bean class="com.mindalliance.channels.data.models.Storyline">
 								<property name="name" value="Building Fire" />
 								<property name="description" value="A fire happens in the building" />
 								<property name="occurrences"><set>
@@ -282,34 +249,34 @@
 									<ref bean="ev4" /></set>
 								</property>
 							</bean>
-							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+							<bean class="com.mindalliance.channels.data.models.Storyline">
 								<property name="name" value="Firewall Breach" />
 								<property name="description" value="A hacker made it through" />
 							</bean></set>
 						</property>
 					</bean>
-					<bean class="com.mindalliance.channels.data.elements.project.Model">
+					<bean class="com.mindalliance.channels.data.models.Scenario">
 						<property name="name" value="Supply Chain" />
-						<property name="scenarios"><set>
-							<bean class="com.mindalliance.channels.data.elements.project.Scenario">
+						<property name="storylines"><set>
+							<bean class="com.mindalliance.channels.data.models.Storyline">
 								<property name="name" value="Some scenario" />
 							</bean></set>
 						</property>
 					</bean></set>
 				</property>
 			</bean>
-			<bean class="com.mindalliance.channels.data.elements.project.Project">
+			<bean class="com.mindalliance.channels.data.frames.Project">
 				<property name="name" value="CDC Avian Flu Preparedness" />
-				<property name="models"><list>
-					<bean class="com.mindalliance.channels.data.elements.project.Model">
+				<property name="scenarios"><list>
+					<bean class="com.mindalliance.channels.data.models.Scenario">
 						<property name="name" value="Another model" />
 					</bean></list>
 				</property>
 			</bean>
-			<bean class="com.mindalliance.channels.data.elements.project.Project">
+			<bean class="com.mindalliance.channels.data.frames.Project">
 				<property name="name" value="International Markets" />
-				<property name="models"><list>
-					<bean class="com.mindalliance.channels.data.elements.project.Model">
+				<property name="scenarios"><list>
+					<bean class="com.mindalliance.channels.data.models.Scenario">
 						<property name="name" value="Some other model" />
 					</bean></list>
 				</property>
@@ -332,18 +299,18 @@
 		<property name="bigPrefix" value="images/24x24/"/>
 		<property name="defaultIcon" value="unknown.png"/>
 		<property name="icons"><map>
-			<entry key="com.mindalliance.channels.data.elements.project.Project" value="environment.png"/>
-			<entry key="com.mindalliance.channels.data.elements.project.Model" value="cube_molecule.png"/>
-			<entry key="com.mindalliance.channels.data.elements.project.Scenario" value="branch.png"/>
-			<entry key="com.mindalliance.channels.data.elements.scenario.Task" value="gears.png"/>
-			<entry key="com.mindalliance.channels.data.elements.scenario.Event" value="warning.png"/>
-			<entry key="com.mindalliance.channels.data.reference.Location" value="earth.png"/>
-			<entry key="com.mindalliance.channels.data.components.Cause" value="redo.png"/>
-			<entry key="com.mindalliance.channels.data.reference.Policy" value="scroll.png"/>
-			<entry key="com.mindalliance.channels.data.reference.Typology" value="scroll.png"/>
-			<entry key="com.mindalliance.channels.data.reference.Typology$Category" value="scroll.png"/>
-			<entry key="com.mindalliance.channels.data.reference.TypeSet" value="bookmarks.png"/>
-			<entry key="com.mindalliance.channels.data.reference.Type" value="bookmark.png"/>
+			<entry key="com.mindalliance.channels.data.frames.Project" value="environment.png"/>
+			<entry key="com.mindalliance.channels.data.models.Scenario" value="cube_molecule.png"/>
+			<entry key="com.mindalliance.channels.data.models.Storyline" value="branch.png"/>
+			<entry key="com.mindalliance.channels.data.models.Task" value="gears.png"/>
+			<entry key="com.mindalliance.channels.data.models.Event" value="warning.png"/>
+			<entry key="com.mindalliance.channels.data.definitions.Location" value="earth.png"/>
+			<entry key="com.mindalliance.channels.data.models.Cause" value="redo.png"/>
+			<entry key="com.mindalliance.channels.data.definitions.Policy" value="scroll.png"/>
+			<entry key="com.mindalliance.channels.data.definitions.Typology" value="scroll.png"/>
+			<entry key="com.mindalliance.channels.data.definitions.Category$Taxonomy" value="scroll.png"/>
+			<entry key="com.mindalliance.channels.data.definitions.CategorySet" value="bookmarks.png"/>
+			<entry key="com.mindalliance.channels.data.definitions.Category" value="bookmark.png"/>
 		</map></property>
 	</bean>
 

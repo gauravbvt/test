@@ -20,8 +20,7 @@ import org.drools.event.DefaultAgendaEventListener;
 import org.drools.rule.Package;
 import org.springframework.context.Lifecycle;
 
-import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.data.elements.project.Model;
+import com.mindalliance.channels.data.models.Scenario;
 
 /**
  * Encapsulation of the DROOLS engine.
@@ -34,7 +33,7 @@ public class RulesEngine implements Lifecycle {
     private static Log logger = LogFactory.getLog( RulesEngine.class );
 
     private List<InputStream> drlPackages;
-    private Model model;
+    private Scenario scenario;
 
     private WorkingMemory workingMemory;
 
@@ -125,25 +124,26 @@ public class RulesEngine implements Lifecycle {
 
     private void assertModel() {
         if ( getModel() == null )
-            throw new IllegalStateException( "A model is required" );
+            throw new IllegalStateException( "A scenario is required" );
 
-        for ( JavaBean b : getModel().getAssertions() )
-            this.workingMemory.assertObject( b, true );
+        // TODO
+//        for ( JavaBean b : getModel().getAssertions() )
+//            this.workingMemory.assertObject( b, true );
     }
 
     /**
-     * Return the model fueling the rules engine.
+     * Return the scenario fueling the rules engine.
      */
-    public Model getModel() {
-        return this.model;
+    public Scenario getModel() {
+        return this.scenario;
     }
 
     /**
-     * Set the model used by this rules engine.
-     * @param model the model
+     * Set the scenario used by this rules engine.
+     * @param scenario the scenario
      */
-    public final void setModel( Model model ) {
-        this.model = model;
+    public final void setModel( Scenario scenario ) {
+        this.scenario = scenario;
     }
 
     /**

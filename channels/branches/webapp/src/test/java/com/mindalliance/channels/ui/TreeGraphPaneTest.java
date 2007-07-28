@@ -13,10 +13,10 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import com.mindalliance.channels.AbstractSecurityTest;
 import com.mindalliance.channels.UserExistsException;
-import com.mindalliance.channels.data.elements.project.Model;
-import com.mindalliance.channels.data.elements.project.Scenario;
-import com.mindalliance.channels.data.elements.scenario.Event;
-import com.mindalliance.channels.data.elements.scenario.Task;
+import com.mindalliance.channels.data.models.Event;
+import com.mindalliance.channels.data.models.Scenario;
+import com.mindalliance.channels.data.models.Storyline;
+import com.mindalliance.channels.data.models.Task;
 import com.mindalliance.channels.ui.TreeGraphPane.Arc;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 
@@ -37,7 +37,7 @@ public class TreeGraphPaneTest extends AbstractSecurityTest {
     private TreeGraphPane tgp;
     private Event event1;
     private Task task1;
-    private Scenario scenario;
+    private Storyline storyline;
     private EditorFactory editorFactory;
     
     /**
@@ -48,19 +48,19 @@ public class TreeGraphPaneTest extends AbstractSecurityTest {
         super.setUp();
         
         assertEquals( "ACME Business Continuity", project.getName() );
-        Model model = project.getModels().iterator().next();
-        assertEquals( "Headquarters", model.getName() );
+        Scenario scenario = project.getScenarios().iterator().next();
+        assertEquals( "Headquarters", scenario.getName() );
 
-        final Iterator<Scenario> iterator = model.getScenarios().iterator();
+        final Iterator<Storyline> iterator = scenario.getStorylines().iterator();
         iterator.next();
-        scenario = iterator.next();
-        assertEquals( "Building Fire", scenario.getName() );
-        event1 = scenario.getEvents().iterator().next();
-        task1 = scenario.getTasks().iterator().next();
+        storyline = iterator.next();
+        assertEquals( "Building Fire", storyline.getName() );
+        event1 = storyline.getEvents().iterator().next();
+        task1 = storyline.getTasks().iterator().next();
         this.editorFactory = new EditorFactory();
         editorFactory.setSystem( system );
         editorFactory.setUser( user );
-        this.tgp = new TreeGraphPane( 200, scenario, editorFactory );
+        this.tgp = new TreeGraphPane( 200, storyline, editorFactory );
         this.tgp.setIconManager( new IconManager() );
     }
 
@@ -82,7 +82,7 @@ public class TreeGraphPaneTest extends AbstractSecurityTest {
     
     @Test
     public void testGetScenario() {
-        assertSame( scenario, tgp.getScenario() );
+        assertSame( storyline, tgp.getScenario() );
     }
     
     @Test( expected=NullPointerException.class )

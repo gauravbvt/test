@@ -26,12 +26,12 @@ import org.zkoss.zul.Treechildren;
 import org.zkoss.zul.Treeitem;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.project.Model;
-import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.data.elements.project.Scenario;
-import com.mindalliance.channels.services.PortfolioService;
-import com.mindalliance.channels.services.RegistryService;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.frames.PortfolioService;
+import com.mindalliance.channels.data.frames.Project;
+import com.mindalliance.channels.data.models.Scenario;
+import com.mindalliance.channels.data.models.Storyline;
+import com.mindalliance.channels.data.system.RegistryService;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 
 /**
@@ -151,9 +151,9 @@ public class ScenariosTab extends Tabpanel {
     private Treeitem createProjectNode( Project project ) {
 
         Treechildren models = new Treechildren();
-        for ( Model m : project.getModels() )
+        for ( Scenario m : project.getScenarios() )
             models.appendChild(
-                    createModelNode( m ) );
+                    createScenarioNode( project, m ) );
 
         Treeitem result = newTreeitem(
                     new AccordionSelection(
@@ -169,32 +169,37 @@ public class ScenariosTab extends Tabpanel {
 
     /**
      * Create a model node in the tree.
-     * @param model the model
+     * @param project the projet
+     * @param scenario the model
      * @return a tree node, collapsed
      */
-    private Treeitem createModelNode( Model model ) {
+    private Treeitem createScenarioNode( Project project, Scenario scenario ) {
 
         Treechildren scenarios = new Treechildren();
-        for ( Scenario s : model.getScenarios() )
+        for ( Storyline s : scenario.getStorylines() )
             scenarios.appendChild(
-                    createScenarioNode( s ) );
+                    createStorylineNode( project, scenario, s ) );
 
         return newTreeitem(
             new AccordionSelection(
                 MODEL_ICON,
-                model.getName(),
-                "Model properties",
+                scenario.getName(),
+                "Scenario properties",
                 "ROLE_USER",
                 getCanvas(),
-                getEditorFactory().createEditor( model ) ),
+                getEditorFactory().createEditor( scenario ) ),
             scenarios );
     }
 
     /**
      * Create a scenario node.
+     * @param project the project
      * @param scenario the scenario
+     * @param storyline the storyline
      */
-    private Treeitem createScenarioNode( Scenario scenario ) {
+    private Treeitem createStorylineNode(
+            Project project,
+            Scenario scenario, Storyline storyline ) {
 
         Treechildren reports = new Treechildren();
         reports.appendChild( newTreeitem(
@@ -240,12 +245,13 @@ public class ScenariosTab extends Tabpanel {
         return newTreeitem(
             new AccordionSelection(
                 SCENARIO_ICON,
-                scenario.getName(),
-                "Scenario viewer",
+                storyline.getName(),
+                "Storyline viewer",
                 "ROLE_USER",
                 getCanvas(),
                 new ScenarioViewer(
-                    getMaxHeight(), scenario, getEditorFactory()
+                    getMaxHeight(),
+                    project, scenario, storyline, getEditorFactory()
                 )
             ),
             reports );
@@ -314,43 +320,46 @@ public class ScenariosTab extends Tabpanel {
             }
 
         } else if ( selection.getIcon().equals( MODEL_ICON ) ) {
-            Model model = (Model) selection.getEditor().getObject();
-            Project project = model.getProject();
+            Scenario scenario = (Scenario) selection.getEditor().getObject();
 
-            if ( portfolio.isManager( user, project )
-                    || registry.isAdministrator( user ) ) {
-                menu.appendChild( newAddModelItem( project ) );
-                menu.appendChild( new Menuseparator() );
-                menu.appendChild( newDeleteModelItem( model ) );
-                menu.appendChild( newRenameModelItem( model ) );
-                menu.appendChild( newAddScenarioItem( model ) );
-            }
+//            Project project = scenario.getProject();
+//            if ( portfolio.isManager( user, project )
+//                    || registry.isAdministrator( user ) ) {
+//                menu.appendChild( newAddModelItem( project ) );
+//                menu.appendChild( new Menuseparator() );
+            menu.appendChild( newDeleteModelItem( scenario ) );
+            menu.appendChild( newRenameModelItem( scenario ) );
+            menu.appendChild( newAddScenarioItem( scenario ) );
+//            }
 
         } else if ( selection.getIcon().equals( SCENARIO_ICON ) ) {
-            Scenario scenario = (Scenario) selection.getEditor().getObject();
-            Model model = scenario.getModel();
-            if ( portfolio.isManager( user, model.getProject() )
+            ScenarioViewer viewer = (ScenarioViewer) selection.getEditor();
+            Project project = viewer.getProject();
+            Storyline storyline = viewer.getStoryline();
+            Scenario scenario = viewer.getScenario();
+            if ( portfolio.isManager( user, project )
                     || registry.isAdministrator( user ) ) {
-                menu.appendChild( newAddScenarioItem( model ) );
+                menu.appendChild( newAddScenarioItem( scenario ) );
                 menu.appendChild( new Menuseparator() );
-                menu.appendChild( newEditScenarioItem( scenario ) );
-                menu.appendChild( newDeleteScenarioItem( scenario ) );
-                menu.appendChild( newRenameScenarioItem( scenario ) );
+                menu.appendChild( newEditScenarioItem( storyline ) );
+                menu.appendChild(
+                    newDeleteStorylineItem( scenario, storyline ) );
+                menu.appendChild( newRenameScenarioItem( storyline ) );
             }
         }
     }
 
     /**
      * Open an editor on the selected scenario.
-     * @param scenario the scenario
+     * @param storyline the scenario
      */
-    private Component newEditScenarioItem( final Scenario scenario ) {
+    private Component newEditScenarioItem( final Storyline storyline ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Edit scenario...",
             new Runnable() {
                 public void run() {
-                    if ( getEditorFactory().popupEditor( scenario ) != null )
+                    if ( getEditorFactory().popupEditor( storyline ) != null )
                         refresh();
                 }
             } );
@@ -387,7 +396,7 @@ public class ScenariosTab extends Tabpanel {
         return deleteProjectItem;
     }
 
-    private Menuitem newDeleteModelItem( final Model model ) {
+    private Menuitem newDeleteModelItem( final Scenario scenario ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Delete this model...",
@@ -397,12 +406,13 @@ public class ScenariosTab extends Tabpanel {
                         int button = Messagebox.show(
                             MessageFormat.format(
                                 "Delete model {0}?",
-                                model.getName() ),
+                                scenario.getName() ),
                             null,
                             Messagebox.OK | Messagebox.CANCEL,
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
-                            model.getProject().removeModel( model );
+                            // FIXME
+                            //scenario.getProject().removeScenario( scenario );
                             getSession().setAttribute(
                                     DesktopRichlet.CURRENT_SELECTION, null );
                             refresh();
@@ -415,7 +425,10 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newDeleteScenarioItem( final Scenario scenario ) {
+    private Menuitem newDeleteStorylineItem(
+            final Scenario scenario,
+            final Storyline storyline ) {
+
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Delete this scenario...",
@@ -425,12 +438,12 @@ public class ScenariosTab extends Tabpanel {
                         int button = Messagebox.show(
                             MessageFormat.format(
                                 "Delete scenario {0}?",
-                                scenario.getName() ),
+                                storyline.getName() ),
                             null,
                             Messagebox.OK | Messagebox.CANCEL,
                             Messagebox.QUESTION );
                         if ( button == Messagebox.OK ) {
-                            scenario.getModel().removeScenario( scenario );
+                            scenario.removeStoryline( storyline );
                             getSession().setAttribute(
                                     DesktopRichlet.CURRENT_SELECTION, null );
                             refresh();
@@ -477,13 +490,13 @@ public class ScenariosTab extends Tabpanel {
                 public void run() {
                     try {
                         String modelName = Prompter.prompt(
-                            "Model name?",
+                            "Scenario name?",
                             "Enter the name of the new model",
                             "" );
                         if ( modelName != null ) {
-                            Model model = new Model();
-                            model.setName( modelName );
-                            project.addModel( model );
+                            Scenario scenario = new Scenario();
+                            scenario.setName( modelName );
+                            project.addScenario( scenario );
                             refresh();
                         }
                     } catch ( InterruptedException e1 ) {
@@ -494,7 +507,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newAddScenarioItem( final Model model ) {
+    private Menuitem newAddScenarioItem( final Scenario scenario ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Add a scenario...",
@@ -502,13 +515,13 @@ public class ScenariosTab extends Tabpanel {
                 public void run() {
                     try {
                         String scenarioName = Prompter.prompt(
-                            "Scenario name?",
+                            "Storyline name?",
                             "Enter the name of the new scenario",
                             "" );
                         if ( scenarioName != null ) {
-                            Scenario scenario = new Scenario();
-                            scenario.setName( scenarioName );
-                            model.addScenario( scenario );
+                            Storyline storyline = new Storyline();
+                            storyline.setName( scenarioName );
+                            scenario.addStoryline( storyline );
                             refresh();
                         }
                     } catch ( InterruptedException e1 ) {
@@ -542,7 +555,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newRenameModelItem( final Model model ) {
+    private Menuitem newRenameModelItem( final Scenario scenario ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Rename this model...",
@@ -552,9 +565,9 @@ public class ScenariosTab extends Tabpanel {
                         String modelName = Prompter.prompt(
                             "New model name?",
                             "Enter the new name of the model",
-                            model.getName() );
+                            scenario.getName() );
                         if ( modelName != null ) {
-                            model.setName( modelName );
+                            scenario.setName( modelName );
                             refresh();
                         }
                     } catch ( InterruptedException e1 ) {
@@ -565,7 +578,7 @@ public class ScenariosTab extends Tabpanel {
         return result;
     }
 
-    private Menuitem newRenameScenarioItem( final Scenario scenario ) {
+    private Menuitem newRenameScenarioItem( final Storyline storyline ) {
         // TODO make this a command
         Menuitem result = newMenuitem(
             "Rename this scenario...",
@@ -575,9 +588,9 @@ public class ScenariosTab extends Tabpanel {
                         String scenarioName = Prompter.prompt(
                             "New scenario name?",
                             "Enter the new name of the scenario",
-                            scenario.getName() );
+                            storyline.getName() );
                         if ( scenarioName != null ) {
-                            scenario.setName( scenarioName );
+                            storyline.setName( scenarioName );
                             refresh();
                         }
                     } catch ( InterruptedException e1 ) {

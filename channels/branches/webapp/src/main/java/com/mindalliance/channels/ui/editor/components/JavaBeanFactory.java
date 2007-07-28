@@ -10,14 +10,14 @@ import com.beanview.BeanView;
 import com.beanview.PropertyComponent;
 import com.beanview.PropertyComponentFactory;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.reference.TypeSet;
+import com.mindalliance.channels.data.definitions.CategorySet;
+import com.mindalliance.channels.data.support.AbstractJavaBean;
 import com.mindalliance.channels.data.support.Availability;
 import com.mindalliance.channels.data.support.Distance;
 import com.mindalliance.channels.data.support.Duration;
 import com.mindalliance.channels.data.support.LatLong;
 import com.mindalliance.channels.data.support.Latency;
-import com.mindalliance.channels.services.SystemService;
-import com.mindalliance.channels.util.AbstractJavaBean;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.zk.component.SettableZkTextbox;
 
 
@@ -60,7 +60,7 @@ public class JavaBeanFactory implements PropertyComponentFactory {
             result = new LatLongEditor();
 //        } else if (Location.class.isAssignableFrom(type)) {
 //            result = new LocationEditor();
-        } else if (TypeSet.class.isAssignableFrom(type)) {
+        } else if (CategorySet.class.isAssignableFrom(type)) {
             result = new TypeSetEditor();
         } else if (AbstractJavaBean.class.isAssignableFrom(type)) {
             result = new SingleElementBrowser(type, (SystemService)bv.getContext( "system"), (User)bv.getContext( "user" ));

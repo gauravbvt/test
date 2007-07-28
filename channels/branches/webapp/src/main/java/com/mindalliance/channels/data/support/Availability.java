@@ -1,6 +1,6 @@
-/*
- * Created on Apr 26, 2007
- */
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
+
 package com.mindalliance.channels.data.support;
 
 import java.io.Serializable;
@@ -8,53 +8,87 @@ import java.io.Serializable;
 /**
  * A simplistic way of defining availability. Availabilities can be
  * compared.
- * 
- * @author jf
+ *
+ * @author <a href="mailto:jf@mind-alliance.com">jf</a>
+ * @version $Revision:$
  */
 public class Availability implements Serializable {
 
-    enum Hours {
-        ALL, BUSINESS_HOURS
+    /**
+     * Hours of availability.
+     */
+    public enum Hours {
+        /** Any hour. */
+        ALL,
+
+        /** Business hours. */
+        BUSINESS_HOURS
     };
 
-    enum Days {
-        ALL, WORK_DAYS
+    /**
+     * Day of availability.
+     */
+    public enum Days {
+        /** Any day. */
+        ALL,
+
+        /** Work days. */
+        WORK_DAYS
     };
 
     private Days days = Days.ALL;
     private Hours hours = Hours.ALL;
 
-    public boolean comprise( Availability availability ) {
-        return false;
+    /**
+     * Default constructor.
+     */
+    public Availability() {
+        super();
     }
 
-    public boolean overlap( Availability availability ) {
+    /**
+     * Test if a given availability is included in this one.
+     * @param availability the availability
+     */
+    public boolean comprise( Availability availability ) {
+        // TODO
         return false;
     }
 
     /**
-     * @return the days
+     * Test if a given availability overlaps with this one.
+     * @param availability the availability
+     */
+    public boolean overlap( Availability availability ) {
+        // TODO
+        return false;
+    }
+
+    /**
+     * Return the days.
      */
     public Days getDays() {
         return days;
     }
 
     /**
-     * @param days the days to set
+     * Set the days.
+     * @param days the days
      */
     public void setDays( Days days ) {
         this.days = days;
     }
 
     /**
-     * @return the hours
+     * Return the hours.
      */
     public Hours getHours() {
         return hours;
     }
 
     /**
-     * @param hours the hours to set
+     * Set the hours.
+     * @param hours the hours
      */
     public void setHours( Hours hours ) {
         this.hours = hours;

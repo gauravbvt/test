@@ -15,12 +15,12 @@ import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
-import com.mindalliance.channels.data.reference.Type;
-import com.mindalliance.channels.data.reference.TypeSet;
-import com.mindalliance.channels.data.reference.Typology;
+import com.mindalliance.channels.data.definitions.Category;
+import com.mindalliance.channels.data.definitions.CategorySet;
+import com.mindalliance.channels.data.definitions.NamedObject;
 
 /**
- * A stand-in TypeSet editor component.
+ * A stand-in CategorySet editor component.
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>
  * @version $Revision:$
  */
@@ -35,7 +35,7 @@ public class TypeSetEditor extends Vbox implements PropertyComponent {
     private Toolbarbutton addButton;
     private Toolbarbutton deleteButton;
     private ListModelSet model;
-    private TypeSet set;
+    private CategorySet set;
 
     /**
      * Default constructor.
@@ -69,10 +69,10 @@ public class TypeSetEditor extends Vbox implements PropertyComponent {
             }
 
             public void onEvent( Event arg0 ) {
-                Type type = new Type();
-                type.setName( typeTextbox.getText() );
+                NamedObject category = new Category();
+                category.setName( typeTextbox.getText() );
                 typeTextbox.setText( "" );
-                model.add( type );
+                model.add( category );
             }
 
         } );
@@ -89,8 +89,8 @@ public class TypeSetEditor extends Vbox implements PropertyComponent {
             public void onEvent( Event arg0 ) {
                 int index = list.getSelectedIndex();
                 if ( index >= 0 ) {
-                    Type type = (Type) model.getElementAt( index );
-                    model.remove( type );
+                    NamedObject category = (NamedObject) model.getElementAt( index );
+                    model.remove( category );
                 }
             }
         } );
@@ -109,7 +109,7 @@ public class TypeSetEditor extends Vbox implements PropertyComponent {
         list.setPageSize( LIST_PAGESIZE );
         Listhead lh = new Listhead();
 
-        Listheader name = new Listheader( "Type" );
+        Listheader name = new Listheader( "Category" );
         name.setSort( "auto" );
         lh.appendChild( name );
         list.appendChild( lh );
@@ -118,27 +118,27 @@ public class TypeSetEditor extends Vbox implements PropertyComponent {
     }
 
     /**
-     * Returns the TypeSet instance being edited.
+     * Returns the CategorySet instance being edited.
      * @return the instance
      * @see com.beanview.PropertyComponent#getValue()
      */
     @SuppressWarnings( "unchecked" )
     public Object getValue() {
-        set.setTypes( model.getInnerSet() );
+        set.setCategories( model.getInnerSet() );
         return set;
     }
 
     /**
-     * Sets the TypeSet instance to be edited.
+     * Sets the CategorySet instance to be edited.
      * @param arg0 the instance
      * @see com.beanview.PropertyComponent#setValue(java.lang.Object)
      */
     public void setValue( Object arg0 ) {
-        set = (TypeSet) arg0;
+        set = (CategorySet) arg0;
         if ( set == null ) {
-            set = new TypeSet( new Typology() );
+            set = new CategorySet();
         }
-        model = new ListModelSet( set.getTypes() );
+        model = new ListModelSet( set.getCategories() );
         list.setModel( model );
     }
 }

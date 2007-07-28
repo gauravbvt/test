@@ -3,14 +3,14 @@
 
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.data.support.GUID;
 import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
- * @version $Revision$
+ * @version $Revision:46 $
  */
 public class GUIDFactoryImplTest extends TestCase {
 

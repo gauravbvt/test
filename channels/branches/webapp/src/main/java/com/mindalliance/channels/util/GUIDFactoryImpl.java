@@ -6,6 +6,8 @@ package com.mindalliance.channels.util;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.mindalliance.channels.data.support.GUID;
+
 /**
  * A simple creator of globally unique IDs.
  *

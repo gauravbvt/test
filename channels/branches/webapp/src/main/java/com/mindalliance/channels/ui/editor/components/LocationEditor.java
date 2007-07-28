@@ -7,7 +7,7 @@ package com.mindalliance.channels.ui.editor.components;
 import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
-import com.mindalliance.channels.data.reference.Location;
+import com.mindalliance.channels.data.definitions.Location;
 import com.mindalliance.channels.ui.editor.ElementBeanViewPanel;
 
 

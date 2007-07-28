@@ -11,7 +11,7 @@ import com.beanview.BeanView;
 import com.beanview.PropertyComponent;
 import com.beanview.PropertyComponentFactory;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.editor.ElementBrowser;
 import com.mindalliance.channels.util.CollectionType;
 

@@ -9,7 +9,7 @@ import org.zkoss.zul.Row;
 
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.editor.components.ElementComponentFactory;
 import com.mindalliance.zk.beanview.ZkBeanViewPanel;
 import com.mindalliance.zk.beanview.ZkBeanViewPanelBase;

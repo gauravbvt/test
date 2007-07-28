@@ -16,7 +16,7 @@ import com.beanview.annotation.PropertyOptions;
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision$
  */
-public interface User extends UserDetails, JavaBean, Named {
+public interface User extends UserDetails, JavaBean {
 
     /**
      * The standard user role.
@@ -34,14 +34,19 @@ public interface User extends UserDetails, JavaBean, Named {
     String getUsername();
 
     /**
+     * Return the full name of the user.
+     */
+    String getName();
+
+    /**
      * Return if a user is a standard user.
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     boolean isStandardUser();
 
     /**
      * Return if a user is an administrator.
      */
-    @PropertyOptions(ignore=true)
+    @PropertyOptions( ignore = true )
     boolean isAdmin();
 }

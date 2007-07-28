@@ -36,16 +36,16 @@ import org.zkoss.zul.Treeitem;
 
 import com.mindalliance.channels.DisplayAs;
 import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.data.components.Cause;
-import com.mindalliance.channels.data.components.Caused;
-import com.mindalliance.channels.data.elements.Occurrence;
-import com.mindalliance.channels.data.elements.project.Scenario;
-import com.mindalliance.channels.data.elements.scenario.Event;
-import com.mindalliance.channels.data.elements.scenario.Product;
-import com.mindalliance.channels.data.elements.scenario.Task;
+import com.mindalliance.channels.data.models.Cause;
+import com.mindalliance.channels.data.models.Caused;
+import com.mindalliance.channels.data.models.Event;
+import com.mindalliance.channels.data.models.Occurrence;
+import com.mindalliance.channels.data.models.Product;
+import com.mindalliance.channels.data.models.Storyline;
+import com.mindalliance.channels.data.models.Task;
 import com.mindalliance.channels.data.support.Duration;
+import com.mindalliance.channels.data.support.GUID;
 import com.mindalliance.channels.ui.editor.EditorFactory;
-import com.mindalliance.channels.util.GUID;
 import com.mindalliance.zk.mxgraph.MxFastOrganicLayout;
 import com.mindalliance.zk.mxgraph.MxGraph;
 import com.mindalliance.zk.mxgraph.MxPanningHandler;
@@ -53,7 +53,7 @@ import com.mindalliance.zk.mxgraph.MxPanningHandler;
 import static com.mindalliance.channels.ui.TreeGraphPane.Arc.Direction.to;
 
 /**
- * A scenario element viewer.
+ * A storyline element viewer.
  *
  * @author dfeeney
  * @version $Revision$
@@ -72,7 +72,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     private static final int BORDERS = 10;
 
     private EditorFactory editorFactory;
-    private Scenario scenario;
+    private Storyline storyline;
     private MxGraph graph;
     private Tree tree;
     private Caused rootElement;
@@ -91,13 +91,13 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
      * Default constructor.
      *
      * @param height the available height
-     * @param scenario the current scenario
+     * @param storyline the current storyline
      * @param editorFactory the editor factory
      */
     public TreeGraphPane(
-            int height, Scenario scenario, EditorFactory editorFactory ) {
+            int height, Storyline storyline, EditorFactory editorFactory ) {
 
-        this.scenario = scenario;
+        this.storyline = storyline;
         this.editorFactory = editorFactory;
 
         int contentHeight = height - TITLE_HEIGHT - BORDERS;
@@ -170,7 +170,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
 
     /**
      * Set the root element to display in this pane.
-     * @param root a scenario element
+     * @param root a storyline element
      */
     public void setRootElement( Caused root ) {
         this.rootElement = root;
@@ -202,13 +202,13 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     }
 
     /**
-     * Create a new scenario event.
+     * Create a new storyline event.
      */
     private Event createEvent() {
         GUID guid = getEditorFactory().getSystem().getGuidFactory().newGuid();
         Event event = new Event( guid );
         event.setName( "Some new event" );
-        event.setScenario( scenario );
+        event.setStoryline( storyline );
         return event;
     }
 
@@ -221,7 +221,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     }
 
     /**
-     * Create a new scenario task.
+     * Create a new storyline task.
      */
     private Task createTask() {
         GUID guid = getEditorFactory().getSystem().getGuidFactory().newGuid();
@@ -229,7 +229,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
         task.setName( "Some new task" );
         task.setDuration(
                 new Duration( TASK_DURATION, Duration.Unit.minute ) );
-        task.setScenario( scenario );
+        task.setStoryline( storyline );
         return task;
     }
 
@@ -273,7 +273,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
                     Event event = (Event) getEditorFactory().popupEditor(
                             createEvent() );
                     if ( event != null ) {
-                        scenario.addOccurrence( event );
+                        storyline.addOccurrence( event );
                         refresh();
                     }
                 }
@@ -283,7 +283,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
                     Task task = (Task) getEditorFactory().popupEditor(
                             createTask() );
                     if ( task != null ) {
-                        scenario.addOccurrence( task );
+                        storyline.addOccurrence( task );
                         refresh();
                     }
                 }
@@ -360,7 +360,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
             (Event) getEditorFactory().popupEditor( cause );
         if ( event != null ) {
             caused.setCause( new Cause( cause ) );
-            scenario.addOccurrence( event );
+            storyline.addOccurrence( event );
             refresh();
         }
     }
@@ -373,9 +373,9 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
             Caused<Occurrence> c = (Caused<Occurrence>) consequence;
             c.setCause( new Cause<Occurrence>( causeObject ) );
             if ( Product.class.isAssignableFrom( consequence.getClass() ) )
-                scenario.addProduct( (Product) consequence );
+                storyline.addProduct( (Product) consequence );
             else
-                scenario.addOccurrence( (Occurrence) consequence );
+                storyline.addOccurrence( (Occurrence) consequence );
             refresh();
         }
     }
@@ -584,7 +584,7 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     private boolean isArcNode( Class<?> type ) {
         return type != null
             && type.getName().startsWith( "com.mindalliance.channels." )
-            && !type.getSimpleName().equals( "TypeSet" )
+            && !type.getSimpleName().equals( "CategorySet" )
             && !type.getName().startsWith(
                 "com.mindalliance.channels.data.support." )
             && !type.getName().startsWith(
@@ -592,10 +592,10 @@ public class TreeGraphPane extends Tabbox implements TimelineListener {
     }
 
     /**
-     * Return the value of scenario.
+     * Return the value of storyline.
      */
-    public final Scenario getScenario() {
-        return this.scenario;
+    public final Storyline getScenario() {
+        return this.storyline;
     }
 
     /**

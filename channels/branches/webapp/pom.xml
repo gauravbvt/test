@@ -48,6 +48,61 @@
           </webResources>
         </configuration>
       </plugin>
+
+      <!-- Generate UML graphs for javadocs -->
+      <plugin>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<executions>
+			<execution>
+				<phase>site</phase>
+				<configuration>
+					<tasks>
+						<echo message="------- Generating graphs ----------" />
+						<property name="uml.dir" value="${project.reporting.outputDirectory}/apidocs" />
+						<path id="uml.source.path">
+							<pathelement path="${project.build.sourceDirectory}" />
+						</path>
+						<javadoc sourcepathref="uml.source.path" 
+								packagenames="com.mindalliance.*"
+								classpathref="maven.compile.classpath"
+								package="true" destdir="${uml.dir}">
+							<doclet	name="gr.spinellis.umlgraph.doclet.UmlGraphDoc"
+									path="${user.home}/.m2/repository/umlgraph/umlgraph/4.8/umlgraph-4.8.jar">
+								<param name="-d" value="${uml.dir}" />
+		                        <param name="-hide" value="java.*"/>
+		                        <param name="-collpackages" value="java.util.*"/>
+		                        <param name="-qualify"/>
+		                        <param name="-attributes"/>
+		                        <param name="-postfixpackage"/>
+		                        <param name="-nodefontsize" value="9"/>
+		                        <param name="-nodefontpackagesize" value="7"/>
+		                        <param name="-inferdep"/>
+		                        
+<!--
+		                        <param name="-nodefontname" value="Times"/>
+		                        <param name="-inferrel"/>
+		                        <param name="-link" value="http://java.sun.com/j2se/1.5.0/docs/guide/javadoc/doclet/spec"/>
+		                        <param name="-link" value="http://java.sun.com/j2se/1.5/docs/api"/>
+ -->						</doclet>
+						</javadoc>
+						<apply executable="dot"	dest="${uml.dir}" parallel="false"
+									failifexecutionfails="false">
+								<arg value="-Tpng" />
+								<arg value="-v" />
+								<arg value="-o" />
+								<targetfile />
+								<srcfile />
+								<fileset dir="${uml.dir}" includes="*.dot" />
+								<mapper type="glob" from="*.dot" to="*.png" />
+						</apply>
+					</tasks>
+				</configuration>
+				<goals>
+					<goal>run</goal>
+				</goals>
+			</execution>
+		</executions>
+	  </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
@@ -129,6 +184,12 @@
       <groupId>org.acegisecurity</groupId>
       <artifactId>acegi-security-tiger</artifactId>
       <version>1.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>umlgraph</groupId>
+      <artifactId>umlgraph</artifactId>
+      <version>4.8</version>
+      <scope>site</scope>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>

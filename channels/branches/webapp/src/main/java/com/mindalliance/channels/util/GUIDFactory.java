@@ -3,11 +3,13 @@
 
 package com.mindalliance.channels.util;
 
+import com.mindalliance.channels.data.support.GUID;
+
 /**
  * A creator of GUIDs.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
- * @version $Revision$
+ * @version $Revision:46 $
  */
 public interface GUIDFactory {
 

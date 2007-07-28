@@ -19,10 +19,10 @@ import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 
 import com.mindalliance.channels.UserExistsException;
-import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.data.elements.resources.Organization;
-import com.mindalliance.channels.data.user.UserImpl;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.frames.Project;
+import com.mindalliance.channels.data.profiles.OrganizationImpl;
+import com.mindalliance.channels.data.system.SystemService;
+import com.mindalliance.channels.data.system.UserImpl;
 import com.mindalliance.channels.util.GUIDFactory;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AbstractSecurityTest {
     
     protected SystemService system;
     protected Project project;
-    protected Organization organization;
+    protected OrganizationImpl organization;
     protected UserImpl admin;
     protected UserImpl user;
     protected UserImpl manager;
@@ -74,7 +74,7 @@ public abstract class AbstractSecurityTest {
         manager = (UserImpl) ctx.getBean( "manager" );
         liaison = (UserImpl) ctx.getBean( "liaison" );
         guest = (UserImpl) ctx.getBean( "guest" );
-        organization = (Organization) ctx.getBean( "organization1" );
+        organization = (OrganizationImpl) ctx.getBean( "organization1" );
         guidFactory = (GUIDFactory) ctx.getBean( "guidFactory" );
 
         // TODO get a project managed by the manager

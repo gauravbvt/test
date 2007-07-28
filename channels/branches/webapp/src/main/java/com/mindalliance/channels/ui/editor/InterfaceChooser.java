@@ -33,7 +33,7 @@ public class InterfaceChooser<T> extends Window {
     private boolean ok = false;
     
     public InterfaceChooser(Class<T> type, Class[] options) {
-        super("Choose " + type.getSimpleName() + " Type", "normal", false);
+        super("Choose " + type.getSimpleName() + " Category", "normal", false);
         list = new Listbox();
         list.setRows( 11 );
         list.setMold( "paging" );
@@ -91,7 +91,7 @@ public class InterfaceChooser<T> extends Window {
     
     private Listhead generateHeader() {
         Listhead header = new Listhead();
-        Listheader name = new Listheader( "Type" );
+        Listheader name = new Listheader( "Category" );
         name.setSort( "auto" );
         header.appendChild( name );
         return header;

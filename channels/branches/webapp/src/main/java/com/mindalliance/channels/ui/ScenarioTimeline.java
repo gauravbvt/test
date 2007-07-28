@@ -21,16 +21,16 @@ import org.zkforge.timeline.event.SelectEvent;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.EventListener;
 
-import com.mindalliance.channels.data.components.Cause;
-import com.mindalliance.channels.data.components.Caused;
-import com.mindalliance.channels.data.elements.Occurrence;
-import com.mindalliance.channels.data.elements.project.Scenario;
-import com.mindalliance.channels.data.elements.scenario.Product;
+import com.mindalliance.channels.data.models.Cause;
+import com.mindalliance.channels.data.models.Caused;
+import com.mindalliance.channels.data.models.Occurrence;
+import com.mindalliance.channels.data.models.Product;
+import com.mindalliance.channels.data.models.Storyline;
 import com.mindalliance.channels.data.support.Duration;
 
 /**
- * A timeline view of a scenario. Displays when events/tasks/etc... in
- * a particular scenario occur. Selecting elements in this view will
+ * A timeline view of a storyline. Displays when events/tasks/etc... in
+ * a particular storyline occur. Selecting elements in this view will
  * trigger a selection event.
  *
  * @author dfeeney
@@ -59,7 +59,7 @@ public class ScenarioTimeline extends Timeline {
      */
     private static final int INTERVAL = 30;
 
-    private Scenario scenario;
+    private Storyline storyline;
     private Caused selectedObject;
     private List<TimelineListener> selectionListeners;
     private Map<String,Caused> idMap;
@@ -72,13 +72,13 @@ public class ScenarioTimeline extends Timeline {
      * @param height the available height in pixels
      * @param im the icon manager
      * @param page the page
-     * @param scenario the scenario
+     * @param storyline the storyline
      */
     public ScenarioTimeline(
-            int height, IconManager im, Page page, Scenario scenario ) {
+            int height, IconManager im, Page page, Storyline storyline ) {
 
         super();
-        this.scenario = scenario;
+        this.storyline = storyline;
         this.iconManager = im;
         this.events = getResolvedEvents( new Date( 0 ) );
         setPage( page );
@@ -196,7 +196,7 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
-     * Return a scale that holds the entire scenario.
+     * Return a scale that holds the entire storyline.
      */
     private Scale getScale() {
         long ms = getEndDate().getTime() - getStartDate().getTime();
@@ -211,7 +211,7 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
-     * Return the middle date of the scenario.
+     * Return the middle date of the storyline.
      */
     private Date getMiddleDate() {
         final long stime = getStartDate().getTime();
@@ -220,7 +220,7 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
-     * Return the start date of the scenario.
+     * Return the start date of the storyline.
      */
     private Date getStartDate() {
         Date result = null ;
@@ -235,7 +235,7 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
-     * Return the end date of the scenario.
+     * Return the end date of the storyline.
      */
     private Date getEndDate() {
         Date result = new Date( getStartDate().getTime() + MIN_DURATION ) ;
@@ -282,7 +282,7 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
-     * Resolve the occurrences/products in the scenario starting at
+     * Resolve the occurrences/products in the storyline starting at
      * a given date.
      * @param start the starting date
      */
@@ -302,10 +302,10 @@ public class ScenarioTimeline extends Timeline {
     }
 
     /**
-     * Return the value of scenario.
+     * Return the value of storyline.
      */
-    public final Scenario getScenario() {
-        return this.scenario;
+    public final Storyline getScenario() {
+        return this.storyline;
     }
 
     /**

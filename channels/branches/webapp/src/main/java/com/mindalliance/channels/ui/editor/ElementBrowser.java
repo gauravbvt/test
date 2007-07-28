@@ -5,7 +5,7 @@ package com.mindalliance.channels.ui.editor;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.system.SystemService;
 
 /**
  * @author <a href="mailto:dfeeney@mind-alliance.com">dfeeney</a>

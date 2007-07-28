@@ -32,11 +32,11 @@ import org.zkoss.zul.Tabs;
 import org.zkoss.zul.Vbox;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.resources.Organization;
-import com.mindalliance.channels.data.elements.resources.Person;
-import com.mindalliance.channels.services.DirectoryService;
-import com.mindalliance.channels.services.RegistryService;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.definitions.Organization;
+import com.mindalliance.channels.data.profiles.DirectoryService;
+import com.mindalliance.channels.data.profiles.Person;
+import com.mindalliance.channels.data.system.RegistryService;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 
 /**

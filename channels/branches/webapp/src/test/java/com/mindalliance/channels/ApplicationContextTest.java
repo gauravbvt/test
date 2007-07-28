@@ -13,11 +13,11 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.project.Model;
-import com.mindalliance.channels.data.elements.project.Project;
-import com.mindalliance.channels.services.PortfolioService;
-import com.mindalliance.channels.services.RegistryService;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.frames.PortfolioService;
+import com.mindalliance.channels.data.frames.Project;
+import com.mindalliance.channels.data.models.Scenario;
+import com.mindalliance.channels.data.system.RegistryService;
+import com.mindalliance.channels.data.system.SystemService;
 
 /**
  * A Unit Test for exploring the new data model structure as
@@ -73,11 +73,11 @@ public class ApplicationContextTest {
         while(pItor.hasNext()) {
         	Project proj = pItor.next();
         	java.lang.System.out.println("Project: " + proj.getName());
-        	Set<Model> models = proj.getModels();
-        	Iterator<Model> modelsItor = models.iterator();
+        	Set<Scenario> scenarios = proj.getScenarios();
+        	Iterator<Scenario> modelsItor = scenarios.iterator();
 
         	while(modelsItor.hasNext()) {
-        		java.lang.System.out.println("Model: " + modelsItor.next().getName());
+        		java.lang.System.out.println("Scenario: " + modelsItor.next().getName());
         	}
         }
 	}

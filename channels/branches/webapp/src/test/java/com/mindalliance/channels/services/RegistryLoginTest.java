@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.mindalliance.channels.AbstractSecurityTest;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
+import com.mindalliance.channels.data.system.RegistryService;
 
 public class RegistryLoginTest extends AbstractSecurityTest {
 

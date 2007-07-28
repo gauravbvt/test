@@ -27,10 +27,11 @@ import org.zkoss.zul.Vbox;
 
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.reference.Type;
-import com.mindalliance.channels.data.reference.TypeSet;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.definitions.Category;
+import com.mindalliance.channels.data.definitions.CategorySet;
+import com.mindalliance.channels.data.definitions.NamedObject;
+import com.mindalliance.channels.data.profiles.InferableObject;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.ObjectBrowser;
 import com.mindalliance.channels.ui.ObjectBrowserListener;
 
@@ -294,7 +295,7 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
     private Listhead generateHeader() {
         Listhead header = new Listhead();
 
-        if ( AbstractElement.class.isAssignableFrom( model.getObjectClass() ) ) {
+        if ( InferableObject.class.isAssignableFrom( model.getObjectClass() ) ) {
             Listheader name = new Listheader( "Name" );
             name.setSort( "auto" );
             header.appendChild( name );
@@ -325,15 +326,15 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
          *      java.lang.Object)
          */
         public void render( Listitem row, Object obj ) throws Exception {
-            if ( AbstractElement.class.isAssignableFrom( type ) ) {
-                AbstractElement el = (AbstractElement) obj;
+            if ( InferableObject.class.isAssignableFrom( type ) ) {
+                InferableObject el = (InferableObject) obj;
                 generateLabel( el.getName() ).setParent( row );
                 generateLabel( el.getDescription() ).setParent( row );
-                if ( el.getTypeSet() == null ) {
+                if ( el.getCategorySet() == null ) {
                     generateLabel( "" ).setParent( row );
                 }
                 else {
-                    generateLabel( generateTypeList(el.getTypeSet()) ).setParent( row );
+                    generateLabel( generateTypeList(el.getCategorySet()) ).setParent( row );
                 }
             }
             else {
@@ -354,11 +355,11 @@ public abstract class AbstractBrowser<T> extends Vbox implements ObjectBrowser<T
             return label;
         }
 
-        private String generateTypeList(TypeSet typeset) {
+        private String generateTypeList(CategorySet typeset) {
             String result = "";
-            for (Iterator<Type> it = typeset.getTypes().iterator() ; it.hasNext() ; ) {
-                Type type = it.next();
-                result += type.getName();
+            for (Iterator<Category> it = typeset.getCategories().iterator() ; it.hasNext() ; ) {
+                NamedObject category = it.next();
+                result += category.getName();
                 if (it.hasNext()) {
                     result += ", ";
                 }

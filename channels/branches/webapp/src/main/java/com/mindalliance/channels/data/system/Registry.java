@@ -19,7 +19,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.acegisecurity.Authentication;
 import org.acegisecurity.annotation.Secured;
+import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.context.SecurityContextImpl;
 import org.acegisecurity.providers.AuthenticationProvider;
@@ -32,18 +34,11 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
 import com.mindalliance.channels.UserExistsException;
-import com.mindalliance.channels.data.elements.resources.Person;
-import com.mindalliance.channels.data.user.Alert;
-import com.mindalliance.channels.data.user.Certification;
-import com.mindalliance.channels.data.user.Conversation;
-import com.mindalliance.channels.data.user.Todo;
-import com.mindalliance.channels.data.user.UserImpl;
-import com.mindalliance.channels.data.user.UserRequest;
-import com.mindalliance.channels.data.user.UserTypes;
-import com.mindalliance.channels.services.RegistryService;
+import com.mindalliance.channels.data.profiles.Person;
+import com.mindalliance.channels.data.support.AuditedObject;
 
-import static com.mindalliance.channels.data.user.UserTypes.AdminType;
-import static com.mindalliance.channels.data.user.UserTypes.UserType;
+import static com.mindalliance.channels.data.system.UserTypes.AdminType;
+import static com.mindalliance.channels.data.system.UserTypes.UserType;
 
 /**
  * All user related data; their profiles and alerts/todos targeted at them.
@@ -51,7 +46,7 @@ import static com.mindalliance.channels.data.user.UserTypes.UserType;
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
  */
-public class Registry extends AbstractQueryable implements RegistryService {
+public class Registry extends AuditedObject implements RegistryService {
 
     /**
      * Users, indexed by username.
@@ -93,14 +88,6 @@ public class Registry extends AbstractQueryable implements RegistryService {
      * Default constructor.
      */
     public Registry() {
-    }
-
-    /**
-     * Default constructor.
-     * @param system the system
-     */
-    public Registry( System system ) {
-        super( system );
         usernames = new HashMap<String, User>();
         userRights = new HashMap<User, UserTypes>();
         conversations = new ArrayList<Conversation>();
@@ -503,4 +490,19 @@ public class Registry extends AbstractQueryable implements RegistryService {
     public void removePerson( Person person ) {
         this.persons.remove( person );
     }
+
+    /**
+     * Returns the authenticated user.
+     */
+    public User getAuthenticatedUser() {
+        User user = null;
+        SecurityContext context = SecurityContextHolder.getContext();
+        if ( context != null ) {
+            Authentication authentication = context.getAuthentication();
+            if ( authentication != null )
+                user = (User) authentication.getPrincipal();
+        }
+        return user;
+    }
+
 }

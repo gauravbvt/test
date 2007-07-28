@@ -22,11 +22,13 @@ import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
 import com.mindalliance.channels.JavaBean;
-import com.mindalliance.channels.data.elements.project.Scenario;
+import com.mindalliance.channels.data.frames.Project;
+import com.mindalliance.channels.data.models.Scenario;
+import com.mindalliance.channels.data.models.Storyline;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 
 /**
- * The world-famous scenario viewer.
+ * The world-famous storyline viewer.
  *
  * @author <a href="mailto:denis@mind-alliance.com">denis</a>
  * @version $Revision:$
@@ -40,28 +42,36 @@ public class ScenarioViewer extends Window
     private static final int TIMELINE_HEIGHT = 128;
 
     private EditorFactory editorFactory;
+    private Project project;
     private Scenario scenario;
+    private Storyline storyline;
     private ScenarioTimeline timeline;
 
     /**
      * Default constructor.
      *
      * @param height the available height
+     * @param project the project
      * @param scenario the scenario
+     * @param storyline the storyline
      * @param editorFactory the editor creator
      */
     public ScenarioViewer(
-            int height, Scenario scenario, EditorFactory editorFactory ) {
+            int height,
+            Project project, Scenario scenario, Storyline storyline,
+            EditorFactory editorFactory ) {
 
         super();
+        this.project = project;
         this.scenario = scenario;
+        this.storyline = storyline;
         this.editorFactory = editorFactory;
         Page page = editorFactory.getPage();
         IconManager im = getIconManager( page );
 
         int kidHeight = height - TOP_MARGIN - PADDING - TIMELINE_HEIGHT;
 
-        timeline = new ScenarioTimeline( TIMELINE_HEIGHT, im, page, scenario );
+        timeline = new ScenarioTimeline( TIMELINE_HEIGHT, im, page, storyline );
         Hbox bottom = new Hbox();
         bottom.appendChild( createWherePane( kidHeight, im, timeline ) );
         bottom.appendChild( createWhatPane( kidHeight, im, timeline ) );
@@ -80,7 +90,7 @@ public class ScenarioViewer extends Window
 
         this.appendChild( contents );
         this.setTitle(
-            MessageFormat.format( "Scenario: {0}", scenario.getName() ) );
+            MessageFormat.format( "Storyline: {0}", storyline.getName() ) );
         this.setBorder( "normal" );
         this.setHeight( height + "px" );
     }
@@ -95,7 +105,7 @@ public class ScenarioViewer extends Window
             int height, IconManager im, ScenarioTimeline timeline ) {
 
         TreeGraphPane tgp = new TreeGraphPane(
-                height, getScenario(), getEditorFactory() );
+                height, getStoryline(), getEditorFactory() );
         tgp.setIconManager( im );
         tgp.setTimeline( this.timeline );
         timeline.addTimelineListener( tgp );
@@ -116,7 +126,7 @@ public class ScenarioViewer extends Window
             int height, IconManager im, ScenarioTimeline timeline ) {
 
         TreeGraphPane tgp = new TreeGraphPane(
-                height, getScenario(), getEditorFactory() );
+                height, getStoryline(), getEditorFactory() );
         tgp.setIconManager( im );
         tgp.setTimeline( this.timeline );
 //        timeline.addTimelineListener( tgp );
@@ -154,7 +164,7 @@ public class ScenarioViewer extends Window
      * Create the description portion of the viewer.
      */
     private Textbox createDescription( ) {
-        Textbox result = new Textbox( getScenario().getDescription() );
+        Textbox result = new Textbox( getStoryline().getDescription() );
         result.setWidth( "100%" );
         result.setSclass( "description" );
         result.addEventListener( "onChange", new EventListener() {
@@ -166,17 +176,17 @@ public class ScenarioViewer extends Window
             public void onEvent( Event event ) {
                 // TODO Make a command out of this...
                 InputEvent ie = (InputEvent) event;
-                getScenario().setDescription( ie.getValue() );
+                getStoryline().setDescription( ie.getValue() );
             }
         } );
         return result;
     }
 
     /**
-     * Return the value of scenario.
+     * Return the value of storyline.
      */
-    public final Scenario getScenario() {
-        return this.scenario;
+    public final Storyline getStoryline() {
+        return this.storyline;
     }
 
     /**
@@ -198,7 +208,7 @@ public class ScenarioViewer extends Window
      * Return the object edited by this editor.
      */
     public JavaBean getObject() {
-        return getScenario();
+        return getStoryline();
     }
 
     /**
@@ -206,5 +216,19 @@ public class ScenarioViewer extends Window
      */
     public EditorFactory getEditorFactory() {
         return this.editorFactory;
+    }
+
+    /**
+     * Return the scenario.
+     */
+    public Scenario getScenario() {
+        return this.scenario;
+    }
+
+    /**
+     * Return the project.
+     */
+    public Project getProject() {
+        return this.project;
     }
 }

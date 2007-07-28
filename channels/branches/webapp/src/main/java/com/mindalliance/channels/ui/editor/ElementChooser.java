@@ -16,8 +16,8 @@ import org.zkoss.zul.Window;
 
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.ElementFactory;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.models.ElementFactory;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.util.GUIDFactoryImpl;
 
 /**

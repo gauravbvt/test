@@ -4,16 +4,21 @@
 package com.mindalliance.channels.data.system;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.Element;
-import com.mindalliance.channels.services.DirectoryService;
-import com.mindalliance.channels.services.HistoryService;
-import com.mindalliance.channels.services.LibraryService;
-import com.mindalliance.channels.services.PortfolioService;
-import com.mindalliance.channels.services.RegistryService;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.definitions.Library;
+import com.mindalliance.channels.data.definitions.LibraryService;
+import com.mindalliance.channels.data.frames.Portfolio;
+import com.mindalliance.channels.data.frames.PortfolioService;
+import com.mindalliance.channels.data.profiles.Directory;
+import com.mindalliance.channels.data.profiles.DirectoryService;
+import com.mindalliance.channels.data.support.AuditedObject;
+import com.mindalliance.channels.data.support.Element;
+import com.mindalliance.channels.data.support.Query;
+import com.mindalliance.channels.data.support.Queryable;
 import com.mindalliance.channels.util.GUIDFactory;
 
 /**
@@ -21,15 +26,22 @@ import com.mindalliance.channels.util.GUIDFactory;
  *
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
+ *
+ * @composed - - 1 Registry
+ * @composed - - 1 Directory
+ * @composed - - 1 History
+ * @composed - - 1 Portfolio
+ * @composed - - 1 GUIDFactory
  */
 @SuppressWarnings( "serial" )
-public class System extends AbstractQueryable implements SystemService {
+public class System extends AuditedObject
+        implements SystemService, Queryable {
 
-    private Registry registry;
-    private Directory directory;
-    private History history;
-    private Library library;
-    private Portfolio portfolio;
+    private Registry registry = new Registry();
+    private Directory directory = new Directory();
+    private History history = new History();
+    private Library library = new Library();
+    private Portfolio portfolio = new Portfolio();
     private GUIDFactory guidFactory;
 
     /**
@@ -37,12 +49,6 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public System() {
         super();
-
-        setRegistry( new Registry( this ) );
-        setDirectory( new Directory( this ) );
-        setHistory( new History( this ) );
-        setLibrary( new Library( this ) );
-        setPortfolio( new Portfolio( this ) );
     }
 
     /**
@@ -86,7 +92,6 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public void setRegistry( Registry registry ) {
         this.registry = registry;
-        registry.setSystem( this );
     }
 
     /**
@@ -95,7 +100,6 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public void setDirectory( Directory directory ) {
         this.directory = directory;
-        directory.setSystem( this );
     }
 
     /**
@@ -104,7 +108,6 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public void setHistory( History history ) {
         this.history = history;
-        history.setSystem( this );
     }
 
     /**
@@ -113,7 +116,6 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public void setLibrary( Library library ) {
         this.library = library;
-        library.setSystem( this );
     }
 
     /**
@@ -122,7 +124,6 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public void setPortfolio( Portfolio portfolio ) {
         this.portfolio = portfolio;
-        portfolio.setSystem( this );
     }
 
     /**
@@ -176,7 +177,7 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public boolean hasAuthority( User user, Element element ) {
         // TODO
-        return false;
+        return true;
     }
 
     /**
@@ -192,5 +193,40 @@ public class System extends AbstractQueryable implements SystemService {
      */
     public void setGuidFactory( GUIDFactory guidFactory ) {
         this.guidFactory = guidFactory;
+    }
+
+    /**
+     * Return the single result of a query.
+     * @see Queryable#findAll(Query, java.util.Map)
+     * @param query the query
+     * @param bindings the parameters
+     */
+    public Iterator findAll( Query query, Map bindings ) {
+        // TODO Auto-generated method stub
+        return new Iterator() {
+
+            public boolean hasNext() {
+                return false;
+            }
+
+            public Object next() {
+                return null;
+            }
+
+            public void remove() {
+            }
+        };
+    }
+
+    /**
+     * Return the single result of a query, or null if no
+     * result was found.
+     * @see Queryable#indOne(Query, java.util.Map)
+     * @param query the query
+     * @param bindings the parameters
+     */
+    public Object findOne( Query query, Map bindings ) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

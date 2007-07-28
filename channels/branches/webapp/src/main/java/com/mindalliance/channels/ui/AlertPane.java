@@ -17,9 +17,9 @@ import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.user.Alert;
-import com.mindalliance.channels.services.RegistryService;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.system.Alert;
+import com.mindalliance.channels.data.system.RegistryService;
+import com.mindalliance.channels.data.system.SystemService;
 
 /**
  * The alert portion of the desktop.

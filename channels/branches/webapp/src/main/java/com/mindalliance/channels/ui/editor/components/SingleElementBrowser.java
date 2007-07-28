@@ -15,10 +15,10 @@ import org.zkoss.zul.Toolbarbutton;
 import com.beanview.PropertyComponent;
 import com.mindalliance.channels.JavaBean;
 import com.mindalliance.channels.User;
-import com.mindalliance.channels.data.elements.AbstractElement;
-import com.mindalliance.channels.data.elements.Element;
-import com.mindalliance.channels.data.elements.ElementFactory;
-import com.mindalliance.channels.services.SystemService;
+import com.mindalliance.channels.data.models.ElementFactory;
+import com.mindalliance.channels.data.profiles.InferableObject;
+import com.mindalliance.channels.data.support.Element;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.ui.editor.EditorFactory;
 import com.mindalliance.channels.util.GUIDFactoryImpl;
 

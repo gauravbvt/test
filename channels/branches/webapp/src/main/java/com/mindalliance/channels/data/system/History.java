@@ -5,9 +5,8 @@ package com.mindalliance.channels.data.system;
 
 import java.util.Map;
 
-import com.mindalliance.channels.data.user.VersionHistory;
-import com.mindalliance.channels.services.HistoryService;
-import com.mindalliance.channels.util.GUID;
+import com.mindalliance.channels.data.support.AuditedObject;
+import com.mindalliance.channels.data.support.GUID;
 
 /**
  * System' audit log and element lifecycle.
@@ -16,8 +15,10 @@ import com.mindalliance.channels.util.GUID;
  * system events...
  * @author <a href="mailto:jf@mind-alliance.com">jf</a>
  * @version $Revision:$
+ *
+ * @composed - - * VersionHistory
  */
-public class History extends AbstractQueryable implements HistoryService {
+public class History extends AuditedObject implements HistoryService {
 
     private Map<GUID,VersionHistory> versionHistories;
 
@@ -25,14 +26,6 @@ public class History extends AbstractQueryable implements HistoryService {
      * Default constructor.
      */
     public History() {
-    }
-
-    /**
-     * Default constructor.
-     * @param system the system
-     */
-    public History( System system ) {
-        super( system );
     }
 
     /**

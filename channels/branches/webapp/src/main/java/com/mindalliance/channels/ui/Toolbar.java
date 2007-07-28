@@ -8,8 +8,8 @@ import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Html;
 
 import com.mindalliance.channels.User;
+import com.mindalliance.channels.data.system.SystemService;
 import com.mindalliance.channels.search.ui.SearchWindowManager;
-import com.mindalliance.channels.services.SystemService;
 
 /**
  * The main desktop's toolbar.
