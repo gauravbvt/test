@@ -11,6 +11,7 @@
 <sourceAttachmentPath/>
 </compiler>
 <applications>
+<application path="TestRunner.mxml"/>
 <application path="Channels.mxml"/>
 </applications>
 <modules/>
