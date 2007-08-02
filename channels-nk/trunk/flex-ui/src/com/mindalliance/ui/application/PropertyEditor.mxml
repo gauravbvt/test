@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:ui="com.mindalliance.ui.*"
+    title="Property Editor" status="-type: name-">
+
+    <mx:ViewStack id="viewStack" width="100%" height="100%">
+   		 <!-- 
+   		 	Here we put a viewstack of all the property editor forms and trigger the visibility of each based on selection and permission.
+   		  -->
+    </mx:ViewStack>	
+
+</mx:Panel>

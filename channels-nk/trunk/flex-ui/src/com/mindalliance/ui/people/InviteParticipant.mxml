@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" title="Invite Participants"
+    showCloseButton="true"
+    xmlns:UI="com.yworks.UI.*"
+    close="handleClose(event)" xmlns:common="com.mindalliance.ui.common.*" xmlns:search="com.mindalliance.ui.search.*">    
+    <mx:Script>
+        <![CDATA[
+            import mx.managers.PopUpManager;
+            import mx.events.CloseEvent;
+            private function handleClose(event:CloseEvent):void {
+                PopUpManager.removePopUp(this) ;
+            }
+            
+            private function initSearchDataProvider():void {
+                searchbox.dataProvider = SearchOptions ;
+            }
+            
+        ]]>
+    </mx:Script>
+    
+    <mx:ArrayCollection id="Participants">
+        <mx:Object Name="" Agency="" Role=""/>
+    </mx:ArrayCollection>
+    
+    <mx:ArrayCollection id="SelectedParticipants">
+        <mx:Object Name="" Agency="" Role=""/>
+    </mx:ArrayCollection>
+
+    <mx:ArrayCollection id="SearchOptions">
+        <mx:Object label="Name"/>
+        <mx:Object label="Role"/>
+        <mx:Object label="Discipline"/>
+        <mx:Object label="All"/>
+    </mx:ArrayCollection>
+    
+    <mx:VBox width="100%">
+    	<search:MultiCriterionSearchBox id="searchbox" width="100%" creationComplete="initSearchDataProvider()" creationPolicy="all"/>
+        <mx:HDividedBox width="100%" height="100%">
+            <mx:DataGrid id="dgParticipants" dataProvider="{Participants}" width="100%" height="100%"/>
+            <mx:HBox height="100%" width="100%">
+                <mx:VBox horizontalAlign="center" verticalAlign="middle" height="100%">
+                      <mx:Button label="&gt;&gt;" id="btnAddSelectedParticipants"/>
+                </mx:VBox>
+                <mx:DataGrid id="selectedParticipants" width="100%" height="100%" dataProvider="{SelectedParticipants}"/>
+            </mx:HBox>
+        </mx:HDividedBox>
+        <mx:VBox width="100%" height="100%" backgroundColor="0xDEDEDE"
+            borderColor="gray" borderSides="top" borderStyle="solid" borderThickness="1">
+            <mx:HBox width="100%" horizontalAlign="center">
+                <mx:Label text="Preview" fontWeight="bold"/>
+            </mx:HBox>
+            <mx:Grid width="100%" height="100%">
+                <mx:GridRow width="100%">
+                    <mx:GridItem>
+                        <mx:Label text="From: -full name-"/>    
+                    </mx:GridItem>
+                    <mx:GridItem>
+                        <mx:Label text="Role: -role-"/>        
+                    </mx:GridItem>
+                </mx:GridRow>
+                <mx:GridRow>
+                    <mx:GridItem>
+                        <mx:Label text="Discipline: -discipline-"/>        
+                    </mx:GridItem>
+                    <mx:GridItem>
+                        <mx:Label text="Agency: -agency-"/>
+                    </mx:GridItem>
+                </mx:GridRow>
+                <mx:GridRow>
+                    <mx:GridItem colSpan="2">
+                        <mx:Label text="To: -list of names-"/>
+                    </mx:GridItem>
+                </mx:GridRow>
+            </mx:Grid>
+            <mx:TextArea minHeight="50" width="100%" height="100%" text="&lt;Optional Message&gt;" id="txtMessage"/>
+        </mx:VBox>
+    </mx:VBox>
+    <mx:ControlBar>
+        <mx:Spacer width="100%"/><mx:Button label="Invite" click="handleClose(null)"/>
+    </mx:ControlBar>
+</mx:TitleWindow>

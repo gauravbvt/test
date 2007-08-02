@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:mas="com.mindalliance.ui.*"
+	xmlns:yworks="com.yworks.UI.*"
+	frameRate="40" width="100%" height="100%">
+	<mx:XML id="yFilesLicenseXML" source="file:///Users/shashi/Documents/eclipse3.2-workspace/channels-nk/flex-ui/lib/license.xml" />
+	<mx:Script>
+	    <![CDATA[
+	        import com.yworks.graph.model.IGraphSelection;
+	        import com.yworks.graph.model.GraphSelection;
+	        import mx.controls.Alert;
+	        import mx.containers.TitleWindow;
+	        import mx.managers.PopUpManager;
+	        import com.yworks.graph.model.IGraph;
+	        import com.yworks.graph.model.INode;
+	        import com.yworks.util.Util ; 
+	        import com.mindalliance.UtilFuncs ;
+	        
+            private function registerYFilesLicense():void {
+              Util.registerLicense( yFilesLicenseXML );
+            }
+	        
+	        private var _graphClickX:int, _graphClickY:int ;
+	        protected function addNode(text:String):void {
+	            if (text != null && text.search("[A-Za-z0-9]") > -1) {
+        	            var node:INode = graph.createNodeAt(_graphClickX, _graphClickY) ;
+        	            graph.addLabel(node, text);
+    	            }
+	        }
+	        
+	        private var graphSelection:IGraphSelection ;
+	        private var graph:IGraph ;
+	        
+	        private function initGraph():void {
+	            registerYFilesLicense();
+	            //graph = graphCanvas.graph ;
+	            graphSelection = new GraphSelection(graph);
+	        }
+
+	        private function graphClicked(event:MouseEvent):void {
+	            if (!graphSelection.selectedObjects.iterator().hasNext()) {
+    	            _graphClickX = event.localX ;
+    	            _graphClickY = event.localY ;
+    	            UtilFuncs.GetUserTextInput(graphCanvas, addNode, "Enter Role");
+	            }
+	        }
+	    ]]>
+	</mx:Script>
+	
+	<mx:HDividedBox height="100%" width="100%">
+	    <mx:Form height="100%">
+	            <mx:FormHeading label="View Options"/>
+	    </mx:Form>
+	    <mx:VBox width="100%" height="100%">
+	        <mx:HSlider labels="['Events', 'Tasks', 'Sharing', 'Communications', 'Issues', 'Impacts']"
+	    snapInterval="1" minimum="1" maximum="6" tickInterval="1"  
+		showTrackHighlight="true" showDataTip="false"
+		width="100%"/>
+			<mx:VDividedBox borderThickness="1" borderSides="top" borderColor="gray" width="100%" height="100%">
+    	        <!--<yworks:GraphCanvasComponent id="graphCanvas" click="graphClicked(event)" width="100%" height="100%"/> -->
+    <!--	        <mx:Canvas id="graphCanvas" click="graphClicked(event)" width="100%" height="100%"/> -->
+                <mx:Image id="graphCanvas" source="assets/exampleflowmap2.png" width="100%" height="100%" scaleContent="false"/>
+    	        <mx:VBox width="100%"  borderThickness="1"  borderSides="top" borderColor="gray"  borderStyle="solid">
+    	            <mx:Label text="Legend"/>
+    	            <mx:Canvas id="flowMapLegend" width="100%"/>
+    	        </mx:VBox>
+	        </mx:VDividedBox>
+	    </mx:VBox>
+	</mx:HDividedBox>
+</mx:VBox>

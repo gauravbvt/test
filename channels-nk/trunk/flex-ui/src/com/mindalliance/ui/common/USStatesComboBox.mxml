@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:String>AL - Alabama</mx:String>
+	<mx:String>AK - Alaska</mx:String>
+	<mx:String>AZ - Arizona</mx:String>
+	<mx:String>AR - Arkansas</mx:String>
+	<mx:String>CA - California</mx:String>
+	<mx:String>CO - Colorado</mx:String>
+	<mx:String>CT - Connecticut</mx:String>
+	<mx:String>DE - Delaware</mx:String>
+	<mx:String>FL - Florida</mx:String>
+	<mx:String>GA - Georgia</mx:String>
+	<mx:String>HI - Hawaii</mx:String>
+	<mx:String>ID - Idaho</mx:String>
+	<mx:String>IL - Illinois</mx:String>
+	<mx:String>IN - Indiana</mx:String>
+	<mx:String>IA - Iowa</mx:String>
+	<mx:String>KS - Kansas</mx:String>
+	<mx:String>KY - Kentucky</mx:String>
+	<mx:String>LA - Louisiana</mx:String>
+	<mx:String>ME - Maine</mx:String>
+	<mx:String>MD - Maryland</mx:String>
+	<mx:String>MA - Massachusetts</mx:String>
+	<mx:String>MI - Michigan</mx:String>
+	<mx:String>MN - Minnesota</mx:String>
+	<mx:String>MS - Mississippi</mx:String>
+	<mx:String>MO - Missouri</mx:String>
+	<mx:String>MT - Montana</mx:String>
+	<mx:String>NE - Nebraska</mx:String>
+	<mx:String>NV - Nevada</mx:String>
+	<mx:String>NH - New Hampshire</mx:String>
+	<mx:String>NJ - New Jersey</mx:String>
+	<mx:String>NM - New Mexico</mx:String>
+	<mx:String>NY - New York</mx:String>
+	<mx:String>NC - North Carolina</mx:String>
+	<mx:String>ND - North Dakota</mx:String>
+	<mx:String>OH - Ohio</mx:String>
+	<mx:String>OK - Oklahoma</mx:String>
+	<mx:String>OR - Oregon</mx:String>
+	<mx:String>PA - Pennsylvania</mx:String>
+	<mx:String>RI - Rhode Island</mx:String>
+	<mx:String>SC - South Carolina</mx:String>
+	<mx:String>SD - South Dakota</mx:String>
+	<mx:String>TN - Tennessee</mx:String>
+	<mx:String>TX - Texas</mx:String>
+	<mx:String>UT - Utah</mx:String>
+	<mx:String>VT - Vermont</mx:String>
+	<mx:String>VA - Virginia</mx:String>
+	<mx:String>WA - Washington</mx:String>
+	<mx:String>WV - West Virginia</mx:String>
+	<mx:String>WI - Wisconsin</mx:String>
+	<mx:String>WY - Wyoming</mx:String>
+</mx:ComboBox>

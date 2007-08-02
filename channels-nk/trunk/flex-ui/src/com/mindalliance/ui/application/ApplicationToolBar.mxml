@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    width="100%">
+    <mx:Script>
+	    <![CDATA[
+	    	import com.mindalliance.ui.resources.ChannelEditor;
+	    	import com.mindalliance.ui.people.TeamEditor;
+	    	import com.mindalliance.ui.people.OrganizationEditor;
+	    	import com.mindalliance.ui.flowmap.NodeEditor;
+	    	import com.mindalliance.ui.people.InviteParticipant;
+	    	import com.mindalliance.ui.categories.CategoryEditor;
+	    	import com.mindalliance.ui.categories.CategoryChooser;
+	        import mx.containers.TitleWindow;
+	        import mx.events.FlexMouseEvent;
+	        import mx.controls.Alert;
+	        import mx.events.MenuEvent;
+        	import mx.core.IFlexDisplayObject;
+            import mx.managers.PopUpManager;
+        
+            private function btnScenarioClicked():void {
+            	var psb:ProjectScenarioBrowser = new ProjectScenarioBrowser() ;
+                var sb:IFlexDisplayObject = PopUpManager.createPopUp(this, ProjectScenarioBrowser, false);
+                PopUpManager.centerPopUp(sb);
+            	sb.y = this.y + this.height + 4 ;
+            }
+            
+            private static var classHash:Object = {
+                "Category Chooser":CategoryChooser, 
+                "Category Editor":CategoryEditor,
+                "Invite Participant":InviteParticipant,
+                "Node Editor":NodeEditor,
+                "Project Scenario Browser":ProjectScenarioBrowser,
+                "Organization Editor":OrganizationEditor,
+                "Team Editor":TeamEditor,
+                "Channel Editor":ChannelEditor
+                };
+                
+                
+            private function menuBarItemClicked(event:MenuEvent):void {
+                var popUp:TitleWindow ;
+                var c:Class = classHash[event.item.@label] ;
+                if (c is TitleWindow) {
+                    Alert.show('true');
+                    popUp = TitleWindow(PopUpManager.createPopUp(this, c)) ;
+                }    
+                else {
+                    popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
+                    popUp.addChild((new ClassFactory(c)).newInstance()) ;
+                }
+                popUp.x = this.x + 100;
+                popUp.y = this.y + 100;
+//                popUp.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, function handler(event:FlexMouseEvent):void {PopUpManager.removePopUp(popUp);});
+            }
+	    ]]>
+	</mx:Script>
+		
+	<mx:Array id="dpbtnLogin"> 
+        <mx:Object label="John Q. Public"/>
+        <mx:Object label="Edit Profile..."/>
+		<mx:Object label="Switch Role..."/>
+		<mx:Object label="Edit Roles..."/>
+	    <mx:Object label="Logout"/>
+    </mx:Array>
+    
+    <mx:Array id="dpbtnScenario">
+        <mx:Object label="View Users..."/>
+        <mx:Object label="Add or Invite Users..."/>
+    </mx:Array>
+    
+     <mx:XMLList id="menuXML">
+        <menuitem label="Forms">
+            <menuitem label="Category Chooser"/>
+            <menuitem label="Category Editor"/>
+            <menuitem label="Invite Participant"/>
+            <menuitem label="Node Editor"/>
+            <menuitem label="Project Browser"/>
+            <menuitem label="Organization Editor"/>
+            <menuitem label="Team Editor"/>
+            <menuitem label="Channel Editor"/>
+        </menuitem>
+        <menuitem label="Reports">
+            <menuitem label="Mou"/>
+            <menuitem label="Issues"/>
+            <menuitem label="Capabilities"/>
+        </menuitem>
+        <menuitem label="Library">
+            <menuitem label="Categories"/>
+            <menuitem label="Locations"/>
+            <menuitem label="Policies"/>
+        </menuitem>
+        <menuitem label="Edit">
+            <menuitem label="Cut"/>
+            <menuitem label="Copy"/>
+            <menuitem label="Paste"/>
+        </menuitem>
+        <menuitem label="Export"/>
+        <menuitem label="Print"/>
+    </mx:XMLList>
+	
+    <mx:MenuBar dataProvider="{menuXML}" labelField="@label" showRoot="true" itemClick="menuBarItemClicked(event)"/>
+    <mx:Spacer width="100%"/>
+	<mx:PopUpMenuButton id="btnScenario" click="btnScenarioClicked()" dataProvider="{dpbtnScenario}" showRoot="false" label="Project: Bioterrorism (10/14), Scenario: Plague (4/6)"/>
+	<mx:PopUpMenuButton id="btnLogin" dataProvider="{dpbtnLogin}" labelField="label" showRoot="false"/>
+	<mx:Spacer width="100%"/>
+	<mx:Label text="Search"/>
+	<mx:TextInput/>
+</mx:HBox>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:FormItem label="Username">
+		<mx:TextInput/>
+	</mx:FormItem>
+	<mx:FormItem label="Password">
+			<mx:TextInput displayAsPassword="true"/>
+	</mx:FormItem>
+	<mx:FormItem label="Certified by">
+		<mx:Label text="-name- of -organization-" textDecoration="underline" click="Alert.show('This opens the liaison profile.')" color="blue"/>
+	</mx:FormItem>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+		]]>
+	</mx:Script>
+</mx:Form>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	showCloseButton="true"
+	close="PopUpManager.removePopUp(this);"
+	xmlns:search="com.mindalliance.ui.search.*"
+	xmlns:ui="com.mindalliance.ui.*"
+	xmlns:common="com.mindalliance.ui.common.*">
+	
+	<mx:Script source="ProjectScenarioBrowserScript.as"/>
+	
+	<mx:ArrayCollection id="Projects">
+	    <mx:Object Name="ACME Business continuity"/>
+	    <mx:Object Name="CDC Contagion Preparedness"/>
+	    <mx:Object Name="International Markets"/>
+	</mx:ArrayCollection>
+	
+	<mx:ArrayCollection id="Scenarios">
+	    <mx:Object Name="High Risk"/>
+	    <mx:Object Name="Headquarters"/>
+	    <mx:Object Name="Supply chain"/>
+	</mx:ArrayCollection>
+	
+	<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:HDividedBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:Label text="Projects" fontWeight="bold"/>
+				<search:StandardSearchBox width="100%"/>
+				<mx:VBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:List dataProvider="{Projects}" width="100%" allowMultipleSelection="false"/>
+					<mx:HBox>
+						<common:AddButton visible="{canAddProject}"/>
+						<common:RemoveButton visible="{canRemoveProject}"/>
+					</mx:HBox>
+				</mx:VBox>
+				<mx:Form>
+					<mx:FormItem label="Name">
+						<mx:TextInput/>
+					</mx:FormItem>
+					<mx:FormItem label="Description">
+						<mx:TextArea/>
+					</mx:FormItem>
+					<mx:FormItem label="Project manager">
+						<mx:ComboBox/>
+					</mx:FormItem>
+					<mx:FormItem label="Participants" direction="vertical">
+						<mx:List/>
+						<mx:HBox>
+							<common:AddButton/>
+							<common:RemoveButton/>
+						</mx:HBox>
+					</mx:FormItem>
+				</mx:Form>
+			</mx:VBox>
+			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:Label text="Scenarios" fontWeight="bold"/>
+				<search:StandardSearchBox width="100%"/>
+				<mx:List dataProvider="{Scenarios}" width="100%" id="listScenarios"/>
+				<mx:HBox>
+					<common:AddButton visible="{canAddScenario}"/>
+					<common:RemoveButton visible="{canRemoveScenario}"/>
+				</mx:HBox>
+				<mx:Form>
+					<mx:FormItem label="Name">
+						<mx:TextInput/>
+					</mx:FormItem>
+					<mx:FormItem label="Description">
+						<mx:TextArea/>
+					</mx:FormItem>
+					<mx:FormItem label="Story lines">
+						<mx:List/>
+					</mx:FormItem>
+				</mx:Form>
+			</mx:VBox>
+		</mx:HDividedBox>
+	</mx:VBox>
+	<mx:ControlBar horizontalAlign="right">
+		<mx:Button label="Load scenario" enabled="{listScenarios.selectedItems.length == 1}"/>
+	</mx:ControlBar>	
+</mx:TitleWindow>

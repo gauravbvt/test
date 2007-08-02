@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalAlign="middle" horizontalAlign="left" xmlns:search="com.mindalliance.ui.search.*">
+
+	<mx:Script>
+		<![CDATA[
+			private function txtSearchKeyDown():void {
+				if (txtSearch.text.length > 0)
+					currentState = 'searchTextNotNull' ;
+				else
+					currentState = '' ;
+			}
+			
+			private function clearSearchText():void {
+				txtSearch.text = '' ;
+				currentState = '' ;
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Label text="Search:"/>
+	<mx:TextInput id="txtSearch" width="100%" keyDown="txtSearchKeyDown()"/>
+	<search:ClearSearchButton id="btnClearSearch" click="clearSearchText()" enabled="false"/>
+	
+	<mx:states>
+		<mx:State name="searchTextNotNull">
+			<mx:SetProperty name="enabled" target="btnClearSearch" value="true"/>
+		</mx:State>
+	</mx:states>
+
+</mx:HBox>

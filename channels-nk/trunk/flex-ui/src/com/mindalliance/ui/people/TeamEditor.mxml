@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+    showCloseButton="true"
+    close="PopUpManager.removePopUp(this);" xmlns:common="com.mindalliance.ui.common.*">
+    
+    <mx:Script>
+        <![CDATA[
+            import mx.managers.PopUpManager;
+        ]]>
+    </mx:Script>
+    
+    <mx:ArrayCollection id="Members">
+        <mx:Object PoC="true" Role="" Organization=""/>
+    </mx:ArrayCollection>
+    
+    <mx:Component id="cbCustom">
+        <mx:HBox horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
+            <mx:CheckBox/>
+        </mx:HBox>
+    </mx:Component>
+    
+    <mx:HBox width="100%" height="100%">
+        <mx:Form height="100%" width="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+            <mx:FormItem label="Name">
+                <mx:TextInput id="txtName"/>
+            </mx:FormItem>
+            <mx:FormItem label="Description">
+                <mx:TextArea id="txtDescription"/>
+            </mx:FormItem>
+            <mx:FormItem label="Expertise">
+                <mx:TextArea/>
+            </mx:FormItem>
+            <mx:FormItem label="Members">
+                <mx:VBox width="100%" height="100%">
+                    <mx:DataGrid id="dgMembers" dataProvider="{Members}">
+                        <mx:columns>
+                            <mx:DataGridColumn headerText="PoC" itemRenderer="{cbCustom}" rendererIsEditor="true" dataField="selected" resizable="false" width="40"/>
+                            <mx:DataGridColumn headerText="Role"/>
+                            <mx:DataGridColumn headerText="Organization"/>
+                        </mx:columns>
+                    </mx:DataGrid>
+                    <common:ItemAddRemoveButtonSet id="btnSetAddRemoveItem"/>
+                </mx:VBox>
+            </mx:FormItem>
+            <mx:FormItem label="Normally Operational">
+                <mx:CheckBox/>
+            </mx:FormItem>
+        </mx:Form>
+        <mx:Form>
+            <mx:FormItem label="Categories">
+                <mx:VBox width="100%" height="100%">
+                    <mx:DataGrid id="dgCategories">
+                        <mx:columns>
+                            <mx:DataGridColumn headerText="Discipline"/>
+                            <mx:DataGridColumn headerText="Name"/>
+                        </mx:columns>
+                    </mx:DataGrid>
+                    <common:ItemAddRemoveButtonSet/>
+                </mx:VBox>
+            </mx:FormItem>
+            <mx:FormItem label="Missions">
+                <mx:VBox width="100%" height="100%" creationPolicy="all">
+                    <mx:DataGrid id="dgMissions">
+                        <mx:columns>
+                            <mx:DataGridColumn headerText="Description"/>
+                            <mx:DataGridColumn headerText="Categories" editable="false"/>
+                        </mx:columns>
+                    </mx:DataGrid>
+                    <common:ItemAddRemoveButtonSet id="btnSetAddRemoveMission"/>
+                </mx:VBox>
+            </mx:FormItem>
+        </mx:Form>    
+    </mx:HBox>
+</mx:TitleWindow>

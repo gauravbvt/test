@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.ui.common.*">
+
+	<mx:Style source="../styles/FormStyles.css"/>
+	
+	<mx:FormHeading id="formHeading" label="'Event: '+{eventName.text}"/>
+	
+	<mx:FormItem label="Name" direction="vertical">
+		<mx:Text text="e.g.: Arabic document discovered" styleName="FormItemDescription"/>
+		<mx:TextInput id="eventName"/>
+	</mx:FormItem>
+	<mx:FormItem label="Description">
+		<mx:TextArea/>
+	</mx:FormItem>
+	<mx:FormItem label="Cause" direction="vertical">
+		<mx:VBox id="vBoxCause">
+			<mx:RadioButtonGroup id="rbgCause"/>
+			<mx:RadioButton groupName="rbgCause" label="This event is independent of other events or tasks." selected="true"/>
+			<mx:HBox>
+				<mx:RadioButton groupName="rbgCause" label="This event is caused by another" id="rbCauseExists"/>
+				<mx:HBox id="hBoxCauseExists" includeInLayout="{rbCauseExists.selected}" visible="{rbCauseExists.selected}">
+					<mx:ComboBox id="cbEventTask" selectedIndex="0">
+						<mx:String>event</mx:String>
+						<mx:String>task</mx:String>
+					</mx:ComboBox>
+					<mx:ViewStack selectedIndex="{cbEventTask.selectedIndex}">
+						<mx:ComboBox id="comboTasks"/>
+						<mx:ComboBox id="comboEvents"/>
+					</mx:ViewStack>
+				</mx:HBox>
+			</mx:HBox>
+		</mx:VBox>	
+	</mx:FormItem>
+	<mx:FormItem label="Duration" direction="vertical">
+		<mx:Text text="How long will this event last?" styleName="FormItemDescription"/>
+		<mx:VBox>
+			<mx:RadioButtonGroup id="rbgDuration"/>
+			<mx:HBox>
+				<mx:RadioButton label="About" id="rbDurationQuant" groupName="rbgDuration" selected="true"/>
+				<mx:TextInput width="100" click="rbDurationQuant.selected = true;"/>
+				<common:TimeScalesComponent/>
+			</mx:HBox>
+			<mx:VBox>
+				<mx:RadioButton id="rbDurationQual" label="Until the following tasks are successfully completed:"/>
+				<mx:VBox id="vBoxDuration" visible="{rbDurationQual.selected}" includeInLayout="{rbDurationQual.selected}">
+					<mx:List click="rbDurationQual.selected = true;"/>
+					<mx:HBox>
+						<common:AddButton click="rbDurationQual.selected = true;"/>
+						<common:RemoveButton/>
+					</mx:HBox>
+				</mx:VBox>
+			</mx:VBox>
+		</mx:VBox>
+	</mx:FormItem>
+	<mx:FormItem label="Categories" direction="horizontal">
+		<mx:VBox>
+			<mx:Label text="1. Select categories"/>
+			<mx:List/>
+			<mx:HBox>
+				<common:AddButton/>
+				<common:RemoveButton/>
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox>
+			<mx:Label text="2. Select Elements of Information"/>
+			<mx:DataGrid draggableColumns="false" variableRowHeight="true">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Topic" wordWrap="false"/>
+					<mx:DataGridColumn headerText="Label" itemEditor="CheckBox" rendererIsEditor="true"/>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:VBox>
+	</mx:FormItem>
+	<mx:FormItem label="Story lines">
+		<mx:List/>
+	</mx:FormItem>
+</mx:Form>

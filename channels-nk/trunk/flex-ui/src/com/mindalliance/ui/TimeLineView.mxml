@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mas:CustomPanel xmlns:mx="http://www.adobe.com/2006/mxml"
-    xmlns:mas="com.mindalliance.ui.*"
-    title="-current selection-" status="-summary info-">
-	<mx:Image source="assets/exampletimeline.png"/>
-</mas:CustomPanel>
