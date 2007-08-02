@@ -2,14 +2,13 @@
 <project name="channels-ui" basedir="." default="all">
     <taskdef resource="flexTasks.tasks" classpath="${basedir}/lib/ant/flexTasks.jar" />   
 	<taskdef resource="com/adobe/ac/ant/tasks/tasks.properties" classpath="${basedir}/lib/ant/FlexAntTasks.jar"/>
-	<property file="build.properties"/>
-    <property name="FLEX_HOME" value="/Users/dfeeney/flex"/>
     <property name="src.dir" value="src"/>
 	<property name="dist.dir" value="../dist"/>
 	<property name="ui.dist.dir" value="${dist.dir}/flex"/>
 	<property name="test.dir" value="test"/>
 	<property name="build.dir" value="build"/>
 	<property name="report.dir" value="build/test-results"/>
+	<property file="../build.properties"/>
 	
 	<target name="init">
 		<mkdir dir="${ui.dist.dir}"/>

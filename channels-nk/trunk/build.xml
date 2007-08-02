@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="all" name="Mind-Alliance NetKernel Modules">
-    
-    <target name="init">
+
+	<target name="init">
+		<tstamp>
+			<format property="touch.time" pattern="MM/dd/yyyy hh:mm aa"/>
+		</tstamp>
         <property name="dist.dir" value="${basedir}/dist"/>
         <property name="deploy.dir" value="${basedir}/deploy"/>
         <property name="versions.properties" value="${basedir}/config/deploy.properties"/>
-        <property name="netkernel.home.dir" value="/Volumes/Data/Users/dfeeney/netkernel"/>
+		<property name="install.mode" value="dev"/>
+		<property name="netkernel.user" value=":netkernel"/>
+		
+		<property name="props.file" value="${basedir}/build.properties"/>
+		<available property="properties-exists" file="${props.file}"/>
+		<fail unless="properties-exists" message="You must define ${props.file}"/>
+    	<property file="${props.file}"/>
+       	<fail unless="netkernel.home.dir" message="Please define netkernel.home.dir in ${props.file}"/>
+       	<fail unless="FLEX_HOME" message="Please define FLEX_HOME in ${props.file}"/>
     </target>
     
     <macrodef name="build-subdir">
@@ -27,7 +38,17 @@
         <build-subdir dir="mod-control"/> 
         <build-subdir dir="mod-session"/>               
         <build-subdir dir="mod-template"/>
-		<build-subdir dir="channels-ui" build.xml="build.xml"/>
+		<build-subdir dir="flex-ui" build.xml="build.xml"/>
+
+		<fileset id="jars" dir="${dist.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<chown owner="${netkernel.user}">
+			<fileset refid="jars"/>
+		</chown>
+		<chmod perm="go+rw">
+			<fileset refid="jars"/>
+		</chmod>
     </target>
     
     <target description="Deploy everything" name="deploy" depends="all">
@@ -37,6 +58,20 @@
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
+		<chown owner="${netkernel.user}" type="both">
+			<dirset dir="${deploy.dir}"/>
+			<fileset dir="${deploy.dir}">
+				<include name="*"/>
+			</fileset>
+		</chown>
+		<chmod perm="go+rx">
+			<dirset dir="${deploy.dir}"/>
+		</chmod>
+		<chmod perm="g+rw,o+r">
+			<fileset dir="${deploy.dir}">
+				<include name="*"/>
+			</fileset>
+		</chmod>
     </target>
     
     <target description="Clean up the derived objects" name="clean" depends="init">
@@ -46,7 +81,7 @@
         <build-subdir dir="mod-control" target="clean"/>        
         <build-subdir dir="mod-session" target="clean"/>
         <build-subdir dir="mod-template" target="clean"/>
-        <build-subdir dir="channels-ui" target="clean" build.xml="build.xml"/>   
+        <build-subdir dir="flex-ui" target="clean" build.xml="build.xml"/>   
     </target>
     
     <target name="prepare-app-deployment">
@@ -63,7 +98,35 @@
 		</copy>        
     </target>
     
-    <target name="reload" depends="deploy">
+    <target name="reload" depends="init">
 		<get src="http://localhost:1060/ep+name@control_reload" dest="${deploy.dir}/server1-status.xml"/>
+	</target>
+	
+	<target name="install" description="Configure a new installation of NetKernel" depends="deploy">
+		<filter filtersFile="mod-control/build/version.properties"/>
+		<filter token="deploy-dir" value="${deploy.dir}"/>
+		<copy file="${basedir}/config/deployedModules-${install.mode}.xml"
+			tofile="${netkernel.home.dir}/etc/deployedModules.xml"
+			filtering="true" overwrite="true"/>
+		<copy file="${basedir}/config/frontend-${install.mode}.xml"
+			tofile="${netkernel.home.dir}/modules/mod-fulcrum-frontend/module.xml"
+			overwrite="true"/>
+		<copy todir="${netkernel.home.dir}/modules">
+			<fileset dir="${dist.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+
+		<fileset id="channels-files" dir="${netkernel.home.dir}" followsymlinks="true" >
+			<include name="modules/**/*"/>
+			<include name="etc/*"/>
+			<date when="after" datetime="${touch.time}"/>
+		</fileset>		
+		<chown verbose="yes" owner="${netkernel.user}">
+			<fileset refid="channels-files"/>
+		</chown>
+		<chmod perm="go+rw">
+			<fileset refid="channels-files"/>
+		</chmod>
 	</target>
 </project>
