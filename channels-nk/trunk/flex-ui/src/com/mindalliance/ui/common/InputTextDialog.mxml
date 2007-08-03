@@ -13,7 +13,8 @@
                 if (event.keyCode == Keyboard.ESCAPE) {
                     PopUpManager.removePopUp(this);
                 } else if (event.keyCode == Keyboard.ENTER) {
-                    okEventHandler(textInput.text) ;
+                	if (okEventHandler != null)
+	                    okEventHandler(textInput.text) ;
                     PopUpManager.removePopUp(this);
                 }
             }

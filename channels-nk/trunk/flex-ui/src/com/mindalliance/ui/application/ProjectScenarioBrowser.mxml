@@ -9,15 +9,24 @@
 	<mx:Script source="ProjectScenarioBrowserScript.as"/>
 	
 	<mx:ArrayCollection id="Projects">
-	    <mx:Object Name="ACME Business continuity"/>
-	    <mx:Object Name="CDC Contagion Preparedness"/>
-	    <mx:Object Name="International Markets"/>
+	    <mx:Object ProjectID="Project1" Name="ACME Business continuity" Description="Coyotes and road runners" Manager="Mr. A"/>
+	    <mx:Object ProjectID="Project2" Name="CDC Contagion Preparedness" Description="gonna give it to you" Manager="Mr. B"/>
+	    <mx:Object ProjectID="Project3" Name="International Markets" Description="creativity ends here" Manager="Mr. C"/>
 	</mx:ArrayCollection>
 	
-	<mx:ArrayCollection id="Scenarios">
-	    <mx:Object Name="High Risk"/>
-	    <mx:Object Name="Headquarters"/>
-	    <mx:Object Name="Supply chain"/>
+	<mx:ArrayCollection id="AllScenarios">
+	    <mx:Object ProjectID="Project1" Name="High Risk" Description="And high reward" ScenarioID="Scenario1.1"/>
+	    <mx:Object ProjectID="Project1" Name="Medium Risk" Description="for those who are cautious but not timid" ScenarioID="Scenario1.2"/>
+	    <mx:Object ProjectID="Project1" Name="Low Risk" Description="not very enterprising, are you?" ScenarioID="Scenario1.2"/>
+	    <mx:Object ProjectID="Project2" Name="Headquarters" Description="buck stops here?" ScenarioID="Scenario2.1"/>
+	    <mx:Object ProjectID="Project2" Name="Hindquarters" Description="where the bs begins" ScenarioID="Scenario2.1"/>
+	    <mx:Object ProjectID="Project3" Name="Supply chain" Description="if this fails, we're doomed" ScenarioID="Scenario3.1"/>
+	</mx:ArrayCollection>
+	
+	<mx:ArrayCollection id="ProjectManagers">
+		<mx:Object Name="Mr. A"/>
+		<mx:Object Name="Mr. B"/>
+		<mx:Object Name="Mr. C"/>
 	</mx:ArrayCollection>
 	
 	<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
@@ -26,23 +35,25 @@
 				<mx:Label text="Projects" fontWeight="bold"/>
 				<search:StandardSearchBox width="100%"/>
 				<mx:VBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:List dataProvider="{Projects}" width="100%" allowMultipleSelection="false"/>
+					<mx:List id="listProjects" dataProvider="{Projects}" labelField="Name" width="100%" allowMultipleSelection="false" itemClick="updateScenarioList()"/>
 					<mx:HBox>
-						<common:AddButton visible="{canAddProject}"/>
-						<common:RemoveButton visible="{canRemoveProject}"/>
+						<common:AddButton visible="{canAddProject}" click="Alert.show('mumble mumble')"/>
+						<common:RemoveButton visible="{canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="Projects.removeItemAt(listProjects.selectedIndex)"/>
 					</mx:HBox>
 				</mx:VBox>
-				<mx:Form>
+				<mx:Form enabled="{listProjects.selectedItem != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput/>
+						<mx:TextInput text="{Projects.getItemAt(listProjects.selectedIndex).Name}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea/>
+						<mx:TextArea text="{Projects.getItemAt(listProjects.selectedIndex).Description}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager">
-						<mx:ComboBox/>
+						<!--This won't work properly because data providers are using generic objects. -->
+						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(listProjects.selectedItem.Manager)}"
+							change="Projects.getItemAt(listProjects.selectedIndex).Manager = ProjectManagers.getItemAt(comboProjectManager.selectedIndex).Name"/>
 					</mx:FormItem>
-					<mx:FormItem label="Participants" direction="vertical">
+					<mx:FormItem label="Participants" direction="vertical" visible="false">
 						<mx:List/>
 						<mx:HBox>
 							<common:AddButton/>
@@ -54,19 +65,19 @@
 			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:Label text="Scenarios" fontWeight="bold"/>
 				<search:StandardSearchBox width="100%"/>
-				<mx:List dataProvider="{Scenarios}" width="100%" id="listScenarios"/>
+				<mx:List dataProvider="{Scenarios}" width="100%" id="listScenarios" labelField="Name"/>
 				<mx:HBox>
 					<common:AddButton visible="{canAddScenario}"/>
 					<common:RemoveButton visible="{canRemoveScenario}"/>
 				</mx:HBox>
-				<mx:Form>
+				<mx:Form enabled="{listScenarios.selectedItem != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput/>
+						<mx:TextInput text="{Scenarios.getItemAt(listScenarios.selectedIndex).Name}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea/>
+						<mx:TextArea text="{Scenarios.getItemAt(listScenarios.selectedIndex).Description}"/>
 					</mx:FormItem>
-					<mx:FormItem label="Story lines">
+					<mx:FormItem label="Story lines" visible="false">
 						<mx:List/>
 					</mx:FormItem>
 				</mx:Form>
@@ -74,6 +85,6 @@
 		</mx:HDividedBox>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
-		<mx:Button label="Load scenario" enabled="{listScenarios.selectedItems.length == 1}"/>
+		<mx:Button label="Load scenario" enabled="{listScenarios.selectedItems.length == 1}" click="Alert.show('mumble mumble')"/>
 	</mx:ControlBar>	
 </mx:TitleWindow>
