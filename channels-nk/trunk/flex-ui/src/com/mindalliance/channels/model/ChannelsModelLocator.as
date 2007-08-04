@@ -5,12 +5,14 @@ package com.mindalliance.channels.model
 	import com.adobe.cairngorm.CairngormError;
     import com.adobe.cairngorm.CairngormMessageCodes;
     import mx.collections.ArrayCollection;
+    import com.mindalliance.channels.vo.ProjectVO;
     
     [Bindable]
 	public class ChannelsModelLocator implements IModelLocator
 	{
 		
 		public var projectList : ArrayCollection;
+		public var selectedProject : ProjectVO;
 		
 		/**
 		 * Singleton instance of ChannelsModelLocator
