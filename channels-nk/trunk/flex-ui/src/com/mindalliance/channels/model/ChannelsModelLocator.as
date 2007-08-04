@@ -1,13 +1,17 @@
 
-package com.mindalliance.ui.model
+package com.mindalliance.channels.model
 {
 	import com.adobe.cairngorm.model.IModelLocator;
 	import com.adobe.cairngorm.CairngormError;
     import com.adobe.cairngorm.CairngormMessageCodes;
+    import mx.collections.ArrayCollection;
     
     [Bindable]
 	public class ChannelsModelLocator implements IModelLocator
 	{
+		
+		public var projectList : ArrayCollection;
+		
 		/**
 		 * Singleton instance of ChannelsModelLocator
 		 */

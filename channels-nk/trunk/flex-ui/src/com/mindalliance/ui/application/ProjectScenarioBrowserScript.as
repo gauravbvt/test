@@ -8,8 +8,9 @@ import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import com.mindalliance.ui.common.InputTextDialog;
 
+
 private function updateScenarioList():void {
-		var projectID:String = Projects.getItemAt(listProjects.selectedIndex).ProjectID ;
+		var projectID:String = model.projectList.getItemAt(listProjects.selectedIndex).ProjectID ;
 		Scenarios.removeAll();
 		for (var i:int = 0 ; i < AllScenarios.length ; ++i) {
 			var scenario:Object = AllScenarios.getItemAt(i) ;

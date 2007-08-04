@@ -5,8 +5,14 @@
 		<![CDATA[
 		
 			public static const SERVICE:String = "service";
-			
+			public static const GET_PROJECT_LIST_SERVICE : String = "getProjectListService"
+			public static const GET_PROJECT_1_SERVICE : String = "getProject1Service"
+			public static const GET_PROJECT_2_SERVICE : String = "getProject2Service"
+			public static const GET_PROJECT_3_SERVICE : String = "getProject3Service"
 		]]>
 	</mx:Script>
-
+	<mx:HTTPService id="getProjectListService" url="assets/projectList.xml"/>
+	<mx:HTTPService id="getProject1Service" url="assets/project1.xml"/>
+	<mx:HTTPService id="getProject2Service" url="assets/project2.xml"/>
+	<mx:HTTPService id="getProject3Service" url="assets/project3.xml"/>
 </cairngorm:ServiceLocator>

@@ -2,17 +2,29 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
 	showCloseButton="true"
 	close="PopUpManager.removePopUp(this);"
+	creationComplete="getProjectList(event)"
 	xmlns:search="com.mindalliance.ui.search.*"
 	xmlns:ui="com.mindalliance.ui.*"
 	xmlns:common="com.mindalliance.ui.common.*">
 	
 	<mx:Script source="ProjectScenarioBrowserScript.as"/>
-	
-	<mx:ArrayCollection id="Projects">
-	    <mx:Object ProjectID="Project1" Name="ACME Business continuity" Description="Coyotes and road runners" Manager="Mr. A"/>
-	    <mx:Object ProjectID="Project2" Name="CDC Contagion Preparedness" Description="gonna give it to you" Manager="Mr. B"/>
-	    <mx:Object ProjectID="Project3" Name="International Markets" Description="creativity ends here" Manager="Mr. C"/>
-	</mx:ArrayCollection>
+	<mx:Script>
+		<![CDATA[
+        	import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.events.GetProjectListEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.adobe.cairngorm.control.CairngormEvent;
+		
+            [Bindable]
+ 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+ 	        
+ 	        
+ 	        private function getProjectList(event : Event) : void
+ 	        {
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectListEvent() );
+ 	        }
+		]]>
+	</mx:Script>
 	
 	<mx:ArrayCollection id="AllScenarios">
 	    <mx:Object ProjectID="Project1" Name="High Risk" Description="And high reward" ScenarioID="Scenario1.1"/>
@@ -29,29 +41,29 @@
 		<mx:Object Name="Mr. C"/>
 	</mx:ArrayCollection>
 	
-	<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off" >
 		<mx:HDividedBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:Label text="Projects" fontWeight="bold"/>
 				<search:StandardSearchBox width="100%"/>
 				<mx:VBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:List id="listProjects" dataProvider="{Projects}" labelField="Name" width="100%" allowMultipleSelection="false" itemClick="updateScenarioList()"/>
+					<mx:List id="listProjects" dataProvider="{model.projectList}" labelField="name" width="100%" allowMultipleSelection="false" itemClick="updateScenarioList()"/>
 					<mx:HBox>
 						<common:AddButton visible="{canAddProject}" click="Alert.show('mumble mumble')"/>
-						<common:RemoveButton visible="{canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="Projects.removeItemAt(listProjects.selectedIndex)"/>
+						<common:RemoveButton visible="{canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="model.projectList.removeItemAt(listProjects.selectedIndex)"/>
 					</mx:HBox>
 				</mx:VBox>
 				<mx:Form enabled="{listProjects.selectedItem != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{Projects.getItemAt(listProjects.selectedIndex).Name}"/>
+						<mx:TextInput text="{model.projectList.getItemAt(listProjects.selectedIndex).Name}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{Projects.getItemAt(listProjects.selectedIndex).Description}"/>
+						<mx:TextArea text="{model.projectList.getItemAt(listProjects.selectedIndex).Description}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager">
 						<!--This won't work properly because data providers are using generic objects. -->
 						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(listProjects.selectedItem.Manager)}"
-							change="Projects.getItemAt(listProjects.selectedIndex).Manager = ProjectManagers.getItemAt(comboProjectManager.selectedIndex).Name"/>
+							change="model.projectList.getItemAt(listProjects.selectedIndex).Manager = ProjectManagers.getItemAt(comboProjectManager.selectedIndex).Name"/>
 					</mx:FormItem>
 					<mx:FormItem label="Participants" direction="vertical" visible="false">
 						<mx:List/>

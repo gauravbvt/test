@@ -3,20 +3,33 @@
 	backgroundColor="white"
 	layout="vertical"
 	applicationComplete="init()" height="100%"  width="100%"
-	xmlns:flowmap="com.mindalliance.ui.flowmap.*" xmlns:timeline="com.mindalliance.ui.timeline.*" xmlns:ui="com.mindalliance.ui.*" xmlns:application="com.mindalliance.ui.application.*" xmlns:geomap="com.mindalliance.ui.geomap.*">
-    <!--<mx:XML id="yFilesLicenseXML" source="file:///Users/dfeeney/ma/channels-ui/lib/license.xml" />
+	xmlns:flowmap="com.mindalliance.ui.flowmap.*"
+	xmlns:timeline="com.mindalliance.ui.timeline.*" 
+	xmlns:ui="com.mindalliance.ui.*" 
+	xmlns:application="com.mindalliance.ui.application.*" 
+	xmlns:geomap="com.mindalliance.ui.geomap.*"
+	xmlns:control="com.mindalliance.channels.control.*"
+	xmlns:business="com.mindalliance.channels.business.*">
+    <!--<mx:XML id="yFilesLicenseXML" source="file:///Users/dfeeney/ma/channels-ui/lib/license.xml" />-->
     <mx:Script>
       <![CDATA[
+      	import com.mindalliance.channels.model.ChannelsModelLocator;
     
+        /*
         import com.yworks.util.Util;
     
         private function init():void {
           Util.registerLicense( yFilesLicenseXML );
         }
+        */
+        [Bindable]
+        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
         
       ]]>
-    </mx:Script>-->
-    
+    </mx:Script>
+   	<business:Services id="services" />
+	<control:ChannelsController id="appController" />
+
     <application:ApplicationToolBar width="100%"/>
     <mx:VDividedBox width="100%" height="100%">
         <mx:HDividedBox width="100%" height="100%" maxHeight="600">
