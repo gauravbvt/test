@@ -10,9 +10,7 @@ package com.mindalliance.channels.model
     [Bindable]
 	public class ChannelsModelLocator implements IModelLocator
 	{
-		
-		public var projectList : ArrayCollection;
-		public var selectedProject : ProjectVO;
+		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel();
 		
 		/**
 		 * Singleton instance of ChannelsModelLocator

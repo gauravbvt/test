@@ -7,9 +7,12 @@ package com.mindalliance.channels.events
 	{
 		public static const GetScenarioList_Event:String = "<GetScenarioListEvent>";
 		
-		public function GetScenarioListEvent() 
+		public var projectId : String;
+		
+		public function GetScenarioListEvent( projectId : String ) 
 		{
 			super( GetScenarioList_Event );
+			this.projectId = projectId;
 		}
 	}
 }

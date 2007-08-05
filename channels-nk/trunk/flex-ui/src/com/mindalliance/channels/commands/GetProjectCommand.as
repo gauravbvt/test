@@ -6,6 +6,7 @@ package com.mindalliance.channels.commands
 	import com.mindalliance.channels.business.GetProjectDelegate;
 	import com.mindalliance.channels.events.GetProjectEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
+	import com.mindalliance.channels.model.ProjectScenarioBrowserModel;
 	import com.mindalliance.channels.vo.ProjectVO;
 	
 	import mx.rpc.IResponder;
@@ -15,7 +16,7 @@ package com.mindalliance.channels.commands
 	public class GetProjectCommand implements ICommand, IResponder
 	{
 		
-		private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+		private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
 	
 		public function execute(event:CairngormEvent):void
 		{

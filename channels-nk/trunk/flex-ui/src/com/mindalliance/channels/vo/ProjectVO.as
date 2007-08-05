@@ -16,6 +16,7 @@ package com.mindalliance.channels.vo
 			this.manager = manager;
 		}
 		
+		
 		public var description:String;
 		public var manager:String;
 		
