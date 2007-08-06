@@ -27,6 +27,7 @@ while(i<mods.length())
 		{	System.out.println("Removing Module... "+mods[i].toString());
 			delete mods[i];
 			incr=false;
+			break;
 		}
 	}
 	if(incr) i++;
