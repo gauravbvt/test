@@ -2,11 +2,11 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 	backgroundColor="white"
 	layout="vertical" height="100%"  width="100%"
-	xmlns:flowmap="com.mindalliance.ui.flowmap.*"
-	xmlns:timeline="com.mindalliance.ui.timeline.*" 
-	xmlns:ui="com.mindalliance.ui.*" 
-	xmlns:application="com.mindalliance.ui.application.*" 
-	xmlns:geomap="com.mindalliance.ui.geomap.*"
+	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
+	xmlns:timeline="com.mindalliance.channels.view.timeline.*" 
+	xmlns:ui="com.mindalliance.channels.view.*" 
+	xmlns:application="com.mindalliance.channels.view.application.*" 
+	xmlns:geomap="com.mindalliance.channels.view.geomap.*"
 	xmlns:control="com.mindalliance.channels.control.*"
 	xmlns:business="com.mindalliance.channels.business.*">
     <!--<mx:XML id="yFilesLicenseXML" source="file:///Users/dfeeney/ma/channels-ui/lib/license.xml" />-->

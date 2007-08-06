@@ -1,6 +1,6 @@
 package com.mindalliance
 {
-    import com.mindalliance.ui.common.InputTextDialog;
+    import com.mindalliance.channels.view.common.InputTextDialog;
     
     import flash.display.DisplayObject;
     
