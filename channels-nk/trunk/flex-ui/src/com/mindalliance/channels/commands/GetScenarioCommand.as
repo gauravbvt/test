@@ -22,9 +22,9 @@ package com.mindalliance.channels.commands
 			var evt:GetScenarioEvent = event as GetScenarioEvent;
 			var delegate:GetScenarioDelegate = new GetScenarioDelegate( this );
 			
-			var id : String = evt.id;
-			if (id != null) {
-				delegate.getScenario(id);
+			model.selectedScenarioId = evt.id;
+			if (model.selectedScenarioId != null) {
+				delegate.getScenario(model.selectedScenarioId);
 			} else {
 				model.selectedScenario = null;
 			}

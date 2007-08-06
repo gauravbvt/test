@@ -3,7 +3,7 @@ package com.mindalliance.channels.commands
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.UtilFuncs;
+	import com.mindalliance.channels.util.ServiceUtil;
 	import com.mindalliance.channels.business.GetProjectListDelegate;
 	import com.mindalliance.channels.events.GetProjectListEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
@@ -27,8 +27,8 @@ package com.mindalliance.channels.commands
 		
 		public function result(data:Object):void
 		{
-			var result:ResultEvent = data as ResultEvent;
-			model.projectList = UtilFuncs.convertServiceResults(result.result.projects.project);
+			var result:Object = (data as ResultEvent).result;
+			model.projectList = ServiceUtil.convertServiceResults(result.projects.project);
 			model.selectedProject = null;
 			model.scenarioList = null;
 			model.selectedScenario = null;

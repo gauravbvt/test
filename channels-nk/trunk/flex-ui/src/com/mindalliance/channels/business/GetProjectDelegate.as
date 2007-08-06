@@ -13,20 +13,12 @@ package com.mindalliance.channels.business
 		
 		public function GetProjectDelegate(responder:IResponder)
 		{
-			//this.service = ServiceLocator.getInstance().getHTTPService( Services.GET_PROJECT_SERVICE );
+			this.service = ServiceLocator.getInstance().getHTTPService( Services.GET_PROJECT_SERVICE );
 			this.responder = responder;
 		}
 		
 		public function getProject(id : String) : void
-		{
-			if (id == "1") {
-				this.service = ServiceLocator.getInstance().getHTTPService( Services.GET_PROJECT_1_SERVICE );
-			} else if (id == "2") {
-				this.service = ServiceLocator.getInstance().getHTTPService( Services.GET_PROJECT_2_SERVICE );
-			} else if (id == "3") {
-				this.service = ServiceLocator.getInstance().getHTTPService( Services.GET_PROJECT_3_SERVICE );
-			}
-			
+		{		
 			var token:AsyncToken = service.send();
 			token.addResponder( responder );	
 		}

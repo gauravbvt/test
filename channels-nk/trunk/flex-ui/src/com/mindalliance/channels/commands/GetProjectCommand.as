@@ -20,11 +20,12 @@ package com.mindalliance.channels.commands
 	
 		public function execute(event:CairngormEvent):void
 		{
-			var evt:GetProjectEvent = event as GetProjectEvent;
-			var delegate:GetProjectDelegate = new GetProjectDelegate( this );
-			
+			var evt:GetProjectEvent = event as GetProjectEvent;			
 			var id : String = evt.id;
+			model.selectedProjectId = evt.id;
+			
 			if (id != null) {
+				var delegate:GetProjectDelegate = new GetProjectDelegate( this );
 				delegate.getProject(id);
 			} else {
 				model.selectedProject = null;
@@ -34,9 +35,9 @@ package com.mindalliance.channels.commands
 		
 		public function result(data:Object):void
 		{
-			var result:ResultEvent = data as ResultEvent;
+			var result:Object = (data as ResultEvent).result.project;
 			//model.project = new ProjectVO(result.result.id,result.result.name, result.result.description, result.result.manager);
-			model.selectedProject = new ProjectVO(result.result.project.id, result.result.project.name, result.result.project.description, result.result.project.manager);
+			model.selectedProject = new ProjectVO(result.id, result.name, result.description, result.manager);
 		}
 		
 		public function fault(info:Object):void

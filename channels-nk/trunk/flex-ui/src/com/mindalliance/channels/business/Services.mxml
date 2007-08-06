@@ -3,32 +3,22 @@
 	            xmlns:cairngorm="com.adobe.cairngorm.business.*" >
 	<mx:Script>
 		<![CDATA[
-			public static const GET_PROJECT_LIST_SERVICE : String = "getProjectListService"
-			public static const GET_PROJECT_1_SERVICE : String = "getProject1Service"
-			public static const GET_PROJECT_2_SERVICE : String = "getProject2Service"
-			public static const GET_PROJECT_3_SERVICE : String = "getProject3Service"
-			public static const GET_SCENARIO_LIST_1_SERVICE : String = "getScenarioList1Service"
-			public static const GET_SCENARIO_LIST_2_SERVICE : String = "getScenarioList2Service"
-			public static const GET_SCENARIO_LIST_3_SERVICE : String = "getScenarioList3Service"
-			public static const GET_SCENARIO_1_1_SERVICE : String = "getScenario11Service"
-			public static const GET_SCENARIO_1_2_SERVICE : String = "getScenario12Service"
-			public static const GET_SCENARIO_1_3_SERVICE : String = "getScenario13Service"
-			public static const GET_SCENARIO_2_1_SERVICE : String = "getScenario21Service"
-			public static const GET_SCENARIO_2_2_SERVICE : String = "getScenario22Service"
-			public static const GET_SCENARIO_3_1_SERVICE : String = "getScenario31Service"
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			
+			public static const GET_PROJECT_LIST_SERVICE : String = "getProjectListService";
+			public static const GET_PROJECT_SERVICE : String = "getProjectService";
+			public static const GET_SCENARIO_LIST_SERVICE : String = "getScenarioListService";
+			public static const GET_SCENARIO_SERVICE : String = "getScenarioService";
+			
+ 	        [Bindable]
+ 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+ 	      
 		]]>
 	</mx:Script>
+	
 	<mx:HTTPService id="getProjectListService" url="assets/xml/projectList.xml"/>
-	<mx:HTTPService id="getProject1Service" url="assets/xml/project1.xml"/>
-	<mx:HTTPService id="getProject2Service" url="assets/xml/project2.xml"/>
-	<mx:HTTPService id="getProject3Service" url="assets/xml/project3.xml"/>
-	<mx:HTTPService id="getScenarioList1Service" url="assets/xml/scenarioList1.xml"/>
-	<mx:HTTPService id="getScenarioList2Service" url="assets/xml/scenarioList2.xml"/>
-	<mx:HTTPService id="getScenarioList3Service" url="assets/xml/scenarioList3.xml"/>
-	<mx:HTTPService id="getScenario11Service" url="assets/xml/scenario1.1.xml"/>
-	<mx:HTTPService id="getScenario12Service" url="assets/xml/scenario1.2.xml"/>
-	<mx:HTTPService id="getScenario13Service" url="assets/xml/scenario1.3.xml"/>
-	<mx:HTTPService id="getScenario21Service" url="assets/xml/scenario2.1.xml"/>
-	<mx:HTTPService id="getScenario22Service" url="assets/xml/scenario2.2.xml"/>
-	<mx:HTTPService id="getScenario31Service" url="assets/xml/scenario3.1.xml"/>
+	<mx:HTTPService id="getProjectService" url="assets/xml/project{model.projectScenarioBrowserModel.selectedProjectId}.xml"/>
+	<mx:HTTPService id="getScenarioListService" url="assets/xml/scenarioList{model.projectScenarioBrowserModel.selectedProjectId}.xml"/>
+	<mx:HTTPService id="getScenarioService" url="assets/xml/scenario{model.projectScenarioBrowserModel.selectedScenarioId}.xml"/>
+
 </cairngorm:ServiceLocator>
