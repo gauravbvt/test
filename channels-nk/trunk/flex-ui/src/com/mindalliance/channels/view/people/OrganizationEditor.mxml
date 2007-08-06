@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+    
+    <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+    <mx:FormItem label="Name" required="true">
+        <mx:TextInput/>
+    </mx:FormItem>
+    <mx:FormItem label="Abbreviation" direction="vertical">
+    	<mx:Label text="e.g.: NYPD" styleName="FormItemDescription"/>
+    	<mx:TextInput/>
+    </mx:FormItem>
+    <mx:FormItem label="Description">
+        <mx:TextArea/>
+    </mx:FormItem>
+    <mx:FormItem label="Parent Organization" direction="vertical">
+    	<mx:Text text="If this organization falls under another one, please specify it here." styleName="FormItemDescription"/>
+    	<mx:ComboBox>
+    		<!-- This combo box holds a list of all organizations so user can select one. -->
+    	</mx:ComboBox>
+    </mx:FormItem>
+    <mx:FormItem label="Address" direction="vertical">
+        <mx:Label text="Street"/>
+        <mx:TextInput/>
+        <mx:Label text="City"/>
+        <mx:TextInput/>
+        <mx:HBox>
+        	<mx:Label text="State"/><common:USStatesComboBox/>
+        </mx:HBox>
+    </mx:FormItem>
+</mx:Form>

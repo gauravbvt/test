@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 	backgroundColor="white"
-	layout="vertical"
-	applicationComplete="init()" height="100%"  width="100%"
+	layout="vertical" height="100%"  width="100%"
 	xmlns:flowmap="com.mindalliance.ui.flowmap.*"
 	xmlns:timeline="com.mindalliance.ui.timeline.*" 
 	xmlns:ui="com.mindalliance.ui.*" 

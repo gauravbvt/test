@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-    xmlns:mas="com.mindalliance.ui.*"
-    title="Geo Map">
-		<mx:Image source="assets/examplegeomap.png"/>
-<!-- <mx:Image id="graphCanvas" source="assets/exampleflowmap2.png" width="100%" height="100%" scaleContent="false"/> -->
-</mx:Panel>

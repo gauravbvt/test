@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+	<mx:VBox>
+		<mx:Label text="Category labels"/>
+		<mx:List/>
+		<mx:HBox>
+			<common:AddButton/>
+			<common:RemoveButton/>
+		</mx:HBox>
+	</mx:VBox>
+	<mx:VBox>
+		<mx:Label text="Elements of information"/>
+		<mx:List/>
+	</mx:VBox>
+	<mx:VBox>
+		<mx:Label text="Disciplines"/>
+		<mx:List/>
+	</mx:VBox>
+</mx:HBox>

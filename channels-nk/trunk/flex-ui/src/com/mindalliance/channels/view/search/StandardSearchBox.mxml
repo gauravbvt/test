@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalAlign="middle" horizontalAlign="left" xmlns:search="com.mindalliance.channels.view.search.*">
+
+	<mx:Script>
+		<![CDATA[
+			private function clearSearchText():void {
+				txtSearch.text = '' ;
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Label text="Search:"/>
+	<mx:TextInput id="txtSearch" width="100%"/>
+	<search:ClearSearchButton id="btnClearSearch" click="clearSearchText()" enabled="{txtSearch.text.length > 0}"/>
+
+</mx:HBox>

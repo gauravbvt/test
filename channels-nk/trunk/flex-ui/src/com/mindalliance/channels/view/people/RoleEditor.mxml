@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:ui="flex-ui.src.com.mindalliance.channels.view.*">
+    <mx:FormItem label="Name">
+        <mx:TextInput/>
+    </mx:FormItem>
+    <mx:FormItem label="Organization">
+    	<mx:ComboBox/>
+    </mx:FormItem>
+    <mx:FormItem label="Description">
+        <mx:TextArea/>
+    </mx:FormItem>
+    <mx:FormItem label="Expertise" direction="vertical">
+		<mx:Text fontStyle="italic" selectable="false" text="This role can provide the following information at all times:"
+			width="{listExpertise.width}"/>
+		<mx:List editable="true" id="listExpertise"/>
+    </mx:FormItem>
+    <mx:FormItem label="Teams" direction="vertical">
+		<mx:Text fontStyle="italic" text="This role is part of the following teams:" selectable="false"/>
+    	<mx:List editable="false"/>
+    </mx:FormItem>
+</mx:Form>
