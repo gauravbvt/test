@@ -18,7 +18,11 @@ package com.mindalliance.channels.control
 			this.addCommand(GetProjectEvent.GetProject_Event, GetProjectCommand);
 			this.addCommand(GetScenarioListEvent.GetScenarioList_Event, GetScenarioListCommand);
 			this.addCommand(GetScenarioEvent.GetScenario_Event, GetScenarioCommand);
-			
+			this.addCommand(CreateProjectEvent.CreateProject_Event, CreateProjectCommand);
+			this.addCommand(CreateScenarioEvent.CreateScenario_Event, CreateScenarioCommand);
+			this.addCommand(UpdateProjectEvent.UpdateProject_Event, UpdateProjectCommand);
+			this.addCommand(UpdateScenarioEvent.UpdateScenario_Event, UpdateScenarioCommand);
+			this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
 		}
 	}
 }

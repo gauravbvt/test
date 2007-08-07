@@ -13,12 +13,17 @@
  	        [Bindable]
  	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
  	      
+ 	      
+ 	      	[Bindable]
+ 	      	private var urlRoot : String = "http://24.249.249.240:8080/channels";
+ 	      	//private var urlRoot : String = "assets/xml";
+ 	      	
 		]]>
 	</mx:Script>
 	
-	<mx:HTTPService id="getProjectListService" url="assets/xml/projectList.xml"/>
-	<mx:HTTPService id="getProjectService" url="assets/xml/project{model.projectScenarioBrowserModel.selectedProjectId}.xml"/>
-	<mx:HTTPService id="getScenarioListService" url="assets/xml/scenarioList{model.projectScenarioBrowserModel.selectedProjectId}.xml"/>
-	<mx:HTTPService id="getScenarioService" url="assets/xml/scenario{model.projectScenarioBrowserModel.selectedScenarioId}.xml"/>
+	<mx:HTTPService id="getProjectListService" url="{urlRoot}/projectList.xml"/>
+	<mx:HTTPService id="getProjectService" url="{urlRoot}/project{model.projectScenarioBrowserModel.selectedProjectId}.xml"/>
+	<mx:HTTPService id="getScenarioListService" url="{urlRoot}/scenarioList{model.projectScenarioBrowserModel.selectedProjectId}.xml"/>
+	<mx:HTTPService id="getScenarioService" url="{urlRoot}/scenario{model.projectScenarioBrowserModel.selectedScenarioId}.xml"/>
 
 </cairngorm:ServiceLocator>

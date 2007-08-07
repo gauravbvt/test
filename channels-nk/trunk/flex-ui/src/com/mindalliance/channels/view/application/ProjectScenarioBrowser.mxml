@@ -45,6 +45,16 @@
  	        	
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioEvent( id ) );
  	        }
+ 	        
+ 	        private function createProject() : void 
+ 	        {
+ 	        		
+ 	        }
+ 	        
+ 	        private function createScenario() : void
+ 	        {
+ 	        		
+ 	        }
 		]]>
 	</mx:Script>
 	
