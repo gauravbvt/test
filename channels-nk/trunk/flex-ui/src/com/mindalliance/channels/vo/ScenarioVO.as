@@ -13,7 +13,24 @@ package com.mindalliance.channels.vo
 			this.description = description;
 		}
 		
-		public var projectId : String;
-		public var description : String;
+		private var _projectId : String;
+		private var _description : String;
+		
+		public function get projectId() : String {
+			return _projectId;
+		}
+		
+		public function set projectId(projectId : String) : void {
+			_projectId = projectId;
+		}
+		
+		public function get description() : String {
+			return _description;
+		}
+		
+		public function set description(description : String) : void {
+			_description = description;
+		}
+		
 	}
 }

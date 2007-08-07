@@ -17,8 +17,23 @@ package com.mindalliance.channels.vo
 		}
 		
 		
-		public var description:String;
-		public var manager:String;
+		private var _description:String;
+		private var _manager:String;
 		
+		public function get description() : String {
+			return _description;
+		}
+		
+		public function set description(description: String) : void {
+			this._description = description;	
+		}
+		
+		public function get manager() : String {
+			return _manager;
+		}
+		
+		public function set manager(manager: String) : void {
+			this._manager = manager;	
+		}
 	}
 }
