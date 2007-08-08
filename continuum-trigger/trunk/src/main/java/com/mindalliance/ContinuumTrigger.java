@@ -131,6 +131,8 @@ public class ContinuumTrigger implements Runnable {
             if ( p.getArtifactId().equals( name ) )
                 return p;
 
+        logger.warn(
+                MessageFormat.format( "Couldn't find project {0}", name ) );
         return null;
     }
 }
