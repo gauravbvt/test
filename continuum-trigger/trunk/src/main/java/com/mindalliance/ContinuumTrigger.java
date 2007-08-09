@@ -41,21 +41,25 @@ public class ContinuumTrigger implements Runnable {
      * @param args continuum URL, project
      */
     public static void main( String[] args ) {
-        ContinuumTrigger trigger = new ContinuumTrigger();
+        try {
+            ContinuumTrigger trigger = new ContinuumTrigger();
 
-        if ( args.length == 1 )
-            trigger.setProjectName( args[0] );
-        else {
-            try {
+            if ( args.length == 1 )
+                trigger.setProjectName( args[0] );
+            else {
                 trigger.setAddress( new URL( args[0] ) );
-            } catch ( MalformedURLException e ) {
-                logger.fatal( e );
-                System.exit( ERROR_CODE );
+                trigger.setProjectName( args[1] );
             }
-            trigger.setProjectName( args[1] );
-        }
 
-        trigger.run();
+            trigger.run();
+
+        } catch ( MalformedURLException e ) {
+            logger.fatal( e );
+            System.exit( ERROR_CODE );
+        } catch ( RuntimeException e ) {
+            logger.fatal( e );
+            System.exit( ERROR_CODE );
+        }
     }
 
     /**
@@ -127,9 +131,14 @@ public class ContinuumTrigger implements Runnable {
     private Project getProject( ProjectsReader reader, String name )
         throws XmlRpcException, IOException {
 
-        for ( Project p : reader.readProjects() )
-            if ( p.getArtifactId().equals( name ) )
+        for ( Project p : reader.readProjects() ) {
+            String artifactId = p.getArtifactId();
+            if ( artifactId == null )
+                logger.warn(
+                    MessageFormat.format( "Null artifactId for {0}", name ) );
+            else if ( artifactId.equals( name ) )
                 return p;
+        }
 
         logger.warn(
                 MessageFormat.format( "Couldn't find project {0}", name ) );
