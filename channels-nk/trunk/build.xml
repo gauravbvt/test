@@ -9,14 +9,16 @@
         <property name="deploy.dir" value="${basedir}/deploy"/>
         <property name="versions.properties" value="${basedir}/config/deploy.properties"/>
 		<property name="install.mode" value="dev"/>
-		<property name="netkernel.user" value=":netkernel"/>
 		
 		<property name="props.file" value="${basedir}/build.properties"/>
 		<available property="properties-exists" file="${props.file}"/>
 		<fail unless="properties-exists" message="You must define ${props.file}"/>
     	<property file="${props.file}"/>
+		<property name="netkernel.user" value=":netkernel"/>    	
        	<fail unless="netkernel.home.dir" message="Please define netkernel.home.dir in ${props.file}"/>
        	<fail unless="FLEX_HOME" message="Please define FLEX_HOME in ${props.file}"/>
+       	<echo message="NetKernel Home: ${netkernel.home.dir}"/>
+       	<echo message="NetKernel User: ${netkernel.user}"/>       	
     </target>
     
     <macrodef name="build-subdir">
@@ -106,14 +108,16 @@
 	</target>
 	
 	<target name="install" description="Configure a new installation of NetKernel" depends="deploy">
-		<filter filtersFile="mod-control/build/version.properties"/>
+		<filter filtersFile="mod-channels/build/version.properties"/>
+		<filter filtersFile="mod-control/build/version.properties"/>		
 		<filter token="deploy-dir" value="${deploy.dir}"/>
 		<copy file="${basedir}/config/deployedModules-${install.mode}.xml"
 			tofile="${netkernel.home.dir}/etc/deployedModules.xml"
 			filtering="true" overwrite="true"/>
 		<copy file="${basedir}/config/frontend-${install.mode}.xml"
 			tofile="${netkernel.home.dir}/modules/mod-fulcrum-frontend/module.xml"
-			overwrite="true"/>
+			overwrite="true"
+			filtering="true"/>
 		<copy todir="${netkernel.home.dir}/modules">
 			<fileset dir="${dist.dir}">
 				<include name="*.jar"/>

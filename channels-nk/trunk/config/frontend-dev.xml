@@ -112,7 +112,10 @@
 		************
 		-->
 		<import>
-		    <uri>urn:com:mindalliance:session</uri>
+		    <uri>@mod-session-uri@</uri>
+		</import>
+		<import>
+		    <uri>@mod-channels-uri@</uri>
 		</import>
 	  
 
