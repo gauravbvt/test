@@ -28,6 +28,7 @@
             <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
             <source-path path-element="${FLEX_HOME}/frameworks"/>
             <compiler.source-path path-element="${src.dir}"/>
+        	<compiler.source-path path-element="resources"/>
             <!-- List of SWC files or directories that contain SWC files. -->
             <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs" />
@@ -85,6 +86,7 @@
             <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
             <source-path path-element="${FLEX_HOME}/frameworks"/>
             <compiler.source-path path-element="${src.dir}"/>
+        	<compiler.source-path path-element="resources"/>
             <compiler.source-path path-element="${test.dir}"/>
             <!-- List of SWC files or directories that contain SWC files. -->
             <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">

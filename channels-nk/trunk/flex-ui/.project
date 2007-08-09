@@ -19,7 +19,12 @@
 		<link>
 			<name>[source path] test</name>
 			<type>2</type>
-			<location>/Volumes/Data/Users/dfeeney/ma/channels-nk/flex-ui/test</location>
+			<location>/Users/dfeeney/ma/channels/flex-ui/test</location>
+		</link>
+		<link>
+			<name>[source path] resources</name>
+			<type>2</type>
+			<location>/Users/dfeeney/ma/channels/flex-ui/resources</location>
 		</link>
 	</linkedResources>
 </projectDescription>
