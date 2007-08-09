@@ -133,15 +133,12 @@ public class ContinuumTrigger implements Runnable {
 
         for ( Project p : reader.readProjects() ) {
             String artifactId = p.getArtifactId();
-            if ( artifactId == null )
-                logger.warn(
-                    MessageFormat.format( "Null artifactId for {0}", name ) );
-            else if ( artifactId.equals( name ) )
+            if ( artifactId != null && artifactId.equals( name ) )
                 return p;
         }
 
         logger.warn(
-                MessageFormat.format( "Couldn't find project {0}", name ) );
+                MessageFormat.format( "Couldn''t find project {0}", name ) );
         return null;
     }
 }
