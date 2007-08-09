@@ -57,7 +57,15 @@
             <fileset dir="${dst}">
                 <include name="**/*.class"/>
             </fileset>
+        	<!-- This need cleaned up... -->
+            <fileset dir="${base}/modules/mod-channels/resources">
+                <include name="assets/**/*"/>
+                <include name="*.js"/>
+                <include name="*.swf"/>
+                <include name="*.html"/>
+            </fileset>
         </delete>
+    	<delete dir="${base}/modules/mod-channels/resources/assets"/>
     </target>
 
 </project>
