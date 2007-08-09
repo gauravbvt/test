@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:categories="com.mindalliance.channels.view.categories.*">
+
+	<mx:states>
+		<mx:State name="EditState">
+			<mx:AddChild relativeTo="{txtName}" position="before">
+				<mx:Text text="e.g.: Search suspect home" styleName="FormItemDescription"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
+			<mx:AddChild relativeTo="{formitemAgents}" position="lastChild">
+				<mx:HBox id="hBoxEditAgents">
+					<common:AddButton/>
+					<common:RemoveButton enabled="{listAgents.selectedItems.length > 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{formitemArtifacts}" position="lastChild">
+				<mx:HBox id="hBoxEditArtifacts">
+					<common:AddButton/>
+					<common:RemoveButton enabled="{listArtifacts.selectedItems.length > 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{listArtifacts}" position="before">
+				<mx:Text text="e.g.: tissue samples" styleName="FormItemDescription"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
+			<mx:AddChild relativeTo="{viewEditStateChangeFormItem}" position="after">
+				<common:HintFieldRequiredFormItem/>
+			</mx:AddChild>
+			<mx:SetProperty target="{formitemCause}" name="mouseEnabled" value="true"/>
+			<mx:SetProperty target="{formitemCause}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{formitemDuration}" name="mouseEnabled" value="true"/>
+			<mx:SetProperty target="{formitem1}" name="required" value="true"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+		<common:ViewEditStateTransition fromState="*" toState="*" targets="{[formitemAgents, formitemArtifacts, formitemCategories]}"/>
+	</mx:transitions>
+
+	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection ;
+			
+			[Bindable]
+			private var Artifacts:ArrayCollection = new ArrayCollection() ;
+			
+			private function switchToEditState():void {
+				currentState = 'EditState';
+			}
+			
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
+		btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}"/>
+	
+	<mx:FormHeading id="formHeading" label="{'Task: '+txtName.text}"/>
+	
+	<mx:FormItem label="Name" direction="vertical" id="formitem1">
+		<mx:TextInput id="txtName" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Description">
+		<mx:TextArea id="txtDescription" wordWrap="true" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Agents" direction="vertical" id="formitemAgents">
+		<mx:Text text="The following roles execute this task:" styleName="FormItemDescription" id="text1"/>
+		<mx:List id="listAgents"/>
+	</mx:FormItem>
+	<mx:FormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize">
+		<mx:VBox id="vBoxCause">
+			<mx:RadioButtonGroup id="rbgCause"/>
+			<mx:RadioButton groupName="rbgCause" label="This task is independent of other events or tasks." selected="true"/>
+			<mx:VBox>
+				<mx:HBox>
+					<mx:RadioButton groupName="rbgCause" label="This task is caused by another" id="rbCauseExists"/>
+					<mx:HBox id="hBoxCauseExists">
+						<mx:ComboBox id="cbEventTask" selectedIndex="0">
+							<mx:String>event</mx:String>
+							<mx:String>task</mx:String>
+						</mx:ComboBox>
+					</mx:HBox>
+				</mx:HBox>
+				<mx:HBox includeInLayout="{rbCauseExists.selected}" visible="{rbCauseExists.selected}">
+					<mx:Label text="{'Select '+cbEventTask.selectedItem+':'}"/>
+					<mx:ViewStack selectedIndex="{cbEventTask.selectedIndex}"
+						showEffect="Resize" hideEffect="Resize">
+						<mx:Box>
+							<mx:ComboBox id="comboTasks"/>
+						</mx:Box>
+						<mx:Box>
+							<mx:ComboBox id="comboEvents"/>
+						</mx:Box>
+					</mx:ViewStack>									
+				</mx:HBox>				
+			</mx:VBox>
+		</mx:VBox>	
+	</mx:FormItem>
+	<mx:FormItem label="Duration" mouseChildren="false" mouseEnabled="false" id="formitemDuration">
+		<mx:HBox>
+			<mx:Label text="About"/>
+			<mx:TextInput width="100"/>
+			<common:TimeScalesComponent/>
+		</mx:HBox>
+	</mx:FormItem>
+	<mx:FormItem label="Artifacts produced" direction="vertical" id="formitemArtifacts">
+		<mx:List id="listArtifacts" dataProvider="{Artifacts}"/>
+	</mx:FormItem>
+	<mx:FormItem label="Categories" id="formitemCategories">
+		<categories:CategoryViewer/>
+	</mx:FormItem>
+</mx:Form>

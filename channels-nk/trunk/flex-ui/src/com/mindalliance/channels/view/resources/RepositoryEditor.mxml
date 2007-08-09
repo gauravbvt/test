@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:categories="com.mindalliance.channels.view.categories.*" xmlns:common="com.mindalliance.channels.view.common.*">
+	
+	<mx:Script>
+		<![CDATA[
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function initiateEdit():void {
+				currentState = 'EditState' ;
+			}
+		]]>
+	</mx:Script>
+	
+	
+	<mx:states>
+		<mx:State name="EditState">
+			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
+			<mx:SetProperty target="{comboOwner}" name="enabled" value="true"/>
+			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
+			<mx:AddChild relativeTo="{categoryViewer}" position="before">
+				<mx:Label text="Use categories to specify information available in this repository." styleName="FormItemDescription"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{formItemAdministrators}" position="lastChild">
+				<mx:HBox width="100%">
+					<common:AddButton/>
+					<common:RemoveButton enabled="{listAdministrators.selectedItems.length > 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{formItemAccess}" position="lastChild">
+				<mx:HBox width="100%">
+					<common:AddButton/>
+					<common:RemoveButton enabled="{listAccessRightsHolders.selectedItems.length > 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty target="{formItemName}" name="required" value="true"/>
+			<mx:AddChild relativeTo="{formHeading}" position="before">
+				<mx:FormItem required="true" id="formItemHint">
+					<mx:Label text="means field cannot be empty" styleName="FormItemDescription"/>
+				</mx:FormItem>
+			</mx:AddChild>
+			<mx:SetProperty target="{formItemStateChange}" name="currentState" value="EditState"/>
+			<mx:SetProperty target="{formitem1}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{formitem1}" name="mouseEnabled" value="true"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+		<common:ViewEditStateTransition 
+			targets="{[formItemStateChange, formItemHint, formItemAccess, formItemAdministrators]}"/>
+	</mx:transitions>
+	
+	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+
+	<common:ViewEditStateChangeFormItem width="100%" btnEditClickHandler="{initiateEdit}" id="formItemStateChange"
+		confirmEditHandler="{confirmEdit}" cancelEditHandler="{cancelEdit}"/>
+	<mx:FormHeading label="{'Repository: ' + txtName.text}" id="formHeading"/>
+	<mx:FormItem label="Name" id="formItemName">
+		<mx:TextInput id="txtName" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Description">
+		<mx:TextArea id="txtDescription" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Owner" mouseChildren="false" mouseEnabled="false" id="formitem1">
+		<mx:ComboBox editable="false" id="comboOwner"></mx:ComboBox>
+	</mx:FormItem>
+	<mx:FormItem label="Administrators" id="formItemAdministrators">
+		<mx:List id="listAdministrators" editable="false"></mx:List>
+	</mx:FormItem>
+	<mx:FormItem label="Categories" direction="vertical">
+		<categories:CategoryViewer id="categoryViewer"/>
+	</mx:FormItem>
+	<mx:FormItem label="Access granted" id="formItemAccess">
+		<mx:Text styleName="FormItemDescription">
+			<mx:htmlText><![CDATA[In addition to administrators, the following  <br>roles have access to this repository:]]></mx:htmlText>
+		</mx:Text>
+		<mx:List id="listAccessRightsHolders" editable="false"></mx:List>
+	</mx:FormItem>
+</mx:Form>

@@ -1,23 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form 
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:ui="flex-ui.src.com.mindalliance.channels.view.*">
+	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.view.common.InputTextDialog;
+
+			private function switchToEditState():void {
+				currentState = 'EditState' ;
+			}
+			
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function handleAddExpertise():void {
+				var ipd:InputTextDialog = new InputTextDialog() ;
+				ipd.title = 'Enter short description of expertise' ;
+				ipd.okEventHandler = function handler(text:String):void {
+					if (text != null && text.length > 0)
+						Expertise.addItem({name:text}) ;
+				}
+				PopUpManager.addPopUp(ipd, listExpertise, false) ;
+			}
+			
+			[Bindable]
+			private var Expertise:ArrayCollection = new ArrayCollection() ;
+		]]>
+	</mx:Script>
+    
+    <mx:states>
+    	<mx:State name="EditState">
+    		<mx:AddChild relativeTo="{viewEditStateChangeFormItem}" position="after">
+    			<common:HintFieldRequiredFormItem/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{listExpertise}" position="after">
+				<mx:HBox width="100%">
+					<common:AddButton id="btnAddExpertise" click="handleAddExpertise()"/>
+					<common:RemoveButton enabled="{listExpertise.selectedItems.length > 0}" id="btnRemoveExpertise"/>
+				</mx:HBox>
+			</mx:AddChild>
+    		<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+		</mx:State>
+	</mx:states>
+	
+    <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+	
+    <common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
+    	btnEditClickHandler="{switchToEditState}"
+    	confirmEditHandler="{confirmEdit}"
+    	cancelEditHandler="{cancelEdit}"/>
+    	
+    <mx:FormHeading label="{'Organization: '+txtName}"/>	
+	
     <mx:FormItem label="Name">
-        <mx:TextInput/>
+        <mx:TextInput id="txtName"/>
     </mx:FormItem>
-    <mx:FormItem label="Organization">
+    <mx:FormItem label="Organization" mouseEnabled="false" mouseChildren="false">
     	<mx:ComboBox/>
     </mx:FormItem>
     <mx:FormItem label="Description">
-        <mx:TextArea/>
+        <mx:TextArea id="txtDescription"/>
     </mx:FormItem>
     <mx:FormItem label="Expertise" direction="vertical">
-		<mx:Text fontStyle="italic" selectable="false" text="This role can provide the following information at all times:"
+		<mx:Text styleName="FormItemDescription" selectable="false" text="This role can provide the following information at all times:"
 			width="{listExpertise.width}"/>
-		<mx:List editable="true" id="listExpertise"/>
+		<mx:List editable="false" id="listExpertise" dataProvider="{Expertise}" labelField="name"/>
     </mx:FormItem>
-    <mx:FormItem label="Teams" direction="vertical">
-		<mx:Text fontStyle="italic" text="This role is part of the following teams:" selectable="false"/>
-    	<mx:List editable="false"/>
+    <mx:FormItem label="Teams" direction="vertical" visible="false" includeInLayout="false">
+		<mx:Text styleName="FormItemDescription"  text="This role is part of the following teams:" selectable="false"/>
+    	<mx:List editable="false" id="listTeams"/>
     </mx:FormItem>
 </mx:Form>

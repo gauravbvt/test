@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:FormItem xmlns:mx="http://www.adobe.com/2006/mxml"
+	direction="horizontal">
+	
+	<mx:Script>
+		<![CDATA[
+			public var confirmEditHandler:Function ;
+			
+			public var cancelEditHandler:Function ;
+			
+			public var btnEditClickHandler:Function ;
+			
+			private function confirmEdit():void {
+				if (confirmEditHandler != null)
+					confirmEditHandler() ;
+			}
+			
+			private function cancelEdit():void {
+				if (cancelEditHandler != null)
+					cancelEditHandler() ;
+			}
+			
+			private function btnEditClicked():void {
+				if (btnEditClickHandler != null)
+					btnEditClickHandler() ;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<mx:State name="EditState">
+			<mx:RemoveChild target="{btnEdit}"/>
+			<mx:AddChild relativeTo="{hboxStateChange}" position="lastChild">
+				<mx:Button label="Cancel" click="cancelEdit()" id="btnCancel"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{btnCancel}" position="before">
+				<mx:Button label="Done" click="confirmEdit()" id="btnDone"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:HBox width="100%" id="hboxStateChange">
+		<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()"/>
+	</mx:HBox>
+</mx:FormItem>

@@ -1,26 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml">
-	<mx:FormItem label="First name">
-		<mx:TextInput width="100%"/>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+
+	<mx:Script>
+		<![CDATA[
+			private function switchToEditState():void {
+				currentState = 'EditState' ;
+			}
+			
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+		]]>
+	</mx:Script>
+    
+    <mx:states>
+    	<mx:State name="EditState">
+    		<mx:AddChild relativeTo="{viewEditStateChangeFormItem}" position="after">
+    			<common:HintFieldRequiredFormItem/>
+    		</mx:AddChild>
+    		<mx:AddChild relativeTo="{listRoles}" position="after">
+				<mx:HBox>
+					<common:AddButton/>
+					<common:RemoveButton enabled="{listRoles.selectedItems.length > 0}"/>
+				</mx:HBox>
+    		</mx:AddChild>
+    		<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
+    		<mx:SetProperty target="{txtFirstName}" name="editable" value="true"/>
+    		<mx:SetProperty target="{txtEmail}" name="editable" value="true"/>
+    		<mx:SetProperty target="{formitem1}" name="required" value="true"/>
+    		<mx:SetProperty target="{formitem2}" name="required" value="true"/>
+    		<mx:SetProperty target="{formitem3}" name="required" value="true"/>
+    		<mx:SetProperty target="{formitem4}" name="required" value="true"/>
+    		<mx:SetProperty target="{formitem5}" name="required" value="true"/>
+		</mx:State>
+	</mx:states>
+	
+    <mx:transitions>
+    	<common:ViewEditStateTransition fromState="*" toState="*" targets="{[this]}"/>
+    </mx:transitions>
+    
+    <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+    
+    <common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
+    	btnEditClickHandler="{switchToEditState}"
+    	confirmEditHandler="{confirmEdit}"
+    	cancelEditHandler="{cancelEdit}"/>
+
+	<mx:FormItem label="First name" id="formitem1">
+		<mx:TextInput width="100%" id="txtFirstName" editable="false"/>
 	</mx:FormItem>
-	<mx:FormItem label="Last name">
-		<mx:TextInput width="100%"/>
+	<mx:FormItem label="Last name" id="formitem2">
+		<mx:TextInput width="100%" id="txtLastName"/>
 	</mx:FormItem>
-	<mx:FormItem label="Email">
-		<mx:TextInput width="100%"/>
+	<mx:FormItem label="Email" id="formitem3">
+		<mx:TextInput width="100%" id="txtEmail"/>
 	</mx:FormItem>
-	<mx:FormItem label="Office phone">
-		<mx:TextInput width="100%"/>
+	<mx:FormItem label="Office phone" id="formitem5">
+		<mx:TextInput width="100%" id="txtOfficePhone"/>
 	</mx:FormItem>
 	<mx:FormItem label="Cell phone">
-		<mx:TextInput width="100%"/>
+		<mx:TextInput width="100%" id="txtCellPhone"/>
 	</mx:FormItem>
-	<mx:FormItem label="Roles">
-		<mx:DataGrid width="100%">
-			<mx:columns>
-				<mx:DataGridColumn headerText="Organization"/>
-				<mx:DataGridColumn headerText="Role"/>
-			</mx:columns>
-		</mx:DataGrid>
+	<mx:FormItem label="Roles" id="formitem4">
+		<mx:List id="listRoles" editable="false"/>
 	</mx:FormItem>
 </mx:Form>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Transition xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
+	 fromState="*" toState="*">
+
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var targets:Array ;
+		]]>
+	</mx:Script>
+
+	<mx:Parallel targets="{targets}">
+		<mx:Resize/>
+	</mx:Parallel>
+</mx:Transition>

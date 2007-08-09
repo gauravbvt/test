@@ -3,10 +3,10 @@
 	<name>yWorks GmbH</name>
 	<email>support@yworks.com</email>
 	<type>eval</type>
-	<expires>07/19/2007</expires>
+	<expires>09/07/2007</expires>
 	<domains>
 		<domain>*</domain>
 	</domains>
 	<localhost>true</localhost>
-	<key>5a2dc50039e26a9f3d7f409aa83857533150a865</key>
+	<key>ff23b07af1f56ef7b69b3c7ac15badbf7f06914c</key>
 </license>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow 
+	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:search="com.mindalliance.channels.view.search.*" title="Choose artifacts"
+	showCloseButton="true" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:scenario="com.mindalliance.channels.view.scenario.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection ;
+			
+			[Bindable]
+			private var SelectedArtifacts:ArrayCollection = new ArrayCollection() ;
+						
+		]]>
+	</mx:Script>
+	
+	<mx:HBox>
+		<mx:VBox>
+			<search:StandardSearchBox width="100%"/>
+			<mx:HBox verticalAlign="middle">
+				<mx:List id="listArtifacts" height="100%"/>
+				<mx:VBox horizontalAlign="center">
+					<mx:Button label=">>" enabled="{listArtifacts.selectedItems.length > 0}"/>
+					<mx:Text color="gray" text="click to add"/>
+				</mx:VBox>
+				<mx:VBox>
+					<mx:Label text="Selected artifacts"/>
+					<mx:List id="listSelectedArtifacts"/>
+					<common:RemoveButton enabled="{listSelectedArtifacts.selectedItems.length > 0}"/>
+				</mx:VBox>
+			</mx:HBox>
+		</mx:VBox>
+		<scenario:ArtifactEditor enabled="{false}"/>
+	</mx:HBox>
+	<mx:ControlBar horizontalAlign="right">
+		<mx:Button label="Done" enabled="{SelectedArtifacts.length > 0}"/>
+	</mx:ControlBar>
+</mx:TitleWindow>

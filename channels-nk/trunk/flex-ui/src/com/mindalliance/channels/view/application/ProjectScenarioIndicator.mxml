@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="{'Project: '+currentProjectName+', Scenario: ' + currentScenarioName}" 
+		click="btnClicked()" toolTip="click to browse or change projects and scenarios">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.IFlexDisplayObject;
+			import mx.managers.PopUpManager;
+
+			[Bindable]
+			private var currentProjectName:String ;
+			
+			[Bindable]
+			private var currentScenarioName:String ;
+
+			private function btnClicked():void {
+				var sb:IFlexDisplayObject = PopUpManager.createPopUp(this, ProjectScenarioBrowser, true);
+				PopUpManager.centerPopUp(sb);
+				sb.y = this.y + this.height + 4 ;
+            }
+		]]>
+	</mx:Script>
+	
+</mx:Button>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:categories="com.mindalliance.channels.view.categories.*" 
+	xmlns:common="com.mindalliance.channels.view.common.*">
+
+	<mx:Script>
+		<![CDATA[
+			private function switchToEditState():void {
+				currentState = 'EditState';
+			}
+			
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '';	
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<mx:State name="EditState">
+			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
+			<mx:AddChild relativeTo="{categoryViewer}" position="before">
+				<mx:Text styleName="FormItemDescription" id="formItemCategoryHint">
+					<mx:text>Use categories to specify information associated with this artifact</mx:text>
+					<mx:htmlText>Use categories to specify information associated with this artifact</mx:htmlText>
+				</mx:Text>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{formItemStateChange}" position="after">
+				<common:HintFieldRequiredFormItem/>
+			</mx:AddChild>
+			<mx:SetProperty target="{formItemStateChange}" name="currentState" value="EditState"/>
+			<mx:SetProperty target="{formitem1}" name="required" value="true"/>
+		</mx:State>
+	</mx:states>
+
+	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+	<mx:FormHeading label="{'Artifact: '+txtName.text}"/>
+	
+	<common:ViewEditStateChangeFormItem id="formItemStateChange" 
+		btnEditClickHandler="{switchToEditState}" confirmEditHandler="{confirmEdit}" 
+		cancelEditHandler="{cancelEdit}"/>
+	<mx:FormItem label="Name" id="formitem1">
+		<mx:TextInput id="txtName" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Description">
+		<mx:TextArea id="txtDescription" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Categories" id="formitemCategories">
+		<categories:CategoryViewer id="categoryViewer"/>
+	</mx:FormItem>
+</mx:Form>

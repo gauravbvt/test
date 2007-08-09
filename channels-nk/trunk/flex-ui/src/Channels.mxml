@@ -8,19 +8,20 @@
 	xmlns:application="com.mindalliance.channels.view.application.*" 
 	xmlns:geomap="com.mindalliance.channels.view.geomap.*"
 	xmlns:control="com.mindalliance.channels.control.*"
-	xmlns:business="com.mindalliance.channels.business.*">
-    <!--<mx:XML id="yFilesLicenseXML" source="file:///Users/dfeeney/ma/channels-ui/lib/license.xml" />-->
+	xmlns:business="com.mindalliance.channels.business.*"
+	applicationComplete="init()">
+    <mx:XML id="yFilesLicenseXML" source="../lib/license.xml" />
     <mx:Script>
       <![CDATA[
       	import com.mindalliance.channels.model.ChannelsModelLocator;
     
-        /*
+        
         import com.yworks.util.Util;
     
         private function init():void {
-          Util.registerLicense( yFilesLicenseXML );
+           Util.registerLicense( yFilesLicenseXML );
         }
-        */
+
         [Bindable]
         private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
         

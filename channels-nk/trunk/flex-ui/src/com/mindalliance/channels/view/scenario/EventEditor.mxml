@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:categories="com.mindalliance.channels.view.categories.*">
+
+	<mx:Script>
+		<![CDATA[
+			private function switchToEditState():void {
+				currentState = 'EditState' ;
+			}
+			
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<mx:State name="EditState">
+			<mx:AddChild relativeTo="{txtName}" position="before">
+				<mx:Text text="e.g.: Arabic document discovered" styleName="FormItemDescription"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
+			<mx:SetProperty target="{formitemCause}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{formitemCause}" name="mouseEnabled" value="true"/>
+			<mx:AddChild relativeTo="{vbox1}" position="lastChild">
+				<mx:HBox visible="{rbDurationQual.selected}" includeInLayout="{rbDurationQual.selected}">
+					<common:AddButton click="rbDurationQual.selected = true;"/>
+					<common:RemoveButton enabled="{listTasks.selectedItems.length &gt; 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
+			<mx:AddChild relativeTo="{viewEditStateChangeFormItem}" position="after">
+				<common:HintFieldRequiredFormItem/>
+			</mx:AddChild>
+			<mx:SetProperty target="{formitem1}" name="required" value="true"/>
+			<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
+			<mx:SetProperty target="{formitemDuration}" name="mouseEnabled" value="true"/>
+			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+		<common:ViewEditStateTransition fromState="*" toState="*" targets="{[formitemCause, formitemDuration, formitemCategories]}"/>
+	</mx:transitions>
+
+	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+	
+	<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem" btnEditClickHandler="{switchToEditState}" 
+		confirmEditHandler="{confirmEdit}" cancelEditHandler="{cancelEdit}"/>
+	
+	<mx:FormHeading id="formHeading" label="{'Event: '+txtName.text}"/>
+	
+	<mx:FormItem label="Name" direction="vertical" id="formitem1">
+		<mx:TextInput id="txtName" editable="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Description">
+		<mx:TextArea editable="false" id="txtDescription"/>
+	</mx:FormItem>
+	<mx:FormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize">
+		<mx:VBox id="vBoxCause">
+			<mx:RadioButtonGroup id="rbgCause"/>
+			<mx:RadioButton groupName="rbgCause" label="This event is independent of other events or tasks." selected="true"/>
+			<mx:VBox>
+				<mx:HBox>
+					<mx:RadioButton groupName="rbgCause" label="This event is caused by another" id="rbCauseExists"/>
+					<mx:HBox id="hBoxCauseExists">
+						<mx:ComboBox id="cbEventTask" selectedIndex="0">
+							<mx:String>event</mx:String>
+							<mx:String>task</mx:String>
+						</mx:ComboBox>
+					</mx:HBox>
+				</mx:HBox>
+				<mx:HBox includeInLayout="{rbCauseExists.selected}" visible="{rbCauseExists.selected}">
+					<mx:Label text="{'Select '+cbEventTask.selectedItem+':'}"/>
+					<mx:ViewStack selectedIndex="{cbEventTask.selectedIndex}"
+						showEffect="Resize" hideEffect="Resize">
+						<mx:Box>
+							<mx:ComboBox id="comboTasks"/>
+						</mx:Box>
+						<mx:Box>
+							<mx:ComboBox id="comboEvents"/>
+						</mx:Box>
+					</mx:ViewStack>									
+				</mx:HBox>				
+			</mx:VBox>
+		</mx:VBox>	
+	</mx:FormItem>
+	<mx:FormItem label="Duration" direction="vertical" mouseEnabled="false" mouseChildren="false" id="formitemDuration">
+		<mx:VBox>
+			<mx:RadioButtonGroup id="rbgDuration"/>
+			<mx:HBox>
+				<mx:RadioButton label="About" id="rbDurationQuant" groupName="rbgDuration" selected="true"/>
+				<mx:TextInput width="100" click="rbDurationQuant.selected = true;"/>
+				<common:TimeScalesComponent/>
+			</mx:HBox>
+			<mx:VBox id="vbox1">
+				<mx:RadioButton id="rbDurationQual" label="Until the following tasks are successfully completed:" groupName="rbgDuration"/>
+				<mx:VBox id="vBoxDuration" visible="{rbDurationQual.selected}" includeInLayout="{rbDurationQual.selected}" showEffect="Resize" hideEffect="Resize">
+					<mx:List click="rbDurationQual.selected = true;" id="listTasks" editable="false"/>
+				</mx:VBox>
+			</mx:VBox>
+		</mx:VBox>
+	</mx:FormItem>
+	<mx:FormItem label="Categories" id="formitemCategories">
+		<categories:CategoryViewer id="categoryViewer"/>
+	</mx:FormItem>
+</mx:Form>

@@ -1,30 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
     
+	<mx:Script>
+		<![CDATA[
+			private function switchToEditState():void {
+				currentState = 'EditState' ;
+			}
+			
+			private function confirmEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+			
+			private function cancelEdit():void {
+				// Do stuff and then:
+				currentState = '' ;
+			}
+		]]>
+	</mx:Script>
+    
+    <mx:states>
+    	<mx:State name="EditState">
+    		<mx:AddChild relativeTo="{viewEditStateChangeFormItem}" position="after">
+    			<common:HintFieldRequiredFormItem/>
+    		</mx:AddChild>
+    		<mx:AddChild relativeTo="{formitemAbbrev}" position="firstChild">
+		    	<mx:Label text="e.g.: NYPD" styleName="FormItemDescription"/>
+    		</mx:AddChild>
+    		<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+    		<mx:SetProperty target="{formitemName}" name="required" value="true"/>
+    		<mx:SetProperty target="{formitemParentOrg}" name="mouseEnabled" value="true"/>
+    		<mx:SetProperty target="{formitemParentOrg}" name="mouseChildren" value="true"/>
+    		<mx:SetProperty target="{formitemAddress}" name="mouseChildren" value="true"/>
+    		<mx:SetProperty target="{formitemAddress}" name="mouseChildren" value="true"/>
+    		<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
+    	</mx:State>
+    </mx:states>
+    
+    <mx:transitions>
+    	<common:ViewEditStateTransition fromState="*" toState="*" targets="{[this]}"/>
+    </mx:transitions>
+    
     <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
-    <mx:FormItem label="Name" required="true">
-        <mx:TextInput/>
+    
+    <common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
+    	btnEditClickHandler="{switchToEditState}"
+    	confirmEditHandler="{confirmEdit}"
+    	cancelEditHandler="{cancelEdit}"/>
+    	
+    <mx:FormHeading label="{'Organization: '+txtName}"/>	
+    <mx:FormItem label="Name" required="false" id="formitemName">
+        <mx:TextInput id="txtName" editable="false"/>
     </mx:FormItem>
-    <mx:FormItem label="Abbreviation" direction="vertical">
-    	<mx:Label text="e.g.: NYPD" styleName="FormItemDescription"/>
-    	<mx:TextInput/>
+    <mx:FormItem label="Abbreviation" direction="vertical" id="formitemAbbrev">
+    	<mx:TextInput id="txtAbbrev" editable="false"/>
     </mx:FormItem>
     <mx:FormItem label="Description">
-        <mx:TextArea/>
+        <mx:TextArea id="txtDescription" editable="false"/>
     </mx:FormItem>
-    <mx:FormItem label="Parent Organization" direction="vertical">
-    	<mx:Text text="If this organization falls under another one, please specify it here." styleName="FormItemDescription"/>
-    	<mx:ComboBox>
-    		<!-- This combo box holds a list of all organizations so user can select one. -->
-    	</mx:ComboBox>
+    <mx:FormItem label="Parent Organization" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemParentOrg">
+	<mx:ComboBox id="comboOrganizations"/>
     </mx:FormItem>
-    <mx:FormItem label="Address" direction="vertical">
+    <mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">
         <mx:Label text="Street"/>
-        <mx:TextInput/>
+        <mx:TextInput id="txtStreet"/>
         <mx:Label text="City"/>
-        <mx:TextInput/>
+        <mx:TextInput id="txtCity"/>
         <mx:HBox>
-        	<mx:Label text="State"/><common:USStatesComboBox/>
+        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates"/>
         </mx:HBox>
     </mx:FormItem>
 </mx:Form>
