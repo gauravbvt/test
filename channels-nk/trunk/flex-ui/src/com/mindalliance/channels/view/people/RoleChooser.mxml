@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:search="com.mindalliance.channels.view.search.*"
+	xmlns:people="com.mindalliance.channels.view.people.*"
+	resizeEffect="Resize">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.collections.ArrayCollection;
+			[Bindable]
+			private var SelectedRoles:ArrayCollection = new ArrayCollection() ;
+			
+			private function closeChooser():void {
+				PopUpManager.removePopUp(this) ;
+			}
+		]]>
+	</mx:Script>
+	
+    <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+	
+	<mx:VBox>
+		<search:StandardSearchBox width="100%"/>
+		<mx:HBox>
+			<mx:VBox>
+				<mx:Label text="Roles" fontWeight="bold"/>
+				<mx:List id="listRoles" width="100%" height="100%"/>
+			</mx:VBox>
+			<mx:VBox verticalAlign="middle" height="100%">
+				<mx:Button id="btnSelect" label=">>" enabled="{listRoles.selectedItems.length > 0}" toolTip="click to select"/>
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Selected Roles" fontWeight="bold"/>
+				<mx:List id="listSelectedRoles" dataProvider="{SelectedRoles}" labelField="name" height="100%"/>
+			</mx:VBox>
+		</mx:HBox>
+		<mx:CheckBox label="Show details" id="cbShowDetails"/>
+		<people:RoleEditor visible="{cbShowDetails.selected}" includeInLayout="{cbShowDetails.selected}" width="100%"/>
+	</mx:VBox>
+	<mx:ControlBar horizontalAlign="right">
+		<mx:Button label="Done" enabled="{listSelectedRoles.dataProvider.length > 0}"/>
+		<mx:Button label="Cancel" click="closeChooser()"/>
+	</mx:ControlBar>
+</mx:Panel>

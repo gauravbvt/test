@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
     title="Category Editor"
-    showCloseButton="true"
-    close="handleClose(event)" xmlns:search="com.mindalliance.channels.view.search.*" xmlns:common="com.mindalliance.channels.view.common.*">
+    xmlns:search="com.mindalliance.channels.view.search.*"
+    xmlns:common="com.mindalliance.channels.view.common.*">
     
     <mx:Script>
         <![CDATA[
@@ -12,93 +12,66 @@
             import mx.managers.PopUpManager;
             import mx.events.CloseEvent;
             
-            private function handleClose(event:CloseEvent):void {
+            private function closeEditor():void {
                 PopUpManager.removePopUp(this) ;
             }
             
             private function treeCategoriesItemClicked(event:ListEvent):void {
                 //
             }
+            
         ]]>
     </mx:Script>
     
-    <mx:ArrayCollection id="Taxonomies">
-        <mx:Object label="Event"/>
-        <mx:Object label="Task"/>
-        <mx:Object label="Role"/>
-    </mx:ArrayCollection>
-    
-    <mx:Component id="comboInformationType">
-        <mx:ComboBox>
-            <mx:dataProvider>
-                <mx:String>Date</mx:String>
-                <mx:String>Time</mx:String>
-                <mx:String>Date &amp; Time</mx:String>
-                <mx:String>Text</mx:String>
-                <mx:String>Number</mx:String>
-                <mx:String>Alpha Numeric</mx:String>
-            </mx:dataProvider>
-        </mx:ComboBox>
-    </mx:Component>
-
-    
     <mx:VBox width="100%" height="100%">
         <mx:HBox horizontalAlign="center" width="100%" verticalAlign="middle">
-            <mx:Label text="Taxonomy:" fontWeight="bold"/>
-            <mx:ComboBox id="comboTaxonomy" dataProvider="{Taxonomies}"/>
+            <mx:Label text="Select Taxonomy:" fontWeight="bold"/>
+            <mx:ComboBox id="comboTaxonomy"/>
+            <mx:Label text="Select Discipline:" fontWeight="bold"/>
+            <mx:ComboBox id="comboDisciplines"/>
         </mx:HBox>
         <mx:HBox width="100%">
         	<search:StandardSearchBox width="100%"/>
         </mx:HBox>
-        <mx:Label id="txtSelectedItemTreeLocation" text="Location &gt; In &gt; Tree &gt; Of &gt; Selected &gt; Category" width="100%"/>
-        <mx:HDividedBox width="100%" height="100%">
-            <mx:DataGrid id="dgDisciplines" width="100%" height="100%">
-                <mx:columns>
-                    <mx:DataGridColumn headerText="Discipline"/>
-                </mx:columns>
-            </mx:DataGrid>
-            <mx:VBox width="100%" height="100%">
-                <mx:HBox width="100%">
-                    <mx:Button label="Add Sibling"/>
-                    <mx:Button label="Add Child"/>
-                </mx:HBox>
-                <mx:Tree width="100%" height="100%" id="treeCategories" itemClick="treeCategoriesItemClicked(event)"/>
-            </mx:VBox>
+        <mx:HDividedBox width="100%">
+	        <mx:VBox width="100%" height="100%">
+	            <mx:HBox width="100%" horizontalAlign="center">
+	                <mx:Button label="Add Category"/>
+	                <mx:Button label="Add Sub-Category"/>
+	            </mx:HBox>
+	            <mx:Tree width="100%" height="100%" id="treeCategories" itemClick="treeCategoriesItemClicked(event)"/>
+	            <common:RemoveButton enabled="{treeCategories.selectedItems.length > 0}" toolTip="Remove selected categories"/>
+	        </mx:VBox>
+	        <mx:VBox width="100%" height="100%" id="details">
+                <mx:Form>
+                    <mx:FormItem label="Name">
+                        <mx:TextInput/>
+                    </mx:FormItem>
+                    <mx:FormItem label="Description">
+                        <mx:TextArea/>
+                    </mx:FormItem>
+                </mx:Form>
+                <mx:VBox width="100%" height="100%">
+                    <mx:Label text="Information Template:" fontWeight="bold"/>
+                    <mx:DataGrid id="dgInformationTemplate" width="100%" height="100%">
+                        <mx:columns>
+                            <mx:DataGridColumn headerText="Topic"/>
+                            <mx:DataGridColumn headerText="Label"/>
+                        </mx:columns>
+                    </mx:DataGrid>
+                    <mx:HBox>
+                    	<common:AddButton/>
+                    	<common:RemoveButton enabled="{dgInformationTemplate.selectedItems.length > 0}"/>
+                    </mx:HBox>
+	                <mx:VBox width="100%" height="100%">
+	                       <mx:Label text="Implied Categories:" fontWeight="bold"/>
+	                       <mx:List width="100%" height="100%"/>
+	                </mx:VBox>
+                </mx:VBox>
+	        </mx:VBox>
         </mx:HDividedBox>
-        <mx:VBox width="100%" height="100%" id="details">
-                <mx:HBox width="100%" height="100%">
-                    <mx:Form>
-                        <mx:FormItem label="Name">
-                            <mx:TextInput/>
-                        </mx:FormItem>
-                        <mx:FormItem label="Description">
-                            <mx:TextArea/>
-                        </mx:FormItem>
-                    </mx:Form>
-                    <mx:VBox width="100%" height="100%">
-                           <mx:Label text="Implied Categories:" fontWeight="bold"/>
-                           <mx:VBox width="100%" height="100%">
-                                <mx:DataGrid id="dgImpliedCategories">
-                                    <mx:columns>
-                                        <mx:DataGridColumn headerText="Discipline"/>
-                                        <mx:DataGridColumn headerText="Name"/>
-                                    </mx:columns>
-                                </mx:DataGrid>
-                                <common:ItemAddRemoveButtonSet id="btnSetAddRemoveCategory"/>
-                            </mx:VBox>
-                    </mx:VBox>
-                    <mx:VBox width="100%" height="100%">
-                        <mx:Label text="Information Template:" fontWeight="bold"/>
-                        <mx:DataGrid id="dgInformationTemplate" width="100%" height="100%">
-                            <mx:columns>
-                                <mx:DataGridColumn headerText="Category"/>
-                                <mx:DataGridColumn headerText="Name"/>
-                                <mx:DataGridColumn headerText="Type" itemRenderer="{comboInformationType}" rendererIsEditor="true"/>
-                            </mx:columns>
-                        </mx:DataGrid>
-                        <common:ItemAddRemoveButtonSet id="btnSetAddRemoveInformation"/>
-                    </mx:VBox>
-                </mx:HBox>
-        </mx:VBox>
     </mx:VBox>
-</mx:TitleWindow>
+    <mx:ControlBar horizontalAlign="right">
+    	<mx:Button label="Close" click="closeEditor()"/>
+    </mx:ControlBar>
+</mx:Panel>

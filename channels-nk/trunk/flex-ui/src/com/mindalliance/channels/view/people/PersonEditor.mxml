@@ -3,6 +3,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.core.IFlexDisplayObject;
+			import mx.managers.PopUpManager;
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}
@@ -16,6 +18,14 @@
 				// Do stuff and then:
 				currentState = '' ;
 			}
+			
+			private function chooseRoles():void {
+				var rc:IFlexDisplayObject = PopUpManager.createPopUp(listRoles, RoleChooser, false) ;
+				var p:Point = new Point(listRoles.x, listRoles.y) ;
+				p = listRoles.localToGlobal(p) ;
+				rc.x = p.x + listRoles.width + 5 ;
+				rc.y = p.y ;
+			}
 		]]>
 	</mx:Script>
     
@@ -26,7 +36,7 @@
     		</mx:AddChild>
     		<mx:AddChild relativeTo="{listRoles}" position="after">
 				<mx:HBox>
-					<common:AddButton/>
+					<common:AddButton click="chooseRoles()"/>
 					<common:RemoveButton enabled="{listRoles.selectedItems.length > 0}"/>
 				</mx:HBox>
     		</mx:AddChild>

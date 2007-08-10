@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:categories="com.mindalliance.channels.view.categories.*">
 
+	<mx:Script>
+		<![CDATA[
+			import mx.core.IFlexDisplayObject;
+			import mx.managers.PopUpManager;
+			private function chooseArtifacts():void {
+				var popup:IFlexDisplayObject = PopUpManager.createPopUp(listArtifacts, ArtifactChooser) ;
+				PopUpManager.centerPopUp(popup) ;
+			}
+		]]>
+	</mx:Script>
+
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:AddChild relativeTo="{txtName}" position="before">
@@ -15,7 +26,7 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{formitemArtifacts}" position="lastChild">
 				<mx:HBox id="hBoxEditArtifacts">
-					<common:AddButton/>
+					<common:AddButton click="chooseArtifacts()"/>
 					<common:RemoveButton enabled="{listArtifacts.selectedItems.length > 0}"/>
 				</mx:HBox>
 			</mx:AddChild>

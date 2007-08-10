@@ -59,7 +59,7 @@
     	confirmEditHandler="{confirmEdit}"
     	cancelEditHandler="{cancelEdit}"/>
     	
-    <mx:FormHeading label="{'Organization: '+txtName}"/>	
+    <mx:FormHeading label="{'Role: '+txtName}"/>	
 	
     <mx:FormItem label="Name">
         <mx:TextInput id="txtName"/>
@@ -71,8 +71,12 @@
         <mx:TextArea id="txtDescription"/>
     </mx:FormItem>
     <mx:FormItem label="Expertise" direction="vertical">
-		<mx:Text styleName="FormItemDescription" selectable="false" text="This role can provide the following information at all times:"
-			width="{listExpertise.width}"/>
+		<mx:Text styleName="FormItemDescription" selectable="false"
+			width="{listExpertise.width}">
+			<mx:htmlText>
+				<![CDATA[This role can provide the following<br>information at all times:]]>
+			</mx:htmlText>
+		</mx:Text>
 		<mx:List editable="false" id="listExpertise" dataProvider="{Expertise}" labelField="name"/>
     </mx:FormItem>
     <mx:FormItem label="Teams" direction="vertical" visible="false" includeInLayout="false">

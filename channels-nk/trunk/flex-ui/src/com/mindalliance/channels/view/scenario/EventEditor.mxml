@@ -3,6 +3,10 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.core.IFlexDisplayObject;
+		
+			import mx.managers.PopUpManager ;
+			
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}
@@ -15,6 +19,11 @@
 			private function cancelEdit():void {
 				// Do stuff and then:
 				currentState = '' ;
+			}
+			
+			private function chooseTasks():void {
+				var popup:IFlexDisplayObject = PopUpManager.createPopUp(listTasks, TaskChooser) ;
+				PopUpManager.centerPopUp(popup) ;
 			}
 		]]>
 	</mx:Script>
@@ -30,8 +39,8 @@
 			<mx:SetProperty target="{formitemCause}" name="mouseEnabled" value="true"/>
 			<mx:AddChild relativeTo="{vbox1}" position="lastChild">
 				<mx:HBox visible="{rbDurationQual.selected}" includeInLayout="{rbDurationQual.selected}">
-					<common:AddButton click="rbDurationQual.selected = true;"/>
-					<common:RemoveButton enabled="{listTasks.selectedItems.length &gt; 0}"/>
+					<common:AddButton click="chooseTasks()"/>
+					<common:RemoveButton enabled="{listTasks.selectedItems.length > 0}"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>

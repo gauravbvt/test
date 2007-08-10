@@ -3,6 +3,13 @@
     width="100%" xmlns:application="com.mindalliance.channels.view.application.*" xmlns:search="com.mindalliance.channels.view.search.*">
     <mx:Script>
 	    <![CDATA[
+	    	import mx.containers.Panel;
+	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
+	    	import com.mindalliance.channels.view.scenario.TaskChooser;
+	    	import com.mindalliance.channels.view.categories.CategoryViewer;
+	    	import com.mindalliance.channels.view.people.RoleChooser;
+	    	import com.mindalliance.channels.view.categories.CategoryLibraryEditor;
+	    	import com.mindalliance.channels.view.people.RoleEditor;
 	    	import com.mindalliance.channels.view.scenario.ArtifactEditor;
 	    	import com.mindalliance.channels.view.people.PersonalProfileEditor;
 	    	import com.mindalliance.channels.view.scenario.EventEditor;
@@ -23,30 +30,30 @@
         	private var username:String = 'John Doe';
         
             private static var classHash:Object = {
-                "Category Chooser":CategoryChooser, 
+                "Category Library Editor":CategoryLibraryEditor,
+                "Category Viewer":CategoryViewer, 
+                "Category Chooser":CategoryChooser,
                 "Personal Profile Editor":PersonalProfileEditor,
+                "Role Editor":RoleEditor,
+                "Role Chooser":RoleChooser,
                 "Organization Editor":OrganizationEditor,
                 "Repository Editor":RepositoryEditor,
                 "Task Editor":TaskEditor,
+                "Task Chooser":TaskChooser,
                 "Event Editor":EventEditor,
-                "Artifact Editor":ArtifactEditor
+                "Artifact Editor":ArtifactEditor,
+                "Artifact Chooser":ArtifactChooser
                 };
                 
             private function menuBarItemClicked(event:MenuEvent):void {
-                var popUp:TitleWindow ;
                 var c:Class = classHash[event.item.@label] ;
-                if (c is TitleWindow) {
-                    popUp = TitleWindow(PopUpManager.createPopUp(this, c)) ;
-                }    
-                else {
-                    popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
-                    popUp.addChild((new ClassFactory(c)).newInstance()) ;
-                }
-                popUp.x = this.x + 100;
-                popUp.y = this.y + 100;
-                popUp.showCloseButton = true ;
-                popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)});
-                popUp.verticalScrollPolicy = 'auto' ;
+            	var popUp:TitleWindow ;
+            	popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
+            	popUp.addChild(new ClassFactory(c).newInstance()) ;
+            	popUp.showCloseButton = true ;
+            	popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)}) ;
+                popUp.x = this.x + 100 ;
+                popUp.y = this.y ;
             }
             
 	    ]]>
@@ -54,13 +61,19 @@
 		
      <mx:XMLList id="ChannelsMenuBarItems">
         <menuitem label="*TEST*Forms">
-            <menuitem label="Category Chooser"/>
-            <menuitem label="Organization Editor"/>
-            <menuitem label="Personal Profile Editor"/>
-            <menuitem label="Repository Editor"/>
-            <menuitem label="Task Editor"/>
-            <menuitem label="Event Editor"/>
-            <menuitem label="Artifact Editor"/>
+			<menuitem label="Category Library Editor"/>
+			<menuitem label="Category Viewer"/>
+			<menuitem label="Category Chooser"/>
+			<menuitem label="Personal Profile Editor"/>
+			<menuitem label="Role Editor"/>
+			<menuitem label="Role Chooser"/>
+			<menuitem label="Organization Editor"/>
+			<menuitem label="Repository Editor"/>
+			<menuitem label="Task Editor"/>
+			<menuitem label="Task Chooser"/>
+			<menuitem label="Event Editor"/>
+			<menuitem label="Artifact Editor"/>
+			<menuitem label="Artifact Chooser"/>
         </menuitem>
         <menuitem label="Project">
         	<menuitem label="Create New Project"/>

@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.mindalliance.channels.view.common.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.core.IFlexDisplayObject;
+
+			private function showCategoryChooser():void {
+				var p:Point = listCategories.localToGlobal(new Point(listCategories.x, listCategories.y)) ;
+				var popup:IFlexDisplayObject = PopUpManager.createPopUp(listCategories, CategoryChooser, false) ;
+				PopUpManager.centerPopUp(popup) ;
+			}
+		]]>
+	</mx:Script>
+	
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:SetProperty target="{lblEOI}" name="text" value="2. Select Elements of Information"/>
 			<mx:AddChild relativeTo="{vboxCategories}" position="lastChild">
 				<mx:HBox width="100%">
-					<common:AddButton/>
+					<common:AddButton click="showCategoryChooser()"/>
 					<common:RemoveButton enabled="{listCategories.selectedItems.length > 0}"/>
 				</mx:HBox>
 			</mx:AddChild>
