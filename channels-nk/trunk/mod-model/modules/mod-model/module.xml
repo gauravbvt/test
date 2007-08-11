@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="module_schema_v1.xsd">
+  <identity>
+    <uri>urn:com:mindalliance:channels:model</uri>
+    <version>${project.version}</version>
+  </identity>
+  <info>
+    <name>${project.name}</name>
+    <description>${project.description}</description>
+    <dynamic/>
+  </info>
+  <publisher>
+    <name>Mind Alliance Systems LLC</name>
+    <uri>http://www.mind-alliance.com</uri>
+  </publisher>
+  <export>
+    <class>
+      <match>com\.mindalliance\.channels\..*</match>
+    </class>
+  </export>
+</module>
