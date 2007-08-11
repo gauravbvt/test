@@ -17,7 +17,7 @@
 		<uri>file:@deploy-dir@/@test-mod-template-name@-@test-mod-template-version@.jar</uri>
 	</update>	
 	<update>
-		<match>@mod-channels@</match>
+		<match>@mod-channels-name@</match>
 		<uri>file:@deploy-dir@/@mod-channels-name@-@mod-channels-version@.jar</uri>
 	</update>	
     <update>

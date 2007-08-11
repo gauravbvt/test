@@ -90,7 +90,6 @@
 		************
 		Demo and Test modules - remove these for production...
 		************
-		-->
 		<import>
 			<uri>urn:org:ten60:workbench</uri>
 		</import>
@@ -106,6 +105,7 @@
         <import>
             <uri>urn:org:ten60:netkernel:1060Forum:web</uri>
         </import>
+    -->
         <!--
 		************
 		Add your modules below here...
