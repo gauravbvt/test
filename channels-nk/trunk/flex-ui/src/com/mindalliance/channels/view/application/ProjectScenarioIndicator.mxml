@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
-	label="{'Project: '+currentProjectName+', Scenario: ' + currentScenarioName}" 
-		click="btnClicked()" toolTip="click to browse or change projects and scenarios">
+	label="{'Project: '+currentProjectName+', Scenario: ' + currentScenarioName}" click="btnClicked()" toolTip="click to browse or change projects and scenarios">
 	
 	<mx:Script>
 		<![CDATA[

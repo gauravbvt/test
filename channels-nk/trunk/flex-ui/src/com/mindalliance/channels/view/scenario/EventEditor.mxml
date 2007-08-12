@@ -63,9 +63,7 @@
 	<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem" btnEditClickHandler="{switchToEditState}" 
 		confirmEditHandler="{confirmEdit}" cancelEditHandler="{cancelEdit}"/>
 	
-	<mx:FormHeading id="formHeading" label="{'Event: '+txtName.text}"/>
-	
-	<mx:FormItem label="Name" direction="vertical" id="formitem1">
+	<mx:FormItem label="Event Name" direction="vertical" id="formitem1">
 		<mx:TextInput id="txtName" editable="false"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">

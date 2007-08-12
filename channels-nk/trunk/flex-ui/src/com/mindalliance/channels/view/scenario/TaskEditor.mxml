@@ -41,7 +41,9 @@
 			<mx:SetProperty target="{formitemCause}" name="mouseChildren" value="true"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseEnabled" value="true"/>
-			<mx:SetProperty target="{formitem1}" name="required" value="true"/>
+			<mx:SetProperty target="{formitemName}" name="required" value="true"/>
+			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
 		</mx:State>
 	</mx:states>
 	
@@ -79,10 +81,8 @@
 	<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
 		btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}"/>
 	
-	<mx:FormHeading id="formHeading" label="{'Task: '+txtName.text}"/>
-	
-	<mx:FormItem label="Name" direction="vertical" id="formitem1">
-		<mx:TextInput id="txtName" editable="false"/>
+	<mx:FormItem label="Task Name" direction="vertical" id="formitemName">
+		<mx:TextInput id="txtName" editable="false" fontSize="12" fontWeight="bold"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">
 		<mx:TextArea id="txtDescription" wordWrap="true" editable="false"/>
@@ -131,6 +131,6 @@
 		<mx:List id="listArtifacts" dataProvider="{Artifacts}"/>
 	</mx:FormItem>
 	<mx:FormItem label="Categories" id="formitemCategories">
-		<categories:CategoryViewer/>
+		<categories:CategoryViewer id="categoryViewer"/>
 	</mx:FormItem>
 </mx:Form>

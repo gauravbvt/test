@@ -42,7 +42,7 @@
 	            <mx:Tree width="100%" height="100%" id="treeCategories" itemClick="treeCategoriesItemClicked(event)"/>
 	            <common:RemoveButton enabled="{treeCategories.selectedItems.length > 0}" toolTip="Remove selected categories"/>
 	        </mx:VBox>
-	        <mx:VBox width="100%" height="100%" id="details">
+	        <mx:VBox width="100%" height="100%" id="details" enabled="{treeCategories.selectedItems.length == 1}">
                 <mx:Form>
                     <mx:FormItem label="Name">
                         <mx:TextInput/>

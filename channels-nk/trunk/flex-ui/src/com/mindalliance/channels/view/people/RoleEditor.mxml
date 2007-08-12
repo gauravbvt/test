@@ -58,10 +58,8 @@
     	btnEditClickHandler="{switchToEditState}"
     	confirmEditHandler="{confirmEdit}"
     	cancelEditHandler="{cancelEdit}"/>
-    	
-    <mx:FormHeading label="{'Role: '+txtName}"/>	
 	
-    <mx:FormItem label="Name">
+    <mx:FormItem label="Role Name">
         <mx:TextInput id="txtName"/>
     </mx:FormItem>
     <mx:FormItem label="Organization" mouseEnabled="false" mouseChildren="false">

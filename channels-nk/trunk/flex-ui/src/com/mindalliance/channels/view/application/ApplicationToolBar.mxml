@@ -3,6 +3,12 @@
     width="100%" xmlns:application="com.mindalliance.channels.view.application.*" xmlns:search="com.mindalliance.channels.view.search.*">
     <mx:Script>
 	    <![CDATA[
+	    	import mx.effects.Resize;
+	    	import mx.events.FlexEvent;
+	    	import mx.events.EffectEvent;
+	    	import mx.effects.WipeUp;
+	    	import mx.effects.WipeDown;
+	    	import mx.effects.Effect;
 	    	import mx.containers.Panel;
 	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
 	    	import com.mindalliance.channels.view.scenario.TaskChooser;
@@ -47,13 +53,57 @@
                 
             private function menuBarItemClicked(event:MenuEvent):void {
                 var c:Class = classHash[event.item.@label] ;
-            	var popUp:TitleWindow ;
-            	popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
-            	popUp.addChild(new ClassFactory(c).newInstance()) ;
-            	popUp.showCloseButton = true ;
-            	popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)}) ;
-                popUp.x = this.x + 100 ;
-                popUp.y = this.y ;
+                if (c != null) {
+	            	var popUp:TitleWindow ;
+	            	popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
+	            	popUp.addChild(new ClassFactory(c).newInstance()) ;
+	            	popUp.showCloseButton = true ;
+	            	popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)}) ;
+	                popUp.x = this.x + 100 ;
+	                popUp.y = this.y ;
+                }
+                var menuItem:String = event.item.@label ;
+                switch (menuItem) {
+                	case "Edit Categories":
+                		var cle:CategoryLibraryEditor = CategoryLibraryEditor(PopUpManager.createPopUp(this, CategoryLibraryEditor)) ;
+                		cle.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, 
+                			function close(event:FlexMouseEvent):void{
+                				PopUpManager.removePopUp(cle);
+                				});
+                		cle.addEventListener(FlexEvent.CREATION_COMPLETE, 
+                			function wipeDown(event:FlexEvent):void {
+                				new WipeDown(cle).play() ;
+                				}) ;
+                		PopUpManager.centerPopUp(cle) ;
+                		cle.y = this.y + this.height + 2 ;
+                	break ;
+                	case "Create New Scenario":
+                	case "Edit Scenario Properties":
+                	case "Switch to a Different Scenario":
+                	case "Create New Project":
+                	case "Edit Project Properties":
+                		projectScenarioIndicator.dispatchEvent(new MouseEvent(MouseEvent.CLICK)) ;
+                	break ;
+                }
+            }
+            
+            private function editPersonalProfile():void {
+            	var profileWindow:TitleWindow = TitleWindow(PopUpManager.createPopUp(this, TitleWindow, false)) ; ;
+            	profileWindow.title = "Personal Profile" ;
+            	profileWindow.showCloseButton = true ;
+            	profileWindow.addEventListener(CloseEvent.CLOSE, 
+            	function closeHandler(event:CloseEvent):void {
+             		PopUpManager.removePopUp(profileWindow);
+            		}) ;
+            	profileWindow.addEventListener(FlexEvent.CREATION_COMPLETE, 
+            	function creationCompleteHandler(event:FlexEvent):void {
+            			new WipeDown(profileWindow).play() ;
+            		}); 
+            	
+            	var personalProfileEditor:PersonalProfileEditor = new PersonalProfileEditor() ;
+            	profileWindow.addChild(personalProfileEditor) ;
+            	PopUpManager.centerPopUp(profileWindow) ;
+            	profileWindow.y = this.y + this.height + 2 ;
             }
             
 	    ]]>
@@ -79,25 +129,27 @@
         	<menuitem label="Create New Project"/>
         	<menuitem label="Edit Project Properties"/>
         	<menuitem type="separator"/>
-        	<menuitem label="other commands" enabled="false"/>
+        	<menuitem label="People">
+        		<menuitem label="My Profile"/>
+        		<menuitem label="Browse Directory"/>
+        	</menuitem>
         </menuitem>
 		<menuitem label="Scenario">
         	<menuitem label="Create New Scenario"/>
         	<menuitem label="Edit Scenario Properties"/>
-        	<menuitem id="switchScenario" label="Switch to a Different Scenario"/>
-        	<menuitem type="separator"/>
-	    	<menuitem label="other commands" enabled="false"/>
+        	<menuitem label="Switch to a Different Scenario"/>
         </menuitem>
-		<menuitem label="Shared elements">
-			<menuitem label="Categories"/>
+		<menuitem label="Shared Elements">
+			<menuitem label="Edit Categories"/>
 		</menuitem>
     </mx:XMLList>
 	
     <mx:MenuBar id="channelsMenuBar" dataProvider="{ChannelsMenuBarItems}" labelField="@label" showRoot="false" itemClick="menuBarItemClicked(event)"/>
     <mx:Spacer width="100%"/>
-    <application:ProjectScenarioIndicator/>
+    <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
     <mx:Button label="Go to Dashboard"/>
 	<mx:Spacer width="100%"/>
 	<mx:Label text="{'Logged in as: '+username}"/>
+	<mx:Button label="My Profile" id="btnEditProfile" click="editPersonalProfile()"/>
 	<mx:Button label="Logout"/>
 </mx:HBox>

@@ -6,7 +6,8 @@
 	creationComplete="getProjectList(event)"
 	xmlns:search="com.mindalliance.channels.view.search.*"
 	xmlns:ui="com.mindalliance.channels.view.*"
-	xmlns:common="com.mindalliance.channels.view.common.*">
+	xmlns:common="com.mindalliance.channels.view.common.*"
+	creationCompleteEffect="WipeDown">
 	
 	<mx:Script>
 		<![CDATA[

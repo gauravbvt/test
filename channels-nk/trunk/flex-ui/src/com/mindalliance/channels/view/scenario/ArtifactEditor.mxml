@@ -39,12 +39,11 @@
 	</mx:states>
 
 	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
-	<mx:FormHeading label="{'Artifact: '+txtName.text}"/>
 	
 	<common:ViewEditStateChangeFormItem id="formItemStateChange" 
 		btnEditClickHandler="{switchToEditState}" confirmEditHandler="{confirmEdit}" 
 		cancelEditHandler="{cancelEdit}"/>
-	<mx:FormItem label="Name" id="formitem1">
+	<mx:FormItem label="Artifact Name" id="formitem1">
 		<mx:TextInput id="txtName" editable="false"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">

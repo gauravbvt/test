@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 	backgroundColor="white"
-	layout="vertical" height="100%"  width="100%"
+	height="100%"  width="100%"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
 	xmlns:timeline="com.mindalliance.channels.view.timeline.*" 
 	xmlns:ui="com.mindalliance.channels.view.*" 
@@ -30,18 +30,24 @@
    	<business:Services id="services" />
 	<control:ChannelsController id="appController" />
 
-    <application:ApplicationToolBar width="100%"/>
-    <mx:VDividedBox width="100%" height="100%">
-        <mx:HDividedBox width="100%" height="100%" maxHeight="600">
+    <mx:VBox width="100%">
+	    <application:ApplicationToolBar/>
+    	<mx:HDividedBox width="100%">
+    		<application:PropertyEditor verticalScrollPolicy="auto" horizontalScrollPolicy="auto"/>
+    		<flowmap:FlowMapView/>
+    	</mx:HDividedBox>
+    </mx:VBox>
+<!--    <mx:VDividedBox width="100%" height="100%">
+        <mx:HDividedBox width="100%" height="100%">
         	<application:PropertyEditor id="propertyEditor" height="100%"/>
         	<flowmap:FlowMapView width="100%" height="100%"/>
-<!--            <flowmap:NetworkViews height="100%" id="networkViews"/>
+            <flowmap:NetworkViews height="100%" id="networkViews"/>
             <mx:VDividedBox height="100%" width="80%">
             	<timeline:TimeLineView width="100%"/>
             	<geomap:GeoMapView width="100%"/>
-            </mx:VDividedBox> -->
+            </mx:VDividedBox>
         </mx:HDividedBox>
-<!--        <application:Conversations
-        	 width="100%"/> -->
-    </mx:VDividedBox>        
+        <application:Conversations
+        	 width="100%"/>
+    </mx:VDividedBox>         -->
 </mx:Application>

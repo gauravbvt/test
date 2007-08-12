@@ -18,9 +18,7 @@
         </mx:HBox>
     </mx:Component>
     
-    <mx:FormHeading label="'Channel:' + {txtName.text}"/>
-    
-	<mx:FormItem label="Name">
+	<mx:FormItem label="Channel Name">
 	    <mx:TextInput id="txtName"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">

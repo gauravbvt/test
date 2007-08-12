@@ -42,7 +42,7 @@
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{formItemName}" name="required" value="true"/>
-			<mx:AddChild relativeTo="{formHeading}" position="before">
+			<mx:AddChild relativeTo="{formItemName}" position="before">
 				<mx:FormItem required="true" id="formItemHint">
 					<mx:Label text="means field cannot be empty" styleName="FormItemDescription"/>
 				</mx:FormItem>
@@ -62,8 +62,7 @@
 
 	<common:ViewEditStateChangeFormItem width="100%" btnEditClickHandler="{initiateEdit}" id="formItemStateChange"
 		confirmEditHandler="{confirmEdit}" cancelEditHandler="{cancelEdit}"/>
-	<mx:FormHeading label="{'Repository: ' + txtName.text}" id="formHeading"/>
-	<mx:FormItem label="Name" id="formItemName">
+	<mx:FormItem label="Repository Name" id="formItemName">
 		<mx:TextInput id="txtName" editable="false"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">
