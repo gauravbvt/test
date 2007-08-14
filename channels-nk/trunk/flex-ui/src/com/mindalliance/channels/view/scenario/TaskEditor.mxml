@@ -124,7 +124,7 @@
 		<mx:HBox>
 			<mx:Label text="About"/>
 			<mx:TextInput width="100"/>
-			<common:TimeScalesComponent/>
+			<common:TimeScalesComboBox/>
 		</mx:HBox>
 	</mx:FormItem>
 	<mx:FormItem label="Artifacts produced" direction="vertical" id="formitemArtifacts">

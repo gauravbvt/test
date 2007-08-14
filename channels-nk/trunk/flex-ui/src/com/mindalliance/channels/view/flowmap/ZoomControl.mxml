@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	enabled="{_graphCanvas != null}">
+
+	<mx:Script>
+		<![CDATA[
+			import com.yworks.ui.GraphCanvasComponent;
+			
+			[Bindable]
+			private var _graphCanvas:GraphCanvasComponent ;
+			
+			public function get graphCanvas():GraphCanvasComponent {
+				return _graphCanvas ;
+			}
+			
+			public function set graphCanvas(gc:GraphCanvasComponent):void {
+				_graphCanvas = gc ;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Label text="Zoom:" fontWeight="bold"/>
+	<mx:HSlider width="150"
+		value="{Math.log(_graphCanvas.zoom)/Math.log(2)}" 
+		change="{_graphCanvas.zoom=Math.pow(2,event.value)}" 
+		liveDragging="true" tickInterval="1.0" 
+		minimum="-4" maximum="4" />
+	<mx:Button label="Fit Content" click="_graphCanvas.fitContent();" />		
+	<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))+0.1));"  toolTip="Zoom In">
+		<mx:icon>@Embed('../../../../../assets/images/zoom_in.png')</mx:icon>
+	</mx:Button>
+	<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))-0.1));"  toolTip="Zoom Out">
+		<mx:icon>@Embed('../../../../../assets/images/zoom_out.png')</mx:icon>
+	</mx:Button>
+
+</mx:HBox>

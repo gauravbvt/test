@@ -20,6 +20,8 @@
     
         private function init():void {
            Util.registerLicense( yFilesLicenseXML );
+           
+           flowmap.graphCanvas.initializeGraph() ;
         }
 
         [Bindable]
@@ -34,7 +36,7 @@
 	    <application:ApplicationToolBar/>
     	<mx:HDividedBox width="100%">
     		<application:PropertyEditor verticalScrollPolicy="auto" horizontalScrollPolicy="auto"/>
-    		<flowmap:FlowMapView/>
+    		<flowmap:FlowMapView id="flowmap"/>
     	</mx:HDividedBox>
     </mx:VBox>
 <!--    <mx:VDividedBox width="100%" height="100%">

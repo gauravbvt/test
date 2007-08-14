@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<yui:GraphCanvasComponent 
+	xmlns:yui="com.yworks.ui.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	frameRate="30">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.view.flowmap.FlowMapNode ;
+			import mx.graphics.Stroke;
+			import mx.graphics.SolidColor;
+			import com.mindalliance.channels.view.UtilFuncs;
+			import mx.core.UIComponent;
+			import mx.core.UITextFormat;
+			import com.yworks.graph.drawing.SimpleLabelStyleRenderer;
+			import com.yworks.graph.drawing.SimpleLabelStyle;
+			import com.yworks.graph.drawing.ILabelStyle;
+			import com.yworks.graph.model.ILabel;
+			import mx.core.IFlexDisplayObject;
+			import mx.managers.PopUpManager;
+			import com.yworks.graph.drawing.ShapeNodeStyleRenderer;
+			import com.yworks.graph.drawing.Fills;
+			import com.yworks.graph.drawing.ShapeNodeShape;
+			import com.yworks.graph.drawing.ShapeNodeStyle;
+			import com.yworks.graph.drawing.INodeStyle;
+			import mx.controls.Alert;
+			import com.yworks.graph.model.InteriorLabelModel;
+			import com.yworks.graph.model.INode;
+			import com.mindalliance.channels.view.common.InputTextDialog;
+			import com.yworks.canvas.geom.IPoint;
+			import com.yworks.graph.model.IGraph;
+			import com.yworks.graph.model.GraphSelection;
+			import com.yworks.graph.input.GraphEditorInputMode;
+			import com.yworks.graph.model.DefaultGraph;
+
+			private var geim:GraphEditorInputMode ;
+			
+			public function initializeGraph():void {
+				this.autoMouseWheelZoom = true ;
+				this.graph = new DefaultGraph() ;
+				this.selection = new GraphSelection(this.graph) ;
+				geim = new GraphEditorInputMode(this.graph, this.selection) ;
+				
+				geim.deleteElementsAllowed = true ;
+				geim.labelEditingAllowed = false ;
+				geim.selectElementsAllowed = true ;
+				geim.createEdgeInputMode.bendCreationAllowed = false ;
+				geim.contextMenuInputMode.enabled = false ;
+					
+				geim.install(this) ;
+				
+				FlowMapStyles.systemManager = this.systemManager ;
+				this.graph.defaultNodeStyle = FlowMapStyles.nodeStyle ;
+				this.graph.defaultEdgeStyle = FlowMapStyles.edgeStyle ;
+				geim.nodeCreator = createNewNode ;
+			}
+			
+			private function createNewNode(graph:IGraph, location:IPoint):void {
+				function handler(taskName:String):void {
+					if (taskName != null && taskName.length > 0) {
+						taskName = UtilFuncs.Capitalize(taskName) ;
+						var node:INode = graph.createNodeAt(location.x, location.y) ;
+						graph.addLabel(node, taskName, FlowMapStyles.taskLabelModelParameter, FlowMapStyles.taskLabelStyle) ;
+						graph.setBounds(node, node.layout.x, node.layout.y, 
+						node.labels.getLabelAt(node.labels.count-1).layout.width * 1.5, node.layout.height) ;
+						this.selection.setNodeSelected(node, true) ;
+					}
+				}
+				UtilFuncs.GetUserTextInput(this, handler, 'Enter Name of New Task', true) ;
+			}
+
+		]]>
+	</mx:Script>
+	
+</yui:GraphCanvasComponent>

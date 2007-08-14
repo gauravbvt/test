@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
-    keyUp="handleKeyEvent(event)"
-    mouseDownOutside="PopUpManager.removePopUp(this);">
+    keyDown="handleKeyEvent(event)"
+    mouseDownOutside="PopUpManager.removePopUp(this);"
+    creationComplete="textInput.setFocus()"
+    minWidth="100">
     <mx:Script>
     
         <![CDATA[
@@ -10,16 +12,19 @@
             public var okEventHandler:Function ;
             
             private function handleKeyEvent(event:KeyboardEvent):void {
-                if (event.keyCode == Keyboard.ESCAPE) {
-                    PopUpManager.removePopUp(this);
-                } else if (event.keyCode == Keyboard.ENTER) {
-                	if (okEventHandler != null)
-	                    okEventHandler(textInput.text) ;
-                    PopUpManager.removePopUp(this);
-                }
+            	switch (event.keyCode) {
+            		case Keyboard.ESCAPE:
+	                    PopUpManager.removePopUp(this);
+	                    break ;
+	                case Keyboard.ENTER:
+	                	if (okEventHandler != null)
+	                		callLater(okEventHandler, [textInput.text]) ;
+	                    PopUpManager.removePopUp(this);
+	                	break ;
+	            }
             }
             
         ]]>
     </mx:Script>
-    <mx:TextInput id="textInput"/>
+    <mx:TextInput id="textInput" keyDown="handleKeyEvent(event)" width="100%"/>
 </mx:TitleWindow>

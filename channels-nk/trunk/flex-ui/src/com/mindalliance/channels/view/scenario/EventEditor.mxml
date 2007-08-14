@@ -104,7 +104,7 @@
 			<mx:HBox>
 				<mx:RadioButton label="About" id="rbDurationQuant" groupName="rbgDuration" selected="true"/>
 				<mx:TextInput width="100" click="rbDurationQuant.selected = true;"/>
-				<common:TimeScalesComponent/>
+				<common:TimeScalesComboBox/>
 			</mx:HBox>
 			<mx:VBox id="vbox1">
 				<mx:RadioButton id="rbDurationQual" label="Until the following tasks are successfully completed:" groupName="rbgDuration"/>
