@@ -4,12 +4,12 @@
     <name>test-mod-data</name>
     <uri>ffcpl:/test/mod-data-test/xunit</uri>
     <indexable>
-      <title>Mind-Alliance Data Library Tests</title>
-      <desc>Mind-Alliance Data unit-test suite</desc>
+      <title>Mind-Alliance Channels Data Tests</title>
+      <desc>Mind-Alliance Channels Data Module unit-test suite</desc>
       <keywords/>
     </indexable>
     <categories>xunit</categories>
-    <group>Mind-Alliance Data</group>
+    <group>Mind-Alliance</group>
     <icon/>
   </entrypoint>
  </entrypoints>

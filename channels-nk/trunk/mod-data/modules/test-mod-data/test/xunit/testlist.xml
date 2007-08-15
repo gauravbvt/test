@@ -1,43 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testlist title="mod-data tests">
-  <desc>Data access tests</desc>
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testOpenContainer.idoc</uri>
-    <assert name="Opening container returns true">
-      <uri>active:javascript+operator@ffcpl:/test/mod-data-test/isTrue.js</uri> 
-    </assert>
-    <assert name="No caching">
-      <expired/>
-    </assert>
-  </test>
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testCreateElement.idoc</uri>
-    <assert name="Element created with id and schema attributes">
-      <xpath>self::node()[@schema]/id</xpath>
-    </assert>
-  </test>
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testGetElement.idoc</uri>
-    <assert name="Got element with an id">
-      <xpath>./id</xpath>
-    </assert>
-  </test> 
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testDeleteElement.idoc</uri>
-    <assert name="Deleted element">
-      <uri>active:javascript+operator@ffcpl:/test/mod-data-test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testUpdateElement.idoc</uri>
-    <assert name="Updated element">
-      <uri>active:javascript+operator@ffcpl:/test/mod-data-test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testQueryContainer.idoc</uri>
-    <assert name="Query returned a least one result">
-      <xpath>./*[1]</xpath>
-    </assert>
-  </test>
+<testlist title="Data Unit Tests">
+  <desc>
+    <div>
+      This is the set of unit tests for the Mind-Alliance Channels data module.
+    </div>
+  </desc>
+  <group title="Data access tests">
+    <uri>ffcpl:/test/xunit/testlist-crud.xml</uri>
+  </group>
 </testlist>
