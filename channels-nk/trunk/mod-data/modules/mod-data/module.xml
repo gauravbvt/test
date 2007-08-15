@@ -20,11 +20,18 @@
 	<export>
 		<uri>
 			<match>ffcpl:/data/.*</match> <!-- TO BE CHANGED -->
+			<match>data:.*</match>
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
 	</export>
+	<rewrite>
+    	<rule>
+    		<match>data:([^\+]*)(.*)</match>
+    		<to>active:javascript+operator@ffcpl:/$1.js$2</to>
+    	</rule>
+    </rewrite>
 	<mapping>
 		<this>
 			<match>ffcpl:/entrypoints.xml</match>

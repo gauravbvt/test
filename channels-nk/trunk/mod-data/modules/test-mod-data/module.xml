@@ -28,10 +28,6 @@
 			<match>ffcpl:/test/mod-data-test/(.*)</match>
 			<to>ffcpl:/test/$1</to>
 		</rule>
-		<rule>
-			<match>(.*?js.*)</match>
-			<to>active:javascript+operator@$1</to>
-		</rule>
 	</rewrite>
     <mapping>
 		<this>
