@@ -1,5 +1,5 @@
 
-package com.mindalliance.channels.business
+package com.mindalliance.channels.business.application
 {
 	import com.mindalliance.channels.business.Services;
 	import com.adobe.cairngorm.business.ServiceLocator;

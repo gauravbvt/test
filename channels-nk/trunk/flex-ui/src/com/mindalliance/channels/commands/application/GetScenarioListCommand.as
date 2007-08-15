@@ -1,13 +1,13 @@
 
-package com.mindalliance.channels.commands
+package com.mindalliance.channels.commands.application
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mindalliance.channels.util.ServiceUtil;
-	import com.mindalliance.channels.business.GetScenarioListDelegate;
-	import com.mindalliance.channels.events.GetScenarioListEvent;
+	import com.mindalliance.channels.business.application.GetScenarioListDelegate;
+	import com.mindalliance.channels.events.application.GetScenarioListEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
-	import com.mindalliance.channels.model.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
 	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;

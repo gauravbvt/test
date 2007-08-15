@@ -1,9 +1,9 @@
 
-package com.mindalliance.channels.commands
+package com.mindalliance.channels.commands.application
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.channels.events.LoadScenarioEvent;
+	import com.mindalliance.channels.events.application.LoadScenarioEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	public class LoadScenarioCommand implements ICommand
 	{

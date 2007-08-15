@@ -1,12 +1,12 @@
 
-package com.mindalliance.channels.commands
+package com.mindalliance.channels.commands.application
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.channels.business.GetScenarioDelegate;
-	import com.mindalliance.channels.events.GetScenarioEvent;
+	import com.mindalliance.channels.business.application.GetScenarioDelegate;
+	import com.mindalliance.channels.events.application.GetScenarioEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
-	import com.mindalliance.channels.model.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.AsyncToken;

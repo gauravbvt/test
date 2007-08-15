@@ -1,10 +1,10 @@
 
-package @namespace@.@commands@
+package @namespace@.@commands@.@submodule@
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import @namespace@.@business@.@sequence@Delegate;
-	import @namespace@.@events@.@sequence@Event;
+	import @namespace@.@business@.@submodule@.@sequence@Delegate;
+	import @namespace@.@events@.@submodule@.@sequence@Event;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.AsyncToken;

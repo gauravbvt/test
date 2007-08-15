@@ -1,5 +1,5 @@
 
-package @namespace@.@events@
+package @namespace@.@events@.@submodule@
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
 

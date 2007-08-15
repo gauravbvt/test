@@ -1,5 +1,5 @@
 
-package com.mindalliance.channels.events
+package com.mindalliance.channels.events.application
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
 

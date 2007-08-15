@@ -1,12 +1,12 @@
 
-package com.mindalliance.channels.commands
+package com.mindalliance.channels.commands.application
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.channels.business.GetProjectDelegate;
-	import com.mindalliance.channels.events.GetProjectEvent;
+	import com.mindalliance.channels.business.application.GetProjectDelegate;
+	import com.mindalliance.channels.events.application.GetProjectEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
-	import com.mindalliance.channels.model.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
 	import com.mindalliance.channels.vo.ProjectVO;
 	
 	import mx.rpc.IResponder;

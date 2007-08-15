@@ -1,9 +1,9 @@
 
-package @namespace@.@commands@
+package @namespace@.@commands@.@submodule@
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import @namespace@.@events@.@sequence@Event;
+	import @namespace@.@events@.@submodule@.@sequence@Event;
 
 	public class @sequence@Command implements ICommand
 	{

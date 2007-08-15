@@ -7,6 +7,7 @@ package com.mindalliance.channels.model
     import mx.collections.ArrayCollection;
     import com.mindalliance.channels.vo.ProjectVO;
     import com.mindalliance.channels.vo.ScenarioVO;
+    import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
     
     /**
      * This singleton class provides references to the models for various components.  In
@@ -17,6 +18,7 @@ package com.mindalliance.channels.model
 	{
 		// Component Models
 		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel();
+		public var permissionModel : PermissionModel = new PermissionModel();
 		
 		// Global Properties
 		private var _currentProject : ProjectVO;

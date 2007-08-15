@@ -92,16 +92,17 @@
 	<!-- create cairngen incluse delegate sequence, generates: Event, Command, Delegate -->
 	<target name="create-sequence-include-delegate" depends="log" >
 		<echo>${log.sequence.include.delegate.message}</echo>
-		<copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/Event.tpl" tofile="${project-uri}/${events.dir}/${sequence.name}Event.as" overwrite="${overwrite.existing.files}" >
+		<copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/Event.tpl" tofile="${project-uri}/${events.dir}/${submodule.dir}/${sequence.name}Event.as" overwrite="${overwrite.existing.files}" >
 	        <filterchain>
 	           <replacetokens>
 	                <token key="sequence"  value="${sequence.name}" />
 	                <token key="namespace" value="${namespace}"     />
 	                <token key="events"    value="${events.dir}"    />
+	           	    <token key="submodule" value="${submodule.dir}"/>
 	            </replacetokens>
 	        </filterchain>
 	    </copy>
-	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/CommandIncludeDelegate.tpl" tofile="${project-uri}/${commands.dir}/${sequence.name}Command.as" overwrite="${overwrite.existing.files}" >
+	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/CommandIncludeDelegate.tpl" tofile="${project-uri}/${commands.dir}/${submodule.dir}/${sequence.name}Command.as" overwrite="${overwrite.existing.files}" >
 	        <filterchain>
 	           <replacetokens>
 	                <token key="sequence"  value="${sequence.name}" />
@@ -109,15 +110,17 @@
 	                <token key="events"    value="${events.dir}"    />
 	                <token key="commands"  value="${commands.dir}"  />
 	                <token key="business"  value="${business.dir}"  />
+           	    <token key="submodule" value="${submodule.dir}"/>
 	            </replacetokens>
 	        </filterchain>
 	    </copy>
-	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/BusinessDelegate.tpl" tofile="${project-uri}/${business.dir}/${sequence.name}Delegate.as" overwrite="${overwrite.existing.files}" >
+	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/BusinessDelegate.tpl" tofile="${project-uri}/${business.dir}/${submodule.dir}/${sequence.name}Delegate.as" overwrite="${overwrite.existing.files}" >
 	        <filterchain>
 	           <replacetokens>
 	                <token key="sequence"  value="${sequence.name}" />
 	                <token key="namespace" value="${namespace}"     />
 	                <token key="business"  value="${business.dir}"  />
+           	    <token key="submodule" value="${submodule.dir}"/>
 	            </replacetokens>
 	        </filterchain>
 	    </copy>
@@ -126,22 +129,24 @@
 	<!-- create cairngen exclude-delegate-sequence, generates: Event, Command -->
 	<target name="create-sequence-exclude-delegate" depends="log" >
 		<echo>${log.sequence.exclude.delegate.message}</echo>
-	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/Event.tpl" tofile="${project-uri}/${events.dir}/${sequence.name}Event.as" overwrite="${overwrite.existing.files}" >
+	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/Event.tpl" tofile="${project-uri}/${events.dir}/${submodule.dir}/${sequence.name}Event.as" overwrite="${overwrite.existing.files}" >
 	        <filterchain>
 	           <replacetokens>
 	                <token key="sequence"  value="${sequence.name}" />
 	                <token key="namespace" value="${namespace}"     />
-	                <token key="events"    value="${events.dir}"    />          
+	                <token key="events"    value="${events.dir}"    />    
+           	    <token key="submodule" value="${submodule.dir}"/>      
 	            </replacetokens>
 	        </filterchain>
 	    </copy>
-	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/CommandExcludeDelegate.tpl" tofile="${project-uri}/${commands.dir}/${sequence.name}Command.as" overwrite="${overwrite.existing.files}" >
+	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/CommandExcludeDelegate.tpl" tofile="${project-uri}/${commands.dir}/${submodule.dir}/${sequence.name}Command.as" overwrite="${overwrite.existing.files}" >
 	        <filterchain>
 	           <replacetokens>
 	                <token key="sequence"  value="${sequence.name}" />
 	                <token key="namespace" value="${namespace}"     />
 	                <token key="events"    value="${events.dir}"    />
 	                <token key="commands"  value="${commands.dir}"  />
+           	    <token key="submodule" value="${submodule.dir}"/>
 	            </replacetokens>
 	        </filterchain>
 	    </copy>

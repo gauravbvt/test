@@ -1,8 +1,8 @@
 
-package com.mindalliance.channels.business
+package com.mindalliance.channels.business.application
 {
 	import com.adobe.cairngorm.business.ServiceLocator;
-	
+	import com.mindalliance.channels.business.Services;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 	

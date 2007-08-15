@@ -1,5 +1,5 @@
 
-package @namespace@.@business@
+package @namespace@.@business@.@submodule@
 {
 	import @namespace@.@business@.Services;
 	import com.adobe.cairngorm.business.ServiceLocator;

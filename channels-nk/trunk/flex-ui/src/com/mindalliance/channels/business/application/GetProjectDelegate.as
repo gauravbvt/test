@@ -1,24 +1,24 @@
 
-package com.mindalliance.channels.business
+package com.mindalliance.channels.business.application
 {
 	import com.mindalliance.channels.business.Services;
 	import com.adobe.cairngorm.business.ServiceLocator;
 	import mx.rpc.IResponder;
 	import mx.rpc.AsyncToken;
 	
-	public class GetScenarioDelegate
+	public class GetProjectDelegate
 	{
 		private var responder:IResponder;
-		private var service:Object;
+		private var service : Object;
 		
-		public function GetScenarioDelegate(responder:IResponder)
+		public function GetProjectDelegate(responder:IResponder)
 		{
+			this.service = ServiceLocator.getInstance().getHTTPService( Services.GET_PROJECT_SERVICE );
 			this.responder = responder;
-			this.service =  ServiceLocator.getInstance().getHTTPService( Services.GET_SCENARIO_SERVICE );
 		}
 		
-		public function getScenario(id : String) : void {
-			
+		public function getProject(id : String) : void
+		{		
 			var token:AsyncToken = service.send();
 			token.addResponder( responder );	
 		}

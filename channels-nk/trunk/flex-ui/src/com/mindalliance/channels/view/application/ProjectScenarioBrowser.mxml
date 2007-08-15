@@ -11,12 +11,13 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.model.PermissionModel;
         	import com.mindalliance.channels.model.ChannelsModelLocator;
-        	import com.mindalliance.channels.model.ProjectScenarioBrowserModel;
-			import com.mindalliance.channels.events.*;
+        	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
+			import com.mindalliance.channels.events.application.*;
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
 			import com.adobe.cairngorm.control.CairngormEvent;
-			
+			import com.mindalliance.channels.view.UtilFuncs;
 			import mx.managers.PopUpManager;	
 			import mx.controls.Alert;
 		
@@ -24,6 +25,9 @@
 		
             [Bindable]
  	        private var psbModel : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
+ 	        
+ 	        [Bindable]
+ 	        private var permissions : PermissionModel = ChannelsModelLocator.getInstance().permissionModel;
  	        
  	        private function getProjectList(event : Event) : void
  	        {
@@ -50,19 +54,22 @@
  	        	PopUpManager.removePopUp(this);
  	        }
 
-		    private function addProject() : void 
+		    private function addProject(name : String) : void 
  	        {
- 	        		
+				if (name != null) {
+					CairngormEventDispatcher.getInstance().dispatchEvent(new CreateProjectEvent(name));
+				}
  	        }
  	        
  	        private function removeProject() : void
  	        {
- 	        	
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteProjectEvent(psbModel.selectedProjectId));
  	        }
  	        
  	        private function removeScenario() : void
  	        {
  	        	
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteScenarioEvent(psbModel.selectedScenarioId));
  	        }
  	        
  	        private function addScenario() : void
@@ -93,8 +100,8 @@
 				<mx:VBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:List id="listProjects" dataProvider="{psbModel.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
 					<mx:HBox>
-						<common:AddButton visible="{psbModel.canAddProject}" click="Alert.show('mumble mumble')"/>
-						<common:RemoveButton visible="{psbModel.canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="psbModel.projectList.removeItemAt(listProjects.selectedIndex)"/>
+						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.GetUserTextInput(this, addProject, 'Enter Project name', true)"/>
+						<common:RemoveButton visible="{permissions.canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="psbModel.projectList.removeItemAt(listProjects.selectedIndex)"/>
 					</mx:HBox>
 				</mx:VBox>
 				<mx:Form enabled="{listProjects.selectedItem != null}">
@@ -123,8 +130,8 @@
 				<search:StandardSearchBox width="100%" visible="false" includeInLayout="false"/>
 				<mx:List dataProvider="{psbModel.scenarioList}" width="100%" id="listScenarios" labelField="name" change="selectScenario()"/>
 				<mx:HBox>
-					<common:AddButton visible="{psbModel.canAddScenario}" click="addScenario()"/>
-					<common:RemoveButton visible="{psbModel.canRemoveScenario}" click="removeScenario()"/>
+					<common:AddButton visible="{permissions.canAddScenario}" click="addScenario()"/>
+					<common:RemoveButton visible="{permissions.canRemoveScenario}" click="removeScenario()"/>
 				</mx:HBox>
 				<mx:Form enabled="{psbModel.selectedScenario != null}">
 					<mx:FormItem label="Name">
