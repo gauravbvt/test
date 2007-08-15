@@ -7,7 +7,7 @@ importPackage(Packages.java.lang);
 // Constants
 
 DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
-SCHEMA_URL = "ffcpl:/schemas/";
+SCHEMA_URL = "ffcpl:/resources/schemas/";
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
 
 function log(content, level) {
@@ -57,7 +57,7 @@ function getDocumentDescriptor(param) {
 function filter(s) {
   // Java strings are NOT the same as JavaScript strings: 
   // make sure to convert to JS strings before using string methods!
-  var fs = String(s).replace(/__CONTAINER__/g, String(dbxml_getContainerName())); 
+  var fs = String(s).replace(/__MODEL__/g, String(dbxml_getContainerName())); 
   // more filters here
   return fs;
 }

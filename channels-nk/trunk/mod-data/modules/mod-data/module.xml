@@ -19,7 +19,13 @@
     </publisher>
 	<export>
 		<uri>
-			<match>model:.*</match>
+			<match>active:createElement.*</match>
+			<match>active:deleteModel.*</match>
+			<match>active:deleteElement.*</match>
+			<match>active:getElement.*</match>
+			<match>active:openModel.*</match>
+			<match>active:queryModel.*</match>
+			<match>active:updateElement.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
 		</uri>
 	</export>
@@ -31,13 +37,13 @@
 			<match>ffcpl:/resources/.*</match>
 		</this>
 		<rewrite>
+			<match>active:(createElement|deleteModel|deleteElement|getElement|openModel|queryModel|updateElement)(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>			
+		</rewrite>
+		<rewrite>
 			<match>ffcpl:/data/(.*)</match>
 			<to>ffcpl:/$1</to>
 		</rewrite>
-		<rewrite>
-      		<match>model:([^+]*)(.*)</match>
-      		<to>active:javascript+operator@ffcpl:/resources/$1.js$2</to>
-    	</rewrite>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>
 		</import>
@@ -61,6 +67,9 @@
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:mod:dbxml</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xsecurity</uri>
 		</import>
 		<super/>
     </mapping>

@@ -1,6 +1,3 @@
-utilsURI = "ffcpl:/crud/libs/utils.js";
-context.importLibrary(utilsURI);
-
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 

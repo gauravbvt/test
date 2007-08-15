@@ -1,8 +1,8 @@
 // Creates a new element
 
 // arguments:
-//    doc -- an XML document with initial values
-//    class -- the element type, e.g. project (all lowercase, multiple words separated by '_')
+//    doc -- an XML resource with initial values
+//    kind -- the element type, e.g. project (all lowercase, multiple words separated by '_') as a string
 // returns:
 //    the element as  as XML
 
@@ -13,7 +13,7 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
-kind = context.sourceAspect("this:param:kind", IAspectString).getString();
+kind = new XML(context.sourceAspect("this:param:kind",IAspectXmlObject).getXmlObject()).text();
 log("Creating element " + kind, "info");
 doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 

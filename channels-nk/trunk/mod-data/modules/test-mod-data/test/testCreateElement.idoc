@@ -4,13 +4,13 @@
   </comment>
   <seq>
     <instr>
-      <type>model:createElement</type>
+      <type>createElement</type>
       <doc>
         <project>
           <name>My project</name>
         </project>
       </doc>
-      <kind>data:text/plain,project</kind>
+      <kind><string>project</string></kind>
       <target>this:response</target>
     </instr>
   </seq>

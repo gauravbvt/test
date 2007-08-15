@@ -2,19 +2,19 @@
   <comment>Query a container</comment>
   <seq>
     <instr>
-      <type>model:createElement</type>
+      <type>createElement</type>
       <doc>
         <project>
           <name>My project</name>
         </project>
       </doc>
-      <kind>model:text/plain,project</kind>
+      <kind><string>project</string></kind>
       <target>var:element</target>
     </instr>
     <instr>
-      <type>model:queryContainer</type>
+      <type>queryModel</type>
       <xquery>
-          ffcpl:/crud/queries/allProjects.xq
+          ffcpl:/resources/queries/allProjects.xq
       </xquery>
       <variables>
         <properties>
