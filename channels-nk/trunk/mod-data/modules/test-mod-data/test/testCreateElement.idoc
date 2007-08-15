@@ -4,7 +4,7 @@
   </comment>
   <seq>
     <instr>
-      <type>data:createElement</type>
+      <type>model:createElement</type>
       <doc>
         <project>
           <name>My project</name>

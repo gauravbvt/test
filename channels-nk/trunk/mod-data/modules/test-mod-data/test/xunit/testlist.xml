@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testlist title="CRUD tests">
-  <desc>Tests of the CRUD framework</desc>
+<testlist title="mod-data tests">
+  <desc>Data access tests</desc>
   <test>
     <uri>active:dpml+operand@ffcpl:/test/mod-data-test/testOpenContainer.idoc</uri>
     <assert name="Opening container returns true">

@@ -4,10 +4,10 @@
   </comment>
   <seq>
     <instr>
-      <type>data:deleteContainer</type>
+      <type>model:deleteContainer</type>
     </instr>
     <instr>
-      <type>data:openContainer</type>
+      <type>model:openContainer</type>
       <target>this:response</target>
     </instr>
   </seq>

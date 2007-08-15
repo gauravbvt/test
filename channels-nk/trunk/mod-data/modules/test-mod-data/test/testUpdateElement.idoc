@@ -2,13 +2,13 @@
   <comment>Create an element and update it using its id</comment>
   <seq>
     <instr>
-      <type>data:createElement</type>
+      <type>model:createElement</type>
       <doc>
         <project>
           <name>My project</name>
         </project>
       </doc>
-      <kind>data:text/plain,project</kind>
+      <kind>model:text/plain,project</kind>
       <target>var:element</target>
     </instr>
     <instr>
@@ -24,7 +24,7 @@
       <target>var:update</target>
     </instr>
     <instr>
-      <type>data:updateELement</type>
+      <type>model:updateELement</type>
       <doc>var:update</doc>
       <target>this:response</target>
     </instr>

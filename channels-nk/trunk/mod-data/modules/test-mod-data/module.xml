@@ -16,7 +16,7 @@
     <export>
 		<uri>
 			<match>ffcpl:/test/mod-data-test/.*</match>
-			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/(entrypoints.xml)</match>
 		</uri>
     </export>
     <rewrite>

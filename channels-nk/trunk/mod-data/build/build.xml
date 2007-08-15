@@ -20,7 +20,5 @@
             <fileset dir="../modules/mod-data/" includes="**/*.class"/>
         </delete>
     </target>
-	
-
-    
+	    
 </project>

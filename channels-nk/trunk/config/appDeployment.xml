@@ -21,7 +21,11 @@
 		<uri>file:@deploy-dir@/@mod-channels-name@-@mod-channels-version@.jar</uri>
 	</update>	
     <update>
-      <match>@mod-model-name@</match>
-      <uri>file:@deploy-dir@/@mod-model-name@-@mod-model-version@.jar</uri>
+      <match>@mod-data-name@</match>
+      <uri>file:@deploy-dir@/@mod-data-name@-@mod-data-version@.jar</uri>
+    </update> 
+    <update>
+      <match>@test-mod-data-name@</match>
+      <uri>file:@deploy-dir@/@test-mod-data-name@-@test-mod-data-version@.jar</uri>
     </update> 
 </appModules>

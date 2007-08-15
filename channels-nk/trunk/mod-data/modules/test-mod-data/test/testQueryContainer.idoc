@@ -2,17 +2,17 @@
   <comment>Query a container</comment>
   <seq>
     <instr>
-      <type>data:createElement</type>
+      <type>model:createElement</type>
       <doc>
         <project>
           <name>My project</name>
         </project>
       </doc>
-      <kind>data:text/plain,project</kind>
+      <kind>model:text/plain,project</kind>
       <target>var:element</target>
     </instr>
     <instr>
-      <type>data:queryContainer</type>
+      <type>model:queryContainer</type>
       <xquery>
           ffcpl:/crud/queries/allProjects.xq
       </xquery>

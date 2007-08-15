@@ -2,13 +2,13 @@
   <comment>Create an element and get it back using its id</comment>
   <seq>
     <instr>
-      <type>data:createElement</type>
+      <type>model:createElement</type>
       <doc>
         <project>
           <name>My project</name>
         </project>
       </doc>
-      <kind>data:text/plain,project</kind>
+      <kind>model:text/plain,project</kind>
       <target>var:element</target>
     </instr>
     <instr>
@@ -17,7 +17,7 @@
       <target>var:id</target>
     </instr>
     <instr>
-      <type>data:getElement</type>
+      <type>model:getElement</type>
       <id>var:id</id>
       <target>this:response</target>
      </instr>

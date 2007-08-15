@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entrypoints>
   <entrypoint>
-    <name>test-mod-template</name>
+    <name>test-mod-data</name>
     <uri>ffcpl:/test/mod-data-test/xunit</uri>
     <indexable>
       <title>Mind-Alliance Data Library Tests</title>
@@ -9,7 +9,7 @@
       <keywords/>
     </indexable>
     <categories>xunit</categories>
-    <group>Mind-Alliance</group>
+    <group>Mind-Alliance Data</group>
     <icon/>
   </entrypoint>
  </entrypoints>

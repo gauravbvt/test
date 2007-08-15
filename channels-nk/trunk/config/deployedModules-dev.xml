@@ -54,11 +54,11 @@
 	<module>modules/demo-xml-tech-1.0.0.jar</module>
 	
 	<!--Demonstration Apps - remove these for production systems-->
-<!--	<module>modules/app-address-book-1.1.4.jar</module>
+	<module>modules/app-address-book-1.1.4.jar</module>
 	<module>modules/pingpong-1.2.0.jar</module>
 	<module>modules/forum-web-1.1.6.jar</module>
 	<module>modules/forum-services-lite-1.0.0.jar</module>
-	<module>modules/forum-style-2.0.1.jar</module> -->
+	<module>modules/forum-style-2.0.1.jar</module>
 
 	<module>file://@deploy-dir@/@mod-control-name@-@mod-control-version@.jar</module>
 </modules>
