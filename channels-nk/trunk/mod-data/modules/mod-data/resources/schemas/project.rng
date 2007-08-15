@@ -1,0 +1,14 @@
+<element name="project" xmlns="http://relaxng.org/ns/structure/1.0">
+	<!--
+	element project {
+	  element id { text },
+	  attribute schema { text },
+	  element name { text }
+	}
+	-->
+  <element name="id"><text/></element>
+  <attribute name="schema"><text/></attribute>
+  <element name="name">
+    <text/>
+  </element>
+</element>

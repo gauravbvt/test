@@ -1,0 +1,14 @@
+<idoc>
+  <comment>
+    Deletes a container if it exists then opens it.
+  </comment>
+  <seq>
+    <instr>
+      <type>data:deleteContainer</type>
+    </instr>
+    <instr>
+      <type>data:openContainer</type>
+      <target>this:response</target>
+    </instr>
+  </seq>
+</idoc>

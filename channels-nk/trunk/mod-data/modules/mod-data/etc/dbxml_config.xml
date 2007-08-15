@@ -1,0 +1,17 @@
+<configs env="test"> <!-- "@ENVIRONMENT@" -->
+  <config name="prod">
+    <dbxml>
+      <name>channels_dbxml</name>
+    </dbxml>
+  </config>
+  <config name="dev">
+    <dbxml>
+      <name>dev_dbxml</name>
+    </dbxml>
+  </config>
+  <config name="test">
+    <dbxml>
+      <name>test_dbxml</name>
+    </dbxml>
+  </config>
+</configs>

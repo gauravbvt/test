@@ -1,0 +1,17 @@
+<idoc>
+  <comment>
+    Creates a new, valid element
+  </comment>
+  <seq>
+    <instr>
+      <type>data:createElement</type>
+      <doc>
+        <project>
+          <name>My project</name>
+        </project>
+      </doc>
+      <kind>data:text/plain,project</kind>
+      <target>this:response</target>
+    </instr>
+  </seq>
+</idoc>

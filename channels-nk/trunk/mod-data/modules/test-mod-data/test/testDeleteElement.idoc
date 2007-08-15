@@ -1,0 +1,25 @@
+<idoc>
+  <comment>Create an element and delete it using its id</comment>
+  <seq>
+    <instr>
+      <type>data:createElement</type>
+      <doc>
+        <project>
+          <name>My project</name>
+        </project>
+      </doc>
+      <kind>data:text/plain,project</kind>
+      <target>var:element</target>
+    </instr>
+    <instr>
+      <type>copy</type>
+      <operand>var:element#xpointer(./id[1])</operand>
+      <target>var:id</target>
+    </instr>
+    <instr>
+      <type>data:deleteElement</type>
+      <id>var:id</id>
+      <target>this:response</target>
+     </instr>
+  </seq>
+</idoc>

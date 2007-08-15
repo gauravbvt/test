@@ -1,0 +1,32 @@
+<idoc>
+  <comment>Create an element and update it using its id</comment>
+  <seq>
+    <instr>
+      <type>data:createElement</type>
+      <doc>
+        <project>
+          <name>My project</name>
+        </project>
+      </doc>
+      <kind>data:text/plain,project</kind>
+      <target>var:element</target>
+    </instr>
+    <instr>
+      <type>stm</type>
+      <operand>var:element</operand>
+      <operator>
+        <stm:group xmlns:stm="http://1060.org/stm">
+          <stm:replace xpath="./name">
+            <name>Updated project</name>
+           </stm:replace>
+        </stm:group>
+      </operator>
+      <target>var:update</target>
+    </instr>
+    <instr>
+      <type>data:updateELement</type>
+      <doc>var:update</doc>
+      <target>this:response</target>
+    </instr>
+  </seq>
+</idoc>

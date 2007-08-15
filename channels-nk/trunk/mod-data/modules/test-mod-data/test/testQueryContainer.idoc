@@ -1,0 +1,30 @@
+<idoc>
+  <comment>Query a container</comment>
+  <seq>
+    <instr>
+      <type>data:createElement</type>
+      <doc>
+        <project>
+          <name>My project</name>
+        </project>
+      </doc>
+      <kind>data:text/plain,project</kind>
+      <target>var:element</target>
+    </instr>
+    <instr>
+      <type>data:queryContainer</type>
+      <xquery>
+          ffcpl:/crud/queries/allProjects.xq
+      </xquery>
+      <variables>
+        <properties>
+          <property>
+            <key>part</key>
+            <value>My</value>
+          </property>
+        </properties>
+      </variables>
+      <target>this:response</target>
+    </instr>
+  </seq>
+</idoc>

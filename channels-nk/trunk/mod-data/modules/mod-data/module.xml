@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Channels Data Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:data</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Channels Data Module</name>
+        <description>Data services</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+			<match>ffcpl:/data/.*</match> <!-- TO BE CHANGED -->
+			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/CRONConfig.xml</match>
+		</uri>
+	</export>
+	<mapping>
+		<this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+			<match>ffcpl:/libs/.*</match>
+			<match>ffcpl:/resources/.*</match>
+		</this>
+		<rewrite>
+			<match>ffcpl:/data/(.*)</match>
+			<to>ffcpl:/$1</to>
+		</rewrite>
+		<rewrite>
+      		<match>data:(.*?)\+(.*)</match>
+      		<to>active:javascript+operator@ffcpl:/resources/$1.js+$2</to>
+    	</rewrite>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:dpml</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:mod:dbxml</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

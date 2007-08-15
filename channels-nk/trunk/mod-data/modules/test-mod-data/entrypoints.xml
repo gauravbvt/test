@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-template</name>
+    <uri>ffcpl:/test/mod-data-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance Data Library Tests</title>
+      <desc>Mind-Alliance Data unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>

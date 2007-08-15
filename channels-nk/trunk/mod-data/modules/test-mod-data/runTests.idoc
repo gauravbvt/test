@@ -1,0 +1,7 @@
+<idoc>
+  <instr>
+    <type>xunit</type>
+    <testlist>ffcpl:/crud/tests/testlist.xml</testlist>
+    <target>this:response</target>
+  </instr>
+</idoc>
