@@ -13,18 +13,17 @@
 		<![CDATA[
         	import com.mindalliance.channels.model.ChannelsModelLocator;
         	import com.mindalliance.channels.model.ProjectScenarioBrowserModel;
-			import com.mindalliance.channels.events.GetProjectListEvent;
-			import com.mindalliance.channels.events.GetScenarioListEvent;
-			import com.mindalliance.channels.events.GetScenarioEvent;
-			import com.mindalliance.channels.events.GetProjectEvent;
+			import com.mindalliance.channels.events.*;
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
 			import com.adobe.cairngorm.control.CairngormEvent;
 			
 			import mx.managers.PopUpManager;	
 			import mx.controls.Alert;
 		
+			
+		
             [Bindable]
- 	        private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
+ 	        private var psbModel : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
  	        
  	        private function getProjectList(event : Event) : void
  	        {
@@ -51,14 +50,30 @@
  	        	PopUpManager.removePopUp(this);
  	        }
 
-		    private function createProject() : void 
+		    private function addProject() : void 
  	        {
  	        		
  	        }
  	        
- 	        private function createScenario() : void
+ 	        private function removeProject() : void
+ 	        {
+ 	        	
+ 	        }
+ 	        
+ 	        private function removeScenario() : void
+ 	        {
+ 	        	
+ 	        }
+ 	        
+ 	        private function addScenario() : void
  	        {
  	        		
+ 	        }
+ 	        
+ 	        private function loadScenario() : void 
+ 	        {
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new LoadScenarioEvent() );
+ 	        	this.closeBrowser();
  	        }
  	        
 		]]>
@@ -76,28 +91,28 @@
 				<mx:Label text="Projects" fontWeight="bold"/>
 				<search:StandardSearchBox width="100%" visible="false" includeInLayout="false" id="searchBoxProject"/>
 				<mx:VBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:List id="listProjects" dataProvider="{model.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
+					<mx:List id="listProjects" dataProvider="{psbModel.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
 					<mx:HBox>
-						<common:AddButton visible="{model.canAddProject}" click="Alert.show('mumble mumble')"/>
-						<common:RemoveButton visible="{model.canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="model.projectList.removeItemAt(listProjects.selectedIndex)"/>
+						<common:AddButton visible="{psbModel.canAddProject}" click="Alert.show('mumble mumble')"/>
+						<common:RemoveButton visible="{psbModel.canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="psbModel.projectList.removeItemAt(listProjects.selectedIndex)"/>
 					</mx:HBox>
 				</mx:VBox>
 				<mx:Form enabled="{listProjects.selectedItem != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{model.selectedProject.name}"/>
+						<mx:TextInput text="{psbModel.selectedProject.name}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{model.selectedProject.description}"/>
+						<mx:TextArea text="{psbModel.selectedProject.description}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager" visible="false" includeInLayout="false">
 						<!--This won't work properly because data providers are using generic objects. -->
-						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(model.selectedProject.manager)}"
-							change="model.selectedProject.manager = ProjectManagers.getItemAt(comboProjectManager.selectedIndex).Name"/>
+						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(psbModel.selectedProject.manager)}"
+							change="psbModel.selectedProject.manager = ProjectManagers.getItemAt(comboProjectManager.selectedIndex).Name"/>
 					</mx:FormItem>
 					<mx:FormItem label="Participants" direction="vertical" visible="false" includeInLayout="false">
 						<mx:List/>
 						<mx:HBox>
-							<common:AddButton/>
+							<common:AddButton click=""/>
 							<common:RemoveButton/>
 						</mx:HBox>
 					</mx:FormItem>
@@ -106,17 +121,17 @@
 			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:Label text="Scenarios" fontWeight="bold"/>
 				<search:StandardSearchBox width="100%" visible="false" includeInLayout="false"/>
-				<mx:List dataProvider="{model.scenarioList}" width="100%" id="listScenarios" labelField="name" change="selectScenario()"/>
+				<mx:List dataProvider="{psbModel.scenarioList}" width="100%" id="listScenarios" labelField="name" change="selectScenario()"/>
 				<mx:HBox>
-					<common:AddButton visible="{model.canAddScenario}"/>
-					<common:RemoveButton visible="{model.canRemoveScenario}"/>
+					<common:AddButton visible="{psbModel.canAddScenario}" click="addScenario()"/>
+					<common:RemoveButton visible="{psbModel.canRemoveScenario}" click="removeScenario()"/>
 				</mx:HBox>
-				<mx:Form enabled="{model.selectedScenario != null}">
+				<mx:Form enabled="{psbModel.selectedScenario != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{model.selectedScenario.name}"/>
+						<mx:TextInput text="{psbModel.selectedScenario.name}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{model.selectedScenario.description}"/>
+						<mx:TextArea text="{psbModel.selectedScenario.description}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Story lines" visible="false" includeInLayout="false">
 						<mx:List/>
@@ -126,7 +141,7 @@
 		</mx:HBox>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
-		<mx:Label text="{model.selectedProject.name + ' > ' + model.selectedScenario.name}"/>
-		<mx:Button label="Load Scenario" enabled="{listScenarios.selectedItems.length == 1}"/>
+		<mx:Label text="{psbModel.selectedProject.name + ' > ' + psbModel.selectedScenario.name}"/>
+		<mx:Button label="Load Scenario" enabled="{listScenarios.selectedItems.length == 1}" click="loadScenario()"/>
 	</mx:ControlBar>	
 </mx:TitleWindow>

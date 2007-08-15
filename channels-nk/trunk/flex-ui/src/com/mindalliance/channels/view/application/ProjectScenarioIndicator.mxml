@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
-	label="{'Project: '+currentProjectName+', Scenario: ' + currentScenarioName}" click="btnClicked()" toolTip="click to browse or change projects and scenarios">
+	label="{model.currentScenario == null ? 'Load Scenario' : 'Project: '+ model.currentProject.name +', Scenario: ' + model.currentScenario.name}" click="btnClicked()" toolTip="click to browse or change projects and scenarios">
 	
 	<mx:Script>
 		<![CDATA[
 			import mx.core.IFlexDisplayObject;
 			import mx.managers.PopUpManager;
 
-			[Bindable]
-			private var currentProjectName:String ;
+			import com.mindalliance.channels.model.ChannelsModelLocator;
 			
 			[Bindable]
-			private var currentScenarioName:String ;
+ 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
 
 			private function btnClicked():void {
 				var sb:IFlexDisplayObject = PopUpManager.createPopUp(this, ProjectScenarioBrowser, true);

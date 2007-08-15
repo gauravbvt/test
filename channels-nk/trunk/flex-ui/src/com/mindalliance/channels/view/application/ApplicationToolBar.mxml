@@ -20,6 +20,7 @@
 	    	import com.mindalliance.channels.view.people.PersonalProfileEditor;
 	    	import com.mindalliance.channels.view.scenario.EventEditor;
 	    	import com.mindalliance.channels.view.scenario.TaskEditor;
+	    	import com.mindalliance.channels.model.ChannelsModelLocator;
 	    	import mx.events.CloseEvent;
 	    	import com.mindalliance.channels.view.resources.RepositoryEditor;
 	    	import mx.controls.Menu;
@@ -32,8 +33,9 @@
         	import mx.core.IFlexDisplayObject;
             import mx.managers.PopUpManager;
         
-        	[Bindable]
-        	private var username:String = 'John Doe';
+        			
+            [Bindable]
+ 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
         
             private static var classHash:Object = {
                 "Category Library Editor":CategoryLibraryEditor,
@@ -149,7 +151,7 @@
     <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
     <mx:Button label="Go to Dashboard"/>
 	<mx:Spacer width="100%"/>
-	<mx:Label text="{'Logged in as: '+username}"/>
+	<mx:Label text="{'Logged in as: '+model.username}"/>
 	<mx:Button label="My Profile" id="btnEditProfile" click="editPersonalProfile()"/>
 	<mx:Button label="Logout"/>
 </mx:HBox>

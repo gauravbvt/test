@@ -7,12 +7,9 @@ package com.mindalliance.channels.events
 	{
 		public static const LoadScenario_Event:String = "<LoadScenarioEvent>";
 		
-		public var id : String;
-		
-		public function LoadScenarioEvent(id : String) 
+		public function LoadScenarioEvent() 
 		{
 			super( LoadScenario_Event );
-			this.id = id;
 		}
 	}
 }
