@@ -1,14 +1,14 @@
 
 package com.mindalliance.channels.model
 {
-	import com.adobe.cairngorm.model.IModelLocator;
 	import com.adobe.cairngorm.CairngormError;
-    import com.adobe.cairngorm.CairngormMessageCodes;
-    import mx.collections.ArrayCollection;
-    import com.mindalliance.channels.vo.ProjectVO;
-    import com.mindalliance.channels.vo.ScenarioVO;
-    import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
-    
+	import com.adobe.cairngorm.CairngormMessageCodes;
+	import com.adobe.cairngorm.model.IModelLocator;
+	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.vo.ProjectVO;
+	import com.mindalliance.channels.vo.ScenarioVO;
+	
+	import mx.resources.ResourceBundle;
     /**
      * This singleton class provides references to the models for various components.  In
      * addition, it keeps track of global data elements such as the loaded scenario.
@@ -16,6 +16,10 @@ package com.mindalliance.channels.model
     [Bindable]
 	public class ChannelsModelLocator implements IModelLocator
 	{
+		
+ 	    [ResourceBundle("services")]
+     	private static var serviceResources:ResourceBundle;
+		
 		// Component Models
 		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel();
 		public var permissionModel : PermissionModel = new PermissionModel();
@@ -25,6 +29,7 @@ package com.mindalliance.channels.model
 		private var _currentScenario : ScenarioVO;
 		private var _username : String= 'John Doe';
 		
+ 	    private var _urlRoot : String = serviceResources.getString("urlRoot");		
 		
 		// Accessor Functions
 		/**
@@ -65,6 +70,10 @@ package com.mindalliance.channels.model
 		 */		
 		public function set username(username : String) : void {
 			this._username = username;	
+		}
+		
+		public function get urlRoot() : String {
+			return _urlRoot;
 		}
 		
 		/**

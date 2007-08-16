@@ -1,3 +1,5 @@
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
 
 package @namespace@.@model@
 {

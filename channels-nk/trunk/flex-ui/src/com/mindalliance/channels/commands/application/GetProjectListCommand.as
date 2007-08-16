@@ -4,7 +4,7 @@ package com.mindalliance.channels.commands.application
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mindalliance.channels.util.ServiceUtil;
-	import com.mindalliance.channels.business.application.GetProjectListDelegate;
+	import com.mindalliance.channels.business.application.ProjectDelegate;
 	import com.mindalliance.channels.events.application.GetProjectListEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
@@ -20,7 +20,7 @@ package com.mindalliance.channels.commands.application
 		public function execute(event:CairngormEvent):void
 		{
 			var evt:GetProjectListEvent = event as GetProjectListEvent;
-			var delegate:GetProjectListDelegate = new GetProjectListDelegate( this );
+			var delegate:ProjectDelegate = new ProjectDelegate( this );
 			
 			delegate.getProjectList();
 		}

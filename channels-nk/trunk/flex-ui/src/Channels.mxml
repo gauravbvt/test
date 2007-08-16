@@ -29,7 +29,7 @@
         
       ]]>
     </mx:Script>
-   	<business:Services id="services" />
+   	<!--<business:Services id="services" />-->
 	<control:ChannelsController id="appController" />
 
     <mx:VBox width="100%">

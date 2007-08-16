@@ -47,6 +47,15 @@
 		<mkdir dir="${project-uri}/${vo.dir}"       />
 	</target>
 
+	<target name="create-submodule-directories" >
+		<echo>${log.create.cairngorm.directories.message}</echo>
+        <mkdir dir="${project-uri}/${business.dir}/${submodule.dir}" />
+        <mkdir dir="${project-uri}/${commands.dir}/${submodule.dir}" />  
+        <mkdir dir="${project-uri}/${events.dir}/${submodule.dir}"   />
+		<mkdir dir="${project-uri}/${model.dir}/${submodule.dir}"    />
+
+	</target>
+	
 	<!-- create default cairngorm project ModelLocator -->
 	<target name="create-model-locator" >
 		<echo>${log.model.locator.message}</echo>
@@ -109,7 +118,8 @@
 	                <token key="namespace" value="${namespace}"     />
 	                <token key="events"    value="${events.dir}"    />
 	                <token key="commands"  value="${commands.dir}"  />
-	                <token key="business"  value="${business.dir}"  />
+	                <token key="business"  value="${business.dir}"  />	                
+	                <token key="delegate"  value="${sequence.name}" />
            	    <token key="submodule" value="${submodule.dir}"/>
 	            </replacetokens>
 	        </filterchain>
@@ -119,12 +129,56 @@
 	           <replacetokens>
 	                <token key="sequence"  value="${sequence.name}" />
 	                <token key="namespace" value="${namespace}"     />
-	                <token key="business"  value="${business.dir}"  />
+	                <token key="business"  value="${business.dir}"  />	                
+                <token key="delegate"  value="${sequence.name}" />
            	    <token key="submodule" value="${submodule.dir}"/>
 	            </replacetokens>
 	        </filterchain>
 	    </copy>
 	</target>
+	
+	<!-- create cairngen incluse delegate sequence, generates: Event, Command, Delegate -->
+	<target name="create-sequence" depends="log" >
+		<echo>${log.sequence.include.delegate.message}</echo>
+		<copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/Event.tpl" tofile="${project-uri}/${events.dir}/${submodule.dir}/${sequence.name}Event.as" overwrite="${overwrite.existing.files}" >
+	        <filterchain>
+	           <replacetokens>
+	                <token key="sequence"  value="${sequence.name}" />
+	                <token key="namespace" value="${namespace}"     />
+	                <token key="events"    value="${events.dir}"    />
+	           	    <token key="submodule" value="${submodule.dir}"/>
+	            </replacetokens>
+	        </filterchain>
+	    </copy>
+	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/CommandIncludeDelegate.tpl" tofile="${project-uri}/${commands.dir}/${submodule.dir}/${sequence.name}Command.as" overwrite="${overwrite.existing.files}" >
+	        <filterchain>
+	           <replacetokens>
+	                <token key="sequence"  value="${sequence.name}" />
+	                <token key="namespace" value="${namespace}"     />
+	                <token key="events"    value="${events.dir}"    />
+	                <token key="commands"  value="${commands.dir}"  />
+	                <token key="business"  value="${business.dir}"  />	                
+	                <token key="delegate"  value="${delegate.name}" />
+           	    <token key="submodule" value="${submodule.dir}"/>
+	            </replacetokens>
+	        </filterchain>
+	    </copy>
+	</target>
+	
+	<target name="create-delegate">
+	    <copy file="${cairngorm.templates.dir}/${cairngorm.framework.name}${cairngorm.version}/BusinessDelegate.tpl" tofile="${project-uri}/${business.dir}/${submodule.dir}/${delegate.name}Delegate.as" overwrite="${overwrite.existing.files}" >
+	        <filterchain>
+	           <replacetokens>
+	                <token key="sequence"  value="${sequence.name}" />
+	                <token key="namespace" value="${namespace}"     />
+	                <token key="business"  value="${business.dir}"  />	                
+                <token key="delegate"  value="${delegate.name}" />
+           	    <token key="submodule" value="${submodule.dir}"/>
+	            </replacetokens>
+	        </filterchain>
+	    </copy>
+	</target>
+	
 	
 	<!-- create cairngen exclude-delegate-sequence, generates: Event, Command -->
 	<target name="create-sequence-exclude-delegate" depends="log" >

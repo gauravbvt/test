@@ -1,18 +1,17 @@
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
 
 package @namespace@.@business@.@submodule@
 {
-	import @namespace@.@business@.Services;
-	import com.adobe.cairngorm.business.ServiceLocator;
-	import mx.rpc.IResponder;
-	import mx.rpc.AsyncToken;
+	import com.mindalliance.channels.business.BaseDelegate;
 	
-	public class @sequence@Delegate
-	{
-		private var responder:IResponder;
-		
-		public function @sequence@Delegate(responder:IResponder)
+	import mx.rpc.IResponder;
+	
+	public class @delegate@Delegate extends BaseDelegate
+	{	
+		public function @delegate@Delegate(responder:IResponder)
 		{
-			this.responder = responder;
+			super(responder);
 		}
 	}
 }

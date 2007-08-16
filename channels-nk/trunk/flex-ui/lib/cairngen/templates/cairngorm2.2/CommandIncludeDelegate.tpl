@@ -1,9 +1,11 @@
+// Copyright (C) 2007 Mind-Alliance Systems LLC.
+// All rights reserved.
 
 package @namespace@.@commands@.@submodule@
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import @namespace@.@business@.@submodule@.@sequence@Delegate;
+	import @namespace@.@business@.@submodule@.@delegate@Delegate;
 	import @namespace@.@events@.@submodule@.@sequence@Event;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
@@ -15,7 +17,7 @@ package @namespace@.@commands@.@submodule@
 		public function execute(event:CairngormEvent):void
 		{
 			var evt:@sequence@Event = event as @sequence@Event;
-			var delegate:@sequence@Delegate = new @sequence@Delegate( this );
+			var delegate:@delegate@Delegate = new @delegate@Delegate( this );
 		}
 		
 		public function result(data:Object):void
