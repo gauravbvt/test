@@ -5,7 +5,7 @@
 	***********
 	-->
     <identity>
-		<uri>urn:com:mindalliance:data</uri>
+		<uri>urn:com:mindalliance:channels:data</uri>
 		<version>0.0.1</version>
     </identity>
 	<info>
@@ -19,31 +19,66 @@
     </publisher>
 	<export>
 		<uri>
-			<match>active:createElement.*</match>
-			<match>active:deleteModel.*</match>
-			<match>active:deleteElement.*</match>
-			<match>active:getElement.*</match>
-			<match>active:openModel.*</match>
-			<match>active:queryModel.*</match>
-			<match>active:updateElement.*</match>
+			<match>active:openModel</match>
+			<match>active:deleteModel</match>
+			<match>active:queryModel\+.*</match>
+			<match>active:createElement\+.*</match>
+			<match>active:deleteElement\+.*</match>
+			<match>active:getElement\+.*</match>
+			<match>active:updateElement\+.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/com/mindalliance/channels/data/.*</match>
 		</uri>
 	</export>
+   <rewrite>
+     <rule>
+       <match>ffcpl:/com/mindalliance/channels/data/(.*)</match>
+       <to>ffcpl:/resources/$1</to>
+     </rule>
+   </rewrite>
 	<mapping>
-		<this>
+   <rewrite>
+     <match>ffcpl:/com/mindalliance/channels/data/(.*)</match>
+     <to>ffcpl:/resources/$1</to>
+   </rewrite>
+		<rewrite>
+			<match>active:openModel(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/openModel.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>active:deleteModel(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/deleteModel.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>active:queryModel(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/queryModel.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>active:createElement(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/createElement.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>active:deleteElement(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/deleteElement.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>active:getElement(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/getElement.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>active:updateElement(.*)</match>
+			<to>active:javascript+operator@ffcpl:/resources/scripts/updateElement.js$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>doc:(.*)</match>
+			<to>active:doc-generate+operand@ffcpl:$1</to>
+		</rewrite>
+    <this>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/.*</match>
 			<match>ffcpl:/libs/.*</match>
 			<match>ffcpl:/resources/.*</match>
 		</this>
-		<rewrite>
-			<match>active:(createElement|deleteModel|deleteElement|getElement|openModel|queryModel|updateElement)(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>			
-		</rewrite>
-		<rewrite>
-			<match>ffcpl:/data/(.*)</match>
-			<to>ffcpl:/$1</to>
-		</rewrite>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>
 		</import>
@@ -70,6 +105,9 @@
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:xsecurity</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:mod:docxter</uri>
 		</import>
 		<super/>
     </mapping>

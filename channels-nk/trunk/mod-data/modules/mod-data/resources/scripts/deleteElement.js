@@ -22,7 +22,7 @@ try {
   log("Deleted element " + descriptor.name + " from container " + dbxml_getContainerName(), "info");
   succeeded = true;
 }
-catch(e) {
+catch(e) { // RISKY - hides all problems
   log("Failed to delete element: " + descriptor.name + ": " + e, "severe");
 }
 

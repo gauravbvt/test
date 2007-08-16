@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+<title>Channels Data Accessors Guide</title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Links***************-->
+<links>
+</links>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="main"/>
+</toc>
+
+<section name="main" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+	<h2>Guide to Channels Model Accessors</h2>
+	<p>
+	Berkeley DBXML is a native embedded XML database. Formerly developed by Sleepycat and now a part of Oracle,
+	DBXML is based on the open-source Berkeley database engine.  This library provides a tool library for
+	managing and querying XML document repositories in DBXML.
+	</p>
+	<h3>Requirements</h3>
+	<p>
+	This library requires that DBXML is installed on your host operating system.  You can download the latest
+	version <a href="http://www.oracle.com/database/berkeley-db/xml/index.html">here</a>.
+	</p>
+	<h2>Using the Library</h2>
+	<p>
+	A model is a DBXML container configured in /etc/dbxml_config where the container for current model is named. 
+	The library supports opening the current model, deleting it and querying it.
+	It also supports creating new model elements, getting elements, updating them and deleting them. 
+
+	The following set of accessors provide tools for accessing the model.
+	</p>
+	<ul>
+		<li><link name="doc_ura_openModel">openModel</link></li>
+		<li><link name="doc_ura_deleteModel">deleteModel</link></li>
+		<li><link name="doc_ura_queryModel">queryModel</link></li>
+		<li><link name="doc_ura_createElement">createElement</link></li>
+		<li><link name="doc_ura_deleteElement">deleteElement</link></li>
+		<li><link name="doc_ura_getElement">getElement</link></li>
+		<li><link name="doc_ura_updateElement">updateElement</link></li>
+	</ul>
+	</content>
+	<includes/>
+</section>
+
+</document>

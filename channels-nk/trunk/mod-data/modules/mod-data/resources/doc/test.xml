@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu name="doc_mod_data_chapter_head">
+	<item name="doc_mod_data_guide"/>
+	<item name="doc_mod_data_openModel"/>
+	<item name="doc_mod_data_deleteModel"/>
+	<item name="doc_mod_data_createElement"/>
+	<item name="doc_mod_data_deleteElement"/>
+	<item name="doc_mod_data_getElement"/>
+	<item name="doc_mod_data_updateElement"/>
+	<item name="doc_mod_data_queryModel"/>
+</menu>

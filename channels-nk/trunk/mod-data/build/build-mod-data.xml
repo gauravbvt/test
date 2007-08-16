@@ -30,10 +30,10 @@
     <target depends="init,compile" name="jar">
         <mkdir dir="${dist.dir}"/>
         <jar basedir="${dst}" compress="true" destfile="${dist.dir}/${app}-${version}.jar">
-		    <include name="**/*"/>
-		    <exclude name="**/.nbattrs*"/>
-		    <exclude name="**/.svn"/>
-	        <exclude name="**/*.java"/>
+			    <include name="**/*"/>
+			    <exclude name="**/.nbattrs*"/>
+			    <exclude name="**/.svn"/>
+		      <exclude name="**/*.java"/>
         </jar>
     </target>
 

@@ -14,7 +14,7 @@
     <instr>
       <type>queryModel</type>
       <xquery>
-          ffcpl:/resources/queries/allProjects.xq
+          ffcpl:/com/mindalliance/channels/data/queries/allProjects.xq
       </xquery>
       <variables>
         <properties>

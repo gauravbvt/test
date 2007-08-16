@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>doc_mod_data_guide</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_guide.xml</uri>
+    <indexable>
+      <title>Accessors Guide</title>
+      <desc>Guide to accessing Channels Data</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_openModel</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_openModel.xml</uri>
+    <indexable>
+      <title>openModel</title>
+      <desc>Open a persistent model</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_deleteModel</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_deleteModel.xml</uri>
+    <indexable>
+      <title>deleteModel</title>
+      <desc>Delete a persistent model</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_createElement</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_createElement.xml</uri>
+    <indexable>
+      <title>createElement</title>
+      <desc>Create a model element</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_deleteElement</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_deleteElement.xml</uri>
+    <indexable>
+      <title>deleteElement</title>
+      <desc>Delete an element from the model</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_getElement</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_getElement.xml</uri>
+    <indexable>
+      <title>getElement</title>
+      <desc>Get a model element</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_updateElement</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_updateElement.xml</uri>
+    <indexable>
+      <title>updateElement</title>
+      <desc>Update a model element</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_queryModel</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_queryModel.xml</uri>
+    <indexable>
+      <title>queryModel</title>
+      <desc>Query a model</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
+   <!--Discoverable Documentation Menu-->
+	<entrypoint>
+		<name>urn:com:mindalliance:channels:data:chapter</name>
+		<uri>ffcpl:/com/mindalliance/channels/data/doc/chapter-menu.chp</uri>
+		<indexable>
+			<title>Channels Model Accessors Book</title>
+			<desc>Documentation for the Channels Data Accessors</desc>
+			<keywords/>
+		</indexable>
+		<categories>chapter hidden</categories>
+		<group>channels_data</group>
+	</entrypoint>
+	<!--Documents-->
+	<entrypoint>
+		<name>doc_mod_data_chapter_head</name>
+		<uri>ffcpl:/com/mindalliance/channels/data/doc/chapter-head.xml</uri>
+		<indexable>
+			<title>Channels Model Accessors</title>
+			<desc>Documentation for the Channels Data Accessors</desc>
+			<keywords/>
+		</indexable>
+		<categories>doc postInstallInfo</categories>
+		<group>channels_data</group>
+	</entrypoint>
+
+</entrypoints>

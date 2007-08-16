@@ -1,0 +1,10 @@
+<menu name="doc_mod_data_chapter_head">
+	<item name="doc_mod_data_guide"/>
+	<item name="doc_ura_openModel"/>
+	<item name="doc_ura_deleteModel"/>
+	<item name="doc_ura_createElement"/>
+	<item name="doc_ura_deleteElement"/>
+	<item name="doc_ura_getElement"/>
+	<item name="doc_ura_updateElement"/>
+	<item name="doc_ura_queryModel"/>
+</menu>
