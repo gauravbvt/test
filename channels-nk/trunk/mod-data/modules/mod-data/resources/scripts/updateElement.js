@@ -42,6 +42,7 @@ if (id != null) {
   catch(e) { // RISKY: hides all other failures
     log("No older version of " + id + " deleted from container " + dbxml_getContainerName(), "warning");
   }
+
   req=context.createSubRequest("active:dbxmlPutDocument");
   req.addArgument("operand", new XmlObjectAspect(doc.getXmlObject()));
   req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));

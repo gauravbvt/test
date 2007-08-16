@@ -1,0 +1,51 @@
+import org.ten60.netkernel.layer1.representation.*;
+import com.ten60.netkernel.urii.aspect.*;
+
+main()
+{ 
+	method = (((IAspectString)context.sourceAspect("literal:method", IAspectString.class)).getString());
+	guid=context.getThisRequest().getArgument("guid");
+	type=context.getThisRequest().getArgument("type");
+	response=null;
+
+	switch(method) {
+		case "GET":
+  		response = context.createResponseFrom(new StringAspect("<guid type=\"" + type + "\">" + guid + "</guid>"));
+		break;
+		case "POST":
+		params=getParams(context);
+		submethod=params.getValue("method");
+		
+		if(submethod != null ) {
+			if(submethod.equals("PUT")) {
+				element=context.sourceAspect("this:param:param",IAspectString.class);
+				req=context.createSubRequest("active:updateElement");
+				req.addArgument("doc", element);
+				out=context.issueSubRequest(req);
+				response=context.createResponseFrom(out);
+			} else if(submethod.equals("DELETE")) {
+				req=context.createSubRequest("active:deleteElement");
+				req.addArgument("id", new StringAspect("<id>" + guid + "</id>"));
+				out=context.issueSubRequest(req);
+				response=context.createResponseFrom(out);				
+			}
+		} else {
+			// POST not presently supported
+		}
+		
+		break;
+	}
+  	response.setMimeType("text/xml");
+  	context.setResponse(response);
+}
+
+getParams(context) {
+	params = null;
+	if(context.exists("this:param:param2")) {
+		params = (IAspectNVP) context.sourceAspect("this:param:param2", IAspectNVP.class);
+	} else if(context.exists("this:param:param")) {
+		params = (IAspectNVP) context.sourceAspect("this:param:param", IAspectNVP.class);
+	}
+	
+	return params;
+}

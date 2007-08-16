@@ -6,7 +6,7 @@
 	-->
     <identity>
 		<uri>urn:com:mindalliance:channels</uri>
-		<version>0.0.6</version>
+		<version>0.0.14</version>
     </identity>
 	<info>
 		<name>Mind-Alliance Channels Module</name>
@@ -39,9 +39,21 @@
 			<to>active:beanshell+operator@ffcpl:/resources/$1</to>
 		</rewrite>
 		<rewrite>
+			<match>ffcpl:/channels/(project)/(.*)</match> // Overload this
+			<to>active:beanshell+operator@ffcpl:/resources/guid.bsh+type@$1+guid@$2</to>			
+		</rewrite>
+		<rewrite>
+			<match>ffcpl:/channels/(project)(.*)</match> // Overload this
+			<to>active:beanshell+operator@ffcpl:/resources/$1.bsh+kind@$1$2</to>			
+		</rewrite>
+		<rewrite>
 			<match>ffcpl:/channels/(.*)</match>
 			<to>ffcpl:/resources/$1</to>
 <!--			<to>active:beanshell+operator@ffcpl:/resources/channels.bsh+path@$1</to>-->
+		</rewrite>
+		<rewrite>
+			<match>(.*\.idoc)</match>
+			<to>active:dpml+operator@$1</to>
 		</rewrite>
 		<this>
 			<match>ffcpl:/.*</match>
@@ -50,6 +62,9 @@
       		<match>active:template\+.*</match>
       		<class>com.mindalliance.template.accessor.TemplateAccessor</class>
     	</ura>
+    	<import>
+    	    <uri>urn:com:mindalliance:data</uri>
+    	</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>
 		</import>
@@ -61,6 +76,9 @@
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:dpml</uri>
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>

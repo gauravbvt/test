@@ -20,7 +20,7 @@
  	      
  	      	[Bindable]
  	      	private var urlRoot : String = serviceResources.getString("urlRoot");
- 	      	//private var urlRoot : String = "http://24.249.249.240:8080/channels";
+ 	      	//private var urlRoot : String = "http://ranger.homelinux.ne:8080/channels";
  	      	//private var urlRoot : String = "assets/xml";
  	      	
 
