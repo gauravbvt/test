@@ -12,6 +12,7 @@ package com.mindalliance.channels.commands.application
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
+	import mx.collections.ArrayCollection;
 	
 	public class GetProjectListCommand implements ICommand, IResponder
 	{
@@ -28,7 +29,11 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result;
-			model.projectList = ServiceUtil.convertServiceResults(result.projects.project);
+			if (result.results == null) {
+				model.projectList = new ArrayCollection();	
+			} else {
+				model.projectList = ServiceUtil.convertServiceResults(result.results.project);
+			}
 			model.selectedProject = null;
 			model.scenarioList = null;
 			model.selectedScenario = null;
