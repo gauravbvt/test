@@ -1,14 +1,23 @@
-<element name="project" xmlns="http://relaxng.org/ns/structure/1.0">
-	<!--
-	element project {
-	  element id { text },
-	  attribute schema { text },
-	  element name { text }
-	}
-	-->
-  <element name="id"><text/></element>
-  <attribute name="schema"><text/></attribute>
-  <element name="name">
-    <text/>
-  </element>
-</element>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  include href="http://localhost:8080/channels/schema/ext_attrs.rnc"
+  include href="http://localhost:8080/channels/schema/ext_attrs.rnc"
+  start =
+      element project {
+  	    {attrs},
+  	    {elems}
+      }
+  -->
+  <include href="http://localhost:8080/channels/schema/ext_attrs.rng"/>
+  <include href="http://localhost:8080/channels/schema/ext_elems.rng"/>
+  
+  <start>
+    <element name="project">
+      <ref name="attrs"/>
+      <interleave>
+        <ref name="elems"/>
+      </interleave>
+    </element>
+  </start>
+  
+</grammar>

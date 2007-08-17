@@ -21,6 +21,11 @@
 		<passCookies/>
 	</zone>    	
 	<zone>
+		<match>.*/channels/schema/.*</match>
+		<processQueries/>
+		<passCookies/>
+	</zone>    	
+	<zone>
 		<match>.*/(channels)/.*</match>
 		<processQueries/>
 		<passCookies/>

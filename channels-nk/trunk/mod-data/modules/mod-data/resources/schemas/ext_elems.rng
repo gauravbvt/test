@@ -1,0 +1,22 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  element id { text } &
+  element name { text } &
+  element description { text }?
+  }
+  -->
+  <define name="elems">
+    <element name="id">
+      <text/>
+    </element>
+    <element name="name">
+      <text/>
+    </element>
+    <optional>
+      <element name="description">
+        <text/>
+      </element>
+    </optional>
+  </define>
+  
+</grammar>

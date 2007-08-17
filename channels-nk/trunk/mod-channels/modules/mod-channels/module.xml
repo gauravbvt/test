@@ -26,6 +26,10 @@
 		</uri>
 	</export>
 	<mapping>
+    <rewrite>
+      <match>ffcpl:/channels/schema/(.*)</match>
+      <to>schema:$1</to>
+    </rewrite>
 		<this>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/.*</match>

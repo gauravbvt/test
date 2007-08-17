@@ -1,0 +1,38 @@
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  element project {
+  attribute schema { text },
+  element id { text } &
+  element name { text }
+  }
+  -->
+  <define name="attrs">
+    <attribute name="schema">
+      <text/>
+    </attribute>
+  </define>
+  
+  <define name="elems">
+    <element name="id">
+      <text/>
+    </element>
+    <element name="name">
+      <text/>
+    </element>
+    <optional>
+      <element name="description">
+        <text/>
+      </element>
+    </optional>
+  </define>
+  
+  <start>
+    <element name="project">
+      <ref name="attrs"/>
+      <interleave>
+        <ref name="elems"/>
+      </interleave>
+    </element>
+  </start>
+</grammar>

@@ -7,7 +7,7 @@ importPackage(Packages.java.lang);
 // Constants
 
 DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
-SCHEMA_URL = "ffcpl:/resources/schemas/";
+SCHEMA_URL = "http://localhost:8080/channels/schema/"; //TODO  FILTER on @HOSTNAME@:@PORT@
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
 
 function log(content, level) {

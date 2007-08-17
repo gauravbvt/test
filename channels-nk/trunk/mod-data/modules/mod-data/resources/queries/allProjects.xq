@@ -1,6 +1,4 @@
-(: VARIABLES 
-    part : a string that matches part of a project's name
-:)
+(: All projects in the model :)
 <list>
-   { collection('__MODEL__')/project[contains(name,$part)] }
+   { collection('__MODEL__')/project }
 </list>
