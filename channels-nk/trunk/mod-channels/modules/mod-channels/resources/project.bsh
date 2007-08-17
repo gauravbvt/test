@@ -10,7 +10,7 @@ main()
 		case "GET":
 		req=context.createSubRequest("active:queryModel");
 		req.addArgument("xquery", "ffcpl:/resources/queries/allProjects.xq");
-		req.addArgument("variables", new  StringAspect("<properties><property><key>part</key><value>Some</value></property></properties>"));
+		req.addArgument("variables", new  StringAspect("<properties><property><key>part</key><value>My</value></property></properties>"));
 		out=context.issueSubRequest(req);
 
 		break;
