@@ -101,7 +101,7 @@
 					<mx:List id="listProjects" dataProvider="{psbModel.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
 					<mx:HBox>
 						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.GetUserTextInput(this, addProject, 'Enter Project name', true)"/>
-						<common:RemoveButton visible="{permissions.canRemoveProject}" enabled="{listProjects.selectedItems.length > 0}" click="psbModel.projectList.removeItemAt(listProjects.selectedIndex)"/>
+						<common:RemoveButton visible="{permissions.canRemoveProject}" enabled="{psbModel.selectedProject!=null}" click="removeProject()"/>
 					</mx:HBox>
 				</mx:VBox>
 				<mx:Form enabled="{listProjects.selectedItem != null}">
@@ -119,7 +119,7 @@
 					<mx:FormItem label="Participants" direction="vertical" visible="false" includeInLayout="false">
 						<mx:List/>
 						<mx:HBox>
-							<common:AddButton click=""/>
+							<common:AddButton />
 							<common:RemoveButton/>
 						</mx:HBox>
 					</mx:FormItem>
@@ -130,8 +130,8 @@
 				<search:StandardSearchBox width="100%" visible="false" includeInLayout="false"/>
 				<mx:List dataProvider="{psbModel.scenarioList}" width="100%" id="listScenarios" labelField="name" change="selectScenario()"/>
 				<mx:HBox>
-					<common:AddButton visible="{permissions.canAddScenario}" click="addScenario()"/>
-					<common:RemoveButton visible="{permissions.canRemoveScenario}" click="removeScenario()"/>
+					<common:AddButton visible="{permissions.canAddScenario}" click="addScenario()"  enabled="{psbModel.selectedProject!=null}"/>
+					<common:RemoveButton visible="{permissions.canRemoveScenario}" click="removeScenario()"  enabled="{psbModel.selectedScenario!=null}"/>
 				</mx:HBox>
 				<mx:Form enabled="{psbModel.selectedScenario != null}">
 					<mx:FormItem label="Name">

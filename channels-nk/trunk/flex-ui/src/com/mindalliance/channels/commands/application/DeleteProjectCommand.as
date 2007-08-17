@@ -18,7 +18,7 @@ package com.mindalliance.channels.commands.application
 			var id : String = evt.id;
 			
 			var delegate:ProjectDelegate = new ProjectDelegate( this );
-			delegate.deleteProject(id);
+			delegate.deleteElement(id);
 		}
 		
 		public function result(data:Object):void

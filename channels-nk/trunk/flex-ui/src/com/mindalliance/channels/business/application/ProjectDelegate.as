@@ -14,23 +14,14 @@ package com.mindalliance.channels.business.application
 		}
 		
 		public function getProjectList() : void {
-			send("project", null, "GET", responder);
+			performQuery("project", null);
 		}
 		
 		public function createProject(name:String) : void {
 			var project : XML = <project></project>;
 			project.appendChild(<name>{name}</name>);
 			
-			var request:Object = new Object();
-			request["doc"] = project;
-
-			send("project", request, "POST", responder);	
+			createElement(project);	
 		}
-		
-		public function deleteProject(id : String) : void {			
-			send(id, null, "DELETE", responder);	
-		}
-		
-		
 	}
 }

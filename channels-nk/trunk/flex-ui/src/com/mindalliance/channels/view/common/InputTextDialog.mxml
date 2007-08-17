@@ -26,5 +26,5 @@
             
         ]]>
     </mx:Script>
-    <mx:TextInput id="textInput" keyDown="handleKeyEvent(event)" width="100%"/>
+    <mx:TextInput id="textInput" width="100%"/>
 </mx:TitleWindow>

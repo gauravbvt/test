@@ -19,7 +19,7 @@ package com.mindalliance.channels.business.application
 			var request:Object = new Object();
 			request["project"] = projectId;
 
-			send("scenario", request, "GET", responder);
+			performQuery("scenario", [{key : "project", value : projectId}]);
 		}
 		
 	}
