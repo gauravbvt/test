@@ -59,7 +59,7 @@
 				Example /etc/config_dbxml.xml file:
 			</p>
 			<sub name="config_dbxml"/>
-			<p>If successful the response is a boolean indicating whether a container had to be deleted, otherwise an exception is thrown.</p>
+			<p>If successful the response is a boolean indicating whether a container was deleted, otherwise an exception is thrown.</p>
 		</content>
 		<includes>
 			<include name="config_dbxml" type = "xml">

@@ -4,8 +4,8 @@
     <name>doc_mod_data_guide</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_guide.xml</uri>
     <indexable>
-      <title>Accessors Guide</title>
-      <desc>Guide to accessing Channels Data</desc>
+      <title>Guide</title>
+      <desc>Guide to accessing Channels data</desc>
       <keywords/>
     </indexable>
 	<fullTextIndex/>
@@ -121,7 +121,7 @@
 		<name>doc_mod_data_chapter_head</name>
 		<uri>ffcpl:/com/mindalliance/channels/data/doc/chapter-head.xml</uri>
 		<indexable>
-			<title>Channels Data Accessors</title>
+			<title>Channels Data</title>
 			<desc>Documentation for the Channels Data Accessors</desc>
 			<keywords/>
 		</indexable>

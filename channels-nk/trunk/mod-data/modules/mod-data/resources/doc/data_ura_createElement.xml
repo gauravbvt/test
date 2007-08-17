@@ -79,7 +79,7 @@
         </content>
         <includes>
           <include name="initialized" type ="xml">
-            <project schema="ffcpl:/resources/schemas/project.rng">
+            <project schema="ffcpl:/com/mindalliance/channels/data/schemas/project.rng">
               <id>878AD470F6C983655BEE25411</id>
               <name>My project</name>
             </project>

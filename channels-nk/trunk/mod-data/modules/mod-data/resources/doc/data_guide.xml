@@ -17,11 +17,19 @@
 
 <section name="main" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 	<content>
-	<h2>Guide to Channels Model Accessors</h2>
+	<h2>Guide to Channels Data</h2>
 	<p>
-	Berkeley DBXML is a native embedded XML database. Formerly developed by Sleepycat and now a part of Oracle,
-	DBXML is based on the open-source Berkeley database engine.  This library provides a tool library for
-	managing and querying XML document repositories in DBXML.
+	  The Channels Data module gives access to elements stored in persistent models. Configuration determines which
+    model is targeted. The following operations are supported:
+    <ul>
+      <li>Opening a model</li>
+      <li>Deleting a model</li>
+      <li>Querying a model</li>
+      <li>Creating an element</li>
+      <li>Deleting an element</li>
+      <li>Getting an element</li>
+      <li>Updating an element</li>
+    </ul>
 	</p>
 	<h3>Requirements</h3>
 	<p>
@@ -31,8 +39,6 @@
 	<h2>Using the Library</h2>
 	<p>
 	A model is a DBXML container configured in /etc/dbxml_config where the container for current model is named. 
-	The library supports opening the current model, deleting it and querying it.
-	It also supports creating new model elements, getting elements, updating them and deleting them. 
 
 	The following set of accessors provide tools for accessing the model.
 	</p>

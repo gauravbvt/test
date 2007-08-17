@@ -58,13 +58,13 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 	    <p>
-				The <code>channels_data_updateElement</code> accessor validate the updated element against its schema,
-        deletes the element with the same id as the update element (the prior version), if any, 
-        and then the updated element in the currently opened model.
+				The <code>channels_data_updateElement</code> accessor validates the updated element against its schema,
+        deletes the element  (the prior version), if any, with the same id as the updated element (the new version)
+        and then the updated element is stored in the currently opened model.
 			</p>
-			<p>If successful the response is a boolean indicating if a prior version was removed, otherwise an exception is thrown.</p>
+			<p>If successful the response is a boolean indicating whether a prior version was removed, otherwise an exception is thrown.</p>
 			<h3>Validation</h3>
-			The schema attribute value in the updated element is used to validate it.
+			The schema URI held in the root attribute named schema of the updated element is used to validate the element.
 			If the validation fails, an exception is raised. The schemas are 
 			located under /resources/schemas and must be in RelaxNG's XML format. 
 		</content>
