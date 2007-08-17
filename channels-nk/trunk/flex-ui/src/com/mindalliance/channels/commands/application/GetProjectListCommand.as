@@ -29,10 +29,10 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result;
-			if (result.results == null) {
+			if (result.list == null) {
 				model.projectList = new ArrayCollection();	
 			} else {
-				model.projectList = ServiceUtil.convertServiceResults(result.results.project);
+				model.projectList = ServiceUtil.convertServiceResults(result.list.project);
 			}
 			model.selectedProject = null;
 			model.scenarioList = null;
