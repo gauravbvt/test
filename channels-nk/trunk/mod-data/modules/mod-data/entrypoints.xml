@@ -17,7 +17,7 @@
     <name>doc_ura_openModel</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_openModel.xml</uri>
     <indexable>
-      <title>openModel</title>
+      <title>channels_data_openModel</title>
       <desc>Open a persistent model</desc>
       <keywords/>
     </indexable>
@@ -30,7 +30,7 @@
     <name>doc_ura_deleteModel</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_deleteModel.xml</uri>
     <indexable>
-      <title>deleteModel</title>
+      <title>channels_data_deleteModel</title>
       <desc>Delete a persistent model</desc>
       <keywords/>
     </indexable>
@@ -43,7 +43,7 @@
     <name>doc_ura_createElement</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_createElement.xml</uri>
     <indexable>
-      <title>createElement</title>
+      <title>channels_data_createElement</title>
       <desc>Create a model element</desc>
       <keywords/>
     </indexable>
@@ -56,7 +56,7 @@
     <name>doc_ura_deleteElement</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_deleteElement.xml</uri>
     <indexable>
-      <title>deleteElement</title>
+      <title>channels_data_deleteElement</title>
       <desc>Delete an element from the model</desc>
       <keywords/>
     </indexable>
@@ -69,7 +69,7 @@
     <name>doc_ura_getElement</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_getElement.xml</uri>
     <indexable>
-      <title>getElement</title>
+      <title>channels_data_getElement</title>
       <desc>Get a model element</desc>
       <keywords/>
     </indexable>
@@ -82,7 +82,7 @@
     <name>doc_ura_updateElement</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_updateElement.xml</uri>
     <indexable>
-      <title>updateElement</title>
+      <title>channels_data_updateElement</title>
       <desc>Update a model element</desc>
       <keywords/>
     </indexable>
@@ -95,7 +95,7 @@
     <name>doc_ura_queryModel</name>
     <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_queryModel.xml</uri>
     <indexable>
-      <title>queryModel</title>
+      <title>channels_data_queryModel</title>
       <desc>Query a model</desc>
       <keywords/>
     </indexable>
@@ -109,7 +109,7 @@
 		<name>urn:com:mindalliance:channels:data:chapter</name>
 		<uri>ffcpl:/com/mindalliance/channels/data/doc/chapter-menu.chp</uri>
 		<indexable>
-			<title>Channels Model Accessors Book</title>
+			<title>Channels Data Accessors Book</title>
 			<desc>Documentation for the Channels Data Accessors</desc>
 			<keywords/>
 		</indexable>
@@ -121,12 +121,24 @@
 		<name>doc_mod_data_chapter_head</name>
 		<uri>ffcpl:/com/mindalliance/channels/data/doc/chapter-head.xml</uri>
 		<indexable>
-			<title>Channels Model Accessors</title>
+			<title>Channels Data Accessors</title>
 			<desc>Documentation for the Channels Data Accessors</desc>
 			<keywords/>
 		</indexable>
 		<categories>doc postInstallInfo</categories>
 		<group>channels_data</group>
 	</entrypoint>
+  <entrypoint>
+    <name>icon</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/icon.png</uri>
+    <indexable>
+      <title>Icon</title>
+      <desc></desc>
+      <keywords/>
+    </indexable>
+    <categories>img hidden</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
 
 </entrypoints>

@@ -19,56 +19,42 @@
     </publisher>
 	<export>
 		<uri>
-			<match>active:openModel</match>
-			<match>active:deleteModel</match>
-			<match>active:queryModel\+.*</match>
-			<match>active:createElement\+.*</match>
-			<match>active:deleteElement\+.*</match>
-			<match>active:getElement\+.*</match>
-			<match>active:updateElement\+.*</match>
-			<match>ffcpl:/entrypoints.xml</match>
+			<match>active:channels_data_.*</match>
 			<match>ffcpl:/com/mindalliance/channels/data/.*</match>
+			<match>ffcpl:/entrypoints.xml</match>
 		</uri>
 	</export>
-   <rewrite>
-     <rule>
+   <rewrite> <!-- non-accessor resources -->
+     <rule> <!-- xdoc -->
+       <match>ffcpl:/com/mindalliance/channels/data/doc/(.*\.xml)</match>
+       <to>doc:/resources/doc/$1</to>
+     </rule>
+     <rule> <!-- other non-accessor resources -->
        <match>ffcpl:/com/mindalliance/channels/data/(.*)</match>
        <to>ffcpl:/resources/$1</to>
      </rule>
-   </rewrite>
+   	<rule> <!-- accessor resources -->
+   		<match>active:channels_data_(.*?)(\+.*)</match>
+   		<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>	
+   	</rule>
+   	<rule> <!-- accessor resources, no args -->
+   		<match>active:channels_data_(.*?)</match>
+   		<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js</to>	
+   	</rule>
+   </rewrite> 
 	<mapping>
    <rewrite>
      <match>ffcpl:/com/mindalliance/channels/data/(.*)</match>
      <to>ffcpl:/resources/$1</to>
    </rewrite>
-		<rewrite>
-			<match>active:openModel(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/openModel.js$1</to>			
-		</rewrite>
-		<rewrite>
-			<match>active:deleteModel(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/deleteModel.js$1</to>			
-		</rewrite>
-		<rewrite>
-			<match>active:queryModel(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/queryModel.js$1</to>			
-		</rewrite>
-		<rewrite>
-			<match>active:createElement(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/createElement.js$1</to>			
-		</rewrite>
-		<rewrite>
-			<match>active:deleteElement(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/deleteElement.js$1</to>			
-		</rewrite>
-		<rewrite>
-			<match>active:getElement(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/getElement.js$1</to>			
-		</rewrite>
-		<rewrite>
-			<match>active:updateElement(.*)</match>
-			<to>active:javascript+operator@ffcpl:/resources/scripts/updateElement.js$1</to>			
-		</rewrite>
+   <rewrite>
+   		<match>active:channels_data_(.*?)(\+.*)</match>
+   		<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>	
+   </rewrite>
+   <rewrite>
+   		<match>active:channels_data_(.*?)</match>
+   		<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js</to>	
+   </rewrite>
 		<rewrite>
 			<match>doc:(.*)</match>
 			<to>active:doc-generate+operand@ffcpl:$1</to>

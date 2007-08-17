@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <document>
-	<title>openModel</title>
+	<title>channels_data_openModel</title>
 	<!--***************Cascading Style Sheets***************-->
 	<csslist>
 		<css>/xlib/styles/css_ten60_lnf.css</css>
@@ -19,7 +19,7 @@
 	
 	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
 		<content>
-			<name>openModel</name>
+			<name>channels_data_openModel</name>
 			<text>Accessor to open a channels model</text>
 		</content>
 	</section>
@@ -34,14 +34,14 @@
 				<b>t</b>
 			</returns>
 			<syntax>
-				<type><b>openModel</b></type>
+				<type><b>channels_data_openModel</b></type>
 				<target req="false">boolean response</target>
 			</syntax>
 		</content>
 		<includes>
 			<include name="format" type="xml">
 					<instr>
-			      <type>openModel</type>
+			      <type>channels_data_openModel</type>
 			    </instr>
 			</include>
 		</includes>
@@ -50,7 +50,7 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 		  <p>
-				The <code>openModel</code> accessor opens the DBXML container holding the model for the current environment.
+				The <code>channels_data_openModel</code> accessor opens the DBXML container that holds the model for the current environment.
 				The container is created if needed.
 				The container specification is held in /etc/config_dbxml.xml as well as the name of the current environment which
 				determines the DBXML container to be opened.

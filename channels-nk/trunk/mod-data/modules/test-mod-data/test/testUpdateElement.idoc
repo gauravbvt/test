@@ -2,7 +2,7 @@
   <comment>Create an element and update it using its id</comment>
   <seq>
     <instr>
-      <type>createElement</type>
+      <type>channels_data_createElement</type>
       <doc>
         <project>
           <name>My project</name>
@@ -24,7 +24,7 @@
       <target>var:update</target>
     </instr>
     <instr>
-      <type>updateElement</type>
+      <type>channels_data_updateElement</type>
       <doc>var:update</doc>
       <target>this:response</target>
     </instr>

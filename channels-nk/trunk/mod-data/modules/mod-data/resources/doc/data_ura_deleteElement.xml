@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <document>
-	<title>deleteElement</title>
+	<title>channels_data_deleteElement</title>
 	<!--***************Cascading Style Sheets***************-->
 	<csslist>
 		<css>/xlib/styles/css_ten60_lnf.css</css>
@@ -19,7 +19,7 @@
 	
 	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
 		<content>
-			<name>deleteElement</name>
+			<name>channels_data_deleteElement</name>
 			<text>Accessor to delete an element in the opened model</text>
 		</content>
 	</section>
@@ -34,7 +34,7 @@
 				<b>t</b>
 			</returns>
 			<syntax>
-				<type><b>deleteElement</b></type>
+				<type><b>channels_data_deleteElement</b></type>
 				<id req="true">the element's id</id>
 				<target req="false">boolean response</target>
 			</syntax>
@@ -42,7 +42,7 @@
 		<includes>
 			<include name="format" type="xml">
 		    <instr>
-		      <type>deleteElement</type>
+		      <type>channels_data_deleteElement</type>
 		      <id>1230980875AD45A6BC</id>
 		      <target>this:response</target>
 		    </instr>
@@ -53,7 +53,7 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 	    <p>
-				The <code>deleteElement</code> accessor removes the element with the given unique id from the currently opened model.
+				The <code>channels_data_deleteElement</code> accessor removes the element with the given unique id from the currently opened model.
 			</p>
 			<p>If successful the response is the boolean true</p>
 		</content>

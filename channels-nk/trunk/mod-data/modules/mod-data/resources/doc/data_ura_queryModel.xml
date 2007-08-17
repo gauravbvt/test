@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-  <title>queryModel</title>
+  <title>channels_data_queryModel</title>
   <!--***************Cascading Style Sheets***************-->
   <csslist>
     <css>/xlib/styles/css_ten60_lnf.css</css>
@@ -18,7 +18,7 @@
   
   <section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
     <content>
-      <name>queryModel</name>
+      <name>channels_data_queryModel</name>
       <text>Accessor to create query the opened model</text>
     </content>
   </section>
@@ -35,7 +35,7 @@
       </returns>
       <syntax>
         <type>
-          <b>queryModel</b>
+          <b>channels_data_queryModel</b>
         </type>
         <xquery req="true">an xquery resource</xquery>
         <variables req="true">an xml resource with the values of the variables declared in
@@ -46,7 +46,7 @@
     <includes>
       <include name="format" type="xml">
         <instr>
-          <type>queryModel</type>
+          <type>channels_data_queryModel</type>
           <xquery>
             ffcpl:/com/mindalliance/channels/data/queries/allProjects.xq
           </xquery>
@@ -67,7 +67,7 @@
   <section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
     <content>
       <p> The
-        <code>queryModel</code> accessor applies an xquery on the currently opened model.
+        <code>channels_data_queryModel</code> accessor applies an xquery on the currently opened model.
         </p>
       <p>If successful the response is a list of results as xml, otherwise an exception is
         thrown.</p>

@@ -4,7 +4,7 @@
   </comment>
   <seq>
     <instr>
-      <type>createElement</type>
+      <type>channels_data_createElement</type>
       <doc>
         <project>
           <name>My project</name>

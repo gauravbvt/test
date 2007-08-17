@@ -2,7 +2,7 @@
   <comment>Create an element and get it back using its id</comment>
   <seq>
     <instr>
-      <type>createElement</type>
+      <type>channels_data_createElement</type>
       <doc>
         <project>
           <name>My project</name>
@@ -17,7 +17,7 @@
       <target>var:id</target>
     </instr>
     <instr>
-      <type>getElement</type>
+      <type>channels_data_getElement</type>
       <id>var:id</id>
       <target>this:response</target>
      </instr>

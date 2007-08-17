@@ -37,13 +37,13 @@
 	The following set of accessors provide tools for accessing the model.
 	</p>
 	<ul>
-		<li><link name="doc_ura_openModel">openModel</link></li>
-		<li><link name="doc_ura_deleteModel">deleteModel</link></li>
-		<li><link name="doc_ura_queryModel">queryModel</link></li>
-		<li><link name="doc_ura_createElement">createElement</link></li>
-		<li><link name="doc_ura_deleteElement">deleteElement</link></li>
-		<li><link name="doc_ura_getElement">getElement</link></li>
-		<li><link name="doc_ura_updateElement">updateElement</link></li>
+		<li><link name="doc_ura_openModel">channels_data_openModel</link></li>
+		<li><link name="doc_ura_deleteModel">channels_data_deleteModel</link></li>
+		<li><link name="doc_ura_queryModel">channels_data_queryModel</link></li>
+		<li><link name="doc_ura_createElement">channels_data_createElement</link></li>
+		<li><link name="doc_ura_deleteElement">channels_data_deleteElement</link></li>
+		<li><link name="doc_ura_getElement">channels_data_getElement</link></li>
+		<li><link name="doc_ura_updateElement">channels_data_updateElement</link></li>
 	</ul>
 	</content>
 	<includes/>

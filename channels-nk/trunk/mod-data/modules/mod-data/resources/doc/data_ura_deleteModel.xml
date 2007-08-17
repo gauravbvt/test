@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <document>
-	<title>deleteModel</title>
+	<title>channels_data_deleteModel</title>
 	<!--***************Cascading Style Sheets***************-->
 	<csslist>
 		<css>/xlib/styles/css_ten60_lnf.css</css>
@@ -19,7 +19,7 @@
 	
 	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
 		<content>
-			<name>deleteModel</name>
+			<name>channels_data_deleteModel</name>
 			<text>Accessor to delete a channels model</text>
 		</content>
 	</section>
@@ -34,14 +34,14 @@
 				<b>t</b>
 			</returns>
 			<syntax>
-				<type><b>deleteModel</b></type>
+				<type><b>channels_data_deleteModel</b></type>
 				<target req="false">boolean response</target>
 			</syntax>
 		</content>
 		<includes>
 			<include name="format" type="xml">
 					<instr>
-			      <type>deleteModel</type>
+			      <type>channels_data_deleteModel</type>
 			    </instr>
 			</include>
 		</includes>
@@ -50,7 +50,7 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 		  <p>
-				The <code>deleteModel</code> accessor deletes the DBXML container holding the model for the current environment.
+				The <code>channels_data_deleteModel</code> accessor deletes the DBXML container holding the model for the current environment.
 				If the container does not exist, the accessor logs a warning and does nothing.
 				The container specification is held in /etc/config_dbxml.xml as well as the name of the current environment which
 				determines the DBXML container to be deleted.

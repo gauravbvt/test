@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <document>
-      <title>createElement</title>
+      <title>channels_data_createElement</title>
       <!--***************Cascading Style Sheets***************-->
       <csslist>
         <css>/xlib/styles/css_ten60_lnf.css</css>
@@ -18,7 +18,7 @@
       
       <section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
         <content>
-          <name>createElement</name>
+          <name>channels_data_createElement</name>
           <text>Accessor to create an element in the opened model</text>
         </content>
       </section>
@@ -33,7 +33,7 @@
             <b>t</b>
           </returns>
           <syntax>
-            <type><b>createElement</b></type>
+            <type><b>channels_data_createElement</b></type>
             <kind req="true">the kind of element</kind>
             <doc req="true">an xml resource with the initial state of the element</doc>
             <target req="false">the created element as xml</target>
@@ -42,7 +42,7 @@
         <includes>
           <include name="format" type="xml">
             <instr>
-              <type>createElement</type>
+              <type>channels_data_createElement</type>
               <doc>
                 <project>
                   <name>My project</name>
@@ -58,7 +58,7 @@
       <section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
         <content>
           <p>
-            The <code>createElement</code> accessor puts a new element in the currently opened model.
+            The <code>channels_data_createElement</code> accessor puts a new element in the currently opened model.
             But first it initializes it with a unique id and the uri of the schema by which it is validated.
             Then it validates the new element against its schema before putting it into the DBXML container of the model.
           </p>

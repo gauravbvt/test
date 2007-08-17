@@ -4,10 +4,10 @@
   </comment>
   <seq>
     <instr>
-      <type>deleteModel</type>
+      <type>channels_data_deleteModel</type>
     </instr>
     <instr>
-      <type>openModel</type>
+      <type>channels_data_openModel</type>
       <target>this:response</target>
     </instr>
   </seq>
