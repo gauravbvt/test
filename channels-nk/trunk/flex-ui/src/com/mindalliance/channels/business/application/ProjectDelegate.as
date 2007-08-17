@@ -21,7 +21,7 @@ package com.mindalliance.channels.business.application
 			var project : XML = <project></project>;
 			project.appendChild(<name>{name}</name>);
 			
-			createElement(project);	
+			createElement("project", project);	
 		}
 	}
 }

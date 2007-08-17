@@ -38,8 +38,8 @@ package com.mindalliance.channels.business
 			send("element?id=" + id, null, "DELETE");	
 		}
 		
-		public function createElement(doc : XML) : void{
-			send("element", doc, "POST");	
+		public function createElement(type: String, doc : XML) : void{
+			send(type, doc, "POST");	
 		}
 		
 		public function updateElement(id : String, doc : XML) : void {
