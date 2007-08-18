@@ -13,6 +13,7 @@
 		<property name="lib" value="${base}/lib"/>
 		<property name="mod-data-lib" value="${src}/lib"/>
 		<property name="dist.dir" value="../../dist"/>
+    <property name="project.dir" value="../.."/>
 	</target>
 
     <target depends="init" name="compile">
@@ -34,10 +35,18 @@
 			    <exclude name="**/.nbattrs*"/>
 			    <exclude name="**/.svn"/>
 		      <exclude name="**/*.java"/>
+          <exclude name="config/**"/>
         </jar>
     </target>
+  
+  <target depends="init" description="Apply filters" name="filter">
+    <filter filtersFile="${project.dir}/deploy.properties"/>
+    <copy todir="${dst}" filtering="true" overwrite="true">
+      <fileset dir="${dst}/tofilter"/>
+     </copy>
+  </target>
 
-	<target depends="init,clean, build, jar" description="Build everything." name="all">
+	<target depends="init,clean, filter, build, jar" description="Build everything." name="all">
         <echo message="${app}  built."/>
     </target>
 

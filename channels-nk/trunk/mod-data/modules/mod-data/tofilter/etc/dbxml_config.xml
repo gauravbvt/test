@@ -1,4 +1,4 @@
-<configs env="test">
+<configs env="@environment@">
   <config name="prod">
     <dbxml>
       <name>channels_dbxml</name>
