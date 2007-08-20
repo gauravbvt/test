@@ -2,7 +2,8 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-
+	import mx.collections.ArrayCollection;
+	
 	[Bindable]
 	public class ElementVO implements IValueObject
 	{
@@ -37,6 +38,16 @@ package com.mindalliance.channels.vo
 		
 		public function set description(description : String) : void {
 			this._description = description;	
+		}
+		
+		protected static function fromXMLList(key : String, results : Object) : ArrayCollection {
+			if (results.list == null || results.list[key] == null) {
+				return new ArrayCollection();
+			} else if (results.list[key] is ObjectProxy) {
+				return new ArrayCollection([results]);
+			} else { 
+				return results.list[key] as ArrayCollection;
+			}		
 		}
 	}
 }

@@ -2,6 +2,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
+	import mx.collections.ArrayCollection;
 	
 	[Bindable]
 	public class ScenarioVO extends ElementVO implements IValueObject
@@ -23,13 +24,52 @@ package com.mindalliance.channels.vo
 			_projectId = projectId;
 		}
 		
+		
+		/**
+		 * Produces XML of the form:
+		 * 
+		 * <scenario>
+		 *   <id>{id}</id>
+		 *   <name>{name}</name>
+		 *   <description>{description}</description>
+		 * </scenario>
+		 */
 		public function toXML() : XML {
 			return <scenario>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
+						<projectId>{projectId}</projectId>
 					</scenario>;
 		
+		}
+		/**
+		 * Expects XML of the form:
+		 * <scenario>
+		 *   <id>{id}</id>
+		 *   <name>{name}</id>
+		 *   <description>{description}</description>
+		 *   <projectId>{projectId}</projectId>
+		 * </scenario>
+		 */
+		public static function fromXML( obj : Object ) : ScenarioVO {
+				return new ScenarioVO(obj.id, obj.name, obj.projectId, obj.description);
+		}
+		
+		/**
+		 * Produces a list from XML of the form:
+		 * 
+		 * <list>
+		 *   <scenario>
+		 *     <id>{id}</id>
+		 *     <name>{name}</id>
+		 *   </scenario>
+		 *   ...
+		 * </list>
+		 * 
+		 */
+		public static function fromXMLList( xml : Object ) : ArrayCollection {
+			
 		}
 		
 	}
