@@ -7,9 +7,12 @@ package com.mindalliance.channels.events.application
 	{
 		public static const UpdateScenario_Event:String = "<UpdateScenarioEvent>";
 		
-		public function UpdateScenarioEvent() 
+		public var id : String;
+		
+		public function UpdateScenarioEvent(id : String) 
 		{
 			super( UpdateScenario_Event );
+			this.id = id;
 		}
 	}
 }

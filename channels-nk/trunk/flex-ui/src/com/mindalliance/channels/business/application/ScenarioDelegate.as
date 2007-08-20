@@ -21,6 +21,13 @@ package com.mindalliance.channels.business.application
 
 			performQuery("allScenarios", request);
 		}
-		
+		public function createScenario(name:String, projectId:String) : void {
+			var scenario : XML = <scenario></scenario>;
+			scenario.appendChild(<name>{name}</name>);
+			scenario.appendChild(<project>{projectId}</project>);
+			
+			
+			createElement("scenario", scenario);	
+		}
 	}
 }

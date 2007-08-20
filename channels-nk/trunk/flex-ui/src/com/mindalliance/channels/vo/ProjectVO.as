@@ -35,5 +35,15 @@ package com.mindalliance.channels.vo
 		public function set manager(manager: String) : void {
 			this._manager = manager;	
 		}
+		
+		public function toXML() : XML {
+			return <project>
+						<id>{id}</id>
+						<name>{name}</name>
+						<description>{description}</description>
+						<manager>{manager}</manager>	
+					</project>;
+		
+		}
 	}
 }

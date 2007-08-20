@@ -72,9 +72,11 @@
  	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteScenarioEvent(psbModel.selectedScenario.id));
  	        }
  	        
- 	        private function addScenario() : void
+ 	        private function addScenario(name : String) : void
  	        {
- 	        		
+ 	        	if (name != null) {
+					CairngormEventDispatcher.getInstance().dispatchEvent(new CreateScenarioEvent(name, psbModel.selectedProject.id));
+				}	
  	        }
  	        
  	        private function loadScenario() : void 
@@ -100,7 +102,7 @@
 				<mx:VBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:List id="listProjects" dataProvider="{psbModel.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
 					<mx:HBox>
-						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.GetUserTextInput(this, addProject, 'Enter Project name', true)"/>
+						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.GetUserTextInput(this, addProject, 'Enter Project Name', true)"/>
 						<common:RemoveButton visible="{permissions.canRemoveProject}" enabled="{psbModel.selectedProject!=null}" click="removeProject()"/>
 					</mx:HBox>
 				</mx:VBox>
@@ -130,7 +132,7 @@
 				<search:StandardSearchBox width="100%" visible="false" includeInLayout="false"/>
 				<mx:List dataProvider="{psbModel.scenarioList}" width="100%" id="listScenarios" labelField="name" change="selectScenario()"/>
 				<mx:HBox>
-					<common:AddButton visible="{permissions.canAddScenario}" click="addScenario()"  enabled="{psbModel.selectedProject!=null}"/>
+					<common:AddButton visible="{permissions.canAddScenario}" click="UtilFuncs.GetUserTextInput(this, addScenario, 'Enter Scenario Name', true)"  enabled="{psbModel.selectedProject!=null}"/>
 					<common:RemoveButton visible="{permissions.canRemoveScenario}" click="removeScenario()"  enabled="{psbModel.selectedScenario!=null}"/>
 				</mx:HBox>
 				<mx:Form enabled="{psbModel.selectedScenario != null}">

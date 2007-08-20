@@ -32,5 +32,14 @@ package com.mindalliance.channels.vo
 			_description = description;
 		}
 		
+		public function toXML() : XML {
+			return <scenario>
+						<id>{id}</id>
+						<name>{name}</name>
+						<description>{description}</description>
+					</scenario>;
+		
+		}
+		
 	}
 }

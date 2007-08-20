@@ -51,15 +51,16 @@ package com.mindalliance.channels.business
 			service.url = ChannelsModelLocator.getInstance().urlRoot + '/' + key
 			if (method == "PUT" || method == "DELETE") {
 				service.url += "&method=" + method;
-				service.method = "POST";
+				service.method ="POST";
 			} else {
 				service.method = method;	
 			}
 			if (doc != null) {
 				service.contentType = "application/xml";	
 				service.request = doc;
-			} else if (service.method == "POST") {
-				service.request = "<delete/>";	
+			} else if (method == "DELETE") {
+				service.contentType = "application/xml";	
+				service.request = "<delete/>";
 			}
 			var token:AsyncToken = service.send();
 			token.addResponder( responder );	
