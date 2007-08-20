@@ -19,7 +19,7 @@ main() {
 				out=context.issueSubRequest(req);
 			} catch(Exception e) {
 				out = new StringAspect("<error>Unable to process query: " + query 
-					+ "." + e.getMessage() + "</error>")
+					+ "." + e.getMessage() + "</error>");
 				e.printStackTrace();
 			}
 		}
