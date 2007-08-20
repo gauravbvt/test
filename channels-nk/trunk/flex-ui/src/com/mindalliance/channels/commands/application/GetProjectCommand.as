@@ -22,7 +22,6 @@ package com.mindalliance.channels.commands.application
 		{
 			var evt:GetProjectEvent = event as GetProjectEvent;			
 			var id : String = evt.id;
-			model.selectedProjectId = evt.id;
 			
 			if (id != null) {
 				var delegate:ProjectDelegate = new ProjectDelegate( this );

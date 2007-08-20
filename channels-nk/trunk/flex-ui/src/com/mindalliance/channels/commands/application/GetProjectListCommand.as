@@ -3,9 +3,11 @@ package com.mindalliance.channels.commands.application
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.util.ServiceUtil;
 	import com.mindalliance.channels.business.application.ProjectDelegate;
 	import com.mindalliance.channels.events.application.GetProjectListEvent;
+	import com.mindalliance.channels.events.application.GetProjectEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
 	
@@ -29,14 +31,9 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result;
-			if (result.list == null) {
-				model.projectList = new ArrayCollection();	
-			} else {
-				model.projectList = ServiceUtil.convertServiceResults(result.list.project);
-			}
-			model.selectedProject = null;
-			model.scenarioList = null;
-			model.selectedScenario = null;
+			model.projectList = ServiceUtil.convertServiceList("project", result);
+			
+        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 		}
 		
 		public function fault(info:Object):void

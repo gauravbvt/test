@@ -10,13 +10,13 @@ package com.mindalliance.channels.util
 	
 	public class ServiceUtil
 	{
-		public static function convertServiceResults(results : Object) : ArrayCollection {
-			if (results == null) {
+		public static function convertServiceList(key : String, results : Object) : ArrayCollection {
+			if (results.list == null || results.list[key] == null) {
 				return new ArrayCollection();
-			} else if (results is ObjectProxy) {
+			} else if (results.list[key] is ObjectProxy) {
 				return new ArrayCollection([results]);
 			} else { 
-				return results as ArrayCollection;
+				return results.list[key] as ArrayCollection;
 			}		
 		}
 

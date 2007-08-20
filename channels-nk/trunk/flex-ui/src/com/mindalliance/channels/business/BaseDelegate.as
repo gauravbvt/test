@@ -23,8 +23,8 @@ package com.mindalliance.channels.business
 		{
 			var url : String = "model?query=" + name;
 			if (parameters != null) {
-				for (var pair:Object in parameters) {
-					url += pair.key + "=" +pair.value;	
+				for (var key:String in parameters) {
+					url += "&" + key + "=" + parameters[key];	
 				}
 			}
 			send(url, null, "GET");
@@ -58,6 +58,8 @@ package com.mindalliance.channels.business
 			if (doc != null) {
 				service.contentType = "application/xml";	
 				service.request = doc;
+			} else if (service.method == "POST") {
+				service.request = "<delete/>";	
 			}
 			var token:AsyncToken = service.send();
 			token.addResponder( responder );	

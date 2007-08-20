@@ -63,13 +63,13 @@
  	        
  	        private function removeProject() : void
  	        {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteProjectEvent(psbModel.selectedProjectId));
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteProjectEvent(psbModel.selectedProject.id));
  	        }
  	        
  	        private function removeScenario() : void
  	        {
  	        	
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteScenarioEvent(psbModel.selectedScenarioId));
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteScenarioEvent(psbModel.selectedScenario.id));
  	        }
  	        
  	        private function addScenario() : void

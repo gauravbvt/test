@@ -16,10 +16,10 @@ package com.mindalliance.channels.business.application
 		
 		public function getScenarioList(projectId : String) : void {
 			
-			var request:Object = new Object();
+			var request:Array = new Array();
 			request["project"] = projectId;
 
-			performQuery("scenario", [{key : "project", value : projectId}]);
+			performQuery("allScenarios", request);
 		}
 		
 	}

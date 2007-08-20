@@ -10,13 +10,9 @@ package com.mindalliance.channels.model.application
 	{
 		public var projectList : ArrayCollection;
 		
-		public var selectedProjectId : String;
-		
 		public var selectedProject : ProjectVO;
 		
 		public var scenarioList : ArrayCollection;
-		
-		public var selectedScenarioId : String;
 		
 		public var selectedScenario : ScenarioVO;
 
