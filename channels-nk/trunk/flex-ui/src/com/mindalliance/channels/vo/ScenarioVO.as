@@ -14,7 +14,6 @@ package com.mindalliance.channels.vo
 		}
 		
 		private var _projectId : String;
-		private var _description : String;
 		
 		public function get projectId() : String {
 			return _projectId;
@@ -22,14 +21,6 @@ package com.mindalliance.channels.vo
 		
 		public function set projectId(projectId : String) : void {
 			_projectId = projectId;
-		}
-		
-		public function get description() : String {
-			return _description;
-		}
-		
-		public function set description(description : String) : void {
-			_description = description;
 		}
 		
 		public function toXML() : XML {
