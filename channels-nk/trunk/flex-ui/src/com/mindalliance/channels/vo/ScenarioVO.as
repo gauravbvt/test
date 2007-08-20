@@ -68,8 +68,8 @@ package com.mindalliance.channels.vo
 		 * </list>
 		 * 
 		 */
-		public static function fromXMLList( xml : Object ) : ArrayCollection {
-			
+		public static function fromXMLList( obj : Object ) : ArrayCollection {
+			return ElementVO.fromXMLList("scenario", obj);
 		}
 		
 	}
