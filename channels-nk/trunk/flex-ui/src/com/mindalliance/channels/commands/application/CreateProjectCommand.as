@@ -3,14 +3,16 @@ package com.mindalliance.channels.commands.application
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.channels.events.application.CreateProjectEvent;
+	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.application.ProjectDelegate;
+	import com.mindalliance.channels.events.application.CreateProjectEvent;
+	import com.mindalliance.channels.events.application.GetProjectListEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
+	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
-	import com.mindalliance.channels.events.application.GetProjectEvent;
 	
 	public class CreateProjectCommand implements ICommand, IResponder
 	{
@@ -30,7 +32,7 @@ package com.mindalliance.channels.commands.application
 		{
 			var result:Object = (data as ResultEvent).result;
 			if (result.project != null) {
-				model.projectList.addItem(result);
+				CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectListEvent() );
 			}
 		}
 		

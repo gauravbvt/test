@@ -8,7 +8,7 @@ package com.mindalliance.channels.business.application
 	import mx.rpc.IResponder;
 	
 	public class ScenarioDelegate extends BaseDelegate
-	{	
+	{ 
 		public function ScenarioDelegate(responder:IResponder)
 		{
 			super(responder);

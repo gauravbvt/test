@@ -56,9 +56,9 @@ package com.mindalliance.channels.business
 				service.method = method;	
 			}
 			if (doc != null) {
-				service.request = "application/xml";	
+				service.contentType = "application/xml";	
+				service.request = doc;
 			}
-			service.request = doc;
 			var token:AsyncToken = service.send();
 			token.addResponder( responder );	
 		}

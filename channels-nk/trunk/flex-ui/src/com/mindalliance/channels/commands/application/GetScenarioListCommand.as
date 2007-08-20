@@ -32,7 +32,7 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result;
-			model.scenarioList = ServiceUtil.convertServiceResults(result.scenarios.scenario);
+			model.scenarioList = ServiceUtil.convertServiceResults(result.list.scenario);
 		}
 		
 		public function fault(info:Object):void
