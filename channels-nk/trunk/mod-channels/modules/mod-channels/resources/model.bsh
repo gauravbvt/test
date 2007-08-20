@@ -1,0 +1,34 @@
+import org.ten60.netkernel.layer1.representation.*;
+import org.ten60.netkernel.xml.representation.*;
+import com.ten60.netkernel.urii.aspect.*;
+
+main() {
+	
+	out = null;
+	
+	if(context.exists("this:param:param")) {
+		params = (IAspectNVP) context.sourceAspect("this:param:param", IAspectNVP.class);
+		query=params.getValue("query");
+		
+		if(query != null) {
+			queryScript = "ffcpl:/resources/queries/" + query + ".xq";
+
+			try {
+				req=context.createSubRequest("active:channels_data_queryModel");
+				req.addArgument("xquery", queryScript);
+				out=context.issueSubRequest(req);
+			} catch(Exception e) {
+				out = new StringAspect("<error>Unable to process query: " + query 
+					+ "." + e.getMessage() + "</error>")
+				e.printStackTrace();
+			}
+		}
+
+	} else {
+		out = new StringAspect("<error>Expecting parameters but didn't get any in model.bsh</error>");
+	}
+	
+  	response = context.createResponseFrom(out);
+  	response.setMimeType("text/xml");
+  	context.setResponse(response);
+}

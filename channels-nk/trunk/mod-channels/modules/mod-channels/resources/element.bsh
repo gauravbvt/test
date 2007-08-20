@@ -1,0 +1,98 @@
+import org.ten60.netkernel.layer1.representation.*;
+import org.ten60.netkernel.xml.representation.*;
+import com.ten60.netkernel.urii.aspect.*;
+
+main() {
+	method = (((IAspectString)context.sourceAspect("literal:method", IAspectString.class)).getString());
+
+	System.out.println("METHOD: " + method);
+	response = context.createResponseFrom(new StringAspect("<foo>bleah</foo>"));
+	type=context.getThisRequest().getArgument("type");
+	System.out.println("type: " + type );
+
+	if(type != null) {
+		// regular POST to /channels/<elementClass>
+		element=context.sourceAspect("this:param:param", IAspectString.class);
+		System.out.println("project: " + element.getString());		
+		req=context.createSubRequest("active:channels_data_createElement");
+		req.addArgument("doc", element);
+		req.addArgument("kind", new StringAspect("<string>" + type + "</string>"));
+		try {
+			out=context.issueSubRequest(req);
+			System.out.println("output: " + context.transrept(out, IAspectString.class).getString());
+		} catch( Throwable t ) {
+			out = new StringAspect("<error> Error creating project </error>");
+		}
+		response=context.createResponseFrom(out);		
+	} else {
+		// particular element manipulation
+		params = getParams(context);
+
+		if(params != null) {
+			id=params.getValue("id");			
+
+			switch(method) {
+				case "GET":
+				req=context.createSubRequest("active:channels_data_getElement");
+				req.addArgument("id", new StringAspect("<id>" + id + "</id>"));
+				out = null;
+
+				try {
+					out=context.issueSubRequest(req);
+				} catch(Throwable t) {
+					out=new StringAspect("<error> Could not find element with id=" + id + "</error>");
+				}
+
+				response=context.createResponseFrom(out);
+				break;
+				case "POST":
+				System.out.println("1");
+				method = params.getValue("method");
+				System.out.println("2");			
+				if(method!=null) {
+					switch(method) {
+						case "DELETE":
+						System.out.println("DELETE: " + id );
+						req=context.createSubRequest("active:channels_data_deleteElement");
+						req.addArgument("id", new StringAspect("<id>" + id + "</id>"));
+						out=null;
+						try {
+							out=context.issueSubRequest(req);
+						} catch(Throwable t) {
+							out=new StringAspect("<error> Could not delete element with id=" + id + "</error>");						
+						}
+
+						response=context.createResponseFrom(out);
+						break;
+						case "PUT":
+						break;
+						default:
+						// TODO: Handle error
+						break;
+					}
+				} else {
+					// TODO: Handle Error
+				}
+				break;
+				default :
+				// TODO: Handle Error
+				break;
+			}
+		}
+
+	}
+
+	response.setMimeType("text/xml");
+	context.setResponse(response);
+}
+
+getParams(context) {
+	params = null;
+	if(context.exists("this:param:param2")) {
+		params = (IAspectNVP) context.sourceAspect("this:param:param2", IAspectNVP.class);
+		} else if(context.exists("this:param:param")) {
+			params = (IAspectNVP) context.sourceAspect("this:param:param", IAspectNVP.class);
+		}
+
+		return params;
+	}

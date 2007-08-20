@@ -3,6 +3,10 @@ import com.ten60.netkernel.urii.aspect.*;
 
 main()
 { 
+	// 
+	// This BeanShell should not be called anymore. We'll remove it from SVN shortly.
+	//
+	
 	method = (((IAspectString)context.sourceAspect("literal:method", IAspectString.class)).getString());
 	out = null;
 	
@@ -15,6 +19,7 @@ main()
 
 		break;
 		case "POST":
+		System.out.println("HELLO");
 		kind=context.getThisRequest().getArgument("kind");	
 		project=context.sourceAspect("this:param:param", IAspectString.class);
 		req=context.createSubRequest("active:createElement");
