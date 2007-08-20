@@ -2,24 +2,26 @@
   <!--
   include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
   include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  
   start =
-      element project {
+      element organizaion {
   	    {attrs},
   	    {elems} & 
-        element manager {text}?
+        element expertise {text} &
+        element organizationId {text} &
       }
   -->
   <include href="http://@host@:@port@/channels/schema/ext_attrs.rng"/>
   <include href="http://@host@:@port@/channels/schema/ext_elems.rng"/>
+  <include href="http://@host@:@port@/channels/schema/ext_address.rng"/>
   
   <start>
-    <element name="project">
+    <element name="organization">
       <ref name="attrs"/>
       <interleave>
         <ref name="elems"/>
-        <optional>
-          <element name="manager"><text/></element>
-        </optional>
+        <element name="organizationId"><text/></element>
+        <element name="expertise"><text/></element>
       </interleave>
     </element>
   </start>

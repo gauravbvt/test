@@ -1,0 +1,21 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+    element address {
+      element street {text} &
+      element city {text} &
+      element state {text} 
+  }
+  -->
+  <define name="address">
+    <element name="street">
+      <text/>
+    </element>
+    <element name="city">
+      <text/>
+    </element>
+    <element name="state">
+      <text/>
+    </element>
+  </define>
+  
+</grammar>

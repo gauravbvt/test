@@ -1,4 +1,12 @@
 (: All projects in the model :)
 <list>
-   { collection('__MODEL__')/project }
+	{
+		 for $e in collection('__MODEL__')/project
+		 order by $e/name
+		 return
+		 	<project>
+		 		<id>{$e/id}</id>
+		 		<name>{$e/name}</name>
+		 	</project>
+	}
 </list>

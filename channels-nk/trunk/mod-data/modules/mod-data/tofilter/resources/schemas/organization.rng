@@ -1,0 +1,32 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  include href="http://@host@:@port@/channels/schema/ext_address.rnc"
+  
+  start =
+      element organizaion {
+  	    {attrs},
+  	    {elems} & 
+        element abbreviation {text} &
+        element parentId {text} &
+    		{address}
+      }
+  -->
+  <include href="http://@host@:@port@/channels/schema/ext_attrs.rng"/>
+  <include href="http://@host@:@port@/channels/schema/ext_elems.rng"/>
+  <include href="http://@host@:@port@/channels/schema/ext_address.rng"/>
+  
+  <start>
+    <element name="organization">
+      <ref name="attrs"/>
+      <interleave>
+        <ref name="elems"/>
+        <element name="abbreviation"><text/></element>
+        <element name="parentId"><text/></element>
+        <ref name="address"/>
+      </interleave>
+    </element>
+  </start>
+  
+</grammar>

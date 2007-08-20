@@ -1,0 +1,46 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  include href="http://@host@:@port@/channels/schema/ext_address.rnc"
+  
+  start =
+      element person {
+  	    {attrs},
+  	    {elems} & 
+        element firstName {text} &
+        element lastName {text} &
+        element email {text} &
+        element officePhone {t &ext}
+        element cellPhone {text} &
+    		{address}
+    		element roles {
+    			element roleId {text}
+    		}*
+      }
+  -->
+  <include href="http://@host@:@port@/channels/schema/ext_attrs.rng"/>
+  <include href="http://@host@:@port@/channels/schema/ext_elems.rng"/>
+  <include href="http://@host@:@port@/channels/schema/ext_address.rng"/>
+  
+  <start>
+    <element name="person">
+      <ref name="attrs"/>
+      <interleave>
+        <ref name="elems"/>
+        <element name="firstName"><text/></element>
+        <element name="lastName"><text/></element>
+        <element name="email"><text/></element>
+        <element name="officePhone"><text/></element>
+        <element name="cellPhone"><text/></element>
+        <ref name="address"/>
+        <element name="roles">
+          <zeroOrMore>
+            <element name="roleId"><text/></element>
+          </zeroOrMore>
+        </element>
+      </interleave>
+    </element>
+  </start>
+  
+</grammar>

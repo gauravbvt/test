@@ -1,0 +1,25 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  start =
+      element scenario {
+  	    {attrs},
+  	    {elems} & 
+        element projectId {text}
+      }
+  -->
+  <include href="http://@host@:@port@/channels/schema/ext_attrs.rng"/>
+  <include href="http://@host@:@port@/channels/schema/ext_elems.rng"/>
+  
+  <start>
+    <element name="scenario">
+      <ref name="attrs"/>
+      <interleave>
+        <ref name="elems"/>
+        <element name="projectId"><text/></element>
+      </interleave>
+    </element>
+  </start>
+  
+</grammar>
