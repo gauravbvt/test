@@ -10,14 +10,13 @@ package com.mindalliance.channels.vo
 	{
 		public function PersonVO( id : String, 
 								name : String, 
-								projectId : String, 
 								description : String, 		
 								firstName : String = "",
 								lastName : String = "",
 								email : String = "",
 								officePhone : String = "",
 								cellPhone : String = "",
-								roles : ArrayCollection = new ArrayCollection()) {
+								roles : ArrayCollection) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
@@ -72,7 +71,24 @@ package com.mindalliance.channels.vo
 		public function get roles() : ArrayCollection {
 			return _roles;
 		}
-
+		/**
+		 * Produces XML of the form:
+		 * 
+		 * <person>
+		 *   <id>{id}</id>
+		 *   <name>{name}</name>
+		 *   <description>{description}</description>  
+		 *   <firstName>{firstName}</firstName>
+		 *   <lastName>{lastName}</lastName>
+		 *   <email>{email}</email>
+		 *   <officePhone>{officePhone}</officePhone>
+		 *   <cellPhone>{cellPhone}</cellPhone>
+		 *   <roles>
+		 *     <roleId>{roleId}</roleId>
+		 *     ...
+		 *   </roles>
+		 * </person>
+		 */
 		public function toXML() : XML {
 			
 			var personXML : XML = <person>
@@ -91,6 +107,55 @@ package com.mindalliance.channels.vo
 			}
 			personXML.appendChild(rolesXML);
 			return personXML;
+		}
+
+		/**
+		 * Expects XML of the form:
+		 * <person>
+		 *   <id>{id}</id>
+		 *   <name>{name}</name>
+		 *   <description>{description}</description>  
+		 *   <firstName>{firstName}</firstName>
+		 *   <lastName>{lastName}</lastName>
+		 *   <email>{email}</email>
+		 *   <officePhone>{officePhone}</officePhone>
+		 *   <cellPhone>{cellPhone}</cellPhone>
+		 *   <roles>
+		 *     <role>
+		 *       <id>{roleId}</id>
+		 *       <name>{roleName}</name>
+		 *     </role>
+		 *     ...
+		 *   </roles>
+		 * </person>
+		 */
+		public static function fromXML( obj : Object ) : ProjectVO {
+				return new PersonVO(obj.id, 
+									obj.name, 
+									obj.description,
+									obj.firstName,
+									obj.lastName,
+									obj.email,
+									obj.officePhone,
+									obj.cellPhone,
+									ElementVO.fromXMLList("role", obj.roles)
+									);
+		}
+		
+		/**
+		 * Produces a list from XML of the form:
+		 * 
+		 * <list>
+		 *   <person>
+		 *     <id>{id}</id>
+		 *     <name>{name}</id>
+		 *   </person>
+		 *   ...
+		 * </list>
+		 * 
+		 */
+		public static function fromXMLList( obj : Object ) : ArrayCollection {
+			return ElementVO.fromXMLList("person", obj);
 		}
 	}
 }
