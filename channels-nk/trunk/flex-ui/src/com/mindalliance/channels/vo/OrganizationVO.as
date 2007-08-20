@@ -40,7 +40,7 @@ package com.mindalliance.channels.vo
 			this._address = address;	
 		}
 		
-		public function toXML() {
+		public function toXML() : XML {
 			return <organization>
 						<id>{id}</id>
 						<name>{name}</name>
