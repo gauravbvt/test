@@ -14,7 +14,7 @@ package com.mindalliance.channels.business.application
 		}
 		
 		public function getProjectList() : void {
-			performQuery("project", null);
+			performQuery("allProjects", null);
 		}
 		
 		public function createProject(name:String) : void {
