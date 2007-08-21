@@ -29,7 +29,7 @@
   <test>
     <uri>active:dpml+operand@ffcpl:/test/testDeleteElement.idoc</uri>
     <assert name="Deleted element">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+      <exception>Element not found</exception> 
     </assert>
   </test>
   <test>

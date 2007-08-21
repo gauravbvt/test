@@ -25,7 +25,7 @@ if (context.getThisRequest().argumentExists("variables")) {
 // Prepare the query
 if (properties != null) query = declareVariables(query, properties); // Add variable declaration as prologue
 query = filter(query); // Substitute place holders
-log("Processed query: " + query, "info");
+// log("Processed query: " + query, "info");
 query
 op =  "<dbxml>\n" +
       " <container>" + dbxml_getContainerName() + "</container>\n" +

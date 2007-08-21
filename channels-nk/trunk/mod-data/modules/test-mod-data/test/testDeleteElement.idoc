@@ -19,7 +19,24 @@
     <instr>
       <type>channels_data_deleteElement</type>
       <id>var:id</id>
-      <target>this:response</target>
      </instr>
+    <seq> 
+	    <instr>
+	      <type>channels_data_getElement</type>
+	      <id>var:id</id>
+	      <target>this:response</target>
+	     </instr>
+	     <exception>
+			    <instr>
+			      <type>throw</type>
+			      <operand>
+			        <ex>
+			          <id>Element not found</id>
+			          <message>Can't get element</message>
+			        </ex>
+			      </operand>
+			    </instr>
+	     </exception>
+	   </seq>
   </seq>
 </idoc>

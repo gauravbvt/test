@@ -16,6 +16,7 @@ importPackage(Packages.java.lang);
 kind = new XML(context.sourceAspect("this:param:kind",IAspectXmlObject).getXmlObject()).text();
 log("Creating element " + kind, "info");
 doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
+log("Creating " + kind + ":\n " + doc, "info");
 
 // Generate and add GUID as root attribute id
 

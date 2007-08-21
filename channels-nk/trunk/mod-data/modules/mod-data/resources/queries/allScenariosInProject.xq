@@ -1,11 +1,12 @@
-(: All scenarios in a project.
-	 Variables:
-	 						projectId -- the id of the project
-:)
+(: All scenarios in a project. 							:)
+
+(: Variables:															  :)
+(: 			projectId -- the id of the project	:)
+
 <list>
 	{
 		 for $e in collection('__MODEL__')/scenario
-		 where projectId = $projectId
+		 where $e/projectId = $projectId
 		 order by $e/name
 		 return
 		 	<scenario>

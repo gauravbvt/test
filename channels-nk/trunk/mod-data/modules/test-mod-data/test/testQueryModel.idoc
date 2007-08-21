@@ -9,21 +9,74 @@
         </project>
       </doc>
       <kind><string>project</string></kind>
-      <target>var:element</target>
+      <target>var:project</target>
+    </instr>
+    <instr>
+    	<type>copy</type>
+    	<operand>
+        <scenario>
+          <name>My scenario</name>
+          <projectId/>
+        </scenario>
+      </operand>
+      <target>var:scenario</target>
+    </instr>
+    <instr>
+    	<type>stm</type>
+      <param>var:project</param>
+      <operand>var:scenario</operand>
+    	<operator>
+         <stm:group xmlns:stm="http://1060.org/stm">
+            <stm:replace xpath="./projectId">
+                <stm:param xpath="./id"/>
+            </stm:replace>
+            <stm:rename xpath="./id">
+                projectId
+            </stm:rename>
+         </stm:group>
+       </operator>
+       <target>var:scenario</target>
+    </instr>
+    <instr>
+      <type>channels_data_createElement</type>
+      <doc>var:scenario</doc>
+      <kind><string>scenario</string></kind>
+      <target>var:scenario</target>
+    </instr>
+    <instr>
+    	<type>copy</type>
+    	<operand>
+	      <properties>
+	          <property>
+	            <key>projectId</key>
+	            <value/>
+	          </property>
+	        </properties>
+	    </operand>
+	    <target>var:variables</target>
+    </instr>
+    <instr>
+    	<type>stm</type>
+        <param>var:project</param>
+        <operand>var:variables</operand>
+    	  <operator>
+         <stm:group xmlns:stm="http://1060.org/stm">
+            <stm:replace xpath="./property[key='projectId']/value">
+                <stm:param xpath="./id"/>
+            </stm:replace>
+            <stm:rename xpath="./property[key='projectId']/id">
+                value
+            </stm:rename>
+         </stm:group>
+       </operator>
+       <target>var:variables</target>
     </instr>
     <instr>
       <type>channels_data_queryModel</type>
       <xquery>
-          ffcpl:/com/mindalliance/channels/data/queries/allProjects.xq
+          ffcpl:/com/mindalliance/channels/data/queries/allScenariosInProject.xq
       </xquery>
-      <variables>
-        <properties>
-          <property>
-            <key>part</key>
-            <value>My</value>
-          </property>
-        </properties>
-      </variables>
+      <variables>var:variables</variables>
       <target>this:response</target>
     </instr>
   </seq>
