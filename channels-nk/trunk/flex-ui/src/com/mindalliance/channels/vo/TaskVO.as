@@ -6,30 +6,23 @@ package com.mindalliance.channels.vo
 	import com.adobe.cairngorm.vo.IValueObject;
 	
 	import mx.collections.ArrayCollection;
-	import com.yworks.support.Integer;
 
 	public class TaskVO extends OccurrenceVO implements IValueObject
 	{
 		public function TaskVO( id : String, 
 								name : String, 
 								description : String,
-								independent : Boolean,
-								causeType : String,
-								causeId : String,
-								duration : Integer,
-								durationUnit : String,
 								categories : ArrayCollection,
 								information : ArrayCollection,
+								cause : CauseVO,
+								duration : DurationVO,
 								agents : ArrayCollection,
 								artifacts : ArrayCollection) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
-			this.independent = independent;
-			this.causeType = causeType;
-			this.causeId = causeId;
+			this.cause = cause;
 			this.duration =duration;
-			this.durationUnit =durationUnit;
 			this.categories =categories;
 			_agents = agents;
 			_artifacts = artifacts;
@@ -61,6 +54,13 @@ package com.mindalliance.channels.vo
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
+		 *   <categories>
+		 *     <categoryId>{categoryId}</categoryId>
+		 *     ...  
+		 *   </categories>
+		 *   <information>
+		 *     <element>{elementTopic}</element>
+		 *   </information>
 		 *   <cause>
 		 *     <type>{event|task|independent}</type>
 		 *     <id>{event or task ID}</id> <!-- optional -->
@@ -69,13 +69,6 @@ package com.mindalliance.channels.vo
 		 *     <length>{duration}</length>
 		 *     <unit>{unit}</unit>
 		 *   </duration>
-		 *   <categories>
-		 *     <categoryId>{categoryId}</categoryId>
-		 *     ...  
-		 *   </categories>
-		 *   <information>
-		 *     <element>{elementTopic}</element>
-		 *   </information>
 		 * 	 <agents>
 		 *     <roleId>{roleId}</roleId>
 		 *     ...
@@ -109,17 +102,14 @@ package com.mindalliance.channels.vo
 			var taskXML : XML = <task>
 						<id>{id}</id>
 						<name>{name}</name>
-						<description>{description}</description>
-						<independent>{independent}</independent>
-						<causeType>{causeType}</causeType>
-						<causeId>{causeId}</causeId>
-						<duration>{duration}</duration>
-						<durationUnit>{durationUnit}</durationUnit>
-						
+						<description>{description}</description>						
 					</task>;
+			taskXML.appendChild(categoriesXML);
+			taskXML.appendChild(informationXML);
+			taskXML.appendChild(cause.toXML());
+			taskXML.appendChild(duration.toXML());
 			taskXML.appendChild(agentsXML);
 			taskXML.appendChild(artifactXML);
-			taskXML.appendChild(categoriesXML);
 			
 		}
 
@@ -129,15 +119,6 @@ package com.mindalliance.channels.vo
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 *   <cause>
-		 *     <type>{event|task|independent}</type>
-		 *     <id>{event or task ID}</id> <!-- optional -->
-		 *     <name>{event or task name}</name> <!-- optional -->
-		 *   </cause>
-		 *	 <duration>
-		 *     <length>{duration}</length>
-		 *     <unit>{unit}</unit>
-		 *   </duration>
 		 *   <categories>
 		 *     <category>
 		 *       <id>{categoryId}</id>
@@ -155,7 +136,16 @@ package com.mindalliance.channels.vo
 		 *   <information>
 		 *     <element>{elementTopic}</element>
 		 *     ...
-		 *   </information>		 
+		 *   </information>
+		 *   <cause>
+		 *     <type>{event|task|independent}</type>
+		 *     <id>{event or task ID}</id> <!-- optional -->
+		 *     <name>{event or task name}</name> <!-- optional -->
+		 *   </cause>
+		 *	 <duration>
+		 *     <length>{duration}</length>
+		 *     <unit>{unit}</unit>
+		 *   </duration>
          *   <agents>
 		 *     <role>
 		 *       <id>{roleId}</id>
@@ -176,15 +166,12 @@ package com.mindalliance.channels.vo
 				return new TaskVO(obj.id, 
 									obj.name, 
 									obj.description,
-									obj.independent,
-									obj.causeType,
-									obj.causeId,
-									obj.duration,
-									obj.durationUnit,
-									ElementVO.fromXMLList("categories", obj.categories),
-									ElementVO.fromXMLList("information", obj.information),
-									ElementVO.fromXMLList("agents", obj.agents),
-									ElementVO.fromXMLList("artifacts", obj.artifacts));
+									ElementVO.fromXMLList("category", obj.categories),
+									ElementVO.fromXMLList("element", obj.information),
+									CauseVO.fromXML(obj.cause);,
+									DurationVO.fromXML(obj.duration);
+									ElementVO.fromXMLList("role", obj.agents),
+									ElementVO.fromXMLList("artifact", obj.artifacts));
 		}
 		
 		/**

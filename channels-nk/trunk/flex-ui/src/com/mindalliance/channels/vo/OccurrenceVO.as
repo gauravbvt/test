@@ -7,80 +7,38 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 
-	public class OccurrenceVO extends ElementVO implements IValueObject
+	public class OccurrenceVO extends ArtifactVO implements IValueObject
 	{
 		public function OccurrenceVO( id : String, 
 								name : String, 
 								description : String,
-								independent : Boolean,
-								causeType : String,
-								causeId : String,
-								duration : Integer,
-								durationUnit : String,
 								categories : ArrayCollection,
-								information : ArrayCollection ) {
+								information : ArrayCollection,
+								cause : CauseVO,
+								duration : Integer,
+								durationUnit : String) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
-			_independent = independent;
-			_causeType = causeType;
-			_causeId = causeId;
+			this.categories =categories;
+			this.information = information;
+			_cause = cause;
 			_duration =duration;
 			_durationUnit =durationUnit;
-			_categories =categories;
-			_information = information
 		}
 
-		private var _independent : Boolean;
-		private var _causeType : String ;
-		private var _causeId : String;
+		private var _cause : CauseVO;
 		private var _duration : Integer;
 		private var _durationUnit : String;
-		private var _categories : ArrayCollection;
-		private var _information : ArrayCollection;
 
-		public function get categories() : ArrayCollection {
-			return _categories;
-		}
-
-		public function set categories(categories : ArrayCollection) : void {
-			_categories=categories;
-		}
-		
-		
-		public function get information() : ArrayCollection {
-			return _information;
+		public function get cause() : CauseVO {
+			return _cause;
 		};
 
-		public function set information(information : ArrayCollection) : void {
-			_information=information;
-		}
-		public function get independent() : Boolean {
-			return _independent;
+		public function set cause(cause : CauseVO) : void {
+			_cause=cause;
 		}
 
-		public function set independent(independent : Boolean) : void {
-			_independent=independent;
-		}
-		
-		
-		public function get causeType() : String {
-			return _causeType;
-		}
-
-		public function set causeType(causeType : String) : void {
-			_causeType=causeType;
-		}
-		
-		
-		public function get causeId() : String {
-			return _causeId;
-		}
-
-		public function set causeId(causeId : String) : void {
-			_causeId=causeId;
-		}
-		
 		public function get duration() : Integer {
 			return _duration;
 		}
@@ -106,11 +64,11 @@ package com.mindalliance.channels.vo
 		 * </Occurrence>
 		 */
 		public function toXML() : XML {
-			return <Occurrence>
+			return <occurrence>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
-					</Occurrence>;
+					</ccurrence>;
 		}
 
 		/**

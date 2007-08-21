@@ -4,6 +4,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
+	
 	import mx.collections.ArrayCollection;
 
 	public class PersonVO extends ElementVO implements IValueObject

@@ -11,18 +11,18 @@ package com.mindalliance.channels.vo
 	{
 		public function EventVO( id : String, 
 								name : String, 
-								projectId : String, 
 								description : String,
-								independent : Boolean,
-								causeType : String,
-								causeId : String,
-								duration : Integer,
-								durationUnit : String,
 								categories : ArrayCollection,
-								information : ArrayCollection ) {
+								information : ArrayCollection,
+								cause : CauseVO,
+								duration : DurationVO) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
+			this.categories = categories;
+			this.information = information;
+			this.cause = cause;
+			this.duration = duration;
 		}
 
 		/**
@@ -35,12 +35,19 @@ package com.mindalliance.channels.vo
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
+		 *   <categories>
+		 *     <categoryId>{categoryId}</categoryId>
+		 *     ...  
+		 *   </categories>
+		 *   <information>
+		 *     <element>{elementTopic}</element>
+		 *   </information>
 		 *   <cause>
 		 *     <type>{event|task|independent}</type>
 		 *     <id>{event or task ID}</id> <!-- optional -->
 		 *   </cause>
 		 *	 <duration>
-		 *     <taskBased>{true or false}
+		 *     <taskBased>{true or false}</taskBased>
 		 * 	   <!-- false -->
 		 *     <length>{duration}</length>
 		 *     <unit>{unit}</unit>
@@ -50,21 +57,31 @@ package com.mindalliance.channels.vo
 		 *        ...
 		 *     </tasks>
 		 *   </duration>
-		 *   <categories>
-		 *     <categoryId>{categoryId}</categoryId>
-		 *     ...  
-		 *   </categories>
-		 *   <information>
-		 *     <element>{elementTopic}</element>
-		 *   </information>
+
 		 * </event>
 		 */
 		public function toXML() : XML {
-			return <event>
+			var xml : XML =  <event>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
 					</event>;
+			var categoriesXML : XML = <categories></categories>;
+			for each (var category in categories) {
+				categoriesXML.appendChild(<category><id>{category.id}</id></category>);
+				
+			}
+			var informationXML : XML = <information></information>;
+			for each (var element in information) {
+				informationXML.appendChild(<element><topic>{element.topic}</topic></element>);
+			}			
+			
+			xml.appendChild(categoriesXML);
+			xml.appendChild(informationXML);
+			xml.appendChild(cause.toXML());
+			xml.appendChild(duration.toXML());
+			
+			return xml;
 		}
 
 		/**
@@ -113,7 +130,13 @@ package com.mindalliance.channels.vo
 		 * </event>
 		 */
 		public static function fromXML( obj : Object ) : ProjectVO {
-				return new EventVO(obj.id, obj.name, obj.description);
+				return new EventVO(obj.id, 
+				obj.name, 
+				obj.description,
+				ElementVO.fromXMLList("category", obj.categories),
+				ElementVO.fromXMLList("element", obj.information),
+				CauseVO.fromXML(obj.cause),
+				DurationVO.fromXML(obj.duration));
 		}
 		
 		/**

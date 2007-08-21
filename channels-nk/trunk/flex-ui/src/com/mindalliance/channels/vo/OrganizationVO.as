@@ -2,6 +2,7 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 
+	import mx.collections.ArrayCollection;
 	public class OrganizationVO extends ElementVO implements IValueObject
 	{
 		public function OrganizationVO( id : String, 
@@ -59,7 +60,7 @@ package com.mindalliance.channels.vo
 		 * </organization>
 		 */
 		public function toXML() : XML {
-			return <organization>
+			var xml : XML =  <organization>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
@@ -67,6 +68,8 @@ package com.mindalliance.channels.vo
 						<parentId>{parent.id}</parentId>
 						{address.toXML()}
 					</organization>;
+			xml.appendChild(address.toXML());
+			return xml;
 		}
 
 		/**
