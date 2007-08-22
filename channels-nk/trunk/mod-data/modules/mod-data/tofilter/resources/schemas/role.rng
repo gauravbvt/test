@@ -7,7 +7,7 @@
       element organizaion {
   	    {attrs},
   	    {elems} & 
-        element expertise {text} &
+        element expertise {text}? &
         element organizationId {text} &
       }
   -->
@@ -16,12 +16,14 @@
   <include href="http://@host@:@port@/channels/schema/ext_address.rng"/>
   
   <start>
-    <element name="organization">
+    <element name="role">
       <ref name="attrs"/>
       <interleave>
         <ref name="elems"/>
         <element name="organizationId"><text/></element>
-        <element name="expertise"><text/></element>
+        <optional>
+          <element name="expertise"><text/></element>
+        </optional>
       </interleave>
     </element>
   </start>

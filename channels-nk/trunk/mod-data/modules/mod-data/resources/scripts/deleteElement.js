@@ -12,13 +12,14 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
-descriptor =  getDocumentDescriptor("id");
-
-succeeded = false;
+var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
+var descriptor =  getDocumentDescriptor(id);
+log("Deleting element " + id, "info");
+var succeeded = false;
 try {
-  req=context.createSubRequest("active:dbxmlDeleteDocument");
+  var req=context.createSubRequest("active:dbxmlDeleteDocument");
   req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
-  result=context.issueSubRequest(req);
+  var result=context.issueSubRequest(req);
   log("Deleted element " + descriptor.name + " from container " + dbxml_getContainerName(), "info");
   succeeded = true;
 }
@@ -27,7 +28,7 @@ catch(e) { // RISKY - hides all problems
 }
 
 //Return Response
-resp=context.createResponseFrom(new BooleanAspect(succeeded));
+var resp=context.createResponseFrom(new BooleanAspect(succeeded));
 resp.setExpired(); // don't cache
 resp.setMimeType("text/xml");
 context.setResponse(resp);

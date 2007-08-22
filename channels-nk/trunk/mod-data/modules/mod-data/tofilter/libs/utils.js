@@ -43,12 +43,11 @@ function dbxml_getContainerName() {
 }
 
 // Return a document descriptor given id in a parameter
-function getDocumentDescriptor(param) {
-  var id = new XML(context.sourceAspect("this:param:" + param, IAspectXmlObject).getXmlObject());
+function getDocumentDescriptor(id) {
   var descriptor =  <dbxml>
-                  <name>{id.text()}</name>
-                  <container>{dbxml_getContainerName()}</container>
-                </dbxml>;
+                  		<name>{id}</name>
+                  		<container>{dbxml_getContainerName()}</container>
+                		</dbxml>;
 
   return descriptor;
 }

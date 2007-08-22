@@ -1,0 +1,86 @@
+<idoc>
+  <comment>Create an element and get it back using its id</comment>
+  <seq>
+    <instr>
+      <type>channels_data_createElement</type>
+      <doc>
+        <role>
+          <name>Role 1</name>
+          <organizationId> abc </organizationId>
+        </role>
+      </doc>
+      <kind><string>role</string></kind>
+      <target>var:role1</target>
+    </instr>
+    <instr>
+      <type>channels_data_createElement</type>
+      <doc>
+        <role>
+          <name>Role 2</name>
+          <organizationId> abc </organizationId>
+        </role>
+      </doc>
+      <kind><string>role</string></kind>
+      <target>var:role2</target>
+    </instr>
+    <instr>
+      <type>copy</type>
+      <operand>
+        <person>
+          <name>JD</name>
+          <firstName> John </firstName>
+          <lastName>Doe</lastName>
+          <email>jd@mail.net</email>
+          <roles>
+          	<roleId/>
+          	<roleId/>
+          </roles>
+        </person>
+      </operand>
+      <target>var:person</target>
+    </instr>
+    <instr>
+      <type>stm</type>
+      <param>var:role1</param>
+      <operand>var:person</operand>
+    	<operator>
+         <stm:group xmlns:stm="http://1060.org/stm">
+            <stm:set xpath="./roles/roleId[position() = 1]">
+                <stm:param xpath="./id/text()"/>
+            </stm:set>
+         </stm:group>
+       </operator>
+       <target>var:person</target>
+    </instr>
+    <instr>
+      <type>stm</type>
+      <param>var:role2</param>
+      <operand>var:person</operand>
+    	<operator>
+         <stm:group xmlns:stm="http://1060.org/stm">
+            <stm:set xpath="./roles/roleId[position() = 2]">
+                <stm:param xpath="./id/text()"/>
+            </stm:set>
+         </stm:group>
+       </operator>
+       <target>var:person</target>
+    </instr>
+		<instr>
+			<type>channels_data_createElement</type>
+			<doc>var:person</doc>
+			<kind><string>person</string></kind>
+			<target>var:person</target>
+		</instr>
+    <instr>
+      <type>copy</type>
+      <operand>var:person#xpointer(./id[1])</operand>
+      <target>var:id</target>
+    </instr>
+    <instr>
+      <type>channels_data_getElement</type>
+      <id>var:id</id>
+      <namesListed><b>t</b></namesListed>
+      <target>this:response</target>
+     </instr>
+  </seq>
+</idoc>

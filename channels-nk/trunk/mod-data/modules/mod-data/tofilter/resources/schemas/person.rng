@@ -11,9 +11,9 @@
         element firstName {text} &
         element lastName {text} &
         element email {text} &
-        element officePhone {t &ext}
-        element cellPhone {text} &
-    		{address}
+        element officePhone {text}? &
+        element cellPhone {text}? &
+    		{address}?
     		element roles {
     			element roleId {text}
     		}*
@@ -31,9 +31,15 @@
         <element name="firstName"><text/></element>
         <element name="lastName"><text/></element>
         <element name="email"><text/></element>
-        <element name="officePhone"><text/></element>
-        <element name="cellPhone"><text/></element>
-        <ref name="address"/>
+        <optional>
+          <element name="officePhone"><text/></element>
+        </optional>
+        <optional>
+          <element name="cellPhone"><text/></element>
+        </optional>
+        <optional>
+          <ref name="address"/>
+        </optional>
         <element name="roles">
           <zeroOrMore>
             <element name="roleId"><text/></element>

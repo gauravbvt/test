@@ -15,9 +15,9 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
 // Get arguments
-query = context.sourceAspect("this:param:xquery", IAspectString).getString();
+var query = context.sourceAspect("this:param:xquery", IAspectString).getString();
 log("Query: " + query, "info");
-properties = null;
+var properties = null;
 if (context.getThisRequest().argumentExists("variables")) {
   properties = new XML(context.sourceAspect("this:param:variables", IAspectXmlObject).getXmlObject());
   log("with variables " + properties, "info");
@@ -27,7 +27,7 @@ if (properties != null) query = declareVariables(query, properties); // Add vari
 query = filter(query); // Substitute place holders
 // log("Processed query: " + query, "info");
 query
-op =  "<dbxml>\n" +
+var op =  "<dbxml>\n" +
       " <container>" + dbxml_getContainerName() + "</container>\n" +
       " <xquery>\n" +
       "  <![CDATA[\n   " + query + "\n  ]]>\n" +
@@ -35,12 +35,12 @@ op =  "<dbxml>\n" +
       "</dbxml>";
 
 log("Query operator: " + op, "info");
-req=context.createSubRequest("active:dbxmlQuery");
+var req=context.createSubRequest("active:dbxmlQuery");
 req.addArgument("operator", new StringAspect(op));
 result=context.issueSubRequest(req);
 log("Got results to query " + query + " from container " + dbxml_getContainerName(), "info");
 
 //Return Response
-resp=context.createResponseFrom(result);
+var resp=context.createResponseFrom(result);
 resp.setMimeType("text/xml");
 context.setResponse(resp);

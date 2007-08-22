@@ -12,17 +12,17 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
-updated = false; // whether a prior version was deleted
-doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
+var updated = false; // whether a prior version was deleted
+var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 validateRNG(doc); // Make sure it is valid
 log("Updating with: " + doc, "info");
 
-id = doc.id.text();
+var id = doc.id.text();
 if (id != null) {
   log("Updating element with id " + id, "info");
 
   // Document identity
-  op =  <dbxml>
+  var op =  <dbxml>
            <name>{id}</name>
            <container>{dbxml_getContainerName()}</container>
         </dbxml>;
@@ -33,9 +33,9 @@ if (id != null) {
 
   // Delete older version if exists
   try {
-    req=context.createSubRequest("active:dbxmlDeleteDocument");
+    var req=context.createSubRequest("active:dbxmlDeleteDocument");
     req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
-    result=context.issueSubRequest(req);
+    var result=context.issueSubRequest(req);
     log("Deleted older version of " + id + " from container " + dbxml_getContainerName(), "info");
     updated = true;
   }
@@ -54,6 +54,6 @@ else {
 }
 
 //Return Response
-resp=context.createResponseFrom(new BooleanAspect(updated));
+var resp=context.createResponseFrom(new BooleanAspect(updated));
 resp.setExpired(); // don't cache
 context.setResponse(resp);

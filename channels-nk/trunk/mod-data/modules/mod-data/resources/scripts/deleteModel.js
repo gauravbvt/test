@@ -8,12 +8,12 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
-descriptor = dbxml_getContainerDescriptor();
-exists = dbxml_containerExists(descriptor);
+var descriptor = dbxml_getContainerDescriptor();
+var exists = dbxml_containerExists(descriptor);
 
 if (exists) {
   // Delete container
-  req=context.createSubRequest("active:dbxmlDeleteContainer");
+  var req=context.createSubRequest("active:dbxmlDeleteContainer");
   req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
   context.issueSubRequest(req);
   log("Deleted DBXML container: " + dbxml_getContainerName(), "info");
@@ -23,7 +23,7 @@ else {
 }
 
 //Return Response
-resp=context.createResponseFrom(new BooleanAspect(exists));
+var resp=context.createResponseFrom(new BooleanAspect(exists));
 resp.setExpired(); // don't cache
 resp.setMimeType("text/xml");
 context.setResponse(resp);

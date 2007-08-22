@@ -27,12 +27,9 @@
       <operand>var:scenario</operand>
     	<operator>
          <stm:group xmlns:stm="http://1060.org/stm">
-            <stm:replace xpath="./projectId">
-                <stm:param xpath="./id"/>
-            </stm:replace>
-            <stm:rename xpath="./id">
-                projectId
-            </stm:rename>
+            <stm:set xpath="./projectId">
+                <stm:param xpath="./id/text()"/>
+            </stm:set>
          </stm:group>
        </operator>
        <target>var:scenario</target>
@@ -61,12 +58,9 @@
         <operand>var:variables</operand>
     	  <operator>
          <stm:group xmlns:stm="http://1060.org/stm">
-            <stm:replace xpath="./property[key='projectId']/value">
-                <stm:param xpath="./id"/>
-            </stm:replace>
-            <stm:rename xpath="./property[key='projectId']/id">
-                value
-            </stm:rename>
+            <stm:set xpath="./property[key='projectId']/value">
+                <stm:param xpath="./id/text()"/>
+            </stm:set>
          </stm:group>
        </operator>
        <target>var:variables</target>

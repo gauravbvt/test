@@ -36,6 +36,7 @@
 			<syntax>
 				<type><b>channels_data_getElement</b></type>
 				<id req="true">the element's id</id>
+        <namesListed req="false">a canonical boolean</namesListed>
 				<target req="false">the element as xml</target>
 			</syntax>
 		</content>
@@ -44,6 +45,7 @@
 		    <instr>
 		      <type>channels_data_getElement</type>
 		      <id>1230980875AD45A6BC</id>
+          <namesListed><b>t</b></namesListed>
 		      <target>this:response</target>
 		    </instr>
 			</include>
@@ -58,6 +60,19 @@
 			</p>
 			<p>If successful the response is an element as xml such as:</p>
       <sub name="element"/>
+      <p>
+        If the argument <code>namesListed</code> is set to <code><b>t</b></code> then lists of references to other elements
+        are augmented by the names of the referenced elements. For example, the following would be returned (notice that the 
+        roleId elements have been added a name attribute):
+        <sub name="named"/>
+        The elements to be augmented this way are identified as follows:
+        <ol>
+          <li>
+            From the RelaxNG schema of the element (their definitions are contained in &lt;zeroOrMore&gt;)
+          </li>
+          <li>and their names end with "Id"</li>
+        </ol>
+      </p>
 		</content>
 		<includes>
 			<include name="element" type="xml">
@@ -65,6 +80,19 @@
         	<id>878AD470F6C983655BEE25411</id>
           <name>My project</name>
         </project>
+      </include>
+      <include name="named" type="xml">
+        <person schema="http://localhost:8080/channels/schema/person.rng">
+					<id>977CE769B23B19C5BCC0131E9DF51C3D</id>
+					<name>JD</name>
+					<firstName> John </firstName>
+					<lastName>Doe</lastName>
+					<email>jd@mail.net</email>
+					<roles>
+						<roleId name="Role 1">21F58D2A810CA0A89B8B39DC6EBBE72D</roleId>
+						<roleId name="Role 2">F614956CE87003778ACBB8EA1B330577</roleId>
+					</roles>
+				</person>
       </include>
 		</includes>
 	</section>

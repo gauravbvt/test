@@ -10,19 +10,19 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
 log("Opening DBXML container: " + dbxml_getContainerName(), "info");
-descriptor = dbxml_getContainerDescriptor();
-exists = dbxml_containerExists(descriptor);
+var descriptor = dbxml_getContainerDescriptor();
+var exists = dbxml_containerExists(descriptor);
 
 if (!exists) {
   // Create container
-  req=context.createSubRequest("active:dbxmlCreateContainer");
+  var req=context.createSubRequest("active:dbxmlCreateContainer");
   req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
   context.issueSubRequest(req);
   log("Created DBXML container: " + dbxml_getContainerName(), "info");
 }
 
 //Return Response
-resp=context.createResponseFrom(new BooleanAspect(!exists));
+var resp=context.createResponseFrom(new BooleanAspect(!exists));
 resp.setExpired(); // don't cache
 resp.setMimeType("text/xml");
 context.setResponse(resp);
