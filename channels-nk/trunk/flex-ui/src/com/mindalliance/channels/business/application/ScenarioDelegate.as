@@ -17,7 +17,7 @@ package com.mindalliance.channels.business.application
 		public function getScenarioList(projectId : String) : void {
 			
 			var request:Array = new Array();
-			request["project"] = projectId;
+			request["projectId"] = projectId;
 
 			performQuery("allScenariosInProject", request);
 		}
