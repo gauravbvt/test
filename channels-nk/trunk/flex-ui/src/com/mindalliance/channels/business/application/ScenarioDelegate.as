@@ -19,12 +19,12 @@ package com.mindalliance.channels.business.application
 			var request:Array = new Array();
 			request["project"] = projectId;
 
-			performQuery("allScenarios", request);
+			performQuery("allScenariosInProject", request);
 		}
 		public function createScenario(name:String, projectId:String) : void {
 			var scenario : XML = <scenario></scenario>;
 			scenario.appendChild(<name>{name}</name>);
-			scenario.appendChild(<project>{projectId}</project>);
+			scenario.appendChild(<projectId>{projectId}</projectId>);
 			
 			
 			createElement("scenario", scenario);	

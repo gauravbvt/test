@@ -23,5 +23,6 @@ package com.mindalliance.channels.business.application
 			
 			createElement("project", project);	
 		}
+		
 	}
 }
