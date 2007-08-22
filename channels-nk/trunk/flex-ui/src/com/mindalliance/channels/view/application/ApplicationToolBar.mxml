@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
-    width="100%" xmlns:application="com.mindalliance.channels.view.application.*" xmlns:search="com.mindalliance.channels.view.search.*">
+    width="100%" xmlns:application="com.mindalliance.channels.view.application.*" 
+    xmlns:search="com.mindalliance.channels.view.search.*"
+    xmlns:logging="com.mindalliance.channels.view.logging.*">
     <mx:Script>
 	    <![CDATA[
 	    	import mx.effects.Resize;
@@ -32,10 +34,6 @@
 	        import mx.events.MenuEvent;
         	import mx.core.IFlexDisplayObject;
             import mx.managers.PopUpManager;
-        
-	  		[Bindable]
-	  		public var IS_DEBUG:Boolean = true ;
-
         			
             [Bindable]
  	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
@@ -157,7 +155,7 @@
 		</menuitem>
     </mx:XMLList>
 	
-	<mx:Button label="Show Trace Output" visible="{IS_DEBUG}" click="popUpTraceWindow()" fillColors="[#f09a7b, #f09a7b]"/>
+	<logging:LoggerButton label="Show Trace Output" visible="{model.debug}" fillColors="[#f09a7b, #f09a7b]"/>
     <mx:MenuBar id="channelsMenuBar" dataProvider="{ChannelsMenuBarItems}" labelField="@label" showRoot="false" itemClick="menuBarItemClicked(event)"/>
     <mx:Spacer width="100%"/>
     <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>

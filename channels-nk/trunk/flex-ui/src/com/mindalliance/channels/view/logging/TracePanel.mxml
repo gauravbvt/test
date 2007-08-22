@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+  title="Trace Panel"
+  paddingBottom="10" paddingLeft="10" 
+  paddingRight="10" paddingTop="10"
+  minHeight="320"
+  minWidth="360"  
+  initialize="init()"
+  showCloseButton="true"
+  close="close()"
+  layout="vertical">
+  <mx:Script>
+    <![CDATA[
+    // Borrowed and customized from 'Professional Flex 2'
+
+      import mx.logging.Log;
+      import mx.logging.LogEventLevel;
+      import mx.collections.ArrayCollection;
+      import mx.managers.PopUpManager;
+      
+      public var isOpen:Boolean = false;
+
+      [Bindable]
+      private var targets:ArrayCollection;
+
+      private var target:TracePanelTarget;
+      private function init():void 
+      {
+        target = new TracePanelTarget(txtOutput);
+        target.filters=["com.mindalliance.*"];
+        target.level = LogEventLevel.ALL;
+        target.includeDate = true;
+        target.includeCategory = true;
+        target.includeLevel = true;
+        Log.getLogger("TracePanel").debug("initilization");
+      }
+      
+      private function close():void
+      {
+        isOpen = false;
+        PopUpManager.removePopUp(this);
+      }
+      
+      private function changeTarget():void
+      {
+        if (!chkFlag.selected) 
+        {
+          Log.addTarget(target);
+          Log.getLogger("TracePanel").info("Turned logging on!");
+        } 
+        else 
+        {
+          Log.getLogger("TracePanel").info("Turning logging off!");
+          Log.removeTarget(target);
+        }
+      }
+
+      private function filterTarget():void
+      {
+        Log.getLogger("TracePanel").info("Filter change!");
+        Log.removeTarget(target);
+        target.filters = idFilter.text.split(",");
+        if (target.filters == null)
+          target.filters = ["*"];
+        Log.addTarget(target);
+      }     
+      
+    ]]>
+  </mx:Script>
+  
+  <mx:HBox>
+    <mx:Label 
+      text="Filter Categories:" />
+    <mx:TextInput 
+      id="idFilter"
+      text="com.mindalliance.*"
+      change="filterTarget()" />
+  </mx:HBox>
+  <mx:HBox>
+    <mx:Label 
+      text="Turn Logging Off" />
+    <mx:CheckBox 
+      id="chkFlag" 
+      selected="false"
+      change="changeTarget()" />
+    <mx:Button 
+      label="Clear Output"
+      click="txtOutput.text = ''" />
+  </mx:HBox>
+  <mx:Label 
+    text="Output Console" />
+  <mx:TextArea
+    id="txtOutput"
+    updateComplete="txtOutput.verticalScrollPosition = txtOutput.maxVerticalScrollPosition + 1;"
+    width="100%" height="100%" /> 
+</mx:TitleWindow>

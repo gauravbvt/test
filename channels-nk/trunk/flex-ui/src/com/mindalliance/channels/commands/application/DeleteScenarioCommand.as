@@ -31,7 +31,7 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result;
-			if (result.project != null) {
+			if (result == true) {
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(model.selectedProject.id) );
 			}
 		}
