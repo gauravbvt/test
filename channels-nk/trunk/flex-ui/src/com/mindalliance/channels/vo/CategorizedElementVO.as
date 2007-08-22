@@ -7,24 +7,44 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 
-	public class ArtifactVO extends CategorizedElementVO implements IValueObject
+	public class CategorizedElementVO extends ElementVO implements IValueObject
 	{
-		public function ArtifactVO( id : String, 
+		public function CategorizedElementVO( id : String, 
 								name : String, 
-								description : String,								
+								projectId : String, 
+								description : String,
 								categories : ArrayCollection,
-								information : ArrayCollection ) {
+								information : ArrayCollection  ) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
-			this.categories =categories;
-			this.information = information;
+			this.categories = categories;
+			this.information = information
 		}
 
-		/**
+		private var _categories : ArrayCollection;
+		private var _information : ArrayCollection;
+
+		public function get categories() : ArrayCollection {
+			return _categories;
+		}
+
+		public function set categories(categories : ArrayCollection) : void {
+			_categories=categories;
+		}
+		
+		
+		public function get information() : ArrayCollection {
+			return _information;
+		};
+
+		public function set information(information : ArrayCollection) : void {
+			_information=information;
+		}
+	    /**
 		 * Produces XML of the form:
 		 * 
-		 * <artifact>
+		 * <categorizedElement>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
@@ -35,14 +55,14 @@ package com.mindalliance.channels.vo
 		 *   <information>
 		 *     <element>{elementTopic}</element>
 		 *   </information>
-		 * </artifact>
+		 * </categorizedElement>
 		 */
 		public function toXML() : XML {
-			var xml =  <artifact>
+			var xml =  <categorizedElement>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
-					</artifact>;
+					</categorizedElement>;
 			
 			xml.appendChild(this.generateElementListXML("categories", "categoryId", categories);
 			xml.appendChild(this.generateXMLInformationList(information));
@@ -52,7 +72,7 @@ package com.mindalliance.channels.vo
 
 		/**
 		 * Expects XML of the form:
-		 * <artifact>
+		 * <categorizedElement>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>		 
@@ -74,10 +94,10 @@ package com.mindalliance.channels.vo
 		 *     <element>{elementTopic}</element>
 		 *     ...
 		 *   </information>	
-		 * </artifact>
+		 * </categorizedElement>
 		 */
 		public static function fromXML( obj : Object ) : ProjectVO {
-				return new ArtifactVO(  obj.id, 
+				return new CategorizedElementVO(  obj.id, 
 										obj.name, 
 										obj.description,
 										ElementVO.fromXMLList("category", obj.categories),
@@ -97,7 +117,16 @@ package com.mindalliance.channels.vo
 		 * 
 		 */
 		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("artifact", obj);
+			return ElementVO.fromXMLList("categorizedElement", obj);
 		}
+		
+		protected function generateXMLInformationList(list : ArrayCollection) : XML {
+			var xml : XML = <information></information>;
+			for each (var element in list) {
+				informationXML.appendChild(<element><topic>{element.topic}</topic></element>);
+			}		
+			return xml;
+		}
+	
 	}
 }

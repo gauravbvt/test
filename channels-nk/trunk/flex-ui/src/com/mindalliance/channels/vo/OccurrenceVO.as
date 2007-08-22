@@ -7,7 +7,7 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 
-	public class OccurrenceVO extends ArtifactVO implements IValueObject
+	public class OccurrenceVO extends CategorizedElementVO implements IValueObject
 	{
 		public function OccurrenceVO( id : String, 
 								name : String, 
@@ -15,8 +15,7 @@ package com.mindalliance.channels.vo
 								categories : ArrayCollection,
 								information : ArrayCollection,
 								cause : CauseVO,
-								duration : Integer,
-								durationUnit : String) {
+								duration : DurationVO) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
@@ -39,21 +38,14 @@ package com.mindalliance.channels.vo
 			_cause=cause;
 		}
 
-		public function get duration() : Integer {
+		public function get duration() : DurationVO {
 			return _duration;
 		}
 
-		public function set duration(duration : Integer) : void {
+		public function set duration(duration : DurationVO) : void {
 			_duration=duration;
 		}
-		
-		public function get durationUnit() : String{
-			return _durationUnit;
-		}
 
-		public function set durationUnit(durationUnit : String) : void {
-			_durationUnit=durationUnit;
-		}
 		/**
 		 * Produces XML of the form:
 		 * 
