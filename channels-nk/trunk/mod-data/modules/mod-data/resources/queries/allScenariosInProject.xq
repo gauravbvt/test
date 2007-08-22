@@ -10,8 +10,8 @@
 		 order by $e/name
 		 return
 		 	<scenario>
-		 		<id>{$e/id}</id>
-		 		<name>{$e/name}</name>
+		 		<id>{$e/id/text()}</id>
+		 		<name>{$e/name/text()}</name>
 		 	</scenario>
 	}
 </list>
