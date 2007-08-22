@@ -13,16 +13,21 @@ package com.mindalliance.channels.commands.application
 	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.ResultEvent;	
+	import mx.logging.Log;
+	import mx.logging.ILogger;
 	public class DeleteScenarioCommand implements ICommand, IResponder
 	{
 
 		private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
 		
+		private var log : ILogger = Log.getLogger("com.mindalliance.channels.commands.application.DeleteScenarioCommand");
 		public function execute(event:CairngormEvent):void
 		{
 			var evt:DeleteScenarioEvent = event as DeleteScenarioEvent;
 			var id : String = evt.id;
+			
+			log.debug("Deleting scenario...");
 			
 			var delegate:ScenarioDelegate = new ScenarioDelegate( this );
 			delegate.deleteElement(id);
@@ -33,12 +38,16 @@ package com.mindalliance.channels.commands.application
 			var result:Object = (data as ResultEvent).result;
 			if (result == true) {
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(model.selectedProject.id) );
+ 	        	log.info("Scenario successfully deleted");
+			} else {
+				log.warn("Scenario deletion failed");	
 			}
 		}
 		
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			log.error(fault.toString());
 		}
 	}
 }

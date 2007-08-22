@@ -11,16 +11,19 @@ package com.mindalliance.channels.commands.application
 	import com.mindalliance.channels.vo.ProjectVO;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.ResultEvent;	
+	import mx.logging.Log;
+	import mx.logging.ILogger;
 	
 	public class UpdateProjectCommand implements ICommand, IResponder
 	{
 		
 		private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
+		private var log : ILogger = Log.getLogger("com.mindalliance.channels.commands.application.UpdateProjectCommand");
 		
 		public function execute(event:CairngormEvent):void
 		{
-			trace("Updating project");
+			log.debug("Updating project");
 			var evt:UpdateProjectEvent = event as UpdateProjectEvent;
 			
 			var delegate:ProjectDelegate = new ProjectDelegate( this );
@@ -29,7 +32,7 @@ package com.mindalliance.channels.commands.application
 		
 		public function result(data:Object):void
 		{
-			trace("Project successfully updated");
+			log.debug("Project successfully updated");
 			var result:Object = (data as ResultEvent).result;
 			model.updateProject = false;
 		}
@@ -37,6 +40,7 @@ package com.mindalliance.channels.commands.application
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			log.error(fault.toString());
 		}
 		
 	}

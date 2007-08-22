@@ -11,12 +11,15 @@ package com.mindalliance.channels.commands.application
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
-	import com.mindalliance.channels.vo.ScenarioVO;
+	import com.mindalliance.channels.vo.ScenarioVO;	
+	import mx.logging.Log;
+	import mx.logging.ILogger;
 	
 	public class GetScenarioCommand implements ICommand, IResponder
 	{
 		
 		private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
+		private var log : ILogger = Log.getLogger("com.mindalliance.channels.commands.application.GetScenarioCommand");
 		public function execute(event:CairngormEvent):void
 		{
 			var evt:GetScenarioEvent = event as GetScenarioEvent;
@@ -24,8 +27,10 @@ package com.mindalliance.channels.commands.application
 			
 			var id : String = evt.id;
 			if (id!= null) {
+				log.debug("Retrieving scenario {0}", [id]);
 				delegate.getElement(id);
 			} else {
+				log.debug("Deselecting scenario");
 				model.selectedScenario = null;
 			}
 		}
@@ -33,12 +38,18 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result.scenario;
-			model.selectedScenario = new ScenarioVO(result.id, result.name, result.projectId, result.description);
+			if (result != null) {
+				model.selectedScenario = new ScenarioVO(result.id, result.name, result.projectId, result.description);
+				log.debug("Setting selected scenario to {0}", [result.id]);
+			} else {
+				log.warn("Unable to retrieve scenario");
+			}
 		}
 		
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			log.error(fault.toString());
 		}
 	}
 }

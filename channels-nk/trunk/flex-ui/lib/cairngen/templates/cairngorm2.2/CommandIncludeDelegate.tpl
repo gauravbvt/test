@@ -12,9 +12,14 @@ package @namespace@.@commands@.@submodule@
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
 	
 	public class @sequence@Command implements ICommand, IResponder
 	{
+		
+		private var log : ILogger = Log.getLogger("@namespace@.@commands@.@submodule@.@sequence@Command");
+	
 		public function execute(event:CairngormEvent):void
 		{
 			var evt:@sequence@Event = event as @sequence@Event;
@@ -29,6 +34,7 @@ package @namespace@.@commands@.@submodule@
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			log.error(fault.toString());
 		}
 	}
 }

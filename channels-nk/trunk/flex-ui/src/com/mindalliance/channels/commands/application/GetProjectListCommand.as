@@ -13,17 +13,20 @@ package com.mindalliance.channels.commands.application
 	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.ResultEvent;	
+	import mx.logging.Log;
+	import mx.logging.ILogger;
 	
 	public class GetProjectListCommand implements ICommand, IResponder
 	{
 		private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
 		
+		private var log : ILogger = Log.getLogger("com.mindalliance.channels.commands.application.GetProjectListCommand");
 		public function execute(event:CairngormEvent):void
 		{
 			var evt:GetProjectListEvent = event as GetProjectListEvent;
 			var delegate:ProjectDelegate = new ProjectDelegate( this );
-			
+			log.debug("Retrieving project list");
 			delegate.getProjectList();
 		}
 		
@@ -31,13 +34,14 @@ package com.mindalliance.channels.commands.application
 		{
 			var result:Object = (data as ResultEvent).result;
 			model.projectList = XMLHelper.fromXMLList("project", result);
-			
+			log.debug("Successfully retrieved project list");
         	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 		}
 		
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			log.error(fault.toString());
 		}
 		
 	}

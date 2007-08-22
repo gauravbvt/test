@@ -46,6 +46,7 @@ package com.mindalliance.channels.commands.application
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			log.error(fault.toString());
 		}
 		
 	}
