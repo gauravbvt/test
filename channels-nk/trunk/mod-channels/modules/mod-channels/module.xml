@@ -6,7 +6,7 @@
 	-->
     <identity>
 		<uri>urn:com:mindalliance:channels</uri>
-		<version>0.0.24</version>
+		<version>0.0.25</version>
     </identity>
 	<info>
 		<name>Mind-Alliance Channels Module</name>
@@ -47,7 +47,7 @@
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+id@$1</to>			
 		</rewrite>
 		<rewrite>
-			<match>ffcpl:/channels/(project)(.*)</match> // Overload this
+			<match>ffcpl:/channels/(artifact|category|discipline|event|person|project|repository|role|scenario|task|taxonomy)(.*)</match> // Overload this
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+type@$1$2</to>			
 		</rewrite>
 		<rewrite>
