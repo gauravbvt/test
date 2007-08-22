@@ -66,6 +66,18 @@
  	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteProjectEvent(psbModel.selectedProject.id));
  	        }
  	        
+ 	        private function updateProject() : void
+ 	        {
+ 	        	if (psbModel.updateProject == true) {
+ 	        		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateProjectEvent(psbModel.selectedProject));	
+ 	        	}
+ 	        }
+ 	        
+ 	        private function queueProjectUpdate() : void
+ 	        {
+ 	        	psbModel.updateProject = true;	
+ 	        }
+ 	        
  	        private function removeScenario() : void
  	        {
  	        	
@@ -108,10 +120,10 @@
 				</mx:VBox>
 				<mx:Form enabled="{listProjects.selectedItem != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{psbModel.selectedProject.name}"/>
+						<mx:TextInput text="{psbModel.selectedProject.name}" change="queueProjectUpdate()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{psbModel.selectedProject.description}"/>
+						<mx:TextArea text="{psbModel.selectedProject.description}" change="queueProjectUpdate()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager" visible="false" includeInLayout="false">
 						<!--This won't work properly because data providers are using generic objects. -->

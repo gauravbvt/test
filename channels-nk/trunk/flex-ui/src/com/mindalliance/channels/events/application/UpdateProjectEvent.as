@@ -2,17 +2,18 @@
 package com.mindalliance.channels.events.application
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-
+	import com.mindalliance.channels.vo.ProjectVO;
+	
 	public class UpdateProjectEvent extends CairngormEvent
 	{
 		public static const UpdateProject_Event:String = "<UpdateProjectEvent>";
 		
-		public var id : String;
+		public var project : ProjectVO;
 		
-		public function UpdateProjectEvent(id : String) 
+		public function UpdateProjectEvent(project : ProjectVO) 
 		{
 			super( UpdateProject_Event );
-			this.id = id;
+			this.project= project;
 		}
 	}
 }

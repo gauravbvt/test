@@ -4,12 +4,12 @@ package com.mindalliance.channels.commands.application
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
-	import com.mindalliance.channels.util.ServiceUtil;
 	import com.mindalliance.channels.business.application.ScenarioDelegate;
-	import com.mindalliance.channels.events.application.GetScenarioListEvent;
 	import com.mindalliance.channels.events.application.GetScenarioEvent;
+	import com.mindalliance.channels.events.application.GetScenarioListEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.util.XMLHelper;
 	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
@@ -34,7 +34,7 @@ package com.mindalliance.channels.commands.application
 		public function result(data:Object):void
 		{
 			var result:Object = (data as ResultEvent).result;
-			model.scenarioList = ServiceUtil.convertServiceList("scenario", result);
+			model.scenarioList = XMLHelper.fromXMLList("scenario", result);
 		}
 		
 		public function fault(info:Object):void

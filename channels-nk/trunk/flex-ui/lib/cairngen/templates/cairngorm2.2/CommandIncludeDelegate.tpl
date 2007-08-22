@@ -5,6 +5,7 @@ package @namespace@.@commands@.@submodule@
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.mindalliance.channels.util.XMLHelper;
 	import @namespace@.@business@.@submodule@.@delegate@Delegate;
 	import @namespace@.@events@.@submodule@.@sequence@Event;
 	import mx.rpc.events.ResultEvent;
