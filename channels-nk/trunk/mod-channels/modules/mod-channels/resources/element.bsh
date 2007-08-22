@@ -78,7 +78,7 @@ main() {
 					}
 				} else {
 					// TODO: Handle Error
-					System.out.println("We need to handle the case of missing method")
+					System.out.println("We need to handle the case of missing method");
 				}
 				break;
 				default :
