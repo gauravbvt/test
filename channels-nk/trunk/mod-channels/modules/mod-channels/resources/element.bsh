@@ -5,25 +5,32 @@ import com.ten60.netkernel.urii.aspect.*;
 main() {
 	method = (((IAspectString)context.sourceAspect("literal:method", IAspectString.class)).getString());
 
-	System.out.println("METHOD: " + method);
 	response = context.createResponseFrom(new StringAspect("<foo>bleah</foo>"));
 	type=context.getThisRequest().getArgument("type");
 	System.out.println("type: " + type );
-
+	System.out.println("URI: " + context.getThisRequest().getURI());
 	if(type != null) {
 		// regular POST to /channels/<elementClass>
-		element=context.sourceAspect("this:param:param", IAspectString.class);
-		System.out.println("project: " + element.getString());		
-		req=context.createSubRequest("active:channels_data_createElement");
-		req.addArgument("doc", element);
-		req.addArgument("kind", new StringAspect("<string>" + type + "</string>"));
-		try {
-			out=context.issueSubRequest(req);
-			System.out.println("output: " + context.transrept(out, IAspectString.class).getString());
-		} catch( Throwable t ) {
-			out = new StringAspect("<error> Error creating project </error>");
+		if(context.exists("this:param:param")) {
+			try {
+				element=context.sourceAspect("this:param:param", IAspectString.class);
+			} catch(Throwable d) {
+				d.printStackTrace();
+			}
+			req=context.createSubRequest("active:channels_data_createElement");
+			req.addArgument("doc", element);
+			req.addArgument("kind", new StringAspect("<string>" + type + "</string>"));
+			try {
+				out=context.issueSubRequest(req);
+			} catch( Throwable t ) {
+				out = new StringAspect("<error> Error creating " + type + "</error>");
+			}
+			response=context.createResponseFrom(out);		
+
+		} else {
+			out = new StringAspect("<error> Error creating " + type + "</error>");
 		}
-		response=context.createResponseFrom(out);		
+
 	} else {
 		// particular element manipulation
 		params = getParams(context);
@@ -46,13 +53,11 @@ main() {
 				response=context.createResponseFrom(out);
 				break;
 				case "POST":
-				System.out.println("1");
 				method = params.getValue("method");
-				System.out.println("2");			
+
 				if(method!=null) {
 					switch(method) {
 						case "DELETE":
-						System.out.println("DELETE: " + id );
 						req=context.createSubRequest("active:channels_data_deleteElement");
 						req.addArgument("id", new StringAspect("<id>" + id + "</id>"));
 						out=null;
@@ -68,10 +73,12 @@ main() {
 						break;
 						default:
 						// TODO: Handle error
+						System.out.println("We need to handle the case of unexpected method");
 						break;
 					}
 				} else {
 					// TODO: Handle Error
+					System.out.println("We need to handle the case of missing method")
 				}
 				break;
 				default :
@@ -94,5 +101,5 @@ getParams(context) {
 			params = (IAspectNVP) context.sourceAspect("this:param:param", IAspectNVP.class);
 		}
 
-		return params;
-	}
+	return params;
+}
