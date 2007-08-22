@@ -44,10 +44,18 @@ package com.mindalliance.channels.vo
 			if (results.list == null || results.list[key] == null) {
 				return new ArrayCollection();
 			} else if (results.list[key] is ObjectProxy) {
-				return new ArrayCollection([results]);
+				return new ArrayCollection([results.list[key]]);
 			} else { 
 				return results.list[key] as ArrayCollection;
 			}		
+		}
+		
+		protected function generateElementListXML(listTag : String, elementTag : String, list : ArrayCollection) :XML {
+			var xml : XML = <{listTag}></{listTag}>;
+			for each (var obj : Object in list) {
+				xml.appendChild(<{elementTag}><id>{obj.id}</id></{elementTag}>);	
+			}
+			return xml;
 		}
 	}
 }

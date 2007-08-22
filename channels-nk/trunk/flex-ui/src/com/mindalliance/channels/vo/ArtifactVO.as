@@ -58,26 +58,15 @@ package com.mindalliance.channels.vo
 		 * </artifact>
 		 */
 		public function toXML() : XML {
-			var categoriesXML : XML = <categories></categories>;
-			for each (var category in categories) {
-				categoriesXML.appendChild(<category><id>{category.id}</id></category>);
-				
-			}
-			var informationXML : XML = <information></information>;
-			for each (var element in information) {
-				informationXML.appendChild(<element><topic>{element.topic}</topic></element>);
-			}			
-			
-			
-			var artifactXML =  <artifact>
+			var xml =  <artifact>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
 					</artifact>;
 			
-			artifactXML.appendChild(categoriesXML);
-			artifactXML.appendChild(informationXML);
-			return artifactXML;
+			xml.appendChild(this.generateElementListXML("categories", "categoryId", categories);
+			xml.appendChild(this.generateXMLInformationList(information));
+			return xml;
 			
 		}
 
@@ -129,6 +118,14 @@ package com.mindalliance.channels.vo
 		 */
 		public static function fromXMLList( obj : Object ) : ArrayCollection {
 			return ElementVO.fromXMLList("artifact", obj);
+		}
+		
+		protected function generateXMLInformationList(list : ArrayCollection) : XML {
+			var xml : XML = <information></information>;
+			for each (var element in list) {
+				informationXML.appendChild(<element><topic>{element.topic}</topic></element>);
+			}		
+			return xml;
 		}
 	}
 }

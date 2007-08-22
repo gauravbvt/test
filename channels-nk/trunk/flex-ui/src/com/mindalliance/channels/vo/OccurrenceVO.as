@@ -57,11 +57,11 @@ package com.mindalliance.channels.vo
 		/**
 		 * Produces XML of the form:
 		 * 
-		 * <Occurrence>
+		 * <occurrence>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 * </Occurrence>
+		 * </occurrence>
 		 */
 		public function toXML() : XML {
 			return <occurrence>
@@ -73,11 +73,11 @@ package com.mindalliance.channels.vo
 
 		/**
 		 * Expects XML of the form:
-		 * <Occurrence>
+		 * <occurrence>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 * </Occurrence>
+		 * </occurrence>
 		 */
 		public static function fromXML( obj : Object ) : ProjectVO {
 				return new OccurrenceVO(obj.id, obj.name, obj.description);
@@ -87,16 +87,18 @@ package com.mindalliance.channels.vo
 		 * Produces a list from XML of the form:
 		 * 
 		 * <list>
-		 *   <Occurrence>
+		 *   <occurrence>
 		 *     <id>{id}</id>
 		 *     <name>{name}</id>
-		 *   </Occurrence>
+		 *   </occurrence>
 		 *   ...
 		 * </list>
 		 * 
 		 */
 		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("Occurrence", obj);
+			return ElementVO.fromXMLList("occurrence", obj);
 		}
+		
+
 	}
 }

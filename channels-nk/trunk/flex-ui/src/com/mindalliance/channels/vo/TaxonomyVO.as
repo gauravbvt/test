@@ -7,9 +7,9 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 
-	public class CategoryVO extends ElementVO implements IValueObject
+	public class TaxonomyVO extends ElementVO implements IValueObject
 	{
-		public function CategoryVO( id : String, 
+		public function TaxonomyVO( id : String, 
 								name : String, 
 								projectId : String, 
 								description : String ) {
@@ -21,46 +21,46 @@ package com.mindalliance.channels.vo
 		/**
 		 * Produces XML of the form:
 		 * 
-		 * <Category>
+		 * <taxonomy>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 * </Category>
+		 * </taxonomy>
 		 */
 		public function toXML() : XML {
-			return <category>
+			return <Taxonomy>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
-					</category>;
+					</Taxonomy>;
 		}
 
 		/**
 		 * Expects XML of the form:
-		 * <category>
+		 * <taxonomy>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 * </category>
+		 * </taxonomy>
 		 */
 		public static function fromXML( obj : Object ) : ProjectVO {
-				return new CategoryVO(obj.id, obj.name, obj.description);
+				return new TaxonomyVO(obj.id, obj.name, obj.description);
 		}
 		
 		/**
 		 * Produces a list from XML of the form:
 		 * 
 		 * <list>
-		 *   <category>
+		 *   <taxonomy>
 		 *     <id>{id}</id>
 		 *     <name>{name}</id>
-		 *   </category>
+		 *   </taxonomy>
 		 *   ...
 		 * </list>
 		 * 
 		 */
 		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("category", obj);
+			return ElementVO.fromXMLList("Taxonomy", obj);
 		}
 	}
 }

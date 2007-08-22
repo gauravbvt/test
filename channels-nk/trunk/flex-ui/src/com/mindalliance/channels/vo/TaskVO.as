@@ -80,36 +80,17 @@ package com.mindalliance.channels.vo
 		 * </task>
 		 */
 		public function toXML() : XML {
-			var agentsXML : XML = <agents></agents>;
-			for each (var role in agents) {
-				agentsXML.appendChild(<roleId>{role.id}</roleId>);	
-			}
-			
-			var artifactXML : XML = <artifacts></artifacts>;
-			for each (var artifact in artifacts) {
-				artifactXML.appendChild(<artifactId>{artifact.id}</artifactId>);
-			}
-			var categoriesXML : XML = <categories></categories>;
-			for each (var category in categories) {
-				categoriesXML.appendChild(<category><id>{category.id}</id></category>);
-				
-			}
-			var informationXML : XML = <information></information>;
-			for each (var element in information) {
-				informationXML.appendChild(<element><topic>{element.topic}</topic></element>);
-			}			
-			
 			var taskXML : XML = <task>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>						
 					</task>;
-			taskXML.appendChild(categoriesXML);
-			taskXML.appendChild(informationXML);
+			xml.appendChild(this.generateElementListXML("categories", "categoryId", categories);
+			xml.appendChild(this.generateXMLInformationList(information));
 			taskXML.appendChild(cause.toXML());
 			taskXML.appendChild(duration.toXML());
-			taskXML.appendChild(agentsXML);
-			taskXML.appendChild(artifactXML);
+			taskXML.appendChild(generateElementListXML("agents", "roleId", agents);
+			taskXML.appendChild(generateElementListXML("artifacts", "artifactId", artifacts);
 			
 		}
 

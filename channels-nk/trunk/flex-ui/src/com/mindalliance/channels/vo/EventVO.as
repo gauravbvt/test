@@ -65,19 +65,10 @@ package com.mindalliance.channels.vo
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
-					</event>;
-			var categoriesXML : XML = <categories></categories>;
-			for each (var category in categories) {
-				categoriesXML.appendChild(<category><id>{category.id}</id></category>);
-				
-			}
-			var informationXML : XML = <information></information>;
-			for each (var element in information) {
-				informationXML.appendChild(<element><topic>{element.topic}</topic></element>);
-			}			
+					</event>;	
 			
-			xml.appendChild(categoriesXML);
-			xml.appendChild(informationXML);
+			xml.appendChild(this.generateElementListXML("categories", "categoryId", categories);
+			xml.appendChild(this.generateXMLInformationList(information));
 			xml.appendChild(cause.toXML());
 			xml.appendChild(duration.toXML());
 			

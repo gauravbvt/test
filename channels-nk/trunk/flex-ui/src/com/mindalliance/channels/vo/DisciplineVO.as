@@ -7,9 +7,9 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 
-	public class CategoryVO extends ElementVO implements IValueObject
+	public class DisciplineVO extends ElementVO implements IValueObject
 	{
-		public function CategoryVO( id : String, 
+		public function DisciplineVO( id : String, 
 								name : String, 
 								projectId : String, 
 								description : String ) {
@@ -21,46 +21,46 @@ package com.mindalliance.channels.vo
 		/**
 		 * Produces XML of the form:
 		 * 
-		 * <Category>
+		 * <discipline>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 * </Category>
+		 * </discipline>
 		 */
 		public function toXML() : XML {
-			return <category>
+			return <discipline>
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
-					</category>;
+					</discipline>;
 		}
 
 		/**
 		 * Expects XML of the form:
-		 * <category>
+		 * <discipline>
 		 *   <id>{id}</id>
 		 *   <name>{name}</name>
 		 *   <description>{description}</description>
-		 * </category>
+		 * </discipline>
 		 */
 		public static function fromXML( obj : Object ) : ProjectVO {
-				return new CategoryVO(obj.id, obj.name, obj.description);
+				return new DisciplineVO(obj.id, obj.name, obj.description);
 		}
 		
 		/**
 		 * Produces a list from XML of the form:
 		 * 
 		 * <list>
-		 *   <category>
+		 *   <discipline>
 		 *     <id>{id}</id>
 		 *     <name>{name}</id>
-		 *   </category>
+		 *   </discipline>
 		 *   ...
 		 * </list>
 		 * 
 		 */
 		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("category", obj);
+			return ElementVO.fromXMLList("discipline", obj);
 		}
 	}
 }
