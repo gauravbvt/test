@@ -5,8 +5,8 @@
 		 order by $e/name
 		 return
 		 	<project>
-		 		<id>{$e/id}</id>
-		 		<name>{$e/name}</name>
+		 		<id>{$e/id/text()}</id>
+		 		<name>{$e/name/text()}</name>
 		 	</project>
 	}
 </list>
