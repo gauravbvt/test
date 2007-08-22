@@ -32,7 +32,7 @@ package com.mindalliance.channels.model
 		private var _username : String= 'John Doe';
 		
  	    private var _urlRoot : String = serviceResources.getString("urlRoot");		
-		private var _debug : Boolean = serviceResources.getString("debug");
+		private var _debug : Boolean = serviceResources.getBoolean("debug");
 		// Accessor Functions
 		/**
 		 * The currently loaded project.
