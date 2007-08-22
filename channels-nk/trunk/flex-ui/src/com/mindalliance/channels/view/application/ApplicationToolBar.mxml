@@ -33,6 +33,9 @@
         	import mx.core.IFlexDisplayObject;
             import mx.managers.PopUpManager;
         
+	  		[Bindable]
+	  		public var IS_DEBUG:Boolean = true ;
+
         			
             [Bindable]
  	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
@@ -52,6 +55,14 @@
                 "Artifact Editor":ArtifactEditor,
                 "Artifact Chooser":ArtifactChooser
                 };
+                
+            private function popUpTraceWindow():void {
+            	var traceWindow:TitleWindow = TitleWindow(PopUpManager.createPopUp(this, TitleWindow, false)) ;
+            	traceWindow.showCloseButton = true; 
+            	traceWindow.addEventListener(CloseEvent.CLOSE, function anon():void{PopUpManager.removePopUp(traceWindow);}) ;
+            	// Add whatever trace display component like textarea here.
+            	//traceWindow.addChild(<blah>) ;
+            }    
                 
             private function menuBarItemClicked(event:MenuEvent):void {
                 var c:Class = classHash[event.item.@label] ;
@@ -146,6 +157,7 @@
 		</menuitem>
     </mx:XMLList>
 	
+	<mx:Button label="Show Trace Output" visible="{IS_DEBUG}" click="popUpTraceWindow()" fillColors="[#f09a7b, #f09a7b]"/>
     <mx:MenuBar id="channelsMenuBar" dataProvider="{ChannelsMenuBarItems}" labelField="@label" showRoot="false" itemClick="menuBarItemClicked(event)"/>
     <mx:Spacer width="100%"/>
     <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
