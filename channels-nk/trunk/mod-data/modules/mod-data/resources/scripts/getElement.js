@@ -31,7 +31,8 @@ function addNamesToListedReferences(elem) {
 			var list = elem.getXmlObject().selectPath(".//" + names[i]);
 			for (j in list) {
 				var el = new XML(list[j]);
-				el.@name = getNameFromId(el.text());
+				var name = getNameFromId(el.text());
+				el.@name = name
 				log("Added name to: " + el, "info");
 			}
 		}
@@ -52,9 +53,17 @@ function findListedReferenceElementNames(elem) {
 	return list;
 }
 
+// Returns a name or " NO NAME_" if none is found
 function getNameFromId(id) {
 	log("Getting name from id :" + id, "info");
-	return getDocument(id).name.text();
+	var name = " NO NAME"
+	try {
+		name = getDocument(id).name.text();
+	}
+	catch (e) {
+		log("Can't get name from id: " + id + " (" + e + ")", "warning");
+	}
+	return name;
 }
 
 
