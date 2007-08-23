@@ -7,6 +7,8 @@
         <role>
           <name>Role 1</name>
           <organizationId> abc </organizationId>
+          <categories atMostOne="false" taxonomy="role"/>
+          <expertise/>
         </role>
       </doc>
       <kind><string>role</string></kind>
@@ -18,6 +20,8 @@
         <role>
           <name>Role 2</name>
           <organizationId> abc </organizationId>
+          <categories atMostOne="false" taxonomy="role"/>
+          <expertise/>
         </role>
       </doc>
       <kind><string>role</string></kind>
@@ -27,7 +31,6 @@
       <type>copy</type>
       <operand>
         <person>
-          <name>JD</name>
           <firstName> John </firstName>
           <lastName>Doe</lastName>
           <email>jd@mail.net</email>

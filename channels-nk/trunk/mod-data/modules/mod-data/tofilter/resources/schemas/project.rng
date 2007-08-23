@@ -1,27 +1,26 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
-  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
-  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
+  include href="http://@host@:@port@/channels/schema/def_all.rnc"
+  include href="http://@host@:@port@/channels/schema/def_identified.rnc"
   start =
       element project {
-  	    {attrs},
-  	    {elems} & 
-        element manager {text}?
+  	    {all},
+  	    {identified} & 
+        element managedByPersonId {text}?
       }
   -->
-  <include href="http://@host@:@port@/channels/schema/ext_attrs.rng"/>
-  <include href="http://@host@:@port@/channels/schema/ext_elems.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
   
   <start>
     <element name="project">
-      <ref name="attrs"/>
       <interleave>
-        <ref name="elems"/>
+        <ref name="all"/>
+        <ref name="identified"/>
         <optional>
-          <element name="manager"><text/></element>
+          <element name="managedByPersonId"><text/></element>
         </optional>
       </interleave>
     </element>
   </start>
-  
 </grammar>

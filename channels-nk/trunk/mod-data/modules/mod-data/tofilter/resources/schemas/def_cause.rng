@@ -1,0 +1,31 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+ include href="http://@host@:@port@/channels/schema/duration.rnc"
+  cause = element cause {
+    element occurrenceId {text} &
+    element delay {
+      {duration} &
+      element from {"start" | "end"}
+    }?
+  }
+  -->
+  <include href="http://@host@:@port@/channels/schema/duration.rng"/>
+  <define name="cause">
+    <element name="cause">
+      <interleave>
+        <element name="occurrenceId"><text/></element>
+        <element name="delay">
+          <interleave>
+            <ref name="duration"/>
+            <element name="from">
+              <choice>
+                <value>start</value>
+                <value>end</value>
+              </choice>
+            </element>
+          </interleave>
+        </element>
+      </interleave>
+    </element>
+  </define>
+</grammar>

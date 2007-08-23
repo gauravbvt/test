@@ -1,0 +1,17 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  latLong =
+    element latLong {
+      element latitude {xsd:double} &
+      element longitude {xsd:double}
+    }
+  -->
+  <define name="latlong">
+    <element name="latlong">
+      <interleave>
+        <element name="latitude"><data type="double"/></element>
+        <element name="longitude"><data type="double"/></element>
+      </interleave>
+    </element>
+  </define>
+</grammar>

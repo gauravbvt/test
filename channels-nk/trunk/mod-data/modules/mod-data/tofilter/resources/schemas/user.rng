@@ -1,0 +1,23 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+  include href="http://@host@:@port@/channels/schema/def_all.rnc"
+  start =
+    element user {
+      attribute isAdmin {xsd:boolean} ,
+      {all} &
+      element userName {text} &
+      element password {text}
+    }
+-->
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>  
+  <start>
+    <element name="user">
+      <attribute name="isAdmin"><data type="boolean"/></attribute>
+      <interleave>
+        <ref name="all"/>
+        <element name="userName"><text/></element>
+        <element name="password"><text/></element>
+      </interleave>
+    </element>
+  </start>
+</grammar>

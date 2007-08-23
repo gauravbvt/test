@@ -1,37 +1,32 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
   include href="http://@host@:@port@/channels/schema/def_all.rnc"
-  include href="http://@host@:@port@/channels/schema/def_identified.rnc"
   include href="http://@host@:@port@/channels/schema/def_categorized.rnc"
+  include href="http://@host@:@port@/channels/schema/def_product.rnc"
   include href="http://@host@:@port@/channels/schema/def_information.rnc"
   
   start =
-    element role {
+    element acquirement {
       {all} &
       {identified} &
       {categorized} &
-      element organizationId {text} &
-      element expertise {
-        {information}*
-      }
+      {product} &
+      {information}
     }
-      -->
+  -->
   <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_categorized.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_product.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
- 
+  
   <start>
-    <element name="role">
+    <element name="acquirement">
       <interleave>
         <ref name="all"/>
         <ref name="identified"/>
         <ref name="categorized"/>
-        <element name="organizationId"><text/></element>
-        <element name="expertise">
-          <zeroOrMore>
-            <ref name="information"/>
-          </zeroOrMore>
-        </element>
+        <ref name="product"/>
+        <ref name="information"/>
       </interleave>
     </element>
   </start>

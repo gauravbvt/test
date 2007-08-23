@@ -7,15 +7,10 @@
   }
   -->
   <define name="address">
-    <element name="street">
-      <text/>
-    </element>
-    <element name="city">
-      <text/>
-    </element>
-    <element name="state">
-      <text/>
+    <element name="address">
+      <element name="street"><text/></element>
+      <element name="city"><text/></element>
+      <element name="state"><text/></element>
     </element>
   </define>
-  
 </grammar>

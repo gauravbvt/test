@@ -1,0 +1,26 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+    include href="http://@host@:@port@/channels/schema/def_taxonomy.rnc"
+    categorized =
+      element categories {
+        {taxonomy} ,
+        attribute atMostOne {xsd:boolean} ,
+        element categoryId {text}*
+      }
+  -->
+  <include href="http://@host@:@port@/channels/schema/def_taxonomy.rng"/>
+  <define name="categorized">
+    <element name="categories">
+      <attribute name="atMostOne">
+        <choice>
+          <value>true</value>
+          <value>false</value>
+        </choice>
+      </attribute>
+      <ref name="taxonomy"/>
+        <zeroOrMore>
+          <element name="categoryId"><text/></element>
+        </zeroOrMore>
+    </element>
+  </define>
+</grammar>

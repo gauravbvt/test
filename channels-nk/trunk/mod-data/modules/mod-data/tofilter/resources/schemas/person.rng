@@ -1,35 +1,36 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
-  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
-  include href="http://@host@:@port@/channels/schema/ext_attrs.rnc"
-  include href="http://@host@:@port@/channels/schema/ext_address.rnc"
+  include href="http://@host@:@port@/channels/schema/def_all.rnc"
+  include href="http://@host@:@port@/channels/schema/def_address.rnc"
   
   start =
-      element person {
-  	    {attrs},
-  	    {elems} & 
-        element firstName {text} &
-        element lastName {text} &
-        element email {text} &
-        element officePhone {text}? &
-        element cellPhone {text}? &
-    		{address}?
-    		element roles {
-    			element roleId {text}
-    		}*
-      }
+    element person {
+      {all} &
+      element firstName {text} &
+      element lastName {text} &
+      element photo {text}? &
+      element email {text} &
+      element officePhone {text}? &
+      element cellPhone {text}? &
+      {address}? &
+      element roles {
+        element roleId {text}
+      }*
+      element userId {text}?
+    } 
   -->
-  <include href="http://@host@:@port@/channels/schema/ext_attrs.rng"/>
-  <include href="http://@host@:@port@/channels/schema/ext_elems.rng"/>
-  <include href="http://@host@:@port@/channels/schema/ext_address.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
   
   <start>
     <element name="person">
-      <ref name="attrs"/>
       <interleave>
-        <ref name="elems"/>
+        <ref name="all"/>
         <element name="firstName"><text/></element>
         <element name="lastName"><text/></element>
+        <optional>
+          <element name="photo"><text/></element>
+        </optional>
         <element name="email"><text/></element>
         <optional>
           <element name="officePhone"><text/></element>
@@ -45,8 +46,10 @@
             <element name="roleId"><text/></element>
           </zeroOrMore>
         </element>
+        <optional>
+          <element name="userId"><text/></element>
+        </optional>
       </interleave>
     </element>
   </start>
-  
 </grammar>

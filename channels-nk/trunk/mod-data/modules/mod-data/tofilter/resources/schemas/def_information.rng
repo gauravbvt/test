@@ -1,0 +1,51 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+ include href="http://@host@:@port@/channels/schema/def_level.rnc"
+ include href="http://@host@:@port@/channels/schema/def_identified.rnc"
+    information = 
+      element information {
+        element topic {
+          (
+            element confidence {
+              {level}
+            }? &
+            element privacy {
+              element roleId {text}*
+            }?
+          ) ,
+          element eoi {
+            {identified}
+          }*
+        }*
+      }
+  -->
+  <include href="http://@host@:@port@/channels/schema/def_level.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
+  <define name="information">
+    <element name="information">
+      <zeroOrMore>
+        <element name="topic">
+          <interleave>
+            <optional>
+              <element name="confidence">
+                <ref name="level"/>
+              </element>
+            </optional>
+            <optional>
+              <element name="privacy">
+                <zeroOrMore>
+                  <element name="roleId"><text/></element>
+                </zeroOrMore>
+              </element>
+            </optional>
+          </interleave>
+          <zeroOrMore>
+            <element name="eoi">
+              <ref name="identified"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+</grammar>

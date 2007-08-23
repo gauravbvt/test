@@ -1,5 +1,5 @@
 <log>
-  <name>urn:com:mindalliance:data</name>
+  <name>urn:com:mindalliance:channels:data</name>
   <destination>log/crud-%g.log</destination>
   <limit>131072</limit>
   <count>2</count>

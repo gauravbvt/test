@@ -1,0 +1,33 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+    include href="http://@host@:@port@/channels/schema/address.rnc"
+    include href="http://@host@:@port@/channels/schema/latlong.rnc"
+    occurrence = 
+      element where {
+        locationId {text} | 
+        {address} | 
+        {latLong}
+      }? &
+      {cause}?
+  -->
+  <include href="http://@host@:@port@/channels/schema/address.rng"/>
+  <include href="http://@host@:@port@/channels/schema/latlong.rng"/>
+  <define name="occurrence">
+    <element name="occurrence">
+      <interleave>
+        <optional>
+          <element name="where">
+            <choice>
+              <element name="locationId"><text/></element>
+              <ref name="address"/>
+              <ref name="latlong"/>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <ref name="cause"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+</grammar>

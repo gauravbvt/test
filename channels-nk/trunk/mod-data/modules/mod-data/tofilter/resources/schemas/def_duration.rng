@@ -1,0 +1,26 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  duration =
+  element duration {
+    element value {xsd:integer} &
+      element unit {"week" | "day" | "hour" | "minute" | "second"}
+    }
+  }
+  -->
+  <define name="duration">
+    <element name="duration">
+      <interleave>
+        <element name="value"><data type="double"/></element>
+        <element name="unit">
+          <choice>
+            <value>week</value>
+            <value>day</value>
+            <value>hour</value>
+            <value>minute</value>
+            <value>second</value>
+          </choice>
+        </element>
+      </interleave>
+    </element>
+  </define>
+</grammar>
