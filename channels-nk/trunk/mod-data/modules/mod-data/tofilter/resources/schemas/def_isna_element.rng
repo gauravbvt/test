@@ -1,0 +1,12 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+    all =
+      attribute schema {text} &
+      element id {text}
+      }
+  -->
+  <define name="isna_element">
+    <attribute name="schema"><text/></attribute>
+    <element name="id"><text/></element>
+  </define>
+</grammar>

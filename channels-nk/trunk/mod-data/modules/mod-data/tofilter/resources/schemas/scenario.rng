@@ -9,17 +9,16 @@
         element projectId {text}
       }
   -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
   
   <start>
     <element name="scenario">
       <interleave>
-        <ref name="all"/>
+        <ref name="isna_element"/>
         <ref name="identified"/>
         <element name="projectId"><text/></element>
       </interleave>
     </element>
   </start>
-  
 </grammar>

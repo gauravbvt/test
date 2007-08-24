@@ -10,12 +10,9 @@
   -->
   <include href="http://@host@:@port@/channels/schema/def_taxonomy.rng"/>
   <define name="categorized">
-    <element name="categories">
+    <element name="categories" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <attribute name="atMostOne">
-        <choice>
-          <value>true</value>
-          <value>false</value>
-        </choice>
+        <data type="boolean"/>
       </attribute>
       <ref name="taxonomy"/>
         <zeroOrMore>

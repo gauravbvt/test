@@ -1,0 +1,17 @@
+<organization schema="http://localhost:8080/channels/schema/organization.rng">
+  <id>239843257543</id>
+  <name>An organization</name>
+  <description>About an organization</description>
+  <categories atMostOne="false" taxonomy="organization">
+    <categoryId>47474756</categoryId>
+    <categoryId>33341234</categoryId>
+  </categories>
+	<abbreviation>AO</abbreviation>
+  <logo>http://ao.com/logo.png</logo>
+  <parentOrganizationId>9090987</parentOrganizationId>
+  <address>
+    <street>12 Main</street>
+    <city>Springfield</city>
+    <state>IL</state>
+  </address>
+</organization>

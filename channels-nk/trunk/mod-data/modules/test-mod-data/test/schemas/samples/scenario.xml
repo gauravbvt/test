@@ -1,6 +1,6 @@
 <scenario schema="http://localhost:8080/channels/schema/scenario.rng">
   <id>12345</id>
-  <name>My scenario</name>
-  <description>A scenario</description>
+  <name>A scenario</name>
+  <description>About a scenario</description>
   <projectId>487634</projectId>
 </scenario>

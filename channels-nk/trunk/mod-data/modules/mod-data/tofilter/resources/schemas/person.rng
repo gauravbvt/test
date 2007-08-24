@@ -19,13 +19,13 @@
       element userId {text}?
     } 
   -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
   
   <start>
     <element name="person">
       <interleave>
-        <ref name="all"/>
+        <ref name="isna_element"/>
         <element name="firstName"><text/></element>
         <element name="lastName"><text/></element>
         <optional>

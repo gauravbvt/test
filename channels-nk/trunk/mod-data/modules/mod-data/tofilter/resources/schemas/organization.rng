@@ -16,7 +16,7 @@
       {address}?
     }
   -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_categorized.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
@@ -24,7 +24,7 @@
   <start>
     <element name="organization">
       <interleave>
-        <ref name="all"/>
+        <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
         <optional>

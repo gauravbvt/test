@@ -1,0 +1,92 @@
+<role schema="http://localhost:8080/channels/schema/role.rng">
+  <id>3456787654</id>
+  <name>A role</name>
+  <description>About a role</description>
+  <categories atMostOne="false" taxonomy="role">
+    <categoryId>47474756</categoryId>
+    <categoryId>33341234</categoryId>
+  </categories>
+  <organizationId>984583</organizationId>
+  <expertise>
+    <information>
+      <topic>
+        <name>topic 1</name>
+        <description>about topic1</description>
+        <confidence>
+          <level>low</level>
+        </confidence>
+        <privacy>
+          <roleId>4987</roleId>
+          <roleId>1123</roleId>
+        </privacy>
+        <eoi>
+          <name>eoi 1.1</name>
+          <description>about eoi 1.1</description>
+        </eoi>
+        <eoi>
+          <name>eoi 1.2</name>
+          <description>about eoi 1.2</description>
+        </eoi>
+      </topic>
+      <topic>
+        <name>topic 2</name>
+        <description>about topic2</description>
+        <confidence>
+          <level>low</level>
+        </confidence>
+        <privacy>
+          <roleId>4333</roleId>
+          <roleId>554</roleId>
+        </privacy>
+        <eoi>
+          <name>eoi 2.1</name>
+          <description>about eoi 2.1</description>
+        </eoi>
+        <eoi>
+          <name>eoi 2.2</name>
+          <description>about eoi 2.2</description>
+        </eoi>
+      </topic>
+    </information>
+    <information>
+      <topic>
+        <name>topic 1</name>
+        <description>about topic1</description>
+        <confidence>
+          <level>low</level>
+        </confidence>
+        <privacy>
+          <roleId>4987</roleId>
+          <roleId>1123</roleId>
+        </privacy>
+        <eoi>
+          <name>eoi 1.1</name>
+          <description>about eoi 1.1</description>
+        </eoi>
+        <eoi>
+          <name>eoi 1.2</name>
+          <description>about eoi 1.2</description>
+        </eoi>
+      </topic>
+      <topic>
+        <name>topic 2</name>
+        <description>about topic2</description>
+        <confidence>
+          <level>low</level>
+        </confidence>
+        <privacy>
+          <roleId>4333</roleId>
+          <roleId>554</roleId>
+        </privacy>
+        <eoi>
+          <name>eoi 2.1</name>
+          <description>about eoi 2.1</description>
+        </eoi>
+        <eoi>
+          <name>eoi 2.2</name>
+          <description>about eoi 2.2</description>
+        </eoi>
+      </topic>
+    </information>
+  </expertise>
+</role>

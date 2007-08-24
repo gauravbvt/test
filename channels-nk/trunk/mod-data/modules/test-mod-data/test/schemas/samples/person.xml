@@ -1,0 +1,19 @@
+<person schema="http://localhost:8080/channels/schema/person.rng">
+  <id>6530DAB72</id>
+  <firstName>John</firstName>
+  <lastName>Doe</lastName>
+  <photo>http://photos.com/jd</photo>
+  <email>jd@email.net</email>
+  <officePhone>555-1212</officePhone>
+  <cellPhone>555-1212</cellPhone>
+  <address>
+    <street>25 Elm</street>
+    <city>Middletown</city>
+    <state>NJ</state>
+  </address>
+  <roles>
+    <roleId>293874</roleId>
+    <roleId>766346</roleId>
+  </roles>
+  <userId>34567</userId>
+</person>

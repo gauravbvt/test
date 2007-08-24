@@ -9,12 +9,14 @@
       element password {text}
     }
 -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>  
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>  
   <start>
-    <element name="user">
-      <attribute name="isAdmin"><data type="boolean"/></attribute>
+    <element name="user" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+      <attribute name="isAdmin">
+         <data type="boolean"/>
+      </attribute>
       <interleave>
-        <ref name="all"/>
+        <ref name="isna_element"/>
         <element name="userName"><text/></element>
         <element name="password"><text/></element>
       </interleave>

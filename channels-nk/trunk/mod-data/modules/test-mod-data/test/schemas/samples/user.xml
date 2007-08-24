@@ -1,0 +1,5 @@
+<user schema="http://localhost:8080/channels/schema/user.rng" isAdmin="false">
+  <id>2352332784</id>
+  <userName>jd</userName>
+  <password>bigsecret</password>
+</user>

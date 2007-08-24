@@ -1,11 +1,13 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
 <!--
   product =
-    element causedByTaskId {text}
+  	element product {
+			element taskId {text}
+  	}
   -->
   <define name="product">
     <element name="product">
-      <element name="causedByTaskId"><text/></element>
+      <element name="taskId"><text/></element>
     </element>
   </define>
 </grammar>

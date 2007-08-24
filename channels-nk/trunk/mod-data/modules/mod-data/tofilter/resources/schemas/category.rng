@@ -15,12 +15,12 @@
       } &
       {information}
 -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
   <start>
     <element name="category">
       <interleave>
-        <ref name="all"/>
+        <ref name="isna_element"/>
         <ref name="identified"/>
         <element name="disciplines">
           <zeroOrMore>

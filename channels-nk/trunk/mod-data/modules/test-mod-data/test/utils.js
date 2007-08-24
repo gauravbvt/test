@@ -9,23 +9,21 @@ function log(content, level) {
   req.addArgument("configuration", LOG_URL ); // Defaults to ffcpl:/etc/LogConfig.xml
   var levelXml = "<log>" + "<" + level + "/>" + "</log>";
   req.addArgument("operator", new StringAspect(levelXml) );
-  context.issueAsyncSubRequest(req);
+  context.issueSubRequest(req);
 }
 
 function issueValidateRNGRequest(schemaURI, docURI) {
+	log("Schema uri = " + schemaURI + ", docURI = " + docURI, "info");
 	var req = context.createSubRequest("active:validateRNG");
   req.addArgument("operator", schemaURI );
-  req.addArgument("operand", docURI)
-  res = context.issueSubRequest(req);
-  var isValid = context.transrept(res, IAspectBoolean).isTrue();
-  if (!isValid) {
-  	ex = <ex>
-  					<id>Invalid</id>
-  					<message>{context.transrept(res, IAspectString).getString()}</message>
-  			 </ex>
-  	req = context.createSubRequest("active:throw");
-  	req.addArgument("operand",ex);
-  	context.issueRequest(req);
+  req.addArgument("operand", docURI);
+  try {
+  	var res = context.issueSubRequest(req);
+  	var valid = context.transrept(res, IAspectBoolean).isTrue();
+  	return valid;
   }
-  return res;
+  catch (e) {
+  	log("Validation exception " + new String(e), "severe");
+  	throw("Validation error");
+  }
 }

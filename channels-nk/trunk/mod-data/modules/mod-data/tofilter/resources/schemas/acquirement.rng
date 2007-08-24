@@ -1,11 +1,6 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!-- The acquisition of information from execting a task -->
   <!--
-  include href="http://@host@:@port@/channels/schema/def_all.rnc"
-  include href="http://@host@:@port@/channels/schema/def_categorized.rnc"
-  include href="http://@host@:@port@/channels/schema/def_product.rnc"
-  include href="http://@host@:@port@/channels/schema/def_information.rnc"
-  
   start =
     element acquirement {
       {all} &
@@ -15,7 +10,7 @@
       {information}
     }
   -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_categorized.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_product.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
@@ -23,7 +18,7 @@
   <start>
     <element name="acquirement">
       <interleave>
-        <ref name="all"/>
+        <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
         <ref name="product"/>

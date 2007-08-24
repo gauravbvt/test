@@ -1,12 +1,15 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <!--
-    all =
-      attribute schema {text} &
-      element id {text}
-      }
-  -->
-  <define name="all">
-    <attribute name="schema"><text/></attribute>
-    <element name="id"><text/></element>
-  </define>
+  <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_categorized.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_cause.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_duration.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_latlong.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_level.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_occurrence.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_product.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_spatialCoordinates.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_taxonomy.rng"/>
 </grammar>

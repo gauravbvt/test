@@ -7,10 +7,14 @@
     }
   -->
   <define name="latlong">
-    <element name="latlong">
+    <element name="latlong" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <interleave>
-        <element name="latitude"><data type="double"/></element>
-        <element name="longitude"><data type="double"/></element>
+        <element name="latitude">
+          <data type="double"/>
+        </element>
+        <element name="longitude">
+          <data type="double"/>
+        </element>
       </interleave>
     </element>
   </define>

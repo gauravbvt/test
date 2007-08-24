@@ -1,0 +1,53 @@
+<category schema="http://localhost:8080/channels/schema/category.rng">
+  <id>324598347FAC3654</id>
+  <name>A category</name>
+  <description>About a category</description>
+  <disciplines>
+    <categoryId>349857</categoryId>
+    <categoryId>9875</categoryId>
+  </disciplines>
+  <implies>
+    <categoryId>443234</categoryId>
+    <categoryId>89889</categoryId>
+  </implies>
+  <information>
+    <topic>
+      <name>topic 1</name>
+      <description>about topic1</description>
+      <confidence>
+        <level>low</level>
+      </confidence>
+      <privacy>
+        <roleId>4987</roleId>
+        <roleId>1123</roleId>
+      </privacy>
+      <eoi>
+        <name>eoi 1.1</name>
+        <description>about eoi 1.1</description>
+      </eoi>
+      <eoi>
+        <name>eoi 1.2</name>
+        <description>about eoi 1.2</description>
+      </eoi>
+    </topic>
+    <topic>
+      <name>topic 2</name>
+      <description>about topic2</description>
+      <confidence>
+        <level>low</level>
+      </confidence>
+      <privacy>
+        <roleId>4333</roleId>
+        <roleId>554</roleId>
+      </privacy>
+      <eoi>
+        <name>eoi 2.1</name>
+        <description>about eoi 2.1</description>
+      </eoi>
+      <eoi>
+        <name>eoi 2.2</name>
+        <description>about eoi 2.2</description>
+      </eoi>
+    </topic>
+  </information>
+</category>

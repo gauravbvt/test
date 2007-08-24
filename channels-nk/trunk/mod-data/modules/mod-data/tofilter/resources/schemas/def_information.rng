@@ -5,14 +5,13 @@
     information = 
       element information {
         element topic {
-          (
-            element confidence {
-              {level}
-            }? &
-            element privacy {
-              element roleId {text}*
-            }?
-          ) ,
+          {identified} &
+          element confidence {
+            {level}
+          }? &
+          element privacy {
+            element roleId {text}*
+          }? &
           element eoi {
             {identified}
           }*
@@ -26,6 +25,7 @@
       <zeroOrMore>
         <element name="topic">
           <interleave>
+            <ref name="identified"/>
             <optional>
               <element name="confidence">
                 <ref name="level"/>
@@ -38,12 +38,12 @@
                 </zeroOrMore>
               </element>
             </optional>
+            <zeroOrMore>
+              <element name="eoi">
+                <ref name="identified"/>
+              </element>
+            </zeroOrMore>
           </interleave>
-          <zeroOrMore>
-            <element name="eoi">
-              <ref name="identified"/>
-            </element>
-          </zeroOrMore>
         </element>
       </zeroOrMore>
     </element>
