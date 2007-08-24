@@ -22,7 +22,7 @@ function getDocument(id) {
   log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
 	return new XML(doc.getXmlObject());
 }
-Å
+
 // Adds names of ids in listed references
 function addNamesToListedReferences(elem) {
 	log("Adding names to listed IDs in " + elem, "info");
