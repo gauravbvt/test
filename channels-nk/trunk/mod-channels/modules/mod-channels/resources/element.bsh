@@ -4,8 +4,9 @@ import com.ten60.netkernel.urii.aspect.*;
 
 main() {
 	method = (((IAspectString)context.sourceAspect("literal:method", IAspectString.class)).getString());
-
 	response = context.createResponseFrom(new StringAspect("<foo>bleah</foo>"));
+	cache = false;
+	
 	type=context.getThisRequest().getArgument("type");
 	System.out.println("type: " + type );
 	System.out.println("URI: " + context.getThisRequest().getURI());
@@ -41,16 +42,27 @@ main() {
 			switch(method) {
 				case "GET":
 				req=context.createSubRequest("active:channels_data_getElement");
-				req.addArgument("id", new StringAspect("<id>" + id + "</id>"));
+				req.addArgument("id", "id:" + id);
 				out = null;
 
 				try {
 					out=context.issueSubRequest(req);
+					req=context.createSubRequest("active:attachGoldenThread");
+					req.addArgument("operand", out);
+					req.addArgument("param", "gt:" + id );
+					out=context.issueSubRequest(req);
+					
+					cache = true;
 				} catch(Throwable t) {
 					out=new StringAspect("<error> Could not find element with id=" + id + "</error>");
 				}
 
 				response=context.createResponseFrom(out);
+
+				if(cache) {
+					response.setCacheable();
+				}
+				
 				break;
 				case "POST":
 				method = params.getValue("method");
@@ -70,6 +82,21 @@ main() {
 						response=context.createResponseFrom(out);
 						break;
 						case "PUT":
+						out=null;
+						if(context.exists("this:param:param")) {
+							try {
+								element=context.sourceAspect("this:param:param", IAspectString.class);
+								req=context.createSubRequest("active:channels_data_updateElement");								
+								req.addArgument("doc", element);
+								req.addArgument("id", new StringAspect("<id>" + id + "</id>"));								
+								out=context.issueSubRequest(req);
+							} catch(Throwable d) {
+								out=new StringAspect("<error> Could not update element with id=" + id + "</error>");														
+							}
+						} else {
+							out=new StringAspect("<error> Missing element body for id = " + id +"</error>" );
+						}
+						response=context.createResponseFrom(out);
 						break;
 						default:
 						// TODO: Handle error
