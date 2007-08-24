@@ -22,7 +22,7 @@ function getDocument(id) {
   log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
 	return new XML(doc.getXmlObject());
 }
-
+Å
 // Adds names of ids in listed references
 function addNamesToListedReferences(elem) {
 	log("Adding names to listed IDs in " + elem, "info");
@@ -31,8 +31,7 @@ function addNamesToListedReferences(elem) {
 			var list = elem.getXmlObject().selectPath(".//" + names[i]);
 			for (j in list) {
 				var el = new XML(list[j]);
-				var name = getNameFromId(el.text());
-				el.@name = name
+				el.@name = getNameFromId(el.text());
 				log("Added name to: " + el, "info");
 			}
 		}
@@ -53,21 +52,13 @@ function findListedReferenceElementNames(elem) {
 	return list;
 }
 
-// Returns a name or " NO NAME_" if none is found
 function getNameFromId(id) {
 	log("Getting name from id :" + id, "info");
-	var name = " NO NAME"
-	try {
-		name = getDocument(id).name.text();
-	}
-	catch (e) {
-		log("Can't get name from id: " + id + " (" + e + ")", "warning");
-	}
-	return name;
+	return getDocument(id).name.text();
 }
 
 
-var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
+var id = context.getThisRequest().getArgument("id").substring(3);
 log("Getting element " + id  + " from container " + dbxml_getContainerName(), "info");
 var doc = getDocument(id);
 
