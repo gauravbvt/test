@@ -42,7 +42,7 @@ package com.mindalliance.channels.commands.application
 			var result:Object = (data as ResultEvent).result.project;
 			if (result != null) {
 				log.debug("Setting selected project to {0}", [result.id]);
-				model.selectedProject = new ProjectVO(result.id, result.name, result.description, result.manager);
+				model.selectedProject = ProjectVO.fromXML(result);// new ProjectVO(result.id, result.name, result.description, result.manager);
 			} else {
 				log.warn("Unable to retrieve project");	
 			}

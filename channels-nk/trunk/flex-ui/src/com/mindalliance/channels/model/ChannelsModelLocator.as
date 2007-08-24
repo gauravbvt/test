@@ -82,6 +82,10 @@ package com.mindalliance.channels.model
 			return _debug;	
 		}
 		
+		public function set debug(debug : Boolean) : void {
+			this._debug = debug;	
+		}
+		
 		/**
 		 * Singleton instance of ChannelsModelLocator
 		 */

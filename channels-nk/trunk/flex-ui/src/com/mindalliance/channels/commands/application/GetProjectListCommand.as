@@ -41,6 +41,8 @@ package com.mindalliance.channels.commands.application
 		public function fault(info:Object):void
 		{
 			var fault:FaultEvent = info as FaultEvent;
+			model.projectList = null;
+        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 			log.error(fault.toString());
 		}
 		

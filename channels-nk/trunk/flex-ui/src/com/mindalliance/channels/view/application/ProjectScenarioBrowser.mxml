@@ -21,13 +21,17 @@
 			import mx.managers.PopUpManager;	
 			import mx.controls.Alert;
 		
-			
-		
             [Bindable]
  	        private var psbModel : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
  	        
  	        [Bindable]
  	        private var permissions : PermissionModel = ChannelsModelLocator.getInstance().permissionModel;
+ 	        
+ 	        [Bindable] 
+ 	        private var shouldUpdateProject : Boolean = false;
+ 	        
+ 	        [Bindable]
+ 	        private var shouldUpdateScenario : Boolean = false;
  	        
  	        private function getProjectList(event : Event) : void
  	        {
@@ -38,6 +42,8 @@
  	        {
  	        	var selected : Object = listProjects.selectedItem;
  	        	var id : String = (selected == null ? null : selected.id);
+ 	        	updateScenario();
+ 	        	updateProject();
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent( id ) );
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent( id ) );
  	        }
@@ -47,10 +53,13 @@
  	        	var selected : Object = listScenarios.selectedItem;
  	        	var id : String = (selected == null ? null : selected.id);
  	        	
+ 	        	updateScenario();
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioEvent( id ) );
  	        }
  	        
  	        private function closeBrowser():void {
+ 	        	updateProject();
+ 	        	updateScenario();
  	        	PopUpManager.removePopUp(this);
  	        }
 
@@ -68,14 +77,20 @@
  	        
  	        private function updateProject() : void
  	        {
- 	        	if (psbModel.updateProject == true) {
- 	        		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateProjectEvent(psbModel.selectedProject));	
+ 	        	if (shouldUpdateProject == true) {
+ 	        		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateProjectEvent(psbModel.selectedProject.id,
+ 	        																					txtProjectName.text,
+ 	        																					txtProjectDescription.text));	
+ 	        		shouldUpdateProject = false;
  	        	}
  	        }
  	        
- 	        private function queueProjectUpdate() : void
+ 	        private function updateScenario() : void
  	        {
- 	        	psbModel.updateProject = true;	
+ 	        	if (shouldUpdateScenario == true) {
+ 	      //  		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateScenarioEvent(psbModel.selectedScenario));	
+ 	        		shouldUpdateScenario = false;
+ 	        	}
  	        }
  	        
  	        private function removeScenario() : void
@@ -118,12 +133,12 @@
 						<common:RemoveButton visible="{permissions.canRemoveProject}" enabled="{psbModel.selectedProject!=null}" click="removeProject()"/>
 					</mx:HBox>
 				</mx:VBox>
-				<mx:Form enabled="{listProjects.selectedItem != null}">
+				<mx:Form enabled="{psbModel.selectedProject != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{psbModel.selectedProject.name}" change="queueProjectUpdate()"/>
+						<mx:TextInput id="txtProjectName" text="{psbModel.selectedProject.name}" change="shouldUpdateProject = true;"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{psbModel.selectedProject.description}" change="queueProjectUpdate()"/>
+						<mx:TextArea id="txtProjectDescription" text="{psbModel.selectedProject.description}" change="shouldUpdateProject = true;"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager" visible="false" includeInLayout="false">
 						<!--This won't work properly because data providers are using generic objects. -->
@@ -149,10 +164,10 @@
 				</mx:HBox>
 				<mx:Form enabled="{psbModel.selectedScenario != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{psbModel.selectedScenario.name}"/>
+						<mx:TextInput text="{psbModel.selectedScenario.name}" change="shouldUpdateScenario=true;"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{psbModel.selectedScenario.description}"/>
+						<mx:TextArea text="{psbModel.selectedScenario.description}" change="shouldUpdateScenario=true;"/>
 					</mx:FormItem>
 					<mx:FormItem label="Story lines" visible="false" includeInLayout="false">
 						<mx:List/>

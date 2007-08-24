@@ -9,12 +9,12 @@ package com.mindalliance.channels.vo
 	{
 		public function ProjectVO( id:String,
 		                           name:String,
-		                           description:String,
-		                           manager:ElementVO ) {
+		                           description:String
+		                           /*manager:ElementVO*/ ) {
 			this.id = id;
 			this.name = name;
 			this.description = description;
-			this.manager = manager;
+			//this.manager = manager;
 		}
 		
 	
@@ -38,11 +38,10 @@ package com.mindalliance.channels.vo
 		 * </project>
 		 */
 		public function toXML() : XML {
-			return <project>
+			return <project schema="/channels/schema/project.rng">
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
-						<managerId>{manager}</managerId>	
 					</project>;
 		
 		}
@@ -60,7 +59,7 @@ package com.mindalliance.channels.vo
 		 * </project>
 		 */
 		public static function fromXML( obj : Object ) : ProjectVO {
-				return new ProjectVO(obj.id, obj.name, obj.description, new ElementVO(obj.manager.id, obj.manager.name));
+				return new ProjectVO(obj.id, obj.name, obj.description);//, new ElementVO(obj.manager.id, obj.manager.name));
 		}
 		
 		/**
