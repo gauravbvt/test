@@ -3,7 +3,7 @@
 	showCloseButton="true"
 	close="closeBrowser()"
 	mouseDownOutside="closeBrowser()"
-	creationComplete="getProjectList(event)"
+	creationComplete="initEditor()"
 	xmlns:search="com.mindalliance.channels.view.search.*"
 	xmlns:ui="com.mindalliance.channels.view.*"
 	xmlns:common="com.mindalliance.channels.view.common.*"
@@ -11,6 +11,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.ProjectVO;
+			import com.mindalliance.channels.vo.ScenarioVO;
 			import com.mindalliance.channels.model.PermissionModel;
         	import com.mindalliance.channels.model.ChannelsModelLocator;
         	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
@@ -27,13 +29,12 @@
  	        [Bindable]
  	        private var permissions : PermissionModel = ChannelsModelLocator.getInstance().permissionModel;
  	        
- 	        [Bindable] 
- 	        private var shouldUpdateProject : Boolean = false;
+ 	        private function initEditor() : void {       	
+ 	        	getProjectList();
+ 	        }
  	        
- 	        [Bindable]
- 	        private var shouldUpdateScenario : Boolean = false;
  	        
- 	        private function getProjectList(event : Event) : void
+ 	        private function getProjectList() : void
  	        {
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectListEvent() );
  	        }
@@ -42,28 +43,11 @@
  	        {
  	        	var selected : Object = listProjects.selectedItem;
  	        	var id : String = (selected == null ? null : selected.id);
- 	        	updateScenario();
- 	        	updateProject();
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent( id ) );
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent( id ) );
  	        }
  	        
- 	        private function selectScenario() : void
- 	        {
- 	        	var selected : Object = listScenarios.selectedItem;
- 	        	var id : String = (selected == null ? null : selected.id);
- 	        	
- 	        	updateScenario();
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioEvent( id ) );
- 	        }
- 	        
- 	        private function closeBrowser():void {
- 	        	updateProject();
- 	        	updateScenario();
- 	        	PopUpManager.removePopUp(this);
- 	        }
-
-		    private function addProject(name : String) : void 
+ 	        private function addProject(name : String) : void 
  	        {
 				if (name != null) {
 					CairngormEventDispatcher.getInstance().dispatchEvent(new CreateProjectEvent(name));
@@ -75,24 +59,34 @@
  	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteProjectEvent(psbModel.selectedProject.id));
  	        }
  	        
- 	        private function updateProject() : void
+ 	        private function queueProjectUpdate() : void
  	        {
- 	        	if (shouldUpdateProject == true) {
- 	        		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateProjectEvent(psbModel.selectedProject.id,
- 	        																					txtProjectName.text,
- 	        																					txtProjectDescription.text));	
- 	        		shouldUpdateProject = false;
- 	        	}
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new QueueProjectUpdateEvent());
  	        }
  	        
- 	        private function updateScenario() : void
+ 	        private function updateProject(event : FocusEvent = null) : void
  	        {
- 	        	if (shouldUpdateScenario == true) {
- 	      //  		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateScenarioEvent(psbModel.selectedScenario));	
- 	        		shouldUpdateScenario = false;
- 	        	}
+         		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateProjectEvent(new ProjectVO(psbModel.selectedProject.id,
+         																					txtProjectName.text,
+         																					txtProjectDescription.text)));	
  	        }
  	        
+ 	        private function updateScenario(event : FocusEvent = null) : void
+ 	        {
+         		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateScenarioEvent(new ScenarioVO(psbModel.selectedScenario.id,
+ 	        																					txtScenarioName.text,
+ 	        																					txtScenarioDescription.text,
+ 	        																					psbModel.selectedProject.id)));	
+ 	        }
+ 	        
+ 	        private function selectScenario() : void
+ 	        {
+ 	        	var selected : Object = listScenarios.selectedItem;
+ 	        	var id : String = (selected == null ? null : selected.id);
+ 	        	
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioEvent( id ) );
+ 	        }
+
  	        private function removeScenario() : void
  	        {
  	        	
@@ -105,11 +99,18 @@
 					CairngormEventDispatcher.getInstance().dispatchEvent(new CreateScenarioEvent(name, psbModel.selectedProject.id));
 				}	
  	        }
- 	        
+ 	        private function queueScenarioUpdate() : void
+ 	        {
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new QueueScenarioUpdateEvent());
+ 	        }
  	        private function loadScenario() : void 
  	        {
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new LoadScenarioEvent() );
  	        	this.closeBrowser();
+ 	        }
+ 	         	        
+ 	        private function closeBrowser():void {
+ 	        	PopUpManager.removePopUp(this);
  	        }
  	        
 		]]>
@@ -135,15 +136,14 @@
 				</mx:VBox>
 				<mx:Form enabled="{psbModel.selectedProject != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput id="txtProjectName" text="{psbModel.selectedProject.name}" change="shouldUpdateProject = true;"/>
+						<mx:TextInput id="txtProjectName" text="{psbModel.selectedProject.name}" change="queueProjectUpdate()" focusOut="updateProject()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea id="txtProjectDescription" text="{psbModel.selectedProject.description}" change="shouldUpdateProject = true;"/>
+						<mx:TextArea id="txtProjectDescription" text="{psbModel.selectedProject.description}" change="queueProjectUpdate()" focusOut="updateProject()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager" visible="false" includeInLayout="false">
 						<!--This won't work properly because data providers are using generic objects. -->
-						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(psbModel.selectedProject.manager)}"
-							change="psbModel.selectedProject.manager = ProjectManagers.getItemAt(comboProjectManager.selectedIndex).Name"/>
+						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(psbModel.selectedProject.manager)}"/>
 					</mx:FormItem>
 					<mx:FormItem label="Participants" direction="vertical" visible="false" includeInLayout="false">
 						<mx:List/>
@@ -164,10 +164,10 @@
 				</mx:HBox>
 				<mx:Form enabled="{psbModel.selectedScenario != null}">
 					<mx:FormItem label="Name">
-						<mx:TextInput text="{psbModel.selectedScenario.name}" change="shouldUpdateScenario=true;"/>
+						<mx:TextInput id="txtScenarioName" text="{psbModel.selectedScenario.name}" change="queueScenarioUpdate()" focusOut="updateScenario()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Description">
-						<mx:TextArea text="{psbModel.selectedScenario.description}" change="shouldUpdateScenario=true;"/>
+						<mx:TextArea id="txtScenarioDescription" text="{psbModel.selectedScenario.description}"  change="queueScenarioUpdate()" focusOut="updateScenario()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Story lines" visible="false" includeInLayout="false">
 						<mx:List/>

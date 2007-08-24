@@ -8,18 +8,12 @@ package com.mindalliance.channels.events.application
 	{
 		public static const UpdateProject_Event:String = "<UpdateProjectEvent>";
 		
-		public var id : String;
-		public var name : String;
-		public var description : String;
+		public var project : ProjectVO;
 		
-		public function UpdateProjectEvent(id : String,
-										   name : String,
-										   description : String) 
+		public function UpdateProjectEvent(obj : ProjectVO) 
 		{
 			super( UpdateProject_Event );
-			this.id = id;
-			this.name = name;
-			this.description = description;
+			this.project = obj;
 		}
 	}
 }

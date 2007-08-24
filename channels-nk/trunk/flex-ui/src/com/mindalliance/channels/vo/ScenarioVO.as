@@ -7,7 +7,7 @@ package com.mindalliance.channels.vo
 	[Bindable]
 	public class ScenarioVO extends ElementVO implements IValueObject
 	{
-		public function ScenarioVO(id : String, name : String, projectId : String, description : String) {
+		public function ScenarioVO(id : String, name : String, description : String, projectId : String) {
 			this.name = name;
 			this.id = id;
 			this.projectId = projectId;
@@ -35,7 +35,7 @@ package com.mindalliance.channels.vo
 		 * </scenario>
 		 */
 		public function toXML() : XML {
-			return <scenario>
+			return <scenario schema="/channels/schema/project.rng">
 						<id>{id}</id>
 						<name>{name}</name>
 						<description>{description}</description>
@@ -53,7 +53,7 @@ package com.mindalliance.channels.vo
 		 * </scenario>
 		 */
 		public static function fromXML( obj : Object ) : ScenarioVO {
-				return new ScenarioVO(obj.id, obj.name, obj.projectId, obj.description);
+				return new ScenarioVO(obj.id, obj.name, obj.description, obj.projectId);
 		}
 		
 		/**

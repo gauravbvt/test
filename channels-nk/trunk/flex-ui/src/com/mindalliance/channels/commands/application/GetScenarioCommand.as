@@ -39,7 +39,7 @@ package com.mindalliance.channels.commands.application
 		{
 			var result:Object = (data as ResultEvent).result.scenario;
 			if (result != null) {
-				model.selectedScenario = new ScenarioVO(result.id, result.name, result.projectId, result.description);
+				model.selectedScenario = ScenarioVO.fromXML(result);
 				log.debug("Setting selected scenario to {0}", [result.id]);
 			} else {
 				log.warn("Unable to retrieve scenario");

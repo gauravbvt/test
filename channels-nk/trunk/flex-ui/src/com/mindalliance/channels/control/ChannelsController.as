@@ -31,6 +31,8 @@ package com.mindalliance.channels.control
 			this.addCommand(UpdateProjectEvent.UpdateProject_Event, UpdateProjectCommand);
 			this.addCommand(UpdateScenarioEvent.UpdateScenario_Event, UpdateScenarioCommand);
 			this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
+			this.addCommand(QueueProjectUpdateEvent.QueueProjectUpdate_Event, QueueProjectUpdateCommand);
+			this.addCommand(QueueScenarioUpdateEvent.QueueScenarioUpdate_Event, QueueScenarioUpdateCommand);
 		}
 		
 		private function initializePeople() : void

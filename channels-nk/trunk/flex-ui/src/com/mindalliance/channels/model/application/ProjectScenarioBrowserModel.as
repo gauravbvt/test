@@ -12,13 +12,13 @@ package com.mindalliance.channels.model.application
 		
 		public var selectedProject : ProjectVO;
 		
-		public var updateProject : Boolean = false;
+		public var shouldUpdateProject : Boolean = false;
 		
 		public var scenarioList : ArrayCollection;
 		
 		public var selectedScenario : ScenarioVO;
 		
-		public var updateScenario : Boolean = false;
+		public var shouldUpdateScenario : Boolean = false;
 
 	}
 }
