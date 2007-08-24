@@ -1,8 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <!--
-  include href="http://@host@:@port@/channels/schema/def_all.rnc"
-  include href="http://@host@:@port@/channels/schema/def_address.rnc"
-  
+  <!--  
   start =
     element person {
       {all} &
@@ -19,8 +16,7 @@
       element userId {text}?
     } 
   -->
-  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
   
   <start>
     <element name="person">

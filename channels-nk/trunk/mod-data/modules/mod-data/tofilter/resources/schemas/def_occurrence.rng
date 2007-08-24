@@ -1,8 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
-    include href="http://@host@:@port@/channels/schema/def_address.rnc"
-    include href="http://@host@:@port@/channels/schema/def_latlong.rnc"
-    include href="http://@host@:@port@/channels/schema/def_cause.rnc"
     occurrence = 
       element where {
         locationId {text} | 
@@ -11,9 +8,6 @@
       }? &
       {cause}?
   -->
-  <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_latlong.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_cause.rng"/> 
   <define name="occurrence">
       <interleave>
         <optional>

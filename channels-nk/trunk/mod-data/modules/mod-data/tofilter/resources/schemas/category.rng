@@ -1,8 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
 <!--
-  include href="http://@host@:@port@/channels/schema/def_all.rnc"
-  include href="http://@host@:@port@/channels/schema/def_identified.rnc"
-  include href="http://@host@:@port@/channels/schema/def_information.rnc"
   start =
     element category {
       {all} &
@@ -15,9 +12,9 @@
       } &
       {information}
 -->
-  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
-  <start>
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+
+    <start>
     <element name="category">
       <interleave>
         <ref name="isna_element"/>

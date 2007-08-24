@@ -1,7 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
-  include href="http://@host@:@port@/channels/schema/def_all.rnc"
-  include href="http://@host@:@port@/channels/schema/def_identified.rnc"
   start =
       element scenario {
   	    {all},
@@ -9,8 +7,7 @@
         element projectId {text}
       }
   -->
-  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
   
   <start>
     <element name="scenario">

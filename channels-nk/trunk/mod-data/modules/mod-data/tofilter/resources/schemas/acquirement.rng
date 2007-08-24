@@ -10,11 +10,8 @@
       {information}
     }
   -->
-  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_categorized.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_product.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
-  
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+    
   <start>
     <element name="acquirement">
       <interleave>

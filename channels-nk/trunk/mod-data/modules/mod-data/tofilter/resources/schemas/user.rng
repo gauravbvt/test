@@ -1,6 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
-  include href="http://@host@:@port@/channels/schema/def_all.rnc"
   start =
     element user {
       attribute isAdmin {xsd:boolean} ,
@@ -9,8 +8,9 @@
       element password {text}
     }
 -->
-  <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>  
-  <start>
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+
+    <start>
     <element name="user" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <attribute name="isAdmin">
          <data type="boolean"/>

@@ -1,14 +1,10 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
 <!--
-  include href="http://@host@:@port@/channels/schema/def_latlong.rnc"
-  include href="http://@host@:@port@/channels/schema/def_address.rnc"
   spatialCoordinates =
     element spatialCoordinates {
       {latlong} | {address}
     }
 -->
-  <include href="http://@host@:@port@/channels/schema/def_latlong.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_address.rng"/>
   <define name="spatialCoordinates">
     <element name="spatialCoordinates">
       <choice>

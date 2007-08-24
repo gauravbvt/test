@@ -1,7 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
- include href="http://@host@:@port@/channels/schema/def_level.rnc"
- include href="http://@host@:@port@/channels/schema/def_identified.rnc"
     information = 
       element information {
         element topic {
@@ -18,9 +16,8 @@
         }*
       }
   -->
-  <include href="http://@host@:@port@/channels/schema/def_level.rng"/>
-  <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
-  <define name="information">
+
+    <define name="information">
     <element name="information">
       <zeroOrMore>
         <element name="topic">
