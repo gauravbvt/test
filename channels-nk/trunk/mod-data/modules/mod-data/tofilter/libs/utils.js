@@ -83,5 +83,8 @@ function validateRNG(doc) { // doc is an E4X XML object
   req.addArgument("operator", schemaURL);
   result = context.issueSubRequest(req);
   valid = context.transrept(result, IAspectBoolean).isTrue();
-  if (!valid) throw("Document is invalid");
+  if (!valid) {
+  	var problem = context.transrept(result, IAspectString).getString();
+  	throw("Document is invalid: " + problem);
+  }
 }

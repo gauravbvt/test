@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="mod-data schema validation tests">
+	<desc>
+		<div>
+		<b>mod-data</b> schema validation unit tests
+		</div>
+	</desc>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/schemas/validateSchemas.js</uri>
+    <assert name="All schemas are well-formed and valid">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/schemas/validateSamples.js</uri>
+    <assert name="All samples can be successfully validated">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
+</testlist>

@@ -1,4 +1,5 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!-- The acquisition of information from execting a task -->
   <!--
   include href="http://@host@:@port@/channels/schema/def_all.rnc"
   include href="http://@host@:@port@/channels/schema/def_categorized.rnc"
