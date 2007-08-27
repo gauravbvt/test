@@ -2,7 +2,7 @@
 <!--
   start =
     element category {
-      {all} &
+      {isna_element} &
       {identified} &
       element disciplines {
         element categoryId {text}*

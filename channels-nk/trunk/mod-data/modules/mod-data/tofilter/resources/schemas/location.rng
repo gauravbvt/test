@@ -2,7 +2,7 @@
 <!--
   start =
     element location {
-      {all} &
+      {isna_element} &
       {identified} &
       {categorized} &
       element within {

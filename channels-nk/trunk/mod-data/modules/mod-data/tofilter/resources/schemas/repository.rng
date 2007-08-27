@@ -2,7 +2,7 @@
   <!--
   start =
     element repository {
-      {all} &
+      {isna_element} &
       {identified} &
       {categorized} &
       element organizationId {text} &

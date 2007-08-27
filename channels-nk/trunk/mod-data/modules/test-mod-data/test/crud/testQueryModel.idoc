@@ -68,7 +68,7 @@
     <instr>
       <type>channels_data_queryModel</type>
       <xquery>
-          ffcpl:/com/mindalliance/channels/data/queries/allScenariosInProject.xq
+          ffcpl:/com/mindalliance/channels/data/queries/scenariosInProject.xq
       </xquery>
       <variables>var:variables</variables>
       <target>this:response</target>

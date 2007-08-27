@@ -1,0 +1,7 @@
+<agent schema="http://localhost:8080/channels/schema/agent.rng">
+  <id>345734587364875</id>
+  <name>An agent</name>
+  <description>About an agent</description>
+  <taskId>34875347</taskId>
+  <roleId>09809856</roleId>
+</agent>

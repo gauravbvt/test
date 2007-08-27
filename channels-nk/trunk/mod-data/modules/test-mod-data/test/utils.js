@@ -20,6 +20,11 @@ function issueValidateRNGRequest(schemaURI, docURI) {
   try {
   	var res = context.issueSubRequest(req);
   	var valid = context.transrept(res, IAspectBoolean).isTrue();
+  	if (!valid) {
+  		log("Validation failed for " + docURI, "severe");
+  		throw("Invalid " + docURI);
+  	}
+  	
   	return valid;
   }
   catch (e) {

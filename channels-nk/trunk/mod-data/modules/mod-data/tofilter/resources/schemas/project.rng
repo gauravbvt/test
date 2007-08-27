@@ -2,7 +2,7 @@
   <!--
   start =
       element project {
-  	    {all},
+  	    {isna_element},
   	    {identified} & 
         element managedByPersonId {text}?
       }

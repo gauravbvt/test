@@ -1,24 +1,21 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <!--  
-  start =
-    element task {
+  <!--
+    element agent {
       {isna_element} &
       {identified} &
-      {categorized} &
-      {occurrence} &
-      {duration}
+      element taskId {text} &
+      element roleId {text}
     }
-  -->
+    -->
   <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
-  
-  <start>
-    <element name="task">
+
+    <start>
+    <element name="agent">
       <interleave>
         <ref name="isna_element"/>
         <ref name="identified"/>
-        <ref name="categorized"/>
-        <ref name="occurrence"/>
-        <ref name="duration"/>
+        <element name="taskId"><text/></element>
+        <element name="roleId"><text/></element>
       </interleave>
     </element>
   </start>

@@ -3,7 +3,7 @@
   start =
     element user {
       attribute isAdmin {xsd:boolean} ,
-      {all} &
+      {isna_element} &
       element userName {text} &
       element password {text}
     }

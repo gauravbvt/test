@@ -2,7 +2,7 @@
   <!--  
   start =
     element person {
-      {all} &
+      {isna_element} &
       element firstName {text} &
       element lastName {text} &
       element photo {text}? &

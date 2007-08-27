@@ -2,7 +2,7 @@
   <!--
   start =
     element organization {
-      {all} &
+      {isna_element} &
       {identified} &
       {categorized}
       element abbreviation {text}? &
