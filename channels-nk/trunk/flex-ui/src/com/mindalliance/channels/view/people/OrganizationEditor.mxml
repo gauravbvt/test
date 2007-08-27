@@ -17,12 +17,13 @@
 			}
 			
 			private function confirmEdit():void {
-				// Do stuff and then:
+				update();
 				currentState = '' ;
 			}
 			
 			private function cancelEdit():void {
-				// Do stuff and then:
+				//revert
+				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationEvent(model.organization.id) );
 				currentState = '' ;
 			}
 			
@@ -80,26 +81,26 @@
     	confirmEditHandler="{confirmEdit}"
     	cancelEditHandler="{cancelEdit}"/>
     	
-    <mx:FormHeading label="{'Organization: '+txtName}"/>	
+    <mx:FormHeading label="{'Organization: '+txtName.text}"/>	
     <mx:FormItem label="Name" required="false" id="formitemName">
-        <mx:TextInput id="txtName" editable="false" text="{model.organization.name}" change="queueUpdate()" focusOut="update()"/>
+        <mx:TextInput id="txtName" editable="{currentState=='EditState'}" text="{model.organization.name}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Abbreviation" direction="vertical" id="formitemAbbrev">
-    	<mx:TextInput id="txtAbbrev" editable="false" text="{model.organization.abbreviation}" change="queueUpdate()" focusOut="update()"/>
+    	<mx:TextInput id="txtAbbrev" editable="{currentState=='EditState'}" text="{model.organization.abbreviation}" change="queueUpdate()"/>
     </mx:FormItem>
-    <mx:FormItem label="Description">
-        <mx:TextArea id="txtDescription" editable="false" text="{model.organization.description}" change="queueUpdate()" focusOut="update()"/>
+    <mx:FormItem label="Description" id="formitemDescription">
+        <mx:TextArea id="txtDescription" editable="{currentState=='EditState'}" text="{model.organization.description}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Parent Organization" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemParentOrg">
-	<mx:ComboBox id="comboOrganizations" change="queueUpdate()" focusOut="update()"/>
+	<common:ElementComboBox id="comboOrganizations" dataProvider="{model.organizationList}" selectedValue="{model.organization.parent.id}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">
         <mx:Label text="Street" />
-        <mx:TextInput id="txtStreet" text="{model.organization.address.street}" change="queueUpdate()" focusOut="update()"/>
+        <mx:TextInput id="txtStreet" text="{model.organization.address.street}" change="queueUpdate()"/>
         <mx:Label text="City" />
-        <mx:TextInput id="txtCity" text="{model.organization.address.city}" change="queueUpdate()" focusOut="update()"/>
+        <mx:TextInput id="txtCity" text="{model.organization.address.city}" change="queueUpdate()"/>
         <mx:HBox>
-        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates" change="queueUpdate()" focusOut="update()"/>
+        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates" change="queueUpdate()" selectedValue="{model.organization.address.state}"/>
         </mx:HBox>
     </mx:FormItem>
 </mx:Form>

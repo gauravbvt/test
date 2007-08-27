@@ -47,7 +47,7 @@ package com.mindalliance.channels.business.people
 		 */
 		override public function toXML(element : ElementVO) : XML {
 			var obj : OrganizationVO = (element as OrganizationVO);
-			var xml : XML =  <organization>
+			var xml : XML =  <organization  schema="/channels/schema/organization.rng">
 						<id>{obj.id}</id>
 						<name>{obj.name}</name>
 						<description>{obj.description}</description>

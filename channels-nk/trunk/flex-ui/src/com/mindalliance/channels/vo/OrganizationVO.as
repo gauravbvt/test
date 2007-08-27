@@ -16,6 +16,7 @@ package com.mindalliance.channels.vo
 			this.id = id;
 			this.name = name;
 			this.description = description;
+			this.abbreviation = abbreviation;
 			this.parent = parent;
 			this.address = address;
 		}

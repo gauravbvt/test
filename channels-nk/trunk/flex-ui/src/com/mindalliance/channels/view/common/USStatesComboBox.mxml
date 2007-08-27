@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml"
+<common:ElementComboBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*"
 	dataProvider="{this.usStates}"
-	labelField="{this.labelFieldVar}">
+	labelField="full"
+	dataField="abbr">
 	<mx:Script>
 		<![CDATA[
 			[Bindable]
@@ -56,12 +57,9 @@
    						 {abbr: "WV", full: "WV - West Virginia"},
    						 {abbr: "WI", full: "WI - Wisconsin"},
    						 {abbr: "WY", full: "WY - Wyoming"}];
-
-			[Bindable]
-			public var labelFieldVar:String = "full";
 			
 		]]>
 	</mx:Script>
 		
 
-</mx:ComboBox>
+</common:ElementComboBox>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	labelField="name">
+	<mx:Script>
+		<![CDATA[
+			// Based on code found at http://www.forta.com/blog/index.cfm/2006/11/22/Flex-ComboBox-With-selectedValue-Support
+			// This allows us to populate a combobox from an external source and set the selected item by property in the underlying
+			// object.  The base ComboBox provides a labelField property to determine which field in the underlying object to display,
+			// but only provides the ability to select an item by index or instance
+		
+			private var _selectedValue : String;
+         	private var _dataField : String = "id";
+         	private var isSelectionSet : Boolean = false;
+         	private var isDataProviderSet : Boolean = false;
+
+         	override protected function commitProperties():void
+         	{
+            	super.commitProperties();
+            	if (isSelectionSet && isDataProviderSet)
+            	{
+               		isSelectionSet=false;
+					this.selectedIndex = -1
+					for (var i:int=0;i<this.dataProvider.length;i++)
+					{
+						if(this.dataProvider[i] != null){
+							var item:String = this.dataProvider[i][_dataField];
+   
+							if(item == _selectedValue)
+							{
+								this.selectedIndex = i;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			override public function set dataProvider(o:Object):void
+			{	
+				super.dataProvider = o;
+				if (o!=null && o.length) {
+					isDataProviderSet = true;
+				}
+			}
+
+			public function set selectedValue(s:String):void
+			{
+				isSelectionSet = true;
+				_selectedValue = s;
+				invalidateProperties();
+			}
+         
+			public function set dataField(s:String):void
+			{
+         		_dataField = s;
+			}
+		]]>
+	</mx:Script>
+</mx:ComboBox>
