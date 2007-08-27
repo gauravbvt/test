@@ -34,7 +34,7 @@
 				model.organization.name = txtName.text;
 				model.organization.abbreviation = txtAbbrev.text;
 				model.organization.description = txtDescription.text;
-				model.organization.address = new AddressVO(txtStreet.text, txtCity.text, comboUSStates.selectedItem.abbr);
+				model.organization.address = new AddressVO(formitemAddress.txtStreet.text, formitemAddress.txtCity.text, formitemAddress.comboUSStates.selectedItem.abbr);
 				model.organization.parent = (comboOrganizations.selectedItem as ElementVO);	
 				
 				CairngormEventDispatcher.getInstance().dispatchEvent( new UpdateOrganizationEvent(model.organization) );
@@ -94,7 +94,8 @@
     <mx:FormItem label="Parent Organization" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemParentOrg">
 	<common:ElementComboBox id="comboOrganizations" dataProvider="{model.organizationList}" selectedValue="{model.organization.parent.id}" change="queueUpdate()"/>
     </mx:FormItem>
-    <mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">
+    <common:AddressEditor id="formitemAddress" change="{queueUpdate}" address="{model.organization.address}" mouseChildren="false" mouseEnabled="false"/>
+    <!--<mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">
         <mx:Label text="Street" />
         <mx:TextInput id="txtStreet" text="{model.organization.address.street}" change="queueUpdate()"/>
         <mx:Label text="City" />
@@ -102,5 +103,5 @@
         <mx:HBox>
         	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates" change="queueUpdate()" selectedValue="{model.organization.address.state}"/>
         </mx:HBox>
-    </mx:FormItem>
+    </mx:FormItem>-->
 </mx:Form>

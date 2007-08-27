@@ -5,17 +5,16 @@ package com.mindalliance.channels.vo
 	import mx.collections.ArrayCollection;
 	
 	[Bindable]
-	public class OrganizationVO extends ElementVO implements IValueObject
+	public class OrganizationVO extends CategorizedElementVO implements IValueObject
 	{
 		public function OrganizationVO( id : String, 
 								name : String, 
 								description : String,
+								categories : CategorySetVO,
 								abbreviation : String,
 								parent : ElementVO,
 								address : AddressVO ) {
-			this.id = id;
-			this.name = name;
-			this.description = description;
+			super(id, name, description, categories);
 			this.abbreviation = abbreviation;
 			this.parent = parent;
 			this.address = address;

@@ -60,7 +60,7 @@ package com.mindalliance.channels.business.application
 		 *   <projectId>{projectId}</projectId>
 		 * </scenario>
 		 */
-		override public function fromXML( obj : Object ) : ElementVO {
+		override public function fromXML( obj : XML ) : ElementVO {
 				return new ScenarioVO(obj.id, obj.name, obj.description, new ElementVO(obj.projectId, null));
 		}
 		

@@ -31,37 +31,44 @@ package com.mindalliance.channels.business
 		
 		public function result(data:Object):void {
 			var result:Object = (data as ResultEvent).result;	
-			if ((!ObjectUtil.isSimple(result)) && result["error"] != null) {
-				delegate.responder.fault(result.error);
+			if (requestType == 'delete') {
+				if (result == true) {
+					value=handleDelete((result as Boolean));
+				} else {
+					delegate.responder.fault("Delete failed");
+				}
 			} else {
+				var xml : XML = (result as XML);
+				if (xml.error.length()!=0) {
+					delegate.responder.fault(xml.error.toXMLString());
+					return;
+				}
 				var value : Object;
 				switch(requestType) {
-					case 'query' : value=handleQuery(result); break;
-					case 'read' : value=handleRead(result); break;
-					case 'update' : value=handleUpdate(result); break;
-					case 'delete' : value=handleDelete(result); break;
-					case 'create' : value=handleCreate(result); break;
+					case 'query' : value=handleQuery(xml); break;
+					case 'read' : value=handleRead(xml); break;
+					case 'update' : value=handleUpdate(xml); break;
+					case 'create' : value=handleCreate(xml); break;
 				};
-				
-				delegateResponder.result(value);
 			}
+			delegateResponder.result(value);
 		}
 		
-		private function handleQuery(result : Object) : Object {
-			return delegate.fromXMLList(typeName, result);
+		private function handleQuery(result : XML) : Object {
+			return delegate.fromXMLElementList(typeName, result);
 		}
 		
-		private function handleRead(result : Object) : Object {
-			return delegate.fromXML(result[typeName]);
+		private function handleRead(result : XML) : Object {
+			return delegate.fromXML(result);
 		}		
-		private function handleUpdate(result : Object) : Object {
+		private function handleUpdate(result : XML) : Object {
 			return result;
 		}		
-		private function handleDelete(result : Object) : Object {
+		private function handleDelete(result : Boolean) : Object {
 			return result;
 		}		
-		private function handleCreate(result : Object) : Object {
-			return delegate.fromXML(result[typeName]);
+		private function handleCreate(result : XML) : Object {
+			return delegate.fromXML(result);
 		}
 		public function fault(info:Object) : void {
 			var fault:FaultEvent = info as FaultEvent;

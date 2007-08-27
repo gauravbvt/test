@@ -27,7 +27,7 @@ package com.mindalliance.channels.business.application
 			createElement(project);	
 		}
 		
-		override public function fromXML(obj:Object):ElementVO {
+		override public function fromXML(obj:XML):ElementVO {
 			return new ProjectVO(obj.id, obj.name, obj.description);
 		}
 		

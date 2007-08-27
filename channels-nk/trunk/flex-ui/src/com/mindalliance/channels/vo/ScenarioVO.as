@@ -7,7 +7,7 @@ package com.mindalliance.channels.vo
 	[Bindable]
 	public class ScenarioVO extends ElementVO implements IValueObject
 	{
-		public function ScenarioVO(id : String, name : String, description : String, projectId : ElementVO) {
+		public function ScenarioVO(id : String, name : String, description : String, project : ElementVO) {
 			this.name = name;
 			this.id = id;
 			this.project = project;

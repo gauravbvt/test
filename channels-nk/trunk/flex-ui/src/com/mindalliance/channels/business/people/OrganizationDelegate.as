@@ -9,6 +9,8 @@ package com.mindalliance.channels.business.people
 	import com.mindalliance.channels.vo.OrganizationVO;
 	import com.mindalliance.channels.vo.ElementVO;
 	import com.mindalliance.channels.vo.AddressVO;
+	import com.mindalliance.channels.util.XMLHelper;
+	import com.mindalliance.channels.vo.CategorySetVO;
 	
 	public class OrganizationDelegate extends BaseDelegate
 	{	
@@ -51,14 +53,17 @@ package com.mindalliance.channels.business.people
 						<id>{obj.id}</id>
 						<name>{obj.name}</name>
 						<description>{obj.description}</description>
+						
 						<abbreviation>{obj.abbreviation}</abbreviation>
 					</organization>;
+			xml.appendChild(CategorySetVO.toXML(obj.categories));
 			if (obj.parent != null) {
 				xml.appendChild(<parentOrganizationId>{obj.parent.id}</parentOrganizationId>);	
 			}
 			if (obj.address != null) {
-				xml.appendChild(obj.address.toXML());
+				xml.appendChild(XMLHelper.fromAddress(obj.address));
 			}
+			
 			return xml;
 		}
 
@@ -77,10 +82,11 @@ package com.mindalliance.channels.business.people
 		 *   </address>
 		 * </organization>
 		 */
-		override public function fromXML( obj : Object ) : ElementVO {
+		override public function fromXML( obj : XML ) : ElementVO {
 				return new OrganizationVO(obj.id, 
 										obj.name, 
 										obj.description, 
+										CategorySetVO.fromXML(obj.categories),
 										obj.abbreviation,
 										new ElementVO(obj.parentOrganizationId, null),
 										new AddressVO(obj.address.street, obj.address.city, obj.address.state));
