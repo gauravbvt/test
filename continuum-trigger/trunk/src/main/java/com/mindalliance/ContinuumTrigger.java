@@ -132,7 +132,7 @@ public class ContinuumTrigger implements Runnable {
         throws XmlRpcException, IOException {
 
         for ( Project p : reader.readProjects() ) {
-            String artifactId = p.getArtifactId();
+            String artifactId = p.getName();
             if ( artifactId != null && artifactId.equals( name ) )
                 return p;
         }
