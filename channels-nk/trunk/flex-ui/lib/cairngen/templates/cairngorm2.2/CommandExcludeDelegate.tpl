@@ -5,15 +5,12 @@ package @namespace@.@commands@.@submodule@
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import @namespace@.@commands@.BaseCommand;
 	import @namespace@.@events@.@submodule@.@sequence@Event;
-	import mx.logging.ILogger;
-	import mx.logging.Log;
 	
-	public class @sequence@Command implements ICommand
+	public class @sequence@Command extends BaseCommand
 	{
-		private var log : ILogger = Log.getLogger("@namespace@.@commands@.@submodule@.@sequence@Command");
-		
-		public function execute(event:CairngormEvent):void
+		override public function execute(event:CairngormEvent):void
 		{
 			var evt:@sequence@Event = event as @sequence@Event;
 		}

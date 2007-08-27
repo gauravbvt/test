@@ -3,7 +3,9 @@ package com.mindalliance.channels.control
 {
 	import com.adobe.cairngorm.control.FrontController;
     import com.mindalliance.channels.commands.application.*;
+    import com.mindalliance.channels.commands.people.*;
     import com.mindalliance.channels.events.application.*;
+    import com.mindalliance.channels.events.people.*;
     
 	public class ChannelsController extends FrontController
 	{
@@ -37,7 +39,12 @@ package com.mindalliance.channels.control
 		
 		private function initializePeople() : void
 		{
-				
+			this.addCommand(GetOrganizationListEvent.GetOrganizationList_Event, GetOrganizationListCommand);
+			this.addCommand(GetOrganizationEvent.GetOrganization_Event, GetOrganizationCommand);
+			this.addCommand(CreateOrganizationEvent.CreateOrganization_Event, CreateOrganizationCommand);			
+			this.addCommand(DeleteOrganizationEvent.DeleteOrganization_Event, DeleteOrganizationCommand);
+			this.addCommand(UpdateOrganizationEvent.UpdateOrganization_Event, UpdateOrganizationCommand);
+			this.addCommand(QueueOrganizationUpdateEvent.QueueOrganizationUpdate_Event, QueueOrganizationUpdateCommand);
 		}
 	}
 }

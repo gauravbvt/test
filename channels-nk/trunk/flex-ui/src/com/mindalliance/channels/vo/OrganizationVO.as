@@ -3,11 +3,14 @@ package com.mindalliance.channels.vo
 	import com.adobe.cairngorm.vo.IValueObject;
 
 	import mx.collections.ArrayCollection;
+	
+	[Bindable]
 	public class OrganizationVO extends ElementVO implements IValueObject
 	{
 		public function OrganizationVO( id : String, 
 								name : String, 
 								description : String,
+								abbreviation : String,
 								parent : ElementVO,
 								address : AddressVO ) {
 			this.id = id;
@@ -18,7 +21,7 @@ package com.mindalliance.channels.vo
 		}
 		private var _abbreviation : String;
 		private var _parent : ElementVO;
-		private var _address : AddressVO = new AddressVO();
+		private var _address : AddressVO;
 		
 		public function get abbreviation() : String {
 			return _abbreviation;
@@ -29,89 +32,20 @@ package com.mindalliance.channels.vo
 		}
 		
 		public function get parent() : ElementVO {
-			return _parentId;
+			return _parent;
 		}
 		
 		public function set parent(parentId: ElementVO) : void {
-			this._parentId = parentId;	
+			this._parent = parent;	
 		}
 		
-		public function get address() : String {
+		public function get address() : AddressVO {
 			return _address;
 		}
 		
-		public function set address(address: String) : void {
+		public function set address(address: AddressVO) : void {
 			this._address = address;	
 		}
-		/**
-		 * Produces XML of the form:
-		 * 
-		 * <organization>
-		 *   <id>{id}</id>
-		 *   <name>{name}</name>
-		 *   <description>{description}</description>
-		 *   <abbreviation>{abbreviation}</abbreviation>
-		 *   <parentId>{parent.id}</parentId>
-		 *   <address>
-		 *     <street>{street}</street>
-		 *     <city>{city}</city>
-		 *     <state>{state}</state>
-		 *   </address>
-		 * </organization>
-		 */
-		public function toXML() : XML {
-			var xml : XML =  <organization>
-						<id>{id}</id>
-						<name>{name}</name>
-						<description>{description}</description>
-						<abbreviation>{abbreviation}</abbreviation>
-						<parentId>{parent.id}</parentId>
-						{address.toXML()}
-					</organization>;
-			xml.appendChild(address.toXML());
-			return xml;
-		}
 
-		/**
-		 * Expects XML of the form:
-		 * <organization>
-		 *   <id>{id}</id>
-		 *   <name>{name}</name>
-		 *   <description>{description}</description>
-		 *   <abbreviation>{abbreviation}</abbreviation>
-		 *   <parent>
-		 *     <id>{parent.id}</id>
-		 *     <name>{parent.name}</name>
-		 *   </parent>
-		 *   <address>
-		 *     <street>{street}</street>
-		 *     <city>{city}</city>
-		 *     <state>{state}</state>
-		 *   </address>
-		 * </organization>
-		 */
-		public static function fromXML( obj : Object ) : ProjectVO {
-				return new OrganizationVO(obj.id, 
-										obj.name, 
-										obj.description, 
-										new ElementVO(obj.parent.id, obj.parent.name),
-										new AddressVO(obj.address.street, obj.address.city, obj.address.state));
-		}
-		
-		/**
-		 * Produces a list from XML of the form:
-		 * 
-		 * <list>
-		 *   <organization>
-		 *     <id>{id}</id>
-		 *     <name>{name}</id>
-		 *   </organization>
-		 *   ...
-		 * </list>
-		 * 
-		 */
-		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("organization", obj);
-		}
 	}
 }

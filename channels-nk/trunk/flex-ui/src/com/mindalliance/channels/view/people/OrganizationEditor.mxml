@@ -3,6 +3,15 @@
     
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.AddressVO;
+			import com.mindalliance.channels.vo.ElementVO;
+			import com.mindalliance.channels.model.application.PropertyEditorModel;
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.model.people.OrganizationEditorModel;
+			import com.mindalliance.channels.events.people.*;
+			
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}
@@ -16,6 +25,29 @@
 				// Do stuff and then:
 				currentState = '' ;
 			}
+			
+			[Bindable]
+			private var model : PropertyEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel;
+			
+			private function update() :void {
+				model.organization.name = txtName.text;
+				model.organization.abbreviation = txtAbbrev.text;
+				model.organization.description = txtDescription.text;
+				model.organization.address = new AddressVO(txtStreet.text, txtCity.text, comboUSStates.selectedItem.abbr);
+				model.organization.parent = (comboOrganizations.selectedItem as ElementVO);	
+				
+				CairngormEventDispatcher.getInstance().dispatchEvent( new UpdateOrganizationEvent(model.organization) );
+			}
+			
+			private function queueUpdate() : void {
+				CairngormEventDispatcher.getInstance().dispatchEvent( new QueueOrganizationUpdateEvent() );
+			}
+			
+			private function populateParentComboBox() : void {
+				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
+			}
+			
+			
 		]]>
 	</mx:Script>
     
@@ -50,24 +82,24 @@
     	
     <mx:FormHeading label="{'Organization: '+txtName}"/>	
     <mx:FormItem label="Name" required="false" id="formitemName">
-        <mx:TextInput id="txtName" editable="false"/>
+        <mx:TextInput id="txtName" editable="false" text="{model.organization.name}" change="queueUpdate()" focusOut="update()"/>
     </mx:FormItem>
     <mx:FormItem label="Abbreviation" direction="vertical" id="formitemAbbrev">
-    	<mx:TextInput id="txtAbbrev" editable="false"/>
+    	<mx:TextInput id="txtAbbrev" editable="false" text="{model.organization.abbreviation}" change="queueUpdate()" focusOut="update()"/>
     </mx:FormItem>
     <mx:FormItem label="Description">
-        <mx:TextArea id="txtDescription" editable="false"/>
+        <mx:TextArea id="txtDescription" editable="false" text="{model.organization.description}" change="queueUpdate()" focusOut="update()"/>
     </mx:FormItem>
     <mx:FormItem label="Parent Organization" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemParentOrg">
-	<mx:ComboBox id="comboOrganizations"/>
+	<mx:ComboBox id="comboOrganizations" change="queueUpdate()" focusOut="update()"/>
     </mx:FormItem>
     <mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">
-        <mx:Label text="Street"/>
-        <mx:TextInput id="txtStreet"/>
-        <mx:Label text="City"/>
-        <mx:TextInput id="txtCity"/>
+        <mx:Label text="Street" />
+        <mx:TextInput id="txtStreet" text="{model.organization.address.street}" change="queueUpdate()" focusOut="update()"/>
+        <mx:Label text="City" />
+        <mx:TextInput id="txtCity" text="{model.organization.address.city}" change="queueUpdate()" focusOut="update()"/>
         <mx:HBox>
-        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates"/>
+        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates" change="queueUpdate()" focusOut="update()"/>
         </mx:HBox>
     </mx:FormItem>
 </mx:Form>

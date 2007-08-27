@@ -2,12 +2,22 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 
+	[Bindable]
 	public class AddressVO implements IValueObject
 	{
 		
-		private _street : String;
-		private _city : String;
-		private _state : String;
+		public function AddressVO(street:String,
+									city : String,
+									state : String) 
+		{
+			this.street = street;
+			this.city = city;
+			this.state = state;					
+		}
+		
+		private var _street : String;
+		private var _city : String;
+		private var _state : String;
 		
 		public function get street() : String {
 			return _street;
@@ -34,7 +44,7 @@ package com.mindalliance.channels.vo
 		}
 		
 		
-		public function toXML() {
+		public function toXML() :XML {
 			return <address>
 					<street>{street}</street>
 					<city>{city}</city>

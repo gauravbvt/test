@@ -1,28 +1,20 @@
 
 package com.mindalliance.channels.commands.application
 {
-	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.application.ProjectDelegate;
+	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.application.GetProjectEvent;
 	import com.mindalliance.channels.events.application.GetProjectListEvent;
-	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
-	import com.mindalliance.channels.util.XMLHelper;
 	
-	import mx.rpc.IResponder;
-	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;	
-	import mx.logging.Log;
-	import mx.logging.ILogger;
+	import mx.collections.ArrayCollection;
 	
-	public class GetProjectListCommand implements ICommand, IResponder
+	public class GetProjectListCommand extends BaseDelegateCommand
 	{
-		private var model : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
 		
-		private var log : ILogger = Log.getLogger("com.mindalliance.channels.commands.application.GetProjectListCommand");
-		public function execute(event:CairngormEvent):void
+		override public function execute(event:CairngormEvent):void
 		{
 			var evt:GetProjectListEvent = event as GetProjectListEvent;
 			var delegate:ProjectDelegate = new ProjectDelegate( this );
@@ -30,20 +22,18 @@ package com.mindalliance.channels.commands.application
 			delegate.getProjectList();
 		}
 		
-		public function result(data:Object):void
+		override public function result(data:Object):void
 		{
-			var result:Object = (data as ResultEvent).result;
-			model.projectList = XMLHelper.fromXMLList("project", result);
+			model.projectScenarioBrowserModel.projectList = (data as ArrayCollection);
 			log.debug("Successfully retrieved project list");
         	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 		}
 		
-		public function fault(info:Object):void
+		override public function fault(info:Object):void
 		{
-			var fault:FaultEvent = info as FaultEvent;
-			model.projectList = null;
+			model.projectScenarioBrowserModel.projectList = null;
         	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
-			log.error(fault.toString());
+			super.fault(info);
 		}
 		
 	}

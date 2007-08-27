@@ -4,6 +4,8 @@ package com.mindalliance.channels.business.application
 	import com.mindalliance.channels.business.BaseDelegate;
 	
 	import mx.rpc.IResponder;
+	import com.mindalliance.channels.vo.ProjectVO;
+	import com.mindalliance.channels.vo.ElementVO;
 	
 	public class ProjectDelegate extends BaseDelegate
 	{
@@ -11,6 +13,7 @@ package com.mindalliance.channels.business.application
 		public function ProjectDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName = "project";
 		}
 		
 		public function getProjectList() : void {
@@ -21,7 +24,19 @@ package com.mindalliance.channels.business.application
 			var project : XML = <project></project>;
 			project.appendChild(<name>{name}</name>);
 			
-			createElement("project", project);	
+			createElement(project);	
+		}
+		
+		override public function fromXML(obj:Object):ElementVO {
+			return new ProjectVO(obj.id, obj.name, obj.description);
+		}
+		
+		override public function toXML(obj:ElementVO) : XML {
+			return <project schema="/channels/schema/project.rng">
+						<id>{obj.id}</id>
+						<name>{obj.name}</name>
+						<description>{obj.description}</description>
+					</project>;
 		}
 		
 	}

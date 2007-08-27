@@ -11,6 +11,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.ElementVO;
 			import com.mindalliance.channels.vo.ProjectVO;
 			import com.mindalliance.channels.vo.ScenarioVO;
 			import com.mindalliance.channels.model.PermissionModel;
@@ -76,7 +77,8 @@
          		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateScenarioEvent(new ScenarioVO(psbModel.selectedScenario.id,
  	        																					txtScenarioName.text,
  	        																					txtScenarioDescription.text,
- 	        																					psbModel.selectedProject.id)));	
+ 	        																					new ElementVO(psbModel.selectedProject.id,
+ 	        																					              psbModel.selectedProject.name))));	
  	        }
  	        
  	        private function selectScenario() : void

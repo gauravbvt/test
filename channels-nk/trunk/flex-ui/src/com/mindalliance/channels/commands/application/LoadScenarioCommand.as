@@ -7,12 +7,11 @@ package com.mindalliance.channels.commands.application
 	import com.mindalliance.channels.model.ChannelsModelLocator;	
 	import mx.logging.Log;
 	import mx.logging.ILogger;
-	public class LoadScenarioCommand implements ICommand
+	import com.mindalliance.channels.commands.BaseCommand;
+	
+	public class LoadScenarioCommand extends BaseCommand
 	{
-		private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
-		
-		private var log : ILogger = Log.getLogger("com.mindalliance.channels.commands.application.LoadScenarioCommand");
-		public function execute(event:CairngormEvent):void
+		override public function execute(event:CairngormEvent):void
 		{
 			var evt:LoadScenarioEvent = event as LoadScenarioEvent;
 			
