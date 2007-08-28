@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:categories="com.mindalliance.channels.view.categories.*" 
-	xmlns:common="com.mindalliance.channels.view.common.*">
+	xmlns:common="com.mindalliance.channels.view.common.*"
+	implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
 
 	<mx:Script>
 		<![CDATA[
+			
+			import com.mindalliance.channels.model.scenario.ArtifactEditorModel;
+			import com.mindalliance.channels.model.IChannelsModel;
+			[Bindable]
+			private var model : ArtifactEditorModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as ArtifactEditorModel);
+			}
 			private function switchToEditState():void {
 				currentState = 'EditState';
 			}

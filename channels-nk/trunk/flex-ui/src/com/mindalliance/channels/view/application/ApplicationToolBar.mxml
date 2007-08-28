@@ -5,6 +5,7 @@
     xmlns:logging="com.mindalliance.channels.view.logging.*">
     <mx:Script>
 	    <![CDATA[
+	    	import com.mindalliance.channels.view.common.IChannelsModelComponent;
 	    	import mx.effects.Resize;
 	    	import mx.events.FlexEvent;
 	    	import mx.events.EffectEvent;
@@ -12,6 +13,7 @@
 	    	import mx.effects.WipeDown;
 	    	import mx.effects.Effect;
 	    	import mx.containers.Panel;
+	    	import com.mindalliance.channels.view.common.IChannelsModelComponent;
 	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
 	    	import com.mindalliance.channels.view.scenario.TaskChooser;
 	    	import com.mindalliance.channels.view.categories.CategoryViewer;
@@ -28,6 +30,7 @@
 	    	import mx.controls.Menu;
 	    	import com.mindalliance.channels.view.people.OrganizationEditor;
 	    	import com.mindalliance.channels.view.categories.CategoryChooser;
+	    	import com.mindalliance.channels.view.UtilFuncs;
 	        import mx.containers.TitleWindow;
 	        import mx.events.FlexMouseEvent;
 	        import mx.controls.Alert;
@@ -38,20 +41,20 @@
             [Bindable]
  	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
         
-            private static var classHash:Object = {
-                "Category Library Editor":CategoryLibraryEditor,
-                "Category Viewer":CategoryViewer, 
-                "Category Chooser":CategoryChooser,
-                "Personal Profile Editor":PersonalProfileEditor,
-                "Role Editor":RoleEditor,
-                "Role Chooser":RoleChooser,
-                "Organization Editor":OrganizationEditor,
-                "Repository Editor":RepositoryEditor,
-                "Task Editor":TaskEditor,
-                "Task Chooser":TaskChooser,
-                "Event Editor":EventEditor,
-                "Artifact Editor":ArtifactEditor,
-                "Artifact Chooser":ArtifactChooser
+            private var classHash:Object = {
+                "Category Library Editor":[ CategoryLibraryEditor,model.categoryLibraryEditorModel],
+                "Category Viewer":[ CategoryViewer,model.categoryViewerModel], 
+                "Category Chooser":[ CategoryChooser,model.categoryChooserModel],
+                "Personal Profile Editor":[ PersonalProfileEditor,model.organizationEditorModel],
+                "Role Editor":[ RoleEditor,model.propertyEditorModel.roleEditorModel],
+                "Role Chooser":[ RoleChooser,model.propertyEditorModel.roleChooserModel],
+                "Organization Editor":[ OrganizationEditor,model.organizationEditorModel],
+                "Repository Editor":[ RepositoryEditor, model.propertyEditorModel.repositoryEditorModel],
+                "Task Editor":[ TaskEditor, model.propertyEditorModel.taskEditorModel],
+                "Task Chooser":[ TaskChooser, model.propertyEditorModel.taskChooserModel],
+                "Event Editor":[ EventEditor, model.propertyEditorModel.eventEditorModel],
+                "Artifact Editor":[ ArtifactEditor, model.propertyEditorModel.artifactEditorModel],
+                "Artifact Chooser":[ArtifactChooser,model.propertyEditorModel.artifactChooserModel]
                 };
                 
             private function popUpTraceWindow():void {
@@ -63,11 +66,13 @@
             }    
                 
             private function menuBarItemClicked(event:MenuEvent):void {
-                var c:Class = classHash[event.item.@label] ;
+                var c:Class = classHash[event.item.@label][0] ;
                 if (c != null) {
-	            	var popUp:TitleWindow ;
+                	var popUp:TitleWindow ;
 	            	popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
-	            	popUp.addChild(new ClassFactory(c).newInstance()) ;
+	            	var component : IChannelsModelComponent = (new ClassFactory(c).newInstance() as IChannelsModelComponent);
+	            	component.channelsModel = classHash[event.item.@label][1];
+	            	popUp.addChild(component as DisplayObject) ;
 	            	popUp.showCloseButton = true ;
 	            	popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)}) ;
 	                popUp.x = this.x + 100 ;
@@ -77,6 +82,7 @@
                 switch (menuItem) {
                 	case "Edit Categories":
                 		var cle:CategoryLibraryEditor = CategoryLibraryEditor(PopUpManager.createPopUp(this, CategoryLibraryEditor)) ;
+                		cle.channelsModel = model.categoryLibraryEditorModel;
                 		cle.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, 
                 			function close(event:FlexMouseEvent):void{
                 				PopUpManager.removePopUp(cle);
@@ -112,6 +118,7 @@
             		}); 
             	
             	var personalProfileEditor:PersonalProfileEditor = new PersonalProfileEditor() ;
+            	personalProfileEditor.channelsModel = model.personalProfileEditorModel;
             	profileWindow.addChild(personalProfileEditor) ;
             	PopUpManager.centerPopUp(profileWindow) ;
             	profileWindow.y = this.y + this.height + 2 ;

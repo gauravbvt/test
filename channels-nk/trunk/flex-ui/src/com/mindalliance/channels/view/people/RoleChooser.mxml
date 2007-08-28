@@ -2,12 +2,27 @@
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:search="com.mindalliance.channels.view.search.*"
 	xmlns:people="com.mindalliance.channels.view.people.*"
-	resizeEffect="Resize">
+	resizeEffect="Resize" 
+	implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
 
 	<mx:Script>
 		<![CDATA[
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
+			import com.mindalliance.channels.model.IChannelsModel;
+			import com.mindalliance.channels.model.people.RoleChooserModel;
+			
+			[Bindable]
+			private var model : RoleChooserModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as RoleChooserModel);
+			}
+			
 			[Bindable]
 			private var SelectedRoles:ArrayCollection = new ArrayCollection() ;
 			

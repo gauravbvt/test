@@ -1,8 +1,10 @@
-package com.mindalliance.channels.vo
+package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import mx.collections.ArrayCollection;
 	import com.mindalliance.channels.util.XMLHelper;
+	import com.mindalliance.channels.vo.ElementVO;
+	
 	public class CategorySetVO implements IValueObject
 	{
 		private var _atMostOne : Boolean;
@@ -38,19 +40,6 @@ package com.mindalliance.channels.vo
 
 		public function set categories(categories : ArrayCollection) : void {
 			_categories=categories;
-		}
-		
-		public static function fromXML(obj : Object) : CategorySetVO {
-			return new CategorySetVO(obj.@taxonomy, XMLHelper.fromIdList("categoryId", obj.categoryId), obj.@atMostOne);
-		}
-		
-		public static function toXML(obj : CategorySetVO) : XML {
-			var xml : XML = <categories atMostOne="{obj.atMostOne}" taxonomy="{obj.taxonomy}"></categories>
-			
-			for each (var element:ElementVO in obj.categories) {
-				xml.appendChild(<categoryId>{element.id}</categoryId>);
-			}	
-			return xml;		
 		}
 		
 	}

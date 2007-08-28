@@ -6,7 +6,8 @@ package com.mindalliance.channels.vo
 	import com.adobe.cairngorm.vo.IValueObject;
 	
 	import mx.collections.ArrayCollection;
-
+	import com.mindalliance.channels.vo.common.CategorySetVO;
+	
 	public class CategorizedElementVO extends ElementVO implements IValueObject
 	{
 		public function CategorizedElementVO( id : String, 

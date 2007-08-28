@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.model.IChannelsModel;
+			import com.mindalliance.channels.model.people.UserEditorModel;
+			
+			[Bindable]
+			private var model : UserEditorModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as UserEditorModel);
+			}
+		
 			private function isPasswordChangeValid():Boolean {
 				// WRITE PASSWORD VALIDATION LOGIC HERE
 				return (txtNewPassword.length > 0) 

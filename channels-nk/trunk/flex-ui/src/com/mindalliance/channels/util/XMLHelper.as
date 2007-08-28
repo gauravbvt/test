@@ -3,7 +3,7 @@ package com.mindalliance.channels.util
 	
 	import mx.collections.ArrayCollection;
 	import mx.utils.ObjectProxy;
-	import com.mindalliance.channels.vo.AddressVO;
+	import com.mindalliance.channels.vo.common.*;
 	import com.mindalliance.channels.vo.ElementVO;
 	public class XMLHelper
 	{
@@ -16,42 +16,55 @@ package com.mindalliance.channels.util
 			return xml;
 		}
 		
-		public static function fromXMLList(key : String, results : Object) : ArrayCollection {
-			if (results.list == null || results.list[key] == null) {
-				return new ArrayCollection();
-			} else if (results.list[key] is ObjectProxy) {
-				return new ArrayCollection([results.list[key]]);
-			} else { 
-				return results.list[key] as ArrayCollection;
-			}		
-		}
-		
 		public static function fromIdList(elementName:String, list : XMLList) : ArrayCollection {
 			var results : ArrayCollection = new ArrayCollection();
-//			if (list[listName] != null && list[listName][elementName] != null) {
-//				var ids : Object = list[listName][elementName];
-//				if (ids is ObjectProxy) {
-//					
-//				} else if (ids is ArrayCollection) {		
-//					for each (var obj :Object in ids) {
-//						//results.addItem(new ElementVO(obj, 	
-//					}
-//				}
-//				results.addItem(new ElementVO(obj[elementName], obj.@name));
-//			}
 
 			for each (var el:XML in list.child(elementName)) {
-				results.addItem(new ElementVO(el.valueOf(), el.@name));
+				results.addItem(new ElementVO(el.valueOf(), el.(@name)));
 			}
 			return results;
 		}
 		
-		public static function fromAddress(address : AddressVO) : XML {
+		/**
+		 * Produces a list from XML of the form:
+		 * 
+		 * <list>
+		 *   <project>
+		 *     <id>{id}</id>
+		 *     <name>{name}</id>
+		 *   </project>
+		 *   ...
+		 * </list>
+		 * 
+		 */
+		public static function fromXMLElementList(key : String, list : XML) : ArrayCollection {
+			var results : ArrayCollection = new ArrayCollection();
+			for each (var el : XML in list.elements(key)) {
+				results.addItem(new ElementVO(el.id, el.name));	
+			}
+			return results;	
+		}
+		
+		public static function addressToXML(address : AddressVO) : XML {
 			return <address>
 					<street>{address.street}</street>
 					<city>{address.city}</city>
 					<state>{address.state}</state>
 				</address>;			
 		}
+		
+		public static function xmlToCategorySet(obj : Object) : CategorySetVO {
+			return new CategorySetVO(obj.@taxonomy, XMLHelper.fromIdList("categoryId", obj.categoryId), obj.@atMostOne);
+		}
+		
+		public static function categorySetToXML(obj : CategorySetVO) : XML {
+			var xml : XML = <categories atMostOne="{obj.atMostOne}" taxonomy="{obj.taxonomy}"></categories>
+			
+			for each (var element:ElementVO in obj.categories) {
+				xml.appendChild(<categoryId>{element.id}</categoryId>);
+			}	
+			return xml;		
+		}
+		
 	}
 }

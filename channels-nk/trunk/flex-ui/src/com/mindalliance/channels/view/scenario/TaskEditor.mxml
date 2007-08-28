@@ -4,9 +4,22 @@
 	<mx:Script>
 		<![CDATA[
 			import mx.core.IFlexDisplayObject;
-			import mx.managers.PopUpManager;
+			import mx.managers.PopUpManager;			
+			import com.mindalliance.channels.model.resources.TaskEditorModel;
+			import com.mindalliance.channels.model.IChannelsModel;
+			[Bindable]
+			private var model : TaskEditorModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as TaskEditorModel);
+			}
 			private function chooseArtifacts():void {
-				var popup:IFlexDisplayObject = PopUpManager.createPopUp(listArtifacts, ArtifactChooser) ;
+				var popup:ArtifactChooser = ArtifactChooser(PopUpManager.createPopUp(listArtifacts, ArtifactChooser));
+				
 				PopUpManager.centerPopUp(popup) ;
 			}
 		]]>

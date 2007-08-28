@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:people="com.mindalliance.channels.view.people.*">
-	<people:PersonEditor/>
-	<people:UserEditor/>
+	xmlns:people="com.mindalliance.channels.view.people.*" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.model.people.PersonalProfileEditorModel;
+
+			import com.mindalliance.channels.model.IChannelsModel;		
+			[Bindable]
+			private var model : PersonalProfileEditorModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as PersonalProfileEditorModel);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<people:PersonEditor channelsModel="{model.personEditorModel}" />
+	<people:UserEditor channelsModel="{model.userEditorModel}" />
 </mx:HBox>

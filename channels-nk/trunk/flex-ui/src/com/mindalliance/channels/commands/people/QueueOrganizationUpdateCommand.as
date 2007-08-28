@@ -13,7 +13,7 @@ package com.mindalliance.channels.commands.people
 		override public function execute(event:CairngormEvent):void
 		{
 			var evt:QueueOrganizationUpdateEvent = event as QueueOrganizationUpdateEvent;
-			model.propertyEditorModel.shouldUpdateOrganization = true;
+			model.organizationEditorModel.shouldUpdateOrganization = true;
 		}
 	}
 }

@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:search="com.mindalliance.channels.view.search.*"
-	title="{'Choose categories (Taxonomy: ' + currentTaxonomyName + ')'}">
+	title="{'Choose categories (Taxonomy: ' + currentTaxonomyName + ')'}"
+	implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
              
     <mx:Script>
         <![CDATA[
         	import mx.collections.ArrayCollection;
             import mx.managers.PopUpManager;
-            
+ 			import com.mindalliance.channels.model.IChannelsModel;
+			import com.mindalliance.channels.model.categories.CategoryChooserModel;
+			
+			[Bindable]
+			private var model : CategoryChooserModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as CategoryChooserModel);
+			}                   
             [Bindable]
             private var currentTaxonomyName:String ;
             

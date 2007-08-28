@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
-
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.model.people.PersonEditorModel;
 			import mx.core.IFlexDisplayObject;
 			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.model.IChannelsModel;
+			
+			[Bindable]
+			private var model : PersonEditorModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as PersonEditorModel);
+			}
+			
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}

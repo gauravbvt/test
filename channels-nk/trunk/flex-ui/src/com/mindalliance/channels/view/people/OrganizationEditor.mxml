@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
     
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.vo.AddressVO;
+			import com.mindalliance.channels.model.people.OrganizationChooserModel;
+			import com.mindalliance.channels.vo.common.AddressVO;
 			import com.mindalliance.channels.vo.ElementVO;
 			import com.mindalliance.channels.model.application.PropertyEditorModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.people.OrganizationEditorModel;
+			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.events.people.*;
 			
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
@@ -28,7 +30,17 @@
 			}
 			
 			[Bindable]
-			private var model : PropertyEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel;
+			private var model : OrganizationEditorModel = ChannelsModelLocator.getInstance().organizationEditorModel;
+			[Bindable]
+			private var chooserModel : OrganizationChooserModel = ChannelsModelLocator.getInstance().organizationChooserModel;
+			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as OrganizationEditorModel);
+			}
 			
 			private function update() :void {
 				model.organization.name = txtName.text;
@@ -92,7 +104,7 @@
         <mx:TextArea id="txtDescription" editable="{currentState=='EditState'}" text="{model.organization.description}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Parent Organization" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemParentOrg">
-	<common:ElementComboBox id="comboOrganizations" dataProvider="{model.organizationList}" selectedValue="{model.organization.parent.id}" change="queueUpdate()"/>
+	<common:ElementComboBox id="comboOrganizations" dataProvider="{chooserModel.organizationList}" selectedValue="{model.organization.parent.id}" change="queueUpdate()"/>
     </mx:FormItem>
     <common:AddressEditor id="formitemAddress" change="{queueUpdate}" address="{model.organization.address}" mouseChildren="false" mouseEnabled="false"/>
     <!--<mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">

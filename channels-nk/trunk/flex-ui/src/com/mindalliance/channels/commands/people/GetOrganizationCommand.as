@@ -23,7 +23,7 @@ package com.mindalliance.channels.commands.people
 				delegate.getElement(id);
 			} else {
 				log.debug("Setting selected Organization to null");
-				model.propertyEditorModel.organization = null;
+				model.organizationEditorModel.organization = null;
 			}
 		}
 		
@@ -32,7 +32,7 @@ package com.mindalliance.channels.commands.people
 			var result:OrganizationVO = (data as OrganizationVO);
 			if (result != null) {
 				log.debug("Setting selected Organization to {0}", [result.id]);
-				model.propertyEditorModel.organization = result;// new OrganizationVO(result.id, result.name, result.description, result.manager);
+				model.organizationEditorModel.organization = result;// new OrganizationVO(result.id, result.name, result.description, result.manager);
 			} else {
 				log.warn("Unable to retrieve Organization");	
 			}

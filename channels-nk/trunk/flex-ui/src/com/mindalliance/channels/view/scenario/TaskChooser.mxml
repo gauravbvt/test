@@ -7,7 +7,19 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.model.resources.TaskChooserModel;
+			import com.mindalliance.channels.model.IChannelsModel;
+			[Bindable]
+			private var model : TaskChooserModel;
 			
+			public function get channelsModel() : IChannelsModel {
+				return model;	
+			}
+			
+			public function set channelsModel(model : IChannelsModel) : void {
+				this.model = (model as TaskChooserModel);
+			}
+
 			[Bindable]
 			private var SelectedTasks:ArrayCollection ;
 			

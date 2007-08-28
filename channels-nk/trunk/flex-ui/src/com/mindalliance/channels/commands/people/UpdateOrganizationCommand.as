@@ -13,13 +13,13 @@ package com.mindalliance.channels.commands.people
 	
 		override public function execute(event:CairngormEvent):void
 		{
-			if (model.propertyEditorModel.shouldUpdateOrganization) {
+			if (model.organizationEditorModel.shouldUpdateOrganization) {
 				log.debug("Updating Organization");
 				var evt:UpdateOrganizationEvent = event as UpdateOrganizationEvent;
 				
 				var delegate:OrganizationDelegate = new OrganizationDelegate( this );
 				
-				delegate.updateElement(model.propertyEditorModel.organization);
+				delegate.updateElement(model.organizationEditorModel.organization);
 			}
 		}
 		
@@ -27,7 +27,7 @@ package com.mindalliance.channels.commands.people
 		{
 			log.debug("Organization successfully updated");
 			
-			model.propertyEditorModel.shouldUpdateOrganization = false;
+			model.organizationEditorModel.shouldUpdateOrganization = false;
 			
 		}
 	}

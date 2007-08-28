@@ -2,7 +2,7 @@
 <mx:FormItem label="Address" direction="vertical"  xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
 	<mx:Script >
 		<![CDATA[
-			import com.mindalliance.channels.vo.AddressVO;
+			import com.mindalliance.channels.vo.common.AddressVO;
 			
 			[Bindable]
 			public var address : AddressVO;

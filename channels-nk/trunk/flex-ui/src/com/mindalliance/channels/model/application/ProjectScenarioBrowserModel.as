@@ -4,9 +4,10 @@ package com.mindalliance.channels.model.application
 	import com.mindalliance.channels.vo.ScenarioVO;
 	
 	import mx.collections.ArrayCollection;
+	import com.mindalliance.channels.model.IChannelsModel;
 	
 	[Bindable]
-	public class ProjectScenarioBrowserModel
+	public class ProjectScenarioBrowserModel implements IChannelsModel
 	{
 		public var projectList : ArrayCollection;
 		

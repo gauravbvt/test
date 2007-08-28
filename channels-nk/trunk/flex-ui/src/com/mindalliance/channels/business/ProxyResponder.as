@@ -1,18 +1,11 @@
 package com.mindalliance.channels.business
 {
 	
-	import mx.rpc.AsyncToken;
-	import mx.rpc.IResponder;
-	import mx.rpc.http.HTTPService;
-	import flash.utils.Dictionary;
-	import mx.collections.ArrayCollection;
-	import mx.utils.ObjectProxy;
-	import mx.utils.ObjectUtil;
+	import com.mindalliance.channels.util.XMLHelper;
+	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;	
-	import mx.logging.Log;
-	import mx.logging.ILogger;
+	import mx.rpc.events.ResultEvent;
 	
 	public class ProxyResponder implements mx.rpc.IResponder
 	{
@@ -55,7 +48,7 @@ package com.mindalliance.channels.business
 		}
 		
 		private function handleQuery(result : XML) : Object {
-			return delegate.fromXMLElementList(typeName, result);
+			return XMLHelper.fromXMLElementList(typeName, result);
 		}
 		
 		private function handleRead(result : XML) : Object {

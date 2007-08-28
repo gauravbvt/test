@@ -1,4 +1,4 @@
-package com.mindalliance.channels.vo
+package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 
@@ -42,14 +42,6 @@ package com.mindalliance.channels.vo
 		public function set state(state: String) : void {
 			this._state = state;
 		}
-		
-		
-		public function toXML() :XML {
-			return <address>
-					<street>{street}</street>
-					<city>{city}</city>
-					<state>{state}</state>
-				</address>;			
-		}
+
 	}
 }

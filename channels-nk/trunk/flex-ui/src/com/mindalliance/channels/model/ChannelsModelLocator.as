@@ -11,7 +11,10 @@ package com.mindalliance.channels.model
 	import mx.resources.ResourceBundle;
 	import com.mindalliance.channels.model.flowmap.FlowMapModel;
 	import com.mindalliance.channels.model.application.PropertyEditorModel;
-    /**
+	import com.mindalliance.channels.model.categories.*;
+	import com.mindalliance.channels.model.people.*;
+	
+	/**
      * This singleton class provides references to the models for various components.  In
      * addition, it keeps track of global data elements such as the loaded scenario.
      */
@@ -24,9 +27,16 @@ package com.mindalliance.channels.model
 		
 		// Component Models
 		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel();
+		public var categoryLibraryEditorModel  : CategoryLibraryEditorModel = new CategoryLibraryEditorModel();
+		public var categoryViewerModel : CategoryViewerModel = new CategoryViewerModel();
+		public var categoryChooserModel : CategoryChooserModel = new CategoryChooserModel();
+		public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel();
 		public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel();
 		public var permissionModel : PermissionModel = new PermissionModel();
 		public var flowMapModel : FlowMapModel = new FlowMapModel();
+		public var organizationEditorModel : OrganizationEditorModel = new OrganizationEditorModel();
+		public var organizationChooserModel : OrganizationChooserModel = new OrganizationChooserModel();
+		public var personEditorModel : PersonEditorModel = new PersonEditorModel();
 		
 		// Global Properties
 		private var _currentProject : ProjectVO;

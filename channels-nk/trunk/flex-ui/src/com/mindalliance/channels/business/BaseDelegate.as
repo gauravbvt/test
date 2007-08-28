@@ -79,40 +79,6 @@ package com.mindalliance.channels.business
 			token.addResponder( new ProxyResponder(requestType, this) );	
 		}
 		
-		public function generateElementListXML(listTag : String, elementTag : String, list : ArrayCollection) :XML {
-			var xml : XML = <{listTag}></{listTag}>;
-			for each (var obj : Object in list) {
-				xml.appendChild(<{elementTag}><id>{obj.id}</id></{elementTag}>);	
-			}
-			return xml;
-		}
-		/**
-		 * Produces a list from XML of the form:
-		 * 
-		 * <list>
-		 *   <project>
-		 *     <id>{id}</id>
-		 *     <name>{name}</id>
-		 *   </project>
-		 *   ...
-		 * </list>
-		 * 
-		 */
-		public function fromXMLElementList(key : String, list : XML) : ArrayCollection {
-			var results : ArrayCollection = new ArrayCollection();
-			for each (var el : XML in list.elements(key)) {
-				results.addItem(new ElementVO(el.id, el.name));	
-			}
-			return results;
-//			if (results.list == null || results.list[key] == null) {
-//				return new ArrayCollection();
-//			} else if (results.list[key] is ObjectProxy) {
-//				return new ArrayCollection([results.list[key]]);
-//			} else { 
-//				return results.list[key] as ArrayCollection;
-//			}		
-		}
-		
 		/**
 		 * Extending delegates should override this method to parse XML
 		 * into the appropriate Value Object.
