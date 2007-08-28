@@ -1,0 +1,27 @@
+import org.ten60.netkernel.layer1.representation.*;
+import org.ten60.netkernel.xml.representation.*;
+import com.ten60.netkernel.urii.aspect.*;
+import org.ten60.netkernel.xml.xda.IXDAReadOnly;
+
+main() {
+	id=context.sourceAspect("var:id", IAspectXDA.class).getXDA().getText("/id/text()", true);
+	req=context.createSubRequest("active:channels_data_getElement");
+	
+	namesListedArg=context.getThisRequest().getArgument("namesListed");
+	namesListed=null;
+	
+	if(namesListedArg != null) {
+		namesListed=context.source(namesListedArg);
+	}
+	
+	req.addArgument("id", "id:" + id);
+
+	if(namesListed!=null) {
+		req.addArgument("namesListed", namesListed);
+	}
+	
+	out=context.issueSubRequest(req);
+	response=context.createResponseFrom(out);
+  	response.setMimeType("text/xml");
+  	context.setResponse(response);
+}

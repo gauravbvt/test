@@ -80,10 +80,17 @@
       <target>var:id</target>
     </instr>
     <instr>
+        <type>beanshell</type>
+        <operator>testGetElement.bsh</operator>
+        <id>var:id</id>
+        <namesListed><b>t</b></namesListed>        
+        <target>this:response</target>
+    </instr>
+<!--    <instr>
       <type>channels_data_getElement</type>
       <id>var:id</id>
       <namesListed><b>t</b></namesListed>
       <target>this:response</target>
-     </instr>
+     </instr> -->
   </seq>
 </idoc>
