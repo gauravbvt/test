@@ -6,26 +6,22 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
 importPackage(Packages.java.lang);
 
-// Create the categories
+// Delete and re-open model loading testDB.xml
 
-var cat_event = <category>
-									<name>Event</name>
-									<description>The root of the event taxonomy</description>
-									<disciplines/>
-									<implies/>
-									<information>
-										<topic>
-											<name></name>
-											<description></description>
-											<eoi>
-												<name></name>
-												<description></description>
-											</eoi>
-										</topic>
-									</information>
-								</category>;
-cat_event = createElement(cat_event, "category");
+// Delete model
+var req = context.createSubRequest("active:channels_data_deleteModel");
+context.issueSubRequest(req);
+// Open model from db:testDB.xml
+req = context.createSubRequest("active:channels_data_openModel");
+req.addArgument("init", "db:testDB.xml");
+context.issueSubRequest(req);
 
-// Create a categorized element
+// Get element event1's information template
+req = context.createSubRequest("active:channels_data_getInformationTemplate");
+req.addArgument("id", "id:event1");
+var template = context.issueSubRequest(req);
 
-// Get the element's information template
+// Respond
+var resp = context.createResponseFrom(template);
+resp.setMimeType("text/xml");
+context.setResponse(resp);

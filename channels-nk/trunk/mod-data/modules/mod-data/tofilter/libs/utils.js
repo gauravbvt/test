@@ -92,7 +92,7 @@ function validateRNG(doc) { // doc is an E4X XML object
 // Get stored document as e4x xml object given its id as string
 function getDocument(id) {
 	var op =  getDocumentDescriptor(id);	
-	log("Document descriptor: " + op, "info");
+	// log("Document descriptor: " + op, "info");
 	var req = context.createSubRequest("active:dbxmlGetDocument");
 	req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()) );
 	var doc = context.transrept(context.issueSubRequest(req), IAspectXmlObject);
@@ -129,9 +129,36 @@ function deleteDocument(id) {
   return deleted;
 }
 
-// Returns whether a document thus named exists
-function documentExists(id) {
-	
+// Adds id element if not there, sets schema attribute, validates and stores. Returns doc as stored.
+function createElement(xml) {
+	var doc = xml;
+	var kind = doc.name();
+	log("Creating " + kind + ":\n " + doc, "info");
+	// Generate and add GUID as root attribute id if needed	
+	if (doc.id.length() == 0) {
+		var guid = new XML(context.sourceAspect("active:guid",IAspectXmlObject).getXmlObject()).text();
+		var id = <id>{guid}</id>;
+		doc.insertChildAfter(null, id);
+	}
+	else {
+		log("ID preset "+ doc.id, "warning");
+	}
+	// (Re)set schema attribute
+	doc.@schema = getSchemaURL(kind);
+	// Document identity
+	descriptor =  getDocumentDescriptor(doc.id.text());
+	// Validate
+	try {
+		validateRNG(doc); // throws an exception if not valid
+	}
+	catch(e) {
+		log("Document of kind " + kind + " is invalid:\n" + doc, "severe");
+		throw (e);
+	}
+	// Store new document (exception if conflict on id)
+	putDocument(doc);
+	log("Created document " + doc + " in container " + dbxml_getContainerName(), "info");
+	return doc;
 }
 
 

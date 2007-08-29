@@ -40,97 +40,101 @@ function addIfUnique(array, element) {
 	}
 }
 
-function addAllIfUnique(array, elements) {
+function addAllIfUnique(set, elements) {
 	var added = new Array();
 	for (i in elements) {
 		var element = elements[i];
-		if (addIfUnique(array, element)) added.push(element);
+		if (addIfUnique(set, element)) added.push(element);
 	}
 	return added;
 }
 
-function addImpliedCategoryIds(set, categoryId) {
+function getImpliedCategoryIds(categoryId) {
+	// log("Getting implied categories by " + categoryId, "info");
 	var category = getDocument(categoryId);
-	log("Getting implied categories by " + category, "info");
-	var impliedIds = category.implies.categoryId;
-	for (i in impliedIds) {
-		var id = impliedIds[i].text();
-		if (addlIfUnique(set, id)) {
-			log("Transitive closure on " + id, "info");
-			addImpliedCategoryIds(set, id);
-		}
+	var implied = new Array();
+	for each (id in category.implies.categoryId) {
+		implied.push(id.text());
 	}
+	// log("Categories implied by " + categoryId + " = " + implied);
+	return implied;
 }
 
 function getCategoriesOf(elementId) {
-	log("Getting ALL categories of " + id, "info");
-	var idSet = new Array();
+	// log("Getting all categories of " + elementId, "info");
+	var explicitCategories = new Array();
 	var doc = getDocument(elementId);
-	try {
-		var ids = doc.categories.categoryId;
-		log("Explicit category ids: " + ids, "info");
+	var set = new Array(); // in case there are duplicates
+	for each (id in doc.categories.categoryId) {
+		addIfUnique(set, id.text());
 	}
-	catch(e) {
-		log("Element " + doc + " is not categorized: " + e, "warning");
-	}
-	for (i in ids) {
-		var id = ids[i].text();
-		if (addIfUnique(idSet,id)) { // should be unique but perhaps not
-			addImpliedCategoryIds(idSet, id);
+	// log("Explicit category ids: " + set, "info");
+	var added = [].concat(set);
+	while (added.length > 0) { // while more is added to the transitive closure of categories
+		var more = new Array();
+		for (i in added) {
+			var implied = getImpliedCategoryIds(added[i]);
+			more = more.concat(addAllIfUnique(set, implied)); // Accumulate the new category ids added to idSet
+			}
+		added = more;
 		}
-	}
-	return idSet;
+	return set;
 }
 
 // MAIN
-var id = context.getThisRequest().getArgument("id").substring(3);
-log("Getting information template for " + id, "info");
-var doc = getDocument(id);
+var elementId = context.getThisRequest().getArgument("id").substring(3);
+log("Getting information template for " + elementId, "info");
 // 1- collect all distinct category IDs, explicit and implied
-var idSet = getCategoriesOf(id);
-
+var idSet = getCategoriesOf(elementId);
 // 2- Collect the topics (names only) and their EOIs (names and descriptions) for each information in each category
 // 3- Aggregate the EOIs across categories into each named topic 
 // 			- no duplicate topics by name, no duplicate EOIs by name per topic
 // 			- When collapsing EOIs, accumulate privacy and minimize confidence (TODO)
 // 4- Construct and return an aggregated information element as xml.
-
-var infoXml = <info/>;
+// log("Building information template from " + idSet, "info");
+var template = <information/>;
+var templateTopic;
+var templateEoi;
 for (i in idSet) {
 	var info = getDocument(idSet[i]).information;
 	// for all topics
-	var topics = info.topic;
-	for (j in topics) {
-		var topic = topics[j];
+	for each (topic in info.topic) {
 		var topicName = topic.name.text();
 		var topicDescription = topic.description != null ? topic.description.text() : "";
-		var topicXml = infoXml.topic.(name == topicName); 
-		if (topicXML == null) {
-			topicXml = <topic>
-									 <name>{topicName}</name>
-									 <description>{topicDescription}</description>
-								 </topic>;
-			infoXml.insertChildAfter(null, topicXml);
-			log("Added topic: " + topicXml, "info");
+		var list = template.topic.(name == topicName); // is topic already in template?
+		// log(list.length() + " template topics named " + topicName + " = " + list, "info");
+		if (list.length() == 0) {
+			templateTopic =  <topic>
+												 <name>{topicName}</name>
+												 <description>{topicDescription}</description>
+											 </topic>;
+			template.insertChildAfter(null, templateTopic);
+			templateTopic = template.topic.(name == topicName)[0];
+			// log("Added topic to template: " + templateTopic, "info");
 		}
-		var eois = topic.eoi;
-		for (k in eois){
-			var eoi = eois[k];
+		else {
+			templateTopic = list[0];
+		}
+		for each (eoi in topic.eoi){
 			var eoiName = eoi.name.text();
 			var eoiDescription = eoi.description != null ? eoi.description.text() : "";
-			var eioXml = topicXml.eoi.(name == eoiName);
-			if (eoiXml == null) {
-				eoiXml = <eoi>
-									<name>{eoiName}</name>
-									<description>{eoiDescription}</description>
-								 </eoi>;
-				topicXml.insertChildAfter(null,eoiXml);
-				log("Added eoi: " + eoiXml, "info");
+			list = templateTopic.eoi.(name == eoiName);
+			// log(list.length() + " template eois in topic " + topicName + " named " + eoiName + " = " + list, "info");
+			if (list.length() == 0) {
+				templateEoi = <eoi>
+												<name>{eoiName}</name>
+												<description>{eoiDescription}</description>
+											 </eoi>;
+				templateTopic.insertChildAfter(null,templateEoi);
+				// log("Added eoi: " + templateEoi + " to topic " + topicName + " in template", "info");
+			}
+			else {
+				log("EOI collision with " + list[0] + " in topic " + topicName + " from category " + idSet[i], "warning");
 			}
 		}
 	}
 }
-
-var es = context.contructResponseFrom(new XmlObjectAspect(infoXml.getXmlObject()));
+log("Information template for " + elementId + " =\n" + template, "info");
+var resp = context.createResponseFrom(new XmlObjectAspect(template.getXmlObject()));
 resp.setMimeType("text/xml");
 context.setResponse(resp);

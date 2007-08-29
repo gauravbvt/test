@@ -2,6 +2,7 @@
 <!--
   start =
     element category {
+      {taxonomy} &
       {isna_element} &
       {identified} &
       element disciplines {
@@ -17,6 +18,7 @@
     <start>
     <element name="category">
       <interleave>
+        <ref name="taxonomy"/>
         <ref name="isna_element"/>
         <ref name="identified"/>
         <element name="disciplines">

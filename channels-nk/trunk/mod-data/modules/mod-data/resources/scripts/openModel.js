@@ -31,7 +31,7 @@ if (!exists) {
   	var db = new XML(xml); // otherwise db.* also gathers whitespace children
   	log("Initializing db with " + db.*.length() + " elements", "info");
   	for each (el in db.*) { 
-  		putDocument(el);
+  		createElement(el);
   	}
   	log("Database initialized", "info");
   }

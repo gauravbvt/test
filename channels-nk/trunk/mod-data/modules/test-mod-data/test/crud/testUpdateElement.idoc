@@ -8,7 +8,6 @@
           <name>My project</name>
         </project>
       </doc>
-      <kind><string>project</string></kind>
       <target>var:element</target>
     </instr>
     <instr>

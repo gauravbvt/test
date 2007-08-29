@@ -104,6 +104,19 @@
     <group>channels_data</group>
     <icon/>
   </entrypoint>
+  <entrypoint>
+    <name>doc_ura_getInformationTemplate</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_getInformationTemplate.xml</uri>
+    <indexable>
+      <title>channels_data_getInformationTemplate</title>
+      <desc>Get the information template for a categorized element</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
    <!--Discoverable Documentation Menu-->
 	<entrypoint>
 		<name>urn:com:mindalliance:channels:data:chapter</name>

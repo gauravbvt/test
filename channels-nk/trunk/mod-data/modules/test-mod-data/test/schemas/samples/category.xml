@@ -1,7 +1,7 @@
-<category schema="http://localhost:8080/channels/schema/category.rng">
+<category schema="http://localhost:8080/channels/schema/category.rng" taxonomy="event">
   <id>324598347FAC3654</id>
-  <name>A category</name>
-  <description>About a category</description>
+  <name>An event category</name>
+  <description>About an event category</description>
   <disciplines>
     <categoryId>349857</categoryId>
     <categoryId>9875</categoryId>

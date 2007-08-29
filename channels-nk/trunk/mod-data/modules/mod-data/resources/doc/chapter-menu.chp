@@ -7,4 +7,5 @@
 	<item name="doc_ura_getElement"/>
 	<item name="doc_ura_updateElement"/>
 	<item name="doc_ura_queryModel"/>
+	<item name="doc_ura_getInformationTemplate"/>
 </menu>

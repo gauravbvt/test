@@ -34,7 +34,6 @@
           </returns>
           <syntax>
             <type><b>channels_data_createElement</b></type>
-            <kind req="true">the kind of element</kind>
             <doc req="true">an xml resource with the initial state of the element</doc>
             <target req="false">the created element as xml</target>
           </syntax>
@@ -73,7 +72,7 @@
             the identity of the container in the BDXML database into which the document is put.
           </p>
           <h3>Validation</h3>
-          The <code>kind</code> argument is used to locate the appropriate RelaxNG schema against which to validate
+          The name of the root element is used to locate the appropriate RelaxNG schema against which to validate
           the fully initialized element prior to storing it. If the validation fails, an exception is raised. The schemas are 
           located under /resources/schemas and must be in RelaxNG's XML format. 
         </content>

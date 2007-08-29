@@ -10,7 +10,6 @@
           <name>My project</name>
         </project>
       </doc>
-      <kind><string>project</string></kind>
       <target>this:response</target>
     </instr>
   </seq>
