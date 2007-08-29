@@ -22,7 +22,7 @@ package com.mindalliance.channels.business.application
 			var request:Array = new Array();
 			request["projectId"] = projectId;
 
-			performQuery("allScenariosInProject", request);
+			performQuery("scenariosInProject", request);
 		}
 		public function createScenario(name:String, projectId:String) : void {
 			var scenario : XML = <scenario></scenario>;
