@@ -1,7 +1,7 @@
 // Gets an element as XML document from the container
 
 // arguments:
-//    id -- the id of the element as canonical document <id>someguid</id>
+//    id -- the id of the element as a url id:<someguid>, e.g. id:98394839847634
 // returns:
 //    an XML document
 
@@ -13,15 +13,6 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
 importPackage(Packages.java.lang);
 
-function getDocument(id) {
-	var op =  getDocumentDescriptor(id);	
-	log("Document descriptor: " + op, "info");
-	var req = context.createSubRequest("active:dbxmlGetDocument");
-	req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()) );
-	var doc = context.transrept(context.issueSubRequest(req), IAspectXmlObject);
-  log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
-	return new XML(doc.getXmlObject());
-}
 
 // Adds names of ids in listed references
 function addNamesToListedReferences(elem) {

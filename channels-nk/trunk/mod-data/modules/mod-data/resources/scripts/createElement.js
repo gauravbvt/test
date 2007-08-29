@@ -18,20 +18,21 @@ log("Creating element " + kind, "info");
 var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 log("Creating " + kind + ":\n " + doc, "info");
 
-// Generate and add GUID as root attribute id
+// Generate and add GUID as root attribute id if needed
 
-var guid = new XML(context.sourceAspect("active:guid",IAspectXmlObject).getXmlObject());
-guid = guid.text();
-var id = <id>{guid}</id>;
-doc.insertChildAfter(null, id);
+if (doc.id.length() == 0) {
+	var guid = new XML(context.sourceAspect("active:guid",IAspectXmlObject).getXmlObject()).text();
+	var id = <id>{guid}</id>;
+	doc.insertChildAfter(null, id);
+}
+else {
+	log("ID preset "+ doc.id, "warning");
+}
+// (Re)set schema attribute
 doc.@schema = getSchemaURL(kind);
 
 // Document identity
-op =  <dbxml>
-          <name>{guid}</name>
-          <container>{dbxml_getContainerName()}</container>
-      </dbxml>;
-var descriptor = new XmlObjectAspect(op.getXmlObject());
+descriptor =  getDocumentDescriptor(doc.id.text());
 
 try {
 	validateRNG(doc); // throws an exception if not valid
@@ -40,16 +41,12 @@ catch(e) {
 	log("Document of kind " + kind + " is invalid:\n" + doc, "severe");
 	throw (e);
 }
-var req=context.createSubRequest("active:dbxmlPutDocument");
-req.addArgument("operand", new XmlObjectAspect(doc.getXmlObject()) );
-req.addArgument("operator", descriptor);
-var result=context.issueSubRequest(req);
-log("Put document named " + id + " with " + doc + " in container " + dbxml_getContainerName(), "info");
 
+putDocument(doc);
+var req=context.createSubRequest("active:dbxmlPutDocument");
+log("Created document named " + id + " with " + doc + " in container " + dbxml_getContainerName(), "info");
 
 //Return Response
-//result = <root/>;
-//result.insertChildAfter(null, doc); // otherwise the root of doc is stripped and replaced by <xml-fragment>. Go figure.
 var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));
 resp.setExpired(); // don't cache
 resp.setMimeType("text/xml");

@@ -8,6 +8,7 @@
     </instr>
     <instr>
       <type>channels_data_openModel</type>
+      <init>db:testDB.xml</init>
       <target>this:response</target>
     </instr>
   </seq>

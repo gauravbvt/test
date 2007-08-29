@@ -22,6 +22,7 @@
 			<match>active:channels_data_.*</match>
 			<match>ffcpl:/com/mindalliance/channels/data/.*</match>
       <match>schema:.*</match>
+      <match>db:.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
 		</uri>
 	</export>
@@ -48,6 +49,10 @@
    	</rule>
    </rewrite>
 	<mapping>
+	 <rewrite>
+	 	<match>db:(.*)</match>
+	 	<to>ffcpl:/resources/db/$1</to>
+	 </rewrite>
    <rewrite>
      <match>ffcpl:/com/mindalliance/channels/data/(.*)</match>
      <to>ffcpl:/resources/$1</to>

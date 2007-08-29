@@ -1,0 +1,13 @@
+<db>
+  <project>
+    <id>project1</id>
+    <name>A project</name>
+    <description>About a project</description>
+  </project>
+  <scenario>
+    <id>scenario1</id>
+    <name>A scenario</name>
+    <description>About a scenario</description>
+    <projectId>project1</projectId>
+  </scenario>
+</db>

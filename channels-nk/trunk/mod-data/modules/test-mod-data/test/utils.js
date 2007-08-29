@@ -32,3 +32,12 @@ function issueValidateRNGRequest(schemaURI, docURI) {
   	throw("Validation error");
   }
 }
+
+function createElement(doc, kind) {
+	var req = context.createSubRequest("active:channels_data_createElement");
+	req.addArgument("doc", new XmlObjectAspect(doc.getXmlObject()));
+	req.addArgument("kind", new StringAspect("<string>"+kind+"</string>"));
+	var res = context.issueSubRequest(req);
+	xml = new  XML(res.transrept(res, IAspectXmlObject).getXmlObject());
+	return xml;
+}

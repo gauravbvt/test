@@ -88,3 +88,50 @@ function validateRNG(doc) { // doc is an E4X XML object
   	throw("Document is invalid: " + problem);
   }
 }
+
+// Get stored document as e4x xml object given its id as string
+function getDocument(id) {
+	var op =  getDocumentDescriptor(id);	
+	log("Document descriptor: " + op, "info");
+	var req = context.createSubRequest("active:dbxmlGetDocument");
+	req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()) );
+	var doc = context.transrept(context.issueSubRequest(req), IAspectXmlObject);
+  log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
+	return new XML(doc.getXmlObject());
+}
+
+// Store e4x doc in currently opened database
+function putDocument(doc, op) {
+	var id = doc.id[0].text(); // document *must* have id
+  var op =  getDocumentDescriptor(id);
+  var req=context.createSubRequest("active:dbxmlPutDocument");
+  req.addArgument("operand", new XmlObjectAspect(doc.getXmlObject()));
+  req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
+  context.issueSubRequest(req);
+  log("Element " + id + " put in container " + dbxml_getContainerName(), "info");	
+}
+
+// Deletes document by name. if exists. Returns whether existed.
+function deleteDocument(id) {
+	log("Deleting element " + id, "info");
+	var deleted = false;
+  var op =  getDocumentDescriptor(id);
+  try {
+    var req=context.createSubRequest("active:dbxmlDeleteDocument");
+    req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
+    context.issueSubRequest(req);
+    log("Deleted older version of " + id + " from container " + dbxml_getContainerName(), "info");
+    deleted = true;
+  }
+  catch(e) { // RISKY: hides all other failures
+    log("No older version of " + id + " deleted from container " + dbxml_getContainerName(), "warning");
+  }
+  return deleted;
+}
+
+// Returns whether a document thus named exists
+function documentExists(id) {
+	
+}
+
+

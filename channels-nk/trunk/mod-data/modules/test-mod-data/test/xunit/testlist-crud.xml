@@ -51,4 +51,12 @@
       <xpath>./*[1]</xpath>
     </assert>
   </test>
+  <!--
+  <test>
+    <uri>active:dpml+operand@ffcpl:/test/crud/testGetInformationTemplate.js</uri>
+    <assert name="Information template returned">
+      <xpath>./topic/eoi/name</xpath>
+    </assert>
+  </test>
+    -->
 </testlist>

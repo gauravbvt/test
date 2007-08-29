@@ -35,6 +35,7 @@
 			</returns>
 			<syntax>
 				<type><b>channels_data_openModel</b></type>
+        <init req="false">uri of xml document with elements</init>
 				<target req="false">boolean response</target>
 			</syntax>
 		</content>
@@ -51,7 +52,8 @@
 		<content>
 		  <p>
 				The <code>channels_data_openModel</code> accessor opens the DBXML container that holds the model for the current environment.
-				The container is created if needed.
+				The container is created if needed. If the container is created and the <code>init</code> parameter is set (to the uri 
+        of an xml document), then the elements, listed as children of some root element, are loaded into the database.
 				The container specification is held in /etc/config_dbxml.xml where the current environment is named which
 				determines the DBXML container to be opened.
 			</p>

@@ -8,7 +8,7 @@
       }
   -->
 
-    <define name="categorized">
+  <define name="categorized">
     <element name="categories" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <attribute name="atMostOne">
         <data type="boolean"/>
