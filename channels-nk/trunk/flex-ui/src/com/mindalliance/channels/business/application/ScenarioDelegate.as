@@ -7,7 +7,7 @@ package com.mindalliance.channels.business.application
 	
 	import mx.rpc.IResponder;
 	import com.mindalliance.channels.vo.ScenarioVO;
-	import com.mindalliance.channels.vo.ElementVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class ScenarioDelegate extends BaseDelegate
 	{ 

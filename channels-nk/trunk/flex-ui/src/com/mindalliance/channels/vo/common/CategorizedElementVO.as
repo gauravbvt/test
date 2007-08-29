@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.vo
+package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	
@@ -15,9 +15,8 @@ package com.mindalliance.channels.vo
 								description : String,
 								categories : CategorySetVO
 								 ) {
-			this.id = id;
-			this.name = name;
-			this.description = description;
+
+			super(id, name, description);
 			this.categories = categories;
 		}
 

@@ -3,7 +3,7 @@ package com.mindalliance.channels.vo.common
 	import com.adobe.cairngorm.vo.IValueObject;
 	import mx.collections.ArrayCollection;
 	import com.mindalliance.channels.util.XMLHelper;
-	import com.mindalliance.channels.vo.ElementVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class CategorySetVO implements IValueObject
 	{

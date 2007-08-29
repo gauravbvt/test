@@ -5,7 +5,7 @@
 		<![CDATA[
 			import com.mindalliance.channels.model.people.OrganizationChooserModel;
 			import com.mindalliance.channels.vo.common.AddressVO;
-			import com.mindalliance.channels.vo.ElementVO;
+			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.model.application.PropertyEditorModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.people.OrganizationEditorModel;

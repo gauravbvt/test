@@ -1,9 +1,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-	import com.mindalliance.channels.vo.common.AddressVO;
-	import com.mindalliance.channels.vo.common.CategorySetVO;
-	import com.mindalliance.channels.vo.common.Taxonomy;
+	import com.mindalliance.channels.vo.common.*;
 	import mx.collections.ArrayCollection;
 	
 	[Bindable]

@@ -5,89 +5,38 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import mx.collections.ArrayCollection;
-	public class RoleVO extends ElementVO implements IValueObject
+	import com.mindalliance.channels.vo.common.ElementVO;
+	
+	public class RoleVO extends CategorizedElementVO implements IValueObject
 	{
 		public function RoleVO( id : String, 
 								name : String, 
-								projectId : String, 
-								description : String 
+								description : String,
+								categories : ArrayCollection, 
 								organization : ElementVO,
-								expertise : String) {
-			this.id = id;
-			this.name = name;
-			this.description = description;
+								expertise : ArrayCollection) {
+			super(id,name,description,categories);
+			this.organization = organization;
+			this.expertise = expertise;
 		}
 		
-		private var _organizationId : String;
-		private var _expertise : String;
+		private var _organization : ElementVO;
+		private var _expertise : ArrayCollection;
 		
-		public function get organizationId() : String {
-			return _organizationId;
+		public function get organization() : ElementVO {
+			return _organization;
 		}
 		
-		public function set organizationId(organizationId: String) : void {
-			this._organizationId = organizationId;	
+		public function set organization(organization: ElementVO) : void {
+			this._organization = organization;	
 		}
 		
-		public function get expertise() : String {
+		public function get expertise() : ArrayCollection {
 			return _expertise;
 		}
 		
-		public function set expertise(expertise: String) : void {
+		public function set expertise(expertise: ArrayCollection) : void {
 			this._expertise = expertise;	
-		}
-		/**
-		 * Produces XML of the form:
-		 * 
-		 * <role>
-		 *   <id>{id}</id>
-		 *   <name>{name}</name>
-		 *   <description>{description}</description>
-		 *   <organizationId>{organizationId}</organizationId>
-		 *   <expertise>{expertise}</expertise>
-		 * </role>
-		 */
-		public function toXML() : XML {
-			return <role>
-						<id>{id}</id>
-						<name>{name}</name>
-						<description>{description}</description>
-						<organizationId>{organizationId}</organizationId>
-						<expertise>{expertise}</expertise>
-					</role>;
-		}
-		
-		/**
-		 * Expects XML of the form:
-		 * <role>
-		 *   <id>{id}</id>
-		 *   <name>{name}</name>
-		 *   <description>{description}</description>
-		 *   <organization>
-		 *     <id>{organizationId}</id>
-		 *     <name>{organizationName}</name>
-		 *   </organization>
-		 *   <expertise>{expertise}</expertise>
-		 * </role>
-		 */
-		public static function fromXML( obj : Object ) : ScenarioVO {
-				return new RoleVO(obj.id, obj.name, obj.projectId, obj.description, new ElementVO(obj.organization.id, obj.organization.name));
-		}
-		
-		/**
-		 * Produces a list from XML of the form:
-		 * 
-		 * <list>
-		 *   <role>
-		 *     <id>{id}</id>
-		 *     <name>{name}</id>
-		 *   </role>
-		 *   ...
-		 * </list>
-		 * 
-		 */
-		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("role", obj);
 		}
 	}
 }

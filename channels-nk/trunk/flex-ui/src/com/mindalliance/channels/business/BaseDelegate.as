@@ -8,7 +8,7 @@ package com.mindalliance.channels.business
 	import flash.utils.Dictionary;
 	import mx.collections.ArrayCollection;
 	import mx.utils.ObjectProxy;
-	import com.mindalliance.channels.vo.ElementVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class BaseDelegate
 	{

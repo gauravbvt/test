@@ -11,7 +11,7 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.vo.ElementVO;
+			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.vo.ProjectVO;
 			import com.mindalliance.channels.vo.ScenarioVO;
 			import com.mindalliance.channels.model.PermissionModel;

@@ -11,9 +11,9 @@
 			import mx.collections.ArrayCollection;
 			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.people.RoleChooserModel;
-			
+			import com.mindalliance.channels.model.ChannelsModelLocator;
 			[Bindable]
-			private var model : RoleChooserModel;
+			private var model : RoleChooserModel = ChannelsModelLocator.getInstance().propertyEditorModel.roleChooserModel;
 			
 			public function get channelsModel() : IChannelsModel {
 				return model;	
@@ -46,7 +46,7 @@
 			</mx:VBox>
 			<mx:VBox>
 				<mx:Label text="Selected Roles" fontWeight="bold"/>
-				<mx:List id="listSelectedRoles" dataProvider="{SelectedRoles}" labelField="name" height="100%"/>
+				<mx:List id="listSelectedRoles" dataProvider="{model.list}" labelField="name" height="100%"/>
 			</mx:VBox>
 		</mx:HBox>
 		<mx:CheckBox label="Show details" id="cbShowDetails"/>

@@ -7,7 +7,7 @@ package com.mindalliance.channels.business.people
 	
 	import mx.rpc.IResponder;
 	import com.mindalliance.channels.vo.OrganizationVO;
-	import com.mindalliance.channels.vo.ElementVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	import com.mindalliance.channels.vo.common.AddressVO;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.common.CategorySetVO;
@@ -70,7 +70,7 @@ package com.mindalliance.channels.business.people
 										XMLHelper.categorySetToXML(obj.categories).categories,
 										obj.abbreviation,
 										new ElementVO(obj.parentOrganizationId, null),
-										new AddressVO(obj.address.street, obj.address.city, obj.address.state),
+										XMLHelper.xmlToAddress(obj.address),
 										obj.logo);
 		}
 	}

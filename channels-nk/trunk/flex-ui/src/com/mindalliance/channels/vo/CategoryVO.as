@@ -4,6 +4,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
+	import com.mindalliance.channels.vo.common.InformationVO;
 	
 	import mx.collections.ArrayCollection;
 
@@ -11,56 +12,44 @@ package com.mindalliance.channels.vo
 	{
 		public function CategoryVO( id : String, 
 								name : String, 
-								projectId : String, 
-								description : String ) {
-			this.id = id;
-			this.name = name;
-			this.description = description;
+								description : String,
+								disciplines : ArrayCollection,
+								implies : ArrayCollection,
+								information : InformationVO ) {
+			super(id,name,description);
+			this.disciplines = disciplines;
+			this.implies=implies;
+			this.information = information;
+		}
+        
+        private var _disciplines : ArrayCollection;
+        private var _implies : ArrayCollection;
+        private var _information : InformationVO;
+
+		
+		public function get disciplines() : ArrayCollection {
+			return _disciplines;
 		}
 
-		/**
-		 * Produces XML of the form:
-		 * 
-		 * <Category>
-		 *   <id>{id}</id>
-		 *   <name>{name}</name>
-		 *   <description>{description}</description>
-		 * </Category>
-		 */
-		public function toXML() : XML {
-			return <category>
-						<id>{id}</id>
-						<name>{name}</name>
-						<description>{description}</description>
-					</category>;
-		}
-
-		/**
-		 * Expects XML of the form:
-		 * <category>
-		 *   <id>{id}</id>
-		 *   <name>{name}</name>
-		 *   <description>{description}</description>
-		 * </category>
-		 */
-		public static function fromXML( obj : Object ) : ProjectVO {
-				return new CategoryVO(obj.id, obj.name, obj.description);
+		public function set disciplines(disciplines : ArrayCollection) : void {
+			_disciplines=disciplines;
 		}
 		
-		/**
-		 * Produces a list from XML of the form:
-		 * 
-		 * <list>
-		 *   <category>
-		 *     <id>{id}</id>
-		 *     <name>{name}</id>
-		 *   </category>
-		 *   ...
-		 * </list>
-		 * 
-		 */
-		public static function fromXMLList( obj : Object ) : ArrayCollection {
-			return ElementVO.fromXMLList("category", obj);
+		public function get implies() : ArrayCollection {
+			return _implies;
 		}
+
+		public function set implies(implies : ArrayCollection) : void {
+			_implies=implies;
+		}
+		
+		public function get information() : InformationVO {
+			return _information;
+		}
+
+		public function set information(information : InformationVO) : void {
+			_information=information;
+		}
+		
 	}
 }

@@ -15,17 +15,24 @@ package @namespace@.@business@.@submodule@
 		{
 			super(responder);
 		}
-		
-		override public function fromXML(obj:Object):ElementVO {
-			return new @delegate@VO(obj.id, obj.name, obj.description);
+		/**
+         * parses /channels/schema/@delegate@.rng
+         */
+		override public function fromXML(xml:XML):ElementVO {
+			return new @delegate@VO(xml.id, xml.name, xml.description);
 		}
-		
-		override public function toXML(obj:ElementVO) : XML {
-			return <@delegate@ schema="/channels/schema/project.rng">
+		/**
+         * generates /channels/schema/@delegate@.rng
+         */
+		override public function toXML(element:ElementVO) : XML {
+			var obj : @delegate@VO = (element as @delegate@VO);
+			var xml : XML = <@delegate@ schema="/channels/schema/@delegate@.rng">
 						<id>{obj.id}</id>
 						<name>{obj.name}</name>
 						<description>{obj.description}</description>
 					</@delegate@>;
+			
+			return xml;
 		}
 	}
 }

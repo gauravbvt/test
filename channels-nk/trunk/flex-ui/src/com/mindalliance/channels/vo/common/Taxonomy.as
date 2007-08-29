@@ -3,7 +3,7 @@ package com.mindalliance.channels.vo.common
 	public class Taxonomy
 	{
 		public static const ACQUIREMENT : String = "acquirement";
-        public static const ARTIFACT : String = "artefact";
+        public static const ARTIFACT : String = "artifact";
         public static const ORGANIZATION : String = "organization";
         public static const ROLE : String = "role";
         public static const TASK : String = "task";

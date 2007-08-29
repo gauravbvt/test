@@ -3,15 +3,15 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import mx.collections.ArrayCollection;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	[Bindable]
 	public class ScenarioVO extends ElementVO implements IValueObject
 	{
 		public function ScenarioVO(id : String, name : String, description : String, project : ElementVO) {
-			this.name = name;
-			this.id = id;
+
+			super(id, name, description);
 			this.project = project;
-			this.description = description;
 		}
 		
 		private var _project : ElementVO;

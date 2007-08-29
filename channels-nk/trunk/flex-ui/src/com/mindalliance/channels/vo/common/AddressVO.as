@@ -3,7 +3,7 @@ package com.mindalliance.channels.vo.common
 	import com.adobe.cairngorm.vo.IValueObject;
 
 	[Bindable]
-	public class AddressVO implements IValueObject
+	public class AddressVO implements IValueObject, ISpatial
 	{
 		
 		public function AddressVO(street:String,
