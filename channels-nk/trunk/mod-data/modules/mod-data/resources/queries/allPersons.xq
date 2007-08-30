@@ -2,11 +2,12 @@
 <list>
 	{
 		 for $e in collection('__MODEL__')/person
-		 order by $e/name
+		 order by $e/lastName , $e/firstName
 		 return
 		 	<person>
 		 		<id>{$e/id/text()}</id>
-		 		<name>{$e/name/text()}</name>
+		 		<firstName>{$e/firstName/text()}</firstName>
+		 		<lastName>{$e/lastName/text()}</lastName>
 		 	</person>
 	}
 </list>

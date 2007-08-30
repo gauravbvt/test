@@ -6,7 +6,8 @@
       {identified} &
       {categorized} &
       {occurrence} &
-      {duration}
+      {duration} &
+      element scenarioId {text}
     }
   -->
   <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
@@ -19,6 +20,7 @@
         <ref name="categorized"/>
         <ref name="occurrence"/>
         <ref name="duration"/>
+        <element name="scenarioId"><text/></element>
       </interleave>
     </element>
   </start>

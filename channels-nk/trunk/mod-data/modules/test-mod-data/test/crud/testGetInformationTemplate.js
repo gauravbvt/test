@@ -13,7 +13,7 @@ var req = context.createSubRequest("active:channels_data_deleteModel");
 context.issueSubRequest(req);
 // Open model from db:testDB.xml
 req = context.createSubRequest("active:channels_data_openModel");
-req.addArgument("init", "db:testDB.xml");
+req.addArgument("init", "db:testTemplateDB.xml");
 context.issueSubRequest(req);
 
 // Get element event1's information template

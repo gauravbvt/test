@@ -4,7 +4,7 @@
     <div>
       This is the set of unit tests for the Mind-Alliance Channels data module.
     </div>
-  </desc>
+  </desc>  
   <group title="Schema validation tests">
     <uri>ffcpl:/test/xunit/testlist-schemas.xml</uri>
   </group>

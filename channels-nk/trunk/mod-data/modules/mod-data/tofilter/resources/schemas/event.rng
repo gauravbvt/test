@@ -7,6 +7,7 @@
       {identified} &
       {categorized} &
       {occurrence} &
+      element scenarioId {text} &
       element terminatesAfter {
         {duration} |
         element taskCompletions {
@@ -24,6 +25,7 @@
         <ref name="identified"/>
         <ref name="categorized"/>
         <ref name="occurrence"/>
+        <element name="scenarioId"><text/></element>
         <optional>
           <element name="terminatesAfter">
             <choice>

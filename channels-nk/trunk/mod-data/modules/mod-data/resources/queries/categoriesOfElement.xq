@@ -6,25 +6,17 @@
 <list>
 	{
 		 for 
-		 	$doc in collection('__MODEL__')
+		 	$e in collection('__MODEL__'),
+		 	$c  in collection('__MODEL__')/category
 		 where 
-		 	$doc/*/id = $elementId
-		 let 
-		 	$e := $doc/*
+		 	$e/*/id = $elementId and
+		 	$c/id = $e/*/categories/categoryId
+		 	order by
+		 		$c/name
 		 return
-		 	{
-			 	for 
-			 		$ecid in $/categories/categoryId,
-			 		$c in collection('__MODEL__')/category
-			 	where
-			 		$c/id = $ecid
-			 	order by
-			 		$c/name
-			 	return
-				 	<category>
-				 		<id>{$c/id/text()}</id>
-				 		<name>{$c/name/text()}</name>
-				 	</category>
-			}
+			 	<category>
+			 		<id>{$c/id/text()}</id>
+			 		<name>{$c/name/text()}</name>
+			 	</category>
 	}
 </list>

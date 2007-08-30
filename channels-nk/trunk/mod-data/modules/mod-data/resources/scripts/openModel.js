@@ -13,6 +13,16 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
+function initializeFrom(uri) {
+  var xml = context.sourceAspect(uri, IAspectString).getString(); // get string aspect first otherwise db.* also gathers whitespace children
+  var db = new XML(xml); 
+  log("Initializing db with " + db.*.length() + " elements", "info");
+	for each (el in db.*) { 
+		createElement(el);
+	}
+	log("Database initialized", "info");
+}
+
 log("Opening DBXML container: " + dbxml_getContainerName(), "info");
 var descriptor = dbxml_getContainerDescriptor();
 var exists = dbxml_containerExists(descriptor);
@@ -27,13 +37,13 @@ if (!exists) {
   // Initialize from file if requested
   if (context.getThisRequest().argumentExists("init")) {
   	log("Initializing database from " + context.getThisRequest().getArgument("init"));
-  	var xml = context.sourceAspect("this:param:init", IAspectString).getString();
-  	var db = new XML(xml); // otherwise db.* also gathers whitespace children
-  	log("Initializing db with " + db.*.length() + " elements", "info");
-  	for each (el in db.*) { 
-  		createElement(el);
+  	initializeFrom("this:param:init");
+  }
+  else { // look for an initialization file at db:<containerName>.xml and use it if there
+  	var uri = "db:" + dbxml_getContainerName() + ".xml";
+  	if (context.exists(uri)) {
+  		initializeFrom(uri);
   	}
-  	log("Database initialized", "info");
   }
 }
 

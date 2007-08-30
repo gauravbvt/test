@@ -61,16 +61,6 @@ function filter(s) {
   return fs;
 }
 
-// Add variable declaration to xquery from properties document
-function declareVariables(query, properties) {
-  var prologuedQuery = query;
-  for each (prop in properties.property) {
-    var decl = "declare variable $" +  prop.key.text() + " := '" + prop.value.text() + "';\n";
-    prologuedQuery = decl + prologuedQuery;
-  }
-  return prologuedQuery;
-}
-
 function getSchemaURL(kind) {
   return SCHEMA_URL + kind + ".rng";
 }

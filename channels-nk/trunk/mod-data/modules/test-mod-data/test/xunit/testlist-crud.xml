@@ -53,8 +53,13 @@
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testGetInformationTemplate.js</uri>
     <assert name="Information template returned">
-      <xpath>./topic/eoi/name</xpath>
+      <xpath>.//topic/eoi/name</xpath>
     </assert>
   </test>
-
+    <test>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testAllQueries.js</uri>
+    <assert name="All queries succeed">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
 </testlist>

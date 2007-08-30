@@ -146,6 +146,7 @@
       <categoryId>cat-car-accident</categoryId>
       <categoryId>cat-traffic</categoryId>
     </categories>
+    <scenarioId>scenario1</scenarioId>
   </event>
  
 </db>

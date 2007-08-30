@@ -14,6 +14,16 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
+// Add variable declaration to xquery from properties document
+function declareVariables(query, properties) {
+  var prologuedQuery = query;
+  for each (prop in properties.property) {
+    var decl = "declare variable $" +  prop.key.text() + " := '" + prop.value.text() + "';\n";
+    prologuedQuery = decl + prologuedQuery;
+  }
+  return prologuedQuery;
+}
+
 // Get arguments
 var query = context.sourceAspect("this:param:xquery", IAspectString).getString();
 log("Query: " + query, "info");
@@ -34,11 +44,11 @@ var op =  "<dbxml>\n" +
       " </xquery>\n" +
       "</dbxml>";
 
-log("Query operator: " + op, "info");
+// log("Query operator: " + op, "info");
 var req=context.createSubRequest("active:dbxmlQuery");
 req.addArgument("operator", new StringAspect(op));
 result=context.issueSubRequest(req);
-log("Got results to query " + query + " from container " + dbxml_getContainerName(), "info");
+log("Got results to query:\n" + context.transrept(result,IAspectXmlObject).getXmlObject(), "info");
 
 //Return Response
 var resp=context.createResponseFrom(result);
