@@ -15,6 +15,16 @@ importPackage(Packages.java.lang);
 var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
 var deleted = deleteDocument(id);
 
+// Cut the GoldenThread associated with this resource
+req=context.createSubRequest("active:cutGoldenThread");
+req.addArgument("param", "gt:element:"+ id);
+res=context.issueSubRequest(req);
+
+// Cut the GoldenThread associated with all existing queries
+req=context.createSubRequest("active:cutGoldenThread");
+req.addArgument("param", "gt:channels");
+res=context.issueSubRequest(req);
+
 //Return Response
 var resp=context.createResponseFrom(new BooleanAspect(deleted));
 resp.setExpired(); // don't cache

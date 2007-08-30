@@ -26,6 +26,16 @@ if (id != null) {
   var deleted = deleteDocument(id);
   // Then replace with new version
 	putDocument(doc);
+	
+	// Cut the GoldenThread associated with this resource
+	req=context.createSubRequest("active:cutGoldenThread");
+	req.addArgument("param", "gt:element:"+ id);
+	res=context.issueSubRequest(req);
+	
+	// Cut the GoldenThread associated with all existing queries
+	req=context.createSubRequest("active:cutGoldenThread");
+	req.addArgument("param", "gt:channels");
+	res=context.issueSubRequest(req);
 }
 else {
   throw("Can't update element with no id", "warning");

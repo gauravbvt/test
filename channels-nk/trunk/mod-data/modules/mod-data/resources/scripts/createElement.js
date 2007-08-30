@@ -17,6 +17,12 @@ importPackage(Packages.java.lang);
 var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 doc = createElement(doc);
 
+// Cut the GoldenThread associated with all existing queries
+req=context.createSubRequest("active:cutGoldenThread");
+req.addArgument("param", "gt:channels");
+res=context.issueSubRequest(req);
+
+
 //Return Response
 var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));
 resp.setExpired(); // don't cache

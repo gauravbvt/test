@@ -63,8 +63,14 @@ if (namesListed) {
 }
 
 //Return Response
-var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));
+var xoa=new XmlObjectAspect(doc.getXmlObject());
+
+req=context.createSubRequest("active:attachGoldenThread");
+req.addArgument("operand", xoa);
+req.addArgument("param", "gt:element:"+ id);
+res=context.issueSubRequest(req);
+
+var resp=context.createResponseFrom(res);
 resp.setMimeType("text/xml");
+resp.setCacheable();
 context.setResponse(resp);
-
-
