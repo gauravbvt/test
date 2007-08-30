@@ -52,10 +52,19 @@
 		<content>
 		  <p>
 				The <code>channels_data_openModel</code> accessor opens the DBXML container that holds the model for the current environment.
-				The container is created if needed. If the container is created and the <code>init</code> parameter is set (to the uri 
+				The container is created if needed. 
+       </p>
+      <p>
+        If the container is created and the <code>init</code> parameter is set (to the uri 
         of an xml document), then the elements, listed as children of some root element, are loaded into the database.
+       </p>
+       <p>
 				The container specification is held in /etc/config_dbxml.xml where the current environment is named which
 				determines the DBXML container to be opened.
+         </p>
+      <p>
+        If the container to be opened needs to first be created, no <code>init</code> parameter was given and if an xml resource exists
+        at db:nameOfContainer.xml (e.g. db:test_dbxml.xml), then the container is initialized with the elements in that resource.
 			</p>
 			<p>
 				Example /etc/config_dbxml.xml file:
