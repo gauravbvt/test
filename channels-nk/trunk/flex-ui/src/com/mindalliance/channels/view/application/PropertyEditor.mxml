@@ -1,17 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
     xmlns:view="com.mindalliance.channels.view.*"
-    title="Property Editor"
     xmlns:scenario="com.mindalliance.channels.view.scenario.*"
     xmlns:people="com.mindalliance.channels.view.people.*"
-    xmlns:resources="com.mindalliance.channels.view.resources.*" 
-    implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
-
+    xmlns:resources="com.mindalliance.channels.view.resources.*"
+    xmlns:application="com.mindalliance.channels.view.application.*"
+    verticalScrollPolicy="off"
+    horizontalScrollPolicy="off" 
+    verticalAlign="middle">
+	<mx:states>
+		<mx:State name="TaskNodeEditorState">
+			<mx:AddChild position="lastChild">
+				<application:TaskNodeEditor/>
+			</mx:AddChild>
+			<mx:SetStyle name="verticalAlign"/>
+		</mx:State>
+		<mx:State name="RepositoryNodeEditor">
+			<mx:AddChild position="lastChild">
+				<application:RepositoryNodeEditor/>
+			</mx:AddChild>
+			<mx:SetStyle name="verticalAlign"/>
+		</mx:State>
+		<mx:State name="MultipleItemsSelectedState">
+			<mx:SetProperty name="height" value="25%"/>
+			<mx:AddChild position="lastChild">
+				<mx:Label text="Multiple Items Selected"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.flowmap.FlowMapEvent;
+			import com.yworks.graph.model.SelectionEvent;
+			import com.yworks.graph.model.IEdge;
+			import com.yworks.graph.model.INode;
+			import com.yworks.support.Iterator;
+			import com.mindalliance.channels.view.flowmap.FlowMap;
 			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.application.PropertyEditorModel;
-			
+
 			[Bindable]
 			private var model : PropertyEditorModel;
 			
@@ -21,16 +49,49 @@
 			
 			public function set channelsModel(model : IChannelsModel) : void {
 				this.model = (model as PropertyEditorModel);
-			}	
+			}
+
+			private var _isEditing:Boolean = false ;
+			
+			[Bindable(event="changeIsEditing")] 
+            public function get isEditing():Boolean {
+                return _isEditing;
+            }
+            
+            public function set isEditing(value:Boolean):void {
+            	if (_isEditing != value) {
+	            	_isEditing = value ;
+    	        	dispatchEvent(new Event("changeIsEditing")) ;
+    	        }
+            }
+		
+			public function init():void {
+				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+			}
+			
+			private function itemSelected(event:SelectionEvent):void {
+				if (FlowMap.numSelected == 1) {
+					var iter:Iterator = FlowMap.selectedItems.iterator() ;
+					if (iter.hasNext()) {
+						var obj:Object = iter.next() ;
+						if (obj is INode)
+							currentState = 'TaskNodeEditorState' ;
+					}
+				}
+				else if (FlowMap.numSelected > 1) {
+					currentState = 'MultipleItemsSelectedState' ;
+				}
+			}
+		
+			private function itemDeselected(event:SelectionEvent):void {
+				if (FlowMap.numSelected == 0)
+					currentState = '' ;
+				else if (FlowMap.numSelected > 1)
+					currentState = 'MultipleItemsSelectedState' ;
+			}
+			
 		]]>
 	</mx:Script>
 
-    <mx:ViewStack id="viewStack" width="100%" height="100%">
-    	<scenario:TaskEditor id="taskEditor" channelsModel="{model.taskEditorModel}"/>
-    	<scenario:EventEditor id="eventEditor" channelsModel="{model.eventEditorModel}"/>
-    	<scenario:ArtifactEditor id="artifactEditor" channelsModel="{model.artifactEditorModel}"/>
-    	<people:RoleEditor id="roleEditor" channelsModel="{model.roleEditorModel}"/>
-    	<resources:RepositoryEditor id="repositoryEditor"  channelsModel="{model.repositoryEditorModel}"/>
-    </mx:ViewStack>	
-
-</mx:Panel>
+</mx:VBox>
