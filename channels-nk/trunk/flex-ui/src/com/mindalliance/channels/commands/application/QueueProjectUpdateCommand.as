@@ -12,7 +12,7 @@ package com.mindalliance.channels.commands.application
 		override public function execute(event:CairngormEvent):void
 		{
 			var evt:QueueProjectUpdateEvent = event as QueueProjectUpdateEvent;
-			model.projectScenarioBrowserModel.shouldUpdateProject = true;
+			channelsModel.projectScenarioBrowserModel.shouldUpdateProject = true;
 		}
 	}
 }

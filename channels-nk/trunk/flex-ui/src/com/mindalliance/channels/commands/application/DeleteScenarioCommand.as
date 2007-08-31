@@ -27,7 +27,7 @@ package com.mindalliance.channels.commands.application
 		{
 			var result:Boolean = (data as Boolean);
 			if (result == true) {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(model.projectScenarioBrowserModel.selectedProject.id) );
+ 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(channelsModel.projectScenarioBrowserModel.selectedProject.id) );
  	        	log.info("Scenario successfully deleted");
 			} else {
 				log.warn("Scenario deletion failed");	

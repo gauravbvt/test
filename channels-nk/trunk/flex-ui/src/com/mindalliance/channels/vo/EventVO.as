@@ -15,15 +15,17 @@ package com.mindalliance.channels.vo
 								name : String, 
 								description : String,
 								categories : ArrayCollection,
-								duration : DurationVO = null,
+                                scenario : ScenarioVO,
+								duration : DurationVO,
 								taskCompletions : ArrayCollection) {
             super(id,name,description,categories,where,cause);
             this.duration = duration;
             this.taskCompletions = taskCompletions;
+            this.scenario = scenario;
 		}
         private var _duration : DurationVO;
         private var _taskCompletions : ArrayCollection;
-
+        private var _scenario : ScenarioVO;
 		
 		public function get duration() : DurationVO {
 			return _duration;
@@ -39,6 +41,14 @@ package com.mindalliance.channels.vo
 
 		public function set taskCompletions(taskCompletions : ArrayCollection) : void {
 			_taskCompletions=taskCompletions;
+		}
+		
+		public function get scenario() : ElementVO {
+			return _scenario;
+		}
+
+		public function set scenario(scenario : ElementVO) : void {
+			_scenario=scenario;
 		}
 		
         

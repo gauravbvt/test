@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.mindalliance.channels.view.common.*" 
+	implements="com.mindalliance.channels.view.common.IChannelsModelComponent"
+	creationComplete="init()">
     
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import com.mindalliance.channels.vo.OrganizationVO;
+			import mx.binding.utils.ChangeWatcher;
+			import com.mindalliance.channels.model.ElementModel;
 			import com.mindalliance.channels.model.people.OrganizationChooserModel;
 			import com.mindalliance.channels.vo.common.AddressVO;
 			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.model.application.PropertyEditorModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
-			import com.mindalliance.channels.model.people.OrganizationEditorModel;
+			import com.mindalliance.channels.model.EditorModel;
 			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.events.people.*;
 			
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			[Bindable]
+			private var elementModel : ElementModel;
+			[Bindable]
+			private var edited : OrganizationVO;
+			[Bindable]
+			private var organizationList : ArrayCollection;
 			
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
@@ -25,45 +38,58 @@
 			
 			private function cancelEdit():void {
 				//revert
-				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationEvent(model.organization.id) );
+				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationEvent(model.id, model) );
 				currentState = '' ;
 			}
 			
 			[Bindable]
-			private var model : OrganizationEditorModel = ChannelsModelLocator.getInstance().organizationEditorModel;
-			[Bindable]
-			private var chooserModel : OrganizationChooserModel = ChannelsModelLocator.getInstance().organizationChooserModel;
+			private var model : EditorModel = (ChannelsModelLocator.getInstance().getEditorModel(EditorModel) as EditorModel);
 			
 			public function get channelsModel() : IChannelsModel {
 				return model;	
 			}
 			
 			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as OrganizationEditorModel);
+				this.model = (model as EditorModel);
 			}
 			
 			private function update() :void {
-				model.organization.name = txtName.text;
-				model.organization.abbreviation = txtAbbrev.text;
-				model.organization.description = txtDescription.text;
-				model.organization.address = new AddressVO(formitemAddress.txtStreet.text, formitemAddress.txtCity.text, formitemAddress.comboUSStates.selectedItem.abbr);
-				model.organization.parent = (comboOrganizations.selectedItem as ElementVO);	
 				
-				CairngormEventDispatcher.getInstance().dispatchEvent( new UpdateOrganizationEvent(model.organization) );
+				CairngormEventDispatcher.getInstance().dispatchEvent( 
+				                    new UpdateOrganizationEvent(model,
+                                                                txtName.text,
+                                                                txtDescription.text,
+                                                                txtAbbrev.text,
+                                                                new AddressVO(formitemAddress.txtStreet.text, 
+                                                                            formitemAddress.txtCity.text, 
+                                                                            formitemAddress.comboUSStates.selectedItem.abbr),
+                                                                (comboOrganizations.selectedItem as ElementVO)));   
 			}
 			
 			private function queueUpdate() : void {
-				CairngormEventDispatcher.getInstance().dispatchEvent( new QueueOrganizationUpdateEvent() );
+				CairngormEventDispatcher.getInstance().dispatchEvent( new QueueOrganizationUpdateEvent(model) );
 			}
 			
 			private function populateParentComboBox() : void {
 				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
 			}
 			
-			
+			private function init():void {
+                idChange(null); 
+                ChangeWatcher.watch(model, "id",idChange);  
+                populateParentComboBox();
+			}
+			private function idChange(evt : Event) : void {
+                
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationEvent(model.id, model) );	
+			}
 		]]>
 	</mx:Script>
-    
+	
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as OrganizationVO)" destination="edited"/>
+    <mx:Binding source="model.getElementListModel('organizations').data" destination="organizationList"/>
+	
     <mx:states>
     	<mx:State name="EditState">
     		<mx:AddChild relativeTo="{viewEditStateChangeFormItem}" position="after">
@@ -91,29 +117,22 @@
     <common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
     	btnEditClickHandler="{switchToEditState}"
     	confirmEditHandler="{confirmEdit}"
-    	cancelEditHandler="{cancelEdit}"/>
+    	cancelEditHandler="{cancelEdit}"
+    	enabled="{edited != null}"/>
     	
     <mx:FormHeading label="{'Organization: '+txtName.text}"/>	
     <mx:FormItem label="Name" required="false" id="formitemName">
-        <mx:TextInput id="txtName" editable="{currentState=='EditState'}" text="{model.organization.name}" change="queueUpdate()"/>
+        <mx:TextInput id="txtName" editable="{currentState=='EditState'}" text="{edited.name}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Abbreviation" direction="vertical" id="formitemAbbrev">
-    	<mx:TextInput id="txtAbbrev" editable="{currentState=='EditState'}" text="{model.organization.abbreviation}" change="queueUpdate()"/>
+    	<mx:TextInput id="txtAbbrev" editable="{currentState=='EditState'}" text="{edited.abbreviation}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Description" id="formitemDescription">
-        <mx:TextArea id="txtDescription" editable="{currentState=='EditState'}" text="{model.organization.description}" change="queueUpdate()"/>
+        <mx:TextArea id="txtDescription" editable="{currentState=='EditState'}" text="{edited.description}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Parent Organization" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemParentOrg">
-	<common:ElementComboBox id="comboOrganizations" dataProvider="{chooserModel.organizationList}" selectedValue="{model.organization.parent.id}" change="queueUpdate()"/>
+	<common:ElementComboBox id="comboOrganizations" dataProvider="{organizationList}" selectedValue="{edited.parent.id}" change="queueUpdate()"/>
     </mx:FormItem>
-    <common:AddressEditor id="formitemAddress" change="{queueUpdate}" address="{model.organization.address}" mouseChildren="false" mouseEnabled="false"/>
-    <!--<mx:FormItem label="Address" direction="vertical" mouseChildren="false" mouseEnabled="false" id="formitemAddress">
-        <mx:Label text="Street" />
-        <mx:TextInput id="txtStreet" text="{model.organization.address.street}" change="queueUpdate()"/>
-        <mx:Label text="City" />
-        <mx:TextInput id="txtCity" text="{model.organization.address.city}" change="queueUpdate()"/>
-        <mx:HBox>
-        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates" change="queueUpdate()" selectedValue="{model.organization.address.state}"/>
-        </mx:HBox>
-    </mx:FormItem>-->
+    <common:AddressEditor id="formitemAddress" change="{queueUpdate}" address="{edited.address}" mouseChildren="false" mouseEnabled="false"/>
+
 </mx:Form>

@@ -5,14 +5,14 @@ package com.mindalliance.channels.model
 	import com.adobe.cairngorm.CairngormMessageCodes;
 	import com.adobe.cairngorm.model.IModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.model.categories.*;
+	import com.mindalliance.channels.model.flowmap.FlowMapModel;
+	import com.mindalliance.channels.model.people.*;
 	import com.mindalliance.channels.vo.ProjectVO;
 	import com.mindalliance.channels.vo.ScenarioVO;
+	import com.mindalliance.channels.vo.UserVO;
 	
 	import mx.resources.ResourceBundle;
-	import com.mindalliance.channels.model.flowmap.FlowMapModel;
-	import com.mindalliance.channels.model.application.PropertyEditorModel;
-	import com.mindalliance.channels.model.categories.*;
-	import com.mindalliance.channels.model.people.*;
 	
 	/**
      * This singleton class provides references to the models for various components.  In
@@ -26,77 +26,41 @@ package com.mindalliance.channels.model
      	private static var serviceResources:ResourceBundle;
 		
 		// Component Models
-		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel();
-		public var categoryLibraryEditorModel  : CategoryLibraryEditorModel = new CategoryLibraryEditorModel();
-		public var categoryViewerModel : CategoryViewerModel = new CategoryViewerModel();
-		public var categoryChooserModel : CategoryChooserModel = new CategoryChooserModel();
-		public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel();
-		public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel();
+		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel(elements,elementLists);
 		public var permissionModel : PermissionModel = new PermissionModel();
 		public var flowMapModel : FlowMapModel = new FlowMapModel();
-		public var organizationEditorModel : OrganizationEditorModel = new OrganizationEditorModel();
-		public var organizationChooserModel : OrganizationChooserModel = new OrganizationChooserModel();
-		public var personEditorModel : PersonEditorModel = new PersonEditorModel();
+
+		
+		// The element hash
+        private var elements : Object = new Object();
+		private var elementLists : Object = new Object();
 		
 		// Global Properties
-		private var _currentProject : ProjectVO;
-		private var _currentScenario : ScenarioVO;
-		private var _username : String= 'John Doe';
+		public var currentProject : ProjectVO;
+		public var currentScenario : ScenarioVO;
+		public var user : UserVO = new UserVO("0",'John Doe',null,true);
 		
- 	    private var _urlRoot : String = serviceResources.getString("urlRoot");		
-		private var _debug : Boolean = serviceResources.getBoolean("debug");
-		// Accessor Functions
-		/**
-		 * The currently loaded project.
-		 */
-		public function get currentProject() : ProjectVO {
-			return _currentProject;	
+ 	    public var urlRoot : String = serviceResources.getString("urlRoot");		
+		public var debug : Boolean = serviceResources.getBoolean("debug");
+		
+		
+		public function getEditorModel(type : Class) : IChannelsModel {
+            return new type(elements, elementLists);
 		}
 		
-		/**
-		 * @private
-		 */
-		public function set currentProject(currentProject : ProjectVO) : void {
-			this._currentProject = currentProject;	
+		public function getElementModel(id : String) : ElementModel {
+			if (elements[id] == null) {
+                elements[id] = new ElementModel();
+			}
+			return elements[id];
 		}
-		/**
-		 * The loaded scenario
-		 */
-		public function get currentScenario() : ScenarioVO {
-			return _currentScenario;	
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set currentScenario(currentScenario : ScenarioVO) : void {
-			this._currentScenario = currentScenario;	
-		}
-		
-		/**
-		 * The username of the logged in user
-		 */
-		public function get username() : String {
-			return _username;	
-		}
-		/**
-		 * @private
-		 */		
-		public function set username(username : String) : void {
-			this._username = username;	
-		}
-		
-		public function get urlRoot() : String {
-			return _urlRoot;
-		}
-		
-		public function get debug() : Boolean {
-			return _debug;	
-		}
-		
-		public function set debug(debug : Boolean) : void {
-			this._debug = debug;	
-		}
+	    public function getElementListModel(key : String) : ElementListModel {
+            if (elementLists[key] == null) {
+                elementLists[key] = new ElementModel();
+            }
+            return elementLists[key];
+        }	
+
 		
 		/**
 		 * Singleton instance of ChannelsModelLocator

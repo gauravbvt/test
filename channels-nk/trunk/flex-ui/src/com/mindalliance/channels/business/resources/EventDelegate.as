@@ -6,7 +6,9 @@ package com.mindalliance.channels.business.resources
 	import com.mindalliance.channels.business.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.EventVO;
+	import com.mindalliance.channels.vo.common.DurationVO;
 	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
 	
 	public class EventDelegate extends BaseDelegate
@@ -19,13 +21,30 @@ package com.mindalliance.channels.business.resources
          * parses /channels/schema/event.rng
          */
 		override public function fromXML(obj:Object):ElementVO {
-			
-			         if (xml.terminatesAfter != null) {
+			var taskCompletions : ArrayCollection = null;
+			var duration : DurationVO = null;
+			if (xml.terminatesAfter != null) {
                 if (xml.terminatesAfter.duration != null) {
-                    xml.ap
+                    taskCompletions = xml.appendChild(XMLHelper.fromXMLList("taskId",xml.terminatesAfter.taskCompletions); 
                     
-                }   
+                }  else if (xml.terminatesAfter.duration!=null) {
+                    duration = XMLHelper.xmlToDuration(xml.terminatesAfter.duration);
+                } 
+            } 
+			
+			var cause : CauseVO;
+            if (xml.cause != null) {
+                cause = XMLHelper.xmlToCause(xml.cause);    
             }
+            return new EventVO(obj.id, 
+                                 obj.name, 
+                                 obj.description,
+                                 XMLHelper.xmlToCategorySet(obj.categories),
+                                 XMLHelper.xmlToOccurenceWhere(obj.where),
+                                 cause,
+                                 new ElementVO(obj.scenarioId, null),
+                                 duration,
+                                 taskCompletions);
 			
 			return new EventVO(obj.id, obj.name, obj.description);
 		}

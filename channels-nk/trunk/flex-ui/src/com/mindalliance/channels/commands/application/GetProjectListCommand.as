@@ -24,14 +24,14 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			model.projectScenarioBrowserModel.projectList = (data as ArrayCollection);
+			channelsModel.projectScenarioBrowserModel.projectList = (data as ArrayCollection);
 			log.debug("Successfully retrieved project list");
         	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 		}
 		
 		override public function fault(info:Object):void
 		{
-			model.projectScenarioBrowserModel.projectList = null;
+			channelsModel.projectScenarioBrowserModel.projectList = null;
         	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 			super.fault(info);
 		}

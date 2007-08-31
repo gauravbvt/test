@@ -1,7 +1,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-
+    [Bindable]
 	public class UserVO implements IValueObject
 	{
 		

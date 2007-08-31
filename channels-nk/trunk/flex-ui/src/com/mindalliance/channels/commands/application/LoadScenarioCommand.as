@@ -15,9 +15,9 @@ package com.mindalliance.channels.commands.application
 		{
 			var evt:LoadScenarioEvent = event as LoadScenarioEvent;
 			
-			model.currentProject = model.projectScenarioBrowserModel.selectedProject;
-			model.currentScenario = model.projectScenarioBrowserModel.selectedScenario;	
-			log.debug("Loaded scenario {0}", [model.currentScenario.id]);
+			channelsModel.currentProject = channelsModel.projectScenarioBrowserModel.selectedProject;
+			channelsModel.currentScenario = channelsModel.projectScenarioBrowserModel.selectedScenario;	
+			log.debug("Loaded scenario {0}", [channelsModel.currentScenario.id]);
 		}
 	}
 }

@@ -7,7 +7,7 @@ package com.mindalliance.channels.business.resources
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.TaskVO;
 	import com.mindalliance.channels.vo.common.CauseVO;
-	import com.mindalliance.channels.vo.common.ISpatial;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.rpc.IResponder;
 	
@@ -30,7 +30,8 @@ package com.mindalliance.channels.business.resources
 			                     obj.description,
 			                     XMLHelper.xmlToCategorySet(obj.categories),
 			                     XMLHelper.xmlToOccurenceWhere(obj.where),
-			                     cause);
+			                     cause,
+			                     new ElementVO(obj.scenarioId, null));
 		}
 		/**
          * generates /channels/schema/task.rng
@@ -53,6 +54,7 @@ package com.mindalliance.channels.business.resources
             if (obj.duration != null) {
             	xml.appendChild(XMLHelper.durationToXML(obj.duration));
             }
+            xml.appendChild(<scenarioId>{obj.scenario.id}</scenarioId>);
 			return xml;
 		}
 	}

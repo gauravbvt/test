@@ -23,13 +23,13 @@ package com.mindalliance.channels.commands.people
 		
 		override public function result(data:Object):void
 		{
-			model.organizationChooserModel.organizationList = (data as ArrayCollection);
+			channelsModel.getElementListModel("organizations").data = (data as ArrayCollection);
 			log.debug("Successfully retrieved Organization list");
 		}
 		
 		override public function fault(info:Object):void
 		{
-			model.organizationChooserModel.organizationList = null;
+			channelsModel.getElementListModel("organizations").data  = null;
 			super.fault(info);
 		}
 	}

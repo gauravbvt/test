@@ -4,15 +4,18 @@
 package com.mindalliance.channels.events.people
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.mindalliance.channels.model.EditorModel;
 
 	public class DeleteOrganizationEvent extends CairngormEvent
 	{
 		public static const DeleteOrganization_Event:String = "<DeleteOrganizationEvent>";
 		public var id : String;
-		public function DeleteOrganizationEvent(id : String) 
+		public var model : EditorModel;
+		public function DeleteOrganizationEvent(id : String, model : EditorModel) 
 		{
 			super( DeleteOrganization_Event );
 			this.id = id;
+			this.model = model;
 		}
 	}
 }

@@ -13,14 +13,14 @@ package com.mindalliance.channels.commands.application
 		
 		override public function execute(event:CairngormEvent):void
 		{
-			if (model.projectScenarioBrowserModel.shouldUpdateScenario) {
+			if (channelsModel.projectScenarioBrowserModel.shouldUpdateScenario) {
 				log.debug("Updating Scenario");
 				var evt:UpdateScenarioEvent = event as UpdateScenarioEvent;
 				
 				var delegate:ScenarioDelegate = new ScenarioDelegate( this );
-				model.projectScenarioBrowserModel.selectedScenario = evt.scenario;
+				channelsModel.projectScenarioBrowserModel.selectedScenario = evt.scenario;
 				
-				delegate.updateElement(model.projectScenarioBrowserModel.selectedScenario);
+				delegate.updateElement(channelsModel.projectScenarioBrowserModel.selectedScenario);
 			}
 		}
 		
@@ -29,14 +29,14 @@ package com.mindalliance.channels.commands.application
 			log.debug("Scenario successfully updated");
 			
 			var obj : Object = ElementHelper.findElementById(
-												model.projectScenarioBrowserModel.selectedScenario.id, 
-												model.projectScenarioBrowserModel.scenarioList
+												channelsModel.projectScenarioBrowserModel.selectedScenario.id, 
+												channelsModel.projectScenarioBrowserModel.scenarioList
 											);
 												
-			if (obj.name != model.projectScenarioBrowserModel.selectedScenario.name) {
-				obj.name = model.projectScenarioBrowserModel.selectedScenario.name;	
+			if (obj.name != channelsModel.projectScenarioBrowserModel.selectedScenario.name) {
+				obj.name = channelsModel.projectScenarioBrowserModel.selectedScenario.name;	
 			}
-			model.projectScenarioBrowserModel.shouldUpdateScenario = false;
+			channelsModel.projectScenarioBrowserModel.shouldUpdateScenario = false;
 			
 		}
 

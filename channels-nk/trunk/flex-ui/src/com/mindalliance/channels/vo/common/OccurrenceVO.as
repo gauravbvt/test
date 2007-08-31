@@ -4,9 +4,6 @@
 package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-	import com.mindalliance.channels.vo.common.*;
-	
-	import mx.collections.ArrayCollection;
 
 	public class OccurrenceVO extends CategorizedElementVO implements IValueObject
 	{

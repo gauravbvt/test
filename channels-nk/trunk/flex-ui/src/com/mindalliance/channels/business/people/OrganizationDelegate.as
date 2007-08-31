@@ -67,7 +67,7 @@ package com.mindalliance.channels.business.people
 				return new OrganizationVO(obj.id, 
 										obj.name, 
 										obj.description, 
-										XMLHelper.categorySetToXML(obj.categories).categories,
+										XMLHelper.xmlToCategorySet(obj.categories),
 										obj.abbreviation,
 										new ElementVO(obj.parentOrganizationId, null),
 										XMLHelper.xmlToAddress(obj.address),

@@ -10,17 +10,17 @@
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
 			import com.mindalliance.channels.model.IChannelsModel;
-			import com.mindalliance.channels.model.people.RoleChooserModel;
+			import com.mindalliance.channels.model.ChooserModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			[Bindable]
-			private var model : RoleChooserModel = ChannelsModelLocator.getInstance().propertyEditorModel.roleChooserModel;
+			private var model : ChooserModel = (ChannelsModelLocator.getInstance().getEditorModel(ChooserModel) as ChooserModel);
 			
 			public function get channelsModel() : IChannelsModel {
 				return model;	
 			}
 			
 			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as RoleChooserModel);
+				this.model = (model as ChooserModel);
 			}
 			
 			[Bindable]
@@ -42,18 +42,18 @@
 				<mx:List id="listRoles" width="100%" height="100%"/>
 			</mx:VBox>
 			<mx:VBox verticalAlign="middle" height="100%">
-				<mx:Button id="btnSelect" label=">>" enabled="{listRoles.selectedItems.length > 0}" toolTip="click to select"/>
+				<mx:Button id="btnSelect" label=">>" enabled="{model.getElementListModel('roles').data.length > 0}" toolTip="click to select"/>
 			</mx:VBox>
 			<mx:VBox>
 				<mx:Label text="Selected Roles" fontWeight="bold"/>
-				<mx:List id="listSelectedRoles" dataProvider="{model.list}" labelField="name" height="100%"/>
+				<mx:List id="listSelectedRoles" dataProvider="{model.getElementListModel('roles').data}" labelField="name" height="100%"/>
 			</mx:VBox>
 		</mx:HBox>
 		<mx:CheckBox label="Show details" id="cbShowDetails"/>
 		<people:RoleEditor visible="{cbShowDetails.selected}" includeInLayout="{cbShowDetails.selected}" width="100%"/>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
-		<mx:Button label="Done" enabled="{listSelectedRoles.dataProvider.length > 0}"/>
+		<mx:Button label="Done" enabled="{model.getElementListModel('roles').data.length > 0}"/>
 		<mx:Button label="Cancel" click="closeChooser()"/>
 	</mx:ControlBar>
 </mx:Panel>

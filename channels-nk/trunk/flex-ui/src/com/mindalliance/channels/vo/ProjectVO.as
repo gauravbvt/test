@@ -2,7 +2,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-	import com.mindalliance.channels.vo.common.ElementVO;
+    import com.mindalliance.channels.vo.common.ElementVO;
 
 	import mx.collections.ArrayCollection;
 	[Bindable]

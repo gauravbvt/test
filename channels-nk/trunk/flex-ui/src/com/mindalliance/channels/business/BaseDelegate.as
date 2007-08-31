@@ -1,14 +1,11 @@
 package com.mindalliance.channels.business
 {
 	import com.mindalliance.channels.model.ChannelsModelLocator;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 	import mx.rpc.http.HTTPService;
-	import flash.utils.Dictionary;
-	import mx.collections.ArrayCollection;
-	import mx.utils.ObjectProxy;
-	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class BaseDelegate
 	{
@@ -36,11 +33,11 @@ package com.mindalliance.channels.business
 		}
 		
 		public function getElement(id : String) : void {
-			send("element?id=" + id, null, "GET", "read");	
+			send("element?id=" + id, null, "GET", "read", id);	
 		}
 		
 		public function deleteElement(id : String) : void {
-			send("element?id=" + id, null, "DELETE", "delete");	
+			send("element?id=" + id, null, "DELETE", "delete", id);	
 		}
 		
 		public function createElement(doc : XML) : void{
@@ -48,10 +45,10 @@ package com.mindalliance.channels.business
 		}
 		
 		public function updateElement(obj : ElementVO) : void {
-			send("element?id=" + obj.id, toXML(obj), "PUT", "update");	
+			send("element?id=" + obj.id, toXML(obj), "PUT", "update", obj.id);	
 		}
 		
-		public function send(key : String, doc : Object, method : String, requestType : String) : void {
+		public function send(key : String, doc : Object, method : String, requestType : String, elementId : String = null) : void {
 			var service : HTTPService = new HTTPService();
 			service.url = ChannelsModelLocator.getInstance().urlRoot + '/' + key
 			switch(requestType) {
@@ -76,7 +73,7 @@ package com.mindalliance.channels.business
 						break;
 			};
 			var token:AsyncToken = service.send();
-			token.addResponder( new ProxyResponder(requestType, this) );	
+			token.addResponder( new ProxyResponder(requestType, this, elementId) );	
 		}
 		
 		/**

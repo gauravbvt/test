@@ -13,8 +13,9 @@ package com.mindalliance.channels.business
 		private var requestType : String;
 		private var typeName : String;
 		private var delegateResponder : IResponder;
+		private var id : String;
 		
-		public function ProxyResponder(requestType : String, delegate : com.mindalliance.channels.business.BaseDelegate) {
+		public function ProxyResponder(requestType : String, delegate : com.mindalliance.channels.business.BaseDelegate, id : String) {
 			this.delegate = delegate;
 			this.requestType = requestType;
 			this.typeName = delegate.typeName;
@@ -25,12 +26,18 @@ package com.mindalliance.channels.business
 		public function result(data:Object):void {
 			var result:Object = (data as ResultEvent).result;	
 			if (requestType == 'delete') {
-				if (result == true) {
+				if (result==true) {
 					value=handleDelete((result as Boolean));
 				} else {
 					delegate.responder.fault("Delete failed");
 				}
-			} else {
+			} if (requestType == 'update') {
+			   if (result==true) {
+                    value=handleUpdate((result as Boolean));
+                } else {
+                    delegate.responder.fault("Update failed");
+                }
+			}else {	
 				var xml : XML = (result as XML);
 				if (xml.error.length()!=0) {
 					delegate.responder.fault(xml.error.toXMLString());
@@ -40,7 +47,6 @@ package com.mindalliance.channels.business
 				switch(requestType) {
 					case 'query' : value=handleQuery(xml); break;
 					case 'read' : value=handleRead(xml); break;
-					case 'update' : value=handleUpdate(xml); break;
 					case 'create' : value=handleCreate(xml); break;
 				};
 			}
@@ -54,11 +60,19 @@ package com.mindalliance.channels.business
 		private function handleRead(result : XML) : Object {
 			return delegate.fromXML(result);
 		}		
-		private function handleUpdate(result : XML) : Object {
-			return result;
+		private function handleUpdate(result : Boolean) : Object {
+			if (result) {
+                return id;
+            } else {
+                return null;
+            }
 		}		
 		private function handleDelete(result : Boolean) : Object {
-			return result;
+			if (result) {
+                return id;
+			} else {
+				return null;
+			}
 		}		
 		private function handleCreate(result : XML) : Object {
 			return delegate.fromXML(result);

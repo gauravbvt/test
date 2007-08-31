@@ -22,7 +22,7 @@ package com.mindalliance.channels.commands.application
 				delegate.getElement(id);
 			} else {
 				log.debug("Setting selected Project to null");
-				model.projectScenarioBrowserModel.selectedProject = null;
+				channelsModel.projectScenarioBrowserModel.selectedProject = null;
 			}
 			
 		}
@@ -32,7 +32,7 @@ package com.mindalliance.channels.commands.application
 			var result:ProjectVO = (data as ProjectVO);
 			if (result != null) {
 				log.debug("Setting selected project to {0}", [result.id]);
-				model.projectScenarioBrowserModel.selectedProject = result;// new ProjectVO(result.id, result.name, result.description, result.manager);
+				channelsModel.projectScenarioBrowserModel.selectedProject = result;// new ProjectVO(result.id, result.name, result.description, result.manager);
 			} else {
 				log.warn("Unable to retrieve project");	
 			}

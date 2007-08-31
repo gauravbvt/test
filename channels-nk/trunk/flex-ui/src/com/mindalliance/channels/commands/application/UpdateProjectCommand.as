@@ -13,14 +13,14 @@ package com.mindalliance.channels.commands.application
 		
 		override public function execute(event:CairngormEvent):void
 		{
-			if (model.projectScenarioBrowserModel.shouldUpdateProject) {
+			if (channelsModel.projectScenarioBrowserModel.shouldUpdateProject) {
 				log.debug("Updating project");
 				var evt:UpdateProjectEvent = event as UpdateProjectEvent;
 				
 				var delegate:ProjectDelegate = new ProjectDelegate( this );
-				model.projectScenarioBrowserModel.selectedProject = evt.project;
+				channelsModel.projectScenarioBrowserModel.selectedProject = evt.project;
 				
-				delegate.updateElement(model.projectScenarioBrowserModel.selectedProject);
+				delegate.updateElement(channelsModel.projectScenarioBrowserModel.selectedProject);
 			}
 		}
 		
@@ -29,12 +29,12 @@ package com.mindalliance.channels.commands.application
 			log.debug("Project successfully updated");
 			
 			var obj : Object = ElementHelper.findElementById(
-											model.projectScenarioBrowserModel.selectedProject.id, 
-											model.projectScenarioBrowserModel.projectList);
-			if (obj.name != model.projectScenarioBrowserModel.selectedProject.name) {
-				obj.name = model.projectScenarioBrowserModel.selectedProject.name;	
+											channelsModel.projectScenarioBrowserModel.selectedProject.id, 
+											channelsModel.projectScenarioBrowserModel.projectList);
+			if (obj.name != channelsModel.projectScenarioBrowserModel.selectedProject.name) {
+				obj.name = channelsModel.projectScenarioBrowserModel.selectedProject.name;	
 			}
-			model.projectScenarioBrowserModel.shouldUpdateProject = false;
+			channelsModel.projectScenarioBrowserModel.shouldUpdateProject = false;
 			
 		}
 		

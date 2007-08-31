@@ -11,7 +11,7 @@ package com.mindalliance.channels.commands
 	public class BaseCommand implements ICommand
 	{
 				
-		protected var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();	
+		protected var channelsModel : ChannelsModelLocator = ChannelsModelLocator.getInstance();	
 		protected var log : ILogger = Log.getLogger(ObjectUtil.getClassInfo(this).name.replace("::", "."));
 		
 		public function execute(event:CairngormEvent):void

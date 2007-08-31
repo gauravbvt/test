@@ -22,7 +22,7 @@ package com.mindalliance.channels.commands.application
 				delegate.getElement(id);
 			} else {
 				log.debug("Deselecting scenario");
-				model.projectScenarioBrowserModel.selectedScenario = null;
+				channelsModel.projectScenarioBrowserModel.selectedScenario = null;
 			}
 		}
 		
@@ -30,7 +30,7 @@ package com.mindalliance.channels.commands.application
 		{
 			var result:ScenarioVO = (data as ScenarioVO);
 			if (result != null) {
-				model.projectScenarioBrowserModel.selectedScenario = result;
+				channelsModel.projectScenarioBrowserModel.selectedScenario = result;
 				log.debug("Setting selected scenario to {0}", [result.id]);
 			} else {
 				log.warn("Unable to retrieve scenario");

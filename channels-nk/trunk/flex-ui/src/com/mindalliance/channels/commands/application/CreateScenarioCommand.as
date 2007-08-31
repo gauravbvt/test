@@ -21,14 +21,14 @@ package com.mindalliance.channels.commands.application
 			log.debug("Creating scenario");
 			
 			var delegate:ScenarioDelegate = new ScenarioDelegate( this );
-			delegate.createScenario(name, model.projectScenarioBrowserModel.selectedProject.id);
+			delegate.createScenario(name, channelsModel.projectScenarioBrowserModel.selectedProject.id);
 		}
 		
 		override public function result(data:Object):void
 		{
 			var result:ScenarioVO = (data as ScenarioVO);
 			if (result != null) {
-				CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(model.projectScenarioBrowserModel.selectedProject.id) );
+				CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(channelsModel.projectScenarioBrowserModel.selectedProject.id) );
 				log.info("Scenario successfully created");
 			} else {
 				log.warn("Scenario creation failed");	

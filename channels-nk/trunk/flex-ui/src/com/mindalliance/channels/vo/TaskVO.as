@@ -16,19 +16,31 @@ package com.mindalliance.channels.vo
                                 categories : CategorySetVO,
                                 where : ISpatial = null,
                                 cause : CauseVO = null,
-                                duration : DurationVO) {
+                                duration : DurationVO,
+                                scenario : ElementVO) {
+                                
 			super(id,name,description,categories,where,cause);
 			this.duration = duration;
+			this.scenario = scenario;
 		}
 
 		private var _duration : DurationVO;
-		
+        private var _scenario : ElementVO;
+        
 		public function get duration() : DurationVO {
 			return _duration;
 		}
 
 		public function set duration(duration : DurationVO) : void {
 			_duration=duration;
+		}
+		
+		public function get scenario() : ElementVO {
+			return _scenario;
+		}
+
+		public function set scenario(scenario : ElementVO) : void {
+			_scenario=scenario;
 		}
 		
 	}

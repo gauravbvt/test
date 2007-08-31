@@ -10,12 +10,12 @@ package com.mindalliance.channels.vo
 		public function OrganizationVO( id : String, 
 								name : String, 
 								description : String,
-								categories : ArrayCollection,
+								categories : CategorySetVO,
 								abbreviation : String,
 								parent : ElementVO,
 								address : AddressVO,
 								logo : String ) {
-			super(id, name, description, new CategorySetVO(Taxonomy.ORGANIZATION, categories));
+			super(id, name, description, categories);
 			this.abbreviation = abbreviation;
 			this.parent = parent;
 			this.address = address;
@@ -38,7 +38,7 @@ package com.mindalliance.channels.vo
 			return _parent;
 		}
 		
-		public function set parent(parentId: ElementVO) : void {
+		public function set parent(parent: ElementVO) : void {
 			this._parent = parent;	
 		}
 		

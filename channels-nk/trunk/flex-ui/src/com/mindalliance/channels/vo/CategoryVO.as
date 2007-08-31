@@ -8,7 +8,7 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 
-	public class CategoryVO extends ElementVO implements IValueObject
+	public class CategoryVO extends UpdatableElementVO implements IValueObject
 	{
 		public function CategoryVO( id : String, 
 								name : String, 

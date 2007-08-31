@@ -61,7 +61,7 @@ package com.mindalliance.channels.util
 				</address>;			
 		}
 		
-		public static function xmlToAddress(xml : XML) : AddressVO{
+		public static function xmlToAddress(xml : XMLList) : AddressVO{
 			return new AddressVO(xml.street,xml.city,xml.state);	
 		}
 		
@@ -70,8 +70,7 @@ package com.mindalliance.channels.util
 		}
 		
 		public static function categorySetToXML(obj : CategorySetVO) : XML {
-			var xml : XML = <categories atMostOne="{obj.atMostOne}" taxonomy="{obj.taxonomy}"></categories>
-			
+			var xml : XML = <categories atMostOne={obj.atMostOne} taxonomy={obj.taxonomy}></categories>;
 			for each (var element:ElementVO in obj.categories) {
 				xml.appendChild(<categoryId>{element.id}</categoryId>);
 			}	

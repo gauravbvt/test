@@ -5,10 +5,11 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import com.mindalliance.channels.vo.common.AddressVO;
-	
+	import com.mindalliance.channels.vo.common.UpdatableElementVO;
+
 	import mx.collections.ArrayCollection;
 
-	public class PersonVO extends ElementVO implements IValueObject
+	public class PersonVO extends UpdatableElementVO implements IValueObject
 	{
 		public function PersonVO( id : String, 
 								name : String, 

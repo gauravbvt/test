@@ -3,7 +3,7 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import mx.collections.ArrayCollection;
-	import com.mindalliance.channels.vo.common.ElementVO;
+    import com.mindalliance.channels.vo.common.ElementVO;
 	
 	[Bindable]
 	public class ScenarioVO extends ElementVO implements IValueObject
