@@ -80,61 +80,67 @@ function getCategoriesOf(elementId) {
 		}
 	return set;
 }
-
-// MAIN
-var elementId = context.getThisRequest().getArgument("id").substring(3);
-log("Getting information template for " + elementId, "info");
-// 1- collect all distinct category IDs, explicit and implied
-var idSet = getCategoriesOf(elementId);
-// 2- Collect the topics (names only) and their EOIs (names and descriptions) for each information in each category
-// 3- Aggregate the EOIs across categories into each named topic 
-// 			- no duplicate topics by name, no duplicate EOIs by name per topic
-// 			- When collapsing EOIs, accumulate privacy and minimize confidence (TODO)
-// 4- Construct and return an aggregated information element as xml.
-// log("Building information template from " + idSet, "info");
-var template = <information/>;
-var templateTopic;
-var templateEoi;
-for (i in idSet) {
-	var info = getDocument(idSet[i]).information;
-	// for all topics
-	for each (topic in info.topic) {
-		var topicName = topic.name.text();
-		var topicDescription = topic.description != null ? topic.description.text() : "";
-		var list = template.topic.(name == topicName); // is topic already in template?
-		// log(list.length() + " template topics named " + topicName + " = " + list, "info");
-		if (list.length() == 0) {
-			templateTopic =  <topic>
-												 <name>{topicName}</name>
-												 <description>{topicDescription}</description>
-											 </topic>;
-			template.insertChildAfter(null, templateTopic);
-			templateTopic = template.topic.(name == topicName)[0];
-			// log("Added topic to template: " + templateTopic, "info");
-		}
-		else {
-			templateTopic = list[0];
-		}
-		for each (eoi in topic.eoi){
-			var eoiName = eoi.name.text();
-			var eoiDescription = eoi.description != null ? eoi.description.text() : "";
-			list = templateTopic.eoi.(name == eoiName);
-			// log(list.length() + " template eois in topic " + topicName + " named " + eoiName + " = " + list, "info");
+try {
+	// MAIN
+	var elementId = context.getThisRequest().getArgument("id").substring(3);
+	log("Getting information template for " + elementId, "info");
+	// 1- collect all distinct category IDs, explicit and implied
+	var idSet = getCategoriesOf(elementId);
+	// 2- Collect the topics (names only) and their EOIs (names and descriptions) for each information in each category
+	// 3- Aggregate the EOIs across categories into each named topic 
+	// 			- no duplicate topics by name, no duplicate EOIs by name per topic
+	// 			- When collapsing EOIs, accumulate privacy and minimize confidence (TODO)
+	// 4- Construct and return an aggregated information element as xml.
+	// log("Building information template from " + idSet, "info");
+	var template = <information/>;
+	var templateTopic;
+	var templateEoi;
+	for (i in idSet) {
+		var info = getDocument(idSet[i]).information;
+		// for all topics
+		for each (topic in info.topic) {
+			var topicName = topic.name.text();
+			var topicDescription = topic.description != null ? topic.description.text() : "";
+			var list = template.topic.(name == topicName); // is topic already in template?
+			// log(list.length() + " template topics named " + topicName + " = " + list, "info");
 			if (list.length() == 0) {
-				templateEoi = <eoi>
-												<name>{eoiName}</name>
-												<description>{eoiDescription}</description>
-											 </eoi>;
-				templateTopic.insertChildAfter(null,templateEoi);
-				// log("Added eoi: " + templateEoi + " to topic " + topicName + " in template", "info");
+				templateTopic =  <topic>
+													 <name>{topicName}</name>
+													 <description>{topicDescription}</description>
+												 </topic>;
+				template.insertChildAfter(null, templateTopic);
+				templateTopic = template.topic.(name == topicName)[0];
+				// log("Added topic to template: " + templateTopic, "info");
 			}
 			else {
-				log("EOI collision with " + list[0] + " in topic " + topicName + " from category " + idSet[i], "warning");
+				templateTopic = list[0];
+			}
+			for each (eoi in topic.eoi){
+				var eoiName = eoi.name.text();
+				var eoiDescription = eoi.description != null ? eoi.description.text() : "";
+				list = templateTopic.eoi.(name == eoiName);
+				// log(list.length() + " template eois in topic " + topicName + " named " + eoiName + " = " + list, "info");
+				if (list.length() == 0) {
+					templateEoi = <eoi>
+													<name>{eoiName}</name>
+													<description>{eoiDescription}</description>
+												 </eoi>;
+					templateTopic.insertChildAfter(null,templateEoi);
+					// log("Added eoi: " + templateEoi + " to topic " + topicName + " in template", "info");
+				}
+				else {
+					log("EOI collision with " + list[0] + " in topic " + topicName + " from category " + idSet[i], "warning");
+				}
 			}
 		}
 	}
+	log("Information template for " + elementId + " =\n" + template, "info");
 }
-log("Information template for " + elementId + " =\n" + template, "info");
+catch(e) {
+	log("getInformationTemplate failed: " + e, "severe");
+	throw e;
+}
+
 var resp = context.createResponseFrom(new XmlObjectAspect(template.getXmlObject()));
 resp.setMimeType("text/xml");
 context.setResponse(resp);

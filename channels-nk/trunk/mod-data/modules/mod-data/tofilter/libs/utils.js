@@ -19,6 +19,10 @@ function log(content, level) {
   context.issueAsyncSubRequest(req);
 }
 
+function pause(millis) {
+	java.lang.Thread.sleep(millis);
+} 
+
 // Returns whether a dbxml container as described exists
 function dbxml_containerExists(descriptor) {
   // Check if already exists

@@ -10,16 +10,28 @@ importPackage(Packages.java.lang);
 
 var descriptor = dbxml_getContainerDescriptor();
 var exists = dbxml_containerExists(descriptor);
-
-if (exists) {
-  // Delete container
-  var req=context.createSubRequest("active:dbxmlDeleteContainer");
-  req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
-  context.issueSubRequest(req);
-  log("Deleted DBXML container: " + dbxml_getContainerName(), "info");
-}
-else {
-  log("DBXML container not deleted (does not exist): " + dbxml_getContainerName(), "warning");
+var maxRetries = 20;
+while (dbxml_containerExists(descriptor) && (maxRetries > 0)) {
+	maxRetries--;
+	try {
+		var exists = dbxml_containerExists(descriptor);
+		if (exists) {
+		  // Delete container
+		  var req=context.createSubRequest("active:dbxmlDeleteContainer");
+		  req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
+		  context.issueSubRequest(req);
+		  // pause(3000);
+		  log("Deleted DBXML container: " + dbxml_getContainerName(), "info");
+		}
+		else {
+		  log("DBXML container not deleted (does not exist): " + dbxml_getContainerName(), "warning");
+		}
+	}
+	catch(e) {
+		log("Delete model failed: " + e, "severe");
+		// pause(1000);
+		// throw e;
+	}
 }
 
 //Return Response

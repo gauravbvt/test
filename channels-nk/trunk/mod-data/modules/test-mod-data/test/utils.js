@@ -12,6 +12,10 @@ function log(content, level) {
   context.issueSubRequest(req);
 }
 
+function pause(millis) {
+	java.lang.Thread.sleep(millis);
+} 
+
 function issueValidateRNGRequest(schemaURI, docURI) {
 	log("Schema uri = " + schemaURI + ", docURI = " + docURI, "info");
 	var req = context.createSubRequest("active:validateRNG");

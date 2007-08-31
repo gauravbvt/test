@@ -9,6 +9,7 @@ importPackage(Packages.java.lang);
 // Delete model
 var req = context.createSubRequest("active:channels_data_deleteModel");
 context.issueSubRequest(req);
+
 // Open model from db:testDB.xml
 req = context.createSubRequest("active:channels_data_openModel");
 req.addArgument("init", "db:testQueriesDB.xml");
@@ -47,36 +48,42 @@ var tests =
 		["categoriesOfElement", {elementId:"event1"}, 2, ["./list/category/id","./list/category/name"]]
 	]
 
-for (i in tests)	 {
-	var test = tests[i];
-	var queryName = test[0];
-	var variables = test[1];
-	var count = test[2];
-	var xpaths = test[3];
-	// Build an issue request
-	var req = context.createSubRequest("active:channels_data_queryModel");
-	req.addArgument("xquery", "ffcpl:/com/mindalliance/channels/data/queries/" + queryName + ".xq");
-	if (variables != null) {
-		var properties = makeProperties(variables); // returns <properties><property><key>...</key><value>...</value></property>...</properties> e4x xml object
-		req.addArgument("variables", new XmlObjectAspect(properties.getXmlObject()));
-	}
-	var res = context.transrept(context.issueSubRequest(req), IAspectXmlObject).getXmlObject();
-	var resCount = res.selectPath("./list/*").length;
-	if (resCount != count) {
-		var mess = "Query returned " + resCount + " results instead of the expected " + count;
-		log(mess, "severe");
-		throw("Invalid query");
-	}
-	// Apply xpaths
-	for (j in xpaths) {
-		var xpath = xpaths[j];
-		var r = res.selectPath(xpath);
-		if (r.length == 0) {
-			var mess = "Query " + queryName + " failed test " + xpath;
+try {
+	for (i in tests)	 {
+		var test = tests[i];
+		var queryName = test[0];
+		var variables = test[1];
+		var count = test[2];
+		var xpaths = test[3];
+		// Build an issue request
+		var req = context.createSubRequest("active:channels_data_queryModel");
+		req.addArgument("xquery", "ffcpl:/com/mindalliance/channels/data/queries/" + queryName + ".xq");
+		if (variables != null) {
+			var properties = makeProperties(variables); // returns <properties><property><key>...</key><value>...</value></property>...</properties> e4x xml object
+			req.addArgument("variables", new XmlObjectAspect(properties.getXmlObject()));
+		}
+		var res = context.transrept(context.issueSubRequest(req), IAspectXmlObject).getXmlObject();
+		var resCount = res.selectPath("./list/*").length;
+		if (resCount != count) {
+			var mess = "Query returned " + resCount + " results instead of the expected " + count;
 			log(mess, "severe");
-			throw("Invalid query"); // fail early
+			throw("Invalid query");
+		}
+		// Apply xpaths
+		for (j in xpaths) {
+			var xpath = xpaths[j];
+			var r = res.selectPath(xpath);
+			if (r.length == 0) {
+				var mess = "Query " + queryName + " failed test " + xpath;
+				log(mess, "severe");
+				throw("Invalid query"); // fail early
+			}
 		}
 	}
+}
+catch(e) {
+	log("EXCEPTION: " + e, "severe");
+	throw e;
 }
 
 // Respond
