@@ -14,14 +14,14 @@
     <mx:Script>
       <![CDATA[
       	import com.mindalliance.channels.model.ChannelsModelLocator;
-    
-        
+           
         import com.yworks.util.Util;
-    
+      
         private function init():void {
            Util.registerLicense( yFilesLicenseXML );
-           
-           flowmap.graphCanvas.initializeGraph() ;
+
+           flowmap.init() ;
+           propertyEditor.init() ;
         }
 
         [Bindable]
@@ -32,11 +32,11 @@
    	<!--<business:Services id="services" />-->
 	<control:ChannelsController id="appController" />
 
-    <mx:VBox width="100%">
+    <mx:VBox width="100%" height="100%">
 	    <application:ApplicationToolBar/>
-    	<mx:HDividedBox width="100%">
-    		<application:PropertyEditor verticalScrollPolicy="auto" horizontalScrollPolicy="auto"/>
-    		<flowmap:FlowMapView id="flowmap"/>
+    	<mx:HDividedBox width="100%" height="100%" paddingTop="10">
+    		<application:PropertyEditor id="propertyEditor" resizeEffect="Resize"/>
+    		<flowmap:FlowMapView id="flowmap" width="100%" height="100%"/>
     	</mx:HDividedBox>
     </mx:VBox>
 <!--    <mx:VDividedBox width="100%" height="100%">

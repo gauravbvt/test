@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:FormItem xmlns:mx="http://www.adobe.com/2006/mxml"
-	direction="horizontal">
+	direction="horizontal"
+	resizeEffect="Resize" icon="@Embed('../../../../../assets/images/edit.png')">
 	
 	<mx:Script>
 		<![CDATA[
@@ -32,14 +33,17 @@
 		<mx:State name="EditState">
 			<mx:RemoveChild target="{btnEdit}"/>
 			<mx:AddChild relativeTo="{hboxStateChange}" position="lastChild">
-				<mx:Button label="Cancel" click="cancelEdit()" id="btnCancel"/>
+				<mx:Button label="Discard Changes" click="cancelEdit()" id="btnCancel"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{btnCancel}" position="before">
-				<mx:Button label="Done" click="confirmEdit()" id="btnDone"/>
+				<mx:Button label="Save" click="confirmEdit()" id="btnDone">
+					<mx:icon>@Embed('../../../../../assets/images/disk_blue_ok.png')</mx:icon>
+				</mx:Button>
 			</mx:AddChild>
+			<mx:SetStyle target="{hboxStateChange}" name="horizontalGap" value="20"/>
 		</mx:State>
 	</mx:states>
-	<mx:HBox width="100%" id="hboxStateChange">
-		<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()"/>
+	<mx:HBox id="hboxStateChange">
+		<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()" icon="@Embed('../../../../../assets/images/edit.png')"/>
 	</mx:HBox>
 </mx:FormItem>

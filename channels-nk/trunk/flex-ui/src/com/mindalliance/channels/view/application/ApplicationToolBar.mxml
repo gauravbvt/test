@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:ApplicationControlBar xmlns:mx="http://www.adobe.com/2006/mxml"
     width="100%" xmlns:application="com.mindalliance.channels.view.application.*" 
     xmlns:search="com.mindalliance.channels.view.search.*"
     xmlns:logging="com.mindalliance.channels.view.logging.*">
@@ -56,14 +56,6 @@
                 "Artifact Editor":[ ArtifactEditor, model.propertyEditorModel.artifactEditorModel],
                 "Artifact Chooser":[ArtifactChooser,model.propertyEditorModel.artifactChooserModel]
                 };
-                
-            private function popUpTraceWindow():void {
-            	var traceWindow:TitleWindow = TitleWindow(PopUpManager.createPopUp(this, TitleWindow, false)) ;
-            	traceWindow.showCloseButton = true; 
-            	traceWindow.addEventListener(CloseEvent.CLOSE, function anon():void{PopUpManager.removePopUp(traceWindow);}) ;
-            	// Add whatever trace display component like textarea here.
-            	//traceWindow.addChild(<blah>) ;
-            }    
                 
             private function menuBarItemClicked(event:MenuEvent):void {
                 var c:Class = classHash[event.item.@label][0] ;
@@ -171,4 +163,4 @@
 	<mx:Label text="{'Logged in as: '+model.username}"/>
 	<mx:Button label="My Profile" id="btnEditProfile" click="editPersonalProfile()"/>
 	<mx:Button label="Logout"/>
-</mx:HBox>
+</mx:ApplicationControlBar>

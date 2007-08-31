@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:resources="com.mindalliance.channels.view.resources.*"
+	xmlns:people="com.mindalliance.channels.view.people.*">
+	
+	<resources:RepositoryEditor label="{'Repository: '}"/>
+	<people:OrganizationEditor label="{'Organization: '}"/>
+</mx:TabNavigator>

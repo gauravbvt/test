@@ -3,3 +3,8 @@
 	color: gray;
 	fontStyle: italic ;
 	}
+
+.PrimaryNameFieldEditState {
+	fontWeight: bold ;
+	fontSize: 12 ;
+	}

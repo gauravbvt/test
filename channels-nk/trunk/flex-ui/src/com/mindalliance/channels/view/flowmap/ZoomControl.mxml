@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	enabled="{_graphCanvas != null}">
+	enabled="{_graphCanvas != null}"
+	paddingTop="5"
+	paddingBottom="5"
+	paddingLeft="5"
+	paddingRight="5">
 
 	<mx:Script>
 		<![CDATA[
@@ -26,7 +30,7 @@
 		change="{_graphCanvas.zoom=Math.pow(2,event.value)}" 
 		liveDragging="true" tickInterval="1.0" 
 		minimum="-4" maximum="4" />
-	<mx:Button label="Fit Content" click="_graphCanvas.fitContent();" />		
+	<mx:Button label="Fit Content" click="_graphCanvas.fitContent();"/>
 	<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))+0.1));"  toolTip="Zoom In">
 		<mx:icon>@Embed('../../../../../assets/images/zoom_in.png')</mx:icon>
 	</mx:Button>

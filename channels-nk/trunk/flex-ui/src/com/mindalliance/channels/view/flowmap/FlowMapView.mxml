@@ -2,18 +2,130 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:view="com.mindalliance.channels.view.*"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
-	width="100%" height="100%"
-	creationComplete="init()">
+	xmlns:yui="com.yworks.ui.*"
+	width="100%" height="100%">
 	
 	<mx:Script>
 		<![CDATA[
-			private function init():void {
+			import com.yworks.support.Iterable;
+			import com.yworks.graph.model.ILabel;
+			import com.yworks.support.Iterator;
+			import com.yworks.graph.model.IEdge;
+			import com.yworks.graph.model.SelectionEvent;
+			import mx.controls.Alert;
+			import com.yworks.graph.model.INode;
+			import com.mindalliance.channels.view.UtilFuncs;
+		
+			public function init():void {
 				zoomControl.graphCanvas = this.graphCanvas ;
+				FlowMap.initialize(graphCanvas) ;
+				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				FlowMap.addSelectionListener(FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED, selectedScenarioStageChanged) ;
 			}
+			
+			[Bindable]
+			private var singleNodeSelected:Boolean = false ;
+			
+			[Bindable]
+			private var selectedScenarioStageIDNotNull:Boolean = false ;
+			
+			private function _updateSelectionBoundVariables():void {
+				if (FlowMap.numSelected == 1) {
+					var iter:Iterator = FlowMap.selectedItems.iterator() ;
+					while (iter.hasNext()) {
+						var o:Object = iter.next() ;
+						if (o is INode) {
+							singleNodeSelected = true ;
+						}
+					}
+				}
+				else
+					singleNodeSelected = false ;
+			}
+			
+			public function selectedScenarioStageChanged(event:Event):void {
+				selectedScenarioStageIDNotNull = (FlowMap.selectedScenarioStageID != null) ;
+			}
+			
+			public function itemSelected(event:SelectionEvent):void {
+				_updateSelectionBoundVariables() ;	
+			}
+			
+			public function itemDeselected(event:SelectionEvent):void {
+				_updateSelectionBoundVariables() ;	
+			}
+			
+			private function addStage():void {
+				UtilFuncs.GetUserTextInput(this,
+					function anon(value:String):void {
+						if (value == null || value.length == 0)
+							return ;
+						FlowMap.addStage(FlowMap.getNewID(), UtilFuncs.Capitalize(value)) ;
+					}, "Enter Stage Name", true) ;
+			}
+			
+			private function addTask():void {
+				var ssid:String = FlowMap.selectedScenarioStageID ;
+				if (ssid == null)
+					throw new Error("SEVERE: Selected Scenario Stage ID should not be null but is!") ;
+					
+				UtilFuncs.GetUserTextInput(this,
+					function anon(text:String):void {
+						if (text == null || text.length == 0)
+							return ;
+						FlowMap.addTask(ssid, FlowMap.getNewID(), UtilFuncs.Capitalize(text)) ;
+					}, "Enter Name of New Task", true) ;
+			}
+			
+			private function addEvent():void {
+				var task:INode = INode(FlowMap.selectedItems.iterator().next()) ;
+				var taskID:String = FlowMap.getIDForItem(task) ;
+				if (taskID == null)
+					throw new Error("SEVERE: ID for selected task not found!") ;
+					
+				UtilFuncs.GetUserTextInput(this,
+					function anon(text:String):void {
+						if (text == null || text.length == 0)
+							return ;
+						FlowMap.addEvent(taskID, FlowMap.getNewID(), UtilFuncs.Capitalize(text)) ;
+					}, "Enter Name of New Event", true) ;
+			}
+			
+			private function setRole():void {
+				var iter:Iterator = FlowMap.selectedItems.iterator() ;
+				if (!(iter.hasNext()))
+					throw new Error("SEVERE: Selected item list should not be empty but is!")
+				var o:Object = iter.next() ;
+				if (!(o is INode))
+					throw new Error("INTERESTING: Selected item should be an INode instance but is not.") ;
+				var task:INode = INode(o) ;
+				var taskID:String = FlowMap.getIDForItem(task) ;
+				if (taskID == null)
+					throw new Error("SEVERE: ID for selected task not found!") ;
+					
+				UtilFuncs.GetUserTextInput(this,
+					function anon(text:String):void {
+						if (text == null || text.length == 0)
+							return ;
+						FlowMap.setRole(taskID, FlowMap.getNewID(), UtilFuncs.Capitalize(text)) ;
+					}, "Enter Name of Role", true) ;
+			}
+			
 		]]>
 	</mx:Script>
 	
-	<flowmap:ZoomControl width="100%" borderSides="bottom" borderThickness="1" borderStyle="solid" id="zoomControl"/>
-	<flowmap:FlowMap id="graphCanvas" width="100%" height="100%"/>
-	<!-- <mx:Image id="graphCanvas" source="assets/exampleflowmap2.png" width="100%" height="100%" scaleContent="false"/> -->
+	<mx:HBox width="100%" borderSides="bottom" borderThickness="1" borderStyle="solid">
+		<flowmap:ZoomControl id="zoomControl" resizeEffect="Resize"/>
+		<mx:Label text="Menu:"/>
+		<mx:Button label="Add Stage" click="addStage()"/>
+		<mx:HBox visible="{selectedScenarioStageIDNotNull}" includeInLayout="{selectedScenarioStageIDNotNull}">
+			<mx:Button label="Add Task" click="addTask()"/>
+		</mx:HBox>
+		<mx:HBox visible="{singleNodeSelected}" includeInLayout="{singleNodeSelected}" >
+			<mx:Button label="Set Role" click="setRole()"/>
+			<mx:Button label="Add Event" click="addEvent()"/>
+		</mx:HBox>
+	</mx:HBox>
+	<yui:GraphCanvasComponent id="graphCanvas" width="100%" height="100%"/>
 </mx:VBox>

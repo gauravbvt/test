@@ -62,6 +62,10 @@
 				</mx:HBox>
 			</mx:AddChild>
     		<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+    		<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
+    		<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
+    		<mx:SetProperty target="{formitem1}" name="mouseChildren" value="true"/>
+    		<mx:SetProperty target="{formitem1}" name="mouseEnabled" value="true"/>
 		</mx:State>
 	</mx:states>
 	
@@ -73,13 +77,13 @@
     	cancelEditHandler="{cancelEdit}"/>
 	
     <mx:FormItem label="Role Name">
-        <mx:TextInput id="txtName"/>
+        <mx:TextInput id="txtName" editable="false"/>
     </mx:FormItem>
-    <mx:FormItem label="Organization" mouseEnabled="false" mouseChildren="false">
+    <mx:FormItem label="Organization" mouseEnabled="false" mouseChildren="false" id="formitem1">
     	<mx:ComboBox/>
     </mx:FormItem>
     <mx:FormItem label="Description">
-        <mx:TextArea id="txtDescription"/>
+        <mx:TextArea id="txtDescription" editable="false"/>
     </mx:FormItem>
     <mx:FormItem label="Expertise" direction="vertical">
 		<mx:Text styleName="FormItemDescription" selectable="false"

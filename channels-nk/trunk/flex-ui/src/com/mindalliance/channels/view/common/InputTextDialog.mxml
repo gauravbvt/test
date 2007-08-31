@@ -7,16 +7,21 @@
     <mx:Script>
     
         <![CDATA[
+        	import mx.controls.Alert;
             import mx.managers.PopUpManager;
             
             public var okEventHandler:Function ;
-            
+			private var _done:Boolean = false ;
             private function handleKeyEvent(event:KeyboardEvent):void {
+            	if (_done)
+            		return ;
             	switch (event.keyCode) {
             		case Keyboard.ESCAPE:
+            			_done = true ;
 	                    PopUpManager.removePopUp(this);
 	                    break ;
 	                case Keyboard.ENTER:
+            			_done = true ;
 	                	if (okEventHandler != null)
 	                		callLater(okEventHandler, [textInput.text]) ;
 	                    PopUpManager.removePopUp(this);

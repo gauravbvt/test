@@ -10,5 +10,6 @@
 
 	<mx:Parallel targets="{targets}">
 		<mx:Resize/>
+		<mx:Fade/>
 	</mx:Parallel>
 </mx:Transition>

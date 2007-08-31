@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:scenario="com.mindalliance.channels.view.scenario.*"
+	xmlns:people="com.mindalliance.channels.view.people.*"
+	creationComplete="init()">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.StateChangeEvent;
+		
+			private function init():void {
+				taskEditor.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, editorStateChange) ;
+			}
+			
+			public function editorStateChange(event:StateChangeEvent):void {
+				
+				if (event.newState == 'EditState') {
+					Alert.show(event.target.id) ;
+				}
+			}
+		
+		]]>
+	</mx:Script>
+
+	<mx:Text text="This node is made up of the following elements:"/>
+	<mx:TabNavigator>	
+		<scenario:TaskEditor id="taskEditor" label="{'Task: '}"/>
+		<scenario:EventEditor id="eventEditor" label="{'Event: '}"/>
+		<people:RoleEditor id="roleEditor" label="{'Role: '}"/>
+	</mx:TabNavigator>
+</mx:VBox>
