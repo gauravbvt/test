@@ -2,8 +2,10 @@
 package com.mindalliance.channels.control
 {
 	import com.adobe.cairngorm.control.FrontController;
+    import com.mindalliance.channels.commands.common.*;
     import com.mindalliance.channels.commands.application.*;
     import com.mindalliance.channels.commands.people.*;
+    import com.mindalliance.channels.events.common.*;
     import com.mindalliance.channels.events.application.*;
     import com.mindalliance.channels.events.people.*;
     
@@ -35,6 +37,9 @@ package com.mindalliance.channels.control
 			this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
 			this.addCommand(QueueProjectUpdateEvent.QueueProjectUpdate_Event, QueueProjectUpdateCommand);
 			this.addCommand(QueueScenarioUpdateEvent.QueueScenarioUpdate_Event, QueueScenarioUpdateCommand);
+			
+			
+            this.addCommand(ChooserSelectEvent.ChooserSelect_Event, ChooserSelectCommand);
 		}
 		
 		private function initializePeople() : void
@@ -45,6 +50,10 @@ package com.mindalliance.channels.control
 			this.addCommand(DeleteOrganizationEvent.DeleteOrganization_Event, DeleteOrganizationCommand);
 			this.addCommand(UpdateOrganizationEvent.UpdateOrganization_Event, UpdateOrganizationCommand);
 			this.addCommand(QueueOrganizationUpdateEvent.QueueOrganizationUpdate_Event, QueueOrganizationUpdateCommand);
+			
+			
+            this.addCommand(GetRoleListEvent.GetRoleList_Event, GetRoleListCommand);
+            this.addCommand(GetRoleEvent.GetRole_Event, GetRoleCommand);
 		}
 	}
 }

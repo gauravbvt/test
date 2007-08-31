@@ -3,57 +3,109 @@
 	xmlns:search="com.mindalliance.channels.view.search.*"
 	xmlns:people="com.mindalliance.channels.view.people.*"
 	resizeEffect="Resize" 
-	implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+	creationComplete="init()">
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.events.common.ChooserSelectEvent;
+			import com.mindalliance.channels.util.ElementHelper;
+			import com.mindalliance.channels.vo.common.ElementVO;
+			import com.mindalliance.channels.model.ElementListModel;
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
 			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.ChooserModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.events.people.GetRoleListEvent;
+            import com.mindalliance.channels.events.people.GetRoleEvent;
+            import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			
+			// Models
 			[Bindable]
-			private var model : ChooserModel = (ChannelsModelLocator.getInstance().getEditorModel(ChooserModel) as ChooserModel);
-			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as ChooserModel);
-			}
+			public var model : ChooserModel = (ChannelsModelLocator.getInstance().getEditorModel(ChooserModel) as ChooserModel);
+			[Bindable]
+			private var elementListModel : ElementListModel;
 			
 			[Bindable]
-			private var SelectedRoles:ArrayCollection = new ArrayCollection() ;
+			public var filtered : ArrayCollection = null;
+			
+			[Bindable]
+			public var processSelected : Function;
+
+			
+			private function getRoleList() : void {
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleListEvent() );
+            }
 			
 			private function closeChooser():void {
 				PopUpManager.removePopUp(this) ;
 			}
+			private function init(): void {
+                
+			}
+			
+			private function applyFilter(evt : Event = null) : void {
+			     roleList.refresh();	
+			}
+			
+			private function filter(item : Object) : Boolean {
+				var el : ElementVO = (item as ElementVO);
+				if (filtered != null && ElementHelper.findElementById(el.id, filtered) != null) {
+				    return false;	
+				} else if (ElementHelper.findElementById(el.id, model.selection) != null) {
+					return false;
+				} else if (searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
+					return false;
+				}
+				return true;
+			}
+			
+			private function loadEditor() : void {
+                var el : ElementVO = (listRoles.selectedItem as ElementVO);
+                if (el != null) {
+                    CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(el.id, model.editorModel));
+                }
+			}
+			
+			private function addSelected() : void {
+                CairngormEventDispatcher.getInstance().dispatchEvent( new ChooserSelectEvent(model, listRoles.selectedItems) );
+                applyFilter();
+                
+			}
+			
+			private function done() : void {
+				if (processSelected != null) {
+				    processSelected(model.selection);
+		      	}
+		      	closeChooser();
+			}
 		]]>
 	</mx:Script>
 	
+    <mx:Binding source="model.getElementListModel('roles')" destination="elementListModel"/>
+    <mx:ArrayCollection id="roleList" source="{elementListModel.data.source}" filterFunction="filter"/>
     <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
 	
 	<mx:VBox>
-		<search:StandardSearchBox width="100%"/>
+		<search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}"/>
 		<mx:HBox>
 			<mx:VBox>
 				<mx:Label text="Roles" fontWeight="bold"/>
-				<mx:List id="listRoles" width="100%" height="100%"/>
+				<mx:List id="listRoles" dataProvider="{roleList}" labelField="name" width="100%" height="100%"/>
 			</mx:VBox>
 			<mx:VBox verticalAlign="middle" height="100%">
-				<mx:Button id="btnSelect" label=">>" enabled="{model.getElementListModel('roles').data.length > 0}" toolTip="click to select"/>
+				<mx:Button id="btnSelect" label=">>" enabled="{roleList.length > 0}" toolTip="click to select" click="addSelected()"/>
 			</mx:VBox>
 			<mx:VBox>
 				<mx:Label text="Selected Roles" fontWeight="bold"/>
-				<mx:List id="listSelectedRoles" dataProvider="{model.getElementListModel('roles').data}" labelField="name" height="100%"/>
+				<mx:List id="listSelectedRoles"  labelField="name" height="100%" dataProvider="{model.selection}" change="applyFilter()"/>
 			</mx:VBox>
 		</mx:HBox>
 		<mx:CheckBox label="Show details" id="cbShowDetails"/>
-		<people:RoleEditor visible="{cbShowDetails.selected}" includeInLayout="{cbShowDetails.selected}" width="100%"/>
+		<people:RoleEditor visible="{cbShowDetails.selected}" includeInLayout="{cbShowDetails.selected}" width="100%" model="{model.editorModel}"/>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
-		<mx:Button label="Done" enabled="{model.getElementListModel('roles').data.length > 0}"/>
+		<mx:Button label="Done" enabled="{roleList.length > 0}" />
 		<mx:Button label="Cancel" click="closeChooser()"/>
 	</mx:ControlBar>
 </mx:Panel>

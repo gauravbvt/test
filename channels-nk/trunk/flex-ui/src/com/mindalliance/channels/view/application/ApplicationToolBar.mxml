@@ -62,8 +62,8 @@
                 if (c != null) {
                 	var popUp:TitleWindow ;
 	            	popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
-	            	var component : IChannelsModelComponent = (new ClassFactory(c).newInstance() as IChannelsModelComponent);
-	            	popUp.addChild(component as DisplayObject) ;
+	            	var component : DisplayObject = new ClassFactory(c).newInstance();
+	            	popUp.addChild(component);
 	            	popUp.showCloseButton = true ;
 	            	popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)}) ;
 	                popUp.x = this.x + 100 ;

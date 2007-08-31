@@ -19,7 +19,7 @@ package com.mindalliance.channels.business.people
          * parses /channels/schema/person.rng
          */
 		override public function fromXML(xml:XML):ElementVO {
-			return new PersonVO(obj.id, obj.name, obj.description,
+			return new PersonVO(obj.id, 
 			                     obj.firstName,
 			                     obj.lastName,
 			                     obj.photo,
@@ -37,8 +37,6 @@ package com.mindalliance.channels.business.people
 			var obj : PersonVO = (element as PersonVO);
 			var xml : XML = <person schema="/channels/schema/person.rng">
 						<id>{obj.id}</id>
-						<name>{obj.name}</name>
-						<description>{obj.description}</description>
 						<firstName>{obj.firstName}</firstName>
 						<lastName>{obj.lastName}</lastName>
 					</person>;

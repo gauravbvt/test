@@ -6,7 +6,7 @@ package com.mindalliance.channels.business.people
 	import com.mindalliance.channels.business.BaseDelegate;
 	
 	import mx.rpc.IResponder;
-	import com.mindalliance.channels.vo.ElementVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	import com.mindalliance.channels.vo.RoleVO;
 	import com.mindalliance.channels.vo.common.InformationVO;
 	import com.mindalliance.channels.util.XMLHelper;
@@ -17,12 +17,17 @@ package com.mindalliance.channels.business.people
 		public function RoleDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName="role";
 		}
+		
+		public function getRoleList() : void {
+            performQuery("allRoles", null);
+        }
 		
 		override public function fromXML(xml:XML):ElementVO {
 			var expertise : ArrayCollection = new ArrayCollection();
-			for each (info : XML in xml.expertise) {
-				expertise.addItem(XMLHelper.xmlToInformation(info);
+			for each (var info : XML in xml.expertise) {
+				expertise.addItem(XMLHelper.xmlToInformation(info));
 			}
 			return new RoleVO(xml.id, 
 								xml.name, 
@@ -40,7 +45,7 @@ package com.mindalliance.channels.business.people
 						<description>{role.description}</description>
 					</role>;
 			
-			xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
+			xml.appendChild(XMLHelper.categorySetToXML(role.categories));
 			xml.appendChild(<organizationId>{role.organization.id}</organizationId>);
 			var expertise : XML = <expertise></expertise>;
 			for each (var information : InformationVO in role.expertise) {

@@ -15,6 +15,9 @@
       <![CDATA[
       	import com.mindalliance.channels.model.ChannelsModelLocator;
            
+        import com.mindalliance.channels.events.people.GetRoleListEvent;
+        import com.mindalliance.channels.events.people.GetOrganizationListEvent;
+        import com.adobe.cairngorm.control.CairngormEventDispatcher;
         import com.yworks.util.Util;
       
         private function init():void {
@@ -22,6 +25,11 @@
 
            flowmap.init() ;
            propertyEditor.init() ;
+           
+           // Load global data lists
+           CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleListEvent() );
+           CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
+           
         }
 
         [Bindable]

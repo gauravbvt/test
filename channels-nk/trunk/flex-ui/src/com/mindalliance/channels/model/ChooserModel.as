@@ -1,11 +1,17 @@
 package com.mindalliance.channels.model
 {
+	
+	import mx.collections.ArrayCollection;
+	
 	[Bindable]
 	public class ChooserModel extends BaseChannelsModel
 	{
-		public function ChooserModel(elements : Object, choosers : Object) {
-          super(elements,choosers);
+		public function ChooserModel(elements : Object, elementLists : Object) {
+          super(elements,elementLists);
 
         }
+        
+        public var selection : ArrayCollection = new ArrayCollection();
+        public var editorModel : EditorModel = new EditorModel(elements, elementLists);
 	}
 }

@@ -9,11 +9,9 @@ package com.mindalliance.channels.vo
 
 	import mx.collections.ArrayCollection;
 
-	public class PersonVO extends UpdatableElementVO implements IValueObject
+	public class PersonVO extends ElementVO implements IValueObject
 	{
-		public function PersonVO( id : String, 
-								name : String, 
-								description : String, 		
+		public function PersonVO( id : String, 	
 								firstName : String,
 								lastName : String,
 								photo : String,
@@ -23,7 +21,7 @@ package com.mindalliance.channels.vo
 								address : AddressVO,
 								roles : ArrayCollection,
 								userId : String) {
-			super(id,name,description);
+			super(id,null,null);
 			this.firstname = firstname;
 			this.lastName = lastName;
 			this.photo = photo;

@@ -56,7 +56,7 @@ package com.mindalliance.channels.model
 		}
 	    public function getElementListModel(key : String) : ElementListModel {
             if (elementLists[key] == null) {
-                elementLists[key] = new ElementModel();
+                elementLists[key] = new ElementListModel();
             }
             return elementLists[key];
         }	

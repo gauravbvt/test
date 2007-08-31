@@ -2,16 +2,26 @@
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalAlign="middle" horizontalAlign="left" xmlns:search="com.mindalliance.channels.view.search.*">
 
 	<mx:Script>
+	
 		<![CDATA[
+            public var change : Function;
+            public var text : String;
 			private function clearSearchText():void {
 				txtSearch.text = '' ;
+			}
+			
+			private function changeFunction() {
+			     text = txtSearch.text;
+			     if (change != null) {
+			         change();	
+			     }
 			}
 			
 		]]>
 	</mx:Script>
 
 	<mx:Label text="Search:"/>
-	<mx:TextInput id="txtSearch" width="100%"/>
+	<mx:TextInput id="txtSearch" width="100%" change="changeFunction()"/>
 	<search:ClearSearchButton id="btnClearSearch" click="clearSearchText()" enabled="{txtSearch.text.length > 0}"/>
 
 </mx:HBox>
