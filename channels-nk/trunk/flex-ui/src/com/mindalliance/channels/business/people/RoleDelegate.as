@@ -32,7 +32,7 @@ package com.mindalliance.channels.business.people
 			return new RoleVO(xml.id, 
 								xml.name, 
 								xml.description,
-								XMLHelper.categorySetToXML(xml.categories).categories,
+								XMLHelper.xmlToCategorySet(xml.categories),
 								new ElementVO(xml.organizationId, null),
 								expertise);
 		}

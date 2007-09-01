@@ -18,8 +18,16 @@ package com.mindalliance.channels.control
 		
 		private function initialize() : void
 		{
+			initializeCommon();
 			initializeApplication();	
 			initializePeople();
+		}
+		
+		private function initializeCommon() : void
+		{
+			
+            this.addCommand(ChooserSelectEvent.ChooserSelect_Event, ChooserSelectCommand);
+            this.addCommand(QueueUpdateEvent.QueueUpdate_Event, QueueUpdateCommand);
 		}
 		
 		private function initializeApplication() : void
@@ -39,7 +47,6 @@ package com.mindalliance.channels.control
 			this.addCommand(QueueScenarioUpdateEvent.QueueScenarioUpdate_Event, QueueScenarioUpdateCommand);
 			
 			
-            this.addCommand(ChooserSelectEvent.ChooserSelect_Event, ChooserSelectCommand);
 		}
 		
 		private function initializePeople() : void
@@ -49,7 +56,6 @@ package com.mindalliance.channels.control
 			this.addCommand(CreateOrganizationEvent.CreateOrganization_Event, CreateOrganizationCommand);			
 			this.addCommand(DeleteOrganizationEvent.DeleteOrganization_Event, DeleteOrganizationCommand);
 			this.addCommand(UpdateOrganizationEvent.UpdateOrganization_Event, UpdateOrganizationCommand);
-			this.addCommand(QueueOrganizationUpdateEvent.QueueOrganizationUpdate_Event, QueueOrganizationUpdateCommand);
 			
 			
             this.addCommand(GetRoleListEvent.GetRoleList_Event, GetRoleListCommand);

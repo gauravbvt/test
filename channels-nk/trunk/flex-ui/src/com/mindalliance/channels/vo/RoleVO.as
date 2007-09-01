@@ -8,7 +8,7 @@ package com.mindalliance.channels.vo
     import com.mindalliance.channels.vo.common.ElementVO;
     import com.mindalliance.channels.vo.common.CategorySetVO;
     import com.mindalliance.channels.vo.common.CategorizedElementVO;
-	
+	[Bindable]
 	public class RoleVO extends CategorizedElementVO implements IValueObject
 	{
 		public function RoleVO( id : String, 

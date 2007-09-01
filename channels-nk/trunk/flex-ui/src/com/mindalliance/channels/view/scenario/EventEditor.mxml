@@ -6,19 +6,11 @@
 			import mx.core.IFlexDisplayObject;
 		
 			import mx.managers.PopUpManager ;
-			import com.mindalliance.channels.model.resources.EventEditorModel;
+			import com.mindalliance.channels.model.EditorModel;
 			import com.mindalliance.channels.model.IChannelsModel;
 			[Bindable]
-			private var model : EventEditorModel;
+			private var model : EditorModel;
 			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as EventEditorModel);
-			}
-
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}

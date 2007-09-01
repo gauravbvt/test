@@ -54,7 +54,7 @@
 				    return false;	
 				} else if (ElementHelper.findElementById(el.id, model.selection) != null) {
 					return false;
-				} else if (searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
+				} else if (searchBox.text != null && searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
 					return false;
 				}
 				return true;
@@ -62,10 +62,12 @@
 			
 			private function loadEditor() : void {
                 var el : ElementVO = (listRoles.selectedItem as ElementVO);
+                var id : String = null;
                 if (el != null) {
-                    CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(el.id, model.editorModel));
+                	id = el.id;
                 }
-			}
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(el.id, model.editorModel));
+            }
 			
 			private function addSelected() : void {
                 CairngormEventDispatcher.getInstance().dispatchEvent( new ChooserSelectEvent(model, listRoles.selectedItems) );
@@ -79,6 +81,12 @@
 		      	}
 		      	closeChooser();
 			}
+			
+			private function showDetails() : void {
+				if (cbShowDetails.selected) {
+				    loadEditor();	
+				}
+			}
 		]]>
 	</mx:Script>
 	
@@ -91,7 +99,7 @@
 		<mx:HBox>
 			<mx:VBox>
 				<mx:Label text="Roles" fontWeight="bold"/>
-				<mx:List id="listRoles" dataProvider="{roleList}" labelField="name" width="100%" height="100%"/>
+				<mx:List id="listRoles" dataProvider="{roleList}" labelField="name" width="100%" height="100%" change="loadEditor()"/>
 			</mx:VBox>
 			<mx:VBox verticalAlign="middle" height="100%">
 				<mx:Button id="btnSelect" label=">>" enabled="{roleList.length > 0}" toolTip="click to select" click="addSelected()"/>
@@ -101,7 +109,7 @@
 				<mx:List id="listSelectedRoles"  labelField="name" height="100%" dataProvider="{model.selection}" change="applyFilter()"/>
 			</mx:VBox>
 		</mx:HBox>
-		<mx:CheckBox label="Show details" id="cbShowDetails"/>
+		<mx:CheckBox label="Show details" id="cbShowDetails" change="showDetails()"/>
 		<people:RoleEditor visible="{cbShowDetails.selected}" includeInLayout="{cbShowDetails.selected}" width="100%" model="{model.editorModel}"/>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">

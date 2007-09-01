@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form 
-	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*"
+	creationComplete="init()">
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.common.TopicVO;
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.events.people.*;
+            import com.mindalliance.channels.events.common.*;
+            
 			import com.mindalliance.channels.view.common.InputTextDialog;
-			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.EditorModel;
+            import com.adobe.cairngorm.control.CairngormEventDispatcher;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.vo.RoleVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementModel;
 			
 			[Bindable]
-			public var model : EditorModel;
+			public var model : EditorModel = (ChannelsModelLocator.getInstance().getEditorModel(EditorModel) as EditorModel);
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable]
+            private var organizationList : ArrayCollection;
 
+			[Bindable]
+			private var edited : RoleVO;
+			
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}
@@ -23,24 +41,50 @@
 			}
 			
 			private function cancelEdit():void {
-				// Do stuff and then:
+				// Revert
+				CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(model.id, model) );
 				currentState = '' ;
 			}
+			
+			private function update() :void {
+                
+                CairngormEventDispatcher.getInstance().dispatchEvent( 
+                                            new UpdateRoleEvent(model,
+                                                                txtName.text,
+                                                                txtDescription.text,
+                                                                (elementModel.data as RoleVO).categories,
+                                                                (comboOrganizations.selectedItem as ElementVO),
+                                                                (elementModel.data as RoleVO).expertise));   
+            }
+            
+            private function queueUpdate() : void {
+                CairngormEventDispatcher.getInstance().dispatchEvent( new QueueUpdateEvent(model) );
+            }
 			
 			private function handleAddExpertise():void {
 				var ipd:InputTextDialog = new InputTextDialog() ;
 				ipd.title = 'Enter short description of expertise' ;
 				ipd.okEventHandler = function handler(text:String):void {
-					if (text != null && text.length > 0)
-						Expertise.addItem({name:text}) ;
+				    if (text != null && text.length > 0)
+						edited.expertise.addItem(new TopicVO(text,null,null,new ArrayCollection(),new ArrayCollection())) ;
 				}
 				PopUpManager.addPopUp(ipd, listExpertise, false) ;
 			}
 			
-			[Bindable]
-			private var Expertise:ArrayCollection = new ArrayCollection() ;
+			
+			private function removeExpertise() : void {
+                if (listExpertise.selectedIndex >= 0) {	
+                    edited.expertise.removeItemAt(listExpertise.selectedIndex);
+                }
+			}
+			
+			private function init() : void {}
+			
 		]]>
 	</mx:Script>
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as RoleVO)" destination="edited"/>
+    <mx:Binding source="model.getElementListModel('organizations').data" destination="organizationList"/>
     
     <mx:states>
     	<mx:State name="EditState">
@@ -69,13 +113,14 @@
     	cancelEditHandler="{cancelEdit}"/>
 	
     <mx:FormItem label="Role Name">
-        <mx:TextInput id="txtName" editable="false"/>
+        <mx:TextInput id="txtName" editable="false" text="{edited.name}"/>
     </mx:FormItem>
     <mx:FormItem label="Organization" mouseEnabled="false" mouseChildren="false" id="formitem1">
-    	<mx:ComboBox/>
+    	<common:ElementComboBox id="comboOrganizations" dataProvider="{organizationList}" selectedValue="{edited.organization.id}" change="queueUpdate()"/>
+    
     </mx:FormItem>
-    <mx:FormItem label="Description">
-        <mx:TextArea id="txtDescription" editable="false"/>
+    <mx:FormItem label="Description" >
+        <mx:TextArea id="txtDescription" editable="false" text="{edited.description}"/>
     </mx:FormItem>
     <mx:FormItem label="Expertise" direction="vertical">
 		<mx:Text styleName="FormItemDescription" selectable="false"
@@ -84,7 +129,7 @@
 				<![CDATA[This role can provide the following<br>information at all times:]]>
 			</mx:htmlText>
 		</mx:Text>
-		<mx:List editable="false" id="listExpertise" dataProvider="{Expertise}" labelField="name"/>
+		<mx:List editable="false" id="listExpertise" dataProvider="{edited.expertise}" labelField="name"/>
     </mx:FormItem>
     <mx:FormItem label="Teams" direction="vertical" visible="false" includeInLayout="false">
 		<mx:Text styleName="FormItemDescription"  text="This role is part of the following teams:" selectable="false"/>

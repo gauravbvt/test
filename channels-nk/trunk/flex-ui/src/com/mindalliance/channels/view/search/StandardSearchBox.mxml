@@ -10,7 +10,7 @@
 				txtSearch.text = '' ;
 			}
 			
-			private function changeFunction() {
+			private function changeFunction() : void {
 			     text = txtSearch.text;
 			     if (change != null) {
 			         change();	
