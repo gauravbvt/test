@@ -5,8 +5,8 @@ package com.mindalliance.channels.commands.application
 	import com.mindalliance.channels.business.application.ProjectDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.application.UpdateProjectEvent;
-	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
 	import com.mindalliance.channels.util.ElementHelper;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class UpdateProjectCommand extends BaseDelegateCommand
 	{
@@ -28,7 +28,7 @@ package com.mindalliance.channels.commands.application
 		{
 			log.debug("Project successfully updated");
 			
-			var obj : Object = ElementHelper.findElementById(
+			var obj : ElementVO = ElementHelper.findElementById(
 											channelsModel.projectScenarioBrowserModel.selectedProject.id, 
 											channelsModel.projectScenarioBrowserModel.projectList);
 			if (obj.name != channelsModel.projectScenarioBrowserModel.selectedProject.name) {

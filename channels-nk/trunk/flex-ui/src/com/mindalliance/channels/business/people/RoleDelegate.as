@@ -4,13 +4,14 @@
 package com.mindalliance.channels.business.people
 {
 	import com.mindalliance.channels.business.BaseDelegate;
-	
-	import mx.rpc.IResponder;
-	import com.mindalliance.channels.vo.common.ElementVO;
-	import com.mindalliance.channels.vo.RoleVO;
-	import com.mindalliance.channels.vo.common.InformationVO;
 	import com.mindalliance.channels.util.XMLHelper;
+	import com.mindalliance.channels.vo.RoleVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
+	import com.mindalliance.channels.vo.common.InformationVO;
+	import com.mindalliance.channels.vo.common.TopicVO;
+	
 	import mx.collections.ArrayCollection;
+	import mx.rpc.IResponder;
 	
 	public class RoleDelegate extends BaseDelegate
 	{	
@@ -26,15 +27,23 @@ package com.mindalliance.channels.business.people
 		
 		override public function fromXML(xml:XML):ElementVO {
 			var expertise : ArrayCollection = new ArrayCollection();
-			for each (var info : XML in xml.expertise) {
+			for each (var info : XML in xml.expertise.information) {
 				expertise.addItem(XMLHelper.xmlToInformation(info));
 			}
+			// TODO information needs to be parsed properly.  The current editor won't allow it.
+			var topics : ArrayCollection  = new ArrayCollection();
+            for each (var information : InformationVO in expertise) {
+                for each (var topic : TopicVO in  information.topics) {	
+                    topics.addItem(topic);
+                }
+            }
+
 			return new RoleVO(xml.id, 
 								xml.name, 
 								xml.description,
 								XMLHelper.xmlToCategorySet(xml.categories),
 								new ElementVO(xml.organizationId, null),
-								expertise);
+								topics);
 		}
 		
 		override public function toXML(obj:ElementVO) : XML {
@@ -48,9 +57,11 @@ package com.mindalliance.channels.business.people
 			xml.appendChild(XMLHelper.categorySetToXML(role.categories));
 			xml.appendChild(<organizationId>{role.organization.id}</organizationId>);
 			var expertise : XML = <expertise></expertise>;
-			for each (var information : InformationVO in role.expertise) {
-				expertise.appendChild(XMLHelper.informationToXML(information));	
-			}
+			
+			
+            // TODO information needs to be generated properly.  The current role editor won't allow it.
+			var info : InformationVO = new InformationVO(role.expertise);
+		    expertise.appendChild(XMLHelper.informationToXML(info));	
 			xml.appendChild(expertise);
 			return xml;
 		}

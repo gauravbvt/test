@@ -41,7 +41,7 @@
 				PopUpManager.removePopUp(this) ;
 			}
 			private function init(): void {
-                
+                model.editorModel = roleEditor.model;
 			}
 			
 			private function applyFilter(evt : Event = null) : void {
@@ -66,7 +66,7 @@
                 if (el != null) {
                 	id = el.id;
                 }
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(el.id, model.editorModel));
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(id, model.editorModel));
             }
 			
 			private function addSelected() : void {
@@ -109,8 +109,8 @@
 				<mx:List id="listSelectedRoles"  labelField="name" height="100%" dataProvider="{model.selection}" change="applyFilter()"/>
 			</mx:VBox>
 		</mx:HBox>
-		<mx:CheckBox label="Show details" id="cbShowDetails" change="showDetails()"/>
-		<people:RoleEditor visible="{cbShowDetails.selected}" includeInLayout="{cbShowDetails.selected}" width="100%" model="{model.editorModel}"/>
+		<mx:CheckBox label="Show details" id="cbShowDetails" change="showDetails()" enabled="{listRoles.selectedItem != null}"/>
+		<people:RoleEditor id="roleEditor" visible="{(cbShowDetails.selected)?(listRoles.selectedItem!=null) : false}" includeInLayout="{cbShowDetails.selected}" width="100%"/>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
 		<mx:Button label="Done" enabled="{roleList.length > 0}" />

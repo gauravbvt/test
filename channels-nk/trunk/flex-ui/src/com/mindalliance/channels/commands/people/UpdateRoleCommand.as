@@ -7,7 +7,10 @@ package com.mindalliance.channels.commands.people
 	import com.mindalliance.channels.business.people.RoleDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.people.*;
+	import com.mindalliance.channels.model.*;
+	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.vo.RoleVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class UpdateRoleCommand extends BaseDelegateCommand
 	{
@@ -15,7 +18,6 @@ package com.mindalliance.channels.commands.people
 		override public function execute(event:CairngormEvent):void
 		{
 			var evt:UpdateRoleEvent = event as UpdateRoleEvent;
-			var delegate:RoleDelegate = new RoleDelegate( this );
 			
 			var model : EditorModel = evt.model;
             var element :ElementModel = model.getElementModel(model.id);
@@ -25,9 +27,9 @@ package com.mindalliance.channels.commands.people
 
                 data.name=evt.name;
                 data.description = evt.description;
-                data.categories = categories; 
-                data.organization = organization;
-                data.expertise = expertise;
+                data.categories = evt.categories; 
+                data.organization = evt.organization;
+                data.expertise = evt.expertise;
                 
                 model.isChanged = false;
                 element.dirty=true;
@@ -44,7 +46,11 @@ package com.mindalliance.channels.commands.people
 		{
 			if (data != null) {
                 log.debug("Role successfully updated");
-                channelsModel.getElementModel((data as String)).dirty = false;
+                var id : String = (data as String);
+                channelsModel.getElementModel(id).dirty = false;
+                                // Update the element name in the role list
+                var el : ElementVO = ElementHelper.findElementById(id, channelsModel.getElementListModel('roles').data);
+                el.name = channelsModel.getElementModel(id).data.name;
             } else {
                 log.error("Update of Role " + result + " failed");
             }

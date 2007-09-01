@@ -20,20 +20,22 @@ package com.mindalliance.channels.business
 			this.requestType = requestType;
 			this.typeName = delegate.typeName;
 			this.delegateResponder = delegate.responder;
+			this.id = id;
 		}
 			
 		
 		public function result(data:Object):void {
 			var result:Object = (data as ResultEvent).result;	
+            var value : Object;
 			if (requestType == 'delete') {
 				if (result==true) {
-					value=handleDelete((result as Boolean));
+					value=id;
 				} else {
 					delegate.responder.fault("Delete failed");
 				}
 			} if (requestType == 'update') {
 			   if (result==true) {
-                    value=handleUpdate((result as Boolean));
+                    value=id;
                 } else {
                     delegate.responder.fault("Update failed");
                 }
@@ -43,7 +45,6 @@ package com.mindalliance.channels.business
 					delegate.responder.fault(xml.error.toXMLString());
 					return;
 				}
-				var value : Object;
 				switch(requestType) {
 					case 'query' : value=handleQuery(xml); break;
 					case 'read' : value=handleRead(xml); break;
@@ -60,12 +61,8 @@ package com.mindalliance.channels.business
 		private function handleRead(result : XML) : Object {
 			return delegate.fromXML(result);
 		}		
-		private function handleUpdate(result : Boolean) : Object {
-			if (result) {
-                return id;
-            } else {
-                return null;
-            }
+		private function handleUpdate(result : Object) : Object {
+           return id;
 		}		
 		private function handleDelete(result : Boolean) : Object {
 			if (result) {

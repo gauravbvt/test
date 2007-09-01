@@ -83,9 +83,10 @@ package com.mindalliance.channels.util
 				eois.addItem(new IdentifiedVO(el.name, el.description));
 				
 			}
+			var confidence : String = (xml.confidence.level.length() > 0) ? xml.confidence.level : null;
 			return new TopicVO(xml.name, 
 								xml.description, 
-								xml.confidence.level, 
+								confidence, 
 								XMLHelper.fromIdList("roleId", xml.privacy),
 								eois);
 			

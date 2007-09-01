@@ -49,12 +49,17 @@ package com.mindalliance.channels.model
 		}
 		
 		public function getElementModel(id : String) : ElementModel {
+			if (id == null) 
+                return null;
 			if (elements[id] == null) {
                 elements[id] = new ElementModel();
 			}
 			return elements[id];
+			
 		}
 	    public function getElementListModel(key : String) : ElementListModel {
+            if (key == null) 
+                return null;
             if (elementLists[key] == null) {
                 elementLists[key] = new ElementListModel();
             }

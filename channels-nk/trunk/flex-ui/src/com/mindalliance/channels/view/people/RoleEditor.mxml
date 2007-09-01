@@ -36,7 +36,7 @@
 			}
 			
 			private function confirmEdit():void {
-				// Do stuff and then:
+                update();
 				currentState = '' ;
 			}
 			
@@ -61,12 +61,14 @@
                 CairngormEventDispatcher.getInstance().dispatchEvent( new QueueUpdateEvent(model) );
             }
 			
-			private function handleAddExpertise():void {
+			private function addExpertise():void {
 				var ipd:InputTextDialog = new InputTextDialog() ;
 				ipd.title = 'Enter short description of expertise' ;
 				ipd.okEventHandler = function handler(text:String):void {
-				    if (text != null && text.length > 0)
-						edited.expertise.addItem(new TopicVO(text,null,null,new ArrayCollection(),new ArrayCollection())) ;
+				    if (text != null && text.length > 0) {
+						edited.expertise.addItem(new TopicVO(text,"",null,new ArrayCollection(),new ArrayCollection())) ;
+						queueUpdate();
+				    }
 				}
 				PopUpManager.addPopUp(ipd, listExpertise, false) ;
 			}
@@ -93,8 +95,8 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{listExpertise}" position="after">
 				<mx:HBox width="100%">
-					<common:AddButton id="btnAddExpertise" click="handleAddExpertise()"/>
-					<common:RemoveButton enabled="{listExpertise.selectedItems.length > 0}" id="btnRemoveExpertise"/>
+					<common:AddButton id="btnAddExpertise" click="addExpertise()"/>
+					<common:RemoveButton enabled="{listExpertise.selectedItems.length > 0}" id="btnRemoveExpertise" click="removeExpertise()"/>
 				</mx:HBox>
 			</mx:AddChild>
     		<mx:SetProperty target="{txtName}" name="editable" value="true"/>
@@ -113,14 +115,13 @@
     	cancelEditHandler="{cancelEdit}"/>
 	
     <mx:FormItem label="Role Name">
-        <mx:TextInput id="txtName" editable="false" text="{edited.name}"/>
+        <mx:TextInput id="txtName" editable="false" text="{edited.name}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Organization" mouseEnabled="false" mouseChildren="false" id="formitem1">
     	<common:ElementComboBox id="comboOrganizations" dataProvider="{organizationList}" selectedValue="{edited.organization.id}" change="queueUpdate()"/>
-    
     </mx:FormItem>
     <mx:FormItem label="Description" >
-        <mx:TextArea id="txtDescription" editable="false" text="{edited.description}"/>
+        <mx:TextArea id="txtDescription" editable="false" text="{edited.description}" change="queueUpdate()"/>
     </mx:FormItem>
     <mx:FormItem label="Expertise" direction="vertical">
 		<mx:Text styleName="FormItemDescription" selectable="false"
@@ -129,7 +130,7 @@
 				<![CDATA[This role can provide the following<br>information at all times:]]>
 			</mx:htmlText>
 		</mx:Text>
-		<mx:List editable="false" id="listExpertise" dataProvider="{edited.expertise}" labelField="name"/>
+		<mx:List editable="false" id="listExpertise" width="200" dataProvider="{edited.expertise}" labelField="name"/>
     </mx:FormItem>
     <mx:FormItem label="Teams" direction="vertical" visible="false" includeInLayout="false">
 		<mx:Text styleName="FormItemDescription"  text="This role is part of the following teams:" selectable="false"/>

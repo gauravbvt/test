@@ -60,6 +60,8 @@ package com.mindalliance.channels.control
 			
             this.addCommand(GetRoleListEvent.GetRoleList_Event, GetRoleListCommand);
             this.addCommand(GetRoleEvent.GetRole_Event, GetRoleCommand);
+            this.addCommand(UpdateRoleEvent.UpdateRole_Event, UpdateRoleCommand);
+            
 		}
 	}
 }
