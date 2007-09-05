@@ -42,7 +42,7 @@
   <target depends="init" description="Apply filters" name="filter">
     <filter filtersFile="${project.dir}/deploy.properties"/>
     <copy todir="${dst}" filtering="true" overwrite="true">
-      <fileset dir="${dst}/tofilter"/>
+	      <fileset dir="${src}/tofilter"/>
      </copy>
   </target>
 
@@ -58,6 +58,11 @@
         <delete>
             <fileset dir="${dst}">
                 <include name="**/*.class"/>
+            </fileset>
+            <fileset dir="${dst}">
+                <include name="resources/schemas/*.rng"/>
+                <include name="libs/utils.js"/>
+            	<include name="etc/dbxml_config.xml"/>
             </fileset>
         </delete>
     </target>

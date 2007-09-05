@@ -16,9 +16,9 @@
         <delete>
             <fileset dir="." includes="**/*.jar"/>
         </delete>
-        <delete>
-            <fileset dir="../modules/mod-data/" includes="**/*.class"/>
-        </delete>
+    	<delete dir="${deploy-dir}"/>
+		<ant antfile="build-mod-data.xml" target="clean"/>
+		<ant antfile="build-test-data.xml" target="clean"/>
     </target>
 	    
 </project>
