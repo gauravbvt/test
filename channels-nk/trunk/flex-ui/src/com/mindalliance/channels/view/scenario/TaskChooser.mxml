@@ -1,38 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:search="com.mindalliance.channels.view.search.*" xmlns:scenario="com.mindalliance.channels.view.scenario.*"
-	resizeEffect="Resize">
+	resizeEffect="Resize"
+    creationComplete="init()">
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.events.common.ChooserSelectEvent;
+			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.util.ElementHelper;
+			import com.mindalliance.channels.events.scenario.GetTaskListEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.mindalliance.channels.vo.common.ElementVO;
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.model.ElementListModel;
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
 			import com.mindalliance.channels.model.ChooserModel;
-			[Bindable]
-			private var model : ChooserModel;
-			
+            
+            // Models
+            
+            [Bindable]
+            private var channelsModel : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+            
+            [Bindable]
+            public var model : ChooserModel = channelsModel.getChooserModel();
+            
+            [Bindable]
+            private var elementListModel : ElementListModel;
+            
+            [Bindable]
+            public var filtered : ArrayCollection = null;
+            
+            [Bindable]
+            public var processSelected : Function;
 
-			[Bindable]
-			private var SelectedTasks:ArrayCollection ;
-			
+			private function getTaskList() : void {
+               CairngormHelper.fireEvent( new GetTaskListEvent(channelsModel.currentScenario.id) );
+            }
+
 			private function closeChooser():void {
 				PopUpManager.removePopUp(this) ;
 			}
-			
+			private function init(): void {
+                model.editorModel = taskEditor.model;
+            }
+            
+            private function applyFilter(evt : Event = null) : void {
+                 taskList.refresh();    
+            }
+            
+           private function filter(item : Object) : Boolean {
+                var el : ElementVO = (item as ElementVO);
+                if (filtered != null && ElementHelper.findElementById(el.id, filtered) != null) {
+                    return false;   
+                } else if (ElementHelper.findElementById(el.id, model.selection) != null) {
+                    return false;
+                } else if (searchBox.text != null && searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
+                    return false;
+                }
+                return true;
+            }
+            
+            private function changeSelection() : void {
+                var el : ElementVO = (listTasks.selectedItem as ElementVO);
+                var id : String = null;
+                if (el != null) {
+                    id = el.id;
+                }
+                CairngormHelper.fireEvent( new GetTaskEvent(id, model.editorModel));
+                CairngormHelper.fireEvent(new ChooserSelectEvent(model, listTasks.selectedItems));
+            }
+            
+             private function done() : void {
+                if (processSelected != null) {
+                    processSelected(model.selection);
+                }
+                closeChooser();
+            }
 		]]>
 	</mx:Script>
-
+    <mx:Binding source="model.getElementListModel('tasks')" destination="elementListModel"/>
+    <mx:ArrayCollection id="taskList" source="{elementListModel.data.source}" filterFunction="filter"/>
+    
 	<mx:HBox>
 		<mx:VBox width="100%" height="100%">
-			<search:StandardSearchBox width="100%"/>
+			<search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}"/>
 			<mx:Label text="Tasks" fontWeight="bold"/>
-			<mx:List id="listTasks" width="100%" height="100%"/>
+			<mx:List id="listTasks" width="100%" height="100%" change="changeSelection()" dataProvider="{taskList}" labelField="name"/>
 			<mx:HBox>
 				<mx:Label text="Select tasks and"/>
-				<mx:Button label="Add to list" enabled="{listTasks.selectedItems.length > 0}"/>
+				<mx:Button label="Add to list" enabled="{listTasks.selectedItems.length > 0}" click="done()"/>
 			</mx:HBox>
 		</mx:VBox>
-		<scenario:TaskEditor enabled="{listTasks.selectedItems.length == 1}" width="100%"/>
+		<scenario:TaskEditor id="taskEditor" enabled="{listTasks.selectedItems.length == 1}" width="100%"/>
 	</mx:HBox>
 	<mx:ControlBar horizontalAlign="right">
 		<mx:Button label="Close" click="closeChooser()"/>

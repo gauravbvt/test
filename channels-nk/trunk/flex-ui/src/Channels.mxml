@@ -13,6 +13,10 @@
     <mx:XML id="yFilesLicenseXML" source="../lib/license.xml" />
     <mx:Script>
       <![CDATA[
+      	import com.mindalliance.channels.events.people.GetUserEvent;
+      	import com.mindalliance.channels.events.resources.GetRepositoryListEvent;
+      	import com.mindalliance.channels.events.people.GetPersonListEvent;
+      	import com.mindalliance.channels.util.CairngormHelper;
       	import com.mindalliance.channels.model.ChannelsModelLocator;
            
         import com.mindalliance.channels.events.people.GetRoleListEvent;
@@ -27,8 +31,12 @@
            propertyEditor.init() ;
            
            // Load global data lists
-           CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleListEvent() );
-           CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
+           CairngormHelper.fireEvent( new GetRoleListEvent() );
+           CairngormHelper.fireEvent( new GetOrganizationListEvent() );
+           CairngormHelper.fireEvent( new GetPersonListEvent() );
+           CairngormHelper.fireEvent( new GetRepositoryListEvent() );
+           
+           CairngormHelper.fireEvent( new GetUserEvent("user1") );
            
         }
 

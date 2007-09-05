@@ -4,11 +4,12 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-	import com.mindalliance.channels.vo.common.AddressVO;
-	import com.mindalliance.channels.vo.common.UpdatableElementVO;
+    import com.mindalliance.channels.vo.common.AddressVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 
 	import mx.collections.ArrayCollection;
 
+    [Bindable]
 	public class PersonVO extends ElementVO implements IValueObject
 	{
 		public function PersonVO( id : String, 	
@@ -20,17 +21,17 @@ package com.mindalliance.channels.vo
 								cellPhone : String,
 								address : AddressVO,
 								roles : ArrayCollection,
-								userId : String) {
+								user : UserVO) {
 			super(id,null,null);
-			this.firstname = firstname;
-			this.lastName = lastName;
-			this.photo = photo;
-			this.email = email;
-			this.officePhone = officePhone;
-			this.cellPhone = cellPhone;
-			this.address = address;
-			this.roles = roles;
-			this.userId = userId;
+			this._firstName = firstName;
+			this._lastName = lastName;
+			this._photo = photo;
+			this._email = email;
+			this._officePhone = officePhone;
+			this._cellPhone = cellPhone;
+			this._address = address;
+			this._roles = roles;
+			this._user = user;
 		}
 		
 		private var _firstName : String;
@@ -41,7 +42,7 @@ package com.mindalliance.channels.vo
 		private var _cellPhone : String;
 		private var _address : AddressVO;
 		private var _roles : ArrayCollection;
-		private var _userId : UserVO;
+		private var _user : UserVO;
 		
 		public function get firstName() : String {
 			return _firstName;
@@ -95,12 +96,12 @@ package com.mindalliance.channels.vo
 			return _roles;
 		}
 		
-		public function get userId() : String {
-			return _userId;
+		public function get user() : UserVO {
+			return _user;
 		}
 
-		public function set userId(userId : String) : void {
-			_userId=userId;
+		public function set user(user : UserVO) : void {
+			_user=user;
 		}
 		
 	}

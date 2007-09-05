@@ -26,7 +26,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			var result:ScenarioVO = (data as ScenarioVO);
+			var result:ScenarioVO = (data["data"] as ScenarioVO);
 			if (result != null) {
 				CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent(channelsModel.projectScenarioBrowserModel.selectedProject.id) );
 				log.info("Scenario successfully created");

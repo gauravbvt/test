@@ -4,9 +4,12 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
+	import com.mindalliance.channels.vo.common.CategorySetVO;
+	import com.mindalliance.channels.vo.common.CauseVO;
 	import com.mindalliance.channels.vo.common.DurationVO;
-	
-	import mx.collections.ArrayCollection;
+	import com.mindalliance.channels.vo.common.ElementVO;
+	import com.mindalliance.channels.vo.common.ISpatial;
+	import com.mindalliance.channels.vo.common.OccurrenceVO;
 
 	public class TaskVO extends OccurrenceVO implements IValueObject
 	{
@@ -14,8 +17,8 @@ package com.mindalliance.channels.vo
                                 name : String, 
                                 description : String,
                                 categories : CategorySetVO,
-                                where : ISpatial = null,
-                                cause : CauseVO = null,
+                                where : ISpatial,
+                                cause : CauseVO,
                                 duration : DurationVO,
                                 scenario : ElementVO) {
                                 

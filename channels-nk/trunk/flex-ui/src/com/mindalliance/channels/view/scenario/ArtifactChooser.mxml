@@ -3,27 +3,18 @@
 	xmlns:search="com.mindalliance.channels.view.search.*" title="Choose artifacts"
 	xmlns:common="com.mindalliance.channels.view.common.*"
 	xmlns:scenario="com.mindalliance.channels.view.scenario.*"
-	implements="com.mindalliance.channels.view.common.IChannelsModelComponent"
 	resizeEffect="Resize">
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.model.ChooserModel;
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection ;
 			
-			import com.mindalliance.channels.model.scenario.ArtifactChooserModel;
-			import com.mindalliance.channels.model.IChannelsModel;
 			
 			[Bindable]
-			private var model : ArtifactChooserModel;
-			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as ArtifactChooserModel);
-			}
+			private var model : ChooserModel;
+
 
 			[Bindable]
 			private var SelectedArtifacts:ArrayCollection = new ArrayCollection() ;

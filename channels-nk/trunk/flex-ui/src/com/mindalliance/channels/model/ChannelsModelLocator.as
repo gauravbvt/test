@@ -38,14 +38,20 @@ package com.mindalliance.channels.model
 		// Global Properties
 		public var currentProject : ProjectVO;
 		public var currentScenario : ScenarioVO;
-		public var user : UserVO = new UserVO("0",'John Doe',null,true);
+		public var user : UserVO = new UserVO("0","John Doe",null,true);
 		
  	    public var urlRoot : String = serviceResources.getString("urlRoot");		
 		public var debug : Boolean = serviceResources.getBoolean("debug");
 		
 		
-		public function getEditorModel(type : Class) : IChannelsModel {
+		public function getEditorModel(type : Class = null) : EditorModel {
+			if (type == null) type = EditorModel;
             return new type(elements, elementLists);
+		}
+		
+		
+		public function getChooserModel() : ChooserModel {
+            return new ChooserModel(elements, elementLists);	
 		}
 		
 		public function getElementModel(id : String) : ElementModel {

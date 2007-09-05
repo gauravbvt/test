@@ -3,19 +3,16 @@
 
 package com.mindalliance.channels.events.people
 {
-	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.mindalliance.channels.events.common.GetElementEvent;
 	import com.mindalliance.channels.model.EditorModel;
 
-	public class GetRoleEvent extends CairngormEvent
+	public class GetRoleEvent extends GetElementEvent
 	{
 		public static const GetRole_Event:String = "<GetRoleEvent>";
-		public var id : String;
-		public var model : EditorModel;
+
 		public function GetRoleEvent(id : String, model : EditorModel) 
 		{
-			super( GetRole_Event );
-			this.id = id;
-			this.model = model;
+			super( GetRole_Event, id, model );
 		}
 	}
 }

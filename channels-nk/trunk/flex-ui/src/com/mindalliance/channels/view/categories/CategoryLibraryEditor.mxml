@@ -2,8 +2,7 @@
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
     title="Category Editor"
     xmlns:search="com.mindalliance.channels.view.search.*"
-    xmlns:common="com.mindalliance.channels.view.common.*"
-	implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+    xmlns:common="com.mindalliance.channels.view.common.*">
     
     <mx:Script>
         <![CDATA[
@@ -12,19 +11,11 @@
             import mx.controls.dataGridClasses.DataGridColumn;
             import mx.managers.PopUpManager;
             import mx.events.CloseEvent;
- 			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.categories.CategoryLibraryEditorModel;
 			
 			[Bindable]
 			private var model : CategoryLibraryEditorModel;
-			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as CategoryLibraryEditorModel);
-			}           
+    
             private function closeEditor():void {
                 PopUpManager.removePopUp(this) ;
             }

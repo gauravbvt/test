@@ -19,7 +19,7 @@ package com.mindalliance.channels.vo.common
 		}
 
 		private var _cause : CauseVO;
-		private var _spatial : ISpatial;
+		private var _where : ISpatial;
 
 		public function get cause() : CauseVO {
 			return _cause;
@@ -30,11 +30,11 @@ package com.mindalliance.channels.vo.common
 		}
         
         public function get where() : ISpatial {
-            return _spatial;
+            return _where;
         }
 
         public function set where(spatial : ISpatial) : void {
-            _spatial=spatial;
+            _where=spatial;
         }
         
 	}

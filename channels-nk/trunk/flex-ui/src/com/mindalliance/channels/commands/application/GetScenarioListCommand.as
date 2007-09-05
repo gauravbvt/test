@@ -29,7 +29,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			channelsModel.projectScenarioBrowserModel.scenarioList = (data as ArrayCollection);
+			channelsModel.projectScenarioBrowserModel.scenarioList = (data["data"] as ArrayCollection);
 			log.debug("Scenario list retrieved successfully");
 
 		}

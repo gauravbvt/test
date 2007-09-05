@@ -11,6 +11,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.util.CairngormHelper;
 			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.vo.ProjectVO;
 			import com.mindalliance.channels.vo.ScenarioVO;
@@ -44,37 +45,37 @@
  	        {
  	        	var selected : Object = listProjects.selectedItem;
  	        	var id : String = (selected == null ? null : selected.id);
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent( id ) );
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioListEvent( id ) );
+ 	        	CairngormHelper.fireEvent( new GetProjectEvent( id ) );
+ 	        	CairngormHelper.fireEvent( new GetScenarioListEvent( id ) );
  	        }
  	        
  	        private function addProject(name : String) : void 
  	        {
 				if (name != null) {
-					CairngormEventDispatcher.getInstance().dispatchEvent(new CreateProjectEvent(name));
+					CairngormHelper.fireEvent(new CreateProjectEvent(name));
 				}
  	        }
  	        
  	        private function removeProject() : void
  	        {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteProjectEvent(psbModel.selectedProject.id));
+ 	        	CairngormHelper.fireEvent(new DeleteProjectEvent(psbModel.selectedProject.id));
  	        }
  	        
  	        private function queueProjectUpdate() : void
  	        {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new QueueProjectUpdateEvent());
+ 	        	CairngormHelper.fireEvent(new QueueProjectUpdateEvent());
  	        }
  	        
  	        private function updateProject(event : FocusEvent = null) : void
  	        {
-         		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateProjectEvent(new ProjectVO(psbModel.selectedProject.id,
+         		CairngormHelper.fireEvent(new UpdateProjectEvent(new ProjectVO(psbModel.selectedProject.id,
          																					txtProjectName.text,
          																					txtProjectDescription.text)));	
  	        }
  	        
  	        private function updateScenario(event : FocusEvent = null) : void
  	        {
-         		CairngormEventDispatcher.getInstance().dispatchEvent(new UpdateScenarioEvent(new ScenarioVO(psbModel.selectedScenario.id,
+         		CairngormHelper.fireEvent(new UpdateScenarioEvent(new ScenarioVO(psbModel.selectedScenario.id,
  	        																					txtScenarioName.text,
  	        																					txtScenarioDescription.text,
  	        																					new ElementVO(psbModel.selectedProject.id,
@@ -86,28 +87,28 @@
  	        	var selected : Object = listScenarios.selectedItem;
  	        	var id : String = (selected == null ? null : selected.id);
  	        	
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetScenarioEvent( id ) );
+ 	        	CairngormHelper.fireEvent( new GetScenarioEvent( id ) );
  	        }
 
  	        private function removeScenario() : void
  	        {
  	        	
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new DeleteScenarioEvent(psbModel.selectedScenario.id));
+ 	        	CairngormHelper.fireEvent(new DeleteScenarioEvent(psbModel.selectedScenario.id));
  	        }
  	        
  	        private function addScenario(name : String) : void
  	        {
  	        	if (name != null) {
-					CairngormEventDispatcher.getInstance().dispatchEvent(new CreateScenarioEvent(name, psbModel.selectedProject.id));
+					CairngormHelper.fireEvent(new CreateScenarioEvent(name, psbModel.selectedProject.id));
 				}	
  	        }
  	        private function queueScenarioUpdate() : void
  	        {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent(new QueueScenarioUpdateEvent());
+ 	        	CairngormHelper.fireEvent(new QueueScenarioUpdateEvent());
  	        }
  	        private function loadScenario() : void 
  	        {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new LoadScenarioEvent() );
+ 	        	CairngormHelper.fireEvent( new LoadScenarioEvent(psbModel.selectedScenario.id) );
  	        	this.closeBrowser();
  	        }
  	         	        

@@ -37,20 +37,11 @@
 			import com.yworks.graph.model.INode;
 			import com.yworks.support.Iterator;
 			import com.mindalliance.channels.view.flowmap.FlowMap;
-			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.application.PropertyEditorModel;
 
 			[Bindable]
 			private var model : PropertyEditorModel;
 			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as PropertyEditorModel);
-			}
-
 			private var _isEditing:Boolean = false ;
 			
 			[Bindable(event="changeIsEditing")] 

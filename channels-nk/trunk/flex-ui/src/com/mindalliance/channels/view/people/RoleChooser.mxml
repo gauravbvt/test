@@ -13,7 +13,6 @@
 			import com.mindalliance.channels.model.ElementListModel;
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
-			import com.mindalliance.channels.model.IChannelsModel;
 			import com.mindalliance.channels.model.ChooserModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
             import com.mindalliance.channels.events.people.GetRoleListEvent;
@@ -22,7 +21,7 @@
 			
 			// Models
 			[Bindable]
-			public var model : ChooserModel = (ChannelsModelLocator.getInstance().getEditorModel(ChooserModel) as ChooserModel);
+			public var model : ChooserModel = ChannelsModelLocator.getInstance().getChooserModel();
 			[Bindable]
 			private var elementListModel : ElementListModel;
 			
@@ -113,7 +112,7 @@
 		<people:RoleEditor id="roleEditor" visible="{(cbShowDetails.selected)?(listRoles.selectedItem!=null) : false}" includeInLayout="{cbShowDetails.selected}" width="100%"/>
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
-		<mx:Button label="Done" enabled="{roleList.length > 0}" />
+		<mx:Button label="Done" enabled="{roleList.length > 0}" click="done()" />
 		<mx:Button label="Cancel" click="closeChooser()"/>
 	</mx:ControlBar>
 </mx:Panel>

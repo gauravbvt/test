@@ -13,42 +13,48 @@ package com.mindalliance.channels.business
 		private var requestType : String;
 		private var typeName : String;
 		private var delegateResponder : IResponder;
-		private var id : String;
+		private var params : Array;
 		
-		public function ProxyResponder(requestType : String, delegate : com.mindalliance.channels.business.BaseDelegate, id : String) {
+		public function ProxyResponder(requestType : String, delegate : com.mindalliance.channels.business.BaseDelegate, params : Array) {
 			this.delegate = delegate;
 			this.requestType = requestType;
 			this.typeName = delegate.typeName;
 			this.delegateResponder = delegate.responder;
-			this.id = id;
+			this.params = params;
 		}
 			
 		
 		public function result(data:Object):void {
 			var result:Object = (data as ResultEvent).result;	
-            var value : Object;
+            var value : Object = new Object();
+            if (params != null) {
+            	for (var key : String in params) { 
+            	   value[key] = params[key];	
+            	}
+            	
+            }
 			if (requestType == 'delete') {
 				if (result==true) {
-					value=id;
+					value["data"] = true; 
 				} else {
 					delegate.responder.fault("Delete failed");
 				}
 			} if (requestType == 'update') {
 			   if (result==true) {
-                    value=id;
+                    value["data"]=true;
                 } else {
                     delegate.responder.fault("Update failed");
                 }
 			}else {	
 				var xml : XML = (result as XML);
-				if (xml.error.length()!=0) {
+				if (xml.localName() == "error") {
 					delegate.responder.fault(xml.error.toXMLString());
 					return;
 				}
 				switch(requestType) {
-					case 'query' : value=handleQuery(xml); break;
-					case 'read' : value=handleRead(xml); break;
-					case 'create' : value=handleCreate(xml); break;
+					case 'query' : value["data"]=handleQuery(xml); break;
+					case 'read' : value["data"]=handleRead(xml); break;
+					case 'create' : value["data"]=handleCreate(xml); break;
 				};
 			}
 			delegateResponder.result(value);
@@ -60,17 +66,8 @@ package com.mindalliance.channels.business
 		
 		private function handleRead(result : XML) : Object {
 			return delegate.fromXML(result);
-		}		
-		private function handleUpdate(result : Object) : Object {
-           return id;
-		}		
-		private function handleDelete(result : Boolean) : Object {
-			if (result) {
-                return id;
-			} else {
-				return null;
-			}
-		}		
+		}			
+		
 		private function handleCreate(result : XML) : Object {
 			return delegate.fromXML(result);
 		}

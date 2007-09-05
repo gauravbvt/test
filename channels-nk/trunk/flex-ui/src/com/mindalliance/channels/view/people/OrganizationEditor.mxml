@@ -5,6 +5,7 @@
     
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.commands.people.GetOrganizationCommand;
 			import mx.collections.ArrayCollection;
 			import com.mindalliance.channels.vo.OrganizationVO;
 			import mx.binding.utils.ChangeWatcher;
@@ -17,12 +18,16 @@
 			import com.mindalliance.channels.model.EditorModel;
             import com.mindalliance.channels.events.people.*;
             import com.mindalliance.channels.events.common.*;
+            import com.mindalliance.channels.util.CairngormHelper;
 			
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			
 			[Bindable]
 			private var elementModel : ElementModel;
+			
 			[Bindable]
 			private var edited : OrganizationVO;
+			
 			[Bindable]
 			private var organizationList : ArrayCollection;
 			
@@ -37,17 +42,16 @@
 			
 			private function cancelEdit():void {
 				//revert
-				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationEvent(model.id, model) );
+                CairngormHelper.fireEvent(new GetOrganizationEvent(model.id,model));
 				currentState = '' ;
 			}
 			
 			[Bindable]
-			private var model : EditorModel = (ChannelsModelLocator.getInstance().getEditorModel(EditorModel) as EditorModel);
-
+            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
 			
 			private function update() :void {
 				
-				CairngormEventDispatcher.getInstance().dispatchEvent( 
+				CairngormHelper.fireEvent( 
 				                    new UpdateOrganizationEvent(model,
                                                                 txtName.text,
                                                                 txtDescription.text,
@@ -59,7 +63,7 @@
 			}
 			
 			private function queueUpdate() : void {
-				CairngormEventDispatcher.getInstance().dispatchEvent( new QueueUpdateEvent(model) );
+				CairngormHelper.queueUpdate(model);
 			}
 			
 			private function populateParentComboBox() : void {
@@ -72,8 +76,7 @@
                 populateParentComboBox();
 			}
 			private function idChange(evt : Event) : void {
-                
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationEvent(model.id, model) );	
+                 CairngormHelper.fireEvent( new GetOrganizationEvent(model.id,model));
 			}
 		]]>
 	</mx:Script>

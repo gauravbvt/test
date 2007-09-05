@@ -26,7 +26,7 @@ package com.mindalliance.channels.commands.people
 		
 		override public function result(data:Object):void
 		{
-			var result:OrganizationVO = data as OrganizationVO;
+			var result:OrganizationVO = data["data"] as OrganizationVO;
 			if (result!=null) {
 				log.info("Organization created");
 				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );

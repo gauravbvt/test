@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model
 {
 	[Bindable]
-	public class BaseChannelsModel implements IChannelsModel
+	public class BaseChannelsModel 
 	{
 		public function BaseChannelsModel(elements : Object, elementLists : Object) {
 		  this._elements = elements;

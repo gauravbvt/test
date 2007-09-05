@@ -1,47 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.model.people.PersonEditorModel;
+			import com.mindalliance.channels.vo.PersonVO;
+			import mx.collections.ArrayCollection;
 			import mx.core.IFlexDisplayObject;
 			import mx.managers.PopUpManager;
-			import com.mindalliance.channels.model.IChannelsModel;
+			import com.mindalliance.channels.events.people.*;
+            import com.mindalliance.channels.events.common.*;
+            
+            import com.mindalliance.channels.model.EditorModel;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.util.CairngormHelper;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
 			
 			[Bindable]
-			private var model : PersonEditorModel;
-			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as PersonEditorModel);
-			}
+            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable]
+            private var roleList : ArrayCollection;
+            
+            [Bindable]
+            private var edited : PersonVO;
 			
 			private function switchToEditState():void {
 				currentState = 'EditState' ;
 			}
 			
 			private function confirmEdit():void {
-				// Do stuff and then:
+                update();
 				currentState = '' ;
 			}
 			
 			private function cancelEdit():void {
-				// Do stuff and then:
+                
+                CairngormHelper.fireEvent( new GetPersonEvent(model.id,model));
 				currentState = '' ;
 			}
 			
 			private function chooseRoles():void {
-				var rc:IFlexDisplayObject = PopUpManager.createPopUp(listRoles, RoleChooser, false) ;
+
+				var rc:RoleChooser = (PopUpManager.createPopUp(listRoles,RoleChooser,false) as RoleChooser);
+		        rc.filtered=edited.roles;
+                rc.processSelected=function(selected : ArrayCollection) : void {
+                    for each(var el : ElementVO in selected) {
+                        edited.roles.addItem(el);   
+                    }
+                }		
 				var p:Point = new Point(listRoles.x, listRoles.y) ;
 				p = listRoles.localToGlobal(p) ;
 				rc.x = p.x + listRoles.width + 5 ;
 				rc.y = p.y ;
 			}
+			
+			private function update() :void {
+                
+                CairngormHelper.fireEvent( new UpdatePersonEvent(model,
+                                                                txtFirstName.text,
+                                                                txtLastName.text,
+                                                                edited.photo,
+                                                                txtEmail.text,
+                                                                txtOfficePhone.text,                 
+                                                                txtCellPhone.text,
+                                                                edited.address,
+                                                                edited.roles,
+                                                                edited.user));   
+            }
+            
+            private function queueUpdate() : void {
+                CairngormHelper.queueUpdate(model);
+            }
+			
+			
+			private function removeRole() : void {
+				if (listRoles.selectedIndex >=0) {
+				    edited.roles.removeItemAt(listRoles.selectedIndex);
+				}
+			}
+			
 		]]>
 	</mx:Script>
+    
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as PersonVO)" destination="edited"/>
+    <mx:Binding source="model.getElementListModel('roles').data" destination="roleList"/>
     
     <mx:states>
     	<mx:State name="EditState">
@@ -50,8 +97,9 @@
     		</mx:AddChild>
     		<mx:AddChild relativeTo="{listRoles}" position="after">
 				<mx:HBox>
-					<common:AddButton click="chooseRoles()"/>
-					<common:RemoveButton enabled="{listRoles.selectedItems.length > 0}"/>
+					<common:AddButton click="chooseRoles()" enabled="{edited != null}"/>
+					<common:RemoveButton enabled="{listRoles.selectedItems.length > 0}" click="removeRole()"/>
+					
 				</mx:HBox>
     		</mx:AddChild>
     		<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
@@ -77,21 +125,21 @@
     	cancelEditHandler="{cancelEdit}"/>
 
 	<mx:FormItem label="First name" id="formitem1">
-		<mx:TextInput width="100%" id="txtFirstName" editable="false"/>
+		<mx:TextInput width="100%" id="txtFirstName" editable="{currentState=='EditState'}" text="{edited.firstName}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Last name" id="formitem2">
-		<mx:TextInput width="100%" id="txtLastName"/>
+		<mx:TextInput width="100%" id="txtLastName" editable="{currentState=='EditState'}" text="{edited.lastName}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Email" id="formitem3">
-		<mx:TextInput width="100%" id="txtEmail"/>
+		<mx:TextInput width="100%" id="txtEmail" editable="{currentState=='EditState'}" text="{edited.email}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Office phone" id="formitem5">
-		<mx:TextInput width="100%" id="txtOfficePhone"/>
+		<mx:TextInput width="100%" id="txtOfficePhone" editable="{currentState=='EditState'}" text="{edited.officePhone}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Cell phone">
-		<mx:TextInput width="100%" id="txtCellPhone"/>
+		<mx:TextInput width="100%" id="txtCellPhone" editable="{currentState=='EditState'}" text="{edited.cellPhone}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Roles" id="formitem4">
-		<mx:List id="listRoles" editable="false"/>
+		<mx:List id="listRoles" editable="false" dataProvider="{edited.roles}" labelField="name" />
 	</mx:FormItem>
 </mx:Form>

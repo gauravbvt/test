@@ -5,7 +5,6 @@
     xmlns:logging="com.mindalliance.channels.view.logging.*">
     <mx:Script>
 	    <![CDATA[
-	    	import com.mindalliance.channels.view.common.IChannelsModelComponent;
 	    	import mx.effects.Resize;
 	    	import mx.events.FlexEvent;
 	    	import mx.events.EffectEvent;
@@ -13,7 +12,6 @@
 	    	import mx.effects.WipeDown;
 	    	import mx.effects.Effect;
 	    	import mx.containers.Panel;
-	    	import com.mindalliance.channels.view.common.IChannelsModelComponent;
 	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
 	    	import com.mindalliance.channels.view.scenario.TaskChooser;
 	    	import com.mindalliance.channels.view.categories.CategoryViewer;
@@ -157,7 +155,7 @@
     <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
     <mx:Button label="Go to Dashboard"/>
 	<mx:Spacer width="100%"/>
-	<mx:Label text="{'Logged in as: '+model.user.username}"/>
+	<mx:Label text="{'Logged in as: '+model.user.name}"/>
 	<mx:Button label="My Profile" id="btnEditProfile" click="editPersonalProfile()"/>
 	<mx:Button label="Logout"/>
 </mx:ApplicationControlBar>

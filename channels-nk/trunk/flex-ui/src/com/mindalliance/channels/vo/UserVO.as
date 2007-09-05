@@ -1,26 +1,20 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
+	import com.mindalliance.channels.vo.common.ElementVO;
+	
     [Bindable]
-	public class UserVO implements IValueObject
+	public class UserVO extends ElementVO implements IValueObject
 	{
 		
 		public function UserVO(id : String, username : String,password : String,admin : Boolean) {
-			
+			super (id, username);
+			this.admin = admin;
+			this.password = password;
 		}
-		private var _id : String;
 		private var _admin : Boolean;
-		private var _username : String;
 		private var _password : String;
 		
-		
-		public function get id() : String {
-			return _id;
-		}
-
-		public function set id(id : String) : void {
-			_id=id;
-		}
 		
 		public function get admin() : Boolean {
 			return _admin;
@@ -28,14 +22,6 @@ package com.mindalliance.channels.vo
 
 		public function set admin(admin : Boolean) : void {
 			_admin=admin;
-		}
-		
-		public function get username() : String {
-			return _username;
-		}
-
-		public function set username(username : String) : void {
-			_username=username;
 		}
 		
 		public function get password() : String {

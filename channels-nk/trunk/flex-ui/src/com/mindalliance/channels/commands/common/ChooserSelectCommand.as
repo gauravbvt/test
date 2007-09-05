@@ -13,8 +13,8 @@ package com.mindalliance.channels.commands.common
 		{
 			var evt:ChooserSelectEvent = event as ChooserSelectEvent;
 			if (evt.selection != null && evt.selection.length > 0) {
-               for each (var role : ElementVO in evt.selection) {
-                   evt.model.selection.addItem(role);  
+               for each (var el : ElementVO in evt.selection) {
+                   evt.model.selection.addItem(el);  
                 }
             }
 		}

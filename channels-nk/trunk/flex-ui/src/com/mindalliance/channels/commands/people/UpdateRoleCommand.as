@@ -44,9 +44,9 @@ package com.mindalliance.channels.commands.people
 		
 		override public function result(data:Object):void
 		{
-			if (data != null) {
+			if (data["data"] == true) {
                 log.debug("Role successfully updated");
-                var id : String = (data as String);
+                var id : String = (data["id"] as String);
                 channelsModel.getElementModel(id).dirty = false;
                                 // Update the element name in the role list
                 var el : ElementVO = ElementHelper.findElementById(id, channelsModel.getElementListModel('roles').data);

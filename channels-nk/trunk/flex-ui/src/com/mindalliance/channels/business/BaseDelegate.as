@@ -29,26 +29,32 @@ package com.mindalliance.channels.business
 					url += "&" + key + "=" + parameters[key];	
 				}
 			}
-			send(url, null, "GET", "query");
+			send(url, null, "GET", "query", parameters);
 		}
 		
 		public function getElement(id : String) : void {
-			send("element?id=" + id, null, "GET", "read", id);	
+			var parameters:Array = new Array();
+            parameters["id"] = id;
+			send("element?id=" + id, null, "GET", "read", parameters);	
 		}
 		
-		public function deleteElement(id : String) : void {
-			send("element?id=" + id, null, "DELETE", "delete", id);	
+		public function deleteElement(id : String) : void {           
+		    var parameters:Array = new Array();
+            parameters["id"] = id;
+			send("element?id=" + id, null, "DELETE", "delete", parameters);	
 		}
 		
 		public function createElement(doc : XML) : void{
 			send(typeName, doc, "POST", "create");	
 		}
 		
-		public function updateElement(obj : ElementVO) : void {
-			send("element?id=" + obj.id, toXML(obj), "PUT", "update", obj.id);	
+		public function updateElement(obj : ElementVO) : void {           
+            var parameters:Array = new Array();
+            parameters["id"] = obj.id;
+			send("element?id=" + obj.id, toXML(obj), "PUT", "update", parameters);	
 		}
 		
-		public function send(key : String, doc : Object, method : String, requestType : String, elementId : String = null) : void {
+		public function send(key : String, doc : Object, method : String, requestType : String, parameters : Array = null) : void {
 			var service : HTTPService = new HTTPService();
 			service.url = ChannelsModelLocator.getInstance().urlRoot + '/' + key
 			switch(requestType) {
@@ -73,7 +79,7 @@ package com.mindalliance.channels.business
 						break;
 			};
 			var token:AsyncToken = service.send();
-			token.addResponder( new ProxyResponder(requestType, this, elementId) );	
+			token.addResponder( new ProxyResponder(requestType, this, parameters) );	
 		}
 		
 		/**

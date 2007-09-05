@@ -22,7 +22,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			var result:Boolean = data as Boolean;
+			var result:Boolean = data["data"] as Boolean;
 			if (result == true) {
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectListEvent() );
  	        	log.info("Project successfully deleted");

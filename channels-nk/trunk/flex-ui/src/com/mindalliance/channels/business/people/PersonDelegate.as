@@ -6,6 +6,7 @@ package com.mindalliance.channels.business.people
 	import com.mindalliance.channels.business.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.PersonVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.rpc.IResponder;
 	
@@ -14,21 +15,27 @@ package com.mindalliance.channels.business.people
 		public function PersonDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName="person";
 		}
+		
+		public function getPersonList() : void {
+			performQuery("allPersons", null);
+		}
+		
 		/**
          * parses /channels/schema/person.rng
          */
 		override public function fromXML(xml:XML):ElementVO {
-			return new PersonVO(obj.id, 
-			                     obj.firstName,
-			                     obj.lastName,
-			                     obj.photo,
-			                     obj.email,
-			                     obj.officePhone,
-			                     obj.cellPhone,
-			                     XMLHelper.xmlToAddress(obj.address),
-			                     XMLHelper.fromXMLElementList("roleId", obj.roles),
-			                     obj.userId);
+			return new PersonVO(xml.id, 
+			                     xml.firstName,
+			                     xml.lastName,
+			                     xml.photo,
+			                     xml.email,
+			                     xml.officePhone,
+			                     xml.cellPhone,
+			                     XMLHelper.xmlToAddress(xml.address),
+			                     XMLHelper.fromXMLElementList("roleId", xml.roles),
+			                     xml.userId);
 		}
 		/**
          * generates /channels/schema/person.rng
@@ -51,11 +58,11 @@ package com.mindalliance.channels.business.people
                 xml.appendChild(<cellPhone>{obj.cellPhone}</cellPhone>);  
             }
             if (obj.address != null) {
-                xml.appendChild(XMLHelper.addressToXML(obj.address);	
+                xml.appendChild(XMLHelper.addressToXML(obj.address));	
             }
-            xml.appendChild(XMLHelper.toXMLElementList("roles", "roleId", obj.roles);
-            if (obj.userId != null) {
-                xml.appendChild(<userId>{obj.userId}</userId>);
+            xml.appendChild(XMLHelper.toXMLElementList("roles", "roleId", obj.roles));
+            if (obj.user != null) {
+                xml.appendChild(<userId>{obj.user.id}</userId>);
            	}
 			return xml;
 		}

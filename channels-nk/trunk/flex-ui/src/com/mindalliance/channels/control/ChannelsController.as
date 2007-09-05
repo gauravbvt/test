@@ -5,9 +5,13 @@ package com.mindalliance.channels.control
     import com.mindalliance.channels.commands.common.*;
     import com.mindalliance.channels.commands.application.*;
     import com.mindalliance.channels.commands.people.*;
+    import com.mindalliance.channels.commands.resources.*;
+    import com.mindalliance.channels.commands.scenario.*;
     import com.mindalliance.channels.events.common.*;
     import com.mindalliance.channels.events.application.*;
     import com.mindalliance.channels.events.people.*;
+    import com.mindalliance.channels.events.resources.*;
+    import com.mindalliance.channels.events.scenario.*;
     
 	public class ChannelsController extends FrontController
 	{
@@ -21,6 +25,8 @@ package com.mindalliance.channels.control
 			initializeCommon();
 			initializeApplication();	
 			initializePeople();
+			initializeResources();
+			initializeScenario();
 		}
 		
 		private function initializeCommon() : void
@@ -62,6 +68,23 @@ package com.mindalliance.channels.control
             this.addCommand(GetRoleEvent.GetRole_Event, GetRoleCommand);
             this.addCommand(UpdateRoleEvent.UpdateRole_Event, UpdateRoleCommand);
             
+            this.addCommand(GetUserEvent.GetUser_Event, GetUserCommand);
+            this.addCommand(GetPersonEvent.GetPerson_Event, GetPersonCommand);
+            this.addCommand(GetPersonListEvent.GetPersonList_Event, GetPersonListCommand);
+            this.addCommand(UpdatePersonEvent.UpdatePerson_Event, UpdatePersonCommand);
+            
+		}
+		
+		private function initializeResources() : void
+		{
+			this.addCommand(GetRepositoryListEvent.GetRepositoryList_Event, GetRepositoryListCommand);
+		}
+		
+		private function initializeScenario() : void
+		{
+			
+            this.addCommand(GetTaskListEvent.GetTaskList_Event, GetTaskListCommand);
+			
 		}
 	}
 }

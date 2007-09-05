@@ -7,7 +7,6 @@
 		
 			import mx.managers.PopUpManager ;
 			import com.mindalliance.channels.model.EditorModel;
-			import com.mindalliance.channels.model.IChannelsModel;
 			[Bindable]
 			private var model : EditorModel;
 			

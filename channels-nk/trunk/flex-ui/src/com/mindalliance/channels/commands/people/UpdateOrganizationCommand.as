@@ -41,11 +41,11 @@ package com.mindalliance.channels.commands.people
 		
 		override public function result(data:Object):void
 		{
-			if (data != null) {
+			if (data["data"]==true) {
                 log.debug("Organization successfully updated");
-			    channelsModel.getElementModel((data as String)).dirty = false;
+			    channelsModel.getElementModel((data["id"] as String)).dirty = false;
 			} else {
-                log.error("Update of organization " + result + " failed");
+                log.error("Update of organization " + data["id"] + " failed");
 			}
 			
 		}

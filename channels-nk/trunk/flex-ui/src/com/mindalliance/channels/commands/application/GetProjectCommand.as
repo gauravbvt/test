@@ -29,7 +29,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			var result:ProjectVO = (data as ProjectVO);
+			var result:ProjectVO = (data["data"] as ProjectVO);
 			if (result != null) {
 				log.debug("Setting selected project to {0}", [result.id]);
 				channelsModel.projectScenarioBrowserModel.selectedProject = result;// new ProjectVO(result.id, result.name, result.description, result.manager);

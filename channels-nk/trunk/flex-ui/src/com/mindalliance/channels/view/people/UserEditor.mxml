@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" implements="com.mindalliance.channels.view.common.IChannelsModelComponent">
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" >
 
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.model.IChannelsModel;
-			import com.mindalliance.channels.model.people.UserEditorModel;
-			
-			[Bindable]
-			private var model : UserEditorModel;
-			
-			public function get channelsModel() : IChannelsModel {
-				return model;	
-			}
-			
-			public function set channelsModel(model : IChannelsModel) : void {
-				this.model = (model as UserEditorModel);
-			}
-		
+		    import com.mindalliance.channels.vo.UserVO;
+            import mx.collections.ArrayCollection;
+            import mx.core.IFlexDisplayObject;
+            import mx.managers.PopUpManager;
+            import com.mindalliance.channels.events.people.*;
+            import com.mindalliance.channels.events.common.*;
+            
+            import com.mindalliance.channels.model.EditorModel;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.util.CairngormHelper;
+		    import com.mindalliance.channels.model.ChannelsModelLocator;
+		            
+            [Bindable]
+            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable]
+            private var edited : UserVO;
+            
 			private function isPasswordChangeValid():Boolean {
 				// WRITE PASSWORD VALIDATION LOGIC HERE
 				return (txtNewPassword.length > 0) 
@@ -31,14 +39,20 @@
 			}
 			
 			private function confirmChangePassword():void {
+				update();
 				txtPassword.text = txtNewPassword.text;
 				txtNewPassword.text = '' ;
 				txtNewPasswordConfirm.text = '' ;
 				currentState = '' ;
 			}
+			
+			private function update() : void {
+                CairngormHelper.fireEvent(new ChangePasswordEvent(model, txtPassword.text,txtNewPassword.text));
+			}
 		]]>
 	</mx:Script>
-	
+	<mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as UserVO)" destination="edited"/>
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:AddChild relativeTo="{formitemCertified}" position="before">
@@ -75,7 +89,7 @@
 	</mx:transitions>
 
 	<mx:FormItem label="Username" id="formitemUsername">
-		<mx:TextInput id="txtUsername" editable="false"/>
+		<mx:TextInput id="txtUsername" editable="false" text="{edited.name}"/>
 	</mx:FormItem>
 	<mx:FormItem label="Password" direction="horizontal" id="formitemPassword">
 			<mx:TextInput displayAsPassword="true" id="txtPassword" editable="false"/>

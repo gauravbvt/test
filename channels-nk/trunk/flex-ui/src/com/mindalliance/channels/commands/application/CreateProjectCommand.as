@@ -25,7 +25,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			var result:ProjectVO = data as ProjectVO;
+			var result:ProjectVO = data["data"] as ProjectVO;
 			if (result!=null) {
 				log.info("Project created");
 				CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectListEvent() );

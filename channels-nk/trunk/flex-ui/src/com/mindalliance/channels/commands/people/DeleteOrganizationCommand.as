@@ -25,7 +25,7 @@ package com.mindalliance.channels.commands.people
 		
 		override public function result(data:Object):void
 		{
-			var result:Boolean = data as Boolean;
+			var result:Boolean = data["data"] as Boolean;
 			if (result == true) {
  	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
  	        	log.info("Organization successfully deleted");

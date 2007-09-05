@@ -16,7 +16,15 @@ package com.mindalliance.channels.business.resources
 		public function TaskDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName="task";
 		}
+		
+		public function getTaskList(scenarioId : String) : void {
+			var request:Array = new Array();
+            request["scenarioId"] = scenarioId;
+			performQuery("tasksInScenario", request);
+		}
+		
 		/**
          * parses /channels/schema/task.rng
          */
@@ -25,13 +33,14 @@ package com.mindalliance.channels.business.resources
 			if (xml.cause != null) {
                 cause = XMLHelper.xmlToCause(xml.cause);	
 			}
-			return new TaskVO(obj.id, 
-			                     obj.name, 
-			                     obj.description,
-			                     XMLHelper.xmlToCategorySet(obj.categories),
-			                     XMLHelper.xmlToOccurenceWhere(obj.where),
+			return new TaskVO(xml.id, 
+			                     xml.name, 
+			                     xml.description,
+			                     XMLHelper.xmlToCategorySet(xml.categories),
+			                     XMLHelper.xmlToOccurenceWhere(xml.where),
 			                     cause,
-			                     new ElementVO(obj.scenarioId, null));
+			                     XMLHelper.xmlToDuration(xml.duration),
+			                     new ElementVO(xml.scenarioId, null));
 		}
 		/**
          * generates /channels/schema/task.rng
@@ -46,10 +55,10 @@ package com.mindalliance.channels.business.resources
 			
             xml.appendChild(XMLHelper.xmlToCategorySet(obj.categories));
             if (obj.where != null) {
-                 xml.appendChild(XMLHelper.occurrenceWhereToXML(obj.where); 
+                 xml.appendChild(XMLHelper.occurrenceWhereToXML(obj.where)); 
             }
             if (obj.cause != null) {
-                xml.appendChild(XMLHelper.causeToXML(obj.cause);    
+                xml.appendChild(XMLHelper.causeToXML(obj.cause));    
             }
             if (obj.duration != null) {
             	xml.appendChild(XMLHelper.durationToXML(obj.duration));

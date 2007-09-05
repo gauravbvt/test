@@ -24,7 +24,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			channelsModel.projectScenarioBrowserModel.projectList = (data as ArrayCollection);
+			channelsModel.projectScenarioBrowserModel.projectList = (data["data"] as ArrayCollection);
 			log.debug("Successfully retrieved project list");
         	CairngormEventDispatcher.getInstance().dispatchEvent( new GetProjectEvent(null) );
 		}

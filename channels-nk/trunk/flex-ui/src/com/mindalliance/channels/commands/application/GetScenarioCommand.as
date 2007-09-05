@@ -28,7 +28,7 @@ package com.mindalliance.channels.commands.application
 		
 		override public function result(data:Object):void
 		{
-			var result:ScenarioVO = (data as ScenarioVO);
+			var result:ScenarioVO = (data["data"] as ScenarioVO);
 			if (result != null) {
 				channelsModel.projectScenarioBrowserModel.selectedScenario = result;
 				log.debug("Setting selected scenario to {0}", [result.id]);

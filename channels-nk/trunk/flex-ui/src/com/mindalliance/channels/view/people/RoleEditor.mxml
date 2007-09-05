@@ -18,9 +18,10 @@
             import com.mindalliance.channels.vo.RoleVO;
             import com.mindalliance.channels.model.ChannelsModelLocator;
             import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.util.CairngormHelper;
 			
 			[Bindable]
-			public var model : EditorModel = (ChannelsModelLocator.getInstance().getEditorModel(EditorModel) as EditorModel);
+			public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
             [Bindable]
             private var elementModel : ElementModel;
@@ -42,14 +43,13 @@
 			
 			private function cancelEdit():void {
 				// Revert
-				CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleEvent(model.id, model) );
+                 CairngormHelper.fireEvent( new GetRoleEvent(model.id,model));
 				currentState = '' ;
 			}
 			
 			private function update() :void {
                 
-                CairngormEventDispatcher.getInstance().dispatchEvent( 
-                                            new UpdateRoleEvent(model,
+                CairngormHelper.fireEvent( new UpdateRoleEvent(model,
                                                                 txtName.text,
                                                                 txtDescription.text,
                                                                 (elementModel.data as RoleVO).categories,
@@ -58,7 +58,7 @@
             }
             
             private function queueUpdate() : void {
-                CairngormEventDispatcher.getInstance().dispatchEvent( new QueueUpdateEvent(model) );
+                CairngormHelper.queueUpdate(model);
             }
 			
 			private function addExpertise():void {

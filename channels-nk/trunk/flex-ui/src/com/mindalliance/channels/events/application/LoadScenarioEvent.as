@@ -6,10 +6,11 @@ package com.mindalliance.channels.events.application
 	public class LoadScenarioEvent extends CairngormEvent
 	{
 		public static const LoadScenario_Event:String = "<LoadScenarioEvent>";
-		
-		public function LoadScenarioEvent() 
+		public var id : String;
+		public function LoadScenarioEvent(id : String) 
 		{
 			super( LoadScenario_Event );
+			this.id = id;
 		}
 	}
 }

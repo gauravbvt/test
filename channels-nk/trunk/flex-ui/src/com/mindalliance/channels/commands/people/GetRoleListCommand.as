@@ -23,7 +23,7 @@ package com.mindalliance.channels.commands.people
 		
         override public function result(data:Object):void
         {
-            channelsModel.getElementListModel("roles").data = (data as ArrayCollection);
+            channelsModel.getElementListModel("roles").data = (data["data"] as ArrayCollection);
             log.debug("Successfully retrieved role list");
         }
         
