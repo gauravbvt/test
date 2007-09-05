@@ -1,0 +1,22 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!-- A phase in a scenario -->
+  <!--
+  start =
+    element phase {
+      {isna_element} &
+      {identified} &
+      element eventId {text}
+    }
+  -->
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+    
+  <start>
+    <element name="phase">
+      <interleave>
+        <ref name="isna_element"/>
+        <ref name="identified"/>
+        <element name="eventId"><text/></element>
+      </interleave>
+    </element>
+  </start>
+</grammar>

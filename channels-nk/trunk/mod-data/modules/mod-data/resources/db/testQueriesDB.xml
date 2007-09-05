@@ -1,5 +1,11 @@
 <db>
   
+  <user isAdmin="false">
+    <id>user1</id>
+    <userName>user</userName>
+    <password>secret</password>
+  </user>
+  
   <organization>
     <id>organization1</id>
     <name>An organization</name>
@@ -45,6 +51,7 @@
       <roleId>role1</roleId>
       <roleId>role2</roleId>
     </roles>
+    <userId>user1</userId>
   </person>
 
   <person>
@@ -264,6 +271,24 @@
     <roleId>role1</roleId>
   </agent>
   
+  <category taxonomy="discipline">
+    <id>disc-law-enforcement</id>
+    <name>Law enforcement</name>
+    <description> The law enforcement discipline</description>
+    <disciplines/>
+    <implies/>
+    <information/>
+  </category>
+  
+  <category taxonomy="discipline">
+    <id>disc-transportation</id>
+    <name>Transportation</name>
+    <description> The transportation discipline</description>
+    <disciplines/>
+    <implies/>
+    <information/>
+  </category>
+  
   <category taxonomy="event">
     <id>cat-event</id>
     <name>Event</name>
@@ -302,7 +327,10 @@
     <id>cat-accident</id>
     <name>Accident</name>
     <description>An accident</description>
-    <disciplines/>
+    <disciplines>
+      <categoryId>disc-law-enforcement</categoryId>
+      <categoryId>disc-transportation</categoryId>
+    </disciplines>
     <implies>
       <categoryId>cat-event</categoryId>
     </implies>
@@ -333,5 +361,19 @@
       </topic>
     </information>
   </category>
+  
+  <phase>
+    <id>phase1</id>
+    <name>A phase</name>
+    <description>About a phase</description>
+    <eventId>event1</eventId>
+  </phase>
+   
+  <phase>
+    <id>phase2</id>
+    <name>Another phase</name>
+    <description>About another phase</description>
+    <eventId>event2</eventId>
+  </phase> 
 
 </db>

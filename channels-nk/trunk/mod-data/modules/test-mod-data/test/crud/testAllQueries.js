@@ -6,15 +6,6 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
 importPackage(Packages.java.lang);
 
-// Delete model
-var req = context.createSubRequest("active:channels_data_deleteModel");
-context.issueSubRequest(req);
-
-// Open model from db:testDB.xml
-req = context.createSubRequest("active:channels_data_openModel");
-req.addArgument("init", "db:testQueriesDB.xml");
-context.issueSubRequest(req);
-
 function makeProperties(obj) {
 	var props = <properties/>;
 	for (p in obj) {
@@ -28,6 +19,15 @@ function makeProperties(obj) {
 	// log("Variables: \n" + variables, "info");
 	return variables
 }
+
+// Delete model
+var req = context.createSubRequest("active:channels_data_deleteModel");
+context.issueSubRequest(req);
+
+// Open model from db:testDB.xml
+req = context.createSubRequest("active:channels_data_openModel");
+req.addArgument("init", "db:testQueriesDB.xml");
+context.issueSubRequest(req);
 
 var tests = 
 	[
@@ -45,7 +45,13 @@ var tests =
 		["rolesOfPerson", {personId:"person1"}, 2, ["./list/role/id","./list/role/name"]],
 		["artifactsInScenario", {scenarioId:"scenario1"}, 1, ["./list/artifact/id","./list/artifact/name"]],
 		["acquirementsInScenario", {scenarioId:"scenario1"}, 1, ["./list/acquirement/id","./list/acquirement/name"]],
-		["categoriesOfElement", {elementId:"event1"}, 2, ["./list/category/id","./list/category/name"]]
+		["categoriesOfElement", {elementId:"event1"}, 2, ["./list/category/id","./list/category/name"]],
+		["personOfUser", {userId:"user1"}, 1, ["./list/person/id", "./list/person/lastName"]],
+		["personOfUser", {userId:"user999"}, 0, []],
+		["phasesInScenario", {scenarioId:"scenario1"}, 2, ["./list/phase/id", "./list/phase/event/id"]],
+		["categoriesInTaxonomy", {taxonomy:"event"}, 2, ["./list/category/id"]],
+		["disciplinesInTaxonomy", {taxonomy:"event"}, 2, ["./list/discipline/id"]],
+		["categoriesInTaxonomyAndDiscipline", {taxonomy:"event",disciplineId:"disc-transportation"}, 1, ["./list/category/id"]]
 	]
 
 try {
@@ -63,13 +69,14 @@ try {
 			req.addArgument("variables", new XmlObjectAspect(properties.getXmlObject()));
 		}
 		var res = context.transrept(context.issueSubRequest(req), IAspectXmlObject).getXmlObject();
+		// Verify correct number of results in list
 		var resCount = res.selectPath("./list/*").length;
 		if (resCount != count) {
 			var mess = "Query returned " + resCount + " results instead of the expected " + count;
 			log(mess, "severe");
 			throw("Invalid query");
 		}
-		// Apply xpaths
+		// Apply xpaths and verify thet they all succeed
 		for (j in xpaths) {
 			var xpath = xpaths[j];
 			var r = res.selectPath(xpath);

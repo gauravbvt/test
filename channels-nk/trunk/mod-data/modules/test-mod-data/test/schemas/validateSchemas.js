@@ -6,7 +6,7 @@ context.importLibrary(utilsURI);
 
 var rngSchemaURL = "http://relaxng.org/relaxng.rng";
 var schemas = ["acquirement","agent","artifact","category","event","location",
-               "organization","person","project","repository","role",
+               "organization","person","phase","project","repository","role",
                "scenario","task","user"];
 
 for (i in schemas) {
