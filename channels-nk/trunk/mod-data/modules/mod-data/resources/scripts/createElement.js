@@ -13,15 +13,16 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
+var doc;
 try {
 	// var kind = new XML(context.sourceAspect("this:param:kind",IAspectXmlObject).getXmlObject()).text();
-	var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
-	doc = createElement(doc);
+	var arg = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
+	doc = createElement(arg);
 	
 	// Cut the GoldenThread associated with all existing queries
-	req=context.createSubRequest("active:cutGoldenThread");
+	var req=context.createSubRequest("active:cutGoldenThread");
 	req.addArgument("param", "gt:channels");
-	res=context.issueSubRequest(req);
+	context.issueSubRequest(req);
 }
 catch(e) {
 	log("Creating element failed: " + e, "severe");

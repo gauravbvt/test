@@ -21,15 +21,15 @@
     </assert>
   </test>
   <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testGetElement.idoc</uri>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testGetElement.js</uri>
     <assert name="Got element with an id">
       <xpath>./id</xpath>
     </assert>
   </test>
   <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testGetElementNamingListedRefs.idoc</uri>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testGetElementNamingListedRefs.js</uri>
     <assert name="Got element with named references">
-     <xpath>./id</xpath>
+     <xpath>./roles/roleId/@name</xpath>
     </assert>
   </test> 
   <test>

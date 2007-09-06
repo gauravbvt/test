@@ -61,7 +61,7 @@
 			<p>If successful the response is an element as xml such as:</p>
       <sub name="element"/>
       <p>
-        If the argument <code>namesListed</code> is set to <code><b>t</b></code> then lists of references to other elements
+        If the argument <code>namesListed</code> is set to any value then lists of references to other elements
         are augmented by the names of the referenced elements. For example, the following would be returned (notice that the 
         roleId elements have been added a name attribute):
         <sub name="named"/>

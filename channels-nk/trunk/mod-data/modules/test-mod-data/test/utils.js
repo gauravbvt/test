@@ -1,4 +1,5 @@
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
+importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.java.lang);
 
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
@@ -35,13 +36,4 @@ function issueValidateRNGRequest(schemaURI, docURI) {
   	log("Validation exception " + new String(e), "severe");
   	throw("Validation error");
   }
-}
-
-function createElement(doc, kind) {
-	var req = context.createSubRequest("active:channels_data_createElement");
-	req.addArgument("doc", new XmlObjectAspect(doc.getXmlObject()));
-	req.addArgument("kind", new StringAspect("<string>"+kind+"</string>"));
-	var res = context.issueSubRequest(req);
-	xml = new  XML(res.transrept(res, IAspectXmlObject).getXmlObject());
-	return xml;
 }

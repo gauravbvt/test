@@ -48,29 +48,23 @@ function getNameFromId(id) {
 	return getDocument(id).name.text();
 }
 
-
+// Access parameter
 var id = context.getThisRequest().getArgument("id").substring(3);
+var doc;
 log("Getting element " + id  + " from container " + dbxml_getContainerName(), "info");
-var doc = getDocument(id);
-
-var namesListed = false;
-if (context.getThisRequest().argumentExists("namesListed")) {
-	namesListed = context.sourceAspect("this:param:" + "namesListed", IAspectBoolean).isTrue();
+// Get element
+try {
+	// beginRead();
+	doc = getDocument(id);
+	if (context.getThisRequest().argumentExists("namesListed")) {
+		addNamesToListedReferences(doc);
+	}
 }
-
-if (namesListed) {
-	addNamesToListedReferences(doc);
+finally {
+	// endRead();
 }
-
 //Return Response
-var xoa=new XmlObjectAspect(doc.getXmlObject());
-
-req=context.createSubRequest("active:attachGoldenThread");
-req.addArgument("operand", xoa);
-req.addArgument("param", "gt:element:"+ id);
-res=context.issueSubRequest(req);
-
-var resp=context.createResponseFrom(res);
+var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));
 resp.setMimeType("text/xml");
 resp.setCacheable();
 context.setResponse(resp);

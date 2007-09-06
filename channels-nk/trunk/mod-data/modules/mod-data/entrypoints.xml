@@ -153,5 +153,17 @@
     <group>channels_data</group>
     <icon/>
   </entrypoint>
+  <entrypoint>
+    <name>urn:postInstall</name>
+    <uri>active:channels_data_openModel</uri>
+    <indexable>
+      <title>Post Install</title>
+      <desc/>
+      <keywords/>
+    </indexable>
+    <categories/>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
 
 </entrypoints>

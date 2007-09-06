@@ -89,13 +89,17 @@ function getDocument(id) {
 	// log("Document descriptor: " + op, "info");
 	var req = context.createSubRequest("active:dbxmlGetDocument");
 	req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()) );
-	var doc = context.transrept(context.issueSubRequest(req), IAspectXmlObject);
+	var res = context.issueSubRequest(req);
+	// Attach golden thread to element
+	attachGoldenThread(res, "gt:element:"+ id);
+	// Return result as xml object
+	var doc = context.transrept(res, IAspectXmlObject);
   log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
 	return new XML(doc.getXmlObject());
 }
 
 // Store e4x doc in currently opened database
-function putDocument(doc, op) {
+function putDocument(doc) {
 	var id = doc.id[0].text(); // document *must* have id
   var op =  getDocumentDescriptor(id);
   var req=context.createSubRequest("active:dbxmlPutDocument");
@@ -155,4 +159,119 @@ function createElement(xml) {
 	return doc;
 }
 
+function attachGoldenThread(resource, uri) {
+	var req=context.createSubRequest("active:attachGoldenThread");
+	req.addArgument("operand", resource);
+	req.addArgument("param", uri);
+	context.issueSubRequest(req);
+	log("Attached GT " + uri);
+}
 
+function grabLock(uri) {
+	var req=context.createSubRequest("active:lock");
+	req.addArgument("operand",uri);
+	context.issueSubRequest(req);	
+}
+
+function grabReleaseLock(uri) {
+	grabLock(uri);
+	releaseLock(uri);
+}
+
+function releaseLock(uri) {
+	var req=context.createSubRequest("active:unlock");
+	req.addArgument("operand",uri);
+	context.issueSubRequest(req);
+}
+
+function incrementMutex(uri) {
+	var count = getMutexCount(uri);
+	var mutex = <mutex>{count+1}</mutex>;
+	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+}
+
+function decrementMutex(uri) {
+	var count = getMutexCount(uri);
+	var mutex = <mutex>{Math.max(count-1,0)}</mutex>;
+	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+}
+
+function getMutexCount(uri) {
+	var count;
+	if (context.exists(uri)) {
+		var mutex = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
+		count = mutex.text();
+	}
+	else {
+		count = 0;
+		var mutex = <mutex>{count}</mutex>;
+		context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	}
+	return count;
+}
+
+function sleep(msecs) {
+	var req = context.createSubRequest("active:sleep");
+	var time = <time>{msecs}</time>;
+	req.addArgument("operator", new XmlObjectAspect(time.getXmlObject()));
+	context.issueRequest(req);
+}
+
+// Wait for write lock to be released if grabbed.
+// Grab read lock then increment read mutex by one, release read lock.
+function beginRead() {
+	try {
+		grabReleaseLock("lock:write"); // Can only go through when write lock not already grabbed 
+		grabLock("lock:read");
+		incrementMutex("ffcpl:/mutex/read");
+	}
+	finally {
+		releaseLock("lock:read");
+	}
+}
+
+// Grab read lock, decrement read mutex by one, release read lock
+function endRead() {
+	try {
+		grabLock("lock:read");
+		decrementMutex("ffcpl:/mutex/read");
+	}
+	finally {
+		releaseLock("lock:read");
+	}
+}
+// Grab write lock to block new read or writes.
+// Grab read lock. If read mutex > 0 then release read lock. Try again (after short sleep).
+// When read mutex = 0, grab read lock.
+// Release write lock, keeping read lock.
+function beginWrite() {
+	try {
+		grabLock("lock:write");
+		var done = false;
+		do {
+			var count;
+			try {
+				grabLock("lock:read");
+				count = getMutexCount("ffcpl:/mutex/read");
+			}
+			catch (e) {
+				releaseLock("lock:read");
+				throw e;
+			}
+			if (count == 0) {
+					done = true;
+			}
+			else {
+				releaseLock("lock:read");
+				sleep(100);
+			}
+		} while (!done);
+	}
+	finally {
+		releaseLock("lock:write");
+	}
+}
+// Release read lock.
+function endWrite() {
+	releaseLock("lock:read");
+}
