@@ -80,10 +80,12 @@ function getCategoriesOf(elementId) {
 		}
 	return set;
 }
+
+var template = <information/>;
+var elementId = context.getThisRequest().getArgument("id").substring(3);
+log("Getting information template for " + elementId, "info");
 try {
-	// MAIN
-	var elementId = context.getThisRequest().getArgument("id").substring(3);
-	log("Getting information template for " + elementId, "info");
+	beginRead();
 	// 1- collect all distinct category IDs, explicit and implied
 	var idSet = getCategoriesOf(elementId);
 	// 2- Collect the topics (names only) and their EOIs (names and descriptions) for each information in each category
@@ -92,7 +94,6 @@ try {
 	// 			- When collapsing EOIs, accumulate privacy and minimize confidence (TODO)
 	// 4- Construct and return an aggregated information element as xml.
 	// log("Building information template from " + idSet, "info");
-	var template = <information/>;
 	var templateTopic;
 	var templateEoi;
 	for (i in idSet) {
@@ -134,13 +135,16 @@ try {
 			}
 		}
 	}
-	log("Information template for " + elementId + " =\n" + template, "info");
 }
 catch(e) {
 	log("getInformationTemplate failed: " + e, "severe");
 	throw e;
 }
-
+finally {
+	endRead();
+}
+log("Information template for " + elementId + " =\n" + template, "info");
+// Response
 var resp = context.createResponseFrom(new XmlObjectAspect(template.getXmlObject()));
 resp.setMimeType("text/xml");
 context.setResponse(resp);

@@ -15,27 +15,22 @@ importPackage(Packages.java.lang);
 var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 validateRNG(doc); // Make sure it is valid
 log("Updating with: " + doc, "info");
-
 var id = doc.id.text();
+var deleted;
 if (id != null) {
   log("Updating element with id " + id, "info");
-
-  // The delete and put operations should be done in a single transaction in case something goes wrong.
-
-  // Delete older version if exists
-  var deleted = deleteDocument(id);
-  // Then replace with new version
-	putDocument(doc);
-	
-	// Cut the GoldenThread associated with this resource
-	req=context.createSubRequest("active:cutGoldenThread");
-	req.addArgument("param", "gt:element:"+ id);
-	res=context.issueSubRequest(req);
-	
-	// Cut the GoldenThread associated with all existing queries
-	req=context.createSubRequest("active:cutGoldenThread");
-	req.addArgument("param", "gt:channels");
-	res=context.issueSubRequest(req);
+  try {
+  	beginWrite();
+	  // Delete older version if exists
+	  deleted = deleteDocument(id);
+	  // Then replace with new version
+		putDocument(doc);
+  }
+  finally {
+  	endWrite();
+  }
+  // Cut goldenthread for entire model
+	cutGoldenThread( "gt:channels");
 }
 else {
   throw("Can't update element with no id", "warning");

@@ -29,7 +29,8 @@
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testGetElementNamingListedRefs.js</uri>
     <assert name="Got element with named references">
-     <xpath>./roles/roleId/@name</xpath>
+     <xpath>./categories/categoryId/@name</xpath>
+     <xpath>./terminatesAfter/taskCompletions/taskId/@name</xpath>
     </assert>
   </test> 
   <test>
@@ -56,7 +57,7 @@
       <xpath>.//topic/eoi/name</xpath>
     </assert>
   </test>
-    <test>
+  <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testAllQueries.js</uri>
     <assert name="All queries succeed">
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 

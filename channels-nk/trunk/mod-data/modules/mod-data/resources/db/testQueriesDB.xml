@@ -163,6 +163,12 @@
       <categoryId>cat-accident</categoryId>
     </categories>
     <scenarioId>scenario1</scenarioId>
+    <terminatesAfter>
+      <taskCompletions>
+        <taskId>task1</taskId>
+        <taskId>task2</taskId>
+      </taskCompletions>
+    </terminatesAfter>
   </event>
 
   <event>

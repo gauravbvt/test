@@ -20,17 +20,15 @@ while (dbxml_containerExists(descriptor) && (maxRetries > 0)) {
 		  var req=context.createSubRequest("active:dbxmlDeleteContainer");
 		  req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
 		  context.issueSubRequest(req);
-		  // pause(3000);
 		  log("Deleted DBXML container: " + dbxml_getContainerName(), "info");
 		}
 		else {
 		  log("DBXML container not deleted (does not exist): " + dbxml_getContainerName(), "warning");
 		}
 	}
-	catch(e) {
+	catch(e) { // Deleting fails temporarily and spurriously
 		log("Delete model failed: " + e, "severe");
-		// pause(1000);
-		// throw e;
+		sleep(100);
 	}
 }
 

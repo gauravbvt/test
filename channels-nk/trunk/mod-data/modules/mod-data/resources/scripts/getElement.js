@@ -15,9 +15,9 @@ importPackage(Packages.java.lang);
 
 
 // Adds names of ids in listed references
-function addNamesToListedReferences(elem) {
-	log("Adding names to listed IDs in " + elem, "info");
-	var names = findListedReferenceElementNames(elem);
+function addNamesToReferences(elem) {
+	log("Adding names to IDs in " + elem, "info");
+	var names = findReferencedElementNames(elem);
 	for (i in names) {
 			var list = elem.getXmlObject().selectPath(".//" + names[i]);
 			for (j in list) {
@@ -27,7 +27,7 @@ function addNamesToListedReferences(elem) {
 			}
 		}
 }
-
+/**
 function findListedReferenceElementNames(elem) {
 	var list = new Array();
 	var uri = elem.@schema;
@@ -36,6 +36,20 @@ function findListedReferenceElementNames(elem) {
 	for each (elDef in schema..zeroOrMore.element) {
 		var elName = elDef.@name;
 		if (elName.match(/Id$/)) { // better enforce this naming pattern throughout...
+			log("Found listed ID at " + elName, "info");
+			list.push(elName);
+		}
+	}
+	return list;
+}
+**/
+
+function findReferencedElementNames(elem) {
+	var list = new Array();
+	for each (el in elem..*) {
+		var elName = el.name();
+		log("Checking name " + elName, "info");
+		if ((elName != null) && new String(elName).match(/Id$/)) { // better enforce this naming pattern throughout...
 			log("Found listed ID at " + elName, "info");
 			list.push(elName);
 		}
@@ -54,14 +68,14 @@ var doc;
 log("Getting element " + id  + " from container " + dbxml_getContainerName(), "info");
 // Get element
 try {
-	// beginRead();
+	beginRead();
 	doc = getDocument(id);
-	if (context.getThisRequest().argumentExists("namesListed")) {
-		addNamesToListedReferences(doc);
+	if (context.getThisRequest().argumentExists("nameReferenced")) {
+		addNamesToReferences(doc);
 	}
 }
 finally {
-	// endRead();
+	endRead();
 }
 //Return Response
 var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));

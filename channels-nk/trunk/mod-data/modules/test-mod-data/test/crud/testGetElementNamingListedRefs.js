@@ -16,8 +16,8 @@ req.addArgument("init", "db:testQueriesDB.xml");
 context.issueSubRequest(req);
 
 req = context.createSubRequest("active:channels_data_getElement");
-req.addArgument("id", "id:person1");
-req.addArgument("namesListed", "1"); // value does not matter
+req.addArgument("id", "id:event1");
+req.addArgument("nameReferenced", "true"); // value does not matter
 res = context.issueSubRequest(req);
 // Set response
 var resp = context.createResponseFrom(res);

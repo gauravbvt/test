@@ -36,7 +36,7 @@
 			<syntax>
 				<type><b>channels_data_getElement</b></type>
 				<id req="true">the element's id</id>
-        <namesListed req="false">a canonical boolean</namesListed>
+        <nameReferenced req="false">anything</nameReferenced>
 				<target req="false">the element as xml</target>
 			</syntax>
 		</content>
@@ -61,17 +61,10 @@
 			<p>If successful the response is an element as xml such as:</p>
       <sub name="element"/>
       <p>
-        If the argument <code>namesListed</code> is set to any value then lists of references to other elements
-        are augmented by the names of the referenced elements. For example, the following would be returned (notice that the 
+        If the argument <code>nameReferenced</code> is set to any value then each reference to an element (element which name ends with "Id")
+        is augmented by an attribute "name" with the name of the referenced element. For example, the following would be returned (notice that the 
         roleId elements have been added a name attribute):
         <sub name="named"/>
-        The elements to be augmented this way are identified as follows:
-        <ol>
-          <li>
-            From the RelaxNG schema of the element (their definitions are contained in &lt;zeroOrMore&gt;)
-          </li>
-          <li>and their names end with "Id"</li>
-        </ol>
       </p>
 		</content>
 		<includes>

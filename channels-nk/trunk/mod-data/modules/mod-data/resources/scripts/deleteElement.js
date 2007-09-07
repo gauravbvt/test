@@ -13,13 +13,18 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
 var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
-var deleted = deleteDocument(id);
-
+var deleted;
+try {
+	beginWrite();
+	deleted = deleteDocument(id);
+	// Delete references
+	// TBD
+}
+finally {
+	endWrite();
+}
 // Cut the GoldenThread associated with this resource
-req=context.createSubRequest("active:cutGoldenThread");
-req.addArgument("param", "gt:element:"+ id);
-res=context.issueSubRequest(req);
-
+cutGoldenThread("gt:element:"+ id);
 // Cut the GoldenThread associated with all existing queries
 req=context.createSubRequest("active:cutGoldenThread");
 req.addArgument("param", "gt:channels");

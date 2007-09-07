@@ -15,18 +15,19 @@ importPackage(Packages.java.lang);
 
 var doc;
 try {
+	beginWrite();
 	// var kind = new XML(context.sourceAspect("this:param:kind",IAspectXmlObject).getXmlObject()).text();
 	var arg = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 	doc = createElement(arg);
-	
 	// Cut the GoldenThread associated with all existing queries
-	var req=context.createSubRequest("active:cutGoldenThread");
-	req.addArgument("param", "gt:channels");
-	context.issueSubRequest(req);
+	cutGoldenThread("gt:channels");
 }
 catch(e) {
 	log("Creating element failed: " + e, "severe");
 	throw e;
+}
+finally {
+	endWrite();
 }
 	
 

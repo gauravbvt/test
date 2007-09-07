@@ -44,10 +44,16 @@ var op =  "<dbxml>\n" +
       " </xquery>\n" +
       "</dbxml>";
 
-// log("Query operator: " + op, "info");
-var req=context.createSubRequest("active:dbxmlQuery");
-req.addArgument("operator", new StringAspect(op));
-result=context.issueSubRequest(req);
+var result;
+try {
+	beginRead();
+	var req=context.createSubRequest("active:dbxmlQuery");
+	req.addArgument("operator", new StringAspect(op));
+	result=context.issueSubRequest(req);
+}
+finally {
+	endRead();
+}
 log("Got results to query:\n" + context.transrept(result,IAspectXmlObject).getXmlObject(), "info");
 
 //Return Response

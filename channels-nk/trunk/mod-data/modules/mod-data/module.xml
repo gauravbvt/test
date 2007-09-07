@@ -74,6 +74,7 @@
 			<match>ffcpl:/etc/.*</match>
 			<match>ffcpl:/libs/.*</match>
 			<match>ffcpl:/resources/.*</match>
+			<match>ffcpl:/mutex/.*</match>
 		</this>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>

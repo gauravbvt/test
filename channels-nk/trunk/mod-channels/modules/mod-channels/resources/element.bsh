@@ -38,8 +38,8 @@ main() {
 				case "GET":
 				req=context.createSubRequest("active:channels_data_getElement");
 				req.addArgument("id", "id:" + id);
-				if (params.getNames().contains("namesListed")) { 
-					req.addArgument("namesListed", params.getValue("namesListed")); // value does not matter
+				if (params.getNames().contains("nameReferenced")) { 
+					req.addArgument("nameReferenced", params.getValue("nameReferenced")); // value does not matter
 				}
 				out = null;
 

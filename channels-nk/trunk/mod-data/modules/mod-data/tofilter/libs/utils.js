@@ -16,12 +16,9 @@ function log(content, level) {
   req.addArgument("configuration", LOG_URL ); // Defaults to ffcpl:/etc/LogConfig.xml
   var levelXml = "<log>" + "<" + level + "/>" + "</log>";
   req.addArgument("operator", new StringAspect(levelXml) );
-  context.issueAsyncSubRequest(req);
+//  context.issueAsyncSubRequest(req);
+  context.issueSubRequest(req);
 }
-
-function pause(millis) {
-	java.lang.Thread.sleep(millis);
-} 
 
 // Returns whether a dbxml container as described exists
 function dbxml_containerExists(descriptor) {
@@ -164,33 +161,45 @@ function attachGoldenThread(resource, uri) {
 	req.addArgument("operand", resource);
 	req.addArgument("param", uri);
 	context.issueSubRequest(req);
-	log("Attached GT " + uri);
+	log("Attached GT " + uri, "info");
+}
+
+function cutGoldenThread(uri) {
+	var req=context.createSubRequest("active:cutGoldenThread");
+	req.addArgument("param", uri);
+	context.issueSubRequest(req);
+	log("Cut GT " + uri, "info");
 }
 
 function grabLock(uri) {
+	log("Grab lock " + uri, "info");
 	var req=context.createSubRequest("active:lock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);	
 }
 
 function grabReleaseLock(uri) {
+	log("Grab & Release lock " + uri, "info");
 	grabLock(uri);
 	releaseLock(uri);
 }
 
 function releaseLock(uri) {
+	log("Release lock " + uri, "info");
 	var req=context.createSubRequest("active:unlock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);
 }
 
 function incrementMutex(uri) {
+	log("Increment mutex " + uri, "info");
 	var count = getMutexCount(uri);
 	var mutex = <mutex>{count+1}</mutex>;
 	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
 }
 
 function decrementMutex(uri) {
+	log("Decrement mutex " + uri, "info");
 	var count = getMutexCount(uri);
 	var mutex = <mutex>{Math.max(count-1,0)}</mutex>;
 	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
@@ -203,23 +212,29 @@ function getMutexCount(uri) {
 		count = mutex.text();
 	}
 	else {
+		log("Creating mutex " + uri, "info");
 		count = 0;
 		var mutex = <mutex>{count}</mutex>;
 		context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
 	}
+	log("Mutex count for " + uri + " = " + count, "info");
 	return count;
 }
 
 function sleep(msecs) {
+	log("Sleeping for " + msecs, "info");
 	var req = context.createSubRequest("active:sleep");
-	var time = <time>{msecs}</time>;
+	var time = <time>
+								{msecs}
+							</time>;
 	req.addArgument("operator", new XmlObjectAspect(time.getXmlObject()));
-	context.issueRequest(req);
+	context.issueSubRequest(req);
 }
 
 // Wait for write lock to be released if grabbed.
 // Grab read lock then increment read mutex by one, release read lock.
 function beginRead() {
+	log("Begin read", "info");
 	try {
 		grabReleaseLock("lock:write"); // Can only go through when write lock not already grabbed 
 		grabLock("lock:read");
@@ -232,6 +247,7 @@ function beginRead() {
 
 // Grab read lock, decrement read mutex by one, release read lock
 function endRead() {
+	log("End read", "info");
 	try {
 		grabLock("lock:read");
 		decrementMutex("ffcpl:/mutex/read");
@@ -245,6 +261,7 @@ function endRead() {
 // When read mutex = 0, grab read lock.
 // Release write lock, keeping read lock.
 function beginWrite() {
+	log("Begin write", "info");
 	try {
 		grabLock("lock:write");
 		var done = false;
@@ -273,5 +290,6 @@ function beginWrite() {
 }
 // Release read lock.
 function endWrite() {
+	log("End write", "info");
 	releaseLock("lock:read");
 }
