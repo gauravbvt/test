@@ -10,7 +10,7 @@
 	xmlns:control="com.mindalliance.channels.control.*"
 	xmlns:business="com.mindalliance.channels.business.*"
 	applicationComplete="init()">
-    <!--<mx:XML id="yFilesLicenseXML" source="../lib/license.xml" />-->
+    <mx:XML id="yFilesLicenseXML" source="../lib/license.xml" />
     <mx:Script>
       <![CDATA[
       	import com.mindalliance.channels.events.people.GetPersonByUserEvent;
@@ -26,10 +26,10 @@
         import com.yworks.util.Util;
       
         private function init():void {
-           //Util.registerLicense( yFilesLicenseXML );
+           Util.registerLicense( yFilesLicenseXML );
 
-           //flowmap.init() ;
-           //propertyEditor.init() ;
+           flowmap.init() ;
+           propertyEditor.init() ;
            
            // Load global data lists
            CairngormHelper.fireEvent( new GetRoleListEvent() );
@@ -54,7 +54,7 @@
 	    <application:ApplicationToolBar/>
     	<mx:HDividedBox width="100%" height="100%" paddingTop="10">
     		<application:PropertyEditor id="propertyEditor" resizeEffect="Resize"/>
-    		<!--<flowmap:FlowMapView id="flowmap" width="100%" height="100%"/>-->
+    		<flowmap:FlowMapView id="flowmap" width="100%" height="100%"/>
     	</mx:HDividedBox>
     </mx:VBox>
 <!--    <mx:VDividedBox width="100%" height="100%">
