@@ -1,7 +1,7 @@
 package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-
+    [Bindable]
 	public class SpatialCoordinatesVO implements IValueObject
 	{
 		public function SpatialCoordinatesVO(spatial : ISpatial) {

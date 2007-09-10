@@ -54,8 +54,6 @@
                 var el : ElementVO = (item as ElementVO);
                 if (filtered != null && ElementHelper.findElementById(el.id, filtered) != null) {
                     return false;   
-                } else if (ElementHelper.findElementById(el.id, model.selection) != null) {
-                    return false;
                 } else if (searchBox.text != null && searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
                     return false;
                 }
@@ -72,11 +70,16 @@
                 CairngormHelper.fireEvent(new ChooserSelectEvent(model, listTasks.selectedItems));
             }
             
-             private function done() : void {
+            private function done() : void {
                 if (processSelected != null) {
                     processSelected(model.selection);
                 }
-                closeChooser();
+            }
+            private function clickAddToList() : void {
+                if (processSelected != null) {
+                    processSelected(model.selection);
+                    applyFilter();
+                }
             }
 		]]>
 	</mx:Script>
@@ -90,7 +93,7 @@
 			<mx:List id="listTasks" width="100%" height="100%" change="changeSelection()" dataProvider="{taskList}" labelField="name"/>
 			<mx:HBox>
 				<mx:Label text="Select tasks and"/>
-				<mx:Button label="Add to list" enabled="{listTasks.selectedItems.length > 0}" click="done()"/>
+				<mx:Button label="Add to list" enabled="{listTasks.selectedItems.length > 0}" click="clickAddToList()"/>
 			</mx:HBox>
 		</mx:VBox>
 		<scenario:TaskEditor id="taskEditor" enabled="{listTasks.selectedItems.length == 1}" width="100%"/>

@@ -4,7 +4,7 @@
 package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-
+    [Bindable]
 	public class OccurrenceVO extends CategorizedElementVO implements IValueObject
 	{
 		public function OccurrenceVO( id : String, 

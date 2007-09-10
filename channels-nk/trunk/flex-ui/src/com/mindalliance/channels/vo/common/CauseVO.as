@@ -5,6 +5,7 @@ package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 
+    [Bindable]
 	public class CauseVO implements IValueObject
 	{
 		private var _type : String;

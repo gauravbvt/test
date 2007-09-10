@@ -2,16 +2,18 @@
 package com.mindalliance.channels.control
 {
 	import com.adobe.cairngorm.control.FrontController;
-    import com.mindalliance.channels.commands.common.*;
-    import com.mindalliance.channels.commands.application.*;
-    import com.mindalliance.channels.commands.people.*;
-    import com.mindalliance.channels.commands.resources.*;
-    import com.mindalliance.channels.commands.scenario.*;
-    import com.mindalliance.channels.events.common.*;
-    import com.mindalliance.channels.events.application.*;
-    import com.mindalliance.channels.events.people.*;
-    import com.mindalliance.channels.events.resources.*;
-    import com.mindalliance.channels.events.scenario.*;
+	import com.mindalliance.channels.commands.application.*;
+	import com.mindalliance.channels.commands.categories.*;
+	import com.mindalliance.channels.commands.common.*;
+	import com.mindalliance.channels.commands.people.*;
+	import com.mindalliance.channels.commands.resources.*;
+	import com.mindalliance.channels.commands.scenario.*;
+	import com.mindalliance.channels.events.application.*;
+	import com.mindalliance.channels.events.categories.*;
+	import com.mindalliance.channels.events.common.*;
+	import com.mindalliance.channels.events.people.*;
+	import com.mindalliance.channels.events.resources.*;
+	import com.mindalliance.channels.events.scenario.*;
     
 	public class ChannelsController extends FrontController
 	{
@@ -23,7 +25,8 @@ package com.mindalliance.channels.control
 		private function initialize() : void
 		{
 			initializeCommon();
-			initializeApplication();	
+			initializeApplication();
+			initializeCategories();	
 			initializePeople();
 			initializeResources();
 			initializeScenario();
@@ -55,6 +58,17 @@ package com.mindalliance.channels.control
 			
 		}
 		
+		private function initializeCategories() : void 
+		{
+			this.addCommand(GetCategoryListEvent.GetCategoryList_Event, GetCategoryListCommand);
+            this.addCommand(GetCategoryEvent.GetCategory_Event, GetCategoryCommand);
+            this.addCommand(UpdateCategoryEvent.UpdateCategory_Event, UpdateCategoryCommand);
+            this.addCommand(GetDisciplineListEvent.GetDisciplineList_Event, GetDisciplineListCommand);
+            this.addCommand(AddCategoriesToSetEvent.AddCategoriesToSet_Event, AddCategoriesToSetCommand);
+            this.addCommand(RemoveCategoriesFromSetEvent.RemoveCategoriesFromSet_Event, RemoveCategoriesFromSetCommand);
+			
+		}
+		
 		private function initializePeople() : void
 		{
 			this.addCommand(GetOrganizationListEvent.GetOrganizationList_Event, GetOrganizationListCommand);
@@ -70,6 +84,7 @@ package com.mindalliance.channels.control
             
             this.addCommand(GetUserEvent.GetUser_Event, GetUserCommand);
             this.addCommand(GetPersonEvent.GetPerson_Event, GetPersonCommand);
+            this.addCommand(GetPersonByUserEvent.GetPersonByUser_Event, GetPersonByUserCommand);
             this.addCommand(GetPersonListEvent.GetPersonList_Event, GetPersonListCommand);
             this.addCommand(UpdatePersonEvent.UpdatePerson_Event, UpdatePersonCommand);
             
@@ -77,14 +92,33 @@ package com.mindalliance.channels.control
 		
 		private function initializeResources() : void
 		{
-			this.addCommand(GetRepositoryListEvent.GetRepositoryList_Event, GetRepositoryListCommand);
+            this.addCommand(GetRepositoryListEvent.GetRepositoryList_Event, GetRepositoryListCommand);
+            this.addCommand(DeleteRepositoryEvent.DeleteRepository_Event, DeleteRepositoryCommand);
+            this.addCommand(GetRepositoryEvent.GetRepository_Event, GetRepositoryCommand);
+            this.addCommand(CreateRepositoryEvent.CreateRepository_Event, CreateRepositoryCommand);
+            this.addCommand(UpdateRepositoryEvent.UpdateRepository_Event, UpdateRepositoryCommand);
 		}
 		
 		private function initializeScenario() : void
 		{
 			
             this.addCommand(GetTaskListEvent.GetTaskList_Event, GetTaskListCommand);
-			
+            this.addCommand(DeleteTaskEvent.DeleteTask_Event, DeleteTaskCommand);
+            this.addCommand(GetTaskEvent.GetTask_Event, GetTaskCommand);
+            this.addCommand(CreateTaskEvent.CreateTask_Event, CreateTaskCommand);
+            this.addCommand(UpdateTaskEvent.UpdateTask_Event, UpdateTaskCommand);
+            
+            this.addCommand(GetArtifactListEvent.GetArtifactList_Event, GetArtifactListCommand);
+            this.addCommand(DeleteArtifactEvent.DeleteArtifact_Event, DeleteArtifactCommand);
+            this.addCommand(GetArtifactEvent.GetArtifact_Event, GetArtifactCommand);
+            this.addCommand(CreateArtifactEvent.CreateArtifact_Event, CreateArtifactCommand);
+            this.addCommand(UpdateArtifactEvent.UpdateArtifact_Event, UpdateArtifactCommand);
+            
+            this.addCommand(GetEventListEvent.GetEventList_Event, GetEventListCommand);
+            this.addCommand(DeleteEventEvent.DeleteEvent_Event, DeleteEventCommand);
+            this.addCommand(GetEventEvent.GetEvent_Event, GetEventCommand);
+            this.addCommand(CreateEventEvent.CreateEvent_Event, CreateEventCommand);
+            this.addCommand(UpdateEventEvent.UpdateEvent_Event, UpdateEventCommand);            
 		}
 	}
 }

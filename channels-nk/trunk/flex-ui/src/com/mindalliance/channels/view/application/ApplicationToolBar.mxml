@@ -20,7 +20,8 @@
 	    	import com.mindalliance.channels.view.people.RoleEditor;
 	    	import com.mindalliance.channels.view.scenario.ArtifactEditor;
 	    	import com.mindalliance.channels.view.people.PersonalProfileEditor;
-	    	import com.mindalliance.channels.view.scenario.EventEditor;
+            import com.mindalliance.channels.view.scenario.EventEditor;
+            import com.mindalliance.channels.view.scenario.EventChooser;
 	    	import com.mindalliance.channels.view.scenario.TaskEditor;
 	    	import com.mindalliance.channels.model.ChannelsModelLocator;
 	    	import mx.events.CloseEvent;
@@ -51,6 +52,7 @@
                 "Task Editor": TaskEditor,
                 "Task Chooser": TaskChooser, 
                 "Event Editor": EventEditor, 
+                "Event Chooser" : EventChooser,
                 "Artifact Editor": ArtifactEditor, 
                 "Artifact Chooser": ArtifactChooser
                 };
@@ -126,7 +128,8 @@
 			<menuitem label="Repository Editor"/>
 			<menuitem label="Task Editor"/>
 			<menuitem label="Task Chooser"/>
-			<menuitem label="Event Editor"/>
+            <menuitem label="Event Editor"/>
+            <menuitem label="Event Chooser"/>
 			<menuitem label="Artifact Editor"/>
 			<menuitem label="Artifact Chooser"/>
         </menuitem>

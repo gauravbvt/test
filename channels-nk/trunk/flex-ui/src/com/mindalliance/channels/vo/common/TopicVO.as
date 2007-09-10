@@ -2,7 +2,7 @@ package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import mx.collections.ArrayCollection;
-
+    [Bindable]
 	public class TopicVO implements IValueObject
 	{
 		

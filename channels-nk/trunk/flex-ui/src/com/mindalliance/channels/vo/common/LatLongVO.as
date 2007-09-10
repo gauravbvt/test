@@ -1,7 +1,7 @@
 package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-
+    [Bindable]
 	public class LatLongVO implements IValueObject, ISpatial
 	{
 		public function LatLongVO(lat : Number, long : Number) {

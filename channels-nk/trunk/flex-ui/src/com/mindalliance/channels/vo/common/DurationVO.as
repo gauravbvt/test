@@ -5,6 +5,7 @@ package com.mindalliance.channels.vo.common
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 
+    [Bindable]
 	public class DurationVO implements IValueObject
 	{
 		public function DurationVO( value : Number, unit : String ) {

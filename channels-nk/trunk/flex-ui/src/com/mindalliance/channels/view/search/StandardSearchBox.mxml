@@ -8,6 +8,7 @@
             public var text : String;
 			private function clearSearchText():void {
 				txtSearch.text = '' ;
+				changeFunction();
 			}
 			
 			private function changeFunction() : void {

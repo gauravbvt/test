@@ -10,7 +10,10 @@
 			import com.mindalliance.channels.model.categories.CategoryChooserModel;
 			
 			[Bindable]
-			private var model : CategoryChooserModel;
+			public var model : CategoryChooserModel;
+       
+            [Bindable]
+            public var processSelected : Function;
        
             [Bindable]
             private var currentTaxonomyName:String ;

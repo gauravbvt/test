@@ -4,20 +4,53 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.UtilFuncs;
+			import com.mindalliance.channels.events.categories.AddCategoriesToSetEvent;
+			import com.mindalliance.channels.events.categories.RemoveCategoriesFromSetEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import mx.collections.ArrayCollection;
+			import com.mindalliance.channels.vo.common.CategorySetVO;
+			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import mx.managers.PopUpManager;
 			import mx.core.IFlexDisplayObject;
 			import com.mindalliance.channels.model.categories.CategoryViewerModel;
 			
 			[Bindable]
-			private var model : CategoryViewerModel;
+			public var model : CategoryViewerModel = ChannelsModelLocator.getInstance().getCategoryViewerModel();
+			
+			[Bindable]
+			public var change : Function;
+			
+			[Bindable]
+			private var categories : ArrayCollection;
 			
 			private function showCategoryChooser():void {
 				var p:Point = listCategories.localToGlobal(new Point(listCategories.x, listCategories.y)) ;
 				var popup:IFlexDisplayObject = PopUpManager.createPopUp(listCategories, CategoryChooser, false) ;
+				var chooser : CategoryChooser = (popup as CategoryChooser);
+				chooser.processSelected=addCategories;
 				PopUpManager.centerPopUp(popup) ;
+			}
+			
+			private function addCategories(categories : Array) : void {
+				if (categories.length > 0) {
+                    CairngormHelper.fireEvent(new AddCategoriesToSetEvent(categories, model));
+                    if (change!=null)
+                        change();
+                }
+			}
+			
+			private function removeCategories(categories : Array) : void {
+				if (categories.length > 0) {
+                    CairngormHelper.fireEvent(new RemoveCategoriesFromSetEvent(categories, model));
+                    if (change != null)
+                        change();
+				}
 			}
 		]]>
 	</mx:Script>
+
+    <mx:Binding source="UtilFuncs.copyArrayCollection(model.categories.categories)" destination="categories"/>
 	
 	<mx:states>
 		<mx:State name="EditState">
@@ -25,7 +58,7 @@
 			<mx:AddChild relativeTo="{vboxCategories}" position="lastChild">
 				<mx:HBox width="100%">
 					<common:AddButton click="showCategoryChooser()"/>
-					<common:RemoveButton enabled="{listCategories.selectedItems.length > 0}"/>
+					<common:RemoveButton enabled="{listCategories.selectedItems.length > 0}" click="removeCategories(listCategories.selectedItems)"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{listCategories}" position="before">
@@ -44,11 +77,11 @@
 	</mx:transitions>
 	
 	<mx:VBox id="vboxCategories" height="100%">
-		<mx:List id="listCategories" height="100%" editable="false"/>
+		<mx:List id="listCategories" height="100%" editable="false" dataProvider="{categories}" labelField="name"/>
 	</mx:VBox>
 	<mx:VBox>
 		<mx:Label text="Elements of Information" id="lblEOI"/>
-		<mx:DataGrid draggableColumns="false" variableRowHeight="true" id="dgEOIs" editable="false">
+		<mx:DataGrid draggableColumns="false" variableRowHeight="true" id="dgEOIs" editable="false" dataProvider="{model.eois}">
 			<mx:columns>
 				<mx:DataGridColumn headerText="Topic" wordWrap="false"/>
 				<mx:DataGridColumn headerText="Label" rendererIsEditor="true" editorDataField="selected">

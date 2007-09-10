@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.business.resources
+package com.mindalliance.channels.business.scenario
 {
 	import com.mindalliance.channels.business.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
@@ -31,13 +31,13 @@ package com.mindalliance.channels.business.resources
 		override public function fromXML(xml : XML):ElementVO {
 			var cause : CauseVO;
 			if (xml.cause != null) {
-                cause = XMLHelper.xmlToCause(xml.cause);	
+                cause = XMLHelper.xmlToCause(xml);	
 			}
 			return new TaskVO(xml.id, 
 			                     xml.name, 
 			                     xml.description,
-			                     XMLHelper.xmlToCategorySet(xml.categories),
-			                     XMLHelper.xmlToOccurenceWhere(xml.where),
+			                     XMLHelper.xmlToCategorySet(xml),
+			                     XMLHelper.xmlToOccurenceWhere(xml),
 			                     cause,
 			                     XMLHelper.xmlToDuration(xml.duration),
 			                     new ElementVO(xml.scenarioId, null));
@@ -53,17 +53,17 @@ package com.mindalliance.channels.business.resources
 						<description>{obj.description}</description>
 					</task>;
 			
-            xml.appendChild(XMLHelper.xmlToCategorySet(obj.categories));
+            xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
             if (obj.where != null) {
                  xml.appendChild(XMLHelper.occurrenceWhereToXML(obj.where)); 
             }
+            xml.appendChild(<scenarioId>{obj.scenario.id}</scenarioId>);
             if (obj.cause != null) {
                 xml.appendChild(XMLHelper.causeToXML(obj.cause));    
             }
             if (obj.duration != null) {
             	xml.appendChild(XMLHelper.durationToXML(obj.duration));
             }
-            xml.appendChild(<scenarioId>{obj.scenario.id}</scenarioId>);
 			return xml;
 		}
 	}

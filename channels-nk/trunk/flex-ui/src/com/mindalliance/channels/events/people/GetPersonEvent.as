@@ -10,7 +10,7 @@ package com.mindalliance.channels.events.people
 	{
 		public static const GetPerson_Event:String = "<GetPersonEvent>";
 
-		public function GetPersonEvent(id : String, model : EditorModel) 
+		public function GetPersonEvent(id : String, model : EditorModel=null) 
 		{
 			super( GetPerson_Event, id, model );
 		}

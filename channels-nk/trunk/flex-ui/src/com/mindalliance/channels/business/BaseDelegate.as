@@ -3,6 +3,7 @@ package com.mindalliance.channels.business
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 	import mx.rpc.http.HTTPService;
@@ -18,9 +19,6 @@ package com.mindalliance.channels.business
 			this.responder = responder;
 		}
 		
-		/**
-		 * Performs a query based on 
-		 */
 		public function performQuery(name : String, parameters : Array) : void
 		{
 			var url : String = "model?query=" + name;
@@ -32,10 +30,12 @@ package com.mindalliance.channels.business
 			send(url, null, "GET", "query", parameters);
 		}
 		
+
+		
 		public function getElement(id : String) : void {
 			var parameters:Array = new Array();
             parameters["id"] = id;
-			send("element?id=" + id, null, "GET", "read", parameters);	
+			send("element?id=" + id + "&nameReferenced=true", null, "GET", "read", parameters);	
 		}
 		
 		public function deleteElement(id : String) : void {           
@@ -96,7 +96,15 @@ package com.mindalliance.channels.business
 		public function toXML(obj : ElementVO) : XML {
 			return null;
 		}
-		
+		public function fromXMLElementList(list : XML) : ArrayCollection {
+            var results : ArrayCollection = new ArrayCollection();
+            for each (var el : XML in list.elements(typeName)) {
+                results.addItem(new ElementVO(el.id, el.name)); 
+            }
+            return results; 
+        }
+        
+
 	}
 }
 

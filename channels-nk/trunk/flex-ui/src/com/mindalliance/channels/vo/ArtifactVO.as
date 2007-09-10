@@ -4,6 +4,7 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
+	import com.mindalliance.channels.vo.common.CategorySetVO;
 	import com.mindalliance.channels.vo.common.ProductVO;
 	
 	import mx.collections.ArrayCollection;
@@ -15,11 +16,7 @@ package com.mindalliance.channels.vo
                                     description : String,
                                     categories : CategorySetVO,
                                     product : ArrayCollection ) {
-			this.id = id;
-			this.name = name;
-			this.description = description;
-			this.categories =categories;
-			this.product = product;
+            super(id,name,description,categories,product);
 		}
 	}
 }

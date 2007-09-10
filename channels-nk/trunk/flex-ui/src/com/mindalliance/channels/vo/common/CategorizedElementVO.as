@@ -7,7 +7,7 @@ package com.mindalliance.channels.vo.common
 	
 	import mx.collections.ArrayCollection;
 	import com.mindalliance.channels.vo.common.CategorySetVO;
-	
+	[Bindable]
 	public class CategorizedElementVO extends ElementVO implements IValueObject
 	{
 		public function CategorizedElementVO( id : String, 

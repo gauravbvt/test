@@ -7,50 +7,20 @@ package com.mindalliance.channels.util
 	
 	public class XMLHelper
 	{
-		
-		public static  function generateElementListXML(listTag : String, elementTag : String, list : ArrayCollection) :XML {
-			var xml : XML = <{listTag}></{listTag}>;
-			for each (var obj : Object in list) {
-				xml.appendChild(<{elementTag}><id>{obj.id}</id></{elementTag}>);	
-			}
-			return xml;
-		}
-		
-		public static function fromIdList(elementName:String, list : XMLList) : ArrayCollection {
+		public static function idListToXML(header : String, key : String, list : ArrayCollection) : XML {
+            var xml : XML = <{header}></{header}>;
+            for each (var el : ElementVO in list) {
+                xml.appendChild(<{key}>{el.id}</{key}>);    
+            }
+            return xml;
+        }
+		public static function xmlToIdList(elementName:String, list : XMLList) : ArrayCollection {
 			var results : ArrayCollection = new ArrayCollection();
 
 			for each (var el:XML in list.child(elementName)) {
-				results.addItem(new ElementVO(el.valueOf(), el.(@name)));
+				results.addItem(new ElementVO(el.valueOf(), el.attribute("name")));
 			}
 			return results;
-		}
-		
-		/**
-		 * Produces a list from XML of the form:
-		 * 
-		 * <list>
-		 *   <project>
-		 *     <id>{id}</id>
-		 *     <name>{name}</id>
-		 *   </project>
-		 *   ...
-		 * </list>
-		 * 
-		 */
-		public static function fromXMLElementList(key : String, list : XML) : ArrayCollection {
-			var results : ArrayCollection = new ArrayCollection();
-			for each (var el : XML in list.elements(key)) {
-				results.addItem(new ElementVO(el.id, el.name));	
-			}
-			return results;	
-		}
-		
-		public static function toXMLElementList(header : String, key : String, list : ArrayCollection) : XML {
-            var xml : XML = <{header}></{header}>;
-            for each (var el : ElementVO in list) {
-                xml.appendChild(<{key}>el.id</{key}>);	
-            }
-            return xml;
 		}
 		
 		public static function addressToXML(address : AddressVO) : XML {
@@ -65,8 +35,8 @@ package com.mindalliance.channels.util
 			return new AddressVO(xml.street,xml.city,xml.state);	
 		}
 		
-		public static function xmlToCategorySet(obj : Object) : CategorySetVO {
-			return new CategorySetVO(obj.@taxonomy, XMLHelper.fromIdList("categoryId", obj.categoryId), obj.(@atMostOne));
+		public static function xmlToCategorySet(obj : XML) : CategorySetVO {
+			return new CategorySetVO(obj.categories.@taxonomy, XMLHelper.xmlToIdList("categoryId", obj.categories), obj.categories.attribute("atMostOne")=="true");
 		}
 		
 		public static function categorySetToXML(obj : CategorySetVO) : XML {
@@ -87,7 +57,7 @@ package com.mindalliance.channels.util
 			return new TopicVO(xml.name, 
 								xml.description, 
 								confidence, 
-								XMLHelper.fromIdList("roleId", xml.privacy),
+								XMLHelper.xmlToIdList("roleId", xml.privacy),
 								eois);
 			
 		}
@@ -162,9 +132,9 @@ package com.mindalliance.channels.util
 		
 		public static function xmlToSpatial(xml : XML) : SpatialCoordinatesVO {
 			var spatial : ISpatial;
-			if (xml.address != null) {
+			if (xml.address.length() !=0) {
                 spatial = XMLHelper.xmlToAddress(xml.address);
-			} else if (xml.latlong != null) {
+			} else if (xml.latlong.length() != 0) {
 			     spatial = XMLHelper.xmlToLatlong(xml.address);	
 			}
 			return new SpatialCoordinatesVO(spatial);
@@ -174,7 +144,7 @@ package com.mindalliance.channels.util
 			return <duration><value>{obj.value}</value><unit>{obj.unit}</unit></duration>;		
 		}
 		
-		public static function xmlToDuration(xml : XML) : DurationVO  {
+		public static function xmlToDuration(xml : XMLList) : DurationVO  {
             return new DurationVO(xml.value, xml.unit);	
 		}
 		
@@ -200,16 +170,16 @@ package com.mindalliance.channels.util
 			var id : String;
 			var duration : DurationVO = null;
 			var from : String = null;
-			if (xml.taskId != undefined) {
+			if (xml.cause.taskId.length() != 0) {
 				type=CauseVO.CAUSE_TASK;
-				id = xml.taskId;
+				id = xml.cause.taskId;
 			} else {
 			 	type = CauseVO.CAUSE_EVENT;
-			 	id = xml.eventId;
+			 	id = xml.cause.eventId;
 			}
-			if (xml.delay  != undefined ) {
-				duration = XMLHelper.xmlToDuration(xml.delay.duration);
-				from = xml.delay.from;
+			if (xml.delay.length() != 0) {
+				duration = XMLHelper.xmlToDuration(xml.cause.delay);
+				from = xml.cause.delay.from;
 			}
 			return new CauseVO(type,id,duration,from);
 		} 
@@ -228,12 +198,12 @@ package com.mindalliance.channels.util
         public static function xmlToOccurenceWhere(xml : XML) :ISpatial {
         	if (xml == null) {
         		return null;
-        	} else if (xml.addressId!=null) {
-                return new SpatialElementVO(xml.addressId, null);	
-            } else if (xml.latlong != null) {
-            	return XMLHelper.xmlToLatlong(xml.latlong);
-            } else if (xml.address != null) {
-                return XMLHelper.xmlToAddress(xml.address);	
+        	} else if (xml.where.addressId.length() != 0) {
+                return new SpatialElementVO(xml.where.addressId, null);	
+            } else if (xml.where.latlong.length() !=0) {
+            	return XMLHelper.xmlToLatlong(xml.where.latlong);
+            } else if (xml.where.address.length() !=0) {
+                return XMLHelper.xmlToAddress(xml.where.address);	
             }	
             return null;
         }

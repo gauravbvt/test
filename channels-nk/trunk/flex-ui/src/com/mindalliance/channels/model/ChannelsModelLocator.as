@@ -38,7 +38,8 @@ package com.mindalliance.channels.model
 		// Global Properties
 		public var currentProject : ProjectVO;
 		public var currentScenario : ScenarioVO;
-		public var user : UserVO = new UserVO("0","John Doe",null,true);
+		public var user : UserVO;
+		public var personId : String;
 		
  	    public var urlRoot : String = serviceResources.getString("urlRoot");		
 		public var debug : Boolean = serviceResources.getBoolean("debug");
@@ -72,6 +73,10 @@ package com.mindalliance.channels.model
             return elementLists[key];
         }	
 
+		public function getCategoryViewerModel() : CategoryViewerModel {
+			return new CategoryViewerModel(elements, elementLists);	
+		}
+		
 		
 		/**
 		 * Singleton instance of ChannelsModelLocator

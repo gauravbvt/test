@@ -41,7 +41,7 @@ package com.mindalliance.channels.business.people
 			return new RoleVO(xml.id, 
 								xml.name, 
 								xml.description,
-								XMLHelper.xmlToCategorySet(xml.categories),
+								XMLHelper.xmlToCategorySet(xml),
 								new ElementVO(xml.organizationId, null),
 								topics);
 		}

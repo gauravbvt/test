@@ -5,21 +5,120 @@
 
 	<mx:Script>
 		<![CDATA[
-			import mx.core.IFlexDisplayObject;
-			import mx.managers.PopUpManager;			
-			import com.mindalliance.channels.model.EditorModel;
-			[Bindable]
-			public var model : EditorModel;
-			
+			import com.mindalliance.channels.events.scenario.UpdateTaskEvent;
+			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+            import com.mindalliance.channels.util.ElementHelper;
+            import com.mindalliance.channels.view.UtilFuncs;
+            import com.mindalliance.channels.vo.common.DurationVO;
+            import com.mindalliance.channels.vo.common.CauseVO;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.util.CairngormHelper;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementModel;
+            import mx.collections.ArrayCollection;
+            import com.mindalliance.channels.vo.TaskVO;
+            import mx.core.IFlexDisplayObject;
+        
+            import mx.managers.PopUpManager ;
+            import com.mindalliance.channels.model.EditorModel;
+            
+            [Bindable]
+            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable]
+            private var taskList : ArrayCollection;
 
+            [Bindable]
+            private var eventList : ArrayCollection;
+           
+            [Bindable]
+            private var artifacts : ArrayCollection;
+            
+            [Bindable]
+            private var agents : ArrayCollection;
+            
+            [Bindable]
+            private var edited : TaskVO;
+            
+            private function switchToEditState():void {
+                currentState = 'EditState' ;
+            }
+            
+            private function confirmEdit():void {
+                update();
+                currentState = '' ;
+            }
+            
+            private function cancelEdit():void {
+                // Revert
+                CairngormHelper.fireEvent( new GetTaskEvent(model.id,model));
+                currentState = '' ;
+            }
+            
+            private function update() :void {
+                
+                var cause : CauseVO;
+                if (rbCauseExists.selected) {
+                    var id : String;
+                    if (cbEventTask.selectedLabel=="event"  && comboEvents.selectedIndex >= 0) {
+                        id = (comboEvents.selectedItem as ElementVO).id;
+                    } else if (cbEventTask.selectedLabel=="task" && comboTasks.selectedIndex >=0) {
+                        
+                        id = (comboTasks.selectedItem as ElementVO).id;
+                    }
+                    if (id != null) {
+                        cause= new CauseVO(cbEventTask.selectedLabel,id,null,null);
+                    }
+                }
+                
+                var duration : DurationVO;
+                
+                if (txtDurationValue.text != null) {
+                    duration = new DurationVO(Number(txtDurationValue.text), comboDurationUnit.selectedItem.abbr);
+                }
+                CairngormHelper.fireEvent( new UpdateTaskEvent(model,
+                                                                txtName.text,
+                                                                txtDescription.text,
+                                                                categoryViewer.model.categories,
+                                                                (elementModel.data as TaskVO).where,
+                                                                cause,
+                                                                duration,
+                                                                (elementModel.data as TaskVO).scenario));   
+
+            }
+            
+            private function queueUpdate() : void {
+                CairngormHelper.queueUpdate(model);
+            }
+            
+            private function taskFilter(item : Object) : Boolean {
+                 if ((item as ElementVO).id == edited.id) { 
+                    return false;
+                 }
+                 return true;
+            }
+            
+            private function init() : void {
+                switchToEditState();    
+            }
 			private function chooseArtifacts():void {
 				var popup:ArtifactChooser = ArtifactChooser(PopUpManager.createPopUp(listArtifacts, ArtifactChooser));
 				
+//				(popup as ArtifactChooser).filtered=edited.artifacts;
+//				(popup as ArtifactChooser).processSelected=addArtifacts;
 				PopUpManager.centerPopUp(popup) ;
 			}
 		]]>
 	</mx:Script>
-
+    <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as TaskVO)" destination="edited"/>
+    <mx:Binding source="model.getElementListModel('tasks').data" destination="taskList"/>
+    <mx:Binding source="model.getElementListModel('events').data" destination="eventList"/>
+    <mx:Binding source="edited.categories" destination="categoryViewer.model.categories"/>
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:AddChild relativeTo="{txtName}" position="before">
@@ -59,90 +158,63 @@
 		<common:ViewEditStateTransition fromState="*" toState="*" targets="{[formitemAgents, formitemArtifacts, formitemCategories]}"/>
 	</mx:transitions>
 
-	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
-
-	<mx:Script>
-		<![CDATA[
-			import mx.controls.Alert;
-			import mx.collections.ArrayCollection ;
-			import mx.core.IFlexDisplayObject;
-			import mx.managers.PopUpManager;
-			
-			[Bindable]
-			private var Artifacts:ArrayCollection = new ArrayCollection() ;
-			
-			private function switchToEditState():void {
-				currentState = 'EditState';
-			}
-			
-			private function confirmEdit():void {
-				// Do stuff and then:
-				currentState = '' ;
-			}
-			
-			private function cancelEdit():void {
-				// Do stuff and then:
-				currentState = '' ;
-			}
-			
-		]]>
-	</mx:Script>
+	<mx:Style source="../../../../../assets/styles/FormStyles.css"/> 
 
 	<mx:Form>
 		<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
 			btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
 			width="100%"/>
 		<mx:FormItem label="Task Name" direction="vertical" id="formitemName">
-			<mx:TextInput id="txtName" editable="false" styleName="PrimaryNameFieldEditState"/>
+			<mx:TextInput id="txtName" editable="false" styleName="PrimaryNameFieldEditState" text="{edited.name}" change="queueUpdate()"/>
 		</mx:FormItem>
 		<mx:FormItem label="Description">
-			<mx:TextArea id="txtDescription" wordWrap="true" editable="false"/>
+			<mx:TextArea id="txtDescription" wordWrap="true" editable="false" text="{edited.description}" change="queueUpdate()"/>
 		</mx:FormItem>
 		<mx:FormItem label="Agents" direction="vertical" id="formitemAgents">
 			<mx:Text text="The following roles execute this task:" styleName="FormItemDescription" id="text1"/>
 			<mx:List id="listAgents"/>
 		</mx:FormItem>
-		<mx:FormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize" width="100%">
-			<mx:VBox id="vBoxCause">
-				<mx:RadioButtonGroup id="rbgCause"/>
-				<mx:RadioButton groupName="rbgCause" label="This task is independent of other events or tasks." selected="true"/>
-				<mx:VBox>
-					<mx:HBox>
-						<mx:RadioButton groupName="rbgCause" label="This task is caused by another" id="rbCauseExists"/>
-						<mx:HBox id="hBoxCauseExists">
-							<mx:ComboBox id="cbEventTask" selectedIndex="0">
-								<mx:String>event</mx:String>
-								<mx:String>task</mx:String>
-							</mx:ComboBox>
-						</mx:HBox>
-					</mx:HBox>
-					<mx:HBox includeInLayout="{rbCauseExists.selected}" visible="{rbCauseExists.selected}">
-						<mx:Label text="{'Select '+cbEventTask.selectedItem+':'}"/>
-						<mx:ViewStack selectedIndex="{cbEventTask.selectedIndex}"
-							showEffect="Resize" hideEffect="Resize">
-							<mx:Box>
-								<mx:ComboBox id="comboTasks"/>
-							</mx:Box>
-							<mx:Box>
-								<mx:ComboBox id="comboEvents"/>
-							</mx:Box>
-						</mx:ViewStack>									
-					</mx:HBox>				
-				</mx:VBox>
-			</mx:VBox>	
-		</mx:FormItem>
+	    <mx:FormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize">
+	        <mx:VBox id="vBoxCause">
+	            <mx:RadioButtonGroup id="rbgCause"/>
+	            <mx:RadioButton groupName="rbgCause" label="This task is independent of other events or tasks." selected="{edited.cause==null}" change="queueUpdate()" />
+	            <mx:VBox>
+	                <mx:HBox>
+	                    <mx:RadioButton groupName="rbgCause" label="This task is caused by another" id="rbCauseExists" selected="{edited.cause!=null}" change="queueUpdate()"/>
+	                    <mx:HBox id="hBoxCauseExists">
+	                        <mx:ComboBox id="cbEventTask" selectedIndex="{edited.cause.type =='task' ? 1 : 0}" change="queueUpdate()">
+	                            <mx:String>event</mx:String>
+	                            <mx:String>task</mx:String>
+	                        </mx:ComboBox>
+	                    </mx:HBox>
+	                </mx:HBox>
+	                <mx:HBox includeInLayout="{rbCauseExists.selected}" visible="{rbCauseExists.selected}">
+	                    <mx:Label text="{'Select '+cbEventTask.selectedItem+':'}"/>
+	                    <mx:ViewStack selectedIndex="{cbEventTask.selectedIndex}"
+	                        showEffect="Resize" hideEffect="Resize">
+	                        <mx:Box>
+	                            <common:ElementComboBox id="comboEvents" dataProvider="{eventList}"  selectedValue="{edited.cause.id}" change="queueUpdate()"/>
+	                        </mx:Box>
+	                        <mx:Box>
+	                            <common:ElementComboBox id="comboTasks" dataProvider="{taskList}" selectedValue="{edited.cause.id}"  change="queueUpdate()"/>
+	                        </mx:Box>
+	                    </mx:ViewStack>                                 
+	                </mx:HBox>              
+	            </mx:VBox>
+	        </mx:VBox>  
+        </mx:FormItem>
 		<mx:FormItem label="Duration" mouseChildren="false" mouseEnabled="false" id="formitemDuration">
 			<mx:HBox>
 				<mx:Label text="About"/>
-				<mx:TextInput width="100"/>
-				<common:TimeScalesComboBox/>
+                <mx:TextInput width="100" id="txtDurationValue" change="queueUpdate()" text="{edited.duration.value}"/>
+                <common:TimeScalesComboBox id="comboDurationUnit" selectedValue="{edited.duration.unit}" change="queueUpdate()"/>
 			</mx:HBox>
 		</mx:FormItem>
 		<mx:FormItem label="Artifacts produced" direction="vertical" id="formitemArtifacts">
-			<mx:List id="listArtifacts" dataProvider="{Artifacts}"/>
+			<mx:List id="listArtifacts" />
 		</mx:FormItem>
 		<mx:FormItem label="Categories" id="formitemCategories" width="100%">
-			<categories:CategoryViewer id="categoryViewer"/>
+            <categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>
 		</mx:FormItem>
 	</mx:Form>
 </mx:Box>

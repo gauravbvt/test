@@ -1,7 +1,7 @@
 package com.mindalliance.channels.vo.common
 {
 	import mx.collections.ArrayCollection;
-	
+	[Bindable]
 	public class ProductVO extends CategorizedElementVO
 	{
 		public function ProductVO( id : String, 

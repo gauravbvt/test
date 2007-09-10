@@ -1,9 +1,10 @@
 package com.mindalliance.channels.view
 {
-    import com.mindalliance.channels.view.common.InputTextDialog ;
+    import com.mindalliance.channels.view.common.InputTextDialog;
     
     import flash.display.DisplayObject;
     
+    import mx.collections.ArrayCollection;
     import mx.managers.PopUpManager;
     
     public class UtilFuncs
@@ -28,5 +29,16 @@ package com.mindalliance.channels.view
 	    	}
 	    	return arr.join(' ') ;
 	    }
+	    
+	    public static function copyArrayCollection(array : ArrayCollection) : ArrayCollection {
+                var result : ArrayCollection;
+                if (array != null) {    
+                    result = new ArrayCollection;
+                    for (var i:uint = 0 ; i< array.length ; i++) {
+                       result.addItem(array.getItemAt(i));  
+                    }
+                }
+                return result;
+        }
     }
 }

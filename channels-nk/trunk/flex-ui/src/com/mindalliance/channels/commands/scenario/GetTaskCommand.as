@@ -3,24 +3,15 @@
 
 package com.mindalliance.channels.commands.scenario
 {
-	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.scenario.TaskDelegate;
+	import com.mindalliance.channels.commands.common.GetElementCommand;
 	import com.mindalliance.channels.events.scenario.*;
-	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	
-	public class GetTaskCommand extends BaseDelegateCommand
+	public class GetTaskCommand extends GetElementCommand
 	{
 	
-		override public function execute(event:CairngormEvent):void
-		{
-			var evt:GetTaskEvent = event as GetTaskEvent;
-			var delegate:TaskDelegate = new TaskDelegate( this );
-		}
-		
-		override public function result(data:Object):void
-		{
-			
+		public function GetTaskCommand() {
+		  super(TaskDelegate);	
 		}
 	}
 }

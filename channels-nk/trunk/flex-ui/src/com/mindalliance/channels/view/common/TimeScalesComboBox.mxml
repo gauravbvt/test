@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml">
-	<mx:String>Minutes</mx:String>
-	<mx:String>Hours</mx:String>
-	<mx:String>Days</mx:String>
-</mx:ComboBox>
+<common:ElementComboBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*"
+	dataProvider="{this.scales}"
+	labelField="scale"
+	dataField="abbr">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			private var scales:Array = [{abbr: "minute", scale:"Minutes"},
+			                            {abbr: "hour", scale:"Hours"},
+			                            {abbr: "day", scale:"Days"},
+			                            {abbr: "week", scale: "Weeks"},
+			                            {abbr: "second", scale: "Seconds"}];
+		]]>
+	</mx:Script>
+</common:ElementComboBox>

@@ -61,7 +61,12 @@ package com.mindalliance.channels.business
 		}
 		
 		private function handleQuery(result : XML) : Object {
-			return XMLHelper.fromXMLElementList(typeName, result);
+			if (result.localName() == "list") {
+                return delegate.fromXMLElementList(result);
+			} else  if (result != null) {
+                return delegate.fromXML(result);	
+			}
+			return null;
 		}
 		
 		private function handleRead(result : XML) : Object {

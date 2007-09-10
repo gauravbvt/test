@@ -15,5 +15,14 @@ package com.mindalliance.channels.util
 			}
 			return null;
 		}
+		
+		public static function findElementIndexById(id : String, col : ArrayCollection) : int {
+			for (var inx : int = 0 ; inx < col.length ; inx++) {
+                if (col[inx].id == id) {
+                    return inx;
+                }
+            }
+            return -1;
+		}
 	}
 }

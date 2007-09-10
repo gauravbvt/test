@@ -15,12 +15,18 @@ package com.mindalliance.channels.business.scenario
 		public function ArtifactDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName="artifact";
 		}
-		
-		override public function fromXML(obj:Object):ElementVO {
+		public function getArtifactList(scenarioId : String) : void {
+            var request:Array = new Array();
+            request["scenarioId"] = scenarioId;
+            performQuery("artifactsInScenario", request);
+        }
+        
+		override public function fromXML(obj:XML):ElementVO {
 			return new ArtifactVO(obj.id, obj.name, obj.description,
-			                     XMLHelper.xmlToCategorySet(obj.categories),
-			                     XMLHelper.fromXMLElementList("taskId", obj.product));
+			                     XMLHelper.xmlToCategorySet(obj),
+			                     XMLHelper.xmlToIdList("taskId", obj.product));
 		}
 		
 		override public function toXML(element:ElementVO) : XML {
@@ -32,7 +38,7 @@ package com.mindalliance.channels.business.scenario
 					</artifact>;
             
             xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
-            xml.appendChild(XMLHelper.toXMLElementList("product", "taskId", obj.product));
+            xml.appendChild(XMLHelper.idListToXML("product", "taskId", obj.product));
             return xml;
 		}
 	}

@@ -6,6 +6,7 @@ package com.mindalliance.channels.business.categories
 	import com.mindalliance.channels.business.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.CategoryVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.rpc.IResponder;
 	
@@ -22,8 +23,8 @@ package com.mindalliance.channels.business.categories
 			return new CategoryVO(xml.id, 
 			                         xml.name, 
 			                         xml.description,
-			                         XMLHelper.fromXMLElementList("categoryId", xml.disciplines),
-                                     XMLHelper.fromXMLElementList("categoryId", xml.implies),
+			                         XMLHelper.xmlToIdList("categoryId", xml.disciplines),
+                                     XMLHelper.xmlToIdList("categoryId", xml.implies),
                                      XMLHelper.xmlToInformation(xml.information));
 		}
 		/**
@@ -36,9 +37,9 @@ package com.mindalliance.channels.business.categories
 						<name>{obj.name}</name>
 						<description>{obj.description}</description>
 					</category>;
-			xml.appendChild(XMLHelper.toXMLElementList("disciplines","categoryId",obj.disciplines);
-			xml.appendChild(XMLHelper.toXMLElementList("implies","categoryId",obj.implies);
-			xml.appendChild(XMLHelper.informationToXML(obj.information);
+			xml.appendChild(XMLHelper.idListToXML("disciplines","categoryId",obj.disciplines));
+			xml.appendChild(XMLHelper.idListToXML("implies","categoryId",obj.implies));
+			xml.appendChild(XMLHelper.informationToXML(obj.information));
 			return xml;
 		}
 	}

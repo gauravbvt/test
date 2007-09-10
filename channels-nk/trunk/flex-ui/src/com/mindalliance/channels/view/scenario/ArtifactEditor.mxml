@@ -5,27 +5,70 @@
 
 	<mx:Script>
 		<![CDATA[
-			
-			import com.mindalliance.channels.model.EditorModel;
-			[Bindable]
-			private var model : EditorModel;
+			import com.mindalliance.channels.events.scenario.UpdateArtifactEvent;
+			import com.mindalliance.channels.events.scenario.GetArtifactEvent;
+            import com.mindalliance.channels.vo.common.TopicVO;
+            import mx.collections.ArrayCollection;
+            import mx.managers.PopUpManager;
+            import com.mindalliance.channels.events.resources.*;
+            import com.mindalliance.channels.events.common.*;
+            
+            import com.mindalliance.channels.view.common.InputTextDialog;
+            import com.mindalliance.channels.model.EditorModel;
+            import com.adobe.cairngorm.control.CairngormEventDispatcher;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.vo.ArtifactVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.util.CairngormHelper;
+            
+            [Bindable]
+            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable]
+            private var organizationList : ArrayCollection;
 
-			private function switchToEditState():void {
-				currentState = 'EditState';
-			}
-			
-			private function confirmEdit():void {
-				// Do stuff and then:
-				currentState = '';	
-			}
-			
-			private function cancelEdit():void {
-				// Do stuff and then:
-				currentState = '' ;
-			}
+            [Bindable]
+            private var edited : ArtifactVO;
+            
+            private function switchToEditState():void {
+                currentState = 'EditState' ;
+            }
+            
+            private function confirmEdit():void {
+                update();
+                currentState = '' ;
+            }
+            
+            private function cancelEdit():void {
+                // Revert
+                 CairngormHelper.fireEvent( new GetArtifactEvent(model.id,model));
+                currentState = '' ;
+            }
+            
+            private function update() :void {
+                
+                CairngormHelper.fireEvent( new UpdateArtifactEvent(model,
+                                                                txtName.text,
+                                                                txtDescription.text,
+                                                                (elementModel.data as ArtifactVO).categories,
+                                                                (elementModel.data as ArtifactVO).product));   
+            }
+            
+            private function queueUpdate() : void {
+                CairngormHelper.queueUpdate(model);
+            }
+            
+            
+            private function init() : void {}
 		]]>
 	</mx:Script>
-	
+	<mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as ArtifactVO)" destination="edited"/>
+    <mx:Binding source="edited.categories" destination="categoryViewer.model.categories"/>
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
@@ -39,7 +82,10 @@
 				<common:HintFieldRequiredFormItem/>
 			</mx:AddChild>
 			<mx:SetProperty target="{formItemStateChange}" name="currentState" value="EditState"/>
-			<mx:SetProperty target="{formitem1}" name="required" value="true"/>
+			<mx:SetProperty target="{formitem1}" name="required" value="true"/>          
+			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
+            <mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
+			
 		</mx:State>
 	</mx:states>
 
@@ -49,12 +95,12 @@
 		btnEditClickHandler="{switchToEditState}" confirmEditHandler="{confirmEdit}" 
 		cancelEditHandler="{cancelEdit}"/>
 	<mx:FormItem label="Artifact Name" id="formitem1">
-		<mx:TextInput id="txtName" editable="false"/>
+		<mx:TextInput id="txtName" editable="false" text="{edited.name}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">
-		<mx:TextArea id="txtDescription" editable="false"/>
+		<mx:TextArea id="txtDescription" editable="false" text="{edited.description}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Categories" id="formitemCategories">
-		<categories:CategoryViewer id="categoryViewer"/>
+		<categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>
 	</mx:FormItem>
 </mx:Form>

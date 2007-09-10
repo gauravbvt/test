@@ -31,9 +31,9 @@ package com.mindalliance.channels.business.resources
 			                         obj.description,
 			                         XMLHelper.xmlToCategorySet(obj.categories),
 			                         new ElementVO(obj.organizationId, null),
-			                         XMLHelper.fromXMLElementList("roleId", obj.administrators),
+			                         XMLHelper.xmlToIdList("roleId", obj.administrators),
 			                         contents,
-			                         XMLHelper.fromXMLElementList("roleId", obj.access));
+			                         XMLHelper.xmlToIdList("roleId", obj.access));
 		}
 		/**
          * generates /channels/schema/repository.rng
@@ -47,14 +47,14 @@ package com.mindalliance.channels.business.resources
 					</repository>;
 			xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
 			xml.appendChild(<organizationId>{obj.organization.id}</organizationId>);
-			XMLHelper.toXMLElementList("administrators","roleId",obj.administrators);
+			XMLHelper.idListToXML("administrators","roleId",obj.administrators);
 			var contents : XML = <contents></contents>;
 			for each (var info : InformationVO in obj.contents) {
                 contents.appendChild(XMLHelper.informationToXML(info));	
 			}
 			xml.appendChild(contents);
 			 
-			XMLHelper.toXMLElementList("access", "roleId", obj.access);
+			XMLHelper.idListToXML("access", "roleId", obj.access);
 			return xml;
 		}
 	}

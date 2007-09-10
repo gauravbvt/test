@@ -4,7 +4,7 @@
 package com.mindalliance.channels.commands.scenario
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.channels.business.resources.TaskDelegate;
+	import com.mindalliance.channels.business.scenario.TaskDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.scenario.*;
 	

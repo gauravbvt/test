@@ -16,8 +16,7 @@
                 model.personEditorModel = personEditor.model;
                 model.userEditorModel = userEditor.model;
                 model.userEditorModel.id=ChannelsModelLocator.getInstance().user.id;
-                
-                //sfor each (var 
+                model.personEditorModel.id=ChannelsModelLocator.getInstance().personId;
             }
             
 			

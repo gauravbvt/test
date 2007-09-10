@@ -10,7 +10,7 @@ package com.mindalliance.channels.vo
 	import com.mindalliance.channels.vo.common.ElementVO;
 	import com.mindalliance.channels.vo.common.ISpatial;
 	import com.mindalliance.channels.vo.common.OccurrenceVO;
-
+    [Bindable]
 	public class TaskVO extends OccurrenceVO implements IValueObject
 	{
 		public function TaskVO( id : String, 

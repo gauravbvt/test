@@ -22,6 +22,12 @@ package com.mindalliance.channels.business.people
 			performQuery("allPersons", null);
 		}
 		
+		public function getPersonByUser(userId : String) : void {
+			var request : Array = new Array();
+			request["userId"] = userId;
+			performQuery("personOfUser", request);
+		}
+		
 		/**
          * parses /channels/schema/person.rng
          */
@@ -34,7 +40,7 @@ package com.mindalliance.channels.business.people
 			                     xml.officePhone,
 			                     xml.cellPhone,
 			                     XMLHelper.xmlToAddress(xml.address),
-			                     XMLHelper.fromXMLElementList("roleId", xml.roles),
+			                     XMLHelper.xmlToIdList("roleId", xml.roles),
 			                     xml.userId);
 		}
 		/**
@@ -60,7 +66,7 @@ package com.mindalliance.channels.business.people
             if (obj.address != null) {
                 xml.appendChild(XMLHelper.addressToXML(obj.address));	
             }
-            xml.appendChild(XMLHelper.toXMLElementList("roles", "roleId", obj.roles));
+            xml.appendChild(XMLHelper.idListToXML("roles","roleId", obj.roles));
             if (obj.user != null) {
                 xml.appendChild(<userId>{obj.user.id}</userId>);
            	}

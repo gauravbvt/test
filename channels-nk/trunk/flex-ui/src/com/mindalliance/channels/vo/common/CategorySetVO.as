@@ -4,7 +4,7 @@ package com.mindalliance.channels.vo.common
 	import mx.collections.ArrayCollection;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.common.ElementVO;
-	
+	[Bindable]
 	public class CategorySetVO implements IValueObject
 	{
 		private var _atMostOne : Boolean;
