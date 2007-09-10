@@ -71,7 +71,7 @@
 		<chmod perm="go+rx">
 			<dirset dir="${deploy.dir}"/>
 		</chmod>
-		<chmod perm="g+rw,o+r">
+		<chmod perm="g+rw">
 			<fileset dir="${deploy.dir}">
 				<include name="*"/>
 			</fileset>
@@ -81,6 +81,12 @@
 				<include name="*.jar"/>
 			</fileset>
 		</copy>
+		<chmod perm="g+rw">
+			<fileset dir="${netkernel.home.dir}/modules">
+				<include name="*"/>
+			</fileset>
+		</chmod>
+
     </target>
     
     <target description="Clean up the derived objects" name="clean" depends="init">
