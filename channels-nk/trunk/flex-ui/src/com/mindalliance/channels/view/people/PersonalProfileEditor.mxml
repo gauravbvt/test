@@ -10,13 +10,10 @@
 			import com.mindalliance.channels.model.people.PersonalProfileEditorModel;
 
 			[Bindable]
-			private var model : PersonalProfileEditorModel;
-
+			private var model : PersonalProfileEditorModel = ChannelsModelLocator.getInstance().personalProfileEditorModel;
             private function init(): void {
-                model.personEditorModel = personEditor.model;
-                model.userEditorModel = userEditor.model;
-                model.userEditorModel.id=ChannelsModelLocator.getInstance().user.id;
-                model.personEditorModel.id=ChannelsModelLocator.getInstance().personId;
+                personEditor.model = model.personEditorModel;
+                userEditor.model = model.userEditorModel;
             }
             
 			

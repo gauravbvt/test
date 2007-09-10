@@ -4,9 +4,9 @@
 package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-    import com.mindalliance.channels.vo.common.AddressVO;
+	import com.mindalliance.channels.vo.common.AddressVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
-
+	
 	import mx.collections.ArrayCollection;
 
     [Bindable]
@@ -21,7 +21,7 @@ package com.mindalliance.channels.vo
 								cellPhone : String,
 								address : AddressVO,
 								roles : ArrayCollection,
-								user : UserVO) {
+								user : ElementVO) {
 			super(id,null,null);
 			this._firstName = firstName;
 			this._lastName = lastName;
@@ -42,7 +42,7 @@ package com.mindalliance.channels.vo
 		private var _cellPhone : String;
 		private var _address : AddressVO;
 		private var _roles : ArrayCollection;
-		private var _user : UserVO;
+		private var _user : ElementVO;
 		
 		public function get firstName() : String {
 			return _firstName;
@@ -96,11 +96,11 @@ package com.mindalliance.channels.vo
 			return _roles;
 		}
 		
-		public function get user() : UserVO {
+		public function get user() : ElementVO {
 			return _user;
 		}
 
-		public function set user(user : UserVO) : void {
+		public function set user(user : ElementVO) : void {
 			_user=user;
 		}
 		

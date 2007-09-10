@@ -5,8 +5,8 @@ package com.mindalliance.channels.events.people
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mindalliance.channels.model.EditorModel;
-	import com.mindalliance.channels.vo.UserVO;
 	import com.mindalliance.channels.vo.common.AddressVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.collections.ArrayCollection;
 
@@ -22,7 +22,7 @@ package com.mindalliance.channels.events.people
         public var cellPhone : String;
         public var address : AddressVO;
         public var roles : ArrayCollection;
-        public var user : UserVO;
+        public var user : ElementVO;
 		
 		public function UpdatePersonEvent(model : EditorModel,
 		                        firstName : String,
@@ -33,7 +33,7 @@ package com.mindalliance.channels.events.people
                                 cellPhone : String,
                                 address : AddressVO,
                                 roles : ArrayCollection,
-                                user : UserVO) 
+                                user : ElementVO) 
 		{
 			super( UpdatePerson_Event );
 			this.model = model;

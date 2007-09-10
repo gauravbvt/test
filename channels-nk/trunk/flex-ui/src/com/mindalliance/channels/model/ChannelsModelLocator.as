@@ -25,24 +25,24 @@ package com.mindalliance.channels.model
  	    [ResourceBundle("services")]
      	private static var serviceResources:ResourceBundle;
 		
+		// Global Properties
+        public var currentProject : ProjectVO;
+        public var currentScenario : ScenarioVO;
+        public var user : UserVO;
+        
+        public var urlRoot : String = serviceResources.getString("urlRoot");        
+        public var debug : Boolean = serviceResources.getBoolean("debug");      
+        // The element hash
+        private var elements : Object = new Object();
+        private var elementLists : Object = new Object();
+        
 		// Component Models
 		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel(elements,elementLists);
 		public var permissionModel : PermissionModel = new PermissionModel();
 		public var flowMapModel : FlowMapModel = new FlowMapModel();
+        public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel(getEditorModel(), getEditorModel());
 
-		
-		// The element hash
-        private var elements : Object = new Object();
-		private var elementLists : Object = new Object();
-		
-		// Global Properties
-		public var currentProject : ProjectVO;
-		public var currentScenario : ScenarioVO;
-		public var user : UserVO;
-		public var personId : String;
-		
- 	    public var urlRoot : String = serviceResources.getString("urlRoot");		
-		public var debug : Boolean = serviceResources.getBoolean("debug");
+
 		
 		
 		public function getEditorModel(type : Class = null) : EditorModel {

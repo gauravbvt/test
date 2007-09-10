@@ -8,6 +8,7 @@ package com.mindalliance.channels.business.people
 	import com.mindalliance.channels.vo.PersonVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
 	
 	public class PersonDelegate extends BaseDelegate
@@ -41,7 +42,7 @@ package com.mindalliance.channels.business.people
 			                     xml.cellPhone,
 			                     XMLHelper.xmlToAddress(xml.address),
 			                     XMLHelper.xmlToIdList("roleId", xml.roles),
-			                     xml.userId);
+			                     new ElementVO(xml.userId, null));
 		}
 		/**
          * generates /channels/schema/person.rng
@@ -72,5 +73,13 @@ package com.mindalliance.channels.business.people
            	}
 			return xml;
 		}
+		
+		override public function fromXMLElementList(list : XML) : ArrayCollection {
+            var results : ArrayCollection = new ArrayCollection();
+            for each (var el : XML in list.elements(typeName)) {
+                results.addItem(new PersonVO(el.id,el.firstName,el.lastName,null,null,null,null,null,null,null)); 
+            }
+            return results; 
+        }
 	}
 }

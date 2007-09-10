@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.commands.people
 {
+	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mindalliance.channels.business.people.UserDelegate;
 	import com.mindalliance.channels.commands.common.GetElementCommand;
 	import com.mindalliance.channels.events.people.*;
@@ -12,17 +13,25 @@ package com.mindalliance.channels.commands.people
 	public class GetUserCommand extends GetElementCommand
 	{
 	
-		public function GetUserCommand() {
+	
+	    public function GetUserCommand() {
 			super(UserDelegate);
 			
+		}
+		
+		override public function execute(event:CairngormEvent):void
+		{
+		    var evt:GetUserEvent = event as GetUserEvent;  
+            channelsModel.personalProfileEditorModel.userEditorModel.id=evt.id;
+        
+			super.execute(event);
+            
 		}
 		
 		override public function result(data:Object):void
         {
         	super.result(data);
-        	if (data["data"] != null) {
-        	   ChannelsModelLocator.getInstance().user = (data["data"] as UserVO);	
-        	}
+        	channelsModel.user = (data["data"] as UserVO);	
         }
  }
 }

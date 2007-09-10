@@ -29,7 +29,7 @@
            //Util.registerLicense( yFilesLicenseXML );
 
            //flowmap.init() ;
-           propertyEditor.init() ;
+           //propertyEditor.init() ;
            
            // Load global data lists
            CairngormHelper.fireEvent( new GetRoleListEvent() );

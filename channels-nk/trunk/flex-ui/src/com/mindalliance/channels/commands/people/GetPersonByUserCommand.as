@@ -27,7 +27,7 @@ package com.mindalliance.channels.commands.people
         	
         	var list : ArrayCollection = (data["data"] as ArrayCollection);
         	if (list.length > 0) {
-        	   channelsModel.personId = list.getItemAt(0).id;
+        	   channelsModel.personalProfileEditorModel.personEditorModel.id = list.getItemAt(0).id;
         	   CairngormHelper.fireEvent(new GetPersonEvent(list.getItemAt(0).id));	
         	}
             log.debug("Successfully retrieved Organization list");
@@ -35,7 +35,7 @@ package com.mindalliance.channels.commands.people
         
         override public function fault(info:Object):void
         {
-            channelsModel.personId = null;
+            channelsModel.personalProfileEditorModel.personEditorModel.id = null;
             super.fault(info);
         }
 	}
