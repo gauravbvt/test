@@ -111,6 +111,11 @@
 //				(popup as ArtifactChooser).processSelected=addArtifacts;
 				PopUpManager.centerPopUp(popup) ;
 			}
+			
+			private function chooseAcquirements():void {
+				// we don't take kindly to empty functions around here
+			}
+			
 		]]>
 	</mx:Script>
     <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
@@ -151,6 +156,12 @@
 			<mx:SetProperty target="{formitemName}" name="required" value="true"/>
 			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
 			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
+			<mx:AddChild relativeTo="{formitemAcquirements}" position="lastChild">
+				<mx:HBox id="hBoxEditAcquirements">
+					<common:AddButton click="chooseAcquirements()"/>
+					<common:RemoveButton enabled="{listAcquirements.selectedItems.length > 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
 		</mx:State>
 	</mx:states>
 	
@@ -212,6 +223,9 @@
 		</mx:FormItem>
 		<mx:FormItem label="Artifacts produced" direction="vertical" id="formitemArtifacts">
 			<mx:List id="listArtifacts" />
+		</mx:FormItem>
+		<mx:FormItem label="Information acquired" direction="vertical" id="formitemAcquirements">
+			<mx:List id="listAcquirements" />
 		</mx:FormItem>
 		<mx:FormItem label="Categories" id="formitemCategories" width="100%">
             <categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" 
-	xmlns:categories="com.mindalliance.channels.view.categories.*" 
-	xmlns:common="com.mindalliance.channels.view.common.*">
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:categories="com.mindalliance.channels.view.categories.*">
 
 	<mx:Script>
 		<![CDATA[
 			import com.mindalliance.channels.events.scenario.UpdateArtifactEvent;
-			import com.mindalliance.channels.events.scenario.GetArtifactEvent;
+			import com.mindalliance.channels.events.scenario.GetAcquirementEvent;
             import com.mindalliance.channels.vo.common.TopicVO;
             import mx.collections.ArrayCollection;
             import mx.managers.PopUpManager;
@@ -17,7 +15,7 @@
             import com.mindalliance.channels.model.EditorModel;
             import com.adobe.cairngorm.control.CairngormEventDispatcher;
             import com.mindalliance.channels.vo.common.ElementVO;
-            import com.mindalliance.channels.vo.ArtifactVO;
+            import com.mindalliance.channels.vo.AcquirementVO;
             import com.mindalliance.channels.model.ChannelsModelLocator;
             import com.mindalliance.channels.model.ElementModel;
             import com.mindalliance.channels.util.CairngormHelper;
@@ -32,7 +30,7 @@
             private var organizationList : ArrayCollection;
 
             [Bindable]
-            private var edited : ArtifactVO;
+            private var edited : AcquirementVO;
             
             private function switchToEditState():void {
                 currentState = 'EditState' ;
@@ -45,17 +43,17 @@
             
             private function cancelEdit():void {
                 // Revert
-                 CairngormHelper.fireEvent( new GetArtifactEvent(model.id,model));
+                 CairngormHelper.fireEvent( new GetAcquirementEvent(model.id,model));
                 currentState = '' ;
             }
             
             private function update() :void {
                 
-                CairngormHelper.fireEvent( new UpdateArtifactEvent(model,
+                CairngormHelper.fireEvent( new UpdateAcquirementEvent(model,
                                                                 txtName.text,
                                                                 txtDescription.text,
-                                                                (elementModel.data as ArtifactVO).categories,
-                                                                (elementModel.data as ArtifactVO).product));   
+                                                                (elementModel.data as AcquirementVO).categories,
+                                                                (elementModel.data as AcquirementVO).product));   
             }
             
             private function queueUpdate() : void {
@@ -67,39 +65,39 @@
 		]]>
 	</mx:Script>
 	<mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
-    <mx:Binding source="(elementModel.data as ArtifactVO)" destination="edited"/>
+    <mx:Binding source="(elementModel.data as AcquirementVO)" destination="edited"/>
     <mx:Binding source="edited.categories" destination="categoryViewer.model.categories"/>
+
 	<mx:states>
 		<mx:State name="EditState">
-			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
-			<mx:AddChild relativeTo="{categoryViewer}" position="before">
-				<mx:Text styleName="FormItemDescription" id="formItemCategoryHint">
-					<mx:text>Use categories to specify information associated with this artifact</mx:text>
-				</mx:Text>
-			</mx:AddChild>
-			<mx:AddChild relativeTo="{formItemStateChange}" position="after">
-				<common:HintFieldRequiredFormItem/>
-			</mx:AddChild>
-			<mx:SetProperty target="{formItemStateChange}" name="currentState" value="EditState"/>
-			<mx:SetProperty target="{formitem1}" name="required" value="true"/>          
 			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
-            <mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
-			
+			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
+			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
+			<mx:SetProperty target="{vieweditstatechangeformitem}" name="currentState" value="EditState"/>
 		</mx:State>
 	</mx:states>
-
-	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
 	
-	<common:ViewEditStateChangeFormItem id="formItemStateChange" 
-		btnEditClickHandler="{switchToEditState}" confirmEditHandler="{confirmEdit}" 
-		cancelEditHandler="{cancelEdit}"/>
-	<mx:FormItem label="Artifact Name" id="formitem1">
-		<mx:TextInput id="txtName" editable="false" text="{edited.name}" change="queueUpdate()"/>
-	</mx:FormItem>
-	<mx:FormItem label="Description">
-		<mx:TextArea id="txtDescription" editable="false" text="{edited.description}" change="queueUpdate()"/>
-	</mx:FormItem>
-	<mx:FormItem label="Categories" id="formitemCategories">
-		<categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>
-	</mx:FormItem>
-</mx:Form>
+	<mx:transitions>
+		<common:ViewEditStateTransition fromState="*" toState="*" targets="{[formitemCategories]}"/>
+	</mx:transitions>
+	
+	<mx:Style source="../../../../../assets/styles/FormStyles.css"/> 
+	
+	<mx:Form>
+	
+		<common:ViewEditStateChangeFormItem
+			btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
+			width="100%" id="vieweditstatechangeformitem"/>
+		<mx:FormItem label="Acquirement Name" direction="vertical" id="formitemName">
+			<mx:TextInput id="txtName" editable="false" styleName="PrimaryNameFieldEditState" text="{edited.name}" change="{queueUpdate()}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<mx:TextArea id="txtDescription" wordWrap="true" editable="false" text="{edited.description}" change="{queueUpdate()}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Categories" id="formitemCategories" width="100%">
+            <categories:CategoryViewer id="categoryViewer" change="{queueUpdate()}"/>
+		</mx:FormItem>
+		
+	</mx:Form>
+	
+</mx:Box>
