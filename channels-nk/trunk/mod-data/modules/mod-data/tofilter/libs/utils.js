@@ -163,7 +163,7 @@ function findReferrers(id, kind, refPath) {
 }
 
 // Deletes in referrer element at cascade references to id at refPath
-function deleteReference(referrer, refPath, cascade, id) {
+function deleteReference(referrer, refPath, cascade, id, updated) {
 	log("Delete reference to " + id + " by " + referrer + " via " + refPath + " deleting " + cascade, "info");
 	var dottedRefPath = new String(refPath).replace(/\.\/|\//g, "."); // transform ./x/y/x into dotted path .x.y.z
 	var dottedCascade = new String(cascade).replace(/\.\/|\//g, "."); 
@@ -196,15 +196,16 @@ function deleteReference(referrer, refPath, cascade, id) {
 					}
 				}
 			}
+			// update element
+			updateDocument(referrer);
+			updated.push(referrer.id.text());
 		}
-		// update element
-		updateDocument(referrer);
 	}
 }
 
-// Delete all references to an element based on reference table. Return list of IDs deleted
-function deleteReferencesTo(element, deletedIds, refTable) {
-	log("Deleting references to\n" + element.name() + ":" + element.id.text() + " except for "+ deletedIds, "info");
+// Delete all references to an element based on reference table.
+function deleteReferencesTo(element, deleted, updated, refTable) {
+	log("Deleting references to\n" + element.name() + ":" + element.id.text() + " except for "+ deleted, "info");
 	var elName = element.name();
 	for each (from in refTable.*.(@to == elName).from) {
 	  var refNames = new String(from.@element).split("|");
@@ -214,34 +215,39 @@ function deleteReferencesTo(element, deletedIds, refTable) {
 			var ids = findReferrers(element.id.text(), kind, refPath);
 				for each (id in ids) {
 					if (cascade == '.') {
-						deleteElementExcept(id, deletedIds, refTable); // delete element and cascade
+						deleteElementExcept(id, deleted, updated, refTable); // delete element and cascade
 					}
 					else {
 						var referrer = getDocument(id);
 						// log("Deleting in " + referrer + " reference " + cascade, "info");
-						deleteReference(referrer, refPath, cascade, element.id.text()); // remove reference to element from referrer
+						deleteReference(referrer, refPath, cascade, element.id.text(), updated); // remove reference to element from referrer
 					}
 			}
 		}
 	}
 }
 
+// Return an array containing an array of deleted element IDs and an array of updated element IDs
 function deleteElement(id) {
 	var deleted = [];
+	var updated = [];
 	var refTable = new XML(context.sourceAspect("ffcpl:/resources/schemas/referenceTable.xml", IAspectXmlObject).getXmlObject());
-	deleteElementExcept(id, deleted, refTable);
-	return deleted;
+	deleteElementExcept(id, deleted, updated, refTable);
+	var ids = [];
+	ids[0] = deleted;
+	ids[1] = updated;
+	return ids;
 }
 
 // Returns the list of ids of elements deleted
-function deleteElementExcept(id, deleted, refTable) {
+function deleteElementExcept(id, deleted, updated, refTable) {
 	log("Deleting " + id + " except if in " + deleted, "info");
 	// delete if not already deleted
 	if (!contains(deleted,id)) { 
 		var deletedDoc = deleteDocument(id);
 		deleted.push(id);
 		// Delete referrers to deleted document that are not already deleted
-		deleteReferencesTo(deletedDoc, deleted, refTable);
+		deleteReferencesTo(deletedDoc, deleted, updated, refTable);
 	}
 }
 

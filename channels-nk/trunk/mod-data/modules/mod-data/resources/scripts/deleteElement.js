@@ -13,13 +13,20 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
 var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
-var list = <ids/>;
+var list = <ids>
+							<deleted/>
+							<updated/>
+					 </ids>;
 try {
 	beginWrite();
 	var ids = deleteElement(id); // delete document and cascade delete on references
-	for each (deleted in ids) {
-		list.insertChildAfter(null, <id>{deleted}</id>);
+	for each (id in ids[0]) {
+		list.deleted.insertChildAfter(null, <id>{id}</id>);
 	}
+	for each (id in ids[1]) {
+		list.updated.insertChildAfter(null, <id>{id}</id>);
+	}
+	log("Deleted element and cascaded:\n" + list, "info");
 }
 finally {
 	endWrite();
@@ -27,9 +34,7 @@ finally {
 // Cut the GoldenThread associated with this resource
 cutGoldenThread("gt:element:"+ id);
 // Cut the GoldenThread associated with all existing queries
-req=context.createSubRequest("active:cutGoldenThread");
-req.addArgument("param", "gt:channels");
-res=context.issueSubRequest(req);
+cutGoldenThread("gt:channels");
 
 //Return Response
 var resp=context.createResponseFrom(new XmlObjectAspect(list.getXmlObject()));

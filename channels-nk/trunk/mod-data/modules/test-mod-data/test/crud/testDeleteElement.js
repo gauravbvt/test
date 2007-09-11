@@ -7,14 +7,16 @@ importPackage(Packages.java.lang);
 
 reloadModel();
 
-var tests = [
-							["user1", 1],
-							["event1", 2]
+var tests = [ // ["id to delete", number deleted, number updated]
+							["user1", 1, 1],
+							["event1", 2, 1],
+							["role1", 2, 2]
 						];
 
 for each (test in tests) {
 	var id = test[0];
-	var expectedCount = test[1];
+	var expectedDeletes = test[1];
+	var expectedUpdates = test[2];
 	// Send delete request
 	var req = context.createSubRequest("active:channels_data_deleteElement");
 	var idArg = <arg><id>{id}</id></arg>;
@@ -23,9 +25,14 @@ for each (test in tests) {
 	var list = new XML(context.transrept(res, IAspectString).getString());
 	// log(list..id.length() + " DELETED = " + list, "info");
 	// Verify that expected number of deleted elements met
-	var count = list..id.length();
-	if (count != expectedCount) {
-		log("ERROR deleting " + id + ": expected " + expectedCount + " deletions but got " + count, "severe");
+	var count = list.deleted.id.length();
+	if (count != expectedDeletes) {
+		log("ERROR deleting " + id + ": expected " + expectedDeletes + " deletions but got " + count, "severe");
+		throw("Delete failed");
+	}
+	var count = list.updated.id.length();
+	if (count != expectedUpdates) {
+		log("ERROR deleting " + id + ": expected " + expectedUpdates + " updates but got " + count, "severe");
 		throw("Delete failed");
 	}
 	// Verify that all references were deleted

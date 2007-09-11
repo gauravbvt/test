@@ -32,9 +32,16 @@
 			</format>
 			<returns>
 				<ids>
-          <id>someId</id>
-          <id>someOtherId</id>
-          <id>etc</id>
+          <deleted>
+            <id>someId</id>
+            <id>someOtherId</id>
+            <id>etc</id>
+          </deleted>
+          <updated>
+            <id>someId</id>
+            <id>someOtherId</id>
+            <id>etc</id>
+          </updated>
         </ids>
 			</returns>
 			<syntax>
@@ -94,10 +101,18 @@
 		</content>
 		<includes>
       <include name="ids" type="xml">
-         <ids>
-           <id>12345</id>
-           <id>67890</id>
-         </ids> 
+				<ids>
+          <deleted>
+            <id>1111</id>
+            <id>2222</id>
+            <id>etc</id>
+          </deleted>
+          <updated>
+            <id>3333</id>
+            <id>4444</id>
+            <id>etc</id>
+          </updated>
+        </ids>
 			</include>
       <include name="referenceTable" type="xml">
         <references>
