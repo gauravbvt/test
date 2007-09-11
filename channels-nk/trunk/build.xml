@@ -50,7 +50,7 @@
 		<chown owner="${netkernel.user}">
 			<fileset refid="jars"/>
 		</chown>
-		<chmod perm="go+rw">
+		<chmod perm="g+rw">
 			<fileset refid="jars"/>
 		</chmod>
     </target>
@@ -58,35 +58,31 @@
     <target description="Deploy everything" name="deploy" depends="all">
         <mkdir dir="${deploy.dir}"/>
 		<copy todir="${deploy.dir}">
-			<fileset dir="${dist.dir}">
-				<include name="**/*.jar"/>
-			</fileset>
+			<fileset refid="jars"/>
+		</copy>
+		<copy todir="${netkernel.home.dir}/modules">
+			<fileset refid="jars"/>
 		</copy>
 		<chown owner="${netkernel.user}" type="both">
 			<dirset dir="${deploy.dir}"/>
 			<fileset dir="${deploy.dir}">
-				<include name="*"/>
+				<present present="srconly" targetdir="${dist}"/>
+			</fileset>
+			<fileset dir="${netkernel.home.dir}/modules">
+				<present present="srconly" targetdir="${dist}"/>
 			</fileset>
 		</chown>
-		<chmod perm="go+rx">
+		<chmod perm="g+rwx">
 			<dirset dir="${deploy.dir}"/>
 		</chmod>
 		<chmod perm="g+rw">
 			<fileset dir="${deploy.dir}">
-				<include name="*"/>
+				<present present="srconly" targetdir="${dist}"/>
 			</fileset>
-		</chmod>
-		<copy todir="${netkernel.home.dir}/modules">
-			<fileset dir="${dist.dir}">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
-		<chmod perm="g+rw">
 			<fileset dir="${netkernel.home.dir}/modules">
-				<include name="*"/>
+				<present present="srconly" targetdir="${dist}"/>
 			</fileset>
 		</chmod>
-
     </target>
     
     <target description="Clean up the derived objects" name="clean" depends="init">
@@ -125,8 +121,9 @@
 	
 	<target name="install" description="Configure a new installation of NetKernel" depends="deploy">
 		<filter filtersFile="mod-channels/build/version.properties"/>
-		<filter filtersFile="mod-control/build/version.properties"/>		
+		<filter filtersFile="mod-control/build/version.properties"/>	
 		<filter token="deploy-dir" value="${deploy.dir}"/>
+		
 		<copy file="${basedir}/config/deployedModules-${install.mode}.xml"
 			tofile="${netkernel.home.dir}/etc/deployedModules.xml"
 			filtering="true" overwrite="true"/>
@@ -134,11 +131,6 @@
 			tofile="${netkernel.home.dir}/modules/mod-fulcrum-frontend/module.xml"
 			overwrite="true"
 			filtering="true"/>
-		<copy todir="${netkernel.home.dir}/modules">
-			<fileset dir="${dist.dir}">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
 
 		<fileset id="channels-files" dir="${netkernel.home.dir}" followsymlinks="true" >
 			<include name="modules/**/*"/>
@@ -148,7 +140,7 @@
 		<chown verbose="yes" owner="${netkernel.user}">
 			<fileset refid="channels-files"/>
 		</chown>
-		<chmod perm="go+rw">
+		<chmod perm="g+rw">
 			<fileset refid="channels-files"/>
 		</chmod>
 	</target>
