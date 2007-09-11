@@ -14,10 +14,7 @@
 			}
 			
 			public function editorStateChange(event:StateChangeEvent):void {
-				
-				if (event.newState == 'EditState') {
-					Alert.show(event.target.id) ;
-				}
+				//
 			}
 		
 		]]>
