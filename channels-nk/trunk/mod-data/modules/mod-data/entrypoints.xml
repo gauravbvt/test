@@ -154,6 +154,18 @@
     <icon/>
   </entrypoint>
   <entrypoint>
+    <name>mod_data_cron_config</name>
+    <uri>ffcpl:/etc/CRONConfig.xml</uri>
+    <indexable>
+      <title>config for initializing the data store</title>
+      <desc></desc>
+      <keywords/>
+    </indexable>
+    <categories>cron hidden</categories>
+    <group>Tests</group>
+    <icon/>
+  </entrypoint>  
+<!--  <entrypoint>
     <name>urn:postInstall</name>
     <uri>active:channels_data_openModel</uri>
     <indexable>
@@ -164,6 +176,6 @@
     <categories/>
     <group>channels_data</group>
     <icon/>
-  </entrypoint>
+  </entrypoint> -->
 
 </entrypoints>

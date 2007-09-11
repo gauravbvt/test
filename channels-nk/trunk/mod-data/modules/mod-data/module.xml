@@ -21,9 +21,10 @@
 		<uri>
 			<match>active:channels_data_.*</match>
 			<match>ffcpl:/com/mindalliance/channels/data/.*</match>
-      <match>schema:.*</match>
-      <match>db:.*</match>
+            <match>schema:.*</match>
+            <match>db:.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
 	</export>
    <rewrite> <!-- non-accessor resources -->
