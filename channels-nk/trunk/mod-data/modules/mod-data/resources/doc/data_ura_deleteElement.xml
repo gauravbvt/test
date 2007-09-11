@@ -31,12 +31,16 @@
 				<sub name="format"/>
 			</format>
 			<returns>
-				<b>t</b>
+				<ids>
+          <id>someId</id>
+          <id>someOtherId</id>
+          <id>etc</id>
+        </ids>
 			</returns>
 			<syntax>
 				<type><b>channels_data_deleteElement</b></type>
 				<id req="true">the element's id</id>
-				<target req="false">boolean response</target>
+				<target req="false">identifiers of deleted elements</target>
 			</syntax>
 		</content>
 		<includes>
@@ -54,11 +58,59 @@
 		<content>
 	    <p>
 				The <code>channels_data_deleteElement</code> accessor removes the element with the given unique id from the currently opened model.
+        Other elements with references to it are either updated with references removed, or they are removed altogether.
+        A reference table determines which referring elements are updated and which are deleted. The process is recursive (cascaded deletes).
 			</p>
-			<p>If successful the response is the boolean true</p>
+			<p>The response is the list of identifiers for all deleted elements. For example: </p>
+      <sub name="ids"/>
+      <p>
+        The reference table at (private) uri <code>ffcpl:/resources/schemas/referenceTable.xml</code> instructs the updates and consequent
+        deletions required to maintain the referential integrity of the model. A sample reference table:
+      </p>
+       <sub name="referenceTable"/>
+      <p>
+        When an element is deleted, other elements may need to be updated by having references to the deleted location removed.
+        The <code>reference</code> element with a <code>to</code> attribute naming the kind of element deleted provides
+        instructions as to what referring elements to update or delete.
+        The <code>from</code> elements in the relevant <code>reference</code> element
+        contain reference paths that instruct where to look for references to the deleted element. The <code>cascade</code>
+        attribute of a <code>from</code> element instructs what to do with the referring element.
+      </p>
+      <p> 
+        If the cascade path is a single period then the referring element must be deleted as a whole (which may trigger further
+        deletes and updates). Otherwise, the cascade path indicates how to remove the referrence without deleting the referring element.
+        If no cascade attribute is given, it defaults to the referrence path. This means that the element directly containing the id
+        of the deleted element is to be removed. If the cascade is a truncation of the referrence path, then an element that is a parent of the
+        element directly containing the id needs to be removed.
+      </p>
+       <p>
+        For example, according to the sample reference table, when a location is deleted, other locations may need to be updated.
+        The paths <code>./within/locationId</code> and <code>./nextTo/locationId</code> instruct where to look
+        for the ids of the deleted location (references to it). The cascades default to the reference paths so only <code>locationId</code>
+        elements would be removed. For either events or tasks, the id of the deleted location is looked up under
+        <code>./where/locationId</code> but the cascade path is <code>./where</code> meaning that the enclosing <code>where</code> 
+        element needs to be removed.
+      </p>
 		</content>
 		<includes>
-			<include/>
+      <include name="ids" type="xml">
+         <ids>
+           <id>12345</id>
+           <id>67890</id>
+         </ids> 
+			</include>
+      <include name="referenceTable" type="xml">
+        <references>
+          <reference to="location">
+            <from element="location">./within/locationId</from>
+            <from element="location">./nextTo/locationId</from>
+            <from element="event|task" cascade="./where">./where/locationId</from>
+          </reference>
+          <reference to="project">
+            <from element="scenario" cascade=".">./projectId</from>
+          </reference>
+        </references>
+      </include>
 		</includes>
 	</section>
 </document>
