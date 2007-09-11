@@ -34,9 +34,9 @@
     </assert>
   </test> 
   <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testDeleteElement.idoc</uri>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testDeleteElement.js</uri>
     <assert name="Deleted element">
-      <exception>Element not found</exception> 
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
   <test>

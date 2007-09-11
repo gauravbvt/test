@@ -10,6 +10,13 @@ DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
 SCHEMA_URL = "http://@host@:@port@/channels/schema/"; 
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
 
+function contains(array, object) {
+	for each (el in array) {
+		if (el == object) return true;
+	}
+	return false;
+}
+
 function log(content, level) {
   var req=context.createSubRequest("active:application-log");
   req.addArgument("operand", new StringAspect(content) );
@@ -106,21 +113,147 @@ function putDocument(doc) {
   log("Element " + id + " put in container " + dbxml_getContainerName(), "info");	
 }
 
-// Deletes document by name. if exists. Returns whether existed.
+function updateDocument(doc) {
+	var id = doc.id[0].text(); // document *must* have id
+  log("Updating element with id " + id, "info");
+  // Delete older version (must exist else exception)
+  deleteDocument(id);
+  // Then replace with new version
+	putDocument(doc);
+  // Cut goldenthread for entire model
+	cutGoldenThread( "gt:channels");
+}
+
+// Run query and return the results as IURepresentation
+function runQuery(query) {
+	log("Processing query: " + query, "info");
+	var op =  "<dbxml>\n" +
+	      		" <container>" + dbxml_getContainerName() + "</container>\n" +
+	      		" <xquery>\n" +
+	      		"  <![CDATA[\n   " + query + "\n  ]]>\n" +
+	      		" </xquery>\n" +
+	      	 "</dbxml>";
+	var req=context.createSubRequest("active:dbxmlQuery");
+	req.addArgument("operator", new StringAspect(op));
+	var result=context.issueSubRequest(req);
+	log("Got results to query:\n" + context.transrept(result, IAspectString).getString(), "info");
+	return result;
+}
+
+// Find the ids of all elements of given kind that evaluate refPath to id
+function findReferrers(id, kind, refPath) {
+	log("Finding " + kind + " referrers of " + id + " by " + refPath, "info");
+	var path = new String(refPath);
+	var query = "<list>\n" +
+								"{\n" +
+									"for $e in collection('__MODEL__')/" + kind + "\n" +
+									"where $e/" + path.substr(2,path.length) + " = '" + id + "'\n" +
+									"return\n" +
+									"  <id>{$e/id/text()}</id>\n" +
+								"}\n" +
+	            "</list>";
+	var result = runQuery(filter(query));
+	var list = new XML(context.transrept(result, IAspectString).getString());
+	log("Referrers are: \n" + list, "info");
+	var ids = [];
+	for each (id in list.id) {
+		ids.push(id.text());
+	}
+	return ids;
+}
+
+// Deletes in referrer element at cascade references to id at refPath
+function deleteReference(referrer, refPath, cascade, id) {
+	log("Delete reference to " + id + " by " + referrer + " via " + refPath + " deleting " + cascade, "info");
+	var dottedRefPath = new String(refPath).replace(/\.\/|\//g, "."); // transform ./x/y/x into dotted path .x.y.z
+	var dottedCascade = new String(cascade).replace(/\.\/|\//g, "."); 
+	if (dottedRefPath.indexOf(dottedCascade) != 0){ 	// Invalid cascade path
+		log("Error in reference table: " + cascade + " in " + refPath, "info");
+		throw("Invalid reference table");
+	}
+	var els = eval("referrer" + dottedRefPath);
+	for (i in els) { // loop explicitly because somehow e4x filtering is broken on non-attribute values.
+	  var el = els[i];
+		if (el.text() == id) {
+			if (dottedRefPath == dottedCascade) { // just delete the element
+			  // log("Deleting immediate reference " + el.toString() + " at " + dottedRefPath, "info");
+				eval ("delete referrer" + dottedRefPath + "[" + i + "]");
+			  log("Deleted immediate reference in " + referrer + " at " + dottedRefPath, "info");
+			}
+			else { // delete ancestor of element
+				// get the ancestor to delete
+				var target;
+				var delta = dottedRefPath.split(".").length - dottedCascade.split(".").length; // count delta in number of dots
+				log("Deleting parent up " + delta + " level(s)", "info");
+				for (i=0; i< delta; i++) {
+					target = el.parent(); // move up lineage
+				}
+				els = eval("referrer" + dottedCascade);
+				for (i in els) {
+					if (els[i] === target) {
+						eval ("delete referrer" + dottedCascade + "[" + i + "]");
+						log("Delete parent " + target + "=>\n" + referrer, "info");
+					}
+				}
+			}
+		}
+		// update element
+		updateDocument(referrer);
+	}
+}
+
+// Delete all references to an element based on reference table. Return list of IDs deleted
+function deleteReferencesTo(element, deletedIds, refTable) {
+	log("Deleting references to\n" + element.name() + ":" + element.id.text() + " except for "+ deletedIds, "info");
+	var elName = element.name();
+	for each (from in refTable.*.(@to == elName).from) {
+	  var refNames = new String(from.@element).split("|");
+	  var refPath = from.text();
+	  var cascade = (from.@cascade.length() == 0) ? refPath : from.@cascade; // none if same as refPath, if "." then referer needs to be deleted
+		for each (kind in refNames) {
+			var ids = findReferrers(element.id.text(), kind, refPath);
+				for each (id in ids) {
+					if (cascade == '.') {
+						deleteElementExcept(id, deletedIds, refTable); // delete element and cascade
+					}
+					else {
+						var referrer = getDocument(id);
+						// log("Deleting in " + referrer + " reference " + cascade, "info");
+						deleteReference(referrer, refPath, cascade, element.id.text()); // remove reference to element from referrer
+					}
+			}
+		}
+	}
+}
+
+function deleteElement(id) {
+	var deleted = [];
+	var refTable = new XML(context.sourceAspect("ffcpl:/resources/schemas/referenceTable.xml", IAspectXmlObject).getXmlObject());
+	deleteElementExcept(id, deleted, refTable);
+	return deleted;
+}
+
+// Returns the list of ids of elements deleted
+function deleteElementExcept(id, deleted, refTable) {
+	log("Deleting " + id + " except if in " + deleted, "info");
+	// delete if not already deleted
+	if (!contains(deleted,id)) { 
+		var deletedDoc = deleteDocument(id);
+		deleted.push(id);
+		// Delete referrers to deleted document that are not already deleted
+		deleteReferencesTo(deletedDoc, deleted, refTable);
+	}
+}
+
+// Deletes document by name. if exists. Returns the deleted document. Raise exception if document does not exist.
 function deleteDocument(id) {
 	log("Deleting element " + id, "info");
-	var deleted = false;
+	var deleted = getDocument(id);
   var op =  getDocumentDescriptor(id);
-  try {
-    var req=context.createSubRequest("active:dbxmlDeleteDocument");
-    req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
-    context.issueSubRequest(req);
-    log("Deleted older version of " + id + " from container " + dbxml_getContainerName(), "info");
-    deleted = true;
-  }
-  catch(e) { // RISKY: hides all other failures
-    log("No older version of " + id + " deleted from container " + dbxml_getContainerName(), "warning");
-  }
+  var req=context.createSubRequest("active:dbxmlDeleteDocument");
+  req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
+  context.issueSubRequest(req);
+  log("Deleted document " + id + " from container " + dbxml_getContainerName(), "info");
   return deleted;
 }
 
@@ -231,6 +364,9 @@ function sleep(msecs) {
 	context.issueSubRequest(req);
 }
 
+
+// Locking
+
 // Wait for write lock to be released if grabbed.
 // Grab read lock then increment read mutex by one, release read lock.
 function beginRead() {
@@ -288,6 +424,7 @@ function beginWrite() {
 		releaseLock("lock:write");
 	}
 }
+
 // Release read lock.
 function endWrite() {
 	log("End write", "info");

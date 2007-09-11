@@ -27,22 +27,6 @@ function addNamesToReferences(elem) {
 			}
 		}
 }
-/**
-function findListedReferenceElementNames(elem) {
-	var list = new Array();
-	var uri = elem.@schema;
-	var schema = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
-	default xml namespace = 'http://relaxng.org/ns/structure/1.0'; // limit the scope of default ns to this functon
-	for each (elDef in schema..zeroOrMore.element) {
-		var elName = elDef.@name;
-		if (elName.match(/Id$/)) { // better enforce this naming pattern throughout...
-			log("Found listed ID at " + elName, "info");
-			list.push(elName);
-		}
-	}
-	return list;
-}
-**/
 
 function findReferencedElementNames(elem) {
 	var list = new Array();

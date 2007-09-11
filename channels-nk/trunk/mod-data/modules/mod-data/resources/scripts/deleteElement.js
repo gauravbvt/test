@@ -13,12 +13,13 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
 var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
-var deleted;
+var list = <ids/>;
 try {
 	beginWrite();
-	deleted = deleteDocument(id);
-	// Delete references
-	// TBD
+	var ids = deleteElement(id); // delete document and cascade delete on references
+	for each (deleted in ids) {
+		list.insertChildAfter(null, <id>{deleted}</id>);
+	}
 }
 finally {
 	endWrite();
@@ -31,7 +32,7 @@ req.addArgument("param", "gt:channels");
 res=context.issueSubRequest(req);
 
 //Return Response
-var resp=context.createResponseFrom(new BooleanAspect(deleted));
+var resp=context.createResponseFrom(new XmlObjectAspect(list.getXmlObject()));
 resp.setExpired(); // don't cache
 resp.setMimeType("text/xml");
 context.setResponse(resp);

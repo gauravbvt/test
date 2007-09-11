@@ -16,27 +16,21 @@ var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXm
 validateRNG(doc); // Make sure it is valid
 log("Updating with: " + doc, "info");
 var id = doc.id.text();
-var deleted;
 if (id != null) {
-  log("Updating element with id " + id, "info");
+	var isLocking = true;
   try {
   	beginWrite();
-	  // Delete older version if exists
-	  deleted = deleteDocument(id);
-	  // Then replace with new version
-		putDocument(doc);
+  	updateDocument(doc, isLocking);
   }
   finally {
   	endWrite();
   }
-  // Cut goldenthread for entire model
-	cutGoldenThread( "gt:channels");
 }
 else {
   throw("Can't update element with no id", "warning");
 }
 
 //Return Response
-var resp=context.createResponseFrom(new BooleanAspect(deleted));
+var resp=context.createResponseFrom(new BooleanAspect(true));
 resp.setExpired(); // don't cache
 context.setResponse(resp);

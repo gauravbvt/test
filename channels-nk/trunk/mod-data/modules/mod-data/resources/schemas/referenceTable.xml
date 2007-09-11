@@ -1,0 +1,49 @@
+<references>
+  <!-- Ideally this table should be generated from annotated schemas to minimize opportunities for errors -->
+  <reference to="category">
+    <from element="acquirement|artifact|event|location|organization|repository|role|task">./categories/categoryId</from>
+    <from element="category">./disciplines/categoryId</from>
+    <from element="category">./implies/categoryId</from>
+  </reference>
+  <reference to="location">
+    <from element="location">./within/locationId</from>
+    <from element="location">./nextTo/locationId</from>
+    <from element="event|task" cascade="./where">./where/locationId</from>
+  </reference>
+  <reference to="project">
+    <from element="scenario" cascade=".">./projectId</from>
+  </reference>
+  <reference to="scenario">
+    <from element="task|event" cascade=".">./scenarioId</from>
+  </reference>
+  <reference to="person">
+    <from element="project">./managedByPersonId</from>
+  </reference>
+  <reference to="user">
+    <from element="person">./userId</from>
+  </reference>
+  <reference to="role">
+    <from element="category|acquirement">./information/topic/privacy/roleId</from>
+    <from element="role">./expertise/information/topic/privacy/roleId</from>
+    <from element="repository">./contents/information/topic/privacy/roleId</from>
+    <from element="repository">./administrators/roleId</from>
+    <from element="repository">./access/roleId</from>
+    <from element="person">./roles/roleId</from>
+    <from element="agent" cascade=".">./roleId</from>
+  </reference>
+  <reference to="organization">
+    <from element="role" cascade=".">./organizationId</from>
+    <from element="organization">./parentOrganizationId</from>
+    <from element="repository" cascade=".">./organizationId</from>
+  </reference>
+  <reference to="event">
+    <from element="phase" cascade=".">./eventId</from>
+    <from element="task|event" cascade="./cause">./cause/eventId</from>
+  </reference>
+  <reference to="task">
+    <from element="task|event" cascade="./cause">./cause/taskId</from>
+    <from element="event" cascade="./taskId">./terminatesAfter/taskCompletions/taskId</from>
+    <from element="agent" cascade=".">/taskId</from>
+    <from element="artifact|acquirement" cascade=".">./product/taskId</from>
+  </reference>
+</references>

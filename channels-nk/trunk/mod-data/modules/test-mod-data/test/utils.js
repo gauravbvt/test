@@ -13,9 +13,14 @@ function log(content, level) {
   context.issueSubRequest(req);
 }
 
-function pause(millis) {
-	java.lang.Thread.sleep(millis);
-} 
+function reloadModel() {
+	// Delete model
+	var req = context.createSubRequest("active:channels_data_deleteModel");
+	context.issueSubRequest(req);
+	// Open model from db:testDB.xml
+	req = context.createSubRequest("active:channels_data_openModel");
+	context.issueSubRequest(req);
+}
 
 function issueValidateRNGRequest(schemaURI, docURI) {
 	log("Schema uri = " + schemaURI + ", docURI = " + docURI, "info");

@@ -35,26 +35,14 @@ if (context.getThisRequest().argumentExists("variables")) {
 // Prepare the query
 if (properties != null) query = declareVariables(query, properties); // Add variable declaration as prologue
 query = filter(query); // Substitute place holders
-// log("Processed query: " + query, "info");
-query
-var op =  "<dbxml>\n" +
-      " <container>" + dbxml_getContainerName() + "</container>\n" +
-      " <xquery>\n" +
-      "  <![CDATA[\n   " + query + "\n  ]]>\n" +
-      " </xquery>\n" +
-      "</dbxml>";
-
 var result;
 try {
 	beginRead();
-	var req=context.createSubRequest("active:dbxmlQuery");
-	req.addArgument("operator", new StringAspect(op));
-	result=context.issueSubRequest(req);
+	result = runQuery(query);
 }
 finally {
 	endRead();
 }
-log("Got results to query:\n" + context.transrept(result,IAspectXmlObject).getXmlObject(), "info");
 
 //Return Response
 var resp=context.createResponseFrom(result);

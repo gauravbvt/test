@@ -20,14 +20,7 @@ function makeProperties(obj) {
 	return variables
 }
 
-// Delete model
-var req = context.createSubRequest("active:channels_data_deleteModel");
-context.issueSubRequest(req);
-
-// Open model from db:testDB.xml
-req = context.createSubRequest("active:channels_data_openModel");
-req.addArgument("init", "db:testQueriesDB.xml");
-context.issueSubRequest(req);
+reloadModel();
 
 var tests = 
 	[
@@ -72,7 +65,7 @@ try {
 		// Verify correct number of results in list
 		var resCount = res.selectPath("./list/*").length;
 		if (resCount != count) {
-			var mess = "Query returned " + resCount + " results instead of the expected " + count;
+			var mess = "Query returned " + resCount + " results in " + res + " instead of expected " + count;
 			log(mess, "severe");
 			throw("Invalid query");
 		}

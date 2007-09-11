@@ -197,7 +197,7 @@
   <task>
     <id>task2</id>
     <name>Another task</name>
-    <description>About anotehr task</description>
+    <description>About another task</description>
     <categories atMostOne="false" taxonomy="task"/>
     <scenarioId>scenario1</scenarioId>
     <cause>
