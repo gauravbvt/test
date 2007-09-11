@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Box xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.mindalliance.channels.view.common.*"
-	xmlns:categories="com.mindalliance.channels.view.categories.*">
+	xmlns:categories="com.mindalliance.channels.view.categories.*"
+    implements="com.mindalliance.channels.view.common.IEditor"
+    enabled="{edited != null}">
 
 	<mx:Script>
 		<![CDATA[
@@ -23,7 +25,16 @@
             import com.mindalliance.channels.model.EditorModel;
             
             [Bindable]
-            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
             [Bindable]
             private var elementModel : ElementModel;

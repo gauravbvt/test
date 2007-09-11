@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+<common:Chooser xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" 
+	elementListKey="events" 
+	elementName="Events" 
+	editorType="{com.mindalliance.channels.view.scenario.EventEditor}">
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.events.scenario.GetEventEvent;
+			import com.mindalliance.channels.events.scenario.GetEventListEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
+            override protected function populateList() : void {
+                CairngormHelper.fireEvent( new GetEventListEvent(channelsModel.currentScenario.id) ); 
+            }
+            
+            override protected function populateElement(id : String) : void {
+                CairngormHelper.fireEvent( new GetEventEvent(id, model.editorModel));
+            }
+		]]>
+	</mx:Script>
+</common:Chooser>
+<!--<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:search="com.mindalliance.channels.view.search.*" xmlns:scenario="com.mindalliance.channels.view.scenario.*"
 	resizeEffect="Resize"
     creationComplete="init()">
@@ -7,9 +26,9 @@
 	<mx:Script>
 		<![CDATA[
 			import com.mindalliance.channels.events.common.ChooserSelectEvent;
-			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.events.scenario.GetEventEvent;
 			import com.mindalliance.channels.util.ElementHelper;
-			import com.mindalliance.channels.events.scenario.GetTaskListEvent;
+			import com.mindalliance.channels.events.scenario.GetEventListEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
 			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
@@ -35,19 +54,20 @@
             [Bindable]
             public var processSelected : Function;
 
-			private function getTaskList() : void {
-               CairngormHelper.fireEvent( new GetTaskListEvent(channelsModel.currentScenario.id) );
+			private function getEventList() : void {
+               CairngormHelper.fireEvent( new GetEventListEvent(channelsModel.currentScenario.id) );
             }
 
 			private function closeChooser():void {
 				PopUpManager.removePopUp(this) ;
 			}
 			private function init(): void {
-                model.editorModel = taskEditor.model;
+				eventEditor.model =model.editorModel;
+                model.editorModel = eventEditor.model;
             }
             
             private function applyFilter(evt : Event = null) : void {
-                 taskList.refresh();    
+                 eventList.refresh();    
             }
             
            private function filter(item : Object) : Boolean {
@@ -61,20 +81,15 @@
             }
             
             private function changeSelection() : void {
-                var el : ElementVO = (listTasks.selectedItem as ElementVO);
+                var el : ElementVO = (listEvents.selectedItem as ElementVO);
                 var id : String = null;
                 if (el != null) {
                     id = el.id;
                 }
-                CairngormHelper.fireEvent( new GetTaskEvent(id, model.editorModel));
-                CairngormHelper.fireEvent(new ChooserSelectEvent(model, listTasks.selectedItems));
+                CairngormHelper.fireEvent( new GetEventEvent(id, model.editorModel));
+                CairngormHelper.fireEvent(new ChooserSelectEvent(model, listEvents.selectedItems));
             }
             
-            private function done() : void {
-                if (processSelected != null) {
-                    processSelected(model.selection);
-                }
-            }
             private function clickAddToList() : void {
                 if (processSelected != null) {
                     processSelected(model.selection);
@@ -83,23 +98,23 @@
             }
 		]]>
 	</mx:Script>
-    <mx:Binding source="model.getElementListModel('tasks')" destination="elementListModel"/>
-    <mx:ArrayCollection id="taskList" source="{elementListModel.data.source}" filterFunction="filter"/>
+    <mx:Binding source="model.getElementListModel('events')" destination="elementListModel"/>
+    <mx:ArrayCollection id="eventList" source="{elementListModel.data.source}" filterFunction="filter"/>
     
 	<mx:HBox>
 		<mx:VBox width="100%" height="100%">
 			<search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}"/>
-			<mx:Label text="Tasks" fontWeight="bold"/>
-			<mx:List id="listTasks" width="100%" height="100%" change="changeSelection()" dataProvider="{taskList}" labelField="name"/>
+			<mx:Label text="Events" fontWeight="bold"/>
+			<mx:List id="listEvents" width="100%" height="100%" change="changeSelection()" dataProvider="{eventList}" labelField="name"/>
 			<mx:HBox>
-				<mx:Label text="Select tasks and"/>
-				<mx:Button label="Add to list" enabled="{listTasks.selectedItems.length > 0}" click="clickAddToList()"/>
+				<mx:Label text="Select events and"/>
+				<mx:Button label="Add to list" enabled="{listEvents.selectedItems.length > 0}" click="clickAddToList()"/>
 			</mx:HBox>
 		</mx:VBox>
-		<scenario:TaskEditor id="taskEditor" enabled="{listTasks.selectedItems.length == 1}" width="100%"/>
+		<scenario:EventEditor id="eventEditor" enabled="{listEvents.selectedItems.length == 1}" width="100%"/>
 	</mx:HBox>
 	<mx:ControlBar horizontalAlign="right">
 		<mx:Button label="Close" click="closeChooser()"/>
 	</mx:ControlBar>
 	
-</mx:Panel>
+</mx:Panel>-->

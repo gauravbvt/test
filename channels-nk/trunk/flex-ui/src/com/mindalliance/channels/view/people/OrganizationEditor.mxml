@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:common="com.mindalliance.channels.view.common.*" 
+    implements="com.mindalliance.channels.view.common.IEditor"
 	creationComplete="init()">
     
 	<mx:Script>
@@ -45,9 +46,18 @@
 				currentState = '' ;
 			}
 			
-			[Bindable]
-            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
-			
+            [Bindable]
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
 			private function update() :void {
 				
 				CairngormHelper.fireEvent( 

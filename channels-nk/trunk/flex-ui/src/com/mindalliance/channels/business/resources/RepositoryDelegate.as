@@ -17,7 +17,12 @@ package com.mindalliance.channels.business.resources
 		public function RepositoryDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName="repository";
 		}
+	    public function getRepositoryList() : void {
+            performQuery("allRepositories", null);
+        }
+		
 		/**
          * parses /channels/schema/repository.rng
          */

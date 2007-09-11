@@ -26,7 +26,8 @@ package com.mindalliance.channels.business.scenario
 		override public function fromXML(obj:XML):ElementVO {
 			return new AcquirementVO(obj.id, obj.name, obj.description,
 			                     XMLHelper.xmlToCategorySet(obj),
-			                     XMLHelper.xmlToIdList("taskId", obj.product));
+			                     XMLHelper.xmlToIdList("taskId", obj.product),
+                                     XMLHelper.xmlToInformation(obj.information));
 		}
 		
 		override public function toXML(element:ElementVO) : XML {
@@ -39,6 +40,7 @@ package com.mindalliance.channels.business.scenario
             
             xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
             xml.appendChild(XMLHelper.idListToXML("product", "taskId", obj.product));
+            xml.appendChild(XMLHelper.informationToXML(obj.information));
             return xml;
 		}
 	}

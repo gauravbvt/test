@@ -114,6 +114,12 @@ package com.mindalliance.channels.control
             this.addCommand(CreateArtifactEvent.CreateArtifact_Event, CreateArtifactCommand);
             this.addCommand(UpdateArtifactEvent.UpdateArtifact_Event, UpdateArtifactCommand);
             
+            this.addCommand(GetAcquirementListEvent.GetAcquirementList_Event, GetAcquirementListCommand);
+            this.addCommand(DeleteAcquirementEvent.DeleteAcquirement_Event, DeleteAcquirementCommand);
+            this.addCommand(GetAcquirementEvent.GetAcquirement_Event, GetAcquirementCommand);
+            this.addCommand(CreateAcquirementEvent.CreateAcquirement_Event, CreateAcquirementCommand);
+            this.addCommand(UpdateAcquirementEvent.UpdateAcquirement_Event, UpdateAcquirementCommand);
+           
             this.addCommand(GetEventListEvent.GetEventList_Event, GetEventListCommand);
             this.addCommand(DeleteEventEvent.DeleteEvent_Event, DeleteEventCommand);
             this.addCommand(GetEventEvent.GetEvent_Event, GetEventCommand);

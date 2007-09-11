@@ -8,7 +8,9 @@ package com.mindalliance.channels.commands.people
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.people.UpdateOrganizationEvent;
 	import com.mindalliance.channels.model.*;
+	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.vo.OrganizationVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class UpdateOrganizationCommand extends BaseDelegateCommand
 	{
@@ -43,7 +45,11 @@ package com.mindalliance.channels.commands.people
 		{
 			if (data["data"]==true) {
                 log.debug("Organization successfully updated");
+                var id : String = (data["id"] as String);
 			    channelsModel.getElementModel((data["id"] as String)).dirty = false;
+			
+			    var el : ElementVO = ElementHelper.findElementById(id, channelsModel.getElementListModel('organizations').data);
+                el.name = channelsModel.getElementModel(id).data.name;
 			} else {
                 log.error("Update of organization " + data["id"] + " failed");
 			}

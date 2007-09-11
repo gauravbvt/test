@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form 
 	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*"
-	creationComplete="init()">
+	creationComplete="init()"
+    implements="com.mindalliance.channels.view.common.IEditor">
 
 	<mx:Script>
 		<![CDATA[
@@ -20,8 +21,17 @@
             import com.mindalliance.channels.model.ElementModel;
             import com.mindalliance.channels.util.CairngormHelper;
 			
-			[Bindable]
-			public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            [Bindable]
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
             [Bindable]
             private var elementModel : ElementModel;

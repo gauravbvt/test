@@ -5,6 +5,9 @@
     xmlns:logging="com.mindalliance.channels.view.logging.*">
     <mx:Script>
 	    <![CDATA[
+	    	import com.mindalliance.channels.view.scenario.ArtifactEditor;
+	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
+	    	import com.mindalliance.channels.view.people.OrganizationChooser;
 	    	import mx.effects.Resize;
 	    	import mx.events.FlexEvent;
 	    	import mx.events.EffectEvent;
@@ -12,20 +15,21 @@
 	    	import mx.effects.WipeDown;
 	    	import mx.effects.Effect;
 	    	import mx.containers.Panel;
-	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
+	    	import com.mindalliance.channels.view.scenario.AcquirementChooser;
 	    	import com.mindalliance.channels.view.scenario.TaskChooser;
 	    	import com.mindalliance.channels.view.categories.CategoryViewer;
 	    	import com.mindalliance.channels.view.people.RoleChooser;
 	    	import com.mindalliance.channels.view.categories.CategoryLibraryEditor;
 	    	import com.mindalliance.channels.view.people.RoleEditor;
-	    	import com.mindalliance.channels.view.scenario.ArtifactEditor;
+	    	import com.mindalliance.channels.view.scenario.AcquirementEditor;
 	    	import com.mindalliance.channels.view.people.PersonalProfileEditor;
             import com.mindalliance.channels.view.scenario.EventEditor;
             import com.mindalliance.channels.view.scenario.EventChooser;
 	    	import com.mindalliance.channels.view.scenario.TaskEditor;
 	    	import com.mindalliance.channels.model.ChannelsModelLocator;
 	    	import mx.events.CloseEvent;
-	    	import com.mindalliance.channels.view.resources.RepositoryEditor;
+            import com.mindalliance.channels.view.resources.RepositoryEditor;
+            import com.mindalliance.channels.view.resources.RepositoryChooser;
 	    	import mx.controls.Menu;
 	    	import com.mindalliance.channels.view.people.OrganizationEditor;
 	    	import com.mindalliance.channels.view.categories.CategoryChooser;
@@ -48,13 +52,17 @@
                 "Role Editor": RoleEditor,
                 "Role Chooser": RoleChooser,
                 "Organization Editor": OrganizationEditor,
+                "Organization Chooser" : OrganizationChooser,
                 "Repository Editor": RepositoryEditor,
+                "Repository Chooser" : RepositoryChooser,
                 "Task Editor": TaskEditor,
                 "Task Chooser": TaskChooser, 
                 "Event Editor": EventEditor, 
                 "Event Chooser" : EventChooser,
                 "Artifact Editor": ArtifactEditor, 
-                "Artifact Chooser": ArtifactChooser
+                "Artifact Chooser": ArtifactChooser,                
+                "Acquirement Editor": AcquirementEditor, 
+                "Acquirement Chooser": AcquirementChooser
                 };
                 
             private function menuBarItemClicked(event:MenuEvent):void {
@@ -124,14 +132,18 @@
 			<menuitem label="Personal Profile Editor"/>
 			<menuitem label="Role Editor"/>
 			<menuitem label="Role Chooser"/>
-			<menuitem label="Organization Editor"/>
-			<menuitem label="Repository Editor"/>
+            <menuitem label="Organization Editor"/>
+            <menuitem label="Organization Chooser"/>
+            <menuitem label="Repository Editor"/>
+            <menuitem label="Repository Chooser"/>
 			<menuitem label="Task Editor"/>
 			<menuitem label="Task Chooser"/>
             <menuitem label="Event Editor"/>
             <menuitem label="Event Chooser"/>
-			<menuitem label="Artifact Editor"/>
-			<menuitem label="Artifact Chooser"/>
+            <menuitem label="Artifact Editor"/>
+            <menuitem label="Artifact Chooser"/>
+            <menuitem label="Acquirement Editor"/>
+            <menuitem label="Acquirement Chooser"/>
         </menuitem>
         <menuitem label="Project">
         	<menuitem label="Create New Project"/>

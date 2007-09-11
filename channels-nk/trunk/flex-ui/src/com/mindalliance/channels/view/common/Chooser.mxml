@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:search="com.mindalliance.channels.view.search.*" xmlns:scenario="com.mindalliance.channels.view.scenario.*"
+    resizeEffect="Resize"
+    creationComplete="init()" xmlns:common="com.mindalliance.channels.view.common.*">
+
+    <mx:Script>
+        <![CDATA[
+            import com.mindalliance.channels.events.common.ChooserSelectEvent;
+            import com.mindalliance.channels.util.ElementHelper;
+            import com.mindalliance.channels.util.CairngormHelper;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementListModel;
+            import mx.collections.ArrayCollection;
+            import mx.managers.PopUpManager;
+            import com.mindalliance.channels.model.ChooserModel;
+            
+            // Models
+            
+            [Bindable]
+            protected var channelsModel : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+            
+            [Bindable] 
+            protected var elementListKey : String;
+            
+            [Bindable]
+            protected var elementName : String;
+            
+            [Bindable]
+            protected var editor : IEditor;
+            
+            [Bindable]
+            public var model : ChooserModel;
+ 
+            [Bindable]
+            public var filtered : ArrayCollection;
+            
+            [Bindable]
+            public var processSelected : Function;
+
+            [Bindable]
+            private var elementListModel : ElementListModel;
+
+            
+            //Override
+            protected function populateList() : void {
+            	
+            }
+            //Override
+            protected function populateElement(id : String) : void {
+            	
+            }
+            
+            private function closeChooser():void {
+                PopUpManager.removePopUp(this) ;
+            }
+            protected function init(): void {
+            	if (model == null){
+                    model = channelsModel.getChooserModel();
+                }
+            	populateList();
+
+                model.editorModel = editor.model;
+            }
+            
+            private function applyFilter(evt : Event = null) : void {
+                 list.refresh();    
+            }
+            
+           private function filter(item : Object) : Boolean {
+                var el : ElementVO = (item as ElementVO);
+                if (filtered != null && ElementHelper.findElementById(el.id, filtered) != null) {
+                    return false;   
+                } else if (searchBox.text != null && searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
+                    return false;
+                }
+                return true;
+            }
+            
+            private function changeSelection() : void {
+                var el : ElementVO = (listElements.selectedItem as ElementVO);
+                var id : String = null;
+                if (el != null) {
+                    id = el.id;
+                }
+                populateElement(id);
+                CairngormHelper.fireEvent(new ChooserSelectEvent(model, listElements.selectedItems));
+            }
+            
+            private function clickAddToList() : void {
+                if (processSelected != null) {
+                    processSelected(model.selection);
+                    applyFilter();
+                }
+            }
+            
+            private function initEditor() : void {
+                if (editor != null) {
+                    chooserHBox.addChild((editor as DisplayObject));	
+                }
+            }
+
+        ]]>
+    </mx:Script>
+    <mx:Binding source="model.getElementListModel(elementListKey)" destination="elementListModel"/>
+    <mx:ArrayCollection id="list" source="{elementListModel.data.source}" filterFunction="filter"/>
+    
+    <mx:HBox id="chooserHBox" >
+        <mx:VBox width="100%" height="100%" >
+            <search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}"/>
+            <mx:Label text="{elementName}" fontWeight="bold"/>
+            <mx:List id="listElements" width="100%" height="100%" change="changeSelection()" dataProvider="{list}" labelField="name"/>
+            <mx:HBox>
+                <mx:Label text="Select {elementName.toLowerCase()} and"/>
+                <mx:Button label="Add to list" enabled="{listElements.selectedItems.length > 0}" click="clickAddToList()"/>
+            </mx:HBox>
+        </mx:VBox>
+        <common:EditorWrapper id="editorPanel" width="100%" editor="{editor}" enabled="{listElements.selectedItems.length == 1}"/>
+    </mx:HBox>
+    <mx:ControlBar horizontalAlign="right">
+        <mx:Button label="Close" click="closeChooser()"/>
+    </mx:ControlBar>
+    
+</mx:Panel>

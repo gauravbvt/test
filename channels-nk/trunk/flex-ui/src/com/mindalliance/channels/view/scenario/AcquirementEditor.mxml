@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:categories="com.mindalliance.channels.view.categories.*">
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.mindalliance.channels.view.common.*" 
+	xmlns:categories="com.mindalliance.channels.view.categories.*"
+    implements="com.mindalliance.channels.view.common.IEditor">
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.events.scenario.UpdateAcquirementEvent;
 			import com.mindalliance.channels.events.scenario.UpdateArtifactEvent;
 			import com.mindalliance.channels.events.scenario.GetAcquirementEvent;
             import com.mindalliance.channels.vo.common.TopicVO;
@@ -21,7 +25,16 @@
             import com.mindalliance.channels.util.CairngormHelper;
             
             [Bindable]
-            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
             [Bindable]
             private var elementModel : ElementModel;
@@ -95,7 +108,7 @@
 			<mx:TextArea id="txtDescription" wordWrap="true" editable="false" text="{edited.description}" change="{queueUpdate()}"/>
 		</mx:FormItem>
 		<mx:FormItem label="Categories" id="formitemCategories" width="100%">
-            <categories:CategoryViewer id="categoryViewer" change="{queueUpdate()}"/>
+            <categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>
 		</mx:FormItem>
 		
 	</mx:Form>

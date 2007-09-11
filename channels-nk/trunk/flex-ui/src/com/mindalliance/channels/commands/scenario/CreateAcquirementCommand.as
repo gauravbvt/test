@@ -4,10 +4,9 @@
 package com.mindalliance.channels.commands.scenario
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.scenario.AcquirementDelegate;
-	import com.mindalliance.channels.events.scenario.*;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.scenario.*;
 	
 	public class CreateAcquirementCommand extends BaseDelegateCommand
 	{

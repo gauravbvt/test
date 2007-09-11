@@ -2,7 +2,9 @@
 <mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:common="com.mindalliance.channels.view.common.*" 
 	xmlns:categories="com.mindalliance.channels.view.categories.*"
-	creationComplete="init()">
+	implements="com.mindalliance.channels.view.common.IEditor"
+	creationComplete="init()"
+	enabled="{edited != null}">
 
 	<mx:Script>
 		<![CDATA[
@@ -24,7 +26,16 @@
 			import com.mindalliance.channels.model.EditorModel;
 			
             [Bindable]
-            public var model : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            public function get model() : EditorModel 
+            {
+            	return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+            	this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
             [Bindable]
             private var elementModel : ElementModel;
