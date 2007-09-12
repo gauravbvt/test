@@ -8,6 +8,7 @@ package com.mindalliance.channels.commands.people
     import com.mindalliance.channels.commands.BaseDelegateCommand;
     import com.mindalliance.channels.events.people.UpdatePersonEvent;
     import com.mindalliance.channels.model.*;
+    import com.mindalliance.channels.util.ElementHelper;
     import com.mindalliance.channels.vo.PersonVO;
 	
 	public class UpdatePersonCommand extends BaseDelegateCommand
@@ -45,7 +46,13 @@ package com.mindalliance.channels.commands.people
 		{
 			if (data["data"]==true) {
                 log.debug("Person successfully updated");
-                channelsModel.getElementModel((data["id"] as String)).dirty = false;
+                var id : String = (data["id"] as String);
+                channelsModel.getElementModel(id).dirty = false;
+                
+                var el : PersonVO = (ElementHelper.findElementById(id, channelsModel.getElementListModel('people').data) as PersonVO);
+                el.firstName = (channelsModel.getElementModel(id).data as PersonVO).firstName;
+                el.lastName = (channelsModel.getElementModel(id).data as PersonVO).lastName;
+                
             } else {
                 log.error("Update of person " + result + " failed");
             }

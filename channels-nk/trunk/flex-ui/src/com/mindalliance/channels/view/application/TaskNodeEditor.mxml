@@ -6,11 +6,17 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.model.application.TaskNodeEditorModel;
 			import mx.controls.Alert;
 			import mx.events.StateChangeEvent;
 		
+            private var model : TaskNodeEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel.taskNodeEditorModel;
+		
 			private function init():void {
 				taskEditor.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, editorStateChange) ;
+				taskEditor.model = model.taskModel;
+				roleEditor.model = model.roleModel;
 			}
 			
 			public function editorStateChange(event:StateChangeEvent):void {

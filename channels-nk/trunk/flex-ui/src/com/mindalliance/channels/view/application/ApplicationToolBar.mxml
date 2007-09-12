@@ -5,6 +5,7 @@
     xmlns:logging="com.mindalliance.channels.view.logging.*">
     <mx:Script>
 	    <![CDATA[
+	    	import com.mindalliance.channels.view.people.PersonChooser;
 	    	import com.mindalliance.channels.view.scenario.ArtifactEditor;
 	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
 	    	import com.mindalliance.channels.view.people.OrganizationChooser;
@@ -62,7 +63,8 @@
                 "Artifact Editor": ArtifactEditor, 
                 "Artifact Chooser": ArtifactChooser,                
                 "Acquirement Editor": AcquirementEditor, 
-                "Acquirement Chooser": AcquirementChooser
+                "Acquirement Chooser": AcquirementChooser,
+                "Person Chooser" : PersonChooser
                 };
                 
             private function menuBarItemClicked(event:MenuEvent):void {
@@ -144,6 +146,7 @@
             <menuitem label="Artifact Chooser"/>
             <menuitem label="Acquirement Editor"/>
             <menuitem label="Acquirement Chooser"/>
+            <menuitem label="Person Chooser"/>
         </menuitem>
         <menuitem label="Project">
         	<menuitem label="Create New Project"/>

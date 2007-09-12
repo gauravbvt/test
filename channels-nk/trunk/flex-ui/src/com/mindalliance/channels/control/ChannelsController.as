@@ -51,7 +51,10 @@ package com.mindalliance.channels.control
 			this.addCommand(DeleteScenarioEvent.DeleteScenario_Event, DeleteScenarioCommand);
 			this.addCommand(UpdateProjectEvent.UpdateProject_Event, UpdateProjectCommand);
 			this.addCommand(UpdateScenarioEvent.UpdateScenario_Event, UpdateScenarioCommand);
-			this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
+            this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
+            this.addCommand(LoadEventNodeEditorEvent.LoadEventNodeEditor_Event, LoadEventNodeEditorCommand);
+            this.addCommand(LoadRepositoryNodeEditorEvent.LoadRepositoryNodeEditor_Event, LoadRepositoryNodeEditorCommand);
+            this.addCommand(LoadTaskNodeEditorEvent.LoadTaskNodeEditor_Event, LoadTaskNodeEditorCommand);
 			this.addCommand(QueueProjectUpdateEvent.QueueProjectUpdate_Event, QueueProjectUpdateCommand);
 			this.addCommand(QueueScenarioUpdateEvent.QueueScenarioUpdate_Event, QueueScenarioUpdateCommand);
 			

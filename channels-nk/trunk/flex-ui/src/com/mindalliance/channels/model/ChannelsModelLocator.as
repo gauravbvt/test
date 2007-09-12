@@ -5,6 +5,7 @@ package com.mindalliance.channels.model
 	import com.adobe.cairngorm.CairngormMessageCodes;
 	import com.adobe.cairngorm.model.IModelLocator;
 	import com.mindalliance.channels.model.application.ProjectScenarioBrowserModel;
+	import com.mindalliance.channels.model.application.PropertyEditorModel;
 	import com.mindalliance.channels.model.categories.*;
 	import com.mindalliance.channels.model.flowmap.FlowMapModel;
 	import com.mindalliance.channels.model.people.*;
@@ -41,7 +42,7 @@ package com.mindalliance.channels.model
 		public var permissionModel : PermissionModel = new PermissionModel();
 		public var flowMapModel : FlowMapModel = new FlowMapModel();
         public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel(getEditorModel(), getEditorModel());
-
+        public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel();
 
 		
 		

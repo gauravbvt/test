@@ -44,6 +44,14 @@ package com.mindalliance.channels.vo
 		private var _roles : ArrayCollection;
 		private var _user : ElementVO;
 		
+		override public function get name() : String {
+            return lastName + ", " + firstName;	
+		}
+		
+		override public function set name(name : String) : void {
+            	
+		}
+		
 		public function get firstName() : String {
 			return _firstName;
 		}

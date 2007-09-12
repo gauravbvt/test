@@ -33,6 +33,10 @@ package com.mindalliance.channels.business.people
          * parses /channels/schema/person.rng
          */
 		override public function fromXML(xml:XML):ElementVO {
+			var user : ElementVO;
+			if (xml.userId.length > 0) {
+                user = new ElementVO(xml.userId, null);	
+			}
 			return new PersonVO(xml.id, 
 			                     xml.firstName,
 			                     xml.lastName,
@@ -42,7 +46,7 @@ package com.mindalliance.channels.business.people
 			                     xml.cellPhone,
 			                     XMLHelper.xmlToAddress(xml.address),
 			                     XMLHelper.xmlToIdList("roleId", xml.roles),
-			                     new ElementVO(xml.userId, null));
+			                     user);
 		}
 		/**
          * generates /channels/schema/person.rng

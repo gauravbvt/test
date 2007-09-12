@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:resources="com.mindalliance.channels.view.resources.*"
-	xmlns:people="com.mindalliance.channels.view.people.*">
+	xmlns:people="com.mindalliance.channels.view.people.*"
+	creationComplete="init()">
 	
-	<resources:RepositoryEditor label="{'Repository: '}"/>
-	<people:OrganizationEditor label="{'Organization: '}"/>
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.model.application.RepositoryNodeEditorModel;
+            private var model : RepositoryNodeEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel.repositoryNodeEditorModel;
+		
+			private function init():void {
+                repositoryEditor.model = model.repositoryModel;
+                organizationEditor.model = model.organizationModel;
+            }
+		]]>
+	</mx:Script>
+	
+	<resources:RepositoryEditor label="{'Repository: '}" id="repositoryEditor"/>
+	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor"/>
 </mx:TabNavigator>

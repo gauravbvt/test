@@ -60,6 +60,7 @@
                 rc.processSelected=function(selected : ArrayCollection) : void {
                     for each(var el : ElementVO in selected) {
                         edited.roles.addItem(el);   
+                        queueUpdate();
                     }
                 }		
 				var p:Point = new Point(listRoles.x, listRoles.y) ;
@@ -90,6 +91,7 @@
 			private function removeRole() : void {
 				if (listRoles.selectedIndex >=0) {
 				    edited.roles.removeItemAt(listRoles.selectedIndex);
+				    queueUpdate();
 				}
 			}
 			
