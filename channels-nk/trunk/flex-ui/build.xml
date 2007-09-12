@@ -14,9 +14,27 @@
 		<mkdir dir="${ui.dist.dir}"/>
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${report.dir}"/>
+		
+		<mkdir dir="${build.dir}/filtered-resources"/>
+		<copy todir="${build.dir}/filtered-resources">
+			<fileset dir="resources"/>
+			<filterset>
+				<filtersfile file="../deploy.properties"/>
+			</filterset>
+		</copy>
 	</target>
 	
-    <target name="compile" depends="init">
+	<target name="compile-check" depends="init">
+		<uptodate property="compile-not-needed" targetfile="${build.dir}/Channels.swf">
+			<srcfiles dir="${src.dir}">
+				<include name="com/**"/>
+				<include name="assets/**"/>
+			</srcfiles>
+			<srcfiles dir="resources" includes="**"/>
+		</uptodate>
+	</target>
+
+    <target name="compile" depends="compile-check" unless="compile-not-needed">
         <mxmlc 
             file="${src.dir}/Channels.mxml" 
             output="${build.dir}/Channels.swf"
@@ -28,7 +46,7 @@
             <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
             <source-path path-element="${FLEX_HOME}/frameworks"/>
             <compiler.source-path path-element="${src.dir}"/>
-        	<compiler.source-path path-element="resources"/>
+        	<compiler.source-path path-element="${build.dir}/filtered-resources"/>
             <!-- List of SWC files or directories that contain SWC files. -->
             <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs" />
