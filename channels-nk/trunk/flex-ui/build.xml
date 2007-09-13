@@ -39,7 +39,7 @@
             file="${src.dir}/Channels.mxml" 
             output="${build.dir}/Channels.swf"
             actionscript-file-encoding="UTF-8"
-            keep-generated-actionscript="true"
+            keep-generated-actionscript="false"
             incremental="false">
             <!-- Get default compiler options. -->
             <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>            
