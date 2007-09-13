@@ -10,12 +10,10 @@ package com.mindalliance.channels.events.people
 	{
 		public static const CreateOrganization_Event:String = "<CreateOrganizationEvent>";
 		public var name : String;
-		public var model : EditorModel;
-		public function CreateOrganizationEvent(name : String, model : EditorModel) 
+		public function CreateOrganizationEvent(name : String) 
 		{
 			super( CreateOrganization_Event );
 			this.name = name;
-			this.model = model;
 		}
 	}
 }

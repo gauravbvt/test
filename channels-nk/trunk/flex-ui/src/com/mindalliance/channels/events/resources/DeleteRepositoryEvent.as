@@ -8,10 +8,11 @@ package com.mindalliance.channels.events.resources
 	public class DeleteRepositoryEvent extends CairngormEvent
 	{
 		public static const DeleteRepository_Event:String = "<DeleteRepositoryEvent>";
-		
-		public function DeleteRepositoryEvent() 
+		public var id : String;
+		public function DeleteRepositoryEvent(id : String) 
 		{
 			super( DeleteRepository_Event );
+			this.id = id;
 		}
 	}
 }

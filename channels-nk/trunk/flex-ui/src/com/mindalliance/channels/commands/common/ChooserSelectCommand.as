@@ -12,6 +12,7 @@ package com.mindalliance.channels.commands.common
 		override public function execute(event:CairngormEvent):void
 		{
 			var evt:ChooserSelectEvent = event as ChooserSelectEvent;
+			evt.model.selection.removeAll();
 			if (evt.selection != null && evt.selection.length > 0) {
                for each (var el : ElementVO in evt.selection) {
                    evt.model.selection.addItem(el);  

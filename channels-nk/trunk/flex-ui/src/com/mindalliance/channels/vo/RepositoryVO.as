@@ -10,7 +10,7 @@ package com.mindalliance.channels.vo
 	
 	import mx.collections.ArrayCollection;
 	
-
+    [Bindable]
 	public class RepositoryVO extends CategorizedElementVO implements IValueObject
 	{
 		public function RepositoryVO( id : String, 

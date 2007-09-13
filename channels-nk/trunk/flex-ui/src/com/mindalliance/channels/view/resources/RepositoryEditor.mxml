@@ -5,10 +5,22 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.model.ChannelsModelLocator;
-
-			import com.mindalliance.channels.model.EditorModel;
-		
+			import com.mindalliance.channels.view.people.RoleChooser;
+			import com.mindalliance.channels.view.UtilFuncs;
+            import mx.collections.ArrayCollection;
+            import mx.managers.PopUpManager;
+            import com.mindalliance.channels.events.resources.*;
+            import com.mindalliance.channels.events.common.*;
+            
+            import com.mindalliance.channels.view.common.InputTextDialog;
+            import com.mindalliance.channels.model.EditorModel;
+            import com.adobe.cairngorm.control.CairngormEventDispatcher;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.vo.RepositoryVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.util.CairngormHelper;
+            		
             [Bindable]
             public function get model() : EditorModel 
             {
@@ -20,26 +32,71 @@
                 this._editorModel = model;
             }
             public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            [Bindable]
+            private var roleList : ArrayCollection;
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable]
+            private var organizationList : ArrayCollection;
 
-
+            [Bindable]
+            private var edited : RepositoryVO;
 	
 			private function confirmEdit():void {
-				// Do stuff and then:
+				update()
 				currentState = '' ;
 			}
 			
 			private function cancelEdit():void {
-				// Do stuff and then:
+                // Revert
+                 CairngormHelper.fireEvent( new GetRepositoryEvent(model.id,model));
 				currentState = '' ;
 			}
 			
 			private function initiateEdit():void {
 				currentState = 'EditState' ;
 			}
+			
+            private function update() :void {
+                
+                CairngormHelper.fireEvent( new UpdateRepositoryEvent(model,
+                                                                txtName.text,
+                                                                txtDescription.text,
+                                                                edited.categories,
+                                                                (comboOwner.selectedItem as ElementVO),
+                                                                edited.administrators,
+                                                                edited.contents,
+                                                                edited.access));   
+            }
+            
+            private function queueUpdate() : void {
+                CairngormHelper.queueUpdate(model);
+            }
+
+           
+           private function removeAdministrators() : void {
+           	    if (listAdministrators.selectedIndex >=0) {
+                    edited.administrators.removeItemAt(listAdministrators.selectedIndex);
+                    queueUpdate();
+                }
+           }
+           
+           private function removeAccess() : void {
+           	    if (listAccessRightsHolders.selectedIndex >=0) {
+                    edited.access.removeItemAt(listAccessRightsHolders.selectedIndex);
+                    queueUpdate();
+                }
+           	
+           }
 		]]>
 	</mx:Script>
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as RepositoryVO)" destination="edited"/>
+    <mx:Binding source="model.getElementListModel('organizations').data" destination="organizationList"/>	
 	
-	
+    <mx:Binding source="model.getElementListModel('roles').data" destination="roleList"/>
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
@@ -51,14 +108,14 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{formItemAdministrators}" position="lastChild">
 				<mx:HBox width="100%">
-					<common:AddButton/>
-					<common:RemoveButton enabled="{listAdministrators.selectedItems.length > 0}"/>
+					<common:AddButton click="UtilFuncs.popupChooser(RoleChooser,listAdministrators,edited.administrators,queueUpdate)" enabled="{edited != null}"/>
+					<common:RemoveButton enabled="{listAdministrators.selectedItems.length > 0}" click="removeAdministrators()"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{formItemAccess}" position="lastChild">
 				<mx:HBox width="100%">
-					<common:AddButton/>
-					<common:RemoveButton enabled="{listAccessRightsHolders.selectedItems.length > 0}"/>
+					<common:AddButton click="UtilFuncs.popupChooser(RoleChooser,listAccessRightsHolders,edited.access, queueUpdate)" enabled="{edited != null}"/>
+					<common:RemoveButton enabled="{listAccessRightsHolders.selectedItems.length > 0}" click="removeAccess()"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{formItemName}" name="required" value="true"/>
@@ -83,24 +140,24 @@
 	<common:ViewEditStateChangeFormItem width="100%" btnEditClickHandler="{initiateEdit}" id="formItemStateChange"
 		confirmEditHandler="{confirmEdit}" cancelEditHandler="{cancelEdit}"/>
 	<mx:FormItem label="Repository Name" id="formItemName">
-		<mx:TextInput id="txtName" editable="false"/>
+		<mx:TextInput id="txtName" editable="false" text="{edited.name}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Description">
-		<mx:TextArea id="txtDescription" editable="false"/>
+	   <mx:TextArea id="txtDescription" editable="false" text="{edited.description}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Owner" mouseChildren="false" mouseEnabled="false" id="formitem1">
-		<mx:ComboBox editable="false" id="comboOwner"></mx:ComboBox>
+	   <common:ElementComboBox id="comboOwner" dataProvider="{organizationList}" selectedValue="{edited.organization.id}" change="queueUpdate()"/>
 	</mx:FormItem>
 	<mx:FormItem label="Administrators" id="formItemAdministrators">
-		<mx:List id="listAdministrators" editable="false"></mx:List>
+		<mx:List id="listAdministrators" editable="false" dataProvider="{edited.administrators}" labelField="name"/>
 	</mx:FormItem>
 	<mx:FormItem label="Categories" direction="vertical">
-		<categories:CategoryViewer id="categoryViewer"/>
+            <categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>
 	</mx:FormItem>
 	<mx:FormItem label="Access granted" id="formItemAccess">
 		<mx:Text styleName="FormItemDescription">
 			<mx:htmlText><![CDATA[In addition to administrators, the following  <br>roles have access to this repository:]]></mx:htmlText>
 		</mx:Text>
-		<mx:List id="listAccessRightsHolders" editable="false"></mx:List>
+		<mx:List id="listAccessRightsHolders" editable="false" dataProvider="{edited.access}" labelField="name"/>
 	</mx:FormItem>
 </mx:Form>

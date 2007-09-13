@@ -8,10 +8,11 @@ package com.mindalliance.channels.events.scenario
 	public class DeleteEventEvent extends CairngormEvent
 	{
 		public static const DeleteEvent_Event:String = "<DeleteEventEvent>";
-		
-		public function DeleteEventEvent() 
+		public var id : String
+		public function DeleteEventEvent(id : String) 
 		{
 			super( DeleteEvent_Event );
+			this.id = id;
 		}
 	}
 }

@@ -8,10 +8,13 @@ package com.mindalliance.channels.events.scenario
 	public class CreateTaskEvent extends CairngormEvent
 	{
 		public static const CreateTask_Event:String = "<CreateTaskEvent>";
-		
-		public function CreateTaskEvent() 
+		public var name : String;
+        public var scenarioId : String;
+		public function CreateTaskEvent(name : String, scenarioId : String) 
 		{
 			super( CreateTask_Event );
+			this.name = name;
+            this.scenarioId = scenarioId;
 		}
 	}
 }

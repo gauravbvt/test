@@ -8,10 +8,11 @@ package com.mindalliance.channels.events.resources
 	public class CreateRepositoryEvent extends CairngormEvent
 	{
 		public static const CreateRepository_Event:String = "<CreateRepositoryEvent>";
-		
-		public function CreateRepositoryEvent() 
+		public var name : String;
+		public function CreateRepositoryEvent(name : String) 
 		{
 			super( CreateRepository_Event );
+			this.name = name;
 		}
 	}
 }

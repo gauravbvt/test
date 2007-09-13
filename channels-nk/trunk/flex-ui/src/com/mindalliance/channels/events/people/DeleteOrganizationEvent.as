@@ -10,12 +10,10 @@ package com.mindalliance.channels.events.people
 	{
 		public static const DeleteOrganization_Event:String = "<DeleteOrganizationEvent>";
 		public var id : String;
-		public var model : EditorModel;
-		public function DeleteOrganizationEvent(id : String, model : EditorModel) 
+		public function DeleteOrganizationEvent(id : String) 
 		{
 			super( DeleteOrganization_Event );
 			this.id = id;
-			this.model = model;
 		}
 	}
 }

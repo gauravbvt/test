@@ -1,8 +1,11 @@
 package com.mindalliance.channels.view
 {
+    import com.mindalliance.channels.view.common.Chooser;
     import com.mindalliance.channels.view.common.InputTextDialog;
+    import com.mindalliance.channels.vo.common.ElementVO;
     
     import flash.display.DisplayObject;
+    import flash.geom.Point;
     
     import mx.collections.ArrayCollection;
     import mx.managers.PopUpManager;
@@ -40,5 +43,23 @@ package com.mindalliance.channels.view
                 }
                 return result;
         }
+        public static function popupChooser(type : Class, parent : DisplayObject, filter : ArrayCollection, updateFunction : Function) : void {
+
+            var rc:Chooser = (PopUpManager.createPopUp(parent,type,false) as Chooser);
+            rc.filtered=filter;
+            rc.processSelected=function(selected : ArrayCollection) : void {
+                for each(var el : ElementVO in selected) {
+                    filter.addItem(el);   
+                    updateFunction();
+                }
+            }       
+            var p:Point = new Point(parent.x, parent.y) ;
+            p = parent.localToGlobal(p) ;
+            rc.x = p.x + parent.width + 5 ;
+            rc.y = p.y ;
+        }
+        
     }
+    
+    
 }

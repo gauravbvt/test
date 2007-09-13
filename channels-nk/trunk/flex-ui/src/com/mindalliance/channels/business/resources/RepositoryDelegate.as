@@ -28,13 +28,13 @@ package com.mindalliance.channels.business.resources
          */
 		override public function fromXML(obj:XML):ElementVO {
 			var contents : ArrayCollection = new ArrayCollection();
-			for each (var el : XML in obj.contents) {
+			for each (var el : XML in obj.contents.information) {
 			     contents.addItem(XMLHelper.xmlToInformation(el));	
 			}
 			return new RepositoryVO(obj.id, 
 			                         obj.name, 
 			                         obj.description,
-			                         XMLHelper.xmlToCategorySet(obj.categories),
+			                         XMLHelper.xmlToCategorySet(obj),
 			                         new ElementVO(obj.organizationId, null),
 			                         XMLHelper.xmlToIdList("roleId", obj.administrators),
 			                         contents,
@@ -45,21 +45,21 @@ package com.mindalliance.channels.business.resources
          */
 		override public function toXML(element:ElementVO) : XML {
 			var obj : RepositoryVO = (element as RepositoryVO);
-			var xml : XML = <Repository schema="/channels/schema/repository.rng">
+			var xml : XML = <repository schema="/channels/schema/repository.rng">
 						<id>{obj.id}</id>
 						<name>{obj.name}</name>
 						<description>{obj.description}</description>
 					</repository>;
 			xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
 			xml.appendChild(<organizationId>{obj.organization.id}</organizationId>);
-			XMLHelper.idListToXML("administrators","roleId",obj.administrators);
+			xml.appendChild(XMLHelper.idListToXML("administrators","roleId",obj.administrators));
 			var contents : XML = <contents></contents>;
 			for each (var info : InformationVO in obj.contents) {
                 contents.appendChild(XMLHelper.informationToXML(info));	
 			}
 			xml.appendChild(contents);
 			 
-			XMLHelper.idListToXML("access", "roleId", obj.access);
+			xml.appendChild(XMLHelper.idListToXML("access", "roleId", obj.access));
 			return xml;
 		}
 	}
