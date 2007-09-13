@@ -1,0 +1,33 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # Knowing or needing to know (about) something
+  knowing = {
+    element who {
+      {sourceOrSink}
+    } &
+    element about {
+     {knowable}
+    }? &
+    element what {
+      {information}
+    }?
+  }
+  -->
+  <define name="knowing">
+    <interleave>
+      <element name="who">
+        <ref name="sourceOrSink"/>
+      </element>
+      <optional>
+        <element name="about">
+          <ref name="knowable"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="what">
+          <ref name="information"/>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+</grammar>

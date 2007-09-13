@@ -6,8 +6,9 @@ importPackage(Packages.java.lang);
 utilsURI = "ffcpl:/test/utils.js";
 context.importLibrary(utilsURI);
 
-var samples = ["acquirement","agent", "artifact","category","event", "location",
-               "organization","person","phase", "project","repository","role","scenario","task","user"];
+var samples = ["acquirement","agent", "artifact","category","event", "know","location","needToKnow",
+               "organization","person","phase", "project","repository","role","scenario","sharingNeed",
+               "task","user"];
 
 var allValid = true;
 for (i in samples) {

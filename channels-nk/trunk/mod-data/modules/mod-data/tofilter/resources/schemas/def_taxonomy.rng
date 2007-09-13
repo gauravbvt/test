@@ -1,14 +1,16 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <!--
     taxonomy =
-      attribute taxonomy {"acquirement" | "artifact" | "organization" | "role" | "task" | 
-    "event" | "discipline"| "location" | "repository"} # more taxonomy names to come
+      attribute taxonomy {"acquirement" | "artifact" | "format" | "organization" | "role" | "task" | 
+      "event" | "discipline"| "location" | "repository"} # more taxonomy names to come
+
   -->
   <define name="taxonomy">
     <attribute name="taxonomy">
       <choice>
         <value>acquirement</value>
         <value>artifact</value>
+        <value>format</value>
         <value>organization</value>
         <value>role</value>
         <value>task</value>

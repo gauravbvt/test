@@ -6,10 +6,13 @@
   <include href="http://@host@:@port@/channels/schema/def_identified.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_information.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_isna_element.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_knowable.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_knowing.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_latlong.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_level.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_occurrence.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_product.rng"/>
+  <include href="http://@host@:@port@/channels/schema/def_sourceOrSink.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_spatialCoordinates.rng"/>
   <include href="http://@host@:@port@/channels/schema/def_taxonomy.rng"/>
 </grammar>

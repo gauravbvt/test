@@ -27,7 +27,7 @@ while (dbxml_containerExists(descriptor) && (maxRetries > 0)) {
 		}
 	}
 	catch(e) { // Deleting fails temporarily and spurriously
-		log("Delete model failed: " + e, "severe");
+		log("Delete model failed: " + e, "warning");
 		sleep(100);
 	}
 }

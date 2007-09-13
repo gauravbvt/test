@@ -1,0 +1,48 @@
+  <needToKnow  schema="http://localhost:8080/channels/schema/needToKnow.rng">
+    <id>needToKnow1</id>
+    <who>
+      <roleId>agent1</roleId>
+    </who>
+    <about>
+      <eventId>event1</eventId>
+    </about>
+    <what>
+      <information>
+        <topic>
+          <name>Where</name>
+          <description>Where the event took place</description>
+          <eoi>
+            <name>Location</name>
+            <description>The general location</description>
+          </eoi>
+        </topic>
+        <topic>
+          <name>When</name>
+          <description>Where the event took place</description>
+          <eoi>
+            <name>Date</name>
+            <description>The date</description>
+          </eoi>
+        </topic>
+      </information>
+    </what>
+    <criticality>
+      <level>high</level>
+    </criticality>
+    <urgency>
+      <duration>
+        <value>1</value>
+        <unit>hour</unit>
+      </duration>
+    </urgency>
+    <delivery mode="notify">
+      <updating>
+        <onChange/>
+      </updating>
+      <format>
+        <categories atMostOne="false" taxonomy="format">
+          <categoryId>cat-format</categoryId>
+        </categories>
+      </format>
+    </delivery>
+  </needToKnow>

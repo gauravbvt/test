@@ -1,0 +1,19 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # An assertion that someone or something knows (about) something
+    element know {
+      {isna_element} &
+      {knowing}
+  }
+-->
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  
+  <start>
+    <element name="know">
+      <interleave>
+        <ref name="isna_element"/>
+        <ref name="knowing"/>
+      </interleave>
+    </element>
+  </start>
+</grammar>

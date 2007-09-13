@@ -5,9 +5,9 @@ utilsURI = "ffcpl:/test/utils.js";
 context.importLibrary(utilsURI);
 
 var rngSchemaURL = "http://relaxng.org/relaxng.rng";
-var schemas = ["acquirement","agent","artifact","category","event","location",
-               "organization","person","phase","project","repository","role",
-               "scenario","task","user"];
+var schemas = ["acquirement","agent","artifact","category","event","know","location",
+               "needToKnow","organization","person","phase","project","repository","role",
+               "scenario","sharingNeed","task","user"];
 
 for (i in schemas) {
 	var uri = "schema:" + schemas[i] + ".rng";

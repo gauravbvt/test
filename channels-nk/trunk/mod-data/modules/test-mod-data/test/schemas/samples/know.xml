@@ -1,0 +1,29 @@
+	<know schema="http://localhost:8080/channels/schema/know.rng">
+    <id>know1</id>
+    <who>
+      <roleId>role2</roleId>
+    </who>
+    <about>
+      <eventId>event1</eventId>
+    </about>
+    <what>
+      <information>
+        <topic>
+          <name>Where</name>
+          <description>Where the event took place</description>
+          <eoi>
+            <name>Location</name>
+            <description>The general location</description>
+          </eoi>
+        </topic>
+        <topic>
+          <name>When</name>
+          <description>Where the event took place</description>
+          <eoi>
+            <name>Date</name>
+            <description>The date</description>
+          </eoi>
+        </topic>
+      </information>
+    </what>
+  </know>

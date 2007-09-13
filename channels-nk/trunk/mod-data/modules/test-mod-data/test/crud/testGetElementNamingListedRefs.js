@@ -6,14 +6,7 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
 importPackage(Packages.java.lang);
 
-// Delete model
-var req = context.createSubRequest("active:channels_data_deleteModel");
-context.issueSubRequest(req);
-
-// Open model from db:testDB.xml
-req = context.createSubRequest("active:channels_data_openModel");
-req.addArgument("init", "db:testQueriesDB.xml");
-context.issueSubRequest(req);
+reloadModel();
 
 req = context.createSubRequest("active:channels_data_getElement");
 req.addArgument("id", "id:event1");

@@ -1,0 +1,69 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # An assertion that someone or something needs to know (about) something
+  element needToknow {
+    {isna_element} &
+    {knowing} &
+    element criticality {
+      {level}
+    } &
+    # Urgency = delay from availability (notification) or after request (respond)
+    element urgency { 
+      {duration}
+    }
+    element delivery {
+      attribute mode {"notify", "respond"} &
+      element updating {
+        (
+          element every { # respond + refresh = subscription
+            {duration}
+          } |
+          element onChange{}
+        )
+      }? &
+      element format {
+        {categorized} # categories in the format typology
+      }
+    }
+  }
+-->
+  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  
+  <start>
+    <element name="needToKnow">
+      <interleave>
+        <ref name="isna_element"/>
+        <ref name="knowing"/>
+        <element name="criticality">
+          <ref name="level"/>
+        </element>
+        <element name="urgency">
+          <ref name="duration"/>
+        </element>
+        <element name="delivery">
+          <attribute name="mode">
+            <choice>
+              <value>notify</value>
+              <value>respond</value>
+            </choice>
+          </attribute>
+          <interleave>
+            <optional>
+              <element name="updating">
+                <choice>
+                  <element name="every">
+                    <ref name="duration"/>
+                  </element>
+                  <element name="onChange"><empty/></element>
+                </choice>
+              </element>
+            </optional>
+            <element name="format">
+              <ref name="categorized"/>
+            </element>
+          </interleave>
+        </element>
+      </interleave>
+    </element>
+  </start>
+</grammar>
