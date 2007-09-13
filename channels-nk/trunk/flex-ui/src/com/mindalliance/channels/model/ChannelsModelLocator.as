@@ -42,7 +42,7 @@ package com.mindalliance.channels.model
 		public var permissionModel : PermissionModel = new PermissionModel();
 		public var flowMapModel : FlowMapModel = new FlowMapModel();
         public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel(getEditorModel(), getEditorModel());
-        public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel();
+        public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel(getEditorModel);
 
 		
 		

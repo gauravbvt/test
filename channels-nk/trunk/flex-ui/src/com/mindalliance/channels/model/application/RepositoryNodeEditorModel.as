@@ -6,7 +6,13 @@ package com.mindalliance.channels.model.application
 	[Bindable]
 	public class RepositoryNodeEditorModel
 	{
-		public var organizationModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
-		public var repositoryModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+		public function RepositoryNodeEditorModel(organizationModel : EditorModel, repositoryModel : EditorModel)
+		{
+		  this.organizationModel = organizationModel;
+		  this.repositoryModel = repositoryModel;	
+		}
+		
+		public var organizationModel : EditorModel;
+		public var repositoryModel : EditorModel;
 	}
 }

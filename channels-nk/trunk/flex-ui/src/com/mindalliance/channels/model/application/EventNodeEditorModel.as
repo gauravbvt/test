@@ -6,7 +6,9 @@ package com.mindalliance.channels.model.application
 	[Bindable]
 	public class EventNodeEditorModel
 	{
-		
-        public var eventModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+		public function EventNodeEditorModel(eventModel : EditorModel) {
+			this.eventModel = eventModel;
+		}
+        public var eventModel : EditorModel;
 	}
 }

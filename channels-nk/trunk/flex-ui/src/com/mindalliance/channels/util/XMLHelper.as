@@ -49,9 +49,13 @@ package com.mindalliance.channels.util
 		
 		public static function xmlToTopic(xml : XML) : TopicVO {
 			var eois : ArrayCollection;
-			for each (var el : XML in xml.eoi) {
-				eois.addItem(new IdentifiedVO(el.name, el.description));
-				
+			if (xml.eoi.length > 0) {
+				eois = new ArrayCollection();
+				for each (var el : XML in xml.eoi) {
+					
+					eois.addItem(new IdentifiedVO(el.name, el.description));
+					
+				}
 			}
 			var confidence : String = (xml.confidence.level.length() > 0) ? xml.confidence.level : null;
 			return new TopicVO(xml.name, 
