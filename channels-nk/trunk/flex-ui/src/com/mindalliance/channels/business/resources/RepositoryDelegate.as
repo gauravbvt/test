@@ -62,5 +62,20 @@ package com.mindalliance.channels.business.resources
 			xml.appendChild(XMLHelper.idListToXML("access", "roleId", obj.access));
 			return xml;
 		}
+	    public function create(name : String, organizationId : String) : void {
+		    var param : Array=new Array();
+            param["name"] = name;
+            createElement( <repository schema="/channels/schema/repository.rng">
+                    <name>{name}</name>
+                    <organizationId>{organizationId}</organization>
+                    <categories atMostOne="false" taxonomy="repository"/>
+                    <administrators/>
+                    <contents/>
+                    <access/>
+            </repository>, param);
+        }
 	}
+	
+
+	
 }

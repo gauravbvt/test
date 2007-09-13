@@ -4,13 +4,11 @@
 package com.mindalliance.channels.business.people
 {
 	import com.mindalliance.channels.business.BaseDelegate;
-	
-	import mx.rpc.IResponder;
+	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.OrganizationVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
-	import com.mindalliance.channels.vo.common.AddressVO;
-	import com.mindalliance.channels.util.XMLHelper;
-	import com.mindalliance.channels.vo.common.CategorySetVO;
+	
+	import mx.rpc.IResponder;
 	
 	public class OrganizationDelegate extends BaseDelegate
 	{	
@@ -24,12 +22,6 @@ package com.mindalliance.channels.business.people
 			performQuery("allOrganizations", null);
 		}
 		
-		public function createOrganization(name:String) : void {
-			var Organization : XML = <organization></organization>;
-			Organization.appendChild(<name>{name}</name>);
-			
-			createElement(Organization);	
-		}
 
 		/**
 		 * generates /channels/schema/organization.rng
@@ -73,5 +65,14 @@ package com.mindalliance.channels.business.people
 										XMLHelper.xmlToAddress(obj.address),
 										obj.logo);
 		}
+		public function create(name : String) : void {
+          var param : Array=new Array();
+          param["name"] = name;
+          createElement(<organization schema="/channels/schema/organization.rng">
+             <name>{name}</name>
+             <categories atMostOne="false" taxonomy="organization"/>
+           </organization>, param);
+        }
+		
 	}
 }

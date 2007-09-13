@@ -44,5 +44,19 @@ package com.mindalliance.channels.business.scenario
             xml.appendChild(XMLHelper.informationToXML(obj.information));
             return xml;
 		}
+		
+		public function create(name : String, taskId : String) : void {
+          var param : Array=new Array();
+          param["name"] = name;
+          param["taskId"] = taskId;
+           createElement( <acquirement schema="/channels/schema/acquirement.rng">
+             <name>{name}</name>
+             <categories atMostOne="false" taxonomy="acquirement"/>
+             <product>
+                <taskId>{taskId}</taskId>
+             </product>
+             <information/>
+           </acquirement>, param);
+        }
 	}
 }

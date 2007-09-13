@@ -87,5 +87,16 @@ package com.mindalliance.channels.business.scenario
             xml.appendChild(<scenarioId>{obj.scenario.id}</scenarioId>);
 			return xml;
 		}
+		
+		 public function create(name : String, scenarioId : String) : void {
+            var param : Array=new Array();
+            param["name"] = name;
+            param["scenarioId"] = scenarioId;
+	        createElement(<event schema="/channels/schema/event.rng">
+	         <name>{name}</name>
+	         <categories atMostOne="false" taxonomy="event"/>
+	         <scenarioId>{scenarioId}</scenarioId>
+	       </event>, param);
+	    }
 	}
 }

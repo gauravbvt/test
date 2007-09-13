@@ -41,5 +41,19 @@ package com.mindalliance.channels.business.scenario
             xml.appendChild(XMLHelper.idListToXML("product", "taskId", obj.product));
             return xml;
 		}
+		
+		public function create(name : String, taskId : String) : void {
+            var param : Array=new Array();
+            param["name"] = name;
+            param["taskId"] = taskId;
+            createElement( <artifact schema="/channels/schema/artifact.rng">
+             <name>{name}</name>
+             <categories atMostOne="false" taxonomy="artifact"/>
+             <product>
+                <taskId>{taskId}</taskId>
+             </product>
+           </artifact>, param);
+        }
+		
 	}
 }

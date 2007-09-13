@@ -66,5 +66,21 @@ package com.mindalliance.channels.business.scenario
             }
 			return xml;
 		}
+		public function create(name : String, scenarioId : String) : void {
+	       var param : Array=new Array();
+           param["name"] = name;
+           param["scenarioId"] = scenarioId;
+	       createElement( <task schema="/channels/schema/task.rng">
+	         <name>{name}</name>
+	         <categories atMostOne="false" taxonomy="task"/>
+	         <scenarioId>{scenarioId}</scenarioId>
+	         <duration>
+	           <value>0</value>
+	           <unit>second</unit>
+	         </duration>
+	       </task>, param);
+	    }
 	}
+	
+
 }

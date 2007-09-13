@@ -16,11 +16,18 @@ package com.mindalliance.channels.commands.scenario
 		{
 			var evt:DeleteAcquirementEvent = event as DeleteAcquirementEvent;
 			var delegate:AcquirementDelegate = new AcquirementDelegate( this );
+			delegate.deleteElement(evt.id);
 		}
 		
 		override public function result(data:Object):void
 		{
-			
+            var result:Boolean = data["data"] as Boolean;
+            if (result == true) {
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAcquirementListEvent(channelsModel.currentScenario.id) );
+                log.info("Acquirement successfully deleted");
+            } else {
+                log.warn("Acquirement Deletion failed");   
+            }			
 		}
 	}
 }

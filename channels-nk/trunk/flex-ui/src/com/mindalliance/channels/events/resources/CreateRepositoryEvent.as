@@ -9,10 +9,12 @@ package com.mindalliance.channels.events.resources
 	{
 		public static const CreateRepository_Event:String = "<CreateRepositoryEvent>";
 		public var name : String;
-		public function CreateRepositoryEvent(name : String) 
+		public var organizationId : String;
+		public function CreateRepositoryEvent(name : String, organizationId : String) 
 		{
 			super( CreateRepository_Event );
 			this.name = name;
+			this.organizationId = organizationId;
 		}
 	}
 }

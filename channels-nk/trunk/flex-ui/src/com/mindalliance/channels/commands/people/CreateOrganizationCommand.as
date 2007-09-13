@@ -6,9 +6,10 @@ package com.mindalliance.channels.commands.people
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.people.OrganizationDelegate;
-	import com.mindalliance.channels.events.people.*;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.people.*;
 	import com.mindalliance.channels.vo.OrganizationVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class CreateOrganizationCommand extends BaseDelegateCommand
 	{
@@ -21,7 +22,7 @@ package com.mindalliance.channels.commands.people
 			log.debug("Creating Organization " + name);
 			
 			var delegate:OrganizationDelegate = new OrganizationDelegate( this );
-			delegate.createOrganization(name);
+			delegate.create(name);
 		}
 		
 		override public function result(data:Object):void
@@ -29,7 +30,8 @@ package com.mindalliance.channels.commands.people
 			var result:OrganizationVO = data["data"] as OrganizationVO;
 			if (result!=null) {
 				log.info("Organization created");
-				CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
+				channelsModel.getElementListModel('organizations').data.addItem(new ElementVO(result.id, result.name));
+				//CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
 			}
 		}
 	}

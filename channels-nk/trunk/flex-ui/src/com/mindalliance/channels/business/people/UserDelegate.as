@@ -34,5 +34,16 @@ package com.mindalliance.channels.business.people
 					</user>;
 			return xml;
 		}
+		
+		public function create(name : String, password : String, isAdmin : Boolean) : void {
+          var param : Array=new Array();
+          param["name"] = name;
+          param["password"] = password;
+          param["isAdmin"] = isAdmin;
+			createElement( <user schema="/channels/schema/user.rng" isAdmin={isAdmin}>
+			 <userName>{name}</userName>
+			 <password>{password}</password>
+			</user>, param);
+		}
 	}
 }

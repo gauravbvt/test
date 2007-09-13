@@ -16,11 +16,18 @@ package com.mindalliance.channels.commands.scenario
 		{
 			var evt:DeleteEventEvent = event as DeleteEventEvent;
 			var delegate:EventDelegate = new EventDelegate( this );
+			delegate.deleteElement(evt.id);
 		}
 		
 		override public function result(data:Object):void
 		{
-			
+            var result:Boolean = data["data"] as Boolean;
+            if (result == true) {
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetEventListEvent(channelsModel.currentScenario.id) );
+                log.info("Event successfully deleted");
+            } else {
+                log.warn("Event Deletion failed");   
+            }       			
 		}
 	}
 }

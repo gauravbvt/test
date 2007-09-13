@@ -83,10 +83,14 @@ package com.mindalliance.channels.control
 			
             this.addCommand(GetRoleListEvent.GetRoleList_Event, GetRoleListCommand);
             this.addCommand(GetRoleEvent.GetRole_Event, GetRoleCommand);
+            this.addCommand(CreateRoleEvent.CreateRole_Event, CreateRoleCommand);           
+            this.addCommand(DeleteRoleEvent.DeleteRole_Event, DeleteRoleCommand);
             this.addCommand(UpdateRoleEvent.UpdateRole_Event, UpdateRoleCommand);
             
             this.addCommand(GetUserEvent.GetUser_Event, GetUserCommand);
             this.addCommand(GetPersonEvent.GetPerson_Event, GetPersonCommand);
+            this.addCommand(CreatePersonEvent.CreatePerson_Event, CreatePersonCommand);           
+            this.addCommand(DeletePersonEvent.DeletePerson_Event, DeletePersonCommand);
             this.addCommand(GetPersonByUserEvent.GetPersonByUser_Event, GetPersonByUserCommand);
             this.addCommand(GetPersonListEvent.GetPersonList_Event, GetPersonListCommand);
             this.addCommand(UpdatePersonEvent.UpdatePerson_Event, UpdatePersonCommand);

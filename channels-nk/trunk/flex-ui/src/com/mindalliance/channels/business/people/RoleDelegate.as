@@ -65,5 +65,17 @@ package com.mindalliance.channels.business.people
 			xml.appendChild(expertise);
 			return xml;
 		}
+		public function create(name : String, organizationId : String) : void {
+            var param : Array=new Array();
+           param["name"] = name;
+           param["organizationId"] = organizationId;
+           createElement(<role schema="/channels/schema/organization.rng">
+             <name>{name}</name>
+             <categories atMostOne="false" taxonomy="role"/>
+             <organizationId>{organizationId}</organizationId>
+             <expertise/>
+           </role>, param);
+        }
+		
 	}
 }

@@ -85,5 +85,16 @@ package com.mindalliance.channels.business.people
             }
             return results; 
         }
+        
+        public function create(firstName : String, lastName : String) : void {
+            var param : Array=new Array();
+            param["firstName"] = firstName;
+            param["lastName"] = lastName;
+           createElement(<person schema="/channels/schema/person.rng">
+             <firstName>{firstName}</firstName>
+             <lastName>{lastName}</lastName>
+           </person>, param);
+        }
+        
 	}
 }

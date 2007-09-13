@@ -43,14 +43,15 @@ package com.mindalliance.channels.view
                 }
                 return result;
         }
-        public static function popupChooser(type : Class, parent : DisplayObject, filter : ArrayCollection, updateFunction : Function) : void {
+        public static function popupChooser(type : Class, parent : DisplayObject, filter : ArrayCollection, updateFunction : Function = null) : void {
 
             var rc:Chooser = (PopUpManager.createPopUp(parent,type,false) as Chooser);
             rc.filtered=filter;
             rc.processSelected=function(selected : ArrayCollection) : void {
                 for each(var el : ElementVO in selected) {
-                    filter.addItem(el);   
-                    updateFunction();
+                    filter.addItem(el); 
+                    if (updateFunction != null)  
+                        updateFunction();
                 }
             }       
             var p:Point = new Point(parent.x, parent.y) ;
