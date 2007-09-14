@@ -39,15 +39,11 @@
 			<match>ffcpl:/resources/.*</match>
 		</this>
 		<rewrite>
-			<match>ffcpl:/template/(.*.bsh.*)</match>
-			<to>active:beanshell+operator@ffcpl:/resources/$1</to>
-		</rewrite>
-		<rewrite>
 			<match>ffcpl:/channels/element(.*)</match>
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+id@$1</to>			
 		</rewrite>
 		<rewrite>
-			<match>ffcpl:/channels/(artifact|category|discipline|event|person|project|repository|role|scenario|task|taxonomy)(.*)</match> // Overload this
+			<match>ffcpl:/channels/(acquirement|agent|artifact|category|event|know|location|needToKnow|organization|person|phase|project|repository|role|scenario|sharingNeed|task|user)(.*)</match> // Overload this
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+type@$1$2</to>			
 		</rewrite>
 		<rewrite>
