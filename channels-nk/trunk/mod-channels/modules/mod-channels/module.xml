@@ -26,18 +26,24 @@
 		</uri>
 	</export>
 	<mapping>
-    <rewrite>
-      <match>ffcpl:/channels/schema/(.*)</match>
-      <to>schema:$1</to>
-    </rewrite>
+        <rewrite>
+          <match>ffcpl:/channels/schema/(.*)</match>
+          <to>schema:$1</to>
+        </rewrite>
+        <rewrite>
+          <match>ffcpl:/channels/(.*.html|.*.swf|.*.js)</match>
+          <to>ffcpl:/resources/$1</to>
+        </rewrite>
+        <rewrite>
+            <match>ffcpl:/channels/assets/(.*)</match>
+            <to>ffcpl:/resources/assets/$1</to>
+        </rewrite>
 		<this>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/.*</match>
+            <match>ffcpl:/resources/.*</match>
 		</this>
 
-		<this>
-			<match>ffcpl:/resources/.*</match>
-		</this>
 		<rewrite>
 			<match>ffcpl:/channels/element(.*)</match>
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+id@$1</to>			
@@ -50,16 +56,6 @@
 			<match>ffcpl:/channels/model(.*)</match>
 			<to>active:beanshell+operator@ffcpl:/resources/model.bsh$1</to>			
 		</rewrite>		
-		<rewrite>
-			<match>ffcpl:/channels/(.*.html|.*.swf|.*.js)</match>
-			<to>ffcpl:/resources/$1</to>
-<!--			<to>active:beanshell+operator@ffcpl:/resources/channels.bsh+path@$1</to>-->
-		</rewrite>
-		<rewrite>
-			<match>ffcpl:/channels/(.*.html)</match>
-			<to>ffcpl:/resources/$1</to>
-        <!--			<to>active:beanshell+operator@ffcpl:/resources/channels.bsh+path@$1</to>-->
-		</rewrite>
 		<rewrite>
 			<match>(.*\.idoc)</match>
 			<to>active:dpml+operator@$1</to>
