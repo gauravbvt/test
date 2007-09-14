@@ -8,6 +8,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.vo.OrganizationVO;
 			import mx.binding.utils.BindingUtils;
 			import mx.managers.PopUpManager;
@@ -40,7 +41,7 @@
 					close() ;
 				}
 				for (var i:int = 0 ; i < orgAC.length ; i++) {
-					var orgVO:OrganizationVO = orgAC.getItemAt(i) as OrganizationVO ;
+					var orgVO:ElementVO = orgAC.getItemAt(i) as ElementVO ;
 					if (!orgVO) {
 						trace('orgVO is null' + orgAC.getItemAt(i).toString())  ;
 						 continue ;

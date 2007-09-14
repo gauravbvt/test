@@ -67,7 +67,7 @@ package com.mindalliance.channels.business.resources
             param["name"] = name;
             createElement( <repository schema="/channels/schema/repository.rng">
                     <name>{name}</name>
-                    <organizationId>{organizationId}</organization>
+                    <organizationId>{organizationId}</organizationId>
                     <categories atMostOne="false" taxonomy="repository"/>
                     <administrators/>
                     <contents/>

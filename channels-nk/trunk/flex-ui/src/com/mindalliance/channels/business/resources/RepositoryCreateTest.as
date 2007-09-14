@@ -1,6 +1,6 @@
-package com.mindalliance.channels.business.application
+package com.mindalliance.channels.business.resources
 {
-	import com.mindalliance.channels.vo.common.ElementVO;
+    import com.mindalliance.channels.vo.common.ElementVO;
     
     import flexunit.framework.TestCase;
     import flexunit.framework.TestSuite;
@@ -9,15 +9,15 @@ package com.mindalliance.channels.business.application
     
     
 
-    public class ProjectCreateTest extends TestCase implements IResponder
+    public class RepositoryCreateTest extends TestCase implements IResponder
     {
-        public function ProjectCreateTest(method : String) {
+        public function RepositoryCreateTest(method : String) {
           super(method);    
         }
         
         public function result(data:Object):void
         {
-            assertTrue(data is ElementVO);
+            assertTrue(data);
         }
         
         public function fault(info:Object):void
@@ -25,19 +25,17 @@ package com.mindalliance.channels.business.application
             fail(info as String);
         }
         public function create() {
-          var delegate : ProjectDelegate = new ProjectDelegate(this .addResponder(this,5000));
-          delegate.createProject("Test Project");
+          var delegate : RepositoryDelegate = new RepositoryDelegate(this   .addResponder(this,5000));
+          delegate.create("Repository", "organization1");
         }
         
         public static function suite():TestSuite
         {
             var ts:TestSuite = new TestSuite();
  
-            ts.addTest( new ProjectCreateTest( "create" ) );
+            ts.addTest( new RepositoryCreateTest( "create" ) );
             return ts;
         }
 
     }
-	
-
 }
