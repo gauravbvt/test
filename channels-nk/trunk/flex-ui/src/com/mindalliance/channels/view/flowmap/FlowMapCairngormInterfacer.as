@@ -39,8 +39,6 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public function init():void {
-			var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
-
 			_taskListWatcher = createElementListModelWatcher(ElementListNames.TASK_LIST_KEY, taskChangeHandler) ;
 			_repositoryListWatcher = createElementListModelWatcher(ElementListNames.REPOSITORY_LIST_KEY, repositoryChangeHandler) ;
 			_eventListWatcher = createElementListModelWatcher(ElementListNames.EVENT_LIST_KEY, eventChangeHandler) ;
