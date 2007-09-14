@@ -38,6 +38,7 @@ var tests =
 		["rolesOfPerson", {personId:"person1"}, 2, ["./list/role/id","./list/role/name"]],
 		["artifactsInScenario", {scenarioId:"scenario1"}, 1, ["./list/artifact/id","./list/artifact/name"]],
 		["acquirementsInScenario", {scenarioId:"scenario1"}, 1, ["./list/acquirement/id","./list/acquirement/name"]],
+		["agentsInScenario", {scenarioId:"scenario1"}, 1, ["./list/agent/id","./list/agent/name"]],
 		["categoriesOfElement", {elementId:"event1"}, 2, ["./list/category/id","./list/category/name"]],
 		["personOfUser", {userId:"user1"}, 1, ["./list/person/id", "./list/person/lastName"]],
 		["personOfUser", {userId:"user999"}, 0, []],
