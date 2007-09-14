@@ -83,7 +83,10 @@
 					return ;
 				}
 				if (event.item is INode) {
-					var nd:NodeData = mapperHelper.nodeDataMapper.lookupValue(event.item) as NodeData ;
+					var nodeID:String = FlowMap.getIDForItem(event.item) as String ;
+					if (!nodeID)
+						return ;
+					var nd:NodeData = mapperHelper.nodeDataMapper.lookupValue(nodeID) as NodeData ;
 					if (!nd)
 						return ;
 					if (nd is TaskNodeData) {
