@@ -4,6 +4,7 @@ package com.mindalliance.channels.commands.application
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mindalliance.channels.commands.BaseCommand;
 	import com.mindalliance.channels.events.application.LoadScenarioEvent;
+	import com.mindalliance.channels.events.scenario.GetAcquirementListEvent;
 	import com.mindalliance.channels.events.scenario.GetArtifactListEvent;
 	import com.mindalliance.channels.events.scenario.GetEventListEvent;
 	import com.mindalliance.channels.events.scenario.GetTaskListEvent;
@@ -21,6 +22,7 @@ package com.mindalliance.channels.commands.application
             CairngormHelper.fireEvent(new GetTaskListEvent(evt.id));
             CairngormHelper.fireEvent(new GetEventListEvent(evt.id));
             CairngormHelper.fireEvent(new GetArtifactListEvent(evt.id));
+            CairngormHelper.fireEvent(new GetAcquirementListEvent(evt.id));
 			log.debug("Loaded scenario {0}", [evt.id]);
 		}
 	}

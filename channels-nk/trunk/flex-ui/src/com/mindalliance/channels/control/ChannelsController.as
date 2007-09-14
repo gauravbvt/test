@@ -95,6 +95,9 @@ package com.mindalliance.channels.control
             this.addCommand(GetPersonListEvent.GetPersonList_Event, GetPersonListCommand);
             this.addCommand(UpdatePersonEvent.UpdatePerson_Event, UpdatePersonCommand);
             
+            this.addCommand(GetAgentListEvent.GetAgentList_Event, GetAgentListCommand);
+            this.addCommand(CreateAgentEvent.CreateAgent_Event, CreateAgentCommand);
+            this.addCommand(DeleteAgentEvent.DeleteAgent_Event, DeleteAgentCommand);
 		}
 		
 		private function initializeResources() : void

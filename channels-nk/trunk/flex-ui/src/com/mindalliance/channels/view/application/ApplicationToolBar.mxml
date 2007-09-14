@@ -163,7 +163,7 @@
 	<mx:Binding source="personEditorModel.getElementModel(personEditorModel.id) as PersonVO" destination="personVO"/>
 		
      <mx:XMLList id="ChannelsMenuBarItems">
-<!--        <menuitem label="*TEST*Forms">
+        <menuitem label="*TEST*Forms">
 			<menuitem label="Category Library Editor"/>
 			<menuitem label="Category Viewer"/>
 			<menuitem label="Category Chooser"/>
@@ -183,7 +183,7 @@
             <menuitem label="Acquirement Editor"/>
             <menuitem label="Acquirement Chooser"/>
             <menuitem label="Person Chooser"/>
-        </menuitem> -->
+        </menuitem> 
         <menuitem label="Project">
         	<menuitem label="Create New Project"/>
         	<menuitem label="Edit Project Properties"/>

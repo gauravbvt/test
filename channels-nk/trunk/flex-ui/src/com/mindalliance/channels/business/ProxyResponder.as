@@ -1,8 +1,6 @@
 package com.mindalliance.channels.business
 {
 	
-	import com.mindalliance.channels.util.XMLHelper;
-	
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
@@ -34,13 +32,13 @@ package com.mindalliance.channels.business
             	
             }
 			if (requestType == 'delete') {
-				if (result==true) {
+				if ((result as XML).deleted.id.length>0) {
 					value["data"] = true; 
 				} else {
 					delegate.responder.fault("Delete failed");
 				}
 			} if (requestType == 'update') {
-			   if (result==true) {
+			   if (result == true) {
                     value["data"]=true;
                 } else {
                     delegate.responder.fault("Update failed");

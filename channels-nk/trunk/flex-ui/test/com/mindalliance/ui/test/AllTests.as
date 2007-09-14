@@ -1,7 +1,12 @@
 package com.mindalliance.ui.test
 {
-	import flexunit.framework.TestSuite;
+	import com.mindalliance.channels.business.application.ProjectCreateTest;
+	import com.mindalliance.channels.business.scenario.AgentCreateTest;
+	import com.mindalliance.channels.business.scenario.EventCreateTest;
+	import com.mindalliance.channels.business.scenario.TaskCreateTest;
+	
 	import flexunit.framework.Test;
+	import flexunit.framework.TestSuite;
 	
 	public class AllTests
 	{
@@ -9,7 +14,11 @@ package com.mindalliance.ui.test
 		{
 			var testSuite : TestSuite = new TestSuite();
 			
-			testSuite.addTest( new TestSuite( TestDummy ) );
+            testSuite.addTest( ProjectCreateTest.suite());
+            testSuite.addTest( AgentCreateTest.suite());
+            testSuite.addTest( TaskCreateTest.suite());
+            testSuite.addTest( EventCreateTest.suite());
+			
 		
 			return testSuite;
 		}

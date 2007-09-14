@@ -7,7 +7,7 @@ package com.mindalliance.channels.model
 	public class ElementListModel
 	{
 		private var _dirty : Boolean = false;
-        private var _data : ArrayCollection;
+        private var _data : ArrayCollection = new ArrayCollection();
         
         public function get dirty() : Boolean {
             return _dirty;
@@ -23,7 +23,7 @@ package com.mindalliance.channels.model
         }
 
         public function set data(data : ArrayCollection) : void {
-        	_data=data;
+        	_data.source = data.source;
         }
         
         

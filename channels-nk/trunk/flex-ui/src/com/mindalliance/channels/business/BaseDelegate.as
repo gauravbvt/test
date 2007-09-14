@@ -38,8 +38,10 @@ package com.mindalliance.channels.business
 			send("element?id=" + id + "&nameReferenced=true", null, "GET", "read", parameters);	
 		}
 		
-		public function deleteElement(id : String) : void {           
-		    var parameters:Array = new Array();
+		public function deleteElement(id : String, parameters : Array = null) : void {
+			if (parameters == null) {           
+		      parameters = new Array();
+            }
             parameters["id"] = id;
 			send("element?id=" + id, null, "DELETE", "delete", parameters);	
 		}
@@ -74,7 +76,8 @@ package com.mindalliance.channels.business
 				case 'delete':
 						service.method="POST";
 						service.url +="&method=DELETE";
-						service.contentType="application/xml";	
+						service.contentType="application/xml";
+						service.resultFormat="e4x"	
 						service.request = "<delete/>";
 						break;
 			};

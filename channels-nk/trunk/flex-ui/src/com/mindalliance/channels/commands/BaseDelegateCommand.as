@@ -19,7 +19,7 @@ package com.mindalliance.channels.commands
 		
 		public function fault(info:Object):void
 		{
-			log.error(fault as String);
+			log.error(info as String);
 		}
 		
 	}

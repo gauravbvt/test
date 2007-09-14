@@ -7,6 +7,12 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.people.RoleChooser;
+			import com.mindalliance.channels.view.common.Chooser;
+			import com.mindalliance.channels.events.scenario.CreateAgentEvent;
+			import com.mindalliance.channels.vo.AgentVO;
+			import com.mindalliance.channels.events.scenario.DeleteAgentEvent;
+			import com.mindalliance.channels.model.ElementListModel;
 			import com.mindalliance.channels.events.scenario.UpdateTaskEvent;
 			import com.mindalliance.channels.events.scenario.GetTaskEvent;
             import com.mindalliance.channels.util.ElementHelper;
@@ -46,10 +52,13 @@
             private var eventList : ArrayCollection;
            
             [Bindable]
-            private var artifacts : ArrayCollection;
+            private var artifactList : ArrayCollection;
             
             [Bindable]
-            private var agents : ArrayCollection;
+            private var agentListModel : ElementListModel;
+            
+            [Bindable]
+            private var agentList : ArrayCollection;
             
             [Bindable]
             private var edited : TaskVO;
@@ -127,6 +136,32 @@
 				// we don't take kindly to empty functions around here
 			}
 			
+			private function deleteAgent() : void {
+                CairngormHelper.fireEvent(new DeleteAgentEvent((listAgents.selectedItem).id,edited.id));
+			}
+			
+			
+			private function chooseAgents() : void {
+                var rc:Chooser = (PopUpManager.createPopUp(listAgents,RoleChooser,false) as Chooser);
+                rc.filter = function(item : Object) : Boolean {
+                    var agent : AgentVO = (item as AgentVO);
+                    for each (var role : ElementVO in agentList) {
+                    	if (role.id == agent.role.id)
+                    	   return false;
+                    }	
+                    return true;
+                }
+                rc.filtered = agentList;
+                rc.processSelected=function(selected : ArrayCollection) : void {
+                    for each(var el : ElementVO in selected) {
+                        CairngormHelper.fireEvent(new CreateAgentEvent(el.name, edited.id,el.id));
+                    }
+                }       
+                var p:Point = new Point(listAgents.x, listAgents.y) ;
+                p = listAgents.localToGlobal(p) ;
+                rc.x = p.x + listAgents.width + 5 ;
+                rc.y = p.y ;	
+			}
 		]]>
 	</mx:Script>
     <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
@@ -134,6 +169,8 @@
     <mx:Binding source="(elementModel.data as TaskVO)" destination="edited"/>
     <mx:Binding source="model.getElementListModel('tasks').data" destination="taskList"/>
     <mx:Binding source="model.getElementListModel('events').data" destination="eventList"/>
+    <mx:Binding source="model.getElementListModel('agents' + edited.id)" destination="agentListModel"/>
+    <mx:Binding source="agentListModel.data" destination="agentList"/>
     <mx:Binding source="edited.categories" destination="categoryViewer.model.categories"/>
 	<mx:states>
 		<mx:State name="EditState">
@@ -143,8 +180,8 @@
 			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
 			<mx:AddChild relativeTo="{formitemAgents}" position="lastChild">
 				<mx:HBox id="hBoxEditAgents">
-					<common:AddButton/>
-					<common:RemoveButton enabled="{listAgents.selectedItems.length > 0}"/>
+					<common:AddButton click="chooseAgents()"/>
+					<common:RemoveButton enabled="{listAgents.selectedItems.length > 0}" click="deleteAgent()"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{formitemArtifacts}" position="lastChild">
@@ -194,7 +231,7 @@
 		</mx:FormItem>
 		<mx:FormItem label="Agents" direction="vertical" id="formitemAgents">
 			<mx:Text text="The following roles execute this task:" styleName="FormItemDescription" id="text1"/>
-			<mx:List id="listAgents"/>
+			<mx:List id="listAgents" dataProvider="{agentList}" labelField="name"/>
 		</mx:FormItem>
 	    <mx:FormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize">
 	        <mx:VBox id="vBoxCause">

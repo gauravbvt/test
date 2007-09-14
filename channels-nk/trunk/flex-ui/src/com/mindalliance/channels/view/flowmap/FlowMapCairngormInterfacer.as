@@ -1,20 +1,19 @@
 package com.mindalliance.channels.view.flowmap
 {
 	import com.mindalliance.channels.model.ChannelsModelLocator;
-	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.model.ElementListModel;
-	import mx.messaging.Channel;
-	import mx.binding.utils.ChangeWatcher;
-	import flash.events.Event;
-	import mx.controls.Alert;
-	import mx.events.CollectionEvent;
-	import mx.events.PropertyChangeEvent;
-	import mx.events.CollectionEventKind;
-	import com.mindalliance.channels.vo.TaskVO;
-	import com.mindalliance.channels.vo.RepositoryVO;
-	import com.mindalliance.channels.vo.RoleVO;
+	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.vo.EventVO;
 	import com.mindalliance.channels.vo.OrganizationVO;
+	import com.mindalliance.channels.vo.RepositoryVO;
+	import com.mindalliance.channels.vo.RoleVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
+	
+	import flash.events.Event;
+	
+	import mx.binding.utils.ChangeWatcher;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
 	
 	public class FlowMapCairngormInterfacer
 	{
@@ -48,8 +47,9 @@ package com.mindalliance.channels.view.flowmap
 		
 		private function createElementListModelWatcher(modelKey:String, handler:Function):ChangeWatcher {
 			var elementListModel:ElementListModel = ChannelsModelLocator.getInstance().getElementListModel(modelKey) ;
-			var watcher:ChangeWatcher = ChangeWatcher.watch(elementListModel, ['data'], handler) ;
-			return watcher ;
+			//var watcher:ChangeWatcher = ChangeWatcher.watch(elementListModel, ['data'], handler) ;
+			elementListModel.data.addEventListener(CollectionEvent.COLLECTION_CHANGE, handler);
+			return null ;
 		} 
 		
 		protected function repositoryChangeHandler(event:Event):void {
@@ -57,7 +57,7 @@ package com.mindalliance.channels.view.flowmap
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				var items:Array = colEvent.items ;
 				for (var i:int = 0 ; i < items.length ; i++) {
-					var reposVO:RepositoryVO = items[i] as RepositoryVO ;
+					var reposVO:ElementVO = items[i] as ElementVO ;
 					if (!reposVO) continue ;
 					switch (colEvent.kind) {
 						case CollectionEventKind.ADD:
@@ -81,7 +81,7 @@ package com.mindalliance.channels.view.flowmap
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				var items:Array = colEvent.items ;
 				for (var i:int = 0 ; i < items.length ; i++) {
-					var organizationVO:OrganizationVO = items[i] as OrganizationVO ;
+					var organizationVO:ElementVO = items[i] as ElementVO ;
 					if (!organizationVO) continue ;
 /* 					switch (colEvent.kind) {
 						case CollectionEventKind.REMOVE:
@@ -101,7 +101,7 @@ package com.mindalliance.channels.view.flowmap
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				var items:Array = colEvent.items ;
 				for (var i:int = 0 ; i < items.length ; i++) {
-					var eventVO:EventVO = items[i] as EventVO ;
+					var eventVO:ElementVO = items[i] as ElementVO ;
 					if (!eventVO) continue ;
 					switch (colEvent.kind) {
 						case CollectionEventKind.ADD:
@@ -125,7 +125,7 @@ package com.mindalliance.channels.view.flowmap
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				var items:Array = colEvent.items ;
 				for (var i:int = 0 ; i < items.length ; i++) {
-					var roleVO:RoleVO = items[i] as RoleVO ;
+					var roleVO:ElementVO = items[i] as ElementVO ;
 					if (!roleVO) continue ;
 					switch (colEvent.kind) {
 						case CollectionEventKind.REMOVE:
@@ -145,8 +145,8 @@ package com.mindalliance.channels.view.flowmap
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				var items:Array = colEvent.items ;
 				for (var i:int = 0 ; i < items.length ; i++) {
-					var taskVO:TaskVO = items[i] as TaskVO ;
-					if (!taskVO) continue ;
+					var taskVO:ElementVO = items[i] as ElementVO ;
+					if (!ElementVO) continue ;
 					switch (colEvent.kind) {
 						case CollectionEventKind.ADD:
 							FlowMap.addTask(FlowMap.defaultPhaseID, taskVO.id, taskVO.name) ;
