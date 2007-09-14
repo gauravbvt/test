@@ -6,6 +6,9 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.RoleVO;
+			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.application.TaskNodeEditorModel;
 			import mx.controls.Alert;
@@ -22,12 +25,26 @@
 			public function editorStateChange(event:StateChangeEvent):void {
 				//
 			}
+			
+			[Bindable]
+			private var _taskID:String ;
+			
+			[Bindable]
+			private var _roleID:String ;
+			
+			public function loadTask(taskID:String):void {
+				var event:GetTaskEvent = new GetTaskEvent(taskID, taskEditor.model) ;
+				CairngormHelper.fireEvent(event) ;
+			}
 		
 		]]>
 	</mx:Script>
-
+	
+	<mx:Binding source="taskEditor.model.id" destination="_taskID"/>
+	<mx:Binding source="(ChannelsModelLocator.getInstance().getElementListModel('agents'+_taskID).data.getItemAt(0) as RoleVO).id" destination="_roleID"/>
+	
 	<mx:TabNavigator>	
 		<scenario:TaskEditor id="taskEditor" label="{'Task: '}"/>
-		<people:RoleEditor id="roleEditor" label="{'Role: '}"/>
+		<people:RoleEditor id="roleEditor" label="{'Role: '}" enabled="{_roleID != null}"/>
 	</mx:TabNavigator>
 </mx:VBox>

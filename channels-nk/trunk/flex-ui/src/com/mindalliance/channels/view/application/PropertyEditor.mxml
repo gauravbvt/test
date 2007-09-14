@@ -11,12 +11,12 @@
 	<mx:states>
 		<mx:State name="TaskNodeEditorState">
 			<mx:AddChild position="lastChild">
-				<application:TaskNodeEditor/>
+				<application:TaskNodeEditor id="taskNodeEditor"/>
 			</mx:AddChild>
 		</mx:State>
 		<mx:State name="RepositoryNodeEditorState">
 			<mx:AddChild position="lastChild">
-				<application:RepositoryNodeEditor/>
+				<application:RepositoryNodeEditor id="repositoryEditor"/>
 			</mx:AddChild>
 		</mx:State>
 		<mx:State name="NothingSelectedState">
@@ -25,10 +25,25 @@
 		<mx:State name="MultipleItemsSelectedState">
 			<mx:SetProperty name="enabled" value="false"/>
 		</mx:State>
+		<mx:State name="EventNodeEditorState">
+			<mx:AddChild position="lastChild">
+				<scenario:EventEditor id="eventEditor"/>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="SharingNeedEditorState"/>
 	</mx:states>
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
+			import com.mindalliance.channels.view.flowmap.RepositoryNodeData;
+			import com.mindalliance.channels.events.scenario.GetEventEvent;
+			import com.mindalliance.channels.view.flowmap.EventNodeData;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.view.flowmap.TaskNodeData;
+			import com.mindalliance.channels.view.flowmap.NodeData;
+			import com.mindalliance.channels.view.flowmap.GraphMapperHelper;
 			import com.mindalliance.channels.view.flowmap.FlowMapEvent;
 			import com.yworks.graph.model.SelectionEvent;
 			import com.yworks.graph.model.IEdge;
@@ -39,6 +54,8 @@
 
 			[Bindable]
 			private var model : PropertyEditorModel;
+			
+			private var mapperHelper:GraphMapperHelper ;
 			
 			private var _isEditing:Boolean = false ;
 			
@@ -57,19 +74,31 @@
 			public function init():void {
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				mapperHelper = GraphMapperHelper.getInstance() ;
 			}
 			
 			private function itemSelected(event:SelectionEvent):void {
-				if (FlowMap.numSelected == 1) {
-					var iter:Iterator = FlowMap.selectedItems.iterator() ;
-					if (iter.hasNext()) {
-						var obj:Object = iter.next() ;
-						if (obj is INode)
-							currentState = 'TaskNodeEditorState' ;
-					}
-				}
-				else if (FlowMap.numSelected > 1) {
+				if (FlowMap.numSelected > 1) {
 					currentState = 'MultipleItemsSelectedState' ;
+					return ;
+				}
+				if (event.item is INode) {
+					var nd:NodeData = mapperHelper.nodeDataMapper.lookupValue(event.item) as NodeData ;
+					if (!nd)
+						return ;
+					if (nd is TaskNodeData) {
+						currentState = 'TaskNodeEditorState' ;
+						taskNodeEditor.loadTask(TaskNodeData(nd).id) ;
+					}
+					else if (nd is EventNodeData) {
+						currentState = 'EventNodeEditorState' ;
+						var getEventEvent:GetEventEvent = new GetEventEvent(EventNodeData(nd).id, eventEditor.model) ;
+						CairngormHelper.fireEvent(getEventEvent) ;
+					}
+					else if (nd is RepositoryNodeData) {
+						currentState = 'RepositoryNodeEditingState' ;
+						repositoryEditor.loadRepository(RepositoryNodeData(nd).id);
+					}
 				}
 			}
 		

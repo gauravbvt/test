@@ -180,7 +180,7 @@
 			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
 			<mx:AddChild relativeTo="{formitemAgents}" position="lastChild">
 				<mx:HBox id="hBoxEditAgents">
-					<common:AddButton click="chooseAgents()"/>
+					<common:AddButton click="chooseAgents()" enabled="{agentList.length &lt;= 1}" toolTip="{agentList.length &gt; 1 ? 'Only one agent supported (yFiles temp limitation)' : ''}"/>
 					<common:RemoveButton enabled="{listAgents.selectedItems.length > 0}" click="deleteAgent()"/>
 				</mx:HBox>
 			</mx:AddChild>

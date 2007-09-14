@@ -212,7 +212,7 @@ package com.mindalliance.channels.view.flowmap
 		}
 
 		public static function renameRepository(reposID:String, newText:String):void {
-			var nd:NodeData = NodeData(_mapperHelper.nodeDataMapper.lookupValue(reposID)) ;
+			var nd:RepositoryNodeData = RepositoryNodeData(_mapperHelper.nodeDataMapper.lookupValue(reposID)) ;
 			var labelIter:Iterator = nd.node.labels.iterator() ;
 			while (labelIter.hasNext()) {
 				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
@@ -285,7 +285,7 @@ package com.mindalliance.channels.view.flowmap
 			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
 			
 			//Setup mappings
-			var rnd:NodeData = new NodeData(node, reposID) ;
+			var rnd:RepositoryNodeData = new RepositoryNodeData(node, reposID) ;
 			_mapperHelper.nodeDataMapper.mapValue(reposID, rnd) ;
 			_mapperHelper.idMapper.mapValue(node, reposID) ;
 			
@@ -373,7 +373,7 @@ package com.mindalliance.channels.view.flowmap
 		
 		public static function setRepositoryOwner(reposID:String, reposOwnerID:String, reposOwnerLabel:String):void {
 			// Get the node in which this reposOwner is to be added
-			var nd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(reposID) as NodeData ;
+			var nd:RepositoryNodeData = _mapperHelper.nodeDataMapper.lookupValue(reposID) as RepositoryNodeData ;
 			var label:DefaultLabel = _getLabel(nd.node, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
 			if (label == null) {
 				label = _graph.addLabel(nd.node, reposOwnerLabel, FlowMapStyles.repositoryOwnerLabelModelParameter, FlowMapStyles.repositoryOwnerLabelStyle) as DefaultLabel ;
@@ -417,7 +417,7 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		private static function _removeNode(nodeID:String):void {
-			var nd:NodeData = NodeData(_mapperHelper.nodeDataMapper.lookupValue(nodeID)) ;
+			var nd:RepositoryNodeData = RepositoryNodeData(_mapperHelper.nodeDataMapper.lookupValue(nodeID)) ;
 			_unmapAllLabels(nd.node) ;
 			_unmapAllPorts(nd.node) ;
 			_mapperHelper.nodeDataMapper.unMapValue(nodeID) ;

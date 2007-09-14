@@ -6,6 +6,10 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.vo.OrganizationVO;
+			import com.mindalliance.channels.vo.RepositoryVO;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.application.RepositoryNodeEditorModel;
             private var model : RepositoryNodeEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel.repositoryNodeEditorModel;
@@ -14,9 +18,23 @@
                 repositoryEditor.model = model.repositoryModel;
                 organizationEditor.model = model.organizationModel;
             }
+            
+            [Bindable]
+            private var _reposID:String ;
+            
+            [Bindable]
+            private var _orgID:String ;
+            
+            public function loadRepository(reposID:String):void {
+				var getReposEvent:GetRepositoryEvent = new GetRepositoryEvent(_reposID, repositoryEditor.model) ;
+				CairngormHelper.fireEvent(getReposEvent) ;
+            }
+            
 		]]>
 	</mx:Script>
 	
+	<mx:Binding source="((ChannelsModelLocator.getInstance().getElementModel(_reposID) as RepositoryVO).organization as OrganizationVO).id" destination="_orgID"/>
+	
 	<resources:RepositoryEditor label="{'Repository: '}" id="repositoryEditor"/>
-	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor"/>
+	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor" enabled="{_orgID != null}"/>
 </mx:TabNavigator>
