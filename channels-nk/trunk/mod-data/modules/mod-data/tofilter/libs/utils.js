@@ -7,7 +7,7 @@ importPackage(Packages.java.lang);
 // Constants
 
 DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
-SCHEMA_URL = "http://@host@:@port@/channels/schema/"; 
+SCHEMA_URL = "@protocol@://@host@:@port@/channels/schema/"; 
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
 
 function contains(array, object) {

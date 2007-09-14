@@ -8,7 +8,7 @@
       element password {text}
     }
 -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="@protocol@://@host@:@port@/channels/schema/def_all.rng"/>
 
     <start>
     <element name="user" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">

@@ -11,7 +11,7 @@
       }
     }
       -->
-  <include href="http://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="@protocol@://@host@:@port@/channels/schema/def_all.rng"/>
  
   <start>
     <element name="role">
