@@ -20,8 +20,8 @@ package com.mindalliance.channels.view.flowmap
 		public function configure(gc:GraphCanvasComponent):void {
 			this.install(gc) ;
 			contextMenuInputMode.uninstall(gc) ;
-			moveInputMode.uninstall(gc) ;
-			handleInputMode.uninstall(gc) ;
+			moveInputMode.enabled = true ;
+			handleInputMode.enabled = false ;
 			deleteElementsAllowed = false ;
 			labelEditingAllowed = false ;
 			selectElementsAllowed = true ;
@@ -30,37 +30,37 @@ package com.mindalliance.channels.view.flowmap
 			autoRemoveEmptyLabels = false ;
 		}
 		
-		[Bindable(event="scenarioStageSelectionChanged")]
-		public function get selectedScenarioStage():ScenarioStage {
-			return _selectedScenarioStage ;
+		[Bindable(event="phaseSelectionChanged")]
+		public function get selectedPhase():Phase {
+			return _selectedPhase ;
 		}
 		
-		private var _selectedScenarioStage:ScenarioStage ;
+		private var _selectedPhase:Phase ;
 		protected override function onClickInputModeClicked(evt:ClickEvent):void {
 			var ico:ICanvasObject = this.graphCanvas.getCanvasObject(evt.clickPoint.x, evt.clickPoint.y) ;
 			
 			if (ico == null) {
-				_clearScenarioStageSelection() ;
-				dispatchEvent(new Event(FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED.name)) ;
+				_clearPhaseSelection() ;
+				dispatchEvent(new Event(FlowMapEvent.PHASE_SELECTION_CHANGED.name)) ;
 			}
-			else if (ico.userObject is ScenarioStage) {
-				var ss:ScenarioStage = ScenarioStage(ico.userObject) ;
-				if (ss == _selectedScenarioStage)
+			else if (ico.userObject is Phase) {
+				var ss:Phase = Phase(ico.userObject) ;
+				if (ss == _selectedPhase)
 					return ;
-				_clearScenarioStageSelection() ;
-				_selectedScenarioStage = ss ;
-				_selectedScenarioStage.selected = true ;
-				dispatchEvent(new Event(FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED.name)) ;
+				_clearPhaseSelection() ;
+				_selectedPhase = ss ;
+				_selectedPhase.selected = true ;
+				dispatchEvent(new Event(FlowMapEvent.PHASE_SELECTION_CHANGED.name)) ;
 			}
 
 			super.onClickInputModeClicked(evt) ;
 		}
 		
 		
-		private function _clearScenarioStageSelection():void {
-			if (_selectedScenarioStage != null) {
-				_selectedScenarioStage.selected = false ;
-				_selectedScenarioStage = null ;
+		private function _clearPhaseSelection():void {
+			if (_selectedPhase != null) {
+				_selectedPhase.selected = false ;
+				_selectedPhase = null ;
 			}			
 		}
 	}

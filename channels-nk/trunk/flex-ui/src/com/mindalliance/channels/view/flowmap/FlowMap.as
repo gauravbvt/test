@@ -42,6 +42,13 @@ package com.mindalliance.channels.view.flowmap
     import mx.controls.Alert;
     import mx.graphics.Stroke;
     import com.yworks.canvas.geom.ImmutablePoint;
+    import com.yworks.canvas.drawing.RectangularSelectionPaintable;
+    import com.yworks.graph.model.SelectionPaintManager;
+    import flash.geom.Rectangle;
+    import com.yworks.graph.model.ISelectionPaintable;
+    import mx.states.SetStyle;
+    import com.yworks.graph.model.DefaultLabel;
+    import com.yworks.graph.model.DefaultPort;
 
     public class FlowMap
     {
@@ -52,21 +59,27 @@ package com.mindalliance.channels.view.flowmap
     	private static var _graphCanvas:GraphCanvasComponent ;
     	private static var _graph:DefaultGraph ;
     	private static var _graphSelection:GraphSelection ;
+    	private static var _selectionPaintManager:SelectionPaintManager ;
     	private static var _geim:CustomGraphEditorInputMode ;
     	private static var _portCandidateProvider:IPortCandidateProvider ;
     	
-    	private static var _scenarioStageCanvasObjectGroup:ICanvasObjectGroup ;
-    	private static var _scenarioStageCanvasObjectDescriptor:ICanvasObjectDescriptor ;
+    	private static var _phaseCanvasObjectGroup:ICanvasObjectGroup ;
+    	private static var _phaseCanvasObjectDescriptor:ICanvasObjectDescriptor ;
     	
     	private static var _mapperHelper:GraphMapperHelper ;
+    	private static var _defaultPhase:Phase ;
+    	
+    	public static function get defaultPhaseID():String {
+    		return _defaultPhase.phaseID ;
+    	}
     	
 		public static function initialize(graphCanvas:GraphCanvasComponent):void {
 			_graphCanvas = graphCanvas ;
 			_graphCanvas.treeDirty = true ;
 
-			_scenarioStageCanvasObjectGroup = _graphCanvas.addGroup() ;
-			_scenarioStageCanvasObjectDescriptor = new ScenarioStageCanvasObjectDescriptor() ;
-			_scenarioStageCanvasObjectGroup.descriptor = _scenarioStageCanvasObjectDescriptor ;
+			_phaseCanvasObjectGroup = _graphCanvas.addGroup() ;
+			_phaseCanvasObjectDescriptor = new PhaseCanvasObjectDescriptor() ;
+			_phaseCanvasObjectGroup.descriptor = _phaseCanvasObjectDescriptor ;
 						
 			_graph = new DefaultGraph() ;
 			_graphCanvas.graph = _graph ;
@@ -78,49 +91,54 @@ package com.mindalliance.channels.view.flowmap
 			_graph.shareDefaultNodeStyleInstance = true ;
 			_graph.shareDefaultEdgeLabelStyleInstance = true ;
 			
-			_portCandidateProvider = new LimitedPortCandidateProvider() ;
-			
 			_graphSelection = new GraphSelection(_graph) ;
 			_graphSelection.addEventListener(SelectionEvent.SELECT, _itemSelected) ;
 			_graphSelection.addEventListener(SelectionEvent.DESELECT, _itemDeselected) ;
+			_selectionPaintManager = new SelectionPaintManager(_graphCanvas, _graph.collectionModel, _graphSelection) ;
 			
 			_geim = new CustomGraphEditorInputMode(_graph, _graphSelection) ;
 			_geim.configure(_graphCanvas) ;
 			
 			FlowMapStyles.systemManager = _graphCanvas.systemManager ;
-			_graph.defaultNodeStyle = FlowMapStyles.nodeStyle ;
   			_graph.defaultEdgeStyle = FlowMapStyles.edgeStyle ;
 			_graph.defaultPortStyle = FlowMapStyles.portStyle ;
 			
 			_mapperHelper = GraphMapperHelper.getInstance() ;
 			_mapperHelper.initialize(_graph.mapperRegistry) ;
+			
+			_portCandidateProvider = new LimitedPortCandidateProvider(_mapperHelper) ;
+			_defaultPhase = Phase.createPhase("Default Phase") ;
+			_defaultPhase.phaseID = FlowMap.getNewID() ;
 		}
 		
-		public static function get selectedScenarioStageID():String {
-			var ss:ScenarioStage = _geim.selectedScenarioStage ;
-			if (ss == null)
+		public static function getIDForItem(item:Object):String {
+			return _mapperHelper.idMapper.lookupValue(item) as String ;
+		}
+		
+		public static function get selectedPhaseID():String {
+			var selectedPhase:Phase = _geim.selectedPhase ;
+			if (selectedPhase == null)
 				return null ;
-			return String(_mapperHelper.itemIDByInstanceMapper.lookupValue(ss)) ;
+			return selectedPhase.phaseID ;
 		}
 		
-		public static function addStage(stageID:String, stageName:String):void {
-			var ss:ScenarioStage = ScenarioStage.createScenarioStage(stageName) ;
-			ss.width = 200 ;
-			ss.height = _graphCanvas.height ;
-			_mapperHelper.scenarioStageByIDMapper.mapValue(stageID, ss) ;
-			_mapperHelper.nodesByScenarioStageIDMapper.mapValue(stageID, new ArrayCollection()) ;
-			_mapperHelper.itemIDByInstanceMapper.mapValue(ss, stageID) ;
-			_graphCanvas.addCanvasObject(ss, _scenarioStageCanvasObjectDescriptor, _scenarioStageCanvasObjectGroup) ;
+		public static function getPhaseNameByID(phaseID:String):String {
+			return null ;
+		}
+		
+		public static function addPhase(phaseID:String, phaseName:String):void {
+			var phase:Phase = Phase.createPhase(phaseName) ;
+			phase.width = 200 ;
+			phase.height = _graphCanvas.height ;
+/* 			_mapperHelper.phaseMapper.mapValue(phaseID, phase) ; */
+			_graphCanvas.addCanvasObject(phase, _phaseCanvasObjectDescriptor, _phaseCanvasObjectGroup) ;
+			_mapperHelper.idMapper.mapValue(phase, phaseID) ;
 		}
 		
 		protected static function _itemSelected(event:SelectionEvent):void {
 			if (event.item is IEdge) {
  				var de:DefaultEdge = DefaultEdge(event.item) ;
  				de.style = FlowMapStyles.selectedEdgeStyle ;
-			}
-			else if (event.item is INode) {
-				var dn:DefaultNode = DefaultNode(event.item) ;
-				dn.style = FlowMapStyles.selectedNodeStyle ;
 			}
 			_graphCanvas.forceRepaint();
 		}
@@ -130,153 +148,242 @@ package com.mindalliance.channels.view.flowmap
 				var de:DefaultEdge = DefaultEdge(event.item) ;
 				de.style = _graph.defaultEdgeStyle ;
 			}
-			else if (event.item is INode) {
-				var dn:DefaultNode = DefaultNode(event.item) ;
-				dn.style = _graph.defaultNodeStyle ;
-			}
 			_graphCanvas.forceRepaint();
 		}
 		
 		public static function get selectedItems():Iterable {
 			return _graphSelection.selectedObjects ;
 		}
-		
+				
 		public static function get numSelected():uint {
 			return _graphSelection.count ;
 		}
 		
-		public static function getIDForItem(item:IModelItem):String {
-			var itemID:Object = _mapperHelper.itemIDByInstanceMapper.lookupValue(item) ;
-			return (itemID == null ? null : String(itemID)) ;
+		public static function renamePhase(phaseID:String, newText:String):void {
+			var phase:Phase = null ;
+			if (phase == null)
+				return ;
+			phase.name = newText ;
+			FlowMapLayoutHelper.updatePhaseBounds(_mapperHelper, phaseID) ;
+			_graphCanvas.forceRepaint() ;
 		}
 		
-		public static function addTask(stageID:String, taskID:String, taskLabel:String):void {
-			// Find out where the node should be placed
-			var nodePoint:IPoint = _getLocationForNewNode(stageID) ;
-			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
-			
-			// Attach the custom port candidate provider
-			node.registerLookup(IPortCandidateProvider, _portCandidateProvider) ;
-			
-			// Add the task label
-			var label:ILabel = _graph.addLabel(node, taskLabel, FlowMapStyles.taskLabelModelParameter, FlowMapStyles.taskLabelStyle) ;
-			var port:IPort = _graph.addPort(node, node.layout.x, label.layout.anchorY - label.layout.height/2) ;
-			
-			// Update node bounds so that the task label will fit
-			_graph.setBounds(node, node.layout.x, node.layout.y, label.layout.width * 1.2, node.layout.height) ;
-			
-			// Add this node to the new stage's collection
-			var nodesAC:ArrayCollection = ArrayCollection(_mapperHelper.nodesByScenarioStageIDMapper.lookupValue(stageID)) ;
-			nodesAC.addItem(node) ;
-			_mapperHelper.nodesByScenarioStageIDMapper.mapValue(stageID, nodesAC) ;
-			
-			// Update scenario bounds in case widening of the node resulted in changes
-			_updateScenarioStageBounds(stageID) ;
-			
-			_mapperHelper.nodeByIDMapper.mapValue(taskID, node) ;
-			_mapperHelper.scenarioStageIDByItemIDMapper.mapValue(taskID, stageID) ;
-			_mapperHelper.taskByIDMapper.mapValue(taskID, label) ;
-			_mapperHelper.labelTypeByLabelMapper.mapValue(label, GraphMapperHelper.VALUE_LABEL_TYPE_TASK) ;
-			_mapperHelper.itemIDByInstanceMapper.mapValue(label, taskID) ;
-			_mapperHelper.itemIDByInstanceMapper.mapValue(node, taskID) ;
-			_mapperHelper.portTypeByPortMapper.mapValue(port, GraphMapperHelper.VALUE_PORT_TYPE_TASK_INCOMING) ;
-			
-			_graphSelection.setNodeSelected(node, true) ;
-		}
-		
-		public static function renameTask(taskID:String, newName:String):void {
-			var label:ILabel = ILabel(_mapperHelper.taskByIDMapper.lookupValue(taskID)) ;
-			_graph.setLabelText(label, newName) ;
-			var ssid:String = String(_mapperHelper.scenarioStageIDByItemIDMapper.lookupValue(taskID)) ;
-			_updateScenarioStageBounds(ssid) ;
-		}
-		
-		private static function _updateScenarioStageBounds(stageID:String):void {
-			var ss:ScenarioStage = ScenarioStage(_mapperHelper.scenarioStageByIDMapper.lookupValue(stageID)) ;
-			var nodes:ArrayCollection = ArrayCollection(_mapperHelper.nodesByScenarioStageIDMapper.lookupValue(stageID)) ;
-			var desiredWidth:Number = 0 ;
-			var maxY:Number = 0 ;
-			for (var i:int=0 ; i < nodes.length ; i++) {
-				var rect:IRectangle = INode(nodes.getItemAt(i)).layout ;
-				if (rect.width >= desiredWidth)
-					desiredWidth = rect.width ;
-				var desiredY:Number = rect.y + rect.height + FlowMapStyles.SCENARIO_STAGE_NODE_PADDING_Y ;
-				if (desiredY >= maxY)
-					maxY = desiredY ;
+		public static function renameEvent(eventID:String, newText:String):void {
+			var end:EventNodeData = EventNodeData(_mapperHelper.nodeDataMapper.lookupValue(eventID)) ;
+			var labelIter:Iterator = end.node.labels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.type != LabelData.LABEL_TYPE_EVENT)
+					continue ;
+				_graph.setLabelText(ld.label, newText) ;
+				// Adjust node size to fit label
+				FlowMapLayoutHelper.updateNodeBounds(_graph, label.owner as DefaultNode) ;
+				break ;
 			}
-			desiredWidth = desiredWidth + FlowMapStyles.SCENARIO_STAGE_NODE_PADDING_X * 2 ;
-			if (ss.width < desiredWidth)
-				ss.width = desiredWidth ;
-			var desiredHeight:Number = maxY - ss.y + FlowMapStyles.SCENARIO_STAGE_NODE_PADDING_Y * 2;
-			if (ss.height < desiredHeight) {
-				var stages:Iterator = DictionaryMapper(_mapperHelper.scenarioStageByIDMapper).values() ;
-				while (stages.hasNext()) {
-					var stage:ScenarioStage = ScenarioStage(stages.next()) ;
-					stage.height = desiredHeight ;
+		}
+		
+		public static function renameTask(taskID:String, newText:String):void {
+			var tnd:TaskNodeData = TaskNodeData(_mapperHelper.nodeDataMapper.lookupValue(taskID)) ;
+			var labelIter:Iterator = tnd.node.labels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.type != LabelData.LABEL_TYPE_TASK)
+					continue ;
+				_graph.setLabelText(ld.label, newText) ;
+				// Adjust node size to fit label
+				FlowMapLayoutHelper.updateNodeBounds(_graph, label.owner as DefaultNode) ;
+				break ;
+			}
+		}
+		
+		public static function renameRole(roleID:String, newText:String):void {
+			var labelIter:Iterator = _graph.nodeLabels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.type == LabelData.LABEL_TYPE_ROLE && ld.id == roleID) {
+					_graph.setLabelText(ld.label, newText) ;
+				// Adjust node size to fit label
+					FlowMapLayoutHelper.updateNodeBounds(_graph, DefaultNode(label.owner)) ;
+				}
+			}
+		}
+
+		public static function renameRepository(reposID:String, newText:String):void {
+			var nd:NodeData = NodeData(_mapperHelper.nodeDataMapper.lookupValue(reposID)) ;
+			var labelIter:Iterator = nd.node.labels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.type != LabelData.LABEL_TYPE_REPOSITORY)
+					continue ;
+				_graph.setLabelText(ld.label, newText) ;
+/* 				// Adjust node size to fit label
+				FlowMapLayoutHelper.updateNodeBounds(_graph, label.owner as DefaultNode) ;
+ */				break ;
+			}
+		}
+		
+		public static function renameRepositoryOwner(reposOwnerID:String, newText:String):void {
+			var labelIter:Iterator = _graph.nodeLabels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.type == LabelData.LABEL_TYPE_REPOSITORY_OWNER && ld.id == reposOwnerID) {
+					_graph.setLabelText(ld.label, newText) ;
 				}
 			}
 		}
 		
-		private static function _getLocationForNewNode(stageID:String):IPoint {
-			var ss:ScenarioStage = ScenarioStage(_mapperHelper.scenarioStageByIDMapper.lookupValue(stageID)) ;
-			var nodes:ArrayCollection = ArrayCollection(_mapperHelper.nodesByScenarioStageIDMapper.lookupValue(stageID)) ;
-			var maxY:Number = 0 ;
-			for (var i:int=0; i < nodes.length ; i++) {
-				var node:INode = INode(nodes.getItemAt(i)) ;
-				if (node.layout.y > maxY)
-					maxY = node.layout.y ;
-			}
-			var nodeX:Number = ss.x + FlowMapStyles.SCENARIO_STAGE_NODE_PADDING_X ;
-			var nodeY:Number = (maxY == 0 ? FlowMapStyles.SCENARIO_STAGE_NODE_PADDING_Y : maxY + FlowMapStyles.VERTICAL_INTERNODE_GAP) ;
-			return new ImmutablePoint(nodeX, nodeY) ;
+		public static function addTask(phaseID:String, taskID:String, taskLabel:String):void {
+			// Find out where the node should be placed
+			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
+			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
+
+			// Set styles
+			_graph.setNodeStyle(node, FlowMapStyles.taskNodeStyle) ;
+			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
+			
+			// Attach the custom port candidate provider
+			node.registerLookup(IPortCandidateProvider, _portCandidateProvider) ;
+			
+			// Setup node data mappings
+			var tnd:TaskNodeData = new TaskNodeData(node, taskID, phaseID) ;
+			_mapperHelper.nodeDataMapper.mapValue(taskID, tnd) ;
+			_mapperHelper.idMapper.mapValue(node, taskID) ;
+			
+			// Add the task label
+			var label:ILabel = _graph.addLabel(node, taskLabel, FlowMapStyles.taskLabelModelParameter, FlowMapStyles.taskLabelStyle) ;
+
+			// Setup task mappings
+			var ld:LabelData = new LabelData(label, taskID, LabelData.LABEL_TYPE_TASK) as LabelData ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+			_mapperHelper.idMapper.mapValue(label, taskID) ;
+
+			// Adjust node size to fit label
+			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ;
+			
+			// Add a port now
+			var rect:IRectangle = node.layout ;
+			var port:IPort = _graph.addPort(tnd.node, rect.x + rect.width + 5, rect.y + rect.height/2);
+			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_TASK_OUTGOING) ;
+			_mapperHelper.idMapper.mapValue(port, taskID) ;
+
+			_graphSelection.setNodeSelected(node, true) ;
+/* 			_updatePhaseBounds(phaseID) ; */
 		}
 		
-		public static function addEvent(taskID:String, eventID:String, eventLabel:String):void {
-			var node:INode = INode(_mapperHelper.nodeByIDMapper.lookupValue(taskID)) ;
-			var stageID:String = String(_mapperHelper.scenarioStageIDByItemIDMapper.lookupValue(taskID)) ;
-			var label:ILabel = _graph.addLabel(node, eventLabel, FlowMapStyles.eventLabelModelParameter, FlowMapStyles.eventLabelStyle) ;
-			var rect:IOrientedRectangle = label.layout;
-			var taskRect:IOrientedRectangle = ILabel(_mapperHelper.taskByIDMapper.lookupValue(taskID)).layout ;
-			var nodeRect:IRectangle = node.layout ;
-			var minRequiredWidth:Number = rect.width + taskRect.width + 20 ;
-			if (node.layout.width < minRequiredWidth) {
-				_graph.setBounds(node, nodeRect.x, nodeRect.y, minRequiredWidth, nodeRect.height) ;
-			}
-			rect = label.layout ;
-			var port:IPort = _graph.addPort(node, rect.anchorX + rect.width + 2, rect.anchorY - rect.height/2) ;
+		public static function addRepository(phaseID:String, reposID:String, reposLabel:String):void {
+			// Find a place to add the event node
+			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
+			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
 			
-			_updateScenarioStageBounds(stageID) ;
-			_mapperHelper.scenarioStageIDByItemIDMapper.mapValue(eventID, stageID) ;
-			_mapperHelper.eventByIDMapper.mapValue(eventID, label) ;
-			_mapperHelper.labelTypeByLabelMapper.mapValue(label, GraphMapperHelper.VALUE_LABEL_TYPE_EVENT) ;
-			_mapperHelper.itemIDByInstanceMapper.mapValue(label, eventID) ;
-			_mapperHelper.portTypeByPortMapper.mapValue(port, GraphMapperHelper.VALUE_PORT_TYPE_EVENT_OUTGOING) ;
+			// Setup styles
+			_graph.setNodeStyle(node, FlowMapStyles.repositoryNodeStyle) ;
+			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
+			
+			//Setup mappings
+			var rnd:NodeData = new NodeData(node, reposID) ;
+			_mapperHelper.nodeDataMapper.mapValue(reposID, rnd) ;
+			_mapperHelper.idMapper.mapValue(node, reposID) ;
+			
+			// Add repository name label
+			var label:DefaultLabel = _graph.addLabel(node, reposLabel, FlowMapStyles.repositoryLabelModelParameter, FlowMapStyles.repositoryLabelStyle) as DefaultLabel ;
+			var ld:LabelData = new LabelData(label, reposID, LabelData.LABEL_TYPE_REPOSITORY) as LabelData ;
+			_mapperHelper.labelDataMapper.mapValue(reposID, ld) ;
+			_mapperHelper.idMapper.mapValue(label, reposID) ;
+			
+/* 			// Adjust node size to fit label
+			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ; */
+			
+			var rect:IOrientedRectangle = label.layout ;
+			var port:IPort = _graph.addPort(node, rect.anchorX - 5, rect.anchorY - rect.height/2) ;
+			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_REPOSITORY_INCOMING) ;
+			_mapperHelper.idMapper.mapValue(port, reposID) ;
+		}
+		
+		public static function addEvent(phaseID:String, eventID:String, eventLabel:String):void {
+			// Find a place to add the event node
+			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
+			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
+			_mapperHelper.idMapper.mapValue(node, eventID) ;			
+			
+			// Setup styles
+			_graph.setNodeStyle(node, FlowMapStyles.eventNodeStyle) ;
+			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
+			
+			//Setup mappings
+			var end:EventNodeData = new EventNodeData(node, eventID) ;
+			end.startPhaseID = phaseID ;
+			end.endPhaseID = phaseID ;
+			_mapperHelper.nodeDataMapper.mapValue(eventID, end) ;
+			
+			// Add the event label
+			var label:ILabel = _graph.addLabel(node, eventLabel, FlowMapStyles.eventLabelModelParameter, FlowMapStyles.eventLabelStyle) ;
+			var ld:LabelData = new LabelData(label, eventID, LabelData.LABEL_TYPE_EVENT) as LabelData ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+			_mapperHelper.idMapper.mapValue(label, eventID) ;
+						
+			// Adjust node size to fit label
+			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ;
+			
+			var rect:IRectangle = node.layout ;
+			var port:IPort = _graph.addPort(node, rect.x + rect.width + 5, rect.y + rect.height/2) ;
+			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_EVENT_OUTGOING) ;
+			_mapperHelper.idMapper.mapValue(port, eventID) ;			
+			
+/* 			_updateScenarioStageBounds(stageID) ; */
+		}
+		
+		private static function _getLabel(node:DefaultNode, labelType:String):DefaultLabel {
+			var iter:Iterator = node.labels.iterator() ;
+			while (iter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(iter.next()) ;
+				var ld:LabelData = LabelData(_mapperHelper.labelDataMapper.lookupValue(label)) ;
+				if (ld.type == labelType)
+					return label ;
+			}
+			return null ;
 		}
 		
 		public static function setRole(taskID:String, roleID:String, roleLabel:String):void {
-			var stageID:String = String(_mapperHelper.scenarioStageIDByItemIDMapper.lookupValue(taskID)) ;
-			var node:INode = INode(_mapperHelper.nodeByIDMapper.lookupValue(taskID)) ;
-			var label:Object = _mapperHelper.roleByIDMapper.lookupValue(roleID) ;
-
-			if (label != null) {
-				_graph.setLabelText(ILabel(label), roleLabel) ;
-				_mapperHelper.itemIDByInstanceMapper.mapValue(label, roleID) ;
-				// TODO: Update port location
-			} 
-			else {
-				label = _graph.addLabel(node, roleLabel, FlowMapStyles.roleLabelModelParameter, FlowMapStyles.roleLabelStyle) ;
-				_mapperHelper.roleByIDMapper.mapValue(roleID, label) ;	
-				_mapperHelper.labelTypeByLabelMapper.mapValue(label, GraphMapperHelper.VALUE_LABEL_TYPE_ROLE) ;
-				_mapperHelper.itemIDByInstanceMapper.mapValue(label, roleID) ;
+			// Get the node in which this role exists
+			var tnd:TaskNodeData = TaskNodeData(_mapperHelper.nodeDataMapper.lookupValue(taskID)) ;
+			var label:DefaultLabel = _getLabel(tnd.node, LabelData.LABEL_TYPE_ROLE) ;
+			if (label == null) {
+				label = _graph.addLabel(tnd.node, roleLabel, FlowMapStyles.roleLabelModelParameter, FlowMapStyles.roleLabelStyle) as DefaultLabel ;
+				var ld:LabelData = new LabelData(label, roleID, LabelData.LABEL_TYPE_ROLE) ;
+				_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+				_mapperHelper.idMapper.mapValue(label, roleID) ;
+				
+				// Adjust node size to fit label
+				FlowMapLayoutHelper.updateNodeBounds(_graph, label.owner as DefaultNode) ;
+				var rect:IOrientedRectangle = label.layout ;
+				var port:IPort = _graph.addPort(tnd.node, rect.anchorX, rect.anchorY - rect.height/2) ;
+				_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_ROLE_INCOMING) ;
+				_mapperHelper.idMapper.mapValue(port, roleID) ;
 			}
-			var rect:IOrientedRectangle = ILabel(label).layout ;
-			var nodeRect:IRectangle = node.layout ;
-			if (nodeRect.width < rect.width)
-				_graph.setBounds(node, nodeRect.x, nodeRect.y, rect.width*1.15, nodeRect.height) ;
-			_updateScenarioStageBounds(stageID) ;
-			rect = ILabel(label).layout ;
-			var port:IPort = _graph.addPort(node, rect.anchorX, rect.anchorY - rect.height/2) ;
-			_mapperHelper.portTypeByPortMapper.mapValue(port, GraphMapperHelper.VALUE_PORT_TYPE_ROLE_INCOMING) ;
+			else {
+				// If label is already there, just rename it.
+				renameRole(roleID, roleLabel) ;
+			}
+		}
+		
+		public static function setRepositoryOwner(reposID:String, reposOwnerID:String, reposOwnerLabel:String):void {
+			// Get the node in which this reposOwner is to be added
+			var nd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(reposID) as NodeData ;
+			var label:DefaultLabel = _getLabel(nd.node, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
+			if (label == null) {
+				label = _graph.addLabel(nd.node, reposOwnerLabel, FlowMapStyles.repositoryOwnerLabelModelParameter, FlowMapStyles.repositoryOwnerLabelStyle) as DefaultLabel ;
+				var ld:LabelData = new LabelData(label, reposOwnerID, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
+				_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+				_mapperHelper.idMapper.mapValue(label, reposOwnerID) ;
+			}
+			else {
+				renameRepositoryOwner(reposOwnerID, reposOwnerLabel) ;
+			}
 		}
 		
 		public static function addSelectionListener(type:FlowMapEvent, listener:Function):void {
@@ -284,8 +391,8 @@ package com.mindalliance.channels.view.flowmap
 					_graphSelection.addEventListener(SelectionEvent.SELECT, listener) ;
 			else if (type == FlowMapEvent.ITEM_DESELECTED)
 					_graphSelection.addEventListener(SelectionEvent.DESELECT, listener) ;
-			else if (type == FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED)
-				_geim.addEventListener(FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED.name, listener) ;
+			else if (type == FlowMapEvent.PHASE_SELECTION_CHANGED)
+				_geim.addEventListener(FlowMapEvent.PHASE_SELECTION_CHANGED.name, listener) ;
 		}
 		
 		public static function removeSelectionListener(type:FlowMapEvent, listener:Function):void {
@@ -293,28 +400,87 @@ package com.mindalliance.channels.view.flowmap
 				_graphSelection.removeEventListener(SelectionEvent.SELECT, listener) ;
 			else if (type == FlowMapEvent.ITEM_DESELECTED)
 				_graphSelection.removeEventListener(SelectionEvent.DESELECT, listener) ;
-			else if (type == FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED)
-				_geim.removeEventListener(FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED.name, listener) ;
+			else if (type == FlowMapEvent.PHASE_SELECTION_CHANGED)
+				_geim.removeEventListener(FlowMapEvent.PHASE_SELECTION_CHANGED.name, listener) ;
 		}
 		
 		public static function removeTask(taskID:String):void {
-			var tn:Object = _mapperHelper.nodeByIDMapper.lookupValue(taskID) ;
-			if (tn == null)
-				return ;
-			_mapperHelper.removePortMappings(INode(tn)) ;
+			_removeNode(taskID) ;
 		}
+		
+		public static function removeEvent(eventID:String):void {
+			_removeNode(eventID) ;
+		}
+		
+		public static function removeRepository(reposID:String):void {
+			_removeNode(reposID) ;
+		}
+		
+		private static function _removeNode(nodeID:String):void {
+			var nd:NodeData = NodeData(_mapperHelper.nodeDataMapper.lookupValue(nodeID)) ;
+			_unmapAllLabels(nd.node) ;
+			_unmapAllPorts(nd.node) ;
+			_mapperHelper.nodeDataMapper.unMapValue(nodeID) ;
+			_mapperHelper.idMapper.unMapValue(nd.node) ;
+			_graph.removeNode(nd.node) ;
+		}
+		
+		private static function _unmapAllLabels(node:DefaultNode):void {
+			var labelIter:Iterator = node.labels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:ILabel = labelIter.next() as ILabel ;
+				_mapperHelper.labelDataMapper.unMapValue(label) ;
+				_mapperHelper.idMapper.unMapValue(label) ;
+			}
+		}
+		
+		private static function _unmapAllPorts(node:DefaultNode):void {
+			var portsIter:Iterator = node.ports.iterator() ;
+			while (portsIter.hasNext()) {
+				var port:IPort = portsIter.next() as IPort ;
+				_mapperHelper.portTypeMapper.unMapValue(port) ;
+				_mapperHelper.idMapper.unMapValue(port) ;
+			}
+		}
+		
+		public static function removeRole(roleID:String):void {
+			removeLabelsByID(roleID) ;
+			removePorts(roleID, PortType.PORT_TYPE_ROLE_INCOMING) ;
+			// Deal with edges.
+		}
+		
+		private static function removeLabelsByID(labelID:String):void {
+			var labelIter:Iterator = _graph.nodeLabels.iterator() ;
+			while (labelIter.hasNext()) {
+				var label:DefaultLabel = DefaultLabel(labelIter.next()) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.id == labelID) {
+					_graph.removeLabel(label) ;
+					_mapperHelper.labelDataMapper.unMapValue(label) ;
+					_mapperHelper.idMapper.unMapValue(label) ;
+				}
+			}
+		}
+		
+		private static function removePorts(portID:String, portType:String):void {
+			var portsIter:Iterator = _graph.ports.iterator() ;
+			while (portsIter.hasNext()) {
+				var port:DefaultPort = DefaultPort(portsIter.next()) ;
+				var pType:String = _mapperHelper.portTypeMapper.lookupValue(port) as String ;
+				var pID:String  = _mapperHelper.idMapper.lookupValue(port) as String ;
+				if (pID == portID && pType == portType) {
+					_graph.removePort(port) ;
+					_mapperHelper.portTypeMapper.unMapValue(port) ;
+					_mapperHelper.idMapper.unMapValue(port) ;
+				}
+			}			
+		}
+		
+		public static function removeRepositoryOwner(reposOwnerID:String):void {
+			removeLabelsByID(reposOwnerID) ;
+		}
+		
 			
-		public static function reComputeLayout(taskID:String):void {
-			var temp:Object = _mapperHelper.nodeByIDMapper.lookupValue(taskID) ;
-			if (temp == null)
-				return ;
-			var node:INode = INode(temp) ;
-		}
-		
-		public static function moveTask(taskID:String, fromStageID:String, toStageID:String):void {
-			// TODO
-		}
-		
 		private static var id:int = -1 ;
 		public static function getNewID():String {
 			id ++ ;

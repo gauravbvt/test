@@ -12,6 +12,8 @@
             
             public var okEventHandler:Function ;
 			private var _done:Boolean = false ;
+			public var ignoreNullOrEmpty:Boolean = true ;
+			
             private function handleKeyEvent(event:KeyboardEvent):void {
             	if (_done)
             		return ;
@@ -22,8 +24,13 @@
 	                    break ;
 	                case Keyboard.ENTER:
             			_done = true ;
-	                	if (okEventHandler != null)
-	                		callLater(okEventHandler, [textInput.text]) ;
+	                	if (okEventHandler != null) {
+	                		var text:String = textInput.text ;
+	                		if (ignoreNullOrEmpty && (text == null || text.length == 0))
+	                			;
+	                		else	
+	                			callLater(okEventHandler, [textInput.text]) ;
+	                	}
 	                    PopUpManager.removePopUp(this);
 	                	break ;
 	            }

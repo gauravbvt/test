@@ -26,10 +26,8 @@
 		]]>
 	</mx:Script>
 
-	<mx:Text text="This node is made up of the following elements:"/>
 	<mx:TabNavigator>	
 		<scenario:TaskEditor id="taskEditor" label="{'Task: '}"/>
-		<scenario:EventEditor id="eventEditor" label="{'Event: '}"/>
 		<people:RoleEditor id="roleEditor" label="{'Role: '}"/>
 	</mx:TabNavigator>
 </mx:VBox>

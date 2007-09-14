@@ -13,11 +13,17 @@ package com.mindalliance.channels.view
     public class UtilFuncs
     {
         
-        public static function GetUserTextInput(parent:DisplayObject, callback:Function, titleText:String, modal:Boolean=false):void {
+        public static function GetUserTextInput(parent:DisplayObject, callback:Function, titleText:String, modal:Boolean=false, textInputText:String='', ignoreNullOrEmpty:Boolean=true):void {
 	                var inputDialog:InputTextDialog = InputTextDialog(PopUpManager.createPopUp(parent, InputTextDialog, modal)) ;
     	            inputDialog.title = titleText ;
     	            inputDialog.okEventHandler = callback ;
     	            PopUpManager.centerPopUp(inputDialog);
+    	            inputDialog.ignoreNullOrEmpty = ignoreNullOrEmpty ;
+    	            inputDialog.textInput.text = textInputText ;
+    	            if (textInputText != null && textInputText.length > 0) {
+    	            	inputDialog.textInput.selectionBeginIndex = 0 ;
+    	            	inputDialog.textInput.selectionEndIndex = textInputText.length ;
+    	            }
     	            inputDialog.textInput.setFocus();
 	    }
 	    

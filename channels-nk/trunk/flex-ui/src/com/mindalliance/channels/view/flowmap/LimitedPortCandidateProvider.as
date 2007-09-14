@@ -1,20 +1,27 @@
 package com.mindalliance.channels.view.flowmap
 {
-	import com.yworks.graph.model.IPortCandidateProvider;
-	import com.yworks.graph.model.IEdge;
-	import com.yworks.graph.model.IPortCandidate;
-	import com.yworks.graph.model.IGraph;
-	import com.yworks.support.Iterable;
-	import com.yworks.support.IMapper;
-	import com.yworks.support.Iterator;
-	import com.yworks.support.ArrayList;
-	import com.yworks.graph.model.IPort;
+	import com.yworks.canvas.input.MainInputMode;
 	import com.yworks.graph.model.DefaultPortCandidate;
-	import mx.collections.ArrayCollection;
+	import com.yworks.graph.model.IEdge;
+	import com.yworks.graph.model.IGraph;
+	import com.yworks.graph.model.IPort;
+	import com.yworks.graph.model.IPortCandidate;
+	import com.yworks.graph.model.IPortCandidateProvider;
 	import com.yworks.graph.model.IPortOwner;
+	import com.yworks.support.ArrayList;
+	import com.yworks.support.IMapper;
+	import com.yworks.support.Iterable;
+	import com.yworks.support.Iterator;
+	
+	import mx.collections.ArrayCollection;
 
 	public class LimitedPortCandidateProvider implements IPortCandidateProvider
 	{
+		private var _mapperHelper:GraphMapperHelper ;
+		public function LimitedPortCandidateProvider(mapperHelper:GraphMapperHelper) {
+			_mapperHelper = mapperHelper ;
+		}
+		
 		public function getEdgeTargetPortCandidates(graph:IGraph, edge:IEdge):Iterable
 		{
 			return getCandidateTargetPortCandidates(graph, DefaultPortCandidate.create(edge.sourcePort)) ;
@@ -22,15 +29,14 @@ package com.mindalliance.channels.view.flowmap
 		
 		public function getCandidateTargetPortCandidates(graph:IGraph, source:IPortCandidate):Iterable
 		{
-			var mapper:IMapper = graph.mapperRegistry.getMapper(GraphMapperHelper.KEY_PORT_TYPE) ;
  			var port:IPort = source.getInstance() ;
-			var pt:Object = mapper.lookupValue(port) ;
+			var pt:Object = _mapperHelper.portTypeMapper.lookupValue(port) ;
 			var portType:String = String(pt) ;
 			switch (portType) {
-				case GraphMapperHelper.VALUE_PORT_TYPE_EVENT_OUTGOING:
+				case PortType.PORT_TYPE_EVENT_OUTGOING:
+				case PortType.PORT_TYPE_TASK_OUTGOING:
  					return _getPortCandidatesOfType(graph.ports.iterator(), 
-					[GraphMapperHelper.VALUE_PORT_TYPE_ROLE_INCOMING, 
-	 				GraphMapperHelper.VALUE_PORT_TYPE_TASK_INCOMING], mapper, port.owner) ;
+					[PortType.PORT_TYPE_ROLE_INCOMING, PortType.PORT_TYPE_REPOSITORY_INCOMING], _mapperHelper.portTypeMapper, port.owner) ;
 				break ;
 			}
 			return null ;
@@ -44,20 +50,18 @@ package com.mindalliance.channels.view.flowmap
 		public function getGraphSourcePortCandidates(graph:IGraph):Iterable
 		{
 			var candidates:Iterable = _getPortCandidatesOfType(graph.ports.iterator(), 
-			[GraphMapperHelper.VALUE_PORT_TYPE_EVENT_OUTGOING],
-			graph.mapperRegistry.getMapper(GraphMapperHelper.KEY_PORT_TYPE), null) ;
+			[PortType.PORT_TYPE_EVENT_OUTGOING, PortType.PORT_TYPE_TASK_OUTGOING], _mapperHelper.portTypeMapper, null) ;
 			return candidates ;
 		}
 		
 		public function getCandidateSourcePortCandidates(graph:IGraph, target:IPortCandidate):Iterable
 		{
-			var mapper:IMapper = graph.mapperRegistry.getMapper(GraphMapperHelper.KEY_PORT_TYPE) ;
-			var portType:String = String(mapper.lookupValue(target.getInstance())) ;
+			var portType:String = String(_mapperHelper.portTypeMapper.lookupValue(target.getInstance())) ;
 			switch (portType) {
-				case GraphMapperHelper.VALUE_PORT_TYPE_ROLE_INCOMING: 
-				case GraphMapperHelper.VALUE_PORT_TYPE_TASK_INCOMING:
+				case PortType.PORT_TYPE_ROLE_INCOMING:
+				case PortType.PORT_TYPE_REPOSITORY_INCOMING:
 					return _getPortCandidatesOfType(graph.ports.iterator(), 
-					[GraphMapperHelper.VALUE_PORT_TYPE_EVENT_OUTGOING], mapper, target.owner) ;
+					[PortType.PORT_TYPE_EVENT_OUTGOING, PortType.PORT_TYPE_TASK_OUTGOING], _mapperHelper.portTypeMapper, target.owner) ;
 				break ;
 			}
 			return null ;
@@ -65,11 +69,9 @@ package com.mindalliance.channels.view.flowmap
 		
 		public function getGraphTargetPortCandidates(graph:IGraph):Iterable
 		{
-			trace('Target port candidates requested') ;
 			return _getPortCandidatesOfType(graph.ports.iterator(), 
-			[GraphMapperHelper.VALUE_PORT_TYPE_ROLE_INCOMING,
-			GraphMapperHelper.VALUE_PORT_TYPE_TASK_INCOMING],
-			graph.mapperRegistry.getMapper(GraphMapperHelper.KEY_PORT_TYPE), null) ;
+			[PortType.PORT_TYPE_ROLE_INCOMING, PortType.PORT_TYPE_REPOSITORY_INCOMING],
+			_mapperHelper.portTypeMapper, null) ;
 		}
 		
 		private function _getPortCandidatesOfType(ports:Iterator, types:Array, portTypeMapper:IMapper, portOwner:IPortOwner):Iterable {

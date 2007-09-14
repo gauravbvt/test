@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
 	backgroundColor="white"
-	height="100%"  width="100%"
+	height="100%"
+	width="100%"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
 	xmlns:timeline="com.mindalliance.channels.view.timeline.*" 
 	xmlns:ui="com.mindalliance.channels.view.*" 
@@ -9,10 +11,35 @@
 	xmlns:geomap="com.mindalliance.channels.view.geomap.*"
 	xmlns:control="com.mindalliance.channels.control.*"
 	xmlns:business="com.mindalliance.channels.business.*"
-	applicationComplete="init()">
-    <mx:XML id="yFilesLicenseXML" source="../lib/license.xml" />
+	xmlns:common="com.mindalliance.channels.view.common.*"
+	applicationComplete="init()" currentState="{Channels.STATE_DASHBOARD}">
+	
+  	<mx:states>
+		<mx:State name="DashboardState">
+			<mx:AddChild relativeTo="{vboxApplication}" position="lastChild">
+				<mx:Box width="100%" height="100%" horizontalAlign="center">
+					<application:ProjectScenarioBrowser currentState="DashboardState" id="projectScenarioBrowser"/>
+				</mx:Box>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="InScenarioState">
+			<mx:AddChild relativeTo="{vboxApplication}" position="lastChild">
+				<mx:HDividedBox width="100%" height="100%" paddingTop="10">
+					<application:PropertyEditor id="propertyEditor" height="100%" width="25%"/>
+					<flowmap:FlowMapView id="flowmap" width="100%" height="100%"/>
+				</mx:HDividedBox>
+			</mx:AddChild>
+			<mx:SetProperty target="{applicationToolBar}" name="currentState" value="InScenarioState"/>
+		</mx:State>
+	</mx:states>
+	
+    <mx:XML id="yFilesLicenseXML" source="../lib/license.xml"/>
+
     <mx:Script>
       <![CDATA[
+      	import mx.binding.utils.ChangeWatcher;
+      	import mx.events.StateChangeEvent;
+      
       	import com.mindalliance.channels.events.people.GetPersonByUserEvent;
       	import com.mindalliance.channels.events.people.GetUserEvent;
       	import com.mindalliance.channels.events.resources.GetRepositoryListEvent;
@@ -25,49 +52,58 @@
         import com.adobe.cairngorm.control.CairngormEventDispatcher;
         import com.yworks.util.Util;
       
+      	public static const STATE_DASHBOARD:String = 'DashboardState' ;
+      	
+      	public static const STATE_IN_SCENARIO:String = 'InScenarioState' ;
+      
+      	protected function handleStateChanged(event:StateChangeEvent):void {
+      		switch (event.newState) {
+      			case Channels.STATE_IN_SCENARIO:
+      				scenarioLoaded() ;
+      			break ;
+      		}
+      	}
+      	
+      	protected function handleApplicationToolBarStateChanged(event:StateChangeEvent):void {
+      		switch (event.newState) {
+      			case Channels.STATE_DASHBOARD:
+      				currentState = Channels.STATE_DASHBOARD ;
+      			break ;
+      			case Channels.STATE_IN_SCENARIO :
+      				currentState = Channels.STATE_IN_SCENARIO ;
+      			break ;
+      		}
+      	}
+      	
+      	private function scenarioLoaded():void {
+      		flowmap.init() ;
+      		propertyEditor.init() ;
+			// Load global data lists
+			CairngormHelper.fireEvent( new GetRoleListEvent() );
+			CairngormHelper.fireEvent( new GetPersonListEvent() );
+			CairngormHelper.fireEvent( new GetOrganizationListEvent() );
+			CairngormHelper.fireEvent( new GetRepositoryListEvent() );
+      	}
+      
         private function init():void {
-           Util.registerLicense( yFilesLicenseXML );
-
-           flowmap.init() ;
-           propertyEditor.init() ;
-           
-           // Load global data lists
-           CairngormHelper.fireEvent( new GetRoleListEvent() );
-           CairngormHelper.fireEvent( new GetOrganizationListEvent() );
-           CairngormHelper.fireEvent( new GetPersonListEvent() );
-           CairngormHelper.fireEvent( new GetRepositoryListEvent() );
-           
-           CairngormHelper.fireEvent( new GetUserEvent("user1") );
-           CairngormHelper.fireEvent( new GetPersonByUserEvent("user1") );
-           
-        }
+			Util.registerLicense( yFilesLicenseXML );
+			this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleStateChanged) ;
+			applicationToolBar.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleApplicationToolBarStateChanged) ;
+			CairngormHelper.fireEvent( new GetUserEvent("user1") );
+			CairngormHelper.fireEvent( new GetPersonByUserEvent("user1") );
+		}
 
         [Bindable]
         private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
         
       ]]>
-    </mx:Script>
-   	<!--<business:Services id="services" />-->
+	 </mx:Script>
+    
+       	<!--<business:Services id="services" />-->
 	<control:ChannelsController id="appController" />
 
-    <mx:VBox width="100%" height="100%">
-	    <application:ApplicationToolBar/>
-    	<mx:HDividedBox width="100%" height="100%" paddingTop="10">
-    		<application:PropertyEditor id="propertyEditor" resizeEffect="Resize"/>
-    		<flowmap:FlowMapView id="flowmap" width="100%" height="100%"/>
-    	</mx:HDividedBox>
-    </mx:VBox>
-<!--    <mx:VDividedBox width="100%" height="100%">
-        <mx:HDividedBox width="100%" height="100%">
-        	<application:PropertyEditor id="propertyEditor" height="100%"/>
-        	<flowmap:FlowMapView width="100%" height="100%"/>
-            <flowmap:NetworkViews height="100%" id="networkViews"/>
-            <mx:VDividedBox height="100%" width="80%">
-            	<timeline:TimeLineView width="100%"/>
-            	<geomap:GeoMapView width="100%"/>
-            </mx:VDividedBox>
-        </mx:HDividedBox>
-        <application:Conversations
-        	 width="100%"/>
-    </mx:VDividedBox>         -->
+    <mx:VBox width="100%" height="100%" id="vboxApplication">
+	    <application:ApplicationToolBar id="applicationToolBar"/>
+	</mx:VBox>
+     
 </mx:Application>

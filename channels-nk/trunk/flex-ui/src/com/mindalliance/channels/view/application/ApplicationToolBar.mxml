@@ -2,9 +2,36 @@
 <mx:ApplicationControlBar xmlns:mx="http://www.adobe.com/2006/mxml"
     width="100%" xmlns:application="com.mindalliance.channels.view.application.*" 
     xmlns:search="com.mindalliance.channels.view.search.*"
-    xmlns:logging="com.mindalliance.channels.view.logging.*">
+    xmlns:logging="com.mindalliance.channels.view.logging.*"
+    currentState="{model.currentScenario.id == null ? 'DashboardState' : 'InScenarioState'}">
+    <mx:states>
+        <mx:State name="DashboardState">
+            <mx:AddChild relativeTo="{spacer1}" position="before">
+                <mx:Label text="{personVO.firstName + ' ' + personVO.lastName +  '\'' + (personVO.lastName.charAt(personVO.lastName.length - 1) == 's' ? '' : 's') + ' Dashboard'}"
+                	fontWeight="bold" id="lblDashboardHeaderLabel"/>
+            </mx:AddChild>
+        </mx:State>
+        <mx:State name="InScenarioState">
+            <mx:AddChild relativeTo="{spacer2}" position="before">
+                <mx:MenuBar id="channelsMenuBar" dataProvider="{ChannelsMenuBarItems}" labelField="@label" showRoot="false" itemClick="menuBarItemClicked(event)"/>
+            </mx:AddChild>
+            <mx:AddChild relativeTo="{spacer1}" position="before">
+                <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
+            </mx:AddChild>
+            <mx:AddChild relativeTo="{channelsMenuBar}" position="before">
+            	<!--Need some kinda unload event to dispatch here. -->
+                <mx:Button label="Go to Dashboard" click="Alert.show('This will eventually go to dashboard')"/>
+            </mx:AddChild>
+        </mx:State>
+    </mx:states>
     <mx:Script>
 	    <![CDATA[
+	    	import com.mindalliance.channels.util.CairngormHelper;
+	    	import mx.binding.utils.BindingUtils;
+	    	import mx.binding.utils.ChangeWatcher;
+	    	import mx.events.StateChangeEvent;
+	    	import com.mindalliance.channels.vo.PersonVO;
+	    	import com.mindalliance.channels.model.EditorModel;
 	    	import com.mindalliance.channels.view.people.PersonChooser;
 	    	import com.mindalliance.channels.view.scenario.ArtifactEditor;
 	    	import com.mindalliance.channels.view.scenario.ArtifactChooser;
@@ -44,7 +71,13 @@
         			
             [Bindable]
  	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
-        
+ 	        
+ 	        [Bindable]
+ 	        private var personEditorModel:EditorModel ;
+ 	        
+ 	        [Bindable]
+ 	        private var personVO:PersonVO ;
+			 	          			        
             private var classHash:Object = {
                 "Category Library Editor": CategoryLibraryEditor,
                 "Category Viewer": CategoryViewer, 
@@ -125,9 +158,12 @@
             
 	    ]]>
 	</mx:Script>
+	
+	<mx:Binding source="model.personalProfileEditorModel.personEditorModel" destination="personEditorModel"/>
+	<mx:Binding source="personEditorModel.getElementModel(personEditorModel.id) as PersonVO" destination="personVO"/>
 		
      <mx:XMLList id="ChannelsMenuBarItems">
-        <menuitem label="*TEST*Forms">
+<!--        <menuitem label="*TEST*Forms">
 			<menuitem label="Category Library Editor"/>
 			<menuitem label="Category Viewer"/>
 			<menuitem label="Category Chooser"/>
@@ -147,7 +183,7 @@
             <menuitem label="Acquirement Editor"/>
             <menuitem label="Acquirement Chooser"/>
             <menuitem label="Person Chooser"/>
-        </menuitem>
+        </menuitem> -->
         <menuitem label="Project">
         	<menuitem label="Create New Project"/>
         	<menuitem label="Edit Project Properties"/>
@@ -166,13 +202,10 @@
 			<menuitem label="Edit Categories"/>
 		</menuitem>
     </mx:XMLList>
-	
-	<logging:LoggerButton label="Show Trace Output" visible="{model.debug}" fillColors="[#f09a7b, #f09a7b]"/>
-    <mx:MenuBar id="channelsMenuBar" dataProvider="{ChannelsMenuBarItems}" labelField="@label" showRoot="false" itemClick="menuBarItemClicked(event)"/>
-    <mx:Spacer width="100%"/>
-    <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
-    <mx:Button label="Go to Dashboard"/>
-	<mx:Spacer width="100%"/>
+    
+	<logging:LoggerButton label="Show Trace Output" visible="{model.debug}" fillColors="[#f09a7b, #f09a7b]" id="loggerbutton1"/>
+    <mx:Spacer width="100%" id="spacer2"/>
+    <mx:Spacer width="100%" id="spacer1"/>
 	<mx:Label text="{'Logged in as: '+model.user.name}"/>
 	<mx:Button label="My Profile" id="btnEditProfile" click="editPersonalProfile()"/>
 	<mx:Button label="Logout"/>

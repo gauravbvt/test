@@ -7,7 +7,7 @@ package com.mindalliance.channels.view.flowmap
 
 		public static const ITEM_DESELECTED:FlowMapEvent = new FlowMapEvent("itemDeselected") ;
 		
-		public static const SCENARIO_STAGE_SELECTION_CHANGED:FlowMapEvent = new FlowMapEvent("scenarioStageSelectionChanged") ;
+		public static const PHASE_SELECTION_CHANGED:FlowMapEvent = new FlowMapEvent("phaseSelectionChanged") ;
 		
 		private var _name:String ;
 		

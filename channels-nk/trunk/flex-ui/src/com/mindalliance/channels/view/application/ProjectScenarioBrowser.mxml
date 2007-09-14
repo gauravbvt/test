@@ -6,8 +6,16 @@
 	creationComplete="initEditor()"
 	xmlns:search="com.mindalliance.channels.view.search.*"
 	xmlns:ui="com.mindalliance.channels.view.*"
-	xmlns:common="com.mindalliance.channels.view.common.*"
-	creationCompleteEffect="WipeDown">
+	xmlns:common="com.mindalliance.channels.view.common.*">
+<!--	creationCompleteEffect="WipeDown"> -->
+	<mx:states>
+		<mx:State name="DashboardState">
+			<mx:SetProperty name="title" value="Manage Projects and Scenarios"/>
+			<mx:SetProperty name="showCloseButton" value="false"/>
+			<mx:SetEventHandler name="close"/>
+			<mx:SetEventHandler name="mouseDownOutside"/>
+		</mx:State>
+	</mx:states>
 	
 	<mx:Script>
 		<![CDATA[
@@ -113,18 +121,13 @@
  	        }
  	         	        
  	        private function closeBrowser():void {
- 	        	PopUpManager.removePopUp(this);
+ 	        	if (this.isPopUp)
+	 	        	PopUpManager.removePopUp(this);
  	        }
  	        
 		]]>
 	</mx:Script>
-	
-	<mx:ArrayCollection id="ProjectManagers">
-		<mx:Object Name="Mr. A"/>
-		<mx:Object Name="Mr. B"/>
-		<mx:Object Name="Mr. C"/>
-	</mx:ArrayCollection>
-	
+		
 	<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off" >
 		<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
@@ -145,8 +148,7 @@
 						<mx:TextArea id="txtProjectDescription" text="{psbModel.selectedProject.description}" change="queueProjectUpdate()" focusOut="updateProject()"/>
 					</mx:FormItem>
 					<mx:FormItem label="Project manager" visible="false" includeInLayout="false">
-						<!--This won't work properly because data providers are using generic objects. -->
-						<mx:ComboBox id="comboProjectManager" dataProvider="{ProjectManagers}" labelField="Name" selectedIndex="{ProjectManagers.getItemIndex(psbModel.selectedProject.manager)}"/>
+						<mx:ComboBox id="comboProjectManager" />
 					</mx:FormItem>
 					<mx:FormItem label="Participants" direction="vertical" visible="false" includeInLayout="false">
 						<mx:List/>

@@ -7,6 +7,48 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.view.scenario.RepositoryCreator;
+			import com.mindalliance.channels.events.resources.CreateRepositoryEvent;
+			import com.mindalliance.channels.events.scenario.CreateEventEvent;
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+/*
+			PHASE RELATED STUFF CURRENTLY NOT USED
+			
+ 			[Bindable]
+			private var selectedPhaseIDNotNull:Boolean = false ;
+
+ 			public function selectedPhaseChanged(event:Event):void {
+				selectedScenarioStageIDNotNull = (FlowMap.selectedScenarioStageID != null) ;
+			}
+			
+ 			private function addPhase():void {
+				UtilFuncs.GetUserTextInput(this,
+					function anon(value:String):void {
+						FlowMap.addPhase(FlowMap.getNewID(), UtilFuncs.Capitalize(value)) ;
+					}, "Enter Phase Name", true) ;
+			}
+			
+			private function renamePhase():void {
+				var stageID:String = FlowMap.selectedPhaseID
+				var oldName:String = FlowMap.getStageNameByID(stageID) ;
+				
+				UtilFuncs.GetUserTextInput(this,
+					function anon(value:String):void {
+						var newName:String = UtilFuncs.Capitalize(value) ;
+						if (newName == oldName)
+							return ;
+						FlowMap.changeLabelText(FlowMapElementType.SCENARIO_STAGE, stageID, newName) ;
+					}, "Rename Phase", true, oldName) ;
+			}
+ */	
+		]]>
+	</mx:Script>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.events.scenario.CreateTaskEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
 			import com.yworks.support.Iterable;
 			import com.yworks.graph.model.ILabel;
 			import com.yworks.support.Iterator;
@@ -16,19 +58,18 @@
 			import com.yworks.graph.model.INode;
 			import com.mindalliance.channels.view.UtilFuncs;
 		
+			/* Called by Channels because this init needs to wait until license is validated etc. */
 			public function init():void {
 				zoomControl.graphCanvas = this.graphCanvas ;
 				FlowMap.initialize(graphCanvas) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
-				FlowMap.addSelectionListener(FlowMapEvent.SCENARIO_STAGE_SELECTION_CHANGED, selectedScenarioStageChanged) ;
+/* 				FlowMap.addSelectionListener(FlowMapEvent.PHASE_SELECTION_CHANGED, selectedPhaseChanged) ; */
+				FlowMapCairngormInterfacer.initialize() ;
 			}
 			
 			[Bindable]
 			private var singleNodeSelected:Boolean = false ;
-			
-			[Bindable]
-			private var selectedScenarioStageIDNotNull:Boolean = false ;
 			
 			private function _updateSelectionBoundVariables():void {
 				if (FlowMap.numSelected == 1) {
@@ -44,10 +85,6 @@
 					singleNodeSelected = false ;
 			}
 			
-			public function selectedScenarioStageChanged(event:Event):void {
-				selectedScenarioStageIDNotNull = (FlowMap.selectedScenarioStageID != null) ;
-			}
-			
 			public function itemSelected(event:SelectionEvent):void {
 				_updateSelectionBoundVariables() ;	
 			}
@@ -56,76 +93,54 @@
 				_updateSelectionBoundVariables() ;	
 			}
 			
-			private function addStage():void {
-				UtilFuncs.GetUserTextInput(this,
-					function anon(value:String):void {
-						if (value == null || value.length == 0)
-							return ;
-						FlowMap.addStage(FlowMap.getNewID(), UtilFuncs.Capitalize(value)) ;
-					}, "Enter Stage Name", true) ;
-			}
-			
 			private function addTask():void {
-				var ssid:String = FlowMap.selectedScenarioStageID ;
-				if (ssid == null)
-					throw new Error("SEVERE: Selected Scenario Stage ID should not be null but is!") ;
-					
-				UtilFuncs.GetUserTextInput(this,
-					function anon(text:String):void {
-						if (text == null || text.length == 0)
-							return ;
-						FlowMap.addTask(ssid, FlowMap.getNewID(), UtilFuncs.Capitalize(text)) ;
-					}, "Enter Name of New Task", true) ;
+				function addTaskHandler(taskName:String):void {
+					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
+					var event:CreateTaskEvent = new CreateTaskEvent(taskName, scenarioID) ;
+					CairngormHelper.fireEvent(event) ;
+				}
+				
+ 				UtilFuncs.GetUserTextInput(this, addTaskHandler, "Enter Name of New Task", true) ;
 			}
 			
 			private function addEvent():void {
-				var task:INode = INode(FlowMap.selectedItems.iterator().next()) ;
-				var taskID:String = FlowMap.getIDForItem(task) ;
-				if (taskID == null)
-					throw new Error("SEVERE: ID for selected task not found!") ;
-					
-				UtilFuncs.GetUserTextInput(this,
-					function anon(text:String):void {
-						if (text == null || text.length == 0)
-							return ;
-						FlowMap.addEvent(taskID, FlowMap.getNewID(), UtilFuncs.Capitalize(text)) ;
-					}, "Enter Name of New Event", true) ;
+				function addEventHandler(eventName:String):void {
+					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
+					var event:CreateEventEvent = new CreateEventEvent(eventName, scenarioID) ;
+					CairngormHelper.fireEvent(event) ;
+				}
+				UtilFuncs.GetUserTextInput(this, addEventHandler, "Enter Name of New Event", true) ;
 			}
 			
-			private function setRole():void {
-				var iter:Iterator = FlowMap.selectedItems.iterator() ;
-				if (!(iter.hasNext()))
-					throw new Error("SEVERE: Selected item list should not be empty but is!")
-				var o:Object = iter.next() ;
-				if (!(o is INode))
-					throw new Error("INTERESTING: Selected item should be an INode instance but is not.") ;
-				var task:INode = INode(o) ;
-				var taskID:String = FlowMap.getIDForItem(task) ;
-				if (taskID == null)
-					throw new Error("SEVERE: ID for selected task not found!") ;
-					
-				UtilFuncs.GetUserTextInput(this,
-					function anon(text:String):void {
-						if (text == null || text.length == 0)
-							return ;
-						FlowMap.setRole(taskID, FlowMap.getNewID(), UtilFuncs.Capitalize(text)) ;
-					}, "Enter Name of Role", true) ;
+			private function addRepository():void {
+				function addRepositoryHandler(reposName:String, reposOwnerID:String):void {
+					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
+					var event:CreateRepositoryEvent = new CreateRepositoryEvent(reposName, reposOwnerID) ;
+					CairngormHelper.fireEvent(event) ;
+				}
+				
+				var repoCreator:RepositoryCreator = PopUpManager.createPopUp(this, RepositoryCreator, true) as RepositoryCreator ;
+				repoCreator.resultHandler = addRepositoryHandler ;
+				PopUpManager.centerPopUp(repoCreator) ;
 			}
-			
+						
 		]]>
 	</mx:Script>
 	
-	<mx:HBox width="100%" borderSides="bottom" borderThickness="1" borderStyle="solid">
-		<flowmap:ZoomControl id="zoomControl" resizeEffect="Resize"/>
-		<mx:Label text="Menu:"/>
-		<mx:Button label="Add Stage" click="addStage()"/>
+	<mx:HBox width="100%" borderSides="bottom" borderThickness="1" borderStyle="solid" verticalAlign="middle">
+		<mx:Label text="Menu:" fontWeight="bold"/>
+<!--		Phases are called stages for now. Needs to be cleaned up. -->
+<!--		<mx:Button label="Add Phase" click="addStage()"/> -->
+		<mx:Button label="Add Task" click="addTask()"/>
+		<mx:Button label="Add Event" click="addEvent()"/>
+		<mx:Button label="Add Repository" click="addRepository()"/>
+<!--	
 		<mx:HBox visible="{selectedScenarioStageIDNotNull}" includeInLayout="{selectedScenarioStageIDNotNull}">
-			<mx:Button label="Add Task" click="addTask()"/>
+			<mx:Button label="Rename Phase" click="renamePhase()"/>
 		</mx:HBox>
-		<mx:HBox visible="{singleNodeSelected}" includeInLayout="{singleNodeSelected}" >
-			<mx:Button label="Set Role" click="setRole()"/>
-			<mx:Button label="Add Event" click="addEvent()"/>
-		</mx:HBox>
+ -->	
+ 		<mx:Spacer width="100%"/>	
+		<flowmap:ZoomControl id="zoomControl" resizeEffect="Resize"/>
 	</mx:HBox>
 	<yui:GraphCanvasComponent id="graphCanvas" width="100%" height="100%"/>
 </mx:VBox>

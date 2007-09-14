@@ -7,25 +7,23 @@
     xmlns:application="com.mindalliance.channels.view.application.*"
     verticalScrollPolicy="off"
     horizontalScrollPolicy="off" 
-    verticalAlign="middle">
+    currentState="NothingSelectedState">
 	<mx:states>
 		<mx:State name="TaskNodeEditorState">
 			<mx:AddChild position="lastChild">
 				<application:TaskNodeEditor/>
 			</mx:AddChild>
-			<mx:SetStyle name="verticalAlign"/>
 		</mx:State>
-		<mx:State name="RepositoryNodeEditor">
+		<mx:State name="RepositoryNodeEditorState">
 			<mx:AddChild position="lastChild">
 				<application:RepositoryNodeEditor/>
 			</mx:AddChild>
-			<mx:SetStyle name="verticalAlign"/>
+		</mx:State>
+		<mx:State name="NothingSelectedState">
+			<mx:SetProperty name="enabled" value="false"/>
 		</mx:State>
 		<mx:State name="MultipleItemsSelectedState">
-			<mx:SetProperty name="height" value="25%"/>
-			<mx:AddChild position="lastChild">
-				<mx:Label text="Multiple Items Selected"/>
-			</mx:AddChild>
+			<mx:SetProperty name="enabled" value="false"/>
 		</mx:State>
 	</mx:states>
 	
@@ -84,5 +82,5 @@
 			
 		]]>
 	</mx:Script>
-
+	
 </mx:VBox>

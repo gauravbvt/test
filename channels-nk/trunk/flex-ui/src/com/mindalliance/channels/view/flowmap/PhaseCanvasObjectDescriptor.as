@@ -6,21 +6,21 @@ package com.mindalliance.channels.view.flowmap
 	import com.yworks.canvas.ICanvasObjectDescriptor;
 	import com.yworks.canvas.ICanvasObject;
 
-	public class ScenarioStageCanvasObjectDescriptor implements ICanvasObjectDescriptor
+	public class PhaseCanvasObjectDescriptor implements ICanvasObjectDescriptor
 	{
 		public function getPaintable(forUserObject:Object):IPaintable
 		{
-			return ScenarioStage(forUserObject) ;
+			return Phase(forUserObject) ;
 		}
 		
 		public function getHitTestable(forUserObject:Object):IHitTestable
 		{
-			return ScenarioStage(forUserObject) ;
+			return Phase(forUserObject) ;
 		}
 		
 		public function getBoundsProvider(forUserObject:Object):IBoundsProvider
 		{
-			return ScenarioStage(forUserObject) ;
+			return Phase(forUserObject) ;
 		}
 		
 		public function isDirty(obj:ICanvasObject):Boolean
