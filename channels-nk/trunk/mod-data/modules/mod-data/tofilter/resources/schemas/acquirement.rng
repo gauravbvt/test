@@ -6,6 +6,7 @@
       {isna_element} &
       {identified} &
       {categorized} &
+      {documented} &
       {product} &
       {information}
     }
@@ -18,6 +19,7 @@
         <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
+        <ref name="documented"/>
         <ref name="product"/>
         <ref name="information"/>
       </interleave>

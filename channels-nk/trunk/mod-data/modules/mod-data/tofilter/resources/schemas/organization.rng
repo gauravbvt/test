@@ -5,6 +5,7 @@
       {isna_element} &
       {identified} &
       {categorized}
+      {documented} &
       element abbreviation {text}? &
       element logo {text}? &
       element parentOrganizationId {text}? &
@@ -19,6 +20,7 @@
         <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
+        <ref name="documented"/>
         <optional>
           <element name="abbreviation"><text/></element>
         </optional>

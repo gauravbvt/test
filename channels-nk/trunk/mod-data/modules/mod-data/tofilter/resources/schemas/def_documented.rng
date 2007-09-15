@@ -1,0 +1,23 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # Refers to documents
+  documented = {
+    element document {
+      element url {xsd:anyURI} &
+      element summary {text}
+    }*
+  }
+-->
+  <define name="documented">
+    <zeroOrMore>
+      <element name="document" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+        <element name="url">
+          <data type="anyURI"/>
+        </element>
+        <optional>
+          <element name="summary"><text/></element>
+        </optional>
+      </element>
+    </zeroOrMore>
+  </define>
+</grammar>

@@ -2,6 +2,7 @@
   <include href="@protocol@://@host@:@port@/channels/schema/def_address.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_categorized.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_cause.rng"/>
+  <include href="@protocol@://@host@:@port@/channels/schema/def_documented.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_duration.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_identified.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_information.rng"/>

@@ -6,6 +6,14 @@
     <categoryId>47474756</categoryId>
     <categoryId>33341234</categoryId>
   </categories>
+  <document>
+    <url>http://www.acme.com/roles/aRole1.pdf</url>
+    <summary>Some doumentation about a role</summary>
+  </document>
+  <document>
+    <url>http://www.acme.com/roles/aRole2.pdf</url>
+    <summary>More doumentation about a role</summary>
+  </document>
   <organizationId>984583</organizationId>
   <expertise>
     <information>

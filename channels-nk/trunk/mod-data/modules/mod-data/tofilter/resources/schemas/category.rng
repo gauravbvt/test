@@ -5,6 +5,7 @@
       {taxonomy} &
       {isna_element} &
       {identified} &
+      {documented} &
       element disciplines {
         element categoryId {text}*
       }
@@ -21,6 +22,7 @@
         <ref name="taxonomy"/>
         <ref name="isna_element"/>
         <ref name="identified"/>
+        <ref name="documented"/>
         <element name="disciplines">
           <zeroOrMore>
             <element name="categoryId"><text/></element>

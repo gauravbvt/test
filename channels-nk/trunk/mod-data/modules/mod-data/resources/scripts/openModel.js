@@ -23,6 +23,7 @@ function initializeFrom(uri) {
 	}
 	log("Database initialized", "info");
 }
+
 try {
 	log("Opening DBXML container: " + dbxml_getContainerName(), "info");
 	var descriptor = dbxml_getContainerDescriptor();

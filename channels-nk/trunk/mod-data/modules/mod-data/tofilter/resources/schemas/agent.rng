@@ -3,6 +3,7 @@
     element agent {
       {isna_element} &
       {identified} &
+      {documented} &
       element taskId {text} &
       element roleId {text}
     }
@@ -14,6 +15,7 @@
       <interleave>
         <ref name="isna_element"/>
         <ref name="identified"/>
+        <ref name="documented"/>
         <element name="taskId"><text/></element>
         <element name="roleId"><text/></element>
       </interleave>

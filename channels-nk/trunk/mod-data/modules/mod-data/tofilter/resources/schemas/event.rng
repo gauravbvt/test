@@ -6,6 +6,7 @@
       {isna_element} &
       {identified} &
       {categorized} &
+      {documented} &
       {occurrence} &
       element scenarioId {text} &
       element terminatesAfter {
@@ -24,6 +25,7 @@
         <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
+        <ref name="documented"/>
         <ref name="occurrence"/>
         <element name="scenarioId"><text/></element>
         <optional>

@@ -5,6 +5,7 @@
       {isna_element} &
       {identified} &
       {categorized} &
+      {documented} &
       element organizationId {text} &
       element administrators {
         element roleId {text}*
@@ -25,6 +26,7 @@
         <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
+        <ref name="documented"/>
         <element name="organizationId"><text/></element>
         <element name="administrators">
           <zeroOrMore>

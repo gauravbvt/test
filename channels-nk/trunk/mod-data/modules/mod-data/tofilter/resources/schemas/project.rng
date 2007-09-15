@@ -4,6 +4,7 @@
       element project {
   	    {isna_element},
   	    {identified} & 
+        {documented} &
         element managedByPersonId {text}?
       }
   -->
@@ -14,6 +15,7 @@
       <interleave>
         <ref name="isna_element"/>
         <ref name="identified"/>
+        <ref name="documented"/>
         <optional>
           <element name="managedByPersonId"><text/></element>
         </optional>

@@ -3,6 +3,7 @@
   start =
     element person {
       {isna_element} &
+      {documented} &
       element firstName {text} &
       element lastName {text} &
       element photo {text}? &
@@ -22,6 +23,7 @@
     <element name="person">
       <interleave>
         <ref name="isna_element"/>
+        <ref name="documented"/>
         <element name="firstName"><text/></element>
         <element name="lastName"><text/></element>
         <optional>

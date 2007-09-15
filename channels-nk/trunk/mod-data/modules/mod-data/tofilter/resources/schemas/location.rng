@@ -5,6 +5,7 @@
       {isna_element} &
       {identified} &
       {categorized} &
+      {documented} &
       element within {
         element locationId {text}*
       } &
@@ -22,6 +23,7 @@
         <ref name="isna_element"/>
         <ref name="identified"/>
         <ref name="categorized"/>
+        <ref name="documented"/>
         <element name="within">
           <zeroOrMore>
             <element name="locationId"><text/></element>

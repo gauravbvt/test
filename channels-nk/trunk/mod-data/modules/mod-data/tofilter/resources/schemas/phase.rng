@@ -5,6 +5,7 @@
     element phase {
       {isna_element} &
       {identified} &
+      {documented} &
       element eventId {text}
     }
   -->
@@ -15,6 +16,7 @@
       <interleave>
         <ref name="isna_element"/>
         <ref name="identified"/>
+        <ref name="documented"/>
         <element name="eventId"><text/></element>
       </interleave>
     </element>
