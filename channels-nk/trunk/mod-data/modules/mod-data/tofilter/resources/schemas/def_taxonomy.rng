@@ -2,7 +2,7 @@
   <!--
     taxonomy =
       attribute taxonomy {"acquirement" | "artifact" | "format" | "organization" | "role" | "task" | 
-      "event" | "discipline"| "location" | "repository"} # more taxonomy names to come
+      "event" | "discipline"| "location" | "policy" | "repository"} # more taxonomy names to come
 
   -->
   <define name="taxonomy">
@@ -17,6 +17,7 @@
         <value>event</value>
         <value>discipline</value>
         <value>location</value>
+        <value>policy</value>
         <value>repository</value>
       </choice>
     </attribute>

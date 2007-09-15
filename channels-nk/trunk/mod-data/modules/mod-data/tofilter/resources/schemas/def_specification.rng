@@ -1,0 +1,17 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # The specification of a set of elements
+  specification = 
+    element specification {
+      element categoryId {text}+
+    }
+-->
+
+  <define name="specification">
+    <element name="specification">
+      <zeroOrMore>
+        <element name="categoryId"><text/></element>
+      </zeroOrMore>
+    </element>
+  </define>
+</grammar>

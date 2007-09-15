@@ -1,0 +1,25 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # The realization of a sharingNeed is interdicted by a policy
+  element interdiction {
+    {isna_element} &
+    element target {
+      element sharingNeedId {text}
+    } &
+    element policyId {text}
+  }
+}-->
+  <include href="@protocol@://@host@:@port@/channels/schema/def_all.rng"/>
+
+  <start>
+    <element name="interdiction">
+      <interleave>
+        <ref name="isna_element"/>
+        <element name="target">
+           <element name="sharingNeedId"><text/></element>
+        </element>
+        <element name="policyId"><text/></element>
+      </interleave>
+    </element>
+  </start>
+</grammar>

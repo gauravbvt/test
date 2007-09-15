@@ -1,0 +1,31 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<!--
+  # The realization of a task or sharingNeed is obligated by a policy
+  element obligation {
+    {isna_element} &
+    element target {
+      (
+        element taskId {text} |
+        element sharingNeedId {text}
+      )
+    } &
+    element policyId {text}
+  }
+}-->
+  <include href="@protocol@://@host@:@port@/channels/schema/def_all.rng"/>
+
+  <start>
+    <element name="obligation">
+      <interleave>
+        <ref name="isna_element"/>
+        <element name="target">
+          <choice>
+            <element name="taskId"><text/></element>
+            <element name="sharingNeedId"><text/></element>
+          </choice>
+        </element>
+        <element name="policyId"><text/></element>
+      </interleave>
+    </element>
+  </start>
+</grammar>

@@ -49,7 +49,7 @@
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+id@$1</to>			
 		</rewrite>
 		<rewrite>
-			<match>ffcpl:/channels/(acquirement|agent|artifact|category|event|know|location|needToKnow|organization|person|phase|project|repository|role|scenario|sharingNeed|task|user)(.*)</match> // Overload this
+			<match>ffcpl:/channels/(acquirement|agent|artifact|category|event|interdiction|know|location|needToKnow|obligation|organization|person|phase|policy|project|repository|role|scenario|sharingNeed|task|user)(.*)</match> // Overload this
 			<to>active:beanshell+operator@ffcpl:/resources/element.bsh+type@$1$2</to>			
 		</rewrite>
 		<rewrite>

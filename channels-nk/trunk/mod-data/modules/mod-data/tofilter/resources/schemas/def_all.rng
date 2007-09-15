@@ -15,5 +15,6 @@
   <include href="@protocol@://@host@:@port@/channels/schema/def_product.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_sourceOrSink.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_spatialCoordinates.rng"/>
+  <include href="@protocol@://@host@:@port@/channels/schema/def_specification.rng"/>
   <include href="@protocol@://@host@:@port@/channels/schema/def_taxonomy.rng"/>
 </grammar>

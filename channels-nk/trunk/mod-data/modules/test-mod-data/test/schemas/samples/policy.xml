@@ -1,0 +1,22 @@
+<policy schema="http://localhost:8080/channels/schema/policy.rng">
+  <id>policy1</id>
+  <name>A policy</name>
+  <description>About a policy</description>
+  <categories atMostOne="false" taxonomy="policy"/>
+  <document>
+    <url>http://www.us.gov/law.html</url>
+    <summary>The law</summary>
+  </document>
+  <obligates>
+    <specification>
+      <categoryId>cat_task1</categoryId>
+      <categoryId>cat_task2</categoryId>
+    </specification>
+  </obligates>
+  <interdicts>
+    <specification>
+      <categoryId>cat_task1</categoryId>
+      <categoryId>cat_task2</categoryId>
+    </specification>
+  </interdicts>
+</policy>

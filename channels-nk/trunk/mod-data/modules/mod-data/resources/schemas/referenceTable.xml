@@ -10,10 +10,12 @@
     <from element="know|needToKnow" cascade=".">./about/artifactId</from>
   </reference>
   <reference to="category">
-    <from element="acquirement|artifact|event|location|organization|repository|role|task">./categories/categoryId</from>
+    <from element="acquirement|artifact|event|location|organization|policy|repository|role|task">./categories/categoryId</from>
     <from element="category">./disciplines/categoryId</from>
     <from element="category">./implies/categoryId</from>
     <from element="needToKnow">./delivery/format/categories/categoryId</from>
+    <from element="policy">./obligates/specification/categoryId</from>
+    <from element="policy">./interdicts/specification/categoryId</from>
   </reference>
   <reference to="event">
     <from element="phase" cascade=".">./eventId</from>
@@ -59,12 +61,16 @@
   <reference to="know">
     <from element="sharingNeed" cascade=".">./knowId</from>
   </reference>
+  <reference to="sharingNeed">
+     <from element="obligation|interdiction" cascade=".">./target/sharingNeedId</from>
+  </reference>
   <reference to="task">
     <from element="task|event" cascade="./cause">./cause/taskId</from>
     <from element="event" cascade="./taskId">./terminatesAfter/taskCompletions/taskId</from>
     <from element="agent" cascade=".">/taskId</from>
     <from element="artifact|acquirement" cascade=".">./product/taskId</from>
     <from element="know|needToKnow" cascade=".">./about/taskId</from>
+    <from element="obligation" cascade=".">./target/taskId</from>
   </reference>
   <reference to="user">
     <from element="person">./userId</from>

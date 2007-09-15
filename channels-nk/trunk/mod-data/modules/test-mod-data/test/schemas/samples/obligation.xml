@@ -1,0 +1,7 @@
+<obligation schema="http://localhost:8080/channels/schema/obligation.rng">
+  <id>obligation1</id>
+  <target>
+    <taskId>task1</taskId>
+  </target>
+  <policyId>policy1</policyId>
+</obligation>
