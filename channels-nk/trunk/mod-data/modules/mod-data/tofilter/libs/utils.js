@@ -331,17 +331,17 @@ function releaseLock(uri) {
 }
 
 function incrementMutex(uri) {
-	log("Increment mutex " + uri, "info");
-	var count = getMutexCount(uri);
-	var mutex = <mutex>{count+1}</mutex>;
+	var count = 1 + getMutexCount(uri);
+	var mutex = <mutex>{count}</mutex>;
 	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	log("Incremented mutex " + uri + " to " + count, "info");
 }
 
 function decrementMutex(uri) {
-	log("Decrement mutex " + uri, "info");
-	var count = getMutexCount(uri);
-	var mutex = <mutex>{Math.max(count-1,0)}</mutex>;
+	var count = Math.max((getMutexCount(uri) - 1), 0);
+	var mutex = <mutex>{count}</mutex>;
 	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	log("Decremented mutex " + uri + " to " + count, "info");
 }
 
 function getMutexCount(uri) {
@@ -351,13 +351,13 @@ function getMutexCount(uri) {
 		count = mutex.text();
 	}
 	else {
-		log("Creating mutex " + uri, "info");
+		log("Creating mutex " + uri + " at 0", "info");
 		count = 0;
 		var mutex = <mutex>{count}</mutex>;
 		context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
 	}
 	log("Mutex count for " + uri + " = " + count, "info");
-	return count;
+	return 1 * count;  // force conversion to number
 }
 
 function sleep(msecs) {

@@ -17,10 +17,9 @@ validateRNG(doc); // Make sure it is valid
 log("Updating with: " + doc, "info");
 var id = doc.id.text();
 if (id != null) {
-	var isLocking = true;
   try {
   	beginWrite();
-  	updateDocument(doc, isLocking);
+  	updateDocument(doc);
   }
   finally {
   	endWrite();
