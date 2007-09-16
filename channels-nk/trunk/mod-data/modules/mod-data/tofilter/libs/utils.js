@@ -348,7 +348,11 @@ function getMutexCount(uri) {
 	var count;
 	if (context.exists(uri)) {
 		var mutex = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
-		count = mutex.text();
+		count = parseInt(mutex.text());
+		if (isNaN(count)) {
+			log("NaN: " + mutex.text(), "severe");
+			throw ("Mutex is NaN");
+		}
 	}
 	else {
 		log("Creating mutex " + uri + " at 0", "info");
