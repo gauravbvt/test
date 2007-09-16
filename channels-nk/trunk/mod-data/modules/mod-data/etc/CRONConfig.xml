@@ -11,4 +11,15 @@
 			<repeatInterval>1000</repeatInterval>
 		</simple>
 	</job>
+	<job>
+		<uri>active:channels_data_initialize</uri>
+		<name>Initialize the mod-data mutex</name>
+		<desc>Initialize the mod-data mutex</desc>
+		<simple>
+			<startTime></startTime>
+			<endTime></endTime>
+			<repeatCount>0</repeatCount>
+			<repeatInterval>1000</repeatInterval>
+		</simple>
+	</job>	
 </jobs>
