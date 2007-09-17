@@ -94,10 +94,7 @@ package com.mindalliance.channels.control
             this.addCommand(GetPersonByUserEvent.GetPersonByUser_Event, GetPersonByUserCommand);
             this.addCommand(GetPersonListEvent.GetPersonList_Event, GetPersonListCommand);
             this.addCommand(UpdatePersonEvent.UpdatePerson_Event, UpdatePersonCommand);
-            
-            this.addCommand(GetAgentListEvent.GetAgentList_Event, GetAgentListCommand);
-            this.addCommand(CreateAgentEvent.CreateAgent_Event, CreateAgentCommand);
-            this.addCommand(DeleteAgentEvent.DeleteAgent_Event, DeleteAgentCommand);
+
 		}
 		
 		private function initializeResources() : void
@@ -134,7 +131,12 @@ package com.mindalliance.channels.control
             this.addCommand(DeleteEventEvent.DeleteEvent_Event, DeleteEventCommand);
             this.addCommand(GetEventEvent.GetEvent_Event, GetEventCommand);
             this.addCommand(CreateEventEvent.CreateEvent_Event, CreateEventCommand);
-            this.addCommand(UpdateEventEvent.UpdateEvent_Event, UpdateEventCommand);            
+            this.addCommand(UpdateEventEvent.UpdateEvent_Event, UpdateEventCommand);
+                        
+            this.addCommand(GetAgentListByScenarioEvent.GetAgentListByScenario_Event, GetAgentListByScenarioCommand);
+            this.addCommand(GetAgentListEvent.GetAgentList_Event, GetAgentListCommand);
+            this.addCommand(CreateAgentEvent.CreateAgent_Event, CreateAgentCommand);
+            this.addCommand(DeleteAgentEvent.DeleteAgent_Event, DeleteAgentCommand);            
 		}
 	}
 }

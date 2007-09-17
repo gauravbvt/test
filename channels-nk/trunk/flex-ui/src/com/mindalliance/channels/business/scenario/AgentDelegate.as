@@ -22,6 +22,12 @@ package com.mindalliance.channels.business.scenario
             
 		}
 		
+		public function getAgentListByScenarioId(scenarioId : String) : void {
+            var request:Array = new Array();
+            request["scenarioId"] = scenarioId;
+            performQuery("agentsInScenario", request);
+		}
+		
 		override public function fromXML(obj : XML) : ElementVO {
 			return new AgentVO(obj.id,obj.name,obj.description,new ElementVO(obj.taskId, null), new ElementVO(obj.roleId, null));
 		}
