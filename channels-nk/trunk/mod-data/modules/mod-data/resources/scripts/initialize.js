@@ -6,3 +6,6 @@ context.importLibrary(utilsURI);
 // server run to server run.
 
 initializeMutex("ffcpl:/mutex/read");
+
+var resp = context.createResponseFrom(new BooleanAspect(true));
+context.setResponse(resp);

@@ -10,6 +10,8 @@ DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
 SCHEMA_URL = "@protocol@://@host@:@port@/channels/schema/"; 
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
 
+MUTEX = 0;
+
 function contains(array, object) {
 	for each (el in array) {
 		if (el == object) return true;
@@ -332,19 +334,31 @@ function releaseLock(uri) {
 
 function incrementMutex(uri) {
 	var count = 1 + getMutexCount(uri);
-	var mutex = <mutex>{count}</mutex>;
-	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	setMutexCount(uri, count);
 	log("Incremented mutex " + uri + " to " + count, "info");
 }
 
 function decrementMutex(uri) {
 	var count = Math.max((getMutexCount(uri) - 1), 0);
-	var mutex = <mutex>{count}</mutex>;
-	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	setMutexCount(uri, count);
 	log("Decremented mutex " + uri + " to " + count, "info");
 }
 
+function initializeMutex(uri) {
+	MUTEX = 0;
+	// context.delete(uri);
+}
+
+function setMutexCount(uri, count) {
+	/*
+	var mutex = <mutex>{count}</mutex>;
+	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));	
+	*/
+	MUTEX = count;
+}
+
 function getMutexCount(uri) {
+	/*
 	var count;
 	if (context.exists(uri)) {
 		var mutex = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
@@ -362,6 +376,8 @@ function getMutexCount(uri) {
 	}
 	log("Mutex count for " + uri + " = " + count, "info");
 	return 1 * count;  // force conversion to number
+	*/
+	return MUTEX;
 }
 
 function sleep(msecs) {

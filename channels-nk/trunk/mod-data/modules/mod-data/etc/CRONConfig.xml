@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jobs>
 	<job>
-		<uri>active:channels_data_openModel</uri>
-		<name>Initialize the mod-data accessor</name>
-		<desc>Initialize the mod-data accessor</desc>
-		<simple>
-			<startTime></startTime>
-			<endTime></endTime>
-			<repeatCount>0</repeatCount>
-			<repeatInterval>1000</repeatInterval>
-		</simple>
-	</job>
-	<job>
 		<uri>active:channels_data_initialize</uri>
 		<name>Initialize the mod-data mutex</name>
 		<desc>Initialize the mod-data mutex</desc>
@@ -22,4 +11,15 @@
 			<repeatInterval>1000</repeatInterval>
 		</simple>
 	</job>	
+	<job>
+		<uri>active:channels_data_openModel</uri>
+		<name>Initialize the mod-data accessor</name>
+		<desc>Initialize the mod-data accessor</desc>
+		<simple>
+			<startTime>100</startTime>
+			<endTime></endTime>
+			<repeatCount>0</repeatCount>
+			<repeatInterval>1000</repeatInterval>
+		</simple>
+	</job>
 </jobs>
