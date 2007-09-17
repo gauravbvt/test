@@ -4,10 +4,13 @@ context.importLibrary(utilsURI);
 importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
+importPackage(Packages.org.ten60.netkernel.layer1.nkf);
+importPackage(Packages.org.ten60.netkernel.layer1.nkf.impl);
 importPackage(Packages.java.lang);
 
 reloadModel();
 
+var success = true;
 var requests = [];
 
 // Request 0
@@ -22,14 +25,14 @@ requests[0] = req;
 
 // Request 1
 req = context.createSubRequest("active:channels_data_deleteElement");
-doc = <arg><id>role1</id></arg>;
+doc = <arg><id>person1</id></arg>;
 req.addArgument("id", new XmlObjectAspect(doc.getXmlObject()));
 requests[1] = req;
 
 // Request 2
 req = context.createSubRequest("active:channels_data_updateElement");
 doc = <root>
-				 <project>
+				 <project schema="http://localhost:8080/channels/schema/project.rng">
     			<id>project1</id>
     			<name>My project</name>
     			<description>An updated project description</description>
@@ -49,10 +52,22 @@ req = context.createSubRequest("active:channels_data_queryModel");
 req.addArgument("xquery", "ffcpl:/com/mindalliance/channels/data/queries/allOrganizations.xq");
 requests[4] = req;
 
-for each (req in requests) {
-	context.issueAsyncSubRequest(req);
+var requestHandles = [];
+for (i in requests) {
+	requestHandles[i] = context.issueAsyncSubRequest(requests[i]);
+}
+
+//Wait for all requests to complete
+try {
+	for each (handle in requestHandles) {
+		handle.join(); 
+	}
+}
+catch (e)	{
+	log("All requests did not complete: " + e, "severe");
+	success = false;
 }
 
 // Respond
-var resp = context.createResponseFrom(new BooleanAspect(true));
+var resp = context.createResponseFrom(new BooleanAspect(success));
 context.setResponse(resp);

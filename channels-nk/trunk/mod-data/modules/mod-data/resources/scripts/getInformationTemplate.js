@@ -76,16 +76,19 @@ function getCategoriesOf(elementId) {
 			var implied = getImpliedCategoryIds(added[i]);
 			more = more.concat(addAllIfUnique(set, implied)); // Accumulate the new category ids added to idSet
 			}
+			
 		added = more;
 		}
 	return set;
 }
 
+log(">> START TEMPLATE", "info");
+
 var template = <information/>;
 var elementId = context.getThisRequest().getArgument("id").substring(3);
 log("Getting information template for " + elementId, "info");
 try {
-	beginRead();
+	beginRead("TEMPLATE");
 	// 1- collect all distinct category IDs, explicit and implied
 	var idSet = getCategoriesOf(elementId);
 	// 2- Collect the topics (names only) and their EOIs (names and descriptions) for each information in each category
@@ -141,9 +144,11 @@ catch(e) {
 	throw e;
 }
 finally {
-	endRead();
+	endRead("TEMPLATE");
 }
 log("Information template for " + elementId + " =\n" + template, "info");
+log("<< END TEMPLATE", "info");
+
 // Response
 var resp = context.createResponseFrom(new XmlObjectAspect(template.getXmlObject()));
 resp.setMimeType("text/xml");

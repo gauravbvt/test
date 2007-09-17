@@ -46,21 +46,25 @@ function getNameFromId(id) {
 	return getDocument(id).name.text();
 }
 
+log(">> START GET", "info");
+
 // Access parameter
 var id = context.getThisRequest().getArgument("id").substring(3);
 var doc;
 log("Getting element " + id  + " from container " + dbxml_getContainerName(), "info");
 // Get element
 try {
-	beginRead();
+	beginRead("GET");
 	doc = getDocument(id);
 	if (context.getThisRequest().argumentExists("nameReferenced")) {
 		addNamesToReferences(doc);
 	}
 }
 finally {
-	endRead();
+	endRead("GET");
 }
+log("<< END GET", "info");
+
 //Return Response
 var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));
 resp.setMimeType("text/xml");

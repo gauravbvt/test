@@ -12,22 +12,30 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
+log(">> START UPDATE", "info");
 var doc = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
-validateRNG(doc); // Make sure it is valid
+try {
+	validateRNG(doc); // Make sure it is valid
+}
+catch (e) {
+	log("Update invalid: \n" + doc + "\n " + e, "severe");
+	throw(e);
+}
 log("Updating with: " + doc, "info");
 var id = doc.id.text();
 if (id != null) {
   try {
-  	beginWrite();
+  	beginWrite("UPDATE");
   	updateDocument(doc);
   }
   finally {
-  	endWrite();
+  	endWrite("UPDATE");
   }
 }
 else {
   throw("Can't update element with no id", "warning");
 }
+log("<< END UPDATE", "info");
 
 //Return Response
 var resp=context.createResponseFrom(new BooleanAspect(true));
