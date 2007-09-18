@@ -20,6 +20,7 @@ function reloadModel() {
 	// Open model from db:testDB.xml
 	req = context.createSubRequest("active:channels_data_openModel");
 	context.issueSubRequest(req);
+	context.sinkAspect("transient:readCount" , new StringAspect("0"));	
 }
 
 function issueValidateRNGRequest(schemaURI, docURI) {

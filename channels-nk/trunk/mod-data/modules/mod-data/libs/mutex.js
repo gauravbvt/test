@@ -26,34 +26,36 @@ function releaseLock(uri, who) {
 }
 
 function incrementMutex(uri, who) {
-	var count = 1 + getMutexCount(uri);
-	setMutexCount(uri, count);
+	if (LOG_MUTEX) log(who + ": Incrementing mutex " + uri, "info");
+	var count = 1 + getMutexCount(uri, who);
+	setMutexCount(uri, count, who);
 	if (LOG_MUTEX) log(who + ": Incremented mutex " + uri + " to " + count, "info");
 }
 
 function decrementMutex(uri, who) {
-	var count = Math.max((getMutexCount(uri) - 1), 0);
-	setMutexCount(uri, count);
+	if (LOG_MUTEX) log(who + ": Decrementing mutex " + uri, "info");
+	var count = Math.max((getMutexCount(uri, who) - 1), 0);
+	setMutexCount(uri, count, who);
 	if (LOG_MUTEX) log(who + ": Decremented mutex " + uri + " to " + count, "info");
 }
 
 function initializeMutex(uri) {
-	setMutexCount(uri,0);
+	setMutexCount(uri,0, "SYSTEM");
 }
 
 function initializeReadCountMutex() {
-	setMutexCount(MUTEX_READ_COUNT_URI,0);	
+	setMutexCount(MUTEX_READ_COUNT_URI,0, "SYSTEM");	
 }
 
-function setMutexCount(uri, count) {
-	if (LOG_MUTEX) log("Setting mutex " + uri + " to " + count, "info");
+function setMutexCount(uri, count, who) {
+	if (LOG_MUTEX) log(who + ": setting mutex " + uri + " to " + count, "info");
 	context.sinkAspect(uri, new StringAspect(""+count));
 }
 
-function getMutexCount(uri) {
-	if (LOG_MUTEX) log("Getting mutex " + uri, "info");
+function getMutexCount(uri, who) {
+	if (LOG_MUTEX) log(who + ": getting mutex " + uri, "info");
 	var count = context.sourceAspect(uri, IAspectString).getString();
-	if (LOG_MUTEX) log("Got mutex " + uri + " = " + count, "info");
+	if (LOG_MUTEX) log(who + ": got mutex " + uri + " = " + count, "info");
 	return parseInt(count);
 }
 

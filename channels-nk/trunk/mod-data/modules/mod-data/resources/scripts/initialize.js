@@ -4,7 +4,7 @@ context.importLibrary("ffcpl:/libs/channels_data.js");
 // is no existing concurrency state maintained from
 // server run to server run.
 
-initializeMutex("ffcpl:/mutex/read");
+initializeReadCountMutex();
 
 var req=context.createSubRequest("active:channels_data_openModel");
 context.issueSubRequest(req);

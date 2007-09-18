@@ -25,6 +25,7 @@
             <match>db:.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/CRONConfig.xml</match>
+			<match>transient:.*</match>
 		</uri>
 	</export>
    <rewrite> <!-- non-accessor resources -->
