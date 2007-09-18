@@ -37,11 +37,11 @@ if (properties != null) query = declareVariables(query, properties); // Add vari
 query = filter(query); // Substitute place holders
 var result;
 try {
-	beginRead();
-	result = runQuery(query);
+	beginRead("QUERY");
+	result = queryDatabase(query);
 }
 finally {
-	endRead();
+	endRead("QUERY");
 }
 
 //Return Response

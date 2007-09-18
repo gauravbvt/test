@@ -43,7 +43,7 @@ function findReferencedElementNames(elem) {
 
 function getNameFromId(id) {
 	log("Getting name from id :" + id, "info");
-	return getDocument(id).name.text();
+	return getElement(id).name.text();
 }
 
 log(">> START GET", "info");
@@ -51,11 +51,11 @@ log(">> START GET", "info");
 // Access parameter
 var id = context.getThisRequest().getArgument("id").substring(3);
 var doc;
-log("Getting element " + id  + " from container " + dbxml_getContainerName(), "info");
+log("Getting element " + id  + " from container " + getContainerName(), "info");
 // Get element
 try {
 	beginRead("GET");
-	doc = getDocument(id);
+	doc = getElement(id);
 	if (context.getThisRequest().argumentExists("nameReferenced")) {
 		addNamesToReferences(doc);
 	}

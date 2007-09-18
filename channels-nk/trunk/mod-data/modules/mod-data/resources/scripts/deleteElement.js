@@ -18,7 +18,7 @@ var list = <ids>
 							<updated/>
 					 </ids>;
 try {
-	beginWrite();
+	beginWrite("DELETE");
 	var ids = deleteElement(id); // delete document and cascade delete on references
 	for each (id in ids[0]) {
 		list.deleted.insertChildAfter(null, <id>{id}</id>);
@@ -29,7 +29,7 @@ try {
 	log("Deleted element and cascaded:\n" + list, "info");
 }
 finally {
-	endWrite();
+	endWrite("DELETE");
 }
 
 //Return Response

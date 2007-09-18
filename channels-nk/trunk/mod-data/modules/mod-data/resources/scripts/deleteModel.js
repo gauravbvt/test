@@ -8,22 +8,18 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
-var descriptor = dbxml_getContainerDescriptor();
-var exists = dbxml_containerExists(descriptor);
+var exists = databaseExists();
 var maxRetries = 20;
-while (dbxml_containerExists(descriptor) && (maxRetries > 0)) {
+while (databaseExists() && (maxRetries > 0)) {
 	maxRetries--;
 	try {
-		var exists = dbxml_containerExists(descriptor);
+		var exists = databaseExists();
 		if (exists) {
-		  // Delete container
-		  var req=context.createSubRequest("active:dbxmlDeleteContainer");
-		  req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
-		  context.issueSubRequest(req);
-		  log("Deleted DBXML container: " + dbxml_getContainerName(), "info");
+			deleteDatabase();
+  		log("Deleted database: " + getDatabaseName(), "info");
 		}
 		else {
-		  log("DBXML container not deleted (does not exist): " + dbxml_getContainerName(), "warning");
+		  log("Database not deleted (does not exist): " + getDatabaseName(), "warning");
 		}
 	}
 	catch(e) { // Deleting fails temporarily and spurriously

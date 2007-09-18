@@ -15,12 +15,6 @@
     </assert>
   </test>
   <test>
-    <uri>active:javascript+operator@ffcpl:/test/crud/testAsyncCrud.js</uri>
-    <assert name="Async Crud">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test>
     <uri>active:dpml+operand@ffcpl:/test/crud/testCreateElement.idoc</uri>
     <assert name="Element created with id and schema attributes">
       <xpath>self::node()[@schema]/id</xpath>

@@ -26,7 +26,7 @@ var id = doc.id.text();
 if (id != null) {
   try {
   	beginWrite("UPDATE");
-  	updateDocument(doc);
+  	updateElement(doc);
   }
   finally {
   	endWrite("UPDATE");

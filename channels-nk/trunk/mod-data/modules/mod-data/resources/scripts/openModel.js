@@ -25,23 +25,20 @@ function initializeFrom(uri) {
 }
 
 try {
-	log("Opening DBXML container: " + dbxml_getContainerName(), "info");
-	var descriptor = dbxml_getContainerDescriptor();
-	var exists = dbxml_containerExists(descriptor);
-	
+	log("Opening database: " + getDatabaseName(), "info");
+	var exists = databaseExists();
 	if (!exists) {
-	  // Create container
-	  var req=context.createSubRequest("active:dbxmlCreateContainer");
-	  req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
-	  context.issueSubRequest(req);
-	  log("Created DBXML container: " + dbxml_getContainerName(), "info");
+	  // Create database
+	  createDatabase();
+  	log("Created database: " + getDatabaseName(), "info");
+	
 	  // Initialize from file if requested
 	  if (context.getThisRequest().argumentExists("init")) {
 	  	log("Initializing database from " + context.getThisRequest().getArgument("init"));
 	  	initializeFrom("this:param:init");
 	  }
 	  else { // look for an initialization file at db:<containerName>.xml and use it if there
-	  	var uri = "db:" + dbxml_getContainerName() + ".xml";
+	  	var uri = "db:" + getDatabaseName() + ".xml";
 	  	if (context.exists(uri)) {
 	  		initializeFrom(uri);
 	  	}

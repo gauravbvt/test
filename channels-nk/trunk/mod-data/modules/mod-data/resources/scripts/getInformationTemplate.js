@@ -51,7 +51,7 @@ function addAllIfUnique(set, elements) {
 
 function getImpliedCategoryIds(categoryId) {
 	// log("Getting implied categories by " + categoryId, "info");
-	var category = getDocument(categoryId);
+	var category = getElement(categoryId);
 	var implied = new Array();
 	for each (id in category.implies.categoryId) {
 		implied.push(id.text());
@@ -63,7 +63,7 @@ function getImpliedCategoryIds(categoryId) {
 function getCategoriesOf(elementId) {
 	// log("Getting all categories of " + elementId, "info");
 	var explicitCategories = new Array();
-	var doc = getDocument(elementId);
+	var doc = getElement(elementId);
 	var set = new Array(); // in case there are duplicates
 	for each (id in doc.categories.categoryId) {
 		addIfUnique(set, id.text());
@@ -100,7 +100,7 @@ try {
 	var templateTopic;
 	var templateEoi;
 	for (i in idSet) {
-		var info = getDocument(idSet[i]).information;
+		var info = getElement(idSet[i]).information;
 		// for all topics
 		for each (topic in info.topic) {
 			var topicName = topic.name.text();

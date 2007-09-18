@@ -1,3 +1,20 @@
+dbFunctionsURI = "ffcpl:/libs/dbxml.js";
+
+/*
+This library must import an implementation for these xml database functions:
+
+function containerExists();
+function createContainer();
+function deleteContainer();
+function getContainerName();
+function getDocument(id);
+function putDocument(doc);
+function deleteDocument(id);
+function queryContainer(query);
+*/
+context.importLibrary(dbFunctionsURI);
+
+
 // Utilities
 
 importPackage(Packages.org.ten60.netkernel.xml.representation);
@@ -6,9 +23,12 @@ importPackage(Packages.java.lang);
 
 // Constants
 
-DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
 SCHEMA_URL = "@protocol@://@host@:@port@/channels/schema/"; 
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
+LOG_MUTEX = true;
+
+
+// UTILITIES
 
 function contains(array, object) {
 	for each (el in array) {
@@ -27,44 +47,19 @@ function log(content, level) {
   context.issueSubRequest(req);
 }
 
-// Returns whether a dbxml container as described exists
-function dbxml_containerExists(descriptor) {
-  // Check if already exists
-  var req=context.createSubRequest("active:dbxmlExistsContainer");
-  req.addArgument("operator", new XmlObjectAspect(descriptor.getXmlObject()) );
-  res = context.issueSubRequest(req);
-  return context.transrept(res, IAspectBoolean).isTrue();
+function expire(uri) {
+	var req = context.createSubRequest("active:expire");
+	req.addArgument("operand", uri);
+	context.issueSubRequest(req);
 }
 
-// Returns an E4X dbxml descriptor
-function dbxml_getContainerDescriptor() {
-  var configs = new XML(context.sourceAspect(DBXML_CONFIG_URI, IAspectXmlObject).getXmlObject());
-  var env = configs.@env;
-  var descriptor = configs.config.(@name==env).dbxml;
-  // log("Using dbxml descriptor: " + descriptor, "info");
-  return descriptor;
-}
 
-function dbxml_getContainerName() {
-  var descriptor = dbxml_getContainerDescriptor();
-  return descriptor.name.text();
-}
-
-// Return a document descriptor given id in a parameter
-function getDocumentDescriptor(id) {
-  var descriptor =  <dbxml>
-                  		<name>{id}</name>
-                  		<container>{dbxml_getContainerName()}</container>
-                		</dbxml>;
-
-  return descriptor;
-}
 
 // SHOULD PUT SUBSTITUTIONS IN A SEPARATE CONFIGURATION FILE
 function filter(s) {
   // Java strings are NOT the same as JavaScript strings: 
   // make sure to convert to JS strings before using string methods!
-  var fs = String(s).replace(/__MODEL__/g, String(dbxml_getContainerName())); 
+  var fs = String(s).replace(/__MODEL__/g, String(getContainerName())); 
   // more filters here
   return fs;
 }
@@ -87,13 +82,28 @@ function validateRNG(doc) { // doc is an E4X XML object
   }
 }
 
-// Get stored document as e4x xml object given its id as string
-function getDocument(id) {
-	var op =  getDocumentDescriptor(id);	
-	// log("Document descriptor: " + op, "info");
-	var req = context.createSubRequest("active:dbxmlGetDocument");
-	req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()) );
-	var res = context.issueSubRequest(req);
+// XML DATABASE ACCESS
+
+function databaseExists() {
+	return containerExists();
+}
+
+function getDatabaseName() {
+	return getContainerName();
+}
+
+function createDatabase() {
+	createContainer();
+}
+
+function deleteDatabase() {
+	deleteContainer();
+	cutGoldenThread("gt:channels");
+}
+
+// Get stored element as e4x xml object given its id as string
+function getElement(id) {
+	var res = getDocument(id);
 	// Attach golden thread to element
 	res=attachGoldenThread(res, "gt:element:"+ id);
 	// Return result as xml object
@@ -102,24 +112,14 @@ function getDocument(id) {
 	return new XML(doc.getXmlObject());
 }
 
-// Store e4x doc in currently opened database
-function putDocument(doc) {
+function updateElement(doc) {
 	var id = doc.id[0].text(); // document *must* have id
-  var op =  getDocumentDescriptor(id);
-  var req=context.createSubRequest("active:dbxmlPutDocument");
-  req.addArgument("operand", new XmlObjectAspect(doc.getXmlObject()));
-  req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
-  context.issueSubRequest(req);
-  log("Element " + id + " put in container " + dbxml_getContainerName(), "info");	
-}
-
-function updateDocument(doc) {
-	var id = doc.id[0].text(); // document *must* have id
-  	log("Updating element with id " + id, "info");
-  	// Delete older version (must exist else exception)
-  	deleteDocument(id);
-  	// Then replace with new version
+	log("Updating element with id " + id, "info");
+	// Delete older version (must exist else exception)
+	deleteDocument(id);
+	// Then replace with new version
 	putDocument(doc);
+	log("Element " + id + " put in container " + getDatabaseName(), "info");	
 	// Cut the GoldenThread associated with this resource
 	cutGoldenThread("gt:element:"+ id);
 	// Cut the GoldenThread associated with all existing queries
@@ -127,20 +127,12 @@ function updateDocument(doc) {
 }
 
 // Run query and return the results as IURepresentation
-function runQuery(query) {
+function queryDatabase(query) {
 	log("Processing query: " + query, "info");
-	var op =  "<dbxml>\n" +
-	      		" <container>" + dbxml_getContainerName() + "</container>\n" +
-	      		" <xquery>\n" +
-	      		"  <![CDATA[\n   " + query + "\n  ]]>\n" +
-	      		" </xquery>\n" +
-	      	 "</dbxml>";
-	var req=context.createSubRequest("active:dbxmlQuery");
-	req.addArgument("operator", new StringAspect(op));
-	var result=context.issueSubRequest(req);
-	result=attachGoldenThread(result, "gt:channels");
-	log("Got results to query:\n" + context.transrept(result, IAspectString).getString(), "info");
-	return result;
+	var res = queryContainer(query);
+	res=attachGoldenThread(res, "gt:channels");
+	log("Got results to query:\n" + context.transrept(res, IAspectString).getString(), "info");
+	return res;
 }
 
 // Find the ids of all elements of given kind that evaluate refPath to id
@@ -155,7 +147,7 @@ function findReferrers(id, kind, refPath) {
 									"  <id>{$e/id/text()}</id>\n" +
 								"}\n" +
 	            "</list>";
-	var result = runQuery(filter(query));
+	var result = queryContainer(filter(query));
 	var list = new XML(context.transrept(result, IAspectString).getString());
 	log("Referrers are: \n" + list, "info");
 	var ids = [];
@@ -200,7 +192,7 @@ function deleteReference(referrer, refPath, cascade, id, updated) {
 				}
 			}
 			// update element
-			updateDocument(referrer);
+			updateElement(referrer);
 			updated.push(referrer.id.text());
 		}
 	}
@@ -221,7 +213,7 @@ function deleteReferencesTo(element, deleted, updated, refTable) {
 						deleteElementExcept(id, deleted, updated, refTable); // delete element and cascade
 					}
 					else {
-						var referrer = getDocument(id);
+						var referrer = getElement(id);
 						// log("Deleting in " + referrer + " reference " + cascade, "info");
 						deleteReference(referrer, refPath, cascade, element.id.text(), updated); // remove reference to element from referrer
 					}
@@ -232,6 +224,7 @@ function deleteReferencesTo(element, deleted, updated, refTable) {
 
 // Return an array containing an array of deleted element IDs and an array of updated element IDs
 function deleteElement(id) {
+	log("Deleting element " + id, "info");
 	var deleted = [];
 	var updated = [];
 	var refTable = new XML(context.sourceAspect("ffcpl:/resources/schemas/referenceTable.xml", IAspectXmlObject).getXmlObject());
@@ -239,40 +232,26 @@ function deleteElement(id) {
 	var ids = [];
 	ids[0] = deleted;
 	ids[1] = updated;
-	return ids;
 	// Cut the GoldenThread associated with this resource
 	cutGoldenThread("gt:element:"+ id);
 	// Cut the GoldenThread associated with all existing queries
 	cutGoldenThread("gt:channels");
+	return ids;
 }
 
 // Returns the list of ids of elements deleted
 function deleteElementExcept(id, deleted, updated, refTable) {
 	log("Deleting " + id + " except if in " + deleted, "info");
 	// delete if not already deleted
-	if (!contains(deleted,id)) { 
-		var deletedDoc = deleteDocument(id);
+	if (!contains(deleted,id)) {
+		var deletedDoc = new XML(context.transrept(deleteDocument(id), IAspectXmlObject).getXmlObject());
+  	log("Deleted document " + id + " from container " + getDatabaseName(), "info");
 		deleted.push(id);
 		// Delete referrers to deleted document that are not already deleted
 		deleteReferencesTo(deletedDoc, deleted, updated, refTable);
 	}
 }
 
-// Deletes document by name. if exists. Returns the deleted document. Raise exception if document does not exist.
-function deleteDocument(id) {
-	log("Deleting element " + id, "info");
-	var deleted = getDocument(id);
-  var op =  getDocumentDescriptor(id);
-  var req=context.createSubRequest("active:dbxmlDeleteDocument");
-  req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
-  context.issueSubRequest(req);
-  log("Deleted document " + id + " from container " + dbxml_getContainerName(), "info");
-  // Cut the GoldenThread associated with this resource
-  cutGoldenThread("gt:element:"+ id);
-  // Cut the GoldenThread associated with all existing queries
-  cutGoldenThread("gt:channels");
-  return deleted;
-}
 
 // Adds id element if not there, sets schema attribute, validates and stores. Returns doc as stored.
 function createElement(xml) {
@@ -290,8 +269,6 @@ function createElement(xml) {
 	}
 	// (Re)set schema attribute
 	doc.@schema = getSchemaURL(kind);
-	// Document identity
-	descriptor =  getDocumentDescriptor(doc.id.text());
 	// Validate
 	try {
 		validateRNG(doc); // throws an exception if not valid
@@ -304,10 +281,11 @@ function createElement(xml) {
 	putDocument(doc);	
   	// Cut the GoldenThread associated with all existing queries
 	cutGoldenThread("gt:channels");
-
-	log("Created document " + doc + " in container " + dbxml_getContainerName(), "info");
+	log("Created document " + doc + " in database " + getDatabaseName(), "info");
 	return doc;
 }
+
+// GOLDEN THREAD
 
 function attachGoldenThread(resource, uri) {
 	var req=context.createSubRequest("active:attachGoldenThread");
@@ -325,50 +303,60 @@ function cutGoldenThread(uri) {
 	log("Cut GT " + uri, "info");
 }
 
-function grabLock(uri) {
-	log("Grab lock " + uri, "info");
+// SEMAPHORES
+
+MUTEX = 0;
+
+function grabLock(uri, who) {
+	if (LOG_MUTEX) log(who + ": Grab " + uri, "info");
 	var req=context.createSubRequest("active:lock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);	
+	if (LOG_MUTEX) log(who + ": Grabbed " + uri, "info");
 }
 
-function grabReleaseLock(uri) {
-	log("Grab & Release lock " + uri, "info");
-	grabLock(uri);
-	releaseLock(uri);
+function grabReleaseLock(uri, who) {
+	if (LOG_MUTEX) log(who + ": Grab & Release " + uri, "info");
+	grabLock(uri, who);
+	releaseLock(uri, who);
 }
 
-function releaseLock(uri) {
-	log("Release lock " + uri, "info");
+function releaseLock(uri, who) {
+	if (LOG_MUTEX) log(who + ": Release " + uri, "info");
 	var req=context.createSubRequest("active:unlock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);
+	if (LOG_MUTEX) log(who + ": Released " + uri, "info");
+}
+
+function incrementMutex(uri, who) {
+	var count = 1 + getMutexCount(uri);
+	setMutexCount(uri, count);
+	if (LOG_MUTEX) log(who + ": Incremented mutex " + uri + " to " + count, "info");
+}
+
+function decrementMutex(uri, who) {
+	var count = Math.max((getMutexCount(uri) - 1), 0);
+	setMutexCount(uri, count);
+	if (LOG_MUTEX) log(who + ": Decremented mutex " + uri + " to " + count, "info");
 }
 
 function initializeMutex(uri) {
-	var mutex = <mutex>0</mutex>;
-	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
-	log("Initialized mutex " + uri + " to 0", "info");	
+	setMutexCount(uri,0);
 }
 
-function incrementMutex(uri) {
-	var count = 1 + getMutexCount(uri);
-	var mutex = <mutex>{count}</mutex>;
-	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
-	log("Incremented mutex " + uri + " to " + count, "info");
-}
-
-function decrementMutex(uri) {
-	var count = Math.max((getMutexCount(uri) - 1), 0);
-	var mutex = <mutex>{count}</mutex>;
-	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
-	log("Decremented mutex " + uri + " to " + count, "info");
+function setMutexCount(uri, count) {
+	// var mutex = <mutex>{count}</mutex>;
+	// context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));	
+	MUTEX = count;
 }
 
 function getMutexCount(uri) {
+	/*
 	var count;
 	if (context.exists(uri)) {
 		var mutex = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
+		expire(uri);
 		count = parseInt(mutex.text());
 		if (isNaN(count)) {
 			log("NaN: " + mutex.text(), "severe");
@@ -376,13 +364,17 @@ function getMutexCount(uri) {
 		}
 	}
 	else {
-		log("Creating mutex " + uri + " at 0", "info");
+		// if (LOG_MUTEX) log("Creating mutex " + uri + " at 0", "info");
 		count = 0;
-		var mutex = <mutex>{count}</mutex>;
-		context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+		// var mutex = <mutex>{count}</mutex>;
+		// context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
 	}
-	log("Mutex count for " + uri + " = " + count, "info");
-	return 1 * count;  // force conversion to number
+	if (LOG_MUTEX) log("Mutex count for " + uri + " = " + count, "info");
+	return 1 * count;  // force conversion to number (redundant)
+	*/
+
+	if (LOG_MUTEX) log("Mutex count = " + MUTEX, "info");
+	return MUTEX;
 }
 
 function sleep(msecs) {
@@ -400,64 +392,64 @@ function sleep(msecs) {
 
 // Wait for write lock to be released if grabbed.
 // Grab read lock then increment read mutex by one, release read lock.
-function beginRead() {
-	log("Begin read", "info");
+function beginRead(who) {
+	if (LOG_MUTEX) log(who + ": Begin read", "info");
 	try {
-		grabReleaseLock("lock:write"); // Can only go through when write lock not already grabbed 
-		grabLock("lock:read");
-		incrementMutex("ffcpl:/mutex/read");
+		grabReleaseLock("lock:write", who); // Can only go through when write lock not already grabbed 
+		grabLock("lock:read", who);
+		incrementMutex("ffcpl:/mutex/read", who);
 	}
 	finally {
-		releaseLock("lock:read");
+		releaseLock("lock:read", who);
 	}
 }
 
 // Grab read lock, decrement read mutex by one, release read lock
-function endRead() {
-	log("End read", "info");
+function endRead(who) {
+	if (LOG_MUTEX) log(who + ": End read", "info");
 	try {
-		grabLock("lock:read");
-		decrementMutex("ffcpl:/mutex/read");
+		grabLock("lock:read", who);
+		decrementMutex("ffcpl:/mutex/read", who);
 	}
 	finally {
-		releaseLock("lock:read");
+		releaseLock("lock:read", who);
 	}
 }
 // Grab write lock to block new read or writes.
 // Grab read lock. If read mutex > 0 then release read lock. Try again (after short sleep).
 // When read mutex = 0, grab read lock.
 // Release write lock, keeping read lock.
-function beginWrite() {
-	log("Begin write", "info");
+function beginWrite(who) {
+	if (LOG_MUTEX) log(who + ": Begin write", "info");
 	try {
-		grabLock("lock:write");
+		grabLock("lock:write", who);
 		var done = false;
 		do {
 			var count;
 			try {
-				grabLock("lock:read");
-				count = getMutexCount("ffcpl:/mutex/read");
+				grabLock("lock:read", who);
+				count = getMutexCount("ffcpl:/mutex/read", who);
 			}
 			catch (e) {
-				releaseLock("lock:read");
+				releaseLock("lock:read", who);
 				throw e;
 			}
 			if (count == 0) {
 					done = true;
 			}
 			else {
-				releaseLock("lock:read");
+				releaseLock("lock:read", who);
 				sleep(100);
 			}
 		} while (!done);
 	}
 	finally {
-		releaseLock("lock:write");
+		releaseLock("lock:write", who);
 	}
 }
 
 // Release read lock.
-function endWrite() {
-	log("End write", "info");
-	releaseLock("lock:read");
+function endWrite(who) {
+	if (LOG_MUTEX) log(who + ": End write", "info");
+	releaseLock("lock:read", who);
 }
