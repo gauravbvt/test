@@ -23,6 +23,8 @@ function declareVariables(query, properties) {
   return prologuedQuery;
 }
 
+log(">> START QUERY", "info");
+
 // Get arguments
 var query = context.sourceAspect("this:param:xquery", IAspectString).getString();
 log("Query: " + query, "info");
@@ -42,6 +44,8 @@ try {
 finally {
 	endRead("QUERY");
 }
+
+log("<< END QUERY", "info");
 
 //Return Response
 var resp=context.createResponseFrom(result);

@@ -12,9 +12,11 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
+log(">> START CREATE", "info");
+
 var doc;
 try {
-	beginWrite();
+	beginWrite("CREATE");
 	// var kind = new XML(context.sourceAspect("this:param:kind",IAspectXmlObject).getXmlObject()).text();
 	var arg = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 	doc = createElement(arg);
@@ -24,9 +26,10 @@ catch(e) {
 	throw e;
 }
 finally {
-	endWrite();
+	endWrite("CREATE");
 }
 	
+log("<< END CREATE", "info");
 
 //Return Response
 var resp=context.createResponseFrom(new XmlObjectAspect(doc.getXmlObject()));

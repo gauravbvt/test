@@ -6,6 +6,8 @@ context.importLibrary("ffcpl:/libs/database.js");
 dbPluginURI = "ffcpl:/libs/dbxml.js";
 context.importLibrary(dbPluginURI);
 
+// Initialization
+initializeReadCountMutex();
 
 
 

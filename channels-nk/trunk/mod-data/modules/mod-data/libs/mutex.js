@@ -1,10 +1,10 @@
 // SEMAPHORES
 LOG_MUTEX = true;
 
-MUTEX = 0;
+MUTEX_READ_COUNT_URI = "transient:readCount";
 
 function grabLock(uri, who) {
-	if (LOG_MUTEX) log(who + ": Grab " + uri, "info");
+	if (LOG_MUTEX)log(who + ": Grab " + uri, "info");
 	var req=context.createSubRequest("active:lock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);	
@@ -41,36 +41,20 @@ function initializeMutex(uri) {
 	setMutexCount(uri,0);
 }
 
+function initializeReadCountMutex() {
+	setMutexCount(MUTEX_READ_COUNT_URI,0);	
+}
+
 function setMutexCount(uri, count) {
-	// var mutex = <mutex>{count}</mutex>;
-	// context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));	
-	MUTEX = count;
+	if (LOG_MUTEX) log("Setting mutex " + uri + " to " + count, "info");
+	context.sinkAspect(uri, new StringAspect(""+count));
 }
 
 function getMutexCount(uri) {
-	/*
-	var count;
-	if (context.exists(uri)) {
-		var mutex = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
-		expire(uri);
-		count = parseInt(mutex.text());
-		if (isNaN(count)) {
-			log("NaN: " + mutex.text(), "severe");
-			throw ("Mutex is NaN");
-		}
-	}
-	else {
-		// if (LOG_MUTEX) log("Creating mutex " + uri + " at 0", "info");
-		count = 0;
-		// var mutex = <mutex>{count}</mutex>;
-		// context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
-	}
-	if (LOG_MUTEX) log("Mutex count for " + uri + " = " + count, "info");
-	return 1 * count;  // force conversion to number (redundant)
-	*/
-
-	if (LOG_MUTEX) log("Mutex count = " + MUTEX, "info");
-	return MUTEX;
+	if (LOG_MUTEX) log("Getting mutex " + uri, "info");
+	var count = context.sourceAspect(uri, IAspectString).getString();
+	if (LOG_MUTEX) log("Got mutex " + uri + " = " + count, "info");
+	return parseInt(count);
 }
 
 function sleep(msecs) {
@@ -93,7 +77,7 @@ function beginRead(who) {
 	try {
 		grabReleaseLock("lock:write", who); // Can only go through when write lock not already grabbed 
 		grabLock("lock:read", who);
-		incrementMutex("ffcpl:/mutex/read", who);
+		incrementMutex(MUTEX_READ_COUNT_URI, who);
 	}
 	finally {
 		releaseLock("lock:read", who);
@@ -105,7 +89,7 @@ function endRead(who) {
 	if (LOG_MUTEX) log(who + ": End read", "info");
 	try {
 		grabLock("lock:read", who);
-		decrementMutex("ffcpl:/mutex/read", who);
+		decrementMutex(MUTEX_READ_COUNT_URI, who);
 	}
 	finally {
 		releaseLock("lock:read", who);
@@ -124,7 +108,7 @@ function beginWrite(who) {
 			var count;
 			try {
 				grabLock("lock:read", who);
-				count = getMutexCount("ffcpl:/mutex/read", who);
+				count = getMutexCount(MUTEX_READ_COUNT_URI, who);
 			}
 			catch (e) {
 				releaseLock("lock:read", who);

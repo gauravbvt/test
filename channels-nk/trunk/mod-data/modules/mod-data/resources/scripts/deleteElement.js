@@ -11,6 +11,8 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
+log(">> START DELETE", "info");
+
 var id = new XML(context.sourceAspect("this:param:" + "id", IAspectXmlObject).getXmlObject()).text();
 var list = <ids>
 							<deleted/>
@@ -30,6 +32,9 @@ try {
 finally {
 	endWrite("DELETE");
 }
+
+log("<< END DELETE", "info");
+
 
 //Return Response
 var resp=context.createResponseFrom(new XmlObjectAspect(list.getXmlObject()));
