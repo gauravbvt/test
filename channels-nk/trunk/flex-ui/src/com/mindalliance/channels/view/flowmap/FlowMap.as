@@ -184,16 +184,22 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public static function renameTask(taskID:String, newText:String):void {
-			var tnd:TaskNodeData = TaskNodeData(_mapperHelper.nodeDataMapper.lookupValue(taskID)) ;
+			var tnd:TaskNodeData = _mapperHelper.nodeDataMapper.lookupValue(taskID) as TaskNodeData ;
+			if (!tnd)
+				return ;
 			var labelIter:Iterator = tnd.node.labels.iterator() ;
 			while (labelIter.hasNext()) {
-				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var label:DefaultLabel = labelIter.next() as DefaultLabel ;
 				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (!ld)
+					return ;
 				if (ld.type != LabelData.LABEL_TYPE_TASK)
 					continue ;
-				_graph.setLabelText(ld.label, newText) ;
+				_graph.setLabelText(label, newText) ;
+				_mapperHelper.labelDataMapper.mapValue(label, ld) ;
 				// Adjust node size to fit label
 				FlowMapLayoutHelper.updateNodeBounds(_graph, label.owner as DefaultNode) ;
+				_graphCanvas.forceRepaint() ;
 				break ;
 			}
 		}
@@ -209,6 +215,10 @@ package com.mindalliance.channels.view.flowmap
 					FlowMapLayoutHelper.updateNodeBounds(_graph, DefaultNode(label.owner)) ;
 				}
 			}
+		}
+		
+		public static function renameAgent(taskID:String, roleID:String, newText:String):void {
+			renameRole(roleID, newText) ;
 		}
 
 		public static function renameRepository(reposID:String, newText:String):void {
@@ -305,30 +315,36 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public static function addEvent(phaseID:String, eventID:String, eventLabel:String):void {
+			trace('flowmap:addevent') ;
 			// Find a place to add the event node
 			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
 			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
 			_mapperHelper.idMapper.mapValue(node, eventID) ;			
 			
+			trace('setting up styles') ;
 			// Setup styles
 			_graph.setNodeStyle(node, FlowMapStyles.eventNodeStyle) ;
 			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
 			
+			trace('setting up mappings') ;
 			//Setup mappings
 			var end:EventNodeData = new EventNodeData(node, eventID) ;
 			end.startPhaseID = phaseID ;
 			end.endPhaseID = phaseID ;
 			_mapperHelper.nodeDataMapper.mapValue(eventID, end) ;
 			
+			trace('adding label') ;
 			// Add the event label
 			var label:ILabel = _graph.addLabel(node, eventLabel, FlowMapStyles.eventLabelModelParameter, FlowMapStyles.eventLabelStyle) ;
 			var ld:LabelData = new LabelData(label, eventID, LabelData.LABEL_TYPE_EVENT) as LabelData ;
 			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
 			_mapperHelper.idMapper.mapValue(label, eventID) ;
-						
+
+			trace('updating bounds') ;						
 			// Adjust node size to fit label
 			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ;
 			
+			trace('setting up ports') ;
 			var rect:IRectangle = node.layout ;
 			var port:IPort = _graph.addPort(node, rect.x + rect.width + 5, rect.y + rect.height/2) ;
 			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_EVENT_OUTGOING) ;
@@ -348,26 +364,42 @@ package com.mindalliance.channels.view.flowmap
 			return null ;
 		}
 		
-		public static function setRole(taskID:String, roleID:String, roleLabel:String):void {
+		private static function addAgent(node:DefaultNode, roleID:String, roleLabel:String):void {
+			var label:DefaultLabel = _graph.addLabel(node, roleLabel, FlowMapStyles.roleLabelModelParameter, FlowMapStyles.roleLabelStyle) as DefaultLabel ;
+			var ld:LabelData = new LabelData(label, roleID, LabelData.LABEL_TYPE_ROLE) ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+			_mapperHelper.idMapper.mapValue(label, roleID) ;
+			
+			// Adjust node size to fit label
+			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ;
+			var rect:IOrientedRectangle = label.layout ;
+			var port:IPort = _graph.addPort(node, rect.anchorX, rect.anchorY - rect.height/2) ;
+			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_ROLE_INCOMING) ;
+			_mapperHelper.idMapper.mapValue(port, roleID) ;
+		}
+		
+		private static function replaceAgent(node:DefaultNode, newRoleID:String, newRoleLabel:String):void {
+			var label:DefaultLabel = _getLabel(node, LabelData.LABEL_TYPE_ROLE) as DefaultLabel ;
+			var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+			_graph.setLabelText(label, newRoleLabel) ;
+			ld.id = newRoleID ;
+			ld.label = label ;
+			_mapperHelper.idMapper.mapValue(label, newRoleID) ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+		}
+		
+		public static function setAgent(taskID:String, roleID:String, roleLabel:String):void {
 			// Get the node in which this role exists
 			var tnd:TaskNodeData = TaskNodeData(_mapperHelper.nodeDataMapper.lookupValue(taskID)) ;
 			var label:DefaultLabel = _getLabel(tnd.node, LabelData.LABEL_TYPE_ROLE) ;
-			if (label == null) {
-				label = _graph.addLabel(tnd.node, roleLabel, FlowMapStyles.roleLabelModelParameter, FlowMapStyles.roleLabelStyle) as DefaultLabel ;
-				var ld:LabelData = new LabelData(label, roleID, LabelData.LABEL_TYPE_ROLE) ;
-				_mapperHelper.labelDataMapper.mapValue(label, ld) ;
-				_mapperHelper.idMapper.mapValue(label, roleID) ;
-				
-				// Adjust node size to fit label
-				FlowMapLayoutHelper.updateNodeBounds(_graph, label.owner as DefaultNode) ;
-				var rect:IOrientedRectangle = label.layout ;
-				var port:IPort = _graph.addPort(tnd.node, rect.anchorX, rect.anchorY - rect.height/2) ;
-				_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_ROLE_INCOMING) ;
-				_mapperHelper.idMapper.mapValue(port, roleID) ;
-			}
+			if (label == null)
+				addAgent(tnd.node, roleID, roleLabel) ;
 			else {
-				// If label is already there, just rename it.
-				renameRole(roleID, roleLabel) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.id != roleID)
+					replaceAgent(tnd.node, roleID, roleLabel) ;
+				else
+					renameAgent(taskID, roleID, roleLabel) ;
 			}
 		}
 		
@@ -375,15 +407,32 @@ package com.mindalliance.channels.view.flowmap
 			// Get the node in which this reposOwner is to be added
 			var nd:RepositoryNodeData = _mapperHelper.nodeDataMapper.lookupValue(reposID) as RepositoryNodeData ;
 			var label:DefaultLabel = _getLabel(nd.node, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
-			if (label == null) {
-				label = _graph.addLabel(nd.node, reposOwnerLabel, FlowMapStyles.repositoryOwnerLabelModelParameter, FlowMapStyles.repositoryOwnerLabelStyle) as DefaultLabel ;
-				var ld:LabelData = new LabelData(label, reposOwnerID, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
-				_mapperHelper.labelDataMapper.mapValue(label, ld) ;
-				_mapperHelper.idMapper.mapValue(label, reposOwnerID) ;
-			}
+			if (label == null)
+				addRepositoryOwner(nd.node, reposOwnerID, reposOwnerLabel) ;
 			else {
-				renameRepositoryOwner(reposOwnerID, reposOwnerLabel) ;
+				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+				if (ld.id != reposOwnerID)
+					replaceRepositoryOwner(nd.node, reposOwnerID, reposOwnerLabel) ;
+				else
+					renameRepositoryOwner(reposOwnerID, reposOwnerLabel) ;
 			}
+		}
+		
+		private static function addRepositoryOwner(node:DefaultNode, reposOwnerID:String, reposOwnerLabel:String):void {
+			var label:DefaultLabel = _graph.addLabel(node, reposOwnerLabel, FlowMapStyles.repositoryOwnerLabelModelParameter, FlowMapStyles.repositoryOwnerLabelStyle) as DefaultLabel ;
+			var ld:LabelData = new LabelData(label, reposOwnerID, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+			_mapperHelper.idMapper.mapValue(label, reposOwnerID) ;
+		}
+		
+		private static function replaceRepositoryOwner(node:DefaultNode, newReposOwnerID:String, newReposOwnerLabel:String):void {
+			var label:DefaultLabel = _getLabel(node, LabelData.LABEL_TYPE_REPOSITORY_OWNER) as DefaultLabel ;
+			var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
+			_graph.setLabelText(label, newReposOwnerLabel) ;
+			ld.id = newReposOwnerID ;
+			ld.label = label ;
+			_mapperHelper.idMapper.mapValue(label, newReposOwnerID) ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
 		}
 		
 		public static function addSelectionListener(type:FlowMapEvent, listener:Function):void {
@@ -447,6 +496,40 @@ package com.mindalliance.channels.view.flowmap
 			removeLabelsByID(roleID) ;
 			removePorts(roleID, PortType.PORT_TYPE_ROLE_INCOMING) ;
 			// Deal with edges.
+		}
+		
+		public static function removeAgent(taskID:String, roleID:String):void {
+			var tnd:TaskNodeData = _mapperHelper.nodeDataMapper.lookupValue(taskID) as TaskNodeData ;
+			if (!tnd)
+				return ;
+			var label:DefaultLabel = _getLabel(tnd.node, LabelData.LABEL_TYPE_ROLE) ;
+			if (!label)
+				return ;
+			_mapperHelper.idMapper.unMapValue(label) ;
+			_mapperHelper.labelDataMapper.unMapValue(label) ;
+			_graph.removeLabel(label) ;
+			var port:DefaultPort = _getPort(tnd.node, PortType.PORT_TYPE_ROLE_INCOMING) ;
+			if (!port)
+				return ;
+			_mapperHelper.portTypeMapper.unMapValue(port) ;
+			_mapperHelper.idMapper.unMapValue(port) ;
+			_graph.removePort(port) ;
+		}
+		
+		private static function _getPort(node:DefaultNode, portType:String):DefaultPort {
+			var portsIter:Iterator = node.ports.iterator() ;
+			while (portsIter.hasNext()) {
+				var port:DefaultPort = portsIter.next() as DefaultPort ;
+				if (!port)
+					continue ;
+				var pType:String = _mapperHelper.portTypeMapper.lookupValue(port) as String ;
+				if (!pType)
+					continue ;
+				if (pType == portType)
+					return port ;
+			}
+			return null ;
+			
 		}
 		
 		private static function removeLabelsByID(labelID:String):void {

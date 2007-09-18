@@ -98,7 +98,7 @@ package com.mindalliance.channels.view.flowmap
 			_taskNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.roundrectangle, TASK_NODE_STROKE, TASK_NODE_FILL) ;
 			_eventNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.ELLIPSE, EVENT_NODE_STROKE, EVENT_NODE_FILL) ;
  			 var imgNodeStyle:ImageNodeStyle = new ImageNodeStyle(null, new ImageNodeStyleRenderer()) ;
- 			 imgNodeStyle.url = "http://ranger.homelinux.net/svn/channels-nk/trunk/flex-ui/src/assets/images/data.png" ;
+ 			 imgNodeStyle.url = "assets/images/data.png" ;
  			_repositoryNodeStyle = imgNodeStyle ;
 		}
 		

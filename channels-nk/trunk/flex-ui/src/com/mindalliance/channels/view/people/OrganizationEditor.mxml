@@ -123,8 +123,6 @@
     	confirmEditHandler="{confirmEdit}"
     	cancelEditHandler="{cancelEdit}"
     	enabled="{edited != null}"/>
-    	
-    <mx:FormHeading label="{'Organization: '+txtName.text}"/>	
     <mx:FormItem label="Name" required="false" id="formitemName">
         <mx:TextInput id="txtName" editable="{currentState=='EditState'}" text="{edited.name}" change="queueUpdate()"/>
     </mx:FormItem>

@@ -3,22 +3,21 @@
     width="100%" xmlns:application="com.mindalliance.channels.view.application.*" 
     xmlns:search="com.mindalliance.channels.view.search.*"
     xmlns:logging="com.mindalliance.channels.view.logging.*"
-    currentState="{model.currentScenario.id == null ? 'DashboardState' : 'InScenarioState'}">
+    currentState="{model.currentScenario == null ? 'DashboardState' : 'InScenarioState'}"
+    horizontalAlign="center"
+    creationComplete="init()">
     <mx:states>
         <mx:State name="DashboardState">
             <mx:AddChild relativeTo="{spacer1}" position="before">
-                <mx:Label text="{personVO.firstName + ' ' + personVO.lastName +  '\'' + (personVO.lastName.charAt(personVO.lastName.length - 1) == 's' ? '' : 's') + ' Dashboard'}"
-                	fontWeight="bold" id="lblDashboardHeaderLabel"/>
+	            <mx:Label text="{personVO.firstName + ' ' + personVO.lastName +  '\'' + (personVO.lastName.charAt(personVO.lastName.length - 1) == 's' ? '' : 's') + ' Dashboard'}"
+		            	fontWeight="bold" id="lblDashboardHeaderLabel"/>
             </mx:AddChild>
         </mx:State>
         <mx:State name="InScenarioState">
-            <mx:AddChild relativeTo="{spacer2}" position="before">
-                <mx:MenuBar id="channelsMenuBar" dataProvider="{ChannelsMenuBarItems}" labelField="@label" showRoot="false" itemClick="menuBarItemClicked(event)"/>
-            </mx:AddChild>
             <mx:AddChild relativeTo="{spacer1}" position="before">
                 <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
             </mx:AddChild>
-            <mx:AddChild relativeTo="{channelsMenuBar}" position="before">
+            <mx:AddChild relativeTo="{spacer2}" position="before">
             	<!--Need some kinda unload event to dispatch here. -->
                 <mx:Button label="Go to Dashboard" click="Alert.show('This will eventually go to dashboard')"/>
             </mx:AddChild>
@@ -71,74 +70,15 @@
         			
             [Bindable]
  	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
- 	        
+ 	         	        
  	        [Bindable]
  	        private var personEditorModel:EditorModel ;
- 	        
+ 	         	        
  	        [Bindable]
  	        private var personVO:PersonVO ;
-			 	          			        
-            private var classHash:Object = {
-                "Category Library Editor": CategoryLibraryEditor,
-                "Category Viewer": CategoryViewer, 
-                "Category Chooser":CategoryChooser,
-                "Personal Profile Editor": PersonalProfileEditor,
-                "Role Editor": RoleEditor,
-                "Role Chooser": RoleChooser,
-                "Organization Editor": OrganizationEditor,
-                "Organization Chooser" : OrganizationChooser,
-                "Repository Editor": RepositoryEditor,
-                "Repository Chooser" : RepositoryChooser,
-                "Task Editor": TaskEditor,
-                "Task Chooser": TaskChooser, 
-                "Event Editor": EventEditor, 
-                "Event Chooser" : EventChooser,
-                "Artifact Editor": ArtifactEditor, 
-                "Artifact Chooser": ArtifactChooser,                
-                "Acquirement Editor": AcquirementEditor, 
-                "Acquirement Chooser": AcquirementChooser,
-                "Person Chooser" : PersonChooser
-                };
-                
-            private function menuBarItemClicked(event:MenuEvent):void {
-                var c:Class = classHash[event.item.@label];
-                if (c != null) {
-                	var popUp:TitleWindow ;
-	            	popUp = TitleWindow(PopUpManager.createPopUp(this, TitleWindow)) ;
-	            	var component : DisplayObject = new ClassFactory(c).newInstance();
-	            	popUp.addChild(component);
-	            	popUp.showCloseButton = true ;
-	            	popUp.addEventListener(CloseEvent.CLOSE, function handler(event:CloseEvent):void {PopUpManager.removePopUp(popUp)}) ;
-	                popUp.x = this.x + 100 ;
-	                popUp.y = this.y ;
-                }
-                var menuItem:String = event.item.@label ;
-                switch (menuItem) {
-                	case "Edit Categories":
-                		var cle:CategoryLibraryEditor = CategoryLibraryEditor(PopUpManager.createPopUp(this, CategoryLibraryEditor)) ;
-                		cle.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, 
-                			function close(event:FlexMouseEvent):void{
-                				PopUpManager.removePopUp(cle);
-                				});
-                		cle.addEventListener(FlexEvent.CREATION_COMPLETE, 
-                			function wipeDown(event:FlexEvent):void {
-                				new WipeDown(cle).play() ;
-                				}) ;
-                		PopUpManager.centerPopUp(cle) ;
-                		cle.y = this.y + this.height + 2 ;
-                	break ;
-                	case "Create New Scenario":
-                	case "Edit Scenario Properties":
-                	case "Switch to a Different Scenario":
-                	case "Create New Project":
-                	case "Edit Project Properties":
-                		projectScenarioIndicator.dispatchEvent(new MouseEvent(MouseEvent.CLICK)) ;
-                	break ;
-                }
-            }
-            
+			 	          			                    
             private function editPersonalProfile():void {
-            	var profileWindow:TitleWindow = TitleWindow(PopUpManager.createPopUp(this, TitleWindow, false)) ; ;
+            	var profileWindow:TitleWindow = PopUpManager.createPopUp(this, TitleWindow, false) as TitleWindow ;
             	profileWindow.title = "Personal Profile" ;
             	profileWindow.showCloseButton = true ;
             	profileWindow.addEventListener(CloseEvent.CLOSE, 
@@ -150,58 +90,31 @@
             			new WipeDown(profileWindow).play() ;
             		}); 
             	
-            	var personalProfileEditor:PersonalProfileEditor = new PersonalProfileEditor() ;
             	profileWindow.addChild(personalProfileEditor) ;
             	PopUpManager.centerPopUp(profileWindow) ;
-            	profileWindow.y = this.y + this.height + 2 ;
+            	var p:Point = this.localToGlobal(new Point(this.x, this.y + this.height)) ;
+            	profileWindow.y = p.y + 5 ;
+            }
+            
+            [Bindable]
+            private var personalProfileEditor:PersonalProfileEditor ;
+            
+            private static var instance:ApplicationToolBar ;
+            
+            public static function getInstance():ApplicationToolBar {
+            	return instance ;
+            }
+            
+            private function init():void {
+            	personalProfileEditor = new PersonalProfileEditor() ;
+            	instance = this ;
             }
             
 	    ]]>
 	</mx:Script>
 	
-	<mx:Binding source="model.personalProfileEditorModel.personEditorModel" destination="personEditorModel"/>
-	<mx:Binding source="personEditorModel.getElementModel(personEditorModel.id) as PersonVO" destination="personVO"/>
-		
-     <mx:XMLList id="ChannelsMenuBarItems">
-        <menuitem label="*TEST*Forms">
-			<menuitem label="Category Library Editor"/>
-			<menuitem label="Category Viewer"/>
-			<menuitem label="Category Chooser"/>
-			<menuitem label="Personal Profile Editor"/>
-			<menuitem label="Role Editor"/>
-			<menuitem label="Role Chooser"/>
-            <menuitem label="Organization Editor"/>
-            <menuitem label="Organization Chooser"/>
-            <menuitem label="Repository Editor"/>
-            <menuitem label="Repository Chooser"/>
-			<menuitem label="Task Editor"/>
-			<menuitem label="Task Chooser"/>
-            <menuitem label="Event Editor"/>
-            <menuitem label="Event Chooser"/>
-            <menuitem label="Artifact Editor"/>
-            <menuitem label="Artifact Chooser"/>
-            <menuitem label="Acquirement Editor"/>
-            <menuitem label="Acquirement Chooser"/>
-            <menuitem label="Person Chooser"/>
-        </menuitem> 
-        <menuitem label="Project">
-        	<menuitem label="Create New Project"/>
-        	<menuitem label="Edit Project Properties"/>
-        	<menuitem type="separator"/>
-        	<menuitem label="People">
-        		<menuitem label="My Profile"/>
-        		<menuitem label="Browse Directory"/>
-        	</menuitem>
-        </menuitem>
-		<menuitem label="Scenario">
-        	<menuitem label="Create New Scenario"/>
-        	<menuitem label="Edit Scenario Properties"/>
-        	<menuitem label="Switch to a Different Scenario"/>
-        </menuitem>
-		<menuitem label="Shared Elements">
-			<menuitem label="Edit Categories"/>
-		</menuitem>
-    </mx:XMLList>
+	<mx:Binding source="personalProfileEditor.personEditor.model" destination="personEditorModel"/>
+	<mx:Binding source="personEditorModel.getElementModel(personEditorModel.id).data as PersonVO" destination="personVO"/>
     
 	<logging:LoggerButton label="Show Trace Output" visible="{model.debug}" fillColors="[#f09a7b, #f09a7b]" id="loggerbutton1"/>
     <mx:Spacer width="100%" id="spacer2"/>

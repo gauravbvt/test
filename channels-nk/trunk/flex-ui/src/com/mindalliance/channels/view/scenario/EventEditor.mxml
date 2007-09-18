@@ -3,7 +3,6 @@
 	xmlns:common="com.mindalliance.channels.view.common.*" 
 	xmlns:categories="com.mindalliance.channels.view.categories.*"
 	implements="com.mindalliance.channels.view.common.IEditor"
-	creationComplete="init()"
 	enabled="{edited != null}">
 
 	<mx:Script>
@@ -138,10 +137,6 @@
 			     return true;
 			}
 			
-			private function init() : void {
-                switchToEditState();	
-			}
-
 		]]>
 	</mx:Script>
 	

@@ -3,7 +3,7 @@
 	showCloseButton="true"
 	mouseDownOutside="close()"
 	close="close()"
-	title="New Repository"
+	title="Profile New Role"
 	creationComplete="init()" xmlns:common="com.mindalliance.channels.view.common.*">
 
 	<mx:Script>
@@ -42,39 +42,37 @@
 				}
 				for (var i:int = 0 ; i < orgAC.length ; i++) {
 					var orgVO:ElementVO = orgAC.getItemAt(i) as ElementVO ;
-					if (!orgVO) {
-						trace('orgVO is null' + orgAC.getItemAt(i).toString())  ;
+					if (!orgVO) 
 						 continue ;
-					}
 					if (selectedLabel == orgVO.name) {
 						orgID = orgVO.id ;
 						break ;
 					}
 				}
 				if (orgID != null)
-					resultHandler(txtReposName, orgID) ;
+					callLater(resultHandler, [txtRoleName.text, orgID]) ;
 				close() ;
 			}
 			
 			private function init():void {
-				BindingUtils.bindSetter(setEnabled, txtReposName, ['text']) ;
+				BindingUtils.bindSetter(setEnabled, txtRoleName, ['text']) ;
 				BindingUtils.bindSetter(setEnabled, cbOrganizations, ['selectedLabel']) ;
 			}
 			
 			private function setEnabled(value:Object):void {
-				btnOK.enabled = (txtReposName.text.length > 0) && (cbOrganizations.selectedLabel != null) ;
+				btnOK.enabled = (txtRoleName.text.length > 0) && (cbOrganizations.selectedLabel != null) ;
 			}
 			
 		]]>
 	</mx:Script>
 	
 	<mx:Binding source="(modelLocator.getElementListModel(ElementListNames.ORGANIZATION_LIST_KEY) as ElementListModel)" destination="organizationListModel"/>
-	<mx:Form>
+	<mx:Form defaultButton="{btnOK}">
 		<common:HintFieldRequiredFormItem/>
-		<mx:FormItem label="Repository Name" required="true">
-			<mx:TextInput id="txtReposName"/>
+		<mx:FormItem label="Role Name" required="true">
+			<mx:TextInput id="txtRoleName"/>
 		</mx:FormItem>
-		<mx:FormItem label="Owner" required="true">
+		<mx:FormItem label="Organization" required="true">
 			<mx:ComboBox id="cbOrganizations" dataProvider="{organizationListModel.data}" labelField="name" editable="false"/>
 		</mx:FormItem>
 	</mx:Form>

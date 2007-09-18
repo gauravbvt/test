@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:MenuBar xmlns:mx="http://www.adobe.com/2006/mxml" 
+	dataProvider="{ChannelsMenuBarItems}" 
+	labelField="@label" 
+	showRoot="false"
+	itemClick="menuBarItemClicked(event)"
+	creationComplete="init()">
+
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.view.flowmap.FlowMapView;
+			import com.mindalliance.channels.view.UtilFuncs;
+			import com.mindalliance.channels.events.people.CreateOrganizationEvent;
+			import mx.controls.Button;
+			import com.yworks.canvas.input.ClickEvent;
+			import com.mindalliance.channels.view.people.PersonCreator;
+			import com.mindalliance.channels.events.people.CreatePersonEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import mx.core.IFlexDisplayObject;
+			import com.mindalliance.channels.view.common.Chooser;
+			import com.mindalliance.channels.view.people.RoleCreator;
+			import com.mindalliance.channels.events.people.CreateRoleEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.mindalliance.channels.view.common.ResizableTitleWindow;
+			import mx.collections.XMLListCollection;
+			import mx.effects.WipeDown;
+			import mx.containers.TitleWindow;
+			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.view.people.PersonChooser;
+			import com.mindalliance.channels.view.scenario.AcquirementChooser;
+			import com.mindalliance.channels.view.scenario.AcquirementEditor;
+			import com.mindalliance.channels.view.scenario.ArtifactChooser;
+			import com.mindalliance.channels.view.scenario.ArtifactEditor;
+			import com.mindalliance.channels.view.scenario.EventChooser;
+			import com.mindalliance.channels.view.scenario.EventEditor;
+			import com.mindalliance.channels.view.scenario.TaskChooser;
+			import com.mindalliance.channels.view.scenario.TaskEditor;
+			import com.mindalliance.channels.view.resources.RepositoryChooser;
+			import com.mindalliance.channels.view.resources.RepositoryEditor;
+			import com.mindalliance.channels.view.people.OrganizationChooser;
+			import com.mindalliance.channels.view.people.OrganizationEditor;
+			import com.mindalliance.channels.view.people.RoleChooser;
+			import com.mindalliance.channels.view.people.RoleEditor;
+			import com.mindalliance.channels.view.people.PersonalProfileEditor;
+			import com.mindalliance.channels.view.categories.CategoryChooser;
+			import com.mindalliance.channels.view.categories.CategoryViewer;
+			import com.mindalliance.channels.view.categories.CategoryLibraryEditor;
+			import mx.events.FlexEvent;
+			import mx.events.FlexMouseEvent;
+			import mx.events.CloseEvent;
+			import mx.events.MenuEvent;			
+			
+        private static var _channelsMenuBarInstance:ChannelsMenuBar ;    
+        public static function getInstance():ChannelsMenuBar {
+        	return _channelsMenuBarInstance ;
+        }   
+         
+        private function menuBarItemClicked(event:MenuEvent):void {
+            var menuLabel:String = event.item.@label ;
+            switch (menuLabel) {
+            	case "Profile New Role":
+            		var rc:RoleCreator = PopUpManager.createPopUp(this, RoleCreator, true) as RoleCreator ;
+            		rc.resultHandler = function anon(roleName:String, orgID:String):void {
+	             		CairngormHelper.fireEvent(new CreateRoleEvent(roleName, orgID));
+            		}
+            		performPostPopupCreation(rc) ;
+            	break ;
+            	case "Profile New Person":
+            		var pc:PersonCreator = PopUpManager.createPopUp(this, PersonCreator, true) as PersonCreator ;
+            		pc.resultHandler = function anon(firstname:String, lastname:String):void {
+            			CairngormHelper.fireEvent(new CreatePersonEvent(firstname, lastname)) ;
+            		}
+            		performPostPopupCreation(pc) ;
+            	break ;
+            	case "Profile New Organization":
+            		UtilFuncs.GetUserTextInput(FlowMapView.getInstance(),
+            			function anon(orgName:String):void {
+            				CairngormHelper.fireEvent(new CreateOrganizationEvent(orgName)) ;
+	            		}, "Enter Name of New Organization", true) ;
+            	break ;
+            	case "Define/Modify Category Library":
+            		var cle:CategoryLibraryEditor = PopUpManager.createPopUp(this, CategoryLibraryEditor) as CategoryLibraryEditor;
+            		performPostPopupCreation(cle) ;
+            	break ;
+            	case "Browse/Edit People Directory":
+            		popupChooserAsBrowser(menuLabel, PersonChooser) ;
+            	break ;
+            	case "Browse/Edit Roles":
+            		popupChooserAsBrowser(menuLabel, RoleChooser) ;
+            	break ;
+            	case "Browse/Edit Organizations":
+            		popupChooserAsBrowser(menuLabel, OrganizationChooser) ;
+            	break ;
+            	case "Edit My Profile":
+            		ApplicationToolBar.getInstance().btnEditProfile.dispatchEvent(new MouseEvent(MouseEvent.CLICK)) ;
+            	break ;
+				case "Browse/Edit Tasks":
+					popupChooserAsBrowser(menuLabel, TaskChooser) ;
+				break ;
+				case "Browse/Edit Events":
+					popupChooserAsBrowser(menuLabel, EventChooser) ;
+				break ;
+				case "Browse/Edit Repositories":
+					popupChooserAsBrowser(menuLabel, RepositoryChooser) ;
+				break ;
+            }
+        }
+        
+        private function popupChooserAsBrowser(title:String, chooserCls:Class):void {
+        	var chooser:Chooser = PopUpManager.createPopUp(this, chooserCls) as Chooser ;
+        	chooser.title = title ;
+        	chooser.showCloseButton = true ;
+        	chooser.addEventListener(CloseEvent.CLOSE, function anon(event:CloseEvent):void { PopUpManager.removePopUp(chooser) ;});
+        	chooser.currentState = Chooser.BROWSER_STATE ;
+        	performPostPopupCreation(chooser) ;
+        }
+        
+        private function performPostPopupCreation(popup:IFlexDisplayObject):void {
+        	PopUpManager.centerPopUp(popup) ;
+        	var p:Point = this.localToGlobal(new Point(this.x, this.y + this.height)) ;
+        	popup.y = p.y + 5 ;
+        	popup.addEventListener(FlexEvent.CREATION_COMPLETE, function anon(event:FlexEvent):void {new WipeDown(popup).play();}) ;
+        }
+        
+        private function init():void {
+        	_channelsMenuBarInstance = this ;
+        }
+                
+		]]>
+	</mx:Script>
+
+     <mx:XMLList id="ChannelsMenuBarItems">
+		<menuitem label="Shared Elements">
+			<menuitem label="Define/Modify Category Library"/>
+			<menuitem type="separator"/>
+			<menuitem label="Edit My Profile"/>
+			<menuitem label="Profile New Person"/>
+			<menuitem label="Browse/Edit People Directory"/>
+			<menuitem type="separator"/>
+			<menuitem label="Profile New Role"/>
+			<menuitem label="Browse/Edit Roles"/>
+			<menuitem type="separator"/>
+			<menuitem label="Profile New Organization"/>
+			<menuitem label="Browse/Edit Organizations"/>
+		</menuitem>
+		<menuitem label="Scenario">
+			<menuitem label="Add Task"/>
+			<menuitem label="Browse/Edit Tasks"/>
+			<menuitem type="separator"/>
+			<menuitem label="Add Event"/>
+			<menuitem label="Browse/Edit Events"/>
+			<menuitem type="separator"/>
+			<menuitem label="Add Repository"/>
+			<menuitem label="Browse/Edit Repositories"/>
+			<menuitem type="separator"/>
+			<menuitem label="*TEMP* Set Role"/>
+		</menuitem>
+    </mx:XMLList>
+
+</mx:MenuBar>

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:view="com.mindalliance.channels.view.*"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
 	xmlns:yui="com.yworks.ui.*"
+	backgroundColor="0xFFFFFF"
 	width="100%" height="100%">
 	
 	<mx:Script>
 		<![CDATA[
+			import com.yworks.graph.model.DefaultNode;
+			import mx.events.MenuEvent;
+			import com.mindalliance.channels.view.application.ChannelsMenuBar;
 			import mx.managers.PopUpManager;
-			import com.mindalliance.channels.view.scenario.RepositoryCreator;
 			import com.mindalliance.channels.events.resources.CreateRepositoryEvent;
 			import com.mindalliance.channels.events.scenario.CreateEventEvent;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
@@ -49,6 +52,7 @@
 		<![CDATA[
 			import com.mindalliance.channels.events.scenario.CreateTaskEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
+			import com.mindalliance.channels.view.resources.RepositoryCreator ;
 			import com.yworks.support.Iterable;
 			import com.yworks.graph.model.ILabel;
 			import com.yworks.support.Iterator;
@@ -59,13 +63,23 @@
 			import com.mindalliance.channels.view.UtilFuncs;
 		
 			/* Called by Channels because this init needs to wait until license is validated etc. */
+			
+			public static function getInstance():FlowMapView {
+				return instance ;
+			}
+			
+			private static var instance:FlowMapView ;
 			public function init():void {
-				zoomControl.graphCanvas = this.graphCanvas ;
 				FlowMap.initialize(graphCanvas) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
 /* 				FlowMap.addSelectionListener(FlowMapEvent.PHASE_SELECTION_CHANGED, selectedPhaseChanged) ; */
 				FlowMapCairngormInterfacer.initialize() ;
+				instance = this ;
+			}
+			
+			public function requestHandlerRegistration(menuBar:ChannelsMenuBar):void {
+					menuBar.addEventListener(MenuEvent.ITEM_CLICK, menuBarItemClicked) ;
 			}
 			
 			[Bindable]
@@ -91,6 +105,33 @@
 			
 			public function itemDeselected(event:SelectionEvent):void {
 				_updateSelectionBoundVariables() ;	
+			}
+			
+			protected function menuBarItemClicked(event:MenuEvent):void {
+				var menuLabel:String = event.item.@label ;
+				switch (menuLabel) {
+					case "Add Task":
+						addTask() ;
+					break ;
+					case "Add Event":
+						addEvent() ;
+					break ;
+					case "Add Repository":
+						addRepository() ;
+					break ;
+					case "Set Role" :
+						setRole() ;
+					break ;
+				}
+			}
+			
+			private function setRole():void {
+				function setRoleHandler(roleName:String):void {
+					var node:DefaultNode = FlowMap.selectedItems.iterator().next() as DefaultNode ;
+					var taskID:String = GraphMapperHelper.getInstance().idMapper.lookupValue(node) as String ;
+					FlowMap.setAgent(taskID, FlowMap.getNewID(), roleName) ;
+				}
+				UtilFuncs.GetUserTextInput(this, setRoleHandler, "Enter Role Name", true) ;
 			}
 			
 			private function addTask():void {
@@ -127,20 +168,6 @@
 		]]>
 	</mx:Script>
 	
-	<mx:HBox width="100%" borderSides="bottom" borderThickness="1" borderStyle="solid" verticalAlign="middle">
-		<mx:Label text="Menu:" fontWeight="bold"/>
-<!--		Phases are called stages for now. Needs to be cleaned up. -->
-<!--		<mx:Button label="Add Phase" click="addStage()"/> -->
-		<mx:Button label="Add Task" click="addTask()"/>
-		<mx:Button label="Add Event" click="addEvent()"/>
-		<mx:Button label="Add Repository" click="addRepository()"/>
-<!--	
-		<mx:HBox visible="{selectedScenarioStageIDNotNull}" includeInLayout="{selectedScenarioStageIDNotNull}">
-			<mx:Button label="Rename Phase" click="renamePhase()"/>
-		</mx:HBox>
- -->	
- 		<mx:Spacer width="100%"/>	
-		<flowmap:ZoomControl id="zoomControl" resizeEffect="Resize"/>
-	</mx:HBox>
+	<flowmap:ZoomControl id="zoomControl" graphCanvas="{graphCanvas}"/>
 	<yui:GraphCanvasComponent id="graphCanvas" width="100%" height="100%"/>
-</mx:VBox>
+</mx:HBox>

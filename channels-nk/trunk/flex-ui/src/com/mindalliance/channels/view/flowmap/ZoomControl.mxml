@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	enabled="{_graphCanvas != null}"
-	paddingTop="5"
-	paddingBottom="5"
-	paddingLeft="5"
-	paddingRight="5">
+	horizontalAlign="center">
 
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.TitleWindow;
+			import mx.binding.utils.BindingUtils;
+			import mx.managers.PopUpManager;
 			import com.yworks.ui.GraphCanvasComponent;
 			
 			[Bindable]
@@ -20,22 +20,23 @@
 			public function set graphCanvas(gc:GraphCanvasComponent):void {
 				_graphCanvas = gc ;
 			}
-			
+						
 		]]>
 	</mx:Script>
-	
-	<mx:Label text="Zoom:" fontWeight="bold"/>
-	<mx:HSlider width="150"
-		value="{Math.log(_graphCanvas.zoom)/Math.log(2)}" 
-		change="{_graphCanvas.zoom=Math.pow(2,event.value)}" 
-		liveDragging="true" tickInterval="1.0" 
-		minimum="-4" maximum="4" />
-	<mx:Button label="Fit Content" click="_graphCanvas.fitContent();"/>
-	<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))+0.1));"  toolTip="Zoom In">
-		<mx:icon>@Embed('../../../../../assets/images/zoom_in.png')</mx:icon>
-	</mx:Button>
-	<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))-0.1));"  toolTip="Zoom Out">
-		<mx:icon>@Embed('../../../../../assets/images/zoom_out.png')</mx:icon>
-	</mx:Button>
+		<mx:Label text="Zoom" fontWeight="bold"/>
+		<mx:VSlider
+			value="{Math.log(_graphCanvas.zoom)/Math.log(2)}" 
+			change="{_graphCanvas.zoom=Math.pow(2,event.value)}" 
+			liveDragging="true" tickInterval="1.0" 
+			minimum="-4" maximum="4"/>
+		<mx:Button click="_graphCanvas.fitContent();" toolTip="Fit content">
+				<mx:icon>@Embed('../../../../../assets/images/fit_to_size.png')</mx:icon>
+		</mx:Button>
+		<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))+0.1));"  toolTip="Zoom In">
+			<mx:icon>@Embed('../../../../../assets/images/zoom_in.png')</mx:icon>
+		</mx:Button>
+		<mx:Button click="_graphCanvas.zoom=Math.pow(2,((Math.log(_graphCanvas.zoom)/Math.log(2))-0.1));"  toolTip="Zoom Out">
+			<mx:icon>@Embed('../../../../../assets/images/zoom_out.png')</mx:icon>
+		</mx:Button>
 
-</mx:HBox>
+</mx:VBox>

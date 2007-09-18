@@ -5,36 +5,50 @@
     xmlns:people="com.mindalliance.channels.view.people.*"
     xmlns:resources="com.mindalliance.channels.view.resources.*"
     xmlns:application="com.mindalliance.channels.view.application.*"
-    verticalScrollPolicy="off"
-    horizontalScrollPolicy="off" 
-    currentState="NothingSelectedState">
+    currentState="NothingSelectedState"
+    width="100%"
+    height="100%">
 	<mx:states>
 		<mx:State name="TaskNodeEditorState">
 			<mx:AddChild position="lastChild">
-				<application:TaskNodeEditor id="taskNodeEditor"/>
+				<application:TaskNodeEditor id="taskNodeEditor" width="100%" height="100%"/>
 			</mx:AddChild>
 		</mx:State>
 		<mx:State name="RepositoryNodeEditorState">
 			<mx:AddChild position="lastChild">
-				<application:RepositoryNodeEditor id="repositoryEditor"/>
+				<application:RepositoryNodeEditor id="repositoryNodeEditor" width="100%" height="100%"/>
 			</mx:AddChild>
 		</mx:State>
 		<mx:State name="NothingSelectedState">
 			<mx:SetProperty name="enabled" value="false"/>
+			<mx:AddChild position="lastChild">
+				<mx:Label text="Nothing Selected"/>
+			</mx:AddChild>
 		</mx:State>
 		<mx:State name="MultipleItemsSelectedState">
 			<mx:SetProperty name="enabled" value="false"/>
+			<mx:AddChild position="lastChild">
+				<mx:Label text="Multiple Items Selected"/>
+			</mx:AddChild>
 		</mx:State>
 		<mx:State name="EventNodeEditorState">
 			<mx:AddChild position="lastChild">
-				<scenario:EventEditor id="eventEditor"/>
+				<scenario:EventEditor id="eventEditor" width="100%" height="100%"/>
 			</mx:AddChild>
 		</mx:State>
-		<mx:State name="SharingNeedEditorState"/>
+		<mx:State name="SharingNeedEditorState">
+			<mx:SetProperty name="enabled" value="false"/>
+			<mx:AddChild position="lastChild">
+				<mx:Label text="Not yet implemented"/>
+			</mx:AddChild>
+
+		</mx:State>
 	</mx:states>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import mx.events.StateChangeEvent;
 			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
 			import com.mindalliance.channels.view.flowmap.RepositoryNodeData;
 			import com.mindalliance.channels.events.scenario.GetEventEvent;
@@ -57,24 +71,29 @@
 			
 			private var mapperHelper:GraphMapperHelper ;
 			
-			private var _isEditing:Boolean = false ;
-			
-			[Bindable(event="changeIsEditing")] 
-            public function get isEditing():Boolean {
-                return _isEditing;
-            }
-            
-            public function set isEditing(value:Boolean):void {
-            	if (_isEditing != value) {
-	            	_isEditing = value ;
-    	        	dispatchEvent(new Event("changeIsEditing")) ;
-    	        }
-            }
+			[Bindable]
+			public var isEditing:Boolean ;
 		
 			public function init():void {
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
 				mapperHelper = GraphMapperHelper.getInstance() ;
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleStateChange) ;
+			}
+			
+			private function setState(state:String):void {
+				isEditing = (state == 'EditState') ;
+			}
+			
+			private function handleStateChange(event:StateChangeEvent):void {
+				switch (event.newState) {
+					case 'RepositoryNodeEditorState':
+						BindingUtils.bindSetter(setState, repositoryNodeEditor, ['editorState']) ;
+					break ;
+					case 'TaskNodeEditorState':
+						BindingUtils.bindSetter(setState, taskNodeEditor, ['editorState']) ;
+					break ;
+				}
 			}
 			
 			private function itemSelected(event:SelectionEvent):void {
@@ -99,15 +118,15 @@
 						CairngormHelper.fireEvent(getEventEvent) ;
 					}
 					else if (nd is RepositoryNodeData) {
-						currentState = 'RepositoryNodeEditingState' ;
-						repositoryEditor.loadRepository(RepositoryNodeData(nd).id);
+						currentState = 'RepositoryNodeEditorState' ;
+						repositoryNodeEditor.loadRepository(RepositoryNodeData(nd).id);
 					}
 				}
 			}
 		
 			private function itemDeselected(event:SelectionEvent):void {
 				if (FlowMap.numSelected == 0)
-					currentState = '' ;
+					currentState = 'NothingSelectedState' ;
 				else if (FlowMap.numSelected > 1)
 					currentState = 'MultipleItemsSelectedState' ;
 			}

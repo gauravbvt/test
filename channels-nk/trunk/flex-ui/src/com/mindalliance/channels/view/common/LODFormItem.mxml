@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:FormItem xmlns:mx="http://www.adobe.com/2006/mxml" 
+	visible="{includeInLayout}" 
+	includeInLayout="{currentLevelOfDetail &gt;= levelOfDetail}"
+	showEffect="Fade"
+	hideEffect="Fade">
+
+	<mx:Number id="levelOfDetail"/>
+	
+	<mx:Number id="currentLevelOfDetail"/>
+	
+</mx:FormItem>

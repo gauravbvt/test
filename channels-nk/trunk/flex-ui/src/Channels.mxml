@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	backgroundColor="white"
+	backgroundColor="0xFFFFFF"
 	height="100%"
 	width="100%"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
@@ -12,7 +12,7 @@
 	xmlns:control="com.mindalliance.channels.control.*"
 	xmlns:business="com.mindalliance.channels.business.*"
 	xmlns:common="com.mindalliance.channels.view.common.*"
-	applicationComplete="init()" currentState="{Channels.STATE_DASHBOARD}">
+	applicationComplete="init()" currentState="DashboardState">
 	
   	<mx:states>
 		<mx:State name="DashboardState">
@@ -24,10 +24,13 @@
 		</mx:State>
 		<mx:State name="InScenarioState">
 			<mx:AddChild relativeTo="{vboxApplication}" position="lastChild">
-				<mx:HDividedBox width="100%" height="100%" paddingTop="10">
-					<application:PropertyEditor id="propertyEditor" height="100%" width="25%"/>
+				<mx:VBox width="100%" height="100%" paddingTop="10">
+					<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
+						<application:PropertyEditorDock id="propertyEditorDock"/>
+						<application:ChannelsMenuBar creationComplete="channelsMenuBarCreationComplete()" enabled="false" id="channelsMenuBar"/>
+					</mx:HBox>
 					<flowmap:FlowMapView id="flowmap" width="100%" height="100%"/>
-				</mx:HDividedBox>
+				</mx:VBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{applicationToolBar}" name="currentState" value="InScenarioState"/>
 		</mx:State>
@@ -37,6 +40,9 @@
 
     <mx:Script>
       <![CDATA[
+      	import com.mindalliance.channels.events.scenario.GetAgentListByScenarioEvent;
+      	import com.mindalliance.channels.view.application.ChannelsMenuBar;
+      	import mx.controls.Alert;
       	import mx.binding.utils.ChangeWatcher;
       	import mx.events.StateChangeEvent;
       
@@ -77,12 +83,18 @@
       	
       	private function scenarioLoaded():void {
       		flowmap.init() ;
-      		propertyEditor.init() ;
+      		
 			// Load global data lists
 			CairngormHelper.fireEvent( new GetRoleListEvent() );
 			CairngormHelper.fireEvent( new GetPersonListEvent() );
 			CairngormHelper.fireEvent( new GetOrganizationListEvent() );
 			CairngormHelper.fireEvent( new GetRepositoryListEvent() );
+			CairngormHelper.fireEvent(new GetAgentListByScenarioEvent(model.currentScenario.id)) ;
+      	}
+      	
+      	private function channelsMenuBarCreationComplete():void {
+      		flowmap.requestHandlerRegistration(channelsMenuBar) ;
+      		channelsMenuBar.enabled = true ;
       	}
       
         private function init():void {
@@ -90,12 +102,12 @@
 			this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleStateChanged) ;
 			applicationToolBar.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleApplicationToolBarStateChanged) ;
 			CairngormHelper.fireEvent( new GetUserEvent("user1") );
-			CairngormHelper.fireEvent( new GetPersonByUserEvent("user1") );
+			CairngormHelper.fireEvent( new GetPersonByUserEvent("user1") ) ;
 		}
-
+		
         [Bindable]
         private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
-        
+       
       ]]>
 	 </mx:Script>
     

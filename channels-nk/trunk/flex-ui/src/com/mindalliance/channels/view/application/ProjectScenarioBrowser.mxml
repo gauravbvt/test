@@ -117,7 +117,6 @@
  	        private function loadScenario() : void 
  	        {
  	        	CairngormHelper.fireEvent( new LoadScenarioEvent(psbModel.selectedScenario.id) );
- 	        	this.closeBrowser();
  	        }
  	         	        
  	        private function closeBrowser():void {
