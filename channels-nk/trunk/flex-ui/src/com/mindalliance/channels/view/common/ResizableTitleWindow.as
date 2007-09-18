@@ -16,10 +16,6 @@ package com.mindalliance.channels.view.common
 {
 	import adobe.utils.CustomActions;
 	
-	import com.mindalliance.channels.view.common.cursors.DiagonalResizeCursor;
-	import com.mindalliance.channels.view.common.cursors.HorizontalResizeCursor;
-	import com.mindalliance.channels.view.common.cursors.VerticalResizeCursor;
-	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
