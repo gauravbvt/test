@@ -1,5 +1,4 @@
-utilsURI = "ffcpl:/libs/utils.js";
-context.importLibrary(utilsURI);
+context.importLibrary("ffcpl:/libs/channels_data.js");
 
 // As part of the module initialization we ensure there 
 // is no existing concurrency state maintained from

@@ -77,6 +77,10 @@
 			<match>ffcpl:/resources/.*</match>
 			<match>ffcpl:/mutex/.*</match>
 		</this>
+		<ura>
+		  <match>transient:.*</match>
+		  <class>com.mindalliance.channels.data.accessors.Transient</class>
+		</ura>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>
 		</import>

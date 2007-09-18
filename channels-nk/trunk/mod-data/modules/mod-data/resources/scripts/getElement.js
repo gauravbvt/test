@@ -5,8 +5,7 @@
 // returns:
 //    an XML document
 
-utilsURI = "ffcpl:/libs/utils.js";
-context.importLibrary(utilsURI);
+context.importLibrary("ffcpl:/libs/channels_data.js");
 
 importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);

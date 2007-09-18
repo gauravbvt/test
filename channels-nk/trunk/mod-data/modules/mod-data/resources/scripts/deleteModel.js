@@ -1,8 +1,7 @@
 // Delete container return whether the container was deleted (a boolean)
 // Looks up ffcpl:/crud/dbxml_config.xml for container description
 
-utilsURI = "ffcpl:/libs/utils.js";
-context.importLibrary(utilsURI);
+context.importLibrary("ffcpl:/libs/channels_data.js");
 
 importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);

@@ -1,3 +1,16 @@
+/*
+This library implements the XML database plugin functions:
+
+function containerExists();
+function createContainer();
+function deleteContainer();
+function getContainerName();
+function getDocument(id);
+function putDocument(doc);
+function deleteDocument(id);
+function queryContainer(query);
+*/
+
 importPackage(Packages.java.lang);
 importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
