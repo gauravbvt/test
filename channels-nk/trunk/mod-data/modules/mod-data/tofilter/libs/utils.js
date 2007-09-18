@@ -10,10 +10,6 @@ DBXML_CONFIG_URI = "ffcpl:/etc/dbxml_config.xml";
 SCHEMA_URL = "@protocol@://@host@:@port@/channels/schema/"; 
 LOG_URL = "ffcpl:/etc/LogConfig.xml";
 
-MUTEX = 0;
-
-LOG_MUTEX = true;
-
 function contains(array, object) {
 	for each (el in array) {
 		if (el == object) return true;
@@ -99,10 +95,10 @@ function getDocument(id) {
 	req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()) );
 	var res = context.issueSubRequest(req);
 	// Attach golden thread to element
-	attachGoldenThread(res, "gt:element:"+ id);
+	res=attachGoldenThread(res, "gt:element:"+ id);
 	// Return result as xml object
 	var doc = context.transrept(res, IAspectXmlObject);
-  log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
+  	log("Got document " + context.transrept(doc,IAspectString).getString(), "info");
 	return new XML(doc.getXmlObject());
 }
 
@@ -119,13 +115,15 @@ function putDocument(doc) {
 
 function updateDocument(doc) {
 	var id = doc.id[0].text(); // document *must* have id
-  log("Updating element with id " + id, "info");
-  // Delete older version (must exist else exception)
-  deleteDocument(id);
-  // Then replace with new version
+  	log("Updating element with id " + id, "info");
+  	// Delete older version (must exist else exception)
+  	deleteDocument(id);
+  	// Then replace with new version
 	putDocument(doc);
-  // Cut goldenthread for entire model
-	cutGoldenThread( "gt:channels");
+	// Cut the GoldenThread associated with this resource
+	cutGoldenThread("gt:element:"+ id);
+	// Cut the GoldenThread associated with all existing queries
+	cutGoldenThread("gt:channels");
 }
 
 // Run query and return the results as IURepresentation
@@ -140,6 +138,7 @@ function runQuery(query) {
 	var req=context.createSubRequest("active:dbxmlQuery");
 	req.addArgument("operator", new StringAspect(op));
 	var result=context.issueSubRequest(req);
+	result=attachGoldenThread(result, "gt:channels");
 	log("Got results to query:\n" + context.transrept(result, IAspectString).getString(), "info");
 	return result;
 }
@@ -241,6 +240,10 @@ function deleteElement(id) {
 	ids[0] = deleted;
 	ids[1] = updated;
 	return ids;
+	// Cut the GoldenThread associated with this resource
+	cutGoldenThread("gt:element:"+ id);
+	// Cut the GoldenThread associated with all existing queries
+	cutGoldenThread("gt:channels");
 }
 
 // Returns the list of ids of elements deleted
@@ -264,6 +267,10 @@ function deleteDocument(id) {
   req.addArgument("operator", new XmlObjectAspect(op.getXmlObject()));
   context.issueSubRequest(req);
   log("Deleted document " + id + " from container " + dbxml_getContainerName(), "info");
+  // Cut the GoldenThread associated with this resource
+  cutGoldenThread("gt:element:"+ id);
+  // Cut the GoldenThread associated with all existing queries
+  cutGoldenThread("gt:channels");
   return deleted;
 }
 
@@ -293,8 +300,11 @@ function createElement(xml) {
 		log("Document of kind " + kind + " is invalid:\n" + doc, "severe");
 		throw (e);
 	}
-	// Store new document (exception if conflict on id)
-	putDocument(doc);
+	// Store new document (exception if conflict on id)	
+	putDocument(doc);	
+  	// Cut the GoldenThread associated with all existing queries
+	cutGoldenThread("gt:channels");
+
 	log("Created document " + doc + " in container " + dbxml_getContainerName(), "info");
 	return doc;
 }
@@ -303,8 +313,9 @@ function attachGoldenThread(resource, uri) {
 	var req=context.createSubRequest("active:attachGoldenThread");
 	req.addArgument("operand", resource);
 	req.addArgument("param", uri);
-	context.issueSubRequest(req);
+	var result=context.issueSubRequest(req);
 	log("Attached GT " + uri, "info");
+	return result;
 }
 
 function cutGoldenThread(uri) {
@@ -314,55 +325,47 @@ function cutGoldenThread(uri) {
 	log("Cut GT " + uri, "info");
 }
 
-function grabLock(uri, who) {
-	if (LOG_MUTEX) log(who + ": Grab " + uri, "info");
+function grabLock(uri) {
+	log("Grab lock " + uri, "info");
 	var req=context.createSubRequest("active:lock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);	
-	if (LOG_MUTEX) log(who + ": Grabbed " + uri, "info");
 }
 
-function grabReleaseLock(uri, who) {
-	if (LOG_MUTEX) log(who + ": Grab & Release " + uri, "info");
-	grabLock(uri, who);
-	releaseLock(uri, who);
+function grabReleaseLock(uri) {
+	log("Grab & Release lock " + uri, "info");
+	grabLock(uri);
+	releaseLock(uri);
 }
 
-function releaseLock(uri, who) {
-	if (LOG_MUTEX) log(who + ": Release " + uri, "info");
+function releaseLock(uri) {
+	log("Release lock " + uri, "info");
 	var req=context.createSubRequest("active:unlock");
 	req.addArgument("operand",uri);
 	context.issueSubRequest(req);
-	if (LOG_MUTEX) log(who + ": Released " + uri, "info");
-}
-
-function incrementMutex(uri, who) {
-	var count = 1 + getMutexCount(uri);
-	setMutexCount(uri, count);
-	if (LOG_MUTEX) log(who + ": Incremented mutex " + uri + " to " + count, "info");
-}
-
-function decrementMutex(uri, who) {
-	var count = Math.max((getMutexCount(uri) - 1), 0);
-	setMutexCount(uri, count);
-	if (LOG_MUTEX) log(who + ": Decremented mutex " + uri + " to " + count, "info");
 }
 
 function initializeMutex(uri) {
-	MUTEX = 0;
-	// context.delete(uri);
+	var mutex = <mutex>0</mutex>;
+	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	log("Initialized mutex " + uri + " to 0", "info");	
 }
 
-function setMutexCount(uri, count) {
-	/*
+function incrementMutex(uri) {
+	var count = 1 + getMutexCount(uri);
 	var mutex = <mutex>{count}</mutex>;
-	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));	
-	*/
-	MUTEX = count;
+	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	log("Incremented mutex " + uri + " to " + count, "info");
+}
+
+function decrementMutex(uri) {
+	var count = Math.max((getMutexCount(uri) - 1), 0);
+	var mutex = <mutex>{count}</mutex>;
+	context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
+	log("Decremented mutex " + uri + " to " + count, "info");
 }
 
 function getMutexCount(uri) {
-	/*
 	var count;
 	if (context.exists(uri)) {
 		var mutex = new XML(context.sourceAspect(uri, IAspectXmlObject).getXmlObject());
@@ -373,16 +376,13 @@ function getMutexCount(uri) {
 		}
 	}
 	else {
-		if (LOG_MUTEX) log("Creating mutex " + uri + " at 0", "info");
+		log("Creating mutex " + uri + " at 0", "info");
 		count = 0;
 		var mutex = <mutex>{count}</mutex>;
 		context.sinkAspect(uri, new XmlObjectAspect(mutex.getXmlObject()));
 	}
-	if (LOG_MUTEX) log("Mutex count for " + uri + " = " + count, "info");
+	log("Mutex count for " + uri + " = " + count, "info");
 	return 1 * count;  // force conversion to number
-	*/
-	if (LOG_MUTEX) log("Mutex count = " + MUTEX, "info");
-	return MUTEX;
 }
 
 function sleep(msecs) {
@@ -400,64 +400,64 @@ function sleep(msecs) {
 
 // Wait for write lock to be released if grabbed.
 // Grab read lock then increment read mutex by one, release read lock.
-function beginRead(who) {
-	if (LOG_MUTEX) log(who + ": Begin read", "info");
+function beginRead() {
+	log("Begin read", "info");
 	try {
-		grabReleaseLock("lock:write", who); // Can only go through when write lock not already grabbed 
-		grabLock("lock:read", who);
-		incrementMutex("ffcpl:/mutex/read", who);
+		grabReleaseLock("lock:write"); // Can only go through when write lock not already grabbed 
+		grabLock("lock:read");
+		incrementMutex("ffcpl:/mutex/read");
 	}
 	finally {
-		releaseLock("lock:read", who);
+		releaseLock("lock:read");
 	}
 }
 
 // Grab read lock, decrement read mutex by one, release read lock
-function endRead(who) {
-	if (LOG_MUTEX) log(who + ": End read", "info");
+function endRead() {
+	log("End read", "info");
 	try {
-		grabLock("lock:read", who);
-		decrementMutex("ffcpl:/mutex/read", who);
+		grabLock("lock:read");
+		decrementMutex("ffcpl:/mutex/read");
 	}
 	finally {
-		releaseLock("lock:read", who);
+		releaseLock("lock:read");
 	}
 }
 // Grab write lock to block new read or writes.
 // Grab read lock. If read mutex > 0 then release read lock. Try again (after short sleep).
 // When read mutex = 0, grab read lock.
 // Release write lock, keeping read lock.
-function beginWrite(who) {
-	if (LOG_MUTEX) log(who + ": Begin write", "info");
+function beginWrite() {
+	log("Begin write", "info");
 	try {
-		grabLock("lock:write", who);
+		grabLock("lock:write");
 		var done = false;
 		do {
 			var count;
 			try {
-				grabLock("lock:read", who);
-				count = getMutexCount("ffcpl:/mutex/read", who);
+				grabLock("lock:read");
+				count = getMutexCount("ffcpl:/mutex/read");
 			}
 			catch (e) {
-				releaseLock("lock:read", who);
+				releaseLock("lock:read");
 				throw e;
 			}
 			if (count == 0) {
 					done = true;
 			}
 			else {
-				releaseLock("lock:read", who);
+				releaseLock("lock:read");
 				sleep(100);
 			}
 		} while (!done);
 	}
 	finally {
-		releaseLock("lock:write", who);
+		releaseLock("lock:write");
 	}
 }
 
 // Release read lock.
-function endWrite(who) {
-	if (LOG_MUTEX) log(who + ": End write", "info");
-	releaseLock("lock:read", who);
+function endWrite() {
+	log("End write", "info");
+	releaseLock("lock:read");
 }

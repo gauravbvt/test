@@ -6,7 +6,7 @@
 	-->
     <identity>
 		<uri>urn:com:mindalliance:channels:data</uri>
-		<version>0.0.3</version>
+		<version>0.0.5</version>
     </identity>
 	<info>
 		<name>Mind-Alliance Channels Data Module</name>

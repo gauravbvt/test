@@ -23,7 +23,6 @@ function declareVariables(query, properties) {
   }
   return prologuedQuery;
 }
-log(">> START QUERY", "info");
 
 // Get arguments
 var query = context.sourceAspect("this:param:xquery", IAspectString).getString();
@@ -38,15 +37,15 @@ if (properties != null) query = declareVariables(query, properties); // Add vari
 query = filter(query); // Substitute place holders
 var result;
 try {
-	beginRead("QUERY");
+	beginRead();
 	result = runQuery(query);
 }
 finally {
-	endRead("QUERY");
+	endRead();
 }
-log("<< END QUERY", "info");
 
 //Return Response
 var resp=context.createResponseFrom(result);
+resp.setCacheable();
 resp.setMimeType("text/xml");
 context.setResponse(resp);

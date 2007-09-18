@@ -13,24 +13,20 @@ importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.java.lang);
 
-log(">> START CREATE", "info");
 var doc;
 try {
-	beginWrite("CREATE");
+	beginWrite();
 	// var kind = new XML(context.sourceAspect("this:param:kind",IAspectXmlObject).getXmlObject()).text();
 	var arg = new XML(context.sourceAspect("this:param:doc", IAspectXmlObject).getXmlObject());
 	doc = createElement(arg);
-	// Cut the GoldenThread associated with all existing queries
-	cutGoldenThread("gt:channels");
 }
 catch(e) {
 	log("Creating element failed: " + e, "severe");
 	throw e;
 }
 finally {
-	endWrite("CREATE");
+	endWrite();
 }
-log("<< END CREATE", "info");
 	
 
 //Return Response
