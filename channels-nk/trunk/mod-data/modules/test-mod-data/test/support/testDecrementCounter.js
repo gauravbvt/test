@@ -24,9 +24,13 @@ context.issueSubRequest(req);
 
 req = context.createSubRequest("counter:test");
 req.addArgument("operand", new StringAspect("decrement"));
+context.issueSubRequest(req);
+
+req = context.createSubRequest("counter:test");
+req.addArgument("operand", new StringAspect("decrement"));
 var res = context.issueSubRequest(req);
 var count = parseInt(context.transrept(res, IAspectString).getString());
 
 // Respond
-var resp = context.createResponseFrom(new BooleanAspect(count == 2));
+var resp = context.createResponseFrom(new BooleanAspect(count == 1));
 context.setResponse(resp);

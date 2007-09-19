@@ -29,4 +29,10 @@
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
+  <test> 
+    <uri>active:javascript+operator@ffcpl:/test/support/testResetAllCounter.js</uri>
+    <assert name="Reset all counters">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
 </testlist>

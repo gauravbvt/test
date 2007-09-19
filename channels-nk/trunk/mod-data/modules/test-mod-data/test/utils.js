@@ -20,7 +20,15 @@ function reloadModel() {
 	// Open model from db:testDB.xml
 	req = context.createSubRequest("active:channels_data_openModel");
 	context.issueSubRequest(req);
-	context.sinkAspect("transient:readCount" , new StringAspect("0"));	
+	resetAllCounters();
+}
+
+function resetAllCounters() {
+	log("Resetting all counters", "info");
+	var req = context.createSubRequest("counter:all"); // name of counter does not matter
+	req.addArgument("operand", new StringAspect("resetAll"));
+	context.issueSubRequest(req);
+	log("All counters reset", "info");
 }
 
 function issueValidateRNGRequest(schemaURI, docURI) {

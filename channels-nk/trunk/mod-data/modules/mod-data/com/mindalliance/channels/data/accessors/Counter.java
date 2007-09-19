@@ -52,9 +52,17 @@ public class Counter extends NKFAccessorImpl {
         else if (arg.equals( "reset" )) {
             value = resetCounter(path);
         }
+        else if (arg.equals( "resetAll" )) {
+            value = resetAll(); // ignore path 
+        }
         else throw(new Exception("Invalid operand value " + arg));
         INKFResponse resp = context.createResponseFrom( new StringAspect(value.toString()) );
         context.setResponse(resp);
+    }
+
+    private Long resetAll() {
+        Counts = new HashMap<String,Long>();
+        return new Long(0);
     }
 
     private Long decrementCounter( String path ) {

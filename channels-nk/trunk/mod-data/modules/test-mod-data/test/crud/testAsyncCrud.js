@@ -52,6 +52,7 @@ req = context.createSubRequest("active:channels_data_queryModel");
 req.addArgument("xquery", "ffcpl:/com/mindalliance/channels/data/queries/allOrganizations.xq");
 requests[4] = req;
 
+
 var requestHandles = [];
 for (i in requests) {
 	requestHandles[i] = context.issueAsyncSubRequest(requests[i]);
@@ -67,6 +68,13 @@ catch (e)	{
 	log("All requests did not complete: " + e, "severe");
 	success = false;
 }
+
+/*
+for (i in requests) {
+	context.issueSubRequest(requests[i]);
+}
+success = true;
+*/
 
 // Respond
 var resp = context.createResponseFrom(new BooleanAspect(success));
