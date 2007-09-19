@@ -18,7 +18,9 @@ package com.mindalliance.channels.commands.scenario
         {
             var evt:CreateAgentEvent = event as CreateAgentEvent;
             var delegate:AgentDelegate = new AgentDelegate( this );
-            delegate.create(evt.name, evt.taskId, evt.roleId);
+            if (evt.taskId != null && evt.roleId != null) {
+                delegate.create(evt.name, evt.taskId, evt.roleId);
+            }
         }
         
         override public function result(data:Object):void
