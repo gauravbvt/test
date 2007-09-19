@@ -1,7 +1,7 @@
 // SEMAPHORES
 LOG_MUTEX = true;
 
-MUTEX_READ_COUNT_URI = "transient:readCount";
+READ_COUNT = "mutex/reads";
 
 function grabLock(uri, who) {
 	if (LOG_MUTEX)log(who + ": Grab " + uri, "info");
@@ -25,38 +25,34 @@ function releaseLock(uri, who) {
 	if (LOG_MUTEX) log(who + ": Released " + uri, "info");
 }
 
-function incrementMutex(uri, who) {
-	if (LOG_MUTEX) log(who + ": Incrementing mutex " + uri, "info");
-	var count = 1 + getMutexCount(uri, who);
-	setMutexCount(uri, count, who);
-	if (LOG_MUTEX) log(who + ": Incremented mutex " + uri + " to " + count, "info");
+function counting(counter, op, who) {
+	if (LOG_MUTEX) log(who + ": " + op + " " + counter, "info");
+	var req = context.createSubRequest("counter:" + counter);
+	req.addArgument("operand", new StringAspect(op));
+	var res = context.issueSubRequest(req);
+	var val = parseInt(context.transrept(res, IAspectString).getString());
+	if (LOG_MUTEX) log(who + ": " + op + " " + counter + " => " + val, "info");	
+	return val;
 }
 
-function decrementMutex(uri, who) {
-	if (LOG_MUTEX) log(who + ": Decrementing mutex " + uri, "info");
-	var count = Math.max((getMutexCount(uri, who) - 1), 0);
-	setMutexCount(uri, count, who);
-	if (LOG_MUTEX) log(who + ": Decremented mutex " + uri + " to " + count, "info");
+function incrementMutex(counter, who) {
+	return counting(counter, "increment", who);
 }
 
-function initializeMutex(uri) {
-	setMutexCount(uri,0, "SYSTEM");
+function decrementMutex(counter, who) {
+	return counting(counter, "decrement", who);
+}
+
+function initializeMutex(counter) {
+	return counting(counter,"reset", "SYSTEM");
 }
 
 function initializeReadCountMutex() {
-	setMutexCount(MUTEX_READ_COUNT_URI,0, "SYSTEM");	
+	initializeMutex(READ_COUNT);	
 }
 
-function setMutexCount(uri, count, who) {
-	if (LOG_MUTEX) log(who + ": setting mutex " + uri + " to " + count, "info");
-	context.sinkAspect(uri, new StringAspect(""+count));
-}
-
-function getMutexCount(uri, who) {
-	if (LOG_MUTEX) log(who + ": getting mutex " + uri, "info");
-	var count = context.sourceAspect(uri, IAspectString).getString();
-	if (LOG_MUTEX) log(who + ": got mutex " + uri + " = " + count, "info");
-	return parseInt(count);
+function getMutexCount(counter, who) {
+	return counting(counter, "get", who);
 }
 
 function sleep(msecs) {
@@ -79,7 +75,7 @@ function beginRead(who) {
 	try {
 		grabReleaseLock("lock:write", who); // Can only go through when write lock not already grabbed 
 		grabLock("lock:read", who);
-		incrementMutex(MUTEX_READ_COUNT_URI, who);
+		incrementMutex(READ_COUNT, who);
 	}
 	finally {
 		releaseLock("lock:read", who);
@@ -91,7 +87,7 @@ function endRead(who) {
 	if (LOG_MUTEX) log(who + ": End read", "info");
 	try {
 		grabLock("lock:read", who);
-		decrementMutex(MUTEX_READ_COUNT_URI, who);
+		decrementMutex(READ_COUNT, who);
 	}
 	finally {
 		releaseLock("lock:read", who);
@@ -110,7 +106,7 @@ function beginWrite(who) {
 			var count;
 			try {
 				grabLock("lock:read", who);
-				count = getMutexCount(MUTEX_READ_COUNT_URI, who);
+				count = getMutexCount(READ_COUNT, who);
 			}
 			catch (e) {
 				releaseLock("lock:read", who);

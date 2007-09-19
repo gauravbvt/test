@@ -6,8 +6,14 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
 importPackage(Packages.java.lang);
 
-context.sinkAspect("transient:readCount", new StringAspect("0"));
-var count = parseInt(context.sourceAspect("transient:readCount", IAspectString).getString());
+var req = context.createSubRequest("counter:test");
+req.addArgument("operand", new StringAspect("reset"));
+context.issueSubRequest(req);
+
+req = context.createSubRequest("counter:test");
+req.addArgument("operand", new StringAspect("get"));
+var res = context.issueSubRequest(req);
+var count = parseInt(context.transrept(res, IAspectString).getString());
 
 // Respond
 var resp = context.createResponseFrom(new BooleanAspect(count == 0));

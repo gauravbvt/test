@@ -26,6 +26,7 @@
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/CRONConfig.xml</match>
 			<match>transient:.*</match>
+			<match>counter:.*</match>
 		</uri>
 	</export>
    <rewrite> <!-- non-accessor resources -->
@@ -78,6 +79,10 @@
 			<match>ffcpl:/resources/.*</match>
 			<match>ffcpl:/mutex/.*</match>
 		</this>
+		<ura>
+		  <match>counter:.*</match>
+		  <class>com.mindalliance.channels.data.accessors.Counter</class>
+		</ura>
 		<ura>
 		  <match>transient:.*</match>
 		  <class>com.mindalliance.channels.data.accessors.Transient</class>

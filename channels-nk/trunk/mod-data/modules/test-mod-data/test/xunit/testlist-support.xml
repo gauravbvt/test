@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="mod-data CRUD tests">
+	<desc>
+		<div>
+		<b>mod-data</b> support unit tests.
+		</div>
+	</desc>
+  <test> 
+    <uri>active:javascript+operator@ffcpl:/test/support/testResetCounter.js</uri>
+    <assert name="Reset counter">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
+  <test> 
+    <uri>active:javascript+operator@ffcpl:/test/support/testGetCounter.js</uri>
+    <assert name="Reset counter">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
+  <test> 
+    <uri>active:javascript+operator@ffcpl:/test/support/testIncrementCounter.js</uri>
+    <assert name="Reset counter">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
+  <test> 
+    <uri>active:javascript+operator@ffcpl:/test/support/testDecrementCounter.js</uri>
+    <assert name="Reset counter">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
+</testlist>
