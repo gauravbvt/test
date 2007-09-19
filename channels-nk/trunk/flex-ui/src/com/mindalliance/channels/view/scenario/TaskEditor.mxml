@@ -7,6 +7,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
 			import com.mindalliance.channels.view.people.RoleChooser;
 			import com.mindalliance.channels.view.common.Chooser;
 			import com.mindalliance.channels.events.scenario.CreateAgentEvent;
@@ -199,8 +200,12 @@
 			</mx:AddChild>
 			<mx:SetProperty target="{formitemCause}" name="mouseEnabled" value="true"/>
 			<mx:SetProperty target="{formitemCause}" name="mouseChildren" value="true"/>
-			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseEnabled" value="true"/>
+			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{formItemPolicy}" name="mouseEnabled" value="true"/>
+			<mx:SetProperty target="{formItemPolicy}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{txtPolicyURL}" name="editable" value="true"/>
+			<mx:SetProperty target="{txtPolicyDescription}" name="editable" value="true"/>
 			<mx:SetProperty target="{formitemName}" name="required" value="true"/>
 			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
 			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
@@ -210,6 +215,7 @@
 					<common:RemoveButton enabled="{listAcquirements.selectedItems.length > 0}"/>
 				</mx:HBox>
 			</mx:AddChild>
+			<mx:SetProperty target="{txtPolicyURL}" name="styleName"/>
 		</mx:State>
 	</mx:states>
 	
@@ -239,6 +245,13 @@
 		<common:LODFormItem label="Agents" direction="vertical" id="formitemAgents" levelOfDetail="1" currentLevelOfDetail="{sliderLOD.value}">
 			<mx:Text text="The following roles execute this task:" styleName="FormItemDescription" id="text1"/>
 			<mx:List id="listAgents" dataProvider="{agentList}" labelField="name"/>
+		</common:LODFormItem>
+		<common:LODFormItem id="formItemPolicy" label="Policy requirement" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}" resizeEffect="Resize">
+			<mx:CheckBox label="This task is obligated by a policy." id="cbObligated"/>
+			<mx:VBox id="vBoxPolicy" visible="{cbObligated.selected}" includeInLayout="{cbObligated.selected}" width="100%">
+				<mx:TextInput width="100%" id="txtPolicyURL" editable="false" styleName="URLField" useHandCursor="{(currentState == '') &amp;&amp; (txtPolicyURL.text.length > 0)}" click="if (currentState == '') navigateToURL(new URLRequest(txtPolicyURL.text))"/>
+				<mx:TextArea width="100%" id="txtPolicyDescription" editable="false"/>
+			</mx:VBox>
 		</common:LODFormItem>
 	    <common:LODFormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}">
 	        <mx:VBox id="vBoxCause">

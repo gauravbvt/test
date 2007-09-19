@@ -52,10 +52,8 @@ package com.mindalliance.channels.view.flowmap
 		} 
 		
 		protected function agentChangeHandler(event:Event):void {
-			trace(event.type) ;
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
-				trace(colEvent.kind) ;
 				switch (colEvent.kind) {
 					case CollectionEventKind.ADD:
 						colEvent.items.forEach(

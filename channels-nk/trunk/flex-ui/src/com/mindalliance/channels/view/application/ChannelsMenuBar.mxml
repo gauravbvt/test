@@ -8,6 +8,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.scenario.SharingNeedEditor;
 			import com.mindalliance.channels.view.flowmap.FlowMapView;
 			import com.mindalliance.channels.view.UtilFuncs;
 			import com.mindalliance.channels.events.people.CreateOrganizationEvent;
@@ -103,6 +104,14 @@
 				case "Browse/Edit Repositories":
 					popupChooserAsBrowser(menuLabel, RepositoryChooser) ;
 				break ;
+				case "Sharing Need Editor":
+					var tw:ResizableTitleWindow = PopUpManager.createPopUp(this, ResizableTitleWindow) as ResizableTitleWindow ;
+					tw.maxHeight = 600 ;
+					tw.showCloseButton = true ;
+					tw.addEventListener(CloseEvent.CLOSE, function anon(event:CloseEvent):void {PopUpManager.removePopUp(tw);}) ;
+					tw.addChild(new SharingNeedEditor()) ;
+					performPostPopupCreation(tw) ;
+				break ;
             }
         }
         
@@ -153,7 +162,9 @@
 			<menuitem label="Add Repository"/>
 			<menuitem label="Browse/Edit Repositories"/>
 			<menuitem type="separator"/>
-			<menuitem label="*TEMP* Set Role"/>
+			<menuitem label="Temporary items below" enabled="false"/>
+			<menuitem label="Sharing Need Editor"/>
+			<menuitem label="Set Role"/>
 		</menuitem>
     </mx:XMLList>
 

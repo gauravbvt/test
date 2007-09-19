@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+	<mx:states>
+		<mx:State name="EditState">
+			<mx:AddChild relativeTo="{formItemWhat}" position="lastChild">
+				<mx:HBox>
+					<common:AddButton click="addInformation()"/>
+					<common:RemoveButton enabled="{listWhat.selectedItems.length > 0}"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty target="{formItemWho}" name="mouseChildren"/>
+			<mx:SetProperty target="{formItemWho}" name="mouseEnabled"/>
+			<mx:SetProperty target="{formItemAbout}" name="mouseChildren"/>
+			<mx:SetProperty target="{formItemAbout}" name="mouseEnabled"/>
+		</mx:State>
+	</mx:states>
+
+	<mx:ArrayCollection id="whoType">
+		<mx:Object label="Role"/>
+		<mx:Object label="Agent"/>
+		<mx:Object label="Repository"/>
+	</mx:ArrayCollection>
+	
+	<mx:ArrayCollection id="aboutType">
+		<mx:Object label="Task"/>
+		<mx:Object label="Event"/>
+		<mx:Object label="Artifact"/>
+		<mx:Object label="Acquirement"/>
+	</mx:ArrayCollection>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.mindalliance.channels.view.UtilFuncs;
+			import mx.collections.ArrayCollection;
+			
+			private function addInformation():void {
+				UtilFuncs.GetUserTextInput(this, 
+					function anon(info:String):void {
+						// Do stuff here
+					}, "Enter One Line Description of Information", true) ;
+			}
+			
+		]]>
+	</mx:Script>
+
+
+	<mx:FormItem id="formItemWho" label="Who" mouseChildren="false" mouseEnabled="false">
+		<mx:ComboBox id="comboWhoType" dataProvider="{whoType}" labelField="label"/>
+		<mx:HBox>
+			<mx:Label text="{'Choose '+whoType.getItemAt(comboWhoType.selectedIndex).label+':'}"/>
+			<mx:ViewStack id="vsWho" selectedIndex="{comboWhoType.selectedIndex}">
+				<mx:Box>
+					<mx:ComboBox id="comboWhoRole"/>
+				</mx:Box>
+				<mx:Box>
+					<mx:ComboBox id="comboWhoAgent"/>
+				</mx:Box>
+				<mx:Box>
+					<mx:ComboBox id="comboWhoRepository"/>
+				</mx:Box>
+			</mx:ViewStack>
+		</mx:HBox>
+	</mx:FormItem>
+	<mx:FormItem id="formItemAbout" label="About" mouseChildren="false" mouseEnabled="false">
+		<mx:ComboBox id="comboAboutType" dataProvider="{aboutType}" labelField="label"/>
+		<mx:HBox>
+			<mx:Label text="{'Choose '+aboutType.getItemAt(comboAboutType.selectedIndex).label+':'}"/>
+			<mx:ViewStack id="vsAbout" selectedIndex="{comboAboutType.selectedIndex}">
+				<mx:Box>
+					<mx:ComboBox id="comboAboutTask"/>
+				</mx:Box>
+				<mx:Box>
+					<mx:ComboBox id="comboAboutEvent"/>
+				</mx:Box>
+				<mx:Box>
+					<mx:ComboBox id="comboAboutArtifact"/>
+				</mx:Box>
+				<mx:Box>
+					<mx:ComboBox id="comboAboutAcquirement"/>
+				</mx:Box>
+			</mx:ViewStack>
+		</mx:HBox>		
+	</mx:FormItem>
+	<mx:FormItem id="formItemWhat" label="What">
+		<mx:List id="listWhat"/>
+	</mx:FormItem>
+</mx:Form>

@@ -57,7 +57,6 @@ package com.mindalliance.channels.model
 		}
 		
 		public function getElementModel(id : String) : ElementModel {
-			trace('getElementModel:'+id);
 			if (id == null) 
                 return null;
 			if (elements[id] == null) {
@@ -67,7 +66,6 @@ package com.mindalliance.channels.model
 			
 		}
 	    public function getElementListModel(key : String) : ElementListModel {
-	    	trace('getElementListModel: '+key); 
             if (key == null) 
                 return null;
             if (elementLists[key] == null) {

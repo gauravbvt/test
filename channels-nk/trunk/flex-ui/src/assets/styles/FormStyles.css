@@ -8,3 +8,8 @@
 	fontWeight: bold ;
 	fontSize: 12 ;
 	}
+
+.URLField {
+	color: blue ;
+	textDecoration: underline ;
+}
