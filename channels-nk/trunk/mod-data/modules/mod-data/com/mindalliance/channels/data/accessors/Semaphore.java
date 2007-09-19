@@ -24,7 +24,7 @@ public class Semaphore extends NKFAccessorImpl {
     static Map<String,Integer> signals = new HashMap<String,Integer>();
 
     public Semaphore( ) {
-        super( SAFE_FOR_CONCURRENT_USE, INKFRequestReadOnly.RQT_SOURCE );
+        super( SAFE_FOR_CONCURRENT_USE, INKFRequestReadOnly.RQT_SOURCE ); // Must allow concurrent requests
     }
 
     @Override
@@ -60,12 +60,12 @@ public class Semaphore extends NKFAccessorImpl {
         signals = new HashMap<String,Integer>();
     }
 
-    // Polling wait (can't mess with pausing and resuming threads)
+    // Polling wait (not allowed to mess with pausing and resuming threads)
     private void waitOn(String path, INKFConvenienceHelper context) throws NKFException {
         int sleeps = 0;
         while (getCount(path)<= 0) {
             if (sleeps++ > MAX_SLEEPS) {
-                throw new NKFException("Exceeding maximum wait");
+                throw new NKFException("Exceeded maximum wait");
             }
             sleep(context); // Assumes that other requests will be able to execute this thread unsafe accessor while this one sleeps.
         }

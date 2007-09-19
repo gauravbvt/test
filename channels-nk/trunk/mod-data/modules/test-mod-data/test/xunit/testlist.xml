@@ -8,7 +8,7 @@
   <group title="Support tests">
     <uri>ffcpl:/test/xunit/testlist-support.xml</uri>
   </group>
-  <group title="Schema validation tests">
+   <group title="Schema validation tests">
     <uri>ffcpl:/test/xunit/testlist-schemas.xml</uri>
   </group>
   <group title="Data access tests">

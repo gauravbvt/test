@@ -12,20 +12,12 @@
  
 LOG_MUTEX = true;
 
-READ_COUNT = "mutex/reads";
-
 function grabLock(lock, who) {
 	if (LOG_MUTEX)log(who + ": Grab " + lock, "info");
 	var req=context.createSubRequest("active:lock");
 	req.addArgument("operand","lock:" + lock);
 	context.issueSubRequest(req);	
 	if (LOG_MUTEX) log(who + ": Grabbed " + lock, "info");
-}
-
-function grabReleaseLock(lock, who) {
-	if (LOG_MUTEX) log(who + ": Grab & Release " + lock, "info");
-	grabLock(lock, who);
-	releaseLock(lock, who);
 }
 
 function releaseLock(lock, who) {
@@ -70,39 +62,24 @@ function resetAllCounters() {
 	if (LOG_MUTEX) log("All counters reset", "info");
 }
 
-function sleep(msecs) {
-	log("Sleeping for " + msecs, "info");
-	var req = context.createSubRequest("active:sleep");
-	var time = <time>
-								{msecs}
-							</time>;
-	req.addArgument("operator", new XmlObjectAspect(time.getXmlObject()));
-	context.issueSubRequest(req);
-}
-
 function signal(sem, who) {
 	if (LOG_MUTEX) log(who + ": signaling " + sem, "info");
-	incrementCounter(sem, who);
+	var req = context.createSubRequest("sem:" + sem);
+	req.addArgument("operand", new StringAspect("signal"));
+	context.issueSubRequest(req);
 	if (LOG_MUTEX) log(who + ": signaled " + sem, "info");
 }
 
 function waitOn(sem, who) {
 	if (LOG_MUTEX) log(who + ": waiting on " + sem, "info");
-	var cycles = 0;
-	while (getCounter(sem, who) <= 0 ) {
-		sleep(100);
-		cycles++;
-		if (cycles > 200) {
-			log(who + ": timing out wait on " + sem, "severe");
-			throw "Semaphore timeout";
-		}
-	}
-	decrementCounter(sem, who);
+	var req = context.createSubRequest("sem:" + sem);
+	req.addArgument("operand", new StringAspect("wait"));
+	context.issueSubRequest(req);
 	if (LOG_MUTEX) log(who + ": done waiting on " + sem, "info");
 }
 
 
-// Locking
+// Multiple reads, exclusive write
 
 function beginRead(who) {
 	if (LOG_MUTEX) log(who + ": Begin read", "info");

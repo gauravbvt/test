@@ -35,4 +35,10 @@
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
+  <test> 
+    <uri>active:javascript+operator@ffcpl:/test/support/testSemaphore.js</uri>
+    <assert name="Test semaphores">
+      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    </assert>
+  </test>
 </testlist>

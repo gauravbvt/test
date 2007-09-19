@@ -27,6 +27,7 @@
 			<match>ffcpl:/etc/CRONConfig.xml</match>
 			<match>transient:.*</match>
 			<match>counter:.*</match>
+			<match>sem:.*</match>
 		</uri>
 	</export>
    <rewrite> <!-- non-accessor resources -->
@@ -79,6 +80,10 @@
 			<match>ffcpl:/resources/.*</match>
 			<match>ffcpl:/mutex/.*</match>
 		</this>
+		<ura>
+		  <match>sem:.*</match>
+		  <class>com.mindalliance.channels.data.accessors.Semaphore</class>
+		</ura>
 		<ura>
 		  <match>counter:.*</match>
 		  <class>com.mindalliance.channels.data.accessors.Counter</class>

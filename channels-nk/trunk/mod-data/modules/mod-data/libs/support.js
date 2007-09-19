@@ -79,3 +79,13 @@ function cutGoldenThread(uri) {
 	context.issueSubRequest(req);
 	log("Cut GT " + uri, "info");
 }
+
+function sleep(msecs) {
+	log("Sleeping for " + msecs, "info");
+	var req = context.createSubRequest("active:sleep");
+	var time = <time>
+								{msecs}
+							</time>;
+	req.addArgument("operator", new XmlObjectAspect(time.getXmlObject()));
+	context.issueSubRequest(req);
+}
