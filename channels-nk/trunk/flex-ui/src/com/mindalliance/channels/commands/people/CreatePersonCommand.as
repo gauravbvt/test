@@ -25,8 +25,8 @@ package com.mindalliance.channels.commands.people
 			var result:PersonVO = data["data"] as PersonVO;
             if (result!=null) {
                 log.info("Person created");
-                //channelsModel.getElementListModel('people').data.addItem(new ElementVO(result.id, result.name));
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetPersonListEvent() );
+                channelsModel.getElementListModel('people').data.addItem(result);
+                //CairngormEventDispatcher.getInstance().dispatchEvent( new GetPersonListEvent() );
             }
 		}
 	}

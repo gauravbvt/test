@@ -26,7 +26,9 @@ package com.mindalliance.channels.commands.scenario
             var result:AgentVO = data["data"] as AgentVO;
             if (result!=null) {
                 log.info("Agent created");
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) )
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListByScenarioEvent(channelsModel.currentScenario.id) );
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) );
+                
                 //CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
             }
         }

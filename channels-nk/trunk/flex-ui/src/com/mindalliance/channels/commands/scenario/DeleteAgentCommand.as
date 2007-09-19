@@ -25,6 +25,7 @@ package com.mindalliance.channels.commands.scenario
         {
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListByScenarioEvent(channelsModel.currentScenario.id) );
                 CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) );
                 log.info("Agent successfully deleted");
             } else {
