@@ -4,11 +4,11 @@
 package com.mindalliance.channels.commands.people
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.people.PersonDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.people.*;
 	import com.mindalliance.channels.vo.PersonVO;
-	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	public class CreatePersonCommand extends BaseDelegateCommand
 	{
@@ -25,8 +25,8 @@ package com.mindalliance.channels.commands.people
 			var result:PersonVO = data["data"] as PersonVO;
             if (result!=null) {
                 log.info("Person created");
-                channelsModel.getElementListModel('people').data.addItem(new ElementVO(result.id, result.name));
-                //CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
+                //channelsModel.getElementListModel('people').data.addItem(new ElementVO(result.id, result.name));
+                CairngormEventDispatcher.getInstance().dispatchEvent( new GetPersonListEvent() );
             }
 		}
 	}

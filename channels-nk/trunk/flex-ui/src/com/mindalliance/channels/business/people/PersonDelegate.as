@@ -93,6 +93,8 @@ package com.mindalliance.channels.business.people
            createElement(<person schema="/channels/schema/person.rng">
              <firstName>{firstName}</firstName>
              <lastName>{lastName}</lastName>
+             <email></email>
+             <roles/>
            </person>, param);
         }
         
