@@ -13,8 +13,10 @@
 		 order by $a/name
 		 return
 		 	<agent>
-		 		<id>{$a/id/text()}</id>
-		 		<name>{$a/name/text()}</name>
+	 			<id>{$a/id/text()}</id>
+	 			<name>{$a/name/text()}</name>
+	        	<taskId>{$a/taskId/text()}</taskId>
+	        	<roleId>{$a/roleId/text()}</roleId>
 		 	</agent>
 	}
 </list>
