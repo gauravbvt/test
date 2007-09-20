@@ -7,6 +7,7 @@ package com.mindalliance.channels.commands.scenario
 	import com.mindalliance.channels.business.scenario.TaskDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.scenario.*;
+	import com.mindalliance.channels.util.CairngormHelper;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -24,6 +25,7 @@ package com.mindalliance.channels.commands.scenario
         override public function result(data:Object):void
         {
             channelsModel.getElementListModel("tasks").data = (data["data"] as ArrayCollection);
+            CairngormHelper.fireEvent(new GetAgentListByScenarioEvent(data["scenarioId"]));
             log.debug("Successfully retrieved task list");
         }
         

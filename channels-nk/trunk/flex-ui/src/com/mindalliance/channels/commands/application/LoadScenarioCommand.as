@@ -24,7 +24,6 @@ package com.mindalliance.channels.commands.application
             CairngormHelper.fireEvent(new GetEventListEvent(evt.id));
             CairngormHelper.fireEvent(new GetArtifactListEvent(evt.id));
             CairngormHelper.fireEvent(new GetAcquirementListEvent(evt.id));
-            CairngormHelper.fireEvent(new GetAgentListByScenarioEvent(evt.id));
 			log.debug("Loaded scenario {0}", [evt.id]);
 		}
 	}

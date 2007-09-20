@@ -1,6 +1,8 @@
 package com.mindalliance.channels.business.scenario
 {
 	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.model.ChannelsModelLocator;
+	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.vo.AgentVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
@@ -29,7 +31,11 @@ package com.mindalliance.channels.business.scenario
 		}
 		
 		override public function fromXML(obj : XML) : ElementVO {
-			return new AgentVO(obj.id,obj.name,obj.description,new ElementVO(obj.taskId, null), new ElementVO(obj.roleId, null));
+			return new AgentVO(obj.id,
+			                     obj.name,
+			                     obj.description,
+			                     ElementHelper.findElementById(obj.taskId, ChannelsModelLocator.getInstance().getElementListModel("tasks").data), 
+			                     ElementHelper.findElementById(obj.roleId, ChannelsModelLocator.getInstance().getElementListModel("roles").data));
 		}
 		
 		override public function toXML(element : ElementVO) : XML {
