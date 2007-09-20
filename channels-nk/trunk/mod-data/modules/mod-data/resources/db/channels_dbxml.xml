@@ -1,0 +1,9 @@
+<db>
+  
+  <user isAdmin="true">
+    <id>user1</id>
+    <userName>admin</userName>
+    <password>secret</password>
+  </user>
+  
+</db>
