@@ -32,16 +32,19 @@ package com.mindalliance.channels.business
             	
             }
 			if (requestType == 'delete') {
-				if ((result as XML).deleted.id.length>0) {
+				var xml : XML = (result as XML);
+				if (xml.deleted.length() > 0) {
 					value["data"] = true; 
 				} else {
 					delegate.responder.fault("Delete failed");
+					return;
 				}
 			} if (requestType == 'update') {
 			   if (result == true) {
                     value["data"]=true;
                 } else {
                     delegate.responder.fault("Update failed");
+                    return;
                 }
 			}else {	
 				var xml : XML = (result as XML);

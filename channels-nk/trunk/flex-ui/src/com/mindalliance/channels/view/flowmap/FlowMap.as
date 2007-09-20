@@ -490,7 +490,7 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		private static function _removeNode(nodeID:String):void {
-			var nd:RepositoryNodeData = RepositoryNodeData(_mapperHelper.nodeDataMapper.lookupValue(nodeID)) ;
+			var nd:NodeData = NodeData(_mapperHelper.nodeDataMapper.lookupValue(nodeID)) ;
 			_unmapAllLabels(nd.node) ;
 			_unmapAllPorts(nd.node) ;
 			_mapperHelper.nodeDataMapper.unMapValue(nodeID) ;

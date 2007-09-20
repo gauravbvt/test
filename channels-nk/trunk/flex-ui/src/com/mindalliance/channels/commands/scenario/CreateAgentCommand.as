@@ -8,6 +8,7 @@ package com.mindalliance.channels.commands.scenario
 	import com.mindalliance.channels.business.scenario.AgentDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.scenario.*;
+	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.vo.AgentVO;
 	
 	public class CreateAgentCommand extends BaseDelegateCommand
@@ -28,6 +29,7 @@ package com.mindalliance.channels.commands.scenario
             var result:AgentVO = data["data"] as AgentVO;
             if (result!=null) {
                 log.info("Agent created");
+                
                 CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListByScenarioEvent(channelsModel.currentScenario.id) );
                 CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) );
                 

@@ -30,7 +30,7 @@ package com.mindalliance.channels.business.scenario
          */
 		override public function fromXML(xml : XML):ElementVO {
 			var cause : CauseVO;
-			if (xml.cause.length > 0) {
+			if (xml.cause.length() > 0) {
                 cause = XMLHelper.xmlToCause(xml);	
 			}
 			return new TaskVO(xml.id, 

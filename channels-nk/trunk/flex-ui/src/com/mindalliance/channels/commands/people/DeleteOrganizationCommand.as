@@ -4,10 +4,12 @@
 package com.mindalliance.channels.commands.people
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.people.OrganizationDelegate;
-	import com.mindalliance.channels.events.people.*;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.people.*;
+	import com.mindalliance.channels.util.ElementHelper;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class DeleteOrganizationCommand extends BaseDelegateCommand
 	{
@@ -27,8 +29,12 @@ package com.mindalliance.channels.commands.people
 		{
 			var result:Boolean = data["data"] as Boolean;
 			if (result == true) {
- 	        	CairngormEventDispatcher.getInstance().dispatchEvent( new GetOrganizationListEvent() );
- 	        	log.info("Organization successfully deleted");
+ 	        	var col : ArrayCollection = channelsModel.getElementListModel("organizations").data;
+                if (col != null) {
+                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    col.removeItemAt(inx);
+                }
+                log.info("Organization successfully deleted");
 			} else {
 				log.warn("Organization Deletion failed");	
 			}

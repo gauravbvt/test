@@ -34,7 +34,7 @@ package com.mindalliance.channels.business.people
          */
 		override public function fromXML(xml:XML):ElementVO {
 			var user : ElementVO;
-			if (xml.userId.length > 0) {
+			if (xml.userId.length() > 0) {
                 user = new ElementVO(xml.userId, null);	
 			}
 			return new PersonVO(xml.id, 

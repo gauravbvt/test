@@ -8,6 +8,9 @@ package com.mindalliance.channels.commands.scenario
 	import com.mindalliance.channels.business.scenario.AgentDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.scenario.*;
+	import com.mindalliance.channels.util.ElementHelper;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class DeleteAgentCommand extends BaseDelegateCommand
 	{
@@ -25,7 +28,16 @@ package com.mindalliance.channels.commands.scenario
         {
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListByScenarioEvent(channelsModel.currentScenario.id) );
+                var col : ArrayCollection = channelsModel.getElementListModel("agents").data;
+                if (col != null) {
+                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    col.removeItemAt(inx);
+                }
+                col  = channelsModel.getElementListModel("agents" + data["taskId"]).data;
+                if (col != null) {
+                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    col.removeItemAt(inx);
+                }
                 CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) );
                 log.info("Agent successfully deleted");
             } else {

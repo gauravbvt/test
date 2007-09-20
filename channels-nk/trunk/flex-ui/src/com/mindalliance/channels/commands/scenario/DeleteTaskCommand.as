@@ -6,8 +6,11 @@ package com.mindalliance.channels.commands.scenario
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.scenario.TaskDelegate;
-	import com.mindalliance.channels.events.scenario.*;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.scenario.*;
+	import com.mindalliance.channels.util.ElementHelper;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class DeleteTaskCommand extends BaseDelegateCommand
 	{
@@ -23,7 +26,12 @@ package com.mindalliance.channels.commands.scenario
 		{
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetTaskListEvent(channelsModel.currentScenario.id) );
+            	var col : ArrayCollection = channelsModel.getElementListModel("tasks").data;
+            	if (col != null) {
+            		var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+            		col.removeItemAt(inx);
+            	}
+                //CairngormEventDispatcher.getInstance().dispatchEvent( new GetTaskListEvent(channelsModel.currentScenario.id) );
                 log.info("Task successfully deleted");
             } else {
                 log.warn("Task Deletion failed");   

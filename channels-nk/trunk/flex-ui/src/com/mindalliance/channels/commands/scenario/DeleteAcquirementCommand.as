@@ -4,10 +4,12 @@
 package com.mindalliance.channels.commands.scenario
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.scenario.AcquirementDelegate;
-	import com.mindalliance.channels.events.scenario.*;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.scenario.*;
+	import com.mindalliance.channels.util.ElementHelper;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class DeleteAcquirementCommand extends BaseDelegateCommand
 	{
@@ -23,7 +25,11 @@ package com.mindalliance.channels.commands.scenario
 		{
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetAcquirementListEvent(channelsModel.currentScenario.id) );
+                var col : ArrayCollection = channelsModel.getElementListModel("acquirements").data;
+                if (col != null) {
+                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    col.removeItemAt(inx);
+                }
                 log.info("Acquirement successfully deleted");
             } else {
                 log.warn("Acquirement Deletion failed");   

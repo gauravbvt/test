@@ -4,10 +4,12 @@
 package com.mindalliance.channels.commands.people
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.people.PersonDelegate;
-	import com.mindalliance.channels.events.people.*;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.people.*;
+	import com.mindalliance.channels.util.ElementHelper;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class DeletePersonCommand extends BaseDelegateCommand
 	{
@@ -23,10 +25,14 @@ package com.mindalliance.channels.commands.people
 		{
 			var result:Boolean = data["data"] as Boolean;
             if (result == true) {
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetRoleListEvent() );
-                log.info("Role successfully deleted");
+                var col : ArrayCollection = channelsModel.getElementListModel("people").data;
+                if (col != null) {
+                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    col.removeItemAt(inx);
+                }
+                log.info("person successfully deleted");
             } else {
-                log.warn("Role Deletion failed");   
+                log.warn("person Deletion failed");   
             }
 		}
 	}
