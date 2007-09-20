@@ -1,6 +1,6 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
 <!--
-  # An assertion that someone or something knows (about) something
+  # An assertion that someone or something knows about something within the scenario
     element know {
       {isna_element} &
       {knowing}

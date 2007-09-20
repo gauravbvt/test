@@ -45,7 +45,8 @@ var tests =
 		["phasesInScenario", {scenarioId:"scenario1"}, 2, ["./list/phase/id", "./list/phase/event/id"]],
 		["categoriesInTaxonomy", {taxonomy:"event"}, 2, ["./list/category/id"]],
 		["disciplinesInTaxonomy", {taxonomy:"event"}, 2, ["./list/discipline/id"]],
-		["categoriesInTaxonomyAndDiscipline", {taxonomy:"event",disciplineId:"disc-transportation"}, 1, ["./list/category/id"]]
+		["categoriesInTaxonomyAndDiscipline", {taxonomy:"event",disciplineId:"disc-transportation"}, 1, ["./list/category/id"]],
+		["sharingNeedsInScenario", {scenarioId:"scenario1"}, 1, ["./list/sharingNeed/id"]]
 	]
 
 try {

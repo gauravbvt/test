@@ -1,13 +1,15 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
 <!--
-  # Knowing or needing to know (about) something
+  # Knowing or needing to know (about) something within the scenario
   knowing = {
     element who {
       {sourceOrSink}
     } &
     element about {
      {knowable}
-    }? &
+    } &
+    # if left out, then "who" knows all that can be expected to be known of "about"
+    # else what is known is the "what"  
     element what {
       {information}
     }?
@@ -18,11 +20,9 @@
       <element name="who">
         <ref name="sourceOrSink"/>
       </element>
-      <optional>
-        <element name="about">
-          <ref name="knowable"/>
-        </element>
-      </optional>
+      <element name="about">
+         <ref name="knowable"/>
+      </element>
       <optional>
         <element name="what">
           <ref name="information"/>
