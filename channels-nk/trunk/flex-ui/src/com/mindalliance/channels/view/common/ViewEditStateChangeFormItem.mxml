@@ -44,6 +44,6 @@
 		</mx:State>
 	</mx:states>
 	<mx:HBox id="hboxStateChange">
-		<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()" icon="@Embed('../../../../../assets/images/edit.png')"/>
+		<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()" icon="@Embed('../../../../../assets/images/edit.png')" fillColors="[#cdf0af, #cdf0af]" fontSize="12"/>
 	</mx:HBox>
 </mx:FormItem>

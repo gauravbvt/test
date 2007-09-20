@@ -1,28 +1,30 @@
 package com.mindalliance.channels.view.flowmap
 {
+	import com.adobe.cairngorm.model.ModelLocator;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.ElementListModel;
 	import com.mindalliance.channels.model.ElementListNames;
+	import com.mindalliance.channels.model.ElementModel;
+	import com.mindalliance.channels.vo.AgentVO;
 	import com.mindalliance.channels.vo.EventVO;
 	import com.mindalliance.channels.vo.OrganizationVO;
 	import com.mindalliance.channels.vo.RepositoryVO;
 	import com.mindalliance.channels.vo.RoleVO;
+	import com.mindalliance.channels.vo.TaskVO;
+	import com.mindalliance.channels.vo.common.CauseVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import flash.events.Event;
 	
 	import mx.binding.utils.ChangeWatcher;
+	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
 	import mx.events.PropertyChangeEventKind;
-	import com.mindalliance.channels.vo.TaskVO;
 	import mx.validators.ValidationResult;
-	import com.mindalliance.channels.vo.AgentVO;
-	import mx.controls.Alert;
-	import mx.collections.ArrayCollection;
-	import com.mindalliance.channels.vo.common.CauseVO;
-	import com.mindalliance.channels.model.ElementModel;
+	import com.mindalliance.channels.vo.common.OccurrenceVO;
 	
 	public class FlowMapCairngormInterfacer
 	{
@@ -97,7 +99,6 @@ package com.mindalliance.channels.view.flowmap
 							}) ;
 					break ;
 					case CollectionEventKind.UPDATE:
-						trace('nothing') ;
 /* 						Can this ever happen? */
 					break ;
 				}
@@ -235,6 +236,16 @@ package com.mindalliance.channels.view.flowmap
 				}
 			}
 		}
+		
+		private function refreshCausation(elemVO:ElementVO):void {
+			var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+			var occVO:OccurrenceVO = modelLocator.getElementModel(elemVO.id).data as OccurrenceVO ;
+			if (!occVO)
+				return ;
+			if (!occVO.cause)
+				return ;
+			FlowMap.addCausation(occVO.cause.id, occVO.id) ;
+		}
 				
 		protected function taskChangeHandler(event:Event):void {
 			if (event is CollectionEvent) {
@@ -245,14 +256,16 @@ package com.mindalliance.channels.view.flowmap
 						var taskAC:ArrayCollection = modelLocator.getElementListModel(ElementListNames.TASK_LIST_KEY).data ;
 						for each (var task:ElementVO in taskAC) {
 							FlowMap.addTask(FlowMap.defaultPhaseID, task.id, task.name) ;
+							refreshCausation(task) ;
 						}
 					break ;
 					case CollectionEventKind.ADD:
 						colEvent.items.forEach(
 							function procItem(item:*, i:int, a:Array):void {
 								extractElementVO(item,
-									function anon(taskVO:ElementVO):void {
-										FlowMap.addTask(FlowMap.defaultPhaseID, taskVO.id, taskVO.name) ;
+									function anon(elemVO:ElementVO):void {
+										FlowMap.addTask(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
+										refreshCausation(elemVO) ;
 									}) ;
 							}) ;
 					break ;
@@ -271,8 +284,9 @@ package com.mindalliance.channels.view.flowmap
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										FlowMap.renameTask(elemVO.id, newValue as String) ;
+										refreshCausation(elemVO) ;
 									}) ;
-							}) ;
+						}) ;
 					break ;
 				}
 			}

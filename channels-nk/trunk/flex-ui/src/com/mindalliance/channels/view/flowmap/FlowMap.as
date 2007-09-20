@@ -49,9 +49,10 @@ package com.mindalliance.channels.view.flowmap
     import mx.states.SetStyle;
     import com.yworks.graph.model.DefaultLabel;
     import com.yworks.graph.model.DefaultPort;
+    import flash.events.EventDispatcher;
 
 	[Bindable]
-    public class FlowMap
+    public class FlowMap extends EventDispatcher
     {
     	
     	public static const EVENT_ITEM_SELECT:String = "itemSelect" ;
