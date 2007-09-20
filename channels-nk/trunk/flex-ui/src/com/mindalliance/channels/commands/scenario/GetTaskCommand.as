@@ -20,7 +20,9 @@ package com.mindalliance.channels.commands.scenario
 		{
 			super.result(data);
 			if (data != null) {
-				CairngormHelper.fireEvent(new GetAgentListEvent(data["id"]));
+                CairngormHelper.fireEvent(new GetAgentListEvent(data["id"]));
+                CairngormHelper.fireEvent(new GetArtifactListByTaskEvent(data["id"]));
+                CairngormHelper.fireEvent(new GetAcquirementListByTaskEvent(data["id"]));
 			}
 		}
 	}

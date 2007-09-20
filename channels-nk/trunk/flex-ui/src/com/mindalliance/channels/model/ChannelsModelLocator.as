@@ -65,6 +65,13 @@ package com.mindalliance.channels.model
 			return elements[id];
 			
 		}
+		
+		public function deleteElementModel(id : String) : void {
+            var model : ElementModel =  getElementModel(id);
+            model.data = null;
+            elements[id] = null;	
+		}
+		
 	    public function getElementListModel(key : String) : ElementListModel {
             if (key == null) 
                 return null;

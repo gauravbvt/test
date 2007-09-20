@@ -24,7 +24,7 @@ package com.mindalliance.channels.business.application
         {
             fail(info as String);
         }
-        public function create() {
+        public function create() : void {
           var delegate : ProjectDelegate = new ProjectDelegate(this .addResponder(this,5000));
           delegate.createProject("Test Project");
         }

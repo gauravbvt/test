@@ -7,6 +7,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.events.scenario.DeleteArtifactEvent;
+			import com.mindalliance.channels.events.scenario.DeleteAcquirementEvent;
 			import flash.net.navigateToURL;
 			import com.mindalliance.channels.view.people.RoleChooser;
 			import com.mindalliance.channels.view.common.Chooser;
@@ -52,17 +54,26 @@
             [Bindable]
             private var eventList : ArrayCollection;
            
-            [Bindable]
-            private var artifactList : ArrayCollection;
             
             [Bindable]
             private var agentListModel : ElementListModel;
+            
+            [Bindable]
+            private var acquirementListModel : ElementListModel;
+            
+            [Bindable]
+            private var artifactListModel : ElementListModel;
             
             [Bindable]
             private var agentList : ArrayCollection;
             
             [Bindable]
             private var edited : TaskVO;
+            
+            private var removeArtifactList : ArrayCollection  = new ArrayCollection();
+            private var removeAcquirementList : ArrayCollection  = new ArrayCollection();
+            private var addArtifactList : ArrayCollection = new ArrayCollection();
+            private var addAcquirementList : ArrayCollection = new ArrayCollection();
             
             private function switchToEditState():void {
                 currentState = 'EditState' ;
@@ -76,7 +87,15 @@
             private function cancelEdit():void {
                 // Revert
                 CairngormHelper.fireEvent( new GetTaskEvent(model.id,model));
+                resetLists();
                 currentState = '' ;
+            }
+            
+            private function resetLists() : void {
+            	removeArtifactList.removeAll();
+            	removeAcquirementList.removeAll();
+            	addArtifactList.removeAll();
+            	addAcquirementList.removeAll();
             }
             
             private function update() :void {
@@ -107,7 +126,12 @@
                                                                 (elementModel.data as TaskVO).where,
                                                                 cause,
                                                                 duration,
-                                                                (elementModel.data as TaskVO).scenario));   
+                                                                (elementModel.data as TaskVO).scenario));  
+                addArtifacts();
+                addAcquirements();			                                                             
+                deleteAcquirements();
+                deleteArtifacts(); 
+                resetLists();
 
             }
             
@@ -127,19 +151,62 @@
             }
 			private function chooseArtifacts():void {
 				var popup:ArtifactChooser = ArtifactChooser(PopUpManager.createPopUp(listArtifacts, ArtifactChooser));
-				
-//				(popup as ArtifactChooser).filtered=edited.artifacts;
-//				(popup as ArtifactChooser).processSelected=addArtifacts;
+
 				PopUpManager.centerPopUp(popup) ;
+				popup.filter = function(item : Object) : Boolean {
+                    var current : ElementVO = (item as ElementVO);
+                    for each (var el : ElementVO in artifactList) {
+                        if (el.id == current.id)
+                           return false;
+                    }   
+                    return true;
+                }
+                popup.filtered = artifactList;
+                popup.processSelected=function(selected : ArrayCollection) : void {
+                    for each(var el : ElementVO in selected) {
+                        addArtifactList.addItem(el);
+                        artifactList.addItem(el);
+                    }
+                    if (selected.length > 0) queueUpdate();
+                }       
+                var p:Point = new Point(listArtifacts.x, listArtifacts.y) ;
+                p = listArtifacts.localToGlobal(p) ;
+                popup.x = p.x + listArtifacts.width + 5 ;
+                popup.y = p.y ;    
 			}
 			
 			private function chooseAcquirements():void {
 				// we don't take kindly to empty functions around here
 			}
 			
-			private function deleteAgent() : void {
+            private function deleteAgent() : void {
                 CairngormHelper.fireEvent(new DeleteAgentEvent((listAgents.selectedItem).id,edited.id));
-			}
+            }           
+            
+            private function addAcquirements() : void {
+                for each (var el : ElementVO in addAcquirementList) {	
+                	
+                }
+            }
+            
+            private function addArtifacts() : void {
+            	for each (var el: ElementVO in addArtifactList) {
+            		
+            	}
+            }
+            
+            
+            private function deleteAcquirements() : void {
+                for each (var el : ElementVO in removeAcquirementList) {
+                    CairngormHelper.fireEvent(new DeleteAcquirementEvent(el.id,edited.id));
+                }
+            }           
+            
+            private function deleteArtifacts() : void {
+            	for each (var el : ElementVO in removeArtifactList) {
+                    CairngormHelper.fireEvent(new DeleteArtifactEvent(el.id,edited.id));
+                }
+            }
 			
 			
 			private function chooseAgents() : void {
@@ -164,6 +231,19 @@
                 rc.y = p.y ;	
 			}
 			
+			private function removeAcquirement() : void {
+                
+                removeAcquirementList.addItem(listAcquirements.selectedItem);
+                
+                acquirementList.removeItemAt( acquirementList.getItemIndex(listAcquirements.selectedItem) ); 
+			}
+			
+			private function removeArtifact() : void {
+				removeArtifactList.addItem(listArtifacts.selectedItem);
+				
+			    artifactList.removeItemAt( artifactList.getItemIndex(listArtifacts.selectedItem) );	
+			}
+			
 			private function getRoleNameFromAgent(item:Object):String {
 				return (item as AgentVO).role.name ;
 			}
@@ -177,7 +257,15 @@
     <mx:Binding source="model.getElementListModel('events').data" destination="eventList"/>
     <mx:Binding source="model.getElementListModel('agents' + edited.id)" destination="agentListModel"/>
     <mx:Binding source="agentListModel.data" destination="agentList"/>
+    <mx:Binding source="model.getElementListModel('artifacts' + edited.id)" destination="artifactListModel"/>
+    <!--<mx:Binding source="artifactListModel.data" destination="artifactList"/>-->
+    <mx:Binding source="model.getElementListModel('acquirements' + edited.id)" destination="acquirementListModel"/>
+    <!--<mx:Binding source="acquirementListModel.data" destination="acquirementList"/>-->
     <mx:Binding source="edited.categories" destination="categoryViewer.model.categories"/>
+    
+    <mx:ArrayCollection source="{artifactListModel.data.source.concat()}" id="artifactList"/>
+    <mx:ArrayCollection source="{acquirementListModel.data.source.concat()}" id="acquirementList"/>
+    
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:AddChild relativeTo="{txtName}" position="before">
@@ -193,7 +281,7 @@
 			<mx:AddChild relativeTo="{formitemArtifacts}" position="lastChild">
 				<mx:HBox id="hBoxEditArtifacts">
 					<common:AddButton click="chooseArtifacts()"/>
-					<common:RemoveButton enabled="{listArtifacts.selectedItems.length > 0}"/>
+					<common:RemoveButton enabled="{listArtifacts.selectedItems.length > 0}" click="removeArtifact()"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{listArtifacts}" position="before">
@@ -217,7 +305,7 @@
 			<mx:AddChild relativeTo="{formitemAcquirements}" position="lastChild">
 				<mx:HBox id="hBoxEditAcquirements">
 					<common:AddButton click="chooseAcquirements()"/>
-					<common:RemoveButton enabled="{listAcquirements.selectedItems.length > 0}"/>
+					<common:RemoveButton enabled="{listAcquirements.selectedItems.length > 0}" click="removeAcquirement()"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{txtPolicyURL}" name="styleName"/>
@@ -294,11 +382,11 @@
                 <common:TimeScalesComboBox id="comboDurationUnit" selectedValue="{edited.duration.unit}" change="queueUpdate()"/>
 			</mx:HBox>
 		</common:LODFormItem>
-		<common:LODFormItem label="Artifacts produced" direction="vertical" id="formitemArtifacts" levelOfDetail="4" currentLevelOfDetail="{sliderLOD.value}">
-			<mx:List id="listArtifacts" />
+		<common:LODFormItem label="Artifacts produced" direction="vertical" id="formitemArtifacts"  levelOfDetail="4" currentLevelOfDetail="{sliderLOD.value}">
+			<mx:List id="listArtifacts" dataProvider="{artifactList}" labelField="name"/>
 		</common:LODFormItem>
-		<common:LODFormItem label="Information acquired" direction="vertical" id="formitemAcquirements" levelOfDetail="4" currentLevelOfDetail="{sliderLOD.value}">
-			<mx:List id="listAcquirements" />
+		<common:LODFormItem label="Information acquired" direction="vertical" id="formitemAcquirements"  levelOfDetail="4" currentLevelOfDetail="{sliderLOD.value}">
+			<mx:List id="listAcquirements" dataProvider="{acquirementList}" labelField="name" />
 		</common:LODFormItem>
 		<common:LODFormItem label="Categories" id="formitemCategories" width="100%" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}">
             <categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>

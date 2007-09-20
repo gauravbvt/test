@@ -24,7 +24,7 @@ package com.mindalliance.channels.business.resources
         {
             fail(info as String);
         }
-        public function create() {
+        public function create() : void {
           var delegate : RepositoryDelegate = new RepositoryDelegate(this   .addResponder(this,5000));
           delegate.create("Repository", "organization1");
         }

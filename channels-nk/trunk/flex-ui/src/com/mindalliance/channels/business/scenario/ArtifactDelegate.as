@@ -17,10 +17,15 @@ package com.mindalliance.channels.business.scenario
 			super(responder);
 			typeName="artifact";
 		}
-		public function getArtifactList(scenarioId : String) : void {
+        public function getArtifactList(scenarioId : String) : void {
             var request:Array = new Array();
             request["scenarioId"] = scenarioId;
             performQuery("artifactsInScenario", request);
+        }       
+        public function getArtifactListByTask(taskId : String) : void {
+            var request:Array = new Array();
+            request["taskId"] = taskId;
+            performQuery("taskArtifacts", request);
         }
         
 		override public function fromXML(obj:XML):ElementVO {

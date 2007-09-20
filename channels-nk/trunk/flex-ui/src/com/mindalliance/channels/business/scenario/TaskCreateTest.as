@@ -24,7 +24,7 @@ package com.mindalliance.channels.business.scenario
         {
             fail(info as String);
         }
-		public function create() {
+		public function create() : void {
 		  var delegate : TaskDelegate = new TaskDelegate(this	.addResponder(this,5000));
 		  delegate.create("tst", "scenario1");
 		}

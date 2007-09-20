@@ -29,13 +29,14 @@ package com.mindalliance.channels.commands.scenario
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
                 var col : ArrayCollection = channelsModel.getElementListModel("agents").data;
+                var inx : int;
                 if (col != null) {
-                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
-                    col.removeItemAt(inx);
+                    inx = ElementHelper.findElementIndexById(data["id"], col);
+                    if (inx >= 0) col.removeItemAt(inx);
                 }
                 col  = channelsModel.getElementListModel("agents" + data["taskId"]).data;
                 if (col != null) {
-                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    inx = ElementHelper.findElementIndexById(data["id"], col);
                     col.removeItemAt(inx);
                 }
                 CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) );

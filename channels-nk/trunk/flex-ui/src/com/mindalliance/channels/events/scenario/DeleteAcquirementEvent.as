@@ -9,10 +9,12 @@ package com.mindalliance.channels.events.scenario
 	{
 		public static const DeleteAcquirement_Event:String = "<DeleteAcquirementEvent>";
 		public var id : String;
-		public function DeleteAcquirementEvent(id : String) 
+		public var taskId : String;
+		public function DeleteAcquirementEvent(id : String, taskId : String) 
 		{
 			super( DeleteAcquirement_Event );
 			this.id = id;
+			this.taskId = taskId;
 		}
 	}
 }

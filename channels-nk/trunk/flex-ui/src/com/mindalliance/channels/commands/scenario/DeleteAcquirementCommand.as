@@ -26,9 +26,16 @@ package com.mindalliance.channels.commands.scenario
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
                 var col : ArrayCollection = channelsModel.getElementListModel("acquirements").data;
+                var inx : int;
                 if (col != null) {
-                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    inx = ElementHelper.findElementIndexById(data["id"], col);
                     col.removeItemAt(inx);
+                }
+                col = channelsModel.getElementListModel("acquirements" + data["taskId"]).data
+                
+                if (col != null) {
+                    inx = ElementHelper.findElementIndexById(data["id"], col);
+                    if (inx >= 0) col.removeItemAt(inx);
                 }
                 log.info("Acquirement successfully deleted");
             } else {

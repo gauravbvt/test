@@ -25,6 +25,7 @@ package com.mindalliance.channels.business
 		public function result(data:Object):void {
 			var result:Object = (data as ResultEvent).result;	
             var value : Object = new Object();
+            var xml : XML;
             if (params != null) {
             	for (var key : String in params) { 
             	   value[key] = params[key];	
@@ -32,7 +33,7 @@ package com.mindalliance.channels.business
             	
             }
 			if (requestType == 'delete') {
-				var xml : XML = (result as XML);
+				xml  = (result as XML);
 				if (xml.deleted.length() > 0) {
 					value["data"] = true; 
 				} else {
@@ -47,7 +48,7 @@ package com.mindalliance.channels.business
                     return;
                 }
 			}else {	
-				var xml : XML = (result as XML);
+				xml = (result as XML);
 				if (xml.localName() == "error") {
 					delegate.responder.fault(xml.error.toXMLString());
 					return;

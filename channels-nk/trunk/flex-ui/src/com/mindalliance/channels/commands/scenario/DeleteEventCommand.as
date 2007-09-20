@@ -28,7 +28,7 @@ package com.mindalliance.channels.commands.scenario
                 var col : ArrayCollection = channelsModel.getElementListModel("events").data;
                 if (col != null) {
                     var inx: int = ElementHelper.findElementIndexById(data["id"], col);
-                    col.removeItemAt(inx);
+                    if (inx > 0) col.removeItemAt(inx);
                 }
                 log.info("Event successfully deleted");
             } else {

@@ -22,7 +22,11 @@ package com.mindalliance.channels.business.scenario
             request["scenarioId"] = scenarioId;
             performQuery("acquirementsInScenario", request);
         }
-        
+        public function getAcquirementListByTask(taskId : String) : void {
+            var request:Array = new Array();
+            request["taskId"] = taskId;
+            performQuery("taskAcquirements", request);
+        }       
 		override public function fromXML(obj:XML):ElementVO {
 
 			return new AcquirementVO(obj.id, obj.name, obj.description,
