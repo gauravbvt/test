@@ -30,7 +30,7 @@ package com.mindalliance.channels.commands.scenario
             	channelsModel.deleteElementModel(data["id"]);
             	if (col != null) {
             		var inx: int = ElementHelper.findElementIndexById(data["id"], col);
-            		if (inx > 0) col.removeItemAt(inx);
+            		if (inx >= 0) col.removeItemAt(inx);
             	}
                 //CairngormEventDispatcher.getInstance().dispatchEvent( new GetTaskListEvent(channelsModel.currentScenario.id) );
                 log.info("Task successfully deleted");

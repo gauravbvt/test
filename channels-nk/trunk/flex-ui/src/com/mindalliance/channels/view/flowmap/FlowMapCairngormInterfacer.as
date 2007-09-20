@@ -1,30 +1,21 @@
 package com.mindalliance.channels.view.flowmap
 {
-	import com.adobe.cairngorm.model.ModelLocator;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.ElementListModel;
 	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.model.ElementModel;
 	import com.mindalliance.channels.vo.AgentVO;
-	import com.mindalliance.channels.vo.EventVO;
-	import com.mindalliance.channels.vo.OrganizationVO;
 	import com.mindalliance.channels.vo.RepositoryVO;
-	import com.mindalliance.channels.vo.RoleVO;
-	import com.mindalliance.channels.vo.TaskVO;
-	import com.mindalliance.channels.vo.common.CauseVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
+	import com.mindalliance.channels.vo.common.OccurrenceVO;
 	
 	import flash.events.Event;
 	
-	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
 	import mx.events.PropertyChangeEventKind;
-	import mx.validators.ValidationResult;
-	import com.mindalliance.channels.vo.common.OccurrenceVO;
 	
 	public class FlowMapCairngormInterfacer
 	{
@@ -75,8 +66,7 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										var avo:AgentVO = elemVO as AgentVO ;
@@ -84,11 +74,10 @@ package com.mindalliance.channels.view.flowmap
 											return ;
 										FlowMap.setAgent(avo.task.id, avo.role.id, avo.role.name) ;
 									}) ; 
-							}) ;
+							}
 					break ;
 					case CollectionEventKind.REMOVE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										var avo:AgentVO = elemVO as AgentVO ;
@@ -96,7 +85,7 @@ package com.mindalliance.channels.view.flowmap
 											return ;
 										FlowMap.removeAgent(avo.task.id, avo.role.id) ;
 									}) ; 
-							}) ;
+							}
 					break ;
 					case CollectionEventKind.UPDATE:
 /* 						Can this ever happen? */
@@ -131,30 +120,23 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										addRepository(FlowMap.defaultPhaseID, elemVO) ;
 									}) ; 
-							}) ;
+							}
 					break ;
 					case CollectionEventKind.REMOVE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										FlowMap.removeRepository(elemVO.id) ;
 									}) ; 
-							}) ;
+							}
 					break;
 					case CollectionEventKind.UPDATE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
-/* 								var propChangeEvent:PropertyChangeEvent = item as PropertyChangeEvent ;
-								if (!propChangeEvent)
-									return ;
-								if (propChangeEvent */
+                            for each (var item : Object in colEvent.items) {
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										var orgVO:ElementVO = newValue as ElementVO ;
@@ -162,7 +144,7 @@ package com.mindalliance.channels.view.flowmap
 											return ;
 										FlowMap.setRepositoryOwner(elemVO.id, orgVO.id, orgVO.name) ;
 									}, 'organization') ;
-							}) ;
+							}
 					break ;
 				}
 			} 
@@ -173,13 +155,12 @@ package com.mindalliance.channels.view.flowmap
 				var colEvent:CollectionEvent = event as CollectionEvent ;
  				switch (colEvent.kind) {
 					case CollectionEventKind.REMOVE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 											FlowMap.removeRepositoryOwner(elemVO.id) ;
 									}) ;
-							}) ;
+							}
 					break ;
 					case CollectionEventKind.UPDATE:
 						colEvent.items.forEach(
@@ -206,32 +187,29 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										FlowMap.addEvent(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
 									}) ; 
-							}) ;
+							}
 					break ;
 					case CollectionEventKind.REMOVE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										FlowMap.removeEvent(elemVO.id) ;
 									}) ; 
-							}) ;						
+							}						
 					break ;
 					case CollectionEventKind.UPDATE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                            for each (var item : Object in colEvent.items) {
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										FlowMap.renameEvent(elemVO.id, newValue as String) ;
 									}) ;
 								
-							}) ;
+							}
 					break ;
 				}
 			}
@@ -260,33 +238,31 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
-								extractElementVO(item,
-									function anon(elemVO:ElementVO):void {
-										FlowMap.addTask(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
-										refreshCausation(elemVO) ;
-									}) ;
-							}) ;
+					     for each (var item : Object in colEvent.items) {
+					         extractElementVO(item,
+                                    function anon(elemVO:ElementVO):void {
+                                        FlowMap.addTask(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
+                                        refreshCausation(elemVO) ;
+                                    }) ;
+					     }
+
 					break ;
 					case CollectionEventKind.REMOVE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+						for each (var item : Object in colEvent.items) {
 								extractElementVO(item,
 									function anon(taskVO:ElementVO):void {
 										FlowMap.removeTask(taskVO.id) ;
 									}) ;
-							}) ;
+							}
 					break ;
 					case CollectionEventKind.UPDATE:
-						colEvent.items.forEach(
-							function procItem(item:*, i:int, a:Array):void {
+                        for each (var item : Object in colEvent.items) {
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										FlowMap.renameTask(elemVO.id, newValue as String) ;
 										refreshCausation(elemVO) ;
 									}) ;
-						}) ;
+						}
 					break ;
 				}
 			}
