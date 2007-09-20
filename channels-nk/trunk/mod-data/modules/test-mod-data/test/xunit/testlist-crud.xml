@@ -63,7 +63,7 @@
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
-<!--
+<!-- Can HANG because of presumed NK bug with lock/unlock
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testAsyncCrud.js</uri>
     <assert name="Async Crud">
