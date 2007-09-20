@@ -163,6 +163,11 @@
                 rc.x = p.x + listAgents.width + 5 ;
                 rc.y = p.y ;	
 			}
+			
+			private function getRoleNameFromAgent(item:Object):String {
+				return (item as AgentVO).role.name ;
+			}
+			
 		]]>
 	</mx:Script>
     <mx:Style source="../../../../../assets/styles/FormStyles.css"/>
@@ -181,7 +186,7 @@
 			<mx:SetProperty target="{txtDescription}" name="editable" value="true"/>
 			<mx:AddChild relativeTo="{formitemAgents}" position="lastChild">
 				<mx:HBox id="hBoxEditAgents">
-					<common:AddButton click="chooseAgents()" enabled="{agentList.length &lt;= 1}" toolTip="{agentList.length &gt; 1 ? 'Only one agent supported (yFiles temp limitation)' : ''}"/>
+					<common:AddButton click="chooseAgents()" enabled="{agentList.length &lt; 1}" toolTip="{agentList.length &gt; 1 ? 'Only one agent supported (yFiles temp limitation)' : ''}"/>
 					<common:RemoveButton enabled="{listAgents.selectedItems.length > 0}" click="deleteAgent()"/>
 				</mx:HBox>
 			</mx:AddChild>
@@ -232,7 +237,7 @@
 		<mx:HSlider width="100%" minimum="0" maximum="5" value="5" showDataTip="false" liveDragging="true" snapInterval="1" tickInterval="1" id="sliderLOD"/>
 		<mx:Label text="More"/>
 	</mx:HBox>
-	<mx:Form width="100%" height="100%">
+	<mx:Form width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 		<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
 			btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
 			width="100%"/>
@@ -244,7 +249,7 @@
 		</common:LODFormItem>
 		<common:LODFormItem label="Agents" direction="vertical" id="formitemAgents" levelOfDetail="1" currentLevelOfDetail="{sliderLOD.value}">
 			<mx:Text text="The following roles execute this task:" styleName="FormItemDescription" id="text1"/>
-			<mx:List id="listAgents" dataProvider="{agentList}" labelField="name"/>
+			<mx:List id="listAgents" dataProvider="{agentList}" labelFunction="{getRoleNameFromAgent}"/>
 		</common:LODFormItem>
 		<common:LODFormItem id="formItemPolicy" label="Policy requirement" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}" resizeEffect="Resize">
 			<mx:CheckBox label="This task is obligated by a policy." id="cbObligated"/>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Script>
+		<![CDATA[
+			import com.yworks.graph.model.IEdge;
+			import com.mindalliance.channels.events.resources.DeleteRepositoryEvent;
+			import com.mindalliance.channels.events.scenario.DeleteEventEvent;
+			import com.mindalliance.channels.events.scenario.DeleteTaskEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.yworks.graph.model.INode;
+			import com.yworks.support.Iterator;
+			import com.yworks.graph.model.SelectionEvent;
+			
+			private function init():void {
+				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, flowMapSelectionChanged) ;
+				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, flowMapSelectionChanged) ;
+			}
+			
+			private function flowMapSelectionChanged(event:SelectionEvent):void {
+				
+			}
+			
+			private function deleteSelectedElements():void {
+				var itemIter:Iterator = FlowMap.selectedItems.iterator() ;
+				var mapperHelper:GraphMapperHelper = GraphMapperHelper.getInstance() ;
+				while (itemIter.hasNext()) {
+					var item:Object = itemIter.next() ;
+					if (item is INode) {
+						var itemID:String = mapperHelper.idMapper.lookupValue(item) as String ;
+						if (!itemID)
+							continue ;
+						var nd:NodeData = mapperHelper.nodeDataMapper.lookupValue(itemID) as NodeData;
+						if (!nd)
+							continue ;
+						if (nd is TaskNodeData) {
+							CairngormHelper.fireEvent(new DeleteTaskEvent(nd.id)) ;
+							continue ;
+						}
+						else if (nd is EventNodeData) {
+							CairngormHelper.fireEvent(new DeleteEventEvent(nd.id)) ;
+							continue ;
+						}
+						else if (nd is RepositoryNodeData) {
+							CairngormHelper.fireEvent(new DeleteRepositoryEvent(nd.id)) ;
+							continue ;
+						}
+					}
+					else if (item is IEdge) {
+						// Finish this after doing sharing need edges
+					}
+				}
+			}
+			
+			private function renameSelectedElement():void {
+				
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:HBox>
+		<mx:Button label="Delete" enabled="{FlowMap.numSelected > 0}" click="deleteSelectedElements()"/>
+<!--		<mx:Button label="Rename" enabled="{FlowMap.numSelected == 1}" click="renameSelectedElement()"/> -->
+	</mx:HBox>
+</mx:Box>

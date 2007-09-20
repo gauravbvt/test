@@ -50,6 +50,7 @@ package com.mindalliance.channels.view.flowmap
     import com.yworks.graph.model.DefaultLabel;
     import com.yworks.graph.model.DefaultPort;
 
+	[Bindable]
     public class FlowMap
     {
     	
@@ -71,6 +72,14 @@ package com.mindalliance.channels.view.flowmap
     	
     	public static function get defaultPhaseID():String {
     		return _defaultPhase.phaseID ;
+    	}
+    	
+    	public static function setEnabled(value:Boolean):void {
+    		_graphCanvas.enabled = value ;
+    	}
+    	
+    	public static function getEnabled():Boolean {
+    		return _graphCanvas.enabled ;
     	}
     	
 		public static function initialize(graphCanvas:GraphCanvasComponent):void {
@@ -248,6 +257,12 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public static function addTask(phaseID:String, taskID:String, taskLabel:String):void {
+			// Rename task if already present
+			var tnd:TaskNodeData = _mapperHelper.nodeDataMapper.lookupValue(taskID) as TaskNodeData ;
+			if (tnd) {
+				FlowMap.renameTask(taskID, taskLabel) ;
+				return ;
+			} 
 			// Find out where the node should be placed
 			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
 			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
@@ -260,7 +275,7 @@ package com.mindalliance.channels.view.flowmap
 			node.registerLookup(IPortCandidateProvider, _portCandidateProvider) ;
 			
 			// Setup node data mappings
-			var tnd:TaskNodeData = new TaskNodeData(node, taskID, phaseID) ;
+			tnd = new TaskNodeData(node, taskID, phaseID) ;
 			_mapperHelper.nodeDataMapper.mapValue(taskID, tnd) ;
 			_mapperHelper.idMapper.mapValue(node, taskID) ;
 			
@@ -286,6 +301,12 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public static function addRepository(phaseID:String, reposID:String, reposLabel:String):void {
+			// Rename if already present
+			var rnd:RepositoryNodeData = _mapperHelper.nodeDataMapper.lookupValue(reposID) as RepositoryNodeData ;
+			if (rnd) {
+				renameRepository(reposID, reposLabel) ;
+			}
+			
 			// Find a place to add the event node
 			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
 			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
@@ -295,7 +316,7 @@ package com.mindalliance.channels.view.flowmap
 			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
 			
 			//Setup mappings
-			var rnd:RepositoryNodeData = new RepositoryNodeData(node, reposID) ;
+			rnd = new RepositoryNodeData(node, reposID) ;
 			_mapperHelper.nodeDataMapper.mapValue(reposID, rnd) ;
 			_mapperHelper.idMapper.mapValue(node, reposID) ;
 			
@@ -315,40 +336,42 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public static function addEvent(phaseID:String, eventID:String, eventLabel:String):void {
-			trace('flowmap:addevent') ;
+			// First check if event is already there
+			var end:EventNodeData = _mapperHelper.nodeDataMapper.lookupValue(eventID) as EventNodeData ;
+			if (end) {
+				FlowMap.renameEvent(eventID, eventLabel) ;
+				return ;
+			}
+			
 			// Find a place to add the event node
 			var nodePoint:IPoint = FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas) ;
 			var node:DefaultNode = DefaultNode(_graph.createNodeAt(nodePoint.x, nodePoint.y)) ;
-			_mapperHelper.idMapper.mapValue(node, eventID) ;			
+			_mapperHelper.idMapper.mapValue(node, eventID) ;
 			
-			trace('setting up styles') ;
 			// Setup styles
 			_graph.setNodeStyle(node, FlowMapStyles.eventNodeStyle) ;
 			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
 			
-			trace('setting up mappings') ;
 			//Setup mappings
-			var end:EventNodeData = new EventNodeData(node, eventID) ;
+			end = new EventNodeData(node, eventID) ;
 			end.startPhaseID = phaseID ;
 			end.endPhaseID = phaseID ;
 			_mapperHelper.nodeDataMapper.mapValue(eventID, end) ;
 			
-			trace('adding label') ;
 			// Add the event label
 			var label:ILabel = _graph.addLabel(node, eventLabel, FlowMapStyles.eventLabelModelParameter, FlowMapStyles.eventLabelStyle) ;
 			var ld:LabelData = new LabelData(label, eventID, LabelData.LABEL_TYPE_EVENT) as LabelData ;
 			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
 			_mapperHelper.idMapper.mapValue(label, eventID) ;
 
-			trace('updating bounds') ;						
 			// Adjust node size to fit label
 			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ;
 			
-			trace('setting up ports') ;
+			// Add ports
 			var rect:IRectangle = node.layout ;
 			var port:IPort = _graph.addPort(node, rect.x + rect.width + 5, rect.y + rect.height/2) ;
 			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_EVENT_OUTGOING) ;
-			_mapperHelper.idMapper.mapValue(port, eventID) ;			
+			_mapperHelper.idMapper.mapValue(port, eventID) ;
 			
 /* 			_updateScenarioStageBounds(stageID) ; */
 		}
@@ -559,10 +582,103 @@ package com.mindalliance.channels.view.flowmap
 			}			
 		}
 		
+		
 		public static function removeRepositoryOwner(reposOwnerID:String):void {
 			removeLabelsByID(reposOwnerID) ;
 		}
 		
+		private static function addCausePort(node:DefaultNode, type:String):DefaultPort {
+			var rect:IRectangle = node.layout ;
+			var port:DefaultPort ;
+			switch (type) {
+				case PortType.PORT_TYPE_CAUSE_INCOMING:
+					port = _graph.addPort(node, rect.x, rect.y + rect.height) as DefaultPort ;
+					_mapperHelper.portTypeMapper.mapValue(port, type) ;
+				break ;
+				case PortType.PORT_TYPE_EVENT_OUTGOING:
+					port = _graph.addPort(node, rect.x + rect.width, rect.y + rect.height) as DefaultPort ;
+					_mapperHelper.portTypeMapper.mapValue(port, type) ;
+				break ;	
+			}
+			return port ;
+		}
+		
+		public static function addCausation(sourceID:String, targetID:String):void {
+			// Both nodes must exist before causation can be added 
+			var snd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(sourceID) as NodeData ;
+			if (!snd)
+				return ;
+			var tnd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(targetID) as NodeData ;
+			if (!tnd)
+				return ;
+			
+			// Both nodes must be either source or target type
+			if (!(snd is TaskNodeData || snd is EventNodeData))
+				return ;
+			
+			if (!(tnd is TaskNodeData || tnd is EventNodeData))
+				return ;
+			
+			// Check if source and target ports already exists. If not, add them.
+			var sourcePort:DefaultPort = _getPort(snd.node, PortType.PORT_TYPE_CAUSE_OUTGOING) as DefaultPort ;
+			if (!sourcePort) {
+				sourcePort = addCausePort(snd.node, PortType.PORT_TYPE_CAUSE_OUTGOING) ;
+			}
+			var targetPort:DefaultPort = _getPort(tnd.node, PortType.PORT_TYPE_CAUSE_INCOMING) as DefaultPort ;
+			if (!targetPort) {
+				targetPort = addCausePort(tnd.node, PortType.PORT_TYPE_CAUSE_INCOMING) as DefaultPort ;
+			}
+			
+			// Check if there is already a causal edge between them
+			var edgeIter:Iterator = _graph.edgesAtPort(sourcePort).iterator() ;
+			while (edgeIter) {
+				var e:IEdge = edgeIter.next() as IEdge ;
+				if (e.targetPort == targetPort)
+					return ;
+			}
+			
+			// Add causal edge
+			var edge:DefaultEdge = _graph.createEdge(sourcePort, targetPort) as DefaultEdge ;
+			_mapperHelper.edgeTypeMapper.mapValue(edge, EdgeType.EDGE_TYPE_CAUSE) ;
+			_graph.setEdgeStyle(edge, FlowMapStyles.causeEdgeStyle) ;
+		}
+		
+		public static function removeCausation(sourceID:String, targetID:String):void {
+			// Both nodes must exist
+			var snd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(sourceID) as NodeData ;
+			if (!snd)
+				return ;
+			var tnd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(targetID) as NodeData ;
+			if (!tnd)
+				return ;
+				
+			// get the source and target ports
+			var sourcePort:DefaultPort = _getPort(snd.node, PortType.PORT_TYPE_CAUSE_OUTGOING) ;
+			if (!sourcePort)
+				return ;
+			var targetPort:DefaultPort = _getPort(tnd.node, PortType.PORT_TYPE_CAUSE_INCOMING) ;
+			if (!targetPort)
+				return ;
+				
+			// Find the edge with the required source and target port
+			var edgeIter:Iterator = _graph.edgesAtPort(sourcePort).iterator() ;
+			while (edgeIter.hasNext()) {
+				var e:IEdge = edgeIter.next() as IEdge ;
+				if (e.targetPort == targetPort) {
+					_mapperHelper.edgeTypeMapper.unMapValue(e) ;
+					_graph.removeEdge(e) ;
+					return ;
+				}
+			}
+		}
+		
+		public static function addSharingNeed(sourceID:String, targetID:String):void {
+			
+		}
+		
+		public static function removeSharingNeed(sourceID:String, targetID:String):void {
+			
+		}
 			
 		private static var id:int = -1 ;
 		public static function getNewID():String {
@@ -571,3 +687,9 @@ package com.mindalliance.channels.view.flowmap
 		}
     }
 }
+
+
+
+
+
+

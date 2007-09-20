@@ -12,5 +12,9 @@ package com.mindalliance.channels.view.flowmap
 /* 		public static const PORT_TYPE_INFO_OUTGOING:String = "PortInfoOutgoing" ; */
 		
 		public static const PORT_TYPE_REPOSITORY_INCOMING:String = "PortRepositoryIncoming" ;
+		
+		public static const PORT_TYPE_CAUSE_INCOMING:String = "PortTypeCauseIncoming" ;
+		
+		public static const PORT_TYPE_CAUSE_OUTGOING:String = "PortTypeCauseOutgoing" ;
 	}
 }

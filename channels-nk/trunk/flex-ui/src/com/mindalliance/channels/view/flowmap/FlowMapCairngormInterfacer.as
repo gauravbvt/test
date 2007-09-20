@@ -20,6 +20,9 @@ package com.mindalliance.channels.view.flowmap
 	import mx.validators.ValidationResult;
 	import com.mindalliance.channels.vo.AgentVO;
 	import mx.controls.Alert;
+	import mx.collections.ArrayCollection;
+	import com.mindalliance.channels.vo.common.CauseVO;
+	import com.mindalliance.channels.model.ElementModel;
 	
 	public class FlowMapCairngormInterfacer
 	{
@@ -55,6 +58,20 @@ package com.mindalliance.channels.view.flowmap
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				switch (colEvent.kind) {
+					case CollectionEventKind.RESET:
+						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+						var agentAC:ArrayCollection = modelLocator.getElementListModel("agents").data ;
+						if (!agentAC)
+							return ;
+						for each (var agent:AgentVO in agentAC) {
+							try {
+								var roleName:String = modelLocator.getElementModel(agent.role.id).data.name ;
+								FlowMap.setAgent(agent.task.id, agent.role.id, roleName) ;
+							} catch (error:TypeError) {
+								trace('Caught and ignored: ' + error.toString()) ;
+							}
+						}
+					break ;
 					case CollectionEventKind.ADD:
 						colEvent.items.forEach(
 							function procItem(item:*, i:int, a:Array):void {
@@ -80,25 +97,44 @@ package com.mindalliance.channels.view.flowmap
 							}) ;
 					break ;
 					case CollectionEventKind.UPDATE:
+						trace('nothing') ;
 /* 						Can this ever happen? */
 					break ;
 				}
 			}
 		}
 		
+		private function addRepository(phaseID:String, elemVO:ElementVO):void {
+			FlowMap.addRepository(phaseID, elemVO.id, elemVO.name) ;
+			var elementModel:ElementModel = ChannelsModelLocator.getInstance().getElementModel(elemVO.id) as ElementModel ;
+			if (!elementModel)
+				return ;
+			var reposVO:RepositoryVO = elementModel.data as RepositoryVO ;
+			if (!reposVO)
+				return ;
+			var orgVO:ElementVO = reposVO.organization ;
+			if (!orgVO)
+				return ;
+			FlowMap.setRepositoryOwner(reposVO.id, orgVO.id, orgVO.name) ;
+		}
+		
 		protected function repositoryChangeHandler(event:Event):void {
  			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				switch (colEvent.kind) {
+					case CollectionEventKind.RESET:
+						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+						var reposAC:ArrayCollection = modelLocator.getElementListModel(ElementListNames.REPOSITORY_LIST_KEY).data ;
+						for each (var reposVO:ElementVO in reposAC) {
+							addRepository(FlowMap.defaultPhaseID, reposVO) ;
+						}
+					break ;
 					case CollectionEventKind.ADD:
 						colEvent.items.forEach(
 							function procItem(item:*, i:int, a:Array):void {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
-										FlowMap.addRepository(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
-										// This does not seem to work.
-										/* var orgVO:ElementVO = (elemVO as RepositoryVO).organization ;
-										FlowMap.setRepositoryOwner(elemVO.id, orgVO.id, orgVO.name) ; */
+										addRepository(FlowMap.defaultPhaseID, elemVO) ;
 									}) ; 
 							}) ;
 					break ;
@@ -114,6 +150,10 @@ package com.mindalliance.channels.view.flowmap
 					case CollectionEventKind.UPDATE:
 						colEvent.items.forEach(
 							function procItem(item:*, i:int, a:Array):void {
+/* 								var propChangeEvent:PropertyChangeEvent = item as PropertyChangeEvent ;
+								if (!propChangeEvent)
+									return ;
+								if (propChangeEvent */
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										var orgVO:ElementVO = newValue as ElementVO ;
@@ -154,18 +194,21 @@ package com.mindalliance.channels.view.flowmap
 		}
 
 		protected function eventChangeHandler(event:Event):void {
-			trace(event.type) ;
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
-				trace(colEvent.kind) ;
 				switch (colEvent.kind) {
+					case CollectionEventKind.RESET:
+						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+						var eventAC:ArrayCollection = modelLocator.getElementListModel(ElementListNames.EVENT_LIST_KEY).data ;
+						for each (var evt:ElementVO in eventAC) {
+							FlowMap.addEvent(FlowMap.defaultPhaseID, evt.id, evt.name) ;
+						}
+					break ;
 					case CollectionEventKind.ADD:
 						colEvent.items.forEach(
 							function procItem(item:*, i:int, a:Array):void {
-								trace('procItem ' + i) ;
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
-										trace('adding '+elemVO.id + ' ' + elemVO.name) ;
 										FlowMap.addEvent(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
 									}) ; 
 							}) ;
@@ -186,6 +229,7 @@ package com.mindalliance.channels.view.flowmap
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										FlowMap.renameEvent(elemVO.id, newValue as String) ;
 									}) ;
+								
 							}) ;
 					break ;
 				}
@@ -196,6 +240,13 @@ package com.mindalliance.channels.view.flowmap
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
 				switch (colEvent.kind) {
+					case CollectionEventKind.RESET:
+						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+						var taskAC:ArrayCollection = modelLocator.getElementListModel(ElementListNames.TASK_LIST_KEY).data ;
+						for each (var task:ElementVO in taskAC) {
+							FlowMap.addTask(FlowMap.defaultPhaseID, task.id, task.name) ;
+						}
+					break ;
 					case CollectionEventKind.ADD:
 						colEvent.items.forEach(
 							function procItem(item:*, i:int, a:Array):void {
@@ -234,11 +285,11 @@ package com.mindalliance.channels.view.flowmap
 			callback(elemVO) ;
 		}
 		
-		private function examinePropertyChange(event:Object, callback:Function, property:String='name'):void {
+		private function examinePropertyChange(event:Object, callback:Function, property:String='name', propertyChangeEventKind:String=PropertyChangeEventKind.UPDATE):void {
 			var propChangeEvent:PropertyChangeEvent = event as PropertyChangeEvent ;
 			if (!propChangeEvent)
 				return ;
-			if (propChangeEvent.kind != PropertyChangeEventKind.UPDATE)
+			if (propChangeEvent.kind != propertyChangeEventKind)
 				return ;
 			if (propChangeEvent.property == property) {
 				var elemVO:ElementVO = propChangeEvent.source as ElementVO ;

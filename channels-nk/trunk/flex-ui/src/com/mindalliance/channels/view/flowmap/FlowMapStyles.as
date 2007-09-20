@@ -92,6 +92,7 @@ package com.mindalliance.channels.view.flowmap
 		private static var _hoverPortStyle:IPortStyle ;
 		private static var _edgeStyle:IEdgeStyle ;
 		private static var _selectedEdgeStyle:IEdgeStyle ;
+		private static var _causeEdgeStyle:IEdgeStyle ;
 
 		private static function _initNodeStyles():void {
 			_checkSystemManager() ;
@@ -188,13 +189,17 @@ package com.mindalliance.channels.view.flowmap
 				
 		private static function _initEdgeStyles():void {
 			var es:PolylineEdgeStyle = new PolylineEdgeStyle() ;
-			es.stroke = new Stroke(0xAAAAAA, 2.0) ;
-			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0xAAAAAA,1.0), new SolidColor(0xAAAAAA), 2.0) ;
+			es.stroke = new Stroke(0xAAAAAA, 4.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0xAAAAAA,1.0), new SolidColor(0xAAAAAA), 4.0) ;
 			_edgeStyle = IEdgeStyle(es.clone()) ;
 			
-			es.stroke = new Stroke(0x000000, 3.0) ;
-			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0x005C9F, 1.0), new SolidColor(0x005C9F), 2.0) ;
+			es.stroke = new Stroke(0x000000, 5.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0x005C9F, 1.0), new SolidColor(0x005C9F), 4.0) ;
 			_selectedEdgeStyle = IEdgeStyle(es.clone()) ;
+			
+			es.stroke = new Stroke(0xCCFF33, 2.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.DIAMOND, new Stroke(0xCCFF33, 1.0), new SolidColor(0xCCFF33), 4.0) ;
+			_causeEdgeStyle = es.clone() as IEdgeStyle ;
 		}
 		
 		public static function get edgeStyle():IEdgeStyle {
@@ -203,6 +208,10 @@ package com.mindalliance.channels.view.flowmap
 		
 		public static function get selectedEdgeStyle():IEdgeStyle {
 			return _selectedEdgeStyle ;
+		}
+		
+		public static function get causeEdgeStyle():IEdgeStyle {
+			return _causeEdgeStyle ;
 		}
 	}
 }

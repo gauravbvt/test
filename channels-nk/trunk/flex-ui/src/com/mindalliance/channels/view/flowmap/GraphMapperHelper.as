@@ -24,6 +24,8 @@ package com.mindalliance.channels.view.flowmap
 		
 		private static const ID_MAPPER:String = "IDMapper" ;
 		
+		private static const EDGE_TYPE_MAPPER:String = "EdgeTypeMapper" ;
+		
 		private static const _INSTANCE:GraphMapperHelper = new GraphMapperHelper() ;
 		
 		public static function getInstance():GraphMapperHelper {
@@ -35,6 +37,7 @@ package com.mindalliance.channels.view.flowmap
 		private var _portTypeMapper:IMapper ;
 		private var _phaseMapper:IMapper ;
 		private var _idMapper:IMapper ;
+		private var _edgeTypeMapper:IMapper ;
 		
 		public function initialize(mapReg:IMapperRegistry):void {
 			mapReg.addMapper(GraphMapperHelper.NODE_DATA_MAPPER, new DictionaryMapper()) ;
@@ -48,6 +51,13 @@ package com.mindalliance.channels.view.flowmap
 			
 			mapReg.addMapper(GraphMapperHelper.ID_MAPPER, new DictionaryMapper()) ;
 			_idMapper = mapReg.getMapper(GraphMapperHelper.ID_MAPPER) ;
+			
+			mapReg.addMapper(GraphMapperHelper.EDGE_TYPE_MAPPER, new DictionaryMapper()) ;
+			_edgeTypeMapper = mapReg.getMapper(GraphMapperHelper.EDGE_TYPE_MAPPER) ;
+		}
+		
+		public function get edgeTypeMapper():IMapper {
+			return _edgeTypeMapper ;
 		}
 		
 		public function get idMapper():IMapper {
