@@ -5,8 +5,8 @@
 
 <list>
 	{
+		 let $e := collection('__MODEL__')
 		 for 
-		 	$e in collection('__MODEL__'),
 		 	$c  in collection('__MODEL__')/category
 		 where 
 		 	$e/*/id = $elementId and

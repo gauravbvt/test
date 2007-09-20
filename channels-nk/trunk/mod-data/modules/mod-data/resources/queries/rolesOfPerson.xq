@@ -5,8 +5,8 @@
 
 <list>
 	{
+	 let $p := collection('__MODEL__')/person
 	 for
-		$p in collection('__MODEL__')/person,
 		$r in collection('__MODEL__')/role
 	 where 
 	 	$p/id = $personId and

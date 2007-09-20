@@ -4,8 +4,8 @@
 <list>
 	{
 		 let $cats := collection('__MODEL__')/category[@taxonomy = $taxonomy]
+		 let $id := distinct-values($cats/disciplines/categoryId)
 		 for 
-		 		$id in distinct-values($cats/disciplines/categoryId),
 		 		$d in collection('__MODEL__')/category[@taxonomy="discipline"]
 		 where $d/id = $id  
 		 order by $d/name

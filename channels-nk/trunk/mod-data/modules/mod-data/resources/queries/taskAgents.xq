@@ -5,9 +5,9 @@
 
 <list>
 	{
+		 let $r := collection('__MODEL__')/role
 		 for 
-		 	$a in collection('__MODEL__')/agent,
-		 	$r in collection('__MODEL__')/role
+		 	$a in collection('__MODEL__')/agent
 		 where 
 		 	$a/taskId = $taskId and
 		 	$r/id = $a/roleId

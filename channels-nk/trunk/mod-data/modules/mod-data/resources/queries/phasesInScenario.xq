@@ -3,9 +3,9 @@
 
 <list>
 	{
+		 let $e :=  collection('__MODEL__')/event
 		 for
-		 		$p in collection('__MODEL__')/phase,
-		 		$e in  collection('__MODEL__')/event
+		 		$p in collection('__MODEL__')/phase
 		 where 
 		 	$p/eventId = $e/id and
 		 	$e/scenarioId = $scenarioId

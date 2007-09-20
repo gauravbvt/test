@@ -4,8 +4,8 @@
 
 <list>
 	{
+		 let $t := collection('__MODEL__')/task
 		 for 
-		 	$t in collection('__MODEL__')/task,
 		 	$a in collection('__MODEL__')/artifact
 		 where 
 		 	$t/scenarioId = $scenarioId and
