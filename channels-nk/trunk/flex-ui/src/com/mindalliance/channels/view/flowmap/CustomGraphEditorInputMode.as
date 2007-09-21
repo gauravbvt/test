@@ -26,6 +26,7 @@ package com.mindalliance.channels.view.flowmap
 			labelEditingAllowed = false ;
 			selectElementsAllowed = true ;
 			createBendInputMode.enabled = true ;
+			createEdgeInputMode.enabled = false ;
 			nodeCreator = null ;
 			autoRemoveEmptyLabels = false ;
 		}
