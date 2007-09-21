@@ -16,8 +16,8 @@
 		 	<agent>
 		 		<id>{$a/id/text()}</id>
 		 		<name>{$a/name/text()}</name>
-		        <taskId>{$taskId}</taskId>
-		        <roleId>{$r/id/text()}</roleId>
+		        <taskId>{$a/taskId/text()}</taskId>
+		        <roleId>{$a/roleId/text()}</roleId>
 		 	</agent>
 	}
 </list>
