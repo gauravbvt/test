@@ -22,6 +22,8 @@
 		return
 		 	<sharingNeed>
 		 		<id>{$sn/id/text()}</id>
+				<knowId>{$sn/knowId/text()}</knowId>
+				<needToKnowId>{$sn/needToKnowId/text()}</needToKnowId>
 		 	</sharingNeed>
 	}
 </list>
