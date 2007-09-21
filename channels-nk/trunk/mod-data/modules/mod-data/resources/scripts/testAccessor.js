@@ -42,7 +42,7 @@ function releaseLock(lock, who) {
 
 function issueSleepRequest(who) {
 	log(who + ": Sleeping ", "info");
-	var msecs = Math.round(Math.random() * 1000);
+	var msecs = Math.round(Math.random() * 100);
 	sleep(msecs);
 	log(who + ": Waking ", "info");
 }

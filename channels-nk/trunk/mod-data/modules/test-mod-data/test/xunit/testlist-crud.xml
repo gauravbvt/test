@@ -52,7 +52,13 @@
     </assert>
   </test>
   <test>
-    <uri>active:javascript+operator@ffcpl:/test/crud/testGetInformationTemplate.js</uri>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testGetInformationForElement.js</uri>
+    <assert name="Information template returned">
+      <xpath>.//topic/eoi/name</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testGetInformationForCategories.js</uri>
     <assert name="Information template returned">
       <xpath>.//topic/eoi/name</xpath>
     </assert>
@@ -63,12 +69,12 @@
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
-<!-- Can HANG because of presumed NK bug with lock/unlock
+  <!-- hangs in NK3.2 - fixed in NK3.3
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testAsyncCrud.js</uri>
     <assert name="Async Crud">
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
-  -->
+    -->
 </testlist>

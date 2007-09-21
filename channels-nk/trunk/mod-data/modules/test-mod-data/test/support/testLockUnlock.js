@@ -6,7 +6,7 @@ importPackage(Packages.com.ten60.netkernel.urii.aspect);
 importPackage(Packages.org.apache.xmlbeans);
 importPackage(Packages.java.lang);
 
-var RUNS = 20;
+var RUNS = 5;
 
 var operands = [];
 var requestHandles = [];

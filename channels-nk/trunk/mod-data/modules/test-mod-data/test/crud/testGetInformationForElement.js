@@ -20,7 +20,7 @@ try {
 	
 	// Get element event1's information template
 	req = context.createSubRequest("active:channels_data_getInformationTemplate");
-	req.addArgument("id", "id:event1");
+	req.addArgument("ids", "ids:event1");
 	var template = context.issueSubRequest(req);
 }
 catch(e) {

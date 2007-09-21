@@ -57,6 +57,10 @@
 			<to>active:beanshell+operator@ffcpl:/resources/model.bsh$1</to>			
 		</rewrite>		
 		<rewrite>
+			<match>ffcpl:/channels/information(.*)</match>
+			<to>active:beanshell+operator@ffcpl:/resources/information.bsh$1</to>			
+		</rewrite>		
+		<rewrite>
 			<match>(.*\.idoc)</match>
 			<to>active:dpml+operator@$1</to>
 		</rewrite>

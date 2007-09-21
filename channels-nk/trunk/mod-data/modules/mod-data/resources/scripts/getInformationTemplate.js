@@ -29,27 +29,41 @@ function contains(array, element) {
 	return false;
 }
 
-function addIfUnique(array, element) {
-	if (contains(array, element)) {
+function addIfUnique(array, item) {
+	if (contains(array, item)) {
 		return false;
 	}
 	else {
-		array.push(element);
+		array.push(item);
 		return true;
 	}
 }
 
-function addAllIfUnique(set, elements) {
+function addAllIfUnique(set, items) {
 	var added = new Array();
-	for (i in elements) {
-		var element = elements[i];
-		if (addIfUnique(set, element)) added.push(element);
+	for each (item in items) {
+		if (addIfUnique(set, item)) added.push(item);
 	}
 	return added;
 }
 
+function getCategoriesOf(ids) {
+	var idSet = [];
+	for each (id in ids) {
+		var element = getElement(id);
+		if (element.name() == "category") {
+			addIfUnique(idSet, id);
+			addAllIfUnique(idSet, getImpliedCategoryIds(id));
+		}
+		else {
+			addAllIfUnique(idSet, getCategoryIdsOfCategorized(id));
+		}
+	}
+	return idSet;
+}
+
 function getImpliedCategoryIds(categoryId) {
-	// log("Getting implied categories by " + categoryId, "info");
+	log("Getting implied categories by " + categoryId, "info");
 	var category = getElement(categoryId);
 	var implied = new Array();
 	for each (id in category.implies.categoryId) {
@@ -59,8 +73,8 @@ function getImpliedCategoryIds(categoryId) {
 	return implied;
 }
 
-function getCategoriesOf(elementId) {
-	// log("Getting all categories of " + elementId, "info");
+function getCategoryIdsOfCategorized(elementId) {
+	log("Getting all categories of " + elementId, "info");
 	var explicitCategories = new Array();
 	var doc = getElement(elementId);
 	var set = new Array(); // in case there are duplicates
@@ -80,16 +94,23 @@ function getCategoriesOf(elementId) {
 		}
 	return set;
 }
-
+/*
+ The argument is "ids", and must be set to ids:<id>[,<id>]* 
+ The accessor returns the aggregation of all information templates associated with each element id-ed
+ If the element is a category, then the information templates are the ones part of its definition and of the
+ definitions of the categories it implies.
+ If the element is "categorized", then the information templates are aggregated form the templates associated
+ with its categories.
+*/
 log(">> START TEMPLATE", "info");
 
 var template = <information/>;
-var elementId = context.getThisRequest().getArgument("id").substring(3);
-log("Getting information template for " + elementId, "info");
+var ids = context.getThisRequest().getArgument("ids").substring(4);
+log("Getting information template for " + ids, "info");
 try {
 	beginRead("TEMPLATE");
 	// 1- collect all distinct category IDs, explicit and implied
-	var idSet = getCategoriesOf(elementId);
+	var idSet = getCategoriesOf(ids.split(","));
 	// 2- Collect the topics (names only) and their EOIs (names and descriptions) for each information in each category
 	// 3- Aggregate the EOIs across categories into each named topic 
 	// 			- no duplicate topics by name, no duplicate EOIs by name per topic
@@ -145,7 +166,7 @@ catch(e) {
 finally {
 	endRead("TEMPLATE");
 }
-log("Information template for " + elementId + " =\n" + template, "info");
+log("Information template for " + ids + " =\n" + template, "info");
 log("<< END TEMPLATE", "info");
 
 // Response

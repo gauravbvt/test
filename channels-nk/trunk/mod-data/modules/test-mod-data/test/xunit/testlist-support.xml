@@ -41,7 +41,7 @@
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
-  <!-- HANGS presumably because of NK bug
+  <!-- Hangs in NK 3.2, fixed in NK 3.3
   <test> 
     <uri>active:javascript+operator@ffcpl:/test/support/testLockUnlock.js</uri>
     <assert name="Test locking/unlocking">
