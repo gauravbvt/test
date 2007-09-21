@@ -35,7 +35,7 @@
 			</returns>
 			<syntax>
 				<type><b>channels_data_getInformationTemplate</b></type>
-				<id req="true">the element's id</id>
+				<ids req="true">ids:id[,id]*</ids>
 				<target req="false">an information template as xml</target>
 			</syntax>
 		</content>
@@ -43,7 +43,7 @@
 			<include name="format" type="xml">
 		    <instr>
 		      <type>channels_data_getInformationTemplate</type>
-		      <id>1230980875AD45A6BC</id>
+		      <ids>ids:23947,58768</ids>
           <namesListed><b>t</b></namesListed>
 		      <target>this:response</target>
 		    </instr>
@@ -54,16 +54,22 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 	    <p>
-				The <code>channels_data_getInformationTemplate</code> accessor information template 
-        (validated by the RelaxNG schema def_information.rng) for the element with the given unique id from the currently opened model.
+				The <code>channels_data_getInformationTemplate</code> accessor produces an information template 
+        (validated by the RelaxNG schema def_information.rng) for the identified elements in the currently opened model.
 			</p>
+      <p>
+         The argument <code>ids</code> must be set to <code>ids:id[,id]*</code>
+      </p>
+      <p>
+        The accessor returns the aggregation of all information templates associated with each element id-ed.
+        If the element is a category, then the information templates are the ones part of its definition and of the
+        definitions of the categories it implies.
+        If the element is "categorized", then the information templates are aggregated from the templates associated
+        with its categories (explicit and implied).
+      </p>
 			<p>If successful the response is an information template as xml such as:</p>
       <sub name="template"/>
-      <p>
-        The information template is an aggregate of the information templates attached to the categories given to the
-        element, and to the categories they imply. Template topics are integrated and implied, duplicate (by name) EOIs are dropped.
-      </p>
-		</content>
+ 		</content>
 		<includes>
 			<include name="template" type="xml">
         <information>
