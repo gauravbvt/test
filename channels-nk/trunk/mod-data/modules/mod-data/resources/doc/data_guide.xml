@@ -31,6 +31,9 @@
       <li>Updating an element</li>
     </ul>
 	</p>
+  <p>
+    Asynchronous accesses to elements are synchronized via a <link name="doc_ura_MREWSynchronizer">Multiple Reads Exclusive Write synchronizer</link>.
+  </p>
 	<h3>Requirements</h3>
 	<p>
 	This library requires that DBXML is installed on your host operating system.  You can download the latest

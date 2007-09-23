@@ -69,7 +69,8 @@
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
-  <!-- hangs in NK3.2 - fixed in NK3.3
+  <!-- hangs in NK3.2 - fixed in NK3.3 -->
+  <!--
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testAsyncCrud.js</uri>
     <assert name="Async Crud">

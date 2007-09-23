@@ -5,48 +5,11 @@
 		<b>mod-data</b> support unit tests.
 		</div>
 	</desc>
-  <test> 
-    <uri>active:javascript+operator@ffcpl:/test/support/testResetCounter.js</uri>
-    <assert name="Reset counter">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test> 
-    <uri>active:javascript+operator@ffcpl:/test/support/testGetCounter.js</uri>
-    <assert name="Reset counter">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test> 
-    <uri>active:javascript+operator@ffcpl:/test/support/testIncrementCounter.js</uri>
-    <assert name="Reset counter">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test> 
-    <uri>active:javascript+operator@ffcpl:/test/support/testDecrementCounter.js</uri>
-    <assert name="Reset counter">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test> 
-    <uri>active:javascript+operator@ffcpl:/test/support/testResetAllCounter.js</uri>
-    <assert name="Reset all counters">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test> 
-    <uri>active:javascript+operator@ffcpl:/test/support/testSemaphore.js</uri>
-    <assert name="Test semaphores">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <!-- Hangs in NK 3.2, fixed in NK 3.3
+  <!-- Hangs in NK 3.2, fixed in NK 3.3 -->
   <test> 
     <uri>active:javascript+operator@ffcpl:/test/support/testLockUnlock.js</uri>
     <assert name="Test locking/unlocking">
       <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
     </assert>
   </test>
-    -->
 </testlist>

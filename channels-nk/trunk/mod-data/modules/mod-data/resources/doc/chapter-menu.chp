@@ -8,4 +8,5 @@
 	<item name="doc_ura_updateElement"/>
 	<item name="doc_ura_queryModel"/>
 	<item name="doc_ura_getInformationTemplate"/>
+	<item name="doc_ura_MREWSynchronizer"/>
 </menu>

@@ -117,6 +117,19 @@
     <group>channels_data</group>
     <icon/>
   </entrypoint>
+  <entrypoint>
+    <name>doc_ura_MREWSynchronizer</name>
+    <uri>ffcpl:/com/mindalliance/channels/data/doc/data_ura_MREWSynchronizer.xml</uri>
+    <indexable>
+      <title>channels_data_MREWSynchronizer</title>
+      <desc>Multiple reads exclusive write synchronizer</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_data</group>
+    <icon/>
+  </entrypoint>
    <!--Discoverable Documentation Menu-->
 	<entrypoint>
 		<name>urn:com:mindalliance:channels:data:chapter</name>

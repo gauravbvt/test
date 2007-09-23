@@ -69,12 +69,6 @@ catch (e)	{
 	success = false;
 }
 
-/*
-for (i in requests) {
-	context.issueSubRequest(requests[i]);
-}
-success = true;
-*/
 
 // Respond
 var resp = context.createResponseFrom(new BooleanAspect(success));

@@ -20,13 +20,13 @@ function reloadModel() {
 	// Open model from db:testDB.xml
 	req = context.createSubRequest("active:channels_data_openModel");
 	context.issueSubRequest(req);
-	resetAllCounters();
+	resetAll();
 }
 
-function resetAllCounters() {
+function resetAll() {
 	log("Resetting all counters", "info");
-	var req = context.createSubRequest("counter:all"); // name of counter does not matter
-	req.addArgument("operand", new StringAspect("resetAll"));
+	var req = context.createSubRequest("active:MREWSynchronizer");
+	req.addArgument("operator", new StringAspect("reset"));
 	context.issueSubRequest(req);
 	log("All counters reset", "info");
 }
