@@ -9,7 +9,6 @@ package com.mindalliance.channels.events.categories
 	public class GetCategoryEvent extends GetElementEvent
 	{
 		public static const GetCategory_Event:String = "<GetCategoryEvent>";
-		
 		public function GetCategoryEvent(id : String, model : EditorModel) 
         {
             super( GetCategory_Event, id, model );

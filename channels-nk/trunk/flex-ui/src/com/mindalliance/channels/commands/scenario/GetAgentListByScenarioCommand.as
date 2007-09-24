@@ -16,8 +16,12 @@ package com.mindalliance.channels.commands.scenario
 		override public function execute(event:CairngormEvent):void
 		{
 			var evt:GetAgentListByScenarioEvent = event as GetAgentListByScenarioEvent;
-			var delegate:AgentDelegate = new AgentDelegate( this );
-			delegate.getAgentListByScenarioId(evt.scenarioId);
+			if (evt.scenarioId != null) {
+			    var delegate:AgentDelegate = new AgentDelegate( this );
+			    delegate.getAgentListByScenarioId(evt.scenarioId);
+			} else {
+				channelsModel.getElementListModel("agents").data = null;
+			}
 		}
 		
 		override public function result(data:Object):void

@@ -7,13 +7,15 @@ package com.mindalliance.channels.control
 	import com.mindalliance.channels.commands.common.*;
 	import com.mindalliance.channels.commands.people.*;
 	import com.mindalliance.channels.commands.resources.*;
-	import com.mindalliance.channels.commands.scenario.*;
+    import com.mindalliance.channels.commands.scenario.*;;
+    import com.mindalliance.channels.commands.sharingneed.*;
 	import com.mindalliance.channels.events.application.*;
 	import com.mindalliance.channels.events.categories.*;
 	import com.mindalliance.channels.events.common.*;
 	import com.mindalliance.channels.events.people.*;
 	import com.mindalliance.channels.events.resources.*;
-	import com.mindalliance.channels.events.scenario.*;
+    import com.mindalliance.channels.events.scenario.*;
+    import com.mindalliance.channels.events.sharingneed.*;
     
 	public class ChannelsController extends FrontController
 	{
@@ -30,6 +32,7 @@ package com.mindalliance.channels.control
 			initializePeople();
 			initializeResources();
 			initializeScenario();
+			initializeSharingNeed();
 		}
 		
 		private function initializeCommon() : void
@@ -51,6 +54,7 @@ package com.mindalliance.channels.control
 			this.addCommand(DeleteScenarioEvent.DeleteScenario_Event, DeleteScenarioCommand);
 			this.addCommand(UpdateProjectEvent.UpdateProject_Event, UpdateProjectCommand);
 			this.addCommand(UpdateScenarioEvent.UpdateScenario_Event, UpdateScenarioCommand);
+            this.addCommand(LoadGlobalDataEvent.LoadGlobalData_Event, LoadGlobalDataCommand);
             this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
             this.addCommand(LoadEventNodeEditorEvent.LoadEventNodeEditor_Event, LoadEventNodeEditorCommand);
             this.addCommand(LoadRepositoryNodeEditorEvent.LoadRepositoryNodeEditor_Event, LoadRepositoryNodeEditorCommand);
@@ -121,6 +125,7 @@ package com.mindalliance.channels.control
             this.addCommand(GetArtifactEvent.GetArtifact_Event, GetArtifactCommand);
             this.addCommand(CreateArtifactEvent.CreateArtifact_Event, CreateArtifactCommand);
             this.addCommand(UpdateArtifactEvent.UpdateArtifact_Event, UpdateArtifactCommand);
+            this.addCommand(UpdateArtifactTaskEvent.UpdateArtifactTask_Event, UpdateArtifactTaskCommand);
             
             this.addCommand(GetAcquirementListEvent.GetAcquirementList_Event, GetAcquirementListCommand);
             this.addCommand(GetAcquirementListByTaskEvent.GetAcquirementListByTask_Event, GetAcquirementListByTaskCommand);
@@ -128,6 +133,7 @@ package com.mindalliance.channels.control
             this.addCommand(GetAcquirementEvent.GetAcquirement_Event, GetAcquirementCommand);
             this.addCommand(CreateAcquirementEvent.CreateAcquirement_Event, CreateAcquirementCommand);
             this.addCommand(UpdateAcquirementEvent.UpdateAcquirement_Event, UpdateAcquirementCommand);
+            this.addCommand(UpdateAcquirementTaskEvent.UpdateAcquirementTask_Event, UpdateAcquirementTaskCommand);
            
             this.addCommand(GetEventListEvent.GetEventList_Event, GetEventListCommand);
             this.addCommand(DeleteEventEvent.DeleteEvent_Event, DeleteEventCommand);
@@ -139,6 +145,21 @@ package com.mindalliance.channels.control
             this.addCommand(GetAgentListEvent.GetAgentList_Event, GetAgentListCommand);
             this.addCommand(CreateAgentEvent.CreateAgent_Event, CreateAgentCommand);
             this.addCommand(DeleteAgentEvent.DeleteAgent_Event, DeleteAgentCommand);            
+		}
+		
+		private function initializeSharingNeed() : void
+		{
+            this.addCommand(CreateKnowEvent.CreateKnow_Event, CreateKnowCommand);
+            this.addCommand(CreateKnowSequenceEvent.CreateKnowSequence_Event, CreateKnowSequenceCommand);
+            this.addCommand(CreateNeedToKnowEvent.CreateNeedToKnow_Event, CreateNeedToKnowCommand);
+            this.addCommand(CreateNeedToKnowSequenceEvent.CreateNeedToKnowSequence_Event, CreateNeedToKnowSequenceCommand);
+            this.addCommand(CreateSharingNeedEvent.CreateSharingNeed_Event, CreateSharingNeedCommand);
+            this.addCommand(CreateSharingNeedSequenceEvent.CreateSharingNeedSequence_Event, CreateSharingNeedSequenceCommand);
+            this.addCommand(DeleteNeedToKnowEvent.DeleteNeedToKnow_Event, DeleteNeedToKnowCommand);
+            this.addCommand(GetKnowEvent.GetKnow_Event, GetKnowCommand);
+            this.addCommand(GetNeedToKnowEvent.GetNeedToKnow_Event, GetNeedToKnowCommand);
+            this.addCommand(GetSharingNeedListEvent.GetSharingNeedList_Event, GetSharingNeedListCommand);
+            
 		}
 	}
 }

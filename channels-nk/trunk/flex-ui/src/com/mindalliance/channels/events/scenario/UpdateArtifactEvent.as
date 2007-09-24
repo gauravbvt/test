@@ -6,6 +6,7 @@ package com.mindalliance.channels.events.scenario
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mindalliance.channels.model.EditorModel;
 	import com.mindalliance.channels.vo.common.CategorySetVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.collections.ArrayCollection;
 
@@ -16,12 +17,12 @@ package com.mindalliance.channels.events.scenario
 		public var name : String; 
         public var description : String;
         public var categories : CategorySetVO;
-        public var product : ArrayCollection;
+        public var product : ElementVO;
 		public function UpdateArtifactEvent(model : EditorModel,
                                     name : String, 
                                     description : String,
                                     categories : CategorySetVO,
-                                    product : ArrayCollection) 
+                                    product : ElementVO) 
 		{
 			super( UpdateArtifact_Event );
 			this.model = model;

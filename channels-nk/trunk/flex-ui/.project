@@ -19,12 +19,12 @@
 		<link>
 			<name>[source path] test</name>
 			<type>2</type>
-			<location>/Users/dfeeney/ma/channels/flex-ui/test</location>
+			<location>/Volumes/Data/Users/dfeeney/ma/channels-nk/flex-ui/test</location>
 		</link>
 		<link>
-			<name>[source path] resources</name>
+			<name>[source path] eclipse-resources</name>
 			<type>2</type>
-			<location>/Users/dfeeney/ma/channels/flex-ui/resources</location>
+			<location>/Volumes/Data/Users/dfeeney/ma/channels-nk/flex-ui/eclipse-resources</location>
 		</link>
 	</linkedResources>
 </projectDescription>

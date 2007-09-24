@@ -7,6 +7,11 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.events.scenario.UpdateAcquirementTaskEvent;
+			import com.mindalliance.channels.events.scenario.UpdateArtifactTaskEvent;
+			import com.mindalliance.channels.commands.scenario.UpdateAcquirementTaskCommand;
+			import com.mindalliance.channels.commands.scenario.UpdateArtifactTaskCommand;
+			import com.mindalliance.channels.commands.scenario.UpdateAcquirementCommand;
 			import com.mindalliance.channels.events.scenario.DeleteArtifactEvent;
 			import com.mindalliance.channels.events.scenario.DeleteAcquirementEvent;
 			import flash.net.navigateToURL;
@@ -176,7 +181,29 @@
 			}
 			
 			private function chooseAcquirements():void {
-				// we don't take kindly to empty functions around here
+                var popup:AcquirementChooser = AcquirementChooser(PopUpManager.createPopUp(listAcquirements, AcquirementChooser));
+
+                PopUpManager.centerPopUp(popup) ;
+                popup.filter = function(item : Object) : Boolean {
+                    var current : ElementVO = (item as ElementVO);
+                    for each (var el : ElementVO in acquirementList) {
+                        if (el.id == current.id)
+                           return false;
+                    }   
+                    return true;
+                }
+                popup.filtered = artifactList;
+                popup.processSelected=function(selected : ArrayCollection) : void {
+                    for each(var el : ElementVO in selected) {
+                        addAcquirementList.addItem(el);
+                        acquirementList.addItem(el);
+                    }
+                    if (selected.length > 0) queueUpdate();
+                }       
+                var p:Point = new Point(listAcquirements.x, listAcquirements.y) ;
+                p = listAcquirements.localToGlobal(p) ;
+                popup.x = p.x + listAcquirements.width + 5 ;
+                popup.y = p.y ;    
 			}
 			
             private function deleteAgent() : void {
@@ -185,13 +212,14 @@
             
             private function addAcquirements() : void {
                 for each (var el : ElementVO in addAcquirementList) {	
-                	
+                	CairngormHelper.fireEvent(new UpdateAcquirementTaskEvent(el.id, edited.id));
                 }
             }
             
             private function addArtifacts() : void {
             	for each (var el: ElementVO in addArtifactList) {
             		
+                    CairngormHelper.fireEvent(new UpdateArtifactTaskEvent(el.id, edited.id));
             	}
             }
             

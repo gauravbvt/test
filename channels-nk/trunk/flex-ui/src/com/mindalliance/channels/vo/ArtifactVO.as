@@ -5,9 +5,8 @@ package com.mindalliance.channels.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import com.mindalliance.channels.vo.common.CategorySetVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	import com.mindalliance.channels.vo.common.ProductVO;
-	
-	import mx.collections.ArrayCollection;
 
 	public class ArtifactVO extends ProductVO implements IValueObject
 	{
@@ -15,7 +14,7 @@ package com.mindalliance.channels.vo
                                     name : String, 
                                     description : String,
                                     categories : CategorySetVO,
-                                    product : ArrayCollection ) {
+                                    product : ElementVO ) {
             super(id,name,description,categories,product);
 		}
 	}

@@ -8,21 +8,21 @@ package com.mindalliance.channels.vo.common
                                     name : String, 
                                     description : String,
                                     categories : CategorySetVO,
-                                    product : ArrayCollection
+                                    product : ElementVO
                                  ) {
 
             super(id, name, description, categories);
             this.product = product;
         }
         
-        private var _product : ArrayCollection;
+        private var _product : ElementVO;
 
 		
-		public function get product() : ArrayCollection {
+		public function get product() : ElementVO {
 			return _product;
 		}
 
-		public function set product(product : ArrayCollection) : void {
+		public function set product(product : ElementVO) : void {
 			_product=product;
 		}
 		

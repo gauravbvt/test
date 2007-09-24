@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model
 {
-    import com.mindalliance.channels.vo.common.ElementVO;
-    
     import mx.collections.ArrayCollection;
 	[Bindable]
 	public class ElementListModel
@@ -23,7 +21,11 @@ package com.mindalliance.channels.model
         }
 
         public function set data(data : ArrayCollection) : void {
-        	_data.source = data.source;
+        	if (data != null) {
+        	   _data.source = data.source;
+        	} else {
+        	   _data.source = new Array();	
+        	}
         }
         
         

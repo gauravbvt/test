@@ -4,6 +4,8 @@
 package com.mindalliance.channels.business.scenario
 {
 	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.model.ChannelsModelLocator;
+	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.ArtifactVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
@@ -31,7 +33,8 @@ package com.mindalliance.channels.business.scenario
 		override public function fromXML(obj:XML):ElementVO {
 			return new ArtifactVO(obj.id, obj.name, obj.description,
 			                     XMLHelper.xmlToCategorySet(obj),
-			                     XMLHelper.xmlToIdList("taskId", obj.product));
+			                     ElementHelper.findElementById(obj.product.taskId,
+                                             ChannelsModelLocator.getInstance().getElementListModel('tasks').data));
 		}
 		
 		override public function toXML(element:ElementVO) : XML {
@@ -43,7 +46,7 @@ package com.mindalliance.channels.business.scenario
 					</artifact>;
             
             xml.appendChild(XMLHelper.categorySetToXML(obj.categories));
-            xml.appendChild(XMLHelper.idListToXML("product", "taskId", obj.product));
+            xml.appendChild(<product><taskId>{obj.product.id}</taskId></product>);
             return xml;
 		}
 		
