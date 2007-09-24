@@ -1,13 +1,33 @@
 Updated installation procedure
 ------------------------------
 0. Checkout channels-nk from svn (http://ranger.homelinux.net/svn/channels-nk/trunk)
-1. Install a distribution of NetKernel
-2. Install Flex SDK
-3. Install Oracle Berkeley DB XML (see http://localhost:1060/book/discovered/doc_mod_dbxml_guide and http://www.oracle.com/database/berkeley-db/xml/index.html)
-4. Create a build.properties in the project's base directory (set netkernel.home.dir and
-FLEX_HOME) and edit deploy.properties
-5. Run "ant install"
-6. Run "ant deploy"
+
+1. Install the latest NetKernel 3.3 distribution from http://1060.org/upload/alpha/
+
+2. Install Adobe Flex 2 SDK
+
+3. Install Oracle Berkeley DB XML 
+	 (see http://localhost:1060/book/discovered/doc_mod_dbxml_guide and http://www.oracle.com/database/berkeley-db/xml/index.html)
+	 Put copies of db.jar and dbxml.jar in <netkernel>/lib/native
+	 Add these lines to <netkernel>/bin/start.sh:
+	 		DBXML=<dbxml>/install/lib
+	 		PROPS="$PROPS -Djava.library.path=$DBXML"
+	 		
+4. Create a build.properties in the project's base directory
+	(set netkernel.home.dir and FLEX_HOME) 
+	and edit deploy.properties if needed
+
+5. Copy /config/deployedModules-dev.xml from <netkernel>/etc/deployedModules.xml
+
+   Add the line:
+     <module>file://@deploy-dir@/@mod-control-name@-@mod-control-version@.jar</module>
+     
+   Remove optional modules if desired.
+
+6. Run "ant clea, install, deploy"
+
 7. Start netkernel (ignore warnings about not finding channels modules)
+
 8. Reload netkernel from browser (http://localhost:1060/ep+name@control_reload)
+
 9. Re-index entry points from browser (http://localhost:1060/ep+name@app_ext_introspect_reindex_quick)
