@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu name="doc_mod_dbxml_chapter_head">
+	<item name="doc_mod_dbxml_guide"/>
+	<item name="doc_ura_dbxmlCreateContainer"/>
+	<item name="doc_ura_dbxmlDeleteContainer"/>
+	<item name="doc_ura_dbxmlRenameContainer"/>
+	<item name="doc_ura_dbxmlPutDocument"/>
+	<item name="doc_ura_dbxmlGetDocument"/>
+	<item name="doc_ura_dbxmlDeleteDocument"/>
+	<item name="doc_ura_dbxmlQuery"/>
+	<item name="doc_ura_dbxmlBooleanQuery"/>
+</menu>

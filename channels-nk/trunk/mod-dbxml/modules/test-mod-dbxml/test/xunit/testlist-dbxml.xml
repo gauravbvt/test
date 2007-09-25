@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist  title="DBXML Accessor Unit Tests">
+    <desc>
+	<div>
+	<b>DBXML</b> accessor unit tests for the <b>Mind-Alliance DBXML</b> lib.
+	</div>
+    </desc>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/test.bsh</uri>
+		<assert>
+			<xpath>count(//xml) = 1</xpath>
+		</assert>
+    </test>
+</testlist>

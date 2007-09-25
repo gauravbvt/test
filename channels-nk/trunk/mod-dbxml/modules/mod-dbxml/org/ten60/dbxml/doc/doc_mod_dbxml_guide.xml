@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+<title>sqlQuery Accessor</title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Links***************-->
+<links>
+</links>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="main"/>
+</toc>
+
+<section name="main" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+	<h2>Guide to the BDBXML Library</h2>
+	<p>
+	Berkeley DBXML is a native embedded XML database. Formerly developed by Sleepycat and now a part of Oracle,
+	DBXML is based on the open-source Berkeley database engine.  This library provides a tool library for
+	managing and querying XML document repositories in BDXML.
+	</p>
+	<h3>Requirements</h3>
+	<p>
+	This library requires that BDBXML is installed on your host operating system.  You can download the latest
+	version <a href="http://www.sleepycat.com">here</a>.
+	</p>
+	<h2>Installation</h2>
+	<p>
+	Before you can use BDBXML from NetKernel.  You must configure NetKernel's host Java platform to access the native
+	BDBXML engine as a library.  Please follow these instructions to make the BDBXML Java interface libraries
+	locatable in the JVM path.
+	</p>
+	<h3>Installation</h3>
+	<p>
+	Since BDXML is a native library with Java JNI native intefaces you must set the JVM property <b>java.library.path</b> with the path to the BDBXML native
+	library files (on Windows these are dll's found in the bin/ directory of the BDBXML install, on Linux they are in /usr/lib/ ).
+	Add the following switch to the Java command line
+	<b>-Djava.library.path=[path to dbxml libraries]</b> in the bin/start.sh script.
+	</p>
+	<p>
+	You must also locate db.jar and dbxml.jar from the BDBXML installation directory (/usr/share/java on Linux) and copy or symlink these to <b>[install]/lib/native</b>
+	directory of your NetKernel installation. Please note: due to the JNI native library dependency do <b>not</b> put the dbxml jar files in the db-xml module's lib/ directory.
+	</p>
+	<h2>Using the Library</h2>
+	<p>
+	BDBXML has an XML container model.  A container must first be constructed.  Documents may then be placed in the container.  Queries over the document
+	collection can be made with XQuery.  The following set of accessors provide atomic tools for accessing the BDBXML database.
+	</p>
+	<ul>
+		<li><link name="doc_ura_dbxmlCreateContainer">dbxmlCreateContainer</link></li>
+		<li><link name="doc_ura_dbxmlDeleteContainer">dbxmlDeleteContainer</link></li>
+		<li><link name="doc_ura_dbxmlRenameContainer">dbxmlRenameContainer</link></li>
+		<li><link name="doc_ura_dbxmlPutDocument">dbxmlPutDocument</link></li>
+		<li><link name="doc_ura_dbxmlGetDocument">dbxmlGetDocument</link></li>
+		<li><link name="doc_ura_dbxmlDeleteDocument">dbxmlDeleteDocument</link></li>
+		<li><link name="doc_ura_dbxmlQuery">dbxmlQuery</link></li>
+		<li><link name="doc_ura_dbxmlBooleanQuery">dbxmlBooleanQuery</link></li>
+	</ul>
+	</content>
+	<includes>
+	</includes>
+</section>
+
+</document>

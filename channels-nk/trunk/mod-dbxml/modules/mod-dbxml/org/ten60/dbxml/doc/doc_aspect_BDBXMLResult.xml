@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+<title></title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="purpose"/>
+</toc>
+
+<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+		<h2>Module</h2>
+		<b>urn:org:ten60:netkernel:mod:dbxml</b>
+		<h2>Class</h2>
+		<b>org.ten60.dbxml.representation.DBXMLResultAspect</b>
+		<h2>Purpose</h2>
+		<p>Holds a 
+		<a href="http://www.oracle.com/technology/documentation/berkeley-db/xml/java/com/sleepycat/dbxml/XmlResults.html">
+		com.sleepycat.dbxml.XmlResults</a>.
+		</p>
+		<p>This aspect is useful for scripting languages to iterate over a result set. This aspect must be treated as immutable.
+		Once its values have been read it is strongly adviced that the delete() method is called on the XmlResults object - this will
+		clean up any native resources held in the underlying native DBXML database.</p>
+		<sub name="source"/>
+    </content>
+	<includes>
+	<include name="source" type="java">
+<java>
+<![CDATA[
+public class DBXMLResultAspect implements IURAspect
+{
+	private XmlResults mResults;
+
+	public DBXMLResultAspect(XmlResults aResults)
+	{	mResults=aResults;
+	}
+	
+	public XmlResults getXmlResultsReadOnly()
+	{	return mResults;
+	}
+	
+	public boolean isEmpty() throws Exception
+	{	return mResults.size()==0;		
+	}
+	
+	public boolean hasXmlDocument() throws Exception
+	{	if (mResults.size()!=1) return false;
+		XmlValue val=mResults.peek();
+		try
+		{	val.asDocument();
+			return true;
+		}
+		catch(Exception e)
+		{	return false;			
+		}
+	}
+}
+]]>
+</java>
+	</include>
+	</includes>
+</section>
+
+</document>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+<title>dbxmlPutDocument Accessor</title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Links***************-->
+<links>
+</links>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="title"/>
+	<section name="definition"/>
+	<section name="purpose"/>
+</toc>
+
+<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
+	<content>
+		<name>dbxmlPutDocument</name>
+		<text>Accessor to put an XML document into a Berkeley DBXML container</text>
+	</content>
+</section>
+
+<section name="definition" styleuri="/xusr/share/doc/styles_1060/style_definition.xsl">
+	<content>
+		<module>urn:org:ten60:netkernel:mod:dbxml</module>
+		<format>
+		<sub name="format"/>
+		</format>
+		<returns>
+<b>t</b>
+		</returns>
+		<syntax>
+			<type><b>dbxmlPutDocument</b></type>
+			<operand req="true">the document</operand>
+			<operator req="true">the put specification document</operator>
+			<target req="false">void response</target>
+		</syntax>
+		</content>
+	<includes>
+
+<include name="format" type="xml">
+<instr>
+      <type>dbxmlPutDocument</type>
+	  <operand>mydoc.xml</operand>
+      <operator>
+		<dbxml>
+			<name>mydocument</name>
+			<container>mycontainer</container>
+		</dbxml>
+	  </operator>
+    </instr>
+</include>
+</includes>
+</section>
+
+<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+        <p>
+		The <code>dbxmlPutDocument</code> accessor puts an XML document into a container in Berkeley DBXML.
+		The put specification is provided as the <i>operator</i> argument and is
+		an XML fragment.
+		</p>
+		<p>If successful the response is a voidAspect otherwise an exception is thrown.</p>
+		<h3>Operator Format</h3>
+		<p>
+		The format for the operator is...
+		</p>
+		<sub name="config"/>
+		<p>
+		The <i>name</i> tag is required and will be used to identify the document in the container.  The <i>container</i> tag specifies
+		the identity of the container in the BDBXML database into which the document is put.
+		</p>
+		<h3>Reference</h3>
+		<ul>
+		<li>Berkeley DBXML can be downloaded from <a href="http://www.sleepycat.com">Sleepycat Software</a>.</li>
+		<li><a href="http://www.oracle.com/technology/documentation/berkeley-db/xml/java/index.html">Javadoc for BDBXML</a></li>
+		</ul>		
+	</content>
+	<includes>
+<include name="config" type="xml">
+<dbxml>
+	<name>someDocumentName</name>
+	<container>someContainerName</container>
+</dbxml>
+</include>
+	</includes>
+</section>
+
+</document>

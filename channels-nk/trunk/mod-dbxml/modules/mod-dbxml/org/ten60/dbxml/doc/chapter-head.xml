@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+<title>BDBXML Chapter</title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Links***************-->
+<links>
+</links>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="title"/>
+</toc>
+
+<section name="title" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+		<h2>BDBXML Library</h2>
+		<p>
+		This section provides the documentation for the Berkeley DBXML tools library.
+		</p>
+	</content>
+	<includes>
+	</includes>
+</section>
+
+</document>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>doc_mod_dbxml_guide</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_mod_dbxml_guide.xml</uri>
+    <indexable>
+      <title>DBXML Guide</title>
+      <desc>Guide to accessing Berkley DBXML Databases</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc database mod_dbxml</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlCreateContainer</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlCreateContainer.xml</uri>
+    <indexable>
+      <title>dbxmlCreateContainer</title>
+      <desc>Create BDBXML container</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlDeleteContainer</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlDeleteContainer.xml</uri>
+    <indexable>
+      <title>dbxmlDeleteContainer</title>
+      <desc>Delete BDBXML container</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlRenameContainer</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlRenameContainer.xml</uri>
+    <indexable>
+      <title>dbxmlRenameContainer</title>
+      <desc>Rename BDBXML container</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlExistsContainer</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlExistsContainer.xml</uri>
+    <indexable>
+      <title>dbxmlExistsContainer</title>
+      <desc>Tests if a BDBXML container exists</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlPutDocument</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlPutDocument.xml</uri>
+    <indexable>
+      <title>dbxmlPutDocument</title>
+      <desc>Put an XML doc into a BDBXML container</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlGetDocument</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlGetDocument.xml</uri>
+    <indexable>
+      <title>dbxmlGetDocument</title>
+      <desc>Get an XML doc from a BDBXML container</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlDeleteDocument</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlDeleteDocument.xml</uri>
+    <indexable>
+      <title>dbxmlDeleteDocument</title>
+      <desc>Delete an XML doc from a BDBXML container</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_aspect_BDBXMLResult</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_aspect_BDBXMLResult.xml</uri>
+    <indexable>
+      <title>BDBXMLResultSet</title>
+      <desc>Holds a Berkeley BDBXML XmlResults</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc aspect</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+
+  <entrypoint>
+    <name>doc_ura_dbxmlQuery</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlQuery.xml</uri>
+    <indexable>
+      <title>dbxmlQuery</title>
+      <desc>Make an XQuery on BDBXML respository.</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_dbxmlBooleanQuery</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlBooleanQuery.xml</uri>
+    <indexable>
+      <title>dbxmlBooleanQuery</title>
+      <desc>Make an XQuery and return a boolean response.</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+  
+   <!--Discoverable Documentation Menu-->
+	<entrypoint>
+		<name>urn:org:ten60:mod:dbxml:chapter</name>
+		<uri>ffcpl:/org/ten60/dbxml/doc/chapter-menu.chp</uri>
+		<indexable>
+			<title>BDBXML Library Book</title>
+			<desc>Documentation for the Berkeley DBXML Library</desc>
+			<keywords/>
+		</indexable>
+		<categories>chapter hidden</categories>
+		<group>mod_dbxml</group>
+	</entrypoint>
+	
+	<!--Documents-->
+	<entrypoint>
+		<name>doc_mod_dbxml_chapter_head</name>
+		<uri>ffcpl:/org/ten60/dbxml/doc/chapter-head.xml</uri>
+		<indexable>
+			<title>BDBXML Library</title>
+			<desc>Documentation for the BDBXML library on NetKernel</desc>
+			<keywords/>
+		</indexable>
+		<categories>doc postInstallInfo</categories>
+		<group>mod_dbxml</group>
+	</entrypoint>
+	
+ </entrypoints>
+

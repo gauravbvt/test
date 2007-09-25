@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="Mind-Alliance DBXML Module">
+    
+    <target name="init">
+        <property name="deploy.dir" value="deploy"/>
+        <mkdir dir="${deploy.dir}"/>
+    </target>
+    
+	<target description="Build everything." name="all" depends="init">
+		<ant antfile="build-mod-dbxml.xml"/>
+		<ant antfile="build-test-mod-dbxml.xml"/>
+        <echo message="Mind-Alliance DBXML Module build completed."/>
+    </target>
+    
+    <target description="Clean up the derived objects" name="clean">
+        <delete>
+            <fileset dir="." includes="**/*.jar"/>
+        </delete>
+        <delete>
+            <fileset dir="../modules/mod-dbxml/" includes="**/*.class"/>
+        </delete>
+    </target>
+	
+
+    
+</project>

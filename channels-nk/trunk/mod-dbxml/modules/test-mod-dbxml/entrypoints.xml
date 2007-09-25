@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-dbxml</name>
+    <uri>ffcpl:/test/mod-dbxml-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance DBXML Library Tests</title>
+      <desc>Mind-Alliance DBXML unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>
