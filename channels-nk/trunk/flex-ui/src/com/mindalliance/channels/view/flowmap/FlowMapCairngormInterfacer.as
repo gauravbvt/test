@@ -1,16 +1,21 @@
 package com.mindalliance.channels.view.flowmap
 {
+	import com.mindalliance.channels.events.scenario.GetTaskEvent;
+	import com.mindalliance.channels.events.sharingneed.CreateSharingNeedEvent;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.ElementListModel;
 	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.model.ElementModel;
+	import com.mindalliance.channels.util.CairngormHelper;
 	import com.mindalliance.channels.vo.AgentVO;
 	import com.mindalliance.channels.vo.RepositoryVO;
+	import com.mindalliance.channels.vo.common.CauseVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	import com.mindalliance.channels.vo.common.OccurrenceVO;
 	
 	import flash.events.Event;
 	
+	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
@@ -50,6 +55,7 @@ package com.mindalliance.channels.view.flowmap
 		protected function agentChangeHandler(event:Event):void {
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
+				var item:Object ;
 				switch (colEvent.kind) {
 					case CollectionEventKind.RESET:
 						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
@@ -66,7 +72,7 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										var avo:AgentVO = elemVO as AgentVO ;
@@ -77,7 +83,7 @@ package com.mindalliance.channels.view.flowmap
 							}
 					break ;
 					case CollectionEventKind.REMOVE:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										var avo:AgentVO = elemVO as AgentVO ;
@@ -111,6 +117,7 @@ package com.mindalliance.channels.view.flowmap
 		protected function repositoryChangeHandler(event:Event):void {
  			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
+				var item : Object ;
 				switch (colEvent.kind) {
 					case CollectionEventKind.RESET:
 						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
@@ -120,7 +127,7 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										addRepository(FlowMap.defaultPhaseID, elemVO) ;
@@ -128,7 +135,7 @@ package com.mindalliance.channels.view.flowmap
 							}
 					break ;
 					case CollectionEventKind.REMOVE:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										FlowMap.removeRepository(elemVO.id) ;
@@ -136,7 +143,7 @@ package com.mindalliance.channels.view.flowmap
 							}
 					break;
 					case CollectionEventKind.UPDATE:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										var orgVO:ElementVO = newValue as ElementVO ;
@@ -178,6 +185,7 @@ package com.mindalliance.channels.view.flowmap
 		protected function eventChangeHandler(event:Event):void {
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
+				var item : Object ;
 				switch (colEvent.kind) {
 					case CollectionEventKind.RESET:
 						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
@@ -187,7 +195,7 @@ package com.mindalliance.channels.view.flowmap
 						}
 					break ;
 					case CollectionEventKind.ADD:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										FlowMap.addEvent(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
@@ -195,7 +203,7 @@ package com.mindalliance.channels.view.flowmap
 							}
 					break ;
 					case CollectionEventKind.REMOVE:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								extractElementVO(item,
 									function anon(elemVO:ElementVO):void {
 										FlowMap.removeEvent(elemVO.id) ;
@@ -203,7 +211,7 @@ package com.mindalliance.channels.view.flowmap
 							}						
 					break ;
 					case CollectionEventKind.UPDATE:
-                            for each (var item : Object in colEvent.items) {
+                            for each (item in colEvent.items) {
 								examinePropertyChange(item, 
 									function anon(elemVO:ElementVO, newValue:Object):void {
 										FlowMap.renameEvent(elemVO.id, newValue as String) ;
@@ -215,53 +223,126 @@ package com.mindalliance.channels.view.flowmap
 			}
 		}
 		
-		private function refreshCausation(elemVO:ElementVO):void {
-			var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
-			var occVO:OccurrenceVO = modelLocator.getElementModel(elemVO.id).data as OccurrenceVO ;
-			if (!occVO)
+		
+		private var watchers:Object = new Object() ;
+		protected function causationChangeHandler(event:Event):void {
+			if (!(event is PropertyChangeEvent))
 				return ;
-			if (!occVO.cause)
-				return ;
-			FlowMap.addCausation(occVO.cause.id, occVO.id) ;
+			refreshCausation((event as PropertyChangeEvent).newValue as OccurrenceVO) ;
+			var cw:ChangeWatcher = watchers[(event as PropertyChangeEvent).newValue.id] as ChangeWatcher ;
+			if (cw)
+				cw.unwatch() ;
 		}
-				
+		
+		private function setupCausationWatcher(elemVO:ElementVO):void {
+			var elemModel:ElementModel = ChannelsModelLocator.getInstance().getElementModel(elemVO.id) as ElementModel ;
+			if (!elemModel.data) {
+				var watcher:ChangeWatcher = ChangeWatcher.watch(elemModel, 'data', causationChangeHandler) ;
+				watchers[elemVO.id] = watcher ;
+				CairngormHelper.fireEvent(new GetTaskEvent(elemVO.id, null)) ;
+			}
+			else {
+				refreshCausation(elemModel.data as OccurrenceVO) ;
+			}
+		}
+		
+		private function refreshCausation(occVO:OccurrenceVO):void {
+			if (occVO && occVO.cause)
+				FlowMap.addCausation(occVO.cause.id, occVO.id) ;
+		}
+		
 		protected function taskChangeHandler(event:Event):void {
 			if (event is CollectionEvent) {
 				var colEvent:CollectionEvent = event as CollectionEvent ;
+				var item : Object ;
+				var causation:ElementVO ;
+				var causationsToWatch:Array ;
 				switch (colEvent.kind) {
 					case CollectionEventKind.RESET:
 						var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
 						var taskAC:ArrayCollection = modelLocator.getElementListModel(ElementListNames.TASK_LIST_KEY).data ;
+						causationsToWatch = new Array() ;
 						for each (var task:ElementVO in taskAC) {
 							FlowMap.addTask(FlowMap.defaultPhaseID, task.id, task.name) ;
-							refreshCausation(task) ;
+							causationsToWatch.push(task) ;
+						}
+						for each (causation in causationsToWatch)
+								setupCausationWatcher(causation) ;
+					break ;
+					case CollectionEventKind.ADD:
+ 						causationsToWatch = new Array() ;
+					    for each (item in colEvent.items) {
+					         extractElementVO(item,
+                                    function anon(elemVO:ElementVO):void {
+										causationsToWatch.push(elemVO) ;
+                                        FlowMap.addTask(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
+                                    }) ;
+					    }
+						for each (causation in causationsToWatch)
+								setupCausationWatcher(causation) ;
+					break ;
+					case CollectionEventKind.REMOVE:
+						for each (item in colEvent.items) {
+							extractElementVO(item,
+								function anon(taskVO:ElementVO):void {
+									FlowMap.removeTask(taskVO.id) ;
+								}) ;
+						}
+					break ;
+					case CollectionEventKind.UPDATE:
+	 					causationsToWatch = new Array() ;
+                        for each (item in colEvent.items) {
+							examinePropertyChange(item, 
+								function anon(elemVO:ElementVO, newValue:Object):void {
+									causationsToWatch.push(elemVO) ;
+									FlowMap.renameTask(elemVO.id, newValue as String) ;
+								}) ;
+						}
+						for each (causation in causationsToWatch)
+								setupCausationWatcher(causation) ;
+					break ;
+				}
+			}
+		}
+		
+		protected function sharingNeedChangeHandler(event:Event):void {
+			if (event is CollectionEvent) {
+				var colEvent:CollectionEvent = event as CollectionEvent ;
+				var item:Object ;
+				switch (colEvent.kind) {
+					case CollectionEventKind.RESET:
+						// Just add all of them again
+						for each (item in colEvent.items) {
+							extractElementVO(item,
+								function anon(elemVO:ElementVO):void {
+									
+								}) ;
 						}
 					break ;
 					case CollectionEventKind.ADD:
-					     for each (var item : Object in colEvent.items) {
-					         extractElementVO(item,
-                                    function anon(elemVO:ElementVO):void {
-                                        FlowMap.addTask(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
-                                        refreshCausation(elemVO) ;
-                                    }) ;
-					     }
-
+						for each (item in colEvent.items) {
+							extractElementVO(item,
+								function anon(elemVO:ElementVO):void {
+									
+								}) ;
+						}
 					break ;
 					case CollectionEventKind.REMOVE:
-						for each (var item : Object in colEvent.items) {
-								extractElementVO(item,
-									function anon(taskVO:ElementVO):void {
-										FlowMap.removeTask(taskVO.id) ;
-									}) ;
-							}
+						for each (item in colEvent.items) {
+							extractElementVO(item,
+								function anon(elemVO:ElementVO):void {
+									FlowMap.removeSharingNeed(elemVO.id) ;
+								}) ;
+						}
 					break ;
-					case CollectionEventKind.UPDATE:
-                        for each (var item : Object in colEvent.items) {
-								examinePropertyChange(item, 
-									function anon(elemVO:ElementVO, newValue:Object):void {
-										FlowMap.renameTask(elemVO.id, newValue as String) ;
-										refreshCausation(elemVO) ;
-									}) ;
+					case CollectionEventKind.RESET:
+						for each (item in colEvent.items) {
+							extractElementVO(item,
+								function anon(elemVO:ElementVO):void {
+									// get sharing need VO
+									// extract elements out of it
+/* 									FlowMap.addSharingNeed(elemVO.id, ...) ; */
+								}) ;
 						}
 					break ;
 				}

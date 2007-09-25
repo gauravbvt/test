@@ -5,9 +5,11 @@ package com.mindalliance.channels.view.flowmap
     import com.yworks.canvas.ICanvasObject;
     import com.yworks.canvas.ICanvasObjectDescriptor;
     import com.yworks.canvas.ICanvasObjectGroup;
+    import com.yworks.canvas.drawing.RectangularSelectionPaintable;
     import com.yworks.canvas.geom.IOrientedRectangle;
     import com.yworks.canvas.geom.IPoint;
     import com.yworks.canvas.geom.IRectangle;
+    import com.yworks.canvas.geom.ImmutablePoint;
     import com.yworks.canvas.input.ClickEvent;
     import com.yworks.canvas.input.MainInputMode;
     import com.yworks.canvas.input.MouseHoverInputMode;
@@ -18,19 +20,24 @@ package com.mindalliance.channels.view.flowmap
     import com.yworks.graph.input.GraphEditorInputMode;
     import com.yworks.graph.model.DefaultEdge;
     import com.yworks.graph.model.DefaultGraph;
+    import com.yworks.graph.model.DefaultLabel;
     import com.yworks.graph.model.DefaultNode;
+    import com.yworks.graph.model.DefaultPort;
     import com.yworks.graph.model.DefaultSelectionModel;
     import com.yworks.graph.model.GraphSelection;
     import com.yworks.graph.model.IEdge;
     import com.yworks.graph.model.IGraph;
     import com.yworks.graph.model.ILabel;
     import com.yworks.graph.model.ILabelCollection;
+    import com.yworks.graph.model.ILabelModelParameter;
     import com.yworks.graph.model.IMapperRegistry;
     import com.yworks.graph.model.INode;
     import com.yworks.graph.model.IPort;
     import com.yworks.graph.model.IPortCandidateProvider;
     import com.yworks.graph.model.IPortCollection;
+    import com.yworks.graph.model.ISelectionPaintable;
     import com.yworks.graph.model.SelectionEvent;
+    import com.yworks.graph.model.SelectionPaintManager;
     import com.yworks.support.DictionaryMapper;
     import com.yworks.support.IMapper;
     import com.yworks.support.Iterable;
@@ -38,18 +45,16 @@ package com.mindalliance.channels.view.flowmap
     import com.yworks.ui.GraphCanvasComponent;
     import com.yworks.util.Util;
     
+    import flash.events.EventDispatcher;
+    import flash.geom.Rectangle;
+    
+    import mx.charts.chartClasses.NumericAxis;
     import mx.collections.ArrayCollection;
     import mx.controls.Alert;
     import mx.graphics.Stroke;
-    import com.yworks.canvas.geom.ImmutablePoint;
-    import com.yworks.canvas.drawing.RectangularSelectionPaintable;
-    import com.yworks.graph.model.SelectionPaintManager;
-    import flash.geom.Rectangle;
-    import com.yworks.graph.model.ISelectionPaintable;
     import mx.states.SetStyle;
-    import com.yworks.graph.model.DefaultLabel;
-    import com.yworks.graph.model.DefaultPort;
-    import flash.events.EventDispatcher;
+    import com.yworks.graph.model.ExteriorParameter;
+    import com.yworks.graph.model.ExteriorLabelModel;
 
 	[Bindable]
     public class FlowMap extends EventDispatcher
@@ -82,7 +87,7 @@ package com.mindalliance.channels.view.flowmap
     	public static function getEnabled():Boolean {
     		return _graphCanvas.enabled ;
     	}
-    	
+    	    	
 		public static function initialize(graphCanvas:GraphCanvasComponent):void {
 			_graphCanvas = graphCanvas ;
 			_graphCanvas.treeDirty = true ;
@@ -102,8 +107,6 @@ package com.mindalliance.channels.view.flowmap
 			_graph.shareDefaultEdgeLabelStyleInstance = true ;
 			
 			_graphSelection = new GraphSelection(_graph) ;
-			_graphSelection.addEventListener(SelectionEvent.SELECT, _itemSelected) ;
-			_graphSelection.addEventListener(SelectionEvent.DESELECT, _itemDeselected) ;
 			_selectionPaintManager = new SelectionPaintManager(_graphCanvas, _graph.collectionModel, _graphSelection) ;
 			
 			_geim = new CustomGraphEditorInputMode(_graph, _graphSelection) ;
@@ -144,23 +147,7 @@ package com.mindalliance.channels.view.flowmap
 			_graphCanvas.addCanvasObject(phase, _phaseCanvasObjectDescriptor, _phaseCanvasObjectGroup) ;
 			_mapperHelper.idMapper.mapValue(phase, phaseID) ;
 		}
-		
-		protected static function _itemSelected(event:SelectionEvent):void {
-			if (event.item is IEdge) {
- 				var de:DefaultEdge = DefaultEdge(event.item) ;
- 				de.style = FlowMapStyles.selectedEdgeStyle ;
-			}
-			_graphCanvas.forceRepaint();
-		}
-		
-		protected static function _itemDeselected(event:SelectionEvent):void {
-			if (event.item is IEdge) {
-				var de:DefaultEdge = DefaultEdge(event.item) ;
-				de.style = _graph.defaultEdgeStyle ;
-			}
-			_graphCanvas.forceRepaint();
-		}
-		
+				
 		public static function get selectedItems():Iterable {
 			return _graphSelection.selectedObjects ;
 		}
@@ -297,7 +284,6 @@ package com.mindalliance.channels.view.flowmap
 			_mapperHelper.portTypeMapper.mapValue(port, PortType.PORT_TYPE_TASK_OUTGOING) ;
 			_mapperHelper.idMapper.mapValue(port, taskID) ;
 
-			_graphSelection.setNodeSelected(node, true) ;
 /* 			_updatePhaseBounds(phaseID) ; */
 		}
 		
@@ -596,8 +582,8 @@ package com.mindalliance.channels.view.flowmap
 					port = _graph.addPort(node, rect.x, rect.y + rect.height) as DefaultPort ;
 					_mapperHelper.portTypeMapper.mapValue(port, type) ;
 				break ;
-				case PortType.PORT_TYPE_EVENT_OUTGOING:
-					port = _graph.addPort(node, rect.x + rect.width, rect.y + rect.height) as DefaultPort ;
+				case PortType.PORT_TYPE_CAUSE_OUTGOING:
+					port = _graph.addPort(node, rect.x + rect.width/2, rect.y + rect.height) as DefaultPort ;
 					_mapperHelper.portTypeMapper.mapValue(port, type) ;
 				break ;	
 			}
@@ -632,7 +618,7 @@ package com.mindalliance.channels.view.flowmap
 			
 			// Check if there is already a causal edge between them
 			var edgeIter:Iterator = _graph.edgesAtPort(sourcePort).iterator() ;
-			while (edgeIter) {
+			while (edgeIter.hasNext()) {
 				var e:IEdge = edgeIter.next() as IEdge ;
 				if (e.targetPort == targetPort)
 					return ;
@@ -640,7 +626,8 @@ package com.mindalliance.channels.view.flowmap
 			
 			// Add causal edge
 			var edge:DefaultEdge = _graph.createEdge(sourcePort, targetPort) as DefaultEdge ;
-			_mapperHelper.edgeTypeMapper.mapValue(edge, EdgeType.EDGE_TYPE_CAUSE) ;
+			_graph.addLabel(edge, 'causes') ;
+ 		/* 	_mapperHelper.edgeTypeMapper.mapValue(edge, EdgeType.EDGE_TYPE_CAUSE) ; */
 			_graph.setEdgeStyle(edge, FlowMapStyles.causeEdgeStyle) ;
 		}
 		
@@ -672,15 +659,166 @@ package com.mindalliance.channels.view.flowmap
 				}
 			}
 		}
-		
-		public static function addSharingNeed(sourceID:String, targetID:String):void {
+				
+		private static function ensureSharingNeedSourceExists(sourceID:String, sourceNodeType:String, sourceNodeLabel:String):DefaultPort {
+			var nd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(sourceID) as NodeData;
+			if (!nd && (sourceNodeType == NodeData.NODE_TYPE_ROLE)) {
+				var node:DefaultNode = addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas), FlowMapStyles.roleNodeStyle, sourceID) ;
+				nd = new RoleNodeData(node, sourceID) ;
+				_mapperHelper.nodeDataMapper.mapValue(sourceID, nd) ;
+				addNewNodeLabel(node, sourceNodeLabel, ExteriorLabelModel.south, FlowMapStyles.roleLabelStyle, sourceID, LabelData.LABEL_TYPE_ROLE) ;
+			}
 			
+			if (nd) {
+				var port:IPort = null ;
+				var rect:IRectangle = nd.node.layout ;
+				if (nd is RoleNodeData) {
+					port = _getPort(nd.node, PortType.PORT_TYPE_ROLE_OUTGOING) ;
+					if (!port)
+						port = addNewPort(nd.node, rect.x + rect.width + 5, rect.y, PortType.PORT_TYPE_ROLE_OUTGOING, sourceID) ;
+				}
+				else if (nd is RepositoryNodeData) {
+					port = _getPort(nd.node, PortType.PORT_TYPE_REPOSITORY_OUTGOING) ;
+					if (!port)
+						port = addNewPort(nd.node, rect.x + rect.width + 5, rect.y, PortType.PORT_TYPE_REPOSITORY_OUTGOING, sourceID) ;
+				}
+			}
+			
+			return port as DefaultPort ;
+		}
+				
+		private static function ensureSharingNeedTargetExists(targetID:String, targetNodeType:String):DefaultPort {
+			var nd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(targetID) as NodeData;
+			if (!nd && (targetNodeType == NodeData.NODE_TYPE_ROLE)) {
+				var node:DefaultNode = addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas), FlowMapStyles.roleNodeStyle, targetID) ;
+				nd = new RoleNodeData(node, targetID) ;
+				_mapperHelper.nodeDataMapper.mapValue(targetID, nd) ;
+			}
+			
+			if (nd) {
+				var port:IPort = null ;
+				var rect:IRectangle = nd.node.layout ;
+				if (nd is RoleNodeData) {
+					port = _getPort(nd.node, PortType.PORT_TYPE_ROLE_INCOMING) ;
+					if (!port)
+						port = addNewPort(nd.node, rect.x - rect.width - 5, rect.y, PortType.PORT_TYPE_ROLE_INCOMING, targetID) ;
+				}
+				else if (nd is RepositoryNodeData) {
+					port = _getPort(nd.node, PortType.PORT_TYPE_REPOSITORY_INCOMING) ;
+					if (!port)
+						port = addNewPort(nd.node, rect.x - rect.width - 5, rect.y, PortType.PORT_TYPE_REPOSITORY_INCOMING, targetID) ;
+				}
+			}
+			
+			return port as DefaultPort ;
 		}
 		
-		public static function removeSharingNeed(sourceID:String, targetID:String):void {
+		public static function addSharingNeed(elemID:String, aboutLabelText:String, what:Array, 
+			sourceID:String, sourceNodeType:String, targetID:String, targetNodeType:String, sourceNodeLabel:String=null):void {
+			var snnd:SharingNeedNodeData = _mapperHelper.nodeDataMapper.lookupValue(elemID) as SharingNeedNodeData ;
+			if (snnd) {
+				removeSharingNeed(elemID) ;
+				addSharingNeed(elemID, aboutLabelText, what, sourceID, sourceNodeType, targetID, targetNodeType, sourceNodeLabel) ;
+				return ;
+			}
 			
+			var sourcePort:IPort = ensureSharingNeedSourceExists(sourceID, sourceNodeType, sourceNodeLabel) ;
+			if (!sourcePort)
+				return ;
+			
+			var targetPort:IPort = ensureSharingNeedTargetExists(targetID, targetNodeType) ;
+			if (!targetPort)
+				return ;
+						
+			// Find a place to add the event node
+			var node:DefaultNode = addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(_graphCanvas),
+												FlowMapStyles.sharingNeedNodeStyle,
+												elemID) ;
+			
+			// Attach node data
+			snnd = new SharingNeedNodeData(node, elemID) ;
+			_mapperHelper.nodeDataMapper.mapValue(elemID, snnd) ;
+	
+			// Add About label
+			var aboutLabel:ILabel = addNewNodeLabel(node, aboutLabelText, 
+													FlowMapStyles.sharingNeedAboutLabelModelParameter, 
+													FlowMapStyles.sharingNeedAboutLabelStyle,
+													elemID, LabelData.LABEL_TYPE_SHARING_NEED_ABOUT) ;
+
+			// Add What label
+			var whatLabel:ILabel = addNewNodeLabel(node, what.join("\n"), 
+													FlowMapStyles.sharingNeedWhatLabelModelParameter, 
+													FlowMapStyles.sharingNeedWhatLabelStyle,
+													elemID, LabelData.LABEL_TYPE_SHARING_NEED_WHAT) ;
+			
+			// Adjust node size to fit labels
+			FlowMapLayoutHelper.updateNodeBounds(_graph, node) ;
+			
+			// Add ports
+			var rect:IRectangle = node.layout ;
+			var sharingIncomingPort:IPort = addNewPort(node, rect.x + rect.width + 5, rect.y + rect.height/2, PortType.PORT_TYPE_SHARING_NEED_OUTGOING, elemID) ;
+			var sharingOutgoingPort:IPort = addNewPort(node, rect.x - rect.width - 5 , rect.y + rect.height/2, PortType.PORT_TYPE_SHARING_NEED_INCOMING, elemID) ;
+			
+			// Create the edges
+			var edge:IEdge ;
+			edge = _graph.createEdge(sourcePort, sharingIncomingPort, FlowMapStyles.edgeStyle) ;
+			_graph.addLabel(edge, 'knows') ;
+			edge = _graph.createEdge(sharingOutgoingPort, targetPort, FlowMapStyles.edgeStyle) ;
+			_graph.addLabel(edge, 'needs to know') ;
 		}
+		
+		public static function removeSharingNeed(elemID:String):void {
+			// First make sure node exists and is the right type
+			var snnd:SharingNeedNodeData = _mapperHelper.nodeDataMapper.lookupValue(elemID) as SharingNeedNodeData ;
+			if (!snnd)
+				return ;
+				
+			// Get source and target nodes. If they are role nodes, remove them.
+			var snd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(snnd.sourceID) as NodeData ;
+			var edgeIter:Iterator ;
+			if (snd is RoleNodeData) {
+				edgeIter = _graph.edgesAtPortOwner(snd.node).iterator() ;
+				edgeIter.next() ;
+				if (!edgeIter.hasNext())
+					_removeNode(snd.id) ;
+			}
 			
+			var tnd:NodeData = _mapperHelper.nodeDataMapper.lookupValue(snnd.targetID) as NodeData ;
+			if (tnd is RoleNodeData) {
+				edgeIter = _graph.edgesAtPortOwner(tnd.node).iterator() ;
+				edgeIter.next() ;
+				if (!edgeIter.hasNext())
+					_removeNode(tnd.id) ;
+			}
+			
+			// Remove the sharing need node
+			_removeNode(elemID) ;
+		}
+		
+		
+		private static function addNewNode(location:IPoint, style:INodeStyle, elemID:String):DefaultNode {
+			var node:DefaultNode = _graph.createNodeAt(location.x, location.y) as DefaultNode ;
+			_mapperHelper.idMapper.mapValue(node, elemID) ;
+			_graph.setNodeStyle(node, style) ;
+			DefaultNodeSelectionPaintable.createAndRegisterFor(node) ;
+			return node ;
+		}
+		
+		private static function addNewPort(node:DefaultNode, x:Number, y:Number, portType:String, elemID:String):IPort {
+			var port:IPort = _graph.addPort(node, x, y) ;
+			_mapperHelper.portTypeMapper.mapValue(port, portType) ;
+			_mapperHelper.idMapper.mapValue(port, elemID) ;
+			return port ;
+		}
+		
+		private static function addNewNodeLabel(node:DefaultNode, labelText:String, labelModelParameter:ILabelModelParameter, labelStyle:ILabelStyle, elemID:String, labelType:String):ILabel {
+			var label:ILabel = _graph.addLabel(node, labelText, labelModelParameter, labelStyle) ;
+			var ld:LabelData = new LabelData(label, elemID, labelType) as LabelData ;
+			_mapperHelper.labelDataMapper.mapValue(label, ld) ;
+			_mapperHelper.idMapper.mapValue(label, elemID) ;
+			return label ;
+		}
+							
 		private static var id:int = -1 ;
 		public static function getNewID():String {
 			id ++ ;

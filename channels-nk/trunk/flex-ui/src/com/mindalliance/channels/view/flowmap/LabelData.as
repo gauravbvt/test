@@ -14,6 +14,10 @@ package com.mindalliance.channels.view.flowmap
 		public static const LABEL_TYPE_REPOSITORY:String = "RepositoryLabel" ;
 		
 		public static const LABEL_TYPE_REPOSITORY_OWNER:String = "RepositoryOwnerLabel" ;
+		
+		public static const LABEL_TYPE_SHARING_NEED_ABOUT:String = "SharingNeedAboutLabel" ;
+		
+		public static const LABEL_TYPE_SHARING_NEED_WHAT:String = "SharingNeedWhatLabel" ;
 
 		private var _label:ILabel ;
 		

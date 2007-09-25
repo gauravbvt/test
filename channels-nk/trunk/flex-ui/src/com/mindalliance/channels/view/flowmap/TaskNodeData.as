@@ -8,7 +8,7 @@ package com.mindalliance.channels.view.flowmap
 		
 		public function TaskNodeData(node:DefaultNode, id:String, phaseID:String)
 		{
-			super(node, id);
+			super(node, id, NODE_TYPE_TASK);
 		}
 		
 		public function get phaseID():String {

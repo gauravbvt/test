@@ -56,20 +56,8 @@
 							CairngormHelper.fireEvent(new DeleteRepositoryEvent(nd.id)) ;
 							continue ;
 						}
-					}
-					else if (item is IEdge) {
-						// Finish this after doing sharing need edges
-						var edgeType:String = mapperHelper.edgeTypeMapper.lookupValue(item) as String ;
-						switch (edgeType) {
-							case EdgeType.EDGE_TYPE_CAUSE:
-								var e:DefaultEdge = item as DefaultEdge ;
-								var node:DefaultNode = e.targetPort.owner as DefaultNode ;
-								if (!node)
-									continue ;
-								var elemID:String = mapperHelper.idMapper.lookupValue(node) as String ;
-								var occVO:OccurrenceVO = ChannelsModelLocator.getInstance().getElementModel(elemID).data as OccurrenceVO ;
-								// Not sure what to do after this point. Fire the relevant updateTask/Event event?
-							break ;
+						else if (nd is SharingNeedNodeData) {
+							continue ;
 						}
 					}
 				}

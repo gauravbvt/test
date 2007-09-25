@@ -8,6 +8,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.communicationplan.CommunicationPlanViewer;
 			import com.mindalliance.channels.view.scenario.SharingNeedEditor;
 			import com.mindalliance.channels.view.flowmap.FlowMapView;
 			import com.mindalliance.channels.view.UtilFuncs;
@@ -105,11 +106,19 @@
 					popupChooserAsBrowser(menuLabel, RepositoryChooser) ;
 				break ;
 				case "Sharing Need Editor":
+					var sharingNeedTitleWindow:ResizableTitleWindow = PopUpManager.createPopUp(this, ResizableTitleWindow) as ResizableTitleWindow ;
+					sharingNeedTitleWindow.maxHeight = 600 ;
+					sharingNeedTitleWindow.showCloseButton = true ;
+					sharingNeedTitleWindow.addEventListener(CloseEvent.CLOSE, function anon(event:CloseEvent):void {PopUpManager.removePopUp(sharingNeedTitleWindow);}) ;
+					sharingNeedTitleWindow.addChild(new SharingNeedEditor()) ;
+					performPostPopupCreation(sharingNeedTitleWindow) ;
+				break ;
+				case "Communication Plan Viewer" :
 					var tw:ResizableTitleWindow = PopUpManager.createPopUp(this, ResizableTitleWindow) as ResizableTitleWindow ;
 					tw.maxHeight = 600 ;
 					tw.showCloseButton = true ;
 					tw.addEventListener(CloseEvent.CLOSE, function anon(event:CloseEvent):void {PopUpManager.removePopUp(tw);}) ;
-					tw.addChild(new SharingNeedEditor()) ;
+					tw.addChild(new CommunicationPlanViewer()) ;
 					performPostPopupCreation(tw) ;
 				break ;
             }
@@ -165,6 +174,9 @@
 			<menuitem label="Temporary items below" enabled="false"/>
 			<menuitem label="Sharing Need Editor"/>
 			<menuitem label="Set Role"/>
+		</menuitem>
+		<menuitem label="Testing">
+			<menuitem label="Communication Plan Viewer"/>
 		</menuitem>
     </mx:XMLList>
 

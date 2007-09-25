@@ -36,6 +36,7 @@ package com.mindalliance.channels.view.flowmap
 	import mx.managers.ISystemManager;
 	import mx.utils.URLUtil;
 	import com.yworks.util.CloneableBitmap;
+	import com.yworks.graph.drawing.Fills;
 	
 	public class FlowMapStyles
 	{
@@ -53,6 +54,10 @@ package com.mindalliance.channels.view.flowmap
 		public static const EVENT_NODE_STROKE:Stroke = new Stroke(0xBEDF5D, 1.0) ;
 		
 		public static const EVENT_NODE_FILL:IFill = new SolidColor(0xD6EB9A, 0.5) ;
+		
+		public static const SHARING_NEED_NODE_STROKE:Stroke = new Stroke(0xAAAAA, 1.0) ;
+		
+		public static const SHARING_NEED_NODE_FILL:IFill = new SolidColor(0xEBF4FA, 0.5) ;
 		
 		public static const SELECTED_NODE_STROKE:Stroke = new Stroke(0xBBD9EE, 1.0) ;
 		
@@ -73,145 +78,80 @@ package com.mindalliance.channels.view.flowmap
 						'See mx.core.UIComponent.') ;
 		}
 		
-		private static var _taskNodeStyle:INodeStyle ;
-		private static var _eventNodeStyle:INodeStyle ;
-		private static var _repositoryNodeStyle:INodeStyle ;
-		private static var _roleLabelStyle:ILabelStyle ;
-		private static var _roleLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north ;
-		private static var _infoLabelStyle:ILabelStyle ;
-		private static var _infoLabelModelParameter:ILabelModelParameter = InteriorLabelModel.south ;
-		private static var _eventLabelStyle:ILabelStyle ;
-		private static var _eventLabelModelParameter:ILabelModelParameter = InteriorLabelModel.center ;
-		private static var _taskLabelStyle:ILabelStyle ;
-		private static var _taskLabelModelParameter:ILabelModelParameter = InteriorLabelModel.center ;
-		private static var _repositoryLabelStyle:ILabelStyle ;
-		private static var _repositoryLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.south ;
-		private static var _repositoryOwnerLabelStyle:ILabelStyle ;
-		private static var _repositoryOwnerLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north ;
-		private static var _portStyle:IPortStyle ;
-		private static var _hoverPortStyle:IPortStyle ;
-		private static var _edgeStyle:IEdgeStyle ;
-		private static var _selectedEdgeStyle:IEdgeStyle ;
-		private static var _causeEdgeStyle:IEdgeStyle ;
+		public static var taskNodeStyle:INodeStyle ;
+		public static var eventNodeStyle:INodeStyle ;
+		public static var repositoryNodeStyle:INodeStyle ;
+		public static var sharingNeedNodeStyle:INodeStyle ;
+		public static var roleNodeStyle:INodeStyle ;
+		public static var roleLabelStyle:ILabelStyle ;
+		public static var roleLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north ;
+		public static var sharingNeedAboutLabelStyle:ILabelStyle ;
+		public static var sharingNeedAboutLabelModelParameter:ILabelModelParameter = InteriorLabelModel.north ;
+		public static var sharingNeedWhatLabelStyle:ILabelStyle ;
+		public static var sharingNeedWhatLabelModelParameter:ILabelModelParameter = InteriorLabelModel.west ;
+		public static var eventLabelStyle:ILabelStyle ;
+		public static var eventLabelModelParameter:ILabelModelParameter = InteriorLabelModel.center ;
+		public static var taskLabelStyle:ILabelStyle ;
+		public static var taskLabelModelParameter:ILabelModelParameter = InteriorLabelModel.center ;
+		public static var repositoryLabelStyle:ILabelStyle ;
+		public static var repositoryLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.south ;
+		public static var repositoryOwnerLabelStyle:ILabelStyle ;
+		public static var repositoryOwnerLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north ;
+		public static var portStyle:IPortStyle ;
+		public static var hoverPortStyle:IPortStyle ;
+		public static var edgeStyle:IEdgeStyle ;
+		public static var selectedEdgeStyle:IEdgeStyle ;
+		public static var causeEdgeStyle:IEdgeStyle ;
 
 		private static function _initNodeStyles():void {
 			_checkSystemManager() ;
-			_taskNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.roundrectangle, TASK_NODE_STROKE, TASK_NODE_FILL) ;
-			_eventNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.ELLIPSE, EVENT_NODE_STROKE, EVENT_NODE_FILL) ;
+			taskNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.roundrectangle, TASK_NODE_STROKE, TASK_NODE_FILL) ;
+			eventNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.ELLIPSE, EVENT_NODE_STROKE, EVENT_NODE_FILL) ;
+			sharingNeedNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.octagon, SHARING_NEED_NODE_STROKE, SHARING_NEED_NODE_FILL) ;
  			 var imgNodeStyle:ImageNodeStyle = new ImageNodeStyle(null, new ImageNodeStyleRenderer()) ;
  			 imgNodeStyle.url = "assets/images/data.png" ;
- 			_repositoryNodeStyle = imgNodeStyle ;
+ 			repositoryNodeStyle = imgNodeStyle.clone() as ImageNodeStyle ;
+ 			imgNodeStyle.url = "assets/images/human.png" ;
+ 			roleNodeStyle = imgNodeStyle.clone() as ImageNodeStyle ;
 		}
-		
-		public static function get taskNodeStyle():INodeStyle {
-			return _taskNodeStyle ;
-		}
-		
-		public static function get eventNodeStyle():INodeStyle {
-			return _eventNodeStyle ;
-		}
-		
-		public static function get repositoryNodeStyle():INodeStyle {
-			return _repositoryNodeStyle ;
-		}
-		
+			
 		private static function _initNodeLabelStyles():void {
 			_checkSystemManager() ;
-			var uitf:UITextFormat = new UITextFormat(_systemManager, 'Verdana', 11, '0x000000', true, null, null, null, null, 'center', 5) ;
-			_roleLabelStyle = new SimpleLabelStyle(new SimpleLabelStyleRenderer(), uitf) ;
-			_taskLabelStyle = SimpleLabelStyle(_roleLabelStyle.clone()) ;
-			_infoLabelStyle = SimpleLabelStyle(_roleLabelStyle.clone()) ;
-			_eventLabelStyle = SimpleLabelStyle(_roleLabelStyle.clone()) ;
-			_repositoryLabelStyle = SimpleLabelStyle(_roleLabelStyle.clone()) ;
-		}
-		
-		public static function get repositoryLabelStyle():ILabelStyle {
-			return _repositoryLabelStyle ;
-		}
-		
-		public static function get repositoryLabelModelParameter():ILabelModelParameter {
-			return _repositoryLabelModelParameter ;
-		}
-		
-		public static function get roleLabelStyle():ILabelStyle {
-			return _roleLabelStyle ;
-		}
-		
-		public static function get roleLabelModelParameter():ILabelModelParameter {
-			return _roleLabelModelParameter ;
+			var uitf:UITextFormat = new UITextFormat(_systemManager, 'Verdana', 11, '0x000000', true, null, null, null, null, 'center', 5, 5) ;
+			roleLabelStyle = new SimpleLabelStyle(new SimpleLabelStyleRenderer(), uitf) ;
+			taskLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
+			eventLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
+			repositoryLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
+			sharingNeedAboutLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
+			
+			sharingNeedWhatLabelStyle = new SimpleLabelStyle(new SimpleLabelStyleRenderer(),
+				new UITextFormat(_systemManager, 'Verdana', 11, '0x000000', true, null, null, null, null, 'left', 5)) ;
 		}
 				
-		public static function get taskLabelStyle():ILabelStyle {
-			return _taskLabelStyle ;
-		}
-		
-		public static function get taskLabelModelParameter():ILabelModelParameter {
-			return _taskLabelModelParameter ;
-		}
-				
-		public static function get infoLabelStyle():ILabelStyle {
-			return _infoLabelStyle ;
-		}
-		
-		public static function get infoLabelModelParameter():ILabelModelParameter {
-			return _infoLabelModelParameter ;
-		}
-				
-		public static function get eventLabelStyle():ILabelStyle {
-			return _eventLabelStyle ;
-		}
-		
-		public static function get eventLabelModelParameter():ILabelModelParameter {
-			return _eventLabelModelParameter ;
-		}
-		
-		public static function get repositoryOwnerLabelStyle():ILabelStyle {
-			return _repositoryOwnerLabelStyle ;
-		}
-		
-		public static function get repositoryOwnerLabelModelParameter():ILabelModelParameter {
-			return _repositoryOwnerLabelModelParameter ;
-		}
-		
 		private static function _initPortStyle():void {
 			var ps:SimplePortStyle = new SimplePortStyle(new SimplePortStyleRenderer()) ;
-			ps.radius = 2.0 ;
-			ps.stroke = new Stroke(0x004100, 2.0) ;
-			_portStyle = IPortStyle(ps.clone()) ;
+			ps.radius = 1.0 ;
+			ps.stroke = new Stroke(0x004100, 1.0) ;
+			portStyle = IPortStyle(ps.clone()) ;
 			ps.radius = 3.0 ;
 			ps.stroke.weight = 3.0 ;
-			_hoverPortStyle = IPortStyle(ps.clone()) ;
-		}
-				
-		public static function get portStyle():IPortStyle {
-			return _portStyle ;
+			hoverPortStyle = IPortStyle(ps.clone()) ;
 		}
 				
 		private static function _initEdgeStyles():void {
 			var es:PolylineEdgeStyle = new PolylineEdgeStyle() ;
 			es.stroke = new Stroke(0xAAAAAA, 4.0) ;
 			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0xAAAAAA,1.0), new SolidColor(0xAAAAAA), 4.0) ;
-			_edgeStyle = IEdgeStyle(es.clone()) ;
+			edgeStyle = IEdgeStyle(es.clone()) ;
 			
 			es.stroke = new Stroke(0x000000, 5.0) ;
 			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0x005C9F, 1.0), new SolidColor(0x005C9F), 4.0) ;
-			_selectedEdgeStyle = IEdgeStyle(es.clone()) ;
+			selectedEdgeStyle = IEdgeStyle(es.clone()) ;
 			
 			es.stroke = new Stroke(0xCCFF33, 2.0) ;
 			es.targetArrow = DefaultArrow.create(ArrowType.DIAMOND, new Stroke(0xCCFF33, 1.0), new SolidColor(0xCCFF33), 4.0) ;
-			_causeEdgeStyle = es.clone() as IEdgeStyle ;
+			causeEdgeStyle = es.clone() as IEdgeStyle ;
 		}
-		
-		public static function get edgeStyle():IEdgeStyle {
-			return _edgeStyle ;
-		}
-		
-		public static function get selectedEdgeStyle():IEdgeStyle {
-			return _selectedEdgeStyle ;
-		}
-		
-		public static function get causeEdgeStyle():IEdgeStyle {
-			return _causeEdgeStyle ;
-		}
+			
 	}
 }

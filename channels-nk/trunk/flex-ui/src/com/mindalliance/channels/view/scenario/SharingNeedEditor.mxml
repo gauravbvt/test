@@ -4,10 +4,10 @@
 	xmlns:common="com.mindalliance.channels.view.common.*">
 	<mx:states>
 		<mx:State name="EditState">
-			<mx:SetProperty target="{formItemPolicy}" name="mouseChildren" value="true"/>
+<!--			<mx:SetProperty target="{formItemPolicy}" name="mouseChildren" value="true"/>
 			<mx:SetProperty target="{formItemPolicy}" name="mouseEnabled" value="true"/>
 			<mx:SetProperty target="{txtPolicyURL}" name="editable" value="true"/>
-			<mx:SetProperty target="{txtPolicyDescription}" name="editable" value="true"/>
+			<mx:SetProperty target="{txtPolicyDescription}" name="editable" value="true"/> -->
 		</mx:State>
 	</mx:states>
 
@@ -48,7 +48,7 @@
             }
             
             
-            private function createSharingNeed() {
+            private function createSharingNeed():void {
                 CairngormHelper.fireEvent(new CreateSharingNeedEvent(SourceOrSink.getRoleType("role1"), Knowable.getEventType("event1"), SourceOrSink.getRepositoryType("repository1"), Knowable.getTaskType("task1")));
             }
 		]]>
@@ -56,9 +56,11 @@
 	
 	<mx:Form>
 		<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
-			btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
-			width="100%" currentState="{currentState}"/>
-		<mx:FormItem id="formItemPolicy" label="Policy requirement" resizeEffect="Resize" mouseChildren="false" mouseEnabled="false">
+		btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
+		width="100%" currentState="{currentState}"/>
+<!--												POLICIES NOT USED FOR NOW
+				
+			<mx:FormItem id="formItemPolicy" label="Policy requirement" resizeEffect="Resize" mouseChildren="false" mouseEnabled="false">
 			<mx:VBox>
 				<mx:RadioButtonGroup id="rbgPolicyRequirement"/>
 				<mx:RadioButton id="rbPolicyNone" groupName="rbgPolicyRequirement" label="This sharing need is not associated with a policy."
@@ -88,7 +90,8 @@
 				includeInLayout="{!rbPolicyNone.selected}"
 				label="Policy Description">
 			<mx:TextArea width="100%" id="txtPolicyDescription" editable="false"/>
-		</mx:FormItem>
+		</mx:FormItem> 
+-->
 	</mx:Form>
 	<mx:HBox width="100%" horizontalAlign="center">
 		<mx:HRule width="50%"/>

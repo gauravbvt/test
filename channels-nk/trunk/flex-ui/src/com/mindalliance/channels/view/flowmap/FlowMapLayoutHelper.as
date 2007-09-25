@@ -14,14 +14,20 @@ package com.mindalliance.channels.view.flowmap
 		public static function updateNodeBounds(graph:DefaultGraph, node:DefaultNode):void {
 			var iter:Iterator = node.labels.iterator() ;
 			var minRequiredWidth:Number = 0 ;
+			var minRequiredHeight:Number = 0 ;
 			while (iter.hasNext()) {
 				var label:DefaultLabel = DefaultLabel(iter.next()) ;
 				var labelWidth:Number = label.layout.width + 20 ;
 				if (minRequiredWidth < labelWidth)
 					minRequiredWidth = labelWidth ;
+				var labelHeight:Number = label.layout.height + 20 ;
+				if (minRequiredHeight < labelHeight)
+					minRequiredHeight = labelHeight; 
 			}
 			if (node.layout.width < minRequiredWidth)
 				graph.setBounds(node, node.layout.x, node.layout.y, minRequiredWidth, node.layout.height) ;
+			if (node.layout.height < minRequiredHeight)
+				graph.setBounds(node, node.layout.x, node.layout.y, node.layout.width, minRequiredHeight) ;
 		}
 		
 		public static function getLocationForNewNode2(gc:GraphCanvasComponent):IPoint {

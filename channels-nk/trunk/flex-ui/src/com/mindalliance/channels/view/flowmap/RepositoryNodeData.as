@@ -6,7 +6,7 @@ package com.mindalliance.channels.view.flowmap
 	{
 		public function RepositoryNodeData(node:DefaultNode, id:String)
 		{
-			super(node, id);
+			super(node, id, NODE_TYPE_REPOSITORY);
 		}
 		
 	}

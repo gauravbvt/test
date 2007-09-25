@@ -12,7 +12,7 @@ package com.mindalliance.channels.view.flowmap
 		
 		public function EventNodeData(node:DefaultNode, id:String)
 		{
-			super(node, id);
+			super(node, id, NODE_TYPE_EVENT);
 		}
 		
 		public function get startPhaseID():String {
