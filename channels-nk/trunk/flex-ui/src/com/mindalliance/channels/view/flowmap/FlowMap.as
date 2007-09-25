@@ -24,6 +24,8 @@ package com.mindalliance.channels.view.flowmap
     import com.yworks.graph.model.DefaultNode;
     import com.yworks.graph.model.DefaultPort;
     import com.yworks.graph.model.DefaultSelectionModel;
+    import com.yworks.graph.model.ExteriorLabelModel;
+    import com.yworks.graph.model.ExteriorParameter;
     import com.yworks.graph.model.GraphSelection;
     import com.yworks.graph.model.IEdge;
     import com.yworks.graph.model.IGraph;
@@ -48,13 +50,10 @@ package com.mindalliance.channels.view.flowmap
     import flash.events.EventDispatcher;
     import flash.geom.Rectangle;
     
-    import mx.charts.chartClasses.NumericAxis;
     import mx.collections.ArrayCollection;
     import mx.controls.Alert;
     import mx.graphics.Stroke;
     import mx.states.SetStyle;
-    import com.yworks.graph.model.ExteriorParameter;
-    import com.yworks.graph.model.ExteriorLabelModel;
 
 	[Bindable]
     public class FlowMap extends EventDispatcher
