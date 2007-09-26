@@ -1,0 +1,45 @@
+Nerkel debugging in Eclipse
+---------------------------
+
+1. Don't put NK's lib/endorsed/*.jar libraries into jre/lib/endorsed as suggested. It breaks Eclipse.
+
+2. Create a Java project to hold NetKernel-specific configuration
+
+  - Let's call it NetKernel
+  - Add the required libraries to the build path (in project properties), preferrably using variables:
+    - 1060netkernel-bootloader-*.*.*.jar (from <nk>/lib)
+    - 1060NetKernel-*.*.*.jar (from <nk>/lib)
+    - ext-layer1.*.*.*.jar (from <nk>/modules)
+    - db.jar and dbxml.jar (from <dbxml>/install/lib)
+
+3. Export them all from the build path of the NetKernel application
+
+4. Create a run configuration for the NetKernel application
+
+    - Within 1060netkernel-bootloader-*.*.*.jar select BootLoader.class
+    - Right-click and select "Run as/Run..."
+    - Create a new Java Application run configuration on BootLoader.class
+    - Set VM arguments to:
+        -Xms128m 
+        -Xmx192m
+        -Dbootloader.basepath=${netkernel_home}    
+        -Djava.endorsed.dirs=${netkernel_home}/lib/endorsed    
+        -Dbootloader.jarDir=${netkernel_home}/lib/ext/
+        -Djava.library.path=${dbxml_home}/install/lib
+        -Dbootloader.nativeDir=${netkernel_home}/lib/native
+     -Set VM arguments variables to: 
+        netkernel_home=<netkernel installation directory>
+        dbxml_home=<dbxml installation directory>
+     -Apply and run to test
+
+5. Create another Java Application Project for Channels NK development
+
+  - Since we already have an SVN project called channels-nk, we'll name this one channels-java
+  - In project properties/Java Build Path/Projects, import the NetKernel project
+  - For each Channels module under development:
+    - Put into the project folder a link to each source folder containing com/mindalliance/channels/...
+    - In project properties/Java Build Path/Source, add the folder
+    - Allow output folders to source folders (checkbox)
+
+6. Set breakpoints in NK module Java code and do Run/Run... or Run/Debug..., selecting the Bootloader run configuration.
+
