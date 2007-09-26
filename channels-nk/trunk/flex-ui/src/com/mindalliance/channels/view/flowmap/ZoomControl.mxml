@@ -28,7 +28,7 @@
 			value="{Math.log(_graphCanvas.zoom)/Math.log(2)}" 
 			change="{_graphCanvas.zoom=Math.pow(2,event.value)}" 
 			liveDragging="true" tickInterval="1.0" 
-			minimum="-4" maximum="4"/>
+			minimum="0" maximum="4"/>
 		<mx:Button click="_graphCanvas.fitContent();" toolTip="Fit content">
 				<mx:icon>@Embed('../../../../../assets/images/fit_to_size.png')</mx:icon>
 		</mx:Button>

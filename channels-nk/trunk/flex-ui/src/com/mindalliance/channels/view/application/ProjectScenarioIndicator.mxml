@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
-	label="{model.currentScenario == null ? 'Load Scenario' : 'Project: '+ model.currentProject.name +', Scenario: ' + model.currentScenario.name}"
+	label="{model.currentProject.name + ' > ' + model.currentScenario.name}"
 	click="btnClicked()" toolTip="click to browse or change projects and scenarios">
-
 	<mx:Script>
-		<![CDATA[
-			import mx.core.IFlexDisplayObject;
-			import mx.managers.PopUpManager;
-
-			import com.mindalliance.channels.model.ChannelsModelLocator;
-			
-			[Bindable]
- 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
-
-			private function btnClicked():void {
-				var sb:IFlexDisplayObject = PopUpManager.createPopUp(this, ProjectScenarioBrowser, true);
-				PopUpManager.centerPopUp(sb);
-				sb.y = this.y + this.height + 4 ;
-            }
-            
-		]]>
-	</mx:Script>
+			<![CDATA[
+				import mx.events.FlexEvent;
+				import mx.effects.Resize;
+				import mx.core.IFlexDisplayObject;
+				import mx.managers.PopUpManager;
 	
+				import com.mindalliance.channels.model.ChannelsModelLocator;
+				
+				[Bindable]
+	 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+	
+				private function btnClicked():void {
+					var sb:ProjectScenarioBrowser = PopUpManager.createPopUp(this, ProjectScenarioBrowser, true) as ProjectScenarioBrowser ;
+					sb.addEventListener(FlexEvent.CREATION_COMPLETE, function effect(event:Event):void{new Resize(sb).play() ;}) ;
+					PopUpManager.centerPopUp(sb);
+					sb.y = this.y + this.height + 4 ;
+	            }
+	            
+			]]>
+	</mx:Script>			
 </mx:Button>

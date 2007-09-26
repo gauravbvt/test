@@ -173,7 +173,6 @@
 			<menuitem type="separator"/>
 			<menuitem label="Temporary items below" enabled="false"/>
 			<menuitem label="Sharing Need Editor"/>
-			<menuitem label="Set Role"/>
 		</menuitem>
 		<menuitem label="Testing">
 			<menuitem label="Communication Plan Viewer"/>

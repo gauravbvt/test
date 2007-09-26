@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center">
 	<mx:VBox horizontalAlign="center">
 		<mx:Label text="Date"/>
 		<mx:HBox horizontalGap="1" verticalAlign="middle">

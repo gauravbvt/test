@@ -141,15 +141,15 @@ package com.mindalliance.channels.view.flowmap
 		private static function _initEdgeStyles():void {
 			var es:PolylineEdgeStyle = new PolylineEdgeStyle() ;
 			es.stroke = new Stroke(0xAAAAAA, 4.0) ;
-			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0xAAAAAA,1.0), new SolidColor(0xAAAAAA), 4.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0xAAAAAA,1.0), new SolidColor(0xAAAAAA), 4.0, 2.0) ;
 			edgeStyle = IEdgeStyle(es.clone()) ;
 			
 			es.stroke = new Stroke(0x000000, 5.0) ;
-			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0x005C9F, 1.0), new SolidColor(0x005C9F), 4.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.DEFAULT, new Stroke(0x005C9F, 1.0), new SolidColor(0x005C9F), 4.0, 2.0) ;
 			selectedEdgeStyle = IEdgeStyle(es.clone()) ;
 			
 			es.stroke = new Stroke(0xCCFF33, 2.0) ;
-			es.targetArrow = DefaultArrow.create(ArrowType.DIAMOND, new Stroke(0xCCFF33, 1.0), new SolidColor(0xCCFF33), 4.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.DIAMOND, new Stroke(0xCCFF33, 1.0), new SolidColor(0x0), 4.0, 2.0) ;
 			causeEdgeStyle = es.clone() as IEdgeStyle ;
 		}
 			

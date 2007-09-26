@@ -52,7 +52,7 @@ package com.mindalliance.channels.business.sharingneed
             return results; 
         }
         
-        public function create(knowId : String, needToKnowId : String) {
+        public function create(knowId : String, needToKnowId : String):void {
             var param : Array = new Array();
             param["knowId"] = knowId;
             param["needToKnowId"] = needToKnowId;

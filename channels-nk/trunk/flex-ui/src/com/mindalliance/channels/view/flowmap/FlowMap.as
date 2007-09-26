@@ -203,7 +203,7 @@ package com.mindalliance.channels.view.flowmap
 		public static function renameRole(roleID:String, newText:String):void {
 			var labelIter:Iterator = _graph.nodeLabels.iterator() ;
 			while (labelIter.hasNext()) {
-				var label:DefaultLabel = DefaultLabel(labelIter.hasNext()) ;
+				var label:DefaultLabel = DefaultLabel(labelIter.next()) ;
 				var ld:LabelData = _mapperHelper.labelDataMapper.lookupValue(label) as LabelData ;
 				if (ld.type == LabelData.LABEL_TYPE_ROLE && ld.id == roleID) {
 					_graph.setLabelText(ld.label, newText) ;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VDividedBox
+<mx:VBox
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:communicationplan="com.mindalliance.channels.view.communicationplan.*"
 	width="100%" height="100%"
@@ -7,6 +7,18 @@
 	
 	<mx:Script>
 		<![CDATA[
+			
+			[Bindable]
+			private var approvalCollapsed:Boolean = true ;
+			
+			[Embed(source='../../../../../assets/images/uparrow.png')]
+			[Bindable]
+			private var upArrowImageCls:Class ;
+			
+			[Embed(source='../../../../../assets/images/downarrow.png')]
+			[Bindable]
+			private var downArrowImageCls:Class ;
+			
 			[Bindable]
 			private var scenarioName:String ;
 			
@@ -66,69 +78,43 @@
 	
 	<mx:ArrayCollection id="PlanData">
 		<mx:Object id="o1" 
-			categories="cat5, cat2" 
+			phases="Detect" 
 			taskName="Corpse Discovered" 
 			success="true" 
-			agents="['Chief of Patrol, County Police']" 
+			agents="['Chief of Patrol, County Police']"
+			status="issue" 
+			communicationDirection="incoming"
+			communicationType="notify"
 			comments="I shot the sheriff (but I did not shoot the deputy)"/>
 		<mx:Object id="o2" 
-			categories="cat18, cat2" 
+			phases="Detect" 
 			taskName="Notify Presumption of Plague" 
 			success="false" 
 			agents="['Secretary to State Medical Examiner', 'Chief Medical Examiner']" 
+			status="pending" 
+			communicationType="notify"
+			communicationDirection="outgoing"
 			comments="The body woke up at midnight and started hunting staff."/>
 		<mx:Object id="o3" 
-			categories="cat1, cat23" 
+			phases="Detect" 
 			taskName="Notify Presumption of Plague" 
-			success="false" 
+			success="false"
+			communicationDirection="outgoing"
+			communicationType="notify"
 			agents="['CDC Emergency Response Hotline', 'Emergency Response Coordinator']" 
 			comments="blah steh u blah"/>
 		<mx:Object id="o4" 
-			categories="cat31, cat32" 
+			phases="Respond" 
 			taskName="Request for Lung Samples" 
-			success="false" 
+			success="false"
+			communicationType="request"			 
+			communicationDirection="incoming"
 			agents="[The Cable Guy]" 
 			comments="Kill everything in sight."/>
 	</mx:ArrayCollection>
 	
 	<mx:HBox id="header" width="100%">
-		<mx:VBox id="commands">
-			<mx:Label text="Legend" fontWeight="bold"/>
-			<mx:Grid>
-				<mx:GridRow>
-					<mx:GridItem>
-						<mx:Image source="assets/images/incoming.png"/>
-					</mx:GridItem>
-					<mx:GridItem>
-						<mx:Label text="Incoming"/>
-					</mx:GridItem>
-				</mx:GridRow>
-				<mx:GridRow>
-					<mx:GridItem>
-						<mx:Image source="assets/images/outgoing.png"/>
-					</mx:GridItem>
-					<mx:GridItem>
-						<mx:Label text="Outgoing"/>
-					</mx:GridItem>
-				</mx:GridRow>
-				<mx:GridRow>
-					<mx:GridItem>
-						<mx:Image source="assets/images/bell.png"/>
-					</mx:GridItem>
-					<mx:GridItem>
-						<mx:Label text="Notify"/>
-					</mx:GridItem>
-				</mx:GridRow>
-				<mx:GridRow>
-					<mx:GridItem>
-						<mx:Image source="assets/images/alert.png"/>
-					</mx:GridItem>
-					<mx:GridItem>
-						<mx:Label text="Event"/>
-					</mx:GridItem>
-				</mx:GridRow>
-			</mx:Grid>
-		</mx:VBox>	
+		<mx:Spacer width="{vBoxApproval.width}"/>
 		<mx:Spacer width="100%"/>
 		<mx:VBox id="title" horizontalAlign="center" height="80%">
 			<mx:Label text="Communication Plan for" fontWeight="bold" fontSize="12"/>
@@ -166,73 +152,98 @@
 			<mx:Spacer height="100%"/>
 		</mx:VBox>
 		<mx:Spacer width="100%"/>
-		<mx:Form>
-			<mx:FormItem label="Date Issued">
-				<mx:TextInput text="{dateIssued}" fontWeight="bold"/>
-			</mx:FormItem>
-			<mx:FormItem label="Approved by">
-				<mx:TextInput text="{approvedBy}" fontWeight="bold"/>
-			</mx:FormItem>
-			<mx:FormItem icon="@Embed('../../../../../assets/images/phone.png')">
-				<mx:TextInput text="{approvedByPhone}" fontWeight="bold"/>
-			</mx:FormItem>
-			<mx:FormItem icon="@Embed('../../../../../assets/images/cellphone.png')">
-				<mx:TextInput text="{approvedByCellPhone}" fontWeight="bold"/>
-			</mx:FormItem>
-			<mx:FormItem icon="@Embed('../../../../../assets/images/fax.png')">
-				<mx:TextInput text="{approvedByFax}" fontWeight="bold"/>
-			</mx:FormItem>
-			<mx:FormItem>
-				<mx:Label text="{approvedByEmail}" fontWeight="bold"/>
-			</mx:FormItem>
-		</mx:Form>
+		<mx:VBox resizeEffect="Resize" horizontalAlign="right" id="vBoxApproval">
+			<mx:Button height="16"
+				icon="{approvalCollapsed ? downArrowImageCls : upArrowImageCls}"
+				click="approvalCollapsed = !approvalCollapsed" width="100%"/>
+			<mx:Form visible="{!approvalCollapsed}" includeInLayout="{!approvalCollapsed}">
+				<mx:FormItem label="Date Issued">
+					<mx:TextInput text="{dateIssued}" fontWeight="bold"/>
+				</mx:FormItem>
+				<mx:FormItem label="Approved by">
+					<mx:TextInput text="{approvedBy}" fontWeight="bold"/>
+				</mx:FormItem>
+				<mx:FormItem icon="@Embed('../../../../../assets/images/phone.png')">
+					<mx:TextInput text="{approvedByPhone}" fontWeight="bold"/>
+				</mx:FormItem>
+				<mx:FormItem icon="@Embed('../../../../../assets/images/cellphone.png')">
+					<mx:TextInput text="{approvedByCellPhone}" fontWeight="bold"/>
+				</mx:FormItem>
+				<mx:FormItem icon="@Embed('../../../../../assets/images/fax.png')">
+					<mx:TextInput text="{approvedByFax}" fontWeight="bold"/>
+				</mx:FormItem>
+				<mx:FormItem>
+					<mx:Label text="{approvedByEmail}" fontWeight="bold"/>
+				</mx:FormItem>
+			</mx:Form>
+		</mx:VBox>
 	</mx:HBox>
 	
 	<mx:Box id="body" width="100%" height="100%">
 		<mx:HBox width="100%" backgroundColor="0xFFFFDA" horizontalAlign="center">
-			<mx:Image source="assets/images/alert.png" scaleContent="true" width="32" height="32"/>
 			<mx:Label text="{scenarioName}" fontSize="14" fontWeight="bold"/>
 		</mx:HBox>
-		<mx:DataGrid editable="true" height="100%" dataProvider="{PlanData}" width="100%"
-			 selectionColor="0xFFFFEE">
+		<mx:DataGrid editable="true" height="100%" dataProvider="{PlanData}" width="100%" rollOverColor="0xFFFFDD" alternatingItemColors="[#FFFFFF]"
+			selectionColor="0xFFFFDD">
 			<mx:columns>
-				<mx:DataGridColumn headerText="Categories" dataField="categories"/>
-				<mx:DataGridColumn headerText="Tasks" rendererIsEditor="true" dataField="taskName">
+				<mx:DataGridColumn headerText="Phases" dataField="phases"/>
+				<mx:DataGridColumn headerText="" dataField="communicationDirection" resizable="false" editable="false" width="24">
 					<mx:itemRenderer>
 						<mx:Component>
-							<communicationplan:TaskColumn/>
+							<communicationplan:CommunicationDirectionColumnItem horizontalAlign="center" width="24" scaleContent="false"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Agents" rendererIsEditor="true">
+				<mx:DataGridColumn headerText="" dataField="communicationType" editable="false" resizable="false" width="24">
 					<mx:itemRenderer>
 						<mx:Component>
-							<communicationplan:AgentsColumn/>
+							<communicationplan:CommunicationTypeColumnItem/>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Task" dataField="taskName" editable="false">
+					<mx:itemRenderer>
+						<mx:Component>
+							<communicationplan:TaskColumnItem/>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Agents" rendererIsEditor="true" editable="false">
+					<mx:itemRenderer>
+						<mx:Component>
+							<communicationplan:AgentsColumnItem/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="Date &amp; Time" rendererIsEditor="true">
 					<mx:itemRenderer>
 						<mx:Component>
-							<communicationplan:DateTimeColumn/>
+							<communicationplan:DateTimeColumnItem/>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Status" rendererIsEditor="true" dataField="status">
+					<mx:itemRenderer>
+						<mx:Component>
+							<communicationplan:StatusColumnItem width="100%" height="100%"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="Comments" rendererIsEditor="true" dataField="comments">
 					<mx:itemRenderer>
 						<mx:Component>
-							<communicationplan:CommentsColumn/>
+							<mx:TextArea width="100%" height="100%" text="{data.comments}"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
 			</mx:columns>
 		</mx:DataGrid>
 	</mx:Box>
-	<mx:VBox width="100%" height="100%">
+	<mx:VBox width="100%" height="20%">
 		<mx:Label text="Notes:"/>
 		<mx:TextArea width="100%" height="100%"/>
 	</mx:VBox>
 	<mx:Box id="footer" width="100%">
 	</mx:Box>
 	
-</mx:VDividedBox>
+</mx:VBox>

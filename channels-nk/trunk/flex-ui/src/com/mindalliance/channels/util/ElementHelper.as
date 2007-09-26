@@ -3,6 +3,9 @@ package com.mindalliance.channels.util
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import mx.collections.ArrayCollection;
+	import com.mindalliance.channels.model.ChannelsModelLocator;
+	import com.mindalliance.channels.model.ElementListModel;
+	import mx.events.CollectionEvent;
 	
 	public class ElementHelper
 	{
@@ -23,6 +26,16 @@ package com.mindalliance.channels.util
                 }
             }
             return -1;
+		}
+		
+		public static function installCollectionChangeListener(modelKey:String, handler:Function):void {
+			var elementListModel:ElementListModel = ChannelsModelLocator.getInstance().getElementListModel(modelKey) ;
+			elementListModel.data.addEventListener(CollectionEvent.COLLECTION_CHANGE, handler);
+		}
+		
+		public static function uninstallCollectionChangeListener(modelKey:String, handler:Function):void {
+			var elementListModel:ElementListModel = ChannelsModelLocator.getInstance().getElementListModel(modelKey) ;
+			elementListModel.data.removeEventListener(CollectionEvent.COLLECTION_CHANGE, handler);
 		}
 	}
 }

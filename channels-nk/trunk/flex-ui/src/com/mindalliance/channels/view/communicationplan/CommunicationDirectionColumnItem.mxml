@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Image xmlns:mx="http://www.adobe.com/2006/mxml"
+	source="{'assets/images/' + communicationDirection + '.png'}"
+	toolTip="{communicationDirection}"
+	height="24">
+	
+	<mx:String id="communicationDirection"/>
+	<mx:Binding source="(data.communicationDirection as String).toLowerCase()" destination="communicationDirection"/>
+	
+</mx:Image>

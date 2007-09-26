@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Image xmlns:mx="http://www.adobe.com/2006/mxml"
+	source="{imageURL}"
+	height="16"
+	width="16"
+	maxWidth="16"
+	maxHeight="16"
+	scaleContent="true">
+	
+	<mx:Object id="imageNames" notify="bell.png" request="question.png" response="response.png"/>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			[Bindable]
+			private var imageURL:String ;
+
+			private var _communicationType:String ;
+			
+			[Bindable]
+			private function set communicationType(value:String):void {
+				_communicationType = value ;
+				imageURL = 'assets/images/' + imageNames[_communicationType] ;
+			}
+			
+			private function get communicationType():String {
+				return _communicationType ;
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Binding source="(data.communicationType as String).toLowerCase()" destination="communicationType"/>
+	
+</mx:Image>

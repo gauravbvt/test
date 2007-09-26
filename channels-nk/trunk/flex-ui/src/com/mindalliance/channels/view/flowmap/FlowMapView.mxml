@@ -74,7 +74,7 @@
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
 /* 				FlowMap.addSelectionListener(FlowMapEvent.PHASE_SELECTION_CHANGED, selectedPhaseChanged) ; */
-				FlowMapCairngormInterfacer.initialize() ;
+				ChannelsModelLocator.getInstance().flowMapModel.init() ;
 				instance = this ;
 			}
 			
