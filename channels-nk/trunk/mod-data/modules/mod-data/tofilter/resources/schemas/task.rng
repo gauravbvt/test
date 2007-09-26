@@ -11,7 +11,7 @@
       element scenarioId {text}
     }
   -->
-  <include href="@protocol@://@host@:@port@/channels/schema/def_all.rng"/>
+  <include href="http://localhost:@localport@/channels/schema/def_all.rng"/>
   
   <start>
     <element name="task">

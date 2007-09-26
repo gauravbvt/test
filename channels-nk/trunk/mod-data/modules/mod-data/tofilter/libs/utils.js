@@ -1,2 +1,2 @@
-SCHEMA_URL = "@protocol@://@host@:@port@/channels/schema/"; 
+SCHEMA_URL = "http://localhost:@localport@/channels/schema/"; 
 
