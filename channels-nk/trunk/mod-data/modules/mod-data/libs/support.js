@@ -33,16 +33,6 @@ function expire(uri) {
 }
 
 
-
-// SHOULD PUT SUBSTITUTIONS IN A SEPARATE CONFIGURATION FILE
-function filter(s) {
-  // Java strings are NOT the same as JavaScript strings: 
-  // make sure to convert to JS strings before using string methods!
-  var fs = String(s).replace(/__MODEL__/g, String(getContainerName())); 
-  // more filters here
-  return fs;
-}
-
 function getSchemaURL(kind) {
   return SCHEMA_URL + kind + ".rng";
 }
