@@ -4,10 +4,12 @@
 package com.mindalliance.channels.commands.resources
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mindalliance.channels.business.resources.RepositoryDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.resources.*;
+	import com.mindalliance.channels.util.ElementHelper;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class DeleteRepositoryCommand extends BaseDelegateCommand
 	{
@@ -23,7 +25,12 @@ package com.mindalliance.channels.commands.resources
 		{
             var result:Boolean = data["data"] as Boolean;
             if (result == true) {
-                CairngormEventDispatcher.getInstance().dispatchEvent( new GetRepositoryListEvent() );
+                var col : ArrayCollection = channelsModel.getElementListModel("repositories").data;
+                channelsModel.deleteElementModel(data["id"]);
+                if (col != null) {
+                    var inx: int = ElementHelper.findElementIndexById(data["id"], col);
+                    if (inx >= 0) col.removeItemAt(inx);
+                }
                 log.info("Repository successfully deleted");
             } else {
                 log.warn("Repository Deletion failed");   
