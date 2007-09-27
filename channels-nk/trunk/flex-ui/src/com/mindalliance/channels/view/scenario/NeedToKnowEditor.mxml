@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml"  
+	xmlns:common="com.mindalliance.channels.view.common.*"
+    xmlns:scenario="com.mindalliance.channels.view.scenario.*" 
+    xmlns:categories="com.mindalliance.channels.view.categories.*"
+    creationComplete="init()">
+    <mx:Script>
+    	<![CDATA[
+    	    import com.mindalliance.channels.vo.NeedToKnowVO;
+            import com.adobe.cairngorm.control.CairngormEvent;
+            import com.mindalliance.channels.view.UtilFuncs;
+            
+            import com.mindalliance.channels.vo.common.*;
+            import mx.collections.ArrayCollection;
+            import mx.managers.PopUpManager;
+            import com.mindalliance.channels.events.sharingneed.*;
+            import com.mindalliance.channels.events.common.*;
+            
+            import com.mindalliance.channels.view.common.InputTextDialog;
+            import com.mindalliance.channels.model.EditorModel;
+            import com.adobe.cairngorm.control.CairngormEventDispatcher;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.vo.KnowVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.util.CairngormHelper;
+    	
+    		[Bindable]
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable] 
+            private var edited : NeedToKnowVO;
+            
+            private function queueUpdate() : void {
+                CairngormHelper.queueUpdate(model);
+            }
+            
+            public function update() : void {
+                var updateOnChange : Boolean = false;
+                var updateEvery : DurationVO;
+                if (cbDeliveryRefresh.selected== true) {
+                   var num : Number = Number(txtUpdateEveryValue.text);
+                   if (num > 0) {
+                        updateEvery= new DurationVO(num, comboUpdateEveryUnit.selectedItem.name);
+                   }
+                }
+                CairngormHelper.fireEvent(new UpdateNeedToKnowEvent(model,
+                                                                subKnowEditor.getWho(),
+                                                                subKnowEditor.getAbout(),
+                                                                subKnowEditor.getWhat(),
+                                                                sliderCriticality.labels[sliderCriticality.value],
+                                                                new DurationVO(Number(textUrgency.text), comboScale.selectedItem.name),
+                                                                comboDeliveryMode.selectedItem.name,
+                                                                updateOnChange,
+                                                                updateEvery,
+                                                                edited.format
+                                                                ));
+            }
+            
+            public function init() : void {
+                subKnowEditor.model = model;	
+            }
+            public function revert() : void {
+                CairngormHelper.fireEvent(new GetNeedToKnowEvent(edited.id,model));
+                    
+            }
+            
+    	]]>
+    </mx:Script>
+    
+    <mx:Array id="deliveryMode">
+        <mx:Object label="Notify" name="notify"/>
+        <mx:Object label="Respond" name="respond"/>
+    </mx:Array>
+    
+    <mx:Array id="format">
+        <mx:Object label="Hard Copy (Paper)"/>
+        <mx:Object label="MS Word Document"/>
+        <mx:Object label="PDF"/>
+        <mx:Object label="Audio"/>
+        <mx:Object label="Video"/>
+    </mx:Array>
+    
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as NeedToKnowVO)" destination="edited"/>   
+    <mx:Binding source="edited.format" destination="categoryViewer.model.categories"/>
+    <mx:states>
+    	<mx:State name="EditState">
+    		
+            <mx:SetProperty target="{formItemUrgency}" name="mouseChildren"/>
+            <mx:SetProperty target="{formItemUrgency}" name="mouseEnabled"/>
+            <mx:SetProperty target="{textUrgency}" name="editable" value="true"/>
+            <mx:SetProperty target="{formItemCriticality}" name="mouseChildren"/>
+            <mx:SetProperty target="{formItemCriticality}" name="mouseEnabled"/>
+    	</mx:State>
+    	
+    </mx:states>
+	<scenario:KnowingEditor id="subKnowEditor" currentState="{currentState}"/>
+    <mx:Form>
+        <mx:FormItem id="formItemCriticality" label="Criticality">
+            <mx:HSlider id="sliderCriticality" labels="['low', 'medium', 'high']" showDataTip="false" showTrackHighlight="true"
+                minimum="1" maximum="3" snapInterval="1" allowTrackClick="true" change="queueUpdate()"/>
+        </mx:FormItem>
+        <mx:FormItem id="formItemUrgency" label="Urgency" direction="horizontal">
+            <mx:TextInput id="textUrgency" editable="false" width="50"  text="{edited.urgency.value}"/><common:TimeScalesComboBox id="comboScale" selectedValue="{edited.urgency.unit}"  change="queueUpdate()"/>
+        </mx:FormItem>
+        <mx:FormItem label="Delivery" direction="horizontal">
+            <common:ElementComboBox id="comboDeliveryMode" dataProvider="{deliveryMode}" selectedValue="{edited.deliveryMode}" labelField="label"  change="queueUpdate()"/>
+            <mx:HBox verticalAlign="middle" height="100%">
+                <mx:CheckBox label="Refresh" id="cbDeliveryRefresh" selected="{edited.updateOnChange == true || edited.updateEvery != null}"  change="queueUpdate()"/>
+                <mx:HBox includeInLayout="{cbDeliveryRefresh.selected}" visible="{cbDeliveryRefresh.selected}" verticalAlign="middle">
+                    <mx:Label text="every"/><mx:TextInput id="txtUpdateEveryValue" text="{edited.updateEvery.unit}" width="50" change="queueUpdate()"/><common:TimeScalesComboBox id="comboUpdateEveryUnit" selectedValue="{edited.updateEvery.unit}"  change="queueUpdate()"/>
+                </mx:HBox>
+            </mx:HBox>
+        </mx:FormItem>
+        <mx:FormItem label="Format">
+            <!--<mx:ComboBox dataProvider="{format}"/>-->
+            <categories:CategoryViewer id="categoryViewer" change="{queueUpdate}"/>
+        </mx:FormItem>
+    </mx:Form>
+</mx:Form>

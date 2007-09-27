@@ -6,6 +6,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.model.ElementModel;
 			import mx.binding.utils.BindingUtils;
 			import com.mindalliance.channels.vo.OrganizationVO;
 			import com.mindalliance.channels.vo.RepositoryVO;
@@ -13,23 +14,17 @@
 			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.application.RepositoryNodeEditorModel;
-            private var model : RepositoryNodeEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel.repositoryNodeEditorModel;
-		
-			private function init():void {
-                repositoryEditor.model = model.repositoryModel;
-                organizationEditor.model = model.organizationModel;
+			
+			[Bindable] private var model : RepositoryNodeEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel.repositoryNodeEditorModel;
+            [Bindable] private var elementModel : ElementModel;
+            [Bindable] private var editedRepository : RepositoryVO;
+            [Bindable] public var editorState:String ;
+            
+            
+            private function init():void {
                 BindingUtils.bindSetter(setState, repositoryEditor, ['currentState']) ;
                 BindingUtils.bindSetter(setState, organizationEditor, ['currentState']) ;
             }
-            
-            [Bindable]
-            private var _reposID:String ;
-            
-            [Bindable]
-            private var _orgID:String ;
-            
-            [Bindable]
-            public var editorState:String ;
             
             private function setState(value:Object):void {
             	if (repositoryEditor.currentState == 'EditState' || organizationEditor.currentState == 'EditState')
@@ -39,15 +34,18 @@
             }
             
             public function loadRepository(reposID:String):void {
-				var getReposEvent:GetRepositoryEvent = new GetRepositoryEvent(_reposID, repositoryEditor.model) ;
+				var getReposEvent:GetRepositoryEvent = new GetRepositoryEvent(reposID, model.repositoryModel) ;
 				CairngormHelper.fireEvent(getReposEvent) ;
             }
             
 		]]>
 	</mx:Script>
-	
-	<mx:Binding source="((ChannelsModelLocator.getInstance().getElementModel(_reposID) as RepositoryVO).organization as OrganizationVO).id" destination="_orgID"/>
-	
-	<resources:RepositoryEditor label="{'Repository: '}" id="repositoryEditor" enabled="{repositoryEditor.currentState != 'EditState'}" width="100%" height="100%"/>
-	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor" enabled="{(_orgID != null) &amp;&amp; (repositoryEditor.currentState != 'EditState')}" width="100%" height="100%"/>
+	<mx:Binding source="model.repositoryModel" destination="repositoryEditor.model" />
+	<mx:Binding source="model.organizationModel" destination="organizationEditor.model"/>
+	<mx:Binding source="ChannelsModelLocator.getInstance().getElementModel(model.repositoryModel.id)" destination="elementModel"/>
+	<mx:Binding source="elementModel.data as RepositoryVO" destination="editedRepository"/>
+	<mx:Binding source="editedRepository.organization.id" destination="model.organizationModel.id"/>
+
+	<resources:RepositoryEditor label="{'Repository: '}" id="repositoryEditor" enabled="{editedRepository != null}" width="100%" height="100%"/>
+	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor" enabled="{(model.organizationModel.id != null) &amp;&amp; (repositoryEditor.currentState != 'EditState')}" width="100%" height="100%"/>
 </mx:TabNavigator>

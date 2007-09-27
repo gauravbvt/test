@@ -159,7 +159,8 @@ package com.mindalliance.channels.control
             this.addCommand(GetKnowEvent.GetKnow_Event, GetKnowCommand);
             this.addCommand(GetNeedToKnowEvent.GetNeedToKnow_Event, GetNeedToKnowCommand);
             this.addCommand(GetSharingNeedListEvent.GetSharingNeedList_Event, GetSharingNeedListCommand);
-            
+            this.addCommand(UpdateKnowEvent.UpdateKnow_Event, UpdateKnowCommand);
+            this.addCommand(UpdateNeedToKnowEvent.UpdateNeedToKnow_Event, UpdateNeedToKnowCommand);           
 		}
 	}
 }

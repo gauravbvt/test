@@ -1,7 +1,7 @@
 package com.mindalliance.channels.vo.common
 {
 	
-	
+	[Bindable]
 	public class SourceOrSink
 	{
 	   

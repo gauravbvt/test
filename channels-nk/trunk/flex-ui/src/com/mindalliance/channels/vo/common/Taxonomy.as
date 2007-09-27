@@ -13,15 +13,15 @@ package com.mindalliance.channels.vo.common
         public static const REPOSITORY : String = "repository";
         
         public static const types : Array = [
-            {name: "acquirement", display: "Acquirement"},
-            {name: "artifact", display: "Artifact"},
-            {name: "organization", display: "Organization"},
-            {name: "role", display: "Role"},
-            {name: "task", display: "Task"},
-            {name: "event", display: "Event"},
-            {name: "discipline", display: "Discipline"},
-            {name: "location", display: "Location"},
-            {name: "repository", display: "Repository"},
+            {name: "acquirement", label: "Acquirement"},
+            {name: "artifact", label: "Artifact"},
+            {name: "organization", label: "Organization"},
+            {name: "role", label: "Role"},
+            {name: "task", label: "Task"},
+            {name: "event", label: "Event"},
+            {name: "discipline", label: "Discipline"},
+            {name: "location", label: "Location"},
+            {name: "repository", label: "Repository"},
               
         
         ];

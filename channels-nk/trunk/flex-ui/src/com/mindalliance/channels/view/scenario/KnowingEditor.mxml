@@ -1,5 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.view.common.*">
+    <mx:Script>
+        <![CDATA[
+        	import com.mindalliance.channels.vo.KnowVO;
+            import com.adobe.cairngorm.control.CairngormEvent;
+            import com.mindalliance.channels.view.UtilFuncs;
+            
+            import com.mindalliance.channels.vo.common.*;
+            import mx.collections.ArrayCollection;
+            import mx.managers.PopUpManager;
+            import com.mindalliance.channels.events.sharingneed.*;
+            import com.mindalliance.channels.events.common.*;
+            
+            import com.mindalliance.channels.view.common.InputTextDialog;
+            import com.mindalliance.channels.model.EditorModel;
+            import com.adobe.cairngorm.control.CairngormEventDispatcher;
+            import com.mindalliance.channels.vo.common.ElementVO;
+            import com.mindalliance.channels.vo.KnowVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.util.CairngormHelper;
+            
+            [Bindable]
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable] 
+            private var edited : KnowVO;
+            
+            [Bindable] private var roleList : ArrayCollection;
+            [Bindable] private var agentList : ArrayCollection;
+            [Bindable] private var repositoryList : ArrayCollection;
+            [Bindable] private var taskList : ArrayCollection;
+            [Bindable] private var eventList : ArrayCollection;
+            [Bindable] private var artifactList : ArrayCollection;
+            [Bindable] private var acquirementList : ArrayCollection;
+            [Bindable] private var topicList : ArrayCollection;
+            
+                        
+            private function addInformation():void {
+                UtilFuncs.GetUserTextInput(this, 
+                    function anon(text:String):void {
+                        if (topicList == null) {
+                            topicList = new ArrayCollection();	
+                        }
+                        if (text != null && text.length > 0) {
+                            topicList.addItem(new TopicVO(text,"",null,new ArrayCollection(),new ArrayCollection())) ;
+                            queueUpdate();
+                        }
+                    }, "Enter One Line Description of Information", true) ;
+            }
+            
+            private function removeInformation() : void {
+            	if (listWhat.selectedIndex >=0) {
+            	   topicList.removeItemAt(listWhat.selectedIndex);	
+            	   queueUpdate();
+            	}
+            	
+            }
+            
+            private function queueUpdate() : void {
+                CairngormHelper.queueUpdate(model);
+            }
+            
+            public function getWho() : SourceOrSink {
+            	var who : SourceOrSink;
+                switch (comboWhoType.selectedItem.name) {
+                    case "role": who = SourceOrSink.getRoleType(comboWhoRole.selectedItem.id); break;
+                    case "agent": who = SourceOrSink.getAgentType(comboWhoAgent.selectedItem.id); break;
+                    case "repository": who = SourceOrSink.getRepositoryType(comboWhoRepository.selectedItem.id); break;
+                };
+                return who;
+            }
+            
+            public function getAbout() : Knowable {
+            	var about : Knowable;
+            	switch (comboAboutType.selectedItem.name) {
+                    case "task": about = Knowable.getTaskType(comboAboutTask.selectedItem.id); break;
+                    case "event": about = Knowable.getEventType(comboAboutEvent.selectedItem.id); break;
+                    case "artifact": about = Knowable.getArtifactType(comboAboutArtifact.selectedItem.id); break;
+                    case "acquirement": about = Knowable.getAcquirementType(comboAboutAcquirement.selectedItem.id); break;
+                };
+                return about;
+            }
+            
+            public function getWhat() : InformationVO {
+            	if (topicList.length > 0)
+            	   return new InformationVO(topicList);
+                return null;
+            }
+            
+            public function update() : void {
+            	
+            	
+                CairngormHelper.fireEvent(new UpdateKnowEvent(model,
+                                                                getWho(),
+                                                                getAbout(),
+                                                                getWhat()));
+            }
+            
+            public function revert() : void {
+                CairngormHelper.fireEvent(new GetKnowEvent(edited.id,model));
+                	
+            }
+            
+        ]]>
+    </mx:Script>
+
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:AddChild relativeTo="{formItemWhat}" position="lastChild">
@@ -15,56 +133,53 @@
 		</mx:State>
 	</mx:states>
 
-	<mx:ArrayCollection id="whoType">
-		<mx:Object label="Role"/>
-		<mx:Object label="Agent"/>
-		<mx:Object label="Repository"/>
-	</mx:ArrayCollection>
+	<mx:Array id="whoType">
+		<mx:Object label="Role" name="role"/>
+		<mx:Object label="Agent" name="agent"/>
+		<mx:Object label="Repository" name="repository"/>
+	</mx:Array>
 	
-	<mx:ArrayCollection id="aboutType">
-		<mx:Object label="Task"/>
-		<mx:Object label="Event"/>
-		<mx:Object label="Artifact"/>
-		<mx:Object label="Acquirement"/>
-	</mx:ArrayCollection>
-	
-	<mx:Script>
-		<![CDATA[
-			import com.mindalliance.channels.util.CairngormHelper;
-			import com.adobe.cairngorm.control.CairngormEvent;
-			import com.mindalliance.channels.view.UtilFuncs;
-			import mx.collections.ArrayCollection;
-			
-			private function addInformation():void {
-				UtilFuncs.GetUserTextInput(this, 
-					function anon(info:String):void {
-						// Do stuff here
-					}, "Enter One Line Description of Information", true) ;
-			}
-			
-		]]>
-	</mx:Script>
+	<mx:Array id="aboutType">
+		<mx:Object label="Task" name="task"/>
+		<mx:Object label="Event" name="event"/>
+		<mx:Object label="Artifact" name="artifact"/>
+		<mx:Object label="Acquirement" name="acquirement"/>
+	</mx:Array>
 
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as KnowVO)" destination="edited"/>	
 
+    <mx:Binding source="model.getElementListModel('roles').data" destination="taskList"/>
+    <mx:Binding source="model.getElementListModel('agents').data" destination="eventList"/>
+    <mx:Binding source="model.getElementListModel('repositories').data" destination="taskList"/>
+    <mx:Binding source="model.getElementListModel('tasks').data" destination="eventList"/>
+    <mx:Binding source="model.getElementListModel('events').data" destination="taskList"/>
+    <mx:Binding source="model.getElementListModel('artifacts').data" destination="eventList"/>
+    <mx:Binding source="model.getElementListModel('acquirements').data" destination="taskList"/>
+    <mx:Binding source="edited.what.topics" destination="topicList"/>
+    
 	<mx:FormItem id="formItemWho" label="Who" mouseChildren="false" mouseEnabled="false">
-		<mx:ComboBox id="comboWhoType" dataProvider="{whoType}" labelField="label"/>
+		<common:ElementComboBox id="comboWhoType" dataProvider="{whoType}" labelField="label" dataField="name" selectedValue="{edited.who.type}" change="queueUpdate()"/>
 		<mx:HBox>
 			<mx:Label text="{'Choose '+whoType.getItemAt(comboWhoType.selectedIndex).label+':'}"/>
 			<mx:ViewStack id="vsWho" selectedIndex="{comboWhoType.selectedIndex}">
 				<mx:Box>
-					<mx:ComboBox id="comboWhoRole"/>
+					<common:ElementComboBox id="comboWhoRole" dataProvider="{roleList}"  selectedValue="{edited.who.id}" change="queueUpdate()"/>
+                 
 				</mx:Box>
 				<mx:Box>
-					<mx:ComboBox id="comboWhoAgent"/>
+					<common:ElementComboBox id="comboWhoAgent" dataProvider="{repositoryList}"  selectedValue="{edited.who.id}" change="queueUpdate()"/>
+                 
 				</mx:Box>
-				<mx:Box>
-					<mx:ComboBox id="comboWhoRepository"/>
+				<mx:Box>    
+				    <common:ElementComboBox id="comboWhoRepository" dataProvider="{repositoryList}"  selectedValue="{edited.who.id}" change="queueUpdate()"/>
+                 
 				</mx:Box>
 			</mx:ViewStack>
 		</mx:HBox>
 	</mx:FormItem>
 	<mx:FormItem id="formItemAbout" label="About" mouseChildren="false" mouseEnabled="false">
-		<mx:ComboBox id="comboAboutType" dataProvider="{aboutType}" labelField="label"/>
+		<common:ElementComboBox id="comboAboutType" dataProvider="{aboutType}" labelField="label" dataField="name" selectedValue="{edited.about.type}" change="queueUpdate()"/>
 		<mx:HBox>
 			<mx:Label text="{'Choose '+aboutType.getItemAt(comboAboutType.selectedIndex).label+':'}"/>
 			<mx:ViewStack id="vsAbout" selectedIndex="{comboAboutType.selectedIndex}">
@@ -72,18 +187,20 @@
 					<mx:ComboBox id="comboAboutTask"/>
 				</mx:Box>
 				<mx:Box>
-					<mx:ComboBox id="comboAboutEvent"/>
+					<common:ElementComboBox id="comboAboutEvent" dataProvider="{eventList}"  selectedValue="{edited.about.id}" change="queueUpdate()"/>
+                            
 				</mx:Box>
 				<mx:Box>
-					<mx:ComboBox id="comboAboutArtifact"/>
+					<common:ElementComboBox id="comboAboutArtifact" dataProvider="{artifactList}"  selectedValue="{edited.about.id}" change="queueUpdate()"/>
 				</mx:Box>
 				<mx:Box>
-					<mx:ComboBox id="comboAboutAcquirement"/>
+					<common:ElementComboBox id="comboAboutAcquirement" dataProvider="{acquirementList}"  selectedValue="{edited.about.id}" change="queueUpdate()"/>
+                
 				</mx:Box>
 			</mx:ViewStack>
 		</mx:HBox>		
 	</mx:FormItem>
 	<mx:FormItem id="formItemWhat" label="What">
-		<mx:List id="listWhat"/>
+		<mx:List id="listWhat" dataProvider="{topicList}" labelField="name"/>
 	</mx:FormItem>
 </mx:Form>

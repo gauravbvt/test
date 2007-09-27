@@ -9,7 +9,7 @@ package com.mindalliance.channels.events.scenario
 	public class GetTaskEvent extends GetElementEvent
 	{
 		public static const GetTask_Event:String = "<GetTaskEvent>";
-		public function GetTaskEvent(id : String, model : EditorModel) 
+		public function GetTaskEvent(id : String, model : EditorModel=null) 
 		{
 			super( GetTask_Event, id, model );
 		}

@@ -6,6 +6,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.binding.utils.ChangeWatcher;
 			import com.mindalliance.channels.vo.common.TopicVO;
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
@@ -90,8 +91,13 @@
                 }
 			}
 			
-			private function init() : void {}
-			
+			private function init() : void {
+			    idChange(null); 
+                ChangeWatcher.watch(model, "id",idChange);  
+			}
+			private function idChange(evt : Event) : void {
+                 CairngormHelper.fireEvent( new GetRoleEvent(model.id,model));
+            }
 		]]>
 	</mx:Script>
     <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>

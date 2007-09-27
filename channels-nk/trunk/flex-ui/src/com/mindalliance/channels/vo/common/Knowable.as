@@ -1,5 +1,6 @@
 package com.mindalliance.channels.vo.common
 {
+	[Bindable]
 	public class Knowable
 	{
 		public static const TYPES : Array = [
