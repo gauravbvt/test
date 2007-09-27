@@ -7,7 +7,7 @@
 	xmlns:search="com.mindalliance.channels.view.search.*"
 	xmlns:ui="com.mindalliance.channels.view.*"
 	xmlns:common="com.mindalliance.channels.view.common.*">
-<!--	creationCompleteEffect="WipeDown"> -->
+
 	<mx:states>
 		<mx:State name="DashboardState">
 			<mx:SetProperty name="title" value="Manage Projects and Scenarios"/>
@@ -19,6 +19,13 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.util.ElementHelper;
+			import mx.events.ListEventReason;
+			import mx.events.ListEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.events.CollectionEventKind;
+			import mx.events.CollectionEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
 			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.vo.ProjectVO;
@@ -33,14 +40,111 @@
 			import mx.managers.PopUpManager;	
 			import mx.controls.Alert;
 		
+			[Bindable]
+			private var model:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+			
             [Bindable]
  	        private var psbModel : ProjectScenarioBrowserModel = ChannelsModelLocator.getInstance().projectScenarioBrowserModel;
  	        
  	        [Bindable]
  	        private var permissions : PermissionModel = ChannelsModelLocator.getInstance().permissionModel;
+
+ 	        [Bindable]
+ 	        private var currentScenarioSelected:Boolean ;
  	        
- 	        private function initEditor() : void {       	
+ 	        [Bindable]
+ 	        private var currentProjectSelected:Boolean ;
+ 	        
+ 	        private function initEditor() : void {
+ 	        	BindingUtils.bindSetter(projectListInitialized, psbModel, 'projectList') ;
+ 	        	BindingUtils.bindSetter(scenarioListInitialized, psbModel, 'scenarioList') ;
  	        	getProjectList();
+ 	        }
+ 	        
+ 	        private function projectListInitialized(value:Object):void {
+ 	        	if (psbModel.projectList) {
+	 	        	psbModel.projectList.addEventListener(CollectionEvent.COLLECTION_CHANGE, projectListChanged) ;
+					var model:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+					if (model.currentProject)
+						setSelectedCurrentProject() ;
+					else	
+	 	        		projectListChanged(new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET)) ;
+	 	        }
+ 	        }
+ 	        
+ 	        private function setSelectedCurrentProject():void {
+				listProjects.selectedIndex = ElementHelper.findElementIndexById(ChannelsModelLocator.getInstance().currentProject.id, psbModel.projectList) ; 	 
+				dispatchListChange(listProjects) ;
+ 	        }
+ 	        
+ 	        private function setSelectedCurrentScenario():void {
+				listScenarios.selectedIndex = ElementHelper.findElementIndexById(ChannelsModelLocator.getInstance().currentScenario.id, psbModel.scenarioList) ;
+ 	        	dispatchListChange(listScenarios) ;
+ 	        }
+ 	        
+ 	        private function scenarioListInitialized(value:Object):void {
+ 	        	if (psbModel.scenarioList) {
+	 	        	psbModel.scenarioList.addEventListener(CollectionEvent.COLLECTION_CHANGE, scenarioListChanged) ;
+					var model:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+					if (model.currentScenario)
+						setSelectedCurrentScenario() ;
+					else
+	 	        		scenarioListChanged(new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET)) ;
+	 	        }
+ 	        }
+ 	        
+ 	        private function dispatchListChange(list:List):void {
+ 	        	list.dispatchEvent(new ListEvent(ListEvent.CHANGE)) ;
+ 	        }
+ 	        
+ 	        private function projectListChanged(event:Event):void {
+ 	        	var colEvent:CollectionEvent = event as CollectionEvent ;
+ 	        	if (!colEvent)
+ 	        		return ;
+				var model:ChannelsModelLocator = ChannelsModelLocator.getInstance() ; 	        		
+ 	        	switch (colEvent.kind) {
+         			case CollectionEventKind.ADD:
+ 	        			listProjects.selectedIndex = psbModel.projectList.length - 1 ;
+ 	        			dispatchListChange(listProjects) ;
+ 	        		break ;
+ 	        		case CollectionEventKind.REMOVE:
+ 	        			if (listProjects.selectedItems.length == 0)
+ 	        				listProjects.selectedIndex = psbModel.projectList.length - 1 ;
+ 	        			dispatchListChange(listProjects) ;
+ 	        		break ;
+ 	        		case CollectionEventKind.RESET:
+ 	        			
+ 	        			if (model.currentProject != null)
+ 	        				setSelectedCurrentProject() ;
+ 	        			else
+ 	        				listProjects.selectedIndex = 0 ;
+ 	        			dispatchListChange(listProjects) ;
+ 	        		break ;
+ 	        	}
+ 	        }
+ 	        
+ 	        private function scenarioListChanged(event:Event):void {
+ 	        	var colEvent:CollectionEvent = event as CollectionEvent ;
+ 	        	if (!colEvent)
+ 	        		return ;
+ 	        	switch (colEvent.kind) {
+ 	        		case CollectionEventKind.ADD:
+ 	        			listScenarios.selectedIndex = psbModel.scenarioList.length - 1 ;
+ 	        			dispatchListChange(listScenarios) ;
+ 	        		break ;
+ 	        		case CollectionEventKind.REMOVE:
+ 	        			if (listScenarios.selectedItems.length == 0)
+ 	        				listScenarios.selectedIndex = psbModel.scenarioList.length - 1 ;
+ 	        		break ;
+ 	        		case CollectionEventKind.RESET:
+ 	        			var model:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+ 	        			if (model.currentScenario != null)
+ 	        				setSelectedCurrentScenario() ;
+ 	        			else
+ 	        				listScenarios.selectedIndex = 0 ;
+ 	        			dispatchListChange(listScenarios) ;
+ 	        		break ;
+ 	        	}
  	        }
  	        
  	        
@@ -117,6 +221,7 @@
  	        private function loadScenario() : void 
  	        {
  	        	CairngormHelper.fireEvent( new LoadScenarioEvent(psbModel.selectedScenario.id) );
+ 	        	closeBrowser() ;
  	        }
  	         	        
  	        private function closeBrowser():void {
@@ -127,6 +232,17 @@
 		]]>
 	</mx:Script>
 		
+	<mx:Binding 
+		source="model.currentScenario &amp;&amp; 
+				psbModel.selectedScenario &amp;&amp; 
+				(model.currentScenario.id == psbModel.selectedScenario.id)" 
+		destination="currentScenarioSelected"/>
+	<mx:Binding
+		source="model.currentProject &amp;&amp; 
+				psbModel.selectedProject &amp;&amp; 
+				(model.currentProject.id == psbModel.selectedProject.id)"
+		destination="currentProjectSelected"/>
+		
 	<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off" >
 		<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:VBox width="50%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
@@ -136,7 +252,10 @@
 					<mx:List id="listProjects" dataProvider="{psbModel.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
 					<mx:HBox>
 						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.GetUserTextInput(this, addProject, 'Enter Project Name', true)"/>
-						<common:RemoveButton visible="{permissions.canRemoveProject}" enabled="{psbModel.selectedProject!=null}" click="removeProject()"/>
+						<common:RemoveButton visible="{permissions.canRemoveProject}" 
+							click="removeProject()"
+							toolTip="{currentProjectSelected ? 'cannot delete currently loaded project' : null}"
+							enabled="{psbModel.selectedProject &amp;&amp; !currentProjectSelected}"/>
 					</mx:HBox>
 				</mx:VBox>
 				<mx:Form enabled="{psbModel.selectedProject != null}">
@@ -163,8 +282,14 @@
 				<search:StandardSearchBox width="100%" visible="false" includeInLayout="false"/>
 				<mx:List dataProvider="{psbModel.scenarioList}" width="100%" id="listScenarios" labelField="name" change="selectScenario()"/>
 				<mx:HBox>
-					<common:AddButton visible="{permissions.canAddScenario}" click="UtilFuncs.GetUserTextInput(this, addScenario, 'Enter Scenario Name', true)"  enabled="{psbModel.selectedProject!=null}"/>
-					<common:RemoveButton visible="{permissions.canRemoveScenario}" click="removeScenario()"  enabled="{psbModel.selectedScenario!=null}"/>
+					<common:AddButton 
+						visible="{permissions.canAddScenario}" 
+						click="UtilFuncs.GetUserTextInput(this, addScenario, 'Enter Scenario Name', true)" />
+					<common:RemoveButton 
+						visible="{permissions.canRemoveScenario}" 
+						click="removeScenario()" 
+						toolTip="{currentScenarioSelected ? 'cannot delete currently loaded scenario' : null}"
+						enabled="{psbModel.selectedScenario &amp;&amp; !currentScenarioSelected}"/>
 				</mx:HBox>
 				<mx:Form enabled="{psbModel.selectedScenario != null}">
 					<mx:FormItem label="Name">
@@ -182,6 +307,9 @@
 	</mx:VBox>
 	<mx:ControlBar horizontalAlign="right">
 		<mx:Label text="{psbModel.selectedProject.name + ' > ' + psbModel.selectedScenario.name}"/>
-		<mx:Button label="Load Scenario" enabled="{listScenarios.selectedItems.length == 1}" click="loadScenario()"/>
+		<mx:Button label="Load Scenario"
+			toolTip="{currentScenarioSelected ? 'scenario already loaded' : null}" 
+			enabled="{!currentScenarioSelected &amp;&amp; psbModel.selectedScenario}" 
+			click="loadScenario()"/>
 	</mx:ControlBar>	
 </mx:TitleWindow>
