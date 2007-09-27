@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	verticalAlign="middle"
+<common:ToolBarButton 
+	xmlns:common="com.mindalliance.channels.view.common.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="Edit" 
+	click="btnEditorInvokerClicked()" 
+	imageSource="assets/images/edit.png"
 	creationComplete="init()">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.ScrollPolicy;
 			import com.mindalliance.channels.view.flowmap.FlowMapView;
 			import mx.effects.Resize;
 			import mx.events.ResizeEvent;
-			import com.mindalliance.channels.view.common.ResizableTitleWindow;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.binding.utils.BindingUtils;
@@ -18,8 +22,6 @@
 			[Bindable]
 			private var _propertyEditor:PropertyEditor ;
 			
-			private var popUp:TitleWindow ;
-			
 			public function get propertyEditor():PropertyEditor {
 				return _propertyEditor ;
 			}
@@ -27,37 +29,38 @@
 			private function init():void {
 				_propertyEditor = new PropertyEditor() ;
 				_propertyEditor.init() ;
-				_propertyEditor.percentHeight = 100 ;
-				_propertyEditor.percentWidth = 100 ;
+
+				PopUpManager.addPopUp(_propertyEditor, this) ;
+				_propertyEditor.width = 400 ;
+				_propertyEditor.height = 600 ;
+/* 
+				_propertyEditor.minHeight = 400 ;
+				_propertyEditor.maxHeight = 600 ;
+				_propertyEditor.minWidth = 200 ;
+				_propertyEditor.maxWidth = 600 ;
+ */
+ 				_propertyEditor.showCloseButton = true ;
+				_propertyEditor.addEventListener(CloseEvent.CLOSE, propertyEditorCloseClicked) ;
 				
-				popUp = PopUpManager.createPopUp(this, ResizableTitleWindow) as ResizableTitleWindow;
-				popUp.addChild(_propertyEditor) ;
-				popUp.minHeight = 400 ;
-				popUp.maxHeight = 600 ;
-				popUp.minWidth = 200 ;
-				popUp.maxWidth = 600 ;
-				popUp.showCloseButton = true ;
-				popUp.addEventListener(CloseEvent.CLOSE, propertyEditorCloseClicked) ;
-				
-				BindingUtils.bindSetter(setState, popUp, ['visible']) ;
+				BindingUtils.bindSetter(setState, _propertyEditor, ['visible']) ;
 				BindingUtils.bindSetter(setState, _propertyEditor, ['isEditing']) ;
 				
-				popUp.visible = false ;
+				_propertyEditor.visible = false ;
 			}
 			
 			protected function propertyEditorCloseClicked(event:CloseEvent):void {
-				popUp.visible = false ;
+				_propertyEditor.visible = false ;
 			}
 			
 			private function setState(value:Object):void {
 				if (_propertyEditor.isEditing) {
 					currentState = 'PropertyEditorEditingState' ;
-					popUp.showCloseButton = false ;
+					_propertyEditor.showCloseButton = false ;
 					return ;
 				}
 				else {
-					popUp.showCloseButton = true ;					
-					if (popUp.visible)
+					_propertyEditor.showCloseButton = true ;					
+					if (_propertyEditor.visible)
 						currentState = 'PropertyEditorUndockedState' ;
 					else
 						currentState = '' ;
@@ -67,10 +70,10 @@
 			private function btnEditorInvokerClicked():void {
 				switch (currentState) {
 					case 'PropertyEditorUndockedState':
-						popUp.visible = false ;
+						_propertyEditor.visible = false ;
 					break ;
 					case '':
-						popUp.visible = true ;
+						_propertyEditor.visible = true ;
 					break ;
 				}
 			}
@@ -78,21 +81,20 @@
 		]]>
 	</mx:Script>
 	
-	<mx:states>
+	<common:states>
 		<mx:State name="PropertyEditorEditingState">
-			<mx:SetProperty target="{btnEditorInvoker}" name="label" value="Editing..."/>
-			<mx:SetProperty target="{btnEditorInvoker}" name="enabled" value="false"/>
+			<mx:SetProperty name="label" value="Editing..."/>
+			<mx:SetProperty name="enabled" value="false"/>
 		</mx:State>
 		<mx:State name="PropertyEditorUndockedState">
-			<mx:SetProperty target="{btnEditorInvoker}" name="label" value="Hide Property Editor"/>
+			<mx:SetProperty name="label" value="Hide Editor"/>
 		</mx:State>
-	</mx:states>
-	
-	<mx:transitions>
+	</common:states>
+
+	<common:transitions>
 		<mx:Transition fromState="*" toState="*">
 			<mx:Glow/>
 		</mx:Transition>
-	</mx:transitions>
-	<mx:Button id="btnEditorInvoker" label="Show Property Editor" click="btnEditorInvokerClicked()" icon="@Embed('../../../../../assets/images/edit.png')"/>
-
-</mx:HBox>
+	</common:transitions>	
+		
+</common:ToolBarButton>

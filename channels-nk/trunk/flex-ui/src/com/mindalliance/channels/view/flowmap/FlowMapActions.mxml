@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalAlign="middle" xmlns:common="com.mindalliance.channels.view.common.*" xmlns:application="com.mindalliance.channels.view.application.*">
 
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
 			import com.mindalliance.channels.events.scenario.UpdateTaskEvent;
 			import com.mindalliance.channels.vo.common.OccurrenceVO;
 			import com.mindalliance.channels.model.ElementModel;
@@ -63,14 +65,16 @@
 				}
 			}
 			
-			private function renameSelectedElement():void {
-				
-			}
-			
 		]]>
+		
 	</mx:Script>
-	<mx:HBox>
-		<mx:Button label="Delete" enabled="{numSelectedItems > 0}" click="deleteSelectedElements()"/>
-<!--		<mx:Button label="Rename" enabled="{FlowMap.numSelected == 1}" click="renameSelectedElement()"/> -->
-	</mx:HBox>
-</mx:Box>
+	
+	<application:PropertyEditorDock id="propertyEditorDock" enabled="{numSelectedItems == 1}"/>
+	<common:ToolBarButton click="deleteSelectedElements()" enabled="{numSelectedItems > 0}" imageSource="assets/images/delete.png" label="Delete"/>
+	<mx:VRule height="20"/>
+	<common:ToolBarButton imageSource="assets/images/gear_add.png" label="Add Task" click="FlowMapView.getInstance().addTask()"/>
+	<common:ToolBarButton label="Add Event" imageSource="assets/images/date_time_add.png" click="FlowMapView.getInstance().addEvent()"/>
+	<common:ToolBarButton imageSource="assets/images/user1_add.png" label="Add Role" enabled="false" toolTip="not implemented yet"/>
+	<common:ToolBarButton label="Add Repository" imageSource="assets/images/data_add.png" click="FlowMapView.getInstance().addRepository()"/>
+	
+</mx:HBox>

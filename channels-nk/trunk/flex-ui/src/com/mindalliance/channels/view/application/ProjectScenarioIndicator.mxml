@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
-	label="{model.currentProject.name + ' > ' + model.currentScenario.name}"
-	click="btnClicked()" toolTip="click to browse or change projects and scenarios">
-	<mx:Script>
-			<![CDATA[
-				import mx.events.FlexEvent;
-				import mx.effects.Resize;
-				import mx.core.IFlexDisplayObject;
-				import mx.managers.PopUpManager;
-	
-				import com.mindalliance.channels.model.ChannelsModelLocator;
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	horizontalAlign="center"
+	horizontalGap="1">
 				
-				[Bindable]
-	 	        private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
-	
-				private function btnClicked():void {
-					var sb:ProjectScenarioBrowser = PopUpManager.createPopUp(this, ProjectScenarioBrowser, true) as ProjectScenarioBrowser ;
-					sb.addEventListener(FlexEvent.CREATION_COMPLETE, function effect(event:Event):void{new Resize(sb).play() ;}) ;
-					PopUpManager.centerPopUp(sb);
-					sb.y = this.y + this.height + 4 ;
-	            }
-	            
-			]]>
-	</mx:Script>			
-</mx:Button>
+	<mx:Label text="project:" fontSize="12"/>
+	<mx:Label text="{ChannelsModelLocator.getInstance().currentProject.name}" fontWeight="bold" fontSize="12"/>
+	<mx:Spacer width="6"/>
+	<mx:Label text="scenario:" fontSize="12"/>
+	<mx:Label text="{ChannelsModelLocator.getInstance().currentScenario.name}" fontWeight="bold" fontSize="12"/>
+	<mx:Spacer width="14"/>
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+		]]>
+	</mx:Script>
+
+</mx:HBox>

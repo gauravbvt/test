@@ -35,13 +35,23 @@ package com.mindalliance.channels.model.flowmap
 		
 		private function setupOwnerWatcher(elemVO:ElementVO):void {
 			var elemModel:ElementModel = model.getElementModel(elemVO.id) as ElementModel ;
-			if (!elemModel.data) {
-				var watcher:ChangeWatcher = ChangeWatcher.watch(elemModel, 'data', ownerChangeHandler) ;
+			
+			if (elemModel.data)
+				refreshOwner(elemModel.data as RepositoryVO) ;
+
+			var watcher:ChangeWatcher = ownerWatchers[elemVO.id] as ChangeWatcher ;
+			if (!(watcher && watcher.isWatching())) {
+				watcher = ChangeWatcher.watch(elemModel, 'data', ownerChangeHandler) ;
 				ownerWatchers[elemVO.id] = watcher ;
 				CairngormHelper.fireEvent(new GetOrganizationEvent(elemVO.id, null)) ;
 			}
-			else {
-				refreshOwner(elemModel.data as RepositoryVO) ;
+		}
+		
+		private function removeOwnerWatcher(elemID:String):void {
+			var watcher:ChangeWatcher = ownerWatchers[elemID] as ChangeWatcher ;
+			if (watcher) {
+				watcher.unwatch() ;
+				delete ownerWatchers[elemID] ;
 			}
 		}
 		
@@ -69,6 +79,7 @@ package com.mindalliance.channels.model.flowmap
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
 						FlowMap.removeRepository(elemVO.id) ;
+						removeOwnerWatcher(elemVO.id) ;
 					}) ; 
 			}
 		}
@@ -87,6 +98,8 @@ package com.mindalliance.channels.model.flowmap
 		}
 
 		private function repositoriesReset(colEvent:CollectionEvent):void {
+			for (var elemID:String in ownerWatchers)
+				removeOwnerWatcher(elemID) ;
 			var reposAC:ArrayCollection = model.getElementListModel(ElementListNames.REPOSITORY_LIST_KEY).data ;
 			var ownersToWatch:Array = new Array() ;
 			for each (var reposVO:ElementVO in reposAC) {

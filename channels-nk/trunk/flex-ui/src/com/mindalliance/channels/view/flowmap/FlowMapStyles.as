@@ -149,7 +149,7 @@ package com.mindalliance.channels.view.flowmap
 			selectedEdgeStyle = IEdgeStyle(es.clone()) ;
 			
 			es.stroke = new Stroke(0xCCFF33, 2.0) ;
-			es.targetArrow = DefaultArrow.create(ArrowType.DIAMOND, new Stroke(0xCCFF33, 1.0), new SolidColor(0x0), 4.0, 2.0) ;
+			es.targetArrow = DefaultArrow.create(ArrowType.SPEARHEAD, new Stroke(0xCCFF33, 1.0), new SolidColor(0x0), 4.0, 2.0) ;
 			causeEdgeStyle = es.clone() as IEdgeStyle ;
 		}
 			

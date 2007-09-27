@@ -8,6 +8,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.Panel;
 			import com.mindalliance.channels.view.communicationplan.CommunicationPlanViewer;
 			import com.mindalliance.channels.view.scenario.SharingNeedEditor;
 			import com.mindalliance.channels.view.flowmap.FlowMapView;
@@ -115,7 +116,6 @@
 				break ;
 				case "Communication Plan Viewer" :
 					var tw:ResizableTitleWindow = PopUpManager.createPopUp(this, ResizableTitleWindow) as ResizableTitleWindow ;
-					tw.maxHeight = 600 ;
 					tw.showCloseButton = true ;
 					tw.addEventListener(CloseEvent.CLOSE, function anon(event:CloseEvent):void {PopUpManager.removePopUp(tw);}) ;
 					tw.addChild(new CommunicationPlanViewer()) ;
@@ -133,7 +133,8 @@
         	performPostPopupCreation(chooser) ;
         }
         
-        private function performPostPopupCreation(popup:IFlexDisplayObject):void {
+        private function performPostPopupCreation(popup:Panel):void {
+			popup.maxHeight = 600 ;
         	PopUpManager.centerPopUp(popup) ;
         	var p:Point = this.localToGlobal(new Point(this.x, this.y + this.height)) ;
         	popup.y = p.y + 5 ;

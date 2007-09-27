@@ -5,13 +5,14 @@
     xmlns:logging="com.mindalliance.channels.view.logging.*"
     currentState="{model.currentScenario == null ? 'DashboardState' : 'InScenarioState'}"
     horizontalAlign="center"
-    creationComplete="init()">
+    creationComplete="init()" verticalAlign="top">
     <mx:states>
         <mx:State name="DashboardState">
             <mx:AddChild relativeTo="{spacer1}" position="before">
 	            <mx:Label text="{personVO.firstName + ' ' + personVO.lastName +  '\'' + (personVO.lastName.charAt(personVO.lastName.length - 1) == 's' ? '' : 's') + ' Dashboard'}"
 		            	fontWeight="bold" id="lblDashboardHeaderLabel"/>
             </mx:AddChild>
+            <mx:SetStyle name="verticalAlign"/>
         </mx:State>
         <mx:State name="InScenarioState">
             <mx:AddChild relativeTo="{spacer1}" position="before">
@@ -19,7 +20,10 @@
             </mx:AddChild>
             <mx:AddChild relativeTo="{spacer2}" position="before">
             	<!--Need some kinda unload event to dispatch here. -->
-                <mx:Button label="Go to Dashboard" click="Alert.show('This will eventually go to dashboard')"/>
+            	<mx:HBox>
+	                <mx:Button label="dashboard" click="Alert.show('This will eventually go to dashboard')"/>
+	                <mx:Button id="btnBrowse" label="change scenario" click="btnChangeScenarioClicked()"/>
+            	</mx:HBox>
             </mx:AddChild>
         </mx:State>
     </mx:states>
@@ -109,6 +113,13 @@
             	personalProfileEditor = new PersonalProfileEditor() ;
             	instance = this ;
             }
+            				
+			private function btnChangeScenarioClicked():void {
+				var sb:ProjectScenarioBrowser = PopUpManager.createPopUp(this, ProjectScenarioBrowser, true) as ProjectScenarioBrowser ;
+				sb.addEventListener(FlexEvent.CREATION_COMPLETE, function effect(event:Event):void{new WipeDown(sb).play() ;}) ;
+				PopUpManager.centerPopUp(sb);
+				sb.y = this.y + this.height + 4 ;
+            }
             
 	    ]]>
 	</mx:Script>
@@ -116,7 +127,7 @@
 	<mx:Binding source="personalProfileEditor.personEditor.model" destination="personEditorModel"/>
 	<mx:Binding source="personEditorModel.getElementModel(personEditorModel.id).data as PersonVO" destination="personVO"/>
     
-	<logging:LoggerButton label="Show Trace Output" visible="{model.debug}" fillColors="[#f09a7b, #f09a7b]" id="loggerbutton1"/>
+	<logging:LoggerButton label="Show Trace Output" visible="{model.debug}" includeInLayout="{model.debug}" fillColors="[#f09a7b, #f09a7b]" id="loggerbutton1"/>
     <mx:Spacer width="100%" id="spacer2"/>
     <mx:Spacer width="100%" id="spacer1"/>
 	<mx:Label text="{'Logged in as: '+model.user.name}"/>

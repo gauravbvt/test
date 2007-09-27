@@ -183,8 +183,10 @@
 		<mx:HBox width="100%" backgroundColor="0xFFFFDA" horizontalAlign="center">
 			<mx:Label text="{scenarioName}" fontSize="14" fontWeight="bold"/>
 		</mx:HBox>
-		<mx:DataGrid editable="true" height="100%" dataProvider="{PlanData}" width="100%" rollOverColor="0xFFFFDD" alternatingItemColors="[#FFFFFF]"
-			selectionColor="0xFFFFDD">
+		<mx:DataGrid editable="true" height="100%" dataProvider="{PlanData}" width="100%" 
+			rollOverColor="0xFEFEFE" 
+			alternatingItemColors="[#FFFFFF]"
+			selectionColor="0xFEFEFE">
 			<mx:columns>
 				<mx:DataGridColumn headerText="Phases" dataField="phases"/>
 				<mx:DataGridColumn headerText="" dataField="communicationDirection" resizable="false" editable="false" width="24">

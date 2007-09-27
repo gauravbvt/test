@@ -17,8 +17,6 @@ package com.mindalliance.channels.model.flowmap
 	public class AgentModel extends BaseModel
 	{
 
-		private var agentWatchers:Object ;		
-		
 		private function agentsAdded(colEvent:CollectionEvent):void {
             for each (var item:Object in colEvent.items) {
 				extractElementVO(item,

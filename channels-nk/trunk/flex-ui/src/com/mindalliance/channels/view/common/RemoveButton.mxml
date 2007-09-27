@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml" label="-" fontSize="20" width="28" height="28" textAlign="center" toolTip="Remove selected"/>
+<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml" 
+	label="-" 
+	fontSize="20" 
+	width="28" height="28" 
+	textAlign="center"
+	cornerRadius="0"/>

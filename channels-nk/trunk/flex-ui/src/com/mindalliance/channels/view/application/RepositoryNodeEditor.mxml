@@ -25,7 +25,7 @@
                 BindingUtils.bindSetter(setState, repositoryEditor, ['currentState']) ;
                 BindingUtils.bindSetter(setState, organizationEditor, ['currentState']) ;
             }
-            
+                        
             private function setState(value:Object):void {
             	if (repositoryEditor.currentState == 'EditState' || organizationEditor.currentState == 'EditState')
             		editorState = 'EditState' ;

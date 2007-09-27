@@ -61,6 +61,8 @@ package com.mindalliance.channels.model.flowmap
 		}
 		
 		private function tasksReset():void {
+			for (var elemID:String in causationWatchers)
+				removeCausationWatcher(elemID) ;
 			var taskAC:ArrayCollection = model.getElementListModel(ElementListNames.TASK_LIST_KEY).data ;
 			var causationsToWatch:Array = new Array() ;
 			for each (var task:ElementVO in taskAC) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	backgroundColor="0xFFFFFF"
 	height="100%"
 	width="100%"
+	backgroundColor="0xFFFFFF"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
 	xmlns:timeline="com.mindalliance.channels.view.timeline.*" 
 	xmlns:ui="com.mindalliance.channels.view.*" 
@@ -13,6 +13,7 @@
 	xmlns:business="com.mindalliance.channels.business.*"
 	xmlns:common="com.mindalliance.channels.view.common.*"
 	applicationComplete="init()" currentState="DashboardState">
+	
 	
   	<mx:states>
 		<mx:State name="DashboardState">
@@ -25,12 +26,12 @@
 		<mx:State name="InScenarioState">
 			<mx:AddChild relativeTo="{vboxApplication}" position="lastChild">
 				<mx:VBox width="100%" height="100%" paddingTop="10">
-					<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
-						<application:PropertyEditorDock id="propertyEditorDock"/>
-						<application:ChannelsMenuBar creationComplete="channelsMenuBarCreationComplete()" enabled="false" id="channelsMenuBar"/>
-						<mx:Spacer width="100%"/>
-						<flowmap:FlowMapActions id="flowMapActions"/>
-					</mx:HBox>
+					<application:ChannelsMenuBar 
+						creationComplete="channelsMenuBarCreationComplete()" 
+						enabled="false" 
+						id="channelsMenuBar"
+						width="100%"/>
+					<flowmap:FlowMapActions id="flowMapActions" resizeEffect="Resize"/>
 					<flowmap:FlowMapView id="flowmap" width="100%" height="100%" />
 				</mx:VBox>
 			</mx:AddChild>
@@ -115,7 +116,7 @@
 	<control:ChannelsController id="appController" />
 
     <mx:VBox width="100%" height="100%" id="vboxApplication">
-	    <application:ApplicationToolBar id="applicationToolBar"/>
+	    <application:ApplicationToolBar id="applicationToolBar" resizeEffect="Resize"/>
 	</mx:VBox>
      
 </mx:Application>

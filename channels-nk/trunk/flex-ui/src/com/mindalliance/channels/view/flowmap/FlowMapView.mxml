@@ -119,22 +119,10 @@
 					case "Add Repository":
 						addRepository() ;
 					break ;
-					case "Set Role" :
-						setRole() ;
-					break ;
 				}
 			}
-			
-			private function setRole():void {
-				function setRoleHandler(roleName:String):void {
-					var node:DefaultNode = FlowMap.selectedItems.iterator().next() as DefaultNode ;
-					var taskID:String = GraphMapperHelper.getInstance().idMapper.lookupValue(node) as String ;
-					FlowMap.setAgent(taskID, FlowMap.getNewID(), roleName) ;
-				}
-				UtilFuncs.GetUserTextInput(this, setRoleHandler, "Enter Role Name", true) ;
-			}
-			
-			private function addTask():void {
+						
+			public function addTask():void {
 				function addTaskHandler(taskName:String):void {
 					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
 					var event:CreateTaskEvent = new CreateTaskEvent(taskName, scenarioID) ;
@@ -144,7 +132,7 @@
  				UtilFuncs.GetUserTextInput(this, addTaskHandler, "Enter Name of New Task", true) ;
 			}
 			
-			private function addEvent():void {
+			public function addEvent():void {
 				function addEventHandler(eventName:String):void {
 					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
 					var event:CreateEventEvent = new CreateEventEvent(eventName, scenarioID) ;
@@ -153,7 +141,7 @@
 				UtilFuncs.GetUserTextInput(this, addEventHandler, "Enter Name of New Event", true) ;
 			}
 			
-			private function addRepository():void {
+			public function addRepository():void {
 				function addRepositoryHandler(reposName:String, reposOwnerID:String):void {
 					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
 					var event:CreateRepositoryEvent = new CreateRepositoryEvent(reposName, reposOwnerID) ;

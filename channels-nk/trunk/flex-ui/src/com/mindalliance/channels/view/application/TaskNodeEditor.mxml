@@ -2,8 +2,7 @@
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:scenario="com.mindalliance.channels.view.scenario.*"
 	xmlns:people="com.mindalliance.channels.view.people.*"
-	creationComplete="init()"
-    width="100%" height="100%">
+	creationComplete="init()">
 
 	<mx:Script>
 		<![CDATA[

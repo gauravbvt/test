@@ -323,11 +323,14 @@
 			<mx:SetProperty target="{formitemCause}" name="mouseChildren" value="true"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseEnabled" value="true"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
+<!--
 			<mx:SetProperty target="{formItemPolicy}" name="mouseEnabled" value="true"/>
 			<mx:SetProperty target="{formItemPolicy}" name="mouseChildren" value="true"/>
 			<mx:SetProperty target="{txtPolicyURL}" name="editable" value="true"/>
 			<mx:SetProperty target="{txtPolicyDescription}" name="editable" value="true"/>
-			<mx:SetProperty target="{formitemName}" name="required" value="true"/>
+			<mx:SetProperty target="{txtPolicyURL}" name="styleName"/>
+ -->
+ 			<mx:SetProperty target="{formitemName}" name="required" value="true"/>
 			<mx:SetProperty target="{txtName}" name="editable" value="true"/>
 			<mx:SetProperty target="{categoryViewer}" name="currentState" value="EditState"/>
 			<mx:AddChild relativeTo="{formitemAcquirements}" position="lastChild">
@@ -336,7 +339,6 @@
 					<common:RemoveButton enabled="{listAcquirements.selectedItems.length > 0}" click="removeAcquirement()"/>
 				</mx:HBox>
 			</mx:AddChild>
-			<mx:SetProperty target="{txtPolicyURL}" name="styleName"/>
 		</mx:State>
 	</mx:states>
 	
@@ -347,26 +349,30 @@
 	<mx:Style source="../../../../../assets/styles/FormStyles.css"/> 
 
 	<mx:HBox>
-		<mx:Label text="Detail:" fontWeight="bold"/>
-		<mx:Spacer width="10%"/>
+		<mx:Spacer width="80"/>
+		<mx:Label text="Detail" fontWeight="bold"/>
+		<mx:Spacer width="6"/>
 		<mx:Label text="Less"/>
 		<mx:HSlider width="100%" minimum="0" maximum="5" value="5" showDataTip="false" liveDragging="true" snapInterval="1" tickInterval="1" id="sliderLOD"/>
 		<mx:Label text="More"/>
 	</mx:HBox>
-	<mx:Form width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:Form width="100%" id="formEdit">
 		<common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
 			btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
 			width="100%"/>
-		<common:LODFormItem label="Task Name" direction="vertical" id="formitemName" levelOfDetail="0" currentLevelOfDetail="{sliderLOD.value}">
-			<mx:TextInput id="txtName" editable="false" styleName="PrimaryNameFieldEditState" text="{edited.name}" change="queueUpdate()"/>
+		<common:LODFormItem label="Task Name" direction="vertical" id="formitemName" levelOfDetail="0" currentLevelOfDetail="{sliderLOD.value}" width="100%">
+			<mx:TextInput id="txtName" editable="false" styleName="PrimaryNameFieldEditState" text="{edited.name}" change="queueUpdate()" width="100%"/>
 		</common:LODFormItem>
-		<common:LODFormItem label="Description" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}">
-			<mx:TextArea id="txtDescription" wordWrap="true" editable="false" text="{edited.description}" change="queueUpdate()"/>
+		<common:LODFormItem label="Description" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}" width="100%">
+			<mx:TextArea id="txtDescription" wordWrap="true" editable="false" text="{edited.description}" change="queueUpdate()" width="100%"/>
 		</common:LODFormItem>
 		<common:LODFormItem label="Agents" direction="vertical" id="formitemAgents" levelOfDetail="1" currentLevelOfDetail="{sliderLOD.value}">
 			<mx:Text text="The following roles execute this task:" styleName="FormItemDescription" id="text1"/>
 			<mx:List id="listAgents" dataProvider="{agentList}" labelFunction="{getRoleNameFromAgent}"/>
 		</common:LODFormItem>
+
+<!--
+		Policy stuff not used
 		<common:LODFormItem id="formItemPolicy" label="Policy requirement" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}" resizeEffect="Resize">
 			<mx:CheckBox label="This task is obligated by a policy." id="cbObligated"/>
 			<mx:VBox id="vBoxPolicy" visible="{cbObligated.selected}" includeInLayout="{cbObligated.selected}" width="100%">
@@ -374,7 +380,8 @@
 				<mx:TextArea width="100%" id="txtPolicyDescription" editable="false"/>
 			</mx:VBox>
 		</common:LODFormItem>
-	    <common:LODFormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}">
+-->
+ 	    <common:LODFormItem label="Cause" direction="vertical" id="formitemCause" mouseEnabled="false" mouseChildren="false" resizeEffect="Resize" levelOfDetail="2" currentLevelOfDetail="{sliderLOD.value}">
 	        <mx:VBox id="vBoxCause">
 	            <mx:RadioButtonGroup id="rbgCause"/>
 	            <mx:RadioButton groupName="rbgCause" label="This task is independent of other events or tasks." selected="{edited.cause==null}" change="queueUpdate()" />

@@ -81,17 +81,12 @@
 	</mx:VBox>
 	<mx:VBox>
 		<mx:Label text="Elements of Information" id="lblEOI"/>
-		<mx:DataGrid draggableColumns="false" variableRowHeight="true" id="dgEOIs" editable="false" dataProvider="{model.eois}">
-			<mx:columns>
-				<mx:DataGridColumn headerText="Topic" wordWrap="false"/>
-				<mx:DataGridColumn headerText="Label" rendererIsEditor="true" editorDataField="selected">
-					<mx:itemEditor>
-						<mx:Component>
-							<mx:CheckBox/>
-						</mx:Component>
-					</mx:itemEditor>
-				</mx:DataGridColumn>
-			</mx:columns>
-		</mx:DataGrid>
+		<mx:List id="listEOI" dataProvider="{model.eois}" editable="false" rendererIsEditor="true">
+			<mx:itemRenderer>
+				<mx:Component>
+					<mx:CheckBox/>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:List>
 	</mx:VBox>
 </mx:HBox>
