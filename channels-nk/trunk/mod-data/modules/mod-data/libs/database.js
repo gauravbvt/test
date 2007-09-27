@@ -11,6 +11,15 @@ function deleteDocument(id);
 function queryContainer(query);
 */
 
+// SHOULD PUT SUBSTITUTIONS IN A SEPARATE CONFIGURATION FILE
+function filter(s) {
+  // Java strings are NOT the same as JavaScript strings: 
+  // make sure to convert to JS strings before using string methods!
+  var fs = String(s).replace(/__MODEL__/g, String(getContainerName())); 
+  // more filters here
+  return fs;
+}
+
 // XML DATABASE ACCESS
 
 function databaseExists() {
@@ -122,7 +131,7 @@ function deleteReference(referrer, refPath, cascade, id, updated) {
 			}
 			// update element
 			updateElement(referrer);
-			updated.push(referrer.id.text());
+			if (!contains(updated, referrer.id.text())) updated.push(referrer.id.text());
 		}
 	}
 }

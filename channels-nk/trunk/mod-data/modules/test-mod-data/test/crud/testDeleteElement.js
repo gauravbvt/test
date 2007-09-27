@@ -10,7 +10,7 @@ reloadModel();
 var tests = [ // ["id to delete", number deleted, number updated]
 							["user1", 1, 1],
 							["event1", 5, 1],
-							["role1", 2, 2]
+							["role1", 2, 3]
 						];
 
 for each (test in tests) {
