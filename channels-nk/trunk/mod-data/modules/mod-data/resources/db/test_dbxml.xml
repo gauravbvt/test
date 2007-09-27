@@ -93,8 +93,8 @@
             <level>low</level>
           </confidence>
           <privacy>
-            <roleId>4987</roleId>
-            <roleId>1123</roleId>
+            <roleId>role1</roleId>
+            <roleId>role2</roleId>
           </privacy>
           <eoi>
             <name>eoi 1.1</name>
@@ -112,8 +112,8 @@
             <level>low</level>
           </confidence>
           <privacy>
-            <roleId>4333</roleId>
-            <roleId>554</roleId>
+            <roleId>role1</roleId>
+            <roleId>role2</roleId>
           </privacy>
           <eoi>
             <name>eoi 2.1</name>
@@ -235,8 +235,8 @@
           <level>low</level>
         </confidence>
         <privacy>
-          <roleId>4987</roleId>
-          <roleId>1123</roleId>
+          <roleId>role1</roleId>
+          <roleId>role2</roleId>
         </privacy>
         <eoi>
           <name>eoi 1.1</name>
@@ -394,7 +394,7 @@
   <needToKnow>
     <id>needToKnow1</id>
     <who>
-      <roleId>agent1</roleId>
+      <roleId>role1</roleId>
     </who>
     <about>
       <eventId>event1</eventId>
