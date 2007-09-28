@@ -66,7 +66,7 @@
   </reference>
   <reference to="task">
     <from element="task|event" cascade="./cause">./cause/taskId</from>
-    <from element="event" cascade="./taskId">./terminatesAfter/taskCompletions/taskId</from>
+    <from element="event">./terminatesAfter/taskCompletions/taskId</from>
     <from element="agent" cascade=".">/taskId</from>
     <from element="artifact|acquirement" cascade=".">./product/taskId</from>
     <from element="know|needToKnow" cascade=".">./about/taskId</from>
