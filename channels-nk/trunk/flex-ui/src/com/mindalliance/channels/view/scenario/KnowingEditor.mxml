@@ -149,13 +149,13 @@
     <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
     <mx:Binding source="(elementModel.data as KnowVO)" destination="edited"/>	
 
-    <mx:Binding source="model.getElementListModel('roles').data" destination="taskList"/>
-    <mx:Binding source="model.getElementListModel('agents').data" destination="eventList"/>
-    <mx:Binding source="model.getElementListModel('repositories').data" destination="taskList"/>
-    <mx:Binding source="model.getElementListModel('tasks').data" destination="eventList"/>
-    <mx:Binding source="model.getElementListModel('events').data" destination="taskList"/>
-    <mx:Binding source="model.getElementListModel('artifacts').data" destination="eventList"/>
-    <mx:Binding source="model.getElementListModel('acquirements').data" destination="taskList"/>
+    <mx:Binding source="model.getElementListModel('roles').data" destination="roleList"/>
+    <mx:Binding source="model.getElementListModel('agents').data" destination="agentList"/>
+    <mx:Binding source="model.getElementListModel('repositories').data" destination="repositoryList"/>
+    <mx:Binding source="model.getElementListModel('tasks').data" destination="taskList"/>
+    <mx:Binding source="model.getElementListModel('events').data" destination="eventList"/>
+    <mx:Binding source="model.getElementListModel('artifacts').data" destination="artifactList"/>
+    <mx:Binding source="model.getElementListModel('acquirements').data" destination="acquirementList"/>
     <mx:Binding source="edited.what.topics" destination="topicList"/>
     
 	<mx:FormItem id="formItemWho" label="Who" mouseChildren="false" mouseEnabled="false">
@@ -168,7 +168,7 @@
                  
 				</mx:Box>
 				<mx:Box>
-					<common:ElementComboBox id="comboWhoAgent" dataProvider="{repositoryList}"  selectedValue="{edited.who.id}" change="queueUpdate()"/>
+					<common:ElementComboBox id="comboWhoAgent" dataProvider="{agentList}"  selectedValue="{edited.who.id}" change="queueUpdate()"/>
                  
 				</mx:Box>
 				<mx:Box>    
@@ -184,7 +184,7 @@
 			<mx:Label text="{'Choose '+aboutType.getItemAt(comboAboutType.selectedIndex).label+':'}"/>
 			<mx:ViewStack id="vsAbout" selectedIndex="{comboAboutType.selectedIndex}">
 				<mx:Box>
-					<mx:ComboBox id="comboAboutTask"/>
+					<common:ElementComboBox id="comboAboutTask" dataProvider="{taskList}"  selectedValue="{edited.about.id}" change="queueUpdate()"/>
 				</mx:Box>
 				<mx:Box>
 					<common:ElementComboBox id="comboAboutEvent" dataProvider="{eventList}"  selectedValue="{edited.about.id}" change="queueUpdate()"/>

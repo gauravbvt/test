@@ -19,6 +19,9 @@
     
     <mx:Script>
         <![CDATA[
+        	import mx.utils.ObjectUtil;
+        	import mx.logging.Log;
+        	import mx.logging.ILogger;
             import com.mindalliance.channels.model.ElementModel;
             import com.mindalliance.channels.vo.SharingNeedVO;
             import com.mindalliance.channels.model.ChannelsModelLocator;
@@ -52,7 +55,9 @@
             }
             
             private function confirmEdit():void {
+                update();
                 currentState = '' ;
+                
             }
             
             private function cancelEdit():void {
@@ -70,6 +75,7 @@
             private function init() : void {
                 model.id="sharingNeed1";
             }
+
         ]]>
     </mx:Script>
     <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>

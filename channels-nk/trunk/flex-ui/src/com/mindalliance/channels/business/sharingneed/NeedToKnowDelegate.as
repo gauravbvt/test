@@ -55,11 +55,11 @@ package com.mindalliance.channels.business.sharingneed
             
             var updateOnChange : Boolean = false;
             var updateEvery : DurationVO;
-            if (xml.delivery.update.length() != 0) {
-                if (xml.delivery.update.onChange.length() != 0) {
+            if (xml.delivery.updating.length() != 0) {
+                if (xml.delivery.updating.onChange.length() != 0) {
                 	updateOnChange = true;
-                } else if (xml.delivery.update.every.length() != 0) {
-                	updateEvery = XMLHelper.xmlToDuration(xml.delivery.update.every.duration[0]);
+                } else if (xml.delivery.updating.every.length() != 0) {
+                	updateEvery = XMLHelper.xmlToDuration(xml.delivery.updating.every.duration);
                 	
                 }
             }
@@ -67,7 +67,7 @@ package com.mindalliance.channels.business.sharingneed
             return new NeedToKnowVO(xml.id, who,about,what,
                                     xml.criticality.level,
                                     XMLHelper.xmlToDuration(xml.urgency.duration),
-                                    xml.delivery.(@mode),
+                                    xml.delivery.@mode,
                                     updateOnChange,
                                     updateEvery,
                                     XMLHelper.xmlToCategorySet(xml.delivery.format[0]));
@@ -98,8 +98,11 @@ package com.mindalliance.channels.business.sharingneed
                	var updating : XML = <updating></updating>;
                	if (obj.updateOnChange)
                	    updating.appendChild(<onChange/>);
-               	else 
-               	    updating.appendChild(XMLHelper.durationToXML(obj.updateEvery));
+               	else {
+               	    var every : XML = <every></every>
+               	    every.appendChild(XMLHelper.durationToXML(obj.updateEvery));
+               	    updating.appendChild(every);
+               	}
                	delivery.appendChild(updating);
 
             }

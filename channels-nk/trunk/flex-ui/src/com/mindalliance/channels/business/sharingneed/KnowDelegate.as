@@ -31,7 +31,7 @@ package com.mindalliance.channels.business.sharingneed
 			} else if (xml.who.repositoryId.length() != 0) {
                 who = SourceOrSink.getRepositoryType(xml.who.repositoryId);
 			} if (xml.who.roleId.length() != 0) {
-                who = SourceOrSink.getRoleType(xml.who.RoleId);
+                who = SourceOrSink.getRoleType(xml.who.roleId);
 			}
 			
 			var about : Knowable;

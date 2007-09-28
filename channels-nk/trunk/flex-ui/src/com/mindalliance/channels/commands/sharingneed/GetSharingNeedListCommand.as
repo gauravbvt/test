@@ -27,6 +27,9 @@ package com.mindalliance.channels.commands.sharingneed
         {
         	var result : ArrayCollection = data["data"] as ArrayCollection;
             channelsModel.getElementListModel("sharingneeds").data = result;
+            for each (var el : SharingNeedVO in result) {
+                channelsModel.getElementModel(el.id).data  = el;	
+            }
             log.debug("Successfully retrieved sharing need list");
             for each (var need : SharingNeedVO in result) {
             	CairngormHelper.fireEvent(new GetKnowEvent(need.knowId));
