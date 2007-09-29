@@ -22,6 +22,7 @@
 
     <mx:Script>
         <![CDATA[
+        	import mx.events.CollectionEvent;
         	import mx.binding.utils.ChangeWatcher;
             import com.mindalliance.channels.events.common.ChooserSelectEvent;
             import com.mindalliance.channels.util.ElementHelper;
@@ -32,6 +33,8 @@
             import mx.collections.ArrayCollection;
             import mx.managers.PopUpManager;
             import com.mindalliance.channels.model.ChooserModel;
+            
+            public static const BROWSER_STATE:String = "BrowserState" ;
             
             // Models
             
@@ -65,14 +68,13 @@
                 return _filtered;	
             }
             
-            public static const BROWSER_STATE:String = "BrowserState" ;
-            
             public function set filtered (filtered: ArrayCollection) : void {
-                if (changeWatcher != null)
-                    changeWatcher.unwatch();
-                this._filtered = filtered;	
-                changeWatcher = ChangeWatcher.watch(this, "filtered", applyFilter);
+                if (_filtered != null) {
+                    _filtered.removeEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);	
+                }
+                _filtered = filtered;
                 
+                _filtered.addEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);
             }
             
             //Override
@@ -95,10 +97,12 @@
             }
             
             private function closeChooser():void {
-            	if (changeWatcher != null) {
-            	   changeWatcher.unwatch();	
-            	}
+            	
                 PopUpManager.removePopUp(this) ;
+                elementListModel.data.removeEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);
+                if (_filtered != null) {
+                    _filtered.removeEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);	
+                }
             }
             protected function init(): void {
             	if (model == null){
@@ -107,6 +111,7 @@
             	populateList();
 
                 model.editorModel = editor.model;
+                elementListModel.data.addEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);
             }
             
             private function applyFilter(evt : Event = null) : void {
@@ -145,7 +150,6 @@
                     chooserHBox.addChild((editor as DisplayObject));	
                 }
             }
-
         ]]>
     </mx:Script>
     <mx:Binding source="model.getElementListModel(elementListKey)" destination="elementListModel"/>

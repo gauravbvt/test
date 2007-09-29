@@ -192,7 +192,7 @@
                     }   
                     return true;
                 }
-                popup.filtered = artifactList;
+                popup.filtered = acquirementList;
                 popup.processSelected=function(selected : ArrayCollection) : void {
                     for each(var el : ElementVO in selected) {
                         addAcquirementList.addItem(el);

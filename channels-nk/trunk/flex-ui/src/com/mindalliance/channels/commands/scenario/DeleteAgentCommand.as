@@ -37,7 +37,9 @@ package com.mindalliance.channels.commands.scenario
                 col  = channelsModel.getElementListModel("agents" + data["taskId"]).data;
                 if (col != null) {
                     inx = ElementHelper.findElementIndexById(data["id"], col);
-                    col.removeItemAt(inx);
+                    if (inx >= 0) {
+                        col.removeItemAt(inx);
+                    }
                 }
                 CairngormEventDispatcher.getInstance().dispatchEvent( new GetAgentListEvent(data["taskId"]) );
                 log.info("Agent successfully deleted");
