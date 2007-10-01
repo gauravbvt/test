@@ -31,7 +31,9 @@ package com.mindalliance.channels.view.flowmap
 		}
 		
 		public static function getLocationForNewNode2(gc:GraphCanvasComponent):IPoint {
-			return new ImmutablePoint(gc.center.x, gc.center.y) ;
+			var dx:Number = (Math.random() > 0.5 ? 1 : -1) * Math.random() * gc.width/3 ;
+			var dy:Number = (Math.random() > 0.5 ? 1 : -1) * Math.random() * gc.height/3 ;
+			return new ImmutablePoint(gc.center.x + dx, gc.center.y + dy) ;
 		}
 		
 		public static function getLocationForNewNode(mapperHelper:GraphMapperHelper, phaseID:String):IPoint {

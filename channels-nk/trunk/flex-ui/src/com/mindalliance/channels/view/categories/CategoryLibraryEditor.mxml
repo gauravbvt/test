@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-    title="Category Editor"
+<common:ResizableTitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+    title="Category Library Editor"
     xmlns:search="com.mindalliance.channels.view.search.*"
-    xmlns:common="com.mindalliance.channels.view.common.*">
+    xmlns:common="com.mindalliance.channels.view.common.*"
+    showCloseButton="true"
+    close="if (this.isPopUp) PopUpManager.removePopUp(this)">
     
     <mx:Script>
         <![CDATA[
@@ -37,7 +39,7 @@
         <mx:HBox width="100%">
         	<search:StandardSearchBox width="100%"/>
         </mx:HBox>
-        <mx:HDividedBox width="100%">
+        <mx:HDividedBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	        <mx:VBox width="100%" height="100%">
 	            <mx:HBox width="100%" horizontalAlign="center">
 	                <mx:Button label="Add Category"/>
@@ -46,36 +48,28 @@
 	            <mx:Tree width="100%" height="100%" id="treeCategories" itemClick="treeCategoriesItemClicked(event)"/>
 	            <common:RemoveButton enabled="{treeCategories.selectedItems.length > 0}" toolTip="Remove selected categories"/>
 	        </mx:VBox>
-	        <mx:VBox width="100%" height="100%" id="details" enabled="{treeCategories.selectedItems.length == 1}">
-                <mx:Form>
-                    <mx:FormItem label="Name">
-                        <mx:TextInput/>
-                    </mx:FormItem>
-                    <mx:FormItem label="Description">
-                        <mx:TextArea/>
-                    </mx:FormItem>
-                </mx:Form>
-                <mx:VBox width="100%" height="100%">
-                    <mx:Label text="Information Template:" fontWeight="bold"/>
-                    <mx:DataGrid id="dgInformationTemplate" width="100%" height="100%">
-                        <mx:columns>
-                            <mx:DataGridColumn headerText="Topic"/>
-                            <mx:DataGridColumn headerText="Label"/>
-                        </mx:columns>
-                    </mx:DataGrid>
+            <mx:Form enabled="{treeCategories.selectedItems.length == 1}" width="100%" height="100%"
+            	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+                <mx:FormItem label="Name">
+                    <mx:TextInput/>
+                </mx:FormItem>
+                <mx:FormItem label="Description">
+                    <mx:TextArea/>
+                </mx:FormItem>
+                <mx:FormItem label="Information">
+                	<mx:List width="100%" id="listInformation"/>
                     <mx:HBox>
                     	<common:AddButton/>
-                    	<common:RemoveButton enabled="{dgInformationTemplate.selectedItems.length > 0}"/>
+                    	<common:RemoveButton enabled="{listInformation.selectedItems.length > 0}"/>
                     </mx:HBox>
-	                <mx:VBox width="100%" height="100%">
-	                       <mx:Label text="Implied Categories:" fontWeight="bold"/>
-	                       <mx:List width="100%" height="100%"/>
-	                </mx:VBox>
-                </mx:VBox>
-	        </mx:VBox>
+                </mx:FormItem>
+                <mx:FormItem label="Implied">
+                	<mx:List width="100%"/>
+                </mx:FormItem>
+            </mx:Form>
         </mx:HDividedBox>
     </mx:VBox>
     <mx:ControlBar horizontalAlign="right">
     	<mx:Button label="Close" click="closeEditor()"/>
     </mx:ControlBar>
-</mx:Panel>
+</common:ResizableTitleWindow>

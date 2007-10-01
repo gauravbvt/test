@@ -2,7 +2,7 @@
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:resources="com.mindalliance.channels.view.resources.*"
 	xmlns:people="com.mindalliance.channels.view.people.*"
-	creationComplete="init()" width="100%" height="100%">
+	resizeToContent="true">
 	
 	<mx:Script>
 		<![CDATA[
@@ -15,24 +15,11 @@
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.application.RepositoryNodeEditorModel;
 			
+			[Bindable] public var editorState:String;
 			[Bindable] private var model : RepositoryNodeEditorModel = ChannelsModelLocator.getInstance().propertyEditorModel.repositoryNodeEditorModel;
             [Bindable] private var elementModel : ElementModel;
             [Bindable] private var editedRepository : RepositoryVO;
-            [Bindable] public var editorState:String ;
-            
-            
-            private function init():void {
-                BindingUtils.bindSetter(setState, repositoryEditor, ['currentState']) ;
-                BindingUtils.bindSetter(setState, organizationEditor, ['currentState']) ;
-            }
-                        
-            private function setState(value:Object):void {
-            	if (repositoryEditor.currentState == 'EditState' || organizationEditor.currentState == 'EditState')
-            		editorState = 'EditState' ;
-            	else
-            		editorState = '' ;
-            }
-            
+                                                
             public function loadRepository(reposID:String):void {
 				var getReposEvent:GetRepositoryEvent = new GetRepositoryEvent(reposID, model.repositoryModel) ;
 				CairngormHelper.fireEvent(getReposEvent) ;
@@ -45,7 +32,11 @@
 	<mx:Binding source="ChannelsModelLocator.getInstance().getElementModel(model.repositoryModel.id)" destination="elementModel"/>
 	<mx:Binding source="elementModel.data as RepositoryVO" destination="editedRepository"/>
 	<mx:Binding source="editedRepository.organization.id" destination="model.organizationModel.id"/>
+	<mx:Binding source="(repositoryEditor.currentState == 'EditState' || organizationEditor.currentState == 'EditState') ? 'EditState' : ''"	destination="editorState"/>
 
-	<resources:RepositoryEditor label="{'Repository: '}" id="repositoryEditor" enabled="{editedRepository != null}" width="100%" height="100%"/>
-	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor" enabled="{(model.organizationModel.id != null) &amp;&amp; (repositoryEditor.currentState != 'EditState')}" width="100%" height="100%"/>
+	<resources:RepositoryEditor label="{'Repository: '}" id="repositoryEditor" enabled="{organizationEditor.currentState != 'EditState'}" width="100%" height="100%"/>
+
+	<people:OrganizationEditor label="{'Organization: '}" id="organizationEditor" 
+		enabled="{(model.organizationModel.id != null) &amp;&amp; (repositoryEditor.currentState != 'EditState')}" width="100%" height="100%"/>
+		
 </mx:TabNavigator>

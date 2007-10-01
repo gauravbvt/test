@@ -4,10 +4,13 @@
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
 	xmlns:yui="com.yworks.ui.*"
 	backgroundColor="0xFFFFFF"
-	width="100%" height="100%">
+	width="100%" height="100%"
+	horizontalGap="0">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import com.mindalliance.channels.view.application.PropertyEditor;
 			import com.yworks.graph.model.DefaultNode;
 			import mx.events.MenuEvent;
 			import com.mindalliance.channels.view.application.ChannelsMenuBar;
@@ -73,13 +76,13 @@
 				FlowMap.initialize(graphCanvas) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
-/* 				FlowMap.addSelectionListener(FlowMapEvent.PHASE_SELECTION_CHANGED, selectedPhaseChanged) ; */
+ 				/* FlowMap.addSelectionListener(FlowMapEvent.PHASE_SELECTION_CHANGED, selectedPhaseChanged) ; */
 				ChannelsModelLocator.getInstance().flowMapModel.init() ;
 				instance = this ;
 			}
-			
+									
 			public function requestHandlerRegistration(menuBar:ChannelsMenuBar):void {
-					menuBar.addEventListener(MenuEvent.ITEM_CLICK, menuBarItemClicked) ;
+				menuBar.addEventListener(MenuEvent.ITEM_CLICK, menuBarItemClicked) ;
 			}
 			
 			[Bindable]
@@ -156,6 +159,9 @@
 		]]>
 	</mx:Script>
 	
-	<flowmap:ZoomControl id="zoomControl" graphCanvas="{graphCanvas}"/>
 	<yui:GraphCanvasComponent id="graphCanvas" width="100%" height="100%"/>
+	<mx:VBox height="100%" verticalAlign="middle">
+		<mx:VRule height="100%"/>
+	</mx:VBox>
+	<flowmap:ZoomControl id="zoomControl" graphCanvas="{graphCanvas}" height="100%"/>
 </mx:HBox>

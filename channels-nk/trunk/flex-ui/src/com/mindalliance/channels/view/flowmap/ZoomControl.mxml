@@ -23,7 +23,7 @@
 						
 		]]>
 	</mx:Script>
-		<mx:Label text="Zoom" fontWeight="bold"/>
+		<mx:Label text="zoom" fontWeight="bold"/>
 		<mx:VSlider
 			value="{Math.log(_graphCanvas.zoom)/Math.log(2)}" 
 			change="{_graphCanvas.zoom=Math.pow(2,event.value)}" 

@@ -3,48 +3,35 @@
 	xmlns:common="com.mindalliance.channels.view.common.*"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	label="Edit" 
-	click="btnEditorInvokerClicked()" 
+	click="_propertyEditor.visible = true"
 	imageSource="assets/images/edit.png"
+	currentState="{_propertyEditor.isEditing ? 'PropertyEditorEditingState' : ''}"
 	creationComplete="init()">
+
+
+	<common:states>
+		<mx:State name="PropertyEditorEditingState">
+			<mx:SetProperty name="label" value="Editing..."/>
+			<mx:SetProperty name="enabled" value="false"/>
+		</mx:State>
+	</common:states>
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.core.ScrollPolicy;
-			import com.mindalliance.channels.view.flowmap.FlowMapView;
-			import mx.effects.Resize;
-			import mx.events.ResizeEvent;
-			import mx.controls.Alert;
+			import mx.states.State;
 			import mx.events.CloseEvent;
 			import mx.binding.utils.BindingUtils;
-			import mx.containers.TitleWindow;
 			import mx.managers.PopUpManager;
 			
 			[Bindable]
 			private var _propertyEditor:PropertyEditor ;
 			
-			public function get propertyEditor():PropertyEditor {
-				return _propertyEditor ;
-			}
-			
 			private function init():void {
-				_propertyEditor = new PropertyEditor() ;
+				_propertyEditor = PopUpManager.createPopUp(this, PropertyEditor) as PropertyEditor ;
 				_propertyEditor.init() ;
-
-				PopUpManager.addPopUp(_propertyEditor, this) ;
-				_propertyEditor.width = 400 ;
-				_propertyEditor.height = 600 ;
-/* 
-				_propertyEditor.minHeight = 400 ;
 				_propertyEditor.maxHeight = 600 ;
-				_propertyEditor.minWidth = 200 ;
-				_propertyEditor.maxWidth = 600 ;
- */
- 				_propertyEditor.showCloseButton = true ;
 				_propertyEditor.addEventListener(CloseEvent.CLOSE, propertyEditorCloseClicked) ;
-				
-				BindingUtils.bindSetter(setState, _propertyEditor, ['visible']) ;
-				BindingUtils.bindSetter(setState, _propertyEditor, ['isEditing']) ;
-				
+
 				_propertyEditor.visible = false ;
 			}
 			
@@ -52,49 +39,7 @@
 				_propertyEditor.visible = false ;
 			}
 			
-			private function setState(value:Object):void {
-				if (_propertyEditor.isEditing) {
-					currentState = 'PropertyEditorEditingState' ;
-					_propertyEditor.showCloseButton = false ;
-					return ;
-				}
-				else {
-					_propertyEditor.showCloseButton = true ;					
-					if (_propertyEditor.visible)
-						currentState = 'PropertyEditorUndockedState' ;
-					else
-						currentState = '' ;
-				}
-			}
-			
-			private function btnEditorInvokerClicked():void {
-				switch (currentState) {
-					case 'PropertyEditorUndockedState':
-						_propertyEditor.visible = false ;
-					break ;
-					case '':
-						_propertyEditor.visible = true ;
-					break ;
-				}
-			}
-			
 		]]>
 	</mx:Script>
-	
-	<common:states>
-		<mx:State name="PropertyEditorEditingState">
-			<mx:SetProperty name="label" value="Editing..."/>
-			<mx:SetProperty name="enabled" value="false"/>
-		</mx:State>
-		<mx:State name="PropertyEditorUndockedState">
-			<mx:SetProperty name="label" value="Hide Editor"/>
-		</mx:State>
-	</common:states>
-
-	<common:transitions>
-		<mx:Transition fromState="*" toState="*">
-			<mx:Glow/>
-		</mx:Transition>
-	</common:transitions>	
 		
 </common:ToolBarButton>

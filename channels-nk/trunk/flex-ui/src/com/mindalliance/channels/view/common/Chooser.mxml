@@ -17,6 +17,7 @@
                 </mx:HBox>
             </mx:AddChild>
             <mx:SetStyle target="{chooserHBox}" name="verticalAlign" value="top"/>
+            <mx:SetProperty target="{button1}" name="label" value="Close"/>
         </mx:State>
     </mx:states>
 
@@ -155,20 +156,20 @@
     <mx:Binding source="model.getElementListModel(elementListKey)" destination="elementListModel"/>
     <mx:ArrayCollection id="list" source="{elementListModel.data.source}" filterFunction="filter"/>
     
-    <mx:HBox id="chooserHBox" >
-        <mx:VBox width="100%" >
-            <search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}"/>
-            <mx:Label text="{elementName}" fontWeight="bold"/>
+    <mx:HBox id="chooserHBox">
+        <mx:VBox width="100%">
+            <search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}" direction="vertical"/>
+<!--            <mx:Label text="{elementName}" fontWeight="bold" fontSize="12"/> -->
             <mx:List id="listElements" width="100%" change="changeSelection()" dataProvider="{list}" labelField="name" allowMultipleSelection="true"/>
             <mx:HBox id="hBoxElementAdder">
-                <mx:Label text="Select {elementName.toLowerCase()} and"/>
-                <mx:Button label="Add to list" enabled="{listElements.selectedItems.length > 0}" click="clickAddToList()"/>
+                <mx:Button label="Add Selected" enabled="{listElements.selectedItems.length > 0}" click="clickAddToList()"/>
             </mx:HBox>
         </mx:VBox>
+        <mx:VRule height="100%"/>
         <common:EditorWrapper id="editorPanel" width="100%" editor="{editor}" enabled="{listElements.selectedItems.length == 1}" height="100%"/>
     </mx:HBox>
     <mx:ControlBar horizontalAlign="right" id="controlbar1">
-        <mx:Button label="Close" click="closeChooser()"/>
+        <mx:Button label="Done" click="closeChooser()" id="button1"/>
     </mx:ControlBar>
     
 </mx:TitleWindow>

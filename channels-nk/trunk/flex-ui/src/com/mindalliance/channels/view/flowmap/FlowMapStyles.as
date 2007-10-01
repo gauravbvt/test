@@ -117,7 +117,7 @@ package com.mindalliance.channels.view.flowmap
 			
 		private static function _initNodeLabelStyles():void {
 			_checkSystemManager() ;
-			var uitf:UITextFormat = new UITextFormat(_systemManager, 'Verdana', 11, '0x000000', true, null, null, null, null, 'center', 5, 5) ;
+			var uitf:UITextFormat = new UITextFormat(_systemManager, 'Georgia', 10, '0x000000', true, null, null, null, null, 'center', 5, 5) ;
 			roleLabelStyle = new SimpleLabelStyle(new SimpleLabelStyleRenderer(), uitf) ;
 			taskLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
 			eventLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
@@ -125,7 +125,7 @@ package com.mindalliance.channels.view.flowmap
 			sharingNeedAboutLabelStyle = SimpleLabelStyle(roleLabelStyle.clone()) ;
 			
 			sharingNeedWhatLabelStyle = new SimpleLabelStyle(new SimpleLabelStyleRenderer(),
-				new UITextFormat(_systemManager, 'Verdana', 11, '0x000000', true, null, null, null, null, 'left', 5)) ;
+				new UITextFormat(_systemManager, 'Georgia', 10, '0x000000', true, null, null, null, null, 'left', 5)) ;
 		}
 				
 		private static function _initPortStyle():void {

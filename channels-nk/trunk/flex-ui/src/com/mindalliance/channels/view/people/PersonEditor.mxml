@@ -136,22 +136,22 @@
     	confirmEditHandler="{confirmEdit}"
     	cancelEditHandler="{cancelEdit}"/>
 
-	<mx:FormItem label="First name" id="formitem1">
+	<mx:FormItem label="First name" id="formitem1" width="100%">
 		<mx:TextInput width="100%" id="txtFirstName" editable="{currentState=='EditState'}" text="{edited.firstName}" change="queueUpdate()"/>
 	</mx:FormItem>
-	<mx:FormItem label="Last name" id="formitem2">
+	<mx:FormItem label="Last name" id="formitem2" width="100%">
 		<mx:TextInput width="100%" id="txtLastName" editable="{currentState=='EditState'}" text="{edited.lastName}" change="queueUpdate()"/>
 	</mx:FormItem>
-	<mx:FormItem label="Email" id="formitem3">
+	<mx:FormItem label="Email" id="formitem3" width="100%">
 		<mx:TextInput width="100%" id="txtEmail" editable="{currentState=='EditState'}" text="{edited.email}" change="queueUpdate()"/>
 	</mx:FormItem>
-	<mx:FormItem label="Office phone" id="formitem5">
+	<mx:FormItem label="Office phone" id="formitem5" width="100%">
 		<mx:TextInput width="100%" id="txtOfficePhone" editable="{currentState=='EditState'}" text="{edited.officePhone}" change="queueUpdate()"/>
 	</mx:FormItem>
-	<mx:FormItem label="Cell phone">
+	<mx:FormItem label="Cell phone" width="100%">
 		<mx:TextInput width="100%" id="txtCellPhone" editable="{currentState=='EditState'}" text="{edited.cellPhone}" change="queueUpdate()"/>
 	</mx:FormItem>
-	<mx:FormItem label="Roles" id="formitem4">
-		<mx:List id="listRoles" editable="false" dataProvider="{edited.roles}" labelField="name" />
+	<mx:FormItem label="Roles" id="formitem4" width="100%">
+		<mx:List id="listRoles" editable="false" dataProvider="{edited.roles}" labelField="name"  width="100%"/>
 	</mx:FormItem>
 </mx:Form>

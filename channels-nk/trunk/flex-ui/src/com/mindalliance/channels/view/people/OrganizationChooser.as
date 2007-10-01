@@ -13,6 +13,7 @@ package com.mindalliance.channels.view.people
 
 	public class OrganizationChooser extends Chooser
 	{
+		
 		public function OrganizationChooser()
 		{
 			super();

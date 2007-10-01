@@ -1,52 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<common:ResizableTitleWindow xmlns:common="com.mindalliance.channels.view.common.*"
+<mx:ViewStack xmlns:common="com.mindalliance.channels.view.common.*"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
     xmlns:view="com.mindalliance.channels.view.*"
     xmlns:scenario="com.mindalliance.channels.view.scenario.*"
     xmlns:people="com.mindalliance.channels.view.people.*"
     xmlns:resources="com.mindalliance.channels.view.resources.*"
     xmlns:application="com.mindalliance.channels.view.application.*"
-    currentState="NothingSelectedState">
+    currentState="NothingSelectedState"
+    horizontalScrollPolicy="off">
 
-	<common:states>
+	<mx:states>
 		<mx:State name="TaskNodeEditorState">
-			<mx:AddChild position="lastChild">
-				<application:TaskNodeEditor id="taskNodeEditor" width="100%"/>
-			</mx:AddChild>
+			<mx:SetProperty name="selectedIndex" value="1"/>
 		</mx:State>
 		<mx:State name="RepositoryNodeEditorState">
-			<mx:AddChild position="lastChild">
-				<application:RepositoryNodeEditor id="repositoryNodeEditor" width="100%"/>
-			</mx:AddChild>
+			<mx:SetProperty name="selectedIndex" value="3"/>
 		</mx:State>
 		<mx:State name="NothingSelectedState">
-			<mx:SetProperty name="enabled" value="false"/>
-			<mx:AddChild position="lastChild">
-				<mx:Label text="Nothing Selected"/>
-			</mx:AddChild>
+			<mx:SetProperty name="selectedIndex" value="0"/>
 		</mx:State>
 		<mx:State name="MultipleItemsSelectedState">
-			<mx:SetProperty name="enabled" value="false"/>
-			<mx:AddChild position="lastChild">
-				<mx:Label text="Multiple Items Selected"/>
-			</mx:AddChild>
+			<mx:SetProperty name="selectedIndex" value="0"/>
 		</mx:State>
 		<mx:State name="EventNodeEditorState">
-			<mx:AddChild position="lastChild">
-				<scenario:EventEditor id="eventEditor" width="100%"/>
-			</mx:AddChild>
+			<mx:SetProperty name="selectedIndex" value="2"/>
 		</mx:State>
 		<mx:State name="SharingNeedEditorState">
-			<mx:SetProperty name="enabled" value="false"/>
-			<mx:AddChild position="lastChild">
-				<mx:Label text="Not yet implemented"/>
-			</mx:AddChild>
-
+			<mx:SetProperty name="selectedIndex" value="0"/>
 		</mx:State>
-	</common:states>
+	</mx:states>
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.common.IEditor;
+			import mx.events.PropertyChangeEventKind;
+			import mx.events.PropertyChangeEvent;
 			import mx.binding.utils.BindingUtils;
 			import mx.events.StateChangeEvent;
 			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
@@ -69,35 +57,26 @@
 			[Bindable]
 			private var model : PropertyEditorModel;
 			
-			private var mapperHelper:GraphMapperHelper ;
-			
 			[Bindable]
+			public var mapperHelper:GraphMapperHelper ;
+						
+			[Bindable]			
 			public var isEditing:Boolean ;
-		
+			
 			public function init():void {
+				FlowMap.removeSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+				FlowMap.removeSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
 				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
 				mapperHelper = GraphMapperHelper.getInstance() ;
-				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleStateChange) ;
 			}
 			
-			private function setState(state:String):void {
-				isEditing = (state == 'EditState') ;
-			}
-			
-			private function handleStateChange(event:StateChangeEvent):void {
-				switch (event.newState) {
-					case 'RepositoryNodeEditorState':
-						BindingUtils.bindSetter(setState, repositoryNodeEditor, ['editorState']) ;
-					break ;
-					case 'TaskNodeEditorState':
-						BindingUtils.bindSetter(setState, taskNodeEditor, ['editorState']) ;
-					break ;
-				}
-				invalidateSize() ;
-			}
-			
+			[Bindable]
+			public var stateChanging:Boolean ;
+									
 			private function itemSelected(event:SelectionEvent):void {
+				stateChanging = true ;
 				if (FlowMap.numSelected > 1) {
 					currentState = 'MultipleItemsSelectedState' ;
 					return ;
@@ -123,16 +102,29 @@
 						repositoryNodeEditor.loadRepository(RepositoryNodeData(nd).id);
 					}
 				}
+				stateChanging = false ;
 			}
 		
 			private function itemDeselected(event:SelectionEvent):void {
+				stateChanging = true ;
 				if (FlowMap.numSelected == 0)
 					currentState = 'NothingSelectedState' ;
 				else if (FlowMap.numSelected > 1)
 					currentState = 'MultipleItemsSelectedState' ;
+				stateChanging = false ;
 			}
 			
 		]]>
 	</mx:Script>
 	
-</common:ResizableTitleWindow>
+	<mx:Box horizontalScrollPolicy="off" verticalScrollPolicy="off" id="nothingSelectedPlaceHolder"/>
+
+	<application:TaskNodeEditor id="taskNodeEditor"/>
+
+	<scenario:EventEditor id="eventEditor"/>
+
+	<application:RepositoryNodeEditor id="repositoryNodeEditor"/>
+	
+	<mx:Binding source="taskNodeEditor.editorState == 'EditState' || eventEditor.editorState == 'EditState' || repositoryNodeEditor.editorState == 'EditState'" destination="isEditing"/>
+	
+</mx:ViewStack>

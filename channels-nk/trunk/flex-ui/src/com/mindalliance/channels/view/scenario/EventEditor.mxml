@@ -34,6 +34,7 @@
             {
             	this._editorModel = model;
             }
+            
             public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
             [Bindable]
@@ -50,6 +51,8 @@
             
             [Bindable]
             private var edited : EventVO;
+
+			[Bindable] public var editorState:String;
             
             private function switchToEditState():void {
                 currentState = 'EditState' ;
@@ -163,6 +166,7 @@
 			<mx:SetProperty target="{viewEditStateChangeFormItem}" name="currentState" value="EditState"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseEnabled" value="true"/>
 			<mx:SetProperty target="{formitemDuration}" name="mouseChildren" value="true"/>
+			<mx:SetProperty target="{viewEditStateChangeFormItem}" name="width" value="100%"/>
 		</mx:State>
 	</mx:states>
 	
@@ -177,6 +181,7 @@
     <mx:Binding source="model.getElementListModel('events').data" destination="eventList"/>
     <mx:Binding source="edited.categories" destination="categoryViewer.model.categories"/>
     <mx:Binding source="UtilFuncs.copyArrayCollection(edited.taskCompletions)" destination="taskCompletions"/>
+    <mx:Binding source="currentState" destination="editorState"/>
     
     <mx:ArrayCollection id="filteredEventList" source="{eventList.source}" filterFunction="eventFilter"/>
         

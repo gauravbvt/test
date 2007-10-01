@@ -32,7 +32,7 @@
 	<mx:states>
 		<mx:State name="EditState">
 			<mx:RemoveChild target="{btnEdit}"/>
-			<mx:AddChild relativeTo="{hboxStateChange}" position="lastChild">
+			<mx:AddChild position="lastChild">
 				<mx:Button label="Discard Changes" click="cancelEdit()" id="btnCancel"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{btnCancel}" position="before">
@@ -40,10 +40,10 @@
 					<mx:icon>@Embed('../../../../../assets/images/disk_blue_ok.png')</mx:icon>
 				</mx:Button>
 			</mx:AddChild>
-			<mx:SetStyle target="{hboxStateChange}" name="horizontalGap" value="20"/>
 		</mx:State>
 	</mx:states>
-	<mx:HBox id="hboxStateChange">
-		<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()" icon="@Embed('../../../../../assets/images/edit.png')" fillColors="[#cdf0af, #cdf0af]" fontSize="12"/>
-	</mx:HBox>
+
+	<mx:Button label="Edit" id="btnEdit" click="btnEditClicked()" icon="@Embed('../../../../../assets/images/edit.png')" fillColors="[#cdf0af, #cdf0af]" fontSize="12"/>
+	<mx:Spacer height="34"/>
+
 </mx:FormItem>

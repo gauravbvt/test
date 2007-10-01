@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.mindalliance.channels.view.common.*"
 	showCloseButton="true"
 	mouseDownOutside="close()"
 	close="close()"
 	title="New Repository"
-	creationComplete="init()" xmlns:common="com.mindalliance.channels.view.common.*">
+	creationComplete="init()"
+	titleIcon="@Embed(source='../../../../../assets/images/data16x16.png')">
 
 	<mx:Script>
 		<![CDATA[

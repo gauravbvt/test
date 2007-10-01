@@ -2,7 +2,8 @@
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:scenario="com.mindalliance.channels.view.scenario.*"
 	xmlns:people="com.mindalliance.channels.view.people.*"
-	creationComplete="init()">
+	creationComplete="init()"
+	resizeToContent="true">
 
 	<mx:Script>
 		<![CDATA[
@@ -25,22 +26,14 @@
 			private function init():void {
 				taskEditor.model = model.taskModel;
 				roleEditor.model = model.roleModel;
-				BindingUtils.bindSetter(setState, taskEditor, ['currentState']) ;
-				BindingUtils.bindSetter(setState, roleEditor, ['currentState']) ;
 			}
 			
-			[Bindable]public var editorState:String;
 			[Bindable]private var elementModel : ElementModel;
 			[Bindable]private var editedTask : TaskVO;
 			[Bindable]private var agentsList : ArrayCollection;
-
-			private function setState(value:Object):void {
-				if (taskEditor.currentState == 'EditState' || roleEditor.currentState == 'EditState')
-					editorState = 'EditState' ;
-				else
-					editorState = '' ;
-			}
 			
+			[Bindable] public var editorState:String;
+			 			
 			public function loadTask(taskID:String):void {
 				var event:GetTaskEvent = new GetTaskEvent(taskID, model.taskModel) ;
 				CairngormHelper.fireEvent(event) ;
@@ -55,11 +48,15 @@
 		    }
 		]]>
 	</mx:Script>
+	
     <mx:Binding source="ChannelsModelLocator.getInstance().getElementListModel('agents'+model.taskModel.id).data" destination="agentsList"/>
 	<mx:Binding source="ChannelsModelLocator.getInstance().getElementModel(model.taskModel.id)" destination="elementModel"/>
 	<mx:Binding source="elementModel.data as TaskVO" destination="editedTask"/>
 	<mx:Binding source="getFirstRoleId(agentsList)" destination="model.roleModel.id"/>
+	<mx:Binding source="(taskEditor.currentState == 'EditState' || roleEditor.currentState == 'EditState') ? 'EditState' : ''" destination="editorState"/>
 	
-	<scenario:TaskEditor id="taskEditor" label="{'Task: '}" enabled="{roleEditor.currentState != 'EditState'}" width="100%" height="100%"/>
-	<people:RoleEditor id="roleEditor" label="{'Role: '}" enabled="{(model.roleModel.id != null) &amp;&amp; (taskEditor.currentState != 'EditState')}" width="100%" height="100%"/>
+	<scenario:TaskEditor id="taskEditor" label="{'Task: '}" enabled="{roleEditor.currentState != 'EditState'}"/>
+
+	<people:RoleEditor id="roleEditor" label="{'Role: '}" enabled="{(model.roleModel.id != null) &amp;&amp; (taskEditor.currentState != 'EditState')}"/>
+
 </mx:TabNavigator>

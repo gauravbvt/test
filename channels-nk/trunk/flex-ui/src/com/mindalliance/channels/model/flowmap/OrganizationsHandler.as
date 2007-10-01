@@ -12,10 +12,10 @@ package com.mindalliance.channels.model.flowmap
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	
-	public class OrganizationModel extends BaseModel
+	public class OrganizationsHandler extends BaseCollectionChangeHandler
 	{
 		
-		private function organizationsRemoved(colEvent:CollectionEvent):void {
+		protected override function itemsRemoved(colEvent:CollectionEvent):void {
             for each (var item:Object in colEvent.items) {
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
@@ -24,7 +24,7 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		private function organizationsUpdated(colEvent:CollectionEvent):void {
+		protected override function itemsUpdated(colEvent:CollectionEvent):void {
 			for each (var item:Object in colEvent.items) {
 				examinePropertyChange(item, 
 				function anon(elemVO:ElementVO, newValue:Object):void {
@@ -33,42 +33,23 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		protected function organizationChangeHandler(event:Event):void {
- 			if (!(event is CollectionEvent))
- 				return ;
-			var colEvent:CollectionEvent = event as CollectionEvent ;
- 			switch (colEvent.kind) {
-				case CollectionEventKind.REMOVE:
-					organizationsRemoved(colEvent) ;
-				break ;
-				case CollectionEventKind.UPDATE:
-					organizationsUpdated(colEvent) ;
-				break ;
-			}
-		}
-		
-		private function init():void {
-			ElementHelper.installCollectionChangeListener(ElementListNames.ORGANIZATION_LIST_KEY, organizationChangeHandler) ;
-		}
-		
-		private static var instance:OrganizationModel;
+		private static var instance:OrganizationsHandler;
 
-		public function OrganizationModel(access:Private) {
-			super() ;
+		public function OrganizationsHandler(access:Private) {
+			super(ElementListNames.ORGANIZATION_LIST_KEY) ;
 			if (access != null)
 				if (instance == null)
 					instance = this;
 			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "OrganizationModel" );
-			init() ;
+				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "OrganizationsHandler" );
 		}
 		 
 		/**
 		 * Returns the Singleton instance of ChannelsModelLocator
 		 */
-		public static function getInstance() : OrganizationModel {
+		public static function getInstance() : OrganizationsHandler {
 			if (instance == null)
-				instance = new OrganizationModel( new Private );
+				instance = new OrganizationsHandler( new Private );
 			return instance;
 		}
 	}

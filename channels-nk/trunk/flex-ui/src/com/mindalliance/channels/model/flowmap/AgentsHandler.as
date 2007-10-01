@@ -14,10 +14,9 @@ package com.mindalliance.channels.model.flowmap
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	
-	public class AgentModel extends BaseModel
+	public class AgentModel extends BaseCollectionChangeHandler
 	{
-
-		private function agentsAdded(colEvent:CollectionEvent):void {
+		protected override function itemsAdded(colEvent:CollectionEvent):void {
             for each (var item:Object in colEvent.items) {
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
@@ -29,7 +28,7 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		private function agentsRemoved(colEvent:CollectionEvent):void {
+		protected override function itemsRemoved(colEvent:CollectionEvent):void {
             for each (var item:Object in colEvent.items) {
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
@@ -41,61 +40,36 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		private function agentsReset(colEvent:CollectionEvent):void {
-			var agentAC:ArrayCollection = model.getElementListModel("agents").data ;
-			if (!agentAC)
-				return ;
+		protected override function collectionReset(colEvent:CollectionEvent):void {
+			var agentAC:ArrayCollection = elementCollection ;
 			for each (var agent:AgentVO in agentAC) {
 					FlowMap.setAgent(agent.task.id, agent.role.id, agent.role.name) ;
 			}
 		}
 		
-		private function agentsUpdated(colEvent:CollectionEvent):void {
-			trace('Message for Shashi: flowmap.AgentModel.agentsUpdated called against all odds!') ;
+		protected override function itemsUpdated(colEvent:CollectionEvent):void {
+			trace('Message for Shashi: Agent collected update called against all odds!') ;
 		}
-		
-		protected function agentChangeHandler(event:Event):void {
-			if (!(event is CollectionEvent))
-				return ; 
-			var colEvent:CollectionEvent = event as CollectionEvent ;
-			switch (colEvent.kind) {
-				case CollectionEventKind.RESET:
-					agentsReset(colEvent) ;
-				break ;
-				case CollectionEventKind.ADD:
-					agentsAdded(colEvent) ;
-				break ;
-				case CollectionEventKind.REMOVE:
-					agentsRemoved(colEvent) ;
-				break ;
-				case CollectionEventKind.UPDATE:
-					agentsUpdated(colEvent) ;
-				break ;
-			}
-		}
-		
-		private function init():void {
-			ElementHelper.installCollectionChangeListener("agents", agentChangeHandler) ;
-		}
-		
-		private static var instance:AgentModel;
 
-		public function AgentModel(access:Private) {
-			super() ;
+		private static var instance:AgentModel;
+		
+		public function AgentsHandler(access:Private) {
+			super("agents") ;
+
 			if (access != null)
 				if (instance == null)
 					instance = this;
 			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "AgentModel" );
-			init() ;
+				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "AgentsHandler" );
+			
 		}
 		 
 		/**
 		 * Returns the Singleton instance of ChannelsModelLocator
 		 */
-		public static function getInstance() : AgentModel {
+		public static function getInstance() : AgentsHandler {
 			if (instance == null)
-				instance = new AgentModel( new Private );
+				instance = new AgentsHandler( new Private );
 			return instance;
 		}
 	}

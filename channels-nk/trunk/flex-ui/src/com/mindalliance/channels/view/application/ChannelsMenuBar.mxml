@@ -4,7 +4,11 @@
 	labelField="@label" 
 	showRoot="false"
 	itemClick="menuBarItemClicked(event)"
-	creationComplete="init()">
+	rollOverColor="0x7FCEFF"
+	creationComplete="init()" 
+	fontSize="11"
+	borderColor="#909090"
+	alpha="1.0">
 
 	<mx:Script>
 		<![CDATA[
@@ -125,7 +129,7 @@
         }
         
         private function popupChooserAsBrowser(title:String, chooserCls:Class):void {
-        	var chooser:Chooser = PopUpManager.createPopUp(this, chooserCls) as Chooser ;
+        	var chooser:Chooser = createPopUp(this, chooserCls) as Chooser ;
         	chooser.title = title ;
         	chooser.showCloseButton = true ;
         	chooser.addEventListener(CloseEvent.CLOSE, function anon(event:CloseEvent):void { PopUpManager.removePopUp(chooser) ;});
@@ -133,12 +137,17 @@
         	performPostPopupCreation(chooser) ;
         }
         
+        private function createPopUp(parent:DisplayObject, className:Class, modal:Boolean=false):IFlexDisplayObject {
+        	var popup:IFlexDisplayObject = PopUpManager.createPopUp(parent, className, modal) ;
+        	popup.addEventListener(FlexEvent.CREATION_COMPLETE, function anon(event:FlexEvent):void {popupEffect.play([popup]);}) ;
+        	return popup ;
+        }
+        
         private function performPostPopupCreation(popup:Panel):void {
 			popup.maxHeight = 600 ;
         	PopUpManager.centerPopUp(popup) ;
         	var p:Point = this.localToGlobal(new Point(this.x, this.y + this.height)) ;
         	popup.y = p.y + 5 ;
-        	popup.addEventListener(FlexEvent.CREATION_COMPLETE, function anon(event:FlexEvent):void {new WipeDown(popup).play();}) ;
         }
         
         private function init():void {
@@ -147,6 +156,8 @@
                 
 		]]>
 	</mx:Script>
+
+	<mx:WipeDown id="popupEffect"/>
 
      <mx:XMLList id="ChannelsMenuBarItems">
 		<menuitem label="Shared Elements">
@@ -177,6 +188,7 @@
 		</menuitem>
 		<menuitem label="Testing">
 			<menuitem label="Communication Plan Viewer"/>
+			<menuitem label="Form Testing"/>
 		</menuitem>
     </mx:XMLList>
 

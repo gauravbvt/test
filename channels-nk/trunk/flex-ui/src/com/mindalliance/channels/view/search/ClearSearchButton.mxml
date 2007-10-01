@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml" textAlign="center" label="X" width="28" height="28"
-	toolTip="Click to clear search text"/>
+<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="x" width="16" height="16" cornerRadius="0" color="#FFFFFF" fillColors="[#BABABA, #BABABA]"
+	toolTip=""/>

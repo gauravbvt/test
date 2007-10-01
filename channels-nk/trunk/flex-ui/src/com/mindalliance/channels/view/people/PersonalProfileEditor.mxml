@@ -21,5 +21,8 @@
 	</mx:Script>
 	
 	<people:PersonEditor  id="personEditor"/>
-	<people:UserEditor id="userEditor"/>
+	<mx:VBox>
+		<mx:Spacer height="21"/>
+		<people:UserEditor id="userEditor"/>
+	</mx:VBox>
 </mx:HBox>

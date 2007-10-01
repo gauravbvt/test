@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ApplicationControlBar xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
     width="100%" xmlns:application="com.mindalliance.channels.view.application.*" 
     xmlns:search="com.mindalliance.channels.view.search.*"
     xmlns:logging="com.mindalliance.channels.view.logging.*"
     currentState="{model.currentScenario == null ? 'DashboardState' : 'InScenarioState'}"
     horizontalAlign="center"
-    creationComplete="init()" verticalAlign="top">
+    creationComplete="init()" 
+    verticalAlign="bottom"
+    borderColor="#909090"
+    borderSides="bottom"
+    borderThickness="1"
+    paddingBottom="5">
+    
     <mx:states>
         <mx:State name="DashboardState">
             <mx:AddChild relativeTo="{spacer1}" position="before">
 	            <mx:Label text="{personVO.firstName + ' ' + personVO.lastName +  '\'' + (personVO.lastName.charAt(personVO.lastName.length - 1) == 's' ? '' : 's') + ' Dashboard'}"
 		            	fontWeight="bold" id="lblDashboardHeaderLabel"/>
             </mx:AddChild>
-            <mx:SetStyle name="verticalAlign"/>
         </mx:State>
         <mx:State name="InScenarioState">
             <mx:AddChild relativeTo="{spacer1}" position="before">
                 <application:ProjectScenarioIndicator id="projectScenarioIndicator"/>
             </mx:AddChild>
             <mx:AddChild relativeTo="{spacer2}" position="before">
-            	<!--Need some kinda unload event to dispatch here. -->
             	<mx:HBox>
+            	<!--Need some kinda unload event to dispatch here. -->
 	                <mx:Button label="dashboard" click="Alert.show('This will eventually go to dashboard')"/>
 	                <mx:Button id="btnBrowse" label="change scenario" click="btnChangeScenarioClicked()"/>
             	</mx:HBox>
@@ -133,4 +138,4 @@
 	<mx:Label text="{'Logged in as: '+model.user.name}"/>
 	<mx:Button label="My Profile" id="btnEditProfile" click="editPersonalProfile()"/>
 	<mx:Button label="Logout"/>
-</mx:ApplicationControlBar>
+</mx:HBox>

@@ -12,12 +12,17 @@ package com.mindalliance.channels.view.resources
 
 	public class RepositoryChooser extends Chooser
 	{
+		[Embed(source='../../../../../assets/images/data16x16.png')]
+		[Bindable]
+		private var dataImgCls:Class ;
+		
 		public function RepositoryChooser()
 		{
 			super();
 			elementListKey="repositories";
-			elementName="Repositories";            
+			elementName="Repositories";
             editor = new RepositoryEditor();
+            titleIcon = dataImgCls ;
 		}
 		
 	    override protected function populateList() : void {

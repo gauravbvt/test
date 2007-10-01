@@ -3,8 +3,16 @@
 	visible="{includeInLayout}" 
 	includeInLayout="{currentLevelOfDetail &gt;= levelOfDetail}">
 
-	<mx:Number id="levelOfDetail"/>
-	
-	<mx:Number id="currentLevelOfDetail"/>
+	<mx:Script>
+		<![CDATA[
+			
+			[Bindable]
+			public var levelOfDetail:Number = 0 ;
+			
+			[Bindable]
+			public var currentLevelOfDetail:Number = 0 ;
+			
+		]]>
+	</mx:Script>
 	
 </mx:FormItem>

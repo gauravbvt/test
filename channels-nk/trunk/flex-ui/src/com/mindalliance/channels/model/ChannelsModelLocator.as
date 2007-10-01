@@ -78,6 +78,7 @@ package com.mindalliance.channels.model
             if (elementLists[key] == null) {
                 elementLists[key] = new ElementListModel();
             }
+            trace('Cairngorm: getElementListModel :' + key) ;
             return elementLists[key];
         }
         

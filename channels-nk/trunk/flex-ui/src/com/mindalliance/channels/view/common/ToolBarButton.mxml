@@ -1,30 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
 	horizontalAlign="center"
 	verticalAlign="middle"
 	verticalGap="1"
-	buttonMode="{enabled}"
 	borderStyle="solid"
-	borderThickness="1" 
-	styleName="mouseOutStyle"
+	borderThickness="1"
+	borderColor="#FFFFFF"
+	borderSides="bottom"
+	shadowDirection="right"
+	shadowDistance="2"
 	mouseOver="if (enabled) styleName = 'mouseOverStyle'"
-	mouseOut="styleName = 'mouseOutStyle'">
-
+	mouseDown="if (enabled) styleName = 'mouseDownStyle'"
+	mouseUp="styleName = null"
+	mouseOut="styleName = null">
+	
 	<mx:Style>
-		.mouseOutStyle {
-			borderColor : #FFFFFF ;
+		.mouseOverStyle {
+			borderColor : #000000 ;
+			backgroundColor	: #B5E2FF ;
 		}
 		
-		.mouseOverStyle {
-			borderColor : #AAAAAA ;
+		.mouseDownStyle {
+			backgroundColor	: #7FCEFF ;
+			borderColor : #000000 ;
 		}
 		
 	</mx:Style>
-	
+
 	<mx:String id="imageSource"/>
+	<mx:Image id="image" source="{imageSource}" width="18" height="18"/>
 	<mx:String id="label"/>
-	
-	<mx:Image source="{imageSource}" width="18" height="18"/>
-	<mx:Label text="{label}"/>
+	<mx:Label id="lblLabel" text="{label}" includeInLayout="{lblLabel.text.length > 0}" visible="{lblLabel.includeInLayout}"/>
 	
 </mx:VBox>

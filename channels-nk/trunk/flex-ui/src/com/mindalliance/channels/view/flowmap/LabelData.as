@@ -26,6 +26,7 @@ package com.mindalliance.channels.view.flowmap
 		private var _type:String ;
 		
 		public function LabelData(label:ILabel, id:String, type:String) {
+			_label = label ;
 			_id = id ;
 			_type = type ;
 		}

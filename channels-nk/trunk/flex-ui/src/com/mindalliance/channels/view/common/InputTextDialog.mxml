@@ -3,7 +3,7 @@
     keyDown="handleKeyEvent(event)"
     mouseDownOutside="PopUpManager.removePopUp(this);"
     creationComplete="textInput.setFocus()"
-    minWidth="100">
+    minWidth="250">
     <mx:Script>
     
         <![CDATA[
