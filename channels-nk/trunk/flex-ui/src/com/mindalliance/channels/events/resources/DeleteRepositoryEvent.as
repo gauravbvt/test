@@ -3,16 +3,13 @@
 
 package com.mindalliance.channels.events.resources
 {
-	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.mindalliance.channels.events.common.DeleteElementEvent;
 
-	public class DeleteRepositoryEvent extends CairngormEvent
+	public class DeleteRepositoryEvent extends DeleteElementEvent
 	{
-		public static const DeleteRepository_Event:String = "<DeleteRepositoryEvent>";
-		public var id : String;
 		public function DeleteRepositoryEvent(id : String) 
 		{
-			super( DeleteRepository_Event );
-			this.id = id;
+			super( id );
 		}
 	}
 }

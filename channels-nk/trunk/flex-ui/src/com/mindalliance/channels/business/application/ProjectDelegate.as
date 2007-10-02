@@ -1,7 +1,7 @@
 
 package com.mindalliance.channels.business.application
 {
-	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.business.common.BaseDelegate;
 	import com.mindalliance.channels.vo.ProjectVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	

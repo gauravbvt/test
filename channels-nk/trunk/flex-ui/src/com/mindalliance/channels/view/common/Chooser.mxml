@@ -62,7 +62,6 @@
             [Bindable]
             private var elementListModel : ElementListModel;
 
-            private var changeWatcher : ChangeWatcher;
             
             [Bindable]
             public function get filtered() : ArrayCollection {

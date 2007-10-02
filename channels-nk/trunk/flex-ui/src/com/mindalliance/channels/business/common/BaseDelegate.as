@@ -1,4 +1,4 @@
-package com.mindalliance.channels.business
+package com.mindalliance.channels.business.common
 {
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.vo.common.ElementVO;

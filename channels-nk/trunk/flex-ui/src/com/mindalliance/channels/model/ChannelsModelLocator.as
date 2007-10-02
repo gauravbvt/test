@@ -12,7 +12,9 @@ package com.mindalliance.channels.model
 	import com.mindalliance.channels.vo.ProjectVO;
 	import com.mindalliance.channels.vo.ScenarioVO;
 	import com.mindalliance.channels.vo.UserVO;
+	import com.mindalliance.channels.vo.common.ElementVO;
 	
+	import mx.collections.ArrayCollection;
 	import mx.resources.ResourceBundle;
 	
 	/**
@@ -70,6 +72,29 @@ package com.mindalliance.channels.model
             var model : ElementModel =  getElementModel(id);
             model.data = null;
             elements[id] = null;	
+		}
+		
+		public function removeFromCache(ids : ArrayCollection) : void {
+            var key : String;
+            for each (var id : String in ids) {
+                for (key in elementLists) {
+                    if (key.indexOf(id) >= 0 && elementLists[key] != null) {
+                        elementLists[key].data = null;
+                        elementLists[key] = null;	
+                    } else if (elementLists[key] != null) {
+                    	var model : ElementListModel = elementLists[key] as ElementListModel;
+                    	for each (var el : ElementVO in model.data) {
+                    	   if (el.id == id) {	
+                    	       model.data.removeItemAt(model.data.getItemIndex(el));
+                    	   }
+                    	}
+                    }
+                }
+            }
+		}
+		
+		public function isCached(id : String) : Boolean {
+			return elements[id] != null;	
 		}
 		
 	    public function getElementListModel(key : String) : ElementListModel {

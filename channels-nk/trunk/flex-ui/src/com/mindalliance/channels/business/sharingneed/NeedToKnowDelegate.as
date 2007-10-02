@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.business.sharingneed
 {
-	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.business.common.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.NeedToKnowVO;
 	import com.mindalliance.channels.vo.common.DurationVO;

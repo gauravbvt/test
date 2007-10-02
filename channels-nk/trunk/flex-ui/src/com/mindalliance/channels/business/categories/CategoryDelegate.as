@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.business.categories
 {
-	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.business.common.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.CategoryVO;
 	import com.mindalliance.channels.vo.common.ElementVO;

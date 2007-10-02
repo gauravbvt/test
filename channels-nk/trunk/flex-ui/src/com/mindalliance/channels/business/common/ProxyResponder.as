@@ -1,19 +1,20 @@
-package com.mindalliance.channels.business
+package com.mindalliance.channels.business.common
 {
 	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	
 	public class ProxyResponder implements mx.rpc.IResponder
 	{
-		private var delegate : com.mindalliance.channels.business.BaseDelegate;
+		private var delegate : BaseDelegate;
 		private var requestType : String;
 		private var typeName : String;
 		private var delegateResponder : IResponder;
 		private var params : Array;
 		
-		public function ProxyResponder(requestType : String, delegate : com.mindalliance.channels.business.BaseDelegate, params : Array) {
+		public function ProxyResponder(requestType : String, delegate : BaseDelegate, params : Array) {
 			this.delegate = delegate;
 			this.requestType = requestType;
 			this.typeName = delegate.typeName;
@@ -35,7 +36,18 @@ package com.mindalliance.channels.business
 			if (requestType == 'delete') {
 				xml  = (result as XML);
 				if (xml.deleted.length() > 0) {
-					value["data"] = true; 
+					value["data"] = true;
+					var deleted : ArrayCollection = new ArrayCollection();
+					var el : XML;
+					for each (el in xml.deleted.id) { 
+						deleted.addItem(el.text());
+					}
+					value["deleted"] = deleted;
+					var updated : ArrayCollection = new ArrayCollection();
+					for each (el in xml.updated.id) { 
+					   updated.addItem(el.text());	
+					}
+					value["updated"] = updated;
 				} else {
 					delegate.responder.fault("Delete failed");
 					return;

@@ -3,16 +3,13 @@
 
 package com.mindalliance.channels.events.people
 {
-	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.mindalliance.channels.events.common.DeleteElementEvent;
 
-	public class DeleteRoleEvent extends CairngormEvent
+	public class DeleteRoleEvent extends DeleteElementEvent
 	{
-		public static const DeleteRole_Event:String = "<DeleteRoleEvent>";
-		public var id : String;
 		public function DeleteRoleEvent(id : String) 
 		{
-			super( DeleteRole_Event );
-			this.id = id;
+			super( id );
 		}
 	}
 }

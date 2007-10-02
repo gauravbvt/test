@@ -1,6 +1,6 @@
 package com.mindalliance.channels.business.scenario
 {
-	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.business.common.BaseDelegate;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.vo.AgentVO;

@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.business.people
 {
-	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.business.common.BaseDelegate;
 	import com.mindalliance.channels.util.XMLHelper;
 	import com.mindalliance.channels.vo.RoleVO;
 	import com.mindalliance.channels.vo.common.ElementVO;

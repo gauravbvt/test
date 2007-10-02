@@ -40,6 +40,7 @@ package com.mindalliance.channels.control
 			
             this.addCommand(ChooserSelectEvent.ChooserSelect_Event, ChooserSelectCommand);
             this.addCommand(QueueUpdateEvent.QueueUpdate_Event, QueueUpdateCommand);
+            this.addCommand(DeleteElementEvent.DeleteElement_Event, DeleteElementCommand);
 		}
 		
 		private function initializeApplication() : void
@@ -56,10 +57,7 @@ package com.mindalliance.channels.control
 			this.addCommand(UpdateScenarioEvent.UpdateScenario_Event, UpdateScenarioCommand);
             this.addCommand(LoadGlobalDataEvent.LoadGlobalData_Event, LoadGlobalDataCommand);
             this.addCommand(LoadScenarioEvent.LoadScenario_Event, LoadScenarioCommand);
-            this.addCommand(LoadEventNodeEditorEvent.LoadEventNodeEditor_Event, LoadEventNodeEditorCommand);
-            this.addCommand(LoadRepositoryNodeEditorEvent.LoadRepositoryNodeEditor_Event, LoadRepositoryNodeEditorCommand);
-            this.addCommand(LoadTaskNodeEditorEvent.LoadTaskNodeEditor_Event, LoadTaskNodeEditorCommand);
-			this.addCommand(QueueProjectUpdateEvent.QueueProjectUpdate_Event, QueueProjectUpdateCommand);
+           this.addCommand(QueueProjectUpdateEvent.QueueProjectUpdate_Event, QueueProjectUpdateCommand);
 			this.addCommand(QueueScenarioUpdateEvent.QueueScenarioUpdate_Event, QueueScenarioUpdateCommand);
 			
 			
@@ -81,20 +79,17 @@ package com.mindalliance.channels.control
 			this.addCommand(GetOrganizationListEvent.GetOrganizationList_Event, GetOrganizationListCommand);
 			this.addCommand(GetOrganizationEvent.GetOrganization_Event, GetOrganizationCommand);
 			this.addCommand(CreateOrganizationEvent.CreateOrganization_Event, CreateOrganizationCommand);			
-			this.addCommand(DeleteOrganizationEvent.DeleteOrganization_Event, DeleteOrganizationCommand);
 			this.addCommand(UpdateOrganizationEvent.UpdateOrganization_Event, UpdateOrganizationCommand);
 			
 			
             this.addCommand(GetRoleListEvent.GetRoleList_Event, GetRoleListCommand);
             this.addCommand(GetRoleEvent.GetRole_Event, GetRoleCommand);
             this.addCommand(CreateRoleEvent.CreateRole_Event, CreateRoleCommand);           
-            this.addCommand(DeleteRoleEvent.DeleteRole_Event, DeleteRoleCommand);
             this.addCommand(UpdateRoleEvent.UpdateRole_Event, UpdateRoleCommand);
             
             this.addCommand(GetUserEvent.GetUser_Event, GetUserCommand);
             this.addCommand(GetPersonEvent.GetPerson_Event, GetPersonCommand);
             this.addCommand(CreatePersonEvent.CreatePerson_Event, CreatePersonCommand);           
-            this.addCommand(DeletePersonEvent.DeletePerson_Event, DeletePersonCommand);
             this.addCommand(GetPersonByUserEvent.GetPersonByUser_Event, GetPersonByUserCommand);
             this.addCommand(GetPersonListEvent.GetPersonList_Event, GetPersonListCommand);
             this.addCommand(UpdatePersonEvent.UpdatePerson_Event, UpdatePersonCommand);
@@ -104,7 +99,6 @@ package com.mindalliance.channels.control
 		private function initializeResources() : void
 		{
             this.addCommand(GetRepositoryListEvent.GetRepositoryList_Event, GetRepositoryListCommand);
-            this.addCommand(DeleteRepositoryEvent.DeleteRepository_Event, DeleteRepositoryCommand);
             this.addCommand(GetRepositoryEvent.GetRepository_Event, GetRepositoryCommand);
             this.addCommand(CreateRepositoryEvent.CreateRepository_Event, CreateRepositoryCommand);
             this.addCommand(UpdateRepositoryEvent.UpdateRepository_Event, UpdateRepositoryCommand);
@@ -114,14 +108,12 @@ package com.mindalliance.channels.control
 		{
 			
             this.addCommand(GetTaskListEvent.GetTaskList_Event, GetTaskListCommand);
-            this.addCommand(DeleteTaskEvent.DeleteTask_Event, DeleteTaskCommand);
             this.addCommand(GetTaskEvent.GetTask_Event, GetTaskCommand);
             this.addCommand(CreateTaskEvent.CreateTask_Event, CreateTaskCommand);
             this.addCommand(UpdateTaskEvent.UpdateTask_Event, UpdateTaskCommand);
             
             this.addCommand(GetArtifactListEvent.GetArtifactList_Event, GetArtifactListCommand);
             this.addCommand(GetArtifactListByTaskEvent.GetArtifactListByTask_Event, GetArtifactListByTaskCommand);
-            this.addCommand(DeleteArtifactEvent.DeleteArtifact_Event, DeleteArtifactCommand);
             this.addCommand(GetArtifactEvent.GetArtifact_Event, GetArtifactCommand);
             this.addCommand(CreateArtifactEvent.CreateArtifact_Event, CreateArtifactCommand);
             this.addCommand(UpdateArtifactEvent.UpdateArtifact_Event, UpdateArtifactCommand);
@@ -129,22 +121,19 @@ package com.mindalliance.channels.control
             
             this.addCommand(GetAcquirementListEvent.GetAcquirementList_Event, GetAcquirementListCommand);
             this.addCommand(GetAcquirementListByTaskEvent.GetAcquirementListByTask_Event, GetAcquirementListByTaskCommand);
-            this.addCommand(DeleteAcquirementEvent.DeleteAcquirement_Event, DeleteAcquirementCommand);
             this.addCommand(GetAcquirementEvent.GetAcquirement_Event, GetAcquirementCommand);
             this.addCommand(CreateAcquirementEvent.CreateAcquirement_Event, CreateAcquirementCommand);
             this.addCommand(UpdateAcquirementEvent.UpdateAcquirement_Event, UpdateAcquirementCommand);
             this.addCommand(UpdateAcquirementTaskEvent.UpdateAcquirementTask_Event, UpdateAcquirementTaskCommand);
            
             this.addCommand(GetEventListEvent.GetEventList_Event, GetEventListCommand);
-            this.addCommand(DeleteEventEvent.DeleteEvent_Event, DeleteEventCommand);
             this.addCommand(GetEventEvent.GetEvent_Event, GetEventCommand);
             this.addCommand(CreateEventEvent.CreateEvent_Event, CreateEventCommand);
             this.addCommand(UpdateEventEvent.UpdateEvent_Event, UpdateEventCommand);
                         
             this.addCommand(GetAgentListByScenarioEvent.GetAgentListByScenario_Event, GetAgentListByScenarioCommand);
             this.addCommand(GetAgentListEvent.GetAgentList_Event, GetAgentListCommand);
-            this.addCommand(CreateAgentEvent.CreateAgent_Event, CreateAgentCommand);
-            this.addCommand(DeleteAgentEvent.DeleteAgent_Event, DeleteAgentCommand);            
+            this.addCommand(CreateAgentEvent.CreateAgent_Event, CreateAgentCommand);       
 		}
 		
 		private function initializeSharingNeed() : void
@@ -155,12 +144,12 @@ package com.mindalliance.channels.control
             this.addCommand(CreateNeedToKnowSequenceEvent.CreateNeedToKnowSequence_Event, CreateNeedToKnowSequenceCommand);
             this.addCommand(CreateSharingNeedEvent.CreateSharingNeed_Event, CreateSharingNeedCommand);
             this.addCommand(CreateSharingNeedSequenceEvent.CreateSharingNeedSequence_Event, CreateSharingNeedSequenceCommand);
-            this.addCommand(DeleteNeedToKnowEvent.DeleteNeedToKnow_Event, DeleteNeedToKnowCommand);
             this.addCommand(GetKnowEvent.GetKnow_Event, GetKnowCommand);
             this.addCommand(GetNeedToKnowEvent.GetNeedToKnow_Event, GetNeedToKnowCommand);
             this.addCommand(GetSharingNeedListEvent.GetSharingNeedList_Event, GetSharingNeedListCommand);
             this.addCommand(UpdateKnowEvent.UpdateKnow_Event, UpdateKnowCommand);
-            this.addCommand(UpdateNeedToKnowEvent.UpdateNeedToKnow_Event, UpdateNeedToKnowCommand);           
-		}
+            this.addCommand(UpdateNeedToKnowEvent.UpdateNeedToKnow_Event, UpdateNeedToKnowCommand);         
+            this.addCommand(DeleteSharingNeedEvent.DeleteSharingNeed_Event, DeleteSharingNeedCommand);
+        }
 	}
 }

@@ -4,7 +4,7 @@
 package com.mindalliance.channels.commands.common
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.mindalliance.channels.business.BaseDelegate;
+	import com.mindalliance.channels.business.common.BaseDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
 	import com.mindalliance.channels.events.common.*;
 	import com.mindalliance.channels.events.people.*;

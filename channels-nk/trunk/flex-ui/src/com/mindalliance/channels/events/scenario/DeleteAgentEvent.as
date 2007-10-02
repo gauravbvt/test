@@ -3,20 +3,14 @@
 
 package com.mindalliance.channels.events.scenario
 {
-	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.mindalliance.channels.events.common.DeleteElementEvent;
 
-	public class DeleteAgentEvent extends CairngormEvent
+	public class DeleteAgentEvent extends DeleteElementEvent
 	{
-		public static const DeleteAgent_Event:String = "<DeleteAgentEvent>";
-		
-		public var id : String;
-		public var taskId : String;
 		
 		public function DeleteAgentEvent(id : String, taskId : String) 
 		{
-			super( DeleteAgent_Event );
-			this.id = id;
-		    this.taskId = taskId;
+			super( id );
 		}
 	}
 }
