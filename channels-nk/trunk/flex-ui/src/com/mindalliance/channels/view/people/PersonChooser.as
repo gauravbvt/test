@@ -32,7 +32,7 @@ package com.mindalliance.channels.view.people
     		var pc:PersonCreator = PopUpManager.createPopUp(this, PersonCreator, true) as PersonCreator ;
 			pc.resultHandler = function anon(firstname:String, lastname:String):void {
 				CairngormHelper.fireEvent(new CreatePersonEvent(firstname, lastname)) ;
-				listElements.scrollToIndex(list.length - 1) ;
+				//listElements.scrollToIndex(list.length - 1) ;
 			}
         }
         

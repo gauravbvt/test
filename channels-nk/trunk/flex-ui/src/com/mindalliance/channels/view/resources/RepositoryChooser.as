@@ -38,7 +38,7 @@ package com.mindalliance.channels.view.resources
         	PopUpManager.centerPopUp(rc) ;
         	rc.resultHandler = function anon(reposName:String, orgID:String):void {
          		CairngormHelper.fireEvent(new CreateRepositoryEvent(reposName, orgID)) ;
-         		listElements.scrollToIndex(list.length - 1) ;
+         		//listElements.scrollToIndex(list.length - 1) ;
          	}
 		}
 
@@ -46,6 +46,7 @@ package com.mindalliance.channels.view.resources
          	for each (var item:Object in listElements.selectedItems) {
         		CairngormHelper.fireEvent(new DeleteRepositoryEvent((item as ElementVO).id)) ;
         	}
+        	
         }		
 	}
 }

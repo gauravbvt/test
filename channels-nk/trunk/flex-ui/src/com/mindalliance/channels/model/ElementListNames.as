@@ -12,5 +12,6 @@ package com.mindalliance.channels.model
 		public static const ROLE_LIST_KEY : String = "roles";
 		public static const ARTIFACT_LIST_KEY : String = "artifacts";
 		public static const ACQUIREMENT_LIST_KEY : String = "acquirements";
+		public static const SHARINGNEEDS_LIST_KEY : String = "sharingneeds";
 	}
 }

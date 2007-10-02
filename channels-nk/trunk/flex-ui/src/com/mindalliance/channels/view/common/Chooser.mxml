@@ -13,7 +13,7 @@
             <mx:AddChild relativeTo="{hBoxElementAdder}" position="before">
                 <mx:HBox width="100%">
                     <common:AddButton click="btnAddClicked()"/>
-                    <common:RemoveButton enabled="{listElements.selectedItems.length > 0}" click="btnRemoveClicked()"/>
+                    <common:RemoveButton enabled="{listElements.selectedItems.length > 0}" click="removeClickWrapper()"/>
                 </mx:HBox>
             </mx:AddChild>
             <mx:SetStyle target="{chooserHBox}" name="verticalAlign" value="top"/>
@@ -94,6 +94,12 @@
             //Override
             protected function btnRemoveClicked():void {
             	
+            }
+            
+            private function removeClickWrapper() : void {
+                btnRemoveClicked();
+                listElements.selectedIndex = -1;
+                changeSelection();
             }
             
             private function closeChooser():void {

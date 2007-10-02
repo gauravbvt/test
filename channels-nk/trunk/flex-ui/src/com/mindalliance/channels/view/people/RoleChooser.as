@@ -32,7 +32,7 @@ package com.mindalliance.channels.view.people
     		var rc:RoleCreator = PopUpManager.createPopUp(this, RoleCreator, true) as RoleCreator ;
     		rc.resultHandler = function anon(roleName:String, orgID:String):void {
          		CairngormHelper.fireEvent(new CreateRoleEvent(roleName, orgID));
-         		listElements.scrollToIndex(list.length - 1) ;
+         		//listElements.scrollToIndex(list.length - 1) ;
     		}
         }
         

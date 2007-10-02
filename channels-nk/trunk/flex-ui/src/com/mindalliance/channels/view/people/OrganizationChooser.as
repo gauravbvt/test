@@ -34,7 +34,7 @@ package com.mindalliance.channels.view.people
     		UtilFuncs.GetUserTextInput(this,
 				function anon(orgName:String):void {
 					CairngormHelper.fireEvent(new CreateOrganizationEvent(orgName)) ;
-					listElements.scrollToIndex(list.length - 1) ;
+					//listElements.scrollToIndex(list.length - 1) ;
 					// Set last element selected and editor in edit state somehow
 				}, "Enter Name of New Organization", true) ;
         }
@@ -43,6 +43,7 @@ package com.mindalliance.channels.view.people
          	for each (var item:Object in listElements.selectedItems) {
         		CairngormHelper.fireEvent(new DeleteOrganizationEvent((item as ElementVO).id)) ;
         	}
+        	
         }
 	}
 }

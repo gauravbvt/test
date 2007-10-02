@@ -31,7 +31,7 @@ package com.mindalliance.channels.view.scenario
         	UtilFuncs.GetUserTextInput(this, 
 	        	function anon(taskName:String):void {
 	         		CairngormHelper.fireEvent(new CreateTaskEvent(taskName, channelsModel.currentScenario.id)) ;
-	         		listElements.scrollToIndex(list.length - 1) ;
+	         		//listElements.scrollToIndex(list.length - 1) ;
 	    		},"Enter Name of New Task", true) ;
         }
         
