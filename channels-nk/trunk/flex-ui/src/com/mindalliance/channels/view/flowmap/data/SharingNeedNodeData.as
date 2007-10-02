@@ -1,10 +1,10 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.data
 {
-	import com.yworks.graph.model.DefaultNode;
+	import com.yworks.graph.model.INode;
 
 	public class SharingNeedNodeData extends NodeData
 	{
-		public function SharingNeedNodeData(node:DefaultNode, id:String)
+		public function SharingNeedNodeData(node:INode, id:String)
 		{
 			super(node, id, NODE_TYPE_SHARING_NEED);
 		}

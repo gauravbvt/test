@@ -2,6 +2,7 @@ package com.mindalliance.channels.model.flowmap
 {
 	import com.adobe.cairngorm.CairngormError;
 	import com.adobe.cairngorm.CairngormMessageCodes;
+	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.view.flowmap.FlowMap;
@@ -19,7 +20,7 @@ package com.mindalliance.channels.model.flowmap
             for each (var item:Object in colEvent.items) {
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
-							FlowMap.removeRepositoryOwner(elemVO.id) ;
+							flowmap.repositories.removeRepositoryOwner(elemVO.id) ;
 					}) ;
 			}
 		}
@@ -28,35 +29,16 @@ package com.mindalliance.channels.model.flowmap
 			for each (var item:Object in colEvent.items) {
 				examinePropertyChange(item, 
 				function anon(elemVO:ElementVO, newValue:Object):void {
-					FlowMap.renameRepositoryOwner(elemVO.id, newValue as String) ;
+					flowmap.repositories.renameRepositoryOwner(elemVO.id, newValue as String) ;
 				}) ;
 			}
 		}
-		
-		private static var instance:OrganizationsHandler;
 
-		public function OrganizationsHandler(access:Private) {
+		private var flowmap:FlowMap ;
+		
+		public function OrganizationsHandler(value:FlowMap) {
 			super(ElementListNames.ORGANIZATION_LIST_KEY) ;
-			if (access != null)
-				if (instance == null)
-					instance = this;
-			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "OrganizationsHandler" );
-		}
-		 
-		/**
-		 * Returns the Singleton instance of ChannelsModelLocator
-		 */
-		public static function getInstance() : OrganizationsHandler {
-			if (instance == null)
-				instance = new OrganizationsHandler( new Private );
-			return instance;
+			flowmap = value ;
 		}
 	}
 }
-
-/**
- * @private
- * Inner class which restricts contructor access to Private
- */
-class Private {}

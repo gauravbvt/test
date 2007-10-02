@@ -3,6 +3,7 @@ package com.mindalliance.channels.model.flowmap
 	import com.adobe.cairngorm.CairngormError;
 	import com.adobe.cairngorm.CairngormMessageCodes;
 	import com.mindalliance.channels.events.scenario.GetTaskEvent;
+	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.model.ElementModel;
@@ -24,18 +25,18 @@ package com.mindalliance.channels.model.flowmap
 	public class TasksHandler extends BaseCollectionChangeHandler
 	{		
 		
-		public static function forceResetWatchers():void {
+/* 		public static function forceResetWatchers():void {
 			instance.tracker.removeAllWatchers() ;
 			var tasks:Array = new Array() ;
 			for each (var elem:ElementVO in instance.elementCollection)
 				tasks.push(elem) ;
 			instance.tracker.setupWatchers(tasks) ;
-		}
+		} */
 		
 		private function refreshCausation(value:Object):void {
 			var occVO:OccurrenceVO = value as OccurrenceVO ;
 			if (occVO && occVO.cause)
-				FlowMap.addCausation(occVO.cause.id, occVO.id) ;
+				flowmap.causations.addCausation(occVO.cause.id, occVO.id) ;
 		}
 		
 		private function dispatchGetTask(elemVO:ElementVO):void {
@@ -44,18 +45,18 @@ package com.mindalliance.channels.model.flowmap
 		
 		protected override function collectionReset(colEvent:CollectionEvent):void {
 			tracker.removeAllWatchers() ;
-			FlowMap.removeAllTasks() ;
+			flowmap.tasks.removeAllTasks() ;
 			
 			var tasks:Array = new Array() ;
 
 			for each (var elem:ElementVO in elementCollection) {
 				tasks.push(elem) ;
-				FlowMap.addTask(FlowMap.defaultPhaseID, elem.id, elem.name) ;
+				flowmap.tasks.addTask(flowmap.defaultPhaseID, elem.id, elem.name) ;
 			}
 
 			tracker.setupWatchers(tasks) ;
 			
-			EventsHandler.forceResetWatchers() ;
+/* 			EventsHandler.forceResetWatchers() ; */
 		}
 		
 		protected override function itemsAdded(colEvent:CollectionEvent):void {
@@ -64,7 +65,7 @@ package com.mindalliance.channels.model.flowmap
 		         extractElementVO(item,
                         function anon(elemVO:ElementVO):void {
 							tasks.push(elemVO) ;
-                            FlowMap.addTask(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
+                            flowmap.tasks.addTask(flowmap.defaultPhaseID, elemVO.id, elemVO.name) ;
                         }) ;
 		    }
 		    tracker.setupWatchers(tasks) ;
@@ -74,7 +75,7 @@ package com.mindalliance.channels.model.flowmap
 			for each (var item:Object in colEvent.items) {
 				extractElementVO(item,
 					function anon(taskVO:ElementVO):void {
-						FlowMap.removeTask(taskVO.id) ;
+						flowmap.tasks.removeTask(taskVO.id) ;
 						tracker.removeWatcher(taskVO.id) ;
 					}) ;
 			}
@@ -86,41 +87,20 @@ package com.mindalliance.channels.model.flowmap
 				examinePropertyChange(item, 
 					function anon(elemVO:ElementVO, newValue:Object):void {
 						tasks.push(elemVO) ;
-						FlowMap.renameTask(elemVO.id, newValue as String) ;
+						flowmap.tasks.renameTask(elemVO.id, newValue as String) ;
 					}) ;
 			}
 			tracker.setupWatchers(tasks) ;
 		}
 				
-		private static var instance:TasksHandler;
-
 		private var tracker:ElementTracker ;
 		
-		public function TasksHandler(access:Private) {
+		private var flowmap:FlowMap ;
+		public function TasksHandler(value:FlowMap) {
 			super(ElementListNames.TASK_LIST_KEY) ;
-
-			if (access != null)
-				if (instance == null)
-					instance = this;
-			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "TasksHandler" );
-
+			flowmap = value ;
 			tracker = new ElementTracker(refreshCausation, dispatchGetTask) ;
 		}
 		 
-		/**
-		 * Returns the Singleton instance of ChannelsModelLocator
-		 */
-		public static function getInstance() : TasksHandler {
-			if (instance == null)
-				instance = new TasksHandler( new Private );
-			return instance;
-		}
 	}
 }
-
-/**
- * @private
- * Inner class which restricts contructor access to Private
- */
-class Private {}

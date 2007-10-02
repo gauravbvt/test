@@ -1,42 +1,59 @@
 package com.mindalliance.channels.view.flowmap
 {
-	import com.yworks.ui.GraphCanvasComponent;
-	import flash.geom.Point;
+	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.yworks.canvas.geom.IPoint;
 	import com.yworks.canvas.geom.ImmutablePoint;
-	import com.yworks.graph.model.DefaultNode;
+	import com.yworks.graph.model.IGraph;
+	import com.yworks.graph.model.ILabel;
+	import com.yworks.graph.model.INode;
 	import com.yworks.support.Iterator;
-	import com.yworks.graph.model.DefaultLabel;
-	import com.yworks.graph.model.DefaultGraph;
+	import com.yworks.ui.GraphCanvasComponent;
+	
+	import flash.geom.Point;
 	
 	public class FlowMapLayoutHelper
 	{
-		public static function updateNodeBounds(graph:DefaultGraph, node:DefaultNode):void {
+		
+		public static var graphCanvas:GraphCanvasComponent ;
+		
+		public static function updateNodeBounds(graph:IGraph, node:INode):void {
 			var iter:Iterator = node.labels.iterator() ;
+
 			var minRequiredWidth:Number = 0 ;
 			var minRequiredHeight:Number = 0 ;
+
 			while (iter.hasNext()) {
-				var label:DefaultLabel = DefaultLabel(iter.next()) ;
+				var label:ILabel = iter.next() as ILabel ;
+
 				var labelWidth:Number = label.layout.width + 20 ;
 				if (minRequiredWidth < labelWidth)
 					minRequiredWidth = labelWidth ;
+
 				var labelHeight:Number = label.layout.height + 20 ;
 				if (minRequiredHeight < labelHeight)
 					minRequiredHeight = labelHeight; 
 			}
+
 			if (node.layout.width < minRequiredWidth)
 				graph.setBounds(node, node.layout.x, node.layout.y, minRequiredWidth, node.layout.height) ;
+
 			if (node.layout.height < minRequiredHeight)
 				graph.setBounds(node, node.layout.x, node.layout.y, node.layout.width, minRequiredHeight) ;
+				
+			graphCanvas.forceRepaint() ;
 		}
 		
-		public static function getLocationForNewNode2(gc:GraphCanvasComponent):IPoint {
+		public static function getLocationForNewNode2():IPoint {
+			var gc:GraphCanvasComponent = graphCanvas ;
+		
 			var dx:Number = (Math.random() > 0.5 ? 1 : -1) * Math.random() * gc.width/3 ;
+
 			var dy:Number = (Math.random() > 0.5 ? 1 : -1) * Math.random() * gc.height/3 ;
+
 			return new ImmutablePoint(gc.center.x + dx, gc.center.y + dy) ;
 		}
 		
-		public static function getLocationForNewNode(mapperHelper:GraphMapperHelper, phaseID:String):IPoint {
+		public static function getLocationForNewNode(mapper:GraphDataMapper, phaseID:String):IPoint {
 				return null ;
 /* 			var phase:Phase = _mapperHelper.phaseMapper.lookupValue(phaseID) as Phase ;
 			var maxY:Number = 0 ;
@@ -50,7 +67,7 @@ package com.mindalliance.channels.view.flowmap
 			return new ImmutablePoint(nodeX, nodeY) ; */
 		}
 		
-		public static function updatePhaseBounds(mapperHelper:GraphMapperHelper, phaseID:String):void {
+		public static function updatePhaseBounds(mapper:GraphDataMapper, phaseID:String):void {
 			return ;
 /* 			var desiredWidth:Number = 0 ;
 			var maxY:Number = 0 ;

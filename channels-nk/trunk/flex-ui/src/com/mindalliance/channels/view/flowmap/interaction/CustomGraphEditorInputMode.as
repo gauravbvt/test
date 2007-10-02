@@ -1,14 +1,17 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.interaction
 {
-	import com.yworks.graph.model.ISelectionModel;
-	import com.yworks.graph.input.GraphEditorInputMode;
-	import com.yworks.graph.model.IGraph;
+	import com.mindalliance.channels.view.flowmap.FlowMapEvent;
+	import com.mindalliance.channels.view.flowmap.visualelements.Phase;
 	import com.yworks.canvas.ICanvasObject;
 	import com.yworks.canvas.input.ClickEvent;
-	import flash.events.Event;
+	import com.yworks.graph.input.GraphEditorInputMode;
 	import com.yworks.graph.model.IEdge;
+	import com.yworks.graph.model.IGraph;
+	import com.yworks.graph.model.ISelectionModel;
 	import com.yworks.graph.model.SelectionEvent;
 	import com.yworks.ui.GraphCanvasComponent;
+	
+	import flash.events.Event;
 
 	public class CustomGraphEditorInputMode extends GraphEditorInputMode
 	{

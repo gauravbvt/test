@@ -1,12 +1,12 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.data
 {
-	import com.yworks.graph.model.DefaultNode;
+	import com.yworks.graph.model.INode;
 
 	public class TaskNodeData extends NodeData
 	{
 		private var _phaseID:String ;
 		
-		public function TaskNodeData(node:DefaultNode, id:String, phaseID:String)
+		public function TaskNodeData(node:INode, id:String, phaseID:String)
 		{
 			super(node, id, NODE_TYPE_TASK);
 		}

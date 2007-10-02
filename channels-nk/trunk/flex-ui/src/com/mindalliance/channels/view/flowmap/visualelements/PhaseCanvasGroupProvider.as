@@ -1,4 +1,4 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.visualelements
 {
 	import com.yworks.canvas.CanvasComponent;
 	import com.yworks.canvas.model.ICanvasGroupProvider;

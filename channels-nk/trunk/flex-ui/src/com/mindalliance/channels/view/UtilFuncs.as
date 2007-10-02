@@ -13,21 +13,32 @@ package com.mindalliance.channels.view
     public class UtilFuncs
     {
         
-        public static function GetUserTextInput(parent:DisplayObject, callback:Function, titleText:String, modal:Boolean=false, textInputText:String='', ignoreNullOrEmpty:Boolean=true):void {
-	                var inputDialog:InputTextDialog = InputTextDialog(PopUpManager.createPopUp(parent, InputTextDialog, modal)) ;
-    	            inputDialog.title = titleText ;
-    	            inputDialog.okEventHandler = callback ;
-    	            PopUpManager.centerPopUp(inputDialog);
-    	            inputDialog.ignoreNullOrEmpty = ignoreNullOrEmpty ;
-    	            inputDialog.textInput.text = textInputText ;
-    	            if (textInputText != null && textInputText.length > 0) {
-    	            	inputDialog.textInput.selectionBeginIndex = 0 ;
-    	            	inputDialog.textInput.selectionEndIndex = textInputText.length ;
-    	            }
-    	            inputDialog.textInput.setFocus();
+        public static function tracef(message:String='', callerClass:Object=null, callerFunction:Object=null):void {
+        	trace((callerClass ? callerClass.toString() : '') + ': ' + (callerFunction ? callerFunction.toString() : '') + ': ' + message) ;
+        }
+        
+        public static function getUserTextInput(parent:DisplayObject, callback:Function, 
+        										titleText:String, modal:Boolean=false, 
+        										textInputText:String='', ignoreNullOrEmpty:Boolean=true):void {
+            var inputDialog:InputTextDialog = InputTextDialog(PopUpManager.createPopUp(parent, InputTextDialog, modal)) ;
+
+            inputDialog.title = titleText ;
+            inputDialog.okEventHandler = callback ;
+
+            PopUpManager.centerPopUp(inputDialog);
+
+            inputDialog.ignoreNullOrEmpty = ignoreNullOrEmpty ;
+            inputDialog.textInput.text = textInputText ;
+
+            if (textInputText != null && textInputText.length > 0) {
+            	inputDialog.textInput.selectionBeginIndex = 0 ;
+            	inputDialog.textInput.selectionEndIndex = textInputText.length ;
+            }
+
+            inputDialog.textInput.setFocus();
 	    }
 	    
-	    public static function Capitalize(text:String):String {
+	    public static function capitalize(text:String):String {
 	    	var arr:Array = text.split(' ') ;
 	    	for (var i:int ; i < arr.length ; ++i) {
 	    		var full:String = arr[i] ;
@@ -49,6 +60,7 @@ package com.mindalliance.channels.view
                 }
                 return result;
         }
+        
         public static function popupChooser(type : Class, parent : DisplayObject, filter : ArrayCollection, updateFunction : Function = null) : void {
 
             var rc:Chooser = (PopUpManager.createPopUp(parent,type,false) as Chooser);

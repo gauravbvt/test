@@ -48,35 +48,11 @@ package com.mindalliance.channels.model.flowmap
 		}
 		
 		protected override function itemsUpdated(colEvent:CollectionEvent):void {
-			trace('Message for Shashi: Agent collected update called against all odds!') ;
+			trace('Message for Shashi: Agents collectionChange UPDATE called against all odds!') ;
 		}
 
-		private static var instance:AgentModel;
-		
-		public function AgentsHandler(access:Private) {
-			super("agents") ;
-
-			if (access != null)
-				if (instance == null)
-					instance = this;
-			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "AgentsHandler" );
-			
-		}
-		 
-		/**
-		 * Returns the Singleton instance of ChannelsModelLocator
-		 */
-		public static function getInstance() : AgentsHandler {
-			if (instance == null)
-				instance = new AgentsHandler( new Private );
-			return instance;
+		public function AgentsHandler(flowmap:FlowMap) {
+			super("agents", flowmap) ;
 		}
 	}
 }
-
-/**
- * @private
- * Inner class which restricts contructor access to Private
- */
-class Private {}

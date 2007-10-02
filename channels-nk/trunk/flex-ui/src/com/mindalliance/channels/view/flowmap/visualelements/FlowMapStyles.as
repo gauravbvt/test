@@ -1,4 +1,4 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.visualelements
 {
 	import com.yworks.graph.drawing.ArrowType;
 	import com.yworks.graph.drawing.IEdgeStyle;

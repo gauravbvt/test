@@ -6,162 +6,35 @@
 	backgroundColor="0xFFFFFF"
 	width="100%" height="100%"
 	horizontalGap="0">
-	
-	<mx:Script>
-		<![CDATA[
-			import mx.binding.utils.BindingUtils;
-			import com.mindalliance.channels.view.application.PropertyEditor;
-			import com.yworks.graph.model.DefaultNode;
-			import mx.events.MenuEvent;
-			import com.mindalliance.channels.view.application.ChannelsMenuBar;
-			import mx.managers.PopUpManager;
-			import com.mindalliance.channels.events.resources.CreateRepositoryEvent;
-			import com.mindalliance.channels.events.scenario.CreateEventEvent;
-			import com.mindalliance.channels.model.ChannelsModelLocator;
-/*
-			PHASE RELATED STUFF CURRENTLY NOT USED
-			
- 			[Bindable]
-			private var selectedPhaseIDNotNull:Boolean = false ;
-
- 			public function selectedPhaseChanged(event:Event):void {
-				selectedScenarioStageIDNotNull = (FlowMap.selectedScenarioStageID != null) ;
-			}
-			
- 			private function addPhase():void {
-				UtilFuncs.GetUserTextInput(this,
-					function anon(value:String):void {
-						FlowMap.addPhase(FlowMap.getNewID(), UtilFuncs.Capitalize(value)) ;
-					}, "Enter Phase Name", true) ;
-			}
-			
-			private function renamePhase():void {
-				var stageID:String = FlowMap.selectedPhaseID
-				var oldName:String = FlowMap.getStageNameByID(stageID) ;
-				
-				UtilFuncs.GetUserTextInput(this,
-					function anon(value:String):void {
-						var newName:String = UtilFuncs.Capitalize(value) ;
-						if (newName == oldName)
-							return ;
-						FlowMap.changeLabelText(FlowMapElementType.SCENARIO_STAGE, stageID, newName) ;
-					}, "Rename Phase", true, oldName) ;
-			}
- */	
-		]]>
-	</mx:Script>
-	
-	<mx:Script>
-		<![CDATA[
-			import com.mindalliance.channels.events.scenario.CreateTaskEvent;
-			import com.mindalliance.channels.util.CairngormHelper;
-			import com.mindalliance.channels.view.resources.RepositoryCreator ;
-			import com.yworks.support.Iterable;
-			import com.yworks.graph.model.ILabel;
-			import com.yworks.support.Iterator;
-			import com.yworks.graph.model.IEdge;
-			import com.yworks.graph.model.SelectionEvent;
-			import mx.controls.Alert;
-			import com.yworks.graph.model.INode;
-			import com.mindalliance.channels.view.UtilFuncs;
 		
-			/* Called by Channels because this init needs to wait until license is validated etc. */
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.model.flowmap.FlowMapModel;
+		
+			private var _flowmap:FlowMap ;
 			
-			public static function getInstance():FlowMapView {
-				return instance ;
+			public function get flowmap():FlowMap {
+				return _flowmap ;
 			}
 			
-			private static var instance:FlowMapView ;
 			public function init():void {
-				FlowMap.initialize(graphCanvas) ;
-				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
-				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
- 				/* FlowMap.addSelectionListener(FlowMapEvent.PHASE_SELECTION_CHANGED, selectedPhaseChanged) ; */
-				ChannelsModelLocator.getInstance().flowMapModel.init() ;
-				instance = this ;
+				_flowmap = new FlowMap() ;
+
+				_flowmap.graphCanvas = graphCanvas ;
+				
+				ChannelsModelLocator.getInstance().flowMapModel = new FlowMapModel(_flowmap) ;
 			}
 									
-			public function requestHandlerRegistration(menuBar:ChannelsMenuBar):void {
-				menuBar.addEventListener(MenuEvent.ITEM_CLICK, menuBarItemClicked) ;
-			}
-			
-			[Bindable]
-			private var singleNodeSelected:Boolean = false ;
-			
-			private function _updateSelectionBoundVariables():void {
-				if (FlowMap.numSelected == 1) {
-					var iter:Iterator = FlowMap.selectedItems.iterator() ;
-					while (iter.hasNext()) {
-						var o:Object = iter.next() ;
-						if (o is INode) {
-							singleNodeSelected = true ;
-						}
-					}
-				}
-				else
-					singleNodeSelected = false ;
-			}
-			
-			public function itemSelected(event:SelectionEvent):void {
-				_updateSelectionBoundVariables() ;	
-			}
-			
-			public function itemDeselected(event:SelectionEvent):void {
-				_updateSelectionBoundVariables() ;	
-			}
-			
-			protected function menuBarItemClicked(event:MenuEvent):void {
-				var menuLabel:String = event.item.@label ;
-				switch (menuLabel) {
-					case "Add Task":
-						addTask() ;
-					break ;
-					case "Add Event":
-						addEvent() ;
-					break ;
-					case "Add Repository":
-						addRepository() ;
-					break ;
-				}
-			}
-						
-			public function addTask():void {
-				function addTaskHandler(taskName:String):void {
-					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
-					var event:CreateTaskEvent = new CreateTaskEvent(taskName, scenarioID) ;
-					CairngormHelper.fireEvent(event) ;
-				}
-				
- 				UtilFuncs.GetUserTextInput(this, addTaskHandler, "Enter Name of New Task", true) ;
-			}
-			
-			public function addEvent():void {
-				function addEventHandler(eventName:String):void {
-					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
-					var event:CreateEventEvent = new CreateEventEvent(eventName, scenarioID) ;
-					CairngormHelper.fireEvent(event) ;
-				}
-				UtilFuncs.GetUserTextInput(this, addEventHandler, "Enter Name of New Event", true) ;
-			}
-			
-			public function addRepository():void {
-				function addRepositoryHandler(reposName:String, reposOwnerID:String):void {
-					var scenarioID:String = ChannelsModelLocator.getInstance().currentScenario.id ;
-					var event:CreateRepositoryEvent = new CreateRepositoryEvent(reposName, reposOwnerID) ;
-					CairngormHelper.fireEvent(event) ;
-				}
-				
-				var repoCreator:RepositoryCreator = PopUpManager.createPopUp(this, RepositoryCreator, true) as RepositoryCreator ;
-				repoCreator.resultHandler = addRepositoryHandler ;
-				PopUpManager.centerPopUp(repoCreator) ;
-			}
-						
 		]]>
 	</mx:Script>
 	
 	<yui:GraphCanvasComponent id="graphCanvas" width="100%" height="100%"/>
+
 	<mx:VBox height="100%" verticalAlign="middle">
 		<mx:VRule height="100%"/>
 	</mx:VBox>
+
 	<flowmap:ZoomControl id="zoomControl" graphCanvas="{graphCanvas}" height="100%"/>
+
 </mx:HBox>

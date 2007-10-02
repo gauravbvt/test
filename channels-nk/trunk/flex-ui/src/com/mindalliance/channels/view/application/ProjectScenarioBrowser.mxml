@@ -251,7 +251,7 @@
 				<mx:VBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:List id="listProjects" dataProvider="{psbModel.projectList}" labelField="name" width="100%" allowMultipleSelection="false" change="selectProject()"/>
 					<mx:HBox>
-						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.GetUserTextInput(this, addProject, 'Enter Project Name', true)"/>
+						<common:AddButton visible="{permissions.canAddProject}" click="UtilFuncs.getUserTextInput(this, addProject, 'Enter Project Name', true)"/>
 						<common:RemoveButton visible="{permissions.canRemoveProject}" 
 							click="removeProject()"
 							toolTip="{currentProjectSelected ? 'cannot delete currently loaded project' : null}"
@@ -284,7 +284,7 @@
 				<mx:HBox>
 					<common:AddButton 
 						visible="{permissions.canAddScenario}" 
-						click="UtilFuncs.GetUserTextInput(this, addScenario, 'Enter Scenario Name', true)" />
+						click="UtilFuncs.getUserTextInput(this, addScenario, 'Enter Scenario Name', true)" />
 					<common:RemoveButton 
 						visible="{permissions.canRemoveScenario}" 
 						click="removeScenario()" 

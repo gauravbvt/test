@@ -31,7 +31,7 @@ package com.mindalliance.channels.view.people
         }
         
         override protected function btnAddClicked():void {
-    		UtilFuncs.GetUserTextInput(this,
+    		UtilFuncs.getUserTextInput(this,
 				function anon(orgName:String):void {
 					CairngormHelper.fireEvent(new CreateOrganizationEvent(orgName)) ;
 					//listElements.scrollToIndex(list.length - 1) ;

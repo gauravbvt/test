@@ -53,31 +53,8 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		private static var instance:SharingNeedModel;
-
-		public function SharingNeedsHandler(access:Private) {
-			super(sharingneeds) ;
-			if (access != null)
-				if (instance == null)
-					instance = this;
-			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "SharingNeedsHandler" );
-			init() ;
-		}
-		 
-		/**
-		 * Returns the Singleton instance of ChannelsModelLocator
-		 */
-		public static function getInstance() : SharingNeedsHandler {
-			if (instance == null)
-				instance = new SharingNeedsHandler( new Private );
-			return instance;
+		public function SharingNeedsHandler(flowmap:FlowMap) {
+			super("sharingneeds", flowmap:FlowMap) ;
 		}
 	}
 }
-
-/**
- * @private
- * Inner class which restricts contructor access to Private
- */
-class Private {}

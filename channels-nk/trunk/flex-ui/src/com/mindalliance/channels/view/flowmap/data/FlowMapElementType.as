@@ -1,4 +1,4 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.data
 {
 	public class FlowMapElementType
 	{

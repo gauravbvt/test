@@ -1,4 +1,4 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.visualelements
 {
 	import com.yworks.canvas.drawing.RectangularSelectionPaintable;
 	import com.yworks.canvas.geom.IRectangle;
@@ -10,9 +10,13 @@ package com.mindalliance.channels.view.flowmap
 	
 	import mx.graphics.SolidColor;
 	import mx.graphics.Stroke;
+	import mx.graphics.RectangularDropShadow;
+	import com.yworks.canvas.CanvasComponent;
+	import com.yworks.canvas.ICanvasObjectGroup;
 
 	public class DefaultNodeSelectionPaintable extends RectangularSelectionPaintable
 	{
+		
 		public function DefaultNodeSelectionPaintable(bounds:IRectangle)
 		{
 			super(bounds) ;

@@ -3,6 +3,7 @@ package com.mindalliance.channels.model.flowmap
 	import com.adobe.cairngorm.CairngormError;
 	import com.adobe.cairngorm.CairngormMessageCodes;
 	import com.mindalliance.channels.events.people.GetOrganizationEvent;
+	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.model.ElementModel;
 	import com.mindalliance.channels.util.CairngormHelper;
@@ -29,7 +30,7 @@ package com.mindalliance.channels.model.flowmap
 		private function refreshOwner(elemVO:ElementVO):void {
 			var reposVO:RepositoryVO = elemVO as RepositoryVO ;
 			if (reposVO && reposVO.organization)
-				FlowMap.setRepositoryOwner(reposVO.id, reposVO.organization.id, reposVO.organization.name) ;
+				flowmap.repositories.setRepositoryOwner(reposVO.id, reposVO.organization.id, reposVO.organization.name) ;
 		}
 
 		protected override function itemsAdded(colEvent:CollectionEvent):void {
@@ -38,7 +39,7 @@ package com.mindalliance.channels.model.flowmap
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
 						toWatch.push(elemVO) ;
-						FlowMap.addRepository(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
+						flowmap.repositories.addRepository(flowmap.defaultPhaseID, elemVO.id, elemVO.name) ;
 					}) ; 
 			}
 			tracker.setupWatchers(toWatch) ;
@@ -49,7 +50,7 @@ package com.mindalliance.channels.model.flowmap
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
 						tracker.removeWatcher(elemVO.id) ;
-						FlowMap.removeRepository(elemVO.id) ;
+						flowmap.repositories.removeRepository(elemVO.id) ;
 					}) ; 
 			}
 		}
@@ -58,55 +59,34 @@ package com.mindalliance.channels.model.flowmap
             for each (var item:Object in colEvent.items) {
 				examinePropertyChange(item, 
 					function anon(elemVO:ElementVO, newValue:Object):void {
-						FlowMap.renameRepository(elemVO.id, newValue as String) ;
+						flowmap.repositories.renameRepository(elemVO.id, newValue as String) ;
 					}) ;
 			}
 		}
 		
 		protected override function collectionReset(colEvent:CollectionEvent):void {
 			tracker.removeAllWatchers() ;
-			FlowMap.removeAllRepositories() ;
+			flowmap.repositories.removeAllRepositories() ;
 			
 			var reposAC:ArrayCollection = elementCollection ;
 			var toWatch:Array = new Array() ;
 			
 			for each (var reposVO:ElementVO in reposAC) {
 				toWatch.push(reposVO) ;
-				FlowMap.addRepository(FlowMap.defaultPhaseID, reposVO.id, reposVO.name) ;
+				flowmap.repositories.addRepository(flowmap.defaultPhaseID, reposVO.id, reposVO.name) ;
 			}
 			
 			tracker.setupWatchers(toWatch) ;
 		}
 
-		private static var instance:RepositoriesHandler;
-		
 		private var tracker:ElementTracker ;
 
-		public function RepositoriesHandler(access:Private) {
+		private var flowmap:FlowMap ;
+		
+		public function RepositoriesHandler(value:FlowMap) {
 			super(ElementListNames.REPOSITORY_LIST_KEY) ;
-
-			if (access != null)
-				if (instance == null)
-					instance = this;
-			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "RepositoriesHandler" );
-
+			flowmap = value ;
 			tracker = new ElementTracker(refreshOwner, dispatchGetOrganization) ;
-		}
-		 
-		/**
-		 * Returns the Singleton instance of ChannelsModelLocator
-		 */
-		public static function getInstance() : RepositoriesHandler {
-			if (instance == null)
-				instance = new RepositoriesHandler( new Private );
-			return instance;
 		}
 	}
 }
-
-/**
- * @private
- * Inner class which restricts contructor access to Private
- */
-class Private {}

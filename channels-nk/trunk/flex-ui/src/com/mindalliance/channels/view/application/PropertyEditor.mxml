@@ -32,20 +32,20 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.view.flowmap.data.TaskNodeData;
+			import com.mindalliance.channels.view.flowmap.data.EventNodeData;
+			import com.mindalliance.channels.view.flowmap.data.RepositoryNodeData;
+			import com.mindalliance.channels.view.flowmap.data.NodeData;
+			import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 			import com.mindalliance.channels.view.common.IEditor;
 			import mx.events.PropertyChangeEventKind;
 			import mx.events.PropertyChangeEvent;
 			import mx.binding.utils.BindingUtils;
 			import mx.events.StateChangeEvent;
 			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
-			import com.mindalliance.channels.view.flowmap.RepositoryNodeData;
 			import com.mindalliance.channels.events.scenario.GetEventEvent;
-			import com.mindalliance.channels.view.flowmap.EventNodeData;
 			import com.mindalliance.channels.util.CairngormHelper;
 			import com.mindalliance.channels.events.scenario.GetTaskEvent;
-			import com.mindalliance.channels.view.flowmap.TaskNodeData;
-			import com.mindalliance.channels.view.flowmap.NodeData;
-			import com.mindalliance.channels.view.flowmap.GraphMapperHelper;
 			import com.mindalliance.channels.view.flowmap.FlowMapEvent;
 			import com.yworks.graph.model.SelectionEvent;
 			import com.yworks.graph.model.IEdge;
@@ -57,19 +57,25 @@
 			[Bindable]
 			private var model : PropertyEditorModel;
 			
-			[Bindable]
-			public var mapperHelper:GraphMapperHelper ;
+			private var mapper:GraphDataMapper ;
 						
 			[Bindable]			
 			public var isEditing:Boolean ;
 			
-			public function init():void {
-				FlowMap.removeSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
-				FlowMap.removeSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+			private var _flowmap:FlowMap ;
+			
+			public function set flowmap(value:FlowMap):void {
+				if (_flowmap) {
+					_flowmap.removeSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+					_flowmap.removeSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				}
 				
-				FlowMap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
-				FlowMap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
-				mapperHelper = GraphMapperHelper.getInstance() ;
+				_flowmap = value ;
+				
+				_flowmap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+				_flowmap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				
+				mapper = _flowmap.dataMapper ;
 			}
 			
 			[Bindable]
@@ -77,15 +83,15 @@
 									
 			private function itemSelected(event:SelectionEvent):void {
 				stateChanging = true ;
-				if (FlowMap.numSelected > 1) {
+				if (_flowmap.numSelected > 1) {
 					currentState = 'MultipleItemsSelectedState' ;
 					return ;
 				}
 				if (event.item is INode) {
-					var nodeID:String = FlowMap.getIDForItem(event.item) as String ;
+					var nodeID:String = _flowmap.getIDForItem(event.item) as String ;
 					if (!nodeID)
 						return ;
-					var nd:NodeData = mapperHelper.nodeDataMapper.lookupValue(nodeID) as NodeData ;
+					var nd:NodeData = mapper.nodeDataMapper.lookupValue(nodeID) as NodeData ;
 					if (!nd)
 						return ;
 					if (nd is TaskNodeData) {
@@ -107,9 +113,9 @@
 		
 			private function itemDeselected(event:SelectionEvent):void {
 				stateChanging = true ;
-				if (FlowMap.numSelected == 0)
+				if (_flowmap.numSelected == 0)
 					currentState = 'NothingSelectedState' ;
-				else if (FlowMap.numSelected > 1)
+				else if (_flowmap.numSelected > 1)
 					currentState = 'MultipleItemsSelectedState' ;
 				stateChanging = false ;
 			}

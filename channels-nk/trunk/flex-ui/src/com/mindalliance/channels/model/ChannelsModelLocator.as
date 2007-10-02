@@ -42,9 +42,9 @@ package com.mindalliance.channels.model
 		// Component Models
 		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel(elements,elementLists);
 		public var permissionModel : PermissionModel = new PermissionModel();
-		public var flowMapModel : FlowMapModel = new FlowMapModel();
+		public var flowMapModel : FlowMapModel ;
         public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel(getEditorModel(), getEditorModel());
-        public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel(getEditorModel);
+        public var propertyEditorModel : PropertyEditorModel = new PropertyEditorModel(getEditorModel)
 
 		
 		
@@ -103,7 +103,6 @@ package com.mindalliance.channels.model
             if (elementLists[key] == null) {
                 elementLists[key] = new ElementListModel();
             }
-            trace('Cairngorm: getElementListModel :' + key) ;
             return elementLists[key];
         }
         

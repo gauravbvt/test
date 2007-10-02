@@ -3,6 +3,7 @@ package com.mindalliance.channels.model.flowmap
 	import com.adobe.cairngorm.CairngormError;
 	import com.adobe.cairngorm.CairngormMessageCodes;
 	import com.mindalliance.channels.events.scenario.GetEventEvent;
+	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.model.ElementListNames;
 	import com.mindalliance.channels.util.CairngormHelper;
 	import com.mindalliance.channels.util.ElementHelper;
@@ -26,7 +27,7 @@ package com.mindalliance.channels.model.flowmap
 		private function refreshCausation(value:Object):void {
 			var occVO:OccurrenceVO = value as OccurrenceVO ;
 			if (occVO && occVO.cause)
-				FlowMap.addCausation(occVO.cause.id, occVO.id) ;
+				flowmap.causations.addCausation(occVO.cause.id, occVO.id) ;
 		}
 		
 		protected override function itemsAdded(colEvent:CollectionEvent):void {
@@ -35,7 +36,7 @@ package com.mindalliance.channels.model.flowmap
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
 						toWatch.push(elemVO) ;
-						FlowMap.addEvent(FlowMap.defaultPhaseID, elemVO.id, elemVO.name) ;
+						flowmap.events.addEvent(flowmap.defaultPhaseID, elemVO.id, elemVO.name) ;
 					}) ; 
 			}
 			tracker.setupWatchers(toWatch) ;
@@ -46,7 +47,7 @@ package com.mindalliance.channels.model.flowmap
 				extractElementVO(item,
 					function anon(elemVO:ElementVO):void {
 						tracker.removeWatcher(elemVO.id) ;
-						FlowMap.removeEvent(elemVO.id) ;
+						flowmap.events.removeEvent(elemVO.id) ;
 					}) ; 
 			}						
 		}
@@ -55,62 +56,40 @@ package com.mindalliance.channels.model.flowmap
             for each (var item:Object in colEvent.items) {
 				examinePropertyChange(item, 
 					function anon(elemVO:ElementVO, newValue:Object):void {
-						FlowMap.renameEvent(elemVO.id, newValue as String) ;
+						flowmap.events.renameEvent(elemVO.id, newValue as String) ;
 					}) ;
 			}
 		}
 		
-		public static function forceResetWatchers():void {
+/* 		public static function forceResetWatchers():void {
 			instance.tracker.removeAllWatchers() ;
 			var toWatch:Array = new Array() ;
 			for each (var evt:ElementVO in instance.elementCollection)
 				toWatch.push(evt) ;
 			instance.tracker.setupWatchers(toWatch) ;
-		}
+		} */
 		
 		protected override function collectionReset(colEvent:CollectionEvent):void {
 			tracker.removeAllWatchers() ;
-			FlowMap.removeAllEvents() ;
+			flowmap.events.removeAllEvents() ;
 			
 			var eventAC:ArrayCollection = elementCollection ;
 			var toWatch:Array = new Array() ;
 			for each (var evt:ElementVO in eventAC) {
 				toWatch.push(evt) ;
-				FlowMap.addEvent(FlowMap.defaultPhaseID, evt.id, evt.name) ;
+				flowmap.events.addEvent(flowmap.defaultPhaseID, evt.id, evt.name) ;
 			}
 			tracker.setupWatchers(toWatch) ;
-			TasksHandler.forceResetWatchers() ;
+/* 			TasksHandler.forceResetWatchers() ; */
 		}
 		
-		private static var instance:EventsHandler;
-
 		private var tracker:ElementTracker ;
 
-		public function EventsHandler(access:Private) {
+		private var flowmap:FlowMap ;
+		public function EventsHandler(value:FlowMap) {
 			super(ElementListNames.EVENT_LIST_KEY) ;
-
-			if (access != null)
-				if (instance == null)
-					instance = this;
-			else
-				throw new CairngormError( CairngormMessageCodes.SINGLETON_EXCEPTION, "EventsHandler" );
-			
+			flowmap = value ;
 			tracker = new ElementTracker(refreshCausation, dispatchGetEvent) ;
-		}
-		 
-		/**
-		 * Returns the Singleton instance of ChannelsModelLocator
-		 */
-		public static function getInstance() : EventsHandler {
-			if (instance == null)
-				instance = new EventsHandler( new Private );
-			return instance;
 		}
 	}
 }
-
-/**
- * @private
- * Inner class which restricts contructor access to Private
- */
-class Private {}

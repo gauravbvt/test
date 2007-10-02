@@ -1,4 +1,4 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.data
 {
 	import com.yworks.graph.model.DefaultLabel;
 	import com.yworks.graph.model.ILabel;

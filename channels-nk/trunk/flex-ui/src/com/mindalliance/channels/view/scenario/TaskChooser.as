@@ -28,7 +28,7 @@ package com.mindalliance.channels.view.scenario
         }
         
         override protected function btnAddClicked():void {
-        	UtilFuncs.GetUserTextInput(this, 
+        	UtilFuncs.getUserTextInput(this, 
 	        	function anon(taskName:String):void {
 	         		CairngormHelper.fireEvent(new CreateTaskEvent(taskName, channelsModel.currentScenario.id)) ;
 	         		//listElements.scrollToIndex(list.length - 1) ;

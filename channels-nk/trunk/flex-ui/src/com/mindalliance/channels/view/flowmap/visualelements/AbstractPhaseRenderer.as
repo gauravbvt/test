@@ -1,4 +1,4 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.visualelements
 {
 	import com.yworks.canvas.ICanvasContext;
 	import com.yworks.canvas.ICanvasObjectDescriptor;

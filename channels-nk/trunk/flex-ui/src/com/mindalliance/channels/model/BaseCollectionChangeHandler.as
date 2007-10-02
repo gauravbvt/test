@@ -1,15 +1,17 @@
-package com.mindalliance.channels.model.flowmap
+package com.mindalliance.channels.model
 {
 	import com.mindalliance.channels.model.ChannelsModelLocator;
+	import com.mindalliance.channels.util.ElementHelper;
+	import com.mindalliance.channels.view.flowmap.FlowMap;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
+	import flash.events.Event;
+	
+	import mx.collections.ArrayCollection;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
 	import mx.events.PropertyChangeEventKind;
-	import com.mindalliance.channels.util.ElementHelper;
-	import mx.events.CollectionEvent;
-	import mx.collections.ArrayCollection;
-	import flash.events.Event;
-	import mx.events.CollectionEventKind;
 	
 	public class BaseCollectionChangeHandler
 	{
@@ -20,7 +22,7 @@ package com.mindalliance.channels.model.flowmap
 		public function BaseCollectionChangeHandler(key:String) {
 			model = ChannelsModelLocator.getInstance() ;
 			ElementHelper.installCollectionChangeListener(key, collectionChangeHandler) ;
-			_key = key ;
+			this._key = key ;
 		}
 
 		protected function get key():String {
@@ -51,7 +53,7 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		/* SUBCLASSES MUST OVERRIDE THESE METHODS  */
+		// Sub-classes should override these methods to handle changes.
 		protected function collectionReset(colEvent:CollectionEvent):void {
 			
 		}

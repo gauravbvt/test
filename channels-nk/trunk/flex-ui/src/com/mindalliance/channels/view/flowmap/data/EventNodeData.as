@@ -1,8 +1,9 @@
-package com.mindalliance.channels.view.flowmap
+package com.mindalliance.channels.view.flowmap.data
 {
 	import com.yworks.graph.model.DefaultPort;
 	import com.yworks.graph.model.DefaultNode;
 	import com.yworks.graph.model.DefaultLabel;
+	import com.yworks.graph.model.INode;
 
 	public class EventNodeData extends NodeData
 	{
@@ -10,7 +11,7 @@ package com.mindalliance.channels.view.flowmap
 		
 		private var _endPhaseID:String ;
 		
-		public function EventNodeData(node:DefaultNode, id:String)
+		public function EventNodeData(node:INode, id:String)
 		{
 			super(node, id, NODE_TYPE_EVENT);
 		}

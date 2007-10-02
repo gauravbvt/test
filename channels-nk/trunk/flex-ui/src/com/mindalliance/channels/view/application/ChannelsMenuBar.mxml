@@ -80,7 +80,7 @@
             		performPostPopupCreation(pc) ;
             	break ;
             	case "Profile New Organization":
-            		UtilFuncs.GetUserTextInput(FlowMapView.getInstance(),
+            		UtilFuncs.getUserTextInput(this,
             			function anon(orgName:String):void {
             				CairngormHelper.fireEvent(new CreateOrganizationEvent(orgName)) ;
 	            		}, "Enter Name of New Organization", true) ;

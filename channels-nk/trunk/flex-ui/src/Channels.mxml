@@ -3,7 +3,6 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	height="100%"
 	width="100%"
-	backgroundColor="0xFFFFFF"
 	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
 	xmlns:timeline="com.mindalliance.channels.view.timeline.*" 
 	xmlns:ui="com.mindalliance.channels.view.*" 
@@ -12,37 +11,80 @@
 	xmlns:control="com.mindalliance.channels.control.*"
 	xmlns:business="com.mindalliance.channels.business.*"
 	xmlns:common="com.mindalliance.channels.view.common.*"
-	applicationComplete="init()" currentState="DashboardState">
-	
+	applicationComplete="init()" 
+	currentState="{applicationToolBar.currentState}"
+	backgroundGradientColors="[#FFFFFF, #FFFFFF]" paddingRight="5" paddingTop="5" paddingLeft="5" paddingBottom="5"
+	layout="vertical"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	visible="false"
+	showEffect="{fadeIn}">
+
+	<mx:Style>
+		Form {
+			paddingLeft : 4 ;
+			paddingTop : 4 ;
+			paddingRight : 6 ;
+			paddingBottom : 4 ;
+		}
+	</mx:Style>
 	
   	<mx:states>
 		<mx:State name="DashboardState">
-			<mx:AddChild relativeTo="{vboxApplication}" position="lastChild">
+			<mx:AddChild position="lastChild">
 				<mx:Box width="100%" height="100%" horizontalAlign="center">
 					<application:ProjectScenarioBrowser currentState="DashboardState" id="projectScenarioBrowser"/>
 				</mx:Box>
 			</mx:AddChild>
 		</mx:State>
 		<mx:State name="InScenarioState">
-			<mx:AddChild relativeTo="{vboxApplication}" position="lastChild">
-				<mx:VBox width="100%" height="100%" paddingTop="10">
-					<application:ChannelsMenuBar 
-						creationComplete="channelsMenuBarCreationComplete()" 
-						enabled="false" 
-						id="channelsMenuBar"
-						width="100%"/>
-					<flowmap:FlowMapActions id="flowMapActions" resizeEffect="Resize"/>
-					<flowmap:FlowMapView id="flowmap" width="100%" height="100%" />
-				</mx:VBox>
+			<mx:AddChild position="lastChild">
+				<application:ChannelsMenuBar 
+					creationComplete="channelsMenuBarCreationComplete()" 
+					id="channelsMenuBar"
+					width="100%"
+					enabled="{!propertyEditor.isEditing}"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:HDividedBox width="100%" height="100%" 
+					borderStyle="solid" borderColor="#909090"
+					horizontalScrollPolicy="off"
+					verticalScrollPolicy="off">
+					<mx:Box height="{vBoxFlowMap.height}"
+						horizontalScrollPolicy="off"
+						id="vBoxPropertyEditor">
+						<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+							horizontalAlign="right" height="{flowMapActions.height}"
+							borderStyle="solid" borderColor="#909090" borderSides="bottom"
+							paddingTop="5" width="100%">
+							<common:PushPinToggleButton id="pushPin"/>
+						</mx:HBox>
+						<application:PropertyEditor id="propertyEditor" 
+							resizeToContent="true"/>
+					</mx:Box>
+					<mx:VBox width="100%" height="100%"
+						borderStyle="solid" borderColor="#909090" borderSides="left" 
+						id="vBoxFlowMap"
+						enabled="{!propertyEditor.isEditing}">
+						<flowmap:FlowMapActions id="flowMapActions" width="100%"
+							borderStyle="solid" borderColor="#909090" borderSides="bottom"
+							paddingTop="5"/>
+						<flowmap:FlowMapView id="flowmapview" width="100%" height="100%"/>
+					</mx:VBox>
+				</mx:HDividedBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{applicationToolBar}" name="currentState" value="InScenarioState"/>
 		</mx:State>
 	</mx:states>
 	
+	<mx:Dissolve alphaTo="1.0" id="fadeIn" duration="1000"/>
+	
     <mx:XML id="yFilesLicenseXML" source="../lib/license.xml"/>
 
     <mx:Script>
       <![CDATA[
+      	import mx.events.ResizeEvent;
+      	import mx.binding.utils.BindingUtils;
       	import com.mindalliance.channels.events.application.LoadGlobalDataEvent;
       	import com.mindalliance.channels.events.scenario.GetAgentListByScenarioEvent;
       	import com.mindalliance.channels.view.application.ChannelsMenuBar;
@@ -74,38 +116,46 @@
       		}
       	}
       	
-      	protected function handleApplicationToolBarStateChanged(event:StateChangeEvent):void {
-      		switch (event.newState) {
-      			case Channels.STATE_DASHBOARD:
-      				currentState = Channels.STATE_DASHBOARD ;
-      			break ;
-      			case Channels.STATE_IN_SCENARIO :
-      				currentState = Channels.STATE_IN_SCENARIO ;
-      			break ;
-      		}
-      	}
-      	
       	private function scenarioLoaded():void {
-      		flowmap.init() ;
-      		flowMapActions.init() ;
-      		
+      		flowmapview.init() ;
+      		flowMapActions.init(flowmapview.flowmap) ;
+			propertyEditor.flowmap = flowmapview.flowmap ;
+			
 			// Load global data lists
 			CairngormHelper.fireEvent(new LoadGlobalDataEvent());
+			
+			setupResizeWatcher() ;
       	}
       	
       	private function channelsMenuBarCreationComplete():void {
-      		flowmap.requestHandlerRegistration(channelsMenuBar) ;
-      		channelsMenuBar.enabled = true ;
+      		flowMapActions.requestHandlerRegistration(channelsMenuBar) ;
       	}
       
         private function init():void {
 			Util.registerLicense( yFilesLicenseXML );
 			this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleStateChanged) ;
-			applicationToolBar.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleApplicationToolBarStateChanged) ;
 			CairngormHelper.fireEvent( new GetUserEvent("user1") );
 			CairngormHelper.fireEvent( new GetPersonByUserEvent("user1") ) ;
+			
+			visible = true ;
+		}
+	
+		public function set pushPinToggled(isPinned:Boolean):void {
+			if (isPinned)
+				tearDownResizeWatcher() ;
+			else
+				setupResizeWatcher(); 
+		}
+	
+		private var _resizeChangeWatcher:ChangeWatcher ;	
+		protected function setupResizeWatcher():void {
+			_resizeChangeWatcher = BindingUtils.bindProperty(vBoxPropertyEditor, 'width', propertyEditor, ["selectedChild", "width"]) ;
 		}
 		
+		protected function tearDownResizeWatcher():void {
+			_resizeChangeWatcher.unwatch() ;
+		}
+						
         [Bindable]
         private var model : ChannelsModelLocator = ChannelsModelLocator.getInstance();
        
@@ -115,8 +165,8 @@
        	<!--<business:Services id="services" />-->
 	<control:ChannelsController id="appController" />
 
-    <mx:VBox width="100%" height="100%" id="vboxApplication">
-	    <application:ApplicationToolBar id="applicationToolBar" resizeEffect="Resize"/>
-	</mx:VBox>
+    <application:ApplicationToolBar id="applicationToolBar"/>
+    
+    <mx:Binding source="pushPin.isPinned" destination="pushPinToggled"/>
      
 </mx:Application>
