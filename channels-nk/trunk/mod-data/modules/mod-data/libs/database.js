@@ -20,6 +20,11 @@ function filter(s) {
   return fs;
 }
 
+function addDBIndices() {
+	log("Creating database indices: " + getDatabaseName(), "info");	
+	addDBXMLIndices();
+}
+
 // XML DATABASE ACCESS
 
 function databaseExists() {

@@ -36,6 +36,40 @@ function getDocumentDescriptor(id) {
   return descriptor;
 }
 
+function addDBXMLIndex(nodeName, indexType) {
+	var indexDesc = <dbxml>
+				<name>{getContainerName()}</name>
+				<index>
+					<nodeName>{nodeName}</nodeName>
+					<type>{indexType}</type>
+				</index>
+			 </dbxml>;
+			
+	var req=context.createSubRequest("active:dbxmlAddIndex");
+	req.addArgument("operator", new XmlObjectAspect(indexDesc.getXmlObject()));
+	res=context.issueSubRequest(req);
+	
+	log("Added database index: " + nodeName + ", type: " + indexType, "info");	
+}
+
+function addDBXMLIndices() {
+	addDBXMLIndex("/agent/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/acquirement/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/artifact/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/category/id", "unique-edge-element-equality-string");	
+	addDBXMLIndex("/event/id", "unique-edge-element-equality-string");	
+	addDBXMLIndex("/know/id", "unique-edge-element-equality-string");		
+	addDBXMLIndex("/needToKnow/id", "unique-edge-element-equality-string");	
+	addDBXMLIndex("/organization/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/person/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/phase/id", "unique-edge-element-equality-string");	
+	addDBXMLIndex("/project/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/repository/id", "unique-edge-element-equality-string");	
+	addDBXMLIndex("/role/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/scenario/id", "unique-edge-element-equality-string");
+	addDBXMLIndex("/task/id", "unique-edge-element-equality-string");	
+	addDBXMLIndex("/user/id", "unique-edge-element-equality-string");
+}
 
 // XML DATABASE PLUGIN FUNCTIONS
 

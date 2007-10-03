@@ -42,6 +42,9 @@ try {
 	  		initializeFrom(uri);
 	  	}
 	  }
+
+	  // Initialize DB indices if the underlying database supports them
+	  addDBIndices();
 	}
 }
 catch(e) {
