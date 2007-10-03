@@ -27,5 +27,13 @@
     <update>
       <match>@test-mod-data-name@</match>
       <uri>file:@deploy-dir@/@test-mod-data-name@-@test-mod-data-version@.jar</uri>
-    </update> 
+    </update>
+    <update>
+      <match>@mod-dbxml-name@</match>
+      <uri>file:@deploy-dir@/@mod-dbxml-name@-@mod-dbxml-version@.jar</uri>
+    </update>
+    <update>
+      <match>@test-mod-dbxml-name@</match>
+      <uri>file:@deploy-dir@/@test-mod-dbxml-name@-@test-mod-dbxml-version@.jar</uri>
+    </update>
 </appModules>

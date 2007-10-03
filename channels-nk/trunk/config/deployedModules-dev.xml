@@ -31,7 +31,7 @@
 	<module>modules/ext-xrl-1.5.3.jar</module>
 	<module>modules/ext-xsecurity-1.2.2.jar</module>
 	<module>modules/ext-xunit-2.1.4.jar</module>
-	<module>modules/mod-dbxml-1.0.1.jar</module>
+<!--	<module>modules/mod-dbxml-1.0.1.jar</module>-->
 	<module>modules/mod-developer-1.0.8.jar</module>
 	<module>modules/mod-docxter-2.0.0.jar</module>
 	<module>modules/mod-docxter-legacy-1.2.0.jar</module>
