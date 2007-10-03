@@ -6,9 +6,57 @@
 	</div>
     </desc>
     <test>
-        <uri>active:beanshell+operator@ffcpl:/test/accessor/test.bsh</uri>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/createContainer.bsh</uri>
 		<assert>
-			<xpath>count(//xml) = 1</xpath>
+			<xpath>/success</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/getIndices.bsh+step@num:1</uri>
+		<assert>
+			<xpath>count(//index) = 1</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/addBadIndex.bsh</uri>
+		<assert>
+			<xpath>/success</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/getIndices.bsh+step@num:3</uri>
+		<assert>
+			<xpath>count(//index) = 1</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/addIndex.bsh</uri>
+		<assert>
+			<xpath>/success</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/getIndices.bsh+step@num:2</uri>
+		<assert>
+			<xpath>count(//index) = 2</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/deleteIndex.bsh</uri>
+		<assert>
+			<xpath>/success</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/getIndices.bsh+step@num:3</uri>
+		<assert>
+			<xpath>count(//index) = 1</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:beanshell+operator@ffcpl:/test/accessor/deleteContainer.bsh</uri>
+		<assert>
+			<xpath>/success</xpath>
 		</assert>
     </test>
 </testlist>

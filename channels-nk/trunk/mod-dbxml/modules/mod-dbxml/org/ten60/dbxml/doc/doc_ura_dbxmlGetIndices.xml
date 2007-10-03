@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+<title>dbxmlGetIndices Accessor</title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Links***************-->
+<links>
+</links>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="title"/>
+	<section name="definition"/>
+	<section name="purpose"/>
+</toc>
+
+<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
+	<content>
+		<name>dbxmlGetIndices</name>
+		<text>Accessor to get the indices currently set for a dbxml container</text>
+	</content>
+</section>
+
+<section name="definition" styleuri="/xusr/share/doc/styles_1060/style_definition.xsl">
+	<content>
+		<module>urn:org:ten60:netkernel:mod:dbxml</module>
+		<format>
+		<sub name="format"/>
+		</format>
+		<returns>
+<b>t</b>
+		</returns>
+		<syntax>
+			<type><b>dbxmlGetIndices</b></type>
+			<operator req="true">the specification of the dbxml container</operator>
+			<target req="true">the retrieved document</target>
+		</syntax>
+		</content>
+	<includes>
+
+<include name="format" type="xml">
+<instr>
+	<type>dbxmlGetIndices</type>
+	<operator>
+		<dbxml>
+			<container>mycontainer</container>
+		</dbxml>
+	</operator>
+</instr>
+</include>
+</includes>
+</section>
+
+<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+        <p>The <code>dbxmlGetIndices</code> accessor retrieves a document describing the indices currently set on a particular dbxml container.</p>
+		<h3>Operator Format</h3>
+		<p>
+		The format for the operator is...
+		</p>
+		<sub name="config"/>
+		<p>
+		The <i>container</i> tag specifies the identity of the container in the BDBXML database.
+		For details on what the index configurations mean please see the references below.
+		</p>
+		<h3>Reference</h3>
+		<ul>
+		<li>Berkeley DBXML can be downloaded from <a href="http://www.sleepycat.com">Sleepycat Software</a>.</li>
+		<li><a href="http://www.oracle.com/technology/documentation/berkeley-db/xml/gsg_xml/java/BerkeleyDBXML-JAVA-GSG.pdf">Getting Started with Berkeley DB XML</a></li>
+		<li><a href="http://www.oracle.com/technology/documentation/berkeley-db/xml/java/index.html">Javadoc for BDBXML</a></li>
+		</ul>
+	</content>
+	<includes>
+<include name="config" type="xml">
+<dbxml>
+	<container>someContainerName</container>
+</dbxml>
+</include>
+	</includes>
+</section>
+
+</document>

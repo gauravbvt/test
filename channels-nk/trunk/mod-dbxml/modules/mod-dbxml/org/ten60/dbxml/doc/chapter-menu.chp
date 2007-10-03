@@ -9,4 +9,7 @@
 	<item name="doc_ura_dbxmlDeleteDocument"/>
 	<item name="doc_ura_dbxmlQuery"/>
 	<item name="doc_ura_dbxmlBooleanQuery"/>
+	<item name="doc_ura_dbxmlAddIndex"/>
+	<item name="doc_ura_dbxmlGetIndices"/>
+	<item name="doc_ura_dbxmlDeleteIndex"/>
 </menu>

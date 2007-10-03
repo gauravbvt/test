@@ -1,0 +1,14 @@
+import org.ten60.netkernel.layer1.representation.*;
+import org.ten60.netkernel.xml.representation.*;
+import com.ten60.netkernel.urii.aspect.*;
+
+main() {
+
+  req = context.createSubRequest("active:dbxmlDeleteContainer");
+  req.addArgument("operator", new StringAspect("<dbxml><name>mycontainer</name></dbxml>"));
+  context.issueSubRequest(req);
+
+  response = context.createResponseFrom(new StringAspect("<success/>"));
+  response.setMimeType("text/xml");
+  context.setResponse(response);
+}

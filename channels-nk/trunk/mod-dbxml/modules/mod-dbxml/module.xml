@@ -18,7 +18,7 @@
 	</licence>
 	<export>
 		<uri>
-			<match>active:dbxml((Put|Get|Delete)Document|(Create|Delete|Rename|Exists)Container|Query|BooleanQuery|GetIndices)\+.*</match>
+			<match>active:dbxml((Put|Get|Delete)Document|(Create|Delete|Rename|Exists)Container|Query|BooleanQuery|GetIndices|AddIndex|DeleteIndex)\+.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/org/ten60/dbxml/doc.*</match>
 		</uri>
@@ -38,7 +38,7 @@
 			<match>ffcpl:/(org/ten60/dbxml/doc/|entrypoints.xml).*</match>
 		</this>
 		<ura>
-			<match>active:dbxml((Put|Get|Delete)Document|(Create|Delete|Rename|Exists)Container|Query|BooleanQuery|GetIndices)\+.*</match>
+			<match>active:dbxml((Put|Get|Delete)Document|(Create|Delete|Rename|Exists)Container|Query|BooleanQuery|GetIndices|AddIndex|DeleteIndex)\+.*</match>
 			<class>org.ten60.dbxml.accessor.DBXMLAccessorImpl</class>
 		</ura>
 		<!--

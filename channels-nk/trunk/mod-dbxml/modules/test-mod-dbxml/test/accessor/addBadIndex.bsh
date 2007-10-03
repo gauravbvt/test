@@ -1,0 +1,20 @@
+import org.ten60.netkernel.layer1.representation.*;
+import org.ten60.netkernel.xml.representation.*;
+import com.ten60.netkernel.urii.aspect.*;
+
+main() {
+   try {
+       req = context.createSubRequest("active:dbxmlAddIndex");
+       req.addArgument("operator", new StringAspect("<dbxml><name>mycontainer</name><index><nodeName>foo</nodeName><type>node-something-presence-none</type></index></dbxml>"));
+       r=context.issueSubRequest(req);
+  	   // Success is failure
+       response = context.createResponseFrom(new StringAspect("<failure/>"));
+    } catch( Exception e ) {
+    	e.printStackTrace();
+  	   // Failure is success
+      response = context.createResponseFrom(new StringAspect("<success/>"));
+    }
+
+    response.setMimeType("text/xml");
+    context.setResponse(response);
+}

@@ -35,16 +35,29 @@
 package org.ten60.dbxml.accessor;
 
 
-import org.ten60.netkernel.layer1.nkf.*;
-import org.ten60.netkernel.layer1.nkf.impl.*;
-import com.ten60.netkernel.urii.*;
-import com.sleepycat.dbxml.*;
-
-import org.ten60.netkernel.xml.representation.*;
-import org.ten60.netkernel.xml.xda.*;
-import org.ten60.netkernel.layer1.representation.*;
-import com.ten60.netkernel.urii.aspect.*;
 import org.ten60.dbxml.representation.DBXMLResultAspect;
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
+import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly;
+import org.ten60.netkernel.layer1.nkf.INKFResponse;
+import org.ten60.netkernel.layer1.nkf.impl.NKFAccessorImpl;
+import org.ten60.netkernel.layer1.representation.ByteArrayAspect;
+import org.ten60.netkernel.xml.representation.IXAspect;
+import org.ten60.netkernel.xml.xda.IXDAReadOnly;
+
+import com.sleepycat.dbxml.XmlContainer;
+import com.sleepycat.dbxml.XmlContainerConfig;
+import com.sleepycat.dbxml.XmlDocument;
+import com.sleepycat.dbxml.XmlIndexDeclaration;
+import com.sleepycat.dbxml.XmlIndexSpecification;
+import com.sleepycat.dbxml.XmlInputStream;
+import com.sleepycat.dbxml.XmlManager;
+import com.sleepycat.dbxml.XmlQueryContext;
+import com.sleepycat.dbxml.XmlQueryExpression;
+import com.sleepycat.dbxml.XmlResults;
+import com.sleepycat.dbxml.XmlUpdateContext;
+import com.ten60.netkernel.urii.IURAspect;
+import com.ten60.netkernel.urii.aspect.IAspectReadableBinaryStream;
+import com.ten60.netkernel.urii.aspect.StringAspect;
 
 /**
  *	The DBXML Accessor class. Implements dbxmlxxxxx family of accessors
@@ -120,8 +133,14 @@ public class DBXMLAccessorImpl extends NKFAccessorImpl
 		else if (action.equals("dbxmlBooleanQuery"))
 		{	resultantAspect=dbxmlBooleanQuery(aManager, context);
 		}
+		else if (action.equals("dbxmlAddIndex"))
+		{   dbxmlAddIndex(aManager, context);
+		}
 		else if (action.equals("dbxmlGetIndices"))
 		{   resultantAspect=dbxmlGetIndices(aManager, context);
+		}
+		else if (action.equals("dbxmlDeleteIndex"))
+		{   dbxmlDeleteIndex(aManager, context);
 		}
 		return resultantAspect;
 	}
@@ -268,23 +287,52 @@ public class DBXMLAccessorImpl extends NKFAccessorImpl
 		return new org.ten60.netkernel.layer1.representation.BooleanAspect(!r.isEmpty());
 	}
 
+	private void dbxmlAddIndex(XmlManager aManager, INKFConvenienceHelper context) throws Exception
+	{	IXDAReadOnly opt=((IXAspect)context.sourceAspect("this:param:operator", IXAspect.class)).getXDA();
+    	String container=opt.getText("/dbxml/name", true);
+    	String indexNamespace= opt.isTrue("/dbxml/index/namespace")
+    	    ? opt.getText("/dbxml/index/namespace", true) : "";
+    	String indexNodeName=opt.getText("/dbxml/index/nodeName", true);
+    	String indexType=opt.getText("/dbxml/index/type", true);
+
+    	XmlContainer c=null;
+    	try
+    	{   c=aManager.openContainer(container);
+        	XmlIndexSpecification is = c.getIndexSpecification();
+        	is.addIndex(indexNamespace, indexNodeName, indexType);
+        	XmlUpdateContext uc = aManager.createUpdateContext();
+        	c.setIndexSpecification(is, uc);
+    	} finally
+    	{   if(c!=null)
+        	{   c.delete();
+        	}
+    	}
+	}
+
 	private IURAspect dbxmlGetIndices(XmlManager aManager, INKFConvenienceHelper context) throws Exception
 	{   IXDAReadOnly opt=((IXAspect)context.sourceAspect("this:param:operator", IXAspect.class)).getXDA();
-        String container=opt.getText("/dbxml/container", true);
+        String container=opt.getText("/dbxml/name", true);
         XmlContainer c=null;
         IURAspect result=null;
 
         try
         {   c=aManager.openContainer(container);
             XmlIndexSpecification is = c.getIndexSpecification();
-
-            int count=0;
+            StringBuffer sb = new StringBuffer("<indices>");
             XmlIndexDeclaration idxDecl=null;
-            while((idxDecl = (is.next())) != null) {
-                System.out.println("For node '" + idxDecl.name + "', found index: '"
-                        + idxDecl.name + "'.");
-            }
 
+            while((idxDecl = (is.next())) != null)
+            {  	sb.append("<index>");
+            	sb.append("<nodeName>");
+            	sb.append(idxDecl.name);
+            	sb.append("</nodeName>");
+            	sb.append("<type>");
+            	sb.append(idxDecl.index);
+            	sb.append("</type></index>");
+            }
+            sb.append("</indices>");
+
+            result=new StringAspect(sb.toString());
         }
         finally
         {   if(c!=null)
@@ -292,5 +340,30 @@ public class DBXMLAccessorImpl extends NKFAccessorImpl
             }
         }
         return result;
+	}
+
+	private void dbxmlDeleteIndex(XmlManager aManager, INKFConvenienceHelper context) throws Exception
+	{
+		IXDAReadOnly opt=((IXAspect)context.sourceAspect("this:param:operator", IXAspect.class)).getXDA();
+    	String container=opt.getText("/dbxml/name", true);
+    	String indexNamespace= opt.isTrue("/dbxml/index/namespace")
+    	    ? opt.getText("/dbxml/index/namespace", true) : "";
+    	String indexNodeName=opt.getText("/dbxml/index/nodeName", true);
+    	String indexType=opt.getText("/dbxml/index/type", true);
+
+    	XmlContainer c=null;
+
+    	try
+    	{   c=aManager.openContainer(container);
+        	XmlIndexSpecification is = c.getIndexSpecification();
+        	is.deleteIndex(indexNamespace, indexNodeName, indexType);
+        	XmlUpdateContext uc = aManager.createUpdateContext();
+        	c.setIndexSpecification(is, uc);
+    	}
+    	finally
+    	{   if(c!=null)
+        	{   c.delete();
+        	}
+    	}
 	}
 }

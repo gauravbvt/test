@@ -144,7 +144,49 @@
     <group>mod_dbxml</group>
     <icon/>
   </entrypoint>
-  
+
+    <entrypoint>
+    <name>doc_ura_dbxmlAddIndex</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlAddIndex.xml</uri>
+    <indexable>
+      <title>dbxmlAddIndex</title>
+      <desc>Add a BDBXML index</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+
+  <entrypoint>
+    <name>doc_ura_dbxmlGetIndices</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlGetIndices.xml</uri>
+    <indexable>
+      <title>dbxmlGetIndices</title>
+      <desc>Get a list of BDBXML indices</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+
+  <entrypoint>
+    <name>doc_ura_dbxmlDeleteIndex</name>
+    <uri>ffcpl:/org/ten60/dbxml/doc/doc_ura_dbxmlDeleteIndex.xml</uri>
+    <indexable>
+      <title>dbxmlDeleteIndex</title>
+      <desc>Delete a BDBXML index</desc>
+      <keywords/>
+    </indexable>
+	<fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>mod_dbxml</group>
+    <icon/>
+  </entrypoint>
+
    <!--Discoverable Documentation Menu-->
 	<entrypoint>
 		<name>urn:org:ten60:mod:dbxml:chapter</name>
@@ -157,7 +199,7 @@
 		<categories>chapter hidden</categories>
 		<group>mod_dbxml</group>
 	</entrypoint>
-	
+
 	<!--Documents-->
 	<entrypoint>
 		<name>doc_mod_dbxml_chapter_head</name>
@@ -170,6 +212,6 @@
 		<categories>doc postInstallInfo</categories>
 		<group>mod_dbxml</group>
 	</entrypoint>
-	
+
  </entrypoints>
 
