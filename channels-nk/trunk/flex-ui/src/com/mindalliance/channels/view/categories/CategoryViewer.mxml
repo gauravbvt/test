@@ -28,13 +28,15 @@
 				var p:Point = listCategories.localToGlobal(new Point(listCategories.x, listCategories.y)) ;
 				var popup:IFlexDisplayObject = PopUpManager.createPopUp(listCategories, CategoryChooser, false) ;
 				var chooser : CategoryChooser = (popup as CategoryChooser);
+				chooser.taxonomy = model.categories.taxonomy;
 				chooser.processSelected=addCategories;
+				chooser.filtered=categories;
 				PopUpManager.centerPopUp(popup) ;
 			}
 			
-			private function addCategories(categories : Array) : void {
+			private function addCategories(categories : ArrayCollection) : void {
 				if (categories.length > 0) {
-                    CairngormHelper.fireEvent(new AddCategoriesToSetEvent(categories, model));
+                    CairngormHelper.fireEvent(new AddCategoriesToSetEvent(categories.source, model));
                     if (change!=null)
                         change();
                 }
@@ -50,7 +52,7 @@
 		]]>
 	</mx:Script>
 
-    <mx:Binding source="UtilFuncs.copyArrayCollection(model.categories.categories)" destination="categories"/>
+    <mx:Binding source="model.categories.categories" destination="categories"/>
 	
 	<mx:states>
 		<mx:State name="EditState">

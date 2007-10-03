@@ -4,10 +4,11 @@
 package com.mindalliance.channels.commands.categories
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
-	import com.mindalliance.channels.business.categories.CategoryDelegate;
-	import com.mindalliance.channels.events.categories.*;
+	import com.mindalliance.channels.business.categories.DisciplineDelegate;
 	import com.mindalliance.channels.commands.BaseDelegateCommand;
+	import com.mindalliance.channels.events.categories.*;
+	
+	import mx.collections.ArrayCollection;
 	
 	public class GetDisciplineListCommand extends BaseDelegateCommand
 	{
@@ -15,12 +16,13 @@ package com.mindalliance.channels.commands.categories
 		override public function execute(event:CairngormEvent):void
 		{
 			var evt:GetDisciplineListEvent = event as GetDisciplineListEvent;
-			var delegate:CategoryDelegate = new CategoryDelegate( this );
+			var delegate:DisciplineDelegate = new DisciplineDelegate( this );
+			delegate.getDisciplineList(evt.taxonomy);
 		}
 		
 		override public function result(data:Object):void
 		{
-			
+			channelsModel.getElementListModel("disciplines" + data["taxonomy"]).data = (data["data"] as ArrayCollection);
 		}
 	}
 }

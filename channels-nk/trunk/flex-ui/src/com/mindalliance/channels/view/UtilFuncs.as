@@ -50,10 +50,15 @@ package com.mindalliance.channels.view
 	    	return arr.join(' ') ;
 	    }
 	    
-	    public static function copyArrayCollection(array : ArrayCollection) : ArrayCollection {
+	    public static function copyArrayCollection(array : ArrayCollection, defaultElement : Object = null) : ArrayCollection {
                 var result : ArrayCollection;
+                if (defaultElement!=null || array != null) {
+                    result = new ArrayCollection();	
+                }
+                if (defaultElement != null) {
+                    result.addItem(defaultElement); 
+                }
                 if (array != null) {    
-                    result = new ArrayCollection;
                     for (var i:uint = 0 ; i< array.length ; i++) {
                        result.addItem(array.getItemAt(i));  
                     }

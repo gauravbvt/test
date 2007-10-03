@@ -68,7 +68,7 @@ package com.mindalliance.channels.model
 			
 		}
 		
-		public function deleteElementModel(id : String) : void {
+		private function deleteElementModel(id : String) : void {
             var model : ElementModel =  getElementModel(id);
             model.data = null;
             elements[id] = null;	
@@ -77,6 +77,7 @@ package com.mindalliance.channels.model
 		public function removeFromCache(ids : ArrayCollection) : void {
             var key : String;
             for each (var id : String in ids) {
+            	// Clean up the element list
                 for (key in elementLists) {
                     if (key.indexOf(id) >= 0 && elementLists[key] != null) {
                         elementLists[key].data = null;
@@ -89,6 +90,11 @@ package com.mindalliance.channels.model
                     	   }
                     	}
                     }
+                }
+                
+                // Clean up the element model
+                if (isCached(id)) {
+                    deleteElementModel(id);	
                 }
             }
 		}

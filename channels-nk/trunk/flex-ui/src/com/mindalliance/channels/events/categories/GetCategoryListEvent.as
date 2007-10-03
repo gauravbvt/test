@@ -8,10 +8,11 @@ package com.mindalliance.channels.events.categories
 	public class GetCategoryListEvent extends CairngormEvent
 	{
 		public static const GetCategoryList_Event:String = "<GetCategoryListEvent>";
-		
-		public function GetCategoryListEvent() 
+		public var taxonomy : String;
+		public function GetCategoryListEvent(taxonomy : String) 
 		{
 			super( GetCategoryList_Event );
+			this.taxonomy = taxonomy;
 		}
 	}
 }

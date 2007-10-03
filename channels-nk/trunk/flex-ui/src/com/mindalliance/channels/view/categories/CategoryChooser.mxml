@@ -1,62 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:search="com.mindalliance.channels.view.search.*"
-	title="{'Choose categories (Taxonomy: ' + currentTaxonomyName + ')'}">
+	title="{'Choose categories (Taxonomy: ' + taxonomy + ')'}"
+    xmlns:common="com.mindalliance.channels.view.common.*"
+    creationComplete="init()">
              
     <mx:Script>
         <![CDATA[
+        	import com.mindalliance.channels.events.common.ChooserSelectEvent;
+        	import com.mindalliance.channels.model.ElementModel;
+        	import com.mindalliance.channels.vo.CategoryVO;
+        	import com.mindalliance.channels.events.categories.GetCategoryEvent;
+        	import com.mindalliance.channels.model.EditorModel;
+        	import mx.events.CollectionEvent;
+        	import com.mindalliance.channels.util.ElementHelper;
+        	import com.mindalliance.channels.view.UtilFuncs;
+        	import com.mindalliance.channels.model.ChannelsModelLocator;
+        	import com.mindalliance.channels.model.ElementListNames;
+        	import com.mindalliance.channels.model.ElementListModel;
+        	import com.mindalliance.channels.vo.common.Taxonomy;
+        	import com.mindalliance.channels.events.categories.GetCategoryListByDisciplineEvent;
+        	import com.mindalliance.channels.vo.common.ElementVO;
+        	import com.mindalliance.channels.events.categories.GetCategoryListEvent;
+        	import com.mindalliance.channels.events.categories.GetDisciplineListEvent;
+        	import com.mindalliance.channels.util.CairngormHelper;
         	import mx.collections.ArrayCollection;
             import mx.managers.PopUpManager;
-			import com.mindalliance.channels.model.categories.CategoryChooserModel;
+			import com.mindalliance.channels.model.ChooserModel;
 			
-			[Bindable]
-			public var model : CategoryChooserModel;
-       
-            [Bindable]
-            public var processSelected : Function;
-       
-            [Bindable]
-            private var currentTaxonomyName:String ;
+			[Bindable] protected var channelsModel : ChannelsModelLocator = ChannelsModelLocator.getInstance();
+            [Bindable] public var model : ChooserModel = channelsModel.getChooserModel();
+            [Bindable] private var editorModel : EditorModel = channelsModel.getEditorModel();
+            [Bindable] private var disciplineModel : ElementListModel;
+            [Bindable] private var categoryModel : ElementListModel;
+            [Bindable] private var disciplines:ArrayCollection ;
+            [Bindable] private var categories:ArrayCollection ;
+            [Bindable] private var categoryKey : String;
+            [Bindable] private var SelectedCategories:ArrayCollection ;
+            [Bindable] public var taxonomy : String;
+            [Bindable] public var processSelected : Function;
+            [Bindable] public var elementModel : ElementModel;
+            [Bindable] public var edited : CategoryVO;
+
+             private var _filtered : ArrayCollection;           
             
             [Bindable]
-            private var Disciplines:ArrayCollection ;
+            public function get filtered() : ArrayCollection {
+                return _filtered;   
+            }
             
-            [Bindable]
-            private var SelectedCategories:ArrayCollection ;
+            public function set filtered (filtered: ArrayCollection) : void {
+                if (_filtered != null) {
+                    _filtered.removeEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);  
+                }
+                _filtered = filtered;
+                
+                _filtered.addEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);
+            }
             
             private function closeChooser():void {
             	PopUpManager.removePopUp(this) ;
+            	categories.removeEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);
+                if (_filtered != null) {
+                    _filtered.removeEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);  
+                }
             }
             
+            private function init() : void {
+                //CairngormHelper.fireEvent(new GetDisciplineListEvent(taxonomy));	
+                CairngormHelper.fireEvent(new GetCategoryListEvent(Taxonomy.DISCIPLINE));
+                CairngormHelper.fireEvent(new GetCategoryListEvent(taxonomy));
+                categoryKey =  ElementListNames.CATEGORY_LIST_KEY + taxonomy;
+                categories.addEventListener(CollectionEvent.COLLECTION_CHANGE, applyFilter);
+            }
+            
+            private function selectDiscipline() : void {
+                	   
+                if (cbDisciplines.selectedItem.id != '<All>') {
+                	
+                    var disciplineId : String  = (cbDisciplines.selectedItem as ElementVO).id;
+                    categoryKey = ElementListNames.CATEGORY_LIST_KEY + taxonomy + disciplineId;
+                    CairngormHelper.fireEvent(new GetCategoryListByDisciplineEvent(taxonomy, disciplineId));
+                	
+                	
+                } else {
+                    categoryKey =  ElementListNames.CATEGORY_LIST_KEY + taxonomy;  
+                    CairngormHelper.fireEvent(new GetCategoryListEvent(taxonomy));
+                }
+            }
+            
+            private function applyFilter(evt : Event = null) : void {
+                 list.refresh();    
+            }
+            
+           public var filter: Function  = function(item : Object) : Boolean {
+                var el : ElementVO = (item as ElementVO);
+                if (filtered != null && ElementHelper.findElementById(el.id, filtered) != null) {
+                    return false;   
+                } else if (searchBox.text != null && searchBox.text.length > 0 && el.name.match(searchBox.text) == null) {
+                    return false;
+                }
+                return true;
+            }
+            
+            private function changeSelection() : void {
+                var el : ElementVO = (categoryList.selectedItem as ElementVO);
+                var id : String = null;
+                if (el != null) {
+                    id = el.id;
+                }
+                CairngormHelper.fireEvent(new GetCategoryEvent(id, editorModel));
+                CairngormHelper.fireEvent(new ChooserSelectEvent(model, categoryList.selectedItems));
+            }
+            
+            private function clickAddToList() : void {
+                if (processSelected != null) {
+                    processSelected(model.selection);
+                    categoryList.selectedIndex = -1;
+                    changeSelection();
+                    applyFilter();
+                }
+            }
         ]]>
     </mx:Script>
     
+    <mx:Binding source="model.getElementListModel(ElementListNames.CATEGORY_LIST_KEY + Taxonomy.DISCIPLINE)" destination="disciplineModel"/>
+    <mx:Binding source="UtilFuncs.copyArrayCollection(disciplineModel.data, new ElementVO('&lt;All&gt;','&lt;All&gt;'))" destination="disciplines"/>
+    <mx:Binding source="model.getElementListModel(categoryKey)" destination="categoryModel"/>
+    <mx:Binding source="categoryModel.data" destination="categories"/>
+    <mx:Binding source="model.getElementModel(editorModel.id)" destination="elementModel"/>
+    <mx:Binding source="elementModel.data as CategoryVO" destination="edited"/>
+    
+    <mx:ArrayCollection id="list" source="{categories.source}" filterFunction="filter"/>
+    
     <mx:VBox>
-		<search:StandardSearchBox width="100%"/>
+		<search:StandardSearchBox id="searchBox" width="100%" change="{applyFilter}"/>
     	<mx:HBox>
 			<mx:VBox height="100%">
 				<mx:HBox>
 					<mx:Label text="Show Categories from" fontWeight="bold"/>
-			        <mx:ComboBox dataProvider="{Disciplines}" editable="false" labelField="name" toolTip="Choose discipline"/>
+			        <common:ElementComboBox id="cbDisciplines" dataProvider="{disciplines}"  change="selectDiscipline()" editable="false" toolTip="Choose discipline"/>
 				</mx:HBox>
-				<mx:Tree id="treeCategories" width="100%" labelField="label" editable="false" height="100%"/>
+				<!--<mx:Tree id="treeCategories" width="100%" labelField="label" editable="false" height="100%"/>-->
+				<mx:List id="categoryList" width="100%" labelField="name" height="100%" dataProvider="{list}" change="changeSelection()"/>
 			</mx:VBox>
 			<mx:HBox width="100%">
 				<mx:VBox height="100%">
 				  		<mx:Label text="Implied Categories" fontWeight="bold"/>
-				  		<mx:List height="100%" width="100%" editable="false"/>
+				  		<mx:List id="impliedList" dataProvider="{edited.implies}" labelField="name" height="100%" width="100%" editable="false"/>
 				   		<mx:Label text="Elements of Information" fontWeight="bold"/>
 				   		<mx:List editable="false" height="100%" width="100%"/>				  		
 				</mx:VBox>
 			</mx:HBox>			
     	</mx:HBox>
     	<mx:HBox>
-    		<mx:Label text="Select categories above and"/><mx:Button label="Add to List" enabled="{SelectedCategories.length > 0}"/>
+    		<mx:Label text="Select categories above and"/><mx:Button label="Add to List" enabled="{categoryList.selectedItems.length > 0}" click="clickAddToList()"/>
     	</mx:HBox>
     </mx:VBox>
 
     <mx:ControlBar horizontalAlign="right">
         <mx:Button label="Close" click="closeChooser()"/>
     </mx:ControlBar>
-    
 </mx:Panel>

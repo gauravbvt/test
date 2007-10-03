@@ -11,10 +11,7 @@ package com.mindalliance.channels.model.categories
             this.taxonomy = taxonomy;
         }
         public var taxonomy : String;
-        
-        public var disciplines : ArrayCollection;
-        
-        
+       
         
 	}
 }

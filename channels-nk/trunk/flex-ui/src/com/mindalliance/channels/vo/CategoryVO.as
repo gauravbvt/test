@@ -8,16 +8,18 @@ package com.mindalliance.channels.vo
 	import com.mindalliance.channels.vo.common.InformationVO;
 	
 	import mx.collections.ArrayCollection;
-
+    [Bindable]
 	public class CategoryVO extends ElementVO implements IValueObject
 	{
 		public function CategoryVO( id : String, 
 								name : String, 
 								description : String,
+								taxonomy : String,
 								disciplines : ArrayCollection,
 								implies : ArrayCollection,
 								information : InformationVO ) {
 			super(id,name,description);
+			this.taxonomy = taxonomy
 			this.disciplines = disciplines;
 			this.implies=implies;
 			this.information = information;
@@ -26,7 +28,7 @@ package com.mindalliance.channels.vo
         private var _disciplines : ArrayCollection;
         private var _implies : ArrayCollection;
         private var _information : InformationVO;
-
+        private var _taxonomy : String;
 		
 		public function get disciplines() : ArrayCollection {
 			return _disciplines;
@@ -50,6 +52,14 @@ package com.mindalliance.channels.vo
 
 		public function set information(information : InformationVO) : void {
 			_information=information;
+		}
+		
+		public function get taxonomy() : String {
+		  return _taxonomy;
+		}
+
+		public function set taxonomy(taxonomy : String) : void {
+		  _taxonomy=taxonomy;
 		}
 		
 	}

@@ -15,6 +15,7 @@ package com.mindalliance.channels.business.categories
 		public function CategoryDelegate(responder:IResponder)
 		{
 			super(responder);
+			typeName="category";
 		}
 		/**
          * parses /channels/schema/category.rng
@@ -23,9 +24,10 @@ package com.mindalliance.channels.business.categories
 			return new CategoryVO(xml.id, 
 			                         xml.name, 
 			                         xml.description,
+			                         xml.@taxonomy,
 			                         XMLHelper.xmlToIdList("categoryId", xml.disciplines),
                                      XMLHelper.xmlToIdList("categoryId", xml.implies),
-                                     XMLHelper.xmlToInformation(xml.information));
+                                     XMLHelper.xmlToInformation(xml.information[0]));
 		}
 		/**
          * generates /channels/schema/category.rng
@@ -42,5 +44,20 @@ package com.mindalliance.channels.business.categories
 			xml.appendChild(XMLHelper.informationToXML(obj.information));
 			return xml;
 		}
+		
+		        
+        public function getCategoryList(taxonomy : String) : void {
+            var request:Array = new Array();
+            request["taxonomy"] = taxonomy;
+            performQuery("categoriesInTaxonomy", request);
+        }
+        
+        public function getCategoryListByDiscipline(taxonomy : String, disciplineId : String) : void {
+            var request:Array = new Array();
+            request["taxonomy"] = taxonomy;
+            request["disciplineId"] = disciplineId;
+            performQuery("categoriesInTaxonomyAndDiscipline", request);
+        }
+
 	}
 }

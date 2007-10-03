@@ -65,7 +65,8 @@ package com.mindalliance.channels.control
 		
 		private function initializeCategories() : void 
 		{
-			this.addCommand(GetCategoryListEvent.GetCategoryList_Event, GetCategoryListCommand);
+            this.addCommand(GetCategoryListEvent.GetCategoryList_Event, GetCategoryListCommand);
+            this.addCommand(GetCategoryListByDisciplineEvent.GetCategoryListByDiscipline_Event, GetCategoryListByDisciplineCommand);
             this.addCommand(GetCategoryEvent.GetCategory_Event, GetCategoryCommand);
             this.addCommand(UpdateCategoryEvent.UpdateCategory_Event, UpdateCategoryCommand);
             this.addCommand(GetDisciplineListEvent.GetDisciplineList_Event, GetDisciplineListCommand);

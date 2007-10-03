@@ -12,12 +12,14 @@ package com.mindalliance.channels.model
 		private var _elementLists : Object;
 		      
         public function getElementModel(id : String) : ElementModel {
+        	if (id == null) return null;
             if (_elements[id] == null) {
                 _elements[id] = new ElementModel();
             }
             return _elements[id];
         }
         public function getElementListModel(key : String) : ElementListModel {
+            if (key == null) return null;
             if (_elementLists[key] == null) {
                 _elementLists[key] = new ElementListModel();
             }
