@@ -42,7 +42,8 @@
         <build-subdir dir="mod-session"/>  
         <build-subdir dir="mod-template"/>
 		<build-subdir dir="flex-ui" build.xml="build.xml"/>
-        <build-subdir dir="mod-channels"/>		
+        <build-subdir dir="mod-channels"/>
+        <build-subdir dir="mod-dbxml"/>
 
 		<fileset id="jars" dir="${dist.dir}">
 			<include name="**/*.jar"/>
@@ -95,7 +96,8 @@
 <!--        <build-subdir dir="mod-model" target="clean"/>-->
         <build-subdir dir="mod-template" target="clean"/>
         <build-subdir dir="flex-ui" target="clean" build.xml="build.xml"/>
-        <build-subdir dir="mod-channels" target="clean" />		        
+        <build-subdir dir="mod-channels" target="clean" />
+        <build-subdir dir="mod-dbxml" target="clean" />		        
     </target>
     
     <target name="prepare-app-deployment">
@@ -103,7 +105,8 @@
         <filter filtersFile="mod-data/build/version.properties"/>        
         <filter filtersFile="mod-session/build/version.properties"/>
         <filter filtersFile="mod-template/build/version.properties"/>
-        <filter filtersFile="mod-channels/build/version.properties"/>        
+        <filter filtersFile="mod-channels/build/version.properties"/>
+        <filter filtersFile="mod-dbxml/build/version.properties"/>        
 
 		<copy todir="mod-control/modules/mod-control/etc" filtering="true" overwrite="true">
 		    <filterset>
