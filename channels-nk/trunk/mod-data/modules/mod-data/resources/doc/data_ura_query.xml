@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <title>channels_query</title>
+  <!--***************Cascading Style Sheets***************-->
+  <csslist>
+    <css>/xlib/styles/css_ten60_lnf.css</css>
+    <css>/xlib/styles/xmlverbatim.css</css>
+  </csslist>
+  <!--***************Links***************-->
+  <links>
+  </links>
+  <!--***************Table of Contents***************-->
+  <toc>
+    <section name="title"/>
+    <section name="definition"/>
+    <section name="purpose"/>
+  </toc>
+  
+  <section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
+    <content>
+      <name>channels_query</name>
+      <text>Accessor to query the opened model</text>
+    </content>
+  </section>
+  
+  <section name="definition"
+    styleuri="/xusr/share/doc/styles_1060/style_definition.xsl">
+    <content>
+      <module>urn:com:mindalliance:channels:data</module>
+      <format>
+        <sub name="format"/>
+      </format>
+      <returns>
+        <b>t</b>
+      </returns>
+      <syntax>
+        <type>
+          <b>channels_query</b>
+        </type>
+        <xquery req="true">an xquery resource</xquery>
+        <aVariableName req="false">the value of the variable hereby named</aVariableName>
+        <target req="false">the list of results as xml</target>
+      </syntax>
+    </content>
+    <includes>
+      <include name="format" type="xml">
+        <instr>
+          <type>channels_query</type>
+          <xquery>
+            xquery:scenariosInProject
+          </xquery>
+          <projectId>
+            data:project1
+          </projectId>
+          <target>this:response</target>
+        </instr>
+      </include>
+    </includes>
+  </section>
+  
+  <section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+    <content>
+      <p> The
+        <code>channels_query</code> accessor applies an xquery on the currently opened model.
+        </p>
+      <p>If successful the response is a list of results as xml, otherwise an exception is
+        thrown.</p>
+      <h3>Queries</h3>
+      <p> Queries are located under /resources/queries </p>
+      <p> A query must not directly name a container but instead use the __MODEL__ string which
+        will be substituted by the name of the model in use. If variables are used and their
+        values are to be provided by the accessor, then they must not be declared. </p>
+      <p>Example query:</p>
+      <sub name="query"/>
+    </content>
+    <includes>
+      <include name="query" type="xml">
+        <list> 
+          { collection('__MODEL__')/project[contains(name,$part)] }
+        </list>
+      </include>
+    </includes>
+  </section>
+</document>

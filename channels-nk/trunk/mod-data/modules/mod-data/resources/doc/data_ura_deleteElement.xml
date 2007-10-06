@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <document>
-	<title>channels_data_deleteElement</title>
+	<title>Delete channels_element</title>
 	<!--***************Cascading Style Sheets***************-->
 	<csslist>
 		<css>/xlib/styles/css_ten60_lnf.css</css>
@@ -19,7 +19,7 @@
 	
 	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
 		<content>
-			<name>channels_data_deleteElement</name>
+			<name>Delete channels_element</name>
 			<text>Accessor to delete an element in the opened model</text>
 		</content>
 	</section>
@@ -45,16 +45,16 @@
         </ids>
 			</returns>
 			<syntax>
-				<type><b>channels_data_deleteElement</b></type>
-				<id req="true">the element's id</id>
+				<type><b>delete</b></type>
+				<uri>active:channels_element+id@id:someID</uri>
 				<target req="false">identifiers of deleted elements</target>
 			</syntax>
 		</content>
 		<includes>
 			<include name="format" type="xml">
 		    <instr>
-		      <type>channels_data_deleteElement</type>
-		      <id>1230980875AD45A6BC</id>
+		      <type>delete</type>
+		      <uri>active:channels_element+id@id:387635DA34</uri>
 		      <target>this:response</target>
 		    </instr>
 			</include>
@@ -64,7 +64,7 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 	    <p>
-				The <code>channels_data_deleteElement</code> accessor removes the element with the given unique id from the currently opened model.
+				The <code>channels_element</code> accessor, when invoked with the DELETE request type, removes the element with the given unique id from the currently opened model.
         Other elements with references to it are either updated with references removed, or they are removed altogether.
         A reference table determines which referring elements are updated and which are deleted. The process is recursive (cascaded deletes).
 			</p>

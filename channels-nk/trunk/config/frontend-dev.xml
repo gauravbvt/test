@@ -115,7 +115,7 @@
 		    <uri>@mod-session-uri@</uri>
 		</import>
 		<import>
-		    <uri>@mod-channels-uri@</uri>
+		    <uri>@mod-rest-uri@</uri>
 		</import>
 	  
 

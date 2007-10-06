@@ -6,7 +6,7 @@
 		<version>0.1.0</version>
     </identity>
 	<info>
-	    <name>Mind-Alliance Data Library Tests</name>
+	    <name>Mind-Alliance Data Module Tests</name>
 	    <description>Tests for mod-data</description>
 	</info>
     <publisher>
@@ -14,10 +14,11 @@
 		<uri>http://www.mindalliance.com</uri>
     </publisher>
     <export>
-		<uri>
-			<match>ffcpl:/test/mod-data-test/.*</match>
-			<match>ffcpl:/(entrypoints.xml)</match>
-		</uri>
+		  <uri>
+        <match>ffcpl:/com/mindalliance/channels/library/.*</match>
+        <match>ffcpl:/test/mod-data-test/.*</match>
+        <match>ffcpl:/(entrypoints.xml)</match>
+      </uri>
     </export>
     <rewrite>
 		<rule>
@@ -35,6 +36,9 @@
 		</this>
 		<import>
 			<uri>urn:com:mindalliance:channels:data</uri>
+		</import>
+		<import>
+			<uri>urn:com:mindalliance:channels:support</uri>
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>

@@ -1,23 +1,15 @@
-utilsURI = "ffcpl:/test/utils.js";
+importPackage(Packages.com.ten60.netkernel.urii.aspect);
+utilsURI = "ffcpl:/com/mindalliance/channels/library/scripts/utils.js";
 context.importLibrary(utilsURI);
 
-importPackage(Packages.org.ten60.netkernel.xml.representation);
-importPackage(Packages.com.ten60.netkernel.urii.aspect);
-importPackage(Packages.org.apache.xmlbeans);
-importPackage(Packages.java.lang);
-
-function makeProperties(obj) {
-	var props = <properties/>;
+function addVariableArguments(req, obj) {
 	for (p in obj) {
-		var prop = <property>
-		             <key>{p}</key>
-		             <value>{obj[p]}</value>
-		           </property>;
-	  props.insertChildAfter(null,prop);
+		log("Adding variable argument " + p, "info");
+		var encoded;
+		encoded = "data:text/plain," + escape(obj[p]);
+		log("Variable has encoded value: " + encoded, "info");
+		req.addArgument(p, encoded);
 	}
-	var variables = <variables/>.insertChildAfter(null,props);
-	// log("Variables: \n" + variables, "info");
-	return variables
 }
 
 reloadModel();
@@ -57,11 +49,10 @@ try {
 		var count = test[2];
 		var xpaths = test[3];
 		// Build an issue request
-		var req = context.createSubRequest("active:channels_data_queryModel");
-		req.addArgument("xquery", "ffcpl:/com/mindalliance/channels/data/queries/" + queryName + ".xq");
+		var req = context.createSubRequest("active:channels_query");
+		req.addArgument("xquery", "xquery:" + queryName);
 		if (variables != null) {
-			var properties = makeProperties(variables); // returns <properties><property><key>...</key><value>...</value></property>...</properties> e4x xml object
-			req.addArgument("variables", new XmlObjectAspect(properties.getXmlObject()));
+			addVariableArguments(req, variables); // add arguments <varName>@data:<url-encoded value>
 		}
 		var res = context.transrept(context.issueSubRequest(req), IAspectXmlObject).getXmlObject();
 		// Verify correct number of results in list
@@ -89,5 +80,4 @@ catch(e) {
 }
 
 // Respond
-var resp = context.createResponseFrom(new BooleanAspect(true));
-context.setResponse(resp);
+respond(new BooleanAspect(true));

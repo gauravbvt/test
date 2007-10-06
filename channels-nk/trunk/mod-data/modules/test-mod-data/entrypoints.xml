@@ -4,7 +4,7 @@
     <name>test-mod-data</name>
     <uri>ffcpl:/test/mod-data-test/xunit</uri>
     <indexable>
-      <title>Mind-Alliance Channels Data Tests</title>
+      <title>Channels Data Access Tests</title>
       <desc>Mind-Alliance Channels Data Module unit-test suite</desc>
       <keywords/>
     </indexable>
@@ -12,4 +12,16 @@
     <group>Mind-Alliance</group>
     <icon/>
   </entrypoint>
+  <entrypoint>
+    <name>icon</name>
+    <uri>ffcpl:/com/mindalliance/channels/library/icon.png</uri>
+    <indexable>
+      <title>Icon</title>
+      <desc></desc>
+      <keywords/>
+    </indexable>
+    <categories>img hidden</categories>
+    <group>channels_data</group>
+    <icon/>
+   </entrypoint>
  </entrypoints>

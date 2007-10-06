@@ -6,22 +6,22 @@
 		</div>
 	</desc>
   <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testOpenModel.idoc</uri>
-    <assert name="Opening container returns true">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+    <uri>active:javascript+operator@ffcpl:/test/crud/testOpenModel.js</uri>
+    <assert name="Opening model returns true">
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/library/scripts/isTrue.js</uri> 
     </assert>
     <assert name="No caching">
       <expired/>
     </assert>
   </test>
   <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testCreateElement.idoc</uri>
-    <assert name="Element created with id and schema attributes">
-      <xpath>self::node()[@schema]/id</xpath>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testGetModel.js</uri>
+    <assert name="Getting model returns xml contents">
+      <xpath>.//id</xpath> 
     </assert>
   </test>
   <test>
-    <uri>active:javascript+operator@ffcpl:/test/crud/testGetElement.js</uri>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testCreateGetElement.js</uri>
     <assert name="Got element with an id">
       <xpath>./id</xpath>
     </assert>
@@ -36,19 +36,13 @@
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testDeleteElement.js</uri>
     <assert name="Deleted element">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/library/scripts/isTrue.js</uri> 
     </assert>
   </test>
   <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testUpdateElement.idoc</uri>
+    <uri>active:javascript+operator@ffcpl:/test/crud/testUpdateElement.js</uri>
     <assert name="Updated element">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
-    </assert>
-  </test>
-  <test>
-    <uri>active:dpml+operand@ffcpl:/test/crud/testQueryModel.idoc</uri>
-    <assert name="Query returned a least one result">
-      <xpath>./*[1]</xpath>
+      <xpath>./name[. = "Updated"]</xpath> 
     </assert>
   </test>
   <test>
@@ -66,15 +60,14 @@
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testAllQueries.js</uri>
     <assert name="All queries succeed">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/library/scripts/isTrue.js</uri> 
     </assert>
   </test>
-  <!-- hangs in NK3.2 - fixed in NK3.3 -->
   <!--
   <test>
     <uri>active:javascript+operator@ffcpl:/test/crud/testAsyncCrud.js</uri>
     <assert name="Async Crud">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/library/scripts/isTrue.js</uri> 
     </assert>
   </test>
     -->

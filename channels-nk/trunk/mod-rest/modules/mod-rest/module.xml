@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Channels Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:rest</uri>
+		<version>0.0.25</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Channels REST Module</name>
+        <description>A module handling REST calls for Channels</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+			<match>ffcpl:/channels/.*</match> <!-- from transport -->
+      <match>active:channels/(element|model|information).*</match>
+      <match>ffcpl:/com/mindalliance/channels/library/.*</match>
+			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/CRONConfig.xml</match>
+		</uri>
+	</export>
+     <rewrite>
+       <rule> <!-- xdoc -->
+         <match>ffcpl:/com/mindalliance/channels/doc/(.*\.xml)</match>
+         <to>doc:/resources/doc/$1</to>
+       </rule>
+     </rewrite> 
+	<mapping>
+    <rewrite>
+      <match>ffcpl:/channels/schema/(.*)</match>
+      <to>schema:$1</to>
+    </rewrite>
+    <rewrite>
+      <match>ffcpl:/channels/(.*.html|.*.swf|.*.js)</match>
+      <to>ffcpl:/resources/$1</to>
+    </rewrite>
+    <rewrite>
+       <match>ffcpl:/channels/assets/(.*)</match>
+       <to>ffcpl:/resources/assets/$1</to>
+    </rewrite>
+		<rewrite>
+			<match>doc:(.*)</match>
+			<to>active:doc-generate+operand@ffcpl:$1</to>
+		</rewrite>
+		<this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+      <match>ffcpl:/resources/.*</match>
+		</this>
+ 		<rewrite>
+			<match>ffcpl:/channels/element(.*)</match>
+			<to>active:channels/element$1</to>			
+		</rewrite>
+		<rewrite>
+			<match>ffcpl:/channels/(acquirement|agent|artifact|category|event|interdiction|know|location|needToKnow|obligation|organization|person|phase|policy|project|repository|role|scenario|sharingNeed|task|user)(.*)</match> // Overload this
+			<to>active:channels/element+type@$1$2</to>			
+		</rewrite>
+		<rewrite>
+			<match>ffcpl:/channels/model(.*)</match> <!-- TODO change to ffcpl:/channels/query -->
+			<to>active:channels/query$1</to>			
+		</rewrite>		
+		<rewrite>
+			<match>ffcpl:/channels/information(.*)</match>
+			<to>active:channels/information$1</to>			
+		</rewrite>	
+		<rewrite>
+			<match>(.*\.idoc)</match>
+			<to>active:dpml+operator@$1</to>
+		</rewrite>
+		<this>
+			<match>ffcpl:/(resources|etc).*</match>
+		</this>
+		<ura>
+			<match>active:channels/(query|element|information).*</match>
+			<class>com.mindalliance.channels.rest.accessors.ChannelsAccessor</class>
+		</ura>
+  	<import>
+			<uri>urn:com:mindalliance:channels:support</uri>
+		</import>
+    <import>
+    	<uri>urn:com:mindalliance:channels:data</uri>
+    </import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:dpml</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

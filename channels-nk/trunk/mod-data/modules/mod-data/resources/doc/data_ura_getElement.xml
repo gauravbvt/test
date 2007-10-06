@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <document>
-	<title>channels_data_getElement</title>
+	<title>Source channels_element</title>
 	<!--***************Cascading Style Sheets***************-->
 	<csslist>
 		<css>/xlib/styles/css_ten60_lnf.css</css>
@@ -19,7 +19,7 @@
 	
 	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
 		<content>
-			<name>channels_data_getElement</name>
+			<name>Source channels_element</name>
 			<text>Accessor to get an element from the opened model</text>
 		</content>
 	</section>
@@ -34,7 +34,7 @@
 				<b>t</b>
 			</returns>
 			<syntax>
-				<type><b>channels_data_getElement</b></type>
+				<type><b>channels_element</b></type>
 				<id req="true">the element's id</id>
         <nameReferenced req="false">anything</nameReferenced>
 				<target req="false">the element as xml</target>
@@ -43,8 +43,8 @@
 		<includes>
 			<include name="format" type="xml">
 		    <instr>
-		      <type>channels_data_getElement</type>
-		      <id>1230980875AD45A6BC</id>
+		      <type>channels_element</type>
+		      <id>id:1230980875AD45A6BC</id>
           <namesListed><b>t</b></namesListed>
 		      <target>this:response</target>
 		    </instr>
@@ -55,7 +55,7 @@
 	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
 		<content>
 	    <p>
-				The <code>channels_data_getElement</code> accessor retrieves the element with the given unique id from the currently opened model,
+				The <code>channels_element</code> accessor retrieves the element with the given unique id from the currently opened model,
         otherwise an exception is thrown.
 			</p>
 			<p>If successful the response is an element as xml such as:</p>

@@ -26,18 +26,19 @@
 	<rewrite>
 		<!--
 		***********
-		Seperate Sessions Path from Base
+		Separate Sessions Path from Base
 		***********
 		-->
 		<rule>
 			<match>(ffcpl:/(template)/(?!login|static/).*)</match>
 			<to>active:gk+uri@$1</to>
 		</rule>
-		<rule>
+		<rule> 
 			<match>.*?(/login/.*?.bsh.*)</match>
 			<to>active:beanshell+operator@ffcpl:/resources$1</to>
 		</rule>
-		<rule>
+    <!--
+		<rule> 
 			<match>(.*(template)/(?!static).*)</match>
 			<to>active:sessionmapper+uri@$e1</to>
 		</rule>
@@ -45,6 +46,7 @@
 			<match>ffcpl:/(template)(/static.*?)(\+.*)</match>
 			<to>ffcpl:/resources$1</to>
 		</rule>
+      -->
 	</rewrite>
 	<mapping>
 		<this>
@@ -75,9 +77,6 @@
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
-		</import>
-		<import>
-			<uri>urn:com:mindalliance:template</uri>
 		</import>
     </mapping>
 </module>

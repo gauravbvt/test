@@ -8,6 +8,7 @@
 		<match>@mod-session-name@</match>
 		<uri>file:@deploy-dir@/@mod-session-name@-@mod-session-version@.jar</uri>
 	</update>
+  <!--
 	<update>
 		<match>@mod-template-name@</match>
 		<uri>file:@deploy-dir@/@mod-template-name@-@mod-template-version@.jar</uri>
@@ -16,9 +17,18 @@
 		<match>@test-mod-template-name@</match>
 		<uri>file:@deploy-dir@/@test-mod-template-name@-@test-mod-template-version@.jar</uri>
 	</update>	
+    -->
 	<update>
-		<match>@mod-channels-name@</match>
-		<uri>file:@deploy-dir@/@mod-channels-name@-@mod-channels-version@.jar</uri>
+		<match>@mod-support-name@</match>
+		<uri>file:@deploy-dir@/@mod-support-name@-@mod-support-version@.jar</uri>
+	</update>	
+	<update>
+		<match>@mod-rest-name@</match>
+		<uri>file:@deploy-dir@/@mod-rest-name@-@mod-rest-version@.jar</uri>
+	</update>	
+	<update>
+		<match>@test-mod-rest-name@</match>
+		<uri>file:@deploy-dir@/@test-mod-rest-name@-@test-mod-rest-version@.jar</uri>
 	</update>	
     <update>
       <match>@mod-data-name@</match>

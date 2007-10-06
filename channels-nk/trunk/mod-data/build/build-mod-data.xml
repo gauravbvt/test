@@ -21,12 +21,15 @@
     <target depends="init" name="compile">
         <javac debug="true" deprecation="true" destdir="${dst}" srcdir="${src}">
             <classpath>
-				<fileset dir="${netkernel.home.dir}">
-					<include name="lib/1060netkernel-*.jar"/>
-					<include name="modules/ext-layer1-*.jar"/>
-					<include name="modules/ext-xml-core-*.jar"/>
-					<include name="modules/ext-kernel-*.jar"/>
-				</fileset>
+				      <fileset dir="${netkernel.home.dir}">
+                <include name="lib/1060netkernel-*.jar"/>
+                <include name="modules/ext-layer1-*.jar"/>
+                <include name="modules/ext-xml-core-*.jar"/>
+                <include name="modules/ext-kernel-*.jar"/>
+              </fileset>
+              <fileset dir="${dist.dir}">
+                <include name="mod-support-*.jar"/>
+              </fileset>
             </classpath>
         </javac>
     </target>
@@ -64,8 +67,8 @@
             </fileset>
             <fileset dir="${dst}">
                 <include name="resources/schemas/*.rng"/>
-                <include name="libs/utils.js"/>
-            	<include name="etc/dbxml_config.xml"/>
+                <include name="etc/dbxml_config.xml"/>
+                <include name="etc/data.properties"/>
             </fileset>
         </delete>
     </target>

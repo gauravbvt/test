@@ -4,9 +4,11 @@ import com.ten60.netkernel.urii.aspect.*;
 
 void main()
 {
-	System.out.println("HELLO");
+	System.out.println("*** VALIDATING SESSION");
 	sessionURI=context.getThisRequest().getArgument("session");
+	System.out.println("sessionURI: " + sessionURI);
 	tokenURI=sessionURI+"+key@ffcpl:/credentials";
+	System.out.println("tokenURI: " + tokenURI);
 	//See if credentials exist...
 	req=context.createSubRequest(tokenURI);
 	req.setRequestType(INKFRequestReadOnly.RQT_EXISTS);
@@ -14,7 +16,7 @@ void main()
 	boolean b=context.issueSubRequestForAspect(req).isTrue();
 	if(b)
 	{	//Validate Credentials
-
+	
 		//Source the credentials from the session.
 		credentials=context.source(tokenURI);
 
@@ -26,6 +28,9 @@ void main()
 
 		//If they're valid return true.
 		b=true;
+	}
+	else {
+		System.out.println("No credentials exist for this session");
 	}
 	resp=context.createResponseFrom(new BooleanAspect(b));
 	resp.setMimeType("text/plain");

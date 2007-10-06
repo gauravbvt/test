@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <document>
-      <title>channels_data_createElement</title>
+      <title>Source channels_element</title>
       <!--***************Cascading Style Sheets***************-->
       <csslist>
         <css>/xlib/styles/css_ten60_lnf.css</css>
@@ -18,7 +18,7 @@
       
       <section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
         <content>
-          <name>channels_data_createElement</name>
+          <name>New channels_element</name>
           <text>Accessor to create an element in the opened model</text>
         </content>
       </section>
@@ -30,24 +30,21 @@
             <sub name="format"/>
           </format>
           <returns>
-            <b>t</b>
+            the created element as XML
           </returns>
           <syntax>
-            <type><b>channels_data_createElement</b></type>
-            <doc req="true">an xml resource with the initial state of the element</doc>
+            <type><b>new</b></type>
+            <uri req="true">active:channels_element+doc@data:elementasURIEncodedXml</uri>
             <target req="false">the created element as xml</target>
           </syntax>
         </content>
         <includes>
           <include name="format" type="xml">
             <instr>
-              <type>channels_data_createElement</type>
-              <doc>
-                <project>
-                  <name>My project</name>
-                </project>
-              </doc>
-              <kind><string>project</string></kind>
+              <type>new</type>
+              <uri>
+                active:channels_element+doc@data:elementasURIEncodedXml
+              </uri>
               <target>this:response</target>
             </instr>
           </include>
@@ -57,7 +54,7 @@
       <section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
         <content>
           <p>
-            The <code>channels_data_createElement</code> accessor puts a new element in the currently opened model.
+            A NEW request type to <code>channels_data_createElement</code> accessor puts a new element in the currently opened model.
             But first it initializes it with a unique id and the uri of the schema by which it is validated.
             Then it validates the new element against its schema before putting it into the DBXML container of the model.
           </p>
@@ -68,8 +65,7 @@
           </p>
           <sub name="initialized"/>
           <p>
-            The <i>name</i> tag is required and will be used to identify the document in the container.  The <i>container</i> tag specifies
-            the identity of the container in the BDXML database into which the document is put.
+            The <i>id</i> tag is required and will be used to identify the document in the container.
           </p>
           <h3>Validation</h3>
           The name of the root element is used to locate the appropriate RelaxNG schema against which to validate

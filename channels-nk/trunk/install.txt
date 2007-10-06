@@ -31,3 +31,4 @@ Updated installation procedure
 8. Reload netkernel from browser (http://localhost:1060/ep+name@control_reload)
 
 9. Re-index entry points from browser (http://localhost:1060/ep+name@app_ext_introspect_reindex_quick)
+

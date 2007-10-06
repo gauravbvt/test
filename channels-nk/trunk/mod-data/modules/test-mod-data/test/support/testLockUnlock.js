@@ -1,10 +1,6 @@
-utilsURI = "ffcpl:/test/utils.js";
-context.importLibrary(utilsURI);
-
-importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
-importPackage(Packages.org.apache.xmlbeans);
-importPackage(Packages.java.lang);
+utilsURI = "ffcpl:/com/mindalliance/channels/library/scripts/utils.js";
+context.importLibrary(utilsURI);
 
 var RUNS = 5;
 
@@ -16,7 +12,7 @@ for (i=1; i< RUNS; i++) {
 }
 
 for (i in operands) {
-	var req = context.createSubRequest("active:channels_data_testAccessor");
+	var req = context.createSubRequest("js:testAccessor");
 	req.addArgument("operand", new StringAspect(operands[i]));
 	requestHandles[i] = context.issueAsyncSubRequest(req);
 }

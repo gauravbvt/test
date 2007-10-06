@@ -29,6 +29,7 @@
       <li>Deleting an element</li>
       <li>Getting an element</li>
       <li>Updating an element</li>
+      <li>Synchroning accesses</li>
     </ul>
 	</p>
   <p>
@@ -41,18 +42,19 @@
 	</p>
 	<h2>Using the Library</h2>
 	<p>
-	A model is a DBXML container configured in /etc/dbxml_config where the container for current model is named. 
+	A model is an XML container configured in /etc/dbxml_config where the container for current model is named. 
 
 	The following set of accessors provide tools for accessing the model.
 	</p>
 	<ul>
-		<li><link name="doc_ura_openModel">channels_data_openModel</link></li>
-		<li><link name="doc_ura_deleteModel">channels_data_deleteModel</link></li>
-		<li><link name="doc_ura_queryModel">channels_data_queryModel</link></li>
-		<li><link name="doc_ura_createElement">channels_data_createElement</link></li>
-		<li><link name="doc_ura_deleteElement">channels_data_deleteElement</link></li>
-		<li><link name="doc_ura_getElement">channels_data_getElement</link></li>
-		<li><link name="doc_ura_updateElement">channels_data_updateElement</link></li>
+		<li><link name="doc_ura_model">channels_model</link></li>
+		<li><link name="doc_ura_createElement">new channels_element</link></li>
+		<li><link name="doc_ura_getElement">source channels_element</link></li>
+		<li><link name="doc_ura_updateElement">sink channels_element</link></li>
+		<li><link name="doc_ura_deleteElement">delete channels_element</link></li>
+		<li><link name="doc_ura_information">channels_information</link></li>
+		<li><link name="doc_ura_query">channels_query</link></li>
+		<li><link name="doc_ura_MREWSynchronizer">channels_MREWSynchronizer</link></li>
 	</ul>
 	</content>
 	<includes/>

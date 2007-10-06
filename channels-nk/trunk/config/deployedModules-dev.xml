@@ -60,5 +60,7 @@
 	<module>modules/forum-services-lite-1.0.0.jar</module>
 	<module>modules/forum-style-2.0.1.jar</module>
 
-	<module>file://@deploy-dir@/@mod-control-name@-@mod-control-version@.jar</module>
+  
+  <module>file://@deploy-dir@/@mod-control-name@-@mod-control-version@.jar</module>
+
 </modules>

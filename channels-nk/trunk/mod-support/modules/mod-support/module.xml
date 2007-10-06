@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Channels Support Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:support</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Channels Support Module</name>
+        <description>Support services and classes</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+    <uri>
+			<match>ffcpl:/com/mindalliance/channels/library/.*</match>
+    </uri>
+		<class>
+      <match>com\.mindalliance\.channels\.nk..*</match>
+    </class>
+	</export>
+	<mapping>
+   <rewrite>
+     <match>ffcpl:/com/mindalliance/channels/library/(.*)</match>
+     <to>ffcpl:/resources/$1</to>
+   </rewrite>
+    <this>
+      <match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/resources/.*</match>
+    </this>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:mod:docxter</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

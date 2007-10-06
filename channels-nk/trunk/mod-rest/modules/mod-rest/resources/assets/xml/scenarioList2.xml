@@ -1,0 +1,10 @@
+<scenarios>
+	<scenario>
+		<id>2.1</id>
+		<name>Headquarters</name>
+	</scenario>
+	<scenario>
+		<id>2.2</id>
+		<name>Hindquarters</name>
+	</scenario>
+</scenarios>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="mod-rest Channels REST tests">
+	<desc>
+		<div>
+		<b>mod-rest</b> REST tests.
+		</div>
+	</desc>
+   <test>
+    <uri>active:javascript+operator@ffcpl:/test/testRESTGetElement.js</uri>
+    <assert name="Got element">
+      <xpath>./id</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testRESTCreateElement.js</uri>
+    <assert name="Created element">
+      <xpath>./id</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testRESTUpdateElement.js</uri>
+    <assert name="Updated element">
+      <xpath>./name[. = "Updated"]</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testRESTDeleteElement.js</uri>
+    <assert name="Deleted elements">
+      <xpath>./deleted</xpath>
+    </assert>
+    <assert name="Updated elements">
+      <xpath>./updated</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testRESTGetInformation.js</uri>
+    <assert name="Information template returned">
+      <xpath>.//topic/eoi/name</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testRESTQueryModel.js</uri>
+    <assert name="Results returned">
+      <xpath>.//event/id</xpath>
+    </assert>
+  </test>
+</testlist>

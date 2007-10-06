@@ -8,13 +8,13 @@
   <test>
     <uri>active:javascript+operator@ffcpl:/test/schemas/validateSchemas.js</uri>
     <assert name="All schemas are well-formed and valid">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/library/scripts/isTrue.js</uri> 
     </assert>
   </test>
   <test>
     <uri>active:javascript+operator@ffcpl:/test/schemas/validateSamples.js</uri>
     <assert name="All samples can be successfully validated">
-      <uri>active:javascript+operator@ffcpl:/test/isTrue.js</uri> 
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/library/scripts/isTrue.js</uri> 
     </assert>
   </test>
 </testlist>

@@ -1,9 +1,5 @@
-importPackage(Packages.org.ten60.netkernel.xml.representation);
 importPackage(Packages.com.ten60.netkernel.urii.aspect);
-importPackage(Packages.java.lang);
-
-
-utilsURI = "ffcpl:/test/utils.js";
+utilsURI = "ffcpl:/com/mindalliance/channels/library/scripts/utils.js";
 context.importLibrary(utilsURI);
 
 var samples = ["acquirement","agent", "artifact","category","event","interdiction","know","location","needToKnow",

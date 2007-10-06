@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <title>channels_model</title>
+  <!--***************Cascading Style Sheets***************-->
+  <csslist>
+    <css>/xlib/styles/css_ten60_lnf.css</css>
+    <css>/xlib/styles/xmlverbatim.css</css>
+  </csslist>
+  <!--***************Links***************-->
+  <links>
+  </links>
+  <!--***************Table of Contents***************-->
+  <toc>
+    <section name="title"/>
+    <section name="definition"/>
+    <section name="purpose"/>
+  </toc>
+  
+  <section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
+    <content>
+      <name>channels_model</name>
+      <text>Accessor that opens, deletes or gets the contents of a model.</text>
+    </content>
+  </section>
+  
+  <section name="definition"
+    styleuri="/xusr/share/doc/styles_1060/style_definition.xsl">
+    <content>
+      <module>urn:com:mindalliance:channels:data</module>
+      <format>
+        <sub name="format"/>
+      </format>
+      <returns>
+        <b>t</b>
+      </returns>
+      <syntax>
+        <type>
+          <b>channels_model</b>
+        </type>
+        <operator req="true">open or delete or get</operator>
+        <init req="false">initial content</init>
+        <target req="false">boolean</target>
+      </syntax>
+    </content>
+		<includes>
+			<include name="format" type="xml">
+					<instr>
+			      <type>channels_model</type>
+            <operator>open</operator>
+            <init>db:initial</init>
+            <target>this:response</target>
+			    </instr>
+			</include>
+		</includes>
+	</section>
+	
+	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+		<content>
+		  <p>
+				The <code>channels_model</code> accessor opens or deletes a model.
+				On opening the XML container is created if needed. 
+       </p>
+      <p>
+        If the container is created and the <code>init</code> parameter is set (to the uri 
+        of an xml document), then the elements, listed as children of some root element, are loaded into the database.
+       </p>
+       <p>
+				The container specification is held in /etc/config_dbxml.xml where the current environment is named which
+				determines the DBXML container to be opened.
+         </p>
+      <p>
+        If the container to be opened needs to first be created, no <code>init</code> parameter was given and if an xml resource exists
+        at db:nameOfContainer (e.g. db:test_dbxml), then the container is initialized with the elements in that resource.
+			</p>
+			<p>
+				Example /etc/config_dbxml.xml file:
+			</p>
+			<sub name="config_dbxml"/>
+			<p>
+        If successful the response is a boolean indicating whether or not a new container had to be created, otherwise an exception is thrown.
+      </p>
+      <p>
+        When deleting a model, the XML container that holds it is destroyed and the boolean value true is returned.
+        If the container was already deleted, the boolean value false is returned.
+      </p>
+      <p>
+        When getting the contents of a model, the xml contents of the container holding the model is returned.
+      </p>
+  		</content>
+		<includes>
+			<include name="config_dbxml" type = "xml">
+				<configs env="test">
+				  <config name="prod">
+				    <dbxml>
+				      <name>channels_dbxml</name>
+				    </dbxml>
+				  </config>
+				  <config name="dev">
+				    <dbxml>
+				      <name>dev_dbxml</name>
+				    </dbxml>
+				  </config>
+				  <config name="test">
+				    <dbxml>
+				      <name>test_dbxml</name>
+				    </dbxml>
+	  			</config>
+				</configs>
+			</include>
+		</includes>
+	</section>
+</document>

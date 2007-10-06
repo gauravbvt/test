@@ -1,0 +1,15 @@
+/* CSS file */
+.FormItemDescription {
+	color: gray;
+	fontStyle: italic ;
+	}
+
+.PrimaryNameFieldEditState {
+	fontWeight: bold ;
+	fontSize: 12 ;
+	}
+
+.URLField {
+	color: blue ;
+	textDecoration: underline ;
+}

@@ -10,6 +10,7 @@ Nerkel debugging in Eclipse
     - 1060netkernel-bootloader-*.*.*.jar (from <nk>/lib)
     - 1060NetKernel-*.*.*.jar (from <nk>/lib)
     - ext-layer1.*.*.*.jar (from <nk>/modules)
+    - ext-xml-core.*.*.*.jar (from <nk>/modules)
     - db.jar and dbxml.jar (from <dbxml>/install/lib)
 
 3. Export them all from the build path of the NetKernel application
