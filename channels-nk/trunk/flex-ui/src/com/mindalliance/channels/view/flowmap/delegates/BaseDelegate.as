@@ -1,10 +1,17 @@
 package com.mindalliance.channels.view.flowmap.delegates
 {
+	import com.mindalliance.channels.view.flowmap.FlowMapError;
+	import com.mindalliance.channels.view.flowmap.FlowMapEvent;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.yworks.graph.model.IGraph;
 	
-	public class BaseDelegate
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
+	public class BaseDelegate extends EventDispatcher
 	{
+		
 		protected var helper:GraphHelper ;
 		
 		protected var graph:IGraph ;
@@ -16,5 +23,10 @@ package com.mindalliance.channels.view.flowmap.delegates
 			this.helper = helperObj ;
 			this.graph = graphObj ;
 		}
+		
+		protected function dispatchFlowMapChanged():void {
+			dispatchEvent(new Event(FlowMapEvent.FLOWMAP_CHANGED.name)) ;
+		}
+
 	}
 }

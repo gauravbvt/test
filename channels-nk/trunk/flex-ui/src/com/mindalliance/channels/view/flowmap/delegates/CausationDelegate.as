@@ -1,4 +1,5 @@
 package com.mindalliance.channels.view.flowmap.delegates {
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.EventNodeData;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.NodeData;
@@ -71,9 +72,10 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			
 			// Add causal edge
 			var edge:IEdge = graph.createEdge(sourcePort, targetPort) ;
-			graph.addLabel(edge, 'causes') ;
+			/* graph.addLabel(edge, 'causes') ; */
 	 	/* 	mapper.edgeTypeMapper.mapValue(edge, EdgeType.EDGE_TYPE_CAUSE) ; */
 			graph.setEdgeStyle(edge, FlowMapStyles.causeEdgeStyle) ;
+			dispatchFlowMapChanged() ;
 		}
 		
 		public function removeCausation(sourceID:String, targetID:String):void {
@@ -103,6 +105,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 					return ;
 				}
 			}
+			dispatchFlowMapChanged() ;
 		}
 	}
 }

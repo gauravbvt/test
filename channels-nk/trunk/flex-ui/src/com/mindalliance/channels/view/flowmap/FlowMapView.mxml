@@ -25,7 +25,7 @@
 				
 				ChannelsModelLocator.getInstance().flowMapModel = new FlowMapModel(_flowmap) ;
 			}
-									
+
 		]]>
 	</mx:Script>
 	

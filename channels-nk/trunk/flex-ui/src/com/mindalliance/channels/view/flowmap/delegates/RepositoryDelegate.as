@@ -1,6 +1,6 @@
 package com.mindalliance.channels.view.flowmap.delegates {
-	import com.mindalliance.channels.view.flowmap.FlowMap;
 	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.NodeData;
@@ -23,12 +23,15 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			super(mapper, helper, graph) ;
 		}
 
-		public function removeRepository(reposID:String):void {
+		public function removeRepository(reposID:String, dispatchEvent:Boolean=true):void {
 			helper.removeNode(reposID) ;
+			if (dispatchEvent)
+				dispatchFlowMapChanged() ;
 		}
 		
 		public function removeRepositoryOwner(reposOwnerID:String):void {
 			helper.removeLabelsByID(reposOwnerID) ;
+			dispatchFlowMapChanged() ;
 		}
 				
 		public function removeAllRepositories():void {
@@ -40,7 +43,9 @@ package com.mindalliance.channels.view.flowmap.delegates {
 					itemsToRemove.addItem(nd.id) ;
 			}
 			for each (var id:String in itemsToRemove)
-				removeRepository(id) ;
+				removeRepository(id, false) ;
+			
+			dispatchFlowMapChanged() ;
 		}
 		
 		public function renameRepository(reposID:String, newText:String):void {
@@ -56,6 +61,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 				FlowMapLayoutHelper.updateNodeBounds(graph, label.owner as INode) ;
 				break ;
 			}
+			dispatchFlowMapChanged() ;
 		}
 		
 		public function renameRepositoryOwner(reposOwnerID:String, newText:String):void {
@@ -67,6 +73,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 					graph.setLabelText(ld.label, newText) ;
 				}
 			}
+			dispatchFlowMapChanged() ;
 		}
 		
 		public function addRepository(phaseID:String, reposID:String, reposLabel:String):void {
@@ -78,8 +85,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			}
 			
 			// Find a place to add the event node
-			var node:INode = helper.addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(),
-												FlowMapStyles.repositoryNodeStyle,
+			var node:INode = helper.addNewNode(FlowMapStyles.repositoryNodeStyle,
 												reposID) ;
 			
 			//Setup mappings
@@ -110,6 +116,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 				else
 					renameRepositoryOwner(reposOwnerID, reposOwnerLabel) ;
 			}
+			dispatchFlowMapChanged() ;
 		}
 		
 		private function addRepositoryOwner(node:INode, reposOwnerID:String, reposOwnerLabel:String):void {
@@ -117,6 +124,8 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			var ld:LabelData = new LabelData(label, reposOwnerID, LabelData.LABEL_TYPE_REPOSITORY_OWNER) ;
 			mapper.labelDataMapper.mapValue(label, ld) ;
 			mapper.idMapper.mapValue(label, reposOwnerID) ;
+			
+			dispatchFlowMapChanged() ;
 		}
 		
 		private function replaceRepositoryOwner(node:INode, newReposOwnerID:String, newReposOwnerLabel:String):void {
@@ -127,6 +136,8 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			ld.label = label ;
 			mapper.idMapper.mapValue(label, newReposOwnerID) ;
 			mapper.labelDataMapper.mapValue(label, ld) ;
+			
+			dispatchFlowMapChanged() ;
 		}
 	}
 }

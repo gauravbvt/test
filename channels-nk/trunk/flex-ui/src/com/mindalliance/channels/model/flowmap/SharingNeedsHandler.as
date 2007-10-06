@@ -1,17 +1,11 @@
 package com.mindalliance.channels.model.flowmap
 {
-	import com.adobe.cairngorm.CairngormError;
-	import com.adobe.cairngorm.CairngormMessageCodes;
-	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.view.flowmap.FlowMap;
 	import com.mindalliance.channels.vo.SharingNeedVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
-	import flash.events.Event;
-	
 	import mx.collections.ArrayCollection;
 	import mx.events.CollectionEvent;
-	import mx.events.CollectionEventKind;
 	
 	public class SharingNeedsHandler extends BaseCollectionChangeHandler
 	{
@@ -38,7 +32,6 @@ package com.mindalliance.channels.model.flowmap
 		protected override function collectionReset(colEvent:CollectionEvent):void {
 			var sharingNeedsAC:ArrayCollection = elementCollection 
 			for each (var sn:SharingNeedVO in sharingNeedsAC) {
-				
 			}
 		}
 		
@@ -53,8 +46,10 @@ package com.mindalliance.channels.model.flowmap
 			}
 		}
 		
-		public function SharingNeedsHandler(flowmap:FlowMap) {
-			super("sharingneeds", flowmap:FlowMap) ;
+		private var flowmap:FlowMap ;
+		public function SharingNeedsHandler(value:FlowMap) {
+			super("sharingneeds") ;
+			flowmap = value ;
 		}
 	}
 }

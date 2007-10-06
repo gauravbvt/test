@@ -30,8 +30,8 @@ package com.mindalliance.channels.view.flowmap.interaction
 			selectElementsAllowed = true ;
 			createBendInputMode.enabled = true ;
 			createEdgeInputMode.enabled = false ;
-			nodeCreator = null ;
 			autoRemoveEmptyLabels = false ;
+			nodeCreator = null ;
 		}
 		
 		[Bindable(event="phaseSelectionChanged")]

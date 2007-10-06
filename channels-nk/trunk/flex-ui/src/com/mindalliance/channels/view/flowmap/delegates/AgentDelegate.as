@@ -1,5 +1,6 @@
 package com.mindalliance.channels.view.flowmap.delegates {
 	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.PortType;
@@ -44,7 +45,6 @@ package com.mindalliance.channels.view.flowmap.delegates {
 		private function addAgent(node:INode, roleID:String, roleLabel:String):void {
 			// UPDATE TO ADD SUPPORT FOR MULTIPLE AGENTS
 			var label:ILabel = helper.addNewNodeLabel(node, roleLabel, FlowMapStyles.roleLabelModelParameter, FlowMapStyles.roleLabelStyle, roleID, LabelData.LABEL_TYPE_ROLE) ;
-			
 			// Adjust node size to fit label
 			FlowMapLayoutHelper.updateNodeBounds(graph, node) ;
 			var rect:IOrientedRectangle = label.layout ;

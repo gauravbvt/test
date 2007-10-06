@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model.flowmap
 {
 	import com.mindalliance.channels.view.flowmap.FlowMap;
-	import com.mindalliance.channels.view.UtilFuncs;
 	
 	public class FlowMapModel
 	{
@@ -13,9 +12,13 @@ package com.mindalliance.channels.model.flowmap
 		
 		private var reposHandler:RepositoriesHandler ;
 		
+		private var agentsHandler:AgentsHandler ;
+		
 		public function FlowMapModel(flowmap:FlowMap) {
 			
 			tasksHandler = new TasksHandler(flowmap) ;
+			
+			agentsHandler = new AgentsHandler(flowmap) ;
 			
 			eventsHandler = new EventsHandler(flowmap) ;
 			

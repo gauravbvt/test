@@ -13,10 +13,6 @@ package com.mindalliance.channels.view.flowmap.data
 	public class GraphDataMapper
 	{
 		
-		public function getNodeDataByID(id:String):NodeData {
-			return nodeDataMapper.lookupValue(id) as NodeData ;
-		}
-				
 		/*
 		 	Keys used to lookup the appropriate mappers from the mapper registry.
 		 */

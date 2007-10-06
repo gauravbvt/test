@@ -1,20 +1,14 @@
 package com.mindalliance.channels.model.flowmap
 {
-	import com.adobe.cairngorm.CairngormError;
-	import com.adobe.cairngorm.CairngormMessageCodes;
-	import com.mindalliance.channels.util.ElementHelper;
+	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.view.flowmap.FlowMap;
 	import com.mindalliance.channels.vo.AgentVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
-	import flash.events.Event;
-	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.events.CollectionEvent;
-	import mx.events.CollectionEventKind;
 	
-	public class AgentModel extends BaseCollectionChangeHandler
+	public class AgentsHandler extends BaseCollectionChangeHandler
 	{
 		protected override function itemsAdded(colEvent:CollectionEvent):void {
             for each (var item:Object in colEvent.items) {
@@ -23,7 +17,7 @@ package com.mindalliance.channels.model.flowmap
 						var avo:AgentVO = elemVO as AgentVO ;
 						if (!avo)
 							return ;
-						FlowMap.setAgent(avo.task.id, avo.role.id, avo.role.name) ;
+						flowmap.agents.setAgent(avo.task.id, avo.role.id, avo.role.name) ;
 					}) ; 
 			}
 		}
@@ -35,7 +29,7 @@ package com.mindalliance.channels.model.flowmap
 						var avo:AgentVO = elemVO as AgentVO ;
 						if (!avo)
 							return ;
-						FlowMap.removeAgent(avo.task.id, avo.role.id) ;
+						flowmap.agents.removeAgent(avo.task.id, avo.role.id) ;
 					}) ; 
 			}
 		}
@@ -43,7 +37,7 @@ package com.mindalliance.channels.model.flowmap
 		protected override function collectionReset(colEvent:CollectionEvent):void {
 			var agentAC:ArrayCollection = elementCollection ;
 			for each (var agent:AgentVO in agentAC) {
-					FlowMap.setAgent(agent.task.id, agent.role.id, agent.role.name) ;
+					flowmap.agents.setAgent(agent.task.id, agent.role.id, agent.role.name) ;
 			}
 		}
 		
@@ -51,8 +45,10 @@ package com.mindalliance.channels.model.flowmap
 			trace('Message for Shashi: Agents collectionChange UPDATE called against all odds!') ;
 		}
 
-		public function AgentsHandler(flowmap:FlowMap) {
-			super("agents", flowmap) ;
+		private var flowmap:FlowMap ;
+		public function AgentsHandler(value:FlowMap) {
+			super("agents") ;
+			flowmap = value ;
 		}
 	}
 }

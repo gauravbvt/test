@@ -9,6 +9,8 @@ package com.mindalliance.channels.view.flowmap
 		
 		public static const PHASE_SELECTION_CHANGED:FlowMapEvent = new FlowMapEvent("phaseSelectionChanged") ;
 		
+		public static const FLOWMAP_CHANGED:FlowMapEvent = new FlowMapEvent("flowmapChanged") ;
+		
 		private var _name:String ;
 		
 		public function FlowMapEvent(name:String) {

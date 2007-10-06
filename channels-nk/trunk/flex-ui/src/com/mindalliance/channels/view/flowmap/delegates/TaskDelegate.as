@@ -1,5 +1,6 @@
 package com.mindalliance.channels.view.flowmap.delegates {
 	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.NodeData;
@@ -24,8 +25,10 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			super(mapper, helper, graph) ;
 		}
 
-		public function removeTask(taskID:String):void {
+		public function removeTask(taskID:String, dispatchEvent:Boolean=true):void {
 			helper.removeNode(taskID) ;
+			if (dispatchEvent)
+				dispatchFlowMapChanged() ;
 		}
 		
 		public function removeAllTasks():void {
@@ -39,7 +42,9 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			}
 	
 			for each (var id:String in itemsToRemove)
-				removeTask(id) ;
+				removeTask(id, false) ;
+			
+			dispatchFlowMapChanged() ;
 		}
 	
 		public function renameTask(taskID:String, text:String):void {
@@ -48,6 +53,8 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			
 			graph.setLabelText(label, text) ;
 			FlowMapLayoutHelper.updateNodeBounds(graph, label.owner as INode) ;
+			
+			dispatchFlowMapChanged() ;
 		}
 	
 	
@@ -62,8 +69,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 			if (tnd) removeTask(taskID) ;
 			
 			// Find out where the node should be placed
-			var node:INode = helper.addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(), 
-												FlowMapStyles.taskNodeStyle, 
+			var node:INode = helper.addNewNode(FlowMapStyles.taskNodeStyle, 
 												taskID) ;
 	
 			// Attach the custom port candidate provider
@@ -94,6 +100,8 @@ package com.mindalliance.channels.view.flowmap.delegates {
 										taskID) ;
 	
 			// _updatePhaseBounds(phaseID) ;
+			
+			dispatchFlowMapChanged() ;
 		}
 	}
 }

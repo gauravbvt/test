@@ -1,5 +1,6 @@
 package com.mindalliance.channels.view.flowmap.delegates {
 	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.PortType;
@@ -26,12 +27,15 @@ package com.mindalliance.channels.view.flowmap.delegates {
 					FlowMapLayoutHelper.updateNodeBounds(graph, label.owner as INode) ;
 				}
 			}
+			
+			dispatchFlowMapChanged() ;
 		}
 		
 		public function removeRole(roleID:String):void {
 			helper.removeLabelsByID(roleID) ;
 			helper.removePorts(roleID, PortType.PORT_TYPE_ROLE_INCOMING) ;
 			// Deal with edges.
+			dispatchFlowMapChanged() ;
 		}
 	}
 }

@@ -1,10 +1,11 @@
-package com.mindalliance.channels.view.flowmap.delegates
+package com.mindalliance.channels.view.flowmap
 {
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.NodeData;
 	import com.mindalliance.channels.view.flowmap.visualelements.DefaultNodeSelectionPaintable;
 	import com.yworks.canvas.geom.IPoint;
+	import com.yworks.canvas.geom.ImmutablePoint;
 	import com.yworks.graph.drawing.ILabelStyle;
 	import com.yworks.graph.drawing.INodeStyle;
 	import com.yworks.graph.model.DefaultNode;
@@ -13,7 +14,6 @@ package com.mindalliance.channels.view.flowmap.delegates
 	import com.yworks.graph.model.ILabelModelParameter;
 	import com.yworks.graph.model.INode;
 	import com.yworks.graph.model.IPort;
-	import com.yworks.support.IMapper;
 	import com.yworks.support.Iterator;
 	
 	public class GraphHelper
@@ -87,7 +87,6 @@ package com.mindalliance.channels.view.flowmap.delegates
 					return port ;
 			}
 			return null ;
-			
 		}
 		
 		public function addNewPort(node:INode, x:Number, y:Number, portType:String, elemID:String):IPort {
@@ -137,11 +136,19 @@ package com.mindalliance.channels.view.flowmap.delegates
 			_graph.removeNode(nd.node) ;
 		}
 		
-		public function addNewNode(location:IPoint, style:INodeStyle, elemID:String):INode {
-			var node:INode = _graph.createNodeAt(location.x, location.y) as INode ;
+		public function addNewNode(style:INodeStyle, elemID:String, location:IPoint=null):INode {
+			var p:IPoint = location ;
+			if (!p)
+				p = new ImmutablePoint(0, 0) ;
+				
+			var node:INode = _graph.createNodeAt(p.x, p.y) as INode ;
+
 			_mapper.idMapper.mapValue(node, elemID) ;
+
 			_graph.setNodeStyle(node, style) ;
+
 			DefaultNodeSelectionPaintable.createAndRegisterFor(node as DefaultNode) ;
+
 			return node ;
 		}
 		

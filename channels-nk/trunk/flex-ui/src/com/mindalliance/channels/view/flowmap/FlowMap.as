@@ -1,69 +1,30 @@
 package com.mindalliance.channels.view.flowmap
 {
-    import com.mindalliance.channels.view.UtilFuncs;
     import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
     import com.mindalliance.channels.view.flowmap.delegates.AgentDelegate;
     import com.mindalliance.channels.view.flowmap.delegates.CausationDelegate;
     import com.mindalliance.channels.view.flowmap.delegates.EventDelegate;
-    import com.mindalliance.channels.view.flowmap.delegates.GraphHelper;
-    import com.mindalliance.channels.view.flowmap.delegates.PhaseDelegate;
     import com.mindalliance.channels.view.flowmap.delegates.RepositoryDelegate;
     import com.mindalliance.channels.view.flowmap.delegates.RoleDelegate;
     import com.mindalliance.channels.view.flowmap.delegates.SharingNeedDelegate;
     import com.mindalliance.channels.view.flowmap.delegates.TaskDelegate;
     import com.mindalliance.channels.view.flowmap.interaction.CustomGraphEditorInputMode;
+    import com.mindalliance.channels.view.flowmap.layout.GridLayout;
     import com.mindalliance.channels.view.flowmap.visualelements.FlowMapStyles;
     import com.mindalliance.channels.view.flowmap.visualelements.Phase;
     import com.mindalliance.channels.view.flowmap.visualelements.PhaseCanvasObjectDescriptor;
-    import com.yworks.canvas.ICanvasObject;
     import com.yworks.canvas.ICanvasObjectDescriptor;
     import com.yworks.canvas.ICanvasObjectGroup;
-    import com.yworks.canvas.drawing.RectangularSelectionPaintable;
-    import com.yworks.canvas.geom.IOrientedRectangle;
-    import com.yworks.canvas.geom.IPoint;
-    import com.yworks.canvas.geom.IRectangle;
-    import com.yworks.canvas.geom.ImmutablePoint;
-    import com.yworks.canvas.input.ClickEvent;
-    import com.yworks.canvas.input.MainInputMode;
-    import com.yworks.canvas.input.MouseHoverInputMode;
-    import com.yworks.canvas.model.DefaultCollectionModel;
-    import com.yworks.canvas.model.IModelItem;
-    import com.yworks.graph.drawing.ILabelStyle;
-    import com.yworks.graph.drawing.INodeStyle;
-    import com.yworks.graph.input.GraphEditorInputMode;
     import com.yworks.graph.model.DefaultGraph;
-    import com.yworks.graph.model.DefaultSelectionModel;
-    import com.yworks.graph.model.ExteriorLabelModel;
-    import com.yworks.graph.model.ExteriorParameter;
     import com.yworks.graph.model.GraphSelection;
-    import com.yworks.graph.model.IEdge;
-    import com.yworks.graph.model.IGraph;
-    import com.yworks.graph.model.ILabel;
-    import com.yworks.graph.model.ILabelCollection;
-    import com.yworks.graph.model.ILabelModelParameter;
-    import com.yworks.graph.model.IMapperRegistry;
-    import com.yworks.graph.model.INode;
-    import com.yworks.graph.model.IPort;
     import com.yworks.graph.model.IPortCandidateProvider;
-    import com.yworks.graph.model.IPortCollection;
-    import com.yworks.graph.model.ISelectionPaintable;
     import com.yworks.graph.model.SelectionEvent;
     import com.yworks.graph.model.SelectionPaintManager;
-    import com.yworks.support.DictionaryMapper;
-    import com.yworks.support.IMapper;
     import com.yworks.support.Iterable;
-    import com.yworks.support.Iterator;
     import com.yworks.ui.GraphCanvasComponent;
-    import com.yworks.util.Util;
     
-    import flash.events.EventDispatcher;
-    import flash.geom.Rectangle;
-    
-    import mx.collections.ArrayCollection;
-    import mx.controls.Alert;
-    import mx.graphics.Stroke;
-    import mx.states.SetStyle;
-    import com.yworks.graph.model.GraphEvent;
+    import flash.events.Event;
+    import flash.geom.Point;
 
 	[Bindable]
     public class FlowMap
@@ -90,6 +51,10 @@ package com.mindalliance.channels.view.flowmap
     	private var _phaseCanvasObjectDescriptor:ICanvasObjectDescriptor ;
     	
     	private var _mapper:GraphDataMapper ;
+    	
+    	private var _helper:GraphHelper ;
+
+    	private var _layout:GridLayout ;
     	
     	public function get dataMapper():GraphDataMapper {
     		return _mapper ;
@@ -157,26 +122,67 @@ package com.mindalliance.channels.view.flowmap
     	public function getEnabled():Boolean {
     		return _graphCanvas.enabled ;
     	}
-    	 
+    	
+    	private var _autoLayout:Boolean = true ;
+    	
+    	public function set autoLayout(value:Boolean):void {
+    		_autoLayout = value ;	
+    	}
+    	
+    	public function get autoLayout():Boolean {
+    		return _autoLayout ;
+    	}
+    	
+    	private function flowmapChanged(event:Event):void {
+    		redraw(true) ;
+    	}
+    	
     	private function initDelegates():void {
-    		var helper:GraphHelper = new GraphHelper(_mapper, _graph) ;
-    		_tasks = new TaskDelegate(_mapper, helper, _graph) ;
-    		_events = new EventDelegate(_mapper, helper, _graph) ;
-    		_causations = new CausationDelegate(_mapper, helper, _graph) ;
-    		_repositories = new RepositoryDelegate(_mapper, helper, _graph) ;
-    		_roles = new RoleDelegate(_mapper, helper, _graph) ;
-    		_agents = new AgentDelegate(_mapper, helper, _graph) ;
-    		_sharingNeeds = new SharingNeedDelegate(_mapper, helper, _graph) ;
+    		var eventName:String = FlowMapEvent.FLOWMAP_CHANGED.name ;
+    		
+    		_tasks = new TaskDelegate(_mapper, _helper, _graph) ;
+    		_tasks.addEventListener(eventName, flowmapChanged) ;
+    		
+    		_events = new EventDelegate(_mapper, _helper, _graph) ;
+    		_events.addEventListener(eventName, flowmapChanged) ;
+    		
+    		_causations = new CausationDelegate(_mapper, _helper, _graph) ;
+    		_causations.addEventListener(eventName, flowmapChanged) ;
+    		
+    		_repositories = new RepositoryDelegate(_mapper, _helper, _graph) ;
+    		_repositories.addEventListener(eventName, flowmapChanged) ;
+    		
+    		_roles = new RoleDelegate(_mapper, _helper, _graph) ;
+    		_roles.addEventListener(eventName, flowmapChanged) ;
+    		
+    		_agents = new AgentDelegate(_mapper, _helper, _graph) ;
+    		_agents.addEventListener(eventName, flowmapChanged) ;
+    		
+    		_sharingNeeds = new SharingNeedDelegate(_mapper, _helper, _graph) ;
+    		_sharingNeeds.addEventListener(eventName, flowmapChanged) ;
     	} 
     	 
     	private function configurePhaseCanvasGroup():void {
 			_phaseCanvasObjectGroup = _graphCanvas.addGroup() ;
 			_phaseCanvasObjectDescriptor = new PhaseCanvasObjectDescriptor() ;
 			_phaseCanvasObjectGroup.descriptor = _phaseCanvasObjectDescriptor ;
-    	} 
+    	}
+    	
+    	private function initLayout():void {
+    		_layout = new GridLayout(_mapper, _graph, _helper, _graphCanvas) ;
+    		_layout.leftMargin = 50 ;
+    		_layout.topMargin = 50 ;
+    		_layout.nodeHorizontalSpacing = 50 ;
+    		_layout.nodeVerticalSpacing = 75 ;
+    	}
+    	
+    	public function get graphCanvas():GraphCanvasComponent {
+    		return _graphCanvas ;
+    	}
     	    	
 		public function set graphCanvas(graphCanvas:GraphCanvasComponent):void {
 			_graphCanvas = graphCanvas ;
+
 			configurePhaseCanvasGroup() ;
 						
 			_graph = new DefaultGraph() ;
@@ -200,6 +206,7 @@ package com.mindalliance.channels.view.flowmap
 			_graph.defaultPortStyle = FlowMapStyles.portStyle ;
 			
 			_mapper = new GraphDataMapper(_graph.mapperRegistry) ;
+    		_helper = new GraphHelper(_mapper, _graph) ;
 			
 			_portCandidateProvider = new LimitedPortCandidateProvider(_mapper) ;
 			
@@ -207,15 +214,21 @@ package com.mindalliance.channels.view.flowmap
 			_defaultPhase.phaseID = "phase0" ;
 			
 			FlowMapLayoutHelper.graphCanvas = _graphCanvas ;
-			_graph.addEventListener(GraphEvent.GRAPH_CHANGED, handleGraphChanged) ;
+			/* _graph.addEventListener(GraphEvent.GRAPH_CHANGED, handleGraphChanged) ; */
+			
+			initLayout() ;
 			
 			initDelegates() ;
 		}
 		
-		private function handleGraphChanged(value:Object):void {
-			_graphCanvas.forceRepaint() ;
+		public function redraw(useAutoLayout:Boolean=false):void {
+			if (useAutoLayout && !_autoLayout)
+				return ;
+			_graphCanvas.viewPoint = new Point(0, 0) ;
+			_layout.layout() ;
+			_graphCanvas.forceRepaint() ;	
 		}
-		
+				
 		public function getIDForItem(item:Object):String {
 			return _mapper.idMapper.lookupValue(item) as String ;
 		}

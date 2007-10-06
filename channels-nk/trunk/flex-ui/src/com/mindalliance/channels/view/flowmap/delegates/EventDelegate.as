@@ -1,20 +1,20 @@
 package com.mindalliance.channels.view.flowmap.delegates {
+	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.EventNodeData;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.NodeData;
+	import com.mindalliance.channels.view.flowmap.data.PortType;
+	import com.mindalliance.channels.view.flowmap.visualelements.FlowMapStyles;
 	import com.yworks.canvas.geom.IRectangle;
 	import com.yworks.graph.model.IGraph;
 	import com.yworks.graph.model.ILabel;
 	import com.yworks.graph.model.INode;
+	import com.yworks.support.DictionaryMapper;
 	import com.yworks.support.Iterator;
 	
 	import mx.collections.ArrayCollection;
-	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
-	import com.mindalliance.channels.view.flowmap.visualelements.FlowMapStyles;
-	import com.mindalliance.channels.view.flowmap.data.PortType;
-	import com.yworks.support.DictionaryMapper;
-	import com.yworks.ui.GraphCanvasComponent;
 	
 	
 	public class EventDelegate extends BaseDelegate {
@@ -62,7 +62,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 				return ;
 			}
 			
-			var node:INode = helper.addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(), FlowMapStyles.eventNodeStyle, eventID) ;
+			var node:INode = helper.addNewNode(FlowMapStyles.eventNodeStyle, eventID) ;
 			
 			//Setup mappings
 			end = new EventNodeData(node, eventID) ;

@@ -17,35 +17,17 @@ package com.mindalliance.channels.view.flowmap.visualelements
 	import com.yworks.graph.drawing.SimplePortStyleRenderer;
 	import com.yworks.graph.model.DefaultArrow;
 	import com.yworks.graph.model.ExteriorLabelModel;
-	import com.yworks.graph.model.ILabelModel;
 	import com.yworks.graph.model.ILabelModelParameter;
 	import com.yworks.graph.model.InteriorLabelModel;
-	import com.yworks.graph.model.RotatingEdgeLabelModel;
 	
-	import flash.display.Bitmap;
-	import flash.display.Loader;
-	import flash.display.Shape;
-	import flash.net.URLRequest;
-	
-	import mx.controls.Alert;
 	import mx.core.UITextFormat;
 	import mx.graphics.IFill;
-	import mx.graphics.IStroke;
 	import mx.graphics.SolidColor;
 	import mx.graphics.Stroke;
 	import mx.managers.ISystemManager;
-	import mx.utils.URLUtil;
-	import com.yworks.util.CloneableBitmap;
-	import com.yworks.graph.drawing.Fills;
 	
 	public class FlowMapStyles
 	{
-		
-		public static const SCENARIO_STAGE_NODE_PADDING_X:Number = 30 ;
-		
-		public static const SCENARIO_STAGE_NODE_PADDING_Y:Number = 100 ;
-		
-		public static const VERTICAL_INTERNODE_GAP:Number = 100 ;
 		
 		public static const TASK_NODE_FILL:IFill = new SolidColor(0xFAF1C3, 0.5) ;
 		
@@ -59,7 +41,7 @@ package com.mindalliance.channels.view.flowmap.visualelements
 		
 		public static const SHARING_NEED_NODE_FILL:IFill = new SolidColor(0xEBF4FA, 0.5) ;
 		
-		public static const SELECTED_NODE_STROKE:Stroke = new Stroke(0xBBD9EE, 1.0) ;
+		public static const SELECTED_NODE_STROKE:Stroke = new Stroke(0xBBD9EE, 2.0) ;
 		
 		private static var _systemManager:ISystemManager ;
 	
@@ -84,7 +66,7 @@ package com.mindalliance.channels.view.flowmap.visualelements
 		public static var sharingNeedNodeStyle:INodeStyle ;
 		public static var roleNodeStyle:INodeStyle ;
 		public static var roleLabelStyle:ILabelStyle ;
-		public static var roleLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north ;
+		public static var roleLabelModelParameter:ILabelModelParameter = InteriorLabelModel.northWest ;
 		public static var sharingNeedAboutLabelStyle:ILabelStyle ;
 		public static var sharingNeedAboutLabelModelParameter:ILabelModelParameter = InteriorLabelModel.north ;
 		public static var sharingNeedWhatLabelStyle:ILabelStyle ;
@@ -94,9 +76,9 @@ package com.mindalliance.channels.view.flowmap.visualelements
 		public static var taskLabelStyle:ILabelStyle ;
 		public static var taskLabelModelParameter:ILabelModelParameter = InteriorLabelModel.center ;
 		public static var repositoryLabelStyle:ILabelStyle ;
-		public static var repositoryLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.south ;
+		public static var repositoryLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north
 		public static var repositoryOwnerLabelStyle:ILabelStyle ;
-		public static var repositoryOwnerLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.north ;
+		public static var repositoryOwnerLabelModelParameter:ILabelModelParameter = ExteriorLabelModel.south ;
 		public static var portStyle:IPortStyle ;
 		public static var hoverPortStyle:IPortStyle ;
 		public static var edgeStyle:IEdgeStyle ;
@@ -106,8 +88,8 @@ package com.mindalliance.channels.view.flowmap.visualelements
 		private static function _initNodeStyles():void {
 			_checkSystemManager() ;
 			taskNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.roundrectangle, TASK_NODE_STROKE, TASK_NODE_FILL) ;
-			eventNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.ELLIPSE, EVENT_NODE_STROKE, EVENT_NODE_FILL) ;
-			sharingNeedNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.octagon, SHARING_NEED_NODE_STROKE, SHARING_NEED_NODE_FILL) ;
+			eventNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.roundrectangle, EVENT_NODE_STROKE, EVENT_NODE_FILL) ;
+			sharingNeedNodeStyle = new ShapeNodeStyle(new ShapeNodeStyleRenderer(), ShapeNodeShape.roundrectangle, SHARING_NEED_NODE_STROKE, SHARING_NEED_NODE_FILL) ;
  			 var imgNodeStyle:ImageNodeStyle = new ImageNodeStyle(null, new ImageNodeStyleRenderer()) ;
  			 imgNodeStyle.url = "assets/images/data.png" ;
  			repositoryNodeStyle = imgNodeStyle.clone() as ImageNodeStyle ;
@@ -130,12 +112,13 @@ package com.mindalliance.channels.view.flowmap.visualelements
 				
 		private static function _initPortStyle():void {
 			var ps:SimplePortStyle = new SimplePortStyle(new SimplePortStyleRenderer()) ;
-			ps.radius = 1.0 ;
+			/* ps.radius = 1.0 ;
 			ps.stroke = new Stroke(0x004100, 1.0) ;
 			portStyle = IPortStyle(ps.clone()) ;
-			ps.radius = 3.0 ;
+			 ps.radius = 3.0 ;
 			ps.stroke.weight = 3.0 ;
-			hoverPortStyle = IPortStyle(ps.clone()) ;
+			hoverPortStyle = IPortStyle(ps.clone()) ; */
+			portStyle = null ;
 		}
 				
 		private static function _initEdgeStyles():void {

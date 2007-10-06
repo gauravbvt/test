@@ -1,5 +1,6 @@
 package com.mindalliance.channels.view.flowmap.delegates {
 	import com.mindalliance.channels.view.flowmap.FlowMapLayoutHelper;
+	import com.mindalliance.channels.view.flowmap.GraphHelper;
 	import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 	import com.mindalliance.channels.view.flowmap.data.LabelData;
 	import com.mindalliance.channels.view.flowmap.data.NodeData;
@@ -27,7 +28,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 		private function ensureSharingNeedSourceExists(sourceID:String, sourceNodeType:String, sourceNodeLabel:String):IPort {
 			var nd:NodeData = mapper.nodeDataMapper.lookupValue(sourceID) as NodeData;
 			if (!nd && (sourceNodeType == NodeData.NODE_TYPE_ROLE)) {
-				var node:INode = helper.addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(), FlowMapStyles.roleNodeStyle, sourceID) ;
+				var node:INode = helper.addNewNode(FlowMapStyles.roleNodeStyle, sourceID) ;
 				nd = new RoleNodeData(node, sourceID) ;
 				mapper.nodeDataMapper.mapValue(sourceID, nd) ;
 				helper.addNewNodeLabel(node, sourceNodeLabel, ExteriorLabelModel.south, FlowMapStyles.roleLabelStyle, sourceID, LabelData.LABEL_TYPE_ROLE) ;
@@ -54,7 +55,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 		private function ensureSharingNeedTargetExists(targetID:String, targetNodeType:String):IPort {
 			var nd:NodeData = mapper.nodeDataMapper.lookupValue(targetID) as NodeData;
 			if (!nd && (targetNodeType == NodeData.NODE_TYPE_ROLE)) {
-				var node:INode = helper.addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(), FlowMapStyles.roleNodeStyle, targetID) ;
+				var node:INode = helper.addNewNode(FlowMapStyles.roleNodeStyle, targetID) ;
 				nd = new RoleNodeData(node, targetID) ;
 				mapper.nodeDataMapper.mapValue(targetID, nd) ;
 			}
@@ -95,8 +96,7 @@ package com.mindalliance.channels.view.flowmap.delegates {
 				return ;
 						
 			// Find a place to add the event node
-			var node:INode = helper.addNewNode(FlowMapLayoutHelper.getLocationForNewNode2(),
-												FlowMapStyles.sharingNeedNodeStyle,
+			var node:INode = helper.addNewNode(FlowMapStyles.sharingNeedNodeStyle,
 												elemID) ;
 			
 			// Attach node data
