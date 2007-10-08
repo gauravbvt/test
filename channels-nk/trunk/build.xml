@@ -98,6 +98,7 @@
 <!--        <build-subdir dir="mod-template" target="clean"/> -->
         <build-subdir dir="flex-ui" target="clean" build.xml="build.xml"/>
         <build-subdir dir="mod-rest" target="clean" />
+        <build-subdir dir="mod-support" target="clean" />
         <build-subdir dir="mod-dbxml" target="clean" />		        
     </target>
     
