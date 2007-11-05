@@ -7,8 +7,8 @@
             import mx.collections.ArrayCollection;
             import mx.core.IFlexDisplayObject;
             import mx.managers.PopUpManager;
-            import com.mindalliance.channels.events.people.*;
-            import com.mindalliance.channels.events.common.*;
+            import com.mindalliance.channels.people.events.*;
+            import com.mindalliance.channels.common.events.*;
             
             import com.mindalliance.channels.model.EditorModel;
             import com.mindalliance.channels.model.ElementModel;

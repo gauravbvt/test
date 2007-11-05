@@ -13,8 +13,8 @@
             import com.mindalliance.channels.vo.common.*;
             import mx.collections.ArrayCollection;
             import mx.managers.PopUpManager;
-            import com.mindalliance.channels.events.sharingneed.*;
-            import com.mindalliance.channels.events.common.*;
+            import com.mindalliance.channels.sharingneed.events.*;
+            import com.mindalliance.channels.common.events.*;
             
             import com.mindalliance.channels.view.common.InputTextDialog;
             import com.mindalliance.channels.model.EditorModel;
@@ -75,7 +75,7 @@
                 subKnowEditor.model = model;	
             }
             public function revert() : void {
-                CairngormHelper.fireEvent(new GetNeedToKnowEvent(edited.id,model));
+                CairngormHelper.fireEvent(new GetElementEvent(edited.id,model));
                     
             }
             

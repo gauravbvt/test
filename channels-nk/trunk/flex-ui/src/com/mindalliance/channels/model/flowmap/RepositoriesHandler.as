@@ -1,30 +1,21 @@
 package com.mindalliance.channels.model.flowmap
 {
-	import com.adobe.cairngorm.CairngormError;
-	import com.adobe.cairngorm.CairngormMessageCodes;
-	import com.mindalliance.channels.events.people.GetOrganizationEvent;
+	import com.mindalliance.channels.common.events.GetElementEvent;
 	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.model.ElementListNames;
-	import com.mindalliance.channels.model.ElementModel;
 	import com.mindalliance.channels.util.CairngormHelper;
-	import com.mindalliance.channels.util.ElementHelper;
 	import com.mindalliance.channels.view.flowmap.FlowMap;
 	import com.mindalliance.channels.vo.RepositoryVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
-	import flash.events.Event;
-	
-	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
 	import mx.events.CollectionEvent;
-	import mx.events.CollectionEventKind;
-	import mx.events.PropertyChangeEvent;
 	
 	public class RepositoriesHandler extends BaseCollectionChangeHandler
 	{
 
 		private function dispatchGetOrganization(elemVO:ElementVO):void {
-			CairngormHelper.fireEvent(new GetOrganizationEvent(elemVO.id, null)) ;
+			CairngormHelper.fireEvent(new GetElementEvent(elemVO.id, null)) ;
 		}
 		
 		private function refreshOwner(elemVO:ElementVO):void {

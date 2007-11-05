@@ -13,7 +13,7 @@
 			import com.mindalliance.channels.vo.TaskVO;
 			import mx.binding.utils.BindingUtils;
 			import com.mindalliance.channels.vo.RoleVO;
-			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.scenario.events.GetTaskEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.application.TaskNodeEditorModel;

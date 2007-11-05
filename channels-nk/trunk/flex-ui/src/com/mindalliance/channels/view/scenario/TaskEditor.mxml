@@ -7,22 +7,17 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.events.scenario.UpdateAcquirementTaskEvent;
-			import com.mindalliance.channels.events.scenario.UpdateArtifactTaskEvent;
-			import com.mindalliance.channels.commands.scenario.UpdateAcquirementTaskCommand;
-			import com.mindalliance.channels.commands.scenario.UpdateArtifactTaskCommand;
-			import com.mindalliance.channels.commands.scenario.UpdateAcquirementCommand;
-			import com.mindalliance.channels.events.scenario.DeleteArtifactEvent;
-			import com.mindalliance.channels.events.scenario.DeleteAcquirementEvent;
+			import com.mindalliance.channels.common.events.DeleteElementEvent;
+			import com.mindalliance.channels.scenario.events.UpdateAcquirementTaskEvent;
+			import com.mindalliance.channels.scenario.events.UpdateArtifactTaskEvent;
 			import flash.net.navigateToURL;
 			import com.mindalliance.channels.view.people.RoleChooser;
 			import com.mindalliance.channels.view.common.Chooser;
-			import com.mindalliance.channels.events.scenario.CreateAgentEvent;
+			import com.mindalliance.channels.scenario.events.CreateAgentEvent;
 			import com.mindalliance.channels.vo.AgentVO;
-			import com.mindalliance.channels.events.scenario.DeleteAgentEvent;
 			import com.mindalliance.channels.model.ElementListModel;
-			import com.mindalliance.channels.events.scenario.UpdateTaskEvent;
-			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.scenario.events.UpdateTaskEvent;
+			import com.mindalliance.channels.scenario.events.GetTaskEvent;
             import com.mindalliance.channels.util.ElementHelper;
             import com.mindalliance.channels.view.UtilFuncs;
             import com.mindalliance.channels.vo.common.DurationVO;
@@ -207,7 +202,7 @@
 			}
 			
             private function deleteAgent() : void {
-                CairngormHelper.fireEvent(new DeleteAgentEvent((listAgents.selectedItem).id,edited.id));
+                CairngormHelper.fireEvent(new DeleteElementEvent((listAgents.selectedItem).id));
             }           
             
             private function addAcquirements() : void {
@@ -226,13 +221,13 @@
             
             private function deleteAcquirements() : void {
                 for each (var el : ElementVO in removeAcquirementList) {
-                    CairngormHelper.fireEvent(new DeleteAcquirementEvent(el.id,edited.id));
+                    CairngormHelper.fireEvent(new DeleteElementEvent(el.id));
                 }
             }           
             
             private function deleteArtifacts() : void {
             	for each (var el : ElementVO in removeArtifactList) {
-                    CairngormHelper.fireEvent(new DeleteArtifactEvent(el.id,edited.id));
+                    CairngormHelper.fireEvent(new DeleteElementEvent(el.id));
                 }
             }
 			

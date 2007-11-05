@@ -1,9 +1,9 @@
 package com.mindalliance.channels.view.scenario
 {
-	import com.mindalliance.channels.events.scenario.CreateEventEvent;
-	import com.mindalliance.channels.events.scenario.DeleteEventEvent;
-	import com.mindalliance.channels.events.scenario.GetEventEvent;
-	import com.mindalliance.channels.events.scenario.GetEventListEvent;
+	import com.mindalliance.channels.common.events.DeleteElementEvent;
+	import com.mindalliance.channels.common.events.GetElementEvent;
+	import com.mindalliance.channels.scenario.events.CreateEventEvent;
+	import com.mindalliance.channels.scenario.events.GetEventListEvent;
 	import com.mindalliance.channels.util.CairngormHelper;
 	import com.mindalliance.channels.view.UtilFuncs;
 	import com.mindalliance.channels.view.common.Chooser;
@@ -24,7 +24,7 @@ package com.mindalliance.channels.view.scenario
         }
         
         override protected function populateElement(id : String) : void {
-            CairngormHelper.fireEvent( new GetEventEvent(id, model.editorModel));
+            CairngormHelper.fireEvent( new GetElementEvent(id, model.editorModel));
         }
         
         override protected function btnAddClicked():void {
@@ -37,7 +37,7 @@ package com.mindalliance.channels.view.scenario
         
         override protected function btnRemoveClicked():void {
          	for each (var item:Object in listElements.selectedItems) {
-        		CairngormHelper.fireEvent(new DeleteEventEvent((item as ElementVO).id)) ;
+        		CairngormHelper.fireEvent(new DeleteElementEvent((item as ElementVO).id)) ;
         	}
         }
 	}

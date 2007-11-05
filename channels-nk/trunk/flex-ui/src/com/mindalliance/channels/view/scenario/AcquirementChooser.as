@@ -1,7 +1,7 @@
 package com.mindalliance.channels.view.scenario
 {
-	import com.mindalliance.channels.events.scenario.GetAcquirementEvent;
-	import com.mindalliance.channels.events.scenario.GetAcquirementListEvent;
+	import com.mindalliance.channels.common.events.GetElementEvent;
+	import com.mindalliance.channels.scenario.events.GetAcquirementListEvent;
 	import com.mindalliance.channels.util.CairngormHelper;
 	import com.mindalliance.channels.view.common.Chooser;
 
@@ -20,7 +20,7 @@ package com.mindalliance.channels.view.scenario
         }
         
         override protected function populateElement(id : String) : void {
-            CairngormHelper.fireEvent( new GetAcquirementEvent(id, model.editorModel));
+            CairngormHelper.fireEvent( new GetElementEvent(id, model.editorModel));
         }
 	}
 }

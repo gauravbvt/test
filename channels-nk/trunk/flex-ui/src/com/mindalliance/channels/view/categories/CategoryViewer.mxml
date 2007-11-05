@@ -5,8 +5,8 @@
 	<mx:Script>
 		<![CDATA[
 			import com.mindalliance.channels.view.UtilFuncs;
-			import com.mindalliance.channels.events.categories.AddCategoriesToSetEvent;
-			import com.mindalliance.channels.events.categories.RemoveCategoriesFromSetEvent;
+			import com.mindalliance.channels.categories.events.AddCategoriesToSetEvent;
+			import com.mindalliance.channels.categories.events.RemoveCategoriesFromSetEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
 			import mx.collections.ArrayCollection;
 			import com.mindalliance.channels.vo.common.CategorySetVO;

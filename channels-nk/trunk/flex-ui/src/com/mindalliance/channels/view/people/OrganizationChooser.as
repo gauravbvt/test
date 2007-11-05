@@ -1,15 +1,13 @@
 package com.mindalliance.channels.view.people
 {
-	import com.mindalliance.channels.events.people.GetOrganizationEvent;
-	import com.mindalliance.channels.events.people.GetOrganizationListEvent;
+	import com.mindalliance.channels.common.events.DeleteElementEvent;
+	import com.mindalliance.channels.common.events.GetElementEvent;
+	import com.mindalliance.channels.people.events.CreateOrganizationEvent;
+	import com.mindalliance.channels.people.events.GetOrganizationListEvent;
 	import com.mindalliance.channels.util.CairngormHelper;
-	import com.mindalliance.channels.view.common.Chooser;
 	import com.mindalliance.channels.view.UtilFuncs;
-	import com.mindalliance.channels.events.people.CreateOrganizationEvent;
+	import com.mindalliance.channels.view.common.Chooser;
 	import com.mindalliance.channels.vo.common.ElementVO;
-	import com.mindalliance.channels.events.people.DeleteOrganizationEvent;
-	import mx.core.ClassFactory;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
 	public class OrganizationChooser extends Chooser
 	{
@@ -27,7 +25,7 @@ package com.mindalliance.channels.view.people
         }
         
         override protected function populateElement(id : String) : void {
-            CairngormHelper.fireEvent( new GetOrganizationEvent(id, model.editorModel));
+            CairngormHelper.fireEvent( new GetElementEvent(id, model.editorModel));
         }
         
         override protected function btnAddClicked():void {
@@ -41,7 +39,7 @@ package com.mindalliance.channels.view.people
         
         override protected function btnRemoveClicked():void {
          	for each (var item:Object in listElements.selectedItems) {
-        		CairngormHelper.fireEvent(new DeleteOrganizationEvent((item as ElementVO).id)) ;
+        		CairngormHelper.fireEvent(new DeleteElementEvent((item as ElementVO).id)) ;
         	}
         	
         }

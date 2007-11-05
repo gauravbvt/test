@@ -1,31 +1,19 @@
 package com.mindalliance.channels.model.application
 {
 	import com.mindalliance.channels.model.BaseChannelsModel;
-	import com.mindalliance.channels.vo.ProjectVO;
-	import com.mindalliance.channels.vo.ScenarioVO;
-	
-	import mx.collections.ArrayCollection;
+	import com.mindalliance.channels.model.ChooserModel;
 	
 	[Bindable]
-	public class ProjectScenarioBrowserModel extends BaseChannelsModel
+	public class ProjectScenarioBrowserModel
 	{
 		
-		public function ProjectScenarioBrowserModel(elements : Object, choosers : Object) {
-			super(elements, choosers);
+		public function ProjectScenarioBrowserModel(projectModel : ChooserModel, scenarioModel : ChooserModel) {
+			this.projectModel = projectModel;
+			this.scenarioModel = scenarioModel;
 			
 		}
 			
-		public var projectList : ArrayCollection;
-		
-		public var selectedProject : ProjectVO;
-		
-		public var shouldUpdateProject : Boolean = false;
-		
-		public var scenarioList : ArrayCollection;
-		
-		public var selectedScenario : ScenarioVO;
-		
-		public var shouldUpdateScenario : Boolean = false;
-
+		public var projectModel : ChooserModel;
+		public var scenarioModel : ChooserModel;
 	}
 }

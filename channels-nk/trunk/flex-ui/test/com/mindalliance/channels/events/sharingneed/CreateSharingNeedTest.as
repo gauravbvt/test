@@ -1,4 +1,4 @@
-package com.mindalliance.channels.events.sharingneed
+package com.mindalliance.channels.sharingneed.events
 {
 	import flexunit.framework.TestCase;
 	

@@ -40,7 +40,7 @@ package com.mindalliance.channels.model
         private var elementLists : Object = new Object();
         
 		// Component Models
-		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel(elements,elementLists);
+		public var projectScenarioBrowserModel : ProjectScenarioBrowserModel = new ProjectScenarioBrowserModel(getChooserModel(),getChooserModel());
 		public var permissionModel : PermissionModel = new PermissionModel();
 		public var flowMapModel : FlowMapModel ;
         public var personalProfileEditorModel : PersonalProfileEditorModel = new PersonalProfileEditorModel(getEditorModel(), getEditorModel());
@@ -97,6 +97,19 @@ package com.mindalliance.channels.model
                     deleteElementModel(id);	
                 }
             }
+		}
+		
+		public function replaceElementInLists(element : ElementVO) : void {
+		  for (var key : String in elementLists) {	
+		      if (elementLists[key] != null) {
+		      	var model : ElementListModel = elementLists[key] as ElementListModel;
+                for each (var el : ElementVO in model.data) {
+                   if (el.id == element.id) {   
+                       model.data[model.data.getItemIndex(el)] = element;
+                   }
+                }
+		      }
+		  }
 		}
 		
 		public function isCached(id : String) : Boolean {

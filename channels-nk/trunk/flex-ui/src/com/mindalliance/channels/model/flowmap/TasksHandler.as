@@ -2,7 +2,7 @@ package com.mindalliance.channels.model.flowmap
 {
 	import com.adobe.cairngorm.CairngormError;
 	import com.adobe.cairngorm.CairngormMessageCodes;
-	import com.mindalliance.channels.events.scenario.GetTaskEvent;
+	import com.mindalliance.channels.scenario.events.GetTaskEvent;
 	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.model.ElementListNames;

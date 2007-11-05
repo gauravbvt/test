@@ -5,8 +5,7 @@
 	creationComplete="init()">
     
 	<mx:Script>
-		<![CDATA[
-			import com.mindalliance.channels.commands.people.GetOrganizationCommand;
+		<![CDATA[ 
 			import mx.collections.ArrayCollection;
 			import com.mindalliance.channels.vo.OrganizationVO;
 			import mx.binding.utils.ChangeWatcher;
@@ -16,8 +15,8 @@
 			import com.mindalliance.channels.model.application.PropertyEditorModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.EditorModel;
-            import com.mindalliance.channels.events.people.*;
-            import com.mindalliance.channels.events.common.*;
+            import com.mindalliance.channels.people.events.*;
+            import com.mindalliance.channels.common.events.*;
             import com.mindalliance.channels.util.CairngormHelper;
 			
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
@@ -42,7 +41,7 @@
 			
 			private function cancelEdit():void {
 				//revert
-                CairngormHelper.fireEvent(new GetOrganizationEvent(model.id,model));
+                CairngormHelper.fireEvent(new GetElementEvent(model.id,model));
 				currentState = '' ;
 			}
 			
@@ -59,7 +58,10 @@
             public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
             
 			private function update() :void {
-				
+				var state : String;
+				if (formitemAddress.comboUSStates.selectedItem != null) {
+				    state = formitemAddress.comboUSStates.selectedItem.abbr;	
+				}
 				CairngormHelper.fireEvent( 
 				                    new UpdateOrganizationEvent(model,
                                                                 txtName.text,
@@ -67,7 +69,7 @@
                                                                 txtAbbrev.text,
                                                                 new AddressVO(formitemAddress.txtStreet.text, 
                                                                             formitemAddress.txtCity.text, 
-                                                                            formitemAddress.comboUSStates.selectedItem.abbr),
+                                                                            state),
                                                                 (comboOrganizations.selectedItem as ElementVO)));   
 			}
 			
@@ -85,7 +87,7 @@
                 populateParentComboBox();
 			}
 			private function idChange(evt : Event) : void {
-                 CairngormHelper.fireEvent( new GetOrganizationEvent(model.id,model));
+                 CairngormHelper.fireEvent( new GetElementEvent(model.id,model));
 			}
 		]]>
 	</mx:Script>

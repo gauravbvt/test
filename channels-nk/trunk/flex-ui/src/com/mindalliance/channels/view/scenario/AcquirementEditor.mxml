@@ -6,14 +6,13 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.mindalliance.channels.events.scenario.UpdateAcquirementEvent;
-			import com.mindalliance.channels.events.scenario.UpdateArtifactEvent;
-			import com.mindalliance.channels.events.scenario.GetAcquirementEvent;
+			import com.mindalliance.channels.scenario.events.UpdateAcquirementEvent;
+			import com.mindalliance.channels.scenario.events.UpdateArtifactEvent;
             import com.mindalliance.channels.vo.common.TopicVO;
             import mx.collections.ArrayCollection;
             import mx.managers.PopUpManager;
-            import com.mindalliance.channels.events.resources.*;
-            import com.mindalliance.channels.events.common.*;
+            import com.mindalliance.channels.resources.events.*;
+            import com.mindalliance.channels.common.events.*;
             
             import com.mindalliance.channels.view.common.InputTextDialog;
             import com.mindalliance.channels.model.EditorModel;
@@ -56,7 +55,7 @@
             
             private function cancelEdit():void {
                 // Revert
-                 CairngormHelper.fireEvent( new GetAcquirementEvent(model.id,model));
+                 CairngormHelper.fireEvent( new GetElementEvent(model.id,model));
                 currentState = '' ;
             }
             

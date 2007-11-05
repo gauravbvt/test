@@ -15,12 +15,12 @@
 	<mx:Script>
 		<![CDATA[
 			import com.yworks.canvas.geom.IRectangle;
-			import com.mindalliance.channels.events.scenario.CreateTaskEvent;
+			import com.mindalliance.channels.scenario.events.CreateTaskEvent;
 			import com.mindalliance.channels.view.UtilFuncs;
 			import mx.managers.PopUpManager;
 			import com.mindalliance.channels.view.resources.RepositoryCreator;
-			import com.mindalliance.channels.events.resources.CreateRepositoryEvent;
-			import com.mindalliance.channels.events.scenario.CreateEventEvent;
+			import com.mindalliance.channels.resources.events.CreateRepositoryEvent;
+			import com.mindalliance.channels.scenario.events.CreateEventEvent;
 			import mx.events.MenuEvent;
 			import mx.controls.MenuBar;
 			import com.mindalliance.channels.view.flowmap.data.TaskNodeData;
@@ -30,16 +30,16 @@
 			import com.mindalliance.channels.view.flowmap.data.GraphDataMapper;
 			import com.mindalliance.channels.view.flowmap.data.NodeData;
 			import mx.controls.Alert;
-			import com.mindalliance.channels.events.scenario.UpdateTaskEvent;
+			import com.mindalliance.channels.scenario.events.UpdateTaskEvent;
 			import com.mindalliance.channels.vo.common.OccurrenceVO;
 			import com.mindalliance.channels.model.ElementModel;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.yworks.graph.model.DefaultNode;
 			import com.yworks.graph.model.DefaultEdge;
 			import com.yworks.graph.model.IEdge;
-			import com.mindalliance.channels.events.resources.DeleteRepositoryEvent;
-			import com.mindalliance.channels.events.scenario.DeleteEventEvent;
-			import com.mindalliance.channels.events.scenario.DeleteTaskEvent;
+			import com.mindalliance.channels.resources.events.DeleteRepositoryEvent;
+			import com.mindalliance.channels.scenario.events.DeleteEventEvent;
+			import com.mindalliance.channels.scenario.events.DeleteTaskEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
 			import com.yworks.graph.model.INode;
 			import com.yworks.support.Iterator;

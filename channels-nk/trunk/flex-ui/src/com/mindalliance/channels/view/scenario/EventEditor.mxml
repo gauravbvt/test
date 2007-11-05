@@ -7,14 +7,14 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.common.events.GetElementEvent;
 			import com.mindalliance.channels.util.ElementHelper;
 			import com.mindalliance.channels.view.UtilFuncs;
 			import com.mindalliance.channels.vo.common.DurationVO;
 			import com.mindalliance.channels.vo.common.CauseVO;
 			import com.mindalliance.channels.vo.common.ElementVO;
 			import com.mindalliance.channels.util.CairngormHelper;
-			import com.mindalliance.channels.events.scenario.GetEventEvent;
-			import com.mindalliance.channels.events.scenario.UpdateEventEvent;
+			import com.mindalliance.channels.scenario.events.UpdateEventEvent;
 			import com.mindalliance.channels.model.ChannelsModelLocator;
 			import com.mindalliance.channels.model.ElementModel;
 			import mx.collections.ArrayCollection;
@@ -65,7 +65,7 @@
             
             private function cancelEdit():void {
                 // Revert
-                CairngormHelper.fireEvent( new GetEventEvent(model.id,model));
+                CairngormHelper.fireEvent( new GetElementEvent(model.id,model));
                 currentState = '' ;
             }
             

@@ -8,7 +8,7 @@
 	xmlns:ui="com.mindalliance.channels.view.*" 
 	xmlns:application="com.mindalliance.channels.view.application.*" 
 	xmlns:geomap="com.mindalliance.channels.view.geomap.*"
-	xmlns:control="com.mindalliance.channels.control.*"
+	xmlns:control="com.mindalliance.channels.application.control.*"
 	xmlns:business="com.mindalliance.channels.business.*"
 	xmlns:common="com.mindalliance.channels.view.common.*"
 	applicationComplete="init()" 
@@ -53,12 +53,12 @@
 					<mx:Box height="{vBoxFlowMap.height}"
 						horizontalScrollPolicy="off"
 						id="vBoxPropertyEditor">
-						<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+						<!--<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off" 
 							horizontalAlign="right" height="{flowMapActions.height}"
 							borderStyle="solid" borderColor="#909090" borderSides="bottom"
 							paddingTop="5" width="100%">
 							<common:PushPinToggleButton id="pushPin"/>
-						</mx:HBox>
+						</mx:HBox>-->
 						<application:PropertyEditor id="propertyEditor" 
 							resizeToContent="true"/>
 					</mx:Box>
@@ -66,10 +66,10 @@
 						borderStyle="solid" borderColor="#909090" borderSides="left" 
 						id="vBoxFlowMap"
 						enabled="{!propertyEditor.isEditing}">
-						<flowmap:FlowMapActions id="flowMapActions" width="100%"
+						<!--<flowmap:FlowMapActions id="flowMapActions" width="100%"
 							borderStyle="solid" borderColor="#909090" borderSides="bottom"
 							paddingTop="5"/>
-						<flowmap:FlowMapView id="flowmapview" width="100%" height="100%"/>
+						<flowmap:FlowMapView id="flowmapview" width="100%" height="100%"/>-->
 					</mx:VBox>
 				</mx:HDividedBox>
 			</mx:AddChild>
@@ -85,22 +85,22 @@
       <![CDATA[
       	import mx.events.ResizeEvent;
       	import mx.binding.utils.BindingUtils;
-      	import com.mindalliance.channels.events.application.LoadGlobalDataEvent;
-      	import com.mindalliance.channels.events.scenario.GetAgentListByScenarioEvent;
+      	import com.mindalliance.channels.application.events.LoadGlobalDataEvent;
+      	import com.mindalliance.channels.scenario.events.GetAgentListByScenarioEvent;
       	import com.mindalliance.channels.view.application.ChannelsMenuBar;
       	import mx.controls.Alert;
       	import mx.binding.utils.ChangeWatcher;
       	import mx.events.StateChangeEvent;
       
-      	import com.mindalliance.channels.events.people.GetPersonByUserEvent;
-      	import com.mindalliance.channels.events.people.GetUserEvent;
-      	import com.mindalliance.channels.events.resources.GetRepositoryListEvent;
-      	import com.mindalliance.channels.events.people.GetPersonListEvent;
+      	import com.mindalliance.channels.people.events.GetPersonByUserEvent;
+      	import com.mindalliance.channels.people.events.GetUserEvent;
+      	import com.mindalliance.channels.resources.events.GetRepositoryListEvent;
+      	import com.mindalliance.channels.people.events.GetPersonListEvent;
       	import com.mindalliance.channels.util.CairngormHelper;
       	import com.mindalliance.channels.model.ChannelsModelLocator;
            
-        import com.mindalliance.channels.events.people.GetRoleListEvent;
-        import com.mindalliance.channels.events.people.GetOrganizationListEvent;
+        import com.mindalliance.channels.people.events.GetRoleListEvent;
+        import com.mindalliance.channels.people.events.GetOrganizationListEvent;
         import com.adobe.cairngorm.control.CairngormEventDispatcher;
         import com.yworks.util.Util;
       
@@ -117,9 +117,9 @@
       	}
       	
       	private function scenarioLoaded():void {
-      		flowmapview.init() ;
-      		flowMapActions.init(flowmapview.flowmap) ;
-			propertyEditor.flowmap = flowmapview.flowmap ;
+      		//flowmapview.init() ;
+      		//flowMapActions.init(flowmapview.flowmap) ;
+			//propertyEditor.flowmap = flowmapview.flowmap ;
 			
 			// Load global data lists
 			CairngormHelper.fireEvent(new LoadGlobalDataEvent());
@@ -128,11 +128,11 @@
       	}
       	
       	private function channelsMenuBarCreationComplete():void {
-      		flowMapActions.requestHandlerRegistration(channelsMenuBar) ;
+      		//flowMapActions.requestHandlerRegistration(channelsMenuBar) ;
       	}
       
         private function init():void {
-			Util.registerLicense( yFilesLicenseXML );
+			//Util.registerLicense( yFilesLicenseXML );
 			this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, handleStateChanged) ;
 			CairngormHelper.fireEvent( new GetUserEvent("user1") );
 			CairngormHelper.fireEvent( new GetPersonByUserEvent("user1") ) ;
@@ -167,6 +167,6 @@
 
     <application:ApplicationToolBar id="applicationToolBar"/>
     
-    <mx:Binding source="pushPin.isPinned" destination="pushPinToggled"/>
+    <!--<mx:Binding source="pushPin.isPinned" destination="pushPinToggled"/>-->
      
 </mx:Application>

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.view.scenario
 {
-	import com.mindalliance.channels.events.scenario.CreateTaskEvent;
-	import com.mindalliance.channels.events.scenario.DeleteTaskEvent;
-	import com.mindalliance.channels.events.scenario.GetTaskEvent;
-	import com.mindalliance.channels.events.scenario.GetTaskListEvent;
+	import com.mindalliance.channels.common.events.DeleteElementEvent;
+	import com.mindalliance.channels.scenario.events.CreateTaskEvent;
+	import com.mindalliance.channels.scenario.events.GetTaskEvent;
+	import com.mindalliance.channels.scenario.events.GetTaskListEvent;
 	import com.mindalliance.channels.util.CairngormHelper;
 	import com.mindalliance.channels.view.UtilFuncs;
 	import com.mindalliance.channels.view.common.Chooser;
@@ -37,7 +37,7 @@ package com.mindalliance.channels.view.scenario
         
         override protected function btnRemoveClicked():void {
          	for each (var item:Object in listElements.selectedItems) {
-        		CairngormHelper.fireEvent(new DeleteTaskEvent((item as ElementVO).id)) ;
+        		CairngormHelper.fireEvent(new DeleteElementEvent((item as ElementVO).id)) ;
         	}
         }        
 	}

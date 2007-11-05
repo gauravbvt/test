@@ -2,7 +2,7 @@ package com.mindalliance.channels.util
 {
     import com.adobe.cairngorm.control.CairngormEvent;
     import com.adobe.cairngorm.control.CairngormEventDispatcher;
-    import com.mindalliance.channels.events.common.*;
+    import com.mindalliance.channels.common.events.*;
     import com.mindalliance.channels.model.EditorModel;
     
 	public class CairngormHelper

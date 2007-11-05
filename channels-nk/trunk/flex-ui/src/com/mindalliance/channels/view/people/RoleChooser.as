@@ -1,9 +1,9 @@
 package com.mindalliance.channels.view.people
 {
-	import com.mindalliance.channels.events.people.CreateRoleEvent;
-	import com.mindalliance.channels.events.people.DeleteRoleEvent;
-	import com.mindalliance.channels.events.people.GetRoleEvent;
-	import com.mindalliance.channels.events.people.GetRoleListEvent;
+	import com.mindalliance.channels.common.events.DeleteElementEvent;
+	import com.mindalliance.channels.common.events.GetElementEvent;
+	import com.mindalliance.channels.people.events.CreateRoleEvent;
+	import com.mindalliance.channels.people.events.GetRoleListEvent;
 	import com.mindalliance.channels.util.CairngormHelper;
 	import com.mindalliance.channels.view.common.Chooser;
 	import com.mindalliance.channels.vo.common.ElementVO;
@@ -25,7 +25,7 @@ package com.mindalliance.channels.view.people
         }
         
         override protected function populateElement(id : String) : void {
-            CairngormHelper.fireEvent( new GetRoleEvent(id, model.editorModel));
+            CairngormHelper.fireEvent( new GetElementEvent(id, model.editorModel));
         }
         
         override protected function btnAddClicked():void {
@@ -38,7 +38,7 @@ package com.mindalliance.channels.view.people
         
         override protected function btnRemoveClicked():void {
          	for each (var item:Object in listElements.selectedItems) {
-        		CairngormHelper.fireEvent(new DeleteRoleEvent((item as ElementVO).id)) ;
+        		CairngormHelper.fireEvent(new DeleteElementEvent((item as ElementVO).id)) ;
         	}
         }        
 	}

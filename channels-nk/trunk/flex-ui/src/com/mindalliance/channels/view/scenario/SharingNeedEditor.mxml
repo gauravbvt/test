@@ -27,7 +27,7 @@
             import com.mindalliance.channels.model.ChannelsModelLocator;
             import com.mindalliance.channels.model.EditorModel;
             import com.mindalliance.channels.util.CairngormHelper;
-            import com.mindalliance.channels.events.sharingneed.CreateSharingNeedEvent;
+            import com.mindalliance.channels.sharingneed.events.CreateSharingNeedEvent;
             import com.mindalliance.channels.vo.common.SourceOrSink;
             import com.mindalliance.channels.vo.common.Knowable;
             

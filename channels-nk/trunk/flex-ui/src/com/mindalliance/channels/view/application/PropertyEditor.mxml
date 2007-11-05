@@ -32,6 +32,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mindalliance.channels.common.events.GetElementEvent;
 			import com.mindalliance.channels.view.flowmap.data.TaskNodeData;
 			import com.mindalliance.channels.view.flowmap.data.EventNodeData;
 			import com.mindalliance.channels.view.flowmap.data.RepositoryNodeData;
@@ -42,10 +43,8 @@
 			import mx.events.PropertyChangeEvent;
 			import mx.binding.utils.BindingUtils;
 			import mx.events.StateChangeEvent;
-			import com.mindalliance.channels.events.resources.GetRepositoryEvent;
-			import com.mindalliance.channels.events.scenario.GetEventEvent;
 			import com.mindalliance.channels.util.CairngormHelper;
-			import com.mindalliance.channels.events.scenario.GetTaskEvent;
+			import com.mindalliance.channels.scenario.events.GetTaskEvent;
 			import com.mindalliance.channels.view.flowmap.FlowMapEvent;
 			import com.yworks.graph.model.SelectionEvent;
 			import com.yworks.graph.model.IEdge;
@@ -100,7 +99,7 @@
 					}
 					else if (nd is EventNodeData) {
 						currentState = 'EventNodeEditorState' ;
-						var getEventEvent:GetEventEvent = new GetEventEvent(EventNodeData(nd).id, eventEditor.model) ;
+						var getEventEvent:GetElementEvent = new GetElementEvent(EventNodeData(nd).id, eventEditor.model) ;
 						CairngormHelper.fireEvent(getEventEvent) ;
 					}
 					else if (nd is RepositoryNodeData) {

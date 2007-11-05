@@ -12,6 +12,6 @@ package com.mindalliance.channels.model
         }
         
         public var selection : ArrayCollection = new ArrayCollection();
-        public var editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+        public var editorModel : EditorModel = new EditorModel(elements, elementLists);
 	}
 }
