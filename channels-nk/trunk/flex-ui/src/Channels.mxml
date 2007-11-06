@@ -3,14 +3,14 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	height="100%"
 	width="100%"
-	xmlns:flowmap="com.mindalliance.channels.view.flowmap.*"
-	xmlns:timeline="com.mindalliance.channels.view.timeline.*" 
+	xmlns:flowmap="com.mindalliance.channels.flowmap.view.*"
+	xmlns:timeline="com.mindalliance.channels.timeline.view.*" 
 	xmlns:ui="com.mindalliance.channels.view.*" 
-	xmlns:application="com.mindalliance.channels.view.application.*" 
-	xmlns:geomap="com.mindalliance.channels.view.geomap.*"
+	xmlns:application="com.mindalliance.channels.application.view.*" 
+	xmlns:geomap="com.mindalliance.channels.geomap.view.*"
 	xmlns:control="com.mindalliance.channels.application.control.*"
 	xmlns:business="com.mindalliance.channels.business.*"
-	xmlns:common="com.mindalliance.channels.view.common.*"
+	xmlns:common="com.mindalliance.channels.common.view.*"
 	applicationComplete="init()" 
 	currentState="{applicationToolBar.currentState}"
 	backgroundGradientColors="[#FFFFFF, #FFFFFF]" paddingRight="5" paddingTop="5" paddingLeft="5" paddingBottom="5"
@@ -87,7 +87,7 @@
       	import mx.binding.utils.BindingUtils;
       	import com.mindalliance.channels.application.events.LoadGlobalDataEvent;
       	import com.mindalliance.channels.scenario.events.GetAgentListByScenarioEvent;
-      	import com.mindalliance.channels.view.application.ChannelsMenuBar;
+      	import com.mindalliance.channels.application.view.ChannelsMenuBar;
       	import mx.controls.Alert;
       	import mx.binding.utils.ChangeWatcher;
       	import mx.events.StateChangeEvent;

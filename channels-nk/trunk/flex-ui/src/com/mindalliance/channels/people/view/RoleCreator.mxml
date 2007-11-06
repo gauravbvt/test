@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+	showCloseButton="true"
+	mouseDownOutside="close()"
+	close="close()"
+	title="Profile New Role"
+	creationComplete="init()" xmlns:common="com.mindalliance.channels.common.view.*">
+
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.vo.common.ElementVO;
+			import com.mindalliance.channels.vo.OrganizationVO;
+			import mx.binding.utils.BindingUtils;
+			import mx.managers.PopUpManager;
+			import com.mindalliance.channels.model.ElementListModel;
+			import com.mindalliance.channels.model.ElementListNames;
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import mx.collections.ArrayCollection ;
+			
+			[Bindable]
+			private var modelLocator:ChannelsModelLocator = ChannelsModelLocator.getInstance() ;
+		
+			[Bindable]
+			private var organizationListModel:ElementListModel ;
+			
+			private function close():void {
+				if (this.isPopUp) {
+					PopUpManager.removePopUp(this) ;
+				}
+			}
+			
+			public var resultHandler:Function ;
+			
+			private function btnOkClicked():void {
+				if (resultHandler == null)
+					return ;
+				var orgID:String ;
+				var selectedLabel:String = cbOrganizations.selectedLabel ;
+				var orgAC:ArrayCollection = organizationListModel.data as ArrayCollection ;
+				if (!orgAC) {
+					close() ;
+				}
+				for (var i:int = 0 ; i < orgAC.length ; i++) {
+					var orgVO:ElementVO = orgAC.getItemAt(i) as ElementVO ;
+					if (!orgVO) 
+						 continue ;
+					if (selectedLabel == orgVO.name) {
+						orgID = orgVO.id ;
+						break ;
+					}
+				}
+				if (orgID != null)
+					callLater(resultHandler, [txtRoleName.text, orgID]) ;
+				close() ;
+			}
+			
+			private function init():void {
+				BindingUtils.bindSetter(setEnabled, txtRoleName, ['text']) ;
+				BindingUtils.bindSetter(setEnabled, cbOrganizations, ['selectedLabel']) ;
+			}
+			
+			private function setEnabled(value:Object):void {
+				btnOK.enabled = (txtRoleName.text.length > 0) && (cbOrganizations.selectedLabel != null) ;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Binding source="(modelLocator.getElementListModel(ElementListNames.ORGANIZATION_LIST_KEY) as ElementListModel)" destination="organizationListModel"/>
+	<mx:Form defaultButton="{btnOK}">
+		<common:HintFieldRequiredFormItem/>
+		<mx:FormItem label="Role Name" required="true">
+			<mx:TextInput id="txtRoleName"/>
+		</mx:FormItem>
+		<mx:FormItem label="Organization" required="true">
+			<mx:ComboBox id="cbOrganizations" dataProvider="{organizationListModel.data}" labelField="name" editable="false"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:ControlBar horizontalAlign="right">
+		<mx:Button label="Ok" click="btnOkClicked()" id="btnOK"/>
+	</mx:ControlBar>
+</mx:TitleWindow>

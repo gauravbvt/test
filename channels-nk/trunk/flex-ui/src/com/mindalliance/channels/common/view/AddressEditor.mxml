@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:FormItem label="Address" direction="vertical"  xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.mindalliance.channels.common.view.*">
+	<mx:Script >
+		<![CDATA[
+			import com.mindalliance.channels.vo.common.AddressVO;
+			
+			[Bindable]
+			public var address : AddressVO;
+			
+			public var change : Function;
+			
+			
+		]]>
+	</mx:Script>
+
+	    <mx:Label text="Street" />
+        <mx:TextInput id="txtStreet" text="{address.street}" change="change()"/>
+        <mx:Label text="City" />
+        <mx:TextInput id="txtCity" text="{address.city}" change="change()"/>
+        <mx:HBox>
+        	<mx:Label text="State"/><common:USStatesComboBox id="comboUSStates" change="change()" selectedValue="{address.state}"/>
+        </mx:HBox>
+</mx:FormItem>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:search="com.mindalliance.channels.search.view.*" 
+	horizontalGap="0" 
+	verticalGap="0"
+	verticalScrollPolicy="off" 
+	horizontalScrollPolicy="off"
+	verticalAlign="bottom" 
+	horizontalAlign="left"
+	creationComplete="init()">
+
+	<mx:Script>
+	
+		<![CDATA[
+			import mx.controls.Label;
+			import mx.binding.utils.BindingUtils;
+			import mx.controls.Button;
+            public var change : Function;
+            public var text : String;
+            
+            [Bindable]
+            private var btnClearSearch:ClearSearchButton ;
+            
+			private function clearSearchText(event:Event):void {
+				txtSearch.text = '' ;
+				changeFunction();
+			}
+			
+			private function changeFunction() : void {
+			     text = txtSearch.text;
+			     if (change != null) {
+			         change();	
+			     }
+			}
+			
+			private function init():void {
+				btnClearSearch = new ClearSearchButton() ;
+				txtSearch.addChild(btnClearSearch) ;
+				btnClearSearch.addEventListener(MouseEvent.CLICK, clearSearchText) ;
+				btnClearSearch.visible = false ;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Binding source="txtSearch.text.length > 0" destination="btnClearSearch.visible"/>
+	<mx:Binding source="txtSearch.width - btnClearSearch.width - 2" destination="btnClearSearch.x"/>
+	<mx:Binding source="(txtSearch.height - btnClearSearch.height)/2" destination="btnClearSearch.y"/>
+
+	<mx:Label text="Search"/>
+	<mx:TextInput id="txtSearch" width="100%" change="changeFunction()"/>
+
+</mx:Box>

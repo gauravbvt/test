@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" xmlns:common="com.mindalliance.channels.common.view.*"
+    implements="com.mindalliance.channels.common.view.IEditor">
+    <mx:Script>
+    	<![CDATA[
+    		import com.mindalliance.channels.vo.CategoryVO;
+    		import com.mindalliance.channels.model.ElementModel;
+    		import com.mindalliance.channels.model.ChannelsModelLocator;
+    		import com.mindalliance.channels.model.EditorModel;
+    		[Bindable]
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]private var elementModel : ElementModel;
+            [Bindable] private var edited : CategoryVO;
+    	]]>
+    </mx:Script>
+    
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as CategoryVO)" destination="edited"/>
+	<mx:VBox height="100%">
+	    <mx:Label text="Implied Categories" fontWeight="bold"/>
+	    <mx:List id="impliedList" dataProvider="{edited.implies}" labelField="name" height="100%" width="100%" editable="false"/>
+	    <mx:Label text="Elements of Information" fontWeight="bold"/>
+	    <mx:List editable="false" height="100%" width="100%"/>                      
+    </mx:VBox>
+</mx:HBox>

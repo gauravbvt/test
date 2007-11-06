@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model.flowmap
 {
 	import com.mindalliance.channels.model.BaseCollectionChangeHandler;
-	import com.mindalliance.channels.view.flowmap.FlowMap;
+	import com.mindalliance.channels.flowmap.view.FlowMap;
 	import com.mindalliance.channels.vo.AgentVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ToolBarButton 
+	xmlns="com.mindalliance.channels.common.view.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	imageSource="assets/images/pushpin{isPinned ? 'down' : 'up'}16x16.png" 
+	click="isPinned = !isPinned">
+
+	<mx:Script>
+		<![CDATA[
+		
+			[Bindable] public var isPinned:Boolean = false ;
+		
+		]]>
+	</mx:Script>
+
+</ToolBarButton>

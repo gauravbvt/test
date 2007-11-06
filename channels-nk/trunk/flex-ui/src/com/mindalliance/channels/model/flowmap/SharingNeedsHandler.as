@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model.flowmap
 {
-	import com.mindalliance.channels.view.flowmap.FlowMap;
+	import com.mindalliance.channels.flowmap.view.FlowMap;
 	import com.mindalliance.channels.vo.SharingNeedVO;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	

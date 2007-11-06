@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    horizontalGap="2"
+    horizontalAlign="left" xmlns:common="com.mindalliance.channels.common.view.*">
+	
+	<common:AddButton id="btnAddItem"/>
+	<common:RemoveButton id="btnRemoveItem"/>
+</mx:HBox>    

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:common="com.mindalliance.channels.common.view.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:view="com.mindalliance.channels.view.*"
+    xmlns:scenario="com.mindalliance.channels.scenario.view.*"
+    xmlns:people="com.mindalliance.channels.people.view.*"
+    xmlns:resources="com.mindalliance.channels.resources.view.*"
+    xmlns:application="com.mindalliance.channels.application.view.*"
+    currentState="NothingSelectedState"
+    horizontalScrollPolicy="off">
+
+	<mx:states>
+		<mx:State name="TaskNodeEditorState">
+			<mx:SetProperty name="selectedIndex" value="1"/>
+		</mx:State>
+		<mx:State name="RepositoryNodeEditorState">
+			<mx:SetProperty name="selectedIndex" value="3"/>
+		</mx:State>
+		<mx:State name="NothingSelectedState">
+			<mx:SetProperty name="selectedIndex" value="0"/>
+		</mx:State>
+		<mx:State name="MultipleItemsSelectedState">
+			<mx:SetProperty name="selectedIndex" value="0"/>
+		</mx:State>
+		<mx:State name="EventNodeEditorState">
+			<mx:SetProperty name="selectedIndex" value="2"/>
+		</mx:State>
+		<mx:State name="SharingNeedEditorState">
+			<mx:SetProperty name="selectedIndex" value="0"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.common.events.GetElementEvent;
+			import com.mindalliance.channels.flowmap.view.data.TaskNodeData;
+			import com.mindalliance.channels.flowmap.view.data.EventNodeData;
+			import com.mindalliance.channels.flowmap.view.data.RepositoryNodeData;
+			import com.mindalliance.channels.flowmap.view.data.NodeData;
+			import com.mindalliance.channels.flowmap.view.data.GraphDataMapper;
+			import com.mindalliance.channels.common.view.IEditor;
+			import mx.events.PropertyChangeEventKind;
+			import mx.events.PropertyChangeEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.events.StateChangeEvent;
+			import com.mindalliance.channels.util.CairngormHelper;
+			import com.mindalliance.channels.scenario.events.GetTaskEvent;
+			import com.mindalliance.channels.flowmap.view.FlowMapEvent;
+			import com.yworks.graph.model.SelectionEvent;
+			import com.yworks.graph.model.IEdge;
+			import com.yworks.graph.model.INode;
+			import com.yworks.support.Iterator;
+			import com.mindalliance.channels.flowmap.view.FlowMap;
+			import com.mindalliance.channels.model.application.PropertyEditorModel;
+
+			[Bindable]
+			private var model : PropertyEditorModel;
+			
+			private var mapper:GraphDataMapper ;
+						
+			[Bindable]			
+			public var isEditing:Boolean ;
+			
+			private var _flowmap:FlowMap ;
+			
+			public function set flowmap(value:FlowMap):void {
+				if (_flowmap) {
+					_flowmap.removeSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+					_flowmap.removeSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				}
+				
+				_flowmap = value ;
+				
+				_flowmap.addSelectionListener(FlowMapEvent.ITEM_SELECTED, itemSelected) ;
+				_flowmap.addSelectionListener(FlowMapEvent.ITEM_DESELECTED, itemDeselected) ;
+				
+				mapper = _flowmap.dataMapper ;
+			}
+			
+			[Bindable]
+			public var stateChanging:Boolean ;
+									
+			private function itemSelected(event:SelectionEvent):void {
+				stateChanging = true ;
+				if (_flowmap.numSelected > 1) {
+					currentState = 'MultipleItemsSelectedState' ;
+					return ;
+				}
+				if (event.item is INode) {
+					var nodeID:String = _flowmap.getIDForItem(event.item) as String ;
+					if (!nodeID)
+						return ;
+					var nd:NodeData = mapper.nodeDataMapper.lookupValue(nodeID) as NodeData ;
+					if (!nd)
+						return ;
+					if (nd is TaskNodeData) {
+						currentState = 'TaskNodeEditorState' ;
+						taskNodeEditor.loadTask(TaskNodeData(nd).id) ;
+					}
+					else if (nd is EventNodeData) {
+						currentState = 'EventNodeEditorState' ;
+						var getEventEvent:GetElementEvent = new GetElementEvent(EventNodeData(nd).id, eventEditor.model) ;
+						CairngormHelper.fireEvent(getEventEvent) ;
+					}
+					else if (nd is RepositoryNodeData) {
+						currentState = 'RepositoryNodeEditorState' ;
+						repositoryNodeEditor.loadRepository(RepositoryNodeData(nd).id);
+					}
+				}
+				stateChanging = false ;
+			}
+		
+			private function itemDeselected(event:SelectionEvent):void {
+				stateChanging = true ;
+				if (_flowmap.numSelected == 0)
+					currentState = 'NothingSelectedState' ;
+				else if (_flowmap.numSelected > 1)
+					currentState = 'MultipleItemsSelectedState' ;
+				stateChanging = false ;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Box horizontalScrollPolicy="off" verticalScrollPolicy="off" id="nothingSelectedPlaceHolder"/>
+
+	<application:TaskNodeEditor id="taskNodeEditor"/>
+
+	<scenario:EventEditor id="eventEditor"/>
+
+	<application:RepositoryNodeEditor id="repositoryNodeEditor"/>
+	
+	<mx:Binding source="taskNodeEditor.editorState == 'EditState' || eventEditor.editorState == 'EditState' || repositoryNodeEditor.editorState == 'EditState'" destination="isEditing"/>
+	
+</mx:ViewStack>

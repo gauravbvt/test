@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:scenario="com.mindalliance.channels.scenario.view.*" 
+    xmlns:common="com.mindalliance.channels.common.view.*"
+    creationComplete="init()">
+    <mx:states>
+        <mx:State name="EditState">
+<!--            <mx:SetProperty target="{formItemPolicy}" name="mouseChildren" value="true"/>
+            <mx:SetProperty target="{formItemPolicy}" name="mouseEnabled" value="true"/>
+            <mx:SetProperty target="{txtPolicyURL}" name="editable" value="true"/>
+            <mx:SetProperty target="{txtPolicyDescription}" name="editable" value="true"/> -->
+        </mx:State>
+    </mx:states>
+
+    <mx:Array id="policyRequirementType">
+        <mx:Object label="obligated"/>
+        <mx:Object label="interdicted"/>
+    </mx:Array>
+    
+    <mx:Script>
+        <![CDATA[
+        	import mx.utils.ObjectUtil;
+        	import mx.logging.Log;
+        	import mx.logging.ILogger;
+            import com.mindalliance.channels.model.ElementModel;
+            import com.mindalliance.channels.vo.SharingNeedVO;
+            import com.mindalliance.channels.model.ChannelsModelLocator;
+            import com.mindalliance.channels.model.EditorModel;
+            import com.mindalliance.channels.util.CairngormHelper;
+            import com.mindalliance.channels.sharingneed.events.CreateSharingNeedEvent;
+            import com.mindalliance.channels.vo.common.SourceOrSink;
+            import com.mindalliance.channels.vo.common.Knowable;
+            
+            [Bindable]
+            public function get model() : EditorModel 
+            {
+                return _editorModel;
+            }
+            
+            public function set model(model : EditorModel) : void 
+            {
+                this._editorModel = model;
+            }
+            public var _editorModel : EditorModel = ChannelsModelLocator.getInstance().getEditorModel();
+            
+            [Bindable]
+            private var elementModel : ElementModel;
+            
+            [Bindable] 
+            private var edited : SharingNeedVO;
+            
+            
+            private function switchToEditState():void {
+                currentState = 'EditState' ;
+            }
+            
+            private function confirmEdit():void {
+                update();
+                currentState = '' ;
+                
+            }
+            
+            private function cancelEdit():void {
+                sourceKnowingEditor.revert();
+                targetKnowingEditor.revert();
+                currentState = '' ;
+            }
+            
+            private function update() : void {
+                sourceKnowingEditor.update();
+                targetKnowingEditor.update();
+ 
+            }
+
+            private function init() : void {
+                model.id="sharingNeed1";
+            }
+
+        ]]>
+    </mx:Script>
+    <mx:Binding source="model.getElementModel(model.id)" destination="elementModel"/>
+    <mx:Binding source="(elementModel.data as SharingNeedVO)" destination="edited"/>   
+    <mx:Binding source="edited.knowId" destination="sourceKnowingEditor.model.id"/>
+    <mx:Binding source="edited.needToKnowId" destination="targetKnowingEditor.model.id"/>
+    
+    <mx:Form>
+        <common:ViewEditStateChangeFormItem id="viewEditStateChangeFormItem"
+
+        btnEditClickHandler="{switchToEditState}" cancelEditHandler="{cancelEdit}" confirmEditHandler="{confirmEdit}" 
+        width="100%" currentState="{currentState}"/>
+<!--                                                POLICIES NOT USED FOR NOW
+                
+            <mx:FormItem id="formItemPolicy" label="Policy requirement" resizeEffect="Resize" mouseChildren="false" mouseEnabled="false">
+            <mx:VBox>
+                <mx:RadioButtonGroup id="rbgPolicyRequirement"/>
+                <mx:RadioButton id="rbPolicyNone" groupName="rbgPolicyRequirement" label="This sharing need is not associated with a policy."
+                    includeInLayout="{(currentState == 'EditState') || (rbPolicyNone.selected)}" visible="{rbPolicyNone.includeInLayout}"
+                    fontWeight="{rbPolicyNone.selected ? 'bold' : 'normal'}"
+                    selected="true"/>
+                <mx:RadioButton id="rbPolicyObligate" groupName="rbgPolicyRequirement" label="This sharing need is obligated by a policy."
+                    includeInLayout="{(currentState == 'EditState') || (rbPolicyObligate.selected)}" visible="{rbPolicyObligate.includeInLayout}"
+                    fontWeight="{rbPolicyObligate.selected ? 'bold' : 'normal'}"/>
+                <mx:RadioButton id="rbPolicyInterdict" groupName="rbgPolicyRequirement" label="This sharing need is interdicted by a policy."
+                    includeInLayout="{(currentState == 'EditState') || (rbPolicyInterdict.selected)}" 
+                    visible="{rbPolicyInterdict.includeInLayout}"
+                    fontWeight="{rbPolicyInterdict.selected ? 'bold' : 'normal'}"/>
+            </mx:VBox>
+        </mx:FormItem>
+        <mx:FormItem id="formItemPolicyURL"
+                visible="false" 
+                includeInLayout="{!rbPolicyNone.selected}"
+                label="Policy URL">
+            <mx:TextInput width="100%" id="txtPolicyURL" 
+                editable="false" styleName="URLField" 
+                useHandCursor="{(currentState == '') &amp;&amp; (txtPolicyURL.text.length > 0)}"
+                click="if (currentState == '') navigateToURL(new URLRequest(txtPolicyURL.text))"/>          
+        </mx:FormItem>
+        <mx:FormItem id="formItemPolicyDescription"
+                visible="false" 
+                includeInLayout="{!rbPolicyNone.selected}"
+                label="Policy Description">
+            <mx:TextArea width="100%" id="txtPolicyDescription" editable="false"/>
+        </mx:FormItem> 
+-->
+    </mx:Form>
+    <mx:HBox width="100%" horizontalAlign="center" visible="false">
+        <mx:HRule width="50%"/>
+    </mx:HBox>
+    <mx:Label text="Source" fontWeight="bold"/>
+    <scenario:KnowingEditor id="sourceKnowingEditor" currentState="{currentState}"/>
+    <mx:HBox width="100%" horizontalAlign="center">
+        <mx:HRule width="50%"/>
+    </mx:HBox>
+    <mx:Label text="Target" fontWeight="bold"/>
+    <scenario:NeedToKnowEditor id="targetKnowingEditor" currentState="{currentState}"/>
+</mx:VBox>

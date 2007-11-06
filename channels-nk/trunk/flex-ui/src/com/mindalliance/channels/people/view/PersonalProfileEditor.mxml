@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:people="com.mindalliance.channels.people.view.*"
+	creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mindalliance.channels.model.ChannelsModelLocator;
+			import com.mindalliance.channels.model.people.PersonalProfileEditorModel;
+
+			[Bindable]
+			private var model : PersonalProfileEditorModel = ChannelsModelLocator.getInstance().personalProfileEditorModel;
+            private function init(): void {
+                personEditor.model = model.personEditorModel;
+                userEditor.model = model.userEditorModel;
+            }
+            
+			
+		]]>
+	</mx:Script>
+	
+	<people:PersonEditor  id="personEditor"/>
+	<mx:VBox>
+		<mx:Spacer height="21"/>
+		<people:UserEditor id="userEditor"/>
+	</mx:VBox>
+</mx:HBox>

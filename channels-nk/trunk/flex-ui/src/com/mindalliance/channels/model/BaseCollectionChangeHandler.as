@@ -2,7 +2,7 @@ package com.mindalliance.channels.model
 {
 	import com.mindalliance.channels.model.ChannelsModelLocator;
 	import com.mindalliance.channels.util.ElementHelper;
-	import com.mindalliance.channels.view.flowmap.FlowMap;
+	import com.mindalliance.channels.flowmap.view.FlowMap;
 	import com.mindalliance.channels.vo.common.ElementVO;
 	
 	import flash.events.Event;
