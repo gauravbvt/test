@@ -141,7 +141,7 @@ public class Model {
     public DeletionRecord deleteElement(String id) throws Exception {
         contextHelper.log("Deleting element " + id, "info");
         DeletionRecord deletionRecord = new DeletionRecord();
-        IXDAReadOnly refTable = xdaHelper.sourceXDA("ffcpl:/resources/schemas/referenceTable.xml");
+        IXDAReadOnly refTable = xdaHelper.sourceXDA("ffcpl:/resources/meta/referenceTable.xml");
         deleteElementExcept(id, deletionRecord, refTable);
         // Cut the GoldenThread associated with this resource
         contextHelper.cutGoldenThread(ELEMENT_GOLDEN_THREAD + id);

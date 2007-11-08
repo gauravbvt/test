@@ -71,7 +71,7 @@
 			<p>The response is the list of identifiers for all deleted elements. For example: </p>
       <sub name="ids"/>
       <p>
-        The reference table at (private) uri <code>ffcpl:/resources/schemas/referenceTable.xml</code> instructs the updates and consequent
+        The reference table at (private) uri <code>ffcpl:/resources/meta/referenceTable.xml</code> instructs the updates and consequent
         deletions required to maintain the referential integrity of the model. A sample reference table:
       </p>
        <sub name="referenceTable"/>

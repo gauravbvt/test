@@ -33,13 +33,6 @@
 
     <target depends="init,compile" name="jar">
         <mkdir dir="${dist.dir}"/>
-
-        <copy todir="${base}/modules/mod-rest/resources">
-            <fileset dir="${dist.dir}/flex">
-                <include name="**/*"/>
-            </fileset>
-        </copy>
-        
         <jar basedir="${dst}" compress="true" destfile="${dist.dir}/${app}-${version}.jar">
 		    <include name="**/*"/>
 		    <exclude name="**/.nbattrs*"/>
@@ -61,15 +54,7 @@
             <fileset dir="${dst}">
                 <include name="**/*.class"/>
             </fileset>
-        	<!-- This need cleaned up... -->
-            <fileset dir="${base}/modules/mod-rest/resources">
-                <include name="assets/**/*"/>
-                <include name="*.js"/>
-                <include name="*.swf"/>
-                <include name="*.html"/>
-            </fileset>
         </delete>
-    	<delete dir="${base}/modules/mod-rest/resources/assets"/>
     </target>
 
 </project>

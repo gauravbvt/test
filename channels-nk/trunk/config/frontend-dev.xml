@@ -111,9 +111,11 @@
 		Add your modules below here...
 		************
 		-->
+    <!--
 		<import>
 		    <uri>@mod-session-uri@</uri>
 		</import>
+      -->
 		<import>
 		    <uri>@mod-rest-uri@</uri>
 		</import>

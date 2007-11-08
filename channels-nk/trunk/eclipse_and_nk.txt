@@ -44,3 +44,6 @@ Nerkel debugging in Eclipse
 
 6. Set breakpoints in NK module Java code and do Run/Run... or Run/Debug..., selecting the Bootloader run configuration.
 
+7. Increase the request timeout value in /etc/system.xml to allow debugging (the default is 90000 msecs)
+
+	<deadlockPeriod>300000</deadlockPeriod>  # now 5 minutes

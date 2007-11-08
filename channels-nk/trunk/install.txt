@@ -2,7 +2,7 @@ Updated installation procedure
 ------------------------------
 0. Checkout channels-nk from svn (http://ranger.homelinux.net/svn/channels-nk/trunk)
 
-1. Install the latest NetKernel 3.3 distribution from http://1060.org/upload/alpha/
+1. Install the latest NetKernel distribution from http://1060.org/upload/beta/
 
 2. Install Adobe Flex 2 SDK
 
@@ -23,12 +23,16 @@ Updated installation procedure
      <module>file://@deploy-dir@/@mod-control-name@-@mod-control-version@.jar</module>
      
    Remove optional modules if desired.
+   
+6. Update build.properies
 
-6. Run "ant clea, install, deploy"
+		netkernel.home.dir = <netkernel>
 
-7. Start netkernel (ignore warnings about not finding channels modules)
+7. Run "ant clean, install, deploy"
 
-8. Reload netkernel from browser (http://localhost:1060/ep+name@control_reload)
+8. Start netkernel (ignore warnings about not finding channels modules)
 
-9. Re-index entry points from browser (http://localhost:1060/ep+name@app_ext_introspect_reindex_quick)
+9. Reload netkernel from browser (http://localhost:1060/ep+name@control_reload)
+
+10. Re-index entry points from browser (http://localhost:1060/ep+name@app_ext_introspect_reindex_quick)
 
