@@ -6,7 +6,6 @@ package com.mindalliance.channels.application.control
 	import com.mindalliance.channels.categories.commands.*;
 	import com.mindalliance.channels.common.commands.*;
 	import com.mindalliance.channels.people.commands.*;
-	import com.mindalliance.channels.commands.resources.*;
     import com.mindalliance.channels.scenario.commands.*;;
     import com.mindalliance.channels.sharingneed.commands.*;
 	import com.mindalliance.channels.application.events.*;
