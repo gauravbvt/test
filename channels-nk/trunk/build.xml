@@ -98,7 +98,6 @@
 	</target>
 	
 	<target name="install" description="Configure a new installation of NetKernel" depends="deploy">
-		<!-- <filter filtersFile="mod-rest/build/version.properties"/> -->
 		<filter filtersFile="deploy.properties"/>	
 		<filter token="deploy-dir" value="${deploy.dir}"/>
     <filter filtersFile="mod-support/build/version.properties"/>        
