@@ -27,12 +27,8 @@
     </interleave>
   </define>
   <define name="type_conceptualized">
-    <a:documentation>That which meaning is given by a standard sense (a WordNet synonymous set).</a:documentation>
-    <element name="sense">
-      <a:documentation>a WordNet synset ID,  eg "example#2"</a:documentation>
-      <ref name="synset"></ref>
-      
-    </element>
+    <a:documentation>Something with a sense</a:documentation>
+    <ref name="sense"/>
   </define>
   <define name="type_categorized">
     <a:documentation>That which has an information content specified by a set of categories.</a:documentation>
@@ -64,7 +60,7 @@
     <a:documentation>That which is located somewhere on the planet.</a:documentation>
     <interleave>
       <optional>
-        <element name="geonamesid">
+        <element name="geoname">
           <a:documentation>a geonames ID (see http://www.geonames.org/)</a:documentation>
           <text/>
         </element>
@@ -77,11 +73,13 @@
       </optional>
     </interleave>
   </define>
-  <define name="synset">
-      <a:documentation>A synset in wordnet. Eg   synset#1</a:documentation>
-      <text/>
-  </define>
   <!-- - - - - - - - COMPONENTS - - - - - - -# -->
+  <define name="sense">
+    <element name="sense">
+      <a:documentation>A synset in wordnet. See http://wordnet.princeton.edu/perl/webwn</a:documentation>
+        <text/>
+    </element>
+  </define>
   <define name="address">
     <a:documentation>A postal address.</a:documentation>
     <element name="address">
@@ -181,16 +179,7 @@
         </ref>
         <element name="type">
           <a:documentation>what kind of value the eoi can take. Specifid as a WordNet 3.0 sense ID</a:documentation>
-          <choice>
-            <value>quantity#1</value>
-            <value>identity#2</value>
-            <value>description#1</value>
-            <value>representation#2</value>
-            <value>valuation#1</value>
-            <value>judgement#1</value>
-            <value>sense#2</value>
-            <value>identifier#1</value>
-          </choice>
+          <data type="normalizedString"></data>
         </element>
         <optional>
           <element name="value">
@@ -588,11 +577,74 @@
       <!-- none means whole hours -->
     </element>
   </define>
+  <define name="timePeriod">
+      <choice>
+        <element name="always"><empty/></element>
+        <group>
+          <optional>
+            <choice>
+              <element name="January"><empty/></element>
+              <element name="February"><empty/></element>
+              <element name="March"><empty/></element>
+              <element name="April"><empty/></element>
+              <element name="May"><empty/></element>
+              <element name="June"><empty/></element>
+              <element name="July"><empty/></element>
+              <element name="August"><empty/></element>
+              <element name="September"><empty/></element>
+              <element name="October"><empty/></element>
+              <element name="November"><empty/></element>
+              <element name="December"><empty/></element>
+            </choice>
+          </optional>
+          <optional>
+            <element name="days">
+              <element name="from"><data type="gDay"></data></element>
+              <element name="to"><data type="gDay"></data></element>
+            </element>
+          </optional>
+          <optional>
+            <group>
+              <optional>
+                <choice>
+                  <element name="first"><empty/></element>
+                  <element name="second"><empty/></element>
+                  <element name="third"><empty/></element>
+                  <element name="fourth"><empty/></element>
+                </choice>    
+              </optional>
+              <choice>
+                <element name="sundays"><empty/></element>
+                <element name="mondays"><empty/></element>
+                <element name="tuesdays"><empty/></element>
+                <element name="wednesdays"><empty/></element>
+                <element name="thursdays"><empty/></element>
+                <element name="fridays"><empty/></element>
+                <element name="saturdays"><empty/></element>
+              </choice>
+            </group>
+          </optional>
+          <optional>
+            <element name="hours">
+              <element name="from"><data type="time"/></element>
+              <element name="to"><data type="time"/></element>
+            </element>
+          </optional>
+        </group>
+      </choice>
+  </define>
   <define name="availability">
     <a:documentation>The timing of  the availability of a resource.</a:documentation>
     <element name="availability">
       <oneOrMore>
-        <ref name="timing"/>
+        <choice>
+          <element name="include">
+              <ref name="timePeriod"/>
+          </element>
+          <element name="exclude">
+            <ref name="timePeriod"/>
+          </element>
+        </choice>
       </oneOrMore>
     </element>
   </define>
@@ -652,9 +704,11 @@
   <define name="abstract_event">
     <a:documentation>Something of significance being true somewhere for some time in a scenario. A cost/benefit valuation can be attached to an event.</a:documentation>
     <interleave>
-      <ref name="scenario">
-        <a:documentation>an event is always within the scope of a scenario</a:documentation>
-      </ref>
+      <optional>
+        <ref name="scenario">
+              <a:documentation>an event is always within the scope of a scenario</a:documentation>
+            </ref>
+      </optional>
       <ref name="abstract_entity"/>
       <optional>
         <ref name="type_located">
@@ -788,6 +842,9 @@
             <ref name="abstract_category"/>
             <a:documentation>constraint: taxonomy is format#1</a:documentation>
             <optional>
+              <element name="mimetype"><data type="string"/></element>
+            </optional>
+            <optional>
               <element name="compatibleFormats">
                 <oneOrMore>
                   <ref name="format"/>
@@ -806,35 +863,18 @@
           <interleave>
             <ref name="abstract_category"/>
             <zeroOrMore>
-              <element name="expertise">
-                <ref name="category">
-                  <a:documentation>what someone in a role is expected to know about</a:documentation>
-                </ref>
+              <ref name="mission"/>
+            </zeroOrMore>
+            <zeroOrMore>
+              <element name="responsibility">
+                <element name="trigger">
+                  <ref name="event"/>
+                </element>
+                <element name="response">
+                  <ref name="task"/>
+                </element>
               </element>
             </zeroOrMore>
-            <element name="responsibility">
-              <interleave>
-                <element name="eventSpecification">
-                  <ref name="specification"/>
-                </element>
-                <element name="taskSpecification">
-                  <ref name="specification"/>
-                </element>
-                <optional>
-                  <element name="maxStartDelay">
-                    <ref name="duration"/>
-                  </element>
-                </optional>
-                <optional>
-                  <element name="maxEndDelay">
-                    <ref name="duration"/>
-                  </element>
-                </optional>
-                <zeroOrMore>
-                  <ref name="mission"/>
-                </zeroOrMore>
-              </interleave>
-            </element>
           </interleave>
         </choice>
       </element>
@@ -845,6 +885,7 @@
         <choice>
           <attribute name="ref"><data type="IDREF"/></attribute>
           <interleave>
+            <ref name="type_identified"/>
             <ref name="abstract_category"/>
             <a:documentation>Constraint: at least one child appears</a:documentation>
             <optional>
