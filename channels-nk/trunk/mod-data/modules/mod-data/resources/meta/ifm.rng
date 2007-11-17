@@ -12,12 +12,15 @@
       <data type="ID"/>
     </attribute>
   </define>
-  <define name="type_identified">
-    <a:documentation>That which is named and possibly described</a:documentation>
+  <define name="type_named">
+    <a:documentation>Something with a required name</a:documentation>
+    <element name="name">
+      <data type="normalizedString"/>
+    </element>
+  </define>
+  <define name="type_described">
+    <a:documentation>Something that may be described</a:documentation>
     <interleave>
-      <element name="name">
-        <text/>
-      </element>
       <optional>
         <element name="description">
           <a:documentation>constraint: not empty</a:documentation>
@@ -659,6 +662,7 @@
     <a:documentation>A uniquely identified element of an information flow model.</a:documentation>
     <interleave>
       <ref name="type_unique"/>
+      <ref name="type_described"/>
       <zeroOrMore>
         <element name="note">
           <a:documentation>Links to interview data collected about this element.
@@ -672,7 +676,7 @@
   <define name="abstract_entity">
     <a:documentation>A separate and self-contained thus identifiable model element that can be known to an agent.</a:documentation>
     <interleave>
-      <ref name="type_identified"/>
+      <ref name="type_named"/>
       <ref name="abstract_model_element"/>
       <ref name="type_categorized"/>
     </interleave>
@@ -885,7 +889,6 @@
         <choice>
           <attribute name="ref"><data type="IDREF"/></attribute>
           <interleave>
-            <ref name="type_identified"/>
             <ref name="abstract_category"/>
             <a:documentation>Constraint: at least one child appears</a:documentation>
             <optional>
@@ -910,7 +913,7 @@
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
           <ref name="abstract_model_element"/>
-          <ref name="type_identified"/>
+          <ref name="type_named"/>
           <ref name="type_documented"/>
         </interleave>        
       </choice>
@@ -1461,7 +1464,7 @@
       </choice>
       <interleave>
         <ref name="type_unique"/>
-        <ref name="type_identified"/>
+        <ref name="type_described"/>
         <ref name="model_element"/>
         <zeroOrMore>
           <ref name="value"/>
@@ -1496,18 +1499,13 @@
     </element>
   </define>
   <!-- - - - - - Application objects etc. - - - - - - - - -# -->
-  <define name="model">
-    <element name="model">
-      <choice>
-        <attribute name="ref"><data type="IDREF"/></attribute>
-        <interleave>
-          <ref name="type_unique"/>
-          <ref name="type_identified">
-            <a:documentation>constraint: the name is meant to be unique</a:documentation>
-          </ref>
-          <ref name="type_documented"/>
-        </interleave>
-      </choice>
+  <define name="project">
+    <a:documentation>Descriptive information for the project</a:documentation>
+    <element name="project">
+      <ref name="type_unique"/>
+      <ref name="type_named"/>
+      <ref name="type_described"/>
+      <ref name="organization"/>
     </element>
   </define>
   <define name="participant">
@@ -1618,7 +1616,7 @@
     <element name="db">
       <a:documentation>A project is a model, its elements and the project's participants.</a:documentation>
       <interleave>
-        <ref name="model"/>
+        <ref name="project"/>
         <zeroOrMore>
           <ref name="participant"/>
         </zeroOrMore>
