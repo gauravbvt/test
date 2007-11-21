@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>reporting-ui_cron_config</name>
+    <uri>ffcpl:/etc/CRONConfig.xml</uri>
+    <indexable>
+      <title>config for kicking the ReportingUi Accessor</title>
+      <desc></desc>
+      <keywords/>
+    </indexable>
+    <categories>cron hidden</categories>
+    <group>Tests</group>
+    <icon/>
+  </entrypoint>
+</entrypoints>

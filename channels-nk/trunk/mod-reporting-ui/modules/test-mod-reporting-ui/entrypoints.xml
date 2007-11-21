@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-reporting-ui</name>
+    <uri>ffcpl:/test/mod-reporting-ui-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance ReportingUi Library Tests</title>
+      <desc>Mind-Alliance ReportingUi unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>

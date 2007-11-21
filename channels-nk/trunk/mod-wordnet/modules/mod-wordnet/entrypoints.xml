@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>wordnet_cron_config</name>
+    <uri>ffcpl:/etc/CRONConfig.xml</uri>
+    <indexable>
+      <title>config for kicking the Wordnet Accessor</title>
+      <desc></desc>
+      <keywords/>
+    </indexable>
+    <categories>cron hidden</categories>
+    <group>Tests</group>
+    <icon/>
+  </entrypoint>
+</entrypoints>

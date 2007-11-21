@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-geonames</name>
+    <uri>ffcpl:/test/mod-geonames-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance Geonames Library Tests</title>
+      <desc>Mind-Alliance Geonames unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>

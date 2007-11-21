@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="Mind-Alliance Unit Tests">
+  <desc>
+    <div>
+      This is the set of unit tests for the Mind-Alliance Geonames Library.
+    </div>
+  </desc>
+  <group title="Geonames Accessor Tests">
+    <uri>ffcpl:/test/xunit/testlist-geonames.xml</uri>
+  </group>
+</testlist>
