@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+	<title>Delete crud_document</title>
+	<!--***************Cascading Style Sheets***************-->
+	<csslist>
+		<css>/xlib/styles/css_ten60_lnf.css</css>
+		<css>/xlib/styles/xmlverbatim.css</css>
+	</csslist>
+	<!--***************Links***************-->
+	<links>
+	</links>
+	<!--***************Table of Contents***************-->
+	<toc>
+		<section name="title"/>
+		<section name="definition"/>
+		<section name="purpose"/>
+	</toc>
+	
+	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
+		<content>
+			<name>Delete crud_document</name>
+			<text>Accessor to delete a document from a database while preserving referential integrity</text>
+		</content>
+	</section>
+	
+	<section name="definition" styleuri="/xusr/share/doc/styles_1060/style_definition.xsl">
+		<content>
+			<module>urn:com:mindalliance:channels:crud</module>
+			<format>
+				<sub name="format"/>
+			</format>
+			<returns>
+				<ids>
+          <deleted>
+            <id>someId</id>
+            <id>someOtherId</id>
+            <id>etc</id>
+          </deleted>
+          <updated>
+            <id>someId</id>
+            <id>someOtherId</id>
+            <id>etc</id>
+          </updated>
+        </ids>
+			</returns>
+			<syntax>
+				<type><b>delete</b></type>
+				<id req="true">documentID</id>
+        <refTable req="true">A reference table URI</refTable>
+        <database req="true">The database's URI</database>
+				<target>xml document with IDs of all deleted and updated documents</target>
+			</syntax>
+		</content>
+		<includes>
+			<include name="format" type="xml">
+		    <instr>
+		      <type>delete</type>
+          <id>data:112313</id>
+		      <refTable>refTable.xml</refTable>
+          <database>db.xml</database>
+		      <target>this:response</target>
+		    </instr>
+			</include>
+		</includes>
+	</section>
+	
+	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+		<content>
+	    <p>
+				The <code>crud_document</code> accessor, when invoked with the DELETE request type, 
+        removes the element with the given unique id from the named database.
+        Other documents with references to it are either updated with references removed, or they are removed altogether.
+        A reference table determines which referring documents are updated and which are deleted. The process is recursive (cascaded deletes).
+			</p>
+			<p>The response is the list of identifiers for all deleted documents For example: </p>
+      <sub name="ids"/>
+      <p>
+        The reference table at (private) uri <code>ffcpl:/resources/meta/referenceTable.xml</code> instructs the updates and consequent
+        deletions required to maintain the referential integrity of the database A sample reference table:
+      </p>
+       <sub name="referenceTable"/>
+      <p>
+        When a document is deleted, other documents may need to be updated by having references to the deleted location removed.
+        The <code>reference</code> document with a <code>to</code> attribute naming the root of document deleted provides
+        instructions as to what referring documents to update or delete.
+        The <code>from</code> document in the relevant <code>reference</code> document
+        contain reference paths that instruct where to look for references to the deleted document. The <code>cascade</code>
+        attribute of a <code>from</code> document instructs what to do with the referring document.
+      </p>
+      <p> 
+        If the cascade path is a single period then the referring document must be deleted as a whole (which may trigger further
+        deletes and updates). Otherwise, the cascade path indicates how to remove the referrence without deleting the referring document.
+        If no cascade attribute is given, it defaults to the referrence path. This means that the element directly containing the id
+        of the deleted document is to be removed. If the cascade is a truncation of the referrence path, then an document that is a parent of the
+        document directly containing the id needs to be removed.
+      </p>
+       <p>
+        For example, according to the sample reference table, when a location is deleted, other locations may need to be updated.
+        The paths <code>./within/locationId</code> and <code>./nextTo/locationId</code> instruct where to look
+        for the ids of the deleted location (references to it). The cascades default to the reference paths so only <code>locationId</code>
+        documents would be removed. For either events or tasks, the id of the deleted location is looked up under
+        <code>./where/locationId</code> but the cascade path is <code>./where</code> meaning that the enclosing <code>where</code> 
+        document needs to be removed.
+      </p>
+		</content>
+		<includes>
+      <include name="ids" type="xml">
+				<ids>
+          <deleted>
+            <id>1111</id>
+            <id>2222</id>
+            <id>etc</id>
+          </deleted>
+          <updated>
+            <id>3333</id>
+            <id>4444</id>
+            <id>etc</id>
+          </updated>
+        </ids>
+			</include>
+      <include name="referenceTable" type="xml">
+        <references>
+          <reference to="location">
+            <from document="location">./within/locationId</from>
+            <from document="location">./nextTo/locationId</from>
+            <from document="event|task" cascade="./where">./where/locationId</from>
+          </reference>
+          <reference to="project">
+            <from document="scenario" cascade=".">./projectId</from>
+          </reference>
+        </references>
+      </include>
+		</includes>
+	</section>
+</document>

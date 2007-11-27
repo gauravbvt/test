@@ -1,0 +1,48 @@
+<links basepath="ffcpl:/analyst/command/">
+  <!-- EXTERNAL -->
+  <link>
+    <name>edit</name>
+    <ext>/edit</ext>
+    <int>active:analyst_processTemplate+template@xrl:xform</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>showParticipants</name>
+    <ext>/showParticipants</ext>
+    <int>xrl:tbd</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>showQuestionsAndAnswers</name>
+    <ext>/showQuestionsAndAnswers</ext>
+    <int>xrl:tbd</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>showModel</name>
+    <ext>/showModel</ext>
+    <int>xrl:tbd</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>showReports</name>
+    <ext>/showReports</ext>
+    <int>xrl:tbd</int>
+    <args>all</args>
+  </link>
+  <!-- UTILS -->
+  <link>
+    <name>tbd</name>
+    <int>active:analyst_processTemplate+template@xrl:notImplementedYet</int>
+    <args>all</args>
+  </link>
+  <!-- TACONITE -->
+  <link>
+    <name>xform</name>
+    <int>ffcpl:/resources/templates/taconite/xform.xml</int>
+  </link>
+  <link>
+    <name>notImplementedYet</name>
+    <int>ffcpl:/resources/templates/taconite/notImplementedYet.xml</int>
+  </link>
+</links>

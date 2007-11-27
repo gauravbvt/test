@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GateKeeperPolicy>
+	<zone>
+		<match>.*/analyst/.*</match>
+		<isValidURI>active:analyst_validateSession</isValidURI>
+		<loginURI>ffcpl:/analyst/view/login</loginURI>
+	</zone>
+</GateKeeperPolicy>

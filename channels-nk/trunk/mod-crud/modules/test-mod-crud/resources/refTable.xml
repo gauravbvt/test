@@ -1,0 +1,78 @@
+<references>
+  <!-- Ideally this table should be generated from annotated schemas to minimize opportunities for errors -->
+	<reference to="acquirement">
+    <from document="know|needToKnow" cascade=".">./about/acquirementId</from>
+  </reference>
+  <reference to="agent">
+    <from document="know|needToKnow" cascade=".">./who/agentId</from>
+  </reference>
+	<reference to="artifact">
+    <from document="know|needToKnow" cascade=".">./about/artifactId</from>
+  </reference>
+  <reference to="category">
+    <from document="acquirement|artifact|event|location|organization|policy|repository|role|task">./categories/categoryId</from>
+    <from document="category">./disciplines/categoryId</from>
+    <from document="category">./implies/categoryId</from>
+    <from document="needToKnow">./delivery/format/categories/categoryId</from>
+    <from document="policy">./obligates/specification/categoryId</from>
+    <from document="policy">./interdicts/specification/categoryId</from>
+  </reference>
+  <reference to="event">
+    <from document="phase" cascade=".">./eventId</from>
+    <from document="task|event" cascade="./cause">./cause/eventId</from>
+    <from document="know|needToKnow" cascade=".">./about/eventId</from>
+  </reference>
+  <reference to="location">
+    <from document="location">./within/locationId</from>
+    <from document="location">./nextTo/locationId</from>
+    <from document="event|task" cascade="./where">./where/locationId</from>
+  </reference>
+  <reference to="needToKnow">
+    <from document="sharingNeed" cascade=".">./needToKnowId</from>
+  </reference>
+  <reference to="organization">
+    <from document="role" cascade=".">./organizationId</from>
+    <from document="organization">./parentOrganizationId</from>
+    <from document="repository" cascade=".">./organizationId</from>
+  </reference>
+  <reference to="person">
+    <from document="project">./managedByPersonId</from>
+  </reference>
+  <reference to="project">
+    <from document="scenario" cascade=".">./projectId</from>
+  </reference>
+  <reference to="repository">
+    <from document="know|needToKnow" cascade=".">./who/repositoryId</from>
+  </reference>
+  <reference to="role">
+    <from document="category|acquirement">./information/topic/privacy/roleId</from>
+    <from document="role">./expertise/information/topic/privacy/roleId</from>
+    <from document="repository">./contents/information/topic/privacy/roleId</from>
+    <from document="know|needToknow">./what/information/topic/privacy/roleId</from>
+    <from document="repository">./administrators/roleId</from>
+    <from document="repository">./access/roleId</from>
+    <from document="person">./roles/roleId</from>
+    <from document="agent" cascade=".">./roleId</from>
+    <from document="know|needToKnow" cascade=".">./who/roleId</from>
+  </reference>
+  <reference to="scenario">
+    <from document="task|event" cascade=".">./scenarioId</from>
+  </reference>
+  <reference to="know">
+    <from document="sharingNeed" cascade=".">./knowId</from>
+  </reference>
+  <reference to="sharingNeed">
+     <from document="obligation|interdiction" cascade=".">./target/sharingNeedId</from>
+  </reference>
+  <reference to="task">
+    <from document="task|event" cascade="./cause">./cause/taskId</from>
+    <from document="event">./terminatesAfter/taskCompletions/taskId</from>
+    <from document="agent" cascade=".">/taskId</from>
+    <from document="artifact|acquirement" cascade=".">./product/taskId</from>
+    <from document="know|needToKnow" cascade=".">./about/taskId</from>
+    <from document="obligation" cascade=".">./target/taskId</from>
+  </reference>
+  <reference to="user">
+    <from document="person">./userId</from>
+  </reference>
+</references>

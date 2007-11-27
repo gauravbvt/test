@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>Analyst - INVALID</title>
+    <link rel="stylesheet" href="analyst.css" type="text/css" media="screen"/>
+  </head>
+  <body>
+	  <div class="invalidLogin">
+      Invalid login
+    </div>
+    <div><a href="~~url~~">Try again</a></div>
+  </body>
+</html>

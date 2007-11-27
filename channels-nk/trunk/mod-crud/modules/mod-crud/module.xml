@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********************************
+	Mind-Alliance Channels CRUD Module
+	***********************************
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:crud</uri>
+		<version>0.1.0</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Channels CRUD Module</name>
+        <description>Create-Read-Update-Delete services</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+			<match>ffcpl:/com/mindalliance/channels/crud/.*</match>
+      <match>db:.*</match>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>active:crud_mrew.*</match>
+			<match>active:crud_database.*</match>
+			<match>active:crud_document.*</match>
+			<match>ffcpl:/com/mindalliance/channels/support/.*</match>
+		</uri>
+	</export> 
+   <rewrite>
+     <rule> <!-- xdoc -->
+       <match>ffcpl:/com/mindalliance/channels/crud/doc/(.*\.xml)</match>
+       <to>doc:/resources/doc/$1</to>
+     </rule>
+     <rule> <!-- other non-accessor resources -->
+       <match>ffcpl:/com/mindalliance/channels/crud/(.*)</match>
+       <to>ffcpl:/resources/$1</to>
+     </rule>
+  </rewrite>
+	<mapping>
+	 <rewrite>
+	 	<match>db:(.*)</match> <!-- TODO why not before mapping? -->
+	 	<to>ffcpl:/resources/db/$1.xml</to>
+	 </rewrite>
+		<rewrite>  <!-- TODO why not before mapping? -->
+			<match>doc:(.*)</match>
+			<to>active:doc-generate+operand@ffcpl:$1</to>
+		</rewrite>
+    <this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+			<match>ffcpl:/libs/.*</match>
+			<match>ffcpl:/resources/.*</match>
+		</this>
+		<ura>
+		  <match>active:crud_mrew.*</match>
+		  <class>com.mindalliance.channels.crud.accessors.MREWSynchronizer</class>
+		</ura>
+		<ura>
+			<match>active:crud_database.*</match>
+			<class>com.mindalliance.channels.crud.accessors.DatabaseAccessor</class>
+		</ura>
+		<ura>
+			<match>active:crud_document.*</match>
+			<class>com.mindalliance.channels.crud.accessors.DocumentAccessor</class>
+		</ura>
+		<import>
+			<uri>urn:com:mindalliance:channels:support</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+    <import>
+      <uri>	urn:org:ten60:netkernel:ext:xsecurity</uri>
+    </import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:mod:dbxml</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:mod:docxter</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

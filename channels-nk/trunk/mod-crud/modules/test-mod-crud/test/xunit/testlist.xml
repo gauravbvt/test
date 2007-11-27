@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="mod-data CRUD tests">
+	<desc>
+		<div>
+		<b>mod-crud</b> unit tests.
+		</div>
+	</desc>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testOpenDatabase.js</uri>
+    <assert name="Opening database returns true">
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/support/scripts/isTrue.js</uri> 
+    </assert>
+    <assert name="No caching">
+      <expired/>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testCreateGetDocument.js</uri>
+    <assert name="Got document with an id">
+      <xpath>./id</xpath>
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testGetDocumentNamingListedRefs.js</uri>
+    <assert name="Got document with named references">
+     <xpath>./categories/categoryId/@name</xpath>
+     <xpath>./terminatesAfter/taskCompletions/taskId/@name</xpath>
+    </assert>
+  </test> 
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testDeleteDocument.js</uri>
+    <assert name="Deleted document">
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/support/scripts/isTrue.js</uri> 
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testUpdateDocument.js</uri>
+    <assert name="Updated document">
+      <xpath>./name[. = "Updated"]</xpath> 
+    </assert>
+  </test>
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testQueryDatabase.js</uri>
+    <assert name="Query results obtained">
+      <xpath>.//project</xpath> 
+    </assert>
+  </test>
+  <!-- Deadlocks once in a while
+  <test>
+    <uri>active:javascript+operator@ffcpl:/test/testAsyncCrud.js</uri>
+    <assert name="Async Crud">
+      <uri>active:javascript+operator@ffcpl:/com/mindalliance/channels/support/scripts/isTrue.js</uri> 
+    </assert>
+  </test>
+    -->
+</testlist>

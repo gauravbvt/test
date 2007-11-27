@@ -36,23 +36,21 @@ function log(content, level) {
   																	 operator: new StringAspect("<log>" + "<" + level + "/>" + "</log>")});
 }
 
-function reloadModel(uri) {
+function reloadDatabase(name) {
 	// Delete model
-	request("active:channels_model", {operator:asData("delete")});
-	// Open model from db:testDB
-	if (uri == null)
-		request("active:channels_model", {operator:asData("open")});
-	else
-		request("active:channels_model", {operator:asData("open"), init:uri});
+	request("active:crud_database", {operator:asData("delete"), name:asData(name)});
+	request("active:crud_database", {operator:asData("open"), name:asData(name)});
+	request("active:crud_database", {operator:asData("load"), name:asData(name), init:"db:" + name});
 	resetAll();
 }
 
 function resetAll() {
 	log("Resetting all counters", "info");
-	request("active:MREWSynchronizer", {operator:new StringAspect("reset")});
+	request("active:crud_mrew", {operator:new StringAspect("reset")});
 	log("All counters reset", "info");
 }
 
+/*
 function issueValidateRNGRequest(schemaURI, docURI) {
 	log("Schema uri = " + schemaURI + ", docURI = " + docURI, "info");
 	try {
@@ -69,6 +67,7 @@ function issueValidateRNGRequest(schemaURI, docURI) {
   	throw("Validation error");
   }
 }
+*/
 
 function asData(value) {
 	return "data:text/plain," + escape(value.toString());

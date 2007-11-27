@@ -73,9 +73,9 @@
         <copy todir="${deploy.dir}">
             <fileset refid="jars"/>
         </copy>
-        <copy todir="${netkernel.home.dir}/modules">
+        <!--<copy todir="${netkernel.home.dir}/modules">
             <fileset refid="jars"/>
-        </copy>
+        </copy>-->
         <chown owner="${netkernel.user}" type="both">
             <dirset dir="${deploy.dir}"/>
             <fileset dir="${deploy.dir}">
@@ -117,6 +117,13 @@
         <filter filtersFile="deploy.properties"/>
         <filter token="deploy-dir" value="${deploy.dir}"/>
         <groovy>
+            def filteredModules = ["tpt-servlet"]
+            
+            void filterList(List list, def filter) {
+                def pattern = ".*${filter}-\\d+\\.\\d+\\.\\d+\\.jar\$"
+                list.removeAll(list.grep(~pattern))
+            }
+            
             // Add Module Filters
             project.getReference("parseModules")(){module ->  ant.filter(filtersFile: "${module}/build/version.properties")}
 
@@ -126,12 +133,17 @@
             def out = new File("${properties['netkernel.home.dir']}/etc/deployedModules.xml")
             def writer = new FileWriter( out )
             def xml = new MarkupBuilder( writer )
-            def jarNamePattern = /.*/
             xml.modules {
                 def libdir = new File("${properties['netkernel.home.dir']}/modules")
-                libdir.listFiles().grep(~jarNamePattern).each { jar ->
-                    xml.module(jar)
-                }
+                
+                def list = libdir.listFiles().grep(~/.*/)
+                filteredModules.each {filterList(list, it)}
+                
+                project.getReference("parseModules")(){module -> filterList(list, module)}
+                list.each { jar -> xml.module(jar) }
+                
+                new File("${properties['basedir']}/dist").listFiles().grep(~/.*\.jar/).each {xml.module(it)}
+                
             }
         </groovy>
         <copy file="${basedir}/config/frontend-${install.mode}.xml" tofile="${netkernel.home.dir}/modules/mod-fulcrum-frontend/module.xml" overwrite="true" filtering="true"/>

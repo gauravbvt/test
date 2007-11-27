@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><module>
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
 	<!--
 	***********
 	Mind-Alliance ReportingUi Module
 	***********
 	-->
     <identity>
-		<uri>urn:com:mindalliance:reportingui</uri>
-		<version>0.0.13</version>
+		<uri>urn:com:mindalliance:channels:reportingui</uri>
+		<version>0.0.1</version>
     </identity>
 	<info>
 		<name>Mind-Alliance ReportingUi Module</name>
@@ -39,10 +40,14 @@
 			<match>ffcpl:/reporting-ui/(.*.bsh.*)</match>
 			<to>active:beanshell+operator@ffcpl:/resources/$1</to>
 		</rewrite>
-		<rewrite>
+		<!--<rewrite>
 			<match>(ffcpl:/reporting-ui/.*)</match>
 			<to>active:reporting-ui+path@$1</to>
-		</rewrite>
+		</rewrite>-->
+		<rewrite>
+		    <match>ffcpl:/reporting-ui/(.*\.html)</match>
+		    <to>ffcpl:/resources/$1</to>
+	    </rewrite>
 		<ura>
       		<match>active:reporting-ui\+.*</match>
       		<class>com.mindalliance.reportingui.accessor.ReportingUiAccessor</class>
@@ -64,6 +69,9 @@
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<import>
+			<uri>urn:com:mindalliance:reporting</uri>
 		</import>
 		<super/>
     </mapping>

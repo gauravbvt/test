@@ -3,7 +3,7 @@
 <module>
     <identity>
 		<uri>urn:com:mindalliance:@templatepackage@:test</uri>
-		<version>0.1.0</version>
+		<version>0.0.1</version>
     </identity>
 	<info>
 	    <name>Mind-Alliance @Template@ Library Tests</name>

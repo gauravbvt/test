@@ -1,0 +1,9 @@
+<menu name="doc_mod_crud_chapter_head">
+	<item name="doc_mod_crud_guide"/>
+	<item name="doc_ura_database"/>
+	<item name="doc_ura_createDocument"/>
+	<item name="doc_ura_getDocument"/>
+	<item name="doc_ura_updateDocument"/>
+	<item name="doc_ura_deleteDocument"/>
+	<item name="doc_ura_MREWSynchronizer"/>
+</menu>

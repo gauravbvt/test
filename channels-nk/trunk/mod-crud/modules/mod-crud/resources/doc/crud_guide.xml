@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+<title>Channels CRUD Accessors Guide</title>
+<!--***************Cascading Style Sheets***************-->
+<csslist>
+	<css>/xlib/styles/css_ten60_lnf.css</css>
+	<css>/xlib/styles/xmlverbatim.css</css>
+</csslist>
+<!--***************Links***************-->
+<links>
+</links>
+<!--***************Table of Contents***************-->
+<toc>
+	<section name="main"/>
+</toc>
+
+<section name="main" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+	<content>
+	<h2>Guide to Channels CRUD</h2>
+	<p>The Channels CRUD module gives access to documents stored in XML databases.</p>
+  <p> CRUD stands for Create, Read, Update, Delete. The accessor enable CRUD operations
+    on documents stored in an XML database, together with operations on the database itself, namely
+    open, delete, get and query.</p>
+<p>
+    The following operations are supported:
+    <ul>
+      <li>Opening a database</li>
+      <li>Deleting a database</li>
+      <li>Querying a database</li>
+      <li>Creating a document</li>
+      <li>Deleting a document</li>
+      <li>Getting a document</li>
+      <li>Updating a document</li>
+      <li>Synchroning accesses</li>
+    </ul>
+	</p>
+  <p>
+    Asynchronous accesses to Documents are synchronized via a <link name="doc_ura_MREWSynchronizer">Multiple Reads Exclusive Write synchronizer</link>.
+  </p>
+	<h3>Requirements</h3>
+	<p>
+	This library requires that DBXML is installed on the host operating system.  The latest
+	version can be downloaded at <a href="http://www.oracle.com/database/berkeley-db/xml/index.html">here</a>.
+	</p>
+	<h2>Using the Library</h2>
+	<p>
+	A database is a named XML container. 
+
+	The following set of accessors provide tools for accessing the model.
+	</p>
+	<ul>
+		<li><link name="doc_ura_database">crud_database</link></li>
+		<li><link name="doc_ura_createDocument">new crud_document</link></li>
+		<li><link name="doc_ura_getDocument">source crud_document</link></li>
+		<li><link name="doc_ura_updateDocument">sink crud_document</link></li>
+		<li><link name="doc_ura_deleteDocument">delete crud_document</link></li>
+		<li><link name="doc_ura_MREWSynchronizer">channels_MREWSynchronizer</link></li>
+	</ul>
+	</content>
+	<includes/>
+</section>
+
+</document>

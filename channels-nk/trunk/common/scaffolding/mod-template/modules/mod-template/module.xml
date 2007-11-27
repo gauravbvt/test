@@ -6,7 +6,7 @@
 	-->
     <identity>
 		<uri>urn:com:mindalliance:@templatepackage@</uri>
-		<version>0.0.13</version>
+		<version>0.0.1</version>
     </identity>
 	<info>
 		<name>Mind-Alliance @Template@ Module</name>

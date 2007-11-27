@@ -117,10 +117,12 @@
 		</import>
       -->
 		<import>
-		    <uri>@mod-rest-uri@</uri>
+		    <uri>@mod-analyst-uri@</uri>
 		</import>
 	  
-
+		<import>
+		    <uri>@mod-reporting-ui-uri@</uri>
+		</import>
     </mapping>
 	<transports>
 		<!--

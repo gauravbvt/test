@@ -1,0 +1,50 @@
+<links basepath="ffcpl:/analyst/view/">
+  <!-- EXTERNAL -->
+  <link>
+    <name>login</name>
+    <ext>/login</ext>
+    <int>active:xrl-html+template@ffcpl:/resources/templates/pages/login.xml</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>invalidLogin</name>
+    <ext>/invalidLogin</ext>
+    <int>active:analyst_processTemplate+template@ffcpl:/resources/templates/pages/invalidLogin.xml</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>logout</name>
+    <ext>/logout</ext>
+    <int>ffcpl:/resources/templates/pages/logout.xml</int>
+    <args>all</args>
+  </link>
+  <link>
+    <name>app</name>
+    <ext>/app</ext>
+    <int>active:xrl-html+template@xrl:home</int>
+    <args>all</args>
+  </link>
+  <!-- INTERNAL -->
+  <link>
+    <name>home</name>
+    <int>ffcpl:/resources/templates/pages/home.xml</int>
+  </link>
+  <!-- divs -->
+  <link>
+    <name>top</name>
+    <int>ffcpl:/resources/templates/divs/top.xml</int>
+  </link>
+  <link>
+    <name>middle</name>
+    <int>ffcpl:/resources/templates/divs/middle.xml</int>
+  </link>
+  <link>
+    <name>bottom</name>
+    <int>ffcpl:/resources/templates/divs/bottom.xml</int>
+  </link>
+  <!-- content -->
+  <link>
+    <name>projectOptions</name>
+    <int>active:xquery+operator@ffcpl:/resources/xqueries/projectOptions.xq+input@ffcpl:/etc/projects.xml</int>
+  </link>
+</links>

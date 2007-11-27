@@ -2,8 +2,8 @@
 
 <module>
     <identity>
-		<uri>urn:com:mindalliance:reportingui:test</uri>
-		<version>0.1.0</version>
+		<uri>urn:com:mindalliance:channels:reportingui:test</uri>
+		<version>0.0.1</version>
     </identity>
 	<info>
 	    <name>Mind-Alliance ReportingUi Library Tests</name>
@@ -38,7 +38,7 @@
 			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
 		</this>
 		<import>
-			<uri>urn:com:mindalliance:reportingui</uri>
+			<uri>urn:com:mindalliance:channels:reportingui</uri>
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>

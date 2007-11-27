@@ -8,6 +8,7 @@ import org.ten60.netkernel.layer1.nkf.INKFRequest;
 import org.ten60.netkernel.layer1.nkf.NKFException;
 import org.ten60.netkernel.xml.representation.DOMXDAAspect;
 import org.ten60.netkernel.xml.representation.IAspectXDA;
+import org.ten60.netkernel.xml.representation.IXAspect;
 import org.ten60.netkernel.xml.xda.DOMXDA;
 import org.ten60.netkernel.xml.xda.DOMXPathResult;
 import org.ten60.netkernel.xml.xda.IXDA;
@@ -123,8 +124,24 @@ public class XDAHelper {
         return textAtXPath(doc.getXDA(), xpath);
     }
 
-    public String asXML( IAspectXDA doc ) throws NKFException {
-        return ((IAspectString)context.transrept( doc, IAspectString.class )).getString();
+    public String asXML( IXDA doc ) throws NKFException {
+        return ((IAspectString)context.transrept( new DOMXDAAspect((DOMXDA)doc), IAspectString.class )).getString();
     }
+    
+    public String asXML( IAspectXDA doc ) throws NKFException {
+        return ((IAspectString)context.transrept(doc, IAspectString.class )).getString();
+    }
+    public String getCookie(String cookieName) throws Exception {
+        String operator = "<cookie><get>" + cookieName + "</get></cookie>";
+        IAspectString ias = new StringAspect(operator);
+        INKFRequest req = context.createSubRequest("active:HTTPCookie");
+        req.addArgument( "operand", "this:param:cookie" );
+        req.addArgument( "operator", ias );
+        IURRepresentation rep = context.issueSubRequest( req );
+        IAspectXDA xda = (IAspectXDA)context.transrept( rep, IXAspect.class );
+        String xml = asXML( xda );
+        return xml;
+    }
+
     
 }

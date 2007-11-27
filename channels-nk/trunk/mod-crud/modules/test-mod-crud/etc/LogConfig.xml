@@ -1,0 +1,6 @@
+<log>
+  <name>urn:com:mindalliance:channels:crud:test</name>
+  <destination>log/crud-test-%g.log</destination>
+  <limit>131072</limit>
+  <count>2</count>
+</log>

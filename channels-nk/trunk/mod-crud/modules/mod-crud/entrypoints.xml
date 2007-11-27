@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>doc_mod_crud_guide</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_guide.xml</uri>
+    <indexable>
+      <title>Guide</title>
+      <desc>Guide to Channels CRUD</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_database</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_ura_database.xml</uri>
+    <indexable>
+      <title>Database</title>
+      <desc>Operations on an XML database as a whole</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_createDocument</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_ura_createDocument.xml</uri>
+    <indexable>
+      <title>Create document</title>
+      <desc>Creating a document</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_getDocument</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_ura_getDocument.xml</uri>
+    <indexable>
+      <title>Get document</title>
+      <desc>Getting a document</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_updateDocument</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_ura_updateDocument.xml</uri>
+    <indexable>
+      <title>Update document</title>
+      <desc>Updating a document</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_deleteDocument</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_ura_deleteDocument.xml</uri>
+    <indexable>
+      <title>Delete document</title>
+      <desc>Deleting a document</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+  <entrypoint>
+    <name>doc_ura_MREWSynchronizer</name>
+    <uri>ffcpl:/com/mindalliance/channels/crud/doc/crud_ura_MREWSynchronizer.xml</uri>
+    <indexable>
+      <title>MREWSynchronizer</title>
+      <desc>Multiple reads exclusive write synchronizer</desc>
+      <keywords/>
+    </indexable>
+	  <fullTextIndex/>
+    <categories>doc URA</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+   <!--Discoverable Documentation Menu-->
+	<entrypoint>
+		<name>urn:com:mindalliance:channels:crud:chapter</name>
+		<uri>ffcpl:/com/mindalliance/channels/crud/doc/chapter-menu.chp</uri>
+		<indexable>
+			<title>Channels CRUD</title>
+			<desc>Documentation for the Channels CRUD Accessors</desc>
+			<keywords/>
+		</indexable>
+		<categories>chapter hidden</categories>
+		<group>channels_crud</group>
+	</entrypoint>
+	<entrypoint>
+		<name>doc_mod_crud_chapter_head</name>
+		<uri>ffcpl:/com/mindalliance/channels/crud/doc/chapter-head.xml</uri>
+		<indexable>
+			<title>Channels CRUD</title>
+			<desc>Documentation for Channels XML Database Access</desc>
+			<keywords/>
+		</indexable>
+		<categories>doc postInstallInfo</categories>
+		<group>channels_crud</group>
+	</entrypoint>
+  <entrypoint>
+    <name>icon</name>
+    <uri>ffcpl:/com/mindalliance/channels/support/icon.png</uri>
+    <indexable>
+      <title>Icon</title>
+      <desc></desc>
+      <keywords/>
+    </indexable>
+    <categories>img hidden</categories>
+    <group>channels_crud</group>
+    <icon/>
+  </entrypoint>
+</entrypoints>

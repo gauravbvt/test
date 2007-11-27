@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+	<title>Sink crud_document</title>
+	<!--***************Cascading Style Sheets***************-->
+	<csslist>
+		<css>/xlib/styles/css_ten60_lnf.css</css>
+		<css>/xlib/styles/xmlverbatim.css</css>
+	</csslist>
+	<!--***************Links***************-->
+	<links>
+	</links>
+	<!--***************Table of Contents***************-->
+	<toc>
+		<section name="title"/>
+		<section name="definition"/>
+		<section name="purpose"/>
+	</toc>
+	
+	<section name="title" styleuri="/xusr/share/doc/styles_1060/style_title.xsl">
+		<content>
+			<name>Sink crud_document</name>
+			<text>Accessor to update a document in the named database</text>
+		</content>
+	</section>
+	
+	<section name="definition" styleuri="/xusr/share/doc/styles_1060/style_definition.xsl">
+		<content>
+			<module>urn:com:mindalliance:channels:crud</module>
+			<format>
+				<sub name="format"/>
+			</format>
+			<returns>
+				<b>t</b>
+			</returns>
+			<syntax>
+				<type><b>copy</b></type>
+				<operand req="true">this:param</operand>
+        <database req="true">databse name</database>
+				<target req="true">active:crud_document</target>
+			</syntax>
+		</content>
+		<includes>
+			<include name="format" type="xml">
+		    <instr>
+		      <type>copy</type>
+		      <operand>
+            <project>
+              <id>878AD470F6C983655BEE25411</id>
+              <name>My project</name>
+            </project>
+		      </operand>
+          <database>data:dbName</database>
+		      <target>active:crud_document</target>
+		    </instr>
+			</include>
+		</includes>
+	</section>
+	
+	<section name="purpose" styleuri="/xusr/share/doc/styles_1060/style_basic.xsl">
+		<content>
+	    <p>
+				Updating is done by sinking an xml document into the <code>crud_document</code> accessor. 
+        It deletes the document  (the prior version), if any, with the same id as the updated document (the new version)
+        and then the updated document is stored in the currently opened model.
+			</p>
+			<p>If successful the response is a boolean indicating whether a prior version was removed, otherwise an exception is thrown.</p>
+		</content>
+		<includes/>
+	</section>
+</document>
