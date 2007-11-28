@@ -140,20 +140,6 @@ latlong =
     & element longitude { xsd:double }
   }
 
-## The security clearance of a person.
-clearance =
-  element clearance {
-    
-    ## hyponyms give implied clearance levels, synonyms give equivalent clearances
-    type_conceptualized
-    & 
-      ## the organization that granted the clearance
-      organization
-    & 
-      ## when it expires
-      element terminationDate { xsd:date }
-  }
-
 ## The information content of a transmission. A message encodes (formats) and possibly encrypts information.
 abstract_message = encryption? & information & format?
 
@@ -422,7 +408,6 @@ abstract_category =
 ## Something of significance being true somewhere for some time in a scenario. A cost/benefit valuation can be attached to an event.
 abstract_event =
   
-  ## an event is always within the scope of a scenario
   scenario?
   & type_named
   & abstract_entity
@@ -484,6 +469,11 @@ abstract_service =
   & 
     ## agent who administers the service
     element administeredBy { agent }*
+    
+## Something immaterial that, by being true, may impact, prevent, allow or motivate communications.
+abstract_fact =
+    abstract_thing
+    
 # .....Concrete....#
 model_element = category | scenario | entity | analysis
 div {
@@ -553,6 +543,7 @@ thing =
   | possession
   | contactPoint
   | relationship
+  |clearance
   | policy
   | element thing {
       attribute ref { xsd:IDREF }
@@ -568,7 +559,6 @@ person =
        & element middleName { text }?
        & element lastName { text }
        & element photo { xsd:anyURI }?
-       & clearance*
        & type_located)
   }
 
@@ -764,7 +754,7 @@ div {
 informationNeed =
   element informationNeed {
     attribute ref { xsd:IDREF }
-    | (abstract_thing
+    | (abstract_fact
        & agent
        & information
        & 
@@ -780,7 +770,7 @@ knowledge =
     | (
        ## default is false
        element negated { xsd:boolean }?
-       & abstract_thing
+       & abstract_fact
        & agent
        & information
        & 
@@ -792,7 +782,7 @@ knowledge =
 requisite =
   element requisite {
     attribute ref { xsd:IDREF }
-    | (abstract_thing
+    | (abstract_fact
        & agent
        & element resource { resource }
        & availability)
@@ -802,14 +792,14 @@ requisite =
 possession =
   element possession {
     attribute ref { xsd:IDREF }
-    | (abstract_thing & artifact & agent)
+    | (abstract_fact & artifact & agent)
   }
 
 ## Point of contact to some agent over some channel. A Point of Contact may require authentication by the agent.
 contactPoint =
   element contactPoint {
     attribute ref { xsd:IDREF }
-    | (abstract_thing
+    | (abstract_fact
        & (agent | organization)
        & channel
        & 
@@ -822,18 +812,35 @@ contactPoint =
 relationship =
   element relationship {
     attribute ref { xsd:IDREF }
-    | (abstract_thing
+    | (abstract_fact
        & element fromAgent { agent }
        & element toAgent { agent })
   }
+
+## The security clearance of a person.
+clearance =
+  element clearance {
+    attribute ref { xsd:IDREF }
+    | (abstract_fact 
+        & 
+          ## the organization that granted the clearance
+          organization
+        & 
+          ## the person who is cleared
+          person
+        &
+          ## when it expires
+          element terminationDate { xsd:date })
+  }
+
 
 ## A law, mandate, directive etc. from an organization that either obligates or forbids a kind of task done somewhere by agents in any of a given set of roles.
 policy =
   element policy {
     attribute ref { xsd:IDREF }
-    | (abstract_thing
+    | (abstract_fact
        & type_documented
-       & element authorityOrganization { organization }
+       & element authority { organization }
        & element appliesTo {
            type_located
            & element taskSpecification { specification }
@@ -865,13 +872,19 @@ valueGroup =
     element name { text }
     & value+
   }
-# - - - - - Application objects etc. - - - - - - - - -#
+# - - - - - Project elements - - - - - - - - -#
 
 ## Descriptive information for the project
 project =
   element project {
     type_unique, type_named, type_described, organization
   }
+  
+project_element =
+    journalEntry |
+    question |
+    answerToQuestion |
+    participant
 
 ## A user having access to one or more models.
 participant =
@@ -932,9 +945,6 @@ start =
   ## A project is a model, its elements and the project's participants.
   element db {
     project
-    & participant*
-    & journalEntry*
-    & question*
-    & answerToQuestion*
+    & project_element*
     & model_element*
   }

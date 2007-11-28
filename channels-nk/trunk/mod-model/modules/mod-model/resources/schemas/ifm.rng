@@ -255,23 +255,6 @@
       </interleave>
     </element>
   </define>
-  <define name="clearance">
-    <a:documentation>The security clearance of a person.</a:documentation>
-    <element name="clearance">
-      <interleave>
-        <ref name="type_conceptualized">
-          <a:documentation>hyponyms give implied clearance levels, synonyms give equivalent clearances</a:documentation>
-        </ref>
-        <ref name="organization">
-          <a:documentation>the organization that granted the clearance</a:documentation>
-        </ref>
-        <element name="terminationDate">
-          <a:documentation>when it expires</a:documentation>
-          <data type="date"/>
-        </element>
-      </interleave>
-    </element>
-  </define>
   <define name="abstract_message">
     <a:documentation>The information content of a transmission. A message encodes (formats) and possibly encrypts information.</a:documentation>
     <interleave>
@@ -709,9 +692,7 @@
     <a:documentation>Something of significance being true somewhere for some time in a scenario. A cost/benefit valuation can be attached to an event.</a:documentation>
     <interleave>
       <optional>
-        <ref name="scenario">
-              <a:documentation>an event is always within the scope of a scenario</a:documentation>
-            </ref>
+        <ref name="scenario"/>          
       </optional>
       <ref name="type_named"/>
       <ref name="abstract_entity"/>
@@ -813,6 +794,10 @@
         </element>
       </zeroOrMore>
     </interleave>
+  </define>
+  <define name="abstract_fact">
+    <a:documentation>Something immaterial that, by being true, might impact, prevent, allow or motivate communications.</a:documentation>
+    <ref name="abstract_thing"/>
   </define>
   <!-- .....Concrete....# -->
   <define name="model_element">
@@ -940,7 +925,8 @@
       <ref name="requisite"/>      
       <ref name="possession"/>      
       <ref name="contactPoint"/>      
-      <ref name="relationship"/>      
+      <ref name="relationship"/>
+      <ref name="clearance"/>
       <ref name="policy"/>      
       <element name="thing">
         <choice>
@@ -973,9 +959,6 @@
               <data type="anyURI"/>
             </element>
           </optional>
-          <zeroOrMore>
-            <ref name="clearance"/>
-          </zeroOrMore>
           <ref name="type_located"/>
         </interleave>    
       </choice>
@@ -1322,7 +1305,7 @@
       <choice>
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <ref name="agent"/>
           <ref name="information"/>
           <element name="maximumDelay">
@@ -1348,7 +1331,7 @@
               <data type="boolean"/>
             </element>
           </optional>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <ref name="agent"/>
           <ref name="information"/>
           <optional>
@@ -1367,7 +1350,7 @@
       <choice>
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <ref name="agent"/>
           <element name="resource">
             <ref name="resource"/>
@@ -1383,7 +1366,7 @@
       <choice>
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <ref name="artifact"/>
           <ref name="agent"/>
         </interleave>
@@ -1396,7 +1379,7 @@
       <choice>
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <choice>
             <ref name="agent"/>
             <ref name="organization"/>
@@ -1416,13 +1399,34 @@
       </choice>
     </element>
   </define>
+  <define name="clearance">
+    <a:documentation>The security clearance of a person.</a:documentation>
+    <element name="clearance">
+      <choice>
+        <attribute name="ref"><data type="IDREF"/></attribute>
+        <interleave>
+          <ref name="abstract_fact"/>
+          <ref name="organization">
+            <a:documentation>the organization that granted the clearance</a:documentation>
+          </ref>
+          <ref name="person">
+            <a:documentation>the person who is cleared</a:documentation>
+          </ref>
+          <element name="terminationDate">
+            <a:documentation>when it expires</a:documentation>
+            <data type="date"/>
+        </element>
+        </interleave>
+      </choice>
+    </element>
+  </define>
   <define name="relationship">
     <a:documentation>A relationship, categorization and trust level, between two agents.</a:documentation>
     <element name="relationship">
       <choice>
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <!-- taxonomy is 'person#1' -->
           <element name="fromAgent">
             <ref name="agent"/>
@@ -1440,9 +1444,9 @@
       <choice>
         <attribute name="ref"><data type="IDREF"/></attribute>
         <interleave>
-          <ref name="abstract_thing"/>
+          <ref name="abstract_fact"/>
           <ref name="type_documented"/>
-          <element name="authorityOrganization">
+          <element name="authority">
             <ref name="organization"/>
           </element>
           <element name="appliesTo">
@@ -1508,7 +1512,7 @@
       </interleave>
     </element>
   </define>
-  <!-- - - - - - Application objects etc. - - - - - - - - -# -->
+  <!-- - - - - - Project elements - - - - - - - - -# -->
   <define name="project">
     <a:documentation>Descriptive information for the project</a:documentation>
     <element name="project">
@@ -1517,6 +1521,14 @@
       <ref name="type_described"/>
       <ref name="organization"/>
     </element>
+  </define>
+  <define name="project_element">
+    <choice>
+      <ref name="participant"/>
+      <ref name="journalEntry"/>
+      <ref name="question"/>
+      <ref name="answerToQuestion"/>
+    </choice>
   </define>
   <define name="participant">
     <a:documentation>A user having access to one or more models.</a:documentation>
@@ -1628,16 +1640,7 @@
       <interleave>
         <ref name="project"/>
         <zeroOrMore>
-          <ref name="participant"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="journalEntry"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="question"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="answerToQuestion"/>
+          <ref name="project_element"/>
         </zeroOrMore>
         <zeroOrMore>
           <ref name="model_element"/>
