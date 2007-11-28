@@ -979,11 +979,11 @@
               <ref name="type_located"/>
             </element>
           </optional>
+          <optional>
             <element name="parent">
-              <optional>
                 <ref name="organization"/>
-              </optional>
             </element>
+          </optional>
         </interleave>
       </choice>
     </element>
