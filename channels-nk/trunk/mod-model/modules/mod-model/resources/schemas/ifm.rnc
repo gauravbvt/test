@@ -188,7 +188,7 @@ abstract_response =
 taskRequest =
   element taskRequest {
     abstract_request
-    & element toAgent { agent }
+    & element forAgents { agent* }
     & 
       ## constraint: taxonomy is "task#1"
       element taskSpecification { specification }
@@ -389,8 +389,6 @@ abstract_model_element =
   & type_described
   & 
     ## Links to interview data collected about this element.
-    ##             could be a URL to a tiddler.
-    ##           
     element note { xsd:anyURI }*
 
 ## A separate and self-contained thus identifiable model element that can be known to an agent.
@@ -461,14 +459,14 @@ abstract_artifact =
   abstract_resource
   & 
     ## The agent who controls (owns, is responsible for...) the artifact
-    element controlledByAgent { text }?
+    agent?
 
 ## Definition shared by all services
 abstract_service =
   abstract_resource
   & 
-    ## agent who administers the service
-    element administeredBy { agent }*
+    ## agents who administers the service
+    agent*
     
 ## Something immaterial that, by being true, may impact, prevent, allow or motivate communications.
 abstract_fact =
@@ -498,7 +496,7 @@ div {
       | (abstract_category
          >> a:documentation [ "constraint: taxonomy is format#1" ]
          & element mimetype { xsd:string }?
-         & element compatibleFormats { format+ }?)
+         & element compatibleWith { format+ }?)
     }
   
   ## A generic role that can be played by agents. A role sets expections about expertise and defines responsibilities.
@@ -508,8 +506,8 @@ div {
       | (abstract_category
          & mission*
          & element responsibility {
-             element trigger { event },
-             element response { task }
+             event,
+             task
            }*)
     }
   
@@ -519,8 +517,8 @@ div {
       attribute ref { xsd:IDREF }
       | (abstract_category
          >> a:documentation [ "Constraint: at least one child appears" ]
-         & element canFurther { mission+ }?
-         & element canOppose { mission+ }?)
+         & element canFurther { mission* }
+         & element canOppose { mission* })
     }
 }
 
@@ -572,7 +570,7 @@ organization =
        & element abbreviation { text }?
        & element logo { xsd:anyURI }?
        & element jurisdiction { type_located }?
-       & element parent { organization }?)
+       & element parent { organization? })
   }
 div {
   resource = agent | service | artifact
@@ -840,7 +838,7 @@ policy =
     attribute ref { xsd:IDREF }
     | (abstract_fact
        & type_documented
-       & element authority { organization }
+       & organization
        & element appliesTo {
            type_located
            & element taskSpecification { specification }
@@ -897,7 +895,6 @@ participant =
        & element userName { text }
        & element password { text }
        & element email { text }
-       & element projectId { text }*
        & 
          ## If participant is a person represented in the model
          person?)

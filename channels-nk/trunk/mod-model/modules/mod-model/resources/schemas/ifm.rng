@@ -339,9 +339,11 @@
     <element name="taskRequest">
       <interleave>
         <ref name="abstract_request"/>
-        <element name="toAgent">
-          <ref name="agent"/>
-        </element>
+          <element name="forAgents">
+            <zeroOrMore>
+              <ref name="agent"/>     
+            </zeroOrMore>
+          </element>
         <element name="taskSpecification">
           <a:documentation>constraint: taxonomy is "task#1"</a:documentation>
           <ref name="specification"/>
@@ -776,10 +778,9 @@
     <interleave>
       <ref name="abstract_resource"/>
       <optional>
-        <element name="controlledByAgent">
+        <ref name="agent">
           <a:documentation>The agent who controls (owns, is responsible for...) the artifact</a:documentation>
-          <text/>
-        </element>
+        </ref>
       </optional>
     </interleave>
   </define>
@@ -788,10 +789,9 @@
     <interleave>
       <ref name="abstract_resource"/>
       <zeroOrMore>
-        <element name="administeredBy">
-          <a:documentation>agent who administers the service</a:documentation>
-          <ref name="agent"/>
-        </element>
+          <ref name="agent">
+            <a:documentation>agent who administers the service</a:documentation>
+          </ref>
       </zeroOrMore>
     </interleave>
   </define>
@@ -805,7 +805,6 @@
       <ref name="category"/>
       <ref name="scenario"/>
       <ref name="entity"/>
-      <ref name="analysis"/>
     </choice>
   </define>
   <div>
@@ -838,7 +837,7 @@
               <element name="mimetype"><data type="string"/></element>
             </optional>
             <optional>
-              <element name="compatibleFormats">
+              <element name="compatibleWith">
                 <oneOrMore>
                   <ref name="format"/>
                 </oneOrMore>
@@ -860,12 +859,8 @@
             </zeroOrMore>
             <zeroOrMore>
               <element name="responsibility">
-                <element name="trigger">
-                  <ref name="event"/>
-                </element>
-                <element name="response">
-                  <ref name="task"/>
-                </element>
+                <ref name="event"/>
+                <ref name="task"/>
               </element>
             </zeroOrMore>
           </interleave>
@@ -880,16 +875,12 @@
           <interleave>
             <ref name="abstract_category"/>
             <a:documentation>Constraint: at least one child appears</a:documentation>
-            <optional>
               <element name="canFurther">
-                <oneOrMore><ref name="mission"/></oneOrMore>
+                <zeroOrMore><ref name="mission"/></zeroOrMore>
               </element>
-            </optional>
-            <optional>
               <element name="canOppose">
-                <oneOrMore><ref name="mission"/></oneOrMore>
+                <zeroOrMore><ref name="mission"/></zeroOrMore>
               </element>
-            </optional>
           </interleave>
         </choice>
       </element>
@@ -988,11 +979,11 @@
               <ref name="type_located"/>
             </element>
           </optional>
-          <optional>
             <element name="parent">
-              <ref name="organization"/>
+              <optional>
+                <ref name="organization"/>
+              </optional>
             </element>
-          </optional>
         </interleave>
       </choice>
     </element>
@@ -1446,9 +1437,7 @@
         <interleave>
           <ref name="abstract_fact"/>
           <ref name="type_documented"/>
-          <element name="authority">
-            <ref name="organization"/>
-          </element>
+          <ref name="organization"/>
           <element name="appliesTo">
             <interleave>
               <ref name="type_located"/>
@@ -1470,49 +1459,7 @@
       </choice>
     </element>
   </define>
-  <define name="analysis">
-    <a:documentation>An analytical result about an element of the model (this is always inferred)</a:documentation>
-    <element name="analysis">
-      <choice>
-        <attribute name="ref"><data type="IDREF"/></attribute>
-      </choice>
-      <interleave>
-        <ref name="type_unique"/>
-        <ref name="type_described"/>
-        <ref name="model_element"/>
-        <zeroOrMore>
-          <ref name="value"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="valueGroup"/>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="value">
-    <a:documentation>A named value</a:documentation>
-    <element name="value">
-      <interleave>
-        <element name="name">          
-          <text/>
-        </element>
-      </interleave>
-    </element>
-  </define>
-  <define name="valueGroup">
-    <a:documentation>A named group of values</a:documentation>
-    <element name="valueGroup">
-      <interleave>
-        <element name="name">
-          <text/>
-        </element>
-        <oneOrMore>
-          <ref name="value"/>
-        </oneOrMore>
-      </interleave>
-    </element>
-  </define>
-  <!-- - - - - - Project elements - - - - - - - - -# -->
+   <!-- - - - - - Project elements - - - - - - - - -# -->
   <define name="project">
     <a:documentation>Descriptive information for the project</a:documentation>
     <element name="project">
@@ -1552,11 +1499,6 @@
           <element name="email">
             <text/>
           </element>
-          <zeroOrMore>
-            <element name="projectId">
-              <text/>
-            </element>
-          </zeroOrMore>
           <optional>
             <ref name="person">
               <a:documentation>If participant is a person represented in the model</a:documentation>
@@ -1632,6 +1574,56 @@
       </choice>
     </element>
   </define>
+  <!-- - - - - - - Application objects - - - - - - - -->
+  <define name="application_object">
+    <choice>
+      <ref name="analysis"/>
+    </choice>
+  </define> 
+  
+  <define name="analysis">
+    <a:documentation>An analytical result about an element of the model (this is always inferred)</a:documentation>
+    <element name="analysis">
+      <choice>
+        <attribute name="ref"><data type="IDREF"/></attribute>
+      </choice>
+      <interleave>
+        <ref name="type_unique"/>
+        <ref name="type_described"/>
+        <ref name="model_element"/>
+        <zeroOrMore>
+          <ref name="value"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="valueGroup"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="value">
+    <a:documentation>A named value</a:documentation>
+    <element name="value">
+      <interleave>
+        <element name="name">          
+          <text/>
+        </element>
+      </interleave>
+    </element>
+  </define>
+  <define name="valueGroup">
+    <a:documentation>A named group of values</a:documentation>
+    <element name="valueGroup">
+      <interleave>
+        <element name="name">
+          <text/>
+        </element>
+        <oneOrMore>
+          <ref name="value"/>
+        </oneOrMore>
+      </interleave>
+    </element>
+  </define>
+  
   <!-- - - - - - - Project - - - - - -# -->
   <!-- One database per project -->
   <start>
@@ -1644,6 +1636,9 @@
         </zeroOrMore>
         <zeroOrMore>
           <ref name="model_element"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="application_object"/>
         </zeroOrMore>
       </interleave>
     </element>
