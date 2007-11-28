@@ -3,17 +3,30 @@
     <from element="question|answerToQuestion"/>
   </reference>
   <reference to="question">
-    <from element="answerToQuestion" cascade="."/>
+    <from element="answerToQuestion" delete="."/>
   </reference>
   <reference to="category"> <!-- specified and/or categorized -->
-    <from element="taskRequest|notificationRequest|policy|organization|worker|group|team|system|channel|service|artifact|document|knowledge|informationNeed|requisite|possession|contactPoint|relationship|thing|complexEvent|timeEvent|task|communication|remediation|transmission|regulatoryEvent|issue"/>
+    <from group="thing"/>
+    <from group="event"/>
   </reference>
   <reference to="scenario">
-    <from element="" cascade="">
-      
-    </from>
-    <from element="" cascade="">
-      
-    </from>
+    <from group="thing" delete="."/> <!-- can be scoped by a scenario -->
+    <from group="event" delete="."/> <!-- can be part of a scenario -->
+  </reference>
+  <reference to="person">
+    <from element="worker|participant"/>
+  </reference>
+  <reference to="policy">
+    <from element="regulatoryEvent" delete="."/>
+  </reference>
+  <reference to="organization">
+    <from element="clearance" delete="."/>
+    <from element="organization" delete="./parent">./parent/organization</from>
+    <from element="contactPoint" delete="."/>
+    <from group="resource" delete=".">./organization</from>
+    <from element="policy" delete=".">./authority/organization</from>
+  </reference>
+  <reference to="worker">
+    <from element="team"/>
   </reference>
 </references>
