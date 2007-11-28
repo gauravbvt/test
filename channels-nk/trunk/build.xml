@@ -1,135 +1,197 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="all" name="Mind-Alliance NetKernel Modules">
+    
+    <taskdef name="groovy"
+             classname="org.codehaus.groovy.ant.Groovy"
+             classpath="${basedir}/common/lib/groovy-all-1.1-rc-2.jar"/>
 
-	<target name="init">
-		<tstamp>
-			<format property="touch.time" pattern="MM/dd/yyyy hh:mm aa"/>
-		</tstamp>
-    <property name="dist.dir" value="${basedir}/dist"/>
-    <property name="deploy.dir" value="${basedir}/deploy"/>
-    <property name="versions.properties" value="${basedir}/config/deploy.properties"/>
-		<property name="install.mode" value="dev"/>		
-		<property name="props.file" value="${basedir}/build.properties"/>
-		<available property="properties-exists" file="${props.file}"/>
-		<fail unless="properties-exists" message="You must define ${props.file}"/>
-    <property file="${props.file}"/>
-		<property name="netkernel.user" value=":netkernel"/>    	
-    <fail unless="netkernel.home.dir" message="Please define netkernel.home.dir in ${props.file}"/>
-    <echo message="NetKernel Home: ${netkernel.home.dir}"/>
-    <echo message="NetKernel User: ${netkernel.user}"/>       	
+    
+    <target name="init">
+        <tstamp>
+            <format property="touch.time" pattern="MM/dd/yyyy hh:mm aa"/>
+        </tstamp>
+        <property name="dist.dir" value="${basedir}/dist"/>
+        <property name="deploy.dir" value="${basedir}/deploy"/>
+        <property name="versions.properties" value="${basedir}/config/deploy.properties"/>
+        <property name="install.mode" value="dev"/>
+        <property name="props.file" value="${basedir}/build.properties"/>
+        <available property="properties-exists" file="${props.file}"/>
+        <fail unless="properties-exists" message="You must define ${props.file}"/>
+        <property file="${props.file}"/>
+        <property name="netkernel.user" value=":netkernel"/>
+        <fail unless="netkernel.home.dir" message="Please define netkernel.home.dir in ${props.file}"/>
+        <!-- <fail unless="FLEX_HOME" message="Please define FLEX_HOME in ${props.file}"/> -->
+        <echo message="NetKernel Home: ${netkernel.home.dir}"/>
+        <echo message="NetKernel User: ${netkernel.user}"/>
+        
+        <groovy>
+            project.addReference("parseModules", { Closure process ->
+                new File("${properties['basedir']}/config/modules.conf").eachLine {
+                    if (it.size() > 0 &amp;&amp; !it.startsWith("#"))
+                        process(it) 
+                }
+            })
+        </groovy>
     </target>
     
     <macrodef name="build-subdir">
-      <attribute name="dir"/>
-      <attribute name="target" default="all"/>
-      <attribute name="build.xml" default="build/build.xml"/>
-      <sequential>
-        <ant antfile="@{dir}/@{build.xml}" target="@{target}" inheritAll="false">
-          <property name="dist.dir" value="${dist.dir}"/>
-          <property name="deploy.dir" value="${deploy.dir}"/>  
-          <property name="netkernel.home.dir" value="${netkernel.home.dir}"/>
-        </ant>
-      </sequential>
+        <attribute name="dir"/>
+        <attribute name="target" default="all"/>
+        <attribute name="build.xml" default="build/build.xml"/>
+        <sequential>
+            <ant antfile="@{dir}/@{build.xml}" target="@{target}" inheritAll="false">
+                <property name="dist.dir" value="${dist.dir}"/>
+                <property name="deploy.dir" value="${deploy.dir}"/>
+                <property name="netkernel.home.dir" value="${netkernel.home.dir}"/>
+            </ant>
+        </sequential>
     </macrodef>
     
-	<target description="Build everything." name="all" depends="init">
-      <mkdir dir="${dist.dir}"/>
-      <build-subdir dir="mod-support"/>         
-      <build-subdir dir="mod-dbxml"/>
-      <build-subdir dir="mod-crud"/> 
-      <build-subdir dir="mod-model"/> 
-    <!--
-      <build-subdir dir="mod-rules"/> 
-      -->
-      <build-subdir dir="mod-analyst"/>        
-		  <fileset id="jars" dir="${dist.dir}">
-        <include name="**/*.jar"/>
-      </fileset>
-      <chown owner="${netkernel.user}">
-        <fileset refid="jars"/>
-      </chown>
-          <chmod perm="g+rw">
-        <fileset refid="jars"/>
-      </chmod>
+    <target description="Build everything." name="all" depends="init">
+        <mkdir dir="${dist.dir}"/>
+        <groovy>
+            // Build the sub modules defined in config/modules.conf
+            project.getReference("parseModules")(){module -> ant.'build-subdir'(dir : module);}
+        </groovy>
+        
+        <!-- To be reactivated -->
+        <!-- <build-subdir dir="flex-ui" build.xml="build.xml"/> -->
+        
+        <fileset id="jars" dir="${dist.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <chown owner="${netkernel.user}">
+            <fileset refid="jars"/>
+        </chown>
+        <chmod perm="g+rw">
+            <fileset refid="jars"/>
+        </chmod>
     </target>
     
     <target description="Deploy everything" name="deploy" depends="all">
-      <mkdir dir="${deploy.dir}"/>
-      <copy todir="${deploy.dir}">
-        <fileset refid="jars"/>
-      </copy>
-      <copy todir="${netkernel.home.dir}/modules">
-        <fileset refid="jars"/>
-      </copy>
-      <chown owner="${netkernel.user}" type="both">
-			  <dirset dir="${deploy.dir}"/>
-        <fileset dir="${deploy.dir}">
-          <present present="srconly" targetdir="${dist}"/>
-        </fileset>
-        <fileset dir="${netkernel.home.dir}/modules">
-          <present present="srconly" targetdir="${dist}"/>
-        </fileset>
-      </chown>
-		  <chmod perm="g+rwx">
-        <dirset dir="${deploy.dir}"/>
-      </chmod>
-		  <chmod perm="g+rw">
-        <fileset dir="${deploy.dir}">
-          <present present="srconly" targetdir="${dist}"/>
-        </fileset>
-        <fileset dir="${netkernel.home.dir}/modules">
-          <present present="srconly" targetdir="${dist}"/>
-        </fileset>
-      </chmod>
+        <mkdir dir="${deploy.dir}"/>
+        <copy todir="${deploy.dir}">
+            <fileset refid="jars"/>
+        </copy>
+        <!--<copy todir="${netkernel.home.dir}/modules">
+            <fileset refid="jars"/>
+        </copy>-->
+        <chown owner="${netkernel.user}" type="both">
+            <dirset dir="${deploy.dir}"/>
+            <fileset dir="${deploy.dir}">
+                <present present="srconly" targetdir="${dist}"/>
+            </fileset>
+            <fileset dir="${netkernel.home.dir}/modules">
+                <present present="srconly" targetdir="${dist}"/>
+            </fileset>
+        </chown>
+        <chmod perm="g+rwx">
+            <dirset dir="${deploy.dir}"/>
+        </chmod>
+        <chmod perm="g+rw">
+            <fileset dir="${deploy.dir}">
+                <present present="srconly" targetdir="${dist}"/>
+            </fileset>
+            <fileset dir="${netkernel.home.dir}/modules">
+                <present present="srconly" targetdir="${dist}"/>
+            </fileset>
+        </chmod>
     </target>
     
     <target description="Clean up the derived objects" name="clean" depends="init">
         <delete dir="${dist.dir}"/>
         <delete dir="${deploy.dir}"/>
-        <build-subdir dir="mod-support" target="clean" />
-        <build-subdir dir="mod-dbxml" target="clean" />		        
-        <build-subdir dir="mod-crud" target="clean"/>        
-        <build-subdir dir="mod-model" target="clean" />
-        <build-subdir dir="mod-analyst" target="clean" />
-    <!--
-        <build-subdir dir="mod-rules" target="clean" />
--->
+        <!-- <build-subdir dir="mod-session" target="clean"/> -->
+        <!-- <build-subdir dir="flex-ui" target="clean" build.xml="build.xml"/> -->
+        <groovy>
+            // Clean up the sub modules
+            project.getReference("parseModules")(){module -> ant.'build-subdir'(dir : module, target : "clean");}
+        </groovy>
     </target>
-  
-  <target name="reload" depends="init">
-		<get src="http://localhost:1060/ep+name@control_reload" dest="${deploy.dir}/server1-status.xml"/>
-	</target>
-	
-	<target name="install" description="Configure a new installation of NetKernel" depends="deploy">
-		<filter filtersFile="deploy.properties"/>	
-		<filter token="deploy-dir" value="${deploy.dir}"/>
-    <filter filtersFile="mod-support/build/version.properties"/>        
-    <filter filtersFile="mod-dbxml/build/version.properties"/>        
-    <filter filtersFile="mod-crud/build/version.properties"/>  
-    <filter filtersFile="mod-model/build/version.properties"/>        
-    <filter filtersFile="mod-analyst/build/version.properties"/>        
-    <!--
-    <filter filtersFile="mod-rules/build/version.properties"/>      
-    -->  
-		
-		<copy file="${basedir}/config/deployedModules-${install.mode}.xml"
-			tofile="${netkernel.home.dir}/etc/deployedModules.xml"
-			filtering="true" overwrite="true"/>
-		<copy file="${basedir}/config/frontend-${install.mode}.xml"
-			tofile="${netkernel.home.dir}/modules/mod-fulcrum-frontend/module.xml"
-			overwrite="true"
-			filtering="true"/>
+    
+    <target name="reload" depends="init">
+        <get src="http://localhost:1060/ep+name@control_reload" dest="${deploy.dir}/server1-status.xml"/>
+    </target>
+    
+    <target name="install" description="Configure a new installation of NetKernel" depends="deploy">
+        <filter filtersFile="deploy.properties"/>
+        <filter token="deploy-dir" value="${deploy.dir}"/>
+        <groovy>
+            def filteredModules = ["tpt-servlet"]
+            
+            void filterList(List list, def filter) {
+                def pattern = ".*${filter}-\\d+\\.\\d+\\.\\d+\\.jar\$"
+                list.removeAll(list.grep(~pattern))
+            }
+            
+            // Add Module Filters
+            project.getReference("parseModules")(){module ->  ant.filter(filtersFile: "${module}/build/version.properties")}
 
-		<fileset id="channels-files" dir="${netkernel.home.dir}" followsymlinks="true" >
-			<include name="modules/**/*"/>
-			<include name="etc/*"/>
-			<date when="after" datetime="${touch.time}"/>
-		</fileset>		
-		<chown verbose="yes" owner="${netkernel.user}">
-			<fileset refid="channels-files"/>
-		</chown>
-		<chmod perm="g+rw">
-			<fileset refid="channels-files"/>
-		</chmod>
-	</target>
+            // Generate the netkernel deployedModules.xml
+            import groovy.xml.MarkupBuilder
+            
+            def out = new File("${properties['netkernel.home.dir']}/etc/deployedModules.xml")
+            def writer = new FileWriter( out )
+            def xml = new MarkupBuilder( writer )
+            xml.modules {
+                def libdir = new File("${properties['netkernel.home.dir']}/modules")
+                
+                def list = libdir.listFiles().grep(~/.*/)
+                filteredModules.each {filterList(list, it)}
+                
+                project.getReference("parseModules")(){module -> filterList(list, module)}
+                list.each { jar -> xml.module(jar) }
+                
+                new File("${properties['basedir']}/dist").listFiles().grep(~/.*\.jar/).each {xml.module(it)}
+                
+            }
+        </groovy>
+        <copy file="${basedir}/config/frontend-${install.mode}.xml" tofile="${netkernel.home.dir}/modules/mod-fulcrum-frontend/module.xml" overwrite="true" filtering="true"/>
+        <fileset id="channels-files" dir="${netkernel.home.dir}" followsymlinks="true">
+            <include name="modules/**/*"/>
+            <include name="etc/*"/>
+            <date when="after" datetime="${touch.time}"/>
+        </fileset>
+        <chown verbose="yes" owner="${netkernel.user}">
+            <fileset refid="channels-files"/>
+        </chown>
+        <chmod perm="g+rw">
+            <fileset refid="channels-files"/>
+        </chmod>
+    </target>
+    
+    <target name="create-module" description="Create a new NetKernel module based off of a template">
+        <!-- 
+           module.name should be of the form 'module-name'
+           module.name.upper will be translated to 'ModuleName' 
+        -->
+        <groovy>
+            properties['module.name.upper'] = properties['module.name'].replaceAll(/-\w/) { inner ->
+                inner[1].toUpperCase()
+            }.replaceAll(/^\w/) { inner ->
+                inner.toUpperCase()
+            }
+            properties['module.name.package'] = properties['module.name'].replaceAll(/-/) {''}
+            println "Generating mod-${properties['module.name']} (${properties['module.name.upper']})"
+        </groovy>
+        <!--><mkdir dir="${basedir}/mod-${module.name}"/>-->
+        <filter token="template" value="${module.name}"/>
+        <filter token="Template" value="${module.name.upper}"/>
+        <filter token="templatepackage" value="${module.name.package}"/>
+        <copy todir="${basedir}/mod-${module.name}" filtering="true">
+            <fileset dir="${basedir}/common/scaffolding/mod-template"/>
+  
+            <filtermapper>
+                <replacestring from="templatepackage" to="${module.name.package}"/>
+                <replacestring from="template" to="${module.name}"/>
+                <replacestring from="Template" to="${module.name.upper}"/>
+            </filtermapper>
+        </copy>
+        <groovy>
+            println "Appending module name to config/modules.conf"
+            // Append the new module to the modules file
+            def outfile = new File("${properties['basedir']}/config/modules.conf")
+            outfile.append("\nmod-${properties['module.name']}")
+        </groovy>
+    </target>
 </project>
