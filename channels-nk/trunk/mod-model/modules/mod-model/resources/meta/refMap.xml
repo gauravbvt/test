@@ -1,0 +1,19 @@
+<references>
+  <reference to="participant">
+    <from element="question|answerToQuestion"/>
+  </reference>
+  <reference to="question">
+    <from element="answerToQuestion" cascade="."/>
+  </reference>
+  <reference to="category"> <!-- specified and/or categorized -->
+    <from element="taskRequest|notificationRequest|policy|organization|worker|group|team|system|channel|service|artifact|document|knowledge|informationNeed|requisite|possession|contactPoint|relationship|thing|complexEvent|timeEvent|task|communication|remediation|transmission|regulatoryEvent|issue"/>
+  </reference>
+  <reference to="scenario">
+    <from element="" cascade="">
+      
+    </from>
+    <from element="" cascade="">
+      
+    </from>
+  </reference>
+</references>

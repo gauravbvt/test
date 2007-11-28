@@ -4,7 +4,7 @@
     <name>doc_mod_dbxml_guide</name>
     <uri>ffcpl:/org/ten60/dbxml/doc/doc_mod_dbxml_guide.xml</uri>
     <indexable>
-      <title>DBXML Guide</title>
+      <title>BDBXML Guide</title>
       <desc>Guide to accessing Berkley DBXML Databases</desc>
       <keywords/>
     </indexable>

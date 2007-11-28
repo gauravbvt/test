@@ -38,6 +38,7 @@
 		Servlet - Make the demo servlet map to the index page.
 		*********
 		-->
+    <!-- TODO  - Needed? -->
 		<rule>
 			<match>servlet:.*</match>
 			<to>ffcpl:/pub/index_servlet.html</to>
@@ -53,6 +54,7 @@
 			<match>ffcpl:(/|/\+.*)</match> <!--Fixes unexpected localhost cookie bug on root path-->
 			<to>ffcpl:/pub/index.html</to>
 		</rewrite>
+    <!-- Builds a pseudo static config from all of the imported modules -->
 		<rewrite>
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
 			<to>active:http-bridge-config+module@urn:org:ten60:netkernel:fulcrum:frontend</to>
@@ -111,18 +113,11 @@
 		Add your modules below here...
 		************
 		-->
-    <!--
-		<import>
-		    <uri>@mod-session-uri@</uri>
-		</import>
-      -->
 		<import>
 		    <uri>@mod-analyst-uri@</uri>
 		</import>
 	  
-		<import>
-		    <uri>@mod-reporting-ui-uri@</uri>
-		</import>
+
     </mapping>
 	<transports>
 		<!--

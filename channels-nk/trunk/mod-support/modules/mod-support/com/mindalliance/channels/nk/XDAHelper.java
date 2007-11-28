@@ -41,12 +41,10 @@ public class XDAHelper {
         return makeXDAAspect(xml).getClonedXDA();
     }
     
-    public void validateRNG(IAspectXDA doc) throws Exception { 
-        String schemaURL = doc.getXDA().getText( "@schema", true );  // doc.@schema;
-        if (schemaURL == null) throw new Exception ("Missing schema attribute");
+    public void validateRNG(IAspectXDA doc, String schemaURI) throws Exception { 
         INKFRequest req = context.createSubRequest("active:validateRNG");
         req.addArgument("operand", doc);
-        req.addArgument("operator", schemaURL);
+        req.addArgument("operator", schemaURI);
         IURRepresentation result = context.issueSubRequest(req);
         boolean valid = ((IAspectBoolean)context.transrept(result, IAspectBoolean.class)).isTrue();
         if (!valid) {

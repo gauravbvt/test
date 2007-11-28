@@ -1,5 +1,0 @@
-  <sharingNeed schema="http://localhost:8080/channels/schema/sharingNeed.rng">
-    <id>sharingNeed1</id>
-    <knowId>know1</knowId>
-    <needToKnowId>needToKnow1</needToKnowId>
-  </sharingNeed>

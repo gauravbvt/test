@@ -30,7 +30,7 @@
 	<module>modules/ext-xrl-1.5.3.jar</module>
 	<module>modules/ext-xsecurity-1.2.2.jar</module>
 	<module>modules/ext-xunit-2.1.4.jar</module>
-	<module>modules/mod-dbxml-1.0.1.jar</module>
+	<!-- <module>modules/mod-dbxml-1.0.1.jar</module> --> <!-- Overridden by augmented, v1.0.2 -->
 	<module>modules/mod-developer-1.0.8.jar</module>
 	<module>modules/mod-docxter-2.0.0.jar</module>
 	<module>modules/mod-docxter-legacy-1.2.0.jar</module>
@@ -63,9 +63,15 @@
   <module>file://@deploy-dir@/@mod-support-name@-@mod-support-version@.jar</module>
   <module>file://@deploy-dir@/@mod-dbxml-name@-@mod-dbxml-version@.jar</module>
   <module>file://@deploy-dir@/@test-mod-dbxml-name@-@test-mod-dbxml-version@.jar</module>
-  <module>file://@deploy-dir@/@mod-data-name@-@mod-data-version@.jar</module>
-  <module>file://@deploy-dir@/@test-mod-data-name@-@test-mod-data-version@.jar</module>
-  <module>file://@deploy-dir@/@mod-rest-name@-@mod-rest-version@.jar</module>
-  <module>file://@deploy-dir@/@test-mod-rest-name@-@test-mod-rest-version@.jar</module>
+  <module>file://@deploy-dir@/@mod-crud-name@-@mod-crud-version@.jar</module>
+  <module>file://@deploy-dir@/@test-mod-crud-name@-@test-mod-crud-version@.jar</module>
+<!--
+  <module>file://@deploy-dir@/@mod-model-name@-@mod-model-version@.jar</module>
+  <module>file://@deploy-dir@/@test-mod-model-name@-@test-mod-model-version@.jar</module>
+  <module>file://@deploy-dir@/@mod-rules-name@-@mod-rules-version@.jar</module>
+  <module>file://@deploy-dir@/@test-mod-rules-name@-@test-mod-rules-version@.jar</module>
+-->
+  <module>file://@deploy-dir@/@mod-analyst-name@-@mod-analyst-version@.jar</module>
+  <module>file://@deploy-dir@/@test-mod-analyst-name@-@test-mod-analyst-version@.jar</module>
 
 </modules>

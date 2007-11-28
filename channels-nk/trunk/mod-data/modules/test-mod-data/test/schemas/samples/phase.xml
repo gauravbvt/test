@@ -1,6 +1,0 @@
-<phase schema="http://localhost:8080/channels/schema/phase.rng">
-  <id>46464536</id>
-  <name>A phase</name>
-  <description>About a phase</description>
-  <eventId>66654654</eventId>
-</phase>

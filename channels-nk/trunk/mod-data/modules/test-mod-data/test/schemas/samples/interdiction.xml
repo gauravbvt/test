@@ -1,7 +1,0 @@
-<interdiction schema="http://localhost:8080/channels/schema/interdiction.rng">
-  <id>obligation1</id>
-  <target>
-    <sharingNeedId>task1</sharingNeedId>
-  </target>
-  <policyId>policy1</policyId>
-</interdiction>
