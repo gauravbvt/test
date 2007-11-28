@@ -802,19 +802,6 @@
 </node>
 </node>
 </node>
-<node CREATED="1193186468016" ID="Freemind_Link_1430827764" MODIFIED="1194305538394" TEXT="Analysis">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      A named set of attributes and groups of attributes about an entity that are available to the modeler but not to the agents within the flows. An analysis is inferred and subject to truth maintenance.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
 </node>
 <node CREATED="1192288645164" HGAP="-35" ID="Freemind_Link_353024669" MODIFIED="1193583114596" POSITION="right" TEXT="Component">
 <richcontent TYPE="NOTE"><html>
@@ -1461,6 +1448,19 @@
 </html>
 </richcontent>
 <font BOLD="true" ITALIC="true" NAME="SansSerif" SIZE="12"/>
+<node CREATED="1193186468016" ID="Freemind_Link_1430827764" MODIFIED="1194305538394" TEXT="Analysis">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      A named set of attributes and groups of attributes about an entity that are available to the modeler but not to the agents within the flows. An analysis is inferred and subject to truth maintenance.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 <node CREATED="1192542888748" ID="Freemind_Link_781198467" MODIFIED="1193965669305" TEXT="Binder">
 <richcontent TYPE="NOTE"><html>
   <head>
