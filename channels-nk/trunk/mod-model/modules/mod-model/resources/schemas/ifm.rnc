@@ -141,7 +141,7 @@ latlong =
   }
 
 ## The information content of a transmission. A message encodes (formats) and possibly encrypts information.
-abstract_message = encryption? & information & format?
+abstract_message = encryption? & information & format*
 
 ## The kind of encryption
 encryption = element encryption { type_conceptualized }
@@ -400,8 +400,6 @@ abstract_thing =
   & 
     ## default scope is model
     element scope { scenario | event }?
-abstract_category =
-  abstract_model_element & type_conceptualized & information?
 
 ## Something of significance being true somewhere for some time in a scenario. A cost/benefit valuation can be attached to an event.
 abstract_event =
@@ -473,7 +471,7 @@ abstract_fact =
     abstract_thing
     
 # .....Concrete....#
-model_element = category | scenario | entity | analysis
+model_element = category | scenario | entity | format | role | mission
 div {
   
   ## An association between a sense and information.
@@ -481,19 +479,21 @@ div {
   ##         Constraint: category's sense is hyponym of taxonomy sense.
   ##       
   category =
-    format
-    | role
-    | mission
-    | element category {
+     element category {
         attribute ref { xsd:IDREF }
-        | abstract_category
+        |  (
+        abstract_model_element 
+        & type_conceptualized 
+        & information?
+        )
       }
   
   ## An information encoding format. A format may be compatible with other formats.
   format =
     element format {
       attribute ref { xsd:IDREF }
-      | (abstract_category
+      | (abstract_model_element
+         & type_categorized
          >> a:documentation [ "constraint: taxonomy is format#1" ]
          & element mimetype { xsd:string }?
          & element compatibleWith { format+ }?)
@@ -503,7 +503,8 @@ div {
   role =
     element role {
       attribute ref { xsd:IDREF }
-      | (abstract_category
+      | (abstract_model_element
+         & type_categorized
          & mission*
          & element responsibility {
              event,
@@ -515,8 +516,8 @@ div {
   mission =
     element mission {
       attribute ref { xsd:IDREF }
-      | (abstract_category
-         >> a:documentation [ "Constraint: at least one child appears" ]
+      | (abstract_model_element
+         & type_categorized
          & element canFurther { mission* }
          & element canOppose { mission* })
     }
@@ -567,10 +568,11 @@ organization =
     | (type_named
        & abstract_thing
        & type_located
+       & mission*
        & element abbreviation { text }?
        & element logo { xsd:anyURI }?
        & element jurisdiction { type_located }?
-       & element parent { organization? })
+       & element parent { organization }?)
   }
 div {
   resource = agent | service | artifact
@@ -664,7 +666,7 @@ div {
       attribute ref { xsd:IDREF }
       | (abstract_task
          & information
-         & element targetAgent { agent })
+         & element target { agent })
     }
   
   ## Task of sending a message or batch of messages from one agent directly to another.
@@ -709,8 +711,11 @@ div {
 }
 div {
   
-  ## A resource that can autonomously execute a task.
-  abstract_agent = abstract_resource
+  ## A resource with role assignments that can autonomously execute a task.
+  abstract_agent = 
+    abstract_resource
+    & role*
+
   agent = worker | group | team | system
   
   ## A role-based position held by a person in an organization.
@@ -782,7 +787,7 @@ requisite =
     attribute ref { xsd:IDREF }
     | (abstract_fact
        & agent
-       & element resource { resource }
+       & element required { resource }
        & availability)
   }
 
@@ -811,8 +816,8 @@ relationship =
   element relationship {
     attribute ref { xsd:IDREF }
     | (abstract_fact
-       & element fromAgent { agent }
-       & element toAgent { agent })
+       & element from { agent }
+       & element to { agent })
   }
 
 ## The security clearance of a person.
@@ -847,29 +852,6 @@ policy =
        & element intent { "forbid" | "obligate" })
   }
 
-## An analytical result about an element of the model (this is always inferred)
-analysis =
-  element analysis {
-    (attribute ref { xsd:IDREF }),
-    (type_unique
-     & type_described
-     & model_element
-     & value*
-     & valueGroup*)
-  }
-
-## A named value
-value =
-  element value {
-    element name { text }
-  }
-
-## A named group of values
-valueGroup =
-  element valueGroup {
-    element name { text }
-    & value+
-  }
 # - - - - - Project elements - - - - - - - - -#
 
 ## Descriptive information for the project
@@ -934,6 +916,35 @@ answerToQuestion =
        & element content { text }
        & participant*)
   }
+# - - - - - - Application objects - - - - -#
+
+application_object =
+  (analysis)
+
+## An analytical result about an element of the model (this is always inferred)
+analysis =
+  element analysis {
+    (attribute ref { xsd:IDREF }),
+    (type_unique
+     & type_described
+     & model_element
+     & value*
+     & valueGroup*)
+  }
+
+## A named value
+value =
+  element value {
+    element name { text }
+  }
+
+## A named group of values
+valueGroup =
+  element valueGroup {
+    element name { text }
+    & value+
+  }
+
 # - - - - - - Project - - - - - -#
 
 # One database per project
@@ -944,4 +955,5 @@ start =
     project
     & project_element*
     & model_element*
+    & application_object*
   }

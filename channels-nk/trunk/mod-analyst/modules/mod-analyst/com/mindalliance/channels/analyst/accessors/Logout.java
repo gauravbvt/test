@@ -6,7 +6,7 @@ package com.mindalliance.channels.analyst.accessors;
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
 import org.ten60.netkernel.layer1.nkf.impl.NKFAccessorImpl;
 
-import com.mindalliance.channels.analyst.Session;
+import com.mindalliance.channels.nk.Session;
 import com.mindalliance.channels.nk.ContextSupport;
 
 public class Logout extends NKFAccessorImpl {

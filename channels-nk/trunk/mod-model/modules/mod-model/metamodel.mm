@@ -154,6 +154,7 @@
   </body>
 </html>
 </richcontent>
+</node>
 <node CREATED="1192288746550" ID="Freemind_Link_126905439" MODIFIED="1194018087268" TEXT="Role">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -201,7 +202,6 @@
   </body>
 </html>
 </richcontent>
-</node>
 </node>
 <node CREATED="1192754926343" ID="Freemind_Link_1482619285" MODIFIED="1193526862705" TEXT="Scenario">
 <richcontent TYPE="NOTE"><html>

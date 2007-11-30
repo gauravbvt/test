@@ -1,0 +1,13 @@
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+start = 
+	element references {
+		element reference {
+			(attribute toElement {text} | attribute toGroup {text})
+			& element from {
+				(attribute element {text} | attribute group {text}) ,
+				attribute via {text}? ,
+				attribute in {text}? ,
+				attribute isDependent {xsd:boolean}?
+			}*
+		}*
+	}

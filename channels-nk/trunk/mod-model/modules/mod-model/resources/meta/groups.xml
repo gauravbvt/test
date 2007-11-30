@@ -1,0 +1,76 @@
+<?oxygen RNGSchema="../schemas/groups.rnc" type="compact"?>
+<groups>
+  <group name="application_object">
+    <element>analysis</element>
+  </group>
+  <group name="project_element">
+    <element>participant</element>
+    <element>journalEntry</element>
+    <element>question</element>
+    <element>answerToQuestion</element>
+  </group>
+  <group name="model_element">
+    <subGroup>entity</subGroup>
+    <subGroup>category</subGroup>
+    <element>scenario</element>
+    <element>role</element>
+    <element>format</element>
+    <element>mission</element>
+  </group>
+  <group name="entity">
+    <subGroup>thing</subGroup>
+    <subGroup>event</subGroup>
+  </group>
+  <group name="thing">
+    <element>thing</element>
+    <element>person</element>
+    <element>organization</element>
+    <subGroup>resource</subGroup>
+    <subGroup>fact</subGroup>
+  </group>
+  <group name="event">
+    <element>complexEvent</element>
+    <element>timeEvent</element>
+    <subGroup>linkedEvent</subGroup>
+  </group>
+  <group name="resource">
+    <subGroup>agent</subGroup>
+    <subGroup>service</subGroup>
+    <subGroup>artifact</subGroup>
+  </group>
+  <group name="fact">
+    <element>knowledge</element>
+    <element>informationNeed</element>
+    <element>requisite</element>
+    <element>possession</element>
+    <element>contactPoint</element>
+    <element>relationship</element>
+    <element>clearance</element>
+  </group>
+  <group name="linkedEvent">
+    <element>linkedEvent</element>
+    <element>regulatoryEvent</element>
+    <element>issue</element>
+    <subGroup>task</subGroup>
+  </group>
+  <group name="task">
+    <element>task</element>
+    <element>communication</element>
+    <element>remediation</element>
+    <element>transmission</element>
+  </group>
+  <group name="service">
+    <element>service</element>
+    <element>channel</element>
+  </group>
+  <group name="agent">
+    <element>worker</element>
+    <element>group</element>
+    <element>team</element>
+    <element>system</element>
+  </group>
+  <group name="artifact">
+    <element>artifact</element>
+    <element>document</element>
+  </group>
+</groups>

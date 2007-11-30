@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Analyst</title>
     <link rel="stylesheet" href="analyst.css" type="text/css" media="screen"/>
-    <script src="scripts/libs/jquery.js" type="text/javascript"></script>
-    <script src="scripts/libs/interface.js" type="text/javascript"></script>
-    <script src="scripts/libs/jquery.taconite.js" type="text/javascript"></script>
-    <script src="scripts/libs/analyst.js" type="text/javascript"></script>
+    <script src="support/scripts/libs/jquery.js" type="text/javascript"></script>
+    <script src="support/scripts/libs/interface.js" type="text/javascript"></script>
+    <script src="support/scripts/libs/jquery.taconite.js" type="text/javascript"></script>
+    <script src="support/scripts/channels.js" type="text/javascript"></script>
   </head>
   <body>
 	  <div class="analyst">

@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.analyst;
+package com.mindalliance.channels.nk;
 
 import org.ten60.netkernel.layer1.nkf.NKFException;
 

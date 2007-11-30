@@ -8,7 +8,7 @@ import org.ten60.netkernel.layer1.nkf.impl.NKFAccessorImpl;
 import org.ten60.netkernel.layer1.representation.IAspectNVP;
 import org.ten60.netkernel.xml.representation.IAspectXDA;
 
-import com.mindalliance.channels.analyst.Session;
+import com.mindalliance.channels.nk.Session;
 import com.mindalliance.channels.nk.ContextSupport;
 
 

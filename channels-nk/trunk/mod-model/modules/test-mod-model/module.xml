@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module>
+    <identity>
+		<uri>urn:com:mindalliance:channels:model:test</uri>
+		<version>0.1.0</version>
+    </identity>
+	<info>
+	    <name>Mind-Alliance model Module Tests</name>
+	    <description>Tests for mod-model</description>
+	</info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+    <export>
+		  <uri>
+        <match>ffcpl:/test/mod-model-test/.*</match>
+        <match>ffcpl:/entrypoints.xml</match>
+				<match>ffcpl:/com/mindalliance/channels/support/.*</match>
+      </uri>
+    </export>
+    <rewrite>
+		<rule>
+			<match>ffcpl:/test/mod-model-test/xunit(.*)</match>
+			<to>active:xunit+testlist@ffcpl:/test/xunit/testlist.xml$1</to>
+		</rule>
+		<rule>
+			<match>ffcpl:/test/mod-model-test/(.*)</match>
+			<to>ffcpl:/test/$1</to>
+		</rule>
+	</rewrite>
+  <mapping>
+    <rewrite>
+      <match>ffcpl:/com/mindalliance/channels/test/model/(.*)</match>
+      <to>ffcpl:/resources/$1</to>            
+    </rewrite>
+		<this>
+			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
+      <match>ffcpl:/resources/.*</match>
+		</this>
+		<import>
+			<uri>urn:com:mindalliance:channels:model</uri>
+		</import>
+		<import>
+			<uri>urn:com:mindalliance:channels:support</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xunit</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

@@ -2,11 +2,11 @@
     <script src="scripts/divs/bottom.js" type="text/javascript"/>
     <div id="mainMenu" class="fisheye">
 		  <div class="fisheyeContainer"> <!--  target is an id without the # (or else no value is sent) -->
-        <a onclick="analyst.command('edit', {target:'middle', kind:'project', id:'0'})" class="fisheyeItem"><img src="images/icons/channels-logo.png" width="30" /><span>Project</span></a>
-        <a onclick="analyst.command('showParticipants', {target:'middle'})" class="fisheyeItem"><img src="images/icons/users1.png" width="30" /><span>Participants</span></a>
-        <a onclick="analyst.command('showQuestionsAndAnswers', {target:'middle'})" class="fisheyeItem"><img src="images/icons/question_and_answer.png" width="30" /><span>Q&amp;A</span></a>
-        <a onclick="analyst.command('showModel', {target:'middle'})" class="fisheyeItem"><img src="images/icons/cube_molecule.png" width="30" /><span>Model</span></a>
-        <a onclick="analyst.command('showReports', {target:'middle'})" class="fisheyeItem"><img src="images/icons/document_chart.png" width="30" /><span>Reports</span></a>
+        <a onclick="channels.taconite.command('/analyst/command/edit', {target:'middle', kind:'project', id:'0'})" class="fisheyeItem"><img src="images/icons/channels-logo.png" width="30" /><span>Project</span></a>
+        <a onclick="channels.taconite.command('/analyst/command/showParticipants',{target:'middle'})" class="fisheyeItem"><img src="images/icons/users1.png" width="30" /><span>Participants</span></a>
+        <a onclick="channels.taconite.command('/analyst/command/showQuestionsAndAnswers', {target:'middle'})" class="fisheyeItem"><img src="images/icons/question_and_answer.png" width="30" /><span>Q&amp;A</span></a>
+        <a onclick="channels.taconite.command('/analyst/command/showModel', {target:'middle'})" class="fisheyeItem"><img src="images/icons/cube_molecule.png" width="30" /><span>Model</span></a>
+        <a onclick="channels.taconite.command('/analyst/command/showReports', {target:'middle'})" class="fisheyeItem"><img src="images/icons/document_chart.png" width="30" /><span>Reports</span></a>
       </div>
     </div>
  </div>

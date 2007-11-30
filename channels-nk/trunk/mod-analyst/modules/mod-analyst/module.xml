@@ -23,21 +23,25 @@
 			<match>ffcpl:/com/mindalliance/channels/analyst/.*</match> <!-- Backend services and resources -->
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match> <!-- Front end module config -->
-			<match>ffcpl:/com/mindalliance/channels/library/.*</match> <!-- Expose access to support module resources -->
-      <match>js:(.*)</match> <!-- used for tests -->
+			<match>ffcpl:/com/mindalliance/channels/support/.*</match> <!-- Expose access to support module resources -->
+      <match>js:(.*)</match> <!-- to be used for tests -->
 		</uri>
 	</export> 
   <rewrite>
     <rule>
-      <match>.*/(.*\.css)</match>
+      <match>ffcpl:/analyst/support/(.*?)(\+.*)?</match>
+      <to>ffcpl:/com/mindalliance/channels/support/$1</to> <!-- redirect to mod-support without args-->
+    </rule>
+    <rule>
+      <match>ffcpl:/analyst/(.*?\.css).*</match>
       <to>ffcpl:/resources/styles/$1</to>
     </rule>
     <rule>
-      <match>.*/images/(.*)</match>
+      <match>ffcpl:/analyst/images/(.*?\.png).*</match>
       <to>ffcpl:/resources/images/$1</to>
     </rule>
     <rule>
-      <match>.*/scripts/(.*)</match>
+      <match>ffcpl:/analyst/scripts/(.*?\.js).*</match>
       <to>ffcpl:/resources/scripts/$1</to>
     </rule>
     <rule>

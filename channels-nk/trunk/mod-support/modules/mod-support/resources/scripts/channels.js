@@ -1,7 +1,11 @@
+// ***** GLOBALS ******
+
 $.taconite.debug = true;
 
+// ******* NAMESPACE *********
+
 // To create a namespace
-function analyst_NS(ns) { // HT to http://weblogs.asp.net/mschwarz/archive/2005/08/26/423699.aspx
+function channels_NS(ns) { // HT to http://weblogs.asp.net/mschwarz/archive/2005/08/26/423699.aspx
  var nsParts = ns.split(".");
  var root = window;
  for(var i=0; i<nsParts.length; i++) {
@@ -12,10 +16,12 @@ function analyst_NS(ns) { // HT to http://weblogs.asp.net/mschwarz/archive/2005/
  }
 }
 
-analyst_NS("analyst");
+// ********** channels.taconite ************
 
-analyst.command = function(command, args) {
-	uri = "/analyst/command/" + command;
+channels_NS("channels.taconite");
+
+// Obtain and interpret Taconite command
+channels.taconite.command = function(uri, args) {
 	addedArg = false;
 	// Build command
 	for (arg in args) {
