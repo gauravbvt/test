@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="modules/mod-support" />
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry combineaccessrules="false" kind="src" path="/common" exported="true" />
+    <classpathentry kind="var" path="JUNIT_HOME" />
+    <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GROOVY" exported="true" />
+    <classpathentry kind="output" path="modules/mod-support" />
+</classpath>
+
