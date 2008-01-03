@@ -1,0 +1,11 @@
+<html>
+  <head>
+    <title>@template@ - LOGOUT</title>
+    <link rel="stylesheet" href="@template@.css" type="text/css" media="screen"/>
+  </head>
+  <body>
+	  <div class="logout">
+      Goodbye!
+    </div>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GateKeeperPolicy>
+	<zone>
+		<match>.*/@template@/.*</match>
+		<isValidURI>active:@template@_validateSession</isValidURI>
+		<loginURI>ffcpl:/@template@/view/login</loginURI>
+	</zone>
+</GateKeeperPolicy>

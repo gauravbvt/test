@@ -3,7 +3,7 @@
     
     <taskdef name="groovy"
              classname="org.codehaus.groovy.ant.Groovy"
-             classpath="${basedir}/common/lib/groovy-all-1.1-rc-2.jar"/>
+             classpath="${basedir}/common/lib/groovy-all-1.5.0.jar"/>
 
     
     <target name="init">
@@ -185,6 +185,41 @@
                 <replacestring from="templatepackage" to="${module.name.package}"/>
                 <replacestring from="template" to="${module.name}"/>
                 <replacestring from="Template" to="${module.name.upper}"/>
+            </filtermapper>
+        </copy>
+        <groovy>
+            println "Appending module name to config/modules.conf"
+            // Append the new module to the modules file
+            def outfile = new File("${properties['basedir']}/config/modules.conf")
+            outfile.append("\nmod-${properties['module.name']}")
+        </groovy>
+    </target>
+    
+    <target name="create-web-module" description="Create a new NetKernel module based off of a template">
+        <!-- 
+           module.name should be of the form 'module-name'
+           module.name.upper will be translated to 'ModuleName' 
+        -->
+        <groovy>
+            properties['module.name.upper'] = properties['module.name'].replaceAll(/-\w/) { inner ->
+                inner[1].toUpperCase()
+            }.replaceAll(/^\w/) { inner ->
+                inner.toUpperCase()
+            }
+            properties['module.name.package'] = properties['module.name'].replaceAll(/-/) {''}
+            println "Generating mod-${properties['module.name']} (${properties['module.name.upper']})"
+        </groovy>
+        <!--><mkdir dir="${basedir}/mod-${module.name}"/>-->
+        <filter token="template" value="${module.name}"/>
+        <filter token="Template" value="${module.name.upper}"/>
+        <filter token="templatepackage" value="${module.name.package}"/>
+        <copy todir="${basedir}/mod-${module.name}" filtering="true">
+            <fileset dir="${basedir}/common/scaffolding/mod-web"/>
+  
+            <filtermapper>
+                <replacestring from="templatepackage" to="${module.name.package}"/>
+                <replacestring from="mod-web" to="mod-${module.name}"/>
+                <!-- <replacestring from="Template" to="${module.name.upper}"/> -->
             </filtermapper>
         </copy>
         <groovy>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="@template@ Unit Tests">
+  <desc>
+    <div>
+      This is the set of unit tests for the Mind-Alliance Channels @template@ module.
+    </div>
+  </desc> 
+</testlist>

@@ -1,0 +1,16 @@
+<SessionPolicy>
+  <zone>
+    <match>.*@template@.*</match>
+    <token>cookie</token>
+    <path>/@template@/</path>
+    <type>
+      <simple />
+    </type>
+  </zone>
+  <meta>
+    <id>DefaultPolicy</id>
+    <max-sessions>10</max-sessions>
+    <max-duration>7200000</max-duration> <!-- 2 hours -->
+    <min-duration>3600000</min-duration> <!-- 1 hour -->
+  </meta>
+</SessionPolicy>
