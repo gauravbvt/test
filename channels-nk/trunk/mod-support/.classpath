@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="modules/mod-support" />
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
-    <classpathentry combineaccessrules="false" kind="src" path="/common" exported="true" />
-    <classpathentry kind="var" path="JUNIT_HOME" />
-    <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GROOVY" exported="true" />
-    <classpathentry kind="output" path="modules/mod-support" />
+	<classpathentry kind="src" path="modules/mod-support"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/common"/>
+	<classpathentry kind="var" path="JUNIT_HOME"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/GROOVY"/>
+	<classpathentry exported="true" kind="var" path="GROOVY_ECLIPSE_HOME/groovy-all-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="bin-groovy"/>
+	<classpathentry kind="output" path="modules/mod-support"/>
 </classpath>
-
