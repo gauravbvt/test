@@ -15,7 +15,7 @@ class Login extends AbstractAccessor {
     static final AUTHETICATE_QUERY_URI = "ffcpl:/resources/xqueries/authenticate.xq";
     static final PROJECTS_CONFIG_URI = "ffcpl:/etc/projects.xml";
     static final VIEWLINKS_URI = "ffcpl:/etc/viewLinks.xml";
-    static final INVALID_LOGIN_URI = "ffcpl:/analyst/view/invalidLogin";
+    static final INVALID_LOGIN_URI = "ffcpl:/modeler/view/invalidLogin";
 
     void source(Context context) {
         use(NetKernelCategory) {

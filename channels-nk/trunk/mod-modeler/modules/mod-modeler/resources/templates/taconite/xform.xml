@@ -1,0 +1,11 @@
+<taconite>
+  <replaceContent select="head">
+    <model xmlns="http://www.w3.org/2002/xforms" id="~~kind~~">
+      <instance src="/modeler/getInstance/~~kind~~/~~id~~"/>
+      <submission id="submit" method="post" action="/modeler/putInstance"/>
+    </model>
+  </replaceContent>
+  <replaceContent select="#~~target~~">
+    <xrl:include xmlns:xrl="http://1060.org/xrl" href="active:model_xform+kind@data:~~kind~~"/>
+  </replaceContent>
+</taconite>

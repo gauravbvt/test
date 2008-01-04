@@ -13,7 +13,7 @@ class Logout extends AbstractAccessor {
             Session session = ctx.session;
             session.credentials = null
             // Show logout page
-            ctx.respond("ffcpl:/analyst/view/logout","text/html")
+            ctx.respond("ffcpl:/modeler/view/logout","text/html")
         }
     }
 }

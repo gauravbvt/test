@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="Channels Modeler Module">
+    
+    <target name="init">
+        <property name="deploy.dir" value="deploy"/>
+        <mkdir dir="${deploy.dir}"/>
+    </target>
+    
+	<target description="Build everything." name="all" depends="init">
+		<ant antfile="build-mod-modeler.xml"/>
+		<ant antfile="build-test-modeler.xml"/>
+        <echo message="Channels Modeler Module build completed."/>
+    </target>
+    
+    <target description="Clean up the derived objects" name="clean">
+        <delete>
+            <fileset dir="." includes="**/*.jar"/>
+        </delete>
+    	<delete dir="${deploy-dir}"/>
+		<ant antfile="build-mod-modeler.xml" target="clean"/>
+		<ant antfile="build-test-modeler.xml" target="clean"/>
+    </target>
+	    
+</project>

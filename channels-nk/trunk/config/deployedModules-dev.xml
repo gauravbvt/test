@@ -66,12 +66,10 @@
   <module>file://@deploy-dir@/@mod-crud-name@-@mod-crud-version@.jar</module>
   <module>file://@deploy-dir@/@test-mod-crud-name@-@test-mod-crud-version@.jar</module>
 <!--
-  <module>file://@deploy-dir@/@mod-model-name@-@mod-model-version@.jar</module>
-  <module>file://@deploy-dir@/@test-mod-model-name@-@test-mod-model-version@.jar</module>
   <module>file://@deploy-dir@/@mod-rules-name@-@mod-rules-version@.jar</module>
   <module>file://@deploy-dir@/@test-mod-rules-name@-@test-mod-rules-version@.jar</module>
 -->
-  <module>file://@deploy-dir@/@mod-analyst-name@-@mod-analyst-version@.jar</module>
-  <module>file://@deploy-dir@/@test-mod-analyst-name@-@test-mod-analyst-version@.jar</module>
+  <module>file://@deploy-dir@/@mod-modeler-name@-@mod-modeler-version@.jar</module>
+  <module>file://@deploy-dir@/@test-mod-modeler-name@-@test-mod-modeler-version@.jar</module>
 
 </modules>

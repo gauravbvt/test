@@ -20,7 +20,6 @@
         <property file="${props.file}"/>
         <property name="netkernel.user" value=":netkernel"/>
         <fail unless="netkernel.home.dir" message="Please define netkernel.home.dir in ${props.file}"/>
-        <!-- <fail unless="FLEX_HOME" message="Please define FLEX_HOME in ${props.file}"/> -->
         <echo message="NetKernel Home: ${netkernel.home.dir}"/>
         <echo message="NetKernel User: ${netkernel.user}"/>
         
@@ -53,10 +52,6 @@
             // Build the sub modules defined in config/modules.conf
             project.getReference("parseModules")(){module -> ant.'build-subdir'(dir : module);}
         </groovy>
-        
-        <!-- To be reactivated -->
-        <!-- <build-subdir dir="flex-ui" build.xml="build.xml"/> -->
-        
         <fileset id="jars" dir="${dist.dir}">
             <include name="**/*.jar"/>
         </fileset>
@@ -73,9 +68,9 @@
         <copy todir="${deploy.dir}">
             <fileset refid="jars"/>
         </copy>
-        <!--<copy todir="${netkernel.home.dir}/modules">
+        <copy todir="${netkernel.home.dir}/modules">
             <fileset refid="jars"/>
-        </copy>-->
+        </copy>
         <chown owner="${netkernel.user}" type="both">
             <dirset dir="${deploy.dir}"/>
             <fileset dir="${deploy.dir}">

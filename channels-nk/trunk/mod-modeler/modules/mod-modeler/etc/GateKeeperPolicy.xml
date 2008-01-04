@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GateKeeperPolicy>
+	<zone>
+		<match>.*/modeler/.*</match>
+		<isValidURI>active:modeler_validateSession</isValidURI>
+		<loginURI>ffcpl:/modeler/view/login</loginURI>
+	</zone>
+</GateKeeperPolicy>

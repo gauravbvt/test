@@ -1,0 +1,20 @@
+<html xmlns:xrl="http://1060.org/xrl">
+  <head>
+    <meta http-equiv="Content-Language" content="en" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Modeler</title>
+    <link rel="stylesheet" href="modeler.css" type="text/css" media="screen"/>
+    <script src="support/scripts/libs/jquery.js" type="text/javascript"></script>
+    <script src="support/scripts/libs/interface.js" type="text/javascript"></script>
+    <script src="support/scripts/libs/jquery.taconite.js" type="text/javascript"></script>
+    <script src="support/scripts/channels.js" type="text/javascript"></script>
+  </head>
+  <body>
+	  <div class="modeler">
+      <xrl:include href="xrl:top"/>
+      <xrl:include href="xrl:middle"/>
+      <xrl:include href="xrl:bottom"/>
+    </div>
+  </body>
+</html>
+  

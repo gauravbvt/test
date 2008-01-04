@@ -15,6 +15,7 @@ import org.ten60.netkernel.xml.xda.IXDA;
 import org.ten60.netkernel.xml.xda.IXDAReadOnly;
 import org.ten60.netkernel.xml.xda.IXPathResult;
 import org.ten60.netkernel.xml.xda.XPathLocationException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -33,6 +34,10 @@ public class XDAHelper {
         this.context = context;
     }
     
+    public Document getReadOnlyDocument (IAspectXDA aspectXDA) {
+        return new DOMXDAAspect((DOMXDA)aspectXDA.getXDA()).getReadOnlyDocument();
+    }
+       
     public IAspectXDA makeXDAAspect (String xml) throws NKFException {
         return (IAspectXDA)context.transrept( new StringAspect(xml), IAspectXDA.class );
     }
