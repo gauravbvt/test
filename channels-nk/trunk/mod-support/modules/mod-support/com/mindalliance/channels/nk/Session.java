@@ -60,4 +60,20 @@ public class Session {
         return sessionURI + "+key@data:/" + token;
     }
 
+    // Groovy support
+    public void set(String token, String value) throws NKFException {
+        if (value != null) {
+            storeToken(token, value);
+        } else {
+            deleteToken(token);
+        }
+    }
+
+    public Object get(String name) throws NKFException {
+        if (name.endsWith("?")) {
+            return tokenExists(name.substring(0, name.length() - 1));
+        }
+        return recallToken(name);
+    }
+
 }
