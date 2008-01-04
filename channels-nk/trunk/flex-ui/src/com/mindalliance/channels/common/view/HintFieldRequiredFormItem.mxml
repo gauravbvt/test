@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:FormItem xmlns:mx="http://www.adobe.com/2006/mxml"
-	required="true">
-	
-	<mx:Style source="../../../../../assets/styles/FormStyles.css"/>
-	
-	<mx:Label text="means field cannot be empty" styleName="FormItemDescription"/>
-</mx:FormItem>

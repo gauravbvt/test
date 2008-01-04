@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"
-	label="x" width="16" height="16" cornerRadius="0" color="#FFFFFF" fillColors="[#BABABA, #BABABA]"
-	toolTip=""/>
