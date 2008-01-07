@@ -1,158 +1,176 @@
-<?xml version="1.0" encoding="UTF-8"?><module>
-	<!--
-	*************************************
-	Mind-Alliance Channels Modeler Module
-	*************************************
-	-->
-  <identity>
-		<uri>urn:com:mindalliance:channels:modeler</uri>
-		<version>0.1.0</version> <!-- Why not set from version.properties? -->
-  </identity>
-	<info>
-		<name>Mind-Alliance Channels Modeler Module</name>
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+    <!--
+     *************************************
+     Mind-Alliance Channels Modeler Module
+     *************************************
+     -->
+    <identity>
+        <uri>urn:com:mindalliance:channels:modeler</uri>
+        <version>0.1.0</version>
+        <!-- Why not set from version.properties? -->
+    </identity>
+    <info>
+        <name>Mind-Alliance Channels Modeler Module</name>
         <description>modeler Web application resources and services</description>
-		<dynamic/>
+        <dynamic/>
     </info>
     <publisher>
         <name>Mind-Alliance, Inc.</name>
-		<uri>http://www.mindalliance.com</uri>
+        <uri>http://www.mindalliance.com</uri>
     </publisher>
-	<export>
-		<uri>
-			<match>ffcpl:/modeler.*</match> <!-- Client services and resources (modeler/secure/... or modeler/public/...)-->
-			<match>ffcpl:/com/mindalliance/channels/modeler/.*</match> <!-- Backend services and resources -->
-			<match>ffcpl:/entrypoints.xml</match>
-			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match> <!-- Front end module config -->
-			<match>ffcpl:/com/mindalliance/channels/support/.*</match> <!-- Expose access to support module resources -->
-      <match>js:(.*)</match> <!-- to be used for tests -->
-		</uri>
-	</export> 
-  <rewrite>
-    <rule>
-      <match>ffcpl:/modeler/support/(.*?)(\+.*)?</match>
-      <to>ffcpl:/com/mindalliance/channels/support/$1</to> <!-- redirect to mod-support without args-->
-    </rule>
-    <rule>
-      <match>ffcpl:/modeler/(.*?\.css).*</match>
-      <to>ffcpl:/resources/styles/$1</to>
-    </rule>
-    <rule>
-      <match>ffcpl:/modeler/images/(.*?\.png).*</match>
-      <to>ffcpl:/resources/images/$1</to>
-    </rule>
-    <rule>
-      <match>ffcpl:/modeler/scripts/(.*?\.js).*</match>
-      <to>ffcpl:/resources/scripts/$1</to>
-    </rule>
-    <rule>
-      <match>ffcpl:/modeler/index.html(.*)</match> <!-- Secure the home page -->
-      <to>ffcpl:/modeler/secure/view/app$1</to>
-    </rule>
-    <rule>
-      <match>ffcpl:/modeler/command(.*)</match>
-      <to>ffcpl:/modeler/secure/command$1</to>
-    </rule>
-    <rule> <!-- authorize all secure requests... -->
-      <match>(.*/secure/.*)</match> <!-- Apply gatekeeper to all secured requests -->
-      <to>active:gk+uri@$1</to> 
-    </rule>/
-    <rule>
-      <match>(active:gk.*)</match> <!-- ... but first attach a new or continuing session parameter to the gatekeepered request -->
-      <to>active:sessionmapper+uri@$e1</to> <!-- $e1 means url-escape $1 -->
-    </rule>
-    <rule> <!-- add session parameter to all public requests -->
-      <match>(.*/public/.*)</match> <!-- Apply session mapping (but no gatekeeping) to public requests -->
-      <to>active:sessionmapper+uri@$e1</to>
-    </rule>
-    <rule> <!-- xdoc -->
-      <match>ffcpl:/com/mindalliance/channels/modeler/doc/(.*\.xml)</match>
-      <to>doc:/resources/doc/$1</to>
-    </rule>
-   	<rule> 
-   		<match>js:(.*?)(\+.*)</match>
-   		<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>	
-   	</rule>
-   	<rule> <!-- for tests --> 
-   		<match>js:(.*?)</match>
-   		<to>active:javascript+operator@ffcpl:/resources/scripts/$1.js</to>	
-   	</rule>
-  </rewrite>
-	<mapping>
-    <!-- strip away public|secure path element if any -->
+    <export>
+        <uri>
+            <match>ffcpl:/modeler.*</match>
+            <!-- Client services and resources (modeler/secure/... or modeler/public/...)-->
+            <match>ffcpl:/com/mindalliance/channels/modeler/.*</match>
+            <!-- Backend services and resources -->
+            <match>ffcpl:/entrypoints.xml</match>
+            <match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+            <!-- Front end module config -->
+            <match>ffcpl:/com/mindalliance/channels/support/.*</match>
+            <!-- Expose access to support module resources -->
+            <match>js:(.*)</match>
+            <!-- to be used for tests -->
+        </uri>
+    </export>
     <rewrite>
-      <match>(ffcpl:/modeler)/(public/|secure/)?(view/.*)</match> <!-- gets a new page -->
-      <to>active:mapper+operator@ffcpl:/etc/viewLinks.xml+operand@$1/$3</to>  
+        <rule>
+            <match>ffcpl:/modeler/support/(.*?)(\+.*)?</match>
+            <to>ffcpl:/com/mindalliance/channels/support/$1</to>
+            <!-- redirect to mod-support without args-->
+        </rule>
+        <rule>
+            <match>ffcpl:/modeler/(.*?\.css).*</match>
+            <to>ffcpl:/resources/styles/$1</to>
+        </rule>
+        <rule>
+            <match>ffcpl:/modeler/images/(.*?\.png).*</match>
+            <to>ffcpl:/resources/images/$1</to>
+        </rule>
+        <rule>
+            <match>ffcpl:/modeler/scripts/(.*?\.js).*</match>
+            <to>ffcpl:/resources/scripts/$1</to>
+        </rule>
+        <rule>
+            <match>ffcpl:/modeler/index.html(.*)</match>
+            <!-- Secure the home page -->
+            <to>ffcpl:/modeler/secure/view/app$1</to>
+        </rule>
+        <rule>
+            <match>ffcpl:/modeler/command(.*)</match>
+            <to>ffcpl:/modeler/secure/command$1</to>
+        </rule>
+        <rule> <!-- authorize all secure requests... -->
+            <match>(.*/secure/.*)</match>
+            <!-- Apply gatekeeper to all secured requests -->
+            <to>active:gk+uri@$1</to>
+        </rule>
+        /
+        <rule>
+            <match>(active:gk.*)</match>
+            <!-- ... but first attach a new or continuing session parameter to the gatekeepered request -->
+            <to>active:sessionmapper+uri@$e1</to>
+            <!-- $e1 means url-escape $1 -->
+        </rule>
+        <rule> <!-- add session parameter to all public requests -->
+            <match>(.*/public/.*)</match>
+            <!-- Apply session mapping (but no gatekeeping) to public requests -->
+            <to>active:sessionmapper+uri@$e1</to>
+        </rule>
+        <rule> <!-- xdoc -->
+            <match>ffcpl:/com/mindalliance/channels/modeler/doc/(.*\.xml)</match>
+            <to>doc:/resources/doc/$1</to>
+        </rule>
+        <rule>   <!-- for tests -->
+            <match>js:(.*?)(\+.*)</match>
+            <to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>
+        </rule>
+        <rule> <!-- for tests -->
+            <match>js:(.*?)</match>
+            <to>active:javascript+operator@ffcpl:/resources/scripts/$1.js</to>
+        </rule>
     </rewrite>
-    <rewrite>
-      <match>(ffcpl:/modeler)/(public/|secure/)?(command/.*)</match> <!-- gets a taconite command document -->
-      <to>active:mapper+operator@ffcpl:/etc/commandLinks.xml+operand@$1/$3</to>  
-    </rewrite>
-    <rewrite>
-      <match>ffcpl:/modeler/(public/|secure/)?action/(.*)</match> <!-- calls an accessor -->
-      <to>active:modeler_$2</to>
-    </rewrite>
-    <rewrite>
-      <match>ffcpl:/modeler/(public/|secure/)?(.*?)(\+.*)?</match>  <!-- Map all other requests to resources, ignore params -->
-      <to>ffcpl:/resources/$2</to>
-    </rewrite>
-		<rewrite>
-			<match>doc:(.*)</match>
-			<to>active:doc-generate+operand@ffcpl:$1</to>
-		</rewrite>
-    <this>
-			<match>ffcpl:/entrypoints.xml</match>
-			<match>ffcpl:/etc/.*</match>
-			<match>ffcpl:/resources/.*</match>
-		</this>
-		<ura>
-		  <match>active:modeler_validateSession.*</match>
-		  <class>com.mindalliance.channels.modeler.accessors.SessionValidator</class>
-		</ura>
-		<ura>
-		  <match>active:modeler_login.*</match>
-		  <class>com.mindalliance.channels.modeler.accessors.Login</class>
-		</ura>
-		<ura>
-		  <match>active:modeler_logout.*</match>
-		  <class>com.mindalliance.channels.modeler.accessors.Logout</class>
-		</ura>
-		<ura>
-		  <match>active:modeler_processTemplate.*</match>
-		  <class>com.mindalliance.channels.modeler.accessors.ProcessTemplate</class>
-		</ura>
-		<import>
-			<uri>urn:com:mindalliance:channels:support</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:session</uri>
-		</import>
-    <import>
-      <uri>urn:org:ten60:netkernel:ext:xrl</uri>
-    </import>
-    <import>
-      <uri>urn:org:ten60:netkernel:ext:xquery</uri>
-    </import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:script</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:sys</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:ext:xsecurity</uri>
-		</import>
-		<import>
-			<uri>urn:org:ten60:netkernel:mod:docxter</uri>
-		</import>
-		<super/>
+    <mapping>
+        <!-- strip away public|secure path element if any -->
+        <rewrite>
+            <match>(ffcpl:/modeler)/(public/|secure/)?(view/.*)</match>
+            <!-- gets a new page -->
+            <to>active:mapper+operator@ffcpl:/etc/viewLinks.xml+operand@$1/$3</to>
+        </rewrite>
+        <rewrite>
+            <match>(ffcpl:/modeler)/(public/|secure/)?(command/.*)</match>
+            <!-- gets a taconite command document -->
+            <to>active:mapper+operator@ffcpl:/etc/commandLinks.xml+operand@$1/$3</to>
+        </rewrite>
+        <rewrite>
+            <match>ffcpl:/modeler/(public/|secure/)?action/(.*)</match>
+            <!-- calls an accessor -->
+            <to>active:modeler_$2</to>
+        </rewrite>
+        <rewrite>
+            <match>ffcpl:/modeler/(public/|secure/)?(.*?)(\+.*)?</match>
+            <!-- Map all other requests to resources, ignore params -->
+            <to>ffcpl:/resources/$2</to>
+        </rewrite>
+        <rewrite>
+            <match>doc:(.*)</match>
+            <to>active:doc-generate+operand@ffcpl:$1</to>
+        </rewrite>
+        <this>
+            <match>ffcpl:/entrypoints.xml</match>
+            <match>ffcpl:/etc/.*</match>
+            <match>ffcpl:/resources/.*</match>
+        </this>
+        <ura>
+            <match>active:modeler_validateSession.*</match>
+            <class>com.mindalliance.channels.modeler.accessors.SessionValidator</class>
+        </ura>
+        <ura>
+            <match>active:modeler_login.*</match>
+            <class>com.mindalliance.channels.modeler.accessors.Login</class>
+        </ura>
+        <ura>
+            <match>active:modeler_logout.*</match>
+            <class>com.mindalliance.channels.modeler.accessors.Logout</class>
+        </ura>
+        <ura>
+            <match>active:modeler_processTemplate.*</match>
+            <class>com.mindalliance.channels.modeler.accessors.ProcessTemplate</class>
+        </ura>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:session</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xrl</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xquery</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:script</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:sys</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:layer1</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xsecurity</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:mod:docxter</uri>
+        </import>
+        <super/>
     </mapping>
 </module>

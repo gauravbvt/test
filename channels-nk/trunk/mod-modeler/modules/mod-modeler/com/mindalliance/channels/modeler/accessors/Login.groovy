@@ -12,7 +12,7 @@ import org.ten60.netkernel.xml.representation.IAspectXDA
 */
 class Login extends AbstractAccessor {
     static final SESSION_COOKIE_NAME = "NETKERNELSESSION";
-    static final AUTHETICATE_QUERY_URI = "ffcpl:/resources/xqueries/authenticate.xq";
+    static final AUTHENTICATE_QUERY_URI = "ffcpl:/resources/xqueries/authenticate.xq";
     static final PROJECTS_CONFIG_URI = "ffcpl:/etc/projects.xml";
     static final VIEWLINKS_URI = "ffcpl:/etc/viewLinks.xml";
     static final INVALID_LOGIN_URI = "ffcpl:/analyst/view/invalidLogin";
@@ -56,7 +56,7 @@ class Login extends AbstractAccessor {
     def authenticate(String userid, String password, String project, Context ctx) throws Exception {
         use(NetKernelCategory) {
             def iax = ctx.transrept("active:xquery", IAspectXDA, [
-                    'operator': AUTHETICATE_QUERY_URI,
+                    'operator': AUTHENTICATE_QUERY_URI,
                     'input': PROJECTS_CONFIG_URI,
                     'userid': string("<string>${userid}</string>"),
                     "password": string("<string>${password}</string>"),
