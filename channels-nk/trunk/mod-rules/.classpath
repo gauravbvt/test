@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="modules/mod-rules" />
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry combineaccessrules="false" kind="src" path="/common" />
+    <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
+    <classpathentry combineaccessrules="false" kind="src" path="/mod-support" />
+    <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GROOVY" />
+    <classpathentry kind="lib" path="bin-groovy" />
+    <classpathentry kind="output" path="modules/mod-rules" />
+</classpath>
+
