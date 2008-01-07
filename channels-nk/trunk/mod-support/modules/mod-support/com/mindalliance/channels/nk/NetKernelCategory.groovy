@@ -13,6 +13,8 @@ import org.ten60.netkernel.xml.xda.DOMXDA
 import org.ten60.netkernel.xml.xda.IXDA
 import org.ten60.netkernel.xml.xda.IXDAReadOnly
 import org.ten60.netkernel.layer1.nkf.INKFResponse
+import groovy.xml.DOMBuilder
+import groovy.xml.MarkupBuilder
 
 /**
  * 
@@ -202,5 +204,20 @@ public class NetKernelCategory {
         String xml = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString(); // get string aspect first otherwise db.* also gathers whitespace children
         IXDAReadOnly db = new XDAHelper(context).makeXDA(xml);
         return db;
+    }
+
+    public static XmlSlurper sourceXML(INKFConvenienceHelper context, String uri) {
+        return new XmlSlurper().parseText(((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString());
+    }
+
+    public static XmlSlurper getXml(INKFConvenienceHelper context,IAspectXDA aspect) {
+        return new XmlSlurper().parseText(((IAspectString)context.transrept(aspect, IAspectString.class)).toString());
+    }
+
+    public static IAspectXDA xmlAspect(Object object, Closure yield) {
+        StringWriter writer = new StringWriter();
+        MarkupBuilder builder = new MarkupBuilder(writer);
+        yield(builder);
+        return new DOMXDAAspect(new DOMXDA(DOMBuilder.parse(new StringReader(writer.toString()))));
     }
 }
