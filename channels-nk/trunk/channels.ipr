@@ -246,6 +246,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-crud/mod-crud.iml" filepath="$PROJECT_DIR$/mod-crud/mod-crud.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" filepath="$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-geonames/mod-geonames.iml" filepath="$PROJECT_DIR$/mod-geonames/mod-geonames.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-modeler/mod-modeler.iml" filepath="$PROJECT_DIR$/mod-modeler/mod-modeler.iml" />
