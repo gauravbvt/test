@@ -200,7 +200,7 @@
     </configuration>
     <configuration default="false" name="Channels Netkernel" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" value="com.ten60.netkernel.bootloader.BootLoader" />
-      <option name="VM_PARAMETERS" value="-Djava.endorsed.dirs=$NETKERNEL_HOME$/lib/endorsed -Dbootloader.jarDir=$NETKERNEL_HOME$/lib/ext/ -Djava.library.path=$DBXML_HOME$/install/lib -Dbootloader.nativeDir=$NETKERNEL_HOME$/lib/native -Xms128m -Xmx192m -Dbootloader.basedir=$NETKERNEL_HOME$" />
+      <option name="VM_PARAMETERS" value="-Djava.endorsed.dirs=$NETKERNEL_HOME$/lib/endorsed -Dbootloader.jarDir=$NETKERNEL_HOME$/lib/ext/ -Djava.library.path=$DBXML_HOME$/install/lib -Dbootloader.nativeDir=$NETKERNEL_HOME$/lib/native -Xms128m -Xmx192m -Dbootloader.basepath=$NETKERNEL_HOME$" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
