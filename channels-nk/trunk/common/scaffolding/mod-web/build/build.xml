@@ -7,8 +7,8 @@
     </target>
     
 	<target description="Build everything." name="all" depends="init">
-		<ant antfile="build-mod-@template@.xml"/>
-		<ant antfile="build-test-@template@.xml"/>
+		<ant antfile="build-module.xml"/>
+		<ant antfile="build-test-module.xml"/>
         <echo message="Channels @template@ Module build completed."/>
     </target>
     

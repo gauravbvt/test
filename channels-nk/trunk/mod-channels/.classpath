@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="modules/mod-geonames" />
+    <classpathentry kind="src" path="modules/mod-channels" />
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
     <classpathentry combineaccessrules="false" kind="src" path="/common" />
     <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
-    <classpathentry kind="src" path="/mod-support" combineaccessrules="false" />
-    <classpathentry kind="output" path="modules/mod-geonames" />
+    <classpathentry kind="output" path="modules/mod-channels" />
 </classpath>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="all" name="Mind-Alliance @Template@ Module">
+<project basedir="." default="all" name="Mind-Alliance Channels Module">
     
     <target name="init">
         <property name="deploy.dir" value="deploy"/>
@@ -9,7 +9,7 @@
 	<target description="Build everything." name="all" depends="init">
 		<ant antfile="build-module.xml"/>
 		<ant antfile="build-test-module.xml"/>
-        <echo message="Mind-Alliance @Template@ Module build completed."/>
+        <echo message="Mind-Alliance Channels Module build completed."/>
     </target>
     
     <target description="Clean up the derived objects" name="clean">
@@ -17,7 +17,7 @@
             <fileset dir="." includes="**/*.jar"/>
         </delete>
         <delete>
-            <fileset dir="../modules/mod-@template@/" includes="**/*.class"/>
+            <fileset dir="../modules/mod-channels/" includes="**/*.class"/>
         </delete>
     </target>
 	

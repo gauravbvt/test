@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-channels</name>
+    <uri>ffcpl:/test/mod-channels-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance Channels Library Tests</title>
+      <desc>Mind-Alliance Channels unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>

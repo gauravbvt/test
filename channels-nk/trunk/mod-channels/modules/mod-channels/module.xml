@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?><module>
 	<!--
 	***********
-	Mind-Alliance Geonames Module
+	Mind-Alliance Channels Module
 	***********
 	-->
     <identity>
-		<uri>urn:com:mindalliance:geonames</uri>
-		<version>0.0.13</version>
+		<uri>urn:com:mindalliance:channels</uri>
+		<version>0.0.1</version>
     </identity>
 	<info>
-		<name>Mind-Alliance Geonames Module</name>
+		<name>Mind-Alliance Channels Module</name>
         <description>A module containing the basic structure for a NetKernel module</description>
 		<dynamic/>
     </info>
@@ -19,37 +19,25 @@
     </publisher>
 	<export>
 		<uri>
-			<match>ffcpl:/geonames/.*</match>
-			<match>ffcpl:/geonames/initialize</match>
-			<match>active:geonames\+.*</match>
+			<match>.*:/channels/.*</match>
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
-			<match>ffcpl:/entrypoints.xml</match>
-			<match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
 	</export>
+	<rewrite>
+	    <rule>
+		    <match>ffcpl:/channels/</match>
+		    <to>ffcpl:/resources/index.html</to>
+        </rule>
+	    <rule>
+		    <match>ffcpl:/channels/(.*)</match>
+		    <to>ffcpl:/resources/$1</to>
+        </rule>
+	</rewrite>
 	<mapping>
-		<this>
-			<match>ffcpl:/entrypoints.xml</match>
-			<match>ffcpl:/etc/.*</match>
-		</this>
 		<this>
 			<match>ffcpl:/resources/.*</match>
 		</this>
-		<rewrite>
-			<match>ffcpl:/geonames/(.*.bsh.*)</match>
-			<to>active:beanshell+operator@ffcpl:/resources/$1</to>
-		</rewrite>
-		<rewrite>
-			<match>(ffcpl:/geonames/.*)</match>
-			<to>active:geonames+path@$1</to>
-		</rewrite>
-		<ura>
-      		<match>active:geonames\+.*</match>
-      		<class>com.mindalliance.geonames.accessor.GeonamesAccessor</class>
-    	</ura>
-        <import>
-        <uri>urn:com:mindalliance:channels:support</uri>
-        <import>
+		<import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>
 		</import>
 		<import>
