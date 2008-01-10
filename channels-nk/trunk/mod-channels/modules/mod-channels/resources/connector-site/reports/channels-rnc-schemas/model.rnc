@@ -1,0 +1,218 @@
+# MODEL
+
+default namespace = "http://www.mindalliance.com/schemas/channels"
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+include "channels.rnc"
+
+items |= element items {
+    model
+    & question*
+    & answer*
+    & note*
+    & genericRole*
+    & genericOrganization*
+    & genericTask*
+    & genericSharing*
+    & responsibility*
+    & capability*
+    & knowledge*
+    & edict*
+    & simulation*
+    & unknown*
+    & missing*
+    & contradiction*
+    & gap*
+    }
+    
+roleItem =
+    item
+    & element genericRole { id }
+    
+## Decription of the model
+model =
+    element model {
+        item
+        & description
+    }
+## A question aimed at particulat contributors or to all related to a modeled item
+question =
+    element question {
+        item
+        & element content { text }
+        & element priority { level }
+        & element about { versionRef }? 
+        & element forPerson { id }* # for any if not specified
+    }
+## An answer to a question by a contributor
+answer =
+    element answer {
+        item
+        & element question { id }
+        & element fromPerson { id }
+        & element content { text }
+    }
+## A timestamped note possibly about an item
+note =
+    element note {
+        item
+        & information
+    }
+## A generic role
+genericRole =
+    element genericRole {
+        item
+        & element narrows { id }? # the generic role this one narrows. If none then a "root" generic role.
+        & named
+        & element mission { description }? # Set for root only
+        & element genericOrganization { id }? # Set if root or if narrows on organization
+        & element jurisdiction { locationSpec }? # Set if root or if narrows on role jurisdiction. If none, defaults to that of generic organization.
+    }
+## A generic organization
+genericOrganization =
+    element genericOrganization {
+        item
+        & element narrows { id }? # the generic organization this one narrows. If none then a "root" generic organization.
+        & named
+        & element mission { description }? # Set for root only
+        & element domain { id }? # Set if root or if narrows
+        & element genericParentOrganization { id }? # Set if root or if narrows on parent organization
+        & element jurisdiction { locationSpec }? # Set if root or if narrows
+    }
+## The specification of a location
+locationSpec =
+    element locationSpec {
+        location 
+        | ( element within { location } & element featureCode { text }? )
+    }
+## A generic task
+genericTask = 
+    element genericTask {
+        item
+        & named
+        & element function { id } # categorization
+        & description
+        & element genericRole { id } # who
+        & element infoNeeded { information }*
+        & element newInfo { information }*
+        & element incidentCaused { description }*
+    }
+## A generic sharing used to define a sharingEventSpec or an edict
+genericSharing =
+    element sharingSpec {
+        item
+        & named
+        & documented
+        & information # what is shared
+        & element genericRoleSource { id } # generic role
+        & element genericRoleRecipient { id } # generic role
+    }
+
+## Specifies a task someone in a given role might do in response to a certain kind of event
+responsibility =
+    element responsibility {
+        roleItem
+        & eventSpec
+        & element genericTask { id }
+    }
+    
+eventSpec =
+    element eventSpec {
+        (incidentSpec | taskEventSpec | sharingEventSpec)
+        & element relativeLocation { relativeLocation } # location specified relative to role's jurisdiction
+    }
+## Location relative to another. Specified by relative scope and by location type
+relativeLocation =
+    attribute scope {
+        "enclosed"  # within role's jurisdiction
+        | "neighbor" # within equivalent location that borders the role's jurisdiction (same featureCode and same direct parent location)
+        | "enclosing"  # within a location that encloses the role's jurisdiction
+     }
+     & element enclosingFeatureCode { text }? # if enclosing, the smallest enclosing location with this feature code
+     & element locationFeatureCode { text }? # relative location also has this feature code (e.g. in a park)
+## Incident specification 
+incidentSpec = 
+    element incidentSpec { 
+        description
+    }
+## Task event specification
+taskEventSpec = 
+    element taskEventSpec {
+        element genericTask { id }
+        & element statusChangedTo {"planned" | "started" | "completed" | "cancelled"}+ # what happened re. task? -- ORed if more than one
+    }
+## Sharing event specification
+sharingEventSpec = 
+    element sharingEventSpec {  
+         element genericSharing { id }
+        & element statusChangedTo {"started" | "completed"}+ # ORed if more than one
+
+    }
+
+## Specifies what task someone in a given role is expected to be able to do when needed (not just as a response)
+capability =
+    element capability  {
+        roleItem
+        & element genericTask { id }
+    }
+## Knowledge someone in a given role is expected to have at any time
+knowledge =
+    element knowledge {
+        roleItem
+        & information # what is known
+        & element scope { relativeLocation }* # set if knowledge is localized
+    }
+##Constraint imposed by a policy
+edict =
+    element edict {
+        item
+        & named
+        & description
+        & element policy { id }
+        & element section { text } # some indication of the part of the policy here modeled
+        & element appliesTo {
+            (element genericTask { id } |  element genericSharing { id } )
+        }
+        & element intent {"prohibit" | "obligate" | "restrict" | "validate"}  # can't vs must vs only if vs pass/fail
+        & rule? # rule executed on the edict and matched task or sharing to add further conditions
+    }
+## A scenario is a category of events defined by archetype. An event that matches a scenario's generic event is said to belong to that scenario.
+scenario =
+    element scenario {
+        item
+        & named
+        & documented
+        & eventSpec
+     }
+## A hypothetical situation. A simulation instantiates a scenario if one of the events in it match the scenario's archetypical event.
+simulation =
+    element simulation {
+        item
+        & named
+        & documented
+        & element situation { text } # name of the situational database holding the scenario
+   }
+## Scenario item is unmatched by the model
+unknown =
+    element unknown {
+        analysisItem
+    }
+## Scenario item contradicts the model 
+contradiction =
+    element contradiction {
+        analysisItem
+        & element modelItem { id }
+     }
+## Scenario item missing according to the model
+missing =
+    element missing {
+        analysisItem
+        & element modelItem { id }
+    }
+## Unsatisfied info need in a scenario
+gap =
+    element gap {
+        analysisItem
+        & element infoNeed { id }
+    }

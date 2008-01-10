@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/connector.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Connector</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/forms.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="banner">
+   <img src="images/logo.png" alt="connector logo" class="logo"/>
+   <div id="auxmenu">
+    <ul>
+       <li><a href="loggedout.html">logout</a></li>
+       <li><a href="help/">help</a></li>
+       <li><a href="settings.html">settings</a></li>
+       <li><a href="profileview.html">my profile</a></li>
+    </ul>
+   </div>
+ </div>
+  <div id="globalNav">
+	<ul>
+      <li class="selected"><a href="profiles.html">people</a></li>
+	  <li><a href="tasks.html">tasks</a></li>
+	  <li><a href="information.html">information</a></li>
+	</ul>
+</div>
+  <div id="content">
+  	<!-- InstanceBeginEditable name="notificationArea" -->
+  <div id="notificationArea" class="msgInfo"> <a href="#">Tommy Tamatino</a> has agreed to fulfill <a href="#">need #36 (arrests of paul...)</a> </div>
+  <!-- InstanceEndEditable -->
+  	<!-- InstanceBeginEditable name="contentRegion" -->
+  <div style="clear:both">
+    <div class="panel" style="float:left;clear:left;display:inline;width:49%">
+      <div class="panelHeader">
+        <span class="panelTitle"> 
+        #36
+        i
+          <select class="action" name="infoType">
+            <option selected="selected">need</option>
+            <option>have</option>
+          </select>
+          information </span>
+          <span class="panelActions">
+            <a href="FUNC:delete()" class="action">delete</a>
+          	<a href="FUNC:edit()" class="action">edit</a>
+          </span>
+      </div>
+      <form>
+        <div class="formItem">
+            <div class="formItemLabel">about</div>
+            <div class="formItemContent">
+                <textarea rows="4" cols="25">prior arrests of Paul Durand</textarea>
+            </div>
+          </div>
+          <div class="formItem">
+            <div class="formItemLabel">
+                <select class="action">
+	                <option selected="selected">before</option>
+	                <option selected="selected">after</option>
+	                <option selected="selected">during</option>
+	            </select>
+	        </div>
+            <div class="formItemContent">
+                <input type="text" class="textInput" value="04/2004 - 04/2007"/>
+            </div>
+          </div>
+          <div class="formItem">
+            <div class="formItemLabel">
+                <select class="action">
+	                <option selected="selected">in</option>
+	                <option selected="selected">near</option>
+	                <option selected="selected">outside</option>
+	              </select>
+            </div>
+            <div class="formItemContent">
+                <input type="text" class="textInput" value="Jersey City, NJ"/>
+                <a href="FUNC:findPeople()" class="action"> 
+                    <img src="images/pawn_find.png" alt="find people near Jersey City, NJ"/>find people near Jersey City, NJ
+                </a>
+            </div>
+          </div>
+          <div class="formItem">
+            <div class="formItemLabel">
+                <select class="action">
+	                <option selected="selected">need it by</option>
+	                <option>need it for</option>
+	              </select>
+            </div>
+            <div class="formItemContent">
+                <input type="text" class="textInput"/>
+            </div>
+          </div>
+          <div class="formItem">
+            <div class="formItemLabel">
+                context
+            </div>
+            <div class="formItemContent">
+                <div class="formHint"> 
+                    specify more context like a case number, or an event to which
+                    this need is related
+                </div>
+                <input type="text" class="textInput" value="CIDB case 55"/>
+            </div>
+          </div>
+        <div class="formItem">
+            <div class="formSubmit">
+	          <input type="button" value="revert" onclick="FUNC:revert()" disabled="disabled"/>
+	          <input type="submit" value="save" onclick="FUNC:saveChanges()" disabled="disabled"/>
+              <div class="msgInfo">saving...</div>
+            </div>  
+        </div>
+      </form>
+    </div>
+    <div class="panel" style="float:right;clear:right;width:49%">
+      <div class="panelHeader"> 
+      <span class="panelTitle"> sources
+        <select>
+          <option>allow all sources</option>
+          <option>restrict to my trusted group</option>
+          <option selected="selected">restrict to the following:</option>
+        </select>
+        </span> 
+        <span class="panelActions">
+	        <a href="FUNC:addSourceRestriction" class="action">add restriction</a>
+        </span>
+      </div>
+	    <table class="searchResultsTable" summary="source restrictions">
+	      <tr>
+	        <th>organization</th>
+	        <th>jurisdiction</th>
+	      </tr>
+	      <tr>
+	        <td>FBI</td>
+	        <td>
+	            New York, New Jersey 
+	            <a href="FUNC:findPeople()" class="action">
+	            <img src="images/pawn_find.png" alt="find people in New York, New Jersey"/></a>
+	        </td>
+	        <td><a class="action">delete</a></td>
+	      </tr>
+	      <tr>
+	        <td>NSA</td>
+	        <td>Jersey City</td>
+	        <td><a class="action">delete</a></td>
+	      </tr>
+	      <tr>
+	        <td><input type="text" class="textInput" value="New York Port Authority"/></td>
+	        <td><input type="text" class="textInput" value="New York"/></td>
+	        <td><a class="action">save</a><a class="action">cancel</a></td>
+	      </tr>
+	    </table>
+    </div>
+  </div>
+  
+  <div style="clear:both;border-top:#CCCCCC 1px solid">
+    <div class="panel">
+      <div class="panelHeader">
+      	<span class="panelTitle">
+            <select class="action">
+              <option selected="selected">1 to 5</option>
+              <option>1 to 10</option>
+              <option>1 to 20</option>
+              <option>1 to 50</option>
+              <option>ALL</option>
+              <option>custom...</option>
+            </select>
+            (of 93) sources found
+        </span>
+        <span class="panelActions">
+            <label for="txtSearchWithinResults">search within results:</label>
+            <input type="text" size="30" onkeypress="FUNC:searchWithinResults" id="txtSearchWithinResults"/>
+        </span>
+      </div>
+      
+      <div class="tableGlobalActions">
+        	<select class="action" style="float:left">
+                <option selected="selected">change trust</option>
+                <option>trusted</option>
+                <option>not trusted</option>
+	        </select>
+      </div>
+
+      <table class="searchResultsTable" cellspacing="0" summary="1 to 5 of 93 matching sources">
+        <tr>
+          <th><input type="checkbox"/></th>
+          <th><img src="images/arrowhead_green_down.png" alt="sorting by this column"/>name <img src="images/check2.png" alt="you trust this person"/> = you trust this person</th>
+          <th>information</th>
+          <th>role</th>
+          <th>organization</th>
+          <th>jurisdiction</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox"/></td>
+          <td class="borderRow">
+            <div class="photoBlock">&nbsp;</div>
+            <div class="personName"> <a href="profileview.html">Jane Austen</a> <img src="images/check2.png" alt="this person is in your trusted list"/> </div>
+            <div class="personExpertise"> burn victim therapy and rehabilitation. </div></td>
+          <td class="borderRow">&nbsp;</td>
+          <td class="borderRow">Chief Psychiatrist</td>
+          <td class="borderRow">CARE Children's Center</td>
+          <td class="borderRow">Jersey City, NJ</td>
+        </tr>
+        <tr bgcolor="#F0FFF0">
+          <td><input type="checkbox"/></td>
+          <td class="borderRow">
+            <div class="photoBlock">&nbsp;</div>
+            <div class="personName"><a href="profileview.html">Fred Flintstone</a></div>
+            <div class="personExpertise"> moving large rocks, quarrying </div></td>
+          <td class="borderRow">Paul Durand was responsible for the mining operation involving...</td>
+          <td class="borderRow">Crane Operator</td>
+          <td class="borderRow">Rockefeller Center</td>
+          <td class="borderRow">New York City, NY</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"/></td>
+          <td class="borderRow">
+            <div class="photoBlock"> <a href="profileview.html"><img class="profilePicture" src="images/profilepicplaceholder.png" alt="profile picture of Larry Simpson"/></a> </div>
+            <div class="personName"><a href="profileview.html">Larry Simpson</a> <img src="images/check2.png" alt="this person is in your trusted list"/> </div>
+            <div class="personExpertise"> paramedic recruitment and training </div></td>
+          <td class="borderRow">Lorem ipsum dolor sit.</td>
+          <td class="borderRow">Human Resources Manager</td>
+          <td class="borderRow">LifeSave Emergency Systems</td>
+          <td class="borderRow">New York City, NY</td>
+        </tr>
+        <tr bgcolor="#F0FFF0">
+          <td><input type="checkbox"/></td>
+          <td class="borderRow"><div class="photoBlock"> <a href="profileview.html"><img class="profilePicture" src="images/profilepicplaceholder.png" alt="profile picture of John Smith"/></a> </div>
+            <div class="personName"><a href="profileview.html">John W. Smith</a></div>
+            <div class="personExpertise"> Cases involving arson, deteriorating evidence, long-running cases about...</div></td>
+          <td><span class="borderRow">Location of most-wanted lists and arrest databases during the last 20 years.</span></td>
+          <td>Liaison, Federal Counterterrorism Task Force</td>
+          <td>NYPD Counterterrorism Task Force</td>
+          <td>New York City, NY</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"/></td>
+          <td class="borderRow"><div class="photoBlock">&nbsp;</div>
+            <div class="personName"><a href="profileview.html">Keri Taft</a></div>
+            <div class="personExpertise"> occupational therapy, accidents involving heavy machinery and...</div></td>
+          <td class="borderRow">Lorem ipsum dolor sit.</td>
+          <td class="borderRow">Auxiliary Physician</td>
+          <td class="borderRow">CARE Children's Center</td>
+          <td class="borderRow">Jersey City, NJ</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <!-- InstanceEndEditable -->
+  </div>
+  <div id="footer">
+  	<span id="copyrightblock">copyright (c) 2007-2008 <a href="http://www.mind-alliance.com/">Mind Alliance LLC</a></span>  
+   	<div id="footerMenu">
+    	<ul>
+        	<li><a href="privacy.html">privacy policy</a></li>
+        </ul>
+    </div>
+   </div>
+</body>
+
+<!-- InstanceEnd --></html>

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<playbook>
+    <createdFor>
+        <person>
+	        <firstName>Susan</firstName>
+	        <middleName></middleName>
+	        <lastName>Robbins</lastName>
+	        <role>
+	           <title>secretary</title>
+	           <organizationName>morris county police</organizationName>
+	        </role>
+	        <contactInfo>
+	            <phone>408 867 5309</phone>
+	            <email>susanr@mc.nj.gov</email>
+	            <fax>408 867 5309</fax>
+	            <cellPhone>408 867 5309</cellPhone>
+	        </contactInfo>
+	    </person>
+    </createdFor>
+    <issueDate>July 10, 2006</issueDate>
+    <approvedBy>
+        <person>
+            <firstName>Frank</firstName>
+            <middleName></middleName>
+            <lastName>Miller</lastName>
+            <role>
+               <title>emergency coordinator</title>
+               <organizationName>morris county police</organizationName>
+            </role>
+            <contactInfo>
+                <phone>408 867 5309</phone>
+                <email>frank.miller@mc.nj.gov</email>
+                <fax>408 867 5309</fax>
+                <cellPhone>408 867 5309</cellPhone>
+            </contactInfo>
+        </person>
+    </approvedBy>
+    <scenario>  
+        <name>possible outbreak of plague</name>
+    </scenario>
+    <plan>
+        <incomingSharing>
+            <information>
+            corpse discovered
+            </information>
+            <contacts>
+                <primary>
+                    <person>
+                        <firstName>Bob</firstName>
+                        <middleName></middleName>
+                        <lastName>Jones</lastName>
+                        <role>
+                           <title>chief of patrol</title>
+                           <organizationName>morris county police</organizationName>
+                        </role>
+                        <contactInfo>
+                            <phone>408 867 5309</phone>
+                            <email>bobj@mp.nj.gov</email>
+                            <fax>408 867 5309</fax>
+                            <cellPhone>408 867 5309</cellPhone>
+                        </contactInfo>
+                    </person>
+                </primary>
+            </contacts>
+        </incomingSharing>
+        <task>
+            <description>
+                perform autopsy
+            </description>
+            <guidelines>
+                some information required to perform this task
+            </guidelines>
+        </task>
+        <outgoingSharing>
+            <information>notify presumption of plague</information>
+             <contacts>
+                <primary>
+                    <person>
+                        <firstName>Mary</firstName>
+                        <middleName></middleName>
+                        <lastName>Benton</lastName>
+                        <role>
+                           <title>secretary</title>
+                           <organizationName>state medical examiner</organizationName>
+                        </role>
+                        <contactInfo>
+                            <phone>408 867 5309</phone>
+                            <email>maryb@mp.nj.gov</email>
+                            <fax>408 867 5309</fax>
+                            <cellPhone>408 867 5309</cellPhone>
+                        </contactInfo>
+                    </person>
+                </primary>
+                <alternate>
+                    <person>
+                        <firstName>Peter</firstName>
+                        <middleName></middleName>
+                        <lastName>Smith</lastName>
+                        <role>
+                           <title>chief examiner</title>
+                           <organizationName>state medical examiner</organizationName>
+                        </role>
+                        <contactInfo>
+                            <phone>408 867 5309</phone>
+                            <email>peters@mp.nj.gov</email>
+                            <fax>408 867 5309</fax>
+                            <cellPhone>408 867 5309</cellPhone>
+                        </contactInfo>
+                    </person>
+                </alternate>
+            </contacts>
+        </outgoingSharing>
+        <task>
+            <description>confirm plague
+            </description>
+            <guidelines>
+                some information required to perform this task
+            </guidelines>
+        </task>
+        <task>
+            <description>setup quarantine
+            </description>
+            <guidelines>
+                some information required to perform this task
+            </guidelines>
+        </task>
+    </plan>
+</playbook>

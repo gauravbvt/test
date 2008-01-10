@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/connector.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Connector</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/forms.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="banner">
+   <img src="images/logo.png" alt="connector logo" class="logo"/>
+   <div id="auxmenu">
+    <ul>
+       <li><a href="loggedout.html">logout</a></li>
+       <li><a href="help/">help</a></li>
+       <li><a href="settings.html">settings</a></li>
+       <li><a href="profileview.html">my profile</a></li>
+    </ul>
+   </div>
+ </div>
+  <div id="globalNav">
+	<ul>
+      <li class="selected"><a href="profiles.html">people</a></li>
+	  <li><a href="tasks.html">tasks</a></li>
+	  <li><a href="information.html">information</a></li>
+	</ul>
+</div>
+  <div id="content">
+  	<!-- InstanceBeginEditable name="notificationArea" -->
+  <div id="notificationArea" class="msgInfo"> <a href="#">Tommy Tamatino</a> has agreed to fulfill <a href="#">need #36 (arrests of paul...)</a> </div>
+  <!-- InstanceEndEditable -->
+  	<!-- InstanceBeginEditable name="contentRegion" -->
+  <!-- 
+
+DEVNOTES:
+
+ALL FORMS:
+	- revert and save buttons disabled by default and enabled when a field is changed
+    - if possible do live validation. otherwise do it when save button is clicked.
+
+revert() {
+	- this button should appear only if there is already 
+    some saved data related to that form. this means that the first time
+    a form is added (like a new role), this button should not be visible.
+	- fill fields in target form with last saved entries
+    - disable save and revert buttons
+}
+
+saveChanges() {
+	- validate data
+    - show 'saving...'info message
+	- save data to database
+    - disable save and revert buttons
+}
+
+changePhoneType() {
+    - user clicks on link
+    - drop down opens showing types of phone:
+        - work phone
+        - cell phone
+}
+
+ changePic() {
+    - formUploadProfilePhoto becomes visible in a popup.
+    - user selects a picture using browse
+    - path to picture appears in text box
+    - user clicks upload
+    - form becomes disabled and pic is uploaded. if this is 
+    a time consuming operation replace 'change picture' with 'uploading...' info message
+    while pic is uploading and change it back when done.
+    - pic is scaled to fit limit set by css (preserve aspect ratio).
+    - form disappears
+}
+
+addPhone() {
+    - new row appears below row in which plus was clicked.
+    - new row has both add and delete buttons
+}
+
+deletePhone() {
+    - row is removed
+    * first phone cannot be deleted so has no delete button
+}
+
+addIM(), deleteIM() {
+	- same as for phone
+    - accounts: aol, msn, jabber
+}
+
+findPeople() {
+	- this link should be disabled if the corresponding field is empty. we
+    want people to know they can search by this field if they fill it in.
+    - takes user to results of searching people by org (or jursidiction, etc)
+}
+
+showActionText() {
+	- the exact text shown should appear only when user mouses over that table row
+}
+
+addRole() {
+	- Adds a new role with empty fields at the top of the list.
+    - Set focus on role title
+}
+
+triggerLiveSearch() {
+	- Some form fields like jurisdiction allow choosing from a catalog. These should
+    trigger a live search when user types in them.
+    - Results of live search should be in a popup list below the field and never obscuring it.
+    - If popup is hard to do, then put it in the same table cell below the field with max row count = 6.
+}
+
+addField() {
+	- dropdown menu showing fields that can be added.
+    - when a field is added, move it to the top of the 
+    list of related fields. for example, if user adds a
+    phone1, email1 and phone2 and IM1, the order of fields
+    should be phone2 phone1 email1 IM1.
+    - group fields by type. all phones should be together, emails together, etc.
+}
+
+updateRoleTitle() {
+	- update the role title shown as heading as the user types into this box
+}
+ 
+-->
+  <div style="margin-right:auto;">
+  	<a href="profileview.html" class="action" style="font-size:12pt">save all and view</a>
+  </div>
+  <div id="idContainer" style="display:inline;float:left; width:48%;padding-right:5px;">
+    <div class="panel">
+      <div class="panelHeader">
+      	<span class="panelTitle">identity</span> 
+      </div>
+      <div style="clear:both">
+          <div class="photoBlock" style="display:inline;float:left;width:20%"> 
+          	<img id="profilePicture" src="images/profilepicplaceholder.png" alt="John Doe's Photo"/> <a href="FUNC:changePic()">change picture</a> 
+          </div>
+          
+          <form id="formUploadProfilePhoto" style="display:none" action="">
+            <input type="text" class="textInput" size="100"/>
+            <input type="button" value="browse"/>
+            <input type="button" value="upload"/>
+          </form>
+          
+          <form id="formIdentity" action="" style="width:78%;float:right;">	
+            <div class="formItem">
+            	<label for="txtFirstName">first name</label>
+                <div class="formItemContent">
+                	<input name="txtFirstName" type="text" size="25" value="!xobile" class="textInput"/>
+	                <span class="msgError">name should not contain exclamation mark</span>
+                </div>
+            </div>
+            
+            <div class="formItem">
+            	<label for="txtMiddleName">middle name</label>
+                <div class="formItemContent">
+                	<input type="text" class="textInput" size="25"/>
+                </div>
+            </div>
+            
+            <div class="formItem">
+            	<label for="txtLastName">last name</label>
+                <div class="formItemContent">
+                	<input type="text" class="textInput" size="25"/>
+                </div>
+            </div>
+            
+            <div class="formItem">
+            	<div class="formSubmit">
+                  <input type="button" value="revert" onclick="FUNC:revert()" disabled="disabled"/>
+                  <input type="submit" value="save" onclick="FUNC:saveChanges()" disabled="disabled"/>
+                </div>
+            </div>
+            <div class="msgInfo" style="text-align:right;">saving...</div>	
+          </form>
+       </div>
+    </div>
+    
+    <div class="panel">
+      <div class="panelHeader">
+	      <span class="panelTitle">contact</span> 
+	      <span class="panelActions"> 
+		      <select onchange="FUNC:addField()" class="action">
+		      	<option selected="selected">add item</option>
+		        <option>phone</option>
+		        <option>email</option>
+		        <option>instant messenger</option>
+		      </select> 
+	      	<a href="FUNC:lockContact()" class="action">make private</a>
+		  </span>
+	  </div>
+      <form id="formContact" action="">
+        <div class="formItem">
+        	<select onchange="FUNC:changePhoneType()" class="formItemLabel">
+            	<option>work phone</option>
+                <option>home phone</option>
+                <option>cell phone (work)</option>
+            </select>
+            <div class="formItemContent">
+            	<input type="text" class="textInput" size="25" value="1 812 293 4456"/>
+            </div>
+         </div>
+         <div class="formItem">
+        	<select onchange="FUNC:changePhoneType()" class="formItemLabel">
+            	<option>work phone</option>
+                <option>home phone</option>
+                <option>cell phone (work)</option>
+            </select>
+            <div class="formItemContent">
+            	<input type="text" class="textInput" size="25" />
+            </div>
+          </div>
+          <div class="formItem">
+            <label for="email">email</label>
+            <div class="formItemContent">
+            	<input id="email" type="text" size="25" class="textInput"/>
+            </div>
+          </div>
+          <div class="formItem">
+        	<select onchange="FUNC:changeIMType()" class="formItemLabel">
+            	<option selected="selected">AOL</option>
+                <option>jabber</option>
+                <option>MSN</option>
+            </select>
+            <div class="formItemContent">
+            	<input type="text" class="textInput" size="25" />
+            </div>
+          </div>
+          <div class="formItem">
+        	<select onchange="FUNC:changeIMType()" class="formItemLabel">
+            	<option>AOL</option>
+                <option>jabber</option>
+                <option selected="selected">MSN</option>
+            </select>
+           	<div class="formItemContent">
+           		<input type="text" class="textInput" size="25" />
+           	</div>
+           </div>
+          <div class="formItem">
+            <div class="formSubmit">
+            	<input type="button" value="revert" onclick="FUNC:revert()"/>
+              	<input type="submit" value="save" onclick="FUNC:saveChanges()"/>
+            </div>
+          </div>
+      </form>
+    </div>
+    <div class="panel">
+      <div class="panelHeader">
+      	<span class="panelTitle">experience</span> 
+      	<span class="panelActions"> <a href="FUNC:lockExperience()" class="action">make private</a></span>
+      </div>
+      <form id="formExperience"action="">
+          <div class="formItem">
+            <label for="txtBio">bio</label>
+            <div class="formItemContent">
+            	<textarea cols="25" rows="5" id="txtBio"></textarea>
+            	<a href="FUNC:findPeople()" class="action">
+            		<img src="images/pawn_find.png" alt="find people with similar bio"/> find people with similar bio
+                </a>
+            </div>
+          </div>
+          <div class="formItem">
+            <label for="txtExpertise">expertise</label>
+            <div class="formItemContent">
+            	<textarea cols="25" rows="5"></textarea>
+            	<a href="FUNC:findPeople()" class="action">
+            		<img src="images/pawn_find.png" alt="find people with similar expertise"/> find people with similar expertise
+                </a>
+            </div>
+          </div>
+          <div class="formItem">
+          	<div class="formSubmit">
+          		<input type="button" value="revert" onclick="FUNC:revert()"/>
+              	<input type="submit" value="save" onclick="FUNC:saveChanges()"/>
+          	</div>
+          </div>
+      </form>
+    </div>
+  </div>
+  <div id="rolesContainer" style="float:right;width:48%">
+    <div class="panel">
+      <div class="panelHeader">
+        <span class="panelTitle">roles</span>
+        <span class="panelActions"><a href="FUNC:addRole()" class="action">add role</a></span>
+      </div>
+      <div class="panelSection">
+        <div class="panelSectionHeader">
+          <span class="panelSectionTitle">new role title</span>
+          <span class="panelActions">
+          	<a href="FUNC:deleteRole()" class="action">delete</a> <a href="FUNC:lockRole()" class="action">make private</a>
+          </span>
+        </div>
+        <form action="">
+            <div class="formItem">
+            	<label for="role1Title">title</label>
+            	<div class="formItemContent">
+            		<input type="text" class="textInput" size="25" id="role1Title" value="Chief Feather Counter" onkeydown="updateRoleTitle()"/>	
+            	</div>
+            </div>
+            <div class="formItem">
+            	<label for="role1Org">organization</label>
+        		<div class="formItemContent">
+        			<input type="text" class="textInput" size="25" id="role1Org" value="Chicken Intelligence Agency"/>
+        			<a href="FUNC:findPeople()" class="action"><img src="images/pawn_find.png" alt="find people in this organization"/>find people in CIA</a>
+        		</div>
+        	</div>
+            <div class="formItem">
+            	<label for="role1Jurisdiction">jurisdiction</label>
+            	<div class="formItemContent">
+            		<input type="text" class="textInput" size="25" id="role1Jusridiction"
+	                            onkeypress="FUNC:triggerLiveSearch()" value="New York"/>
+	                <a href="FUNC:findPeople()" class="action"><img src="images/pawn_find.png" alt="find people in this jurisdiction"/>find people in New York</a>
+            	</div>
+            </div>
+            <div class="formItem">
+            	<label for="role1Mission">mission</label>
+            	<div class="formItemContent">
+            		<input type="text" class="textInput" size="25" id="role1Mission" value="stop suicide-bombing chickens"/>
+            		<a href="FUNC:findPeople()" class="action"><img src="images/pawn_find.png" alt="find people with similar missions"/>find people with similar missions</a>
+            	</div>
+            </div>
+            <div class="formItem">
+            	<label for="role1Manager">manager</label>
+            	<div class="formItemContent">
+            		<input type="text" class="textInput" size="25" id="role1Manager" value="Jane Austen"/>
+            		<a href="FUNC:findPeople()" class="action"><img src="images/pawn_find.png" alt="find people working under this manager"/>find people working under Jane Austen</a>
+            	</div>
+            </div>
+            <div class="formItem">
+            	<div class="formSubmit">
+            		<input type="button" value="revert" onclick="FUNC:revert()"/>
+	              	<input type="submit" value="save" onclick="FUNC:saveChanges()"/>
+            	</div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- InstanceEndEditable -->
+  </div>
+  <div id="footer">
+  	<span id="copyrightblock">copyright (c) 2007-2008 <a href="http://www.mind-alliance.com/">Mind Alliance LLC</a></span>  
+   	<div id="footerMenu">
+    	<ul>
+        	<li><a href="privacy.html">privacy policy</a></li>
+        </ul>
+    </div>
+   </div>
+</body>
+
+<!-- InstanceEnd --></html>

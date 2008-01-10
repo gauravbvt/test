@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>TableLess forms</title>
+
+<link rel="stylesheet" href="css/forms.css"/>
+
+<style type="text/css">
+
+img, a {border-style:none;}
+
+
+.msgError {
+	font-family:"Courier New", Courier, monospace;
+	font-weight:bold;
+	color:#FF0000;
+	border-bottom:#FF0000 1px dotted;
+}
+
+</style>
+
+</head>
+
+<body style="max-width:1024px;font-family:Futura">
+
+	<div style="width:45%;">
+    	<div style="background-image:url(images/bannerbackground.png);height:1.5em;">
+        	<span style="text-transform:uppercase;float:left;clear:left">title goes here</span>
+            <span style="float:right;clear:right;padding-top:0.1em;">
+            	<a href="#" style="border:#CCCCCC 1px solid">delete</a>
+                <a href="#" style="border:#CCCCCC 1px solid">add</a>
+                <a href="#" style="border:#CCCCCC 1px solid">clear</a>
+            </span>
+        </div>
+        <form action="">
+            <div class="formItem">
+                <label for="txt1">name</label>
+                <div class="formItemContent">
+                	<div class="formHint">enter your full name</div>
+                    <input type="text" class="textInput"  id="txt1" value="!xobile henthaho ehonthohon"/>                    
+                    <a href="#" style="border:#CCCCCC 1px solid"><img src="images/pawn_find.png"/></a>
+                    <span class="msgError">strange names are not permitted</span>
+                </div>
+            </div>
+            
+            <div class="formItem">
+                <label for="txt2">phone</label>
+                <div class="formItemContent">
+                	<div class="formItemControl">
+                    	<input type="text" class="textInput"  id="txt2"/>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="formItem">
+                <label for="txt4">expertise</label>
+                <div class="formItemContent">
+                	<div class="formItemControl">
+                    	<textarea rows="5" cols="20" id="txt4"></textarea>
+                    </div>
+                 </div>
+            </div>
+            
+            <div class="formItem">
+            	<span class="formSubmit">
+                	<input type="button" value="cancel" />
+                    <input type="button" value="save"/>
+                </span>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

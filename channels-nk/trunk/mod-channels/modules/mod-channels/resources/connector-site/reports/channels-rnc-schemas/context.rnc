@@ -1,0 +1,95 @@
+# CONTEXT
+
+default namespace = "http://www.mindalliance.com/schemas/channels"
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+include "channels.rnc"
+
+items |= element items {
+    domain*
+    & function*
+    & organization*
+    & clearanceLevel*
+    & person*
+    & role*
+    & system*
+    & policy*
+    }
+
+## A domain of human activity    
+domain =
+    element domain {
+        item
+        & named
+        & documented
+        & element parentDomain { id }*
+    }
+## A category of tasks (may be associated with domains)
+function =
+    element function {
+        item
+        & named
+        & documented
+        & element domain { id }*
+        & element narrows { id }? # A more generic function
+    }
+## A managed collection of persons and systems   
+organization =
+    element organization {
+        item
+        & named
+        & documented
+        & element domain { id }*
+        & element mission { description }
+        & element parentOrganization { id }*
+    }
+## Clearance is a category associated with access privileges in a domain
+clearanceLevel =
+    element clearanceLevel {
+        item
+        & named
+        & documented
+        & element domain { id }
+        & element assignedByOrganization { id }
+        & element extendsClearanceLevel { id }
+        }
+## A person with identity and public face   
+person =
+    element person {
+        item
+        & element firstName {text}
+        & element middleName {text}?
+        & element lastName {text}
+        & element web {xsd:anyURI}*
+        & element photo {xsd:anyURI}?
+    }
+ ## A role played by persons  (if known) 
+role = element role {
+    item
+    & element title {text}
+    & documented
+    & element person { id }*
+    & element organization { id }
+    & element manager { 
+            element person { id } 
+            | element name { text }  }* 
+    & element jurisdiction { location }+ # a geofeature
+}
+
+## A non-human agent and source of information    
+system =
+    element system {
+        item
+        & named
+        & documented
+        & element managedByOrganization { id }
+    }
+## A collection of edicts that obligate and/or restrict the execution of tasks and the sharing of information    
+policy =
+    element policy {
+        item
+        & named
+        & documented
+        & element issuedByOrganization { id }
+    }

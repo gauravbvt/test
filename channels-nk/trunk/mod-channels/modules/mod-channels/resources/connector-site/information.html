@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/connector.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Connector</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/forms.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="banner">
+   <img src="images/logo.png" alt="connector logo" class="logo"/>
+   <div id="auxmenu">
+    <ul>
+       <li><a href="loggedout.html">logout</a></li>
+       <li><a href="help/">help</a></li>
+       <li><a href="settings.html">settings</a></li>
+       <li><a href="profileview.html">my profile</a></li>
+    </ul>
+   </div>
+ </div>
+  <div id="globalNav">
+	<ul>
+      <li class="selected"><a href="profiles.html">people</a></li>
+	  <li><a href="tasks.html">tasks</a></li>
+	  <li><a href="information.html">information</a></li>
+	</ul>
+</div>
+  <div id="content">
+  	<!-- InstanceBeginEditable name="notificationArea" --> <!-- InstanceEndEditable -->
+  	<!-- InstanceBeginEditable name="contentRegion" -->
+<div class="panel">
+  <div class="panelHeader">
+    <span class="panelTitle">
+    	<select class="action">
+        	<option selected="selected">1 to 5</option>
+            <option>1 to 10</option>
+            <option>1 to 20</option>
+            <option>1 to 50</option>
+            <option>ALL</option>
+            <option>custom...</option>
+        </select> (of 20)
+        <select class="action">
+        	<option selected="selected">open</option>
+            <option>closed</option>
+            <option>all</option>
+        </select>
+        <select class="action">
+        	<option selected="selected">urgent</option>
+            <option>very urgent</option>
+            <option>not urgent</option>
+            <option>all</option>
+        </select>
+        <select class="action">
+        	<option selected="selected">critical</option>
+            <option>highly critical</option>
+            <option>not critical</option>
+        </select>
+        information I 
+        <select class="action">
+        	<option selected="selected">need</option>
+            <option>have</option>
+            <option>both</option>
+        </select>
+        </span>
+        <span class="panelActions" style="float:right;">
+	        <label for="txtSearchWithinResults">search within results:</label>
+	        <input type="text" onkeypress="FUNC:searchWithinResults" id="txtSearchWithinResults" size="30"/>
+        </span> 
+   </div>
+   <div class="tableGlobalActions">
+        <a href="FUNC:edit()" class="action">edit</a>
+        <a href="FUNC:addNewInfoNeed()" class="action">add new</a>
+        <select class="action" onchange="FUNC:changeStatus()">
+        	<option selected="selected">change status</option>
+            <option>open</option>
+            <option>closed</option>
+        </select>
+        <select class="action">
+			<option selected="selected">change criticality</option>
+            <option class="highCriticality">high</option>
+            <option class="mediumCriticality">medium</option>
+            <option class="lowCriticality">low</option>
+        </select>
+    </div>     
+    <table class="searchResultsTable" cellspacing="0" summary="1 to 5 of 20 open, urgent and critical information needs">
+      <tr>
+        <th><input type="checkbox"/></th>
+        <th>criticality</th>
+        <th>status</th>
+        <th><img src="images/arrowhead_green_down.png" alt="sorting by this column"/>information</th>
+        <th>needed for (task)</th>
+        <th>needed by (time)</th>
+        <th>sources found</th>
+      </tr>
+      
+      <tr>
+      
+        <td><input type="checkbox"/></td>
+        <td class="borderRow"><span class="highCriticality">high</span></td>
+        <td class="borderRow">open</td>
+        <td class="borderRow">
+            <div class="what"><a href="informationneed.html">Prior arrests of Paul Durand</a></div>
+            <div class="where">United States</div>
+        </td>
+        <td class="borderRow"><a href="#">Murder investigation (CIDB case 45)</a></td>
+        <td class="borderRow">5 PM today
+        <div class="fullDateTime">2004-10-05 5:00:00 PM</div></td>
+        <td class="borderRow">
+          <p>3 (1 new)</p>
+          <p>FBI, State Police...</p>
+          <div style="float:right;font-size:x-small;text-align:right"><a href="informationneed.html">&gt;&gt;</a></div>
+          </td>
+      </tr>
+      <tr bgcolor="#F0FFF0">
+      
+        <td><input type="checkbox"/></td>
+        <td class="borderRow"><span class="mediumCriticality">medium</span></td>
+        <td class="borderRow">open</td>
+        <td class="borderRow">
+        	<div class="what">Informant X's comments about Ahmed</div>
+            <div class="when">yesterday</div>
+            <div class="where">Tikrit, Iraq</div>
+        </td>
+        <td class="borderRow">Insurgency list</td>
+        <td class="borderRow">Dec 12 (4 days late)
+        <div class="fullDateTime">2004-12-12</div></td>
+        <td class="borderRow"><p>2 </p>
+        <p>Morristown Mayor's office...</p>
+        
+          <div style="float:right;font-size:x-small;text-align:right"><a href="#">&gt;&gt;</a></div></td>
+      </tr>
+      <tr>
+      
+        <td><input type="checkbox"/></td>
+        <td class="borderRow"><span class="lowCriticality">low</span></td>
+        <td class="borderRow">open</td>
+        <td class="borderRow">      
+            <div class="what">Identity of arsonists at Toyota factory</div>
+          	<div class="when">July 14, 2003</div>
+            <div class="where">Flint, Michigan</div></td>
+        <td class="borderRow">Suspicious death of union worker</td>
+        <td class="borderRow">Dec 14 (4 days left)
+        <div class="fullDateTime">2004-12-14 4:00 AM</div>
+        </td>
+        <td class="borderRow">None</td>
+      </tr>
+      <tr bgcolor="#F0FFF0">
+        <td><input type="checkbox"/></td>
+        <td class="borderRow"><span class="lowCriticality">low</span></td>
+        <td class="borderRow">open</td>
+        <td class="borderRow">
+        	<div class="what">Description of DVDs found at Mosque A</div>
+            <div class="when">Feb 12, 2003</div>
+            <div class="where">Afghanistan</div>
+           </td>
+        <td>Terrorism Surveillance (CIDB Case 83)</td>
+        <td>Jan 6
+        <div class="fullDateTime">2005-01-06 4:00 AM</div>
+        </td>
+        <td>
+            <p>5 (4 new)</p>
+	        <p>CIA, ABC News, ...
+	          <span style="float:right;font-size:x-small;text-align:right"><a href="#">&gt;&gt;</a></span>
+            </p>
+        </td>
+      </tr>
+      <tr>
+      
+        <td><input type="checkbox"/></td>
+        <td class="borderRow"><span class="highCriticality">high</span></td>
+        <td class="borderRow">open</td>
+        <td class="borderRow">
+        	<div class="what">Senator Craig's schedule in Iowa</div>
+            <div class="when">New Year celebration</div>
+            <div class="where">Rockefeller center</div>
+        </td>
+        <td class="borderRow">Identify possible trouble makers</td>
+        <td class="borderRow">
+        	<div class="fullDateTime">2004-12-14 4:00 AM</div>
+		</td>
+        <td class="borderRow">None</td>
+      </tr>
+      
+      <tr bgcolor="#FFFFCC">
+      
+        <td><input type="checkbox" disabled="disabled"/></td>
+        <td class="borderRow">
+        	<select>
+            	<option selected="selected" class="highCriticality">high</option>
+                <option class="mediumCriticality">medium</option>
+                <option class="lowCriticality">low</option>
+            </select>
+        </td>
+        <td class="borderRow">open</td>
+        <td class="borderRow">
+        	<input type="text" class="textInput" size="30" value="RIJAN login procedure"/>
+            <div style="float:right">
+                <input type="button" value="save" disabled="disabled"/>
+                <input type="button" value="cancel" disabled="disabled"/>
+                <div class="msgInfo">saving...</div>
+			</div>
+        </td>
+        <td class="borderRow"><input type="text" class="textInput" size="30" value="autocomplete text input for tasks"/></td>
+        <td class="borderRow"><input type="text" class="textInput" size="15"/><img src="images/calendar.png" alt="click to choose date using graphical calendar"/></td>
+        <td class="borderRow">
+          <div style="float:right;font-size:x-small;text-align:right"><a href="informationneed.html">full editor &gt;&gt;</a></div></td>
+      </tr>
+    </table>
+    <div class="tableGlobalActions">
+	    <a href="FUNC:edit()" class="action">edit</a>
+	    <a href="FUNC:addNewInfoNeed()" class="action">add new</a>
+		 <select class="action" onchange="FUNC:changeStatus()">
+	    	<option selected="selected">change status</option>
+	        <option>open</option>
+	        <option>closed</option>
+	    </select>
+	    <select class="action">
+			<option selected="selected">change criticality</option>
+	        <option class="highCriticality">high</option>
+	        <option class="mediumCriticality">medium</option>
+	        <option class="lowCriticality">low</option>
+    </select>
+	</div> 
+</div>
+<!-- InstanceEndEditable -->
+  </div>
+  <div id="footer">
+  	<span id="copyrightblock">copyright (c) 2007-2008 <a href="http://www.mind-alliance.com/">Mind Alliance LLC</a></span>  
+   	<div id="footerMenu">
+    	<ul>
+        	<li><a href="privacy.html">privacy policy</a></li>
+        </ul>
+    </div>
+   </div>
+</body>
+
+<!-- InstanceEnd --></html>

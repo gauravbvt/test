@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="ifm.rng" type="xml"?>
+<db>
+    <project id="pr1">
+        <name>Emergency preparedness</name>
+        <description>A short description of this modelization.</description>
+        <organization id="o2">
+            <name>Mind-Alliance Systems</name>
+            <abbreviation>MAS</abbreviation>
+            <category id="c9">
+                <sense>company#1</sense>
+            </category>
+            <mission id="m2">
+                <sense>idealism#1</sense>
+            </mission>
+            <address>
+                <line>21 Herbert Terrace</line>
+                <city>Livingston</city>
+                <stateOrProvince>New Jersey</stateOrProvince>
+                <country>USA</country>
+                <code>07944</code>
+            </address>
+        </organization>
+    </project>
+
+    <contactPoint id="cp2">
+        <category id="c11">
+            <sense>phone number#1</sense>
+        </category>
+        <organization ref="o2"/>
+        <channel id="ch1">
+            <description>Wireless phone service</description>
+            <format id="f2">
+                <sense>audio#1</sense>
+            </format>
+            <organization id="o3">
+                <name>Verizon Wireless</name>
+                <abbreviation>VZW</abbreviation>
+                <role id="r1">
+                    <sense>telco#1</sense>
+                </role>
+            </organization>
+            <availability><include><always/></include></availability>
+        </channel>
+        <endpoint>(973) 123-4567</endpoint>
+    </contactPoint>
+
+    <!-- *********************** Taxonomy -->
+    <category id="c1">
+        <sense>consultant#1</sense>
+    </category>
+    <category id="c2">
+        <sense>systems_analyst#1</sense>
+        <information>
+            <eoi>
+                <sense>experience#1</sense>
+                <type>quantity#1</type>
+            </eoi>
+        </information>
+    </category>
+    <category id="c3">
+        <sense>author#1</sense>
+    </category>
+    <category id="c4">
+        <sense>human_activity#1</sense>
+    </category>
+    
+    <!-- *********************** Orgs-->
+    <organization id="o1">
+        <name>Jefferson Township Police Department</name>
+        <abbreviation>JTPD</abbreviation>
+        <jurisdiction>
+            <geoname>5099826</geoname>
+        </jurisdiction>
+        <category id="c6">
+            <sense>police department#1</sense>
+        </category>
+    </organization>
+
+    <!-- *********************** A scenario -->
+    <scenario id="s1">
+        <name>Something bad</name>
+        <description>Some description...</description>
+    </scenario>
+    
+    <task id="t1">
+        <scenario ref="s1"/>
+        <name>Do something quick</name>
+        <description>Some description...</description>
+        <category ref="c4"/>
+        <worker id="w1">
+            <name>Police guy #1</name>
+            <category id="c5">
+                <sense>trooper#3</sense>
+            </category>
+            <availability>
+                <include><always/></include>
+                <exclude><sundays/></exclude>
+                <exclude><saturdays/></exclude>
+                <exclude><hours>
+                    <from>17:00:00</from>
+                    <to>08:00:00</to></hours></exclude>
+            </availability>
+            <organization ref="o1"/>
+            <person id="p2">
+                <firstName>Bill</firstName>
+                <lastName>Officer</lastName>
+                <category ref="c5"/>
+            </person>
+        </worker>
+    </task>
+
+    <worker id="w2">
+        <name>Chief Architect</name>
+        <organization ref="o2"/>
+        <role id="r2">
+            <sense>architect#1</sense>
+            <mission id="m3">
+                <sense>simplicity#1</sense>
+            </mission>
+            <responsibility>
+                <trigger>
+                    <linkedEvent id="e1">
+                        <name>An idea</name>
+                        <category id="c7">
+                            <sense>daydreaming#1</sense>
+                        </category>
+                    </linkedEvent>
+                </trigger>
+                <response>
+                    <communication id="co1">
+                        <name>Let people know</name>
+                        <category id="c10">
+                            <sense>persuasion#1</sense>
+                        </category>
+                        <worker ref="w2"/>
+                        <format id="f1">
+                            <sense>format#1</sense>
+                            <mimetype>text/plain</mimetype>
+                        </format>
+                        <information>
+                            <eoi>
+                                <sense>memo#1</sense>
+                                <type>draft#5</type>
+                            </eoi>
+                        </information>
+                        <targetAgent>
+                            <worker id="w3">
+                                <name>CTO</name>
+                                <organization ref="o2"/>
+                                <role id="r3">
+                                    <sense>executive_director#1</sense>
+                                </role>
+                                <mission id="m4">
+                                    <sense>spearhead#1</sense>
+                                </mission>
+                                <availability>
+                                    <include><always/></include>
+                                </availability>
+                            </worker>
+                        </targetAgent>
+                    </communication>
+                </response>
+            </responsibility>
+        </role>
+        <availability>
+            <include><always/></include>
+        </availability>
+        <person id="p3">
+            <firstName>Denis</firstName>
+            <lastName>Ranger</lastName>
+            <category ref="c2"/>
+        </person>
+    </worker>
+
+    <!-- *********************** Actual collaborators to the project -->
+    <participant id="pa1">        
+        <userName>Consultant</userName>
+        <password/>
+        <isAdmin>true</isAdmin>
+        <email>person@mind-alliance.com</email>
+        <person id="p1">
+            <firstName>Joe</firstName>
+            <lastName>Consultant</lastName>
+            <description>Some description...</description>
+            <address>
+                <line>21 Herbert Terrace</line>
+                <city>Livingston</city>
+                <stateOrProvince>New Jersey</stateOrProvince>
+                <country>USA</country>
+            </address>
+            <category ref="c1"/>
+            <category ref="c2"/>
+            <category ref="c3"/>
+        </person>
+    </participant>    
+    <participant id="pa2">
+        <userName>dr</userName>
+        <password/>
+        <email>denis@mind-alliance.com</email>
+        <person ref="p3"/>
+    </participant>
+</db>

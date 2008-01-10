@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/connector.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Connector</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/forms.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="banner">
+   <img src="images/logo.png" alt="connector logo" class="logo"/>
+   <div id="auxmenu">
+    <ul>
+       <li><a href="loggedout.html">logout</a></li>
+       <li><a href="help/">help</a></li>
+       <li><a href="settings.html">settings</a></li>
+       <li><a href="profileview.html">my profile</a></li>
+    </ul>
+   </div>
+ </div>
+  <div id="globalNav">
+	<ul>
+      <li class="selected"><a href="profiles.html">people</a></li>
+	  <li><a href="tasks.html">tasks</a></li>
+	  <li><a href="information.html">information</a></li>
+	</ul>
+</div>
+  <div id="content">
+  	<!-- InstanceBeginEditable name="notificationArea" -->
+	<div id="notificationArea" class="msgInfo">
+    	<a href="#">Tommy Tamatino</a> has agreed to fulfill <a href="#">need #36 (arrests of paul...)</a>
+    </div>
+	<!-- InstanceEndEditable -->
+  	<!-- InstanceBeginEditable name="contentRegion" -->
+<!-- 
+
+DEVNOTES:
+
+ALL FORMS:
+	- revert and save buttons disabled by default and enabled when a field is changed
+    - if possible do live validation. otherwise do it when save button is clicked.
+
+revert() {
+	- fill fields in target form with last saved entries
+    - disable save and revert buttons
+}
+
+saveChanges() {
+	- validate data
+    - show 'saving...'info message
+	- save data to database
+    - disable save and revert buttons
+}
+
+changePhoneType() {
+    - user clicks on link
+    - drop down opens showing types of phone:
+        - work phone
+        - cell phone
+}
+
+ changePic() {
+    - formUploadProfilePhoto becomes visible in a popup.
+    - user selects a picture using browse
+    - path to picture appears in text box
+    - user clicks upload
+    - form becomes disabled and pic is uploaded. if this is 
+    a time consuming operation replace 'change picture' with 'uploading...' info message
+    while pic is uploading and change it back when done.
+    - pic is scaled to fit limit set by css (preserve aspect ratio).
+    - form disappears
+}
+
+addPhone() {
+    - new row appears below row in which plus was clicked.
+    - new row has both add and delete buttons
+}
+
+deletePhone() {
+    - row is removed
+    * first phone cannot be deleted so has no delete button
+}
+
+addIM(), deleteIM() {
+	- same as for phone
+    - accounts: aol, msn, jabber
+}
+
+findPeople() {
+    - takes user to results of searching people by org (or jursidiction, etc)
+}
+
+showActionText() {
+	- the exact text shown should appear only when user mouses over that table row
+}
+
+triggerLiveSearch() {
+	- Some form fields like jurisdiction allow choosing from a catalog. These should
+    trigger a live search when user types in them.
+    - Results of live search should be in a popup list below the field and never obscuring it.
+    - If popup is hard to do, then put it in the same table cell below the field with max row count = 6.
+}
+ 
+-->		
+	<div style="clear:both">
+        <a href="myprofileedit.html" class="action" style="float:left">edit my profile</a>
+        <span style="float:right">
+            show me
+            <select class="action">
+            	<option selected="selected">how my trusted group sees it</option>
+                <option>how people I don't trust see it</option>
+            </select>
+         </span>
+    </div>
+      <div class="panel" style="display:inline;float:left;width:49%;padding-right:5px;clear:left">
+        <div class="panelHeader">
+            <span class="panelTitle" style="font-weight:bold">John W. Smith</span>
+        </div>
+        <div style="clear:both">
+            <div class="photoBlock">
+                <img id="profilePicture" src="images/profilepicplaceholder.png" alt="John Doe's Photo"/>
+            </div>
+            <form action="">
+            	<div class="formItem">
+            		<span class="formItemLabel">
+            			work phone
+            		</span>
+            		<div class="formItemContent">
+            			812 191 3541
+            		</div>
+            	</div>
+            	<div class="formItem">
+            		<span class="formItemLabel">
+            			work email
+            		</span>
+            		<div class="formItemContent">
+            			john.smith@email.com
+            		</div>
+            	</div>
+            	<div class="formItem">
+            		<span class="formItemLabel">
+            			bio
+            		</span>
+            		<div class="formItemContent">
+            			Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec neque lacus, sagittis ac, tempus sed, aliquam non, odio. Donec sit amet velit at mauris ultricies sagittis.	
+            		</div>
+            	</div>
+            	<div class="formItem">
+            		<span class="formItemLabel">
+            		  expertise
+            		</span>
+            		<div class="formItemContent">
+            		  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec neque lacus, sagittis ac, tempus sed, aliquam non, odio. Donec sit amet velit at mauris ultricies sagittis.
+            		</div>
+            	</div>
+            </form>
+        </div>
+      </div>
+           
+      <div class="panel" style="float:right;width:49%">
+		  <div class="panelHeader">
+		    <div class="panelTitle">roles</div>
+		  </div>
+		  <div class="panelSection">
+		     <div class="panelSectionHeader">
+		        <div class="panelSectionTitle">role title, {organization name}</div>
+		    </div>
+		    <div>
+		        <div class="formItem">
+		            <div class="formItemLabel">jurisdiction</div>
+		            <div class="formItemContent">New York, NY
+		            	<a class="action" href="findPeople()"><img src="images/pawn_find.png" alt="find People in New York"/>find people in New York, NY</a>    
+		             </div>
+		        </div>
+		        <div class="formItem">
+		            <div class="formItemLabel">mission</div>
+		            <div class="formItemContent">Lorem ipsum dolor sit amet.
+		                <a class="action" href="findPeople()"><img src="images/pawn_find.png" alt="find people with similar missions"/>find people with similar missions</a>
+		            </div>
+		        </div>
+		        <div class="formItem">
+		            <div class="formItemLabel">manager</div>
+		            <div class="formItemContent">
+		                <a href="profileview.html">Jane Austen</a>
+		                <a class="action" href="findPeople()"><img src="images/pawn_find.png" alt="find people working under Jane Austen"/>find people working under Jane Austen</a>
+		            </div>
+		        </div>
+		    </div>
+		  </div>
+		  <div class="panelSection">
+		    <div class="panelSectionHeader">
+		       <div class="panelSectionTitle">role title, {organization name}</div>
+		     </div>
+		     <div>
+		        <div class="formItem">
+		            <div class="formItemLabel">jurisdiction</div>
+		            <div class="formItemContent">New York, NY</div>
+		        </div>
+		        <div class="formItem">
+		            <div class="formItemLabel">mission</div>
+		            <div class="formItemContent">Lorem ipsum dolor sit amet.</div>
+		        </div>
+		        <div class="formItem">
+		            <div class="formItemLabel">manager</div>
+		            <div class="formItemContent"><a href="profileview.html">Jane Austen</a></div>
+		        </div>
+		     </div>
+		  </div>
+    </div>
+	<!-- InstanceEndEditable -->
+  </div>
+  <div id="footer">
+  	<span id="copyrightblock">copyright (c) 2007-2008 <a href="http://www.mind-alliance.com/">Mind Alliance LLC</a></span>  
+   	<div id="footerMenu">
+    	<ul>
+        	<li><a href="privacy.html">privacy policy</a></li>
+        </ul>
+    </div>
+   </div>
+</body>
+
+<!-- InstanceEnd --></html>

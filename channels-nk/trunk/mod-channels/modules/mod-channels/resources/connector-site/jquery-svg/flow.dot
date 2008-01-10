@@ -1,0 +1,16 @@
+digraph "unix" {
+	graph [	fontname = "Didot",
+		label = "\n\n\n\nTesting SVG JQuery",
+		size = "6,6"
+		rankdir="LR"];
+	node [	shape = rectangle, color=black, fontcolor=black];
+	edge [color=darkgreen];
+	evCorpse [shape=ellipse, id="evCorpse", label="corpse discovered", toplabel="Neighbor", URL="javascript:alert(\N)"] ;
+	tkInvestigate [label="investigate complaint", id="tkInvestigate", toplabel="Morristown Police", URL="http://www.google.com/search?q=investigate+complaint"] ;
+	tkAutopsy [label="perform autopsy", toplabel="Morris County Medical Examiner", URL="http://www.google.com/search?q=perform+autopsy"] ;
+	tkInvTerrLink [label="investigate possible link to terrorism", toplabel="NJ Office of Counter-terrorism"] ;
+	evCorpse -> tkInvestigate ;
+	tkInvestigate -> tkAutopsy ;
+	tkAutopsy -> tkInvTerrLink [color=red, label="no agreement"] ;
+
+}

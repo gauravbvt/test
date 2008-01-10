@@ -1,0 +1,84 @@
+default namespace = "http://www.mindalliance.com/schemas/channels"
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+## Any uniquely identifiable item in Channels
+item =
+    attribute id {text}
+    & element version { version }
+    & element whenCreated {xsd:dateTime}
+    & element createdBy { text } # user id
+## Globally unique and permanent identifier
+id =
+    element ref { guid }
+    & element db { text }? # if not in the same db as the referrent
+guid = 
+    text
+userid =
+    text
+## A version number
+version =
+    text
+versionRef = 
+    element id { id }
+    & element version { version }
+## Semantically analyzable description
+description =
+    element description {
+        text
+    }  
+## Named item
+named =
+    element name { text }
+## Described and possibly linked to online documents    
+documented =
+    element url { xsd:anyURI }*
+    & description
+## How a location is specified
+location =
+    element geofeature { text } # The id of a geonames geofeature
+## A rating of either none, low, medium or high
+level = 
+    element level {"none" | "low" | "medium" | "high"}
+## A time window    
+timeWindow =
+    element from {xsd:dateTime}? # none = beginning of time
+    & element to {xsd:dateTime}? # none = now
+## A duration
+duration =
+    element count {xsd:int}
+    & element unit {"second" | "minute" | "hour" | "day"}
+## A recurrent time period
+recurrentPeriod =
+    element recurrentPeriod {
+            element day {"any"|"weekday"|"Monday"|"Tuesday"|"Wednesday"|"Thursday"|"Friday"|"Saturday"|"Sunday"}*
+            & element hours {
+                element fromHour {xsd:integer} # 0-23
+                & element toHour {xsd:integer} #1 -24, must be >= fromHour 
+            }
+    }
+## Information
+information =
+    element information {
+        description
+        & element about { id }?
+    }
+## Reference to a rule
+rule =
+    element rule {
+        named
+        & element group { text }
+        }
+## Item generated through inferrence
+analysisItem =
+    item
+    & element item { id }
+    & element confidence {xsd:double}
+    & element rationale {text}
+    & element status { "accepted" | "rejected" }?
+
+items = notAllowed
+
+start = 
+    element db {
+        items
+    }

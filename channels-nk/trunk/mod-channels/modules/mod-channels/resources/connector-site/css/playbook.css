@@ -1,0 +1,284 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:small;
+	width:8.5in;
+}
+
+#header {
+    clear:both;
+    width:99%;
+	border:#CCCCCC 1px solid;
+	margin-bottom:10px;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+
+* {
+	overflow:hidden;
+}
+
+#legend {
+	float:left;
+	display:inline;
+	width:33%;
+}
+
+table {
+	width:99%;
+	clear:both;
+}
+
+th {
+    text-align:left;
+	font-weight:lighter;
+	font-size:small;
+	text-transform:uppercase;
+	border:#CCCCCC 1px solid;
+	background:url(../images/bannerbackground.png) repeat;
+}
+
+td {
+	vertical-align:top;
+	padding-left:10px;
+	padding-right:10px;
+	border-bottom:#666666 1px solid;
+	margin-bottom:5px;
+}
+
+td div.formHint {
+	width:75%;
+	float:right;
+	text-align:right;
+}
+
+tr:hover {
+	background-color:#FFFFCC;
+}
+
+tr.evenRow {
+	background-color: #F0FFF0;
+}
+
+td.incomingSharing {
+	background-image:url(../images/incoming.png);
+	background-repeat:no-repeat;
+	background-position:left;
+	width:25%;
+}
+
+td.outgoingSharing {
+	background-image:url(../images/outgoing.png);
+	background-repeat:no-repeat;
+	background-position:left;
+	width:25%;
+}
+
+input, textarea {
+	border:#999999 1px solid;
+}
+
+
+.success {
+	width:8em;
+	clear:both;
+}
+
+.serialNum {
+	float:left;
+	font-size:1.5em;
+	font-weight:bold;
+	color:#666666;
+	width:36px;
+	text-align:center;
+}
+
+td .formItem * {
+	padding-right:5px;
+}
+
+textarea {
+	width:100%;
+}
+
+
+.tableHeader {
+    background-color:#FFFFCC;
+    clear:both;
+	margin-bottom:10px;
+}
+
+.alternateContact {
+	margin-left:20px;
+	border:#CCCCCC 1px dashed;
+}
+
+#scenarioName {
+	text-align:center;
+	font-weight:bold;
+	font-size:1.25em;
+	display:inline;
+	float:left;
+	width:33%;
+}
+
+#header .createdFor {
+	display:inline;
+	width:33%;
+	float:left;
+}
+
+#header .topTitle {
+    text-align:center;
+    clear:both;
+    padding-bottom:20px;
+}
+
+#header .createdFor .name {
+	font-size:1.25em;
+    display:block;
+    clear:both;
+    text-align:center;
+    float:none;
+}
+
+#header .createdFor .role {
+    display:block;
+    clear:both;
+    text-align:center;
+    float:none;
+}
+
+.action {
+	font-weight:bold;
+	text-align:right;
+}
+
+#approvedBy {
+	float:right;
+	width:33%;
+	font-size:x-small;
+}
+
+#approvedBy .personInfo {
+    width:90%;
+}
+
+#issueDate {
+    margin-top:5px;
+    margin-bottom:10px;
+}
+
+td.dateTime div.formItem label {
+    display:none;
+}
+
+td.dateTime div.formItem input {
+    width:95%;
+    margin:0;
+    padding-right:0px;
+    text-align:center;
+}
+
+#approvedBy div.formItem {
+	padding-top:2px;
+	padding-bottom:2px;
+}
+
+#approvedBy div.formItem .formItemLabel {
+	width:30%;
+}
+
+#approvedBy div.formItem .formItemContent {
+	width:65%;
+}
+
+.primaryContact, .alternateContact, #header .personInfo {
+	border:#CCCCCC 1px dashed;
+	margin-bottom:5px;
+}
+
+
+#firstUse {
+	float:right;
+}
+
+.personInfo {
+	width:99%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.personInfo .name {
+	clear:left;
+	float:left;
+	display:inline;
+	font-weight:bold;
+}
+
+.personInfo .role {
+	clear:right;
+	float:right;
+	text-transform:capitalize;
+	font-weight:bold;
+}
+
+.contact {
+	clear:both;
+	padding-top:5px;
+}
+
+.contact .phone {
+	float:left;
+	clear:left;
+	display:inline;
+	padding-left:16px;
+}
+
+.contact .email {
+    float:right;
+    clear:right;
+	font-family:"Courier New", Courier, monospace;
+	font-weight:bold;
+	color:#0000FF;
+	text-decoration:underline;
+}
+
+#legend td {
+    padding-left:40px;
+    height:24px;
+    border:none;
+    padding-bottom:10px;
+    vertical-align:middle;
+}
+
+/* HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKKKKKKKKKKK REMOVE LATER */
+#header .personInfo .orgName { display:none;}
+
+.contact .cellPhone {
+	float:left;
+	clear:left;
+	display:inline;
+	background-image:url(../images/cellPhone.png);
+	background-repeat:no-repeat;
+	background-position:left;
+	padding-left:16px;
+}
+
+.contact .fax {
+	float:right;
+	clear:right;
+	background-image:url(../images/fax.png);
+	background-repeat:no-repeat;
+	background-position:left;
+	padding-left:36px;	
+}
+
+.orgName {
+	text-align:center;
+	clear:both;
+	text-transform:uppercase;
+	width:100%;
+}

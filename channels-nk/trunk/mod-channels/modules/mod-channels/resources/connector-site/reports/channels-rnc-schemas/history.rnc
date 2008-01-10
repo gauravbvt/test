@@ -1,0 +1,33 @@
+# HISTORY
+
+default namespace = "http://www.mindalliance.com/schemas/channels"
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+include "channels.rnc" 
+
+item &=
+    element whenDeleted {xsd:dateTime}? 
+    & element replacesItemId {text}?  
+
+items |= element items {
+    # All items defined in either context, situation or model plus...
+    infoFlow*
+    & playbook*
+    & issuesReport*
+    }
+    
+infoFlow =
+    element infoFlow { 
+        empty # TBD
+    }
+    
+playbook =
+    element playbook { 
+        empty # TBD
+    }
+    
+issuesReport =
+    element issuesReport { 
+        empty # TBD
+    }
