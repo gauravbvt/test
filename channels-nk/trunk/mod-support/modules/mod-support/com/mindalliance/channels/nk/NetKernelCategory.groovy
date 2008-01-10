@@ -220,4 +220,10 @@ public class NetKernelCategory {
         yield(builder);
         return new DOMXDAAspect(new DOMXDA(DOMBuilder.parse(new StringReader(writer.toString()))));
     }
+
+    public static void log (INKFConvenienceHelper context, String message, String level) {
+            subrequest("active:application-log", ["operand" : message,
+                                                  "configuration" : LOG_URL,
+                                                  "operator" : "<log>" + "<" + level + "/>" + "</log>"]);
+    }
 }
