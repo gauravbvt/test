@@ -9,12 +9,15 @@ import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
 import org.ten60.netkernel.layer1.representation.IAspectNVP
 import org.ten60.netkernel.xml.representation.DOMXDAAspect
 import org.ten60.netkernel.xml.representation.IAspectXDA
+import org.ten60.netkernel.xml.representation.IXAspect;
 import org.ten60.netkernel.xml.xda.DOMXDA
 import org.ten60.netkernel.xml.xda.IXDA
 import org.ten60.netkernel.xml.xda.IXDAReadOnly
 import org.ten60.netkernel.layer1.nkf.INKFResponse
 import groovy.xml.DOMBuilder
 import groovy.xml.MarkupBuilder
+import groovy.util.slurpersupport.GPathResult
+import org.ten60.netkernel.layer1.nkf.INKFRequest
 
 /**
  * 
@@ -32,9 +35,9 @@ public class NetKernelCategory {
     public static final String URI_SYSTEM = INKFRequestReadOnly.URI_SYSTEM;
 
     public static Object get(IAspectNVP aspect, String name) {
-        switch(name) {
-            case 'map' : return map(aspect);
-            default : return aspect.getValue(name);
+        switch (name) {
+            case 'map': return map(aspect);
+            default: return aspect.getValue(name);
         }
     }
 
@@ -42,7 +45,7 @@ public class NetKernelCategory {
         switch (name) {
             case 'params': return params(context);
             case 'args': return args(context);
-            case 'request': return context.thisRequest();
+            case 'request': return context.getThisRequest();
             case 'xdaHelper': return new XDAHelper(context);
             case 'session': return getSession(context);
             case ~/(.*)\?/: return context.thisRequest.argumentExists(name.substring(0, name.length() - 1));
@@ -156,11 +159,11 @@ public class NetKernelCategory {
         }
         return rep;
     }
+
     public static IURAspect transrept(INKFConvenienceHelper context, String uri, Class aspectClass, Map args) {
 
         return context.transrept(subrequest(context, uri, args), aspectClass);
     }
-
 
     public static INKFResponse respond(INKFConvenienceHelper context, IURRepresentation res, String mimeType, boolean expired) {
         //def rep = context.issueSubRequest(context.thisRequest)
@@ -178,15 +181,13 @@ public class NetKernelCategory {
         context.setResponse(resp);
         return resp;
     }
-    public static INKFResponse respond(INKFConvenienceHelper context, String uri, String mimeType) {
+    public static IURRepresentation respond(INKFConvenienceHelper context, String uri, String mimeType) {
         return subrequest(context, uri, ["mimeType": mimeType]);
     }
 
     public static Session getSession(INKFConvenienceHelper context) {
         return new Session(new ContextSupport(context));
     }
-
-
 
     public static String sourceString(INKFConvenienceHelper context, String uri) {
         return ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
@@ -206,12 +207,17 @@ public class NetKernelCategory {
         return db;
     }
 
-    public static XmlSlurper sourceXML(INKFConvenienceHelper context, String uri) {
-        return new XmlSlurper().parseText(((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString());
+    public static GPathResult sourceXML(INKFConvenienceHelper context, String uri) {
+        String text = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
+        return new XmlSlurper().parseText(text);
     }
 
-    public static XmlSlurper getXml(INKFConvenienceHelper context,IAspectXDA aspect) {
-        return new XmlSlurper().parseText(((IAspectString)context.transrept(aspect, IAspectString.class)).toString());
+    public static GPathResult getXml(INKFConvenienceHelper context, IAspectXDA aspect) {
+        return new XmlSlurper().parseText(((IAspectString) context.transrept(aspect, IAspectString.class)).toString());
+    }
+
+    public static GPathResult getXml(INKFConvenienceHelper context, IURRepresentation representation) {
+        return new XmlSlurper().parseText(((IAspectString) context.transrept(representation, IAspectString.class)).toString());
     }
 
     public static IAspectXDA xmlAspect(Object object, Closure yield) {
@@ -221,9 +227,20 @@ public class NetKernelCategory {
         return new DOMXDAAspect(new DOMXDA(DOMBuilder.parse(new StringReader(writer.toString()))));
     }
 
-    public static void log (INKFConvenienceHelper context, String message, String level) {
-            subrequest("active:application-log", ["operand" : message,
-                                                  "configuration" : LOG_URL,
-                                                  "operator" : "<log>" + "<" + level + "/>" + "</log>"]);
+    public static String getCookie(INKFConvenienceHelper context, String cookieName) {
+        String operator = "<cookie><get>" + cookieName + "</get></cookie>";
+        IAspectString ias = new StringAspect(operator);
+        INKFRequest req = context.createSubRequest("active:HTTPCookie");
+        req.addArgument("operand", "this:param:cookie");
+        req.addArgument("operator", ias);
+        IURRepresentation rep = context.issueSubRequest(req);
+        IAspectXDA xda = (IAspectXDA) context.transrept(rep, IXAspect.class);
+        String xml = ((IAspectString) context.transrept(xda, IAspectString.class)).getString();
+        return xml;
+    }
+    public static log(INKFConvenienceHelper context, String message, String level) {
+        subrequest(context, "active:application-log", ["operand": message,
+                "configuration": LOG_URL,
+                "operator": "<log>" + "<" + level + "/>" + "</log>"]);
     }
 }

@@ -2,7 +2,7 @@ package com.mindalliance.channels.modeler.accessors
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context;
 import com.mindalliance.channels.nk.Session
-import com.mindalliance.channels.nk.accessor.AbstractAccessor;
+import com.mindalliance.channels.nk.accessors.AbstractAccessor;
 import com.mindalliance.channels.nk.NetKernelCategory
 /**
  * 

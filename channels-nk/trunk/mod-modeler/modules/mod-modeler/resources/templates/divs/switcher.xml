@@ -1,0 +1,5 @@
+<div id="switcher" xmlns:xrl="http://1060.org/xrl">
+    <xrl:include href="xrl:dashboard_a"/>
+    <xrl:include href="xrl:perspectives_menu"/>
+    <xrl:include href="xrl:dashboard_b"/>
+</div>

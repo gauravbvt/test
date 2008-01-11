@@ -1,4 +1,4 @@
-package com.mindalliance.channels.nk.accessor;
+package com.mindalliance.channels.nk.accessors;
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly;

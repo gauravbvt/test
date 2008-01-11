@@ -36,6 +36,10 @@
     </export>
     <rewrite>
         <rule>
+            <match>ffcpl:/modeler/projects.xml(\+.*)?</match>
+            <to>active:support_build+operand@ffcpl:/com/mindalliance/channels/modeler/resources/builders/projects.bld+projects@ffcpl:/com/mindalliance/channels/modeler/etc/projects.xml</to>
+        </rule>
+        <rule>
             <match>ffcpl:/modeler/support/(.*?)(\+.*)?</match>
             <to>ffcpl:/com/mindalliance/channels/support/$1</to>
             <!-- redirect to mod-support without args-->
@@ -51,6 +55,10 @@
         <rule>
             <match>ffcpl:/modeler/scripts/(.*?\.js).*</match>
             <to>ffcpl:/resources/scripts/$1</to>
+        </rule>
+        <rule>
+            <match>ffcpl:/modeler/(.*?\.xsd).*</match>
+            <to>ffcpl:/resources/schemas/$1</to>
         </rule>
         <rule>
             <match>ffcpl:/modeler/index.html(.*)</match>
@@ -116,6 +124,10 @@
         <rewrite>
             <match>doc:(.*)</match>
             <to>active:doc-generate+operand@ffcpl:$1</to>
+        </rewrite>
+        <rewrite>
+            <match>ffcpl:/com/mindalliance/channels/modeler/(.*)</match>     <!-- for unambiguous access to internal resources -->
+            <to>ffcpl:/$1</to>
         </rewrite>
         <this>
             <match>ffcpl:/entrypoints.xml</match>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema targetNamespace="http://mindalliance.com/channels/modeler/xforms/types"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="qualified" version="1">
+    <xsd:simpleType name="nonEmptyString">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="zipCode">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="^\s*\d{5}(-\d{4})?\s*$"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="email">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="^\s*.+@.+\..+\s*$"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

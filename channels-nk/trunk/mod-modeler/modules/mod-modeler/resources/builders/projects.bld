@@ -1,0 +1,8 @@
+projects =  new XmlSlurper().parseText(_.projects)
+_.builder.projects(xmlns:"") {
+            projects.project.each { p ->
+                project {
+                    name(p.name)
+                }
+            }
+        }

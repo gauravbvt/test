@@ -1,12 +1,98 @@
+@namespace xforms url("http://www.w3.org/2002/xforms");
+
 * {
 	margin: 0;
 	padding: 0;
 }
+xforms|*:invalid .xf-value {
+    background-color: lightcoral;
+}
+xforms|*:required:before {
+    content: "*";
+    color: red;
+}
+.hidden {
+    display: none;
+}
 body {
-	background: #fff;
-	height: 100%;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+    height: 100%;
+    background-image: url( '/modeler/images/channels-huge.png' );
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+#login {
+    width: 100%;
+    min-height: 600px;
+    background-color:transparent;
+}
+#loginForm {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 350px;
+    background-color: #F4F4F4;
+    filter:alpha(opacity=50);
+    text-align: center;
+    padding: 20px;
+    border: dashed 1px #E0E0E0;
+}
+#loginForm > .title {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+.loginField {
+    display: block;
+    padding: 10px;
+    text-align: left;
+}
+xforms|*.loginField > xforms|label {
+    margin: 10px;
+}
+xforms|*.loginField > .xf-value {
+}
+
+.submitButton {
+    display: block;
+    margin-top: 10px;
+}
+/*
+xforms|input.loginField > xforms|label span, xforms|secret.loginField > xforms|label span, xforms|select1.loginField > xforms|label span {
+    display: table-cell;
+    width: 200px;
+}
+xforms|input.loginField > .xf-value , xforms|secret.loginField > .xf-value, xforms|select1.loginField > .xf-value {
+    display: table-cell;
+    width: 100px;
+}
+*/
+#switcher {
+    width: 100%;
+    border: black dashed 1px;
+}
+
+#dashboard_a {
+    float: left;
+    border: black dashed 1px;
+    width: 25%;
+    min-width: 200px;
+}
+
+#dashboard_b {
+    float: right;
+    border: black dashed 1px;
+    width: 25%;
+    min-width: 200px;
+}
+
+#perspectives_menu {
+    border: black dashed 1px;
+    float: left;
+    width: 49%;
+    min-width: 300px;
+
 }
 .fisheye {
 	text-align: center;
@@ -39,3 +125,116 @@ a.fisheyeItem {
 	left: 500px;
 	position: absolute;
 }
+#perspectives {
+    clear: both;
+    width: 100%;
+    position: static;
+    border: black dashed 1px;
+}
+
+#perspectives_top {
+    position: static;
+    border: black dashed 1px;
+}
+
+#perspectives_title {
+    float: left;
+    font-size: 1.5em;
+    border: black dashed 1px;
+}
+
+#perspectives_toolbar {
+    float: right;
+    background-color: lightgray;
+    padding: 2px;
+    border: black solid 1px;
+}
+
+#perspectives_panes {
+    clear: both;
+    position: relative;
+    border: black solid 1px;
+}
+
+.perspective_main {
+    position: absolute;
+    width: 100%;
+    border: black dashed 1px;
+}
+
+.perspective_main_left {
+    float: left;
+    width: 25%;
+    border: black dashed 1px;
+}
+
+.scope {
+    border: black dashed 1px;
+    background-color: yellow;
+}
+
+.reports {
+    height: 40px;
+    border: black dashed 1px;
+}
+
+.perspective_main_right {
+    float: right;
+    width: 74%;
+    border: black dashed 1px;
+}
+
+.finder {
+    position: static;
+    border: black dashed 1px;
+}
+
+.finder_control {
+    position: static;
+    border: black dashed 1px;
+}
+
+.finder_show {
+    float: left;
+    border: black dashed 1px;
+}
+
+.finder_filter {
+    float: right;
+    border: black dashed 1px;
+}
+
+.finder_main {
+    clear: both;
+    position: static;
+    border: black dashed 1px;
+}
+
+.viewer {
+    position: static;
+    border: black dashed 1px;
+}
+
+.viewer_control {
+    position: static;
+    border: black dashed 1px;
+}
+
+.viewer_crumbs {
+    float: left;
+    border: black dashed 1px;
+}
+
+.viewer_buttons {
+    float: right;
+    width: 100px;
+    border: black dashed 1px;
+}
+
+.viewer_main {
+    clear: both;
+    position: static;
+    border: black dashed 1px;
+}
+
+

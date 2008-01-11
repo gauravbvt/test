@@ -1,5 +1,6 @@
-function setURL() {
-	loginform.url.setAttribute("value", window.location.href);
-  loginform.submit();
-}
+$(document).ready(function () {
+    console.info("login");
+    $('#redirectURL').text(window.location.href);
+
+})
     

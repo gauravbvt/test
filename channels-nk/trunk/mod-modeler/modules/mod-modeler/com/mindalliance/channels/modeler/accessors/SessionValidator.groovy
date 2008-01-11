@@ -1,6 +1,6 @@
 package com.mindalliance.channels.modeler.accessors
 
-import com.mindalliance.channels.nk.accessor.AbstractAccessor
+import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import org.ten60.netkernel.layer1.representation.BooleanAspect
 

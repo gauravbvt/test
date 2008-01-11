@@ -1,16 +1,16 @@
-<projects>
+<acl>
   <user>
-    <id>jf</id>
+    <id>jf@mind-alliance.com</id>
     <password>quebec</password>
   </user>
   <project>
     <name>MyProject</name>
     <db>myproject</db>
-    <admin>jf</admin>
+    <admin>jf@mind-alliance.com</admin>
   </project>
   <project>
     <name>AnotherProject</name>
     <db>otherproject</db>
-    <admin>jf</admin>
+    <admin>jf@mind-alliance.com</admin>
   </project>
-</projects>
+</acl>

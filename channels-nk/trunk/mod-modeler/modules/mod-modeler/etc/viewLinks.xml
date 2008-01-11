@@ -3,7 +3,7 @@
   <link>
     <name>login</name>
     <ext>/login</ext>
-    <int>active:xrl-html+template@ffcpl:/resources/templates/pages/login.xml</int>
+    <int>active:xrl+template@ffcpl:/resources/templates/pages/login.xml</int>
     <args>all</args>
   </link>
   <link>
@@ -21,19 +21,93 @@
   <link>
     <name>app</name>
     <ext>/app</ext>
-    <int>active:xrl-html+template@xrl:home</int>
+    <int>active:xrl-html+template@xrl:modeler</int>
     <args>all</args>
   </link>
+
   <!-- INTERNAL -->
+
+  <!-- pages -->
+
   <link>
-    <name>home</name>
-    <int>ffcpl:/resources/templates/pages/home.xml</int>
+    <name>modeler</name>
+    <int>active:xrl+template@ffcpl:/resources/templates/pages/modeler.xml</int>
+    <args>all</args>
   </link>
+
   <!-- divs -->
+
+    <!-- id = switcher -->
   <link>
-    <name>top</name>
-    <int>ffcpl:/resources/templates/divs/top.xml</int>
+    <name>switcher</name>
+    <int>active:xrl+template@ffcpl:/resources/templates/divs/switcher.xml</int>
+    <args>all</args>
   </link>
+  <link>
+      <name>dashboard_a</name>
+      <int>ffcpl:/resources/templates/divs/switcher/dashboard_a.xml</int>
+  </link>
+    <link>
+        <name>dashboard_b</name>
+        <int>ffcpl:/resources/templates/divs/switcher/dashboard_b.xml</int>
+    </link>
+    <link>
+        <name>perspectives_menu</name>
+        <int>ffcpl:/resources/templates/divs/switcher/perspectives_menu.xml</int>
+    </link>
+
+    <!-- id = perspective -->
+
+    <link>
+        <name>perspectives</name>
+        <int>active:xrl+template@ffcpl:/resources/templates/divs/perspectives.xml</int>
+        <args>all</args>
+    </link>
+    <link>
+        <name>toolbar</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/toolbar.xml</int>
+    </link>
+    <link>
+        <name>perspective</name>
+        <int>active:modeler_processTemplate+template@xrl:perspective_template</int>
+        <args>all</args>
+    </link>
+    <link>
+        <name>perspective_template</name>
+        <int>active:xrl+template@ffcpl:/resources/templates/divs/perspectives/perspective.xml</int>
+        <args>all</args>
+    </link>
+    <link>
+        <name>scope</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/scope.xml</int>
+    </link>
+    <link>
+        <name>reports</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/reports.xml</int>
+    </link>
+    <link>
+        <name>finder</name>
+        <int>active:xrl+template@ffcpl:/resources/templates/divs/perspectives/finder.xml</int>
+        <args>all</args>
+    </link>
+    <link>
+        <name>viewer</name>
+        <int>active:xrl+template@ffcpl:/resources/templates/divs/perspectives/viewer.xml</int>
+        <args>all</args>
+    </link>
+
+    <!-- perspectives/finder -->
+    <link>
+        <name>finder_control</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/finder/finder_control.xml</int>
+    </link>
+    <link>
+        <name>finder_main</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/finder/finder_main.xml</int>
+    </link>
+
+
+    <!-- junk -->
   <link>
     <name>middle</name>
     <int>ffcpl:/resources/templates/divs/middle.xml</int>
@@ -42,7 +116,10 @@
     <name>bottom</name>
     <int>ffcpl:/resources/templates/divs/bottom.xml</int>
   </link>
+
+
   <!-- content -->
+
   <link>
     <name>projectOptions</name>
     <int>active:xquery+operator@ffcpl:/resources/xqueries/projectOptions.xq+input@ffcpl:/etc/projects.xml</int>

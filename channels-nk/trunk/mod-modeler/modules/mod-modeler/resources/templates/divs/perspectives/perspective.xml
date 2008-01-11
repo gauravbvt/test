@@ -1,0 +1,10 @@
+<div id="~~perspective~~" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
+    <div class="perspective_main_left">
+        <xrl:include href="xrl:scope"/>
+        <xrl:include href="xrl:reports"/>
+    </div>
+    <div class="perspective_main_right">
+        <xrl:include href="xrl:finder"/>
+        <xrl:include href="xrl:viewer"/>
+    </div>
+</div>

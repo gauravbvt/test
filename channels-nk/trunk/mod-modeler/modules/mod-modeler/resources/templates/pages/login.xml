@@ -1,23 +1,89 @@
-<html xmlns:xrl="http://1060.org/xrl">
-  <head>
-    <title>Modeler - LOGIN</title>
-    <link rel="stylesheet" href="modeler.css" type="text/css" media="screen"/>
-	  <script src="scripts/pages/login.js" type="text/javascript"/>
-  </head>
-  <body>
-	  <div class="login">
-    <form name="loginform" action="/modeler/public/action/login" method="POST">
-      <input name="url" type="hidden"/>
-      <label for="userid">User ID:</label>
-      <input type="text" name="userid"/>
-      <label for="password">Password:</label>
-      <input name="password" type="password"/>
-      <label for="project">Project:</label>
-      <select name="project">
-        <xrl:include href="xrl:projectOptions"/>
-      </select>
-      <input type="submit" value="Login" onclick="setURL()"/>
-    </form>
-    </div>
-  </body>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:xf="http://www.w3.org/2002/xforms"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:ev="http://www.w3.org/2001/xml-events"
+        xmlns:ftype="http://mindalliance.com/channels/modeler/xforms/types"
+        xmlns:xrl="http://1060.org/xrl">
+    <head>
+        <title>Modeler - LOGIN</title>
+        <link rel="stylesheet" href="modeler.css" type="text/css" media="screen"/>
+        <script src="support/scripts/libs/jquery.js" type="text/javascript"></script>
+        <script src="scripts/pages/login.js" type="text/javascript"/>
+        <xf:model id="projectModel">
+            <xf:instance id="projects" src="projects.xml"/>
+        </xf:model>
+        <xf:model id="loginModel" schema="xforms-types.xsd">
+            <xf:instance id="authentication">
+                <authentication xmlns="">
+                    <userid/>
+                    <password/>
+                    <project/>
+                    <url></url>
+                </authentication>
+            </xf:instance>
+            <xf:bind id="userid" required="true()" type="ftype:email" nodeset="/authentication/userid"/>
+            <!--type="ftype:nonEmptyString"-->
+            <xf:bind id="password" required="true()" type="ftype:nonEmptyString" nodeset="/authentication/password"/>
+            <xf:bind id="project" required="true()" type="ftype:nonEmptyString" nodeset="/authentication/project"/>
+            <xf:bind id="redirect" nodeset="/authentication/url"/>
+            <xf:submission id="send" method="post" action="public/action/login" indent="true"
+                           omit-xml-declaration="true"
+                           includenamespaceprefixes="#default">
+            </xf:submission>
+            <xf:action ev:event="xforms-submit-error">
+                <xf:message level="modal">One or more required entries are missing or are not valid. Please try again.</xf:message>
+            </xf:action>
+        </xf:model>
+    </head>
+    <body>
+        <div id="login">
+            <div id="loginForm">
+                <div class="title">Welcome to Modeler</div>
+                <xf:input class="loginField" bind="userid" model="loginModel">
+                    <xf:label>Your email address:</xf:label>
+                </xf:input>
+                <xf:secret class="loginField" bind="password" model="loginModel">
+                    <xf:label>Password:</xf:label>
+                </xf:secret>
+                <xf:select1 class="loginField" bind="project" appearance="minimal" model="loginModel">
+                    <xf:label>Project:</xf:label>
+                    <xf:itemset model="projectModel" nodeset="/projects/project">
+                        <xf:label ref="name"/>
+                        <xf:value ref="name"/>
+                    </xf:itemset>
+                </xf:select1>
+                <!--
+                <div class="loginInput">
+                    <xf:output ref="/authentication/url" model="loginModel">
+                        <xf:label>Redirecting to:</xf:label>
+                    </xf:output>
+                </div>
+                -->
+                <xf:trigger model="loginModel" class="submitButton">
+                    <xf:label>Login</xf:label>
+                    <xf:action ev:event="DOMActivate">
+                        <xf:setvalue id="redirectURL" bind="redirect">Will be set by login.js</xf:setvalue>
+                        <xf:dispatch name="xforms-refresh" target="loginModel"/>
+                        <xf:send submission="send"/>
+                    </xf:action>
+                </xf:trigger>
+            </div>
+            <!--
+            <form name="loginform" action="/modeler/public/action/login" method="POST">
+                <input name="url" type="hidden"/>
+                <label for="userid">User ID:</label>
+                <input type="text" name="userid"/>
+                <label for="password">Password:</label>
+                <input name="password" type="password"/>
+                <label for="project">Project:</label>
+                <select name="project">
+                    <xrl:include href="xrl:projectOptions"/>
+                </select>
+                <input type="submit" value="Login" onclick="setURL()"/>
+            </form>
+            -->
+        </div>
+    </body>
 </html>

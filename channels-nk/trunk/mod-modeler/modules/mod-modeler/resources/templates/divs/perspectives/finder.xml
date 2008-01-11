@@ -1,0 +1,4 @@
+<div class="finder" xmlns:xrl="http://1060.org/xrl">
+    <xrl:include href="xrl:finder_control"/>
+    <xrl:include href="xrl:finder_main"/>
+</div>

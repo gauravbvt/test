@@ -22,6 +22,9 @@
         <uri>
             <match>ffcpl:/com/mindalliance/channels/support/.*</match>
         </uri>
+        <uri>
+            <match>active:support_.*</match>
+        </uri>
         <class>
             <match>com\.mindalliance\.channels\.nk..*</match>
             <match>groovy.*</match>
@@ -37,6 +40,10 @@
             <match>ffcpl:/entrypoints.xml</match>
             <match>ffcpl:/resources/.*</match>
         </this>
+        <ura>
+          <match>active:support_build.*</match>
+          <class>com.mindalliance.channels.nk.accessors.Builder</class>
+        </ura>
         <import>
             <uri>urn:org:ten60:netkernel:ext:sys</uri>
         </import>
