@@ -70,20 +70,6 @@
                     </xf:action>
                 </xf:trigger>
             </div>
-            <!--
-            <form name="loginform" action="/modeler/public/action/login" method="POST">
-                <input name="url" type="hidden"/>
-                <label for="userid">User ID:</label>
-                <input type="text" name="userid"/>
-                <label for="password">Password:</label>
-                <input name="password" type="password"/>
-                <label for="project">Project:</label>
-                <select name="project">
-                    <xrl:include href="xrl:projectOptions"/>
-                </select>
-                <input type="submit" value="Login" onclick="setURL()"/>
-            </form>
-            -->
         </div>
     </body>
 </html>
