@@ -33,7 +33,7 @@
                            includenamespaceprefixes="#default">
             </xf:submission>
             <xf:action ev:event="xforms-submit-error">
-                <xf:message level="modal">One or more required entries are missing or are not valid. Please try again.</xf:message>
+                <xf:message level="modal">Login failed. Please try again.</xf:message>
             </xf:action>
         </xf:model>
     </head>
