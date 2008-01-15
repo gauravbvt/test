@@ -2,7 +2,7 @@
 
 <module>
     <identity>
-		<uri>urn:com:mindalliance:geonames:test</uri>
+		<uri>urn:com:mindalliance:channels:geonames:test</uri>
 		<version>0.1.0</version>
     </identity>
 	<info>
@@ -38,7 +38,7 @@
 			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
 		</this>
 		<import>
-			<uri>urn:com:mindalliance:geonames</uri>
+			<uri>urn:com:mindalliance:channels:geonames</uri>
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>

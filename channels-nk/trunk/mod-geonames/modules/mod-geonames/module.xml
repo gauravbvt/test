@@ -5,7 +5,7 @@
 	***********
 	-->
     <identity>
-		<uri>urn:com:mindalliance:geonames</uri>
+		<uri>urn:com:mindalliance:channels:geonames</uri>
 		<version>0.0.13</version>
     </identity>
 	<info>
@@ -19,12 +19,10 @@
     </publisher>
 	<export>
 		<uri>
-			<match>ffcpl:/geonames/.*</match>
-			<match>ffcpl:/geonames/initialize</match>
-			<match>active:geonames\+.*</match>
+			<match>ffcpl:/geonames/search.*</match>
+			<match>active:geonamesSearch\+.*</match>
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
 			<match>ffcpl:/entrypoints.xml</match>
-			<match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
 	</export>
 	<mapping>
@@ -36,19 +34,16 @@
 			<match>ffcpl:/resources/.*</match>
 		</this>
 		<rewrite>
-			<match>ffcpl:/geonames/(.*.bsh.*)</match>
-			<to>active:beanshell+operator@ffcpl:/resources/$1</to>
-		</rewrite>
-		<rewrite>
-			<match>(ffcpl:/geonames/.*)</match>
-			<to>active:geonames+path@$1</to>
+			<match>ffcpl:/geonames/search(.*)</match>
+			<to>active:geonamesSearch$1</to>
 		</rewrite>
 		<ura>
-      		<match>active:geonames\+.*</match>
-      		<class>com.mindalliance.geonames.accessor.GeonamesAccessor</class>
+      		<match>active:geonamesSearch\+.*</match>
+      		<class>com.mindalliance.channels.geonames.accessor.Search</class>
     	</ura>
         <import>
-        <uri>urn:com:mindalliance:channels:support</uri>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
         <import>
 			<uri>urn:org:ten60:netkernel:ext:session</uri>
 		</import>

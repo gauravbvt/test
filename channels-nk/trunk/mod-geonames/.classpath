@@ -5,6 +5,8 @@
     <classpathentry combineaccessrules="false" kind="src" path="/common" />
     <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
     <classpathentry kind="src" path="/mod-support" combineaccessrules="false" />
+    <classpathentry kind="lib" path="modules/mod-geonames/lib/geonames-0.5.jar" />
+    <classpathentry kind="lib" path="modules/mod-geonames/lib/jdom-1.0.jar" />
     <classpathentry kind="output" path="modules/mod-geonames" />
 </classpath>
 

@@ -37,6 +37,7 @@ public class NetKernelCategory {
     public static Object get(IAspectNVP aspect, String name) {
         switch (name) {
             case 'map': return map(aspect);
+            case ~/(.*)\?/: return aspect.getValue(name.substring(0, name.length() - 1)) != null;
             default: return aspect.getValue(name);
         }
     }
