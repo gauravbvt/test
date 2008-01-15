@@ -18,9 +18,10 @@ import groovy.xml.DOMBuilder
 import groovy.xml.MarkupBuilder
 import groovy.util.slurpersupport.GPathResult
 import org.ten60.netkernel.layer1.nkf.INKFRequest
+import com.ten60.netkernel.urii.aspect.IAspectBoolean
 
 /**
- * 
+ *
  */
 public class NetKernelCategory {
 
@@ -34,91 +35,7 @@ public class NetKernelCategory {
 
     public static final String URI_SYSTEM = INKFRequestReadOnly.URI_SYSTEM;
 
-    public static Object get(IAspectNVP aspect, String name) {
-        switch (name) {
-            case 'map': return map(aspect);
-            case ~/(.*)\?/: return aspect.getValue(name.substring(0, name.length() - 1)) != null;
-            default: return aspect.getValue(name);
-        }
-    }
-
-    public static Object get(INKFConvenienceHelper context, String name) {
-        switch (name) {
-            case 'params': return params(context);
-            case 'args': return args(context);
-            case 'request': return context.getThisRequest();
-            case 'xdaHelper': return new XDAHelper(context);
-            case 'session': return getSession(context);
-            case ~/(.*)\?/: return context.thisRequest.argumentExists(name.substring(0, name.length() - 1));
-            default: return getArgumentIfExists(context.thisRequest, name);
-        }
-    }
-
-    public static Object get(INKFRequestReadOnly self, String name) {
-        switch (name) {
-            case 'type': return self.getRequestType();
-            case 'activeType': return self.getActiveType();
-            case ~/(.*)\?/: return self.argumentExists(name.substring(0, name.length() - 1));
-            default: return self.getArgument(name);
-        }
-
-    }
-
-    public static Set names(IAspectNVP aspect) {
-        return aspect.getNames();
-    }
-    public static List list(IAspectNVP aspect, String name) {
-        return aspect.getValues(name);
-    }
-
-
-    public static Map map(IAspectNVP aspect) {
-        Map map = new HashMap();
-        Set names = aspect.names
-        for (name in names) {
-            map.put(name, aspect.getValue(name))
-        }
-        return map;
-    }
-    public static IAspectNVP params(INKFConvenienceHelper context) {
-        return params(context, "this:param:param");
-    }
-
-    public static IAspectNVP params(INKFConvenienceHelper context, String uri) {
-        return (IAspectNVP) context.sourceAspect(uri, IAspectNVP.class);
-    }
-
-    public static String getArgumentIfExists(INKFRequestReadOnly request, String name) {
-        if (request.argumentExists(name))
-            return request.getArgument(name);
-        return null;
-    }
-
-
-
-    public static Iterator args(INKFConvenienceHelper context) {
-        return context.getThisRequest().getArguments();
-    }
-
-
-    public String getProperty(INKFConvenienceHelper context, String name, String uri) throws IOException, Exception {
-        String content = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
-        Properties props = new Properties();
-        props.load(new ByteArrayInputStream(content.getBytes()));
-        String value = props.getProperty(name);
-        return value;
-    }
-
-    public static StringAspect string(Object obj, String value) {
-        return new StringAspect(value);
-    }
-
-    public static String data(Object obj, Object value) throws Exception {
-        return "data:text/plain," + URLEncoder.encode(value.toString(), "UTF-8");
-    }
-    public static IAspectXDA xda(Object obj, IXDAReadOnly document) {
-        return (IAspectXDA) new DOMXDAAspect((DOMXDA) document);
-    }
+    // CONTEXT
 
     public static IURRepresentation subrequest(INKFConvenienceHelper context, String uri, Map args) {
 
@@ -164,6 +81,14 @@ public class NetKernelCategory {
     public static IURAspect transrept(INKFConvenienceHelper context, String uri, Class aspectClass, Map args) {
 
         return context.transrept(subrequest(context, uri, args), aspectClass);
+    }
+
+    public static boolean isTrue(INKFConvenienceHelper context, IURRepresentation rep) {
+        return ((IAspectBoolean)context.transrept(rep, IAspectBoolean.class)).isTrue();
+    }
+
+    public static boolean isTrue(INKFConvenienceHelper context, String uri, Map args) {
+        isTrue(context, subrequest(context, uri, args))
     }
 
     public static INKFResponse respond(INKFConvenienceHelper context, IURRepresentation res, String mimeType, boolean expired) {
@@ -221,11 +146,36 @@ public class NetKernelCategory {
         return new XmlSlurper().parseText(((IAspectString) context.transrept(representation, IAspectString.class)).toString());
     }
 
-    public static IAspectXDA xmlAspect(Object object, Closure yield) {
-        StringWriter writer = new StringWriter();
-        MarkupBuilder builder = new MarkupBuilder(writer);
-        yield(builder);
-        return new DOMXDAAspect(new DOMXDA(DOMBuilder.parse(new StringReader(writer.toString()))));
+    public static Object get(INKFConvenienceHelper context, String name) {
+        switch (name) {
+            case 'params': return params(context);
+            case 'args': return args(context);
+            case 'request': return context.getThisRequest();
+            case 'xdaHelper': return new XDAHelper(context);
+            case 'session': return getSession(context);
+            case ~/(.*)\?/: return context.thisRequest.argumentExists(name.substring(0, name.length() - 1));
+            default: return getArgumentIfExists(context.thisRequest, name);
+        }
+    }
+
+    public static Iterator args(INKFConvenienceHelper context) {
+         return context.getThisRequest().getArguments();
+     }
+
+     public String getProperty(INKFConvenienceHelper context, String name, String uri) throws IOException, Exception {
+         String content = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
+         Properties props = new Properties();
+         props.load(new ByteArrayInputStream(content.getBytes()));
+         String value = props.getProperty(name);
+         return value;
+     }
+
+    public static IAspectNVP params(INKFConvenienceHelper context) {
+        return params(context, "this:param:param");
+    }
+
+    public static IAspectNVP params(INKFConvenienceHelper context, String uri) {
+        return (IAspectNVP) context.sourceAspect(uri, IAspectNVP.class);
     }
 
     public static String getCookie(INKFConvenienceHelper context, String cookieName) {
@@ -244,4 +194,79 @@ public class NetKernelCategory {
                 "configuration": LOG_URL,
                 "operator": "<log>" + "<" + level + "/>" + "</log>"]);
     }
+
+   public static IURAspect attachGoldenThread(INKFConvenienceHelper context, String uri, IURAspect resource) {
+        log(context, "Attaching GT " + uri, "info")
+        transrept(context, "active:attachGoldenThread", resource.class, [operand: resource, param: uri])
+    }
+
+    public void cutGoldenThread(INKFConvenienceHelper context, String uri) {
+        subrequest(context, "active:cutGoldenThread", [param: uri])
+        log(context, "Cut GT " + uri, "info");
+    }
+
+    // REQUEST
+
+    public static Object get(INKFRequestReadOnly self, String name) {
+        switch (name) {
+            case 'type': return self.getRequestType();
+            case 'activeType': return self.getActiveType();
+            case ~/(.*)\?/: return self.argumentExists(name.substring(0, name.length() - 1));
+            default: return self.getArgument(name);
+        }
+
+    }
+
+    public static String getArgumentIfExists(INKFRequestReadOnly request, String name) {
+        if (request.argumentExists(name))
+            return request.getArgument(name);
+        return null;
+    }
+
+    // NVP
+
+    public static Object get(IAspectNVP aspect, String name) {
+          switch (name) {
+              case 'map': return map(aspect);
+              case ~/(.*)\?/: return aspect.getValue(name.substring(0, name.length() - 1)) != null;
+              default: return aspect.getValue(name);
+          }
+      }
+
+    public static Set names(IAspectNVP aspect) {
+        return aspect.getNames();
+    }
+    public static List list(IAspectNVP aspect, String name) {
+        return aspect.getValues(name);
+    }
+
+    public static Map map(IAspectNVP aspect) {
+        Map map = new HashMap();
+        Set names = aspect.names
+        for (name in names) {
+            map.put(name, aspect.getValue(name))
+        }
+        return map;
+    }
+
+    // OBJECT
+
+    public static StringAspect string(Object obj, String value) {
+        return new StringAspect(value);
+    }
+
+    public static String data(Object obj, Object value) throws Exception {
+        return "data:text/plain," + URLEncoder.encode(value.toString(), "UTF-8");
+    }
+    public static IAspectXDA xda(Object obj, IXDAReadOnly document) {
+        return (IAspectXDA) new DOMXDAAspect((DOMXDA) document);
+    }
+
+    public static IAspectXDA xmlAspect(Object object, Closure yield) {
+        StringWriter writer = new StringWriter();
+        MarkupBuilder builder = new MarkupBuilder(writer);
+        yield(builder);
+        return new DOMXDAAspect(new DOMXDA(DOMBuilder.parse(new StringReader(writer.toString()))));
+    }
+
 }
