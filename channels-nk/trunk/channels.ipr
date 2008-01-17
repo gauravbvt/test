@@ -248,14 +248,16 @@
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-channels/mod-channels.iml" filepath="$PROJECT_DIR$/mod-channels/mod-channels.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-crud/mod-crud.iml" filepath="$PROJECT_DIR$/mod-crud/mod-crud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-data/mod-data.iml" filepath="$PROJECT_DIR$/mod-data/mod-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" filepath="$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-geonames/mod-geonames.iml" filepath="$PROJECT_DIR$/mod-geonames/mod-geonames.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-modeler/mod-modeler.iml" filepath="$PROJECT_DIR$/mod-modeler/mod-modeler.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-rules/mod-rules.iml" filepath="$PROJECT_DIR$/mod-rules/mod-rules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-store/mod-store.iml" filepath="$PROJECT_DIR$/mod-store/mod-store.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-support/mod-support.iml" filepath="$PROJECT_DIR$/mod-support/mod-support.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ResourceManagerContainer">
@@ -277,7 +279,6 @@
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <UsedPathMacros>
-    <macro name="DBXML_HOME" />
     <macro name="NETKERNEL_HOME" />
   </UsedPathMacros>
 </project>

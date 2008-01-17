@@ -14,7 +14,8 @@ public class AbstractDataAccessor extends NKFAccessorImpl {
         super(SAFE_FOR_CONCURRENT_USE, INKFRequestReadOnly.RQT_SOURCE |
                 INKFRequestReadOnly.RQT_SINK |
                 INKFRequestReadOnly.RQT_NEW |
-                INKFRequestReadOnly.RQT_DELETE
+                INKFRequestReadOnly.RQT_DELETE |
+                INKFRequestReadOnly.RQT_EXISTS
         );
     }
 

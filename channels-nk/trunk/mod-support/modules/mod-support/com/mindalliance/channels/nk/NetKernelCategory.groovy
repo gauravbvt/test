@@ -19,6 +19,7 @@ import groovy.xml.MarkupBuilder
 import groovy.util.slurpersupport.GPathResult
 import org.ten60.netkernel.layer1.nkf.INKFRequest
 import com.ten60.netkernel.urii.aspect.IAspectBoolean
+import com.ten60.netkernel.urii.aspect.BooleanAspect
 
 /**
  *
@@ -45,19 +46,24 @@ public class NetKernelCategory {
 
         def mimeType;
         def expired;
+        def goldenThread;
 
         args.each {key, value ->
             switch (key) {
                 case 'type': break;
                 case 'mimeType': mimeType = value; break;
                 case 'expired': expired = value; break;
-
+                case 'goldenThread': goldenThread = value; break;
                 case 'SYSTEM': req.addSystemArgument(value); break;
                 default: req.addArgument(key, value)
             }
         }
         def rep = context.issueSubRequest(req);
         def response;
+
+        if (goldenThread) {
+            rep = subrequest(context, "active:attachGoldenThread", [operand: rep, param: uri])
+        }
 
         if (mimeType) {
             response = context.createResponseFrom(rep)
@@ -79,7 +85,6 @@ public class NetKernelCategory {
     }
 
     public static IURAspect transrept(INKFConvenienceHelper context, String uri, Class aspectClass, Map args) {
-
         return context.transrept(subrequest(context, uri, args), aspectClass);
     }
 
@@ -111,12 +116,20 @@ public class NetKernelCategory {
         return subrequest(context, uri, ["mimeType": mimeType]);
     }
 
+    public static INKFResponse respond(INKFConvenienceHelper context, IURAspect res) {
+        respond(context, res, "text/xml", true)
+    }
+
     public static Session getSession(INKFConvenienceHelper context) {
         return new Session(new ContextSupport(context));
     }
 
     public static String sourceString(INKFConvenienceHelper context, String uri) {
         return ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
+    }
+
+    public static String sourceString(INKFConvenienceHelper context, String uri, Map args) {
+        ((IAspectString)context.transrept(subrequest(context, uri, args), IAspectString.class)).toString();
     }
 
     public static IXDA sourceXDA(INKFConvenienceHelper context, String uri) {
@@ -144,6 +157,14 @@ public class NetKernelCategory {
 
     public static GPathResult getXml(INKFConvenienceHelper context, IURRepresentation representation) {
         return new XmlSlurper().parseText(((IAspectString) context.transrept(representation, IAspectString.class)).toString());
+    }
+
+    public static GPathResult getXml(INKFConvenienceHelper context, IAspectString aspect) {
+        return new XmlSlurper().parseText(aspect.toString());
+    }
+
+    public static GPathResult getXml(INKFConvenienceHelper context, String uri, Map args) {
+        return getXml(context, subrequest(context, uri, args))
     }
 
     public static Object get(INKFConvenienceHelper context, String name) {
@@ -195,15 +216,14 @@ public class NetKernelCategory {
                 "operator": "<log>" + "<" + level + "/>" + "</log>"]);
     }
 
-   public static IURAspect attachGoldenThread(INKFConvenienceHelper context, String uri, IURAspect resource) {
-        log(context, "Attaching GT " + uri, "info")
-        transrept(context, "active:attachGoldenThread", resource.class, [operand: resource, param: uri])
+    public static void cutGoldenThread(INKFConvenienceHelper context, String uri) {
+        subrequest(context, "active:cutGoldenThread", [param: uri])
     }
 
-    public void cutGoldenThread(INKFConvenienceHelper context, String uri) {
-        subrequest(context, "active:cutGoldenThread", [param: uri])
-        log(context, "Cut GT " + uri, "info");
+    public static IAspectString string(INKFConvenienceHelper context, IURRepresentation rep) {
+        return (IAspectString)context.transrept(rep, IAspectString.class)
     }
+
 
     // REQUEST
 
@@ -258,11 +278,16 @@ public class NetKernelCategory {
     public static String data(Object obj, Object value) throws Exception {
         return "data:text/plain," + URLEncoder.encode(value.toString(), "UTF-8");
     }
+
     public static IAspectXDA xda(Object obj, IXDAReadOnly document) {
         return (IAspectXDA) new DOMXDAAspect((DOMXDA) document);
     }
 
-    public static IAspectXDA xmlAspect(Object object, Closure yield) {
+    public static IAspectBoolean bool(boolean value) {
+        return (IAspectBoolean) new BooleanAspect(value)
+    }
+
+    public static IAspectXDA buildXml(Object object, Closure yield) {
         StringWriter writer = new StringWriter();
         MarkupBuilder builder = new MarkupBuilder(writer);
         yield(builder);

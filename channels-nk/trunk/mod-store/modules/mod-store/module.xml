@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Store Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:store</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Store Module</name>
+        <description>An XML store for documents</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+			<match>active:store_db\+.*</match>
+            <match>active:store_doc\+.*</match>
+            <match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/com/mindalliance/channels/store/.*</match>		</uri>
+	</export>
+    <rewrite>
+      <rule> <!-- xdoc -->
+        <match>ffcpl:/com/mindalliance/channels/store/doc/(.*\.xml)</match>
+        <to>doc:/resources/doc/$1</to>
+      </rule>
+      <rule> <!-- other non-accessor resources -->
+        <match>ffcpl:/com/mindalliance/channels/store/(.*)</match>
+        <to>ffcpl:/resources/$1</to>
+      </rule>
+   </rewrite>
+	<mapping>
+        <rewrite>
+            <match>doc:(.*)</match>
+            <to>active:doc-generate+operand@ffcpl:$1</to>
+        </rewrite>
+		<this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+		    <match>ffcpl:/resources/.*</match>
+		</this>
+		<ura>
+      		<match>active:store_db\+.*</match>
+      		<class>com.mindalliance.channels.store.accessors.DatabaseAccessor</class>
+    	</ura>
+        <ura>
+              <match>active:store_doc\+.*</match>
+              <class>com.mindalliance.channels.store.accessors.DocumentAccessor</class>
+        </ura>
+        <import>
+             <uri>urn:com:mindalliance:channels:support</uri>
+         </import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+        <import>
+            <uri>urn:org:ten60:netkernel:mod:dbxml</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:mod:docxter</uri>
+        </import>
+		<super/>
+    </mapping>
+</module>
