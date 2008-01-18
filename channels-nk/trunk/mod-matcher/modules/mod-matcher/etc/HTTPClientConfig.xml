@@ -1,0 +1,10 @@
+<config>
+  <followRedirects>true</followRedirects>
+  <retryAttempts>3</retryAttempts>
+  <maxConnectionsPerHost>1</maxConnectionsPerHost>
+  <maxTotalConnections>10</maxTotalConnections>
+  <maxAcceptableContentLength>-1</maxAcceptableContentLength>
+  <stateExpirationTime>86400</stateExpirationTime>
+  <connectTimeout>2000</connectTimeout>
+  <timeout>5000</timeout>
+</config>

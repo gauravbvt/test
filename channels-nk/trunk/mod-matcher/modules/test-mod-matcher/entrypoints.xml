@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-matcher</name>
+    <uri>ffcpl:/test/mod-matcher-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance Matcher Library Tests</title>
+      <desc>Mind-Alliance Matcher unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>

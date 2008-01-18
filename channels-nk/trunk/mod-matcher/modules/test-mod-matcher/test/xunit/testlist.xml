@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="Mind-Alliance Unit Tests">
+  <desc>
+    <div>
+      This is the set of unit tests for the Mind-Alliance Matcher Library.
+    </div>
+  </desc>
+    <group title="Matching Tests">
+      <uri>ffcpl:/test/xunit/testlist-matcher.xml</uri>
+    </group>
+    <group title="Signing Tests">
+      <uri>ffcpl:/test/xunit/testlist-signer.xml</uri>
+    </group>
+</testlist>

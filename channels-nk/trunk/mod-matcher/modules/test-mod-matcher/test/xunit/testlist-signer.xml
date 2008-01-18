@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist  title="Matcher Signer Unit Tests">
+    <desc>
+	<div>
+	<b>Signer</b> accessor unit tests for the <b>Mind-Alliance Matcher</b> lib.
+	</div>
+    </desc>
+
+    <!-- A few sanity checks to make sure yahoo/google don't change formats on us -->
+    <test>
+        <uri>ffcpl:/matcher/test+text@unit%20testing+source@yahoo-xhtml</uri>
+        <assert>
+            <xpath>
+                count( //div[ @id='yschdircat'] ) = 1</xpath>
+        </assert>
+        <!--<assert>-->
+            <!--<xpath>count( //div[ @id='yschdircat']//a ) > 0</xpath>-->
+        <!--</assert>-->
+        <!--<assert>-->
+            <!--<xpath>starts-with( //div[ @id='yschdircat']//a[1], 'http://dir.yahoo.com' )</xpath>-->
+        <!--</assert>-->
+    </test>
+    <!--<test>-->
+        <!--<uri>ffcpl:/matcher/test+text@unit%20testing+source@google-xhtml</uri>-->
+        <!--<assert>-->
+            <!--<xpath>count(//div[@class='g']) > 0</xpath>-->
+        <!--</assert>-->
+        <!--<assert>-->
+            <!--<xpath>starts-with( //div[ @class='g']//td[1]//a[1]/@href, '/Top' )</xpath>-->
+        <!--</assert>-->
+    <!--</test>-->
+
+
+    <!-- Verify that topics maps to what is expected by signer -->
+    <test>
+        <uri>ffcpl:/matcher/test+text@unit%20testing+source@yahoo</uri>
+        <assert>
+            <rng>ffcpl:/matcher/topics.rng</rng>
+        </assert>
+    </test>
+    <test>
+        <uri>ffcpl:/matcher/test+text@unit%20testing+source@google</uri>
+        <assert>
+            <rng>ffcpl:/matcher/topics.rng</rng>
+        </assert>
+    </test>
+
+</testlist>

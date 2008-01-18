@@ -251,6 +251,7 @@
       <module fileurl="file://$PROJECT_DIR$/mod-data/mod-data.iml" filepath="$PROJECT_DIR$/mod-data/mod-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" filepath="$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-geonames/mod-geonames.iml" filepath="$PROJECT_DIR$/mod-geonames/mod-geonames.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-matcher/mod-matcher.iml" filepath="$PROJECT_DIR$/mod-matcher/mod-matcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-modeler/mod-modeler.iml" filepath="$PROJECT_DIR$/mod-modeler/mod-modeler.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-rules/mod-rules.iml" filepath="$PROJECT_DIR$/mod-rules/mod-rules.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-store/mod-store.iml" filepath="$PROJECT_DIR$/mod-store/mod-store.iml" />
@@ -279,6 +280,7 @@
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <UsedPathMacros>
+    <macro name="DBXML_HOME" />
     <macro name="NETKERNEL_HOME" />
   </UsedPathMacros>
 </project>

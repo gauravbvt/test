@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Matcher Module
+	***********
+	-->
+    <identity>
+        <uri>urn:com:mindalliance:channels:matcher</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Matcher Module</name>
+        <description>Semantic Proximity Matching</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+			<match>ffcpl:/matcher/.*</match>
+			<match>active:matcher\+.*</match>
+			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/CRONConfig.xml</match>
+		</uri>
+	</export>
+
+	<mapping>
+        <rewrite>
+            <match>ffcpl:/matcher/(.*\.rng)</match>
+            <to>ffcpl:/resources/$1</to>
+        </rewrite>
+
+        <this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+			<match>ffcpl:/resources/.*</match>
+		</this>
+
+        <rewrite>
+			<match>ffcpl:/matcher/match(\+.*)</match>
+			<to>active:matcher$1</to>
+		</rewrite>
+        <rewrite>
+            <match>ffcpl:/matcher/sign\+text@(.*)\+source@(.*)</match>
+            <to>active:signer+text@$1+topicsUrl@$2:$e1</to>
+        </rewrite>
+        <rewrite>
+            <match>ffcpl:/matcher/test\+text@(.*)\+source@(.*)</match>
+            <to>$2:$1</to>
+        </rewrite>
+
+        <ura>
+              <match>active:matcher\+.*</match>
+              <class>com.mindalliance.matcher.accessor.MatcherAccessor</class>
+        </ura>
+        <ura>
+              <match>active:signer\+.*</match>
+              <class>com.mindalliance.matcher.accessor.SignerAccessor</class>
+        </ura>
+
+        <rewrite>
+            <match>^([^:\-]*):(.*)</match>
+            <to>active:xslt+operand@$1-xhtml:$e2+operator@ffcpl:/resources/$1-clean.xsl</to>
+        </rewrite>
+        <rewrite>
+            <match>^([^:\-]*)-xhtml:(.*)</match>
+            <to>active:tagSoup+operand@$1-raw:$e2</to>
+        </rewrite>
+
+        <!-- Add new sources here...
+             Don't forget to provide /resources/x-clean.xsl to canonicalize response...
+             -->
+        <rewrite>
+            <match>yahoo2-raw:(.*)</match>
+            <to>active:httpGet+url@http://search.yahoo.com/search/dir?p=$e1&amp;ei=UTF-8&amp;h=C</to>
+        </rewrite>
+        <rewrite>
+            <match>yahoo-raw:(.*)</match>
+            <to>active:httpGet+url@http://search.yahoo.com/search/dir?p=$e1&amp;ei=UTF-8</to>
+        </rewrite>
+        <rewrite>
+            <match>google-raw:(.*)</match>
+            <to>active:httpGet+url@http://www.google.com/search?hl=en&amp;cat=gwd/Top&amp;q=$e1</to>
+        </rewrite>
+
+		<rewrite>
+			<match>ffcpl:/matcher/(.*.bsh.*)</match>
+			<to>active:beanshell+operator@ffcpl:/resources/$1</to>
+		</rewrite>
+
+      	<import>
+    	  <uri>urn:com:mindalliance:channels:support</uri>
+    	</import>
+        <import>
+          <uri>urn:org:ten60:netkernel:ext:http:client</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xhtml</uri>
+        </import>
+        <import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>
