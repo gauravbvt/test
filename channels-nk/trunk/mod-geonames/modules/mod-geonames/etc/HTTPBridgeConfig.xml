@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <HTTPBridgeConfig>
-	<zone>
-		<match>.*/geonames/.*</match>
-		<processQueries/>
-		<passCookies/>
-		<passRequestURL/>
-		<passMethod/>
-	</zone>
+    <zone>
+        <match>.*/geonames/.*\.xhtml</match>
+    </zone>
+    <zone>
+        <match>.*/geonames/.*</match>
+        <processQueries/>
+        <passCookies/>
+        <passRequestURL/>
+        <passMethod/>
+    </zone>
+
 </HTTPBridgeConfig>

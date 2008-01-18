@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:ev="http://www.w3.org/2001/xml-events">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css" media="screen">
+        .suggest_link {
+            background-color: #FFFFFF;
+            padding: 2px 6px 2px 6px;
+        }
+
+        .suggest_link_over {
+            background-color: #3366CC;
+            padding: 2px 6px 2px 6px;
+        }
+
+        #suggest {
+            position: absolute;
+            background-color: #FFFFFF;
+            text-align: left;
+            border: 1px solid #000000;
+        }
+    </style>
+    <title></title>
+    <xf:model id="geonamesModel">
+        <xf:instance id="geonamesQuery">
+            <query xmlns="">
+                <q/>
+                <maxRows>10</maxRows>
+                <countryCode>US</countryCode>
+            </query>
+        </xf:instance>
+        <xf:instance id="geonamesResults">
+            <list xmlns=""/>
+        </xf:instance>
+        <xf:submission id="get_suggest" action="/geonames/search"
+                       method="get" separator="&amp;" ref="instance('geonamesQuery')"
+                       replace="instance" instance="geonamesResults"/>
+    </xf:model>
+    <script type="text/javascript">
+        //<![CDATA[
+        //Mouse over function
+        function suggestOver(div_value) {
+            div_value.className = 'suggest_link_over';
+        }
+        //Mouse out function
+        function suggestOut(div_value) {
+            div_value.className = 'suggest_link';
+        }
+
+        //Click function
+        function setValue(value) {
+            var model = document.getElementById("geonamesModel");
+            var instance = model.getInstanceDocument("geonamesQuery");
+            var queryElement = model.getElementsByTagName("query")[0];
+            var rootElement = queryElement.getElementsByTagName("q")[0];
+            if (rootElement.childNodes.length == 0) {
+                var textNode = document.createTextNode(value);
+                rootElement.appendChild(textNode);
+            } else {
+                rootElement.firstChild.nodeValue = value;
+            }
+            model.rebuild();
+            model.refresh();
+            document.getElementById('suggest').innerHTML = '';
+        }
+        //]]>
+    </script>
+</head>
+<body>
+<xf:input ref="instance('geonamesQuery')/q" incremental="true" id="tBpx">
+    <xf:label>Suggestions for:</xf:label>
+    <xf:action ev:event="xforms-value-changed">
+        <xf:send submission="get_suggest"/>
+    </xf:action>
+    <xf:message level="modal" ev:event="DOMActivate">FOO</xf:message>
+</xf:input>
+
+<div id="suggest">
+    <xf:repeat id="results2" nodeset="instance('geonamesResults')/location/name">
+        <div onmouseover="javascript:suggestOver(this);"
+             onmouseout="javascript:suggestOut(this);"
+             onclick="javascript:setValue(this.innerHTML);" class="suggest_link">
+            <xf:output ref="."/>
+        </div>
+    </xf:repeat>
+</div>
+<xf:output ref=""/>
+</body>
+</html>

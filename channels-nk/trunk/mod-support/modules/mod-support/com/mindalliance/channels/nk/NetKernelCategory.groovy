@@ -2,24 +2,25 @@ package com.mindalliance.channels.nk
 
 import com.ten60.netkernel.urii.IURAspect
 import com.ten60.netkernel.urii.IURRepresentation
+import com.ten60.netkernel.urii.aspect.BooleanAspect
+import com.ten60.netkernel.urii.aspect.IAspectBoolean
 import com.ten60.netkernel.urii.aspect.IAspectString
 import com.ten60.netkernel.urii.aspect.StringAspect
+import groovy.util.slurpersupport.GPathResult
+import groovy.xml.DOMBuilder
+import groovy.xml.MarkupBuilder
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
+import org.ten60.netkernel.layer1.nkf.INKFRequest
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
+import org.ten60.netkernel.layer1.nkf.INKFResponse
 import org.ten60.netkernel.layer1.representation.IAspectNVP
 import org.ten60.netkernel.xml.representation.DOMXDAAspect
 import org.ten60.netkernel.xml.representation.IAspectXDA
-import org.ten60.netkernel.xml.representation.IXAspect;
+import org.ten60.netkernel.xml.representation.IXAspect
 import org.ten60.netkernel.xml.xda.DOMXDA
 import org.ten60.netkernel.xml.xda.IXDA
 import org.ten60.netkernel.xml.xda.IXDAReadOnly
-import org.ten60.netkernel.layer1.nkf.INKFResponse
-import groovy.xml.DOMBuilder
-import groovy.xml.MarkupBuilder
-import groovy.util.slurpersupport.GPathResult
-import org.ten60.netkernel.layer1.nkf.INKFRequest
-import com.ten60.netkernel.urii.aspect.IAspectBoolean
-import com.ten60.netkernel.urii.aspect.BooleanAspect
+
 
 /**
  *
@@ -89,7 +90,7 @@ public class NetKernelCategory {
     }
 
     public static boolean isTrue(INKFConvenienceHelper context, IURRepresentation rep) {
-        return ((IAspectBoolean)context.transrept(rep, IAspectBoolean.class)).isTrue();
+        return ((IAspectBoolean) context.transrept(rep, IAspectBoolean.class)).isTrue();
     }
 
     public static boolean isTrue(INKFConvenienceHelper context, String uri, Map args) {
@@ -129,7 +130,7 @@ public class NetKernelCategory {
     }
 
     public static String sourceString(INKFConvenienceHelper context, String uri, Map args) {
-        ((IAspectString)context.transrept(subrequest(context, uri, args), IAspectString.class)).toString();
+        ((IAspectString) context.transrept(subrequest(context, uri, args), IAspectString.class)).toString();
     }
 
     public static IXDA sourceXDA(INKFConvenienceHelper context, String uri) {
@@ -180,16 +181,16 @@ public class NetKernelCategory {
     }
 
     public static Iterator args(INKFConvenienceHelper context) {
-         return context.getThisRequest().getArguments();
-     }
+        return context.getThisRequest().getArguments();
+    }
 
-     public String getProperty(INKFConvenienceHelper context, String name, String uri) throws IOException, Exception {
-         String content = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
-         Properties props = new Properties();
-         props.load(new ByteArrayInputStream(content.getBytes()));
-         String value = props.getProperty(name);
-         return value;
-     }
+    public String getProperty(INKFConvenienceHelper context, String name, String uri) throws IOException, Exception {
+        String content = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
+        Properties props = new Properties();
+        props.load(new ByteArrayInputStream(content.getBytes()));
+        String value = props.getProperty(name);
+        return value;
+    }
 
     public static IAspectNVP params(INKFConvenienceHelper context) {
         return params(context, "this:param:param");
@@ -221,7 +222,7 @@ public class NetKernelCategory {
     }
 
     public static IAspectString string(INKFConvenienceHelper context, IURRepresentation rep) {
-        return (IAspectString)context.transrept(rep, IAspectString.class)
+        return (IAspectString) context.transrept(rep, IAspectString.class)
     }
 
 
@@ -246,12 +247,12 @@ public class NetKernelCategory {
     // NVP
 
     public static Object get(IAspectNVP aspect, String name) {
-          switch (name) {
-              case 'map': return map(aspect);
-              case ~/(.*)\?/: return aspect.getValue(name.substring(0, name.length() - 1)) != null;
-              default: return aspect.getValue(name);
-          }
-      }
+        switch (name) {
+            case 'map': return map(aspect);
+            case ~/(.*)\?/: return aspect.getValue(name.substring(0, name.length() - 1)) != null;
+            default: return aspect.getValue(name);
+        }
+    }
 
     public static Set names(IAspectNVP aspect) {
         return aspect.getNames();
@@ -288,6 +289,13 @@ public class NetKernelCategory {
     }
 
     public static IAspectXDA buildXml(Object object, Closure yield) {
+        StringWriter writer = new StringWriter();
+        MarkupBuilder builder = new MarkupBuilder(writer);
+        yield(builder);
+        return new DOMXDAAspect(new DOMXDA(DOMBuilder.parse(new StringReader(writer.toString()))));
+    }
+
+    public static IAspectXDA xmlAspect(Object object, Closure yield) {
         StringWriter writer = new StringWriter();
         MarkupBuilder builder = new MarkupBuilder(writer);
         yield(builder);

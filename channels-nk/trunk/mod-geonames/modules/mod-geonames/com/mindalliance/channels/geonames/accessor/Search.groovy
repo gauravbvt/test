@@ -4,7 +4,10 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.nk.accessors.AbstractAccessor
-import org.geonames.*
+import org.geonames.FeatureClass
+import org.geonames.Style
+import org.geonames.ToponymSearchCriteria
+import org.geonames.WebService
 
 /**
 *
@@ -36,7 +39,7 @@ class Search extends AbstractAccessor {
                 if (context.params."${k}?") {
                     searchArgs."${k}" = v.valueOf(context.params."${k}")
                 }
-            }
+            }                                                   
 
             def result = xmlAspect {xml ->
                 xml.list {
