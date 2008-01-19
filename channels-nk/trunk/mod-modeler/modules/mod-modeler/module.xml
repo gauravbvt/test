@@ -30,8 +30,6 @@
             <!-- Front end module config -->
             <match>ffcpl:/com/mindalliance/channels/support/.*</match>
             <!-- Expose access to support module resources -->
-            <match>js:(.*)</match>
-            <!-- to be used for tests -->
         </uri>
     </export>
     <rewrite>
@@ -89,14 +87,6 @@
         <rule> <!-- xdoc -->
             <match>ffcpl:/com/mindalliance/channels/modeler/doc/(.*\.xml)</match>
             <to>doc:/resources/doc/$1</to>
-        </rule>
-        <rule>   <!-- for tests -->
-            <match>js:(.*?)(\+.*)</match>
-            <to>active:javascript+operator@ffcpl:/resources/scripts/$1.js$2</to>
-        </rule>
-        <rule> <!-- for tests -->
-            <match>js:(.*?)</match>
-            <to>active:javascript+operator@ffcpl:/resources/scripts/$1.js</to>
         </rule>
     </rewrite>
     <mapping>

@@ -24,6 +24,7 @@
 			<match>db:.*</match>
             <match>query:.*</match>
             <match>ffcpl:/entrypoints.xml</match>
+            <match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
 	</export>
     <mapping>

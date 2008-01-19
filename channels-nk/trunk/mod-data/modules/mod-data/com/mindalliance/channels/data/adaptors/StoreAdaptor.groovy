@@ -19,9 +19,9 @@ class StoreAdaptor implements IStoreAdaptor {
     boolean open(String db, INKFConvenienceHelper context) {
         boolean exists
         use(NetKernelCategory) {
-            exists = context.isTrue("active:store_db", [type: EXISTS, name: db])
+            exists = context.isTrue("active:store_db", [type: 'exists', name: db])
             if (!exists) {
-                context.subrequest("active:store_db", [type: NEW, name: db])
+                context.subrequest("active:store_db", [type: 'new', name: db])
             }
         }
         return !exists
@@ -29,7 +29,7 @@ class StoreAdaptor implements IStoreAdaptor {
 
     void load(String db, String contentUri, INKFConvenienceHelper context) {
         use(NetKernelCategory) {
-            context.subrequest("active:store_db", [type: SINK, name: db, load: contentUri])
+            context.subrequest("active:store_db", [type: 'sink', name: db, load: contentUri])
         }
     }
 
@@ -42,7 +42,7 @@ class StoreAdaptor implements IStoreAdaptor {
         BeanXMLConverter converter = new BeanXMLConverter(context)
         String xml = converter.xmlFromBean(bean)
         use(NetKernelCategory) {
-           def type = exists(bean.db, bean.id, context) ? SINK : NEW
+           def type = exists(bean.db, bean.id, context) ? 'sink' : 'new'
                context.subrequest("active:store_doc",
                                   [type: type, db: data(bean.db), id: data(bean.id),
                                    doc: string(xml)])
@@ -61,14 +61,14 @@ class StoreAdaptor implements IStoreAdaptor {
     boolean exists(String db, String id, INKFConvenienceHelper context) {
         boolean exists
         use(NetKernelCategory) {
-           exists = context.isTrue("active:store_doc", [type: EXISTS, db: data(bean.db), id: data(bean:id)])
+           exists = context.isTrue("active:store_doc", [type: 'exists', db: data(bean.db), id: data(bean:id)])
         }
         return exists
     }
 
     void remove(String db, String id, INKFConvenienceHelper context) {
         use(NetKernelCategory) {
-           context.subrequest("active:store_doc", [type: DELETE, db: data(bean.db), id: data(bean:id)])
+           context.subrequest("active:store_doc", [type: 'delete', db: data(bean.db), id: data(bean:id)])
         }
     }
 

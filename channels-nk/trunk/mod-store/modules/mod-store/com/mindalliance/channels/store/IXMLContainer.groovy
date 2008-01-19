@@ -17,6 +17,8 @@ interface IXMLContainer {
     boolean containerExists()
     void createContainer()
     void deleteContainer()
+    void dump(Writer writer)
+    String queryContainer(String xquery)
     String getContainerName()
     void initializeContainer(String uri)
     String getDocument(String id)

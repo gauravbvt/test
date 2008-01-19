@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist  title="Store Accessor Unit Tests">
+    <desc>
+	<div>
+	<b>Store</b> accessor unit tests for the <b>Mind-Alliance Channels XML Store</b> lib.
+	</div>
+    </desc>
+    <test>
+        <uri>active:groovy+operator@ffcpl:/test/accessors/database_exists_not.groovy</uri>
+		<assert>
+			<xpath>//b = 'f'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:groovy+operator@ffcpl:/test/accessors/database_create_delete.groovy</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:groovy+operator@ffcpl:/test/accessors/database_sink.groovy</uri>
+		<assert>
+			<xpath>//dump/*</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:groovy+operator@ffcpl:/test/accessors/document_exists_create_delete.groovy</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:groovy+operator@ffcpl:/test/accessors/document_get_update.groovy</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+</testlist>

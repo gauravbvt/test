@@ -1,0 +1,13 @@
+<docs>
+    <person beanClass="com.mindalliance.channels.data.beans.Person" id="1234" rooted="false"
+            createdOn="Fri Jan 18 11:00:51 EST 2008">
+        <firstName type="String">John</firstName>
+        <middleName type="String">Q.</middleName>
+        <lastName type="String">Public</lastName>
+    </person>
+    <person beanClass="com.mindalliance.channels.data.beans.Person" id="4567" rooted="false"
+            createdOn="Fri Jan 18 11:00:51 EST 2008">
+        <firstName type="String">Jane</firstName>
+        <lastName type="String">Doe</lastName>
+    </person>
+</docs>

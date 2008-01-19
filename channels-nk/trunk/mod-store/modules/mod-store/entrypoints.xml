@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entrypoints>
-  <entrypoint>
-    <name>store_cron_config</name>
-    <uri>ffcpl:/etc/CRONConfig.xml</uri>
-    <indexable>
-      <title>config for kicking the Store Accessor</title>
-      <desc></desc>
-      <keywords/>
-    </indexable>
-    <categories>cron hidden</categories>
-    <group>Tests</group>
-    <icon/>
-  </entrypoint>
+    <entrypoint>
+        <name>icon</name>
+        <uri>ffcpl:/com/mindalliance/channels/support/icon.png</uri>
+        <indexable>
+            <title>Icon</title>
+            <desc></desc>
+            <keywords/>
+        </indexable>
+        <categories>img hidden</categories>
+        <group>channels_crud</group>
+        <icon/>
+    </entrypoint>
 </entrypoints>

@@ -42,7 +42,7 @@ class XMLStore {
     }
 
     void dumpContainer(Writer writer) {
-        throw new Exception('Not implemented yet')   // TODO
+        container.dump(writer)
     }
 
     void initializeContainer(String uri) {

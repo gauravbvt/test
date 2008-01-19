@@ -14,7 +14,7 @@ public interface IXMLContainer {
     public void createContainer() throws Exception;
     public void deleteContainer() throws Exception;
     public String getContainerName() throws Exception;
-    public IAspectXDA getDocument(String id) throws Exception;
+    public IAspectXDA getDocument(String id) throws Exception; 
     public void putDocument(IAspectXDA doc) throws Exception;
     public IAspectXDA deleteDocument(String id) throws Exception;
     public IAspectXDA queryContainer(String query) throws Exception;

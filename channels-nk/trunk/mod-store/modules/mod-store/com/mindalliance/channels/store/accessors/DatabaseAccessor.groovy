@@ -14,11 +14,16 @@ import com.mindalliance.channels.nk.NetKernelCategory
 */
 
 class DatabaseAccessor extends AbstractDataAccessor {
+
+    private static final MAX_DELETE_RETRIES = 60
+    private static final int SLEEP_BETWEEN_RETRIES = 500; // msecs
+    //
     // Does a container exist with the given name?
     // name : name of container
     void exists(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.name, ctx)
+            String dbName = ctx.sourceString("this:param:name")
+            XMLStore store = new XMLStore(dbName, ctx)
             boolean exists = store.containerExists()
             ctx.respond(bool(exists))
         }
@@ -29,7 +34,8 @@ class DatabaseAccessor extends AbstractDataAccessor {
     // name : name of container
     void create(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.name, ctx)
+            String dbName = ctx.sourceString("this:param:name")
+            XMLStore store = new XMLStore(dbName, ctx)
             boolean exists = store.containerExists()
             if (!exists) store.createContainer()
             ctx.respond(bool(exists))
@@ -39,7 +45,8 @@ class DatabaseAccessor extends AbstractDataAccessor {
     // name : name of container
     void source(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.name, ctx)
+            String dbName = ctx.sourceString("this:param:name")
+            XMLStore store = new XMLStore(dbName, ctx)
             StringWriter writer = new StringWriter()
             store.dumpContainer(writer)
             ctx.respond(string(writer.toString()))
@@ -50,16 +57,30 @@ class DatabaseAccessor extends AbstractDataAccessor {
     // load:  xml containing a list of documents to load
     void sink(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.name, ctx)
-            store.initializeContainer(ctx.load)
+            String dbName = ctx.sourceString("this:param:name")
+            XMLStore store = new XMLStore(dbName, ctx)
+            String loadUri = ctx.load
+            store.initializeContainer(loadUri)
         }
     }
 
     // name : name of container
     void delete(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.name, ctx)
-            store.deleteContainer()
+            String dbName = ctx.sourceString("this:param:name")
+            XMLStore store = new XMLStore(dbName, ctx)
+            int retries = MAX_DELETE_RETRIES
+            while (retries > 0 && store.containerExists() )
+                try {
+                    store.deleteContainer()
+                } catch (Exception e) {
+                    ctx.log("Failed to delete container $dbName", 'warning')
+                    retries--
+                    sleep(SLEEP_BETWEEN_RETRIES)
+                }
+            if (retries == 0 && store.containerExists()) {
+                throw new Exception("Failed to delete container ${store.getContainerName()}")
+            }
         }
     }
 

@@ -17,7 +17,7 @@
 		  <uri>
         <match>ffcpl:/test/mod-crud-test/.*</match>
         <match>ffcpl:/entrypoints.xml</match>
-				<match>ffcpl:/com/mindalliance/channels/support/.*</match>
+	    <match>ffcpl:/com/mindalliance/channels/support/.*</match>
       </uri>
     </export>
     <rewrite>

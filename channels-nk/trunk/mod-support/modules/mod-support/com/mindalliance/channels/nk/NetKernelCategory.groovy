@@ -130,7 +130,9 @@ public class NetKernelCategory {
     }
 
     public static String sourceString(INKFConvenienceHelper context, String uri, Map args) {
-        ((IAspectString) context.transrept(subrequest(context, uri, args), IAspectString.class)).toString();
+        def rep = subrequest(context, uri, args)
+        String str = ((IAspectString) context.transrept(rep, IAspectString.class)).getString()
+        return str
     }
 
     public static IXDA sourceXDA(INKFConvenienceHelper context, String uri) {
@@ -212,9 +214,10 @@ public class NetKernelCategory {
         return xml;
     }
     public static log(INKFConvenienceHelper context, String message, String level) {
-        subrequest(context, "active:application-log", ["operand": message,
-                "configuration": LOG_URL,
-                "operator": "<log>" + "<" + level + "/>" + "</log>"]);
+        subrequest(context, "active:application-log",
+                ["operand": string(context, message),
+                        "configuration": LOG_URL,
+                        "operator": string(context, "<log>$level</log>")])
     }
 
     public static void cutGoldenThread(INKFConvenienceHelper context, String uri) {
@@ -224,6 +227,11 @@ public class NetKernelCategory {
     public static IAspectString string(INKFConvenienceHelper context, IURRepresentation rep) {
         return (IAspectString) context.transrept(rep, IAspectString.class)
     }
+
+    public static void sleep(INKFConvenienceHelper context, int msecs) {
+        subrequest(context, "active:sleep", [operator: string(context, "<time>$msecs</time>")])
+    }
+
 
 
     // REQUEST
@@ -284,11 +292,11 @@ public class NetKernelCategory {
         return (IAspectXDA) new DOMXDAAspect((DOMXDA) document);
     }
 
-    public static IAspectBoolean bool(boolean value) {
+    public static IAspectBoolean bool(Object obj, boolean value) {
         return (IAspectBoolean) new BooleanAspect(value)
     }
 
-    public static IAspectXDA buildXml(Object object, Closure yield) {
+    public static IAspectXDA buildXml(Object obj, Closure yield) {
         StringWriter writer = new StringWriter();
         MarkupBuilder builder = new MarkupBuilder(writer);
         yield(builder);

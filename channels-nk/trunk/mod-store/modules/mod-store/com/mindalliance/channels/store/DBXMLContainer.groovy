@@ -2,6 +2,8 @@ package com.mindalliance.channels.store
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.NetKernelCategory
+import org.ten60.netkernel.xml.representation.IAspectXDA
+import com.ten60.netkernel.urii.aspect.IAspectString
 
 
 /**
@@ -25,16 +27,20 @@ class DBXMLContainer implements IXMLContainer {
         return name;
     }
 
+    String getContainerName() {
+         return name
+     }
+
     boolean containerExists() {
         boolean exists
-        use(NetKernelCateogry) {
+        use(NetKernelCategory) {
             exists = ctx.isTrue("active:dbxmlExistsContainer", [operator: string(getContainerDescriptor())])
         }
         return exists
     }
 
     void createContainer() {
-        use(NetKernelCateogry) {
+        use(NetKernelCategory) {
             ctx.subrequest("active:dbxmlCreateContainer", [operator: string(getContainerDescriptor())])
         }
     }
@@ -45,13 +51,28 @@ class DBXMLContainer implements IXMLContainer {
         }
     }
 
-    String getContainerName() {
-        return name
+    String queryContainer(String xquery) {
+        String xml
+        String op = "<dbxml><container>${getContainerName()}</container><xquery><![CDATA[$xquery]]></xquery></dbxml>"
+          use(NetKernelCategory) {
+            xml = ctx.sourceString("active:dbxmlQuery", [operator: string(op)])
+            /*IAspectXDA res = (IAspectXDA)ctx.transrept("active:dbxmlQuery", IAspectXDA.class, [operator: string(op)])
+            xml = ((IAspectString)ctx.transrept(res, IAspectString.class)).getString()*/
+        }
+        return xml;
     }
 
+    void dump(Writer writer) {
+        String xquery = "<dump name=\'${getContainerName()}\'>{ collection(\'${getContainerName()}\')/* }</dump>"
+        String xml = queryContainer(xquery)
+        writer.write(xml)
+    }
+
+
     String getDocument(String id) {
+        String xml
         use(NetKernelCategory) {
-            String xml = ctx.sourceString("active:dbxmlGetDocument",
+            xml = ctx.sourceString("active:dbxmlGetDocument",
                                             [operator: string(getDocumentDescriptor(id)),
                                              goldenThread: DOCUMENT_GOLDEN_THREAD + id])
         }
@@ -90,12 +111,14 @@ class DBXMLContainer implements IXMLContainer {
 
     void initializeContainer(String uri) {
         use(NetKernelCategory) {
-           String xml = ctx.sourceString(uri)
-           xml.childNodes().each { doc ->
+           String text = ctx.sourceString(uri)
+           def xml = new XmlParser().parseText(text)
+           xml.children().each { doc ->
                 String id = doc.@id
+                doc.@db = getContainerName()
                 StringWriter writer = new StringWriter()
                 XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer))
-                xmlPrinter.print(node)
+                xmlPrinter.print(doc)
                 putDocument(writer.toString(), id)
            }
         }

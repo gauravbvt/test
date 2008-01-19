@@ -17,6 +17,7 @@
 		<uri>
 			<match>ffcpl:/test/mod-data-test/.*</match>
 			<match>ffcpl:/(entrypoints.xml)</match>
+            <match>ffcpl:/com/mindalliance/channels/support/.*</match>
 		</uri>
     </export>
     <rewrite>
@@ -29,8 +30,8 @@
 			<to>ffcpl:/test/$1</to>
 		</rule>
 		<rule>
-			<match>(.*?bsh.*)</match>
-			<to>active:beanshell+operator@$1</to>
+			<match>(.*?\.groovy.*)</match>
+			<to>active:groovy+operator@$1</to>
 		</rule>
 	</rewrite>
     <mapping>
@@ -38,7 +39,7 @@
 			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
 		</this>
 		<import>
-			<uri>urn:com:mindalliance:data</uri>
+			<uri>urn:com:mindalliance:channels:data</uri>
 		</import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>

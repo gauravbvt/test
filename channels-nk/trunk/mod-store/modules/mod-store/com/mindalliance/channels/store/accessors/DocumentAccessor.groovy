@@ -22,7 +22,7 @@ class DocumentAccessor extends AbstractDataAccessor {
     void exists(Context ctx) {
         use(NetKernelCategory) {
              XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-             respond(bool(store.documentExists(ctx.sourceString("this:param:id"))))
+             ctx.respond(bool(store.documentExists(ctx.sourceString("this:param:id"))))
         }
     }
     // Add a new document at a given id to a named container
@@ -36,7 +36,7 @@ class DocumentAccessor extends AbstractDataAccessor {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
             store.createDocument(ctx.sourceString("this:param:doc"), ctx.sourceString("this:param:id"))
-            respond(bool(true))
+            ctx.respond(bool(true))
         }
     }
     // Get a document at a given id from a named container
@@ -48,7 +48,7 @@ class DocumentAccessor extends AbstractDataAccessor {
     void source(Context ctx) {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            respond(string(store.getDocument(ctx.sourceString("this:param:id"))))
+            ctx.respond(string(store.getDocument(ctx.sourceString("this:param:id"))))
         }
     }
     // Update an existing document at a given id in a named container
@@ -62,7 +62,7 @@ class DocumentAccessor extends AbstractDataAccessor {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
             store.updateDocument(ctx.sourceString("this:param:doc"), ctx.sourceString("this:param:id"))
-            respond(bool(true))
+            ctx.respond(bool(true))
         }
     }
     // Remove an existing document at a given id from a named container
@@ -74,8 +74,8 @@ class DocumentAccessor extends AbstractDataAccessor {
     void delete(Context ctx) {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            store.delete(ctx.sourceString("this:param:id"))
-            respond(bool(true))
+            store.deleteDocument(ctx.sourceString("this:param:id"))
+            ctx.respond(bool(true))
         }
     }
 

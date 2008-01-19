@@ -6,6 +6,6 @@
     </div>
   </desc>
   <group title="Store Accessor Tests">
-    <uri>ffcpl:/test/xunit/testlist-store.xml</uri>
+    <uri>ffcpl:/test/xunit/testlist-accessors.xml</uri>
   </group>
 </testlist>
