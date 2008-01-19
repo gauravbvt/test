@@ -11,8 +11,12 @@
         <uri>ffcpl:/matcher/test+text@unit%20testing+source@yahoo-xhtml</uri>
         <assert>
             <xpath>
-                count( //div[ @id='yschdircat'] ) = 1</xpath>
+                count( /*:html/*:body ) = 1</xpath>
         </assert>
+        <!--<assert>-->
+            <!--<xpath>-->
+                <!--count( //*:div[ @id='yschdircat'] ) = 1</xpath>-->
+        <!--</assert>-->
         <!--<assert>-->
             <!--<xpath>count( //div[ @id='yschdircat']//a ) > 0</xpath>-->
         <!--</assert>-->

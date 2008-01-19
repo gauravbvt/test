@@ -85,6 +85,10 @@
             <match>google-raw:(.*)</match>
             <to>active:httpGet+url@http://www.google.com/search?hl=en&amp;cat=gwd/Top&amp;q=$e1</to>
         </rewrite>
+        <rewrite>
+            <match>odp-raw:(.*)</match>
+            <to>active:httpGet+url@http://search.dmoz.org/cgi-bin/search?search=$e1&amp;all=yes&amp;cs=UTF-8</to>
+        </rewrite>
 
 		<rewrite>
 			<match>ffcpl:/matcher/(.*.bsh.*)</match>

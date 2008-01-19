@@ -20,20 +20,19 @@ class SignerAccessor extends AbstractAccessor {
      * When large, all ranked topic are equivalent (ie, the ordering of the
      * result is ignored).
      */
-    static final double α = Double.MAX_VALUE
+    static final double halfLife = Double.MAX_VALUE
 
     /**
      * Influence of the number of children of a node ( >= 0 ).
      * TODO fix this description
-     * 0 -> no influence ; Bigger values -> less influence
      */
-    static final double δ = 0
+    static final double childCountWeight = 0
 
     /**
      * Effect of children scores on a node's score ( >= 0 ).
      * TODO fix this description
      */
-    static final double γ = 1
+    static final double childScoreWeight = 1
 
     /**
      * Return the parent topic of a topic.
@@ -94,8 +93,8 @@ class SignerAccessor extends AbstractAccessor {
              if ( topic.endsWith( "/" ) )
                 topic = topic.substring( 0, topic.size()-1 )
              addChild( children, topic )
-             μRaw[ topic ] = α == Double.MAX_VALUE ?
-                 1.0 : Math.pow(2.0d, -i / α)
+             μRaw[ topic ] = halfLife == Double.MAX_VALUE ?
+                 1.0 : Math.pow(2.0d, -i / halfLife)
          }
 
          double n = 0.0
@@ -111,7 +110,7 @@ class SignerAccessor extends AbstractAccessor {
              //     μRaw[ topic ] + sum(directChildren(t)) / (γ + δ * Math.log(kidCount + 1))
 
              // Sum of children is already in μ[ topic ] because of map ordering
-             double factor = γ + δ * kidCount
+             double factor = childScoreWeight + childCountWeight * kidCount
              if ( kidCount != 0 && factor != 0.0 ) {
                  μ[ topic ] /= factor
              }
