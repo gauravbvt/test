@@ -86,21 +86,21 @@ class SignerAccessor extends AbstractAccessor {
             )
 
          // Basic scores of raw topics
-         final Map μRaw = new TreeMap()
+         final Map uRaw = new TreeMap()
 
          rawTopics.topic.eachWithIndex { t,i ->
              String topic = t.@name
              if ( topic.endsWith( "/" ) )
                 topic = topic.substring( 0, topic.size()-1 )
              addChild( children, topic )
-             μRaw[ topic ] = halfLife == Double.MAX_VALUE ?
+             uRaw[ topic ] = halfLife == Double.MAX_VALUE ?
                  1.0 : Math.pow(2.0d, -i / halfLife)
          }
 
          double n = 0.0
 
          // Compute developped topics scores
-         final Map μ = new TreeMap()
+         final Map u = new TreeMap()
          children.each { String topic, int kidCount ->
              // Compute μ[ topic ] =
              //     μRaw[ topic ] + sum(kids) / ( γ + δ * kidCount )
@@ -112,27 +112,27 @@ class SignerAccessor extends AbstractAccessor {
              // Sum of children is already in μ[ topic ] because of map ordering
              double factor = childScoreWeight + childCountWeight * kidCount
              if ( kidCount != 0 && factor != 0.0 ) {
-                 μ[ topic ] /= factor
+                 u[ topic ] /= factor
              }
              else
-                 μ[ topic ] = 0.0
+                 u[ topic ] = 0.0
 
-             μ[ topic ] += μRaw[topic] ?: 0.0
-             n += μ[ topic ]
+             u[ topic ] += uRaw[topic] ?: 0.0
+             n += u[ topic ]
              String parent = parent( topic )
              if ( parent != null )  {
-                if ( μ.containsKey( parent ) )
-                    μ[ parent ] += μ[ topic ]
+                if ( u.containsKey( parent ) )
+                    u[ parent ] += u[ topic ]
                 else
-                    μ[ parent ] = μ[ topic ]
+                    u[ parent ] = u[ topic ]
              }
          }
 
          // Normalize
-         μ.each { key,val -> μ[ key ] = val / n  }
-         μ.remove( "" )
+         u.each { key,val -> u[ key ] = val / n  }
+         u.remove( "" )
 
-         return μ
+         return u
      }
 
    Map valueSort( final Map map ) {
