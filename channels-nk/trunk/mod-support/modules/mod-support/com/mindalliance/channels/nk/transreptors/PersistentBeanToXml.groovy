@@ -3,7 +3,7 @@ package com.mindalliance.channels.nk.transreptors
 import org.ten60.netkernel.layer1.nkf.impl.NKFTransreptorImpl
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
 import com.ten60.netkernel.urii.IURRepresentation
-import com.mindalliance.channels.nk.IPersistentBean
+import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.aspects.IAspectPersistentBean
 import com.mindalliance.channels.nk.XDAHelper
 import org.ten60.netkernel.xml.representation.IAspectXDA

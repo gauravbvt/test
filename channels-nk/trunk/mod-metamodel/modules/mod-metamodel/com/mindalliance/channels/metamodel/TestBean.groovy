@@ -2,6 +2,7 @@ package com.mindalliance.channels.metamodel
 
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean
 import com.mindalliance.channels.nk.bean.BeanReference
+import com.mindalliance.channels.nk.bean.BeanList
 
 /**
 * Created by IntelliJ IDEA.
@@ -13,12 +14,13 @@ import com.mindalliance.channels.nk.bean.BeanReference
 class TestBean extends AbstractPersistentBean {
 
     public Map<String, Object> getBeanProperties() {
-        return [name: name, successful: successful, score: score, parent: parent];
+        return [name: name, successful: successful, score: score, parent: parent, runs: runs];
     }
 
     String name
     boolean successful
     Double score
     BeanReference parent = new BeanReference(beanClass: TestBean.class.name)
+    BeanList runs = new BeanList(itemClass: TestRunComponent.class.name)
 
 }

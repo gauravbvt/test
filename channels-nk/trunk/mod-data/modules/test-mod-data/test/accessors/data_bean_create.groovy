@@ -1,6 +1,7 @@
 import com.mindalliance.channels.nk.NetKernelCategory
-import com.mindalliance.channels.nk.IPersistentBean
+import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.metamodel.*
+import com.mindalliance.channels.nk.bean.IPersistentBean
 
 use (NetKernelCategory) {
 

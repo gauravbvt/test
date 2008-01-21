@@ -1,7 +1,7 @@
 package com.mindalliance.channels.nk.bean
 
-import com.mindalliance.channels.nk.IPersistentBean
-import com.mindalliance.channels.nk.IPersistentBean
+import com.mindalliance.channels.nk.bean.IPersistentBean
+import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.
@@ -20,7 +20,13 @@ abstract class AbstractPersistentBean implements IPersistentBean {
 
     private static final String DEFAULT_VERSION = "1.0.0"
 
-    abstract Map<String,Object> getBeanProperties();
+    boolean isPersistent() {
+        return true
+    }
+
+    boolean isComponent() {
+        return false
+    }
 
     // Default
     String getVersion() {

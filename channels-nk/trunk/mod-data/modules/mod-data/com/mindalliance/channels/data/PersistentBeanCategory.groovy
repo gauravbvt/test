@@ -1,6 +1,6 @@
 package com.mindalliance.channels.data
 
-import com.mindalliance.channels.nk.IPersistentBean
+import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.bean.BeanReference
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean

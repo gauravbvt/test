@@ -1,6 +1,6 @@
 package com.mindalliance.channels.nk.transreptors
 
-import com.mindalliance.channels.nk.IPersistentBean
+import com.mindalliance.channels.nk.bean.IPersistentBean
 import org.ten60.netkernel.layer1.nkf.impl.NKFTransreptorImpl
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
 import com.ten60.netkernel.urii.IURRepresentation
@@ -13,6 +13,7 @@ import com.mindalliance.channels.nk.aspects.IAspectPersistentBean
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
 import org.ten60.netkernel.layer1.nkf.INKFResponse
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
+import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.
