@@ -1,6 +1,8 @@
-package com.mindalliance.channels.nk.channels;
+package com.mindalliance.channels.nk;
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
+import com.ten60.netkernel.urii.IURAspect;
+import com.ten60.netkernel.urii.IURRepresentation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,10 +18,9 @@ public interface IStoreAdaptor {
 
     public void close(String db, INKFConvenienceHelper context);
 
-    public void persist(IPersistentBean bean, INKFConvenienceHelper context);
+    public void persist(String db, String id, IURAspect aspect, INKFConvenienceHelper context);
 
-    // Attributes id and db must be set
-    public void reify(IPersistentBean bean, INKFConvenienceHelper context);
+    public IURRepresentation retrieve(String db, String id, INKFConvenienceHelper context);
 
     public void remove(String db, String id, INKFConvenienceHelper context);
 

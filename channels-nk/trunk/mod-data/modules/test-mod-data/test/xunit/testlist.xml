@@ -2,10 +2,10 @@
 <testlist title="Mind-Alliance Unit Tests">
   <desc>
     <div>
-      This is the set of unit tests for the Mind-Alliance Data Library.
+      This is the set of unit tests for the Mind-Alliance Channels Data module.
     </div>
   </desc>
   <group title="Data Accessor Tests">
-    <uri>ffcpl:/test/xunit/testlist-data.xml</uri>
+    <uri>ffcpl:/test/xunit/testlist-accessors.xml</uri>
   </group>
 </testlist>

@@ -2,12 +2,12 @@
 
 <module>
     <identity>
-		<uri>urn:com:mindalliance:channels:store:test</uri>
+		<uri>urn:com:mindalliance:channels:metamodel:test</uri>
 		<version>0.0.1</version>
     </identity>
 	<info>
-	    <name>Mind-Alliance Store Library Tests</name>
-	    <description>Tests for mod-store</description>
+	    <name>Mind-Alliance Metamodel Library Tests</name>
+	    <description>Tests for mod-metamodel</description>
 	</info>
     <publisher>
         <name>Mind-Alliance, Inc.</name>
@@ -15,35 +15,31 @@
     </publisher>
     <export>
 		<uri>
-			<match>ffcpl:/test/mod-store-test/.*</match>
+			<match>ffcpl:/test/mod-metamodel-test/.*</match>
 			<match>ffcpl:/(entrypoints.xml)</match>
-            <match>ffcpl:/com/mindalliance/channels/support/.*</match>
-            <match>ffcpl:/fixture/.*</match>
-        </uri>
+		</uri>
     </export>
     <rewrite>
 		<rule>
-			<match>ffcpl:/test/mod-store-test/xunit(.*)</match>
+			<match>ffcpl:/test/mod-metamodel-test/xunit(.*)</match>
 			<to>active:xunit+testlist@ffcpl:/test/xunit/testlist.xml$1</to>
 		</rule>
 		<rule>
-			<match>ffcpl:/test/mod-store-test/(.*)</match>
+			<match>ffcpl:/test/mod-metamodel-test/(.*)</match>
 			<to>ffcpl:/test/$1</to>
 		</rule>
-    </rewrite>
+		<rule>
+			<match>(.*?bsh.*)</match>
+			<to>active:beanshell+operator@$1</to>
+		</rule>
+	</rewrite>
     <mapping>
 		<this>
-			<match>ffcpl:/(entrypoints.xml|test/.*|fixture/.*)</match>
+			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
 		</this>
 		<import>
-			<uri>urn:com:mindalliance:channels:store</uri>
+			<uri>urn:com:mindalliance:channels:metamodel</uri>
 		</import>
-        <import>
-            <uri>urn:com:mindalliance:channels:metamodel</uri>
-        </import>
-        <import>
-            <uri>urn:com:mindalliance:channels:support</uri>
-        </import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
 		</import>

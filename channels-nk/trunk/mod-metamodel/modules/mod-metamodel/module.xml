@@ -2,16 +2,16 @@
 <module>
     <!--
      ***********
-     Mind-Alliance Store Module
+     Mind-Alliance Metamodel Module
      ***********
      -->
     <identity>
-        <uri>urn:com:mindalliance:channels:store</uri>
+        <uri>urn:com:mindalliance:channels:metamodel</uri>
         <version>0.0.1</version>
     </identity>
     <info>
-        <name>Mind-Alliance Store Module</name>
-        <description>An XML store for documents</description>
+        <name>Mind-Alliance Metamodel Module</name>
+        <description>A module containing the Channels metamodel classes and named queries</description>
         <dynamic/>
     </info>
     <publisher>
@@ -20,45 +20,45 @@
     </publisher>
     <export>
         <uri>
-            <match>active:store_db.*</match>
-            <match>active:store_doc.*</match>
+            <match>ffcpl:/com/mindalliance/channels/metamodel/.*</match>
+            <match>channels_query:\+.*</match>
             <match>ffcpl:/entrypoints.xml</match>
-            <match>ffcpl:/com/mindalliance/channels/store/.*</match>
         </uri>
-     </export>
+        <class>
+            <match>com\.mindalliance\.channels\.metamodel\..*</match>
+        </class>
+    </export>
     <rewrite>
         <rule> <!-- xdoc -->
-            <match>ffcpl:/com/mindalliance/channels/store/doc/(.*\.xml)</match>
+            <match>ffcpl:/com/mindalliance/channels/metamodel/doc/(.*\.xml)</match>
             <to>doc:/resources/doc/$1</to>
-        </rule>
-        <rule> <!-- other non-accessor resources -->
-            <match>ffcpl:/com/mindalliance/channels/store/(.*)</match>
-            <to>ffcpl:/resources/$1</to>
         </rule>
     </rewrite>
     <mapping>
         <rewrite>
+            <match>ffcpl:/com/mindalliance/channels/metamodel/(.*)</match>
+            <to>ffcpl:/resources/$1</to>
+        </rewrite>
+        <rewrite>
             <match>doc:(.*)</match>
             <to>active:doc-generate+operand@ffcpl:$1</to>
+        </rewrite>
+        <rewrite>
+            <match>channels_query:(.*)</match>
+            <to>ffcpl:/resources/queries/$1</to>
         </rewrite>
         <this>
             <match>ffcpl:/entrypoints.xml</match>
             <match>ffcpl:/etc/.*</match>
+        </this>
+        <this>
             <match>ffcpl:/resources/.*</match>
         </this>
-        <ura>
-            <match>active:store_db.*</match>
-            <class>com.mindalliance.channels.store.accessors.DatabaseAccessor</class>
-        </ura>
-        <ura>
-            <match>active:store_doc.*</match>
-            <class>com.mindalliance.channels.store.accessors.DocumentAccessor</class>
-        </ura>
-        <import>
-            <uri>urn:com:mindalliance:channels:support</uri>
-        </import>
         <import>
             <uri>urn:org:ten60:netkernel:ext:session</uri>
+        </import>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
         </import>
         <import>
             <uri>urn:org:ten60:netkernel:ext:script</uri>
@@ -74,9 +74,6 @@
         </import>
         <import>
             <uri>urn:org:ten60:netkernel:ext:layer1</uri>
-        </import>
-        <import>
-            <uri>urn:org:ten60:netkernel:mod:dbxml</uri>
         </import>
         <import>
             <uri>urn:org:ten60:netkernel:mod:docxter</uri>

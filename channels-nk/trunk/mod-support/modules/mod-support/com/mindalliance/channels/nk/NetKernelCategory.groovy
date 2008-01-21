@@ -125,6 +125,15 @@ public class NetKernelCategory {
         return new Session(new ContextSupport(context));
     }
 
+    public static IURAspect sourceAspect(INKFConvenienceHelper context, String uri, Map args, Class aspectClass) {
+        IURRepresentation rep = subrequest(context, uri, args)
+        return context.transrept(rep, aspectClass)
+    }
+
+    public static IURAspect sourceAspect(INKFConvenienceHelper context, String uri) {
+        return context.sourceAspect(uri, IURAspect.class)
+    }
+
     public static String sourceString(INKFConvenienceHelper context, String uri) {
         return ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
     }
@@ -154,20 +163,25 @@ public class NetKernelCategory {
         return new XmlSlurper().parseText(text);
     }
 
-    public static GPathResult getXml(INKFConvenienceHelper context, IAspectXDA aspect) {
-        return new XmlSlurper().parseText(((IAspectString) context.transrept(aspect, IAspectString.class)).toString());
-    }
-
     public static GPathResult getXml(INKFConvenienceHelper context, IURRepresentation representation) {
-        return new XmlSlurper().parseText(((IAspectString) context.transrept(representation, IAspectString.class)).toString());
+        return getXml(context, (IURAspect)representation.getAspects()[0])      // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
     }
 
-    public static GPathResult getXml(INKFConvenienceHelper context, IAspectString aspect) {
-        return new XmlSlurper().parseText(aspect.toString());
+    public static GPathResult getXml(INKFConvenienceHelper context, IURAspect aspect) {
+        return new XmlSlurper().parseText(getString(context, aspect));
     }
 
     public static GPathResult getXml(INKFConvenienceHelper context, String uri, Map args) {
         return getXml(context, subrequest(context, uri, args))
+    }
+
+    public static String getString(INKFConvenienceHelper context, IURAspect aspect) {
+        IAspectString stringAspect = (IAspectString)context.transrept(aspect, IAspectString.class)
+        return stringAspect.getString()
+    }
+
+    public static String getString(INKFConvenienceHelper context, IURRepresentation representation) {
+        return getString(context, (IURAspect)representation.getAspects()[0]) // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
     }
 
     public static Object get(INKFConvenienceHelper context, String name) {

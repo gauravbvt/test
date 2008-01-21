@@ -61,4 +61,9 @@
         </import>
         <super/>
     </mapping>
+    <transreptors>
+        <transreptor>com.mindalliance.channels.nk.transreptors.PersistentBeanToXMLBinaryStream</transreptor>
+        <transreptor>com.mindalliance.channels.nk.transreptors.PersistentBeanToXml</transreptor>
+        <transreptor>com.mindalliance.channels.nk.transreptors.XmlToPersistentBean</transreptor>
+    </transreptors>
 </module>

@@ -2,9 +2,9 @@ package com.mindalliance.channels.store
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.NetKernelCategory
-import org.ten60.netkernel.xml.representation.IAspectXDA
+import com.ten60.netkernel.urii.IURAspect as Aspect
 import com.ten60.netkernel.urii.aspect.IAspectString
-
+import org.ten60.netkernel.layer1.representation.StringAspect
 
 /**
 * Created by IntelliJ IDEA.
@@ -19,6 +19,7 @@ class DBXMLContainer implements IXMLContainer {
     private String name
 
     DBXMLContainer(String name, Context context) {
+        assert name
         this.name = name
         ctx = context
     }
@@ -28,8 +29,8 @@ class DBXMLContainer implements IXMLContainer {
     }
 
     String getContainerName() {
-         return name
-     }
+        return name
+    }
 
     boolean containerExists() {
         boolean exists
@@ -51,57 +52,65 @@ class DBXMLContainer implements IXMLContainer {
         }
     }
 
-    String queryContainer(String xquery) {
-        String xml
-        String op = "<dbxml><container>${getContainerName()}</container><xquery><![CDATA[$xquery]]></xquery></dbxml>"
-          use(NetKernelCategory) {
-            xml = ctx.sourceString("active:dbxmlQuery", [operator: string(op)])
+    Aspect queryContainer(String xquery, Class aspectClass) {
+        assert xquery
+        assert aspectClass
+        Aspect aspect
+        use(NetKernelCategory) {
+            String op = "<dbxml><container>${getContainerName()}</container><xquery><![CDATA[$xquery]]></xquery></dbxml>"
+            aspect = ctx.sourceAspect("active:dbxmlQuery", [operator: string(op)], aspectClass)
             /*IAspectXDA res = (IAspectXDA)ctx.transrept("active:dbxmlQuery", IAspectXDA.class, [operator: string(op)])
             xml = ((IAspectString)ctx.transrept(res, IAspectString.class)).getString()*/
         }
-        return xml;
+        return aspect;
     }
 
     void dump(Writer writer) {
         String xquery = "<dump name=\'${getContainerName()}\'>{ collection(\'${getContainerName()}\')/* }</dump>"
-        String xml = queryContainer(xquery)
+        String xml = ((IAspectString) queryContainer(xquery, IAspectString.class)).getString()
         writer.write(xml)
     }
 
 
-    String getDocument(String id) {
-        String xml
+    Aspect getDocument(String id, Class aspectClass) {
+        assert id
+        assert aspectClass
+        Aspect aspect
         use(NetKernelCategory) {
-            xml = ctx.sourceString("active:dbxmlGetDocument",
-                                            [operator: string(getDocumentDescriptor(id)),
-                                             goldenThread: DOCUMENT_GOLDEN_THREAD + id])
+            aspect = ctx.sourceAspect("active:dbxmlGetDocument",
+                    [operator: string(getDocumentDescriptor(id)),
+                            goldenThread: DOCUMENT_GOLDEN_THREAD + id], aspectClass)
         }
-        return xml
+        return aspect
     }
 
-    void putDocument(String doc, String id) {
+    void putDocument(Aspect doc, String id) {
+        assert doc
+        assert id
         use(NetKernelCategory) {
             ctx.subrequest("active:dbxmlPutDocument",
-                                [operand: string(doc),
-                                 operator: string(getDocumentDescriptor(id))])
+                    [operand: doc,
+                            operator: string(getDocumentDescriptor(id))])
         }
 
     }
 
     void deleteDocument(String id) {
+        assert id
         use(NetKernelCategory) {
             ctx.subrequest("active:dbxmlDeleteDocument",
-                            [operator: string(getDocumentDescriptor(id))])
-                    // Cut the GoldenThread associated with this resource
+                    [operator: string(getDocumentDescriptor(id))])
+            // Cut the GoldenThread associated with this resource
             ctx.cutGoldenThread(DOCUMENT_GOLDEN_THREAD + id);
         }
 
     }
 
     boolean documentExists(String id) {
+        assert id
         boolean exists = true
         try {
-            getDocument(id)
+            getDocument(id, Aspect.class)
         }
         catch (Exception e) {
             exists = false
@@ -110,17 +119,15 @@ class DBXMLContainer implements IXMLContainer {
     }
 
     void initializeContainer(String uri) {
-        use(NetKernelCategory) {
-           String text = ctx.sourceString(uri)
-           def xml = new XmlParser().parseText(text)
-           xml.children().each { doc ->
-                String id = doc.@id
-                doc.@db = getContainerName()
-                StringWriter writer = new StringWriter()
-                XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer))
-                xmlPrinter.print(doc)
-                putDocument(writer.toString(), id)
-           }
+        String text = ctx.sourceString(uri)
+        def xml = new XmlParser().parseText(text)
+        xml.children().each {doc ->
+            String id = doc.@id
+            doc.@db = getContainerName()
+            StringWriter writer = new StringWriter()
+            XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer))
+            xmlPrinter.print(doc)
+            putDocument(new StringAspect(writer.toString()), id)
         }
     }
 
@@ -128,9 +135,8 @@ class DBXMLContainer implements IXMLContainer {
         "<dbxml><name>$name</name></dbxml>"
     }
 
-    private String getDocumentDescriptor( String id ) {
+    private String getDocumentDescriptor(String id) {
         "<dbxml><name>$id</name><container>${getContainerName()}</container></dbxml>"
     }
-
 
 }

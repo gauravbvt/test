@@ -12,7 +12,7 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
  * To change this template use File | Settings | File Templates.
  */
 
-// Init, refresh, querying
+// Search or refresh
 class MemoryAccessor extends AbstractAccessor {
 
     // operator query | refresh

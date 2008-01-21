@@ -4,6 +4,7 @@ import com.mindalliance.channels.nk.accessors.AbstractDataAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.store.XMLStore
 import com.mindalliance.channels.nk.NetKernelCategory
+import com.ten60.netkernel.urii.aspect.IAspectString
 
 // TODO persist, golden thread 
 
@@ -35,7 +36,7 @@ class DocumentAccessor extends AbstractDataAccessor {
     void create(Context ctx) {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            store.createDocument(ctx.sourceString("this:param:doc"), ctx.sourceString("this:param:id"))
+            store.createDocument(ctx.sourceAspect("this:param:doc"), ctx.sourceString("this:param:id"))
             ctx.respond(bool(true))
         }
     }
@@ -48,7 +49,7 @@ class DocumentAccessor extends AbstractDataAccessor {
     void source(Context ctx) {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            ctx.respond(string(store.getDocument(ctx.sourceString("this:param:id"))))
+            ctx.respond(store.getDocument(ctx.sourceString("this:param:id"), IAspectString.class))
         }
     }
     // Update an existing document at a given id in a named container
@@ -61,7 +62,7 @@ class DocumentAccessor extends AbstractDataAccessor {
     void sink(Context ctx) {
         use(NetKernelCategory) {
             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            store.updateDocument(ctx.sourceString("this:param:doc"), ctx.sourceString("this:param:id"))
+            store.updateDocument(ctx.sourceAspect("this:param:doc"), ctx.sourceString("this:param:id"))
             ctx.respond(bool(true))
         }
     }

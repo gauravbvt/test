@@ -2,16 +2,17 @@ package com.mindalliance.channels.data
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import groovy.util.slurpersupport.GPathResult
-import com.mindalliance.channels.nk.channels.IPersistentBean
+import com.mindalliance.channels.nk.IPersistentBean
 import com.mindalliance.channels.nk.NetKernelCategory
+import com.mindalliance.channels.nk.IPersistentBean
 
 /**
- * Created by IntelliJ IDEA.
- * User: jf
- * Date: Jan 16, 2008
- * Time: 10:09:24 AM
- * To change this template use File | Settings | File Templates.
- */
+* Created by IntelliJ IDEA.
+* User: jf
+* Date: Jan 16, 2008
+* Time: 10:09:24 AM
+* To change this template use File | Settings | File Templates.
+*/
 // Singleton class
 class BeanMemory {
 
@@ -49,8 +50,8 @@ class BeanMemory {
         return beanGraph.search(beanClass, db, id, queryUri, context)
     }
 
-    IPersistentBean retrieveBean(String beanClass, String db, String id, Context context)  {
-        IPersistentBean bean = beanGraph.retrieveBean(beanClass, db, id, context)
+    IPersistentBean retrieveBean(String db, String id, Context context)  {
+        IPersistentBean bean = beanGraph.retrieveBean(db, id, context)
         // do something else?
         return bean
     }

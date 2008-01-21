@@ -26,6 +26,9 @@
             <match>ffcpl:/entrypoints.xml</match>
             <match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
+        <class>
+            <match>com\.mindalliance\.channels\.metamodel\..*</match>
+        </class>
 	</export>
     <mapping>
         <rewrite>
@@ -57,6 +60,12 @@
               <match>active:data_memory\+.*</match>
               <class>com.mindalliance.channels.data.accessors.MemoryAccessor</class>
         </ura>
+        <import>
+            <uri>urn:com:mindalliance:channels:metamodel</uri>
+        </import>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
         <import>
             <uri>urn:com:mindalliance:channels:store</uri>
         </import>

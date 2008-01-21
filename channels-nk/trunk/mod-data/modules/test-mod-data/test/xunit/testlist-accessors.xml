@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist  title="Data Accessor Unit Tests">
+    <desc>
+	<div>
+	<b>Memory</b> accessor unit tests for the <b>Mind-Alliance Channels Data module</b> lib.
+	</div>
+    </desc>
+    <test>
+        <uri>active:groovy+operator@ffcpl:/test/accessors/data_bean_create.groovy</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+</testlist>

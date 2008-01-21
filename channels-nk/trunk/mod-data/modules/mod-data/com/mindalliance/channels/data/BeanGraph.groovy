@@ -1,11 +1,14 @@
 package com.mindalliance.channels.data
 
-import com.mindalliance.channels.nk.channels.IPersistentBean
+import com.mindalliance.channels.nk.IPersistentBean
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
-import com.mindalliance.channels.nk.channels.IStoreAdaptor
+import com.mindalliance.channels.nk.IStoreAdaptor
 import com.mindalliance.channels.data.adaptors.StoreAdaptor
 import com.mindalliance.channels.nk.NetKernelCategory
 import groovy.xml.MarkupBuilder
+import com.mindalliance.channels.nk.IPersistentBean
+import com.mindalliance.channels.nk.IStoreAdaptor
+import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
 
 /**
 * Created by IntelliJ IDEA.
@@ -32,7 +35,7 @@ class BeanGraph {
 
     String search(String beanClass, String db, String id, String queryUri, Context context) {
         String xml
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistenBeanCategory) {
             if (queryUri.endsWith('.groovy')) {
                 String query = context.sourceString(queryUri)
                 StringWriter writer = new StringWriter()
@@ -48,25 +51,22 @@ class BeanGraph {
 
     }
 
-    IPersistentBean retrieveBean(String beanClass, String db, String id, Context context) {
+    IPersistentBean retrieveBean(String db, String id, Context context) {
         IPersistentBean bean
-        use(NetKernelCategory) {
+        use(PersistentBeanCategory) {
             if (!(bean = fromCache(db, id))) {
-                if (!beanClass) throw new IllegalArgumentException("beanClass is null and bean is not cached")
-                bean = AbstractPersistentBean.newPersistentBean(db, id, beanClass)
                 IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context)
-                storeAdaptor.reify(bean, context)
+                bean = context.getPersistentBean(storeAdaptor.retrieve(db, id, context))
                 cache(db, id, bean)
             }
         }
-        assert beanClass == bean.class.name
         return bean
     }
 
     void storeBean(IPersistentBean bean, Context context) {
         use(NetKernelCategory) {
-            IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context)
-            storeAdaptor.persist(bean, context)
+            IStoreAdaptor storeAdaptor = selectAdaptorFor(bean.db, context)
+            storeAdaptor.persist(bean.db, bean.id, new PersistentBeanAspect(bean), context)
             cache(bean.db, bean.id, bean)
         }
     }
@@ -95,7 +95,7 @@ class BeanGraph {
             boolean created = storeAdaptor.open(db, context)    // open, create+load if needed
             if (created) {
                 use(NetKernelCategory) {
-                   String initContentUri = "db:$db"
+                   String initContentUri = "db:${db}.xml"
                    if (context.exists(initContentUri)) {
                        storeAdapter.load(db, initContentUri, context) 
                    }

@@ -41,6 +41,12 @@
 		<import>
 			<uri>urn:com:mindalliance:channels:data</uri>
 		</import>
+ 		<import>
+			<uri>urn:com:mindalliance:channels:store</uri>
+		</import>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
 		</import>

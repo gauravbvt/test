@@ -1,4 +1,4 @@
-package com.mindalliance.channels.data
+package com.mindalliance.channels.nk.bean
 /**
  * Created by IntelliJ IDEA.
  * User: jf

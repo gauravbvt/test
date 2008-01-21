@@ -1,6 +1,6 @@
 package com.mindalliance.channels.store
 
-import groovy.util.slurpersupport.GPathResult
+import com.ten60.netkernel.urii.IURAspect as Aspect
 
 /**
 * Created by IntelliJ IDEA.
@@ -18,11 +18,11 @@ interface IXMLContainer {
     void createContainer()
     void deleteContainer()
     void dump(Writer writer)
-    String queryContainer(String xquery)
+    Aspect queryContainer(String xquery, Class aspectClass)
     String getContainerName()
     void initializeContainer(String uri)
-    String getDocument(String id)
-    void putDocument(String doc, String id)
+    Aspect getDocument(String id, Class aspectClass)
+    void putDocument(Aspect doc, String id)
     void deleteDocument(String id)
     boolean documentExists(String id)
 

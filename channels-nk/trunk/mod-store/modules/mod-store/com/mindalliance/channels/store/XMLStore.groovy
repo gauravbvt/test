@@ -2,6 +2,7 @@ package com.mindalliance.channels.store
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.NetKernelCategory
+import com.ten60.netkernel.urii.IURAspect as Aspect
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,11 +50,14 @@ class XMLStore {
         container.initializeContainer(uri)
     }
 
-    public String getDocument(String id) {
-        container.getDocument(id)
+    public Aspect getDocument(String id, Class aspectClass) {
+        assert id
+        container.getDocument(id, aspectClass)
     }
 
-   public void updateDocument(String doc, String id) {
+   public void updateDocument(Aspect doc, String id) {
+       assert id
+       assert doc
         // Delete older version (must exist else exception)
         container.deleteDocument(id);
         // Then replace with new version
@@ -62,7 +66,9 @@ class XMLStore {
         ctx.cutGoldenThread(DATABASE_GOLDEN_THREAD);
     }
 
-    public void createDocument(String doc, String id) {
+    public void createDocument(Aspect doc, String id) {
+        assert id
+        assert doc
         use(NetKernelCategory) {
             container.putDocument(doc, id)
             // Cut the GoldenThread associated with the contents of the entire store
@@ -71,6 +77,7 @@ class XMLStore {
     }
 
     public void deleteDocument(String id) {
+        assert id
         use(NetKernelCategory) {
             container.deleteDocument(id)
             // Cut the GoldenThread associated with the contents of the entire store
@@ -79,6 +86,7 @@ class XMLStore {
     }
 
     public boolean documentExists(String id) {
+        assert id
         return container.documentExists(id)
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist  title="Metamodel Accessor Unit Tests">
+    <desc>
+	<div>
+	<b>Metamodel</b> accessor unit tests for the <b>Mind-Alliance Metamodel</b> lib.
+	</div>
+    </desc>
+</testlist>
