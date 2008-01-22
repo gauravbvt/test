@@ -6,7 +6,7 @@
 	</div>
     </desc>
     <test>
-        <uri>active:groovy+operator@ffcpl:/test/accessors/data_bean_create.groovy</uri>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_bean_create.js</uri>
 		<assert>
 			<xpath>//b = 't'</xpath>
 		</assert>

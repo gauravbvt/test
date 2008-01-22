@@ -22,8 +22,12 @@ class DocumentAccessor extends AbstractDataAccessor {
     // id : a GUID
     void exists(Context ctx) {
         use(NetKernelCategory) {
-             XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-             ctx.respond(bool(store.documentExists(ctx.sourceString("this:param:id"))))
+            String dbName = ctx.sourceString("this:param:db")
+            String id = ctx.sourceString("this:param:id")
+             XMLStore store = new XMLStore(dbName, ctx)
+             boolean exists = store.documentExists(id)
+             ctx.log("XML document $id in $dbName exists is $exists", 'info')
+             ctx.respond(bool(exists))
         }
     }
     // Add a new document at a given id to a named container
@@ -35,8 +39,11 @@ class DocumentAccessor extends AbstractDataAccessor {
     // doc: xml
     void create(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            store.createDocument(ctx.sourceAspect("this:param:doc"), ctx.sourceString("this:param:id"))
+            String dbName = ctx.sourceString("this:param:db")
+            String id = ctx.sourceString("this:param:id")
+            XMLStore store = new XMLStore(dbName, ctx)
+            store.createDocument(ctx.sourceAspect("this:param:doc"), id)
+            ctx.log("XML document $id created in $dbName", 'info')
             ctx.respond(bool(true))
         }
     }
@@ -48,8 +55,12 @@ class DocumentAccessor extends AbstractDataAccessor {
     // id : a GUID
     void source(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            ctx.respond(store.getDocument(ctx.sourceString("this:param:id"), IAspectString.class))
+            String dbName = ctx.sourceString("this:param:db")
+            String id = ctx.sourceString("this:param:id")
+            XMLStore store = new XMLStore(dbName, ctx)
+            IAspectString doc = (IAspectString)store.getDocument(id, IAspectString.class)
+            ctx.log("Retrieved XML document $id from $dbName => \n ${doc.getString()}", 'info')
+            ctx.respond(doc)
         }
     }
     // Update an existing document at a given id in a named container
@@ -61,8 +72,11 @@ class DocumentAccessor extends AbstractDataAccessor {
     // doc: xml
     void sink(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            store.updateDocument(ctx.sourceAspect("this:param:doc"), ctx.sourceString("this:param:id"))
+            String dbName = ctx.sourceString("this:param:db")
+            String id = ctx.sourceString("this:param:id")
+            XMLStore store = new XMLStore(dbName, ctx)
+            store.updateDocument(ctx.sourceAspect("this:param:doc"), id)
+            ctx.log("Stored XML document $id in $dbName <= \n ${ctx.sourceString('this:param:doc')}", 'info')
             ctx.respond(bool(true))
         }
     }
@@ -74,8 +88,11 @@ class DocumentAccessor extends AbstractDataAccessor {
     // id : a GUID
     void delete(Context ctx) {
         use(NetKernelCategory) {
-            XMLStore store = new XMLStore(ctx.sourceString("this:param:db"), ctx)
-            store.deleteDocument(ctx.sourceString("this:param:id"))
+            String dbName = ctx.sourceString("this:param:db")
+            String id = ctx.sourceString("this:param:id")
+            XMLStore store = new XMLStore(dbName, ctx)
+            store.deleteDocument(id)
+            ctx.log("Deleted XML document $id from $dbName", 'info')
             ctx.respond(bool(true))
         }
     }

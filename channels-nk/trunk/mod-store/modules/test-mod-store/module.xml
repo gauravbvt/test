@@ -39,10 +39,10 @@
 			<uri>urn:com:mindalliance:channels:store</uri>
 		</import>
         <import>
-            <uri>urn:com:mindalliance:channels:metamodel</uri>
+            <uri>urn:com:mindalliance:channels:support</uri>
         </import>
         <import>
-            <uri>urn:com:mindalliance:channels:support</uri>
+            <uri>urn:com:mindalliance:channels:metamodel</uri>
         </import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>

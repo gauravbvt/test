@@ -18,9 +18,9 @@ class StoreAdaptor implements IStoreAdaptor {
     boolean open(String db, INKFConvenienceHelper context) {
         boolean exists
         use(NetKernelCategory) {
-            exists = context.isTrue("active:store_db", [type: 'exists', name: db])
+            exists = context.isTrue("active:store_db", [type: 'exists', name: data(db)])
             if (!exists) {
-                context.subrequest("active:store_db", [type: 'new', name: db])
+                context.subrequest("active:store_db", [type: 'new', name: data(db)])
             }
         }
         return !exists
@@ -28,7 +28,7 @@ class StoreAdaptor implements IStoreAdaptor {
 
     void load(String db, String contentUri, INKFConvenienceHelper context) {
         use(NetKernelCategory) {
-            context.subrequest("active:store_db", [type: 'sink', name: db, load: contentUri])
+            context.subrequest("active:store_db", [type: 'sink', name: data(db), load: contentUri])
         }
     }
 
@@ -49,20 +49,20 @@ class StoreAdaptor implements IStoreAdaptor {
     // Initialize from store
     IURRepresentation retrieve(String db, String id, INKFConvenienceHelper context) {
         return context.subrequest("active:store_doc",
-                                    [type:'source', db: data(bean.db), id: data(bean:id)])
+                                    [type:'source', db: data(db), id: data(id)])
     }
 
     boolean exists(String db, String id, INKFConvenienceHelper context) {
         boolean exists
         use(NetKernelCategory) {
-           exists = context.isTrue("active:store_doc", [type: 'exists', db: data(bean.db), id: data(bean:id)])
+           exists = context.isTrue("active:store_doc", [type: 'exists', db: data(db), id: data(id)])
         }
         return exists
     }
 
     void remove(String db, String id, INKFConvenienceHelper context) {
         use(NetKernelCategory) {
-           context.subrequest("active:store_doc", [type: 'delete', db: data(bean.db), id: data(bean:id)])
+           context.subrequest("active:store_doc", [type: 'delete', db: data(db), id: data(id)])
         }
     }
 

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.nk.bean
 
 import com.mindalliance.channels.nk.bean.IPersistentBean
-import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.

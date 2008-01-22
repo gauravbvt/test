@@ -45,6 +45,9 @@
           <class>com.mindalliance.channels.nk.accessors.Builder</class>
         </ura>
         <import>
+            <uri>urn:com:mindalliance:channels:metamodel</uri>
+        </import>
+        <import>
             <uri>urn:org:ten60:netkernel:ext:sys</uri>
         </import>
         <import>
@@ -63,6 +66,7 @@
     </mapping>
     <transreptors>
         <transreptor>com.mindalliance.channels.nk.transreptors.PersistentBeanToXMLBinaryStream</transreptor>
+        <transreptor>com.mindalliance.channels.nk.transreptors.XMLBinaryStreamToPersistentBean</transreptor>
         <transreptor>com.mindalliance.channels.nk.transreptors.PersistentBeanToXml</transreptor>
         <transreptor>com.mindalliance.channels.nk.transreptors.XmlToPersistentBean</transreptor>
     </transreptors>

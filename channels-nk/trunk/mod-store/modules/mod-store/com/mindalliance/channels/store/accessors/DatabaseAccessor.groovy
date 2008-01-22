@@ -37,7 +37,10 @@ class DatabaseAccessor extends AbstractDataAccessor {
             String dbName = ctx.sourceString("this:param:name")
             XMLStore store = new XMLStore(dbName, ctx)
             boolean exists = store.containerExists()
-            if (!exists) store.createContainer()
+            if (!exists) {
+                store.createContainer()
+                ctx.log("Created XML container $dbName", 'info')
+            }
             ctx.respond(bool(exists))
         }
     }
@@ -49,7 +52,9 @@ class DatabaseAccessor extends AbstractDataAccessor {
             XMLStore store = new XMLStore(dbName, ctx)
             StringWriter writer = new StringWriter()
             store.dumpContainer(writer)
-            ctx.respond(string(writer.toString()))
+            String dump = writer.toString()
+            ctx.log("Dump:\n$dump", 'info')
+            ctx.respond(string(dump))
         }
     }
     // Load xml from a dump
@@ -61,6 +66,7 @@ class DatabaseAccessor extends AbstractDataAccessor {
             XMLStore store = new XMLStore(dbName, ctx)
             String loadUri = ctx.load
             store.initializeContainer(loadUri)
+            ctx.log("XML containe $dbName initialized from $loadUri", 'info')
         }
     }
 
@@ -81,6 +87,7 @@ class DatabaseAccessor extends AbstractDataAccessor {
             if (retries == 0 && store.containerExists()) {
                 throw new Exception("Failed to delete container ${store.getContainerName()}")
             }
+            ctx.log("XML container $dbName deleted", 'info')
         }
     }
 

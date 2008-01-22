@@ -32,7 +32,6 @@
           		</fileset>
               <fileset dir="${dist.dir}">
                 <include name="mod-support-*.jar"/>
-                <include name="mod-metamodel-*.jar"/>
               </fileset>
           </classpath>
           <javac  debug="on" />

@@ -62,13 +62,12 @@ class DocumentAccessorTests {
             context.subrequest("active:store_doc", [type: 'new', db: data('test_dbxml'), id: data('1234'), doc: beanAspect])
             String got = context.sourceString("active:store_doc", [db: data('test_dbxml'), id: data('1234')])
             assert got =~ /A test/
-            context.log(got, 'info')
+            
             test.name = 'A great test'
             beanAspect = new PersistentBeanAspect(test)
             context.subrequest("active:store_doc", [type: 'sink', db: data('test_dbxml'), id: data(test.id), doc: beanAspect])
             got = context.sourceString("active:store_doc", [db: data('test_dbxml'), id: data(test.id)])
             assert got =~ /A great test/
-            context.log(got, 'info')
             
             context.subrequest("active:store_doc", [type: 'delete', db: data('test_dbxml'), id: data(test.id)])
             boolean exists = context.isTrue("active:store_doc", [type: 'exists', db: data('test_dbxml'), id: data(test.id)])

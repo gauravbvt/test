@@ -13,7 +13,7 @@ import com.mindalliance.channels.data.BeanMemory;
  * Date: Jan 14, 2008
  * Time: 8:51:57 AM
  */
-public class BeanContext {
+public class BeanRequestContext {
 
     public static final String REQUEST_CONTEXT = "requestContext";
     public static final String BEAN_MEMORY = "beanMemory";

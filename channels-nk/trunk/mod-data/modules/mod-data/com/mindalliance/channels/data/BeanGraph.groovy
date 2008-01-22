@@ -6,10 +6,7 @@ import com.mindalliance.channels.nk.IStoreAdaptor
 import com.mindalliance.channels.data.adaptors.StoreAdaptor
 import com.mindalliance.channels.nk.NetKernelCategory
 import groovy.xml.MarkupBuilder
-import com.mindalliance.channels.nk.bean.IPersistentBean
-import com.mindalliance.channels.nk.IStoreAdaptor
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
-import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.

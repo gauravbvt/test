@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="all" name="Data Test Module">
-	
+    <taskdef name="groovyc"
+                 classname="org.codehaus.groovy.ant.Groovyc"
+                 classpath="../../common/lib/groovy-all-1.5.0.jar"/>
+
 	<target name="init">
 		<property file="./version.properties"/>
 		<echo message="Building: ${test-mod-data-name} version ${test-mod-data-version}"/>
@@ -12,8 +15,29 @@
 		<property name="dst" value="${src}"/>
 		<property name="dist.dir" value="../../dist"/>
 	</target>
-    
+
     <target depends="init" name="compile">
+         <groovyc srcdir="${src}" destdir="${dst}">
+           <classpath>
+                 <fileset dir="${netkernel.home.dir}">
+                     <include name="lib/1060netkernel-*.jar"/>
+                     <include name="modules/ext-layer1-*.jar"/>
+                     <include name="modules/ext-xml-core-*.jar"/>
+                 <include name="modules/ext-kernel-*.jar"/>
+                 </fileset>
+                   <fileset dir="../../common/lib">
+                       <include name="*.jar"/>
+                   </fileset>
+               <fileset dir="${dist.dir}">
+                 <include name="mod-support-*.jar"/>
+                 <include name="mod-metamodel-*.jar"/>
+               </fileset>
+           </classpath>
+           <javac  debug="on" />
+         </groovyc>
+     </target>
+    
+<!--    <target depends="init" name="compile">
         <javac debug="true" deprecation="true" destdir="${dst}" srcdir="${src}">
             <classpath>
 				<fileset dir="${lib}">
@@ -21,7 +45,7 @@
 				</fileset>
             </classpath>
         </javac>
-    </target>
+    </target>    -->
 	
     <target depends="init,compile" name="jar">
         <jar basedir="${dst}" compress="true" destfile="${dist.dir}/${app}-${version}.jar">

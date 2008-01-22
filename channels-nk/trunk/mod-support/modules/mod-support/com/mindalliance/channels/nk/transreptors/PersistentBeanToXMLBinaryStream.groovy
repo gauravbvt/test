@@ -9,9 +9,9 @@ import org.ten60.netkernel.layer1.representation.StringAspect
 import org.ten60.netkernel.layer1.nkf.INKFResponse
 import com.ten60.netkernel.urii.IURRepresentation
 import com.ten60.netkernel.urii.aspect.IAspectBinaryStream
+import com.ten60.netkernel.urii.aspect.IAspectString
 import com.ten60.netkernel.urii.aspect.IAspectReadableBinaryStream
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
-import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.
@@ -23,7 +23,7 @@ import com.mindalliance.channels.nk.bean.IPersistentBean
 class PersistentBeanToXMLBinaryStream extends NKFTransreptorImpl {
 
     public boolean supports(IURRepresentation aFrom, Class aTo) {
-        return aFrom.hasAspect(IAspectPersistentBean.class) && (aTo.isAssignableFrom(IAspectBinaryStream.class) || aTo.isAssignableFrom(IAspectReadableBinaryStream.class));
+        return aFrom.hasAspect(IAspectPersistentBean.class) && (aTo.isAssignableFrom(IAspectString.class) || aTo.isAssignableFrom(IAspectBinaryStream.class) || aTo.isAssignableFrom(IAspectReadableBinaryStream.class));
     }
 
     protected void transrepresent(INKFConvenienceHelper context) {

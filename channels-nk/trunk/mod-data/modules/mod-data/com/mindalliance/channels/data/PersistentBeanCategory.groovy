@@ -37,9 +37,9 @@ class PersistentBeanCategory {
         if (beanReference.id.size()) {
             assert beanReference.db.size() != 0
             assert beanReference.beanClass.size() != 0
-            Context context = BeanContext.getRequestContext()
-            BeanMemory beanMemory = BeanContext.getBeanMemory()
-            bean = beanMemory.retrieveBean(beanReference.beanClass, beanReference.db, beanReference.id, context)
+            Context context = BeanRequestContext.getRequestContext()
+            BeanMemory beanMemory = BeanRequestContext.getBeanMemory()
+            bean = beanMemory.retrieveBean(beanReference.db, beanReference.id, context)
             if (bean) {
                 assert bean.class.name == beanReference.beanClass
             }

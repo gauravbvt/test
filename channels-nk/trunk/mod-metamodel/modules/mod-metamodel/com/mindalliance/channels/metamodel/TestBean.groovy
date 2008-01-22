@@ -20,7 +20,7 @@ class TestBean extends AbstractPersistentBean {
     String name
     boolean successful
     Double score
-    BeanReference parent = new BeanReference(beanClass: TestBean.class.name)
-    BeanList runs = new BeanList(itemClass: TestRunComponent.class.name)
+    def parent = new BeanReference(beanClass: TestBean.class.name)
+    def runs = new BeanList(itemClass: TestRunComponent.class.name)
 
 }
