@@ -21,4 +21,28 @@ class MemoryAccessorTests {
         context = ctx
     }
 
+        void dataMemorySinkBeans() {
+        use(NetKernelCategory) {
+            String count = context.sourceString("active:data_memory", [type: 'sink', db: data('test_dbxml'), beans: 'ffcpl:/fixtures/testBeans.xml'])
+            assert new Integer(count) == 4
+            boolean exists = context.isTrue("active:data_bean", [type: 'exists', db: data('test_dbxml'), id: data('Top')])
+            assert exists
+            exists = context.isTrue("active:data_bean", [type: 'exists', db: data('test_dbxml'), id: data('SubA')])
+            assert exists
+            exists = context.isTrue("active:data_bean", [type: 'exists', db: data('test_dbxml'), id: data('SubB')])
+            assert exists
+            exists = context.isTrue("active:data_bean", [type: 'exists', db: data('test_dbxml'), id: data('SubSub')])
+            assert exists
+            context.respond(bool(true))
+        }
+    }
+
+    void dataMemorySearch() {
+
+    }
+
+    void dataMemoryRefresh() {
+        
+    }
+
 }

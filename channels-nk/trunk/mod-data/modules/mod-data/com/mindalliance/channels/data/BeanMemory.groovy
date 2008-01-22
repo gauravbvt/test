@@ -4,6 +4,7 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import groovy.util.slurpersupport.GPathResult
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.NetKernelCategory
+import com.mindalliance.channels.data.util.PersistentBeanCategory
 
 /**
 * Created by IntelliJ IDEA.
@@ -45,8 +46,16 @@ class BeanMemory {
         // do something else?
     }
 
-    String search(String beanClass, String db, String id, String queryUri, Context context) {
-        return beanGraph.search(beanClass, db, id, queryUri, context)
+    void deleteDB(String db, Context context) {
+
+    }
+
+    void exists(String db, Context context) {
+
+    }
+
+    String search(String db, String id, String queryUri, Context context) {
+        return beanGraph.search(db, id, queryUri, context)
     }
 
     IPersistentBean retrieveBean(String db, String id, Context context)  {
@@ -64,6 +73,26 @@ class BeanMemory {
         storeBean(bean, context)
         // do something else?
     }
+
+   int newBeans(String db, String uri, Context context) {
+       int count = 0
+       use(PersistentBeanCategory) {
+           String text = context.sourceString(uri)
+           def xml = new XmlParser().parseText(text)
+           xml.children().each { node ->
+               StringWriter writer = new StringWriter()
+               XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer), '')
+               xmlPrinter.print(node)
+               String doc = writer.toString().replaceAll('\n','')
+               IPersistentBean bean = context.toPersistentBean(doc)
+               bean.db = db
+               newBean(bean, context)
+               count++
+           }
+       }
+       return count
+
+   }
 
     void removeBean(String db, String id, Context context) {
         beanGraph.removeBean(db, id, context)

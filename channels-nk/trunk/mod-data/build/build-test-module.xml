@@ -29,6 +29,7 @@
                        <include name="*.jar"/>
                    </fileset>
                <fileset dir="${dist.dir}">
+                 <include name="mod-data-*.jar"/>
                  <include name="mod-support-*.jar"/>
                  <include name="mod-metamodel-*.jar"/>
                </fileset>

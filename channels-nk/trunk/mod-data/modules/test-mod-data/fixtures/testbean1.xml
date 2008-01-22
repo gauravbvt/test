@@ -1,0 +1,18 @@
+<testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean'
+          createdOn='Mon Jan 21 15:57:46 EST 2008' root='false'>
+    <name dataType='java.lang.String'>A test</name>
+    <successful dataType='java.lang.Boolean'>false</successful>
+    <score dataType='java.lang.Double'>100.0</score>
+    <parent beanRef='com.mindalliance.channels.metamodel.TestBean'></parent>
+    <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+        <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+            <date dataType='java.util.Date'>Mon Jan 21 15:57:46 EST 2008</date>
+            <tester dataType='java.lang.String'>John Doe</tester>
+        </item>
+        <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+            <date dataType='java.util.Date'>Mon Jan 21 15:57:46 EST 2008</date>
+            <tester dataType='java.lang.String'>Jane Q. Public</tester>
+        </item>
+    </runs>
+    <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'/>
+</testBean>

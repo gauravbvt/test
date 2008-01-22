@@ -7,6 +7,7 @@ import com.mindalliance.channels.data.adaptors.StoreAdaptor
 import com.mindalliance.channels.nk.NetKernelCategory
 import groovy.xml.MarkupBuilder
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
+import com.mindalliance.channels.data.util.PersistentBeanCategory
 
 /**
 * Created by IntelliJ IDEA.
@@ -30,10 +31,12 @@ class BeanGraph {
         }
         cache = fresh
     }
-
-    String search(String beanClass, String db, String id, String queryUri, Context context) {
+    // A Groovy query is code with variable args set to a map with 'builder' -> a MarkupBuilder
+    // and 'bean' -> a IPersistentBean 
+    String search(String db, String id, String queryUri, Context context) {
         String xml
         use(NetKernelCategory, PersistenBeanCategory) {
+            IPersistentBean bean = retrieveBean(db, id, context) 
             if (queryUri.endsWith('.groovy')) {
                 String query = context.sourceString(queryUri)
                 StringWriter writer = new StringWriter()
@@ -42,7 +45,7 @@ class BeanGraph {
                 xml = writer.toString()
             }
             else {
-                throw new IllegalArgumentException("Unsupported query type for $queryUri")
+                throw new IllegalArgumentException("Unsupported query type for ${queryUri}. Supported types: *.groovy")
             }
         }
         return xml
@@ -73,7 +76,7 @@ class BeanGraph {
         use(NetKernelCategory) {
             IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context)
             storeAdaptor.remove(db, id, context)
-            uncache(bean.db, bean.id)
+            uncache(db, id)
         }
     }
 

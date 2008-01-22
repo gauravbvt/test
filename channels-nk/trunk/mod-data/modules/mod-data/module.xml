@@ -27,7 +27,7 @@
             <match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
         <class>
-            <match>com\.mindalliance\.channels\.metamodel\..*</match>
+            <match>com\.mindalliance\.channels\.data\.util\..*</match>
         </class>
 	</export>
     <mapping>

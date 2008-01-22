@@ -25,6 +25,7 @@ class DatabaseAccessor extends AbstractDataAccessor {
             String dbName = ctx.sourceString("this:param:name")
             XMLStore store = new XMLStore(dbName, ctx)
             boolean exists = store.containerExists()
+            ctx.log("$dbName exists is $exists", 'info')
             ctx.respond(bool(exists))
         }
 

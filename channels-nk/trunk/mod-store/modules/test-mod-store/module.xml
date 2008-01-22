@@ -18,7 +18,7 @@
 			<match>ffcpl:/test/mod-store-test/.*</match>
 			<match>ffcpl:/(entrypoints.xml)</match>
             <match>ffcpl:/com/mindalliance/channels/support/.*</match>
-            <match>ffcpl:/fixture/.*</match>
+            <match>ffcpl:/fixtures/.*</match>
         </uri>
     </export>
     <rewrite>
@@ -33,7 +33,7 @@
     </rewrite>
     <mapping>
 		<this>
-			<match>ffcpl:/(entrypoints.xml|test/.*|fixture/.*)</match>
+			<match>ffcpl:/(entrypoints.xml|test/.*|fixtures/.*)</match>
 		</this>
 		<import>
 			<uri>urn:com:mindalliance:channels:store</uri>

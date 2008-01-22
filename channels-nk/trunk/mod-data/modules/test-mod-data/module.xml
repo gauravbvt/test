@@ -18,7 +18,8 @@
 			<match>ffcpl:/test/mod-data-test/.*</match>
 			<match>ffcpl:/(entrypoints.xml)</match>
             <match>ffcpl:/com/mindalliance/channels/support/.*</match>
-		</uri>
+            <match>ffcpl:/fixtures/.*</match>
+        </uri>
     </export>
     <rewrite>
 		<rule>
@@ -29,14 +30,10 @@
 			<match>ffcpl:/test/mod-data-test/(.*)</match>
 			<to>ffcpl:/test/$1</to>
 		</rule>
-		<rule>
-			<match>(.*?\.groovy.*)</match>
-			<to>active:groovy+operator@$1</to>
-		</rule>
 	</rewrite>
     <mapping>
 		<this>
-			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
+			<match>ffcpl:/(entrypoints.xml|test/.*|fixtures/.*)</match>
 		</this>
 		<import>
 			<uri>urn:com:mindalliance:channels:data</uri>

@@ -1,0 +1,68 @@
+<beans>
+    <!--
+      Top <- (SubA , SubB <- (SubSub))
+    -->
+    <!-- Top - rooted at '1234' -->
+    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id='Top' rooted='true'>
+        <name dataType='java.lang.String'>Top</name>
+        <successful dataType='java.lang.Boolean'>false</successful>
+        <score dataType='java.lang.Double'>60.0</score>
+        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+            <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+                <date dataType='java.util.Date'>Mon Jan 21 15:00:00 EST 2008</date>
+                <tester dataType='java.lang.String'>Joe Integrator</tester>
+            </item>
+        </runs>
+        <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'>
+            <item beanClass='com.mindalliance.channels.nk.bean.BeanReference'>SubA</item>
+            <item beanClass='com.mindalliance.channels.nk.bean.BeanReference'>SubB</item>
+        </subTests>
+    </testBean>
+    <!-- SubA -->
+    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id='SubA'>
+        <name dataType='java.lang.String'>SubA</name>
+        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'>Top</parent>
+        <successful dataType='java.lang.Boolean'>false</successful>
+        <score dataType='java.lang.Double'>60.0</score>
+        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+            <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+                <date dataType='java.util.Date'>Mon Jan 21 14:00:00 EST 2008</date>
+                <tester dataType='java.lang.String'>John U. Test</tester>
+            </item>
+            <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+                <date dataType='java.util.Date'>Mon Jan 21 14:30:00 EST 2008</date>
+                <tester dataType='java.lang.String'>Jane Q. Hay</tester>
+            </item>
+        </runs>
+        <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'/>
+    </testBean>
+    <!-- SubB -->
+    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubB">
+        <name dataType='java.lang.String'>SubB</name>
+        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'>Top</parent>
+        <successful dataType='java.lang.Boolean'>true</successful>
+        <score dataType='java.lang.Double'>100.0</score>
+        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+            <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+                <date dataType='java.util.Date'>Mon Jan 21 13:00:00 EST 2008</date>
+                <tester dataType='java.lang.String'>John U. Test</tester>
+            </item>
+        </runs>
+         <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'>
+            <item beanClass='com.mindalliance.channels.nk.bean.BeanReference'>SubSub</item>
+        </subTests>   </testBean>
+    <!-- SubSub -->
+    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubSub">
+        <name dataType='java.lang.String'>SubSub</name>
+        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'>SubB</parent>
+        <successful dataType='java.lang.Boolean'>true</successful>
+        <score dataType='java.lang.Double'>100.0</score>
+        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+            <item beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
+                <date dataType='java.util.Date'>Mon Jan 21 12:00:00 EST 2008</date>
+                <tester dataType='java.lang.String'>Bob A. Sess</tester>
+            </item>
+        </runs>
+        <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'/>
+    </testBean>
+</beans>

@@ -14,7 +14,7 @@ import com.mindalliance.channels.nk.bean.BeanList
 class TestBean extends AbstractPersistentBean {
 
     public Map<String, Object> getBeanProperties() {
-        return [name: name, successful: successful, score: score, parent: parent, runs: runs];
+        return [name: name, successful: successful, score: score, parent: parent, runs: runs, subTests: subTests];
     }
 
     String name
@@ -22,5 +22,6 @@ class TestBean extends AbstractPersistentBean {
     Double score
     def parent = new BeanReference(beanClass: TestBean.class.name)
     def runs = new BeanList(itemClass: TestRunComponent.class.name)
+    def subTests = new BeanList(itemClass: BeanReference.class.name)
 
 }

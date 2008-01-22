@@ -1,13 +1,12 @@
 package com.mindalliance.channels.data.accessors
 
 import com.mindalliance.channels.nk.NetKernelCategory
-import com.mindalliance.channels.nk.accessors.AbstractDataAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.data.BeanMemory
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
 import com.mindalliance.channels.data.BeanRequestContext
-import com.mindalliance.channels.data.PersistentBeanCategory
+import com.mindalliance.channels.data.util.PersistentBeanCategory
 
 /**
 * Created by IntelliJ IDEA.
@@ -16,7 +15,7 @@ import com.mindalliance.channels.data.PersistentBeanCategory
 * Time: 8:07:18 PM
 * To change this template use File | Settings | File Templates.
 */
-class BeanAccessor extends AbstractDataAccessor {
+class BeanAccessor extends AbstractMemoryAccessor {
 
     // Add a new bean from xml to bean graph
     // db: name of database
@@ -26,25 +25,26 @@ class BeanAccessor extends AbstractDataAccessor {
     void create(Context context) {
         initBeanRequestContext(context)
         use(NetKernelCategory, PersistentBeanCategory) {
-            // Instantiate bean and initialize it from xml
-           IPersistentBean bean = context.sourcePersistentBean("this:param:bean")
            String db = context.sourceString("this:param:db")
-           String id
-           boolean isRoot = false
-           if (context.'id?') {  // if id given on create then bean is a root bean (not to be unloaded from memory unless deleted)
-               id = context.sourceString("this:param:id")
-               isRoot = true
-           }
-           else {
-            id = BeanMemory.makeGUID(context)
-           }
-           bean.id = id
-           bean.rooted = isRoot
-           bean.db = db
-           
-           // Add bean to memory
-           BeanRequestContext.getBeanMemory().newBean(bean, context)
-           context.respond(string(id))
+            // Instantiate bean and initialize it from xml
+               IPersistentBean bean = context.sourcePersistentBean("this:param:bean")
+               String id
+               boolean isRoot = false
+               if (context.'id?') {  // if id given on create then bean is a root bean (not to be unloaded from memory unless deleted)
+                   id = context.sourceString("this:param:id")
+                   isRoot = true
+               }
+               else {
+                id = BeanMemory.makeGUID(context)
+               }
+               bean.id = id
+               bean.rooted = isRoot
+               bean.db = db
+               bean.createdOn = new Date()
+
+               // Add bean to memory
+               BeanRequestContext.getBeanMemory().newBean(bean, context)
+               context.respond(string(id))
         }
         // Update WorkingMemory
         // Golden thread?
@@ -100,18 +100,10 @@ class BeanAccessor extends AbstractDataAccessor {
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
-            beanContext.getBeanMemory().removeBean(db, id, context)
+            BeanRequestContext.getBeanMemory().removeBean(db, id, context)
             context.respond(bool(true))
         }
     }
 
-    // Put context and beanGraph into thread local
-    private void initBeanRequestContext(Context context) {
-        use(NetKernelCategory) {
-            BeanMemory beanMemory = BeanMemory.getInstance()
-            BeanRequestContext.setRequestContext(context)
-            BeanRequestContext.setBeanMemory(beanMemory)
-        }
-    }
 
 }

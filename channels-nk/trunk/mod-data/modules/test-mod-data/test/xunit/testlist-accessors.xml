@@ -11,4 +11,16 @@
 			<xpath>//b = 't'</xpath>
 		</assert>
     </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_bean_get_update_delete.js</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_memory_sink_beans.js</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
 </testlist>
