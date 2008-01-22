@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="modules/mod-dbxml"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
-	<classpathentry kind="var" path="NETKERNEL_HOME/lib/native/dbxml.jar"/>
-	<classpathentry kind="var" path="NETKERNEL_HOME/lib/native/db.jar"/>
-	<classpathentry kind="output" path="modules/mod-dbxml"/>
+    <classpathentry kind="src" path="modules/mod-dbxml" />
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry combineaccessrules="false" kind="src" path="/common" />
+    <classpathentry kind="output" path="modules/mod-dbxml" />
 </classpath>
+

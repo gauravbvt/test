@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="src" path="modules/mod-data" />
+    <classpathentry kind="src" path="modules/test-mod-data" />
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
     <classpathentry combineaccessrules="false" kind="src" path="/common" />
     <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
     <classpathentry kind="src" path="/mod-support" combineaccessrules="false" />
-    <classpathentry kind="var" path="GROOVY_ECLIPSE_HOME/embeddable/groovy-all-1.5.1.jar" />
-    <classpathentry kind="lib" path="/common/lib/xalan.jar" />
+    <classpathentry kind="src" path="/mod-metamodel" combineaccessrules="false" />
     <classpathentry kind="output" path="modules/mod-data" />
 </classpath>
 
