@@ -14,7 +14,11 @@ public interface IStoreAdaptor {
 
     public boolean open(String db, INKFConvenienceHelper context);
 
+    boolean storeExists(String db, INKFConvenienceHelper context);
+
     public void load(String db, String contentUri, INKFConvenienceHelper context);
+
+    public void deleteStore(String db, INKFConvenienceHelper context);
 
     public void close(String db, INKFConvenienceHelper context);
 

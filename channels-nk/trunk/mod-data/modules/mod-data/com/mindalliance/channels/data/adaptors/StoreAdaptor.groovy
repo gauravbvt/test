@@ -21,6 +21,7 @@ class StoreAdaptor implements IStoreAdaptor {
             exists = context.isTrue("active:store_db", [type: 'exists', name: data(db)])
             if (!exists) {
                 context.subrequest("active:store_db", [type: 'new', name: data(db)])
+                context.log("Automatically created container $db", 'info')
             }
         }
         return !exists
@@ -34,6 +35,20 @@ class StoreAdaptor implements IStoreAdaptor {
 
      void close(String db, INKFConvenienceHelper context) {
 
+     }
+
+     void deleteStore(String db, INKFConvenienceHelper context) {
+         use(NetKernelCategory) {
+              context.subrequest("active:store_db", [type: 'delete', name: data(db)])
+         }         
+     }
+
+     boolean storeExists(String db, INKFConvenienceHelper context) {
+         boolean exists
+         use(NetKernelCategory) {
+               exists = context.isTrue("active:store_db", [type: 'exists', name: data(db)])
+         }
+         return exists
      }
 
 

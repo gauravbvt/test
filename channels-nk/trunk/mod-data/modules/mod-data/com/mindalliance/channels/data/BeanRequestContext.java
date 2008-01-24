@@ -5,7 +5,6 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
 import java.util.Map;
 import java.util.HashMap;
 
-import com.mindalliance.channels.data.BeanMemory;
 
 /**
  * Created by IntelliJ IDEA.

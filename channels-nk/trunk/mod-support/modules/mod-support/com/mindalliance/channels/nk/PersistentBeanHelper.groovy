@@ -5,6 +5,9 @@ import com.mindalliance.channels.nk.bean.BeanList
 import groovy.xml.MarkupBuilder
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import groovy.util.slurpersupport.GPathResult
+import com.mindalliance.channels.nk.bean.IBeanReference
+import com.mindalliance.channels.nk.bean.IBeanList
+import com.mindalliance.channels.nk.bean.IBean
 
 /**
 * Created by IntelliJ IDEA.
@@ -32,34 +35,38 @@ class PersistentBeanHelper {
     }
 
     private void buildProperty(String propKey, def propValue, MarkupBuilder builder) {
-        String valueClassName = propValue.class.name
-        if (isDataBean(propValue)) {
-            def text = (propValue != null) ? "$propValue" : ''
-            builder."${propKey}"(dataType: propValue.class.name, text)
-        }
-        else if (valueClassName == BeanReference.class.name) {
-            def beanReference = propValue
-            def id = (beanReference.id != null) ? "$beanReference.id" : ''
-            builder."${propKey}"(db: beanReference.db, beanRef: beanReference.beanClass, id)
-        }
-        else if (valueClassName == BeanList.class.name) {
-            def beanList = propValue;
-            builder."${propKey}"(itemClass: beanList.itemClass) {
-                beanList.each {item ->
-                    buildProperty('item', item, builder)
-                }
-            }
-        }
-        else {
-            def component = propValue
-            assert component.isComponent()
-            def props = component.getBeanProperties()
-            builder."${propKey}"(beanClass: component.class.name) {
-                props.each {pKey, pValue -> buildProperty(pKey, pValue, builder)}
-            }
+        switch (propValue) {
+            case {isDataBean(it)}:
+                def text = (propValue != null) ? "$propValue" : '';
+                builder."${propKey}"(dataType: propValue.class.name, text);
+                break;
+            case IBeanReference:
+                def beanReference = propValue
+                def id = (beanReference.id != null) ? "${beanReference.id}" : '';
+                def db = (beanReference.db != null) ? "${beanReference.db}" : '';
+                builder."${propKey}"(beanRef: beanReference.beanClass) {
+                    builder.db(db)
+                    builder.id(id)
+                };
+                break;
+            case IBeanList:
+                def beanList = propValue;
+                builder."${propKey}"(itemClass: beanList.itemClass) {
+                    beanList.each {item ->
+                        buildProperty('item', item, builder)
+                    }
+                };
+                break;
+            case IBean:
+                def component = propValue;
+                def props = component.getBeanProperties();
+                builder."${propKey}"(beanClass: component.class.name) {
+                    props.each {pKey, pValue -> buildProperty(pKey, pValue, builder)}
+                };
+                break;
+            default: throw new IllegalArgumentException("Can't build XML with $propValue")
         }
     }
-
 
     private String elementName(def bean) {
         String name = bean.class.name.tokenize('.').reverse()[0]
@@ -80,48 +87,54 @@ class PersistentBeanHelper {
     }
 
     private void initBeanFromXml(IPersistentBean bean, GPathResult xml) {
-        if (xml.@id) bean.id = xml.@id
-        if (xml.@db) bean.db = xml.@db
-        if (xml.@version) bean.version = xml.@version
+        if (xml.@id.size()) bean.id = xml.@id
+        if (xml.@db.size()) bean.db = xml.@db
+        if (xml.@version.size()) bean.version = xml.@version
         bean.rooted = xml.@rooted == 'true'
-        reifyFromXml(bean, xml.children())
+        xml.children().each {child ->
+            def propValue = reifyFromXml(child)
+            bean."${child.name()}" = propValue
+        }
     }
 
-    private void reifyFromXml(def bean, GPathResult children) {
-        children.each {child ->
-            if (child.@dataType.size()) {// data
-                String value = child.text();
-                if (value.size()) {
-                    String toEval = "new ${child.@dataType}(\'$value\')"
-                    bean."${child.name()}" = Eval.me(toEval) // assumes a constructor with args (String val)
-                }}
-            else if (child.@beanRef.size()) {// a reference
-                def beanReference = new BeanReference(beanClass: child.@beanRef)
-                if (child.@db.size()) beanReference.db = child.@db
-                String beanId = child.text()
-                if (beanId.size()) beanReference.id = beanId
-                bean."${child.name()}" = beanReference
+    private def reifyFromXml(def node) {
+        if (node.@dataType.size()) {// data
+            String value = node.text();
+            if (value.size()) {
+                String toEval = "new ${node.@dataType}(\'$value\')"
+                def data = Eval.me(toEval) // assumes a constructor with args (String val)
+                return data
             }
-            else if (child.@itemClass.size()) {// a list
-                def beanList = new BeanList(itemClass: child.@itemClass)
-                child.children().each {item ->
-                    String aClass = child.@itemClass
-                    String toEval = "new ${aClass}()"
-                    def itemBean = Eval.me(toEval)
-                    reifyFromXml(itemBean, item.children())
-                    beanList.add(itemBean)
-                }
-                bean."${child.name()}" = beanList
+            else return null
+        }
+        else if (node.@beanRef.size()) {// a reference
+            String beanClass =  node.@beanRef
+            def beanReference = new BeanReference(beanClass: beanClass)
+            String db = node.db
+            String id = node.id
+            if (db.size()) beanReference.@db = db
+            if (id.size()) beanReference.@id = id
+             return beanReference
+        }
+        else if (node.@itemClass.size()) {// a list
+            def beanList = new BeanList(itemClass: node.@itemClass)
+            node.children().each {item ->
+                def itemBean = reifyFromXml(item)
+                beanList.add(itemBean)
             }
-            else if (child.@beanClass.size()) {// a component (non-persistent) bean
-                String aClass = child.@beanClass
-                def component = Eval.me("new ${aClass}()")
-                reifyFromXml(component, child.children())
-                bean."${child.name()}" = component
+            return beanList
+        }
+        else if (node.@beanClass.size()) {// a component (non-persistent) bean
+            String aClass = node.@beanClass
+            def component = Eval.me("new ${aClass}()")
+            node.children().each {child ->
+                def propValue = reifyFromXml(child)
+                component."${child.name()}" = propValue
             }
-            else {
-                println "Invalid xml for $bean"
-            }
+            return component
+        }
+        else {
+            throw new Exception("Reifying from invalid xml")
         }
     }
 

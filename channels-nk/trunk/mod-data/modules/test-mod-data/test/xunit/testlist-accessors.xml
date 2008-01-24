@@ -5,7 +5,7 @@
 	<b>Memory</b> accessor unit tests for the <b>Mind-Alliance Channels Data module</b> lib.
 	</div>
     </desc>
-    <test>
+   <test>
         <uri>active:javascript+operator@ffcpl:/test/accessors/data_bean_create.js</uri>
 		<assert>
 			<xpath>//b = 't'</xpath>
@@ -19,6 +19,30 @@
     </test>
     <test>
         <uri>active:javascript+operator@ffcpl:/test/accessors/data_memory_sink_beans.js</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_memory_refresh.js</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+     <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_memory_exists_db.js</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_memory_delete_db.js</uri>
+		<assert>
+			<xpath>//b = 't'</xpath>
+		</assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/data_memory_search.js</uri>
 		<assert>
 			<xpath>//b = 't'</xpath>
 		</assert>

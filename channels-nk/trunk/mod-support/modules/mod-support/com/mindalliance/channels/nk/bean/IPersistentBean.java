@@ -30,4 +30,7 @@ public interface IPersistentBean extends IBean {
 
     public Map<String, Object> getBeanProperties();
 
+    // Make the bean ready for use
+    public void activate();
+
 }

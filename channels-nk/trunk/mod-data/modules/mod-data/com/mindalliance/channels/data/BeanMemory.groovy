@@ -47,11 +47,11 @@ class BeanMemory {
     }
 
     void deleteDB(String db, Context context) {
-
+        beanGraph.deleteDB(db, context)
     }
 
-    void exists(String db, Context context) {
-
+    boolean dbExists(String db, Context context) {
+        return beanGraph.dbExists(db, context)
     }
 
     String search(String db, String id, String queryUri, Context context) {
@@ -84,6 +84,7 @@ class BeanMemory {
                XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer), '')
                xmlPrinter.print(node)
                String doc = writer.toString().replaceAll('\n','')
+               context.log("New bean =>\n$doc", 'info')
                IPersistentBean bean = context.toPersistentBean(doc)
                bean.db = db
                newBean(bean, context)

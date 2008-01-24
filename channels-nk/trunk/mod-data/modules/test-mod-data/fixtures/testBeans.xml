@@ -14,14 +14,14 @@
             </item>
         </runs>
         <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'>
-            <item beanClass='com.mindalliance.channels.nk.bean.BeanReference'>SubA</item>
-            <item beanClass='com.mindalliance.channels.nk.bean.BeanReference'>SubB</item>
+            <item beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubA</id></item>
+            <item beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubB</id></item>
         </subTests>
     </testBean>
     <!-- SubA -->
     <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id='SubA'>
         <name dataType='java.lang.String'>SubA</name>
-        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'>Top</parent>
+        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'><id>Top</id></parent>
         <successful dataType='java.lang.Boolean'>false</successful>
         <score dataType='java.lang.Double'>60.0</score>
         <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
@@ -36,10 +36,11 @@
         </runs>
         <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'/>
     </testBean>
+
     <!-- SubB -->
     <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubB">
         <name dataType='java.lang.String'>SubB</name>
-        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'>Top</parent>
+        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'><id>Top</id></parent>
         <successful dataType='java.lang.Boolean'>true</successful>
         <score dataType='java.lang.Double'>100.0</score>
         <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>
@@ -49,12 +50,13 @@
             </item>
         </runs>
          <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'>
-            <item beanClass='com.mindalliance.channels.nk.bean.BeanReference'>SubSub</item>
+            <item beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubSub</id></item>
         </subTests>   </testBean>
+    
     <!-- SubSub -->
     <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubSub">
         <name dataType='java.lang.String'>SubSub</name>
-        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'>SubB</parent>
+        <parent beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubB</id></parent>
         <successful dataType='java.lang.Boolean'>true</successful>
         <score dataType='java.lang.Double'>100.0</score>
         <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent'>

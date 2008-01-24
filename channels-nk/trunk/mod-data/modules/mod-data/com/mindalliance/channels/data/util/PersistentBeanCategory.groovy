@@ -1,7 +1,6 @@
 package com.mindalliance.channels.data.util
 
 import com.mindalliance.channels.nk.bean.IPersistentBean
-import com.mindalliance.channels.nk.bean.BeanReference
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean
 import com.mindalliance.channels.nk.aspects.IAspectPersistentBean
@@ -11,6 +10,9 @@ import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
 import com.mindalliance.channels.data.BeanMemory
 import com.mindalliance.channels.data.BeanRequestContext
 import com.ten60.netkernel.urii.aspect.StringAspect
+import com.mindalliance.channels.nk.bean.IBeanReference
+import com.mindalliance.channels.nk.bean.IBean
+import com.mindalliance.channels.nk.bean.IBeanList
 
 /**
 * Created by IntelliJ IDEA.
@@ -27,7 +29,8 @@ class PersistentBeanCategory {
     }
 
     static IPersistentBean getPersistentBean(Context context, IURRepresentation representation) {
-       IPersistentBean bean = ((IAspectPersistentBean)context.transrept(representation, IAspectPersistentBean.class)).getPersistentBean()
+        IPersistentBean bean = ((IAspectPersistentBean) context.transrept(representation, IAspectPersistentBean.class)).getPersistentBean()
+        return bean
     }
 
     static IPersistentBean sourcePersistentBean(Context context, String uri, Map args) {
@@ -40,20 +43,23 @@ class PersistentBeanCategory {
     }
 
     static IPersistentBean toPersistentBean(Context context, String xml) {
-        IAspectPersistentBean aspect = (IAspectPersistentBean)context.transrept(new StringAspect(xml), IAspectPersistentBean.class)
+        IAspectPersistentBean aspect = (IAspectPersistentBean) context.transrept(new StringAspect(xml), IAspectPersistentBean.class)
         return aspect.getPersistentBean()
     }
 
-    static IPersistentBean dereference(BeanReference beanReference) {
+    static IPersistentBean dereference(IBeanReference beanReference) {
         IPersistentBean bean
-        if (beanReference.id.size()) {
-            assert beanReference.db.size() != 0
-            assert beanReference.beanClass.size() != 0
+        String id = beanReference.id
+        String db = beanReference.db
+        String beanClass = beanReference.beanClass
+        if (id != null) {
+            assert db != null && db.size() != 0
+            assert beanClass != null && beanClass.size() != 0
             Context context = BeanRequestContext.getRequestContext()
             BeanMemory beanMemory = BeanRequestContext.getBeanMemory()
-            bean = beanMemory.retrieveBean(beanReference.db, beanReference.id, context)
+            bean = beanMemory.retrieveBean(db, id, context)
             if (bean) {
-                assert bean.class.name == beanReference.beanClass
+                assert bean.class.name == beanClass
             }
             else {
                 // clean up dangling reference
@@ -63,14 +69,69 @@ class PersistentBeanCategory {
         return bean
     }
 
-    static  IAspectPersistentBean persistentBean(Object obj, IPersistentBean bean) {
+    static List trans(Object obj, String propName) {
+        List set = []
+        use(PersistentBeanCategory) {
+            switch (obj) {
+                case IBean:
+                    List vals = [] + obj?."$propName"
+                    vals.each {val ->
+                        String cn = val.class.name
+                        set.add(val)
+                        List tc = val.trans(propName)
+                        set.addAll(tc)
+                    }
+                    break
+                case IBeanList:
+                    obj.each {item ->
+                        String cn = item.class.name
+                        List tc = item.trans(propName)
+                        set.addAll(tc)
+                    }
+                    break
+                case IBeanReference:
+                    IPersistentBean bean = obj.dereference()
+                    List tc = bean.trans(propName)
+                    set.addAll(tc)
+                    break
+                default: break
+            }
+        }
+        return set
+    }
+
+    static IAspectPersistentBean persistentBean(Object obj, IPersistentBean bean) {
         return new PersistentBeanAspect(bean)
     }
 
-    // Intercept access to a property containing a BeanReference (dereference it if possible)
+    static Object get(IBeanReference beanRef, String name) {
+        if (['id', 'db', 'beanClass', 'contextBean'].contains(name)) {
+            return beanRef.@"$name"
+        }
+        else {
+            Object value
+            use(PersistentBeanCategory) {
+                IPersistentBean bean = beanRef.dereference()
+                value = bean."$name"
+            }
+            return value
+        }
+    }
+
+    static Object invokeMethod(IBeanReference beanRef, String name, Object args) {
+        Object value
+        use(PersistentBeanCategory) {
+            IPersistentBean bean = beanRef.dereference()
+            value = bean.invokeMethod(name, args)
+        }
+        return value
+
+    }
+
+    /*    // Intercept access to a property containing a BeanReference (dereference it if possible)
     static def getProperty(AbstractPersistentBean bean, String name) {
         def value = bean.@"$name" // access field directly
-        if (value instanceof BeanReference) {
+        if (value instanceof IBeanReference) {
             def beanReference = value
             IPersistentBean refBean = beanReference.dereference()
             return refBean
@@ -78,6 +139,6 @@ class PersistentBeanCategory {
         else {
             return value
         }
-    }
+    }*/
 
 }

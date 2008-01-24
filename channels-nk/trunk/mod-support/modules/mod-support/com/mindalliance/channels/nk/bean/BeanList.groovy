@@ -8,10 +8,24 @@ package com.mindalliance.channels.nk.bean
  */
 
 // A List with an attribute naming the class of its items
-class BeanList {
+class BeanList implements IBeanList {
 
     private List list = new ArrayList()
     String itemClass // class name of bean items
+
+    public IBeanList deepCopy() {
+        IBeanList copy = new BeanList(itemClass: itemClass)
+        list.each { item ->
+            switch(item) {
+                 case IBeanReference:  copy.add(item.deepCopy()); break;
+                 case IBeanList: copy.add(item.deepCopy()); break;
+                 case IBean: copy.add(item.deepCopy()); break;
+                 default: copy.add(item); // TODO - clone it?
+            }
+        }
+        return copy
+    }
+
 
     public Iterator iterator() {
         return list.iterator()
@@ -30,6 +44,17 @@ class BeanList {
 
     public Object invokeMethod(String name, Object args) {
         return list.invokeMethod(name, args)
+    }
+                                                          
+    public void initContextBean(IPersistentBean bean) {
+        list.each { item ->
+            switch(item) {
+                 case IBeanReference: item.initContextBean(bean); break;
+                 case IBeanList: item.initContextBean(bean); break;
+                 case IBean: item.initContextBean(bean); break;
+                 default: break;
+            }
+        }
     }
 
 }

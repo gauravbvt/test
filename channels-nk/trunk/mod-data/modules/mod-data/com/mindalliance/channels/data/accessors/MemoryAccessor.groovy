@@ -21,7 +21,7 @@ class MemoryAccessor extends AbstractMemoryAccessor {
     // query: the uri of a query (a Groovy closure that produces XML when evaluated on the target bean)
     // Responds: xml
     void source(Context context) {
-        initBeanContext(context)
+        initBeanRequestContext(context)
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
@@ -33,20 +33,20 @@ class MemoryAccessor extends AbstractMemoryAccessor {
     // Clears memory of all beans except for the root beans - will force reloads from databases
     // Responds: true
     void create(Context context) {
-        initBeanContext(context)
+        initBeanRequestContext(context)
         use(NetKernelCategory) {
           BeanRequestContext.getBeanMemory().refresh()
-          respond(bool(true))
+          context.respond(bool(true))
         }
     }
 
     // Remove all bean from a database and delete the database
     void delete(Context context) {
-        initBeanContext(context)
+        initBeanRequestContext(context)
         use(NetKernelCategory) {
           String db = context.sourceString("this:param:db")
           BeanRequestContext.getBeanMemory().deleteDB(db, context)
-          respond(bool(true))
+          context.respond(bool(true))
         }
     }
 
@@ -55,21 +55,24 @@ class MemoryAccessor extends AbstractMemoryAccessor {
     // beans: xml containing batch of beans
     // Responds with the number of beans added
     void sink(Context context) {
-        String db = context.sourceString("this:param:db")
-        String uri = context.beans
-        int count = BeanRequestContext.getBeanMemory().newBeans(db, uri, context)
-        context.respond(string("$count"))
+        initBeanRequestContext(context)
+        use(NetKernelCategory) {
+            String db = context.sourceString("this:param:db")
+            String uri = context.beans
+            int count = BeanRequestContext.getBeanMemory().newBeans(db, uri, context)
+            context.respond(string("$count"))
+        }
+
     }
 
     // Is db known to memory?
     void exists(Context context) {
-        initBeanContext(context)
+        initBeanRequestContext(context)
          use(NetKernelCategory) {
            String db = context.sourceString("this:param:db")
-           boolean exists = BeanRequestContext.getBeanMemory().exists(db, context)
-           respond(bool(exists))
+           boolean exists = BeanRequestContext.getBeanMemory().dbExists(db, context)
+           context.respond(bool(exists))
          }
-
     }
 
 }

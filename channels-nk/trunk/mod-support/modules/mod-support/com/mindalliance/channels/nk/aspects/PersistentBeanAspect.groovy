@@ -4,7 +4,6 @@ import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.ten60.netkernel.urii.IURRepresentation
 import com.ten60.netkernel.urii.IURMeta
 import org.ten60.netkernel.layer1.representation.MonoRepresentationImpl
-import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.
@@ -18,11 +17,11 @@ class PersistentBeanAspect implements IAspectPersistentBean {
     private IPersistentBean persistentBean
 
     public PersistentBeanAspect(IPersistentBean bean) {
-        persistentBean = (IPersistentBean)bean.clone() // TODO - do a deep clone?
+        persistentBean = (IPersistentBean)bean.deepCopy()
     }
 
     public IPersistentBean getPersistentBean() {
-        return persistentBean;
+        return persistentBean
     }
 
 

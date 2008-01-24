@@ -9,12 +9,16 @@ import java.io.Serializable;
  * Date: Jan 21, 2008
  * Time: 1:41:37 PM
  */
-public interface IBean extends Serializable, Cloneable{
+public interface IBean extends Serializable, Cloneable {
 
     Map getBeanProperties();
 
     boolean isComponent();
 
     boolean isPersistent();
+
+    IBean deepCopy();
+
+    void initContextBean(IPersistentBean bean);
     
 }

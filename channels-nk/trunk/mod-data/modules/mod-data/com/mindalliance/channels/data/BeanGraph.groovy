@@ -19,37 +19,61 @@ import com.mindalliance.channels.data.util.PersistentBeanCategory
 class BeanGraph {
 
     private Map<String, Map<String, IPersistentBean>> cache = new HashMap<String, Map<String, IPersistentBean>>() // db ->* id -> bean
-    private List dbs = [ ] // List of dbs (names) known to have been opened - and created and initialized if needed
+    private List dbs = [] // List of dbs (names) known to have been opened - and created and initialized if needed
 
     void refresh() {
         Map<String, Map<String, IPersistentBean>> fresh = new HashMap<String, Map<String, IPersistentBean>>()
         cache.each {db, dbCache ->
             fresh[db] = new HashMap<String, IPersistentBean>()
-            dbCache.each { id, bean ->
+            dbCache.each {id, bean ->
                 if (bean.isRooted()) fresh[db][id] = bean
             }
         }
         cache = fresh
     }
+
+    void deleteDB(String db, Context context) {
+        IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context) // TODO - will uselessly create the db id it does not exist
+        storeAdaptor.deleteStore(db, context)
+        dbs.remove(db)
+        cache.remove(db)
+    }
+
+    boolean dbExists(String db, Context context) {
+        IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context)
+        return storeAdaptor.storeExists(db, context)
+    }
+
     // A Groovy query is code with variable args set to a map with 'builder' -> a MarkupBuilder
     // and 'bean' -> a IPersistentBean 
     String search(String db, String id, String queryUri, Context context) {
         String xml
-        use(NetKernelCategory, PersistenBeanCategory) {
-            IPersistentBean bean = retrieveBean(db, id, context) 
-            if (queryUri.endsWith('.groovy')) {
-                String query = context.sourceString(queryUri)
-                StringWriter writer = new StringWriter()
-                MarkupBuilder builder = new MarkupBuilder(writer)
-                Eval.me('args', [bean: bean, builder: builder], query)
-                xml = writer.toString()
-            }
-            else {
-                throw new IllegalArgumentException("Unsupported query type for ${queryUri}. Supported types: *.groovy")
+        use(NetKernelCategory) {
+            IPersistentBean bean = retrieveBean(db, id, context)
+            String queryString = context.sourceString(queryUri)
+            switch (queryUri) {
+                case {isGroovyQuery(it)}: xml = runGroovyQuery(bean, queryString); break;
+                // TODO - add support for JXPath etc. queries here
+                default: throw new IllegalArgumentException("Unsupported query type for ${queryUri}. Supported types: *.groovy")
             }
         }
         return xml
+    }
 
+    private boolean isGroovyQuery(String queryUri) {
+        return queryUri.endsWith('.groovy')
+    }
+
+    private String runGroovyQuery(IPersistentBean bean, String queryString) {
+        String xml
+        StringWriter writer = new StringWriter()
+        MarkupBuilder builder = new MarkupBuilder(writer)
+        Closure query = (Closure) Eval.me(queryString)
+        use(PersistentBeanCategory) {
+            query(bean, builder)
+        }
+        xml = writer.toString()
+        return xml
     }
 
     IPersistentBean retrieveBean(String db, String id, Context context) {
@@ -93,13 +117,13 @@ class BeanGraph {
     IStoreAdaptor selectAdaptorFor(String db, Context context) {
         IStoreAdaptor storeAdaptor = new StoreAdaptor() // TODO replace by some adaptor selection logic based on db
         if (!dbs.contains(db)) {
-            boolean created = storeAdaptor.open(db, context)    // open, create+load if needed
+            boolean created = storeAdaptor.open(db, context) // open, create+load if needed
             if (created) {
                 use(NetKernelCategory) {
-                   String initContentUri = "db:${db}.xml"
-                   if (context.exists(initContentUri)) {
-                       storeAdapter.load(db, initContentUri, context) 
-                   }
+                    String initContentUri = "db:${db}.xml"
+                    if (context.exists(initContentUri)) {
+                        storeAdapter.load(db, initContentUri, context)
+                    }
                 }
             }
             dbs.add(db)
@@ -120,6 +144,8 @@ class BeanGraph {
     void cache(String db, String id, IPersistentBean bean) {
         Map<String, IPersistentBean> dbCache = dbCache(db)
         dbCache[id] = bean
+        bean.activate() // Make sure bean is fully initialized
+        
     }
 
     IPersistentBean fromCache(String db, String id) {
@@ -127,9 +153,13 @@ class BeanGraph {
         return dbCache[id]
     }
 
-    private Map<String, IPersistentBean> dbCache(db) {
+    private void resetDbCache(String db) {
+        cache[db] = new HashMap<String, IPersistentBean>()
+    }
+
+    private Map<String, IPersistentBean> dbCache(String db) {
         if (!cache[db]) {
-            cache[db] = new HashMap<String, IPersistentBean>()
+            resetDbCache(db)
         }
         return cache[db]
     }
