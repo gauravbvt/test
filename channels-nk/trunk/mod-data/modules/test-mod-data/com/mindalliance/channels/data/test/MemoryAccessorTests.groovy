@@ -67,6 +67,7 @@ class MemoryAccessorTests {
 
     // SOURCE
     void dataMemorySearch() {
+        String queryUri = 'ffcpl:/fixtures/testBeansQuery.groovy'
         use(NetKernelCategory) {
             // Delete db
           context.subrequest("active:data_memory", [type: 'delete', db: data(DB)])
@@ -75,10 +76,11 @@ class MemoryAccessorTests {
           // Refresh memory (to force lazy reloads from db)
           context.subrequest("active:data_memory", [type: 'new', db: data(DB)])
           // Query = "Find all successful sub-tests of the Top test"
-          String xml = context.sourceString("active:data_memory", [db: data(DB), id: data('Top'), query: 'ffcpl:/fixtures/testBeansQuery.groovy'])
+          String xml = context.sourceString("active:data_memory", [db: data(DB), id: data('Top'), query: queryUri])
+          context.log("Results to query\n ${context.sourceString(queryUri)}\n =>\n$xml\n", 'info')
           assert xml =~ /SubB/
           assert xml =~ /SubSub/
-            context.respond(bool(true))
+          context.respond(bool(true))
         }
     }
 
