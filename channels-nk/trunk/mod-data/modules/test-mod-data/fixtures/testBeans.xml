@@ -51,7 +51,8 @@
         </runs>
          <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference'>
             <item beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubSub</id></item>
-        </subTests>   </testBean>
+        </subTests>
+    </testBean>
     
     <!-- SubSub -->
     <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubSub">

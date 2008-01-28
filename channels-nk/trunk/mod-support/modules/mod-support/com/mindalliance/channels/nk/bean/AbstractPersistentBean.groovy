@@ -9,7 +9,7 @@ import com.mindalliance.channels.nk.bean.IPersistentBean
 * Time: 1:12:16 PM
 * To change this template use File | Settings | File Templates.
 */
-abstract class AbstractPersistentBean implements IPersistentBean {
+abstract class AbstractPersistentBean extends AbstractBean implements IPersistentBean {
 
     String db
     String id
@@ -21,10 +21,6 @@ abstract class AbstractPersistentBean implements IPersistentBean {
 
     boolean isPersistent() {
         return true
-    }
-
-    boolean isComponent() {
-        return false
     }
 
     // Default
@@ -40,39 +36,24 @@ abstract class AbstractPersistentBean implements IPersistentBean {
         rooted = val
     }
 
+    // TODO - implement deepCopy using visitor
     IBean deepCopy() {
-        IPersistentBean copy
-        copy = (IPersistentBean)clone()
+        IPersistentBean copy = (IPersistentBean) super.deepCopy()
         copy.db = db
         copy.id = id
         copy.createdOn = new Date(createdOn.toString())
         copy.setRooted(isRooted())
         copy.version = version
-        getBeanProperties().each { propKey, propValue ->
-            switch(propValue) {
-                case IBeanReference:  this."$propKey" = propValue.deepCopy(); break;
-                case IBeanList: this."$propKey" = propValue.deepCopy(); break;
-                case IBean: this."$propKey" = propValue.deepCopy(); break;
-                default: this."$propKey" = propValue;   // TODO - clone this?
-            }
-        }
         return copy
     }
 
+
     // Make the bean ready for use
     void activate() {
-        getBeanProperties().each { propKey, propValue ->
-            switch(propValue) {
-                case IBeanReference: propValue.initContextBean(this); break;
-                case IBeanList: propValue.initContextBean(this); break;
-                case IBean: propValue.initContextBean(this); break;
-                default: break;  
-            }
-        }
+        accept{it.initContextBean(this)}
     }
 
-    void initContextBean(IPersistentBean bean) {
-        contextBean = bean
-    }
+    void initContextBean(IPersistentBean bean)  {} // Do nothing
+
 
 }

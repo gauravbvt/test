@@ -7,7 +7,7 @@ package com.mindalliance.channels.nk.bean;
  * Time: 11:00:24 AM
  */
 // Marker interface
-public interface IBeanReference  extends Cloneable {
+public interface IBeanReference  extends Cloneable, IBeanPropertyValue {
 
     public IBeanReference deepCopy();
 

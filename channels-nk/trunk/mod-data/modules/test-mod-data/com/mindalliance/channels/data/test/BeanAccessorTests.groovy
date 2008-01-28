@@ -4,6 +4,7 @@ import com.mindalliance.channels.nk.NetKernelCategory
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.data.util.PersistentBeanCategory
+import com.mindalliance.channels.nk.bean.SimpleData
 
 
 /**
@@ -36,12 +37,11 @@ class BeanAccessorTests {
             String id = context.sourceString("active:data_bean", [type: 'new', db: data('test_dbxml'), id: data('1234'), bean: string(xml)])
 
             IPersistentBean bean = context.sourcePersistentBean("active:data_bean", [db: data('test_dbxml'), id: data(id)])
-            assert bean.name == 'A test'
-
-            bean.name = 'A great test'
+            assert bean.name.value == 'A test'
+            bean.name = SimpleData.from('A great test')
             context.subrequest("active:data_bean", [type: 'sink', db: data('test_dbxml'), id: data('1234'), bean: persistentBean(bean)])
             bean = context.sourcePersistentBean("active:data_bean", [db: data('test_dbxml'), id: data('1234')])
-            assert bean.name == 'A great test'
+            assert bean.name.value == 'A great test'
 
             context.subrequest("active:data_bean", [type: 'delete', db: data('test_dbxml'), id: data('1234')])
             boolean exists = context.isTrue("active:data_bean", [type: 'exists', db: data('test_dbxml'), id: data('1234')])

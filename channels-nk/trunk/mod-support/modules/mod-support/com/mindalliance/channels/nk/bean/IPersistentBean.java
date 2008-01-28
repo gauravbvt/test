@@ -28,8 +28,6 @@ public interface IPersistentBean extends IBean {
 
     // public IPersistentBean migrateTo(String version)
 
-    public Map<String, Object> getBeanProperties();
-
     // Make the bean ready for use
     public void activate();
 

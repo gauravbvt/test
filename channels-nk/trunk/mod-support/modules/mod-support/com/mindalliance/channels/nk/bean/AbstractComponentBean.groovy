@@ -6,40 +6,21 @@ package com.mindalliance.channels.nk.bean
  * Time: 1:45:08 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class AbstractComponentBean implements IBean {
+abstract class AbstractComponentBean extends AbstractBean implements IComponentBean {
 
-    public boolean isComponent() {
+    IPersistentBean contextBean
+
+    boolean isComponent() {
         return true;
     }
 
-    public boolean isPersistent() {
-        return false;
-    }
-
-    IBean deepCopy() {
-        IBean copy
-        copy = (IBean)clone()
-        getBeanProperties().each { propKey, propValue ->
-            switch(propValue) {
-                case IBeanReference:  this."$propKey" = propValue.deepCopy(); break;
-                case IBeanList: this."$propKey" = propValue.deepCopy(); break;
-                case IBean: this."$propKey" = propValue.deepCopy(); break;
-                default: this."$propKey" = propValue;   // TODO - clone this?
-            }
-        }
-        return copy
-    }
-
     void initContextBean(IPersistentBean bean)  {
-        getBeanProperties().each { propKey, propValue ->
-            switch(propValue) {
-                case IBeanReference: propValue.initContextBean(bean); break;
-                case IBeanList: propValue.initContextBean(bean); break;
-                case IBean: propValue.initContextBean(bean); break;
-                default: break;
-            }
-        }
+        contextBean = bean
+    }
 
+    void accept(Closure action) {
+        action(this)
+        getBeanProperties().each { propKey, propValue -> propValue.accept(action) }
     }
 
 }

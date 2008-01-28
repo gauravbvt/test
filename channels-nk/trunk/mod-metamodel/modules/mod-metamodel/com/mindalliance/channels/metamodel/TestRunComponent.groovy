@@ -1,6 +1,7 @@
 package com.mindalliance.channels.metamodel
 
 import com.mindalliance.channels.nk.bean.AbstractComponentBean
+import com.mindalliance.channels.nk.bean.SimpleData
 
 /**
 * Created by IntelliJ IDEA.
@@ -11,11 +12,11 @@ import com.mindalliance.channels.nk.bean.AbstractComponentBean
 */
 class TestRunComponent extends AbstractComponentBean {
 
-    Date date
-    String tester
+    def date = new SimpleData(Date.class)
+    def tester = new SimpleData (String.class)
 
-    public Map getBeanProperties() {
-        return [date: date, tester: tester]
+    Map getBeanProperties() {
+        return [date:date, tester:tester]
     }
 
 }

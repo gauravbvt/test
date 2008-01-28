@@ -2,6 +2,7 @@ package com.mindalliance.channels.metamodel
 
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean
 import com.mindalliance.channels.nk.bean.BeanReference
+import com.mindalliance.channels.nk.bean.SimpleData
 
 /**
 * Created by IntelliJ IDEA.
@@ -12,13 +13,13 @@ import com.mindalliance.channels.nk.bean.BeanReference
 */
 class Person extends AbstractPersistentBean {
 
-    public Map<String, Object> getBeanProperties() {
-        return [firstName: firstName, middleName: middleName, lastName: lastName]
-    }
+    def firstName  = new SimpleData(String.class)
+    def middleName = new SimpleData(String.class)
+    def lastName  = new SimpleData(String.class)
 
-    String firstName
-    String middleName
-    String lastName
+    Map getBeanProperties() {
+        return [firstName:firstName, middleName:middleName, lastName:lastName]
+    }
 
 
 }

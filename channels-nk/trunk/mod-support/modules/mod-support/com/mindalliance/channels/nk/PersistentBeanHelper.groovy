@@ -7,7 +7,10 @@ import com.mindalliance.channels.nk.bean.IPersistentBean
 import groovy.util.slurpersupport.GPathResult
 import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.nk.bean.IBeanList
-import com.mindalliance.channels.nk.bean.IBean
+import com.mindalliance.channels.nk.bean.IComponentBean
+import com.mindalliance.channels.nk.bean.ISimpleData
+import com.mindalliance.channels.nk.bean.SimpleData
+
 
 /**
 * Created by IntelliJ IDEA.
@@ -36,9 +39,10 @@ class PersistentBeanHelper {
 
     private void buildProperty(String propKey, def propValue, MarkupBuilder builder) {
         switch (propValue) {
-            case {isDataBean(it)}:
-                def text = (propValue != null) ? "$propValue" : '';
-                builder."${propKey}"(dataType: propValue.class.name, text);
+            case ISimpleData:
+                def simpleData = propValue
+                def text = (simpleData.@value != null) ? "${simpleData.@value}" : '';
+                builder."${propKey}"(dataType: "${simpleData.@dataClass.name}", text);
                 break;
             case IBeanReference:
                 def beanReference = propValue
@@ -57,24 +61,22 @@ class PersistentBeanHelper {
                     }
                 };
                 break;
-            case IBean:
+            case IComponentBean:
                 def component = propValue;
                 def props = component.getBeanProperties();
                 builder."${propKey}"(beanClass: component.class.name) {
                     props.each {pKey, pValue -> buildProperty(pKey, pValue, builder)}
                 };
                 break;
-            default: throw new IllegalArgumentException("Can't build XML with $propValue")
+            default:    // id, db, version, createdOn, rooted
+                def text = (propValue != null) ? "${propValue}" : '';
+                builder."${propKey}"(text)
         }
     }
 
     private String elementName(def bean) {
         String name = bean.class.name.tokenize('.').reverse()[0]
         "${name[0].toLowerCase()}${name[1..<name.size()]}"
-    }
-
-    private boolean isDataBean(def bean) {
-        return [Date.class, String.class, Integer.class, Boolean.class, Double.class].contains(bean.class) // TODO  add more as needed
     }
 
     // From xml to bean
@@ -90,6 +92,7 @@ class PersistentBeanHelper {
         if (xml.@id.size()) bean.id = xml.@id
         if (xml.@db.size()) bean.db = xml.@db
         if (xml.@version.size()) bean.version = xml.@version
+        if (xml.@createdOn.size()) bean.createdOn = new Date("${xml.@createdOn}")
         bean.rooted = xml.@rooted == 'true'
         xml.children().each {child ->
             def propValue = reifyFromXml(child)
@@ -99,10 +102,10 @@ class PersistentBeanHelper {
 
     private def reifyFromXml(def node) {
         if (node.@dataType.size()) {// data
-            String value = node.text();
+            String value = node.text()
             if (value.size()) {
-                String toEval = "new ${node.@dataType}(\'$value\')"
-                def data = Eval.me(toEval) // assumes a constructor with args (String val)
+                Class dataClass = (Class)Eval.me("${node.@dataType}.class")
+                def data = SimpleData.from(dataClass, value)
                 return data
             }
             else return null
@@ -127,6 +130,7 @@ class PersistentBeanHelper {
         else if (node.@beanClass.size()) {// a component (non-persistent) bean
             String aClass = node.@beanClass
             def component = Eval.me("new ${aClass}()")
+            assert component.isComponent()
             node.children().each {child ->
                 def propValue = reifyFromXml(child)
                 component."${child.name()}" = propValue

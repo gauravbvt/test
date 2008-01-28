@@ -68,6 +68,7 @@ class DatabaseAccessor extends AbstractDataAccessor {
             String loadUri = ctx.load
             store.initializeContainer(loadUri)
             ctx.log("XML containe $dbName initialized from $loadUri", 'info')
+            ctx.respond(bool(true))
         }
     }
 
@@ -89,6 +90,7 @@ class DatabaseAccessor extends AbstractDataAccessor {
                 throw new Exception("Failed to delete container ${store.getContainerName()}")
             }
             ctx.log("XML container $dbName deleted", 'info')
+            ctx.respond(bool(true))
         }
     }
 

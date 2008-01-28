@@ -13,7 +13,7 @@ import com.mindalliance.channels.data.BeanMemory
 * Time: 11:15:42 AM
 * To change this template use File | Settings | File Templates.
 */
-class AbstractMemoryAccessor extends AbstractDataAccessor {
+abstract class AbstractMemoryAccessor extends AbstractDataAccessor {
 
     // Put context and beanGraph into thread local
     void initBeanRequestContext(Context context) {

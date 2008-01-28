@@ -13,6 +13,7 @@ import com.ten60.netkernel.urii.aspect.StringAspect
 import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.nk.bean.IBean
 import com.mindalliance.channels.nk.bean.IBeanList
+import com.mindalliance.channels.nk.bean.SimpleData
 
 /**
 * Created by IntelliJ IDEA.
@@ -22,6 +23,8 @@ import com.mindalliance.channels.nk.bean.IBeanList
 * To change this template use File | Settings | File Templates.
 */
 class PersistentBeanCategory {
+
+    // ********** Context *************
 
     static IPersistentBean sourcePersistentBean(Context context, String uri) {
         IPersistentBean bean = ((IAspectPersistentBean) context.sourceAspect(uri, IAspectPersistentBean.class)).getPersistentBean()
@@ -47,6 +50,9 @@ class PersistentBeanCategory {
         return aspect.getPersistentBean()
     }
 
+
+    // *********** IBeanReference **************
+
     static IPersistentBean dereference(IBeanReference beanReference) {
         IPersistentBean bean
         String id = beanReference.id
@@ -68,6 +74,32 @@ class PersistentBeanCategory {
         }
         return bean
     }
+
+    static Object get(IBeanReference beanRef, String name) {
+        if (['id', 'db', 'beanClass', 'contextBean'].contains(name)) {
+            return beanRef.@"$name"
+        }
+        else {
+            Object value
+            use(PersistentBeanCategory) {
+                IPersistentBean bean = beanRef.dereference()
+                value = bean."$name"
+            }
+            return value
+        }
+    }
+
+    static Object invokeMethod(IBeanReference beanRef, String name, Object args) {
+        Object value
+        use(PersistentBeanCategory) {
+            IPersistentBean bean = beanRef.dereference()
+            value = bean.invokeMethod(name, args)
+        }
+        return value
+
+    }
+
+    // ****************** Object *********************
 
     static List trans(Object obj, String propName) {
         List set = []
@@ -104,41 +136,5 @@ class PersistentBeanCategory {
         return new PersistentBeanAspect(bean)
     }
 
-    static Object get(IBeanReference beanRef, String name) {
-        if (['id', 'db', 'beanClass', 'contextBean'].contains(name)) {
-            return beanRef.@"$name"
-        }
-        else {
-            Object value
-            use(PersistentBeanCategory) {
-                IPersistentBean bean = beanRef.dereference()
-                value = bean."$name"
-            }
-            return value
-        }
-    }
-
-    static Object invokeMethod(IBeanReference beanRef, String name, Object args) {
-        Object value
-        use(PersistentBeanCategory) {
-            IPersistentBean bean = beanRef.dereference()
-            value = bean.invokeMethod(name, args)
-        }
-        return value
-
-    }
-
-    /*    // Intercept access to a property containing a BeanReference (dereference it if possible)
-    static def getProperty(AbstractPersistentBean bean, String name) {
-        def value = bean.@"$name" // access field directly
-        if (value instanceof IBeanReference) {
-            def beanReference = value
-            IPersistentBean refBean = beanReference.dereference()
-            return refBean
-        }
-        else {
-            return value
-        }
-    }*/
 
 }
