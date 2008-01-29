@@ -71,5 +71,7 @@
 -->
   <module>file://@deploy-dir@/@mod-modeler-name@-@mod-modeler-version@.jar</module>
   <module>file://@deploy-dir@/@test-mod-modeler-name@-@test-mod-modeler-version@.jar</module>
+  <module>file://@deploy-dir@/@mod-metamodel-name@-@mod-metamodel-version@.jar</module>
+  <module>file://@deploy-dir@/@test-mod-metamodel-name@-@test-mod-metamodel-version@.jar</module>
 
 </modules>

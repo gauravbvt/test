@@ -58,7 +58,7 @@
                 <xs:enumeration value="stop"/>
                 <xs:enumeration value="continue"/>
             </xs:restriction>
-        </xs:simpleTyle>
+        </xs:simpleType>
     </xs:attribute>
     <xs:attribute name="defaultAction" default="perform">
         <xs:simpleType>
@@ -66,7 +66,7 @@
                 <xs:enumeration value="cancel"/>
                 <xs:enumeration value="perform"/>
             </xs:restriction>
-        </xs:simpleTyle>
+        </xs:simpleType>
     </xs:attribute>
     <xs:attribute name="id" type="xs:ID"/>
   </xs:attributeGroup>

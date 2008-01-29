@@ -73,6 +73,15 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="Spring">
+        <modules>
+          <module name="mod-data" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
+  </component>
   <component name="IdProvider" IDEtalkID="BE041A3F377ABB13D217582536F07B4E" />
   <component name="InspectionProjectProfileManager">
     <option name="PROJECT_PROFILE" value="Project Default" />
@@ -246,19 +255,21 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-channels/mod-channels.iml" filepath="$PROJECT_DIR$/mod-channels/mod-channels.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-crud/mod-crud.iml" filepath="$PROJECT_DIR$/mod-crud/mod-crud.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-data/mod-data.iml" filepath="$PROJECT_DIR$/mod-data/mod-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" filepath="$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-geonames/mod-geonames.iml" filepath="$PROJECT_DIR$/mod-geonames/mod-geonames.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-matcher/mod-matcher.iml" filepath="$PROJECT_DIR$/mod-matcher/mod-matcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-metamodel/mod-metamodel.iml" filepath="$PROJECT_DIR$/mod-metamodel/mod-metamodel.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-modeler/mod-modeler.iml" filepath="$PROJECT_DIR$/mod-modeler/mod-modeler.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-rules/mod-rules.iml" filepath="$PROJECT_DIR$/mod-rules/mod-rules.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-store/mod-store.iml" filepath="$PROJECT_DIR$/mod-store/mod-store.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-support/mod-support.iml" filepath="$PROJECT_DIR$/mod-support/mod-support.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ResourceManagerContainer">
