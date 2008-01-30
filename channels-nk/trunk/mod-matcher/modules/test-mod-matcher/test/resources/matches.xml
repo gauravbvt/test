@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tests>
+    <match>
+        <text>Morristown city block evacuation plan</text>
+    </match>
+    <match>
+        <text>NJ Transit hotline</text>
+    </match>
+    <match>
+        <text>NY-NJ Port Authority</text>
+    </match>
+    <match>
+        <text>NYPD</text>
+        <target>Police Department</target>
+        <expect>hi</expect>
+    </match>
+    <match>
+        <text>NYPD</text>
+        <target>New York City</target>
+        <expect>hi</expect>
+    </match>
+    <match>
+        <text>New York City Police Department</text>
+        <target>NYPD</target>
+        <expect>hi</expect>
+    </match>
+    <match>
+        <text>Risks assessment of multiple bombing</text>
+    </match>
+    <match>
+        <text>Saco Police Department</text>
+    </match>
+    <match>
+        <text>Security task force</text>
+    </match>
+    <match>
+        <text>Surveillance video of Trenton Station</text>
+    </match>
+    <match>
+        <text>Suspicious fertilizer purchases</text>
+    </match>
+    <match>
+        <text>Terrorism prevention</text>
+    </match>
+    <match>
+        <text>Train Officers in the safe disposals of IEDs</text>
+    </match>
+    <match>
+        <text>Training</text>
+    </match>
+
+
+
+</tests>

@@ -7,32 +7,13 @@ import com.mindalliance.channels.nk.NetKernelCategory
 import groovy.xml.MarkupBuilder
 import groovy.util.slurpersupport.GPathResult
 import java.util.regex.Matcher
+import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
 
 /**
  * This is a loose implementation of ...
  * TODO add link to pdf file
  */
 class SignerAccessor extends AbstractAccessor {
-
-    /** Impact weight half-life.
-     * Index of the raw topic for which the impact weight is exactly half as much
-     * as the weight of top-ranked result topic.
-     * When large, all ranked topic are equivalent (ie, the ordering of the
-     * result is ignored).
-     */
-    static final double halfLife = Double.MAX_VALUE
-
-    /**
-     * Influence of the number of children of a node ( >= 0 ).
-     * TODO fix this description
-     */
-    static final double childCountWeight = 0
-
-    /**
-     * Effect of children scores on a node's score ( >= 0 ).
-     * TODO fix this description
-     */
-    static final double childScoreWeight = 1
 
     /**
      * Return the parent topic of a topic.
@@ -72,7 +53,9 @@ class SignerAccessor extends AbstractAccessor {
      *   &lt;topic name="..."/&gt;...</pre></p>
      * @return a map of the weight of the developped topics
      */
-     private Map sign( GPathResult rawTopics ) {
+    Map sign(
+            GPathResult rawTopics,
+            double halfLife, double childCountWeight, double childScoreWeight ) {
 
          // Number of children of each developped node
          Map children = new TreeMap([
@@ -86,21 +69,21 @@ class SignerAccessor extends AbstractAccessor {
             )
 
          // Basic scores of raw topics
-         final Map uRaw = new TreeMap()
+         final Map rawScores = new TreeMap()
 
          rawTopics.topic.eachWithIndex { t,i ->
              String topic = t.@name
              if ( topic.endsWith( "/" ) )
                 topic = topic.substring( 0, topic.size()-1 )
              addChild( children, topic )
-             uRaw[ topic ] = halfLife == Double.MAX_VALUE ?
-                 1.0 : Math.pow(2.0d, -i / halfLife)
+             rawScores[ topic ] = halfLife > 0 ?
+                 1.0 : Math.pow( 2.0d, -i / halfLife )
          }
 
          double n = 0.0
 
          // Compute developped topics scores
-         final Map u = new TreeMap()
+         final Map scores = new TreeMap()
          children.each { String topic, int kidCount ->
              // Compute μ[ topic ] =
              //     μRaw[ topic ] + sum(kids) / ( γ + δ * kidCount )
@@ -112,30 +95,31 @@ class SignerAccessor extends AbstractAccessor {
              // Sum of children is already in μ[ topic ] because of map ordering
              double factor = childScoreWeight + childCountWeight * kidCount
              if ( kidCount != 0 && factor != 0.0 ) {
-                 u[ topic ] /= factor
+                 scores[ topic ] /= factor
              }
              else
-                 u[ topic ] = 0.0
+                 scores[ topic ] = 0.0
 
-             u[ topic ] += uRaw[topic] ?: 0.0
-             n += u[ topic ]
+             scores[ topic ] += rawScores[topic] ?: 0.0
+
+             n += scores[ topic ]
              String parent = parent( topic )
              if ( parent != null )  {
-                if ( u.containsKey( parent ) )
-                    u[ parent ] += u[ topic ]
+                if ( scores.containsKey( parent ) )
+                    scores[ parent ] += scores[ topic ]
                 else
-                    u[ parent ] = u[ topic ]
+                    scores[ parent ] = scores[ topic ]
              }
          }
 
          // Normalize
-         u.each { key,val -> u[ key ] = val / n  }
-         u.remove( "" )
+         scores.each { key,val -> scores[ key ] = val / n  }
+         scores.remove( "" )
 
-         return u
-     }
+         return scores
+    }
 
-   Map valueSort( final Map map ) {
+    Map valueSort( final Map map ) {
        Map result = new TreeMap([
                  compare: {a, b ->
                      int aDepth = a.count("/")
@@ -148,14 +132,38 @@ class SignerAccessor extends AbstractAccessor {
 
        map.each { k, v ->  result[ k ] = v }
        return result
-   }
+    }
 
-   void source( Context ctx ) {
-        use(NetKernelCategory) {
+    private GPathResult getRawTopics( Context ctx, String source, String text ) {
+        String sanitizedText = URLEncoder.encode( text ).replaceAll( "\\+", "%20" )
+        return ctx.sourceXML( "$source-cooked:$sanitizedText" )
+    }
+
+    /**
+     * Produce a signature for given text.
+     */
+    void source( Context ctx ) {
+        use( NetKernelCategory ) {
+
+            String text = ctx.sourceString("this:param:text").replaceAll("_", " ");
+
+            INKFRequestReadOnly request = ctx.request
+            GPathResult config = ctx.sourceXML(
+                 MatcherAccessor.getConfigUri( request ) )
+
+            String source = config.source
+            double halfLife = Double.valueOf( config.halfLife.toString() )
+            double childCountWeight = Double.valueOf( config.childCountWeight.toString() );
+            double childScoreWeight = Double.valueOf( config.childScoreWeight.toString() );
 
             def writer = new StringWriter()
-            new MarkupBuilder(writer).signature(text: ctx.request.text) {
-                sign(ctx.sourceXML(ctx.request.topicsUrl)).each {
+            new MarkupBuilder(writer).signature( text: text ) {
+                sign(
+                    getRawTopics( ctx, source, text ),
+                    halfLife,
+                    childCountWeight,
+                    childScoreWeight ).each {
+
                     topic(name: it.key, value: it.value)
                 }
             }

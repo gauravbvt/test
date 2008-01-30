@@ -24,7 +24,11 @@
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/CRONConfig.xml</match>
-		</uri>
+
+            <!-- for unit tests... -->
+            <match>^([^:]+)-cooked:(.*)</match>
+            <match>^([^:]+)-xhtml:(.*)</match>
+        </uri>
 	</export>
 
 	<mapping>
@@ -44,11 +48,11 @@
 			<to>active:matcher$1</to>
 		</rewrite>
         <rewrite>
-            <match>ffcpl:/matcher/sign\+text@(.*)\+source@(.*)</match>
-            <to>active:signer+text@$1+topicsUrl@$2:$e1</to>
+            <match>ffcpl:/matcher/sign\+text@(.*)\+config@(.*)\+?.*</match>
+            <to>active:signer+text@$1+config@$2</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/matcher/test\+text@(.*)\+source@(.*)</match>
+            <match>ffcpl:/matcher/test\+text@(.*)\+source@(.*)\+?.*</match>
             <to>$2:$1</to>
         </rewrite>
 
@@ -62,7 +66,7 @@
         </ura>
 
         <rewrite>
-            <match>^([^:\-]*):(.*)</match>
+            <match>^([^:]+)-cooked:(.*)</match>
             <to>active:xslt+operand@$1-xhtml:$e2+operator@ffcpl:/resources/$1-clean.xsl</to>
         </rewrite>
         <rewrite>

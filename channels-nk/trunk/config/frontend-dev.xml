@@ -68,7 +68,7 @@
 			<match>ffcpl:/(etc|pub)/.*</match>
 			<match>ffcpl:/entrypoints.xml</match>
 		</this>
-		
+
 		<!--
 		************
 		Jetty HTTP Transport
@@ -122,7 +122,10 @@
         <import>
 		    <uri>@mod-geonames-uri@</uri>
 		</import>
-        
+        <import>
+            <uri>@mod-matcher-uri@</uri>
+        </import>
+
 
     </mapping>
 	<transports>

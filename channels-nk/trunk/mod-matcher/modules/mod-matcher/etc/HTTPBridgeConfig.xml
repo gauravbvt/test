@@ -2,9 +2,9 @@
 <HTTPBridgeConfig>
 	<zone>
 		<match>.*/matcher.*</match>
-		<!--<processQueries/>-->
-		<!--<passCookies/>-->
-		<!--<passRequestURL/>-->
-		<!--<passMethod/>-->
+		<processQueries/>
+		<passCookies/>
+		<passRequestURL/>
+		<passMethod/>
 	</zone>
 </HTTPBridgeConfig>

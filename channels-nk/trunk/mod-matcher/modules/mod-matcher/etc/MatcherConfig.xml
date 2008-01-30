@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Default matcher configuration -->
+<config>
+    <source>yahoo</source>
+
+    <!--
+    * Index of the raw topic for which the impact weight is exactly half as much
+    * as the weight of top-ranked result topic.
+    * When smaller than 1, all ranked topic are equivalent (ie, the ordering of the
+    * result is ignored).
+    -->
+    <halfLife>-1</halfLife>
+
+    <!--
+    * Influence of the number of children of a node ( >= 0 ).
+    * TODO fix this description
+    -->
+    <childCountWeight>0</childCountWeight>
+
+    <!--
+    * Effect of children scores on a node's score ( >= 0 ).
+    * TODO fix this description
+    -->
+    <childScoreWeight>1</childScoreWeight>
+</config>
