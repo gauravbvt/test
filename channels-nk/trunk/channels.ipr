@@ -292,6 +292,7 @@
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <UsedPathMacros>
     <macro name="DBXML_HOME" />
+    <macro name="GROOVY_ECLIPSE_HOME" />
     <macro name="NETKERNEL_HOME" />
   </UsedPathMacros>
 </project>
