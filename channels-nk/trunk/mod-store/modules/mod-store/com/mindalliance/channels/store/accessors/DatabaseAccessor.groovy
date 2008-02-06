@@ -73,23 +73,30 @@ class DatabaseAccessor extends AbstractDataAccessor {
     }
 
     // name : name of container
+    // contents: empty contents vs physically removing the container? (optional)
     void delete(Context ctx) {
         use(NetKernelCategory) {
             String dbName = ctx.sourceString("this:param:name")
             XMLStore store = new XMLStore(dbName, ctx)
-            int retries = MAX_DELETE_RETRIES
-            while (retries > 0 && store.containerExists() )
-                try {
-                    store.deleteContainer()
-                } catch (Exception e) {
-                    ctx.log("Failed to delete container $dbName", 'warning')
-                    retries--
-                    sleep(SLEEP_BETWEEN_RETRIES)
-                }
-            if (retries == 0 && store.containerExists()) {
-                throw new Exception("Failed to delete container ${store.getContainerName()}")
+            if (ctx.'contents?' && ctx.isTrue('this:param:contents')) {
+                store.emptyContainer()
+                ctx.log("XML container $dbName is empty", 'info')
             }
-            ctx.log("XML container $dbName deleted", 'info')
+            else {
+                int retries = MAX_DELETE_RETRIES
+                while (retries > 0 && store.containerExists() )
+                    try {
+                        store.deleteContainer()
+                    } catch (Exception e) {
+                        ctx.log("Failed to delete container $dbName", 'warning')
+                        retries--
+                        sleep(SLEEP_BETWEEN_RETRIES)
+                    }
+                if (retries == 0 && store.containerExists()) {
+                    throw new Exception("Failed to delete container ${store.getContainerName()}")
+                }
+                ctx.log("XML container $dbName deleted", 'info')
+            }
             ctx.respond(bool(true))
         }
     }

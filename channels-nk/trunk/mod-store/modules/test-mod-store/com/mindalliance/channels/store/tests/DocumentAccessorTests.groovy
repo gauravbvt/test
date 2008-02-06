@@ -33,7 +33,6 @@ class DocumentAccessorTests {
         IAspectPersistentBean beanAspect = new PersistentBeanAspect(test)
 
         use(NetKernelCategory) {
-            context.subrequest("active:store_db", [type: 'delete', name: data('test_dbxml')])
             context.subrequest("active:store_db", [type: 'new', name: data('test_dbxml')])
 
             boolean exists = context.isTrue("active:store_doc", [type: 'exists', db: data('test_dbxml'), id: data('1234')])
@@ -43,18 +42,16 @@ class DocumentAccessorTests {
             exists = context.isTrue("active:store_doc", [type: 'exists', db: data('test_dbxml'), id: data('1234')])
             assert exists
 
-            context.subrequest("active:store_doc", [type: 'delete', db: data('test_dbxml'), id: data('1234')])
+            context.subrequest("active:store_db", [type: 'delete', contents: bool(true), name: data('test_dbxml')])
             exists = context.isTrue("active:store_doc", [type: 'exists', db: data('test_dbxml'), id: data('1234')])
             assert !exists
 
-            context.subrequest("active:store_db", [type: 'delete', name: data('test_dbxml')])
             context.respond(bool(true))
         }
     }
 
     void documentGetUpdate() {
         use(NetKernelCategory) {
-            context.subrequest("active:store_db", [type: 'delete', name: data('test_dbxml')])
             context.subrequest("active:store_db", [type: 'new', name: data('test_dbxml')])
 
             TestBean test = new TestBean(id: '1234')
@@ -75,11 +72,10 @@ class DocumentAccessorTests {
             got = context.sourceString("active:store_doc", [db: data('test_dbxml'), id: data(test.id)])
             assert got =~ /A great test/
             
-            context.subrequest("active:store_doc", [type: 'delete', db: data('test_dbxml'), id: data(test.id)])
+            context.subrequest("active:store_db", [type: 'delete', contents: bool(true), name: data('test_dbxml')])
             boolean exists = context.isTrue("active:store_doc", [type: 'exists', db: data('test_dbxml'), id: data(test.id)])
             assert !exists
             
-            context.subrequest("active:store_db", [type: 'delete', name: data('test_dbxml')])
             context.respond(bool(true))
         }
     }

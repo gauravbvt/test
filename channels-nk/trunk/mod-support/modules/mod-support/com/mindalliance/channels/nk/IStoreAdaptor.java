@@ -20,6 +20,8 @@ public interface IStoreAdaptor {
 
     public void deleteStore(String db, INKFConvenienceHelper context);
 
+    public void emptyStore(String db, INKFConvenienceHelper context);
+
     public void close(String db, INKFConvenienceHelper context);
 
     public void persist(String db, String id, IURAspect aspect, INKFConvenienceHelper context);

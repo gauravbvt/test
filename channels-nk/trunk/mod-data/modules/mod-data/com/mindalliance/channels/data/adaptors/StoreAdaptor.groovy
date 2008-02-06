@@ -43,6 +43,11 @@ class StoreAdaptor implements IStoreAdaptor {
          }         
      }
 
+    void emptyStore(String db, INKFConvenienceHelper context) {
+         use(NetKernelCategory) {
+              context.subrequest("active:store_db", [type: 'delete', contents: bool(true), name: data(db)])
+         }
+     }
      boolean storeExists(String db, INKFConvenienceHelper context) {
          boolean exists
          use(NetKernelCategory) {

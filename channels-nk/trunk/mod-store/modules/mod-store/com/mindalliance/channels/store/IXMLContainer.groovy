@@ -17,6 +17,7 @@ interface IXMLContainer {
     boolean containerExists()
     void createContainer()
     void deleteContainer()
+    void emptyContainer()
     void dump(Writer writer)
     Aspect queryContainer(String xquery, Class aspectClass)
     String getContainerName()

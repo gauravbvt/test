@@ -38,8 +38,13 @@ class XMLStore {
         }
     }
 
+    // Remove all documents form a container if it exists
+    void emptyContainer() {
+        if (containerExists()) container.emptyContainer()
+    }
+
     void createContainer() {
-        container.createContainer();
+        container.createContainer()
     }
 
     void dumpContainer(Writer writer) {

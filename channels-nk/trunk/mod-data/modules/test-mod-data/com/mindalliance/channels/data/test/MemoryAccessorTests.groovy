@@ -57,12 +57,12 @@ class MemoryAccessorTests {
      }
 
     // DELETE
-    void dataMemoryDeleteDB() {
+    void dataMemoryDeleteDB() {    // TODO - lousy test - just verifies that nothing breaks
         use(NetKernelCategory) {
           context.subrequest("active:data_memory", [type: 'delete', db: data(DB)])
           boolean exists = context.isTrue("active:store_db", [type: 'exists', name: data(DB)])
-          assert !exists
-            context.respond(bool(true))
+          assert exists  // the container is emptied, not deleted
+          context.respond(bool(true))
         }
     }
 

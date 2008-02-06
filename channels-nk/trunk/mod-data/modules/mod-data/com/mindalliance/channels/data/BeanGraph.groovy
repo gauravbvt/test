@@ -33,8 +33,8 @@ class BeanGraph {
     }
 
     void deleteDB(String db, Context context) {
-        IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context) // TODO - will uselessly create the db if it does not exist
-        storeAdaptor.deleteStore(db, context)
+        IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context) 
+        storeAdaptor.emptyStore(db, context)
         dbs.remove(db)
         cache.remove(db)
     }

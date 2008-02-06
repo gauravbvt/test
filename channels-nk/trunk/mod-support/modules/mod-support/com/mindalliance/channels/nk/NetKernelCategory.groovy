@@ -97,6 +97,10 @@ public class NetKernelCategory {
         isTrue(context, subrequest(context, uri, args))
     }
 
+    public static boolean isTrue(INKFConvenienceHelper context, String uri) {
+        return ((IAspectBoolean)context.sourceAspect(uri, IAspectBoolean.class)).isTrue()
+    }
+
     public static INKFResponse respond(INKFConvenienceHelper context, IURRepresentation res, String mimeType, boolean expired) {
         //def rep = context.issueSubRequest(context.thisRequest)
         def resp = context.createResponseFrom(res);

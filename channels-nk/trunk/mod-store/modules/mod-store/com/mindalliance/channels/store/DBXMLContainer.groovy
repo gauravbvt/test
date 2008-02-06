@@ -5,6 +5,7 @@ import com.mindalliance.channels.nk.NetKernelCategory
 import com.ten60.netkernel.urii.IURAspect as Aspect
 import com.ten60.netkernel.urii.aspect.IAspectString
 import org.ten60.netkernel.layer1.representation.StringAspect
+import groovy.util.slurpersupport.GPathResult
 
 /**
 * Created by IntelliJ IDEA.
@@ -71,7 +72,24 @@ class DBXMLContainer implements IXMLContainer {
         writer.write(xml)
     }
 
-
+    void emptyContainer() {
+        String xquery = """
+            <docs name=\'${getContainerName()}\'>
+                {
+                    for \$doc in collection(\'${getContainerName()}\')/*
+                    return
+		 		        <doc>{\$doc/@id}</doc>
+                }
+            </docs>
+            """
+        String xml = ((IAspectString) queryContainer(xquery, IAspectString.class)).getString()
+        GPathResult gpr = new XmlSlurper().parseText(xml)
+        gpr.children().each {
+            String id = it.@id
+            deleteDocument(id)
+        }
+    }
+    
     Aspect getDocument(String id, Class aspectClass) {
         assert id
         assert aspectClass
@@ -118,6 +136,7 @@ class DBXMLContainer implements IXMLContainer {
         return exists
     }
 
+    // ASSUMES: All documents doc to be stored have their IDs at doc@id
     void initializeContainer(String uri) {
         String text = ctx.sourceString(uri)
         def xml = new XmlParser().parseText(text)
