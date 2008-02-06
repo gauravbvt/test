@@ -46,7 +46,7 @@
     <test>
         <uri>active:javascript+operator@ffcpl:/test/accessor/accuracy-test.js</uri>
 		<assert>
-			<xpath>//b = 't'</xpath>
+			<xpath>number(//:td[@id='score']) >= 0.5</xpath>
 		</assert>
     </test>
 

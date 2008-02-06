@@ -8,10 +8,12 @@ import groovy.xml.MarkupBuilder
 import groovy.util.slurpersupport.GPathResult
 import java.util.regex.Matcher
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
+import org.ten60.netkernel.layer1.nkf.INKFResponse
 
 /**
  * This is a loose implementation of ...
- * TODO add link to pdf file
+ * <a href="http://www.informatik.uni-freiburg.de/~ksimon/papers/CIKM-06-Proximity.pdf">
+ * this article</a>.
  */
 class SignerAccessor extends AbstractAccessor {
 
@@ -144,7 +146,6 @@ class SignerAccessor extends AbstractAccessor {
      */
     void source( Context ctx ) {
         use( NetKernelCategory ) {
-
             String text = ctx.sourceString("this:param:text").replaceAll("_", " ");
 
             INKFRequestReadOnly request = ctx.request
@@ -168,7 +169,10 @@ class SignerAccessor extends AbstractAccessor {
                 }
             }
 
-            ctx.respond( string( writer.toString() ), "text/xml", false )
+            INKFResponse response = ctx.respond( string( writer.toString() ), "text/xml", false )
+            response.setCacheable()
+
+            return response
         }
     }
 

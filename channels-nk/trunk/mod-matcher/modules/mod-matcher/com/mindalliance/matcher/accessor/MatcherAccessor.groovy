@@ -6,6 +6,7 @@ import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import groovy.util.slurpersupport.GPathResult
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
+import org.ten60.netkernel.layer1.nkf.INKFResponse
 
 /**
  * Basic semantic proximity matching.
@@ -24,12 +25,11 @@ class MatcherAccessor extends AbstractAccessor {
     private GPathResult getSignature(
             Context ctx, String paramUri, String configUri) {
 
-        return ctx.getXml(
-                ctx.subrequest("active:signer",
-                        [text: "this:param:$paramUri",
-                                config: configUri
-                        ])
-                )
+        Map parms = [ text: "this:param:$paramUri" ]
+        if ( configUri != DefaultConfigUrl )
+            parms[ "config" ] = configUri
+
+        return ctx.getXml( ctx.subrequest( "active:signer", parms ) )
     }
 
     /**
@@ -117,7 +117,9 @@ class MatcherAccessor extends AbstractAccessor {
                 }
             }
 
-            ctx.respond(string(writer.toString()), "text/xml", false)
+            INKFResponse r = ctx.respond(string(writer.toString()), "text/xml", false)
+            r.setCacheable()
+            return r
         }
     }
 }

@@ -21,7 +21,8 @@
 		<uri>
 			<match>ffcpl:/matcher/.*</match>
 			<match>active:matcher\+.*</match>
-			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+            <match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+            <match>ffcpl:/etc/MatcherConfig.xml</match>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/CRONConfig.xml</match>
 
@@ -33,7 +34,7 @@
 
 	<mapping>
         <rewrite>
-            <match>ffcpl:/matcher/(.*\.rng)</match>
+            <match>ffcpl:/matcher/(.*\.rng)\+?.*</match>
             <to>ffcpl:/resources/$1</to>
         </rewrite>
 
@@ -48,11 +49,11 @@
 			<to>active:matcher$1</to>
 		</rewrite>
         <rewrite>
-            <match>ffcpl:/matcher/sign\+text@(.*)\+config@(.*)\+?.*</match>
-            <to>active:signer+text@$1+config@$2</to>
+            <match>ffcpl:/matcher/sign\+(.*)</match>
+            <to>active:signer+$1</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/matcher/test\+text@(.*)\+source@(.*)\+?.*</match>
+            <match>ffcpl:/matcher/test\+text@(.*)\+source@([^\+]+)\+?.*</match>
             <to>$2:$1</to>
         </rewrite>
 

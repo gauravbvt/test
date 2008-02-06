@@ -3,8 +3,8 @@
 	<zone>
 		<match>.*/matcher.*</match>
 		<processQueries/>
-		<passCookies/>
-		<passRequestURL/>
-		<passMethod/>
+		<!--<passCookies/>-->
+		<!--<passRequestURL/>-->
+		<!--<passMethod/>-->
 	</zone>
 </HTTPBridgeConfig>

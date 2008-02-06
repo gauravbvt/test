@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="all" name="Mind-Alliance Matcher Module">
-    
+
     <target name="init">
         <property name="deploy.dir" value="deploy"/>
         <mkdir dir="${deploy.dir}"/>
     </target>
-    
+
 	<target description="Build everything." name="all" depends="init">
 		<ant antfile="build-mod-matcher.xml"/>
 		<ant antfile="build-test-matcher.xml"/>
         <echo message="Mind-Alliance Matcher Module build completed."/>
     </target>
-    
+
     <target description="Clean up the derived objects" name="clean">
         <delete>
             <fileset dir="." includes="**/*.jar"/>
         </delete>
+        <deltree dir="../modules/mod-matcher/com/mindalliance/channels/nk"/>
+        <deltree dir="../modules/test/mod-matcher/com/mindalliance/channels/nk"/>                
         <delete>
             <fileset dir="../modules/mod-matcher/" includes="**/*.class"/>
         </delete>
     </target>
-	
 
-    
+
+
 </project>

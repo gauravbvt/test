@@ -269,7 +269,7 @@
       <module fileurl="file://$PROJECT_DIR$/mod-support/mod-support.iml" filepath="$PROJECT_DIR$/mod-support/mod-support.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ResourceManagerContainer">
@@ -292,6 +292,7 @@
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <UsedPathMacros>
     <macro name="DBXML_HOME" />
+    <macro name="GROOVY_ECLIPSE_HOME" />
     <macro name="NETKERNEL_HOME" />
   </UsedPathMacros>
 </project>
