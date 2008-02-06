@@ -117,9 +117,6 @@
 		    <uri>@mod-modeler-uri@</uri>
 		</import>
         <import>
-		    <uri>@mod-channels-uri@</uri>
-		</import>
-        <import>
 		    <uri>@mod-geonames-uri@</uri>
 		</import>
         <import>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Forms Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:forms</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Forms Module</name>
+        <description>A module that generates Forms from a metamodel</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+			<match>ffcpl:/com/mindalliance/channels/forms/.*</match>
+			<match>active:forms_.*</match>
+			<match>ffcpl:/entrypoints.xml</match>
+		</uri>
+	</export>
+	<mapping>
+        <rewrite>
+           <match>ffcpl:/com/mindalliance/channels/forms/(.*)</match>
+            <to>ffcpl:/resources/$1</to>
+        </rewrite>
+		<this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+			<match>ffcpl:/resources/.*</match>
+		</this>
+		<ura>
+      		<match>active:forms_xgen\+.*</match>
+      		<class>com.mindalliance.channels.forms.accessors.XFormAccessor</class>
+    	</ura>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
+        <import>
+            <uri>urn:com:mindalliance:channels:metamodel</uri>
+        </import>
+        <import>
+            <uri>urn:com:mindalliance:channels:data</uri>
+        </import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

@@ -1,0 +1,6 @@
+<log>
+  <name>urn:com:mindalliance:channels:xforms</name>
+  <destination>log/store-%g.log</destination>
+  <limit>131072</limit>
+  <count>2</count>
+</log>

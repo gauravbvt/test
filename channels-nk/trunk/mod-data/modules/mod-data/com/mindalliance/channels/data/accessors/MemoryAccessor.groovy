@@ -16,8 +16,9 @@ import com.mindalliance.channels.data.BeanRequestContext
 class MemoryAccessor extends AbstractMemoryAccessor {
 
     // Executes a named query from root bean by default or from identified bean
-    // db: database name
-    // id: bean id
+    // db: database name for root bean
+    // id: root bean id
+    // args: a NVP with query arguments (optional)
     // query: the uri of a query (a Groovy closure that produces XML when evaluated on the target bean)
     // Responds: xml
     void source(Context context) {
@@ -25,7 +26,10 @@ class MemoryAccessor extends AbstractMemoryAccessor {
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
-            String xml = BeanRequestContext.getBeanMemory().search(db, id, context.query, context)
+            String query = context.sourceString("this:param:query")
+            Map args = [:]
+            if (context.'args?') args = context.sourceNVP('this:param:args')
+            String xml = BeanRequestContext.getBeanMemory().search(db, id, args, query, context)
             context.respond(string(xml))
         }
     }

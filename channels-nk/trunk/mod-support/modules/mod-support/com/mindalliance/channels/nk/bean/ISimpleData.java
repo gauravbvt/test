@@ -11,4 +11,6 @@ public interface ISimpleData extends IBeanPropertyValue {
     public Object getValue();
 
     public void setValue(Object val);
+
+    public Class getDataClass();
 }

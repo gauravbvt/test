@@ -1,4 +1,4 @@
-{bean, builder ->
+{bean, args, builder ->
     builder.tests {
         // Find all successful sub-tests transitively reacheable from a test
         bean.trans('subTests').each {list ->

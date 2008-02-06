@@ -9,6 +9,7 @@ import com.mindalliance.channels.nk.ContextSupport;
 import com.ten60.netkernel.urii.aspect.IAspectBoolean;
 import com.ten60.netkernel.urii.aspect.IAspectString;
 import com.ten60.netkernel.urii.aspect.StringAspect;
+import com.ten60.netkernel.urii.IURAspect;
 
 
 public class Session {
@@ -21,6 +22,11 @@ public class Session {
         sessionURI = ctx.getArgument("session");
         if (!sessionURI.startsWith( "session:" )) 
             throw new Exception("Invalid session uri " + sessionURI);
+    }
+
+    public void storeToken(String token, IURAspect aspect) throws NKFException {
+        String value = ((IAspectString)ctx.context.transrept(aspect, IAspectString.class)).getString();
+        storeToken(token, value);
     }
 
     public void storeToken(String token, String value) throws NKFException {

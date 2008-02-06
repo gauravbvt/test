@@ -33,7 +33,7 @@ class BeanGraph {
     }
 
     void deleteDB(String db, Context context) {
-        IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context) // TODO - will uselessly create the db id it does not exist
+        IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context) // TODO - will uselessly create the db if it does not exist
         storeAdaptor.deleteStore(db, context)
         dbs.remove(db)
         cache.remove(db)
@@ -46,31 +46,31 @@ class BeanGraph {
 
     // A Groovy query is code with variable args set to a map with 'builder' -> a MarkupBuilder
     // and 'bean' -> a IPersistentBean 
-    String search(String db, String id, String queryUri, Context context) {
+    String search(String db, String id, Map args, String query, Context context) {
         String xml
         use(NetKernelCategory) {
             IPersistentBean bean = retrieveBean(db, id, context)
-            String queryString = context.sourceString(queryUri)
-            switch (queryUri) {
-                case {isGroovyQuery(it)}: xml = runGroovyQuery(bean, queryString); break;
+            switch (query) {
+                case {isGroovyQuery(it)}: xml = runGroovyQuery(bean, args, query); break;
                 // TODO - add support for JXPath etc. queries here
-                default: throw new IllegalArgumentException("Unsupported query type for ${queryUri}. Supported types: *.groovy")
+                default: throw new IllegalArgumentException("Invalid query ${query}")
             }
         }
         return xml
     }
 
-    private boolean isGroovyQuery(String queryUri) {
-        return queryUri.endsWith('.groovy')
+    private boolean isGroovyQuery(String query) {
+        if (query.trim().replaceAll('\n',' ') ==~ '^\\{.*->.*\\}$') return true     // need if-then-else because IDEA confused about matching result type
+        else return false
     }
 
-    private String runGroovyQuery(IPersistentBean bean, String queryString) {
+    private String runGroovyQuery(IPersistentBean bean, Map args, String queryString) {
         String xml
         StringWriter writer = new StringWriter()
         MarkupBuilder builder = new MarkupBuilder(writer)
         Closure query = (Closure) Eval.me(queryString)
         use(PersistentBeanCategory) {
-            query(bean, builder)
+            query(bean, args, builder)
         }
         xml = writer.toString()
         return xml

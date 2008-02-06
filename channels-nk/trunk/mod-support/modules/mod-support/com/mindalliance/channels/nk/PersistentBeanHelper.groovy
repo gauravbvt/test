@@ -10,6 +10,7 @@ import com.mindalliance.channels.nk.bean.IBeanList
 import com.mindalliance.channels.nk.bean.IComponentBean
 import com.mindalliance.channels.nk.bean.ISimpleData
 import com.mindalliance.channels.nk.bean.SimpleData
+import com.mindalliance.channels.nk.bean.IBeanPropertyValue
 
 
 /**
@@ -54,10 +55,11 @@ class PersistentBeanHelper {
                 };
                 break;
             case IBeanList:
-                def beanList = propValue;
-                builder."${propKey}"(itemClass: beanList.itemClass) {
+                def beanList = propValue
+                String itemClass = beanList.itemPrototype.getClass().name
+                builder."${propKey}"(itemClass: itemClass, itemName:beanList.itemName) {
                     beanList.each {item ->
-                        buildProperty('item', item, builder)
+                        buildProperty(beanList.itemName, item, builder)
                     }
                 };
                 break;
@@ -82,8 +84,7 @@ class PersistentBeanHelper {
     // From xml to bean
     IPersistentBean persistentBeanFromXml(String doc) {
         GPathResult xml = new XmlSlurper().parseText(doc)
-        String toEval = "${xml.@beanClass}.newInstance()"
-        IPersistentBean bean = (IPersistentBean) Eval.me(toEval)
+        IPersistentBean bean = (IPersistentBean)Class.forName("${xml.@beanClass}").newInstance() // (IPersistentBean) Eval.me("${xml.@beanClass}.newInstance()")
         initBeanFromXml(bean, xml)
         return bean
     }
@@ -104,7 +105,7 @@ class PersistentBeanHelper {
         if (node.@dataType.size()) {// data
             String value = node.text()
             if (value.size()) {
-                Class dataClass = (Class)Eval.me("${node.@dataType}.class")
+                Class dataClass = Class.forName("${node.@dataType}") // (Class)Eval.me("${node.@dataType}.class")
                 def data = SimpleData.from(dataClass, value)
                 return data
             }
@@ -120,7 +121,9 @@ class PersistentBeanHelper {
              return beanReference
         }
         else if (node.@itemClass.size()) {// a list
-            def beanList = new BeanList(itemClass: node.@itemClass)
+            String aClass = node.@itemClass
+            IBeanPropertyValue itemPrototype = (IBeanPropertyValue)Class.forName(aClass).newInstance()
+            def beanList = new BeanList(itemPrototype: itemPrototype, itemName: node.@itemName)
             node.children().each {item ->
                 def itemBean = reifyFromXml(item)
                 beanList.add(itemBean)
@@ -129,7 +132,7 @@ class PersistentBeanHelper {
         }
         else if (node.@beanClass.size()) {// a component (non-persistent) bean
             String aClass = node.@beanClass
-            def component = Eval.me("new ${aClass}()")
+            def component = Class.forName(aClass).newInstance() // Eval.me("new ${aClass}()")
             assert component.isComponent()
             node.children().each {child ->
                 def propValue = reifyFromXml(child)

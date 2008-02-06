@@ -11,6 +11,8 @@ public interface IBeanList extends Cloneable, IBeanPropertyValue {
 
     public IBeanList deepCopy();
 
+    public IBeanPropertyValue getItemPrototype();
+
     public void initContextBean(IPersistentBean bean);
 
 }

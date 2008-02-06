@@ -9,17 +9,22 @@ package com.mindalliance.channels.nk.bean
 */
 class BeanReference  extends AbstractBeanPropertyValue implements IBeanReference {
 
-    String db;
-    String id;
-    String beanClass;
+    String db
+    String id
+    String beanClass // optional
+    IBeanDomain domain  // optional but only when BeanReference is generated from a query
 
-    public IBeanReference deepCopy() {
-        IBeanReference copy = new BeanReference(beanClass: beanClass, db: this.@db, id: id)
+    IBeanReference deepCopy() {
+        IBeanReference copy = new BeanReference(beanClass: beanClass, db: this.@db, id: id, domain:domain)
         return copy
     }
 
-    public String getDb() {
+    String getDb() {
         return db ?: (contextBean ? contextBean.db : null)
     }
+
+    String getSchemaType() {
+        return ":beanref"     // starts with ':' means custom type
+    } 
                                                               
 }

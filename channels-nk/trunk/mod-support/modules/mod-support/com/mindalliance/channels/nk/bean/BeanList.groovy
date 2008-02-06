@@ -11,19 +11,20 @@ package com.mindalliance.channels.nk.bean
 class BeanList extends AbstractBeanPropertyValue implements IBeanList {
 
     private List list = new ArrayList()
-    String itemClass // class name of bean items
+    String itemName = 'item' // default
+    IBeanPropertyValue itemPrototype // class name of bean items
 
     IBeanList deepCopy() {
-        IBeanList copy = new BeanList(itemClass: itemClass)
+        IBeanList copy = new BeanList(itemPrototype: itemPrototype.deepCopy(), itemName: itemName)
         list.each {item ->
             copy.add(item.deepCopy())
         }
         return copy
     }
 
-    void accept(Closure action) {
-        action(this)
-        list.each {item -> item.accept(action)}
+    void accept(Map args, Closure action) {
+        action(args.propName, args.parentPath, this)
+        list.each {item -> item.accept([propName: itemName, parentPath: "${args.parentPath}${args.propName}/"], action)}
     }
 
     Iterator iterator() {
@@ -31,20 +32,36 @@ class BeanList extends AbstractBeanPropertyValue implements IBeanList {
     }
 
     Object get(String name) {
-        (name == 'itemClass') ? this.@itemClass : this.@list."$name"
+        switch (name) {
+            case 'itemPrototype': return this.@itemPrototype; break;
+            case 'itemName': return this.@itemName; break;
+            default: return this.@list."$name"
+        }
     }
 
     void set(String name, Object value) {
-        if (name == 'itemClass')
-            this.@itemClass = (String)value
-        else
-            this.@list."$name" = value
+        switch (name) {
+            case 'itemPrototype': this.@itemPrototype = (IBeanPropertyValue) value; break;
+            case 'itemName': this.@itemName = (String) value; break;
+            default:this.@list."$name" = value
+        }
     }
 
     Object invokeMethod(String name, Object args) {
         return this.@list.invokeMethod(name, args)
     }
 
-
+    public IBeanPropertyValue getActivatedItemPrototype() {
+        IBeanPropertyValue proto = itemPrototype.deepCopy()  // get a copy, just to be safe
+        if (proto instanceof IComponentBean) {   // If component bean, make sure it's metadata is fully initialized
+            proto.initialize()
+            String xpath = "${this.metadata.path}/"
+            proto.getBeanProperties().each {key, val ->
+                val.accept([propName:key, parentPath:xpath], { propKey, propPath, propValue ->
+                            propValue.initMetadata(propKey, propPath, proto.defaultMetadata) })
+            }
+        }
+        return proto
+    }
 
 }

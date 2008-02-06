@@ -14,6 +14,7 @@ import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.nk.bean.IBean
 import com.mindalliance.channels.nk.bean.IBeanList
 import com.mindalliance.channels.nk.bean.SimpleData
+import com.ten60.netkernel.urii.aspect.IAspectString
 
 /**
 * Created by IntelliJ IDEA.
@@ -50,6 +51,12 @@ class PersistentBeanCategory {
         return aspect.getPersistentBean()
     }
 
+    static String toXml(Context context, IPersistentBean bean) {
+        IAspectPersistentBean aspect = new PersistentBeanAspect(bean)
+        String xml = ((IAspectString)context.transrept(aspect, IAspectString.class)).getString()
+        return xml
+    }
+
 
     // *********** IBeanReference **************
 
@@ -60,12 +67,11 @@ class PersistentBeanCategory {
         String beanClass = beanReference.beanClass
         if (id != null) {
             assert db != null && db.size() != 0
-            assert beanClass != null && beanClass.size() != 0
             Context context = BeanRequestContext.getRequestContext()
             BeanMemory beanMemory = BeanRequestContext.getBeanMemory()
             bean = beanMemory.retrieveBean(db, id, context)
             if (bean) {
-                assert bean.class.name == beanClass
+                if (beanClass) assert bean.class.name == beanClass  // optional type checking
             }
             else {
                 // clean up dangling reference
@@ -100,6 +106,13 @@ class PersistentBeanCategory {
     }
 
     // ****************** Object *********************
+
+    static IPersistentBean beanAt(Object obj, String id, String db) {
+        Context context = BeanRequestContext.getRequestContext()
+        BeanMemory beanMemory = BeanRequestContext.getBeanMemory()
+        IPersistentBean bean = beanMemory.retrieveBean(db, id, context)
+        return bean
+    }
 
     static List trans(Object obj, String propName) {
         List set = []

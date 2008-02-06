@@ -8,8 +8,16 @@ package com.mindalliance.channels.nk.bean
  */
 abstract class AbstractBean implements IBean {
 
-    private Map<String, IBeanPropertyMetaData> metaData;
+    /* Metadata keys (all are optional): 
+        id, label, hint, required, readonly, cssClass, appearance, anyAttribute, constraint (all)
+        range, step (Numerical SimpleData)
+        choices (SimpleData, BeanList) - query name, or list of strings (enumerated items), or list of lists  (XForm choices = tree of items with named branches)
+        open (BeanList of SimpleData) - choices are not closed if true
+        number (BeanList when no choices) - how many list items to display at once in an XForm repeat
+    */
+    Map defaultMetadata = [:] // [propName : [key:value,...], propName: [key:value...], ...]
 
+    void initialize() {} // default
 
     boolean isComponent() {
         return false;
@@ -21,17 +29,11 @@ abstract class AbstractBean implements IBean {
 
     /*
         Map<String, IBeanPropertyValue> getBeanProperties() {
-           def props = this.properties   // TODO - Goes into lah-lah land
+           def props = this.properties   // TODO - Goes to lah-lah land
            def bProps = props.findAll {entry -> entry.@value instanceof IBeanPropertyValue}
            return bProps
         }
     */
-    void accept(Closure action) {
-        action(this)
-        getBeanProperties().each {propKey, propValue ->
-            propValue.accept(action)
-        }
-    }
 
     def deepCopy() {
         IBean copy
@@ -42,15 +44,8 @@ abstract class AbstractBean implements IBean {
         return copy
     }
 
-    IBeanPropertyMetaData getPropertyMetaData(String propName) {
-        return metaData[propName]
+    Expando getPropertyMetaData(String propName) {
+        return this."$propName".metadata
     }
-
-    // Default
-    Map getMetaData() {
-        return [:]
-    }
-
-    // Make sure bean properties
 
 }

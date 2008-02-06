@@ -64,7 +64,7 @@
                 <xf:trigger model="loginModel" class="submitButton">
                     <xf:label>Login</xf:label>
                     <xf:action ev:event="DOMActivate">
-                        <xf:setvalue id="redirectURL" bind="redirect">Will be set by login.js</xf:setvalue>
+                        <xf:setvalue id="redirectURL" bind="redirect">This text will be set by login.js</xf:setvalue>
                         <xf:dispatch name="xforms-refresh" target="loginModel"/>
                         <xf:send submission="send"/>
                     </xf:action>

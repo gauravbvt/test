@@ -50,10 +50,14 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
 
     // Make the bean ready for use
     void activate() {
-        accept{it.initContextBean(this)}
+        initialize()
+        getBeanProperties().each {key, val ->
+            String xpath = '/'
+            val.accept([propName:key, parentPath:xpath], { propKey, propPath, propValue ->
+                    propValue.initContextBean(this)
+                    propValue.initMetadata(propKey, propPath, this.defaultMetadata)
+                 })
+        }
     }
-
-    void initContextBean(IPersistentBean bean)  {} // Do nothing
-
 
 }

@@ -144,6 +144,12 @@ public class NetKernelCategory {
         return str
     }
 
+    public static Map sourceNVP(INKFConvenienceHelper context, String uri) {
+        IAspectNVP nvp = (IAspectNVP)context.sourceAspect(uri, IAspectNVP.class)
+        Map map = nvp.map
+        return map
+    }
+
     public static IXDA sourceXDA(INKFConvenienceHelper context, String uri) {
         return sourceXDAAspect(context, uri).getClonedXDA();
     }
@@ -160,6 +166,11 @@ public class NetKernelCategory {
 
     public static GPathResult sourceXML(INKFConvenienceHelper context, String uri) {
         String text = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
+        return new XmlSlurper().parseText(text);
+    }
+
+    public static GPathResult sourceXML(INKFConvenienceHelper context, String uri, Map args) {
+        String text = ((IAspectString) sourceAspect(context, uri, args, IAspectString.class)).getString();
         return new XmlSlurper().parseText(text);
     }
 

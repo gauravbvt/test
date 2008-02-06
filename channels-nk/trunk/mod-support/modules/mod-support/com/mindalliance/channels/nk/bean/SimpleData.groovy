@@ -6,7 +6,7 @@ package com.mindalliance.channels.nk.bean
  * Time: 1:51:42 PM
  * To change this template use File | Settings | File Templates.
  */
-class SimpleData  extends AbstractBeanPropertyValue implements ISimpleData {
+class SimpleData extends AbstractBeanPropertyValue implements ISimpleData {
 
     static final List SUPPORTED_TYPES = [Date.class, String.class, Integer.class, Boolean.class, Double.class, Float.class, BigDecimal.class] // TODO - add to this
 
@@ -34,29 +34,45 @@ class SimpleData  extends AbstractBeanPropertyValue implements ISimpleData {
 
     def getValue() {
         if (value == null) {
-          String eval = "new ${dataClass.name}(\"$_str\")"
-          value = Eval.me(eval)
+            if (_str != null) value = dataClass.newInstance(_str) 
         }
         return value
     }
 
+    String getSchemaType() {
+        switch (dataClass) {
+            case Date.class: return 'date'; break
+            case Boolean.class: return 'boolean'; break
+            case BigDecimal.class: return 'decimal'; break
+            case Integer.class: return 'integer'; break
+            case Double.class: return 'double'; break
+            case Float.class: return 'double'; break
+            default: return super.getSchemaType()
+        }
+    }
 
     Object deepCopy() {
-        SimpleData copy = SimpleData.from(getValue())
-        return copy
+        def val = getValue()
+        if (val == null) {
+            return new SimpleData(dataClass)
+        }
+        else {
+            SimpleData copy = SimpleData.from(val)
+            return copy
+        }
     }
 
     String toString() {
-        return getValue().toString()
+        def val = getValue()
+        return (val == null) ? '' : "$val"
     }
 
     Object get(String name) {
-        (name == 'dataClass' ) ? this.@dataClass : getValue()."$name"
+        (name == 'dataClass') ? this.@dataClass : getValue()."$name"
     }
 
     Object invokeMethod(String name, Object args) {
         return getValue().invokeMethod(name, args)
     }
-
 
 }

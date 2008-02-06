@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="Mind-Alliance Unit Tests">
+  <desc>
+    <div>
+      This is the set of unit tests for the Mind-Alliance Xforms Library.
+    </div>
+  </desc>
+  <group title="Xforms Accessor Tests">
+    <uri>ffcpl:/test/xunit/testlist-xforms.xml</uri>
+  </group>
+</testlist>

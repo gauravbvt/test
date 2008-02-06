@@ -8,18 +8,53 @@ package com.mindalliance.channels.nk.bean
  */
 abstract class AbstractBeanPropertyValue implements IBeanPropertyValue {
 
+    IPersistentBean contextBean
+    Expando metadata
 
-    IPersistentBean contextBean;
+    // Visitor pattern
+    void accept(Map args, Closure action) {// DEFAULT
+        action(args.propName, args.parentPath, this)
+    }
+
+    Expando getMetadata() {
+        return metadata
+    }
 
     void initContextBean(IPersistentBean bean) {
         contextBean = bean
     }
 
-    // Visitor pattern
-     void accept(Closure action) {
-         action(this)
-     }
+    void initMetadata(String propName, String xpath, Map defaultMetadata) {    // default
+       metadata = AbstractBeanPropertyValue.prepareMetadata(propName, xpath, defaultMetadata)
+       metadata.type = getSchemaType()
+    }
 
-     abstract def deepCopy();
+    static Expando prepareMetadata(String propName, String xpath, Map defaultMetadata) {
+        Map initial = defaultMetadata[propName] ?: [:]
+        Expando meta = new Expando(initial)
+        meta.propertyName = propName
+        meta.path = "$xpath$propName"
+        meta.id = meta.path.replaceAll('/', '.').substring(1)
+        return meta
+    }
+
+    String getSchemaType() {     // DEFAULT
+        return "string"
+    }
+
+    abstract def deepCopy();
+
+    static IBeanPropertyValue newBeanPropertyValue(Class aClass) {
+        IBeanPropertyValue propValue
+        switch(aClass) {
+            case IBeanReference.class:  propValue = new BeanReference()
+                                        break
+            case IBeanList.class: break
+            case {IComponentBean.class.isAssignableFrom it}: break
+            case {SimpleData.SUPPORTED_TYPES.contains(it)}: break
+            default: throw new IllegalArgumentException("Invalid bean property value class $aClass")
+        }
+        return propValue
+    }
 
 }

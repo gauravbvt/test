@@ -72,7 +72,6 @@
             <!-- Apply gatekeeper to all secured requests -->
             <to>active:gk+uri@$1</to>
         </rule>
-        /
         <rule>
             <match>(active:gk.*)</match>
             <!-- ... but first attach a new or continuing session parameter to the gatekeepered request -->

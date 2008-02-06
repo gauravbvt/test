@@ -27,6 +27,7 @@ class DocumentAccessorTests {
         TestBean test = new TestBean()
         test.id = '1234'
         test.name = SimpleData.from('A test')
+        test.kind = SimpleData.from('Unit')
         test.successful = SimpleData.from(false)
         test.score = SimpleData.from(100.0)
         IAspectPersistentBean beanAspect = new PersistentBeanAspect(test)

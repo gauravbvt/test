@@ -54,8 +54,8 @@ class BeanMemory {
         return beanGraph.dbExists(db, context)
     }
 
-    String search(String db, String id, String queryUri, Context context) {
-        return beanGraph.search(db, id, queryUri, context)
+    String search(String db, String id, Map args, String queryUri, Context context) {
+        return beanGraph.search(db, id, args, queryUri, context)
     }
 
     IPersistentBean retrieveBean(String db, String id, Context context)  {

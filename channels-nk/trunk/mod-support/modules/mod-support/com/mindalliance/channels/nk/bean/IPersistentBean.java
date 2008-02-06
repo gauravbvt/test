@@ -1,7 +1,6 @@
 package com.mindalliance.channels.nk.bean;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.

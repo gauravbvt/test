@@ -1,7 +1,5 @@
 package com.mindalliance.channels.nk.bean;
 
-import groovy.lang.Closure;
-
 import java.util.Map;
 import java.io.Serializable;
 
@@ -21,10 +19,6 @@ public interface IBean extends Serializable, Cloneable {
 
     Object deepCopy();
 
-    Map getMetaData();
-
-    IBeanPropertyMetaData getPropertyMetaData(String propertyName);
-
-    void accept(Closure action);
+    void initialize();
     
 }
