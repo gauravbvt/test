@@ -18,6 +18,7 @@ class PersistentBeanAspect implements IAspectPersistentBean {
 
     public PersistentBeanAspect(IPersistentBean bean) {
         persistentBean = (IPersistentBean)bean.deepCopy()
+        persistentBean.activate() // make sure it is fully initialized
     }
 
     public IPersistentBean getPersistentBean() {

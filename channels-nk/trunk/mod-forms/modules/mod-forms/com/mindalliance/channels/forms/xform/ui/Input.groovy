@@ -16,9 +16,9 @@ class Input extends AbstractUIElement {
         initialize()
     }
 
-    void build(def xf) {
-       xf.input(getAttributes()) {
-           label(metadata.label)
+    void build(def builder, String xf) {
+       builder."$xf:input"(getAttributes()) {
+           builder."$xf:label"(label)
        }
     }
 

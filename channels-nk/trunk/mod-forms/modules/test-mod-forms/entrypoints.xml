@@ -4,8 +4,8 @@
     <name>test-mod-forms</name>
     <uri>ffcpl:/test/mod-forms-test/xunit</uri>
     <indexable>
-      <title>Mind-Alliance Forms Library Tests</title>
-      <desc>Mind-Alliance Forms unit-test suite</desc>
+      <title>Channels Forms Library Tests</title>
+      <desc>Channels Forms unit-test suite</desc>
       <keywords/>
     </indexable>
     <categories>xunit</categories>

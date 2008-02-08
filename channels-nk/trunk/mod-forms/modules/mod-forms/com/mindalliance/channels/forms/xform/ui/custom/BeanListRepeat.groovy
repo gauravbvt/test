@@ -21,7 +21,6 @@ class BeanListRepeat extends AbstractUIElement {
     BeanListRepeat(IBeanList beanList, BeanXForm xform) {
         super((Expando) beanList.metadata, xform)
         this.beanList = beanList
-        this.xform = xform
         initialize()
     }
 
@@ -42,37 +41,37 @@ class BeanListRepeat extends AbstractUIElement {
         return attributes
     }
 
-    void build(def xf) {
+    void build(def builder, String xf) {
         // Wrap repeat and add/remove/scroll triggers into an anonymous group
-        xf.group() {
-            xf.repeat(getAttributes()) {      
+        builder."$xf:group"() {
+            builder."$xf:repeat"(getAttributes()) {
                 // build item prototype with refs, not binds
-                repeatedElement.build(xf)
+                repeatedElement.build(builder, xf)
             }
             // Build add/remove/scroll triggers within an anonymous group
-            xf.group() {
-               trigger() {
-                   label('Add')
-                   insert(nodeset:repeatedElement.ref,
+            builder."$xf:group"() {
+               builder."$xf:trigger"() {
+                   builder."$xf:label"('Add')
+                   builder."$xf:insert"(nodeset:repeatedElement.ref,
                           at:"index('${this.id}')",
                           position:'after',
                           "${this.xform.eventPrefix}:event":'DOMActivate')
                }
-               trigger() {
-                    label('Delete')
-                    delete(nodeset:repeatedElement.ref,
+               builder."$xf:trigger"() {
+                    builder."$xf:label"('Delete')
+                    builder."$xf:delete"(nodeset:repeatedElement.ref,
                            at:"index('${this.id}')",
                            "${this.xform.eventPrefix}:event":'DOMActivate')
                 }
-                trigger() {
-                     label('Scroll torward')
-                     setindex(repeat:"${this.id}",
+                builder."$xf:trigger"() {
+                     builder."$xf:label"('Scroll torward')
+                     builder."$xf:setindex"(repeat:"${this.id}",
                              index:"index('${this.id}')+1",
                             "${this.xform.eventPrefix}:event":'DOMActivate')
                  }
-                trigger() {
-                      label('Scroll backward')
-                      setindex(repeat:"${this.id}",
+                builder."$xf:trigger"() {
+                      builder."$xf:label"('Scroll backward')
+                      builder."$xf:setindex"(repeat:"${this.id}",
                               index:"index('${this.id}')-1",
                              "${this.xform.eventPrefix}:event":'DOMActivate')
                   }

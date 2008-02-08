@@ -11,6 +11,7 @@ import com.mindalliance.channels.nk.bean.IComponentBean
 import com.mindalliance.channels.nk.bean.ISimpleData
 import com.mindalliance.channels.nk.bean.SimpleData
 import com.mindalliance.channels.nk.bean.IBeanPropertyValue
+import com.mindalliance.channels.nk.bean.BeanDomain
 
 
 /**
@@ -49,15 +50,20 @@ class PersistentBeanHelper {
                 def beanReference = propValue
                 def id = (beanReference.id != null) ? "${beanReference.id}" : '';
                 def db = (beanReference.db != null) ? "${beanReference.db}" : '';
-                builder."${propKey}"(beanRef: beanReference.beanClass) {
+                builder."${propKey}"(beanRef: beanReference.beanClass, domain: beanReference.domain.toString()) {
                     builder.db(db)
                     builder.id(id)
                 };
                 break;
             case IBeanList:
                 def beanList = propValue
-                String itemClass = beanList.itemPrototype.getClass().name
-                builder."${propKey}"(itemClass: itemClass, itemName:beanList.itemName) {
+                IBeanPropertyValue proto = beanList.itemPrototype
+                String itemClass = proto.getClass().name
+                Map attributes = [itemClass: itemClass, itemName:beanList.itemName]
+                if (proto instanceof IBeanReference) {
+                    attributes += [itemDomain: proto.domain.toString()]
+                }
+                builder."${propKey}"(attributes) {
                     beanList.each {item ->
                         buildProperty(beanList.itemName, item, builder)
                     }
@@ -86,6 +92,7 @@ class PersistentBeanHelper {
         GPathResult xml = new XmlSlurper().parseText(doc)
         IPersistentBean bean = (IPersistentBean)Class.forName("${xml.@beanClass}").newInstance() // (IPersistentBean) Eval.me("${xml.@beanClass}.newInstance()")
         initBeanFromXml(bean, xml)
+        bean.activate()    // make sure all properties are initialized
         return bean
     }
 
@@ -113,7 +120,8 @@ class PersistentBeanHelper {
         }
         else if (node.@beanRef.size()) {// a reference
             String beanClass =  node.@beanRef
-            def beanReference = new BeanReference(beanClass: beanClass)
+            BeanDomain domain = (node.@domain.size()) ? BeanDomain.fromString("${node.@domain}") : BeanDomain.UNDEFINED
+            def beanReference = new BeanReference(beanClass: beanClass, domain: domain)
             String db = node.db
             String id = node.id
             if (db.size()) beanReference.@db = db
@@ -123,6 +131,10 @@ class PersistentBeanHelper {
         else if (node.@itemClass.size()) {// a list
             String aClass = node.@itemClass
             IBeanPropertyValue itemPrototype = (IBeanPropertyValue)Class.forName(aClass).newInstance()
+            if (itemPrototype instanceof IBeanReference) {
+                BeanDomain domain = (node.@itemDomain.size()) ? BeanDomain.fromString("${node.@itemDomain}") : BeanDomain.UNDEFINED
+                itemPrototype.domain = domain
+            }
             def beanList = new BeanList(itemPrototype: itemPrototype, itemName: node.@itemName)
             node.children().each {item ->
                 def itemBean = reifyFromXml(item)

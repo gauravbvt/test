@@ -60,7 +60,7 @@ class BeanGraph {
     }
 
     private boolean isGroovyQuery(String query) {
-        if (query.trim().replaceAll('\n',' ') ==~ '^\\{.*->.*\\}$') return true     // need if-then-else because IDEA confused about matching result type
+        if (query.trim().replaceAll('\n',' ') ==~ '^(/\\*.*?\\*/)?\\{.*->.*\\}$') return true     // need if-then-else because IDEA confused about matching result type
         else return false
     }
 
@@ -82,9 +82,11 @@ class BeanGraph {
             if (!(bean = fromCache(db, id))) {
                 IStoreAdaptor storeAdaptor = selectAdaptorFor(db, context)
                 bean = context.getPersistentBean(storeAdaptor.retrieve(db, id, context))
+                bean.db = db // make sure it's set
                 cache(db, id, bean)
             }
         }
+        bean.activate() // make sure it is activated - possibly redundant
         return bean
     }
 
@@ -144,8 +146,7 @@ class BeanGraph {
     void cache(String db, String id, IPersistentBean bean) {
         Map<String, IPersistentBean> dbCache = dbCache(db)
         dbCache[id] = bean
-        bean.activate() // Make sure bean is fully initialized
-        
+        bean.activate() // Make sure bean is fully initialized 
     }
 
     IPersistentBean fromCache(String db, String id) {

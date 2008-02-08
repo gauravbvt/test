@@ -11,9 +11,11 @@ abstract class AbstractBeanPropertyValue implements IBeanPropertyValue {
     IPersistentBean contextBean
     Expando metadata
 
+    void initialize() {} // Do nothing - a hook
+
     // Visitor pattern
     void accept(Map args, Closure action) {// DEFAULT
-        action(args.propName, args.parentPath, this)
+        action(args, this)
     }
 
     Expando getMetadata() {
@@ -21,6 +23,7 @@ abstract class AbstractBeanPropertyValue implements IBeanPropertyValue {
     }
 
     void initContextBean(IPersistentBean bean) {
+        assert bean
         contextBean = bean
     }
 

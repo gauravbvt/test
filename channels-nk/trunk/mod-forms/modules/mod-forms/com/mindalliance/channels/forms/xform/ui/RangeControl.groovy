@@ -32,9 +32,9 @@ class RangeControl extends AbstractUIElement {
         return attributes
     }
 
-    void build(def xf) {
-        xf.range(getAttributes()) {
-            label(this.label)
+    void build(def builder, String xf) {
+        builder."$xf:range"(getAttributes()) {
+            builder."$xf:label"(this.label)
         }
     }
     

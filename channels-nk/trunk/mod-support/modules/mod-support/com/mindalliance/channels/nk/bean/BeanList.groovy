@@ -23,7 +23,7 @@ class BeanList extends AbstractBeanPropertyValue implements IBeanList {
     }
 
     void accept(Map args, Closure action) {
-        action(args.propName, args.parentPath, this)
+        action(args, this) // args.propName, args.parentPath
         list.each {item -> item.accept([propName: itemName, parentPath: "${args.parentPath}${args.propName}/"], action)}
     }
 
@@ -51,16 +51,14 @@ class BeanList extends AbstractBeanPropertyValue implements IBeanList {
         return this.@list.invokeMethod(name, args)
     }
 
-    public IBeanPropertyValue getActivatedItemPrototype() {
+    public IBeanPropertyValue getActivatedItemPrototype() {   // TODO - BUG = the activated prototype has a null metadata
         IBeanPropertyValue proto = itemPrototype.deepCopy()  // get a copy, just to be safe
-        if (proto instanceof IComponentBean) {   // If component bean, make sure it's metadata is fully initialized
-            proto.initialize()
-            String xpath = "${this.metadata.path}/"
-            proto.getBeanProperties().each {key, val ->
-                val.accept([propName:key, parentPath:xpath], { propKey, propPath, propValue ->
-                            propValue.initMetadata(propKey, propPath, proto.defaultMetadata) })
-            }
-        }
+        // "activate" the prototype list item to fully initialize it
+        proto.initialize()
+        proto.accept([propName: itemName, parentPath: "${this.metadata.path}/"], {args, self ->
+                self.initContextBean(this.contextBean)
+                self.initMetadata(args.propName, args.parentPath, this.contextBean.defaultMetadata)
+            })
         return proto
     }
 

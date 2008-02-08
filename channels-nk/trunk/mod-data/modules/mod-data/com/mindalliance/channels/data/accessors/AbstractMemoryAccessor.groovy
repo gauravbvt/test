@@ -3,8 +3,9 @@ package com.mindalliance.channels.data.accessors
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.nk.accessors.AbstractDataAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
-import com.mindalliance.channels.data.BeanRequestContext
+import com.mindalliance.channels.data.util.BeanRequestContext
 import com.mindalliance.channels.data.BeanMemory
+import com.mindalliance.channels.data.util.BeanRequestContext
 
 /**
 * Created by IntelliJ IDEA.

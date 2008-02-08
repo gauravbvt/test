@@ -2,18 +2,16 @@ package com.mindalliance.channels.data.util
 
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
-import com.mindalliance.channels.nk.bean.AbstractPersistentBean
 import com.mindalliance.channels.nk.aspects.IAspectPersistentBean
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.ten60.netkernel.urii.IURRepresentation
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
 import com.mindalliance.channels.data.BeanMemory
-import com.mindalliance.channels.data.BeanRequestContext
+import com.mindalliance.channels.data.util.BeanRequestContext
 import com.ten60.netkernel.urii.aspect.StringAspect
 import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.nk.bean.IBean
 import com.mindalliance.channels.nk.bean.IBeanList
-import com.mindalliance.channels.nk.bean.SimpleData
 import com.ten60.netkernel.urii.aspect.IAspectString
 
 /**
@@ -46,6 +44,15 @@ class PersistentBeanCategory {
         return bean
     }
 
+    static IPersistentBean retrievePersistentBean(Context context, String id, String db) {
+        IPersistentBean bean
+        use(NetKernelCategory) {
+            bean = sourcePersistentBean(context, 'active:data_bean', [id: data(id), db: data(db)])
+        }
+        return bean
+
+    }
+
     static IPersistentBean toPersistentBean(Context context, String xml) {
         IAspectPersistentBean aspect = (IAspectPersistentBean) context.transrept(new StringAspect(xml), IAspectPersistentBean.class)
         return aspect.getPersistentBean()
@@ -63,12 +70,12 @@ class PersistentBeanCategory {
     static IPersistentBean dereference(IBeanReference beanReference) {
         IPersistentBean bean
         String id = beanReference.id
-        String db = beanReference.db
+        String db = beanReference.getDb()
         String beanClass = beanReference.beanClass
         if (id != null) {
-            assert db != null && db.size() != 0
+            assert db != null && db.size() != 0, "id=$id and beanClass=$beanClass"
             Context context = BeanRequestContext.getRequestContext()
-            BeanMemory beanMemory = BeanRequestContext.getBeanMemory()
+            def beanMemory = BeanRequestContext.getBeanMemory()
             bean = beanMemory.retrieveBean(db, id, context)
             if (bean) {
                 if (beanClass) assert bean.class.name == beanClass  // optional type checking
@@ -121,7 +128,6 @@ class PersistentBeanCategory {
                 case IBean:
                     List vals = [] + obj?."$propName"
                     vals.each {val ->
-                        String cn = val.class.name
                         set.add(val)
                         List tc = val.trans(propName)
                         set.addAll(tc)
@@ -129,7 +135,6 @@ class PersistentBeanCategory {
                     break
                 case IBeanList:
                     obj.each {item ->
-                        String cn = item.class.name
                         List tc = item.trans(propName)
                         set.addAll(tc)
                     }

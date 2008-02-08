@@ -20,6 +20,8 @@ import org.ten60.netkernel.xml.representation.IXAspect
 import org.ten60.netkernel.xml.xda.DOMXDA
 import org.ten60.netkernel.xml.xda.IXDA
 import org.ten60.netkernel.xml.xda.IXDAReadOnly
+import org.ten60.netkernel.layer1.representation.NVPAspect
+import org.ten60.netkernel.layer1.representation.NVPImpl
 
 
 /**
@@ -311,6 +313,14 @@ public class NetKernelCategory {
 
     public static StringAspect string(Object obj, String value) {
         return new StringAspect(value);
+    }
+
+    public static IAspectNVP map(Object obj, Map map) {
+        NVPImpl nvpImpl = new NVPImpl()
+        map.each {key, val ->
+            nvpImpl.addNVP(key, "$val")
+        }
+        return new NVPAspect(nvpImpl)
     }
 
     public static String data(Object obj, Object value) throws Exception {

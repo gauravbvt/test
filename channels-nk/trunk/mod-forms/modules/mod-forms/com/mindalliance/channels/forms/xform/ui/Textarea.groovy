@@ -16,9 +16,9 @@ class Textarea extends AbstractUIElement {
         initialize()
     }
 
-    void build(def xf) {
-        xf.textarea(getAttributes()) {
-            label(label)
+    void build(def builder, String xf) {
+        builder."$xf:textarea"(getAttributes()) {
+            builder."$xf:label"(label)
         }
     }
 

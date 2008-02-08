@@ -2,8 +2,9 @@ package com.mindalliance.channels.forms.xform
 
 import com.mindalliance.channels.forms.xform.model.Model
 import groovy.xml.MarkupBuilder
-import groovy.xml.NamespaceBuilder
 import com.mindalliance.channels.forms.xform.ui.Submit
+
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 
 /**
 * Created by IntelliJ IDEA.
@@ -15,10 +16,10 @@ import com.mindalliance.channels.forms.xform.ui.Submit
 abstract class XForm {
 
     static public final String CONTROLS_MODEL_ID = 'controls'
-    static public final String XFORMS_NAMESPACE_URL = 'http://www.w3.org/2002/xforms'
-    static public final String XFORMS_NAMESPACE_PREFIX = 'xf'
     static public final String SUBMITS_CSS_CLASS = 'submits'
 
+    Context context
+    String xfPrefix
     String xsdSchemaPrefix
     String eventPrefix
     String customSchemaPrefix
@@ -28,6 +29,10 @@ abstract class XForm {
     Map models = [:]
     List uiElements = []
     List submits = []
+
+    XForm(Context context) {
+        this.context = context
+    }
 
     abstract void createElements()
 
@@ -49,24 +54,23 @@ abstract class XForm {
 
     String toXml() {
         StringWriter writer = new StringWriter()
-        MarkupBuilder mkBuilder = new MarkupBuilder(writer)
-        NamespaceBuilder builder = new NamespaceBuilder(mkBuilder)
-        def xf = builder.namespace(XFORMS_NAMESPACE_URL, XFORMS_NAMESPACE_PREFIX)
-        build(xf)
-        return writer.toString()
+        MarkupBuilder builder = new MarkupBuilder(writer)
+        build(builder, xfPrefix)
+        String xml = writer.toString().replaceAll('&apos;', '"').replaceAll('&amp;', '&')
+        return xml
     }
 
-    void build(def xf) {
+    void build(def builder, String xf) {
         models.each {key, model ->
-            model.build(xf)
+            model.build(builder, xf)
         }
         // build controls within a group
-        xf.group('class': formCssClass) {
+        builder."$xf:group"('class': formCssClass) {
             // Build controls
-            uiElements.each {element -> element.build(xf)}
+            uiElements.each {element -> element.build(builder, xf)}
             // Build submit triggers within a sub-group
-            xf.group('class': SUBMITS_CSS_CLASS) {
-                submits.each {submit -> submit.build(xf)}
+            builder."$xf:group"('class': SUBMITS_CSS_CLASS) {
+                submits.each {submit -> submit.build(builder, xf)}
             }
         }
     }

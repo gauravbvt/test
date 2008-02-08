@@ -23,11 +23,11 @@ class Submit extends AbstractElement {    // not an AbstractUIElement because do
         initialize()
     }
 
-    void build(def xf) {
+    void build(def builder, String xf) {
         Map attributes = getAttributes()
         attributes += [submission:submissionId]
-        xf.submit(attributes){
-            label(label)
+        builder."$xf:submit"(attributes){
+            builder."$xf:label"(label)
         }
     }
 

@@ -18,5 +18,4 @@ class TestRunComponent extends AbstractComponentBean {
     Map getBeanProperties() {
         return [date:date, tester:tester]
     }
-
 }

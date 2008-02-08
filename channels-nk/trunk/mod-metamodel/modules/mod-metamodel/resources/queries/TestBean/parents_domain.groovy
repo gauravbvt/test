@@ -1,16 +1,16 @@
-/**
- * Created by IntelliJ IDEA.
- * User: jf
- * Date: Feb 5, 2008
- * Time: 4:30:56 PM
- * To change this template use File | Settings | File Templates.
- */
 {bean, args, builder ->
-    def allSubs = bean.trans('subTests')
-    def allTests = beanAt('TestEnvironment', bean.db).tests
+    def excluded = [bean.id]
+    bean.trans('subTests').each {list -> list.each {beanRef -> excluded.add(beanRef.id)}}
+    println "excluded=$excluded"
+    def candidates = []
+    beanAt('TestEnvironment', bean.db).tests.each {beanRef ->
+        if (!excluded.contains(beanRef.id)) {candidates.add(beanRef)}
+    }
+    println "candidates=$candidates"
     builder.beans() {
-        allTests.findAll {!allSubs.contains(it)}.each {test ->
-            builder.bean(id: test.id, db: test.db, test.name)
+        candidates.each {beanRef ->
+            def pb = beanRef.dereference()
+            builder.bean(id: beanRef.id, db: beanRef.db, pb.name)
         }
     }
 }

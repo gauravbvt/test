@@ -12,15 +12,15 @@ import com.mindalliance.channels.forms.xform.AbstractElement
 */
 class Model extends AbstractElement {
 
-    String schemaUrl
+    String customSchemaUrl
     List instances = [ ]
-    List bindings = [ ]
+    Map bindings = [:]
     List submissions = [ ]
 
-    Model(String id, String schemaUrl, BeanXForm xform) {
+    Model(String id, String customSchemaUrl, BeanXForm xform) {
         super(xform)
         this.id = id
-        this.schemaUrl = schemaUrl
+        this.customSchemaUrl = customSchemaUrl
         initialize()
     }
 
@@ -29,7 +29,7 @@ class Model extends AbstractElement {
     }
 
     void addBinding(Binding binding) {
-        bindings.add(binding)
+        bindings[binding.id] = binding
     }
 
     void addSubmission(Submission submission) {
@@ -42,15 +42,15 @@ class Model extends AbstractElement {
 
     Map getAttributes() {
         Map attributes = super.getAttributes()
-        attributes += [schema:schemaUrl]
+        attributes += [schema:customSchemaUrl]
         return attributes
     }
 
-    void build(def xf) {
-       xf.model (getAttributes()) {
-           instances.each {instance -> instance.build(xf)}
-           bindings.each {binding -> binding.build(xf)}
-           submissions.each {submission -> submission.build(xf)}
+    void build(def builder, String xf) {
+       builder."$xf:model" (getAttributes()) {
+           instances.each {instance -> instance.build(builder, xf)}
+           bindings.each {key, binding -> binding.build(builder, xf)}
+           submissions.each {submission -> submission.build(builder, xf)}
        }
     }
 

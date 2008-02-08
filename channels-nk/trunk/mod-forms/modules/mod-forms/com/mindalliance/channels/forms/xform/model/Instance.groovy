@@ -31,8 +31,8 @@ class Instance extends AbstractElement {
         return attributes
     }
 
-    void build(def xf) {
-        xf.instance(getAttributes())
+    void build(def builder, String xf) {
+        builder."$xf:instance"(getAttributes())
     }
 
 }

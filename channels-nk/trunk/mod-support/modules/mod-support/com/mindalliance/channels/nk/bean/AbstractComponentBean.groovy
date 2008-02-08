@@ -20,11 +20,11 @@ abstract class AbstractComponentBean extends AbstractBean implements IComponentB
     }
 
     void accept(Map args, Closure action) {
-        action(args.propName, args.parentPath, this)
+        action(args, this)
         getBeanProperties().each { key, val ->
-            val.accept([propName:key, parentPath:"${args.parentPath}/${args.propName}/"], { propKey, propPath, propValue ->
-                    propValue.initContextBean(this.contextBean)
-                    propValue.initMetadata(propKey, propPath, this.defaultMetadata)  // Use component bean's metadata
+            val.accept([propName:key, parentPath:"${args.parentPath}${args.propName}/"], { args1, self ->   
+                    self.initContextBean(this.contextBean)
+                    self.initMetadata(args1.propName, args1.parentPath, this.defaultMetadata)  // Use component bean's metadata
             })
         }
     }

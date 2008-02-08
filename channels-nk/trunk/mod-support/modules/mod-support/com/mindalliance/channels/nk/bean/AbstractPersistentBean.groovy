@@ -47,16 +47,15 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         return copy
     }
 
-
     // Make the bean ready for use
     void activate() {
         initialize()
         getBeanProperties().each {key, val ->
             String xpath = '/'
-            val.accept([propName:key, parentPath:xpath], { propKey, propPath, propValue ->
-                    propValue.initContextBean(this)
-                    propValue.initMetadata(propKey, propPath, this.defaultMetadata)
-                 })
+            val.accept([propName: key, parentPath: xpath], {args, self ->
+                self.initContextBean(this)
+                self.initMetadata(args.propName, args.parentPath, this.defaultMetadata)
+            })
         }
     }
 

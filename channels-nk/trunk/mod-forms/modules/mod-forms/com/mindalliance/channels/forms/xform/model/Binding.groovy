@@ -22,7 +22,7 @@ class Binding extends AbstractElement {
     Binding(String instanceId, Expando metadata, XForm xform) {
         super(xform)
         this.instanceId = instanceId
-        this.metadata = metada
+        this.metadata = metadata
         initialize()
     }
 
@@ -40,15 +40,15 @@ class Binding extends AbstractElement {
 
     Map getAttributes() {
         Map attributes = super.getAttributes()
-        attributes += [nodeset: "instance($instanceId)/$nodeset",
+        attributes += [nodeset: "instance($instanceId)$nodeset",
                        required: required ? 'true()' : 'false()',
                        readonly: readonly,
                        type:type]
         return attributes
     }
 
-    void build(def xf) {
-        xf.binding(getAttributes())
+    void build(def builder, String xf) {
+        builder."$xf:binding"(getAttributes())
     }
 
     static String makeBindingId(String uiElementId) {

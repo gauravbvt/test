@@ -6,7 +6,6 @@ import com.mindalliance.channels.forms.xform.BeanXForm
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.data.util.PersistentBeanCategory
 import groovy.util.slurpersupport.GPathResult
-import com.mindalliance.channels.nk.bean.BeanReference
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.bean.IBeanDomain
 
@@ -20,10 +19,10 @@ import com.mindalliance.channels.nk.bean.IBeanDomain
 class BeanReferenceControl extends AbstractUIElement {
 
     IBeanReference beanReference
-    List domainBeans
+    Map domainBeans = [:]
 
     BeanReferenceControl(IBeanReference beanReference, BeanXForm xform) {
-        super((Expando)beanReference.metadata, xform)
+        super((Expando) beanReference.metadata, xform)
         this.beanReference = beanReference
         initialize()
     }
@@ -34,47 +33,44 @@ class BeanReferenceControl extends AbstractUIElement {
     }
 
     // Temporary, poor man's bean picker -- a simple select1
-    void build(def xf) {
-        xf.group(getAttributes()) {
-            xf.label(this.label)
-            xf.select1() {
-                xf.label('Choose one')
-                domainBeans.each {bean ->
-                    xf.item {
-                        label(bean.metadata.label)
-                        value {
+    void build(def builder, String xf) {
+        builder."$xf:group"(getAttributes()) {
+            builder."$xf:label"(this.label)
+            builder."$xf:select1"() {
+                builder."$xf:label"('Choose one')
+                domainBeans.each {label, bean ->
+                    builder."$xf:item "{
+                        builder."$xf:label"(label)
+                        builder."$xf:value"() {
                             id(bean.id)
-                            }
                         }
                     }
                 }
             }
         }
+    }
 
-    private List getReferenceDomain() {
-        List beans
+    private void getReferenceDomain() {
         IBeanDomain beanDomain = beanReference.domain
-        String rootBeanId = beanDomain.id ?: this.contextBean.id
-        String rootBeanDb = beanDomain.db ?: this.getDb()
-        assert beanDomain.query
-        use(NetKernelCategory, PersistentBeanCategory) {
-            def nvp = context.toNVP(beanDomain.args)
-            String queryUri = "${BeanXForm.INTERNAL_METAMODEL_QUERY_URI_PREFIX}/${this.xform.subjectName()}/${beanDomain.query}"
-            String queryString = context.sourceString(queryUri)
-            GPathResult result = context.sourceXML('active:data_memory',
-                            [id: data(rootBeanId),
-                             db: data(rootBeanDb),
-                             args: nvp,
-                             query: string(queryString)])
-            // result = <beans><bean id="..." db="...">label</bean>...</beans>
-            result.each {el ->
-                BeanReference br = new BeanReference(id: el.@id, db: el.@db)
-                IPersistentBean pb = br.dereference()
-                pb.metadata.label = el.text()
-                beans.add(pb)
+        String rootBeanId = beanDomain.id ?: this.xform.bean.id
+        String rootBeanDb = beanDomain.db ?: beanReference.getDb()
+        assert beanDomain, "domain must be defined in $beanReference"
+        if (beanDomain.isDefined()) {  // if domain is not undefined
+            use(NetKernelCategory, PersistentBeanCategory) {
+                String queryUri = "${BeanXForm.INTERNAL_METAMODEL_QUERY_URI_PREFIX}/${this.xform.subjectName()}/${beanDomain.query}"
+                String queryString = this.xform.context.sourceString(queryUri)
+                GPathResult result = this.xform.context.sourceXML('active:data_memory',
+                        [id: data(rootBeanId),
+                                db: data(rootBeanDb),
+                                args: map(beanDomain.args),
+                                query: string(queryString)])
+                // result = <beans><bean id="..." db="...">label</bean>...</beans>
+                result.bean.each {el ->
+                    IPersistentBean pb = this.xform.context.retrievePersistentBean("${el.@id}", "${el.@db}")
+                    domainBeans += ["$el": pb]
+                }
             }
         }
-        return beans
     }
 
 }

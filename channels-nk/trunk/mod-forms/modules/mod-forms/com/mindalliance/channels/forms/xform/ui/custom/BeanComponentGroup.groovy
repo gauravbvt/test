@@ -36,11 +36,11 @@ class BeanComponentGroup extends AbstractUIElement {
         }
     }
 
-    void build(def xf) {
-        xf.group(getAttributes()) {
-            label(label)
+    void build(def builder, String xf) {
+        builder."$xf:group"(getAttributes()) {
+            "$xf:label"(label)
             uiElements.each {el ->
-                el.build(xf)
+                el.build(builder, xf)
             }
         }
     }

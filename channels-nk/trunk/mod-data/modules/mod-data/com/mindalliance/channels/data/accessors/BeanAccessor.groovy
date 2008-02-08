@@ -5,8 +5,9 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.data.BeanMemory
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
-import com.mindalliance.channels.data.BeanRequestContext
+import com.mindalliance.channels.data.util.BeanRequestContext
 import com.mindalliance.channels.data.util.PersistentBeanCategory
+import com.mindalliance.channels.data.util.BeanRequestContext
 
 /**
 * Created by IntelliJ IDEA.

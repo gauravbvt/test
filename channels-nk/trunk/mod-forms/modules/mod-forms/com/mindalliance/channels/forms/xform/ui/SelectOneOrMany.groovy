@@ -45,34 +45,34 @@ class SelectOneOrMany extends AbstractUIElement {
         return many ? 'select' : 'select1'
     }
 
-    void build(def xf) {
-        xf."${selectTag()}"(getAttributes()) {
-            xf.label(this.label)
-            if (isEnumeratedChoices()) {
-                buildEnumeratedChoices(xf)
+    void build(def builder, String xf) {
+        builder."$xf:${selectTag()}"(getAttributes()) {
+            builder."$xf:label"(this.label)
+            if (isChoicesFromQuery()) {
+                buildItemset(builder, xf)
             }
             else {
-                buildItemset(xf)
+                buildEnumeratedChoices(builder, xf)
             }
          }
     }
 
-    private void buildEnumeratedChoices(def xf) {
+    private void buildEnumeratedChoices(def builder, String xf) {
         if (isFlatChoices()) {
             choices.each {item ->
-                 xf.item {
-                     label(item.toString())
-                     value(item.toString())
+                 builder."$xf:item "{
+                     builder."$xf:label"(item.toString())
+                     builder."$xf:value"(item.toString())
                  }
              }
         }
         else { // [ [label, val, val...] ... ] => <choices><label>aLabel</label><item>anItem</item><value>aValue</value>... </choices>...
            choices.each {branch ->
-              xf.choices {
-                  label(branch[0])
+              builder."$xf:choices "{
+                  builder."$xf:label"(branch[0])
                   branch[1..<branch.size()].each {
-                      xf.item(it)
-                      xf.value(it)
+                      builder."$xf:item"(it)
+                      builder."$xf:value"(it)
                   }
               }
            }
@@ -85,15 +85,15 @@ class SelectOneOrMany extends AbstractUIElement {
             ...
         </items>
     */
-    private void buildItemset(def xf) {
-      xf.itemset(model:XForm.CONTROLS_MODEL_ID, nodeset="instance('${instance.id}')/items/item") {
-          label(ref:'@label')
-          copy(ref:'.')
+    private void buildItemset(def builder, String xf) {
+      builder."$xf:itemset"(model:XForm.CONTROLS_MODEL_ID, nodeset="instance('${instance.id}')/items/item") {
+          builder."$xf:label"(ref:'@label')
+          builder."$xf:copy"(ref:'.')
       }
     }
 
     private boolean isFlatChoices() {
-       return !choices[0] instanceof List
+       return choices && !(choices[0] instanceof List)
     }
 
     private boolean isChoicesFromQuery() {

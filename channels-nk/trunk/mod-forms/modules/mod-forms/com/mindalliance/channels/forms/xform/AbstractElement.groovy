@@ -23,6 +23,6 @@ abstract class AbstractElement {
         return attributes
     }
 
-    abstract void build(def xf)
+    abstract void build(def builder, String xf)
 
 }

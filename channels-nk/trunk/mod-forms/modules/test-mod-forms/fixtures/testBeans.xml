@@ -65,7 +65,7 @@
             <test beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubSub</id></test>
         </subTests>
     </testBean>
-    
+
     <!-- SubSub -->
     <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubSub">
         <name dataType='java.lang.String'>SubSub</name>

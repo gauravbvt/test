@@ -34,8 +34,8 @@ class Submission extends AbstractElement {
         return attributes
      }
 
-    void build(def xf) {      
-        xf.submission(getAttributes())
+    void build(def builder, String xf) {
+        builder."$xf:submission"(getAttributes())
     }
 
 }

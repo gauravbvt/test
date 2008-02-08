@@ -2,15 +2,16 @@ package com.mindalliance.channels.data.accessors
 
 import com.mindalliance.channels.nk.NetKernelCategory
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
-import com.mindalliance.channels.data.BeanRequestContext
+import com.mindalliance.channels.data.util.BeanRequestContext
+import com.mindalliance.channels.data.util.BeanRequestContext
 
 /**
- * Created by IntelliJ IDEA.
- * User: jf
- * Date: Jan 16, 2008
- * Time: 9:49:14 AM
- * To change this template use File | Settings | File Templates.
- */
+* Created by IntelliJ IDEA.
+* User: jf
+* Date: Jan 16, 2008
+* Time: 9:49:14 AM
+* To change this template use File | Settings | File Templates.
+*/
 
 // Search or refresh
 class MemoryAccessor extends AbstractMemoryAccessor {

@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testlist  title="Xforms Accessor Unit Tests">
+<testlist  title="Xforms generation unit tests">
     <desc>
 	<div>
 	<b>Xforms</b> accessor unit tests for the <b>Mind-Alliance Xforms</b> lib.
 	</div>
     </desc>
     <test>
-        <uri>active:beanshell+operator@ffcpl:/test/accessor/test.bsh</uri>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/forms_xform_generate.js</uri>
 		<assert>
-			<xpath>count(//hello) = 1</xpath>
+			<xpath>//b = 't'</xpath>
 		</assert>
-    </test>
-    <test>
-      <uri>active:javascript+operator@ffcpl:/test/accessor/xforms-test1.js</uri>
-		<assert>
-			<xpath>count(//hello) = 1</xpath>
-		</assert>
-    </test>
-    <test>
-      <uri>active:javascript+operator@ffcpl:/test/accessor/xforms-test1.js</uri>
-		<assert>
-			<xpath>//hello = 'xforms'</xpath>
-		</assert>
-    </test>
-</testlist>
+    </test></testlist>

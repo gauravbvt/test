@@ -18,6 +18,7 @@ import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.forms.xform.ui.custom.BeanComponentGroup
 import com.mindalliance.channels.forms.xform.ui.custom.BeanListRepeat
 import com.mindalliance.channels.forms.xform.ui.custom.BeanReferenceControl
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 
 /**
 * Created by IntelliJ IDEA.
@@ -43,11 +44,12 @@ class BeanXForm extends XForm {
 
     IPersistentBean bean // the bean to edit
     String beanInstanceUrl // where the xform gets its bean instance to edit
-    String acceptUrl // where to post the edited bean
-    String cancelUrl // where to announce abort of edit
+    String acceptSubmissionUrl // where to post the edited bean
+    String cancelSubmissionUrl // where to announce abort of edit
 
 
-    BeanXForm(IPersistentBean bean, Map settings) {
+    BeanXForm(IPersistentBean bean, Map settings, Context context) {
+        super(context)
         this.bean = bean
         settings.each {key, value ->
             this."$key" = value
@@ -57,17 +59,17 @@ class BeanXForm extends XForm {
 
     void createElements() {
         // create bean model with its bean instance
-        Model beanModel = new Model(BEAN_MODEL_ID, schemaUrl, this)
+        Model beanModel = new Model(BEAN_MODEL_ID, this.customSchemaUrl, this)
         Instance beanInstance = new Instance(BEAN_INSTANCE_ID, beanInstanceUrl, this)
-        model.addInstance(beanInstance)
+        beanModel.addInstance(beanInstance)
         addModel(beanModel)
-        Model controlsModel = new Model(CONTROLS_MODEL_ID, schemaUrl, this)
+        Model controlsModel = new Model(CONTROLS_MODEL_ID, customSchemaUrl, this)
         addModel(controlsModel)
         bean.getBeanProperties().each {propName, propValue ->
             // Generate bean model bindings for all bean property values
-            propValue.accept([propValue: propValue], {args -> // Apply visitor
-                def metadata = args.propValue.metadata
-                Binding binding = new Binding(beanInstance.id, metadata, xform)
+            propValue.accept([:], {args, self -> // Apply visitor
+                def metadata = self.metadata
+                Binding binding = new Binding(beanInstance.id, metadata, this)
                 beanModel.addBinding(binding)
             })
             // Generate form ui elements for the bean's immediate properties
@@ -75,9 +77,9 @@ class BeanXForm extends XForm {
             addUIElement(element)
         }
         // Add bean form submissions to bean model
-        Submission acceptSubmission = new Submission(ACCEPT_ID, acceptUrl, xform)
+        Submission acceptSubmission = new Submission(ACCEPT_ID, acceptSubmissionUrl, this)
         beanModel.addSubmission(acceptSubmission)
-        Submission cancelSubmission = new Submission(CANCEL_ID, cancelUrl, xform)
+        Submission cancelSubmission = new Submission(CANCEL_ID, cancelSubmissionUrl, this)
         beanModel.addSubmission(cancelSubmission)
         // Add submit controls
         Submit acceptSubmit = new Submit(ACCEPT_LABEL, acceptSubmission.id, this)
@@ -163,7 +165,7 @@ class BeanXForm extends XForm {
 
 
     String subjectName() {
-        String longName = contextBean.class.name
+        String longName = bean.class.name
         String shortName = longName.substring(longName.lastIndexOf('.') + 1)
         return shortName
     }

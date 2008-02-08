@@ -12,9 +12,10 @@ class BeanReference  extends AbstractBeanPropertyValue implements IBeanReference
     String db
     String id
     String beanClass // optional
-    IBeanDomain domain  // optional but only when BeanReference is generated from a query
+    IBeanDomain domain  
 
     IBeanReference deepCopy() {
+        assert domain, "domain must be defined for bean $id in $db"
         IBeanReference copy = new BeanReference(beanClass: beanClass, db: this.@db, id: id, domain:domain)
         return copy
     }
@@ -26,5 +27,10 @@ class BeanReference  extends AbstractBeanPropertyValue implements IBeanReference
     String getSchemaType() {
         return ":beanref"     // starts with ':' means custom type
     } 
-                                                              
+
+    void initContextBean(IPersistentBean bean) {
+        assert bean
+        super.initContextBean(bean)
+    }
+
 }

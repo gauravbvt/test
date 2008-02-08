@@ -1,9 +1,11 @@
-package com.mindalliance.channels.data;
+package com.mindalliance.channels.data.util;
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
 
 import java.util.Map;
 import java.util.HashMap;
+
+import com.mindalliance.channels.data.BeanMemory;
 
 
 /**

@@ -3,6 +3,7 @@ package com.mindalliance.channels.metamodel
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean
 import com.mindalliance.channels.nk.bean.BeanList
 import com.mindalliance.channels.nk.bean.BeanReference
+import com.mindalliance.channels.nk.bean.BeanDomain
 
 /**
 * Created by IntelliJ IDEA.
@@ -13,7 +14,8 @@ import com.mindalliance.channels.nk.bean.BeanReference
 */
 class TestEnvironment extends AbstractPersistentBean {    // TODO - move to com.mindalliance.channels.metamodel.test
 
-    def tests = new BeanList(itemPrototype: new BeanReference(beanClass: TestBean.class.name), itemName:'test')
+    // This bean's tests property serves as a basis for defining other beans' domains, so it's own domain is undefined
+    def tests = new BeanList(itemPrototype: new BeanReference(beanClass: TestBean.class.name, domain: BeanDomain.UNDEFINED), itemName:'test')
 
     public Map getBeanProperties() {
         return [tests:tests]

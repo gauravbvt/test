@@ -1,7 +1,9 @@
 package com.mindalliance.channels.forms.xform.ui
 
 import com.mindalliance.channels.forms.xform.XForm
+import com.mindalliance.channels.forms.xform.BeanXForm
 import com.mindalliance.channels.forms.xform.AbstractElement
+import com.mindalliance.channels.forms.xform.model.Binding
 import com.mindalliance.channels.nk.bean.IBeanPropertyValue
 
 /**
@@ -31,7 +33,7 @@ abstract class AbstractUIElement extends AbstractElement {      // Value editing
     void initialize() {
        super.initialize()
        this.id = metadata.id
-       label = metadata.label ?: AbstractUIElement.makeLabel(metadata.propName)
+       label = metadata.label ?: AbstractUIElement.makeLabel(metadata.propertyName)
        bind = Binding.makeBindingId(id) // by default ui elements are bound - reset to null in repeated ui elements
        cssClass = metadata.cssClass // can be null
        appearance = metadata.appearance // may be null
@@ -64,7 +66,7 @@ abstract class AbstractUIElement extends AbstractElement {      // Value editing
     }
 
     AbstractUIElement makeSubUIElement(IBeanPropertyValue propValue) {
-       AbstractUIElement uiElement = BeanXForm.makeUiElement(propValue, this.xform)
+       AbstractUIElement uiElement = BeanXForm.makeUIElement(propValue, (BeanXForm)this.xform)
        if (this.referenced) {
            uiElement.becomeReferencedFrom(this)
        }
