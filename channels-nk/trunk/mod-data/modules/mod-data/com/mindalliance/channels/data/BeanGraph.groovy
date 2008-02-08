@@ -56,6 +56,7 @@ class BeanGraph {
                 default: throw new IllegalArgumentException("Invalid query ${query}")
             }
         }
+        context.log("Query $query =>\n$xml", 'info')
         return xml
     }
 

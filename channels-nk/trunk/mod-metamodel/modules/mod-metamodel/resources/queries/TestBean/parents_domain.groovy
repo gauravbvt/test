@@ -8,9 +8,9 @@
     }
     println "candidates=$candidates"
     builder.beans() {
-        candidates.each {beanRef ->
-            def pb = beanRef.dereference()
-            builder.bean(id: beanRef.id, db: beanRef.db, pb.name)
+        candidates.each {
+            // def pb = beanRef.dereference()
+            builder.bean(id: it.id, db: it.db, it.name)
         }
     }
 }

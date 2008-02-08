@@ -19,7 +19,7 @@ import com.mindalliance.channels.nk.bean.IBeanDomain
 class BeanReferenceControl extends AbstractUIElement {
 
     IBeanReference beanReference
-    Map domainBeans = [:]
+    Map domainBeans
 
     BeanReferenceControl(IBeanReference beanReference, BeanXForm xform) {
         super((Expando) beanReference.metadata, xform)
@@ -50,7 +50,8 @@ class BeanReferenceControl extends AbstractUIElement {
         }
     }
 
-    private void getReferenceDomain() {
+    private Map getReferenceDomain() {
+        Map beans = [:]
         IBeanDomain beanDomain = beanReference.domain
         String rootBeanId = beanDomain.id ?: this.xform.bean.id
         String rootBeanDb = beanDomain.db ?: beanReference.getDb()
@@ -67,10 +68,11 @@ class BeanReferenceControl extends AbstractUIElement {
                 // result = <beans><bean id="..." db="...">label</bean>...</beans>
                 result.bean.each {el ->
                     IPersistentBean pb = this.xform.context.retrievePersistentBean("${el.@id}", "${el.@db}")
-                    domainBeans += ["$el": pb]
+                    beans["$el"] = pb
                 }
             }
         }
+        return beans
     }
 
 }
