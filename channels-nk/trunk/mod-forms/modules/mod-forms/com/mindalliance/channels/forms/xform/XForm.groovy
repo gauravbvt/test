@@ -56,7 +56,7 @@ abstract class XForm {
         StringWriter writer = new StringWriter()
         MarkupBuilder builder = new MarkupBuilder(writer)
         build(builder, xfPrefix)
-        String xml = writer.toString().replaceAll('&apos;', '"').replaceAll('&amp;', '&')
+        String xml = writer.toString().replaceAll('&apos;', '"').replaceAll('&amp;', '&').replaceAll('&lt;', '<').replaceAll('&gt;', '>')
         return xml
     }
 

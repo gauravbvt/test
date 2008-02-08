@@ -180,6 +180,16 @@ public class NetKernelCategory {
         return new XmlSlurper().parseText(text);
     }
 
+    public static Node sourceDOM(INKFConvenienceHelper context, String uri) {
+        String text = ((IAspectString) context.sourceAspect(uri, IAspectString.class)).getString();
+        return new XmlParser().parseText(text);
+    }
+
+    public static Node sourceDOM(INKFConvenienceHelper context, String uri, Map args) {
+        String text = ((IAspectString) sourceAspect(context, uri, args, IAspectString.class)).getString();
+        return new XmlParser().parseText(text);
+    }
+
     public static GPathResult getXml(INKFConvenienceHelper context, IURRepresentation representation) {
         return getXml(context, (IURAspect)representation.getAspects()[0])      // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
     }
@@ -307,6 +317,15 @@ public class NetKernelCategory {
             map.put(name, aspect.getValue(name))
         }
         return map;
+    }
+
+    // Node
+
+    public static String toXml(Node node) {
+        StringWriter writer = new StringWriter()
+        XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer), '')
+        xmlPrinter.print(node)
+        return writer.toString()       
     }
 
     // OBJECT

@@ -19,6 +19,7 @@ class Secret extends AbstractUIElement {
     void build(def builder, String xf) {
         builder."$xf:secret"(getAttributes()) {
             builder."$xf:label"(this.label)
+            buildHint(builder, xf)
         }
 
     }

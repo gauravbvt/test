@@ -19,6 +19,7 @@ class Input extends AbstractUIElement {
     void build(def builder, String xf) {
        builder."$xf:input"(getAttributes()) {
            builder."$xf:label"(label)
+            buildHint(builder, xf)
        }
     }
 

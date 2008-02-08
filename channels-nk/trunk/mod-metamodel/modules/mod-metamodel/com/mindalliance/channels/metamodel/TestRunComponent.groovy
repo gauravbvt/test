@@ -13,9 +13,16 @@ import com.mindalliance.channels.nk.bean.SimpleData
 class TestRunComponent extends AbstractComponentBean {
 
     def date = new SimpleData(Date.class)
-    def tester = new SimpleData (String.class)
+    def tester = new SimpleData(String.class)
 
     Map getBeanProperties() {
-        return [date:date, tester:tester]
+        return [date: date, tester: tester]
     }
+
+    void initialize() {
+        defaultMetadata = [
+                date: [required: true, hint: 'The date the test was run']
+        ]
+    }
+
 }

@@ -52,14 +52,14 @@ class BeanListRepeat extends AbstractUIElement {
             builder."$xf:group"() {
                builder."$xf:trigger"() {
                    builder."$xf:label"('Add')
-                   builder."$xf:insert"(nodeset:repeatedElement.ref,
+                   builder."$xf:insert"(nodeset:beanList.itemName,
                           at:"index('${this.id}')",
                           position:'after',
                           "${this.xform.eventPrefix}:event":'DOMActivate')
                }
                builder."$xf:trigger"() {
                     builder."$xf:label"('Delete')
-                    builder."$xf:delete"(nodeset:repeatedElement.ref,
+                    builder."$xf:delete"(nodeset:beanList.itemName,
                            at:"index('${this.id}')",
                            "${this.xform.eventPrefix}:event":'DOMActivate')
                 }

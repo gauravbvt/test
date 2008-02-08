@@ -40,7 +40,7 @@ class BeanXForm extends XForm {
     static public final String METAMODEL_QUERY_URI_PREFIX = 'query/meta/'    // TODO to be supported by mod-modeler
     static public final String INTERNAL_METAMODEL_QUERY_URI_PREFIX = 'ffcpl:/com/mindalliance/channels/metamodel/queries'
 
-    static private final boolean MANY = true
+    static public final boolean MANY = true
 
     IPersistentBean bean // the bean to edit
     String beanInstanceUrl // where the xform gets its bean instance to edit

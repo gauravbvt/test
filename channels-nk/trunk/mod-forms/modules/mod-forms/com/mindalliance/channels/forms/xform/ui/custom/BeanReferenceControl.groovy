@@ -1,13 +1,12 @@
 package com.mindalliance.channels.forms.xform.ui.custom
 
 import com.mindalliance.channels.forms.xform.ui.AbstractUIElement
-import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.forms.xform.BeanXForm
+import com.mindalliance.channels.forms.xform.ui.SelectOneOrMany
+import com.mindalliance.channels.nk.bean.IBeanReference
+import com.mindalliance.channels.nk.bean.IBeanDomain
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.data.util.PersistentBeanCategory
-import groovy.util.slurpersupport.GPathResult
-import com.mindalliance.channels.nk.bean.IPersistentBean
-import com.mindalliance.channels.nk.bean.IBeanDomain
 
 /**
 * Created by IntelliJ IDEA.
@@ -20,6 +19,7 @@ class BeanReferenceControl extends AbstractUIElement {
 
     IBeanReference beanReference
     Map domainBeans
+    SelectOneOrMany select
 
     BeanReferenceControl(IBeanReference beanReference, BeanXForm xform) {
         super((Expando) beanReference.metadata, xform)
@@ -29,24 +29,19 @@ class BeanReferenceControl extends AbstractUIElement {
 
     void initialize() {
         super.initialize()
-        domainBeans = getReferenceDomain()
+        // domainBeans = getReferenceDomain()
+        createElements()
+    }
+
+    void createElements() {
+        metadata.choices = getReferenceDomain()
+        select = new SelectOneOrMany(BeanXForm.MANY, metadata, xform)
     }
 
     // Temporary, poor man's bean picker -- a simple select1
     void build(def builder, String xf) {
-        builder."$xf:group"(getAttributes()) {
-            builder."$xf:label"(this.label)
-            builder."$xf:select1"() {
-                builder."$xf:label"('Choose one')
-                domainBeans.each {label, bean ->
-                    builder."$xf:item "{
-                        builder."$xf:label"(label)
-                        builder."$xf:value"() {
-                            id(bean.id)
-                        }
-                    }
-                }
-            }
+        builder."$xf:group"() {
+            select.build(builder, xf)
         }
     }
 
@@ -60,15 +55,16 @@ class BeanReferenceControl extends AbstractUIElement {
             use(NetKernelCategory, PersistentBeanCategory) {
                 String queryUri = "${BeanXForm.INTERNAL_METAMODEL_QUERY_URI_PREFIX}/${this.xform.subjectName()}/${beanDomain.query}"
                 String queryString = this.xform.context.sourceString(queryUri)
-                GPathResult result = this.xform.context.sourceXML('active:data_memory',
+                def result = this.xform.context.sourceDOM('active:data_memory',
                         [id: data(rootBeanId),
                                 db: data(rootBeanDb),
                                 args: map(beanDomain.args),
                                 query: string(queryString)])
-                // result = <beans><bean id="..." db="...">label</bean>...</beans>
-                result.bean.each {el ->
-                    IPersistentBean pb = this.xform.context.retrievePersistentBean("${el.@id}", "${el.@db}")
-                    beans["$el"] = pb
+                // result = <items><item label=aLabel>xml</item>...</items>
+                result.item.each {item ->
+                    def value = item.children()[0]
+                    value.@xmlns = ''
+                    beans["${item.@label}"] =value.toXml()
                 }
             }
         }

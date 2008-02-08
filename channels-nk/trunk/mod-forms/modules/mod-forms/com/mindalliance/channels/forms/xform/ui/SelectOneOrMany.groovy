@@ -12,7 +12,7 @@ import com.mindalliance.channels.forms.xform.model.Instance
 class SelectOneOrMany extends AbstractUIElement {
 
     boolean many
-    def choices
+    def choices  // A list of items or a list of named choices (i.e. a tree)
     boolean open
     Instance instance // set if select gets its items from an itemset in an instance obtained from a query
 
@@ -24,7 +24,7 @@ class SelectOneOrMany extends AbstractUIElement {
 
     void initialize() {
         super.initialize()
-        assert metadata.choices  // can't be empty or null
+        assert metadata.choices != null  // can be empty but not null
         choices = metadata.choices
         this.appearance = appearance ?: 'minimal'
         if (isChoicesFromQuery()) {  // build an instance for the select's itemset
@@ -48,6 +48,7 @@ class SelectOneOrMany extends AbstractUIElement {
     void build(def builder, String xf) {
         builder."$xf:${selectTag()}"(getAttributes()) {
             builder."$xf:label"(this.label)
+            buildHint(builder, xf)
             if (isChoicesFromQuery()) {
                 buildItemset(builder, xf)
             }
@@ -61,11 +62,12 @@ class SelectOneOrMany extends AbstractUIElement {
         if (isFlatChoices()) {
             choices.each {item ->
                  builder."$xf:item "{
-                     builder."$xf:label"(item.toString())
-                     builder."$xf:value"(item.toString())
+                     builder."$xf:label"(itemLabel(item))
+                     builder."$xf:value"(itemValue(item))
                  }
              }
         }
+        // TODO - support trees of arbitrary depth - now just 1
         else { // [ [label, val, val...] ... ] => <choices><label>aLabel</label><item>anItem</item><value>aValue</value>... </choices>...
            choices.each {branch ->
               builder."$xf:choices "{
@@ -78,6 +80,21 @@ class SelectOneOrMany extends AbstractUIElement {
            }
         }
     }
+
+    private String itemLabel(def item) {
+        switch(item) {
+            case Map.Entry: return item.key; break
+            default: return item.toString()
+        }
+    }
+
+    private String itemValue(def item) {
+        switch(item) {
+            case Map.Entry: return item.value; break
+            default: return item.toString()
+        }
+    }
+
     /*
     instance contains:
         <items>
@@ -88,7 +105,7 @@ class SelectOneOrMany extends AbstractUIElement {
     private void buildItemset(def builder, String xf) {
       builder."$xf:itemset"(model:XForm.CONTROLS_MODEL_ID, nodeset="instance('${instance.id}')/items/item") {
           builder."$xf:label"(ref:'@label')
-          builder."$xf:copy"(ref:'.')
+          builder."$xf:copy"(ref:'./*')
       }
     }
 

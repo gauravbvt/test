@@ -7,10 +7,15 @@
         if (!excluded.contains(beanRef.id)) {candidates.add(beanRef)}
     }
     println "candidates=$candidates"
-    builder.beans() {
+    builder.items(xmlns:'') {
         candidates.each {
-            // def pb = beanRef.dereference()
-            builder.bean(id: it.id, db: it.db, it.name)
+            def test = it
+            builder.item(label: test.name) {
+                parent() {
+                    builder.id(test.id)
+                    builder.db(test.db)
+                }
+            }
         }
     }
 }

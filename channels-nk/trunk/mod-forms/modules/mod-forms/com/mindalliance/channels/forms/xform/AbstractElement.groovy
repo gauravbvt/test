@@ -10,12 +10,12 @@ abstract class AbstractElement {
 
     XForm xform
     String id // May be null
- 
+
     AbstractElement(XForm xform) {
         this.xform = xform
     }
 
-    void initialize() { }   // Default
+    void initialize() {}
 
     Map getAttributes() {
         Map attributes = [:]

@@ -19,6 +19,7 @@ class Textarea extends AbstractUIElement {
     void build(def builder, String xf) {
         builder."$xf:textarea"(getAttributes()) {
             builder."$xf:label"(label)
+            buildHint(builder, xf)
         }
     }
 
