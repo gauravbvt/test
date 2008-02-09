@@ -76,11 +76,11 @@
                   <div id="legend">
                       <h2>Legend</h2>
                       <table>
-                          <tr><td class="hi">Expecting high score</td></tr>
-                          <tr><td class="med">Expecting medium score</td></tr>
-                          <tr><td class="lo">Expecting low score</td></tr>
-                          <tr><td class="none">Expecting "no match" score</td></tr>
-                          <tr><td class="neg">Expecting negative score</td></tr>
+                          <tr><td class="hi">Expecting high score (>=0.6)</td></tr>
+                          <tr><td class="med">Expecting medium score [0.3,0.6]</td></tr>
+                          <tr><td class="lo">Expecting low score [0.15,0.3]</td></tr>
+                          <tr><td class="none">Expecting "no match" score [0.15,-0.15]</td></tr>
+                          <tr><td class="neg">Expecting negative score (&lt;=0.15)</td></tr>
                           <tr><td class="normal">No expectation</td></tr>
                       </table>
                   </div>
@@ -88,7 +88,7 @@
               <div id="parms">
                   <h2>Match parameters:</h2>
                   <table>
-                      <tr><th>Score:</th><td id="score"><xsl:value-of select="@score"/></td></tr>
+                      <tr><th>Score:</th><td id="score"><xsl:value-of select="score/@value"/></td></tr>
                       <tr><th>Half-Life:</th><td><xsl:value-of select="@halfLife"/></td></tr>
                       <tr><th>Child Count Weight:</th><td><xsl:value-of select="@childCount"/></td></tr>
                       <tr><th>Child Scores Weight:</th><td><xsl:value-of select="@childScores"/></td></tr>

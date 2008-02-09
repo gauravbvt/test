@@ -78,7 +78,7 @@ class SignerAccessor extends AbstractAccessor {
              if ( topic.endsWith( "/" ) )
                 topic = topic.substring( 0, topic.size()-1 )
              addChild( children, topic )
-             rawScores[ topic ] = halfLife > 0 ?
+             rawScores[ topic ] = halfLife < 1 ?
                  1.0 : Math.pow( 2.0d, -i / halfLife )
          }
 
@@ -89,7 +89,6 @@ class SignerAccessor extends AbstractAccessor {
          children.each { String topic, int kidCount ->
              // Compute μ[ topic ] =
              //     μRaw[ topic ] + sum(kids) / ( γ + δ * kidCount )
-             //     ( (1-y) * μRaw[ topic ] + y * ( sum / δ * kidCount ) )
 
              // The original intent of the article is closer to:
              //     μRaw[ topic ] + sum(directChildren(t)) / (γ + δ * Math.log(kidCount + 1))
@@ -115,7 +114,7 @@ class SignerAccessor extends AbstractAccessor {
          }
 
          // Normalize
-         scores.each { key,val -> scores[ key ] = val / n  }
+         // scores.each { key,val -> scores[ key ] = val / n  }
          scores.remove( "" )
 
          return scores

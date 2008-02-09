@@ -27,7 +27,6 @@
         <!--</assert>-->
     <!--</test>-->
 
-
     <!-- Verify that topics maps to what is expected by signer -->
     <test>
         <uri>yahoo-cooked:unit%20testing</uri>
@@ -42,12 +41,18 @@
         </assert>
     </test>
 
-
     <test>
         <uri>active:javascript+operator@ffcpl:/test/accessor/accuracy-test.js</uri>
 		<assert>
 			<xpath>number(//:td[@id='score']) >= 0.5</xpath>
 		</assert>
     </test>
+
+    <!--<test>-->
+        <!--<uri>active:javascript+operator@ffcpl:/test/accessor/yahoo-parm-finder.js</uri>-->
+		<!--<assert>-->
+			<!--<xpath>number(//:td[@id='score']) >= 0.5</xpath>-->
+		<!--</assert>-->
+    <!--</test>-->
 
 </testlist>

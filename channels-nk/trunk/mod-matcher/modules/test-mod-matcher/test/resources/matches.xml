@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tests>
-    <match><text>Bomb detection</text></match>
+    <match><text>Bomb</text></match>
+    
     <match>
-        <text>Madonna</text>
-        <target>Sting</target><expect>med</expect></match>
+        <text>Fertilizer</text>
+        <target>Bomb</target><expect>lo</expect></match>
     <match>
-        <text>NJ Transit hotline</text>
+        <text>IED</text>
+        <target>Bomb</target><expect>med</expect></match>
+    <match>
+        <text>Law Enforcement</text>
+    <target>Police Department</target><expect>med</expect></match><match>
+        <text>Law Enforcement</text>
+    <target>Police Department</target><expect>med</expect></match>
+    <match>
+        <text>NJ Transit</text>
     </match>
     <match>
         <text>NY-NJ Port Authority</text>
-    </match>
+    <target>Transportation</target><expect>hi</expect></match>
     <match>
         <text>NYPD</text>
         <target>Police Department</target>
@@ -18,41 +27,34 @@
     <match>
         <text>NYPD</text>
         <target>New York City</target>
-        <expect>hi</expect>
+        <expect>med</expect>
     </match>
     <match>
         <text>New Jersey</text>
-    </match>
-    <match><text>New York</text></match>
+    <target>NJ Transit</target><expect>hi</expect></match>
+    
+    <match><text>New York</text></match><match><text>New York</text><target>New York City</target><expect>hi</expect></match>
     <match>
         <text>New York City Police Department</text>
         <target>NYPD</target>
         <expect>hi</expect>
     </match>
     <match>
-        <text>Transportation</text>
-    </match><match>
-        <text>Saco Police Department</text>
-        <target>Police Department</target><expect>hi</expect></match>
-    <match>
-        <text>Saco Police Department</text>
-        <target>Bomb detection</target><expect>lo</expect></match>
+        <text>Report writing</text>
+    </match>
     <match>
         <text>Security task force</text>
     </match>
     <match>
-        <text>Sting</text>
-        <target>New York</target><expect>lo</expect></match>
-    <match>
-        <text>Suspicious fertilizer purchases</text>
-        <target>Bomb detection</target><expect>med</expect></match>
-    <match>
         <text>Terrorism prevention</text>
-    </match>
-    <match>
-        <text>IED</text>
-        <target>Bomb detection</target><expect>hi</expect></match>
-    <match>
+    </match><match>
         <text>Training</text>
+    <target>Police Department</target><expect>none</expect></match><match>
+        <text>Transportation</text>
+    <target>NJ Transit</target><expect>hi</expect></match><match>
+        <text>Progress report</text>
+    </match><match>
+        <text>Government</text>
     </match>
+    
 </tests>

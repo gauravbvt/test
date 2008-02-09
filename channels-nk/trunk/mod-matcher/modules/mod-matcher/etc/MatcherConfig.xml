@@ -9,7 +9,7 @@
     * When smaller than 1, all ranked topic are equivalent (ie, the ordering of the
     * result is ignored).
     -->
-    <halfLife>-1</halfLife>
+    <halfLife>100</halfLife>
 
     <!--
     * Influence of the number of children of a node ( >= 0 ).

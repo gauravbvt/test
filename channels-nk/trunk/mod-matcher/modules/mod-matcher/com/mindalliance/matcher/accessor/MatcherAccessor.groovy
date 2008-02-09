@@ -21,7 +21,6 @@ class MatcherAccessor extends AbstractAccessor {
                 "this:param:config" : DefaultConfigUrl
     }
 
-
     private GPathResult getSignature(
             Context ctx, String paramUri, String configUri) {
 
@@ -89,7 +88,10 @@ class MatcherAccessor extends AbstractAccessor {
             y2 += yDiff * yDiff
         }
 
-        return prod / Math.sqrt(x2 * y2)
+        if ( x2 == 0 || y2 == 0 )
+            return 0.0
+        else
+            return prod / Math.sqrt(x2 * y2)
     }
 
     /**

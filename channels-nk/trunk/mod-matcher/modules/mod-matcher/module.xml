@@ -57,15 +57,6 @@
             <to>$2:$1</to>
         </rewrite>
 
-        <ura>
-              <match>active:matcher\+.*</match>
-              <class>com.mindalliance.matcher.accessor.MatcherAccessor</class>
-        </ura>
-        <ura>
-              <match>active:signer\+.*</match>
-              <class>com.mindalliance.matcher.accessor.SignerAccessor</class>
-        </ura>
-
         <rewrite>
             <match>^([^:]+)-cooked:(.*)</match>
             <to>active:xslt+operand@$1-xhtml:$e2+operator@ffcpl:/resources/$1-clean.xsl</to>
@@ -80,20 +71,33 @@
              -->
         <rewrite>
             <match>yahoo2-raw:(.*)</match>
-            <to>active:httpGet+url@http://search.yahoo.com/search/dir?p=$e1&amp;ei=UTF-8&amp;h=C</to>
+            <to>active:httpClient+url@http://search.yahoo.com/search/dir?p=$e1&amp;ei=UTF-8&amp;h=C</to>
         </rewrite>
         <rewrite>
             <match>yahoo-raw:(.*)</match>
-            <to>active:httpGet+url@http://search.yahoo.com/search/dir?p=$e1&amp;ei=UTF-8</to>
+            <to>active:httpClient+url@http://search.yahoo.com/search/dir?p=$e1&amp;ei=UTF-8</to>
         </rewrite>
         <rewrite>
             <match>google-raw:(.*)</match>
-            <to>active:httpGet+url@http://www.google.com/search?hl=en&amp;cat=gwd/Top&amp;q=$e1</to>
+            <to>active:httpClient+url@http://www.google.com/search?hl=en&amp;cat=gwd/Top&amp;q=$e1</to>
         </rewrite>
         <rewrite>
             <match>odp-raw:(.*)</match>
-            <to>active:httpGet+url@http://search.dmoz.org/cgi-bin/search?search=$e1&amp;all=yes&amp;cs=UTF-8</to>
+            <to>active:httpClient+url@http://search.dmoz.org/cgi-bin/search?search=$e1&amp;all=yes&amp;cs=UTF-8</to>
         </rewrite>
+
+        <ura>
+              <match>active:matcher\+.*</match>
+              <class>com.mindalliance.matcher.accessor.MatcherAccessor</class>
+        </ura>
+        <ura>
+              <match>active:signer\+.*</match>
+              <class>com.mindalliance.matcher.accessor.SignerAccessor</class>
+        </ura>
+        <ura>
+              <match>active:httpClient\+.*</match>
+              <class>com.mindalliance.matcher.accessor.HttpClient</class>
+        </ura>
 
 		<rewrite>
 			<match>ffcpl:/matcher/(.*.bsh.*)</match>
