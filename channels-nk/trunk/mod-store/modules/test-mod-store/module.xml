@@ -39,6 +39,9 @@
 			<uri>urn:com:mindalliance:channels:store</uri>
 		</import>
         <import>
+            <uri>urn:com:mindalliance:channels:metamodel:test</uri> <!-- import test classes and resources from metamodel test -->
+        </import>
+        <import>
             <uri>urn:com:mindalliance:channels:support</uri>
         </import>
         <import>

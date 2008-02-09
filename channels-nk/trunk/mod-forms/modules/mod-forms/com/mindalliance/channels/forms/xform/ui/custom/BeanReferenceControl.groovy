@@ -53,7 +53,7 @@ class BeanReferenceControl extends AbstractUIElement {
         assert beanDomain, "domain must be defined in $beanReference"
         if (beanDomain.isDefined()) {  // if domain is not undefined
             use(NetKernelCategory, PersistentBeanCategory) {
-                String queryUri = "${BeanXForm.INTERNAL_METAMODEL_QUERY_URI_PREFIX}/${this.xform.subjectName()}/${beanDomain.query}"
+                String queryUri = "${this.xform.internalQueryUriPrefix}/${this.xform.subjectName()}/${beanDomain.query}"
                 String queryString = this.xform.context.sourceString(queryUri)
                 def result = this.xform.context.sourceDOM('active:data_memory',
                         [id: data(rootBeanId),

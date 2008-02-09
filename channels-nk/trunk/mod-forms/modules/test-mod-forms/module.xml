@@ -34,14 +34,14 @@
         <this>
             <match>ffcpl:/(entrypoints.xml|test/.*|fixtures/.*)</match>
         </this>
-		<import>
+        <import>
 			<uri>urn:com:mindalliance:channels:forms</uri>
 		</import>
         <import>
-            <uri>urn:com:mindalliance:channels:support</uri>
+            <uri>urn:com:mindalliance:channels:metamodel:test</uri> <!-- import test classes and resources from metamodel test -->
         </import>
         <import>
-            <uri>urn:com:mindalliance:channels:metamodel</uri>
+            <uri>urn:com:mindalliance:channels:support</uri>
         </import>
         <import>
             <uri>urn:com:mindalliance:channels:data</uri>

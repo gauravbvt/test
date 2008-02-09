@@ -44,7 +44,7 @@
         <import>
             <uri>urn:com:mindalliance:channels:metamodel</uri>
         </import>
-        <import>
+         <import>
             <uri>urn:com:mindalliance:channels:data</uri>
         </import>
 		<import>

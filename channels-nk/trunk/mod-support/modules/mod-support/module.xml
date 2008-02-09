@@ -48,6 +48,9 @@
             <uri>urn:com:mindalliance:channels:metamodel</uri>
         </import>
         <import>
+            <uri>urn:com:mindalliance:channels:metamodel:test</uri>     <!-- required to support testing -->
+        </import>
+        <import>
             <uri>urn:org:ten60:netkernel:ext:sys</uri>
         </import>
         <import>

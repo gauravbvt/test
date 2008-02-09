@@ -31,6 +31,7 @@
                <fileset dir="${dist.dir}">
                  <include name="mod-data-*.jar"/>
                  <include name="mod-support-*.jar"/>
+                 <include name="test-mod-metamodel-*.jar"/>
                  <include name="mod-metamodel-*.jar"/>
                </fileset>
            </classpath>

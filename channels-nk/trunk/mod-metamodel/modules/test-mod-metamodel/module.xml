@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <module>
+        <!--
+     ******************************
+     Channels Metamodel Test Module
+     ******************************
+     -->
     <identity>
 		<uri>urn:com:mindalliance:channels:metamodel:test</uri>
 		<version>0.0.1</version>
@@ -17,10 +22,18 @@
 		<uri>
 			<match>ffcpl:/test/mod-metamodel-test/.*</match>
 			<match>ffcpl:/(entrypoints.xml)</match>
-		</uri>
+            <match>ffcpl:/com/mindalliance/channels/test/metamodel/.*</match>
+        </uri>
+        <class>
+            <match>com\.mindalliance\.channels\.metamodel\..*</match>
+        </class>
     </export>
     <rewrite>
-		<rule>
+        <rule>
+            <match>ffcpl:/com/mindalliance/channels/test/metamodel/(.*)</match>
+            <to>ffcpl:/resources/$1</to>
+        </rule>
+        <rule>
 			<match>ffcpl:/test/mod-metamodel-test/xunit(.*)</match>
 			<to>active:xunit+testlist@ffcpl:/test/xunit/testlist.xml$1</to>
 		</rule>
@@ -35,11 +48,14 @@
 	</rewrite>
     <mapping>
 		<this>
-			<match>ffcpl:/(entrypoints.xml|test/.*)</match>
+			<match>ffcpl:/(entrypoints.xml|test/.*|resources/.*)</match>
 		</this>
 		<import>
 			<uri>urn:com:mindalliance:channels:metamodel</uri>
 		</import>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
 		<import>
 			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
 		</import>

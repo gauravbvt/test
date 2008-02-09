@@ -29,6 +29,7 @@ class XFormAccessor extends AbstractAccessor {
                         <acceptSubmissionUrl>a URL</acceptSubmissionUrl>
                         <cancelSubmissionUrl>a URL</cancelSubmissionUrl>
                         <formCssClass>a name</formCssClass>
+                        <internalQueryUriPrefix>a URI prefix</internalQueryUriPrefix>
                     </nvp>
                     */
     // Returns XML for the XForm
@@ -45,6 +46,7 @@ class XFormAccessor extends AbstractAccessor {
             assert settings.acceptSubmissionUrl
             assert settings.cancelSubmissionUrl
             assert settings.formCssClass
+            assert settings.internalQueryUriPrefix
             settings.beanInstanceUrl += "?id=${bean.id}&db=${bean.db}"
             BeanXForm xform = new BeanXForm(bean, settings, context)       // BeanXForm generation is only alternative for now
             String xml = xform.toXml() // serialize the xform to xml

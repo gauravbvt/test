@@ -41,6 +41,7 @@ class XFormAccessorTests {
                         <acceptSubmissionUrl>bean/put</acceptSubmissionUrl>
                         <cancelSubmissionUrl>bean/abort</cancelSubmissionUrl>
                         <formCssClass>beanForm</formCssClass>
+                        <internalQueryUriPrefix>ffcpl:/com/mindalliance/channels/test/metamodel/queries</internalQueryUriPrefix>
                     </nvp>
                              """
             String xform = ctx.sourceString('active:forms_xgen', [bean:persistentBean(bean), operator:string(operator)])

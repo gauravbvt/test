@@ -46,6 +46,7 @@ class BeanXForm extends XForm {
     String beanInstanceUrl // where the xform gets its bean instance to edit
     String acceptSubmissionUrl // where to post the edited bean
     String cancelSubmissionUrl // where to announce abort of edit
+    String internalQueryUriPrefix
 
 
     BeanXForm(IPersistentBean bean, Map settings, Context context) {
