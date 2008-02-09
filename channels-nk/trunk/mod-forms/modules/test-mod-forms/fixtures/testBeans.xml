@@ -1,84 +1,84 @@
 <beans>
     <!-- TestEnvironment -->
-    <testEnvironment version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestEnvironment' id='TestEnvironment' rooted='true'>
-        <tests itemClass='com.mindalliance.channels.nk.bean.BeanReference' itemName='test'>
-            <test beanRef="com.mindalliance.channels.metamodel.TestBean"><id>Top</id></test>
-            <test beanRef="com.mindalliance.channels.metamodel.TestBean"><id>SubA</id></test>
-            <test beanRef="com.mindalliance.channels.metamodel.TestBean"><id>SubB</id></test>
-            <test beanRef="com.mindalliance.channels.metamodel.TestBean"><id>SubSub</id></test>
+    <testEnvironment version='1.0.0' beanClass='test.TestEnvironment' id='TestEnvironment' rooted='true'>
+        <tests itemClass='BeanReference' itemName='test'>
+            <test beanRef="test.TestBean"><id>Top</id></test>
+            <test beanRef="test.TestBean"><id>SubA</id></test>
+            <test beanRef="test.TestBean"><id>SubB</id></test>
+            <test beanRef="test.TestBean"><id>SubSub</id></test>
         </tests>
     </testEnvironment>
     <!--
       Top <- SubA , SubB
     -->
     <!-- Top - rooted at 'Top' -->
-    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id='Top' rooted='true'>
-        <name dataType='java.lang.String'>Top</name>
-        <kind dataType='java.lang.String'>Integration</kind>
-        <successful dataType='java.lang.Boolean'>false</successful>
-        <score dataType='java.lang.Double'>60.0</score>
-        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent' itemName='run'>
-            <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
-                <date dataType='java.util.Date'>Mon Jan 21 15:00:00 EST 2008</date>
-                <tester dataType='java.lang.String'>Joe Integrator</tester>
+    <test.TestBean version='1.0.0' beanClass='test.TestBean' id='Top' rooted='true'>
+        <name dataType='String'>Top</name>
+        <kind dataType='String'>Integration</kind>
+        <successful dataType='Boolean'>false</successful>
+        <score dataType='Double'>60.0</score>
+        <runs itemClass='test.TestRunComponent' itemName='run'>
+            <run beanClass='test.TestRunComponent'>
+                <date dataType='Date'>Mon Jan 21 15:00:00 EST 2008</date>
+                <tester dataType='String'>Joe Integrator</tester>
             </run>
         </runs>
-        <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'>
-            <test beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubA</id></test>
-            <test beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubB</id></test>
+        <subTests itemClass='BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'>
+            <test beanRef='test.TestBean'><id>SubA</id></test>
+            <test beanRef='test.TestBean'><id>SubB</id></test>
         </subTests>
-    </testBean>
+    </test.TestBean>
     <!-- SubA -->
-    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id='SubA'>
-        <name dataType='java.lang.String'>SubA</name>
-        <kind dataType='java.lang.String'>Unit</kind>
-        <parent beanRef='com.mindalliance.channels.metamodel.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
-        <successful dataType='java.lang.Boolean'>false</successful>
-        <score dataType='java.lang.Double'>60.0</score>
-        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent' itemName='run'>
-            <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
-                <date dataType='java.util.Date'>Mon Jan 21 14:00:00 EST 2008</date>
-                <tester dataType='java.lang.String'>John U. Test</tester>
+    <test.TestBean version='1.0.0' beanClass='test.TestBean' id='SubA'>
+        <name dataType='String'>SubA</name>
+        <kind dataType='String'>Unit</kind>
+        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
+        <successful dataType='Boolean'>false</successful>
+        <score dataType='Double'>60.0</score>
+        <runs itemClass='test.TestRunComponent' itemName='run'>
+            <run beanClass='test.TestRunComponent'>
+                <date dataType='Date'>Mon Jan 21 14:00:00 EST 2008</date>
+                <tester dataType='String'>John U. Test</tester>
             </run>
-            <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
-                <date dataType='java.util.Date'>Mon Jan 21 14:30:00 EST 2008</date>
-                <tester dataType='java.lang.String'>Jane Q. Hay</tester>
+            <run beanClass='test.TestRunComponent'>
+                <date dataType='Date'>Mon Jan 21 14:30:00 EST 2008</date>
+                <tester dataType='String'>Jane Q. Hay</tester>
             </run>
         </runs>
-        <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
-    </testBean>
+        <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
+    </test.TestBean>
 
     <!-- SubB <- SubSub -->
-    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubB">
-        <name dataType='java.lang.String'>SubB</name>
-        <kind dataType='java.lang.String'>Integration</kind>
-        <parent beanRef='com.mindalliance.channels.metamodel.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
-        <successful dataType='java.lang.Boolean'>true</successful>
-        <score dataType='java.lang.Double'>100.0</score>
-        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent' itemName='run'>
-            <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
-                <date dataType='java.util.Date'>Mon Jan 21 13:00:00 EST 2008</date>
-                <tester dataType='java.lang.String'>John U. Test</tester>
+    <test.TestBean version='1.0.0' beanClass='test.TestBean' id="SubB">
+        <name dataType='String'>SubB</name>
+        <kind dataType='String'>Integration</kind>
+        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
+        <successful dataType='Boolean'>true</successful>
+        <score dataType='Double'>100.0</score>
+        <runs itemClass='test.TestRunComponent' itemName='run'>
+            <run beanClass='test.TestRunComponent'>
+                <date dataType='Date'>Mon Jan 21 13:00:00 EST 2008</date>
+                <tester dataType='String'>John U. Test</tester>
             </run>
         </runs>
-         <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'>
-            <test beanRef='com.mindalliance.channels.metamodel.TestBean'><id>SubSub</id></test>
+         <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'>
+            <test beanRef='test.TestBean'><id>SubSub</id></test>
         </subTests>
-    </testBean>
+    </test.TestBean>
 
     <!-- SubSub -->
-    <testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean' id="SubSub">
-        <name dataType='java.lang.String'>SubSub</name>
-        <kind dataType='java.lang.String'>Unit</kind>
-        <parent beanRef='com.mindalliance.channels.metamodel.TestBean' domain='_,_,_,parents_domain.groovy'><id>SubB</id></parent>
-        <successful dataType='java.lang.Boolean'>true</successful>
-        <score dataType='java.lang.Double'>100.0</score>
-        <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent' itemName="run">
-            <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
-                <date dataType='java.util.Date'>Mon Jan 21 12:00:00 EST 2008</date>
-                <tester dataType='java.lang.String'>Bob A. Sess</tester>
+    <test.TestBean version='1.0.0' beanClass='test.TestBean' id="SubSub">
+        <name dataType='String'>SubSub</name>
+        <kind dataType='String'>Unit</kind>
+        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>SubB</id></parent>
+        <successful dataType='Boolean'>true</successful>
+        <score dataType='Double'>100.0</score>
+        <runs itemClass='test.TestRunComponent' itemName="run">
+            <run beanClass='test.TestRunComponent'>
+                <date dataType='Date'>Mon Jan 21 12:00:00 EST 2008</date>
+                <tester dataType='String'>Bob A. Sess</tester>
             </run>
         </runs>
-        <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
-    </testBean>
+        <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
+    </test.TestBean>
 </beans>

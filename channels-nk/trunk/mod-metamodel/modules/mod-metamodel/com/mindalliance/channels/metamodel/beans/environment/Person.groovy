@@ -1,4 +1,4 @@
-package com.mindalliance.channels.metamodel
+package com.mindalliance.channels.metamodel.beans.environment
 
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean
 import com.mindalliance.channels.nk.bean.BeanReference

@@ -13,6 +13,7 @@ import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.nk.bean.IBean
 import com.mindalliance.channels.nk.bean.IBeanList
 import com.ten60.netkernel.urii.aspect.IAspectString
+import com.mindalliance.channels.nk.Registry
 
 /**
 * Created by IntelliJ IDEA.
@@ -78,7 +79,7 @@ class PersistentBeanCategory {
             def beanMemory = BeanRequestContext.getBeanMemory()
             bean = beanMemory.retrieveBean(db, id, context)
             if (bean) {
-                if (beanClass) assert bean.class.name == beanClass  // optional type checking
+                if (beanClass) assert beanClass == Registry.getRegistry().nameFor(bean.class)  // optional type checking
             }
             else {
                 // clean up dangling reference
@@ -99,6 +100,18 @@ class PersistentBeanCategory {
                 value = bean."$name"
             }
             return value
+        }
+    }
+
+    static void set(IBeanReference beanRef, String name, def value) {
+        if (['id', 'db', 'beanClass', 'contextBean'].contains(name)) {
+            beanRef.@"$name" = value
+        }
+        else {
+            use(PersistentBeanCategory) {
+                IPersistentBean bean = beanRef.dereference()
+                value = bean."$name" = value
+            }
         }
     }
 

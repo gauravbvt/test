@@ -1,18 +1,18 @@
-<testBean version='1.0.0' beanClass='com.mindalliance.channels.metamodel.TestBean'
+<testBean version='1.0.0' beanClass='test.TestBean'
           createdOn='Mon Jan 21 15:57:46 EST 2008' root='false'>
-    <name dataType='java.lang.String'>A test</name>
-    <successful dataType='java.lang.Boolean'>false</successful>
-    <score dataType='java.lang.Double'>100.0</score>
-    <parent beanRef='com.mindalliance.channels.metamodel.TestBean' domain='_,_,_,parents_domain.groovy'/>
-    <runs itemClass='com.mindalliance.channels.metamodel.TestRunComponent' itemName='run'>
-        <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent'>
-            <date dataType='java.util.Date'>Mon Jan 21 15:57:46 EST 2008</date>
-            <tester dataType='java.lang.String'>John Doe</tester>
+    <name dataType='String'>A test</name>
+    <successful dataType='Boolean'>false</successful>
+    <score dataType='Double'>100.0</score>
+    <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'/>
+    <runs itemClass='test.TestRunComponent' itemName='run'>
+        <run beanClass='test.TestRunComponent'>
+            <date dataType='Date'>Mon Jan 21 15:57:46 EST 2008</date>
+            <tester dataType='String'>John Doe</tester>
         </run>
-        <run beanClass='com.mindalliance.channels.metamodel.TestRunComponent' itemName='run'>
-            <date dataType='java.util.Date'>Mon Jan 21 15:57:46 EST 2008</date>
-            <tester dataType='java.lang.String'>Jane Q. Public</tester>
+        <run beanClass='test.TestRunComponent' itemName='run'>
+            <date dataType='Date'>Mon Jan 21 15:57:46 EST 2008</date>
+            <tester dataType='String'>Jane Q. Public</tester>
         </run>
     </runs>
-    <subTests itemClass='com.mindalliance.channels.nk.bean.BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'/>
+    <subTests itemClass='BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'/>
 </testBean>

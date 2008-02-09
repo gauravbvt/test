@@ -23,6 +23,8 @@ import com.mindalliance.channels.nk.bean.BeanDomain
 */
 class PersistentBeanHelper {
 
+    Registry registry = Registry.getRegistry()
+
     String xmlFromBean(IPersistentBean bean) {
         StringWriter writer = new StringWriter()
         MarkupBuilder builder = new MarkupBuilder(writer)
@@ -34,7 +36,7 @@ class PersistentBeanHelper {
     private void buildXml(def bean, MarkupBuilder builder) {
         assert bean.isPersistent()
         def props = bean.getBeanProperties()
-        builder."${elementName(bean)}"(db: bean.db, id: bean.id, version: bean.version, beanClass: bean.class.name, createdOn: bean.createdOn.toString(), root: bean.rooted) {
+        builder."${elementName(bean)}"(db: bean.db, id: bean.id, version: bean.version, beanClass: registry.nameFor(bean.class), createdOn: bean.createdOn.toString(), root: bean.rooted) {
             props.each {propKey, propValue -> buildProperty(propKey, propValue, builder)}
         }
     }
@@ -44,7 +46,7 @@ class PersistentBeanHelper {
             case ISimpleData:
                 def simpleData = propValue
                 def text = (simpleData.@value != null) ? "${simpleData.@value}" : '';
-                builder."${propKey}"(dataType: "${simpleData.@dataClass.name}", text);
+                builder."${propKey}"(dataType: "${registry.nameFor(simpleData.@dataClass)}", text);
                 break;
             case IBeanReference:
                 def beanReference = propValue
@@ -72,7 +74,7 @@ class PersistentBeanHelper {
             case IComponentBean:
                 def component = propValue;
                 def props = component.getBeanProperties();
-                builder."${propKey}"(beanClass: component.class.name) {
+                builder."${propKey}"(beanClass: registry.nameFor(component.class)) {
                     props.each {pKey, pValue -> buildProperty(pKey, pValue, builder)}
                 };
                 break;
@@ -83,14 +85,14 @@ class PersistentBeanHelper {
     }
 
     private String elementName(def bean) {
-        String name = bean.class.name.tokenize('.').reverse()[0]
+        String name = registry.nameFor(bean.class).tokenize('.').reverse()[0]
         "${name[0].toLowerCase()}${name[1..<name.size()]}"
     }
 
     // From xml to bean
     IPersistentBean persistentBeanFromXml(String doc) {
         GPathResult xml = new XmlSlurper().parseText(doc)
-        IPersistentBean bean = (IPersistentBean)Class.forName("${xml.@beanClass}").newInstance() // (IPersistentBean) Eval.me("${xml.@beanClass}.newInstance()")
+        IPersistentBean bean = (IPersistentBean)registry.classFor("${xml.@beanClass}").newInstance()
         initBeanFromXml(bean, xml)
         bean.activate()    // make sure all properties are initialized
         return bean
@@ -112,7 +114,7 @@ class PersistentBeanHelper {
         if (node.@dataType.size()) {// data
             String value = node.text()
             if (value.size()) {
-                Class dataClass = Class.forName("${node.@dataType}") // (Class)Eval.me("${node.@dataType}.class")
+                Class dataClass = registry.classFor("${node.@dataType}")
                 def data = SimpleData.from(dataClass, value)
                 return data
             }
@@ -130,7 +132,7 @@ class PersistentBeanHelper {
         }
         else if (node.@itemClass.size()) {// a list
             String aClass = node.@itemClass
-            IBeanPropertyValue itemPrototype = (IBeanPropertyValue)Class.forName(aClass).newInstance()
+            IBeanPropertyValue itemPrototype = (IBeanPropertyValue)registry.classFor(aClass).newInstance()
             if (itemPrototype instanceof IBeanReference) {
                 BeanDomain domain = (node.@itemDomain.size()) ? BeanDomain.fromString("${node.@itemDomain}") : BeanDomain.UNDEFINED
                 itemPrototype.domain = domain
@@ -144,7 +146,7 @@ class PersistentBeanHelper {
         }
         else if (node.@beanClass.size()) {// a component (non-persistent) bean
             String aClass = node.@beanClass
-            def component = Class.forName(aClass).newInstance() // Eval.me("new ${aClass}()")
+            def component = registry.classFor(aClass).newInstance()
             assert component.isComponent()
             node.children().each {child ->
                 def propValue = reifyFromXml(child)

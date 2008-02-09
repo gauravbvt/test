@@ -44,6 +44,7 @@
                 <include name="mod-support-*.jar"/>
                   <include name="mod-data-*.jar"/>
                   <include name="mod-metamodel-*.jar"/>
+                  <include name="test-mod-metamodel-*.jar"/>
               </fileset>
           </classpath>
           <javac  debug="on" />

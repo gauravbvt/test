@@ -4,6 +4,10 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.data.util.PersistentBeanCategory
 import com.mindalliance.channels.nk.bean.IPersistentBean
+import com.mindalliance.channels.nk.Registry
+import com.mindalliance.channels.metamodel.TestBean
+import com.mindalliance.channels.metamodel.TestEnvironment
+import com.mindalliance.channels.metamodel.TestRunComponent
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +27,7 @@ class XFormAccessorTests {
     }
 
     void generateXForm() {
+        Registry registry = Registry.getRegistry()
         use(NetKernelCategory, PersistentBeanCategory) {
             // Reset memory
             ctx.subrequest("active:data_memory", [type: 'delete', db: data(DB)])
