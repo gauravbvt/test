@@ -1,3 +1,9 @@
 <div class="scope"  xmlns:xrl="http://1060.org/xrl">
-     context scope
- </div>
+    <ul id="scope-tree">
+        <li><span class="organization">Organization 1</span>
+            <ul>
+                <li><span class="Role">Role1</span></li>
+            </ul>
+        </li>
+    </ul>
+</div>

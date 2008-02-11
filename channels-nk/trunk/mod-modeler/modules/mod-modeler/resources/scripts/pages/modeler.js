@@ -21,7 +21,9 @@ channels.modeler.switchToPerspective = function(perspective_code)  {
     console.info("switch to perspective", perspective_code);
     perspective_id = '#'+perspective_code;
     $(perspective_id).css('z-index', 100);
+    $(perspective_id).css('visibility', '');
     $('.perspective_main').not(perspective_id).css('z-index', 0);
+    $('.perspective_main').not(perspective_id).css('visibility', 'hidden');
     // Change perspective title
     $('#perspectives_title').html(channels.modeler.constants[perspective_code]);
 }

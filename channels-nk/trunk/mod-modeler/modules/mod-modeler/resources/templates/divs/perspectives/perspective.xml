@@ -1,4 +1,5 @@
 <div id="~~perspective~~" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
+    <script src="scripts/divs/perspectives/~~perspective~~.js"/>
     <div class="perspective_main_left">
         <xrl:include href="xrl:scope"/>
         <xrl:include href="xrl:reports"/>

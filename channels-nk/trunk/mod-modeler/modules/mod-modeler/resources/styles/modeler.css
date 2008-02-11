@@ -184,6 +184,7 @@ a.fisheyeItem {
 .scope {
     border: black dashed 1px;
     background-color: yellow;
+    height: 500px;
 }
 
 .reports {
