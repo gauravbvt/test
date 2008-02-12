@@ -1,5 +1,6 @@
 table.scroll {
-table-layout: fixed;
+    position: absolute;
+    table-layout: fixed;
 
 background-color: white;
 }

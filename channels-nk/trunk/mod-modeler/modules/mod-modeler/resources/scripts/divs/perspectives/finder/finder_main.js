@@ -1,5 +1,7 @@
-$(document).ready( function() {
-    jQuery("#finder_grid").jqGrid({
+channels_NS("channels.modeler.finder");
+
+channels.modeler.finder.initialize = function(scope) {
+    jQuery("#" + scope).find("#finder_grid").jqGrid({
         datatype: "local",
         height: 250,
         colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
@@ -27,5 +29,5 @@ $(document).ready( function() {
         {id:"9",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}
     ];
     for(var i=0;i<=mydata.length;i++)
-        jQuery("#finder_grid").addRowData(i+1,mydata[i]);
-});
+        jQuery("#" + scope).find("#finder_grid").addRowData(i+1,mydata[i]);
+}
