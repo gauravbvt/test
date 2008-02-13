@@ -2,7 +2,7 @@
 <project basedir="." default="all" name="Metamodel Modules">
     <taskdef name="groovyc"
                  classname="org.codehaus.groovy.ant.Groovyc"
-                 classpath="../../common/lib/groovy-all-1.5.2.jar"/>
+                 classpath="../../common/lib/groovy-all-1.5.4.jar"/>
 
 	<target name="init">
 		<property environment="env"/>

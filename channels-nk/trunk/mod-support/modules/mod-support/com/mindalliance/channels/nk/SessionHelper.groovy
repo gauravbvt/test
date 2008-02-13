@@ -18,27 +18,27 @@ class SessionHelper {
     SessionHelper(Context context) {
         String uri = context.getThisRequest().getArgument('session')
         ctx = context
-        if (!uri.startsWith( "session:" )) throw new Exception("Invalid session uri " + uri)
+        if (!uri.startsWith("session:")) throw new Exception("Invalid session uri " + uri)
         sessionURI = uri
     }
 
-    SessionHelper(String uri, Context context)  {
+    SessionHelper(String uri, Context context) {
         ctx = context
-        if (!uri.startsWith( "session:" )) throw new Exception("Invalid session uri " + uri)
+        if (!uri.startsWith("session:")) throw new Exception("Invalid session uri " + uri)
         sessionURI = uri
     }
 
     void storeToken(String token, IURAspect aspect) {
         use(NetKernelCategory) {
-            ctx.subrequest(makeTokenURI(token), [type:'sink', SYSTEM:aspect])
+            ctx.subrequest(makeTokenURI(token), [type: 'sink', SYSTEM: aspect])
         }
     }
 
     void storeToken(String token, String value) {
-                 use(NetKernelCategory) {
-                     ctx.subrequest(makeTokenURI(token), [type: 'sink', SYSTEM: string(value)])
-                 }
-             }
+        use(NetKernelCategory) {
+            ctx.subrequest(makeTokenURI(token), [type: 'sink', SYSTEM: string(value)])
+        }
+    }
     IURAspect recallToken(String token, Class aspectClass) {
         IURAspect aspect
         use(NetKernelCategory) {
@@ -74,21 +74,31 @@ class SessionHelper {
         return sessionURI + "+key@data:/" + token;
     }
 
-    void set(String token, String value) {
-        if (value != null) {
-            storeToken(token, value);
-        } else {
-            deleteToken(token);
-        }
-    }
 
-    void set(String token, IURAspect value) {
+    void set(String token, Object value) {
         if (value != null) {
             storeToken(token, value);
         } else {
             deleteToken(token);
         }
     }
+    //
+    //    void set(String token, IURAspect value) {
+    //        if (value != null) {
+    //            storeToken(token, value);
+    //        } else {
+    //            deleteToken(token);
+    //        }
+    //    }
+    //    void set(String token, Object value) {
+    //        if (value == null) {
+    //            deleteToken(value);
+    //        } else if (value instanceof String
+    //            || value instanceof IURAspect) {
+    //            storeToken(token, value);
+    //        }
+    //    }
+
 
     Object get(String name) {
         if (name.endsWith("?")) {
