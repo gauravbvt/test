@@ -4,7 +4,7 @@
     <name>test-mod-geonames</name>
     <uri>ffcpl:/test/mod-geonames-test/xunit</uri>
     <indexable>
-      <title>Mind-Alliance Geonames Library Tests</title>
+      <title>Channels Geonames Tests</title>
       <desc>Mind-Alliance Geonames unit-test suite</desc>
       <keywords/>
     </indexable>

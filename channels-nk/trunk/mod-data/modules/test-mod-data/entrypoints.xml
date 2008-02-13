@@ -4,7 +4,7 @@
         <name>test-mod-data</name>
         <uri>ffcpl:/test/mod-data-test/xunit</uri>
         <indexable>
-            <title>Mind-Alliance Channels Data Tests</title>
+            <title>Channels Data Tests</title>
             <desc>Mind-Alliance Channels Data test suite</desc>
             <keywords/>
         </indexable>

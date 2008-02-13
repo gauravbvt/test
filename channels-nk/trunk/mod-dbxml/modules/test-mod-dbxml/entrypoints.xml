@@ -4,7 +4,7 @@
     <name>test-mod-dbxml</name>
     <uri>ffcpl:/test/mod-dbxml-test/xunit</uri>
     <indexable>
-      <title>Mind-Alliance DBXML Library Tests</title>
+      <title>Channels DBXML Tests</title>
       <desc>Mind-Alliance DBXML unit-test suite</desc>
       <keywords/>
     </indexable>
