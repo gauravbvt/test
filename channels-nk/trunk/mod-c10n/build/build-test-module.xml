@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="C10n Test Module">
+    <taskdef name="groovyc"
+                 classname="org.codehaus.groovy.ant.Groovyc"
+                 classpath="../../common/lib/groovy-all-1.5.2.jar"/>
+
+	<target name="init">
+		<property file="./version.properties"/>
+		<echo message="Building: ${test-mod-c10n-name} version ${test-mod-c10n-version}"/>
+		<property name="app" value="${test-mod-c10n-name}"/>
+		<property name="version" value="${test-mod-c10n-version}"/>
+		<property name="base" value=".."/>
+		<property name="lib" value="${base}/lib"/>
+		<property name="src" value="${base}/modules/test-mod-c10n/"/>
+		<property name="dst" value="${src}"/>
+		<property name="dist.dir" value="../../dist"/>
+	</target>
+    
+    <target depends="init" name="compile">
+        <groovyc srcdir="${src}" destdir="${dst}">
+          <classpath>
+				<fileset dir="${netkernel.home.dir}">
+					<include name="lib/1060netkernel-*.jar"/>
+					<include name="modules/ext-layer1-*.jar"/>
+					<include name="modules/ext-xml-core-*.jar"/>
+                <include name="modules/ext-kernel-*.jar"/>
+				</fileset>
+          		<fileset dir="../../common/lib">
+          			<include name="*.jar"/>
+          		</fileset>
+              <fileset dir="${dist.dir}">
+                <include name="mod-support-*.jar"/>
+                  <include name="mod-c10n-*.jar"/>
+                  <include name="mod-metamodel-*.jar"/>
+                  <include name="test-mod-metamodel-*.jar"/>
+              </fileset>
+          </classpath>
+          <javac  debug="on" />
+        </groovyc>
+    </target>
+
+     <target depends="init,compile" name="jar">
+        <jar basedir="${dst}" compress="true" destfile="${dist.dir}/${app}-${version}.jar">
+	    <include name="**/*"/>
+	        <exclude name="**/.nbattrs*"/>
+	        <exclude name="**/.svn"/>
+        </jar>
+    </target>
+	
+	<target depends="init,clean, build, jar" description="Build everything." name="all">
+        <echo message="${app}  built."/>
+    </target>
+	
+	<target depends="init,clean,compile" description="Build." name="build">
+        <echo message="${app} built."/>
+    </target>
+		
+    <target depends="init" description="Clean all build products." name="clean">
+        <delete>
+            <fileset dir="${dst}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+    </target>
+
+</project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="Mind-Alliance Unit Tests">
+  <desc>
+    <div>
+      Unit tests for the Channels C10n.
+    </div>
+  </desc>
+  <group title="C10n Accessor Tests">
+    <uri>ffcpl:/test/xunit/testlist-c10n.xml</uri>
+  </group>
+</testlist>

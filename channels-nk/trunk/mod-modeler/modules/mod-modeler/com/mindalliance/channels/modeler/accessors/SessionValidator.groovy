@@ -3,9 +3,8 @@ package com.mindalliance.channels.modeler.accessors
 import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import org.ten60.netkernel.layer1.representation.BooleanAspect
-
-import com.mindalliance.channels.nk.Session
 import com.mindalliance.channels.nk.NetKernelCategory
+
 /**
 *
 */
@@ -13,7 +12,7 @@ class SessionValidator  extends AbstractAccessor {
 
     void source( Context ctx ) {
         use (NetKernelCategory) {
-            Session session = ctx.session;
+            def session = ctx.session;
             boolean isValid;
             if(session.'credentials?') {
                 String credentials = session.credentials

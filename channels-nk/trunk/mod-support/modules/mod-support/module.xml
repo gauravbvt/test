@@ -65,6 +65,9 @@
         <import>
             <uri>urn:org:ten60:netkernel:mod:docxter</uri>
         </import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xsecurity</uri>
+        </import>
         <super/>
     </mapping>
     <transreptors>

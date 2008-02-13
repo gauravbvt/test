@@ -1,6 +1,10 @@
 package com.mindalliance.channels.nk.bean;
 
+import com.mindalliance.channels.nk.Action;
+
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,5 +33,15 @@ public interface IPersistentBean extends IBean {
 
     // Make the bean ready for use
     public void activate();
+
+    // Get list of actions that can be taken on the persistent bean
+    public List getActions();
+
+    // Execute an action given arguments
+    public void executeAction(Action action, Map args);
+
+    public boolean isWritable();
+
+    public boolean isDeletable();
 
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-c10n</name>
+    <uri>ffcpl:/test/mod-c10n-test/xunit</uri>
+    <indexable>
+      <title>Channels Continuation  Tests</title>
+      <desc>Channels C10n unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+    <entrypoint>
+        <name>icon</name>
+        <uri>ffcpl:/com/mindalliance/channels/support/icon.png</uri>
+        <indexable>
+            <title>Icon</title>
+            <desc></desc>
+            <keywords/>
+        </indexable>
+        <categories>img hidden</categories>
+        <group>channels_c10n</group>
+        <icon/>
+    </entrypoint>
+ </entrypoints>

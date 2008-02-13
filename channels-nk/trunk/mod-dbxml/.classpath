@@ -4,6 +4,8 @@
     <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GROOVY" />
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
     <classpathentry combineaccessrules="false" kind="src" path="/common" />
+    <classpathentry kind="lib" path="/common/lib/dbxml.jar" />
+    <classpathentry kind="lib" path="/common/lib/db.jar" />
     <classpathentry kind="output" path="modules/mod-dbxml" />
 </classpath>
 

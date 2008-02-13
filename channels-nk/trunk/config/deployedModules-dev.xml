@@ -61,8 +61,10 @@
     <module>modules/forum-style-2.0.1.jar</module>
 
     <module>file://@deploy-dir@/@mod-support-name@-@mod-support-version@.jar</module>
+
     <module>file://@deploy-dir@/@mod-dbxml-name@-@mod-dbxml-version@.jar</module>
     <module>file://@deploy-dir@/@test-mod-dbxml-name@-@test-mod-dbxml-version@.jar</module>
+
     <module>file://@deploy-dir@/@mod-store-name@-@mod-store-version@.jar</module>
     <module>file://@deploy-dir@/@test-mod-store-name@-@test-mod-store-version@.jar</module>
 
@@ -71,11 +73,14 @@
 
     <module>file://@deploy-dir@/@mod-modeler-name@-@mod-modeler-version@.jar</module>
     <module>file://@deploy-dir@/@test-mod-modeler-name@-@test-mod-modeler-version@.jar</module>
+
     <module>file://@deploy-dir@/@mod-data-name@-@mod-data-version@.jar</module>
     <module>file://@deploy-dir@/@test-mod-data-name@-@test-mod-data-version@.jar</module>
+
     <module>file://@deploy-dir@/@mod-metamodel-name@-@mod-metamodel-version@.jar</module>
     <module>file://@deploy-dir@/@test-mod-metamodel-name@-@test-mod-metamodel-version@.jar</module>
-  <module>file://@deploy-dir@/@mod-metamodel-name@-@mod-metamodel-version@.jar</module>
-  <module>file://@deploy-dir@/@test-mod-metamodel-name@-@test-mod-metamodel-version@.jar</module>
+
+    <module>file://@deploy-dir@/@mod-c10n-name@-@mod-c10n-version@.jar</module>
+    <module>file://@deploy-dir@/@test-mod-c10n-name@-@test-mod-c10n-version@.jar</module>
 
 </modules>

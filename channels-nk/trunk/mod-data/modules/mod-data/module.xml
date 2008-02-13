@@ -24,7 +24,6 @@
 			<match>db:.*</match>
             <match>query:.*</match>
             <match>ffcpl:/entrypoints.xml</match>
-            <match>ffcpl:/etc/CRONConfig.xml</match>
 		</uri>
         <class>
             <match>com\.mindalliance\.channels\.data\.util\..*</match>

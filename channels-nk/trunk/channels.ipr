@@ -78,6 +78,7 @@
       <facet-type id="Spring">
         <modules>
           <module name="mod-data" />
+          <module name="mod-forms" />
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -256,10 +257,12 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-c10n/mod-c10n.iml" filepath="$PROJECT_DIR$/mod-c10n/mod-c10n.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-channels/mod-channels.iml" filepath="$PROJECT_DIR$/mod-channels/mod-channels.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-crud/mod-crud.iml" filepath="$PROJECT_DIR$/mod-crud/mod-crud.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-data/mod-data.iml" filepath="$PROJECT_DIR$/mod-data/mod-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" filepath="$PROJECT_DIR$/mod-dbxml/mod-dbxml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mod-forms/mod-forms.iml" filepath="$PROJECT_DIR$/mod-forms/mod-forms.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-geonames/mod-geonames.iml" filepath="$PROJECT_DIR$/mod-geonames/mod-geonames.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-matcher/mod-matcher.iml" filepath="$PROJECT_DIR$/mod-matcher/mod-matcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod-metamodel/mod-metamodel.iml" filepath="$PROJECT_DIR$/mod-metamodel/mod-metamodel.iml" />

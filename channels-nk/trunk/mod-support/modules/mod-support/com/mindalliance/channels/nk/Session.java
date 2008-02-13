@@ -5,7 +5,6 @@ package com.mindalliance.channels.nk;
 
 import org.ten60.netkernel.layer1.nkf.NKFException;
 
-import com.mindalliance.channels.nk.ContextSupport;
 import com.ten60.netkernel.urii.aspect.IAspectBoolean;
 import com.ten60.netkernel.urii.aspect.IAspectString;
 import com.ten60.netkernel.urii.aspect.StringAspect;
@@ -25,9 +24,33 @@ public class Session {
     }
 
     public void storeToken(String token, IURAspect aspect) throws NKFException {
+        ctx.subRequest(makeTokenURI(token)).
+            ofType(ContextSupport.SINK).
+            withSystemArg(aspect).
+            issue();
+    }
+
+    public IURAspect recallToken(String token, Class<? extends IURAspect> aspectClass) throws NKFException {
+        return ctx.subRequest(makeTokenURI(token)).transreptTo(aspectClass);
+    }
+
+    public void deleteToken(String token) throws NKFException {
+        ctx.subRequest(makeTokenURI(token)).
+            ofType(ContextSupport.DELETE).
+            issue();
+    }
+
+    public boolean tokenExists(String token) throws NKFException {
+        return ((IAspectBoolean)ctx.subRequest(makeTokenURI(token)).
+                        ofType(ContextSupport.EXISTS).
+                        issueForAspect(IAspectBoolean.class)).
+                        isTrue();
+    }
+
+      /*public void storeToken(String token, IURAspect aspect) throws NKFException {
         String value = ((IAspectString)ctx.context.transrept(aspect, IAspectString.class)).getString();
         storeToken(token, value);
-    }
+    }*/
 
     public void storeToken(String token, String value) throws NKFException {
         ctx.subRequest(makeTokenURI(token)).
@@ -36,25 +59,13 @@ public class Session {
             issue();
     }
     
-    public boolean tokenExists(String token) throws NKFException {
-        return ((IAspectBoolean)ctx.subRequest(makeTokenURI(token)).
-                        ofType(ContextSupport.EXISTS).
-                        issueForAspect(IAspectBoolean.class)).
-                        isTrue();
-    }
-    
     public String recallToken(String token) throws NKFException {
         String value = ((IAspectString)ctx.subRequest(makeTokenURI(token)).
                                             transreptTo(IAspectString.class)).getString();
         return value;
     }
     
-    public void deleteToken(String token) throws NKFException {
-        ctx.subRequest(makeTokenURI(token)).
-            ofType(ContextSupport.DELETE).
-            issue();
-    }
-    
+
     /**
      * Return the value of sessionURI.
      */
@@ -68,6 +79,15 @@ public class Session {
 
     // Groovy support
     public void set(String token, String value) throws NKFException {
+        if (value != null) {
+            storeToken(token, value);
+        } else {
+            deleteToken(token);
+        }
+    }
+
+    // Groovy support
+    public void set(String token, IURAspect value) throws NKFException {
         if (value != null) {
             storeToken(token, value);
         } else {

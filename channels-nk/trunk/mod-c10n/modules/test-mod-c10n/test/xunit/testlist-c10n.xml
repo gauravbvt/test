@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testlist title="C10n Accessor Unit Tests">
+    <desc>
+        <div>
+            <b>Continuation</b>
+            accessor unit tests for the
+            <b>Channels C10n module</b>
+            lib.
+        </div>
+    </desc>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/continuation_create_exists_delete.js</uri>
+        <assert>
+            <xpath>//b = 't'</xpath>
+        </assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/continuation_update_source.js</uri>
+        <assert>
+            <xpath>//b = 't'</xpath>
+        </assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/continuation_create_from_continuation.js</uri>
+        <assert>
+            <xpath>//b = 't'</xpath>
+        </assert>
+    </test>
+</testlist>

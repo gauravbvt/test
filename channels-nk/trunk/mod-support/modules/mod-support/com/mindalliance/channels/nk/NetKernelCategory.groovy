@@ -100,7 +100,7 @@ public class NetKernelCategory {
     }
 
     public static boolean isTrue(INKFConvenienceHelper context, String uri) {
-        return ((IAspectBoolean)context.sourceAspect(uri, IAspectBoolean.class)).isTrue()
+        return ((IAspectBoolean) context.sourceAspect(uri, IAspectBoolean.class)).isTrue()
     }
 
     public static INKFResponse respond(INKFConvenienceHelper context, IURRepresentation res, String mimeType, boolean expired) {
@@ -127,8 +127,8 @@ public class NetKernelCategory {
         respond(context, res, "text/xml", true)
     }
 
-    public static Session getSession(INKFConvenienceHelper context) {
-        return new Session(new ContextSupport(context));
+    public static SessionHelper getSession(INKFConvenienceHelper context) {
+        return new SessionHelper(context);
     }
 
     public static IURAspect sourceAspect(INKFConvenienceHelper context, String uri, Map args, Class aspectClass) {
@@ -138,6 +138,11 @@ public class NetKernelCategory {
 
     public static IURAspect sourceAspect(INKFConvenienceHelper context, String uri) {
         return context.sourceAspect(uri, IURAspect.class)
+    }
+
+    public static IURAspect sourceAspect(INKFConvenienceHelper context, String uri, Class aspectClass) {
+        IURRepresentation rep = subrequest(context, uri, [:])
+        return context.transrept(rep, aspectClass)
     }
 
     public static String sourceString(INKFConvenienceHelper context, String uri) {
@@ -151,7 +156,7 @@ public class NetKernelCategory {
     }
 
     public static Map sourceNVP(INKFConvenienceHelper context, String uri) {
-        IAspectNVP nvp = (IAspectNVP)context.sourceAspect(uri, IAspectNVP.class)
+        IAspectNVP nvp = (IAspectNVP) context.sourceAspect(uri, IAspectNVP.class)
         Map map = nvp.map
         return map
     }
@@ -191,7 +196,7 @@ public class NetKernelCategory {
     }
 
     public static GPathResult getXml(INKFConvenienceHelper context, IURRepresentation representation) {
-        return getXml(context, (IURAspect)representation.getAspects()[0])      // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
+        return getXml(context, (IURAspect) representation.getAspects()[0]) // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
     }
 
     public static GPathResult getXml(INKFConvenienceHelper context, IURAspect aspect) {
@@ -203,12 +208,12 @@ public class NetKernelCategory {
     }
 
     public static String getString(INKFConvenienceHelper context, IURAspect aspect) {
-        IAspectString stringAspect = (IAspectString)context.transrept(aspect, IAspectString.class)
+        IAspectString stringAspect = (IAspectString) context.transrept(aspect, IAspectString.class)
         return stringAspect.getString()
     }
 
     public static String getString(INKFConvenienceHelper context, IURRepresentation representation) {
-        return getString(context, (IURAspect)representation.getAspects()[0]) // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
+        return getString(context, (IURAspect) representation.getAspects()[0]) // TODO - Filter  - Now: Assumes first aspect in representation is only relevant one
     }
 
     public static Object get(INKFConvenienceHelper context, String name) {
@@ -273,7 +278,10 @@ public class NetKernelCategory {
         subrequest(context, "active:sleep", [operator: string(context, "<time>$msecs</time>")])
     }
 
-
+    public static String makeGUID(INKFConvenienceHelper context) {
+        GPathResult guid = getXml(context, "active:guid", [:])
+        return guid.text()
+    }
 
     // REQUEST
 
@@ -325,7 +333,7 @@ public class NetKernelCategory {
         StringWriter writer = new StringWriter()
         XmlNodePrinter xmlPrinter = new XmlNodePrinter(new PrintWriter(writer), '')
         xmlPrinter.print(node)
-        return writer.toString()       
+        return writer.toString()
     }
 
     // OBJECT
@@ -334,6 +342,7 @@ public class NetKernelCategory {
         return new StringAspect(value);
     }
 
+    // For simple maps only (all values are literals)
     public static IAspectNVP map(Object obj, Map map) {
         NVPImpl nvpImpl = new NVPImpl()
         map.each {key, val ->

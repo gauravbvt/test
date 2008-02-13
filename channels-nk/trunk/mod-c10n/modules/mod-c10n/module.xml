@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance C10n Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:c10n</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance C10n Module</name>
+        <description>Continuation Module</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+
+			<match>active:c10n\+.*</match>
+            <match>ffcpl:/com/mindalliance/channels/c10n/.*</match>
+			<match>ffcpl:/entrypoints.xml</match>
+		</uri>
+        <class>
+             <match>com\.mindalliance\.channels\.c10n\.(util|aspects|transreptors)\..*</match>
+         </class>
+	</export>
+	<mapping>
+		<this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+		</this>
+		<this>
+			<match>ffcpl:/resources/.*</match>
+		</this>
+        <rewrite>
+           <match>ffcpl:/com/mindalliance/channels/c10n/(.*)</match>
+            <to>ffcpl:/resources/$1</to>
+        </rewrite>
+		<ura>
+      		<match>active:c10n\+.*</match>
+      		<class>com.mindalliance.channels.c10n.accessors.C10nAccessor</class>
+    	</ura>
+        <import>
+             <uri>urn:com:mindalliance:channels:support</uri>
+         </import>
+         <import>
+             <uri>urn:com:mindalliance:channels:metamodel</uri>
+         </import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+        <import>
+            <uri>urn:org:ten60:netkernel:ext:xsecurity</uri>
+        </import>
+		<super/>
+    </mapping>
+    <transreptors>
+        <transreptor>com.mindalliance.channels.c10n.transreptors.ContinuationToXMLBinaryStream</transreptor>
+        <transreptor>com.mindalliance.channels.c10n.transreptors.XMLBinaryStreamToContinuation</transreptor>
+        <transreptor>com.mindalliance.channels.c10n.transreptors.ContinuationToXml</transreptor>
+        <transreptor>com.mindalliance.channels.c10n.transreptors.XmlToContinuation</transreptor>
+    </transreptors>
+</module>

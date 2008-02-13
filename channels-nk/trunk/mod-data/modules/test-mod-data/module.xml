@@ -2,7 +2,7 @@
 
 <module>
     <identity>
-		<uri>urn:com:mindalliance:data:test</uri>
+		<uri>urn:com:mindalliance:channels:data:test</uri>
 		<version>0.0.1</version>
     </identity>
 	<info>

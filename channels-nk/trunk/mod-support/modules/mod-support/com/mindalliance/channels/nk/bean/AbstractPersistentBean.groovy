@@ -1,13 +1,13 @@
 package com.mindalliance.channels.nk.bean
 
 import com.mindalliance.channels.nk.bean.IPersistentBean
+import com.mindalliance.channels.nk.Action
 
 /**
 * Created by IntelliJ IDEA.
 * User: jf
 * Date: Jan 16, 2008
 * Time: 1:12:16 PM
-* To change this template use File | Settings | File Templates.
 */
 abstract class AbstractPersistentBean extends AbstractBean implements IPersistentBean {
 
@@ -58,5 +58,23 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
             })
         }
     }
+
+    List getActions() {    // DEFAULT
+        List actions = []
+        return actions
+    }
+
+    void executeAction(Action action, Map args) {
+       this."${action.name}"(args)
+    }
+
+    boolean isWritable() { // DEFAULT
+        return true
+    }
+
+    boolean isDeletable() { // DEFAULT
+        return true
+    }
+
 
 }
