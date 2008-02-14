@@ -10,6 +10,8 @@ import com.mindalliance.channels.c10n.aspects.ContinuationAspect
 import org.ten60.netkernel.layer1.nkf.INKFResponse
 import com.ten60.netkernel.urii.aspect.IAspectBinaryStream
 import com.ten60.netkernel.urii.aspect.IAspectReadableBinaryStream
+import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
+import com.mindalliance.channels.c10n.util.Continuation
 
 /**
 * Created by IntelliJ IDEA.

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.c10n.accessors
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.c10n.util.Continuation
-import com.mindalliance.channels.nk.SessionHelper
 import com.mindalliance.channels.c10n.aspects.ContinuationAspect
 import com.mindalliance.channels.c10n.aspects.IAspectContinuation
 import com.mindalliance.channels.c10n.util.IContinuation
@@ -30,6 +29,9 @@ class C10nAccessor extends AbstractDataAccessor {
                 String previousId = context.sourceString("this:param:id")
                 IAspectContinuation iac = (IAspectContinuation)context.sourceAspect("active:c10n", [id:string(previousId), session:session.sessionURI], IAspectContinuation.class)
                 IContinuation previous = iac.getContinuation()
+                // Update previous with new followup
+                previous.addFollowUp(c10n.id)
+                session.storeToken(previous.id,  new ContinuationAspect(previous))
                 c10n.previous = previous.id
                 c10n.state = previous.state
             }
@@ -59,11 +61,29 @@ class C10nAccessor extends AbstractDataAccessor {
     // returns true (exception if fails)
     void delete(Context context) {
         use(NetKernelCategory) {
-            String id = context.sourceString("this:param:id")
             def session = context.session
-            session.deleteToken(id)
+            String id = context.sourceString("this:param:id")
+            deleteContinuation(id, session, context)
             context.respond(bool(true))
         }
+    }
+
+    private void deleteContinuation(String id, def session, Context context) {
+        IContinuation c10n = ((IAspectContinuation) session.recallToken(id, IAspectContinuation.class)).getContinuation()
+        if (c10n.followUps) {
+            throw new Exception("Continuation has follow-ups. Delete them first")
+        }
+        if (c10n.previous) {
+          IContinuation previous = ((IAspectContinuation) session.recallToken(c10n.previous, IAspectContinuation.class)).getContinuation()
+          previous.removeFollowUp(c10n.id)
+          if (previous.followUps) {  // update previous with one less follow up
+              session.storeToken(previous.id, new ContinuationAspect(previous))
+          }
+          else {  // delete previous since it has no more followups
+              deleteContinuation(previous.id, session, context)
+          }
+        }
+        session.deleteToken(id)
     }
 
     // Updates a continuation stored in a session

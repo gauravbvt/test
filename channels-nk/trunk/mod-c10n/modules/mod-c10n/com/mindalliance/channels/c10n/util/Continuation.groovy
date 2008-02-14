@@ -20,6 +20,7 @@ class Continuation implements IContinuation {
     Map state =[:]   // values must be either literals (recreate-able from SomeClass(someInstance.tostring()) or aspects that can transrept to and from StringAspect
     Date date = new Date()
     String previous
+    List followUps = [ ]
     private boolean aborted = false
     private boolean committed = false
 
@@ -27,32 +28,51 @@ class Continuation implements IContinuation {
         this.id = id
     }
 
-    static Continuation fromXml(String doc, INKFConvenienceHelper context) {
+    static IContinuation fromXml(String doc, INKFConvenienceHelper context) {
         GPathResult xml = new XmlSlurper().parseText(doc)
-        Continuation c10n = new Continuation(xml.@id)
-        c10n.date = new Date(xml.@createdOn)
+        Continuation c10n = new Continuation("${xml.@id}")
+        c10n.date = new Date("${xml.@date}")
         c10n.aborted = new Boolean("${xml.@aborted}")
         c10n.committed = new Boolean("${xml.@committed}")
         assert !(c10n.aborted && c10n.committed)
         if (xml.@previous.size()) {
-           c10n.previous = xml.@previous
+           c10n.previous = "${xml.@previous}"
+        }
+        xml.followUps.id.each {id ->
+            c10n.addFollowUp(id.text())
         }
         Map map = [:]
-        xml.children().each {
+        xml.state.children().each {
             def child = it
-            Class aClass = Class.forName(child.@itemClass)
+            String className = "${child.@itemClass}"
+            Class aClass = Class.forName(className)
             if (IURAspect.class.isAssignableFrom(aClass)) {
-                String s = it.text()
-                IURAspect aspect = context.transrept(new StringAspect(s), aClass)
-                map["${child.name}"] = aspect
+                String s = child.text()
+                // transrept thru XML to desired aspect
+                def aspect = context.transrept(new StringAspect(s), aClass)
+                map["${child.name()}"] = aspect
             }
             else {
-                def value = aClass.newInstance([value])
-                map["${child.name}"] = value
+                def value
+                if (aClass == String.class) {
+                    value = child.text()
+                }
+                else {
+                    value = aClass.newInstance(child.text())
+                }
+                map["${child.name()}"] = value
             }
         }
         c10n.state = map
         return c10n
+    }
+
+    void addFollowUp(String id) {
+        followUps.add(id)
+    }
+
+    void removeFollowUp(String id) {
+        followUps.remove(id)
     }
 
     boolean isAborted() {
@@ -74,21 +94,43 @@ class Continuation implements IContinuation {
     public String toXml(INKFConvenienceHelper context) {
         StringWriter writer = new StringWriter()
         MarkupBuilder builder = new MarkupBuilder(writer)
-        Map args = [id:id, createdOn:"$createdOn", aborted:"$aborted", committed:"$committed"]
+        Map args = [id:id, date:"$date", aborted:"$aborted", committed:"$committed"]
         if (previous) args += [previous:previous]
         builder.continuation(args) {
-           state.each {key,val ->
-             String content
-             if (val instanceof IURAspect) {
-                content = ((IAspectString)(context.transrept((IURAspect)val,IAspectString.class))).getString()
-             }
-             else {
-                 content = "$val"
-             }
-             builder."$key"(itemClass:val.class.name, content)
+           builder.followUps() {
+               followUps.each {id ->
+                builder.id(id)
+               }
+           }
+           builder.state() {
+               state.each {key,val ->
+                 String content
+                 String className
+                 if (val instanceof IURAspect) {
+                    content = ((IAspectString)(context.transrept((IURAspect)val,IAspectString.class))).getString()
+                    className = makeAspectInterfaceName(val.class.name)
+                 }
+                 else {
+                     className = val.class.name
+                     content = "$val"
+                 }
+                 builder."$key"(itemClass:className, content)
+               }
            }
         }
         return writer.toString()
+    }
+
+    private String makeAspectInterfaceName(String className) {
+        def match = (className =~ /(.*\.)([^\.]+)Aspect/)
+        String interfaceName = "${match[0][1]}IAspect${match[0][2]}"
+        try {
+            Class.forName(interfaceName)
+        }
+        catch(Exception e) {
+            throw IllegalArgumentException("$className is not supported in continuations")
+        }
+        return interfaceName
     }
 
 }

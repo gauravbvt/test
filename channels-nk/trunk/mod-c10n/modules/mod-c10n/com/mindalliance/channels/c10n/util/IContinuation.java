@@ -2,6 +2,8 @@ package com.mindalliance.channels.c10n.util;
 
 import java.util.Map;
 import java.util.Date;
+import java.util.List;
+
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
 
 /**
@@ -18,5 +20,6 @@ public interface IContinuation {
     boolean isAborted();
     boolean isCommitted();
     String getPrevious();   // Id of continuation that lead to this one
+    List getFollowUps(); // Ids of follow-up continuations (created from this one)
     String toXml(INKFConvenienceHelper context);
 }

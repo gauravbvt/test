@@ -26,4 +26,16 @@
             <xpath>//b = 't'</xpath>
         </assert>
     </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/continuation_delete_and_rollup.js</uri>
+        <assert>
+            <xpath>//b = 't'</xpath>
+        </assert>
+    </test>
+    <test>
+        <uri>active:javascript+operator@ffcpl:/test/accessors/continuation_transrept.js</uri>
+        <assert>
+            <xpath>//b = 't'</xpath>
+        </assert>
+    </test>
 </testlist>
