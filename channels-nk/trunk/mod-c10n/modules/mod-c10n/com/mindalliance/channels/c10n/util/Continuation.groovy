@@ -121,6 +121,7 @@ class Continuation implements IContinuation {
         return writer.toString()
     }
 
+    // ASSUMES: An Aspect used as value in the c10n's state has a class XYZAspect that implements IAspectXYZ in the same package
     private String makeAspectInterfaceName(String className) {
         def match = (className =~ /(.*\.)([^\.]+)Aspect/)
         String interfaceName = "${match[0][1]}IAspect${match[0][2]}"

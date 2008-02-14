@@ -112,11 +112,11 @@
         <!-- SCRIPTED ACTIONS -->
         <rewrite>
             <match>ffcpl:/modeler/(public/|secure/)?getActions/(.*?)/(.*?)(\+.*)</match>
-            <to>active:modeler_action+operator@data:getActions+beanDB@data:$2+beanId@data:$3$4</to>
+            <to>active:modeler_action+operator@data:getActions+beanDB@data:$2+beanID@data:$3$4</to>
         </rewrite>
         <rewrite>
             <match>ffcpl:/modeler/(public/|secure/)?start/(.*?)/(.*?)/(.*?)/(.*?)(\+.*)</match>
-            <to>active:modeler_action+operator@data(start)+script@data:$2+action@data:$3+beanDB@data:$4+beanId@data:$5$6</to>
+            <to>active:modeler_action+operator@data(start)+script@data:$2+action@data:$3+beanDB@data:$4+beanID@data:$5$6</to>
         </rewrite>
         <rewrite>
             <match>ffcpl:/modeler/(public/|secure/)?continue/(.*?)/(.*?)(\+.*)</match>

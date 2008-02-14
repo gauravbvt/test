@@ -31,6 +31,9 @@
                 </fileset>
                 <fileset dir="${dist.dir}">
                     <include name="mod-support-*.jar"/>
+                    <include name="mod-metamodel-*.jar"/>
+                    <include name="mod-data-*.jar"/>
+                    <include name="mod-c10n-*.jar"/>
                 </fileset>
             </classpath>
             <javac debug="on"/>

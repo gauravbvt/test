@@ -6,6 +6,10 @@
     <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
     <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GROOVY" />
     <classpathentry kind="src" path="/mod-support" combineaccessrules="false" />
+    <classpathentry kind="src" path="/mod-c10n" combineaccessrules="false" />
+    <classpathentry kind="src" path="/mod-data" combineaccessrules="false" />
+    <classpathentry kind="src" path="/mod-forms" combineaccessrules="false" />
+    <classpathentry kind="src" path="/mod-metamodel" combineaccessrules="false" />
     <classpathentry kind="output" path="modules/mod-modeler" />
 </classpath>
 
