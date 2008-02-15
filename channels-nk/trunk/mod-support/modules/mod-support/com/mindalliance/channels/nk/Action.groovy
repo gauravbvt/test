@@ -7,10 +7,7 @@ package com.mindalliance.channels.nk
  * To change this template use File | Settings | File Templates.
  */
 class Action {
-
-    String type
     String name
     String hint
     String label
-
 }

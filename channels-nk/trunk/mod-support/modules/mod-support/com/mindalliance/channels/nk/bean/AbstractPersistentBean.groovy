@@ -60,8 +60,9 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
     }
 
     List getActions() {    // DEFAULT
-        List actions = []
-        return actions
+        Action edit = new Action(name:'edit',label:'Edit',hint:'Edit this')
+        Action delete = new Action(name:'delete',label:'Delete.',hint:'Permanently delete this')
+        return [edit,delete]
     }
 
     void executeAction(Action action, Map args) {

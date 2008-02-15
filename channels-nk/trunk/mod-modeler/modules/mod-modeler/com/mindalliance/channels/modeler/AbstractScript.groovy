@@ -2,6 +2,8 @@ package com.mindalliance.channels.modeler
 
 import com.ten60.netkernel.urii.IURAspect
 import com.mindalliance.channels.c10n.util.IContinuation
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
+import com.mindalliance.channels.nk.bean.IPersistentBean
 
 /**
 * Created by IntelliJ IDEA.
@@ -12,14 +14,34 @@ import com.mindalliance.channels.c10n.util.IContinuation
 */
 abstract class AbstractScript implements IScript {
 
-    abstract IURAspect abort(IContinuation c10n, Map args);
+    IURAspect doStep(String step, IContinuation followUp, Map args, INKFConvenienceHelper context) {
+        return this."$step"(followUp, args, context)
+    }
 
-    abstract IURAspect commit(IContinuation c10n, Map args);
+    String xformFor(IPersistentBean bean, String commitURL, String abortURL , INKFConvenienceHelper context) {
+        String operator = """
+                  <nvp>
+                     <xfPrefix>xf</xfPrefix>
+                     <beanInstanceUrl>bean/get</beanInstanceUrl>
+                     <eventPrefix>ev</eventPrefix>
+                     <xsdSchemaPrefix>xsd</xsdSchemaPrefix>
+                     <customSchemaPrefix>xft</customSchemaPrefix>
+                     <customSchemaUrl>http://mindalliance.com/schemas/xsd/channels</customSchemaUrl>
+                     <acceptSubmissionUrl>$commitURL</acceptSubmissionUrl>
+                     <cancelSubmissionUrl$abortURL</cancelSubmissionUrl>
+                     <formCssClass>beanForm</formCssClass>
+                     <internalQueryUriPrefix>ffcpl:/com/mindalliance/channels/test/metamodel/queries</internalQueryUriPrefix>
+                 </nvp>
+                          """
+        String xform = context.sourceString('active:forms_xgen', [bean: persistentBean(bean), operator: string(operator)])
+        return xform
+    }
 
-    abstract IURAspect start(IContinuation c10n, Map args);
+    void updateBean(IPersistentBean bean, INKFConvenienceHelper context) {
+        use(NetKernelCategory) {
+            context.subrequest('active:data_bean', [type: 'sink', db:bean.db, id:bean.id, bean: persistentBean(bean)])
+        }
 
-    public IURAspect doStep(String step, IContinuation followUp, Map args) {
-        return this."$step"(followUp, args)
     }
 
 }

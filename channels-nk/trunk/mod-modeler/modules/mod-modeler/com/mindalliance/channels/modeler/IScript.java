@@ -1,7 +1,6 @@
 package com.mindalliance.channels.modeler;
 
-import com.mindalliance.channels.nk.bean.IPersistentBean;
-import com.mindalliance.channels.nk.Action;
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper;
 import com.mindalliance.channels.c10n.util.IContinuation;
 import com.ten60.netkernel.urii.IURAspect;
 
@@ -15,12 +14,12 @@ import java.util.Map;
  */
 public interface IScript {
 
-    IURAspect start(IContinuation c10n, Map args); 
+    IURAspect start(IContinuation c10n, Map args, INKFConvenienceHelper context);
 
-    IURAspect commit(IContinuation c10n, Map args);
+    IURAspect commit(IContinuation c10n, Map args, INKFConvenienceHelper context);
 
-    IURAspect abort(IContinuation c10n, Map args);
+    IURAspect abort(IContinuation c10n, Map args, INKFConvenienceHelper context);
 
-    IURAspect doStep(String step, IContinuation followUp, Map args);
+    IURAspect doStep(String step, IContinuation followUp, Map args, INKFConvenienceHelper context);
 
 }

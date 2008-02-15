@@ -23,7 +23,9 @@ import com.mindalliance.channels.c10n.aspects.ContinuationAspect
 class ActionAccessor extends AbstractAccessor {
 
     public static final String ICON_NVP_URI = 'ffcpl:/etc/iconTable.xml'
-    public static final String DEFAULT_SCRIPT_ICON_NAME = "action"
+    public static final String DEFAULT_ACTION_ICON_NAME = "action"
+    public static final Map SCRIPT_TABLE = [edit:'processXForm',
+                                            delete:'confirmIrreversible']
 
     // Manages action and continuation requests
     // operator: getActions|start|continue|commit|abort
@@ -55,10 +57,10 @@ class ActionAccessor extends AbstractAccessor {
                 builder.actions(beanId: beanID, beanDb: beanDB) {
                     bean.actions.each {action ->
                         builder.action(name: action.name) {
-                            script(action.type)
+                            script(this.scriptForAction(action.name, context))
                             label(action.label)
                             hint(action.hint)
-                            icon(this.iconForScript(action.type, context))
+                            icon(this.iconForAction(action.name, context))
                         }
                     }
                 }
@@ -91,7 +93,7 @@ class ActionAccessor extends AbstractAccessor {
                 c10n.state['action'] = actionName
                 c10n.state['bean'] = new PersistentBeanAspect(bean)
                 // Execute start script with continuation and args (modifies continuation state, returns aspect)
-                def response = script.start(c10n, args)
+                def response = script.start(c10n, args, context)
                 // Update continuation
                 updateContinuation(c10n, context)
                 // Responds with aspect
@@ -120,7 +122,7 @@ class ActionAccessor extends AbstractAccessor {
             // Execute step of script with continuation and args
             Map args = map(context.params)
             String step = context.sourceString("this:param:step")
-            def response = script.doStep(step, followUp, args)
+            def response = script.doStep(step, followUp, args, context)
             // Update continuation
             updateContinuation(followup, context)
             // Respond with output of script
@@ -145,7 +147,7 @@ class ActionAccessor extends AbstractAccessor {
         assert action
         IScript script = new ScriptRegistry(context).getScript(scriptName)
          // Execute abort step (abandons transient state)
-        def response = script.abort(c10n, args)
+        def response = script.abort(c10n, args, context)
         // Destroy continuation and (recursively) destroy parent continuation if this is only child
         deleteContinuation(c10n, context)
         // Respond with output of script
@@ -166,21 +168,27 @@ class ActionAccessor extends AbstractAccessor {
         assert action
         IScript script = new ScriptRegistry(context).getScript(scriptName)
          // Execute commit step (abandons transient state)
-        def response = script.commit(c10n, args)
+        def response = script.commit(c10n, args, context)
         // Destroy continuation and (recursively) destroy parent continuation if this is only child
         deleteContinuation(c10n, context)
         // Respond with output of script
         context.respond(response)
     }
 
-    private iconForScript(String scriptName, Context context) {
+    private String iconForAction(String actionName, Context context) {
         String icon
         use(NetKernelCategory) {
             Map icons = context.sourceNVP(ICON_NVP_URI)
-            icon = icons[scriptName]
+            icon = icons[actionName]
 
         }
-        return icon ?: icons[DEFAULT_SCRIPT_ICON_NAME]
+        return icon ?: icons[DEFAULT_ACTION_ICON_NAME]
+    }
+
+    private String scriptForAction(String actionName, Context contect) {
+       String scriptName = SCRIPT_TABLE[actionName]
+       if(!scriptName) throw Exception("No script defined for action $actionName")
+       return scriptName
     }
 
     private IPersistentBean retrieveBean(String beanDB, String beanID, Context context) {
