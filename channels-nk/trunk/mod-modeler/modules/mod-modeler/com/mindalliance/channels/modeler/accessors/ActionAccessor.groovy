@@ -24,8 +24,8 @@ class ActionAccessor extends AbstractAccessor {
 
     public static final String ICON_NVP_URI = 'ffcpl:/etc/iconTable.xml'
     public static final String DEFAULT_ACTION_ICON_NAME = "action"
-    public static final Map SCRIPT_TABLE = [edit:'processXForm',
-                                            delete:'confirmIrreversible']
+    public static final Map SCRIPT_TABLE = [edit:'ProcessXForm',
+                                            delete:'ConfirmIrreversible']
 
     // Manages action and continuation requests
     // operator: getActions|start|continue|commit|abort
