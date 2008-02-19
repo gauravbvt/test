@@ -49,6 +49,7 @@ public class NetKernelCategory {
 
         def mimeType;
         def expired;
+        def cachable;
         def goldenThread;
 
         args.each {key, value ->
@@ -56,6 +57,7 @@ public class NetKernelCategory {
                 case 'type': break;
                 case 'mimeType': mimeType = value; break;
                 case 'expired': expired = value; break;
+                case 'cachable': cachable = value; break;
                 case 'goldenThread': goldenThread = value; break;
                 case 'SYSTEM': req.addSystemArgument(value); break;
                 default: req.addArgument(key, value)
@@ -75,11 +77,14 @@ public class NetKernelCategory {
         }
 
         if (expired) {
-            if (!response) {
+            if (!response)
                 response = context.createResponseFrom(rep)
-
-                response.setExpired()
-            }
+            response.setExpired()
+        }
+        if (cachable) {
+            if (!response)
+                response = context.createResponseFrom(rep)
+            response.setCacheable()
         }
         if (response != null) {
             context.setResponse(response)
@@ -283,6 +288,33 @@ public class NetKernelCategory {
         return guid.text()
     }
 
+    public static double match(INKFConvenienceHelper context, final String text, final String target ) {
+        String eText = URLEncoder.encode( text ).replaceAll( "\\+", "%20" )
+        String eTarget = URLEncoder.encode( target ).replaceAll( "\\+", "%20" )
+        GPathResult matches = sourceXML( context, "active:matcher",
+                    [ text: "data:,$eText", target: "data:,$eTarget" ] )
+        return Double.parseDouble( matches.match[0].@value.toString() )
+    }
+
+    public static List<String> relevanceSort( INKFConvenienceHelper context, final String text, final Collection<String> values ) {
+        Set sorter = new TreeSet([
+                compare: {a, b ->
+                    return b[0] == a[0]? a[1].compareTo( b[1] ) : b[0].compareTo( a[0] )
+                },
+                equals: { a, b -> a == b }
+           ] as Comparator )
+
+        Map args = new HashMap()
+        args[ "text" ] = text.data( text )
+        values.eachWithIndex { v,i -> args[ "target$i" ] = v.data( v ) }
+
+        GPathResult matches = sourceXML( context, "active:matcher", args )
+        matches.match.each {
+            sorter.add( [ Double.parseDouble( it.@value.toString() ), it.@target ] ) }
+
+        sorter.collect { it[1] }.asList()
+    }
+
     // REQUEST
 
     public static Object get(INKFRequestReadOnly self, String name) {
@@ -352,7 +384,7 @@ public class NetKernelCategory {
     }
 
     public static String data(Object obj, Object value) throws Exception {
-        return "data:text/plain," + URLEncoder.encode(value.toString(), "UTF-8");
+        return "data:text/plain," + URLEncoder.encode(value.toString(), "UTF-8").replaceAll( "\\+", "%20" );
     }
 
     public static IAspectXDA xda(Object obj, IXDAReadOnly document) {

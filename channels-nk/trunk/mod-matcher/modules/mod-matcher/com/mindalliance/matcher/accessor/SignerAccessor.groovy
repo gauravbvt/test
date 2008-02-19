@@ -2,7 +2,6 @@ package com.mindalliance.matcher.accessor
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 
-import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import com.mindalliance.channels.nk.NetKernelCategory
 import groovy.xml.MarkupBuilder
 import groovy.util.slurpersupport.GPathResult
@@ -15,7 +14,7 @@ import org.ten60.netkernel.layer1.nkf.INKFResponse
  * <a href="http://www.informatik.uni-freiburg.de/~ksimon/papers/CIKM-06-Proximity.pdf">
  * this article</a>.
  */
-class SignerAccessor extends AbstractAccessor {
+class SignerAccessor extends ConfigedAccessor {
 
     /**
      * Return the parent topic of a topic.
@@ -113,8 +112,6 @@ class SignerAccessor extends AbstractAccessor {
              }
          }
 
-         // Normalize
-         // scores.each { key,val -> scores[ key ] = val / n  }
          scores.remove( "" )
 
          return scores
@@ -135,34 +132,27 @@ class SignerAccessor extends AbstractAccessor {
        return result
     }
 
-    private GPathResult getRawTopics( Context ctx, String source, String text ) {
-        String sanitizedText = URLEncoder.encode( text ).replaceAll( "\\+", "%20" )
-        return ctx.sourceXML( "$source-cooked:$sanitizedText" )
-    }
-
     /**
      * Produce a signature for given text.
      */
     void source( Context ctx ) {
         use( NetKernelCategory ) {
-            String text = ctx.sourceString("this:param:text").replaceAll("_", " ");
+            String      text             = getText( ctx )
+            GPathResult config           = getConfig( ctx )
 
-            INKFRequestReadOnly request = ctx.request
-            GPathResult config = ctx.sourceXML(
-                 MatcherAccessor.getConfigUri( request ) )
-
-            String source = config.source
-            double halfLife = Double.valueOf( config.halfLife.toString() )
-            double childCountWeight = Double.valueOf( config.childCountWeight.toString() );
-            double childScoreWeight = Double.valueOf( config.childScoreWeight.toString() );
+            String      source           = config.source
+            double      halfLife         = Double.valueOf( config.halfLife.toString() )
+            double      childCountWeight = Double.valueOf( config.childCountWeight.toString() );
+            double      childScoreWeight = Double.valueOf( config.childScoreWeight.toString() );
 
             def writer = new StringWriter()
             new MarkupBuilder(writer).signature( text: text ) {
                 sign(
-                    getRawTopics( ctx, source, text ),
+                    ctx.sourceXML( "$source-cooked:${ encode( text ) }" ),
                     halfLife,
                     childCountWeight,
-                    childScoreWeight ).each {
+                    childScoreWeight
+                    ).each {
 
                     topic(name: it.key, value: it.value)
                 }
@@ -170,8 +160,6 @@ class SignerAccessor extends AbstractAccessor {
 
             INKFResponse response = ctx.respond( string( writer.toString() ), "text/xml", false )
             response.setCacheable()
-
-            return response
         }
     }
 

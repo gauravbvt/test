@@ -36,8 +36,8 @@ class MatrixTest {
             result = Double.valueOf(
                 context.getXml(
                     context.subrequest("active:matcher",
-                        [ text: "data:,${ encode( text ) }",
-                          target: "data:,${ encode( target ) }",
+                        [ text: data( text ),
+                          target: data( target ),
                           config: config
                         ])
                     ).match.@value.toString() )

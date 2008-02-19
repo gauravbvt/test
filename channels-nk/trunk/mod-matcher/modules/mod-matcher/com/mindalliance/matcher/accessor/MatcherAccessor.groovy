@@ -3,7 +3,6 @@ package com.mindalliance.matcher.accessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import groovy.xml.MarkupBuilder
 import com.mindalliance.channels.nk.NetKernelCategory
-import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import groovy.util.slurpersupport.GPathResult
 import org.ten60.netkernel.layer1.nkf.INKFRequestReadOnly
 import org.ten60.netkernel.layer1.nkf.INKFResponse
@@ -12,23 +11,18 @@ import org.ten60.netkernel.layer1.nkf.INKFResponse
  * Basic semantic proximity matching.
  * TODO explain how its done
  */
-class MatcherAccessor extends AbstractAccessor {
-
-    final static String DefaultConfigUrl = "ffcpl:/etc/MatcherConfig.xml"
-
-    static String getConfigUri( INKFRequestReadOnly request ) {
-        return request.argumentExists( "config" ) ?
-                "this:param:config" : DefaultConfigUrl
-    }
+class MatcherAccessor extends ConfigedAccessor {
 
     private GPathResult getSignature(
-            Context ctx, String paramUri, String configUri) {
+            Context ctx, boolean chop, String paramUri, String configUri) {
 
-        Map parms = [ text: "this:param:$paramUri" ]
-        if ( configUri != DefaultConfigUrl )
-            parms[ "config" ] = configUri
+        Map parms = [text: "this:param:$paramUri"]
+        if (configUri != ConfigedAccessor.DefaultConfigUrl)
+            parms["config"] = configUri
 
-        return ctx.getXml( ctx.subrequest( "active:signer", parms ) )
+
+        final String request = chop? "active:chopper" : "active:signer"
+        return ctx.getXml( ctx.subrequest(request, parms) )
     }
 
     /**
@@ -103,25 +97,27 @@ class MatcherAccessor extends AbstractAccessor {
 
             INKFRequestReadOnly request = ctx.request
             String configUri = getConfigUri( request )
-            GPathResult sText = getSignature( ctx, "text", configUri )
+            GPathResult config = getConfig(ctx)
+            boolean chop = Boolean.parseBoolean( config.chop.toString() )
+            GPathResult sText = getSignature( ctx, chop, "text", configUri )
 
             def targets = request.arguments
                     .findAll {it.startsWith("target")}
 
             Writer writer = new StringWriter()
-            new MarkupBuilder(writer).matches(
-                    text: ctx.sourceString("this:param:text").replaceAll("_", " "),
-                    source: ctx.sourceXML(configUri).source) {
+            MarkupBuilder builder = new MarkupBuilder(writer)
+            builder.matches(
+                    text: getText( ctx ),
+                    source: config.source) {
                 targets.each {
-                    match(
-                            target: it,
-                            value: doMatch(sText, getSignature( ctx, it, configUri )))
+                    builder.match(
+                        target: ctx.sourceString( "this:param:$it" ),
+                        value: doMatch(sText, getSignature( ctx, chop, it, configUri )))
                 }
             }
 
             INKFResponse r = ctx.respond(string(writer.toString()), "text/xml", false)
             r.setCacheable()
-            return r
         }
     }
 }

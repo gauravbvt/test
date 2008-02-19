@@ -29,6 +29,9 @@
                 <fileset dir="../../common/lib">
                     <include name="*.jar"/>
                 </fileset>
+                <fileset dir="../modules/mod-matcher/lib">
+                    <include name="*.jar"/>
+                </fileset>
                 <fileset dir="${dist.dir}">
                     <include name="mod-support-*.jar"/>
                 </fileset>

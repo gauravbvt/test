@@ -4,6 +4,13 @@
     <source>yahoo</source>
 
     <!--
+    * Set to true to split text into smaller portions.
+    * This is used only for calls to active:Matcher, which
+    * will call either active:chopper or active:signer...
+    -->
+    <chop>false</chop>
+
+    <!--
     * Index of the raw topic for which the impact weight is exactly half as much
     * as the weight of top-ranked result topic.
     * When smaller than 1, all ranked topic are equivalent (ie, the ordering of the

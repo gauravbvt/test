@@ -53,10 +53,18 @@
             <to>active:signer+$1</to>
         </rewrite>
         <rewrite>
+            <match>ffcpl:/matcher/chop\+(.*)</match>
+            <to>active:chopper+$1</to>
+        </rewrite>
+        <rewrite>
             <match>ffcpl:/matcher/test\+text@(.*)\+source@([^\+]+)\+?.*</match>
             <to>$2:$1</to>
         </rewrite>
 
+        <rewrite>
+            <match>^wordnet-cooked:(.*)</match>
+            <to>active:wordnet$1</to>
+        </rewrite>
         <rewrite>
             <match>^([^:]+)-cooked:(.*)</match>
             <to>active:xslt+operand@$1-xhtml:$e2+operator@ffcpl:/resources/$1-clean.xsl</to>
@@ -97,6 +105,18 @@
         <ura>
               <match>active:httpClient\+.*</match>
               <class>com.mindalliance.matcher.accessor.HttpClient</class>
+        </ura>
+        <ura>
+              <match>active:combiner\+.*</match>
+              <class>com.mindalliance.matcher.accessor.Combiner</class>
+        </ura>
+        <ura>
+              <match>active:chopper\+.*</match>
+              <class>com.mindalliance.matcher.accessor.Chopper</class>
+        </ura>
+        <ura>
+              <match>active:wordnet.*</match>
+              <class>com.mindalliance.matcher.accessor.WordNetAccessor</class>
         </ura>
 
 		<rewrite>
