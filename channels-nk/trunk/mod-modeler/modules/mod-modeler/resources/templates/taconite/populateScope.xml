@@ -1,0 +1,18 @@
+<taconite>
+    <replaceContent select="#~~target~~ .scope">
+        <ul id="scope-tree">
+            <li>
+                <span class="organization" id="organization1">Organization 1</span>
+                <ul>
+                    <li>
+                        <span class="role" id="role1">Role1</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </replaceContent>
+    <eval><![CDATA[ 
+        channels.modeler.scope.initialize('~~target~~');
+    ]]>
+    </eval>
+</taconite>

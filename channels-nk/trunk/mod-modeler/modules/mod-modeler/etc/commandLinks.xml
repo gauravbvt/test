@@ -45,4 +45,16 @@
     <name>notImplementedYet</name>
     <int>ffcpl:/resources/templates/taconite/notImplementedYet.xml</int>
   </link>
+
+
+  <link>
+      <name>refreshScope</name>
+      <ext>/refreshScope</ext>
+      <int>active:modeler_processTemplate+template@xrl:populateScope</int>
+      <args>all</args>
+  </link>
+  <link>
+      <name>populateScope</name>
+      <int>ffcpl:/resources/templates/taconite/populateScope.xml</int>
+  </link>
 </links>
