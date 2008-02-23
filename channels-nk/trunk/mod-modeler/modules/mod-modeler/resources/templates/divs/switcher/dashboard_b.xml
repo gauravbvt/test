@@ -1,3 +1,6 @@
 <div id="dashboard_b">
-    dashboard_b
+    <ul>
+        <li><a href="javascript:alert('TBD');">Issues (3)</a></li>
+        <li><a href="javascript:alert('TBD');">Recommendations (6)</a></li>
+    </ul>
 </div>

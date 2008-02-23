@@ -1,28 +1,31 @@
 <div id="perspectives_menu">
-    <script src="scripts/divs/switcher/perspectives_menu.js" type="text/javascript"/>
+    <h2>Perspectives</h2>
     <div id="mainMenu" class="fisheye">
         <div class="fisheyeContainer"> <!--  target is an id without the # (or else no value is sent) -->
-            <a onclick="channels.modeler.switchToPerspective('home')" class="fisheyeItem">
-                <img src="images/icons/large/channels.png" width="30"/>
+            <ul>
+            <li><a id="home_button" onclick="channels.modeler.switchToPerspective('home')" class="selected fisheyeItem">
+                <img src="images/icons/medium/channels.png" width="32" height="32"/>
                 <span>Home</span>
-            </a>
-            <a onclick="channels.modeler.switchToPerspective('context')" class="fisheyeItem">
-                <img src="images/icons/large/context.png" width="30"/>
+            </a></li>
+            <li><a id="context_button" onclick="channels.modeler.switchToPerspective('context')" class="fisheyeItem">
+                <img src="images/icons/medium/context.png" width="32" height="32"/>
                 <span>Context</span>
-            </a>
-            <a onclick="channels.modeler.switchToPerspective('model')" class="fisheyeItem">
-                <img src="images/icons/large/model.png" width="30"/>
+            </a></li>
+            <li><a id="model_button" onclick="channels.modeler.switchToPerspective('model')" class="fisheyeItem">
+                <img src="images/icons/medium/model.png" width="32" height="32"/>
                 <span>Model</span>
-            </a>
-            <a onclick="channels.modeler.switchToPerspective('scenarios')" class="fisheyeItem">
-                <img src="images/icons/large/scenario.png" width="30"/>
+            </a></li>
+            <li><a id="scenarios_button" onclick="channels.modeler.switchToPerspective('scenarios')" class="fisheyeItem">
+                <img src="images/icons/medium/scenario.png" width="32" height="32"/>
                 <span>Scenarios</span>
-            </a>
-            <a onclick="channels.modeler.switchToPerspective('q_and_a_etc')"
+            </a></li>
+            <li><a id="q_and_a_etc_button" onclick="channels.modeler.switchToPerspective('q_and_a_etc')"
                class="fisheyeItem">
-                <img src="images/icons/large/question_and_answer.png" width="30"/>
+                <img src="images/icons/medium/question_and_answer.png" width="32" height="32"/>
                 <span>Q&amp;A etc.</span>
-            </a>
+            </a></li>
+            </ul>
+
         </div>
     </div>
 </div>

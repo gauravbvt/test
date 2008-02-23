@@ -19,9 +19,10 @@
 
 body {
     max-width:1024px;
+    margin: 0px auto;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     /*Didot, Georgia, */
-    font-size: small;
+    font-size: 80%;
 }
 
 #login {
@@ -81,120 +82,88 @@ xf|input.loginField > .xf-value , xf|secret.loginField > .xf-value, xf|select1.l
     width: 100px;
 }
 */
-#switcher {
-    width: 100%;
-    border: black dashed 1px;
+
+html, body {
+    height: 100%;
+}
+div.modeler {
+    position: relative;
+    min-height: 100%;
 }
 
-#dashboard_a {
-    float: left;
-    border: black dashed 1px;
-    width: 25%;
-    min-width: 200px;
-}
-
-#dashboard_b {
-    float: right;
-    border: black dashed 1px;
-    width: 25%;
-    min-width: 200px;
-}
-
-#perspectives_menu {
-    border: black dashed 1px;
-    float: left;
-    width: 49%;
-    min-width: 300px;
-
-}
-.fisheye {
-	text-align: center;
-	height: 50px;
-	position: relative;
-}
-a.fisheyeItem {
-	text-align: center;
-	color: #000;
-	font-weight: bold;
-	text-decoration: none;
-	width: 40px;
-	position: absolute;
-	display: block;
-	top: 0;
-}
-.fisheyeItem img {
-	border: none;
-	margin: 0 auto 5px auto;
-	width: 100%;
-}
-.fisheyeItem span {
-	display: none;
-	position: absolute;
-}
-.fisheyeContainer {
-	background-color: #ccc;
-	height: 50px;
-	width: 200px;
-	left: 500px;
-	position: absolute;
-}
 #perspectives {
-    clear: both;
     width: 100%;
-    position: static;
-    border: black dashed 1px;
-}
-
-#perspectives_top {
-    position: static;
-    border: black dashed 1px;
+    position: absolute;
+    top: 5px;
+    bottom: 65px;
 }
 
 #perspectives_title {
-    float: left;
-    font-size: 1.5em;
-    border: black dashed 1px;
+    font-size: large;
+    border-bottom: 2px solid #4C8021;
 }
 
 #perspectives_toolbar {
-    float: right;
-    background-color: lightgray;
-    padding: 2px;
-    border: black solid 1px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: smaller;
+    background-color: #CCDBC0;
+    color: black;
+    padding: 3px 5px;
+}
+
+#perspectives_toolbar h2 {
+    display: none;
+}
+#perspectives_toolbar ul {
+    list-style: none;
+}
+#perspectives_toolbar li {
+    display: inline;    
+}
+#perspectives_toolbar li:before {
+    content: " - ";    
+}
+#perspectives_toolbar ul:after {
+    content: " - ";    
+}
+#perspectives_toolbar a {
+    text-decoration: none;
+    color: black;
+}
+#perspectives_toolbar a:hover {
+          border-bottom: 1px dotted black;
 }
 
 #perspectives_panes {
-    clear: both;
-    position: relative;
-    border: black solid 1px;
+    width: 100%;
+    overflow: auto;
+    position: absolute;
+    bottom: 0px;
+    top: 2.2em;
 }
 
 .perspective_main {
-    position: absolute;
     width: 100%;
-    border: black dashed 1px;
 }
 
 .perspective_main_left {
+    width: 23em;
     float: left;
-    width: 25%;
-    border: black dashed 1px;
+}
+
+.perspective_main_right {
+    margin: 0px 0px 0px 23.5em;
 }
 
 .scope {
-    border: black dashed 1px;
     background-color: yellow;
-    height: 500px;
+    height: 200px;
 }
 
 .reports {
     height: 40px;
-    border: black dashed 1px;
-}
-
-.perspective_main_right {
-    float: right;
-    width: 74%;
     border: black dashed 1px;
 }
 
@@ -219,7 +188,7 @@ a.fisheyeItem {
 }
 
 .finder_main {
-    clear: both;
+    clear: right;
     position: static;
     border: black dashed 1px;
 }
@@ -251,4 +220,105 @@ a.fisheyeItem {
     border: black dashed 1px;
 }
 
+/* Dashboard */
 
+#switcher {
+    width: 100%;
+    max-width:1024px;
+    position: absolute;
+    bottom: 5px;
+    background-color: #CCDBC0; 
+    color: black;
+    margin: 5px 0px 0px 0px;
+}
+
+#dashboard_a h2, #perspectives_menu h2 {
+    display: none;
+}
+
+#dashboard_a, #dashboard_b {
+    color: black;
+    background-color: #CCDBC0; 
+    padding: 3px 5px;
+    font-size:smaller;
+    width: 15.15em;
+ }
+
+#dashboard_a {
+    float: left;
+}
+
+#dashboard_b {
+    float: right;
+}
+
+#dashboard_a ul, #dashboard_b ul, #mainMenu ul {
+    list-style: none;
+}
+
+#dashboard_a a, #dashboard_b a {
+    color: black;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+#dashboard_a a:hover, #dashboard_b a:hover {
+    border-bottom: 1px dotted black;
+}
+
+#perspectives_menu {
+    font-size:smaller;
+    height: 55px;
+    overflow: hidden;
+}
+
+.fisheyeContainer {
+           display: table;
+           color: black;
+           background-color: #CCDBC0; 
+	margin: 0px auto;
+}
+
+#mainMenu ul {
+    display: table-row;
+}
+
+#mainMenu li {
+    display: table-cell;
+}
+
+.fisheye {
+	text-align: center;
+}
+
+a.fisheyeItem {
+           margin: 3px 5px 5px 2px;
+           padding: 2px 0px 0px 0px;
+           display: block;
+           width: 7.26em;
+	text-align: center;
+	font-weight: normal;
+	text-decoration: none;
+	cursor: pointer;
+}
+a.fisheyeItem:hover {
+          margin: 3px 4px 3px 1px;
+          border: 1px inset white;
+}
+a.fisheyeItem.selected {
+          font-weight: bold;
+}
+
+
+.fisheyeItem img {
+           display: block;
+           margin: 0px auto;
+	border: none;
+}
+.fisheyeItem span {
+    display: block;
+    bottom: 0px;
+    text-align: center;
+    vertical-align: bottom;
+    width: 100%;
+}

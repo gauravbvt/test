@@ -1,10 +1,5 @@
 <div id="perspectives" xmlns:xrl="http://1060.org/xrl">
-    <div id="perspectives_top">
-        <div id="perspectives_title">
-            title
-        </div>
-        <xrl:include href="xrl:toolbar"/>
-    </div>
+    <h1 id="perspectives_title">title</h1>
     <div id="perspectives_panes">
         <!-- Pass nvp as param , as expected by active:modeler_processTemplate -->
         <xrl:include href="xrl:perspective"><nvp><perspective>home</perspective></nvp></xrl:include>
@@ -13,4 +8,5 @@
         <xrl:include href="xrl:perspective"><nvp><perspective>scenarios</perspective></nvp></xrl:include>
         <xrl:include href="xrl:perspective"><nvp><perspective>q_and_a_etc</perspective></nvp></xrl:include>
     </div>
+    <xrl:include href="xrl:toolbar"/>
 </div>

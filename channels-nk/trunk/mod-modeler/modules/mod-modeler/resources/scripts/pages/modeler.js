@@ -11,6 +11,7 @@ channels.modeler.constants['model'] = "Model";
 channels.modeler.constants['scenarios'] = "Scenarios";
 channels.modeler.constants['q_and_a_etc'] = "Questions, notes etc.";
 
+
 channels.modeler.initialize = function() {
    channels.modeler.switchToPerspective('home');
 }
@@ -20,10 +21,14 @@ channels.modeler.switchToPerspective = function(perspective_code)  {
     // Bring perspective on top by giving it z-index greater than those of the other perspectives
     console.info("switch to perspective", perspective_code);
     perspective_id = '#'+perspective_code;
-    //$(perspective_id).css('z-index', 100);
-    $(perspective_id).css('visibility', '');
-    //$('.perspective_main').not(perspective_id).css('z-index', 0);
-    $('.perspective_main').not(perspective_id).css('visibility', 'hidden');
-    // Change perspective title
+
+    $(perspective_id).css('display', '');
+    $('.perspective_main').not(perspective_id).css('display', 'none');
     $('#perspectives_title').html(channels.modeler.constants[perspective_code]);
+
+    // Set selected style on swither button
+    if ( channels.modeler.button != null )
+        channels.modeler.button.className = "fisheyeItem";
+    channels.modeler.button = document.getElementById( perspective_code + '_button' );
+    channels.modeler.button.className = "fisheyeItem selected";
 }

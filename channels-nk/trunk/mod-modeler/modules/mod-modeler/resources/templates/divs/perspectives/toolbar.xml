@@ -1,3 +1,7 @@
 <div id="perspectives_toolbar" xmlns:xrl="http://1060.org/xrl">
-    toolbar
+    <h2>Actions</h2>
+    <ul>
+        <li><a class="first" id="action1" href="javascript:alert('TBD');">Do something</a></li>
+        <li><a id="action2" href="javascript:alert('TBD');">Do another thing</a></li>
+    </ul>
 </div>

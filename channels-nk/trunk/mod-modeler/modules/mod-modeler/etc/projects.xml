@@ -1,8 +1,8 @@
 <acl>
-  <user>
-    <id>jf@mind-alliance.com</id>
-    <password>quebec</password>
-  </user>
+    <user>
+      <id>jf@mind-alliance.com</id>
+      <password>quebec</password>
+    </user>
   <project>
     <name>MyProject</name>
     <db>myproject</db>

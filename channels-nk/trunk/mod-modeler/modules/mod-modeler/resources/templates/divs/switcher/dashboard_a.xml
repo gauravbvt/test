@@ -1,3 +1,8 @@
 <div id="dashboard_a">
-    dashboard_a
+    <h2>Status</h2>
+    <ul>
+        <li><a href="javascript:alert('TBD');">New questions (2)</a></li>
+        <li><a href="javascript:alert('TBD');">New answers (5)</a></li>
+        <li><a href="javascript:alert('TBD');">Todos (4)</a></li>
+    </ul>
 </div>

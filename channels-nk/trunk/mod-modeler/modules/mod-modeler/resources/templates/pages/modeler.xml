@@ -19,9 +19,8 @@
   </head>
   <body>
 	  <div class="modeler">
-      <xrl:include href="xrl:switcher"/>
-      <xrl:include href="xrl:perspectives"/>
+          <xrl:include href="xrl:perspectives"/>
+          <xrl:include href="xrl:switcher"/>
     </div>
   </body>
 </html>
-  
