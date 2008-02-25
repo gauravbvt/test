@@ -4,15 +4,11 @@ channels.modeler.finder.initialize = function(scope) {
     jQuery("#" + scope).find("#finder_grid").jqGrid({
         datatype: "local",
         height: 250,
-        colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
+        colNames:['ID','Name','Description'],
         colModel:[
-            {name:'id',index:'id', width:60, sorttype:"int"},
-            {name:'invdate',index:'invdate', width:90, sorttype:"date"},
+            {name:'id',index:'id', width:10, sorttype:"int"},
             {name:'name',index:'name', width:100},
-            {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"},
-            {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"},
-            {name:'total',index:'total', width:80,align:"right",sorttype:"float"},
-            {name:'note',index:'note', width:150, sortable:false}
+            {name:'description',index:'description', width:200, align:"right",sorttype:"float"}
         ],
         imgpath: 'images'
     });

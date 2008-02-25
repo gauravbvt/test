@@ -162,6 +162,15 @@ div.modeler {
     height: 200px;
 }
 
+.scope .toggle {
+    height: 40px;
+    border: black dashed 1px;
+}
+.scope .tree {
+    clear: both;
+}
+
+
 .reports {
     height: 40px;
     border: black dashed 1px;

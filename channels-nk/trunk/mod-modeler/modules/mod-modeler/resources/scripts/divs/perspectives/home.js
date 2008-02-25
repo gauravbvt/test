@@ -1,4 +1,4 @@
 $(document).ready( function() {
-    channels.modeler.scope.initialize('home');
+    $.get('/modeler/command/refreshScope?target=home');
     channels.modeler.finder.initialize('home');
 });

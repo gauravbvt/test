@@ -1,5 +1,5 @@
 <taconite>
-    <replaceContent select="#~~target~~ .scope">
+    <replaceContent select="#~~target~~ .scope .tree">
         <ul id="scope-tree">
             <li>
                 <span class="organization" id="organization1">Organization 1</span>

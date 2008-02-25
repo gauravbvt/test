@@ -1,4 +1,4 @@
 $(document).ready( function() {
-    channels.modeler.scope.initialize('scenarios');
+    $.get('/modeler/command/refreshScope?target=scenarios');
     channels.modeler.finder.initialize('scenarios');
 });

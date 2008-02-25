@@ -1,3 +1,8 @@
 <div class="scope"  xmlns:xrl="http://1060.org/xrl">
+    <div class="toggle">
+       toggle
+    </div>
+    <div class="tree">
     <ul id="scope-tree"></ul>
+        </div>
 </div>
