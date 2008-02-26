@@ -1,6 +1,7 @@
 table.scroll {
-    position: absolute;
+    position: relative;
     table-layout: fixed;
+    font: inherit;
 
 background-color: white;
 }

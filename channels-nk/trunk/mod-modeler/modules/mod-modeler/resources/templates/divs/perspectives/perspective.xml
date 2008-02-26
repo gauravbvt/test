@@ -1,11 +1,22 @@
 <div id="~~perspective~~" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
     <script src="scripts/divs/perspectives/~~perspective~~.js"/>
+    <h2>~~title~~</h2>
     <div class="perspective_main_left">
             <xrl:include href="xrl:scope"/>
             <xrl:include href="xrl:reports"/>
     </div>
     <div class="perspective_main_right">
-            <xrl:include href="xrl:finder"/>
+        <div> <!-- relative frame to accurately place following -->
+            <div class="finder">
+                <xrl:include href="xrl:finder_control"/>
+                <div class="finder_main"><div>
+                    <table id="~~perspective~~_finder_grid" class="scroll" cellpadding="0" cellspacing="0">
+                    <tr><td></td></tr>
+                    </table>
+                </div></div>
+            </div>
             <xrl:include href="xrl:viewer"/>
+            <xrl:include href="xrl:viewer"/>
+        </div>
     </div>
 </div>

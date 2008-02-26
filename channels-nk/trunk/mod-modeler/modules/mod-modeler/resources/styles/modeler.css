@@ -5,6 +5,15 @@
 	padding: 0;
 }
 
+#dashboard_a a, #dashboard_b a, .viewer_crumbs a, #perspectives_toolbar a {
+    text-decoration: none;
+    background-color: inherit;
+    color: black;
+}
+#dashboard_a a:hover, #dashboard_b a:hover, .viewer_crumbs a:hover, #perspectives_toolbar a:hover {
+          border-bottom: 1px dotted black;
+}
+
 *:invalid > xf|alert {
     display:block;
     font-family:"Courier New", Courier, monospace;
@@ -18,11 +27,14 @@
 }
 
 body {
-    max-width:1024px;
+    max-width:80em;
+    min-width:40em;
+    min-height: 25em;
     margin: 0px auto;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     /*Didot, Georgia, */
     font-size: 80%;
+    padding: 0em 0.4em;
 }
 
 #login {
@@ -89,13 +101,14 @@ html, body {
 div.modeler {
     position: relative;
     min-height: 100%;
+    font-size: inherit;
 }
 
 #perspectives {
     width: 100%;
     position: absolute;
-    top: 5px;
-    bottom: 65px;
+    top: 0.4em;
+    bottom: 5.4em;
 }
 
 #perspectives_title {
@@ -128,93 +141,136 @@ div.modeler {
 #perspectives_toolbar ul:after {
     content: " - ";    
 }
-#perspectives_toolbar a {
-    text-decoration: none;
-    color: black;
-}
-#perspectives_toolbar a:hover {
-          border-bottom: 1px dotted black;
-}
 
 #perspectives_panes {
     width: 100%;
-    overflow: auto;
     position: absolute;
-    bottom: 0px;
-    top: 2.2em;
+    bottom: 0em;
+    top: 2.4em;
 }
 
 .perspective_main {
     width: 100%;
 }
 
+.perspective_main h2 {
+    display: none;
+ }
+
 .perspective_main_left {
-    width: 23em;
-    float: left;
+    width: 25%;
+    height: 100%;
+    position: relative;
 }
 
 .perspective_main_right {
-    margin: 0px 0px 0px 23.5em;
+    position: absolute;
+    top: 0em;
+    right: 0em;
+    bottom: 0em;
+    left: 25%;
+    margin-left: 0.4em;
+}
+div.perspective_main_right > div {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .scope {
-    background-color: yellow;
-    height: 200px;
+    position: absolute;
+    top: 0em;
+    bottom: 3.9em;
+    width: 100%;
 }
-
 .scope .toggle {
-    height: 40px;
     border: black dashed 1px;
+    position: absolute;
+    top: 0em;
+    height: 3em;
+    left: 0em;
+    right: 0em;
 }
 .scope .tree {
-    clear: both;
+    position: absolute;
+    top: 3.4em;
+    bottom: 0em;
+    border: black dashed 1px;
+    left: 0em;
+    right: 0em;
+    overflow: auto;
 }
-
 
 .reports {
-    height: 40px;
+    position: absolute;
+    bottom: 0em;
+    height:3.5em;
+    left: 0em;
+    right: 0em;
     border: black dashed 1px;
+
 }
+.reports h3 {
+    display: none;
+}
+.reports ol {
+    font-size: smaller;
+    list-style-type: none;
+ }
+.reports li {
+    display: inline;
+ }
 
 .finder {
-    position: static;
-    border: black dashed 1px;
+    position: absolute;
+    top: 0em;
+    bottom: 50%;
+    width: 100%;
+    overflow: hidden;
 }
 
 .finder_control {
-    position: static;
-    border: black dashed 1px;
+    font-size: smaller;
+    margin-bottom: 0.4em;
+    padding: 1px 0.4em 1px 0.4em;
+    background-color: #CCDBC0;
+    color: black;
+    height: 2em;
+}
+
+.finder_control select, .finder_control input {
+    border: 1px inset #F9FFF4;
 }
 
 .finder_show {
     float: left;
-    border: black dashed 1px;
 }
 
 .finder_filter {
-    float: right;
-    border: black dashed 1px;
+    text-align: right;
+    white-space: nowrap;
 }
 
-.finder_main {
-    clear: right;
-    position: static;
+div.finder_main {
     border: black dashed 1px;
+    position: absolute;
+    bottom: 0em;
+    top: 2em;
+    left: 0em;
+    right: 0em;
+}
+div.finder_main > div {
+    display: block;
 }
 
 .viewer {
-    position: static;
-    border: black dashed 1px;
-}
-
-.viewer_control {
-    position: static;
-    border: black dashed 1px;
-}
-
-.viewer_crumbs {
-    float: left;
-    border: black dashed 1px;
+    position: absolute;
+    top: 50%;
+    bottom: 0em;
+    left: 0em;
+    right: 0em;
+    margin-top: 0.4em;
+    overflow: auto;
 }
 
 .viewer_buttons {
@@ -224,21 +280,39 @@ div.modeler {
 }
 
 .viewer_main {
-    clear: both;
-    position: static;
-    border: black dashed 1px;
+    height: 100%;
+}
+
+.viewer_crumbs {
+    float: left;
+    margin: 0px 0.4em 0.4em 0px;
+    background-color: #CCDBC0;
+    color: black;
+}
+.viewer_crumbs ul {
+    list-style-type: none;
+    font-size: smaller;
+    padding: 0.4em;
+}
+.viewer_crumbs li {
+    display: inline;
+    cursor: pointer;
+}
+.viewer_crumbs li:before {
+    content: " \BB  ";
 }
 
 /* Dashboard */
 
 #switcher {
     width: 100%;
-    max-width:1024px;
     position: absolute;
-    bottom: 5px;
+    height: 4.5em;
+    bottom: 0.4em;
     background-color: #CCDBC0; 
     color: black;
-    margin: 5px 0px 0px 0px;
+    overflow:hidden;
+    min-height: 51px;
 }
 
 #dashboard_a h2, #perspectives_menu h2 {
@@ -250,7 +324,6 @@ div.modeler {
     background-color: #CCDBC0; 
     padding: 3px 5px;
     font-size:smaller;
-    width: 15.15em;
  }
 
 #dashboard_a {
@@ -265,20 +338,8 @@ div.modeler {
     list-style: none;
 }
 
-#dashboard_a a, #dashboard_b a {
-    color: black;
-    background-color: inherit;
-    text-decoration: none;
-}
-
-#dashboard_a a:hover, #dashboard_b a:hover {
-    border-bottom: 1px dotted black;
-}
-
 #perspectives_menu {
     font-size:smaller;
-    height: 55px;
-    overflow: hidden;
 }
 
 .fisheyeContainer {
@@ -302,9 +363,9 @@ div.modeler {
 
 a.fisheyeItem {
            margin: 3px 5px 5px 2px;
-           padding: 2px 0px 0px 0px;
+           padding: 2px 0.2em 0px 0.2em;
            display: block;
-           width: 7.26em;
+           width: 5.2em;
 	text-align: center;
 	font-weight: normal;
 	text-decoration: none;
@@ -317,7 +378,6 @@ a.fisheyeItem:hover {
 a.fisheyeItem.selected {
           font-weight: bold;
 }
-
 
 .fisheyeItem img {
            display: block;

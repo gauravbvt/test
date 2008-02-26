@@ -1,3 +1,8 @@
 <div class="reports"  xmlns:xrl="http://1060.org/xrl">
-    reports
+    <h3>Reports</h3>
+    <ol>
+        <li><a href="javascript:alert('TBD');">Report 1</a></li>
+        <li><a href="javascript:alert('TBD');">Report 2</a></li>
+        <li><a href="javascript:alert('TBD');">Report 3</a></li>
+    </ol>
 </div>

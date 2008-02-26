@@ -1,8 +1,24 @@
-<div class="finder_control"   xmlns:xrl="http://1060.org/xrl">
-    <div class="finder_show">
-        finder_show
-    </div>
-    <div class="finder_filter">
-        finder_filter
-    </div>
-</div>
+<form class="finder_control">
+    <p class="finder_show">
+        <span>Show:</span>
+        <select name="type">
+            <option value="_all" selected="true">All types</option>
+            <option value="type1">Item type 1</option>
+            <option value="type2">Item type 2</option>
+            <option value="type3">Item type 3</option>
+            <option value="type4">Item type 4</option>
+        </select></p>
+    <p class="finder_filter">
+        <span>Column:</span>
+        <select name="column">
+            <option value="_any" selected="true">Any column</option>
+            <option value="col1">Column 1</option>
+            <option value="col2">Column 2</option>
+            <option value="col3">Column 3</option>
+            <option value="col4">Column 4</option>
+            <option value="col5">Column 5</option>
+        </select>
+        <span>Containing:</span>
+        <input name="filter" type="text"></input>
+    </p>
+</form>
