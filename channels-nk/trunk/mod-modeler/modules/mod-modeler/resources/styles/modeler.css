@@ -191,7 +191,19 @@ div.perspective_main_right > div {
     left: 0em;
     right: 0em;
 }
-.scope .tree {
+
+.scope .toggle .button {
+    border: black solid 1px;
+    width: 3em;
+    height: 3em;
+    
+    float: left;
+}
+
+.scope .toggle .button.selected {
+    background-color: #eee;
+}
+.scope .treeSet {
     position: absolute;
     top: 3.4em;
     bottom: 0em;
@@ -199,6 +211,10 @@ div.perspective_main_right > div {
     left: 0em;
     right: 0em;
     overflow: auto;
+}
+
+.scope .tree {
+    position: absolute;
 }
 
 .reports {
