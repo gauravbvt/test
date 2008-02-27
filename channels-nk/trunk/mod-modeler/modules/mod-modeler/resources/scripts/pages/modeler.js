@@ -5,11 +5,11 @@ $(document).ready( function () {
     channels.modeler.initialize();
 })
 
-channels.modeler.constants['home'] = "Home";
-channels.modeler.constants['context'] = "Context";
+channels.modeler.constants['home'] = "Modeler";
+channels.modeler.constants['environment'] = "Environment";
 channels.modeler.constants['model'] = "Model";
-channels.modeler.constants['scenarios'] = "Scenarios";
-channels.modeler.constants['q_and_a_etc'] = "Questions, notes etc.";
+channels.modeler.constants['scenario'] = "Scenario";
+channels.modeler.constants['process'] = "Process";
 
 
 channels.modeler.initialize = function() {
@@ -19,7 +19,6 @@ channels.modeler.initialize = function() {
 // User switches to a perspective
 channels.modeler.switchToPerspective = function(perspective_code)  {
     // Bring perspective on top by giving it z-index greater than those of the other perspectives
-    console.info("switch to perspective", perspective_code);
     perspective_id = '#'+perspective_code;
 
     $(perspective_id).css('display', '');

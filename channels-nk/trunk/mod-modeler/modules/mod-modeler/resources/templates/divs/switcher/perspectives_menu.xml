@@ -7,22 +7,22 @@
                 <img src="images/icons/medium/channels.png" width="32" height="32"/>
                 <span>Home</span>
             </a></li>
-            <li><a id="context_button" onclick="channels.modeler.switchToPerspective('context')" class="fisheyeItem">
+            <li><a id="environment_button" onclick="channels.modeler.switchToPerspective('environment')" class="fisheyeItem">
                 <img src="images/icons/medium/context.png" width="32" height="32"/>
-                <span>Context</span>
+                <span>Environment</span>
             </a></li>
             <li><a id="model_button" onclick="channels.modeler.switchToPerspective('model')" class="fisheyeItem">
                 <img src="images/icons/medium/model.png" width="32" height="32"/>
                 <span>Model</span>
             </a></li>
-            <li><a id="scenarios_button" onclick="channels.modeler.switchToPerspective('scenarios')" class="fisheyeItem">
+            <li><a id="scenario_button" onclick="channels.modeler.switchToPerspective('scenario')" class="fisheyeItem">
                 <img src="images/icons/medium/scenario.png" width="32" height="32"/>
-                <span>Scenarios</span>
+                <span>Scenario</span>
             </a></li>
-            <li><a id="q_and_a_etc_button" onclick="channels.modeler.switchToPerspective('q_and_a_etc')"
+            <li><a id="process_button" onclick="channels.modeler.switchToPerspective('process')"
                class="fisheyeItem">
                 <img src="images/icons/medium/question_and_answer.png" width="32" height="32"/>
-                <span>Q&amp;A etc.</span>
+                <span>Process</span>
             </a></li>
             </ul>
 

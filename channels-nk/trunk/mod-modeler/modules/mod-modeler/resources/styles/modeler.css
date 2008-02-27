@@ -28,7 +28,7 @@
 
 body {
     max-width:80em;
-    min-width:40em;
+    min-width:53em;
     min-height: 25em;
     margin: 0px auto;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -223,7 +223,8 @@ div.perspective_main_right > div {
     height:3.5em;
     left: 0em;
     right: 0em;
-    border: black dashed 1px;
+    overflow: auto;
+    padding: 0.2em;
 
 }
 .reports h3 {
@@ -234,14 +235,31 @@ div.perspective_main_right > div {
     list-style-type: none;
  }
 .reports li {
-    display: inline;
+    display: block;
+    width: 10em;
+    float: left;
+    padding: 0em 0.2em 0em 1.8em;
+    background: transparent url("images/icons/xsmall/document.png") no-repeat 0.1em 50%;
+    min-height: 16px;
+ }
+.reports a {
+    text-decoration: none;
+    background-color: transparent;
+    color: black;
+    vertical-align: middle;
+    min-height: 16px;
+    border-bottom: 1px solid white;
+ }
+.reports a:hover {
+    border-bottom: 1px dotted black;
  }
 
 .finder {
     position: absolute;
     top: 0em;
+    right: 0em;
     bottom: 50%;
-    width: 100%;
+    left: 0em;
     background-color: #CCDBC0;
     padding: 0.2em;
 }
@@ -299,7 +317,13 @@ div.finder_main > div {
     color: black;
     border: 1px outset #CCDBC0;
     padding: 0em 0.2em;
+    margin: 1px; 
     width: 5em;
+    cursor: pointer;
+}
+.viewer_buttons input:hover {
+    border: 1px inset #CCDBC0;
+    margin: 2px 0px 0pt 2px; 
 }
 
 .viewer_main {
@@ -308,7 +332,7 @@ div.finder_main > div {
 
 .viewer_crumbs {
     position: absolute;
-    bottom: 0em;
+    bottom: 1px;
     margin: 0.4px 0.4em 0em 0px;
     background-color: #CCDBC0;
     color: black;
@@ -325,13 +349,15 @@ div.finder_main > div {
 .viewer_crumbs li:before {
     content: " \BB  ";
 }
+.viewer_crumbs li.first:before {
+    content: " ";
+}
 
 /* Dashboard */
 
 #switcher {
     width: 100%;
     position: absolute;
-    height: 4.5em;
     bottom: 0.4em;
     background-color: #CCDBC0; 
     color: black;
@@ -352,6 +378,7 @@ div.finder_main > div {
 
 #dashboard_a {
     float: left;
+    width: 27%;
 }
 
 #dashboard_b {
@@ -367,18 +394,8 @@ div.finder_main > div {
 }
 
 .fisheyeContainer {
-           display: table;
            color: black;
            background-color: #CCDBC0; 
-	margin: 0px auto;
-}
-
-#mainMenu ul {
-    display: table-row;
-}
-
-#mainMenu li {
-    display: table-cell;
 }
 
 .fisheye {
@@ -389,14 +406,15 @@ a.fisheyeItem {
            margin: 3px 5px 5px 2px;
            padding: 2px 0.2em 0px 0.2em;
            display: block;
-           width: 5.2em;
+           float: left;
+           width: 7em;
+           min-width: 34px;
 	text-align: center;
-	font-weight: normal;
 	text-decoration: none;
 	cursor: pointer;
 }
 a.fisheyeItem:hover {
-          margin: 3px 4px 3px 1px;
+          margin: 3px 3px 3px 2px;
           border: 1px inset white;
 }
 a.fisheyeItem.selected {
@@ -409,9 +427,4 @@ a.fisheyeItem.selected {
 	border: none;
 }
 .fisheyeItem span {
-    display: block;
-    bottom: 0px;
-    text-align: center;
-    vertical-align: bottom;
-    width: 100%;
 }

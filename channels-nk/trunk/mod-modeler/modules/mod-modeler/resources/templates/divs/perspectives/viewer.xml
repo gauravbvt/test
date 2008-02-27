@@ -1,7 +1,7 @@
 <div class="viewer" xmlns:xrl="http://1060.org/xrl">
     <div class="viewer_crumbs">
         <ul>
-            <li><a href="javascript:alert('TBD');">Item</a></li>
+            <li class="first"><a href="javascript:alert('TBD');">Item</a></li>
             <li><a href="javascript:alert('TBD');">Item</a></li>
             <li><a href="javascript:alert('TBD');">Item</a></li>
         </ul>
@@ -10,8 +10,8 @@
         viewer_main
 
         <div class="viewer_buttons">
-            <input name="ok" type="button" value="Ok"></input>
             <input name="cancel" type="button" value="Cancel"></input>
+            <input name="ok" type="button" value="Ok"></input>
         </div>
     </form>
 </div>

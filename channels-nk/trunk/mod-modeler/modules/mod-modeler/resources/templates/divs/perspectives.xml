@@ -3,10 +3,10 @@
     <div id="perspectives_panes">
         <!-- Pass nvp as param , as expected by active:modeler_processTemplate -->
         <xrl:include href="xrl:perspective"><nvp><perspective>home</perspective><title>Welcome</title></nvp></xrl:include>
-        <xrl:include href="xrl:perspective"><nvp><perspective>context</perspective><title>Context</title></nvp></xrl:include>
+        <xrl:include href="xrl:perspective"><nvp><perspective>environment</perspective><title>Environment</title></nvp></xrl:include>
         <xrl:include href="xrl:perspective"><nvp><perspective>model</perspective><title>Model</title></nvp></xrl:include>
-        <xrl:include href="xrl:perspective"><nvp><perspective>scenarios</perspective><title>Scenarios</title></nvp></xrl:include>
-        <xrl:include href="xrl:perspective"><nvp><perspective>q_and_a_etc</perspective><title>Questions/Answers</title></nvp></xrl:include>
+        <xrl:include href="xrl:perspective"><nvp><perspective>scenario</perspective><title>Scenario</title></nvp></xrl:include>
+        <xrl:include href="xrl:perspective"><nvp><perspective>process</perspective><title>Process</title></nvp></xrl:include>
     </div>
     <xrl:include href="xrl:toolbar"/>
 </div>
