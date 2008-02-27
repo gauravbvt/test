@@ -226,20 +226,20 @@ div.perspective_main_right > div {
     top: 0em;
     bottom: 50%;
     width: 100%;
-    overflow: hidden;
+    background-color: #CCDBC0;
+    padding: 0.2em;
 }
 
 .finder_control {
     font-size: smaller;
     margin-bottom: 0.4em;
     padding: 1px 0.4em 1px 0.4em;
-    background-color: #CCDBC0;
     color: black;
     height: 2em;
 }
 
 .finder_control select, .finder_control input {
-    border: 1px inset #F9FFF4;
+    border: 1px inset #CCDBC0;
 }
 
 .finder_show {
@@ -252,12 +252,12 @@ div.perspective_main_right > div {
 }
 
 div.finder_main {
-    border: black dashed 1px;
     position: absolute;
-    bottom: 0em;
-    top: 2em;
-    left: 0em;
-    right: 0em;
+    bottom: 0.4em;
+    top: 1.9em;
+    left: 0.4em;
+    right: 0.4em;
+    overflow: auto;
 }
 div.finder_main > div {
     display: block;
@@ -274,9 +274,16 @@ div.finder_main > div {
 }
 
 .viewer_buttons {
-    float: right;
-    width: 100px;
-    border: black dashed 1px;
+    position: absolute;
+    bottom: 0em;
+    right: 0em;
+}
+.viewer_buttons input {
+    background-color: #CCDBC0;
+    color: black;
+    border: 1px outset #CCDBC0;
+    padding: 0em 0.2em;
+    width: 5em;
 }
 
 .viewer_main {
@@ -284,8 +291,9 @@ div.finder_main > div {
 }
 
 .viewer_crumbs {
-    float: left;
-    margin: 0px 0.4em 0.4em 0px;
+    position: absolute;
+    bottom: 0em;
+    margin: 0.4px 0.4em 0em 0px;
     background-color: #CCDBC0;
     color: black;
 }

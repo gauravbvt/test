@@ -13,9 +13,9 @@ channels.modeler.finder.initialize = function(scope) {
             {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"},
             {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"},
             {name:'total',index:'total', width:80,align:"right",sorttype:"float"},
-            {name:'note',index:'note', width:150, sortable:false}
+            {name:'note',index:'note', width:100, sortable:false}
         ],
-        imgpath: 'images'
+        imgpath: 'support/scripts/libs/jqGrid'
     });
 
     var mydata = [
@@ -31,4 +31,10 @@ channels.modeler.finder.initialize = function(scope) {
     ];
     for(var i=0;i<=mydata.length;i++)
         grid.addRowData(scope+"_row_"+(i+1),mydata[i]);
+
+    // Big hack:  manual fixup of generated table...
+    $( "tbody:gt(0)", grid ).remove();
+    $( "tbody tr:first", grid ).remove();
+    $( "tbody tr:first", grid ).removeAttr( "style" );
+    $( "#" + scope + " div.finder_main > div > div " ).removeAttr( "style" );
 }

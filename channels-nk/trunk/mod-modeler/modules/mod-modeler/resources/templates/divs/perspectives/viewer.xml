@@ -1,14 +1,17 @@
 <div class="viewer" xmlns:xrl="http://1060.org/xrl">
-    <div class="viewer_control">
-        <div class="viewer_crumbs">
-            <ul>
-                <li><a href="javascript:alert('TBD');">Item</a></li>
-                <li><a href="javascript:alert('TBD');">Item</a></li>
-                <li><a href="javascript:alert('TBD');">Item</a></li>
-            </ul>
-        </div>
+    <div class="viewer_crumbs">
+        <ul>
+            <li><a href="javascript:alert('TBD');">Item</a></li>
+            <li><a href="javascript:alert('TBD');">Item</a></li>
+            <li><a href="javascript:alert('TBD');">Item</a></li>
+        </ul>
     </div>
-    <div class="viewer_main">
+    <form class="viewer_main">
         viewer_main
-    </div>
+
+        <div class="viewer_buttons">
+            <input name="ok" type="button" value="Ok"></input>
+            <input name="cancel" type="button" value="Cancel"></input>
+        </div>
+    </form>
 </div>

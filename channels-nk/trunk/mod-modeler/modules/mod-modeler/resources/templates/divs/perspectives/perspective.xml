@@ -16,7 +16,6 @@
                 </div></div>
             </div>
             <xrl:include href="xrl:viewer"/>
-            <xrl:include href="xrl:viewer"/>
         </div>
     </div>
 </div>

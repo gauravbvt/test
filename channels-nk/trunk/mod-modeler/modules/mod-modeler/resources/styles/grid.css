@@ -2,8 +2,8 @@ table.scroll {
     position: relative;
     table-layout: fixed;
     font: inherit;
-
-background-color: white;
+    background-color: white;
+    color: black;
 }
 
 table.scroll tr.over td {
@@ -19,31 +19,24 @@ background: #FFFFB9;
 color: Black;
 }
 
-table.scroll tbody td  {
-padding: 2px;
-text-align: left;
-border-bottom: 1px solid #D4D0C8;
-border-left: 1px solid #D4D0C8;
-text-overflow: ellipsis;
-overflow: hidden;
-white-space: nowrap;
+table.scroll td, table.scroll th  {
+    padding: 0em 0.2em;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: normal;
 }
 
 table.scroll th  {
-padding: 2px;
-/*	background-color: #ebf3fd; */
-border-bottom: 1px solid #CBC7B8;
-border-left: 1px solid #D4D0C8;
-text-align: left;
-font-weight: normal;
-overflow: hidden;
-background-image: url(support/scripts/libs/jqGrid/grid-blue-hd.gif);
+border: 1px outset #CCDBC0;
+background: #CCDBC0;
+color: inherit;
 }
 
-table.scroll th div {
-overflow: hidden;
-white-space: nowrap;
+table.scroll th div  {
 }
+
 table.scroll th span {
 cursor: e-resize;
 /*	border-right: 1px solid #D6D2C2;  */
@@ -53,9 +46,6 @@ display: block;
 margin: -2px -1px -2px 0px;
 height: 18px;
 overflow: hidden;
-}
-
-table.scroll thead {
 }
 
 div.loading {
