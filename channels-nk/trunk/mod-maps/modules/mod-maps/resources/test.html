@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google Maps JavaScript API Example</title>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAOJK4FN2RqB338fw8v0IPgBQFQod56h4ZV7JXlib1zXeyHXEL_hRSV8gbW4VLxVDBonWAFeK4q8cuMQ"
+      type="text/javascript"></script>
+    <script src="scripts/libs/masMapAPI.js" type="text/javascript"></script>  
+    <script type="text/javascript">
+
+    //<![CDATA[
+
+    function load() {
+        masMap.createMap("map") ;
+        masMap.centerOn(40.755580, -73.987255, 13) ;
+        masMap.addSelectionListener(markerSelected) ;
+    }
+    
+    function changeState() {
+        if (!_selectedMarkerID)
+            return ;
+            
+        if (masMap.getState(_selectedMarkerID) == 'normal')
+            masMap.setState(_selectedMarkerID, 'error') ;
+        else
+            masMap.setState(_selectedMarkerID, 'normal') ;
+    }
+    
+    var nm = 0 ;
+    function testCreateMarker() {
+        var mid = 'marker' + nm ;
+        nm ++ ;
+        var lat = document.getElementById('txtLat').value ;
+        var lng = document.getElementById('txtLng').value ;
+        var type = document.getElementById('selectMarkerType').value ;
+        var markerTitle = document.getElementById('txtMarkerTitle').value ;
+        var markerHTML = document.getElementById('txtMarkerHTML').value ;
+        masMap.addMarker(mid, parseFloat(lat), parseFloat(lng), type, 'normal', markerTitle, markerHTML) ;
+        masMap.centerOn(lat, lng);
+        
+        updateBounds() ;
+    }
+    
+    var _selectedMarkerID = '' ;
+    function markerSelected(markerID) {
+        var s = '' ;
+        if (!markerID) {
+            _selectedMarkerID = '' ;
+            s = 'nothing selected' ;
+        }
+        else {
+            _selectedMarkerID = s ;
+            s = 'marker ' + markerID + ' selected' ;
+        }
+            
+        document.getElementById('selectedMarker').innerHTML = s;
+    }
+    
+    function updateBounds() {
+        var e = document.getElementById('mapBounds') ;
+        e.innerHTML = masMap.getBounds(true) ;
+    }
+    
+    function fitVisible() {
+        masMap.fitVisibleOverlays(true) ;
+        
+        updateBounds() ;
+    }
+
+    //]]>
+    </script>
+  </head>
+  <body onload="load()" onunload="GUnload()">
+    <div id="map" style="width: 400px; height:300px; border: #CCCCCC thin solid;display:inline;float:left;"></div>
+    <div style="float:right;clear:right;">
+	    <div>
+		    create new marker:
+		    <br/>
+		    lat: <input type="text" id="txtLat" value="40.855580"/>
+		    <br/>
+		    lng: <input type="text" id="txtLng" value="-73.987255"/>
+		    <br/>
+		    type: <select id="selectMarkerType">
+		               <option value="person">person</option>
+		               <option value="organization">organization</option>
+		          </select>
+		    <br/>
+		    title: <input type="text" id="txtMarkerTitle" value="a title"/>
+		    <br/>
+		    desc html: <textarea id="txtMarkerHTML">i am a marker. so what? so let's dance!</textarea>      
+		    <br/>
+		    <input type="button" onclick="testCreateMarker()" value="create marker"/>
+	    </div>
+	    <div style="clear:both">
+	        other functions:
+    	    <input type="button" onclick="changeState()" value="change state"/>
+		    <input type="button" onclick="fitVisible()" value="fit visible"/>
+	    </div>
+	    <div id="selectedMarker">
+		    selected:
+	    </div>
+	    map bounds:
+	    <br/>
+	    <span id="mapBounds">
+	        
+	    </span>
+    </div>
+  </body>
+</html>
