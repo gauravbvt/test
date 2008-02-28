@@ -1,17 +1,18 @@
 <div class="viewer" xmlns:xrl="http://1060.org/xrl">
-    <div class="viewer_crumbs">
-        <ul>
-            <li class="first"><a href="javascript:alert('TBD');">Item</a></li>
-            <li><a href="javascript:alert('TBD');">Item</a></li>
-            <li><a href="javascript:alert('TBD');">Item</a></li>
-        </ul>
-    </div>
     <form class="viewer_main">
-        viewer_main
+        (Editable form will go here)
 
         <div class="viewer_buttons">
             <input name="cancel" type="button" value="Cancel"></input>
             <input name="ok" type="button" value="Ok"></input>
         </div>
     </form>
+    <div class="viewer_crumbs">
+        <h3>History</h3>
+        <ul>
+            <li class="first"><a href="javascript:alert('TBD');">Item</a></li>
+            <li><a href="javascript:alert('TBD');">Item</a></li>
+            <li><a href="javascript:alert('TBD');">Item</a></li>
+        </ul>
+    </div>
 </div>

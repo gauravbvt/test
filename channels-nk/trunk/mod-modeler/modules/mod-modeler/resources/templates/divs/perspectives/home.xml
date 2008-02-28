@@ -1,5 +1,6 @@
 <div id="home" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
     <script src="scripts/divs/perspectives/home.js"/>
+    <hr/>
     <h2>Modeler</h2>
     <div class="perspective_main_left">
             <xrl:include href="xrl:scope"/>

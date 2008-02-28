@@ -29,7 +29,7 @@
         scope.tree = {};
 
         scope.tree.add = function(name, queryUrl, queryFunction) {
-                buttonSet.append("<div class='button' id='" + name + "'>" + name +"</div>");
+                buttonSet.append("<li class='button' id='" + name + "'>" + name +"</li>");
                 treeSet.append("<div class='tree'><ul id='" + name + "' class='root'></ul></div>");
 
                 initTree(treeSet.find('.tree #' + name),queryUrl, queryFunction);

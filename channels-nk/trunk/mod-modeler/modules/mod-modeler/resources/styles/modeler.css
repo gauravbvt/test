@@ -98,6 +98,9 @@ xf|input.loginField > .xf-value , xf|secret.loginField > .xf-value, xf|select1.l
 html, body {
     height: 100%;
 }
+hr {
+    display: none;
+}
 div.modeler {
     position: relative;
     min-height: 100%;
@@ -192,6 +195,7 @@ div.perspective_main_right > div {
     left: 0em;
     right: 0em;
     z-index: 2;
+    list-style-type: none;
 }
 
 .scope .toggle .button {
@@ -342,6 +346,10 @@ div.finder_main > div {
     background-color: #CCDBC0;
     color: black;
 }
+.viewer_crumbs h3 {
+    display: none;
+}
+
 .viewer_crumbs ul {
     list-style-type: none;
     font-size: smaller;

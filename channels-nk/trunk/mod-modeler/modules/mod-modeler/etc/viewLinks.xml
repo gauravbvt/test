@@ -110,6 +110,10 @@
         <name>home</name>
         <int>ffcpl:/resources/templates/divs/perspectives/home.xml</int>
     </link>
+    <link>
+        <name>scenario</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/scenario.xml</int>
+    </link>
 
     <!-- junk -->
   <link>

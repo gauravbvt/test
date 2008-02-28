@@ -1,6 +1,6 @@
 <div class="scope"  xmlns:xrl="http://1060.org/xrl">
-    <div class="toggle">
-    </div>
+    <ol class="toggle">
+    </ol>
     <div class="treeSet">
     <!--<ul id="scope-tree"></ul>-->
     </div>
