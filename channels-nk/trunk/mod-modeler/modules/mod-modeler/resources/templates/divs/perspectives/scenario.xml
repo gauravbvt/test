@@ -8,6 +8,13 @@
     </div>
     <div class="perspective_main_right">
         <div> <!-- relative frame to accurately place following -->
+            <ul class="toggle">
+                <li class="selected">Table</li>
+                <li>Graph</li>
+                <li>Timeline</li>
+                <li>Map</li>
+                <li>Flow</li>
+            </ul>
             <div class="finder">
                 <xrl:include href="xrl:finder_control"/>
                 <div class="finder_main"><div>

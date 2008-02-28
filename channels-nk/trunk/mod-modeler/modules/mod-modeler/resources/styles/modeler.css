@@ -180,39 +180,40 @@ div.perspective_main_right > div {
     height: 100%;
 }
 
+.toggle {
+    font-size: smaller;
+    background-color: white;
+    border-bottom: 0.2em solid #CCDBC0;
+    position: absolute;
+    top: 0em;
+    left: 0em;
+    right: 0em;
+    z-index: 2;
+    list-style-type: none;
+}
+.toggle li {
+    background-color: #CCDBC0;
+    color: black;
+    border: 1px outset #CCDBC0;
+    padding: 0.25em 0.4em;
+    cursor: pointer;
+    float: left;
+}
+.toggle li.selected {
+    border-bottom: 1px solid transparent;
+    font-weight: bold;
+}
+
+.scope div.treeSet, #scenario div.finder {
+    top: 1.6em;
+}
+
 .scope {
     position: absolute;
     top: 0em;
     bottom: 3.9em;
     width: 100%;
 }
-.scope .toggle {
-    background-color: white;
-    border-bottom: 2px solid #CCDBC0;
-    position: absolute;
-    top: 0em;
-    height: 1em;
-    left: 0em;
-    right: 0em;
-    z-index: 2;
-    list-style-type: none;
-}
-
-.scope .toggle .button {
-    background-color: #CCDBC0;
-    color: black;
-    border: 1px outset #CCDBC0;
-    padding: 0em 0.4em;
-    cursor: pointer;
-    float: left;
-    font-size: smaller;
-}
-
-.scope .toggle .button.selected {
-    border-bottom: 1px solid transparent;
-    font-weight: bold;
-}
-
 .scope .treeSet {
     position: absolute;
     top: 1em;
@@ -220,7 +221,7 @@ div.perspective_main_right > div {
     left: 0em;
     right: 0em;
     overflow: auto;
-    border: 2px solid #CCDBC0;
+    border: 0.15em solid #CCDBC0;
 }
 
 .scope .tree {
@@ -270,6 +271,7 @@ div.perspective_main_right > div {
     bottom: 61.8%;
     left: 0em;
     background-color: #CCDBC0;
+    color: black;
     padding: 0.2em;
 }
 
@@ -277,7 +279,6 @@ div.perspective_main_right > div {
     font-size: smaller;
     margin-bottom: 0.4em;
     padding: 1px 0.4em 1px 0.4em;
-    color: black;
     height: 2em;
 }
 

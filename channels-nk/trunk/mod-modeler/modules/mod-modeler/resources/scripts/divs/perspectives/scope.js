@@ -29,7 +29,7 @@
         scope.tree = {};
 
         scope.tree.add = function(name, queryUrl, queryFunction) {
-                buttonSet.append("<li class='button' id='" + name + "'>" + name +"</li>");
+                buttonSet.append("<li id='" + name + "'>" + name +"</li>");
                 treeSet.append("<div class='tree'><ul id='" + name + "' class='root'></ul></div>");
 
                 initTree(treeSet.find('.tree #' + name),queryUrl, queryFunction);
@@ -43,7 +43,7 @@
             };
 
         scope.tree.select = function(name) {
-                buttonSet.find(".button").removeClass("selected");
+                buttonSet.find("li").removeClass("selected");
                 buttonSet.find("#" + name).addClass("selected");
                 treeSet.find("div.tree:has(ul.root)").css("display", "none");
                 treeSet.find("div.tree:has(ul[id='" + name + "'])").css("display", '');
