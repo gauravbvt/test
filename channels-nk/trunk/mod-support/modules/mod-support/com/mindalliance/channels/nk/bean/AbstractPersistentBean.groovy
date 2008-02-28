@@ -3,6 +3,7 @@ package com.mindalliance.channels.nk.bean
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.Action
 import com.mindalliance.channels.nk.IAction
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 
 /**
 * Created by IntelliJ IDEA.
@@ -17,6 +18,8 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
     Date createdOn = new Date()
     String version
     private boolean rooted = false
+    Context context
+
 
     private static final String DEFAULT_VERSION = "1.0.0"
 
@@ -45,6 +48,7 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         copy.createdOn = new Date(createdOn.toString())
         copy.setRooted(isRooted())
         copy.version = version
+        copy.context = context
         return copy
     }
 
@@ -78,5 +82,11 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         return true
     }
 
-
+    String getName() {
+        return "UNNAMED"
+    }
+    
+    String getDescription() {
+        return "NO DESCRIPTION"
+    }
 }

@@ -15,6 +15,7 @@ import com.mindalliance.channels.nk.bean.BeanDomain
 class TestBean extends AbstractPersistentBean {
 
     def name = new SimpleData(dataClass:String.class)
+    def description = new SimpleData(dataClass:String.class, calculate:'calculate_description')
     def kind = new SimpleData(dataClass:String.class)
     def successful = new SimpleData(dataClass:Boolean.class)
     def score = new SimpleData(dataClass:BigDecimal.class, calculate:'calculate_score') // derived SimpleData property
@@ -26,7 +27,7 @@ class TestBean extends AbstractPersistentBean {
     def mostExpensiveSubTest = new BeanReference(beanClass: TestBean.class.name, calculate: 'most_expensive_subtest')
 
     Map getBeanProperties() {
-        return [name: name, kind: kind, successful: successful, score: score, cost: cost, parent: parent,
+        return [name: name, description: description, kind: kind, successful: successful, score: score, cost: cost, parent: parent,
                 runs: runs, subTests: subTests, successfulTests: successfulTests, mostExpensiveSubTest: mostExpensiveSubTest ]
     }
     /* Metadata keys:
@@ -46,6 +47,10 @@ class TestBean extends AbstractPersistentBean {
                 runs: [label: 'Test runs', number: 4],
                 subTests: [label: 'Unit tests']
         ]
+    }
+
+    def calculate_description() {
+        return "A ${successful.value ? 'successful' : 'failed'} ${kind.value} test "
     }
 
     // Calculates a score

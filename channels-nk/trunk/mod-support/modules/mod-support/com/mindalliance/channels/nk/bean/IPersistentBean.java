@@ -44,4 +44,8 @@ public interface IPersistentBean extends IBean {
 
     public boolean isDeletable();
 
+    public String getName();   // A short identifying string (not necessarily unique)
+
+    public String getDescription();  // A description
+
 }

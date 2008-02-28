@@ -2,7 +2,8 @@ package com.mindalliance.channels.data.accessors
 
 import com.mindalliance.channels.nk.NetKernelCategory
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
-import com.mindalliance.channels.data.util.BeanRequestContext
+import com.mindalliance.channels.data.BeanMemory
+import com.mindalliance.channels.nk.accessors.AbstractDataAccessor
 
 /**
 * Created by IntelliJ IDEA.
@@ -13,7 +14,7 @@ import com.mindalliance.channels.data.util.BeanRequestContext
 */
 
 // Search or refresh
-class MemoryAccessor extends AbstractMemoryAccessor {
+class MemoryAccessor extends AbstractDataAccessor {
 
     // Executes a named query from root bean by default or from identified bean
     // db: database name for root bean
@@ -22,14 +23,14 @@ class MemoryAccessor extends AbstractMemoryAccessor {
     // query: the uri of a query (a Groovy closure that produces XML when evaluated on the target bean)
     // Responds: xml
     void source(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             String query = context.sourceString("this:param:query")
             Map args = [:]
             if (context.'args?') args = context.sourceNVP('this:param:args')
-            String xml = BeanRequestContext.getBeanMemory().search(db, id, args, query, context)
+            String xml = beanMemory.search(db, id, args, query, context)
             context.respond(string(xml))
         }
     }
@@ -37,19 +38,19 @@ class MemoryAccessor extends AbstractMemoryAccessor {
     // Clears memory of all beans except for the root beans - will force reloads from databases
     // Responds: true
     void create(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
-          BeanRequestContext.getBeanMemory().refresh()
+          beanMemory.refresh()
           context.respond(bool(true))
         }
     }
 
     // Remove all bean from a database and delete the database
     void delete(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
           String db = context.sourceString("this:param:db")
-          BeanRequestContext.getBeanMemory().deleteDB(db, context)
+          beanMemory.deleteDB(db, context)
           context.respond(bool(true))
         }
     }
@@ -59,11 +60,11 @@ class MemoryAccessor extends AbstractMemoryAccessor {
     // beans: xml containing batch of beans
     // Responds with the number of beans added
     void sink(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String uri = context.beans
-            int count = BeanRequestContext.getBeanMemory().newBeans(db, uri, context)
+            int count = beanMemory.newBeans(db, uri, context)
             context.respond(string("$count"))
         }
 
@@ -71,10 +72,10 @@ class MemoryAccessor extends AbstractMemoryAccessor {
 
     // Is db known to memory?
     void exists(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
          use(NetKernelCategory) {
            String db = context.sourceString("this:param:db")
-           boolean exists = BeanRequestContext.getBeanMemory().dbExists(db, context)
+           boolean exists = beanMemory.dbExists(db, context)
            context.respond(bool(exists))
          }
     }

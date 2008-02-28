@@ -5,9 +5,8 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.data.BeanMemory
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
-import com.mindalliance.channels.data.util.BeanRequestContext
 import com.mindalliance.channels.data.util.PersistentBeanCategory
-import com.mindalliance.channels.data.util.BeanRequestContext
+import com.mindalliance.channels.nk.accessors.AbstractDataAccessor
 
 /**
 * Created by IntelliJ IDEA.
@@ -16,7 +15,7 @@ import com.mindalliance.channels.data.util.BeanRequestContext
 * Time: 8:07:18 PM
 * To change this template use File | Settings | File Templates.
 */
-class BeanAccessor extends AbstractMemoryAccessor {
+class BeanAccessor extends AbstractDataAccessor {
 
     // Add a new bean from xml to bean graph
     // db: name of database
@@ -24,7 +23,7 @@ class BeanAccessor extends AbstractMemoryAccessor {
     // bean: a persistent bean (@id may not be set)
     // Responds with id of bean
     void create(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory, PersistentBeanCategory) {
            String db = context.sourceString("this:param:db")
             // Instantiate bean and initialize it from xml
@@ -44,7 +43,7 @@ class BeanAccessor extends AbstractMemoryAccessor {
                bean.createdOn = new Date()
 
                // Add bean to memory
-               BeanRequestContext.getBeanMemory().newBean(bean, context)
+               beanMemory.newBean(bean, context)
                context.respond(string(id))
         }
         // Update WorkingMemory
@@ -55,11 +54,11 @@ class BeanAccessor extends AbstractMemoryAccessor {
     // id: bean id
     // Responds with persistent bean
     void source(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
-            IPersistentBean bean = BeanRequestContext.getBeanMemory().retrieveBean(db, id, context)
+            IPersistentBean bean = beanMemory.retrieveBean(db, id, context)
             context.respond(new PersistentBeanAspect(bean))
         }
     }
@@ -69,14 +68,14 @@ class BeanAccessor extends AbstractMemoryAccessor {
     // bean: persistent bean
     // Responds with boolean
     void sink(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             IPersistentBean bean = context.sourcePersistentBean("this:param:bean")
             bean.db = db
             bean.id = id
-            BeanRequestContext.getBeanMemory().updateBean(bean, context)
+            beanMemory.updateBean(bean, context)
         }
     }
     // Does a bean exist at a given id?
@@ -84,11 +83,11 @@ class BeanAccessor extends AbstractMemoryAccessor {
     // id: bean id
     // Responds with boolean
     void exists(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
-            boolean exists = BeanRequestContext.getBeanMemory().isBeanExists(db, id, context)
+            boolean exists = beanMemory.isBeanExists(db, id, context)
             context.respond(bool(exists))
         }
     }
@@ -97,11 +96,11 @@ class BeanAccessor extends AbstractMemoryAccessor {
     // id: bean id
     // Responds with boolean
     void delete(Context context) {
-        initBeanRequestContext(context)
+        BeanMemory beanMemory = BeanMemory.getInstance()
         use(NetKernelCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
-            BeanRequestContext.getBeanMemory().removeBean(db, id, context)
+            beanMemory.removeBean(db, id, context)
             context.respond(bool(true))
         }
     }

@@ -27,7 +27,7 @@ class PersistentBeanToXml extends NKFTransreptorImpl {
     protected void transrepresent(INKFConvenienceHelper context) {
         IAspectPersistentBean aspect = (IAspectPersistentBean)context.sourceAspect(INKFRequestReadOnly.URI_SYSTEM, IAspectPersistentBean.class)
         IPersistentBean bean = aspect.getPersistentBean()
-        String xml = new PersistentBeanHelper().xmlFromBean(bean)
+        String xml = new PersistentBeanHelper(context).xmlFromBean(bean)
         XDAHelper xdaHelper = new XDAHelper(context)
         IAspectXDA xda = xdaHelper.makeXDAAspect(xml)
         INKFResponse response = context.createResponseFrom(xda);

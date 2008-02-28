@@ -12,6 +12,7 @@ import com.mindalliance.channels.nk.bean.ISimpleData
 import com.mindalliance.channels.nk.bean.SimpleData
 import com.mindalliance.channels.nk.bean.IBeanPropertyValue
 import com.mindalliance.channels.nk.bean.BeanDomain
+import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 
 
 /**
@@ -22,6 +23,12 @@ import com.mindalliance.channels.nk.bean.BeanDomain
 * To change this template use File | Settings | File Templates.
 */
 class PersistentBeanHelper {
+
+    Context context
+
+    PersistentBeanHelper(Context context) {
+        this.context = context
+    }
 
     Registry registry = Registry.getRegistry()
 
@@ -106,6 +113,7 @@ class PersistentBeanHelper {
         IPersistentBean bean = (IPersistentBean)registry.classFor("${xml.@beanClass}").newInstance()
         initBeanFromXml(bean, xml)
         bean.activate()    // make sure all properties are initialized
+        bean.context = context
         return bean
     }
 
@@ -140,7 +148,7 @@ class PersistentBeanHelper {
             String id = node.id
             if (db.size()) beanReference.@db = db
             if (id.size()) beanReference.@id = id
-             return beanReference
+            return beanReference
         }
         else if (node.@itemName.size()) {// a list
             def beanList = new BeanList(itemName: node.@itemName)

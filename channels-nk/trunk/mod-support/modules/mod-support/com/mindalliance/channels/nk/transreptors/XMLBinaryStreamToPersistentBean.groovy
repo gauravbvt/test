@@ -29,7 +29,7 @@ class XMLBinaryStreamToPersistentBean  extends NKFTransreptorImpl {
     protected void transrepresent(INKFConvenienceHelper context) {
         IAspectString ias = (IAspectString)context.sourceAspect(INKFRequestReadOnly.URI_SYSTEM, IAspectString.class)
         String doc = ias.getString()
-        IPersistentBean bean = new PersistentBeanHelper().persistentBeanFromXml(doc)
+        IPersistentBean bean = new PersistentBeanHelper(context).persistentBeanFromXml(doc)
         IAspectPersistentBean persistenBeanAspect = new PersistentBeanAspect(bean)
         INKFResponse response = context.createResponseFrom(persistenBeanAspect)
         response.setMimeType("text/xml")

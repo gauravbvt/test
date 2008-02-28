@@ -29,7 +29,7 @@ class XmlToPersistentBean  extends NKFTransreptorImpl {
     protected void transrepresent(INKFConvenienceHelper context) {
         IAspectXDA xda = (IAspectXDA)context.sourceAspect(INKFRequestReadOnly.URI_SYSTEM, IAspectXDA.class)
         String doc = new XDAHelper(context).asXML(xda)
-        IPersistentBean bean = new PersistentBeanHelper().persistentBeanFromXml(doc)
+        IPersistentBean bean = new PersistentBeanHelper(context).persistentBeanFromXml(doc)
         IAspectPersistentBean persistenBeanAspect = new PersistentBeanAspect(bean)
         INKFResponse response = context.createResponseFrom(persistenBeanAspect)
         response.setMineType("text/xml")

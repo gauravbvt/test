@@ -6,8 +6,6 @@ import com.mindalliance.channels.nk.aspects.IAspectPersistentBean
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.ten60.netkernel.urii.IURRepresentation
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
-import com.mindalliance.channels.data.BeanMemory
-import com.mindalliance.channels.data.util.BeanRequestContext
 import com.ten60.netkernel.urii.aspect.StringAspect
 import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.nk.bean.IBean
@@ -75,9 +73,8 @@ class PersistentBeanCategory {
         String beanClassName = beanReference.beanClass
         if (id != null) {
             assert db != null && db.size() != 0, "id=$id and beanClass=$beanClassName"
-            Context context = BeanRequestContext.getRequestContext()
-            def beanMemory = BeanRequestContext.getBeanMemory()
-            bean = beanMemory.retrieveBean(db, id, context)
+            assert beanReference.contextBean && beanReference.contextBean.context
+            bean = retrievePersistentBean(beanReference.contextBean.context,id,db)
             if (bean) {
                 if (beanClassName) {   // type check
                     Class beanClass = Registry.getRegistry().classFor(beanClassName)
@@ -129,13 +126,6 @@ class PersistentBeanCategory {
     }
 
     // ****************** Object *********************
-
-    static IPersistentBean beanAt(Object obj, String id, String db) {
-        Context context = BeanRequestContext.getRequestContext()
-        BeanMemory beanMemory = BeanRequestContext.getBeanMemory()
-        IPersistentBean bean = beanMemory.retrieveBean(db, id, context)
-        return bean
-    }
 
     static List trans(Object obj, String propName) {
         List set = []
