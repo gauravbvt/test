@@ -14,28 +14,61 @@ class BeanList extends AbstractBeanPropertyValue implements IBeanList {
     String itemName = 'item' // default
     IBeanPropertyValue itemPrototype // class name of bean items
 
+    void addItem(Object initializer) {
+        if (isCalculated()) throw new Exception("Can't modify a calculated bean list")
+        // deep copy item prototype and initialize it
+        IBeanPropertyValue item = itemPrototype.deepCopy()
+        item.initializeFrom(initializer)
+        getList().add(item)
+    }
+
+    // initilializer must be a List of initializers
+    void initializeFrom(Object initializer) {
+        List values = (List)initializer
+        values.each {value -> this.addItem(value)}
+    }
+
     IBeanList deepCopy() {
-        IBeanList copy = new BeanList(itemPrototype: itemPrototype.deepCopy(), itemName: itemName)
-        list.each {item ->
-            copy.add(item.deepCopy())
+        IBeanList copy
+        if (isCalculated()) {
+          copy = new BeanList(itemName: itemName, calculate: this.calculate)
+        }
+        else {
+          copy = new BeanList(itemPrototype: itemPrototype.deepCopy(), itemName: itemName)
+          getList().each {item ->
+                copy.add(item.deepCopy())
+            }
         }
         return copy
     }
 
+    List getList() {
+       if (isCalculated()) {
+          return (List)this.calculate()
+       }
+       else {
+          if (this.@list == null) this.@list = new ArrayList()
+          return this.@list
+       }
+    }
+
     void accept(Map args, Closure action) {
         action(args, this) // args.propName, args.parentPath
-        list.each {item -> item.accept([propName: itemName, parentPath: "${args.parentPath}${args.propName}/"], action)}
+        if (!isCalculated()) {
+            getList().each {item -> item.accept([propName: itemName, parentPath: "${args.parentPath}${args.propName}/"], action)}
+        }
     }
 
     Iterator iterator() {
-        return this.@list.iterator()
+        return this.getList().iterator()
     }
 
     Object get(String name) {
         switch (name) {
             case 'itemPrototype': return this.@itemPrototype; break;
             case 'itemName': return this.@itemName; break;
-            default: return this.@list."$name"
+            case 'calculate': return this.@calculate; break;
+            default: return this.getList()."$name"
         }
     }
 
@@ -43,15 +76,16 @@ class BeanList extends AbstractBeanPropertyValue implements IBeanList {
         switch (name) {
             case 'itemPrototype': this.@itemPrototype = (IBeanPropertyValue) value; break;
             case 'itemName': this.@itemName = (String) value; break;
-            default:this.@list."$name" = value
+            default:this.getList()."$name" = value
         }
     }
 
     Object invokeMethod(String name, Object args) {
-        return this.@list.invokeMethod(name, args)
+        if (isCalculated() && (name.startsWith("add") || nameStartsWith("remove"))) throw new Exception ("Can't modify a calculated bean list") // partial protection only
+        return this.getList().invokeMethod(name, args)
     }
 
-    public IBeanPropertyValue getActivatedItemPrototype() {   // TODO - BUG = the activated prototype has a null metadata
+    public IBeanPropertyValue getActivatedItemPrototype() {
         IBeanPropertyValue proto = itemPrototype.deepCopy()  // get a copy, just to be safe
         // "activate" the prototype list item to fully initialize it
         proto.initialize()

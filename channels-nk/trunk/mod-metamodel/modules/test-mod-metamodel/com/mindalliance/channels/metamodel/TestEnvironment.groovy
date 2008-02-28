@@ -12,7 +12,7 @@ import com.mindalliance.channels.nk.bean.BeanDomain
 * Time: 6:47:28 PM
 * To change this template use File | Settings | File Templates.
 */
-class TestEnvironment extends AbstractPersistentBean {    // TODO - move to com.mindalliance.channels.metamodel.test
+class TestEnvironment extends AbstractPersistentBean {
 
     // This bean's tests property serves as a basis for defining other beans' domains, so it's own domain is undefined
     def tests = new BeanList(itemPrototype: new BeanReference(beanClass: TestBean.class.name, domain: BeanDomain.UNDEFINED), itemName:'test')

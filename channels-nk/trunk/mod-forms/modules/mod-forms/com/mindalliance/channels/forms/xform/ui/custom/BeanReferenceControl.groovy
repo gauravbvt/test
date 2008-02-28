@@ -35,7 +35,7 @@ class BeanReferenceControl extends AbstractUIElement {
 
     void createElements() {
         metadata.choices = getReferenceDomain()
-        select = new SelectOneOrMany(BeanXForm.MANY, metadata, xform)
+        select = new SelectOneOrMany(!BeanXForm.MANY, metadata, xform)
     }
 
     // Temporary, poor man's bean picker -- a simple select1

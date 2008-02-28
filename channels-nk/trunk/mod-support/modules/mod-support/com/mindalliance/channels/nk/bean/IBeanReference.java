@@ -13,4 +13,8 @@ public interface IBeanReference  extends Cloneable, IBeanPropertyValue {
 
     public void initContextBean(IPersistentBean bean);
 
+    public boolean isDomainBound();
+
+    public boolean isOwned();
+
 }

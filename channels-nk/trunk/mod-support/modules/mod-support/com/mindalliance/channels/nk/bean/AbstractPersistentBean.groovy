@@ -2,6 +2,7 @@ package com.mindalliance.channels.nk.bean
 
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.Action
+import com.mindalliance.channels.nk.IAction
 
 /**
 * Created by IntelliJ IDEA.
@@ -65,7 +66,7 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         return [edit,delete]
     }
 
-    void executeAction(Action action, Map args) {
+    void executeAction(IAction action, Map args) {
        this."${action.name}"(args)
     }
 

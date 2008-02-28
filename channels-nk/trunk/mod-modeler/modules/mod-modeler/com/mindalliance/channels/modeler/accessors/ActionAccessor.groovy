@@ -194,7 +194,9 @@ class ActionAccessor extends AbstractAccessor {
     private IPersistentBean retrieveBean(String beanDB, String beanID, Context context) {
         IPersistentBean bean = null
         try {
-            bean = context.sourcePersistentBean('active:data_bean', [db: beanDB, id: beanID])
+            use(NetKernelCategory, PersistentBeanCategory) {
+                bean = context.sourcePersistentBean('active:data_bean', [db: beanDB, id: beanID])
+            }
         }
         catch (Exception e) {
             context.log("Persistent bean not found at db=$beanDB id=$beanID", 'warn')
@@ -241,7 +243,5 @@ class ActionAccessor extends AbstractAccessor {
     private void deleteContinuation(IContinuation c10n, Context context) {
         context.subrequest("active:c10n", [type: 'delete', session: sessionURI, id:string(c10n.id)])
     }
-
-
 
 }

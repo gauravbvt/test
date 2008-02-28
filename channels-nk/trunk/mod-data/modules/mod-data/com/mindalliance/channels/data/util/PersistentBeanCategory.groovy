@@ -72,14 +72,17 @@ class PersistentBeanCategory {
         IPersistentBean bean
         String id = beanReference.id
         String db = beanReference.getDb()
-        String beanClass = beanReference.beanClass
+        String beanClassName = beanReference.beanClass
         if (id != null) {
-            assert db != null && db.size() != 0, "id=$id and beanClass=$beanClass"
+            assert db != null && db.size() != 0, "id=$id and beanClass=$beanClassName"
             Context context = BeanRequestContext.getRequestContext()
             def beanMemory = BeanRequestContext.getBeanMemory()
             bean = beanMemory.retrieveBean(db, id, context)
             if (bean) {
-                if (beanClass) assert beanClass == Registry.getRegistry().nameFor(bean.class)  // optional type checking
+                if (beanClassName) {   // type check
+                    Class beanClass = Registry.getRegistry().classFor(beanClassName)
+                    assert beanClass.isAssignableFrom(bean.class)
+                }
             }
             else {
                 // clean up dangling reference

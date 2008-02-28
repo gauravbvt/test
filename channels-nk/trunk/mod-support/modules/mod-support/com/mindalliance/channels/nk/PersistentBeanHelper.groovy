@@ -41,35 +41,46 @@ class PersistentBeanHelper {
         }
     }
 
+    // Calculated properties are neither serialized not reified (they are 100% class-defined)
     private void buildProperty(String propKey, def propValue, MarkupBuilder builder) {
         switch (propValue) {
             case ISimpleData:
                 def simpleData = propValue
-                def text = (simpleData.@value != null) ? "${simpleData.@value}" : '';
-                builder."${propKey}"(dataType: "${registry.nameFor(simpleData.@dataClass)}", text);
+                if (!simpleData.isCalculated()) {
+                    Map attributes = [dataType: "${registry.nameFor(simpleData.@dataClass)}"]
+                    def text = (simpleData.@value != null) ? "${simpleData.@value}" : '';
+                    builder."${propKey}"(attributes, text);
+                }
                 break;
             case IBeanReference:
                 def beanReference = propValue
-                def id = (beanReference.id != null) ? "${beanReference.id}" : '';
-                def db = (beanReference.db != null) ? "${beanReference.db}" : '';
-                builder."${propKey}"(beanRef: beanReference.beanClass, domain: beanReference.domain.toString()) {
-                    builder.db(db)
-                    builder.id(id)
-                };
+                if (!beanReference.isCalculated()) {
+                    Map attributes = [beanRef: beanReference.beanClass]
+                    def id = (beanReference.id != null) ? "${beanReference.id}" : '';
+                    def db = (beanReference.db != null) ? "${beanReference.db}" : '';
+                    if (beanReference.isDomainBound()) attributes += [domain: beanReference.domain.toString()]
+                    builder."${propKey}"(attributes) {
+                        builder.db(db)
+                        builder.id(id)
+                    }
+                }
                 break;
             case IBeanList:
                 def beanList = propValue
-                IBeanPropertyValue proto = beanList.itemPrototype
-                String itemClass = proto.getClass().name
-                Map attributes = [itemClass: itemClass, itemName:beanList.itemName]
-                if (proto instanceof IBeanReference) {
-                    attributes += [itemDomain: proto.domain.toString()]
-                }
-                builder."${propKey}"(attributes) {
-                    beanList.each {item ->
-                        buildProperty(beanList.itemName, item, builder)
+                if (!beanList.isCalculated()) {
+                    Map attributes = [itemName:beanList.itemName]
+                    IBeanPropertyValue proto = beanList.itemPrototype
+                    String itemClass = "${registry.nameFor(proto.getClass())}"
+                    attributes += [itemClass: itemClass]
+                    if (proto instanceof IBeanReference) {
+                        attributes += [itemDomain: proto.domain.toString()]
                     }
-                };
+                    builder."${propKey}"(attributes) {
+                        beanList.each {item ->
+                            buildProperty(beanList.itemName, item, builder)
+                        }
+                    }
+                }
                 break;
             case IComponentBean:
                 def component = propValue;
@@ -112,32 +123,35 @@ class PersistentBeanHelper {
 
     private def reifyFromXml(def node) {
         if (node.@dataType.size()) {// data
+            Class dataClass = registry.classFor("${node.@dataType}")
+            def data = new SimpleData(dataClass:dataClass)
             String value = node.text()
             if (value.size()) {
-                Class dataClass = registry.classFor("${node.@dataType}")
-                def data = SimpleData.from(dataClass, value)
-                return data
+                data.value = dataClass.newInstance(value)
             }
-            else return null
+            return data
         }
         else if (node.@beanRef.size()) {// a reference
             String beanClass =  node.@beanRef
+            def beanReference = new BeanReference(beanClass: beanClass)
             BeanDomain domain = (node.@domain.size()) ? BeanDomain.fromString("${node.@domain}") : BeanDomain.UNDEFINED
-            def beanReference = new BeanReference(beanClass: beanClass, domain: domain)
+            beanReference.domain = domain
             String db = node.db
             String id = node.id
             if (db.size()) beanReference.@db = db
             if (id.size()) beanReference.@id = id
              return beanReference
         }
-        else if (node.@itemClass.size()) {// a list
-            String aClass = node.@itemClass
-            IBeanPropertyValue itemPrototype = (IBeanPropertyValue)registry.classFor(aClass).newInstance()
+        else if (node.@itemName.size()) {// a list
+            def beanList = new BeanList(itemName: node.@itemName)
+            assert node.@itemClass.size()
+            String aClassName = "${node.@itemClass}"
+            IBeanPropertyValue itemPrototype = (IBeanPropertyValue)registry.classFor(aClassName).newInstance()
             if (itemPrototype instanceof IBeanReference) {
                 BeanDomain domain = (node.@itemDomain.size()) ? BeanDomain.fromString("${node.@itemDomain}") : BeanDomain.UNDEFINED
                 itemPrototype.domain = domain
             }
-            def beanList = new BeanList(itemPrototype: itemPrototype, itemName: node.@itemName)
+            beanList.itemPrototype = itemPrototype
             node.children().each {item ->
                 def itemBean = reifyFromXml(item)
                 beanList.add(itemBean)

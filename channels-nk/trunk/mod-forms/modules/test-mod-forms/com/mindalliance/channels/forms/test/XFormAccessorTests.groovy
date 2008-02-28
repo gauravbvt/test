@@ -5,9 +5,6 @@ import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.data.util.PersistentBeanCategory
 import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.Registry
-import com.mindalliance.channels.metamodel.TestBean
-import com.mindalliance.channels.metamodel.TestEnvironment
-import com.mindalliance.channels.metamodel.TestRunComponent
 
 /**
  * Created by IntelliJ IDEA.

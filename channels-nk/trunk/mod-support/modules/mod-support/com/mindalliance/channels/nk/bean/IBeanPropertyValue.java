@@ -21,4 +21,8 @@ public interface IBeanPropertyValue {
 
     String getSchemaType();
 
+    boolean isCalculated();
+
+    void initializeFrom(Object initializer);
+
 }

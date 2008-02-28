@@ -127,7 +127,7 @@ class BeanXForm extends XForm {
         if (metadata.choices) {
             control = new SelectOneOrMany(MANY, metadata, xform) // multiple choice fromresults of a query
         }
-        else {
+        else {  // TODO -- if BeanList of BeanRefs => Select on BeanRef domain
             control = new BeanListRepeat(beanList, xform)
         }
         return control

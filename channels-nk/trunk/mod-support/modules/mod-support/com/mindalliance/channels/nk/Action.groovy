@@ -6,7 +6,7 @@ package com.mindalliance.channels.nk
  * Time: 5:00:27 PM
  * To change this template use File | Settings | File Templates.
  */
-class Action {
+class Action implements IAction {
     String name
     String hint
     String label

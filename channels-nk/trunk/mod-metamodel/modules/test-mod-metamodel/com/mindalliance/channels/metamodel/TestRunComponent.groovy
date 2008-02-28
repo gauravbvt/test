@@ -12,8 +12,8 @@ import com.mindalliance.channels.nk.bean.SimpleData
 */
 class TestRunComponent extends AbstractComponentBean {
 
-    def date = new SimpleData(Date.class)
-    def tester = new SimpleData(String.class)
+    def date = new SimpleData(dataClass: Date.class)
+    def tester = new SimpleData(dataClass: String.class)
 
     Map getBeanProperties() {
         return [date: date, tester: tester]

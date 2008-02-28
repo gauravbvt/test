@@ -10,9 +10,27 @@ abstract class AbstractComponentBean extends AbstractBean implements IComponentB
 
     IPersistentBean contextBean
     Expando metadata
+    String calculate
 
     boolean isComponent() {
         return true;
+    }
+
+    boolean isCalculated() {
+        return calculate != null
+    }
+
+    // Calculate does not apply to bean components
+    def calculate() {
+        throw new Exception("Not supported")
+    }
+
+    // initializer must be a Map
+    void initializeFrom(Object initializer) {
+        Map values = (Map)initializer
+        values.each {key,value ->
+            this."$key".initializeFrom(value)
+        }
     }
 
     Expando getMetadata() {

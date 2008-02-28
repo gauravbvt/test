@@ -1,15 +1,16 @@
 <testBean version='1.0.0' beanClass='test.TestBean'
           createdOn='Mon Jan 21 15:57:46 EST 2008' root='false'>
     <name dataType='String'>A test</name>
+    <kind dataType='String'>Integration</kind>
     <successful dataType='Boolean'>false</successful>
-    <score dataType='Double'>100.0</score>
+    <cost dataType='Double'>100.0</cost>
     <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'/>
     <runs itemClass='test.TestRunComponent' itemName='run'>
         <run beanClass='test.TestRunComponent'>
             <date dataType='Date'>Mon Jan 21 15:57:46 EST 2008</date>
             <tester dataType='String'>John Doe</tester>
         </run>
-        <run beanClass='test.TestRunComponent' itemName='run'>
+        <run beanClass='test.TestRunComponent'>
             <date dataType='Date'>Mon Jan 21 15:57:46 EST 2008</date>
             <tester dataType='String'>Jane Q. Public</tester>
         </run>

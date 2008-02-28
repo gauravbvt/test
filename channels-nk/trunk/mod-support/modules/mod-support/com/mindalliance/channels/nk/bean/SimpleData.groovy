@@ -11,32 +11,19 @@ class SimpleData extends AbstractBeanPropertyValue implements ISimpleData {
     static final List SUPPORTED_TYPES = [Date.class, String.class, Integer.class, Boolean.class, Double.class, Float.class, BigDecimal.class] // TODO - add to this
 
     Class dataClass // assumes that this.class.newInstance([this.toString()] is supported
-    private _str
     def value
 
-    SimpleData(Class aClass) {
-        this.dataClass = aClass
-        assert SUPPORTED_TYPES.contains(aClass)
-    }
-
-    static SimpleData from(Class aClass, String val) {
-        SimpleData data = new SimpleData(aClass)
-        data.@_str = val
-        if (aClass.name == String.class.name) data.@value = val
-        return data
-    }
-
-    static SimpleData from(Object val) {
-        SimpleData data = new SimpleData(val.class)
-        data.@value = val
-        return data
+    void initializeFrom(Object value) {
+       setValue(value) 
     }
 
     def getValue() {
-        if (value == null) {
-            if (_str != null) value = dataClass.newInstance(_str) 
+        if (isCalculated()) {
+            return calculate()
         }
-        return value
+        else {
+            return value
+        }
     }
 
     String getSchemaType() {
@@ -52,19 +39,32 @@ class SimpleData extends AbstractBeanPropertyValue implements ISimpleData {
     }
 
     Object deepCopy() {
-        def val = getValue()
-        if (val == null) {
-            return new SimpleData(dataClass)
+        SimpleData sd
+        if (isCalculated()) {
+            sd = new SimpleData(dataClass:dataClass, calculate:this.calculate)
         }
         else {
-            SimpleData copy = SimpleData.from(val)
-            return copy
+            sd = new SimpleData(dataClass:dataClass)
+            sd.value = getValue()
         }
+        return sd
     }
 
     String toString() {
         def val = getValue()
         return (val == null) ? '' : "$val"
+    }
+
+    void setValue(Object value) {
+        if (!isCalculated()) {
+           this.value = value
+           if (value != null && !dataClass.isAssignableFrom(value.class)) {
+              throw new IllegalArgumentException("Simple data type mismatch. $value is a ${value.class.name} and expecting a ${dataClass.name}")
+           }
+        }
+        else {
+            throw new Exception("Can't assign to a derived simple data.")
+        }
     }
 
     Object get(String name) {

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.nk.bean;
 
-import com.mindalliance.channels.nk.Action;
+import com.mindalliance.channels.nk.IAction;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +38,7 @@ public interface IPersistentBean extends IBean {
     public List getActions();
 
     // Execute an action given arguments
-    public void executeAction(Action action, Map args);
+    public void executeAction(IAction action, Map args);
 
     public boolean isWritable();
 

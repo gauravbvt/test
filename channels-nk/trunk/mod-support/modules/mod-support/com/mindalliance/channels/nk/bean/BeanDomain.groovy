@@ -12,6 +12,7 @@ class BeanDomain implements IBeanDomain {
     String id  // optional, determined from context if not set
     String db // ditto 
     Map args = [:]    // must contain only literals
+
     /* Must eval to a closure {bean, args, builder -> ...}  that returns
         <beans>
             <bean id="..." db="...">label</bean>

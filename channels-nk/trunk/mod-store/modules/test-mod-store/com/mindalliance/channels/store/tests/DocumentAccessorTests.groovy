@@ -26,10 +26,10 @@ class DocumentAccessorTests {
     void documentExistsCreateDelete() {
         TestBean test = new TestBean()
         test.id = '1234'
-        test.name = SimpleData.from('A test')
-        test.kind = SimpleData.from('Unit')
-        test.successful = SimpleData.from(false)
-        test.score = SimpleData.from(100.0)
+        test.name.value = 'A test'
+        test.kind.value = 'Unit'
+        test.successful.value = false
+        test.cost.value = 100.0
         IAspectPersistentBean beanAspect = new PersistentBeanAspect(test)
 
         use(NetKernelCategory) {
@@ -55,18 +55,19 @@ class DocumentAccessorTests {
             context.subrequest("active:store_db", [type: 'new', name: data('test_dbxml')])
 
             TestBean test = new TestBean(id: '1234')
-            test.name = SimpleData.from('A test')
+            test.name.value = 'A test'
             assert test.name.value.equals('A test')
-            test.successful = SimpleData.from(false)
-            test.score = SimpleData.from(100.0)
-            test.runs.add(new TestRunComponent(date: SimpleData.from(new Date()), tester: SimpleData.from('John Doe')))
-            test.runs.add(new TestRunComponent(date: SimpleData.from(new Date()), tester: SimpleData.from('Jane Q. Public')))
+            test.successful.value = false
+            test.cost.value = 100.0
+            // test.runs.initializeFrom([[date: new Date(), tester: 'John Doe'], [date: new Date(), tester: 'Jane Q. Public']])
+            test.runs.addItem([date: new Date(), tester: 'John Doe'])
+            test.runs.addItem([date: new Date(), tester: 'Jane Q. Public'])
             IAspectPersistentBean beanAspect = new PersistentBeanAspect(test)
             context.subrequest("active:store_doc", [type: 'new', db: data('test_dbxml'), id: data('1234'), doc: beanAspect])
             String got = context.sourceString("active:store_doc", [db: data('test_dbxml'), id: data('1234')])
             assert got =~ /A test/
             
-            test.name = SimpleData.from('A great test')
+            test.name.value = 'A great test'
             beanAspect = new PersistentBeanAspect(test)
             context.subrequest("active:store_doc", [type: 'sink', db: data('test_dbxml'), id: data(test.id), doc: beanAspect])
             got = context.sourceString("active:store_doc", [db: data('test_dbxml'), id: data(test.id)])

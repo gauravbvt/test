@@ -15,8 +15,8 @@
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id='Top' rooted='true'>
         <name dataType='String'>Top</name>
         <kind dataType='String'>Integration</kind>
-        <successful dataType='Boolean'>false</successful>
-        <score dataType='Double'>60.0</score>
+        <successful dataType='Boolean'>true</successful>
+        <cost dataType='Double'>60.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 15:00:00 EST 2008</date>
@@ -33,8 +33,8 @@
         <name dataType='String'>SubA</name>
         <kind dataType='String'>Unit</kind>
         <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
-        <successful dataType='Boolean'>false</successful>
-        <score dataType='Double'>60.0</score>
+        <successful dataType='Boolean'>true</successful>
+        <cost dataType='Double'>30.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 14:00:00 EST 2008</date>
@@ -54,7 +54,7 @@
         <kind dataType='String'>Integration</kind>
         <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
         <successful dataType='Boolean'>true</successful>
-        <score dataType='Double'>100.0</score>
+        <cost dataType='Double'>100.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 13:00:00 EST 2008</date>
@@ -71,8 +71,8 @@
         <name dataType='String'>SubSub</name>
         <kind dataType='String'>Unit</kind>
         <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>SubB</id></parent>
-        <successful dataType='Boolean'>true</successful>
-        <score dataType='Double'>100.0</score>
+        <successful dataType='Boolean'>false</successful>
+        <cost dataType='Double'>100.0</cost>
         <runs itemClass='test.TestRunComponent' itemName="run">
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 12:00:00 EST 2008</date>

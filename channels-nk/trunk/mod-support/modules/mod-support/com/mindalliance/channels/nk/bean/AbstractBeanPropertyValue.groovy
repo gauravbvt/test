@@ -10,8 +10,20 @@ abstract class AbstractBeanPropertyValue implements IBeanPropertyValue {
 
     IPersistentBean contextBean
     Expando metadata
+    String calculate
 
     void initialize() {} // Do nothing - a hook
+
+    boolean isCalculated() {
+        return calculate != null
+    }
+
+    // Not supported: Calculated property values that have calculated properties 
+    def calculate() {
+        assert this.calculate
+        assert contextBean
+        return contextBean."$calculate"()
+    }
 
     // Visitor pattern
     void accept(Map args, Closure action) {// DEFAULT
