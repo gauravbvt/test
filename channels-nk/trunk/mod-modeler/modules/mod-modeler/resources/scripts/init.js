@@ -1,4 +1,5 @@
 
 (function($) {
-    $.channels.modeler = {};   
+    $.channels = {};
+    $.channels.modeler = {};
 })(jQuery);

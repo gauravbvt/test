@@ -1,6 +1,9 @@
 $(document).ready( function() {
-//    $.get('/modeler/command/refreshScope?target=environment');
-    //channels.modeler.scope.initialize('environment');
+    var scope = $.channels.modeler.scope('environment');
+    scope.tree.add('Organizations');
+    scope.tree.add('Locations');
+    scope.tree.select('Organizations');
+
     var finder = $.channels.modeler.finder('environment');
     finder.grid.setup();
 });

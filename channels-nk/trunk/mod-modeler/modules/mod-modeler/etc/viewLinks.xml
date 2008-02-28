@@ -106,6 +106,10 @@
         <int>ffcpl:/resources/templates/divs/perspectives/finder/finder_main.xml</int>
     </link>
 
+    <link>
+        <name>home</name>
+        <int>ffcpl:/resources/templates/divs/perspectives/home.xml</int>
+    </link>
 
     <!-- junk -->
   <link>
