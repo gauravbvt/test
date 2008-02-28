@@ -124,4 +124,5 @@
     <name>projectOptions</name>
     <int>active:xquery+operator@ffcpl:/resources/xqueries/projectOptions.xq+input@ffcpl:/etc/projects.xml</int>
   </link>
+
 </links>

@@ -1,4 +1,4 @@
 $(document).ready( function() {
-    $.get('/modeler/command/refreshScope?target=process');
-    channels.modeler.finder.initialize('process');
-});
+//    $.get('/modeler/command/refreshScope?target=process');
+    var finder = $.channels.modeler.finder('process');
+    finder.grid.setup();});

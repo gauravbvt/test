@@ -169,6 +169,7 @@
             <match>active:modeler_action.*</match>
             <class>com.mindalliance.channels.modeler.accessors.ActionAccessor</class>
         </ura>
+
         <import>
              <uri>urn:com:mindalliance:channels:c10n</uri>
          </import>
@@ -213,6 +214,9 @@
         </import>
         <import>
             <uri>urn:org:ten60:netkernel:mod:docxter</uri>
+        </import>
+        <import>
+            <uri>urn:org:ten60:mod:json</uri>
         </import>
         <super/>
     </mapping>

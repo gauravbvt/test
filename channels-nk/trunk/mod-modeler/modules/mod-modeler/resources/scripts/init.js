@@ -1,0 +1,4 @@
+
+(function($) {
+    $.channels.modeler = {};   
+})(jQuery);

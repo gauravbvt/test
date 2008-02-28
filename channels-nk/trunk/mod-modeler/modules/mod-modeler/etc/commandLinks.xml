@@ -55,6 +55,6 @@
   </link>
   <link>
       <name>populateScope</name>
-      <int>ffcpl:/resources/templates/taconite/populateScope.xml</int>
+      <int>ffcpl:/resources/scripts/sample/tree.js</int>
   </link>
 </links>
