@@ -1,6 +1,19 @@
 <div id="dashboard_b">
     <ul>
-        <li><a href="javascript:alert('TBD');">Issues (3)</a></li>
-        <li><a href="javascript:alert('TBD');">Recommendations (6)</a></li>
+        <li><span>Issues (3)</span>
+            <ol>
+                <li><a href="javascript:alert('TBD');">Issue 1</a></li>
+                <li><a href="javascript:alert('TBD');">Issue 2</a></li>
+                <li><a href="javascript:alert('TBD');">Issue 3</a></li>
+            </ol></li>
+        <li><span>Recommendations (6)</span>
+            <ol>
+                <li><a href="javascript:alert('TBD');">Recommendation 1</a></li>
+                <li><a href="javascript:alert('TBD');">Recommendation 2</a></li>
+                <li><a href="javascript:alert('TBD');">Recommendation 3</a></li>
+                <li><a href="javascript:alert('TBD');">Recommendation 4</a></li>
+                <li><a href="javascript:alert('TBD');">Recommendation 5</a></li>
+                <li><a href="javascript:alert('TBD');">Recommendation 6</a></li>
+            </ol></li>
     </ul>
 </div>

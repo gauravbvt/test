@@ -14,6 +14,14 @@ channels.modeler.constants['process'] = "Process";
 
 channels.modeler.initialize = function() {
    channels.modeler.switchToPerspective('home');
+
+    // Switcher status popups
+    $( "#dashboard_a span, #dashboard_b span" ).toggle(
+            function() { $( this ).next().css( "display", "block" ); },
+            function() { $( this ).next().css( "display", "" ); }
+
+        ).next().bind( "mouseleave", function() {
+            $( this ).css( "display", "" ); } );
 }
 
 // User switches to a perspective
@@ -25,7 +33,7 @@ channels.modeler.switchToPerspective = function(perspective_code)  {
     $('.perspective_main').not(perspective_id).css('display', 'none');
     $('#perspectives_title').html(channels.modeler.constants[perspective_code]);
 
-    // Set selected style on swither button
+    // Set selected style on switcher button
     if ( channels.modeler.button != null )
         channels.modeler.button.className = "fisheyeItem";
     channels.modeler.button = document.getElementById( perspective_code + '_button' );

@@ -1,4 +1,4 @@
-<div id="~~perspective~~" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
+<div id="~~perspective~~" class="perspective_main" style="display:none" xmlns:xrl="http://1060.org/xrl">
     <script src="scripts/divs/perspectives/~~perspective~~.js"/>
     <hr/>
     <h2>~~title~~</h2>

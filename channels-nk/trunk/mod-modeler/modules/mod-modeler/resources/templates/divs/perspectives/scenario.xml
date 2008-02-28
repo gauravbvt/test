@@ -1,4 +1,4 @@
-<div id="scenario" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
+<div id="scenario" class="perspective_main" style="display:none" xmlns:xrl="http://1060.org/xrl">
     <script src="scripts/divs/perspectives/scenario.js"/>
     <hr/>
     <h2>Scenario</h2>
@@ -10,10 +10,10 @@
         <div> <!-- relative frame to accurately place following -->
             <ul class="toggle">
                 <li class="selected">Table</li>
-                <li>Graph</li>
+                <li>Cause &amp; Effect</li>
                 <li>Timeline</li>
                 <li>Map</li>
-                <li>Flow</li>
+                <li>Information Flow</li>
             </ul>
             <div class="finder">
                 <xrl:include href="xrl:finder_control"/>

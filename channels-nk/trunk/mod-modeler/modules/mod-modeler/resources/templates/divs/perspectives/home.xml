@@ -1,4 +1,4 @@
-<div id="home" class="perspective_main"  xmlns:xrl="http://1060.org/xrl">
+<div id="home" class="perspective_main" style="display:none" xmlns:xrl="http://1060.org/xrl">
     <script src="scripts/divs/perspectives/home.js"/>
     <hr/>
     <h2>Modeler</h2>

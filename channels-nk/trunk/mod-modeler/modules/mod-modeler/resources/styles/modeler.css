@@ -5,12 +5,15 @@
 	padding: 0;
 }
 
-#dashboard_a a, #dashboard_b a, .viewer_crumbs a, #perspectives_toolbar a {
+#dashboard_a a, #dashboard_b a, #dashboard_a span, #dashboard_b span,
+.viewer_crumbs a, #perspectives_toolbar a {
     text-decoration: none;
     background-color: inherit;
     color: black;
+    cursor: pointer;
 }
-#dashboard_a a:hover, #dashboard_b a:hover, .viewer_crumbs a:hover, #perspectives_toolbar a:hover {
+#dashboard_a a:hover, #dashboard_b a:hover,#dashboard_a span:hover, #dashboard_b span:hover,  
+.viewer_crumbs a:hover, #perspectives_toolbar a:hover {
           border-bottom: 1px dotted black;
 }
 
@@ -205,7 +208,7 @@ div.perspective_main_right > div {
 }
 
 .scope div.treeSet, #scenario div.finder {
-    top: 1.6em;
+    top: 1.56em;
 }
 
 .scope {
@@ -375,12 +378,6 @@ div.finder_main > div {
     bottom: 0.4em;
     background-color: #CCDBC0; 
     color: black;
-    overflow:hidden;
-    min-height: 51px;
-}
-
-#dashboard_a h2, #perspectives_menu h2 {
-    display: none;
 }
 
 #dashboard_a, #dashboard_b {
@@ -389,14 +386,32 @@ div.finder_main > div {
     padding: 3px 5px;
     font-size:smaller;
  }
-
+#dashboard_a h2, #perspectives_menu h2 {
+    display: none;
+}
 #dashboard_a {
     float: left;
     width: 27%;
 }
-
 #dashboard_b {
     float: right;
+}
+
+#dashboard_a ul ol, #dashboard_b ul ol {
+    display: none;
+    position: absolute;
+    list-style-type: none;
+    padding: 0.4em;
+    bottom: 0.4em;
+    border: 1px outset black;
+    background: white;
+    color: black;
+}
+#dashboard_a ul ol {
+    left: 13em;
+}
+#dashboard_b ul ol {
+    right: 13em;
 }
 
 #dashboard_a ul, #dashboard_b ul, #mainMenu ul {
