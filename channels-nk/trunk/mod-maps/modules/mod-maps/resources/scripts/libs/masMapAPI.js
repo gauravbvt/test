@@ -148,7 +148,7 @@ function _createGIconFor(iconResourceKey) {
     var gi = new GIcon() ;
     gi.image = imgURL;
     gi.iconSize = new GSize(32, 32) ;
-    gi.transparent = 'transparent16x16.png' ;
+    //gi.transparent = 'images/transparent16x16.png' ;
     gi.shadowAnchor = new GPoint(0, 32) ;
     gi.iconAnchor = new GPoint(32, 32) ;
     gi.infoWindowAnchor = new GPoint(0, 0) ;
