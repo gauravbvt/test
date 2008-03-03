@@ -1,12 +1,12 @@
 <div id="dashboard_a">
     <h2>Status</h2>
     <ul>
-        <li><span>New questions (2)</span>
+        <li><span>Questions (2)</span>
             <ol>
                 <li><a href="javascript:alert('TBD');">Question 1</a></li>
                 <li><a href="javascript:alert('TBD');">Question 2</a></li>
             </ol></li>
-        <li><span>New answers (5)</span>
+        <li><span>Answers (5)</span>
             <ol>
                 <li><a href="javascript:alert('TBD');">Answer 1</a></li>
                 <li><a href="javascript:alert('TBD');">Answer 2</a></li>

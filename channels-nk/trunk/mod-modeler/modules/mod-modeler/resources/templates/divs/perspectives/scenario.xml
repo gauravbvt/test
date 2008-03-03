@@ -9,21 +9,35 @@
     <div class="perspective_main_right">
         <div> <!-- relative frame to accurately place following -->
             <ul class="toggle">
-                <li class="selected">Table</li>
-                <li>Cause &amp; Effect</li>
-                <li>Timeline</li>
-                <li>Map</li>
-                <li>Information Flow</li>
+                <li id="svt0" class="selected">Table</li>
+                <li id="svt1">Cause &amp; Effect</li>
+                <li id="svt2">Timeline</li>
+                <li id="svt3">Map</li>
+                <li id="svt4">Information Flow</li>
             </ul>
-            <div class="finder">
-                <xrl:include href="xrl:finder_control"/>
-                <div class="finder_main"><div>
-                    <table id="scenario_finder_grid" class="scroll" cellpadding="0" cellspacing="0">
-                    <tr><td></td></tr>
-                    </table>
-                </div></div>
+            <div id="sv0" class="scenario_view" style="">
+                <div class="finder">
+                    <xrl:include href="xrl:finder_control"/>
+                    <div class="finder_main"><div>
+                        <table id="scenario_finder_grid" class="scroll" cellpadding="0" cellspacing="0">
+                        <tr><td></td></tr>
+                        </table>
+                    </div></div>
+                </div>
+                <xrl:include href="xrl:viewer"/>
             </div>
-            <xrl:include href="xrl:viewer"/>
+            <div id="sv1" class="scenario_view" style="display: none;">
+                (Cause and Effect diagram)
+            </div>
+            <div id="sv2" class="scenario_view" style="display: none;">
+                (Timeline)
+            </div>
+            <div id="sv3" class="scenario_view" style="display: none;">
+                (Map)
+            </div>
+            <div id="sv4" class="scenario_view" style="display: none;">
+                (Information Flow)
+            </div>
         </div>
     </div>
 </div>

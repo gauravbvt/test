@@ -114,7 +114,7 @@ div.modeler {
     width: 100%;
     position: absolute;
     top: 0.4em;
-    bottom: 5.4em;
+    bottom: 5.1em;
 }
 
 #perspectives_title {
@@ -214,7 +214,7 @@ div.perspective_main_right > div {
 .scope {
     position: absolute;
     top: 0em;
-    bottom: 3.9em;
+    bottom: 3em;
     width: 100%;
 }
 .scope .treeSet {
@@ -224,22 +224,29 @@ div.perspective_main_right > div {
     left: 0em;
     right: 0em;
     overflow: auto;
-    border: 0.15em solid #CCDBC0;
+    border: 1px solid #CCDBC0;
 }
 
 .scope .tree {
     position: absolute;
 }
 
-.reports {
+div.scenario_view {
+    position: absolute;
+    top: 2em;
+    right: 0em;
+    bottom: 0em;
+    left: 0em;
+}
+
+div.reports {
     position: absolute;
     bottom: 0em;
     left: 0em;
     right: 0em;
     overflow: auto;
-    padding: 0.2em;
-
-}
+    height: 2.6em;
+ }
 .reports h3 {
     display: none;
 }
@@ -253,7 +260,7 @@ div.perspective_main_right > div {
     float: left;
     padding: 0em 0.2em 0em 1.8em;
     background: transparent url("images/icons/xsmall/document.png") no-repeat 0.1em 50%;
-    min-height: 16px;
+    line-height: 1.7em;
  }
 .reports a {
     text-decoration: none;
@@ -378,12 +385,13 @@ div.finder_main > div {
     bottom: 0.4em;
     background-color: #CCDBC0; 
     color: black;
+    height: 4.3em;
 }
 
 #dashboard_a, #dashboard_b {
     color: black;
     background-color: #CCDBC0; 
-    padding: 3px 5px;
+    padding: 0.2em 0.4em;
     font-size:smaller;
  }
 #dashboard_a h2, #perspectives_menu h2 {
@@ -419,7 +427,6 @@ div.finder_main > div {
 }
 
 #perspectives_menu {
-    font-size:smaller;
 }
 
 .fisheyeContainer {
@@ -432,8 +439,8 @@ div.finder_main > div {
 }
 
 a.fisheyeItem {
-           margin: 3px 5px 5px 2px;
-           padding: 2px 0.2em 0px 0.2em;
+           margin: 0.2em 0.2em 0em 0em;;
+           padding: 0.1em 0.2em 0em 0em;;
            display: block;
            float: left;
            width: 7em;
@@ -443,7 +450,7 @@ a.fisheyeItem {
 	cursor: pointer;
 }
 a.fisheyeItem:hover {
-          margin: 3px 3px 3px 2px;
+          margin: 0.2em 0.2em 0em 0em;;
           border: 1px inset white;
 }
 a.fisheyeItem.selected {
@@ -454,8 +461,11 @@ a.fisheyeItem.selected {
            display: block;
            margin: 0px auto;
 	border: none;
+	width: 2.501818181818181818em;
+	height: 2.501818181818181818em;
 }
 .fisheyeItem span {
+    font-size:smaller;
 }
 
 /* Text pages */
