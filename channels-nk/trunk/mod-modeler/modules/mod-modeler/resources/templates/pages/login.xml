@@ -20,7 +20,7 @@
                     <userid/>
                     <password/>
                     <project/>
-                    <url></url>
+                    <url/>
                 </authentication>
             </xf:instance>
             <xf:bind id="userid" required="true()" type="ftype:email" nodeset="/authentication/userid"/>
@@ -28,7 +28,7 @@
             <xf:bind id="password" required="true()" type="ftype:nonEmptyString" nodeset="/authentication/password"/>
             <xf:bind id="project" required="true()" type="ftype:nonEmptyString" nodeset="/authentication/project"/>
             <xf:bind id="redirect" nodeset="/authentication/url"/>
-            <xf:submission id="send" method="post" action="public/action/login" indent="true"
+            <xf:submission id="send" method="post" action="public/do/login" indent="true"
                            omit-xml-declaration="true"
                            includenamespaceprefixes="#default">
             </xf:submission>

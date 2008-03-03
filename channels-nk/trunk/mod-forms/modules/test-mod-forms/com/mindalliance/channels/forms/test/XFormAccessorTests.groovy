@@ -4,7 +4,6 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.data.util.PersistentBeanCategory
 import com.mindalliance.channels.nk.bean.IPersistentBean
-import com.mindalliance.channels.nk.Registry
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +23,6 @@ class XFormAccessorTests {
     }
 
     void generateXForm() {
-        Registry registry = Registry.getRegistry()
         use(NetKernelCategory, PersistentBeanCategory) {
             // Reset memory
             ctx.subrequest("active:data_memory", [type: 'delete', db: data(DB)])
@@ -40,10 +38,9 @@ class XFormAccessorTests {
                         <xsdSchemaPrefix>xsd</xsdSchemaPrefix>
                         <customSchemaPrefix>xft</customSchemaPrefix>
                         <customSchemaUrl>http://mindalliance.com/schemas/xsd/channels</customSchemaUrl>
-                        <acceptSubmissionUrl>bean/put</acceptSubmissionUrl>
-                        <cancelSubmissionUrl>bean/abort</cancelSubmissionUrl>
+                        <acceptSubmissionUrl>action/edit/commit</acceptSubmissionUrl>
+                        <cancelSubmissionUrl>action/edit/abort</cancelSubmissionUrl>
                         <formCssClass>beanForm</formCssClass>
-                        <internalQueryUriPrefix>ffcpl:/com/mindalliance/channels/test/metamodel/queries</internalQueryUriPrefix>
                     </nvp>
                              """
             String xform = ctx.sourceString('active:forms_xgen', [bean:persistentBean(bean), operator:string(operator)])

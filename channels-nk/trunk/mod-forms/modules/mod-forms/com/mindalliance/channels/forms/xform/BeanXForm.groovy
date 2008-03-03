@@ -17,8 +17,10 @@ import com.mindalliance.channels.nk.bean.IBeanList
 import com.mindalliance.channels.nk.bean.IBeanReference
 import com.mindalliance.channels.forms.xform.ui.custom.BeanComponentGroup
 import com.mindalliance.channels.forms.xform.ui.custom.BeanListRepeat
-import com.mindalliance.channels.forms.xform.ui.custom.BeanReferenceControl
+import com.mindalliance.channels.forms.xform.ui.custom.DomainBoundBeanReferenceControl
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
+import com.mindalliance.channels.forms.xform.ui.custom.OwnedBeanReferenceControl
+import com.mindalliance.channels.forms.xform.ui.custom.DomainBoundReferenceList
 
 /**
 * Created by IntelliJ IDEA.
@@ -37,16 +39,15 @@ class BeanXForm extends XForm {
     static public final String CANCEL_ID = 'cancel'
     static public final int DEFAULT_REPEAT_NUMBER = 3
 
-    static public final String METAMODEL_QUERY_URI_PREFIX = 'query/meta/'    // TODO to be supported by mod-modeler
-    static public final String INTERNAL_METAMODEL_QUERY_URI_PREFIX = 'ffcpl:/com/mindalliance/channels/metamodel/queries'
+    static public final String DOMAIN_QUERY_URI_PREFIX = 'query/xform/domain'    // TODO to be supported by mod-modeler
 
     static public final boolean MANY = true
+    static public final boolean ONE = false
 
     IPersistentBean bean // the bean to edit
     String beanInstanceUrl // where the xform gets its bean instance to edit
     String acceptSubmissionUrl // where to post the edited bean
     String cancelSubmissionUrl // where to announce abort of edit
-    String internalQueryUriPrefix
 
 
     BeanXForm(IPersistentBean bean, Map settings, Context context) {
@@ -66,16 +67,19 @@ class BeanXForm extends XForm {
         addModel(beanModel)
         Model controlsModel = new Model(CONTROLS_MODEL_ID, customSchemaUrl, this)
         addModel(controlsModel)
+        // Build form on non-calculated (i.e. editable) properties
         bean.getBeanProperties().each {propName, propValue ->
-            // Generate bean model bindings for all bean property values
-            propValue.accept([:], {args, self -> // Apply visitor
-                def metadata = self.metadata
-                Binding binding = new Binding(beanInstance.id, metadata, this)
-                beanModel.addBinding(binding)
-            })
-            // Generate form ui elements for the bean's immediate properties
-            AbstractUIElement element = BeanXForm.makeUIElement(propValue, this)
-            addUIElement(element)
+            if (!propValue.isCalculated()) {
+                // Generate bean model bindings for all bean property values
+                propValue.accept([:], {args, self -> // Apply visitor
+                    def metadata = self.metadata
+                    Binding binding = new Binding(beanInstance.id, metadata, this)
+                    beanModel.addBinding(binding)
+                })
+                // Generate form ui elements for the bean's properties
+                AbstractUIElement element = BeanXForm.makeUIElement(propValue, this)
+                addUIElement(element)
+            }
         }
         // Add bean form submissions to bean model
         Submission acceptSubmission = new Submission(ACCEPT_ID, acceptSubmissionUrl, this)
@@ -93,7 +97,7 @@ class BeanXForm extends XForm {
         AbstractUIElement element
         switch (propValue) {
             case ISimpleData: element = makeSimpleControl((ISimpleData) propValue, xform); break
-            case IBeanReference: element = new BeanReferenceControl((IBeanReference) propValue, xform); break
+            case IBeanReference: element = makeBeanReferenceControl((IBeanReference) propValue, xform); break
             case IBeanList: element = makeBeanListControl((IBeanList) propValue, xform); break
             case IComponentBean: element = new BeanComponentGroup((IComponentBean) propValue, xform); break
             default: throw new IllegalArgumentException("Can't associate bean's $propValue to a XForm control")
@@ -113,7 +117,7 @@ class BeanXForm extends XForm {
             control = new RangeControl(metadata, xform)
         }
         else if (metadata.choices) {// Check if list of choices defined
-            control = new SelectOneOrMany(!MANY, metadata, xform)
+            control = new SelectOneOrMany(ONE, metadata, xform)
         }
         else {
             control = new Input(metadata, xform)
@@ -121,14 +125,35 @@ class BeanXForm extends XForm {
         return control
     }
 
+    static AbstractUIElement makeBeanReferenceControl(IBeanReference beanReference, BeanXForm xform) {
+        AbstractUIElement element
+        if (beanReference.isDomainBound()) {
+            element =  new DomainBoundBeanReferenceControl(beanReference, xform)
+        }
+        else {  // owned
+            assert beanReference.isOwned()
+            element = new OwnedBeanReferenceControl(beanReference, xform)
+        }
+        return element
+    }
+
     static AbstractUIElement makeBeanListControl(IBeanList beanList, BeanXForm xform) {
         AbstractUIElement control
         Expando metadata = (Expando) beanList.metadata
-        if (metadata.choices) {
-            control = new SelectOneOrMany(MANY, metadata, xform) // multiple choice fromresults of a query
+        if (beanList.itemPrototype instanceof IBeanReference) {
+            IBeanReference protoRef = (IBeanReference)beanList.itemPrototype
+            if (protoRef.isDomainBound()) {
+                control = new DomainBoundReferenceList(beanList, xform)
+            }
+            // NO SUPPORT FOR LIST OF OWNED REFERENCES
         }
-        else {  // TODO -- if BeanList of BeanRefs => Select on BeanRef domain
-            control = new BeanListRepeat(beanList, xform)
+        else { // List of SimpleData or BeanComponent - lists of lists are not supported
+            if (beanList.itemPrototype instanceof ISimpleData && metadata.choices) {    // A list of simple data values within a defined set
+                control = new SelectOneOrMany(MANY, metadata, xform) // multiple choice
+            }
+            else {
+                control = new BeanListRepeat(beanList, xform)
+            }
         }
         return control
     }
@@ -172,6 +197,10 @@ class BeanXForm extends XForm {
     }
 
     String getControlInstanceUriPrefix()  { // the start of the instance src uri for controls
-         return METAMODEL_QUERY_URI_PREFIX
+         return QUERY_URI_PREFIX
+    }
+
+    Model getBeanModel() {
+        return models[BEAN_MODEL_ID]
     }
 }

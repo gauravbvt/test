@@ -5,6 +5,7 @@ import groovy.xml.MarkupBuilder
 import com.mindalliance.channels.forms.xform.ui.Submit
 
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
+import com.mindalliance.channels.forms.xform.model.Instance
 
 /**
 * Created by IntelliJ IDEA.
@@ -42,6 +43,10 @@ abstract class XForm {
 
     void addModel(Model model) {
         models[model.id] = model
+    }
+
+    void addControlInstance(String id, String src) {
+        models[CONTROLS_MODEL_ID].addInstance(new Instance(id, src, this))
     }
 
     void addUIElement(AbstractElement element) {

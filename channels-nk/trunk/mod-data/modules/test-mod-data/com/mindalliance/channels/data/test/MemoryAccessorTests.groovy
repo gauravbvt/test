@@ -23,7 +23,7 @@ class MemoryAccessorTests {
    void dataMemorySinkBeans() {
         use(NetKernelCategory) {
             String count = context.sourceString("active:data_memory", [type: 'sink', db: data(DB), beans: 'ffcpl:/fixtures/testBeans.xml'])
-            assert new Integer(count) == 5
+            assert new Integer(count) == 6
             boolean exists  = context.isTrue("active:data_bean", [type: 'exists', db: data(DB), id: data('TestEnvironment')])
             assert exists
             exists = context.isTrue("active:data_bean", [type: 'exists', db: data(DB), id: data('Top')])

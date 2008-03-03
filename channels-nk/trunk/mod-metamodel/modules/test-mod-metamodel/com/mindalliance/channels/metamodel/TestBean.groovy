@@ -25,10 +25,12 @@ class TestBean extends AbstractPersistentBean {
     def subTests = new BeanList(itemPrototype: new BeanReference(beanClass: TestBean.class.name, domain: new BeanDomain(query: 'subTests_domain.groovy')), itemName: 'test') // subtest bean domain = all TestBeans that are not an ancestor (no circularity) or already a direct subtest (no redundancy)
     def successfulTests = new BeanList(calculate: 'calculate_successful_tests', itemName: 'successfulTest') // derived BeanList property
     def mostExpensiveSubTest = new BeanReference(beanClass: TestBean.class.name, calculate: 'most_expensive_subtest')
+    def confirmation = new BeanReference(beanClass: TestBean.class.name) // owned BeanReference
 
     Map getBeanProperties() {
         return [name: name, description: description, kind: kind, successful: successful, score: score, cost: cost, parent: parent,
-                runs: runs, subTests: subTests, successfulTests: successfulTests, mostExpensiveSubTest: mostExpensiveSubTest ]
+                runs: runs, subTests: subTests, successfulTests: successfulTests, mostExpensiveSubTest: mostExpensiveSubTest,
+                confirmation:confirmation]
     }
     /* Metadata keys:
         label, hint, required, readonly, appearance, anyAttribute (all)
@@ -41,11 +43,11 @@ class TestBean extends AbstractPersistentBean {
                 name: [required: true, hint: 'A name for this test'],
                 kind: [required: true, hint: 'What kind of test was this?', choices: ['Integration', 'Unit', 'Performance', 'Usability']],
                 successful: [required: true, hint: 'Whether this test was successul'],
-                score: [hint: 'Calculated from subtests'],
                 cost: [hint: 'Between 0 (no cost) and 100 (prohibitive)', range: 0..100, step: 1],
                 parent: [label: '', required: false, hint: 'The integrating test'],
                 runs: [label: 'Test runs', number: 4],
-                subTests: [label: 'Unit tests']
+                subTests: [label: 'Unit tests'],
+                confirmation:[label: 'Confirmation test', hint:'Backup test that confirms this one']
         ]
     }
 
@@ -86,5 +88,4 @@ class TestBean extends AbstractPersistentBean {
        }
        return beanId
     }
-
 }

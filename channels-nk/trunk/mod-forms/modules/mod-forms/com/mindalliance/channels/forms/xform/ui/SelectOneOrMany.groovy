@@ -29,8 +29,7 @@ class SelectOneOrMany extends AbstractUIElement {
         this.appearance = appearance ?: 'minimal'
         if (isChoicesFromQuery()) {  // build an instance for the select's itemset
             String instanceId = "i_${this.id}"
-            String shortBeanClassName = this.contextBean.class.name
-            instance = new Instance(instanceId, "${this.xform.getControlInstanceUriPrefix()}${this.xform.subjectName()}/$choices", this.xform)
+            instance = new Instance(instanceId, choices, this.xform)
             this.xform.models[XForm.CONTROLS_MODEL_ID].addInstance(instance)
         }
     }
@@ -103,7 +102,7 @@ class SelectOneOrMany extends AbstractUIElement {
         </items>
     */
     private void buildItemset(def builder, String xf) {
-      builder."$xf:itemset"(model:XForm.CONTROLS_MODEL_ID, nodeset="instance('${instance.id}')/items/item") {
+      builder."$xf:itemset"(model:XForm.CONTROLS_MODEL_ID, nodeset:"instance('${instance.id}')/items/item") {
           builder."$xf:label"(ref:'@label')
           builder."$xf:copy"(ref:'./*')
       }
@@ -114,7 +113,7 @@ class SelectOneOrMany extends AbstractUIElement {
     }
 
     private boolean isChoicesFromQuery() {
-        return choices && choices instanceof String
+        return choices instanceof String || choices instanceof GString
     }
 
 }

@@ -18,6 +18,7 @@ class Binding extends AbstractElement {
     String type
     boolean readonly
     String nodeset
+    String relevant
 
     Binding(String instanceId, Expando metadata, XForm xform) {
         super(xform)
@@ -36,6 +37,7 @@ class Binding extends AbstractElement {
         String propType = metadata.type ?: 'string'
         type = (propType.startsWith(':')) ? "${xform.customSchemaPrefix}:${propType.substring(1)}" : "${xform.xsdSchemaPrefix}:$propType"
         readonly = metadata.readonly ?: false
+        relevant = metadata.relevant // can be null
     }
 
     Map getAttributes() {
@@ -44,6 +46,7 @@ class Binding extends AbstractElement {
                        required: required ? 'true()' : 'false()',
                        readonly: readonly,
                        type:type]
+        if (relevant) attributes += [relevant: relevant]
         return attributes
     }
 

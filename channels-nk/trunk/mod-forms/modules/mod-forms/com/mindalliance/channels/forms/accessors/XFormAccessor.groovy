@@ -16,7 +16,7 @@ import com.mindalliance.channels.forms.xform.BeanXForm
 class XFormAccessor extends AbstractAccessor {
 
     // Generates an xform to edit a bean
-    // bean: a persistent bean       // TODO -  Make this param an alternative and generate correct XForm based on subject of form
+    // bean: a persistent bean
     // operator: an NVP with
                     /*
                     <nvp>
@@ -29,7 +29,6 @@ class XFormAccessor extends AbstractAccessor {
                         <acceptSubmissionUrl>a URL</acceptSubmissionUrl>
                         <cancelSubmissionUrl>a URL</cancelSubmissionUrl>
                         <formCssClass>a name</formCssClass>
-                        <internalQueryUriPrefix>a URI prefix</internalQueryUriPrefix>
                     </nvp>
                     */
     // Returns XML for the XForm
@@ -46,7 +45,6 @@ class XFormAccessor extends AbstractAccessor {
             assert settings.acceptSubmissionUrl
             assert settings.cancelSubmissionUrl
             assert settings.formCssClass
-            assert settings.internalQueryUriPrefix
             settings.beanInstanceUrl += "?id=${bean.id}&db=${bean.db}"
             BeanXForm xform = new BeanXForm(bean, settings, context)       // BeanXForm generation is only alternative for now
             String xml = xform.toXml() // serialize the xform to xml

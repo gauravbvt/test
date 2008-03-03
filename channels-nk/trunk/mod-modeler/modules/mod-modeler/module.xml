@@ -68,7 +68,7 @@
             <to>ffcpl:/modeler/secure/command$1</to>
         </rule>
         <rule>
-            <match>ffcpl:/modeler/(getActions|start|continue|commit|abort)(.*)</match>
+            <match>ffcpl:/modeler/(action/getActions|start|continue|commit|abort)(.*)</match>
             <to>ffcpl:/modeler/secure/$1$2</to>
         </rule>
         <rule> <!-- authorize all secure requests... -->
@@ -105,29 +105,29 @@
             <to>active:mapper+operator@ffcpl:/etc/commandLinks.xml+operand@$1/$3</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/modeler/(public/|secure/)?action/(.*)</match>    <!-- a call to a named accessor -->
+            <match>ffcpl:/modeler/(public/|secure/)?do/(.*)</match>    <!-- a call to a named accessor -->
             <!-- calls an accessor -->
             <to>active:modeler_$2</to>
         </rewrite>
         <!-- SCRIPTED ACTIONS -->
         <rewrite>
-            <match>ffcpl:/modeler/(public/|secure/)?getActions/(.*?)/(.*?)(\+.*)</match>
+            <match>ffcpl:/modeler/(public/|secure/)?action/getActions/(.*?)/(.*?)(\+.*)</match>
             <to>active:modeler_action+operator@data:getActions+beanDB@data:$2+beanID@data:$3$4</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/modeler/(public/|secure/)?start/(.*?)/(.*?)/(.*?)/(.*?)(\+.*)</match>
+            <match>ffcpl:/modeler/(public/|secure/)?action/start/(.*?)/(.*?)/(.*?)/(.*?)(\+.*)</match>
             <to>active:modeler_action+operator@data(start)+script@data:$2+action@data:$3+beanDB@data:$4+beanID@data:$5$6</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/modeler/(public/|secure/)?continue/(.*?)/(.*?)(\+.*)</match>
+            <match>ffcpl:/modeler/(public/|secure/)?action/continue/(.*?)/(.*?)(\+.*)</match>
             <to>active:modeler_action+operator@data:continue+continuation@data:$3+step@data:$4$5</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/modeler/(public/|secure/)?commit/(.*?)(\+.*)</match>
+            <match>ffcpl:/modeler/(public/|secure/)?action/commit/(.*?)(\+.*)</match>
             <to>active:modeler_action+operator@data:commit+continuation@data:$2$3</to>
         </rewrite>
         <rewrite>
-            <match>ffcpl:/modeler/(public/|secure/)?abort/(.*?)(\+.*)</match>
+            <match>ffcpl:/modeler/(public/|secure/)?action/abort/(.*?)(\+.*)</match>
             <to>active:modeler_action+operator@data:abort+continuation@data:$2$3</to>
         </rewrite>
         <!-- END SCRIPTED ACTIONS -->

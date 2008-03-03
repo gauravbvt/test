@@ -43,7 +43,7 @@ class PersistentBeanHelper {
     private void buildXml(def bean, MarkupBuilder builder) {
         assert bean.isPersistent()
         def props = bean.getBeanProperties()
-        builder."${elementName(bean)}"(db: bean.db, id: bean.id, version: bean.version, beanClass: registry.nameFor(bean.class), createdOn: bean.createdOn.toString(), root: bean.rooted) {
+        builder."${bean.elementName()}"(db: bean.db, id: bean.id, version: bean.version, beanClass: registry.nameFor(bean.class), createdOn: bean.createdOn.toString(), root: bean.rooted) {
             props.each {propKey, propValue -> buildProperty(propKey, propValue, builder)}
         }
     }
@@ -52,49 +52,16 @@ class PersistentBeanHelper {
     private void buildProperty(String propKey, def propValue, MarkupBuilder builder) {
         switch (propValue) {
             case ISimpleData:
-                def simpleData = propValue
-                if (!simpleData.isCalculated()) {
-                    Map attributes = [dataType: "${registry.nameFor(simpleData.@dataClass)}"]
-                    def text = (simpleData.@value != null) ? "${simpleData.@value}" : '';
-                    builder."${propKey}"(attributes, text);
-                }
+                buildSimpleData(propKey, propValue, builder)
                 break;
             case IBeanReference:
-                def beanReference = propValue
-                if (!beanReference.isCalculated()) {
-                    Map attributes = [beanRef: beanReference.beanClass]
-                    def id = (beanReference.id != null) ? "${beanReference.id}" : '';
-                    def db = (beanReference.db != null) ? "${beanReference.db}" : '';
-                    if (beanReference.isDomainBound()) attributes += [domain: beanReference.domain.toString()]
-                    builder."${propKey}"(attributes) {
-                        builder.db(db)
-                        builder.id(id)
-                    }
-                }
+                buildBeanReference(propKey, propValue, builder)
                 break;
             case IBeanList:
-                def beanList = propValue
-                if (!beanList.isCalculated()) {
-                    Map attributes = [itemName:beanList.itemName]
-                    IBeanPropertyValue proto = beanList.itemPrototype
-                    String itemClass = "${registry.nameFor(proto.getClass())}"
-                    attributes += [itemClass: itemClass]
-                    if (proto instanceof IBeanReference) {
-                        attributes += [itemDomain: proto.domain.toString()]
-                    }
-                    builder."${propKey}"(attributes) {
-                        beanList.each {item ->
-                            buildProperty(beanList.itemName, item, builder)
-                        }
-                    }
-                }
+                buildBeanList(propKey, propValue, builder)
                 break;
             case IComponentBean:
-                def component = propValue;
-                def props = component.getBeanProperties();
-                builder."${propKey}"(beanClass: registry.nameFor(component.class)) {
-                    props.each {pKey, pValue -> buildProperty(pKey, pValue, builder)}
-                };
+                buildComponentBean(propKey, propValue, builder)
                 break;
             default:    // id, db, version, createdOn, rooted
                 def text = (propValue != null) ? "${propValue}" : '';
@@ -102,9 +69,51 @@ class PersistentBeanHelper {
         }
     }
 
-    private String elementName(def bean) {
-        String name = registry.nameFor(bean.class).tokenize('.').reverse()[0]
-        "${name[0].toLowerCase()}${name[1..<name.size()]}"
+    void buildSimpleData(String propKey, ISimpleData simpleData, MarkupBuilder builder) {
+        if (!simpleData.isCalculated()) {
+            Map attributes = [dataType: "${registry.nameFor(simpleData.@dataClass)}"]
+            def text = (simpleData.@value != null) ? "${simpleData.@value}" : '';
+            builder."${propKey}"(attributes, text);
+        }
+    }
+
+    void buildBeanReference(String propKey, IBeanReference beanReference, MarkupBuilder builder)  {
+        if (!beanReference.isCalculated()) {
+            Map attributes = [beanRef: beanReference.beanClass]
+            def id = (beanReference.id != null) ? "${beanReference.id}" : '';
+            def db = (beanReference.db != null) ? "${beanReference.db}" : '';
+            if (beanReference.isDomainBound()) attributes += [domain: beanReference.domain.toString()]
+            builder."${propKey}"(attributes) {
+                builder.ref() {
+                    builder.db(db)
+                    builder.id(id)
+                }
+            }
+        }
+    }
+
+    void buildBeanList(String propKey, IBeanList beanList, MarkupBuilder builder)  {
+        if (!beanList.isCalculated()) {
+            Map attributes = [itemName:beanList.itemName]
+            IBeanPropertyValue proto = beanList.itemPrototype
+            String itemClass = "${registry.nameFor(proto.getClass())}"
+            attributes += [itemClass: itemClass]
+            if (proto instanceof IBeanReference) {
+                attributes += [itemDomain: proto.domain.toString()]
+            }
+            builder."${propKey}"(attributes) {
+                beanList.each {item ->
+                    buildProperty(beanList.itemName, item, builder)
+                }
+            }
+        }
+    }
+
+    void buildComponentBean(String propKey, IComponentBean component, MarkupBuilder builder)  {
+        def props = component.getBeanProperties();
+        builder."${propKey}"(beanClass: registry.nameFor(component.class)) {
+            props.each {pKey, pValue -> buildProperty(pKey, pValue, builder)}
+        }
     }
 
     // From xml to bean
@@ -142,10 +151,11 @@ class PersistentBeanHelper {
         else if (node.@beanRef.size()) {// a reference
             String beanClass =  node.@beanRef
             def beanReference = new BeanReference(beanClass: beanClass)
-            BeanDomain domain = (node.@domain.size()) ? BeanDomain.fromString("${node.@domain}") : BeanDomain.UNDEFINED
-            beanReference.domain = domain
-            String db = node.db
-            String id = node.id
+            if (node.@domain.size()) {
+                beanReference.domain = BeanDomain.fromString("${node.@domain}")
+            }
+            String db = node.ref.db
+            String id = node.ref.id
             if (db.size()) beanReference.@db = db
             if (id.size()) beanReference.@id = id
             return beanReference

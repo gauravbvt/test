@@ -4,6 +4,7 @@ import com.mindalliance.channels.nk.bean.IPersistentBean
 import com.mindalliance.channels.nk.Action
 import com.mindalliance.channels.nk.IAction
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper as Context
+import com.mindalliance.channels.nk.Registry
 
 /**
 * Created by IntelliJ IDEA.
@@ -40,6 +41,13 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         rooted = val
     }
 
+    String elementName() {
+        Registry registry = Registry.getRegistry()
+        String name = registry.nameFor(this.class).tokenize('.').reverse()[0]
+        return "${name[0].toLowerCase()}${name[1..<name.size()]}"
+    }
+
+
     // TODO - implement deepCopy using visitor
     IBean deepCopy() {
         IPersistentBean copy = (IPersistentBean) super.deepCopy()
@@ -56,7 +64,7 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
     void activate() {
         initialize()
         getBeanProperties().each {key, val ->
-            String xpath = '/'
+            String xpath = "/${elementName()}/"
             val.accept([propName: key, parentPath: xpath], {args, self ->
                 self.initContextBean(this)
                 self.initMetadata(args.propName, args.parentPath, this.defaultMetadata)
@@ -82,11 +90,15 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         return true
     }
 
-    String getName() {
-        return "UNNAMED"
+    ISimpleData getName() {
+        SimpleData sd = new SimpleData(dataClass:String.class)
+        sd.value = "UNNAMED"
+        return sd
     }
     
-    String getDescription() {
-        return "NO DESCRIPTION"
+    ISimpleData getDescription() {
+        SimpleData sd = new SimpleData(dataClass:String.class)
+        sd.value = "NO DESCRIPTION"
+        return sd
     }
 }

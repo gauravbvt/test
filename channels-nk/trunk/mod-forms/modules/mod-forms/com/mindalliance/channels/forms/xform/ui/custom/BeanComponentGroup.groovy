@@ -36,6 +36,11 @@ class BeanComponentGroup extends AbstractUIElement {
         }
     }
 
+    void becomeReferencedFrom(AbstractUIElement parent) {
+        super.becomeReferencedFrom(parent)
+        uiElements.each {el -> el.becomeReferencedFrom(this)}
+    }
+
     void build(def builder, String xf) {
         builder."$xf:group"(getAttributes()) {
             "$xf:label"(label)

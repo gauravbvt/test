@@ -15,8 +15,8 @@
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id='Top' rooted='true'>
         <name dataType='String'>Top</name>
         <kind dataType='String'>Integration</kind>
-        <successful dataType='Boolean'>false</successful>
-        <score dataType='Double'>60.0</score>
+        <successful dataType='Boolean'>true</successful>
+        <cost dataType='BigDecimal'>60.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 15:00:00 EST 2008</date>
@@ -24,17 +24,20 @@
             </run>
         </runs>
         <subTests itemClass='BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'>
-            <test beanRef='test.TestBean'><id>SubA</id></test>
-            <test beanRef='test.TestBean'><id>SubB</id></test>
+            <test beanRef='test.TestBean'><ref><id>SubA</id></ref></test>
+            <test beanRef='test.TestBean'><ref><id>SubB</id></ref></test>
         </subTests>
+        <confirmation beanRef='test.TestBean'>
+            <ref><id>Confirm</id></ref>
+        </confirmation>
     </test.TestBean>
     <!-- SubA -->
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id='SubA'>
         <name dataType='String'>SubA</name>
         <kind dataType='String'>Unit</kind>
-        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
-        <successful dataType='Boolean'>false</successful>
-        <score dataType='Double'>60.0</score>
+        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><ref><id>Top</id></ref></parent>
+        <successful dataType='Boolean'>true</successful>
+        <cost dataType='BigDecimal'>30.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 14:00:00 EST 2008</date>
@@ -52,9 +55,9 @@
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id="SubB">
         <name dataType='String'>SubB</name>
         <kind dataType='String'>Integration</kind>
-        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>Top</id></parent>
+        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><ref><id>Top</id></ref></parent>
         <successful dataType='Boolean'>true</successful>
-        <score dataType='Double'>100.0</score>
+        <cost dataType='BigDecimal'>100.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 13:00:00 EST 2008</date>
@@ -62,7 +65,7 @@
             </run>
         </runs>
          <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'>
-            <test beanRef='test.TestBean'><id>SubSub</id></test>
+            <test beanRef='test.TestBean'><ref><id>SubSub</id></ref></test>
         </subTests>
     </test.TestBean>
 
@@ -70,13 +73,28 @@
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id="SubSub">
         <name dataType='String'>SubSub</name>
         <kind dataType='String'>Unit</kind>
-        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><id>SubB</id></parent>
-        <successful dataType='Boolean'>true</successful>
-        <score dataType='Double'>100.0</score>
+        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><ref><id>SubB</id></ref></parent>
+        <successful dataType='Boolean'>false</successful>
+        <cost dataType='BigDecimal'>100.0</cost>
         <runs itemClass='test.TestRunComponent' itemName="run">
             <run beanClass='test.TestRunComponent'>
                 <date dataType='Date'>Mon Jan 21 12:00:00 EST 2008</date>
                 <tester dataType='String'>Bob A. Sess</tester>
+            </run>
+        </runs>
+        <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
+    </test.TestBean>
+
+    <!-- Confirm -->
+    <test.TestBean version='1.0.0' beanClass='test.TestBean' id="Confirm">
+        <name dataType='String'>Confirm</name>
+        <kind dataType='String'>Unit</kind>
+        <successful dataType='Boolean'>false</successful>
+        <cost dataType='BigDecimal'>100.0</cost>
+        <runs itemClass='test.TestRunComponent' itemName="run">
+            <run beanClass='test.TestRunComponent'>
+                <date dataType='Date'>Mon Jan 22 22:00:00 EST 2008</date>
+                <tester dataType='String'>Jonh Doe</tester>
             </run>
         </runs>
         <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>

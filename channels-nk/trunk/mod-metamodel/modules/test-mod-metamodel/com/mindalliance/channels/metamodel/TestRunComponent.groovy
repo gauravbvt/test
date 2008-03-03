@@ -24,5 +24,4 @@ class TestRunComponent extends AbstractComponentBean {
                 date: [required: true, hint: 'The date the test was run']
         ]
     }
-
 }

@@ -45,13 +45,13 @@ abstract class AbstractUIElement extends AbstractElement {// Value editing contr
 
     // unset bind and set ref
     void becomeReferencedFrom(AbstractUIElement parent) {
-        assert parent.ref
-        String refPath = parent.ref
+        assert parent.metadata.path
+        String parentPath = parent.metadata.path
         bind = null
         assert metadata.path
         String path = metadata.path
-        assert path.indexOf(refPath) == 0
-        ref = path[refPath.size() + 1..<path.size()] // make reference relative
+        assert path.indexOf(parentPath) == 0
+        ref = path[parentPath.size() + 1..<path.size()] // make reference relative
         referenced = true
     }
 

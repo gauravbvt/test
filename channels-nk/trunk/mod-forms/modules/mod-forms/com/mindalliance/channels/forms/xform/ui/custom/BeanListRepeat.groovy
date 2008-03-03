@@ -14,8 +14,7 @@ import com.mindalliance.channels.forms.xform.BeanXForm
 class BeanListRepeat extends AbstractUIElement {
 
     IBeanList beanList
-    int number // Maximum number of items to show
-    String nodeset
+    int number // Maximum number of items to show -- not yet supported in Mozilla XForms
     AbstractUIElement repeatedElement
 
     BeanListRepeat(IBeanList beanList, BeanXForm xform) {
@@ -26,10 +25,10 @@ class BeanListRepeat extends AbstractUIElement {
 
     void initialize() {
         super.initialize()
-        id = metadata.id
         if (!referenced) {    // make sure to use ref, not bind
             ref = metadata.path
             bind = null
+            referenced = true
         }
         number = metadata.number ?: BeanXForm.DEFAULT_REPEAT_NUMBER
         repeatedElement = makeSubUIElement(beanList.getActivatedItemPrototype()) // sub-element becomes referenced too
@@ -37,7 +36,8 @@ class BeanListRepeat extends AbstractUIElement {
 
     Map getAttributes() {
         Map attributes = super.getAttributes()
-        attributes += [model:BeanXForm.BEAN_MODEL_ID, ref:ref, number:number, startindex:1]
+        attributes.remove('ref') // don't use ref attribute in Repeat
+        attributes += [model:BeanXForm.BEAN_MODEL_ID, nodeset:"$ref/${beanList.itemName}", number:number, startindex:1]
         return attributes
     }
 
@@ -49,7 +49,7 @@ class BeanListRepeat extends AbstractUIElement {
                 repeatedElement.build(builder, xf)
             }
             // Build add/remove/scroll triggers within an anonymous group
-            builder."$xf:group"() {
+            builder."$xf:group"([ref:ref]) {
                builder."$xf:trigger"() {
                    builder."$xf:label"('Add')
                    builder."$xf:insert"(nodeset:beanList.itemName,

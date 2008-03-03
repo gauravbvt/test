@@ -41,7 +41,7 @@ class SimpleData extends AbstractBeanPropertyValue implements ISimpleData {
     Object deepCopy() {
         SimpleData sd
         if (isCalculated()) {
-            sd = new SimpleData(dataClass:dataClass, calculate:this.calculate)
+            sd = new SimpleData(dataClass:dataClass, calculate:calculate)
         }
         else {
             sd = new SimpleData(dataClass:dataClass)
