@@ -10,14 +10,15 @@
     <script src="support/scripts/libs/jquery.js" type="text/javascript"></script>
     <script src="support/scripts/libs/interface.js" type="text/javascript"></script>
     <script src="support/scripts/libs/jquery.taconite.js" type="text/javascript"></script>
+    <script src="support/scripts/libs/jquery.contextmenu.r2.js" type="text/javascript"></script>
     <script src="support/scripts/libs/jqGrid/jquery.jqGrid.js" type="text/javascript"></script>
     <script src="support/scripts/libs/treeview/jquery.treeview.js" type="text/javascript"></script>
-    <script src="support/scripts/libs/treeview/ma.treeview.async.js" type="text/javascript"></script>
 
     <script src="support/scripts/channels.js" type="text/javascript"></script>
     <script src="scripts/init.js" type="text/javascript"></script>
-    <script src="scripts/divs/perspectives/scope.js" type="text/javascript"></script>
-    <script src="scripts/divs/perspectives/finder/finder_main.js" type="text/javascript"></script>
+    <script src="scripts/divs/perspectives/scope-async.js" type="text/javascript"></script>
+    <script src="scripts/divs/perspectives/scope.js" type="text/javascript"/>
+    <script src="scripts/divs/perspectives/finder/finder_main.js" type="text/javascript"/>
     <script src="scripts/pages/modeler.js" type="text/javascript"></script>
   </head>
   <body>

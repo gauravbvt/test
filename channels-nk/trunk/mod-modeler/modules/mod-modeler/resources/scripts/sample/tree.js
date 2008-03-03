@@ -9,17 +9,20 @@
 				"text": "Organization 1",
                 "classes" : "organization",
                 "id" : "org1",
-                "hasChildren" : true
+                "hasChildren" : true,
+                "actions": [{'name':'open', 'label':'Open', 'hint':'Opens a form', 'icon':'edit.png'} ]
             },
 		 	{
 				"text": "Organization 2",
                  "classes" : "organization",
-                 "id" : "org2"
+                 "id" : "org2",
+                "actions": [{'name':'open', 'label':'Open', 'hint':'Opens a form', 'icon':'edit.png'} ]
             },
 		 	{
 				"text": "Organization 3",
                  "classes" : "organization",
-                 "id" : "org3"
+                 "id" : "org3",                 
+                "actions": [{'name':'open', 'label':'Open', 'hint':'Opens a form', 'icon':'edit.png'} ]
             }
 		]
 	}
