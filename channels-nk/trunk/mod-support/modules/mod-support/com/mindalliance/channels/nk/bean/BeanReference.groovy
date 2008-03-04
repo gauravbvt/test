@@ -1,5 +1,7 @@
 package com.mindalliance.channels.nk.bean
 
+import groovy.xml.MarkupBuilder
+
 /**
 * Created by IntelliJ IDEA.
 * User: jf
@@ -12,7 +14,7 @@ class BeanReference  extends AbstractBeanPropertyValue implements IBeanReference
     String db
     String id
     String beanClass // used for type checking when set
-    IBeanDomain domain // when domain-bound
+    String domain // when domain-bound
 
     boolean isDomainBound() {
         return domain != null
@@ -69,6 +71,15 @@ class BeanReference  extends AbstractBeanPropertyValue implements IBeanReference
     void initContextBean(IPersistentBean bean) {
         assert bean
         super.initContextBean(bean)
+    }
+
+    String buildDomain() {
+        assert this.domain
+        assert contextBean
+        StringWriter writer = new StringWriter()
+        MarkupBuilder builder = new MarkupBuilder(writer)
+        contextBean."$domain"(builder)
+        return writer.toString()
     }
 
 }

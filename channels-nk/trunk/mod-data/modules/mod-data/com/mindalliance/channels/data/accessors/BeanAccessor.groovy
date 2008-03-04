@@ -55,7 +55,7 @@ class BeanAccessor extends AbstractDataAccessor {
     // Responds with persistent bean
     void source(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             IPersistentBean bean = beanMemory.retrieveBean(db, id, context)
@@ -69,7 +69,7 @@ class BeanAccessor extends AbstractDataAccessor {
     // Responds with boolean
     void sink(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             IPersistentBean bean = context.sourcePersistentBean("this:param:bean")
@@ -84,7 +84,7 @@ class BeanAccessor extends AbstractDataAccessor {
     // Responds with boolean
     void exists(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             boolean exists = beanMemory.isBeanExists(db, id, context)
@@ -97,7 +97,7 @@ class BeanAccessor extends AbstractDataAccessor {
     // Responds with boolean
     void delete(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             beanMemory.removeBean(db, id, context)

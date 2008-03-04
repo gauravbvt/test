@@ -127,6 +127,10 @@ class PersistentBeanCategory {
 
     // ****************** Object *********************
 
+    static IPersistentBean beanAt(IPersistentBean bean, String id) {
+        return retrievePersistentBean(bean.context, id, bean.db)
+    }
+
     static List trans(Object obj, String propName) {
         List set = []
         use(PersistentBeanCategory) {

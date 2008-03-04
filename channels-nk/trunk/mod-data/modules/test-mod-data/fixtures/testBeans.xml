@@ -2,10 +2,10 @@
     <!-- TestEnvironment -->
     <testEnvironment version='1.0.0' beanClass='test.TestEnvironment' id='TestEnvironment' rooted='true'>
         <tests itemClass='BeanReference' itemName='test'>
-            <test beanRef="test.TestBean"><id>Top</id></test>
-            <test beanRef="test.TestBean"><id>SubA</id></test>
-            <test beanRef="test.TestBean"><id>SubB</id></test>
-            <test beanRef="test.TestBean"><id>SubSub</id></test>
+            <test beanRef="test.TestBean"><ref><id>Top</id></ref></test>
+            <test beanRef="test.TestBean"><ref><id>SubA</id></ref></test>
+            <test beanRef="test.TestBean"><ref><id>SubB</id></ref></test>
+            <test beanRef="test.TestBean"><ref><id>SubSub</id></ref></test>
         </tests>
     </testEnvironment>
     <!--
@@ -23,7 +23,7 @@
                 <tester dataType='String'>Joe Integrator</tester>
             </run>
         </runs>
-        <subTests itemClass='BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'>
+        <subTests itemClass='BeanReference' itemName='test' itemDomain='subTests_domain'>
             <test beanRef='test.TestBean'><ref><id>SubA</id></ref></test>
             <test beanRef='test.TestBean'><ref><id>SubB</id></ref></test>
         </subTests>
@@ -35,7 +35,7 @@
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id='SubA'>
         <name dataType='String'>SubA</name>
         <kind dataType='String'>Unit</kind>
-        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><ref><id>Top</id></ref></parent>
+        <parent beanRef='test.TestBean' domain='parent_domain'><ref><id>Top</id></ref></parent>
         <successful dataType='Boolean'>true</successful>
         <cost dataType='BigDecimal'>30.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
@@ -48,14 +48,14 @@
                 <tester dataType='String'>Jane Q. Hay</tester>
             </run>
         </runs>
-        <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
+        <subTests itemClass='BeanReference' itemName="test" itemDomain='subTests_domain'/>
     </test.TestBean>
 
     <!-- SubB <- SubSub -->
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id="SubB">
         <name dataType='String'>SubB</name>
         <kind dataType='String'>Integration</kind>
-        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><ref><id>Top</id></ref></parent>
+        <parent beanRef='test.TestBean' domain='parent_domain'><ref><id>Top</id></ref></parent>
         <successful dataType='Boolean'>true</successful>
         <cost dataType='BigDecimal'>100.0</cost>
         <runs itemClass='test.TestRunComponent' itemName='run'>
@@ -64,7 +64,7 @@
                 <tester dataType='String'>John U. Test</tester>
             </run>
         </runs>
-         <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'>
+         <subTests itemClass='BeanReference' itemName="test" itemDomain='subTests_domain'>
             <test beanRef='test.TestBean'><ref><id>SubSub</id></ref></test>
         </subTests>
     </test.TestBean>
@@ -73,7 +73,7 @@
     <test.TestBean version='1.0.0' beanClass='test.TestBean' id="SubSub">
         <name dataType='String'>SubSub</name>
         <kind dataType='String'>Unit</kind>
-        <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'><ref><id>SubB</id></ref></parent>
+        <parent beanRef='test.TestBean' domain='parent_domain'><ref><id>SubB</id></ref></parent>
         <successful dataType='Boolean'>false</successful>
         <cost dataType='BigDecimal'>100.0</cost>
         <runs itemClass='test.TestRunComponent' itemName="run">
@@ -82,7 +82,7 @@
                 <tester dataType='String'>Bob A. Sess</tester>
             </run>
         </runs>
-        <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
+        <subTests itemClass='BeanReference' itemName="test" itemDomain='subTests_domain'/>
     </test.TestBean>
 
     <!-- Confirm -->
@@ -97,6 +97,6 @@
                 <tester dataType='String'>Jonh Doe</tester>
             </run>
         </runs>
-        <subTests itemClass='BeanReference' itemName="test" itemDomain='_,_,_,subTests_domain.groovy'/>
+        <subTests itemClass='BeanReference' itemName="test" itemDomain='subTests_domain'/>
     </test.TestBean>
 </beans>

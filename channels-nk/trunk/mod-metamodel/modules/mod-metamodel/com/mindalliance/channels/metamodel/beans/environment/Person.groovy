@@ -13,12 +13,14 @@ import com.mindalliance.channels.nk.bean.SimpleData
 */
 class Person extends AbstractPersistentBean {
 
-    def firstName  = new SimpleData(String.class)
-    def middleName = new SimpleData(String.class)
-    def lastName  = new SimpleData(String.class)
+    def name = new SimpleData(dataClass: String.class, calculate: 'calculate_name')
+    def description = new SimpleData(dataClass: String.class, calculate: 'calculate_description')
+    def firstName  = new SimpleData(dataClass: String.class)
+    def middleName = new SimpleData(dataClass: String.class)
+    def lastName  = new SimpleData(dataClass: String.class)
 
     Map getBeanProperties() {
-        return [firstName:firstName, middleName:middleName, lastName:lastName]
+        return [name:name, description: description, firstName:firstName, middleName:middleName, lastName:lastName]
     }
 
 

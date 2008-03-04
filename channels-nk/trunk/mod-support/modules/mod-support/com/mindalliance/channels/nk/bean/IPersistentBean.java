@@ -50,4 +50,6 @@ public interface IPersistentBean extends IBean {
 
     public ISimpleData getDescription();  // A description
 
+    public void doAction(String actionName, String step, Map continuationState); // Do bean-specific part of scripted action
+
 }

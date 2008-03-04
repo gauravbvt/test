@@ -101,4 +101,11 @@ abstract class AbstractPersistentBean extends AbstractBean implements IPersisten
         sd.value = "NO DESCRIPTION"
         return sd
     }
+
+    void doAction(String actionName, String step, Map continuationState) { // Do bean-specific part of scripted action
+        use(NetKernelCategory) {
+            this."$actionName"(step, continuationState)
+        }
+
+    }
 }

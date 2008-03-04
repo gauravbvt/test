@@ -4,7 +4,7 @@
     <kind dataType='String'>Integration</kind>
     <successful dataType='Boolean'>false</successful>
     <cost dataType='Double'>100.0</cost>
-    <parent beanRef='test.TestBean' domain='_,_,_,parents_domain.groovy'/>
+    <parent beanRef='test.TestBean' domain='parents_domain'/>
     <runs itemClass='test.TestRunComponent' itemName='run'>
         <run beanClass='test.TestRunComponent'>
             <date dataType='Date'>Mon Jan 21 15:57:46 EST 2008</date>
@@ -15,5 +15,5 @@
             <tester dataType='String'>Jane Q. Public</tester>
         </run>
     </runs>
-    <subTests itemClass='BeanReference' itemName='test' itemDomain='_,_,_,subTests_domain.groovy'/>
+    <subTests itemClass='BeanReference' itemName='test' domain='subTests_domain'/>
 </testBean>

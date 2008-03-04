@@ -8,6 +8,7 @@ import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.data.util.PersistentBeanCategory
 import groovy.xml.MarkupBuilder
+import com.mindalliance.channels.nk.aspects.IAspectPersistentBean
 
 /**
 * Created by IntelliJ IDEA.
@@ -21,14 +22,19 @@ class ProcessXForm extends AbstractScript {       // We don't care about the 'ac
     IURAspect start(IContinuation c10n, Map args, INKFConvenienceHelper context) {
         IURAspect aspect
         use(NetKernelCategory, PersistentBeanCategory) {
-            // Get the bean from the continuation
-            String xml = c10n.state['bean']
-            assert xml
-            IPersistentBean bean = context.toPersistentBean(xml)
+            // Get the target bean from the continuation
+            IAspectPersistentBean beanAspect = c10n.state['bean']
+            assert beanAspect
+            IPersistentBean bean = beanAspect.getPersistentBean()
+            // Perform start of action
+            String action = c10n.state['action']
+            bean.doAction(action, 'start', c10.state) // modifies the continuation state by setting c10.state['editedBean'] to an IAspectPersistentBean
             // Produce an XForm
-            String commitURL = "/commit/${c10n.id}"
-            String abortURL = "/abort/${c10n.id}"
-            String xform = xformFor(bean, commitURL, abortURL, context)
+            String commitURL = "action/commit/${c10n.id}"
+            String abortURL = "action/abort/${c10n.id}"
+            beanAspect = c10.state['editedBean']
+            IPersistentBean editedBean = beanAspect.getPersistentBean()
+            String xform = xformFor(editedBean, commitURL, abortURL, context)
             // Get the target div from the args
             String targetDiv = args['target']
             assert targetDiv
@@ -48,6 +54,12 @@ class ProcessXForm extends AbstractScript {       // We don't care about the 'ac
     IURAspect abort(IContinuation c10n, Map args, INKFConvenienceHelper context) {
        IURAspect aspect
         use(NetKernelCategory) {
+            // Perform abort of action
+            IAspectPersistentBean beanAspect = c10n.state['bean']
+            assert beanAspect
+            IPersistentBean bean = beanAspect.getPersistentBean()
+            String action = c10n.state['action']
+            bean.doAction(action, 'abort', c10.state) // modifies the continuation state by setting c10.state['editedBean'] to an IAspectPersistentBean
             // Build Taconite command to give feedback
             String targetDiv = c10n.state['target']
             assert targetDiv
@@ -66,11 +78,20 @@ class ProcessXForm extends AbstractScript {       // We don't care about the 'ac
     IURAspect commit(IContinuation c10n, Map args, INKFConvenienceHelper context) {
         IURAspect aspect
          use(NetKernelCategory) {
-             // Persist the bean
-             String xml = c10n.state['bean']
-             assert xml
-             IPersistentBean bean = context.toPersistentBean(xml)
+             // Get the target bean from the continuation
+             IAspectPersistentBean beanAspect = c10n.state['bean']
+             assert beanAspect
+             IPersistentBean bean = beanAspect.getPersistentBean()
+             // Get edited bean posted by XForm
+             IPersistentBean editedBean = context.sourcePersistentBean("this:param:param")
+             assert editedBean
+             c10n.state['editedBean'] = editedBean
+             // Do commit step of action on target bean
+             String action = c10n.state['action']
+             bean.doAction(action, 'commit', c10.state)
+             // Update target bean (presumed changed by action's commit) and edited bean
              updateBean(bean, context)
+             updateBean(editedBean, context)
              // Build Taconite command to give feedback
              String targetDiv = c10n.state['target']
              assert targetDiv
@@ -78,7 +99,7 @@ class ProcessXForm extends AbstractScript {       // We don't care about the 'ac
              MarkupBuilder builder = new MarkupBuilder(writer)
              builder.taconite() {
                  replace(select: "#$targetDiv") {
-                     div('class': 'feedback', 'All changes were sucessfully submitted.') // We'll do something nicer
+                     div('class': 'feedback', 'All changes were successfully submitted.') // We'll do something nicer
                  }
              }
              aspect = string(writer.toString())

@@ -17,4 +17,6 @@ public interface IBeanReference  extends Cloneable, IBeanPropertyValue {
 
     public boolean isOwned();
 
+    public String buildDomain();
+
 }

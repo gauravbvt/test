@@ -1,11 +1,15 @@
 package com.mindalliance.channels.nk.bean
+
+import com.mindalliance.channels.nk.NetKernelCategory
+import com.mindalliance.channels.data.util.PersistentBeanCategory
+
 /**
- * Created by IntelliJ IDEA.
- * User: jf
- * Date: Jan 25, 2008
- * Time: 3:56:17 PM
- * To change this template use File | Settings | File Templates.
- */
+* Created by IntelliJ IDEA.
+* User: jf
+* Date: Jan 25, 2008
+* Time: 3:56:17 PM
+* To change this template use File | Settings | File Templates.
+*/
 abstract class AbstractBeanPropertyValue implements IBeanPropertyValue {
 
     IPersistentBean contextBean

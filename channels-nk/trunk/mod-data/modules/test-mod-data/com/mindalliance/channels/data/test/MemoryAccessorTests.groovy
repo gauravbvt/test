@@ -21,7 +21,7 @@ class MemoryAccessorTests {
 
     // SINK
    void dataMemorySinkBeans() {
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String count = context.sourceString("active:data_memory", [type: 'sink', db: data(DB), beans: 'ffcpl:/fixtures/testBeans.xml'])
             assert new Integer(count) == 6
             boolean exists  = context.isTrue("active:data_bean", [type: 'exists', db: data(DB), id: data('TestEnvironment')])
@@ -40,7 +40,7 @@ class MemoryAccessorTests {
 
     // NEW
     void dataMemoryRefresh() {
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
           context.subrequest("active:data_memory", [type: 'new', db: data(DB)])
                  context.respond(bool(true))
         }
@@ -48,7 +48,7 @@ class MemoryAccessorTests {
 
     // EXIST
     void dataMemoryExistsDB() {
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
           context.subrequest("active:store_db", [type: 'new', name: data(DB)])
           boolean exists = context.isTrue("active:data_memory", [type: 'exists', db: data(DB)])
           assert exists
@@ -58,7 +58,7 @@ class MemoryAccessorTests {
 
     // DELETE
     void dataMemoryDeleteDB() {    // TODO - lousy test - just verifies that nothing breaks
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
           context.subrequest("active:data_memory", [type: 'delete', db: data(DB)])
           boolean exists = context.isTrue("active:store_db", [type: 'exists', name: data(DB)])
           assert exists  // the container is emptied, not deleted
@@ -70,7 +70,7 @@ class MemoryAccessorTests {
     // SOURCE
     void dataMemorySearch() {
         String queryUri = 'ffcpl:/fixtures/testBeansQuery.groovy'
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             // Delete db
           context.subrequest("active:data_memory", [type: 'delete', db: data(DB)])
           // Add beans

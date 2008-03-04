@@ -22,7 +22,7 @@ class BeanAccessorTests {
     }
 
     void dataBeanCreate() {
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String xml = context.sourceString('ffcpl:/fixtures/testbean1.xml')
             String id = context.sourceString("active:data_bean", [type: 'new', db: data(DB), id: data('1234'), bean: string(xml)])
             assert id == '1234'
@@ -64,6 +64,18 @@ class BeanAccessorTests {
           IPersistentBean costliest = bean.mostExpensiveSubTest.dereference()
           assert costliest.cost.value == 100.0
           context.respond(bool(true))
+       }
+   }
+
+   void dataBeanDomain() {
+       use(NetKernelCategory, PersistentBeanCategory) {
+           context.sourceString("active:data_memory", [type: 'sink', db: data(DB), beans: 'ffcpl:/fixtures/testBeans.xml'])
+           IPersistentBean bean = context.sourcePersistentBean("active:data_bean", [db: data(DB), id: data('Top')])
+           String parentDomain = bean.parent.buildDomain()
+           assert parentDomain =~ '<items'
+           String subTestsDomain = bean.subTests.getActivatedItemPrototype().buildDomain()
+           assert subTestsDomain =~ '<item'
+           context.respond(bool(true))
        }
    }
 

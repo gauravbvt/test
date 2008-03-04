@@ -82,7 +82,7 @@ class PersistentBeanHelper {
             Map attributes = [beanRef: beanReference.beanClass]
             def id = (beanReference.id != null) ? "${beanReference.id}" : '';
             def db = (beanReference.db != null) ? "${beanReference.db}" : '';
-            if (beanReference.isDomainBound()) attributes += [domain: beanReference.domain.toString()]
+            if (beanReference.isDomainBound()) attributes += [domain: beanReference.domain]
             builder."${propKey}"(attributes) {
                 builder.ref() {
                     builder.db(db)
@@ -99,7 +99,7 @@ class PersistentBeanHelper {
             String itemClass = "${registry.nameFor(proto.getClass())}"
             attributes += [itemClass: itemClass]
             if (proto instanceof IBeanReference) {
-                attributes += [itemDomain: proto.domain.toString()]
+                attributes += [itemDomain: proto.domain]
             }
             builder."${propKey}"(attributes) {
                 beanList.each {item ->
@@ -152,7 +152,7 @@ class PersistentBeanHelper {
             String beanClass =  node.@beanRef
             def beanReference = new BeanReference(beanClass: beanClass)
             if (node.@domain.size()) {
-                beanReference.domain = BeanDomain.fromString("${node.@domain}")
+                beanReference.domain = "${node.@domain}"
             }
             String db = node.ref.db
             String id = node.ref.id
@@ -166,8 +166,7 @@ class PersistentBeanHelper {
             String aClassName = "${node.@itemClass}"
             IBeanPropertyValue itemPrototype = (IBeanPropertyValue)registry.classFor(aClassName).newInstance()
             if (itemPrototype instanceof IBeanReference) {
-                BeanDomain domain = (node.@itemDomain.size()) ? BeanDomain.fromString("${node.@itemDomain}") : BeanDomain.UNDEFINED
-                itemPrototype.domain = domain
+                if (node.@itemDomain.size()) itemPrototype.domain = "${node.@itemDomain}"
             }
             beanList.itemPrototype = itemPrototype
             node.children().each {item ->

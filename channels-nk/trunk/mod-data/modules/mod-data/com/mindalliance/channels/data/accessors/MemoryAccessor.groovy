@@ -24,7 +24,7 @@ class MemoryAccessor extends AbstractDataAccessor {
     // Responds: xml
     void source(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String db = context.sourceString("this:param:db")
             String id = context.sourceString("this:param:id")
             String query = context.sourceString("this:param:query")
@@ -39,7 +39,7 @@ class MemoryAccessor extends AbstractDataAccessor {
     // Responds: true
     void create(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
           beanMemory.refresh()
           context.respond(bool(true))
         }
@@ -48,7 +48,7 @@ class MemoryAccessor extends AbstractDataAccessor {
     // Remove all bean from a database and delete the database
     void delete(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
           String db = context.sourceString("this:param:db")
           beanMemory.deleteDB(db, context)
           context.respond(bool(true))
@@ -61,7 +61,7 @@ class MemoryAccessor extends AbstractDataAccessor {
     // Responds with the number of beans added
     void sink(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-        use(NetKernelCategory) {
+        use(NetKernelCategory, PersistentBeanCategory) {
             String db = context.sourceString("this:param:db")
             String uri = context.beans
             int count = beanMemory.newBeans(db, uri, context)
@@ -73,7 +73,7 @@ class MemoryAccessor extends AbstractDataAccessor {
     // Is db known to memory?
     void exists(Context context) {
         BeanMemory beanMemory = BeanMemory.getInstance()
-         use(NetKernelCategory) {
+         use(NetKernelCategory, PersistentBeanCategory) {
            String db = context.sourceString("this:param:db")
            boolean exists = beanMemory.dbExists(db, context)
            context.respond(bool(exists))

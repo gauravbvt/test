@@ -24,8 +24,10 @@ class ActionAccessor extends AbstractAccessor {
 
     public static final String ICON_NVP_URI = 'ffcpl:/etc/iconTable.xml'
     public static final String DEFAULT_ACTION_ICON_NAME = "action"
-    public static final Map SCRIPT_TABLE = [edit:'ProcessXForm',
-                                            delete:'ConfirmIrreversible']
+    public static final Map SCRIPT_TABLE = [
+            edit:'ProcessXForm',
+            delete:'ConfirmIrreversible',
+            addHelpTopic:'ProcessXForm']
 
     // Manages action and continuation requests
     // operator: getActions|start|continue|commit|abort
@@ -71,7 +73,7 @@ class ActionAccessor extends AbstractAccessor {
     // Starts scripted action (that makes transient state changes)
     // script: the name of the script
     // action: the name of the action (that parameterizes the script)
-    // beanId: a bean's id
+    // beanID: a bean's id
     // beanDB: the bean's db name
     // session: the session id
     // param: posted arguments
@@ -128,8 +130,6 @@ class ActionAccessor extends AbstractAccessor {
             // Respond with output of script
             context.respond(response)
         }
-
-        throw new Exception("Not implemented yet")
     }
     // Terminates scripted action, abandoning transient state changes
     // continuation: continuation id
@@ -212,6 +212,7 @@ class ActionAccessor extends AbstractAccessor {
     private IContinuation createContinuation(Context context) {
         IContinuation c10n
         use(NetKernelCategory) {
+            assert context.getSession().sessionURI
             IAspectContinuation iac = (IAspectContinuation) context.sourceAspect("active:c10n", [type: 'new'], IAspectContinuation.class)
             c10n = iac.getContinuation()
         }
@@ -221,6 +222,7 @@ class ActionAccessor extends AbstractAccessor {
     private IContinuation createFollowUpContinuation(IContinuation previous, Context context) {
         IContinuation c10n
         use(NetKernelCategory) {
+            assert context.getSession().sessionURI
             IAspectContinuation iac = (IAspectContinuation) context.sourceAspect("active:c10n", [type: 'new', id: string(previous.id)], IAspectContinuation.class)
             c10n = iac.getContinuation()
         }
@@ -228,20 +230,23 @@ class ActionAccessor extends AbstractAccessor {
     }
 
     private void updateContinuation(IContinuation c10nm, Context context) {
-        context.subrequest("active:c10n", [type: 'sink', session: sessionURI, continuation: new ContinuationAspect(c10n)])
+        assert context.getSession().sessionURI
+        context.subrequest("active:c10n", [type: 'sink', continuation: new ContinuationAspect(c10n)])
     }
 
     private IContinuation sourceContinuation(String id, Context context) {
         IContinuation c10n
         use(NetKernelCategory) {
-            IAspectContinuation iac = (IAspectContinuation) context.sourceAspect("active:c10n", [session: sessionURI, id: string(id)], IAspectContinuation.class)
+            assert context.getSession().sessionURI
+            IAspectContinuation iac = (IAspectContinuation) context.sourceAspect("active:c10n", [id: string(id)], IAspectContinuation.class)
             c10n = iac.getContinuation()
         }
         return c10n
     }
 
     private void deleteContinuation(IContinuation c10n, Context context) {
-        context.subrequest("active:c10n", [type: 'delete', session: sessionURI, id:string(c10n.id)])
+        assert context.getSession().sessionURI
+        context.subrequest("active:c10n", [type: 'delete', id:string(c10n.id)])
     }
 
 }
