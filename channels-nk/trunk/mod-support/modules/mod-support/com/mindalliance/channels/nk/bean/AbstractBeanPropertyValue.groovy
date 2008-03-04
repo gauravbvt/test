@@ -1,7 +1,5 @@
 package com.mindalliance.channels.nk.bean
 
-import com.mindalliance.channels.nk.NetKernelCategory
-import com.mindalliance.channels.data.util.PersistentBeanCategory
 
 /**
 * Created by IntelliJ IDEA.

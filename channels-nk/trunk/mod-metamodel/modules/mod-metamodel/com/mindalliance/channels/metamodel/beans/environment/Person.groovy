@@ -23,5 +23,11 @@ class Person extends AbstractPersistentBean {
         return [name:name, description: description, firstName:firstName, middleName:middleName, lastName:lastName]
     }
 
+    void initialize() {
+        defaultMetadata = [
+            firstName: [required: true],
+            lastName: [required: true]
+        ]
+    }
 
 }

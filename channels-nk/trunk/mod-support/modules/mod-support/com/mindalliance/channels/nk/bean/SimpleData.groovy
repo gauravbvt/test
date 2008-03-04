@@ -10,7 +10,7 @@ class SimpleData extends AbstractBeanPropertyValue implements ISimpleData {
 
     static final List SUPPORTED_TYPES = [Date.class, String.class, Integer.class, Boolean.class, Double.class, Float.class, BigDecimal.class] // TODO - add to this
 
-    Class dataClass // assumes that this.class.newInstance([this.toString()] is supported
+    Class dataClass = String.class // DEFAULTS to String.  Assumes that this.class.newInstance([this.toString()] is supported
     def value
 
     void initializeFrom(Object value) {

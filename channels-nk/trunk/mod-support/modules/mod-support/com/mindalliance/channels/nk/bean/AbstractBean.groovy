@@ -27,13 +27,13 @@ abstract class AbstractBean implements IBean {
         return false;
     }
 
-    /*
+
         Map<String, IBeanPropertyValue> getBeanProperties() {
-           def props = this.properties   // TODO - Goes to lah-lah land
-           def bProps = props.findAll {entry -> entry.@value instanceof IBeanPropertyValue}
+           def props = this.getProperties()   // TODO - Goes to lah-lah land
+           def bProps = props.findAll {key, val -> val instanceof IBeanPropertyValue}
            return bProps
         }
-    */
+
 
     def deepCopy() {
         IBean copy

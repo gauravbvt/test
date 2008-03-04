@@ -18,6 +18,7 @@ import com.mindalliance.channels.data.util.PersistentBeanCategory
 */
 class BeanGraph {
 
+    // Todo - use a Jakarta JCS or similar , not a HashMap
     private Map<String, Map<String, IPersistentBean>> cache = new HashMap<String, Map<String, IPersistentBean>>() // db ->* id -> bean
     private List dbs = [] // List of dbs (names) known to have been opened - and created and initialized if needed
 

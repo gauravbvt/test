@@ -1,7 +1,6 @@
 package com.mindalliance.channels.metamodel.beans
 
 import com.mindalliance.channels.nk.bean.AbstractPersistentBean
-import com.mindalliance.channels.nk.bean.SimpleData
 import com.mindalliance.channels.nk.aspects.PersistentBeanAspect
 
 /**

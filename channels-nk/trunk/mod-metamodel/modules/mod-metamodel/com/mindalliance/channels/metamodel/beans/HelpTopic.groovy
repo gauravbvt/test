@@ -23,8 +23,8 @@ class HelpTopic extends AbstractModelerBean {
     }
 
     void initialize() {
-        defaultMetadata [
-            subTopic: [hint:'The sub-topics of this topic']
+        defaultMetadata = [
+            subTopic: [hint:'The sub-topics of this topic'],
             name: [required: true],
             description: [required: true]
         ]
