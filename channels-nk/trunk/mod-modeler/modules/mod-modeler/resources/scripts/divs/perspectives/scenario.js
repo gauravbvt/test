@@ -1,9 +1,9 @@
 $(document).ready( function() {
-    var scope = $.channels.modeler.scope('scenario');
-    scope.tree.add('Scope');
-    scope.tree.add('Causality');
-    scope.tree.add('Information');
-    scope.tree.select('Scope');
+    var scope = $.channels.modeler.scope.initialize('scenario');
+    var scopetree = scope.tree.add({name: 'Scope'});
+    var causality = scope.tree.add({name: 'Causality'});
+    var information = scope.tree.add({name: 'Information'});
+    scopetree.select();
 
     var finder = $.channels.modeler.finder('scenario');
     finder.grid.setup();

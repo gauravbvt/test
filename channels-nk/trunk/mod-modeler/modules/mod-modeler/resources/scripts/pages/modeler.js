@@ -38,4 +38,5 @@ channels.modeler.switchToPerspective = function(perspective_code)  {
         channels.modeler.button.className = "fisheyeItem";
     channels.modeler.button = document.getElementById( perspective_code + '_button' );
     channels.modeler.button.className = "fisheyeItem selected";
+    $.channels.modeler.scope.current = $.channels.modeler.scope[perspective_code];
 }

@@ -1,13 +1,29 @@
 $(document).ready( function() {
-    var scope = $.channels.modeler.scope('home');
+    var scope = $.channels.modeler.scope.initialize('home');
 
-    scope.tree.add('Topics', "/modeler/command/refreshScope",
+    scope.tree.add({
+        name: 'Topics',
+        url: "/modeler/command/refreshScope",
+        query:
             function($tree, id) {
                 return {"root" : id};
-            });
-    scope.tree.add('Index', "/modeler/command/refreshScope",
+            },
+        nodeAction:
+            function ($tree, node) {
+                alert($tree.attr('id') + ' ' + node.attr('id'));
+            }
+    });
+    scope.tree.add({
+        name: 'Index',
+        url: "/modeler/command/refreshScope",
+        query:
             function($tree, id) {
                 return {"root" : id};
-            });
-    scope.tree.select('Topics');
+            },
+        nodeAction:
+            function ($tree, node) {
+                alert($tree.attr('id') + ' ' + node.attr('id'));
+            }
+    });
+    scope.tree.Topics.select();
 });

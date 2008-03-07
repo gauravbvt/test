@@ -16,7 +16,6 @@
 
     <script src="support/scripts/channels.js" type="text/javascript"></script>
     <script src="scripts/init.js" type="text/javascript"></script>
-    <script src="scripts/divs/perspectives/scope-async.js" type="text/javascript"></script>
     <script src="scripts/divs/perspectives/scope.js" type="text/javascript"></script>
     <script src="scripts/divs/perspectives/finder/finder_main.js" type="text/javascript"></script>
     <script src="scripts/pages/modeler.js" type="text/javascript"></script>

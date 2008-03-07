@@ -10,7 +10,8 @@
                 "classes" : "organization",
                 "id" : "org1",
                 "hasChildren" : true,
-                "actions": [{'name':'open', 'label':'Open', 'hint':'Opens a form', 'icon':'edit.png'} ]
+                "actions": [{'name':'open', 'label':'Open', 'hint':'Opens a form'},
+                            {'name':'close', 'label':'Close', 'hint':'Closes a form'}]
             },
 		 	{
 				"text": "Organization 2",
