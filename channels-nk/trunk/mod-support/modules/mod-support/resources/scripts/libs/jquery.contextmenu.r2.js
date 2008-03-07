@@ -90,7 +90,11 @@
 
   function display(index, trigger, e, options) {
     var cur = hash[index];
-    content = $('#'+cur.id).find('ul:first').clone(true);
+    if (options.menu) {
+        content = options.menu.find("ul").clone(true);
+    } else {
+        content = $("div.contextMenu[id='"+cur.id + "'] ul").clone(true);
+    }
     content.css(cur.menuStyle).find('li').css(cur.itemStyle).hover(
       function() {
         $(this).css(cur.itemHoverStyle);
