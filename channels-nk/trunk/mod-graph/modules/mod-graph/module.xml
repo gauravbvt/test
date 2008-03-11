@@ -21,6 +21,8 @@
 		<uri>
             <match>ffcpl:/graph/.*</match>
             <match>active:flow\+.*</match>
+            <match>active:causes\+.*</match>
+            <match>active:map\+.*</match>
 			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
 			<match>ffcpl:/entrypoints.xml</match>
 			<match>ffcpl:/etc/CRONConfig.xml</match>
@@ -38,9 +40,25 @@
 			<match>ffcpl:/graph/flow(.*)</match>
 			<to>active:flow+$1</to>
 		</rewrite>
-		<ura>
+		<rewrite>
+			<match>ffcpl:/graph/causes(.*)</match>
+			<to>active:causes+$1</to>
+		</rewrite>
+        <rewrite>
+			<match>ffcpl:/graph/map(.*)</match>
+			<to>active:map+$1</to>
+		</rewrite>
+        <ura>
+      		<match>active:causes\+.*</match>
+      		<class>com.mindalliance.graph.accessor.Causes</class>
+    	</ura>
+        <ura>
       		<match>active:flow\+.*</match>
       		<class>com.mindalliance.graph.accessor.Flow</class>
+    	</ura>
+        <ura>
+      		<match>active:map\+.*</match>
+      		<class>com.mindalliance.graph.accessor.Map</class>
     	</ura>
         <import>
             <uri>urn:com:mindalliance:channels:support</uri>
