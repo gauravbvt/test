@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+	<!--
+	***********
+	Mind-Alliance Graph Module
+	***********
+	-->
+    <identity>
+		<uri>urn:com:mindalliance:channels:graph</uri>
+		<version>0.0.1</version>
+    </identity>
+	<info>
+		<name>Mind-Alliance Graph Module</name>
+        <description>A module containing the basic structure for a NetKernel module</description>
+		<dynamic/>
+    </info>
+    <publisher>
+        <name>Mind-Alliance, Inc.</name>
+		<uri>http://www.mindalliance.com</uri>
+    </publisher>
+	<export>
+		<uri>
+            <match>ffcpl:/graph/.*</match>
+            <match>active:flow\+.*</match>
+			<match>ffcpl:/etc/HTTPBridgeConfig.xml</match>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/CRONConfig.xml</match>
+		</uri>
+	</export>
+	<mapping>
+		<this>
+			<match>ffcpl:/entrypoints.xml</match>
+			<match>ffcpl:/etc/.*</match>
+		</this>
+		<this>
+			<match>ffcpl:/resources/.*</match>
+		</this>
+		<rewrite>
+			<match>ffcpl:/graph/flow(.*)</match>
+			<to>active:flow+$1</to>
+		</rewrite>
+		<ura>
+      		<match>active:flow\+.*</match>
+      		<class>com.mindalliance.graph.accessor.Flow</class>
+    	</ura>
+        <import>
+            <uri>urn:com:mindalliance:channels:support</uri>
+        </import>
+        <import>
+			<uri>urn:org:ten60:netkernel:ext:session</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:script</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:sys</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:core</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:xml:ura</uri>
+		</import>
+		<import>
+			<uri>urn:org:ten60:netkernel:ext:layer1</uri>
+		</import>
+		<super/>
+    </mapping>
+</module>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entrypoints>
+  <entrypoint>
+    <name>test-mod-graph</name>
+    <uri>ffcpl:/test/mod-graph-test/xunit</uri>
+    <indexable>
+      <title>Mind-Alliance Graph Library Tests</title>
+      <desc>Mind-Alliance Graph unit-test suite</desc>
+      <keywords/>
+    </indexable>
+    <categories>xunit</categories>
+    <group>Mind-Alliance</group>
+    <icon/>
+  </entrypoint>
+ </entrypoints>
