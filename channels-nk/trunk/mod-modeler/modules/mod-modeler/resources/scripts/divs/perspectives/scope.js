@@ -65,7 +65,7 @@
                     scope.tree.current = treeSet.find("div.tree:has(ul[id='" + name + "'])");
                     scope.tree.current.css("display", '');
                 };
-                tree.actions = settings.actionMap || actionMap;
+                tree.actions = settings.actionMap || {};
                 tree.id = name;
                 return tree;
             };
@@ -134,10 +134,12 @@
                         li.append("<img src='" + action.icon + "' />");
                     }
                     //bindings[actions[i].name] = eval("$.channels.modeler.scope.action." + actions[i].name);
-                    bindings[action.name] = function(t) {
-                        tree.actions[action.name](node, tree, scope);
+                    var actionFunc = tree.actions[action.name] || actionMap[action.name];
+                    if (actionFunc != undefined) {
+                        bindings[action.name] = function(t) {
+                            actionFunc(node, tree, scope);
+                        }
                     }
-
 
 
                     li.append(action.label);

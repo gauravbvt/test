@@ -15,7 +15,7 @@ $(document).ready( function() {
     });
     scope.tree.add({
         name: 'Index',
-        url: "/modeler/command/refreshScope",
+        url: "/modeler/refreshScope",
         query:
             function($tree, id) {
                 return {"root" : id};
