@@ -11,7 +11,10 @@ class Flow extends AbstractAccessor {
 
     protected void source(INKFConvenienceHelper context) {
         use(NetKernelCategory) {
-            def resp = context.subrequest("ffcpl:/resources/flow.svg", [mimeType: "image/svg+xml"]);
+            def resp = context.subrequest("active:renderDot",
+                    [mimeType: "image/svg+xml",
+                     format: string("image/svg+xml"),
+                     source: "ffcpl:/resources/profile.dot"]);
             context.respond(resp, "image/svg+xml", true);
         }
     }

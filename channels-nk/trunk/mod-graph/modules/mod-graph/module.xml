@@ -49,6 +49,10 @@
 			<to>active:map+$1</to>
 		</rewrite>
         <ura>
+            <match>active:renderDot\+.*</match>
+            <class>com.mindalliance.graph.accessor.RenderDot</class>
+        </ura>
+        <ura>
       		<match>active:causes\+.*</match>
       		<class>com.mindalliance.graph.accessor.Causes</class>
     	</ura>
