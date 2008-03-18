@@ -19,7 +19,7 @@ public class Template extends WebPage {
         super( pageParameters );
 
         add( new Label( "name", new PropertyModel( this, "session.name" ) ));
-        add( new Label( "project", new PropertyModel( this, "session.project" ) ));
+        add( new Label( "project", new PropertyModel( this, "session.project.name" ) ));
         add( new BookmarkablePageLink("signout", SignOutPage.class, pageParameters ) );
     }
 }
