@@ -61,10 +61,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="HomePage.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HomePage.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="3" selection-start="522" selection-end="522" vertical-scroll-proportion="0.62376237">
+            <state line="22" column="3" selection-start="522" selection-end="522" vertical-scroll-proportion="0.39772728">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WicketApplication.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/WicketApplication.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="29" selection-start="259" selection-end="259" vertical-scroll-proportion="0.09469697">
               <folding />
             </state>
           </provider>
@@ -73,7 +82,7 @@
       <file leaf-file-name="HomePage.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.15690376">
+            <state line="5" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.09803922">
               <folding />
             </state>
           </provider>
@@ -85,7 +94,7 @@
       <file leaf-file-name="Template.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="13" selection-start="638" selection-end="638" vertical-scroll-proportion="0.26732674">
+            <state line="15" column="13" selection-start="638" selection-end="638" vertical-scroll-proportion="0.17045455">
               <folding />
             </state>
           </provider>
@@ -94,7 +103,7 @@
       <file leaf-file-name="log4j.properties" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/log4j.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="417" selection-end="417" vertical-scroll-proportion="0.35643566">
+            <state line="12" column="0" selection-start="417" selection-end="417" vertical-scroll-proportion="0.22727273">
               <folding />
             </state>
           </provider>
@@ -103,7 +112,7 @@
       <file leaf-file-name="LoginPage.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/LoginPage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.5346535">
+            <state line="19" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.3409091">
               <folding />
             </state>
           </provider>
@@ -112,7 +121,7 @@
       <file leaf-file-name="Template.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="21" selection-start="39" selection-end="39" vertical-scroll-proportion="0.06276151">
+            <state line="2" column="21" selection-start="39" selection-end="39" vertical-scroll-proportion="0.039215688">
               <folding />
             </state>
           </provider>
@@ -124,7 +133,7 @@
       <file leaf-file-name="LoginPage.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/LoginPage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="0" selection-start="246" selection-end="246" vertical-scroll-proportion="0.31380752">
+            <state line="10" column="0" selection-start="246" selection-end="246" vertical-scroll-proportion="0.19607843">
               <folding />
             </state>
           </provider>
@@ -136,10 +145,8 @@
       <file leaf-file-name="PlaybookSession.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="28" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.8792079">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="32" column="28" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.54924244">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -562,6 +569,7 @@
     <option name="UPDATE_RUN_STATUS" value="false" />
     <option name="UPDATE_RECURSIVELY" value="true" />
     <option name="MERGE_DRY_RUN" value="false" />
+    <configuration useDefault="true">/home/denis/.subversion</configuration>
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -598,19 +606,19 @@
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22485691" order="5" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
-      <window_info id="FileBrowser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="FileBrowser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923833" order="3" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20094007" order="7" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23751023" order="8" />
-      <window_info id="Maven Build Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32902467" order="8" />
-      <window_info id="Maven projects" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17772318" order="6" />
+      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17690417" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27518427" order="0" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27518427" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="6" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2682353" order="2" />
+      <window_info id="Maven Build Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32902467" order="8" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="5" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="0" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
@@ -661,7 +669,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.15690376">
+        <state line="5" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.09803922">
           <folding />
         </state>
       </provider>
@@ -671,28 +679,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="638" selection-end="638" vertical-scroll-proportion="0.26732674">
+        <state line="15" column="13" selection-start="638" selection-end="638" vertical-scroll-proportion="0.17045455">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/log4j.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="417" selection-end="417" vertical-scroll-proportion="0.35643566">
+        <state line="12" column="0" selection-start="417" selection-end="417" vertical-scroll-proportion="0.22727273">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/LoginPage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.5346535">
+        <state line="19" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.3409091">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="21" selection-start="39" selection-end="39" vertical-scroll-proportion="0.06276151">
+        <state line="2" column="21" selection-start="39" selection-end="39" vertical-scroll-proportion="0.039215688">
           <folding />
         </state>
       </provider>
@@ -702,7 +710,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/LoginPage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="246" selection-end="246" vertical-scroll-proportion="0.31380752">
+        <state line="10" column="0" selection-start="246" selection-end="246" vertical-scroll-proportion="0.19607843">
           <folding />
         </state>
       </provider>
@@ -712,16 +720,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="28" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.8792079">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="32" column="28" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.54924244">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="3" selection-start="522" selection-end="522" vertical-scroll-proportion="0.62376237">
+        <state line="22" column="3" selection-start="522" selection-end="522" vertical-scroll-proportion="0.39772728">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/WicketApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="29" selection-start="259" selection-end="259" vertical-scroll-proportion="0.09469697">
           <folding />
         </state>
       </provider>
