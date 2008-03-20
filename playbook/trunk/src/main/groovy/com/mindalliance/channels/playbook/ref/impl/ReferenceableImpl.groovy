@@ -4,7 +4,6 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Reference
 import java.beans.PropertyChangeSupport
 import java.beans.PropertyChangeListener
-import com.mindalliance.channels.playbook.ref.Store
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,37 +19,37 @@ abstract class ReferenceableImpl implements Referenceable, GroovyInterceptable {
 
     PropertyChangeSupport pcs = new PropertyChangeSupport(this)
 
-    void addPropertyChangeListener( PropertyChangeListener listener ) {
-        this.pcs.addPropertyChangeListener( listener )
+    void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener)
     }
 
-    void removePropertyChangeListener( PropertyChangeListener listener ) {
-        this.pcs.removePropertyChangeListener( listener )
+    void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener)
     }
 
     Referenceable copy() {
-        Referenceable copy = (Referenceable)this.class.newInstance()
+        Referenceable copy = (Referenceable) this.class.newInstance()
         copy.id = this.@id
         copy.db = this.@db
         copy.pcs = new PropertyChangeSupport(copy)
-        getProperties().each {name,val ->
-            if (!['id','db','pcs','class','reference','metaClass'].contains(name)) {
+        getProperties().each {name, val ->
+            if (!['id', 'db', 'pcs', 'class', 'reference', 'metaClass'].contains(name)) {
                 copy."$name" = val
             }
         }
         return copy
     }
 
-    void changed(String propName) { // MUST be called when ifmElement is changed other than via a property get/set
+    void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
         propertyChanged(propName, null, this.@"$propName") // don't care about old value
     }
 
     void propertyChanged(String name, def old, def value) {
-       pcs.firePropertyChange(name, old, value)
+        pcs.firePropertyChange(name, old, value)
     }
 
     String getId() {
-        return id ?: (id = makeGuid())    // If no id is given, make one
+        return id ?: (id = makeGuid()) // If no id is given, make one
     }
 
     Reference getReference() {
@@ -62,7 +61,8 @@ abstract class ReferenceableImpl implements Referenceable, GroovyInterceptable {
         return uuid
     }
 
-    void setProperty(String name, def value) {
+    void setProperty(String name, def val) {
+        def value = (val instanceof Referenceable) ? val.reference : val
         doSetProperty(name, value)
     }
 
@@ -71,5 +71,50 @@ abstract class ReferenceableImpl implements Referenceable, GroovyInterceptable {
         this."$setterName"(value)
     }
 
+    // Adds add<Field> and remove<Field> methods if none -- expects List <fields> to be defined
+    def invokeMethod(String name, def args) {
+        def metamethod = this.class.metaClass.getMetaMethod(name, args)
+        if (metamethod == null) {// don't override a defined method
+            // addField  --> fields.add(args[0])
+            if (name =~ /^add.+/) {
+                String field = "${name.substring(3).toLowerCase()}s"
+                return doAddToField(field, args[0])
+            }
+            // removeField --> fields.remove(fields.indexOf(args[0]))
+            if (name =~ /^remove.+/) {
+                String field = "${name.substring(6).toLowerCase()}s"
+                return doRemoveFromField(field, args[0])
+            }
+        }
+        if (metamethod == null) {
+            throw new Exception("No method named $name")
+        }
+        return metamethod.invoke(this, args)
+    }
+
+    Referenceable doAddToField(String name, def val) {
+        def value = (isReferenceable(val)) ? val.reference : val
+        List list = (List) this."$name"
+        if (!list.contains(value)) {
+            list.add(value)
+            changed(name)
+        }
+        return this
+    }
+
+    Referenceable doRemoveFromField(String name, def val) {
+        def value = (isReferenceable(val)) ? val.reference : val
+        List list = (List) this."$name"
+        if (list.contains(val)) {
+            list.remove(list.indexOf(val)) // works for int as well
+            changed(name)
+        }
+        return this
+    }
+
+    static boolean isReferenceable(def obj) {
+        boolean b = Referenceable.isAssignableFrom(obj.class)
+        return b
+    }
 
 }

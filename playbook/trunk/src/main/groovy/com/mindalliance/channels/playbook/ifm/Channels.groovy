@@ -14,11 +14,6 @@ class Channels extends IfmElement {
     String about
     List<Reference> projects = []
 
-    void addProject(Project project) {
-        projects.add(project.reference)
-        changed("projects")
-    }
-
     Reference findProjectNamed(String name) {
         Reference ref = (Reference)projects.find {it.name == name}
         return ref

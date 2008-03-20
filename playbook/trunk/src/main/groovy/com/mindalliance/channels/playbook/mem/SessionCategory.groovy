@@ -18,32 +18,8 @@ class SessionCategory {
 
     // REFERENCEABLE
 
-    /*
-        def invokeMethod(String name, def args) {
-           switch (name) {
-               case ~/^set/: // Set the field and raise change event
-                             String fieldName = name.substring(3).toLowerCase()
-                             set(fieldName, args)
-                             break
-               case ~/^add/: // later
-               case ~/^remove/:
-               default: // Run the method as is
-                        def metamethod = this.class.metaClass.getMetaMethod(name, args)
-                        return metamethod.invoke(this, args)
-           }
-        }
-    */
-
-
     static void doSetProperty(ReferenceableImpl self, String name, def value) {
         def old = self."$name"
-        def newValue
-        if (value instanceof Referenceable) {
-            newValue = ((Referenceable) value).getReference()
-        }
-        else {
-            newValue = value
-        }
         String setterName = "set${name[0].toUpperCase()}${name.substring(1)}"
         self."$setterName"(value)
         if (!['id', 'db', 'pcs'].contains(name)) {

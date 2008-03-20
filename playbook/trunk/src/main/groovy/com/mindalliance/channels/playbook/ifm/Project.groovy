@@ -11,9 +11,4 @@ class Project extends IfmElement {
     String name
     List<Reference> scenarios = []
 
-    void addScenario(Scenario scenario) {
-        scenarios.add(scenario.reference) // TODO mkae assigning reference transparent
-        changed('scenarios')
-    }
-
 }
