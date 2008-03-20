@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook;
 import com.mindalliance.channels.playbook.model.Project;
 import com.mindalliance.channels.playbook.model.Resource;
 import com.mindalliance.channels.playbook.model.Scenario;
+import com.mindalliance.channels.playbook.mem.ApplicationMemory;
 import org.apache.wicket.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebPage;
@@ -13,6 +14,7 @@ import org.apache.wicket.markup.html.WebPage;
 public class PlaybookApplication extends AuthenticatedWebApplication
 {
 
+    private ApplicationMemory memory;
     Project project;
 
     /**
@@ -21,6 +23,7 @@ public class PlaybookApplication extends AuthenticatedWebApplication
 	public PlaybookApplication()
 	{
         super();
+        memory = new ApplicationMemory();
 
         // A default project for everyone, for now...
         Project p = new Project();
@@ -59,4 +62,7 @@ public class PlaybookApplication extends AuthenticatedWebApplication
         this.project = project;
     }
 
+    public ApplicationMemory getMemory() {
+        return memory;
+    }
 }

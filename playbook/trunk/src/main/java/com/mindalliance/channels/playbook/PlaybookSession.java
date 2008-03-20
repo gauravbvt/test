@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook;
 
 import com.mindalliance.channels.playbook.model.Project;
 import com.mindalliance.channels.playbook.model.Todo;
+import com.mindalliance.channels.playbook.mem.SessionMemory;
 import org.apache.wicket.Request;
 import org.apache.wicket.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authentication.AuthenticatedWebSession;
@@ -22,6 +23,8 @@ public class PlaybookSession extends AuthenticatedWebSession {
 
     private Project project;
     private List<Todo> todos = new ArrayList<Todo>();
+
+    private SessionMemory memory = new SessionMemory();
 
     public PlaybookSession( AuthenticatedWebApplication application, Request request ) {
         super( application, request );
@@ -71,4 +74,7 @@ public class PlaybookSession extends AuthenticatedWebSession {
     }
 
 
+    public SessionMemory getMemory() {
+        return memory;
+    }
 }
