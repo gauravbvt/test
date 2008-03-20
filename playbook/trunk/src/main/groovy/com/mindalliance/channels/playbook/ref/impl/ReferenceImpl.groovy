@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Store
 * Date: Mar 19, 2008
 * Time: 8:47:26 AM
 */
-class ReferenceImpl implements Reference, Serializable {
+class ReferenceImpl implements Reference, Serializable, GroovyInterceptable {
 
     String id
     String db
@@ -73,6 +73,39 @@ class ReferenceImpl implements Reference, Serializable {
     void doSetProperty(String name, def value) {
         this.@"$name" = value
     }
+
+    def get(String name) {
+         if (['id', 'db'].contains(name)) {
+             return ref.@"$name"
+         }
+         else {
+             def value
+             Referenceable referenceable = dereference()
+             value = referenceable."$name"
+             return value
+         }
+     }
+
+
+
+    def invokeMethod(String name, Object args) {
+        def metamethod = this.class.metaClass.getMetaMethod(name, args)
+        if (metamethod == null) {// don't override a defined method
+            def value
+            Referenceable referenceable = dereference()
+            value = referenceable.invokeMethod(name, args)
+            return value
+        }
+        if (metamethod == null) {
+            throw new Exception("No method named $name")
+        }
+        return metamethod.invoke(this, args)
+    }
+
+    Referenceable dereference() {
+        throw new Exception("Must be executed within a session")
+    }
+
 
 
 }

@@ -37,7 +37,7 @@ class ApplicationMemory {
         cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
         DiskPersistenceListener listener = new DiskPersistenceListener()
         Config config = new Config()
-        config.set('cache.path', "/home/jf/workspace/playbook/target/work/cache") // TODO change this
+        config.set('cache.path', "./target/work/cache") // TODO change this
         listener.configure(config)
         cache.setPersistenceListener(listener)
         initialize()
@@ -73,6 +73,10 @@ class ApplicationMemory {
     void clearAll() {
         cache.clear()
         initializeContents()
+    }
+
+    Reference getRoot() {
+        return ROOT
     }
 
     private void initialize() {

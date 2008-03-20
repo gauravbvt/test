@@ -41,19 +41,7 @@ class SessionCategory {
          return referenceable
      }
 
-    static Object get(ReferenceImpl ref, String name) {
-         if (['id', 'db'].contains(name)) {
-             return ref.@"$name"
-         }
-         else {
-             def value
-             Referenceable referenceable = dereference(ref)
-             value = referenceable."$name"
-             return value
-         }
-     }
-
-     static void doSetProperty(ReferenceImpl ref, String name, def value) {
+    static void doSetProperty(ReferenceImpl ref, String name, def value) {
          if (['id', 'db'].contains(name)) {
              ref.@"$name" = value
          }
@@ -61,14 +49,6 @@ class SessionCategory {
              Referenceable referenceable = dereference(ref)
              referenceable.setProperty(name, value)
          }
-     }
-
-     static Object invokeMethod(ReferenceImpl ref, String name, Object args) {
-         Object value
-         Referenceable referenceable = dereference(ref)
-         value = referenceable.invokeMethod(name, args)
-         return value
-
      }
 
     // support
