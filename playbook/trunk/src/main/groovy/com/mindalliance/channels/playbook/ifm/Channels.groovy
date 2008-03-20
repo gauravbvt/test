@@ -1,6 +1,5 @@
 package com.mindalliance.channels.playbook.ifm
 
-import com.mindalliance.channels.playbook.ref.impl.ReferenceImpl
 import com.mindalliance.channels.playbook.ref.Reference
 
 /**
@@ -13,6 +12,16 @@ import com.mindalliance.channels.playbook.ref.Reference
 class Channels extends IfmElement {
 
     String about
-    Reference project
+    List<Reference> projects = []
+
+    void addProject(Project project) {
+        projects.add(project.reference)
+        changed("projects")
+    }
+
+    Reference findProjectNamed(String name) {
+        Reference ref = (Reference)projects.find {it.name == name}
+        return ref
+    }
 
 }

@@ -44,8 +44,35 @@ class ReferenceImpl implements Reference, Serializable {
         return id
     }
 
-    public Reference getReference() {
+    void setId(String val) {
+        if (id != null) {
+            throw new Exception("Not allowed to change the id of a Reference once set")
+        }
+        else {
+           id = val
+        }
+    }
+
+    void setDb(String val) {
+        if (db != null) {
+            throw new Exception("Not allowed to change the db of a Reference once set")
+        }
+        else {
+           db = val
+        }
+    }
+
+    Reference getReference() {
         return this; // convenience method; returns self
     }
+
+    void setProperty(String name, def value) {
+        doSetProperty(name, value)
+    }
+
+    void doSetProperty(String name, def value) {
+        this.@"$name" = value
+    }
+
 
 }

@@ -11,7 +11,6 @@ import com.opensymphony.oscache.base.Cache
 import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
-import com.mindalliance.channels.playbook.ref.impl.ReferenceCategory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -24,7 +23,7 @@ class ApplicationMemory {
 
     public static final String ROOT_ID = 'CHANNELS'
     public static final String ROOT_DB = 'channels'
-    public final static Reference ROOT = new ReferenceImpl(id: ROOT_ID, db:ROOT_DB)
+    public final static Reference ROOT = new ReferenceImpl(id: ROOT_ID, db: ROOT_DB)
 
     Cache cache
 
@@ -38,7 +37,7 @@ class ApplicationMemory {
         cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
         DiskPersistenceListener listener = new DiskPersistenceListener()
         Config config = new Config()
-        config.set('cache.path', "/home/jf/workspace/playbook/target/work/cache")    // TODO change this
+        config.set('cache.path', "/home/jf/workspace/playbook/target/work/cache") // TODO change this
         listener.configure(config)
         cache.setPersistenceListener(listener)
         initialize()
@@ -62,7 +61,7 @@ class ApplicationMemory {
             System.err.println(e)
             // TODO log warning
         }
-        return referenceable
+        return (Referenceable) referenceable // will be cloned by SessionMemory
     }
 
     void clear(Reference ref) {
@@ -85,29 +84,27 @@ class ApplicationMemory {
     // Should get initialize contents from file?
     // MUST store a Referenceable with id = ROOT_ID and db = ROOT_DB
     private void initializeContents() {
-        use (ReferenceCategory) {
-            Channels channels = new Channels(about:"About Channels")
-            channels.makeRoot()
-            Project myProject = new Project(name:"My project")
-            store(myProject)
-            channels.project = myProject.reference
-            Scenario scenario = new Scenario(name:"My scenario")
-            store(scenario)
-            myProject.addScenario(scenario)
-            store(channels) 
-        }
+        Channels channels = new Channels(about: "About Channels")
+        channels.makeRoot()
+        Project myProject = new Project(name: "My project")
+        store(myProject)
+        channels.addProject(myProject)
+        Scenario scenario = new Scenario(name: "My scenario")
+        store(scenario)
+        myProject.addScenario(scenario)
+        store(channels)
     }
 
     private boolean isEmpty() {
-       boolean empty = true
-       try {
-          def root = cache.getFromCache(ROOT_ID, CacheEntry.INDEFINITE_EXPIRY)
-          empty = false
-       }
-       catch (NeedsRefreshException nre) {
-           // TODO use logger
-          System.out.println("Cache is empty")
-       }
-       return empty
+        boolean empty = true
+        try {
+            def root = cache.getFromCache(ROOT_ID, CacheEntry.INDEFINITE_EXPIRY)
+            empty = false
+        }
+        catch (NeedsRefreshException nre) {
+            // TODO use logger
+            System.out.println("Cache is empty")
+        }
+        return empty
     }
 }

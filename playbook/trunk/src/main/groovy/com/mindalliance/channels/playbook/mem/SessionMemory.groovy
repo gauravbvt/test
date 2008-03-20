@@ -24,10 +24,8 @@ class SessionMemory implements Store, PropertyChangeListener {
         if (!referenceable) {
             Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
             if (appLevelReferenceable) {
-               referenceable =  (Referenceable)appLevelReferenceable.clone() // take a copy
-                if (referenceable instanceof IfmElement) { // ...
-                    ((IfmElement)referenceable).addPropertyChangeListener(this)
-                }
+               referenceable =  (Referenceable)appLevelReferenceable.copy() // take a copy
+               referenceable.addPropertyChangeListener(this) // register with this session memory
             }
         }
         return referenceable
@@ -72,6 +70,11 @@ class SessionMemory implements Store, PropertyChangeListener {
 
     public boolean isEmpty() {
         return changes.isEmpty()
+    }
+
+    public int getSize() {
+        int size = changes.size()
+        return size
     }
 
 }
