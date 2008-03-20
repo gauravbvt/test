@@ -16,34 +16,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Store.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Referenceable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceCategory.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playbook.iws" afterPath="$PROJECT_DIR$/playbook.iws" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/groovy/com" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Reference.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playbook.ipr" afterPath="$PROJECT_DIR$/playbook.ipr" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/groovy/com/mindalliance" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Project.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Scenario.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/IfmElement.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Channels.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceImpl.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/oscache.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy" afterPath="$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy" />
     </list>
     <ignored path="playbook.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -138,10 +113,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ApplicationMemory.groovy" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ApplicationMemory.groovy" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="116" column="0" selection-start="4242" selection-end="4242" vertical-scroll-proportion="0.6942446">
+            <state line="41" column="74" selection-start="1773" selection-end="1773" vertical-scroll-proportion="0.67427385">
               <folding />
             </state>
           </provider>
@@ -150,7 +125,7 @@
       <file leaf-file-name="PlaybookApplication.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="65" column="0" selection-start="1826" selection-end="1826" vertical-scroll-proportion="0.8381295">
+            <state line="65" column="0" selection-start="1826" selection-end="1826" vertical-scroll-proportion="1.4813278">
               <folding />
             </state>
           </provider>
@@ -159,25 +134,16 @@
       <file leaf-file-name="TestMemory.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="0" selection-start="596" selection-end="596" vertical-scroll-proportion="0.3533569">
+            <state line="41" column="0" selection-start="1597" selection-end="1597" vertical-scroll-proportion="1.2759336">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Reference.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Reference.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="45" selection-start="370" selection-end="370" vertical-scroll-proportion="0.22968198">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SessionMemory.groovy" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SessionMemory.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="43" selection-start="678" selection-end="678" vertical-scroll-proportion="0.33568904">
+            <state line="28" column="65" selection-start="1091" selection-end="1091" vertical-scroll-proportion="0.8713693">
               <folding />
             </state>
           </provider>
@@ -186,7 +152,7 @@
       <file leaf-file-name="ReferenceCategory.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceCategory.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="0" selection-start="2098" selection-end="2098" vertical-scroll-proportion="0.8233216">
+            <state line="74" column="0" selection-start="2098" selection-end="2098" vertical-scroll-proportion="1.4502075">
               <folding />
             </state>
           </provider>
@@ -195,7 +161,7 @@
       <file leaf-file-name="Project.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Project.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="6" selection-start="214" selection-end="214" vertical-scroll-proportion="0.14134276">
+            <state line="8" column="6" selection-start="214" selection-end="214" vertical-scroll-proportion="0.24896266">
               <folding>
                 <marker date="1205955781000" expanded="true" signature="331:409" placeholder="{...}" />
               </folding>
@@ -206,7 +172,7 @@
       <file leaf-file-name="IfmElement.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/IfmElement.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="874" selection-end="874" vertical-scroll-proportion="0.45936397">
+            <state line="26" column="0" selection-start="874" selection-end="874" vertical-scroll-proportion="0.80912864">
               <folding />
             </state>
           </provider>
@@ -224,7 +190,7 @@
       <file leaf-file-name="ReferenceableImpl.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="0" selection-start="413" selection-end="413" vertical-scroll-proportion="0.26501766">
+            <state line="15" column="0" selection-start="413" selection-end="413" vertical-scroll-proportion="0.46680498">
               <folding>
                 <marker date="1205976130000" expanded="true" signature="433:512" placeholder="{...}" />
                 <marker date="1205976130000" expanded="true" signature="543:609" placeholder="{...}" />
@@ -540,6 +506,54 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/target" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/target" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/target/work" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/target/work/cache" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/target/work/cache/application" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -1433,17 +1447,17 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" order="1" />
       <window_info id="Maven Repo Search" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1962306" order="8" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3991131" order="3" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3991131" order="3" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38470066" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17117117" order="5" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" order="8" />
       <window_info id="FileBrowser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923833" order="3" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32815966" order="8" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20094007" order="7" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20066519" order="7" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23712184" order="8" />
       <window_info id="Maven Build Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3946785" order="8" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="0" />
-      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17337461" order="6" />
+      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17337461" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23405573" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
@@ -1466,7 +1480,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Missing stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="Persistence" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -1480,6 +1494,7 @@
     <MESSAGE value="Changed subversion project settings" />
     <MESSAGE value="Connected page to model objects" />
     <MESSAGE value="Missing stuff" />
+    <MESSAGE value="Persistence" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1520,13 +1535,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/mindalliance/channels/playbook/TestHomePage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="43" selection-start="201" selection-end="218" vertical-scroll-proportion="0.21784233">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="75" selection-start="1997" selection-end="1997" vertical-scroll-proportion="0.032397408">
@@ -1555,16 +1563,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Reference.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="45" selection-start="370" selection-end="370" vertical-scroll-proportion="0.22968198">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="0" selection-start="413" selection-end="413" vertical-scroll-proportion="0.26501766">
+        <state line="15" column="0" selection-start="413" selection-end="413" vertical-scroll-proportion="0.46680498">
           <folding>
             <marker date="1205976130000" expanded="true" signature="433:512" placeholder="{...}" />
             <marker date="1205976130000" expanded="true" signature="543:609" placeholder="{...}" />
@@ -1575,7 +1576,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Project.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="6" selection-start="214" selection-end="214" vertical-scroll-proportion="0.14134276">
+        <state line="8" column="6" selection-start="214" selection-end="214" vertical-scroll-proportion="0.24896266">
           <folding>
             <marker date="1205955781000" expanded="true" signature="331:409" placeholder="{...}" />
           </folding>
@@ -1591,7 +1592,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/IfmElement.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="874" selection-end="874" vertical-scroll-proportion="0.45936397">
+        <state line="26" column="0" selection-start="874" selection-end="874" vertical-scroll-proportion="0.80912864">
           <folding />
         </state>
       </provider>
@@ -1605,35 +1606,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="0" selection-start="1826" selection-end="1826" vertical-scroll-proportion="0.8381295">
+        <state line="65" column="0" selection-start="1826" selection-end="1826" vertical-scroll-proportion="1.4813278">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceCategory.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="0" selection-start="2098" selection-end="2098" vertical-scroll-proportion="0.8233216">
+        <state line="74" column="0" selection-start="2098" selection-end="2098" vertical-scroll-proportion="1.4502075">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Reference.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="0" selection-start="596" selection-end="596" vertical-scroll-proportion="0.3533569">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="0" selection-start="4242" selection-end="4242" vertical-scroll-proportion="0.6942446">
+        <state line="13" column="45" selection-start="370" selection-end="370" vertical-scroll-proportion="0.22968198">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="43" selection-start="678" selection-end="678" vertical-scroll-proportion="0.33568904">
+        <state line="28" column="65" selection-start="1091" selection-end="1091" vertical-scroll-proportion="0.8713693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="0" selection-start="1597" selection-end="1597" vertical-scroll-proportion="1.2759336">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="74" selection-start="1773" selection-end="1773" vertical-scroll-proportion="0.67427385">
           <folding />
         </state>
       </provider>

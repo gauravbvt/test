@@ -28,9 +28,6 @@ class ApplicationMemory {
     Cache cache
 
     ApplicationMemory() {
-        /*Properties properties = loadProperties("osCache.properties")
-        String path = properties.getProperty('cache.path')
-        properties.setProperty('cache.path', "$path/$ROOT_DB")*/
         boolean useMemoryCaching = true
         boolean unlimitedDiskCache = true
         boolean overflowPersistence = false
@@ -40,7 +37,7 @@ class ApplicationMemory {
         cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
         DiskPersistenceListener listener = new DiskPersistenceListener()
         Config config = new Config()
-        config.set('cache.path', '/home/jf/workspace/playbook/cache')
+        config.set('cache.path', "/home/jf/workspace/playbook/target/work/cache")    // TODO change this
         listener.configure(config)
         cache.setPersistenceListener(listener)
         initialize()
@@ -76,21 +73,6 @@ class ApplicationMemory {
     void clearAll() {
         cache.clear()
         initializeContents()
-    }
-
-    private Properties loadProperties(String name) {
-        Properties properties = new Properties()
-        // TODO load from file
-        /*def stream = this.class.getResourceAsStream(name)
-        properties.load(stream)*/
-        // properties.put('cache.capacity', 200)
-        properties.put('cache.blocking', 'true')
-        properties.put('cache.unlimited.disk', 'true')
-        properties.put('cache.algorithm', 'com.opensymphony.oscache.base.algorithm.UnlimitedCache')
-        properties.put('cache.persistence.class', 'com.opensymphony.oscache.plugins.diskpersistence.HashDiskPersistenceListener')
-        properties.put('cache.path', '/home/jf/workspace/playbook/cache')
-        properties.put('cache.memory', 'false')
-        return properties
     }
 
     private void initialize() {

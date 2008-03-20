@@ -19,7 +19,7 @@ public class TestMemory  extends TestCase {
 
    void testMemoryInit() {
         PlaybookApplication app = new PlaybookApplication()
-        WicketTester tester = new WicketTester(app, "/home/jf/workspace/playbook/src/main/webapp")
+        WicketTester tester = new WicketTester(app, "/home/jf/workspace/playbook/src/main/webapp")  // TODO change this
         app.getMemory().clearAll()
         PlaybookSession session = (PlaybookSession)Session.get()
         SessionMemory mem = session.memory
