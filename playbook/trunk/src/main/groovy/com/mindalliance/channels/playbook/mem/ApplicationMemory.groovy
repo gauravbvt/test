@@ -11,6 +11,7 @@ import com.opensymphony.oscache.base.Cache
 import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
+import com.mindalliance.channels.playbook.ref.impl.ReferenceCategory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -48,7 +49,7 @@ class ApplicationMemory {
     }
 
     void store(Referenceable referenceable) {
-        cache.putInCache(referenceable.id, referenceable)
+        cache.putInCache(referenceable.getId(), referenceable)
     }
 
     Referenceable retrieve(Reference ref) {
@@ -84,15 +85,17 @@ class ApplicationMemory {
     // Should get initialize contents from file?
     // MUST store a Referenceable with id = ROOT_ID and db = ROOT_DB
     private void initializeContents() {
-        Channels channels = new Channels(about:"About Channels", project: new ReferenceImpl())
-        channels.makeRoot()
-        Project myProject = new Project(name:"My project", scenarios:[])
-        store(myProject)
-        channels.project = myProject.reference
-        Scenario scenario = new Scenario(name:"My scenario")
-        store(scenario)
-        myProject.addScenario(scenario)
-        store(channels)        
+        use (ReferenceCategory) {
+            Channels channels = new Channels(about:"About Channels")
+            channels.makeRoot()
+            Project myProject = new Project(name:"My project")
+            store(myProject)
+            channels.project = myProject.reference
+            Scenario scenario = new Scenario(name:"My scenario")
+            store(scenario)
+            myProject.addScenario(scenario)
+            store(channels) 
+        }
     }
 
     private boolean isEmpty() {

@@ -19,8 +19,8 @@ class ReferenceCategory {
     // REFERENCE
 
     static private Store locateStore() {
-        PlaybookSession session = (PlaybookSession)Session.get()
-        return (Store)session.memory
+        PlaybookSession session = (PlaybookSession) Session.get()
+        return (Store) session.memory
     }
 
     static Referenceable dereference(Reference ref) {
@@ -48,8 +48,8 @@ class ReferenceCategory {
         }
         else {
             Referenceable referenceable = dereference(ref)
-            use (ReferenceCategory) {
-                referenceable.set(name,value)
+            use(ReferenceCategory) {
+                referenceable.set(name, value)
             }
         }
     }
@@ -68,6 +68,17 @@ class ReferenceCategory {
         Store store = locateStore()
         store.persist(referenceable)
     }
+
+/*    static void set(Referenceable referenceable, String name, def value) {
+        def newValue
+        if (value instanceof Referenceable) {
+            newValue = ((Referenceable) value).getReference()
+        }
+        else {
+            newValue = value
+        }
+        referenceable.@"$name" = newValue
+    }*/
 
     // IFMELEMENT
 

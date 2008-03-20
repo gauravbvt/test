@@ -15,8 +15,9 @@ abstract class ReferenceableImpl implements Referenceable {
     String db
 
     String getId() {
-        return id ?: (id = makeGuid())   // If no id is given, make one
+        return id ?: (id = makeGuid())    // If no id is given, make one
     }
+
 
     Reference getReference() {
         return new ReferenceImpl(id: getId(), db: getDb())

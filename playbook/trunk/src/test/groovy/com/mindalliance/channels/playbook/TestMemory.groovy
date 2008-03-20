@@ -28,12 +28,21 @@ public class TestMemory  extends TestCase {
             def myProject = channels.project
             String name = myProject.name
             assertTrue(name.equals("My project"))
+            // Modify project in session memory
             myProject.name = "Your project"
             def yourProject = mem.retrieve(myProject.reference)
             assertTrue(myProject.equals(yourProject.reference))
             assertTrue(yourProject.name.equals("Your project"))
+            // Verify that project in application scope still unchanged
+            def appLevelProject = app.getMemory().retrieve(yourProject.reference)
+            assertTrue(appLevelProject.name.equals("My project"))
+            // Commit session changes to application memory
             mem.commit()
+            // Verify that session memory is now empty
             assertTrue(mem.isEmpty())
+            // that the project has been updated to application memory and is visible thru empty session memory
+            appLevelProject = app.getMemory().retrieve(yourProject.reference)
+            assertTrue(appLevelProject.name.equals("Your project"))
             yourProject = mem.retrieve(myProject.reference)
             assertTrue(yourProject.name.equals("Your project"))
         }

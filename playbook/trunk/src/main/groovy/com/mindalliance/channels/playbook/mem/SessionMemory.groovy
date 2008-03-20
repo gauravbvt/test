@@ -22,9 +22,12 @@ class SessionMemory implements Store, PropertyChangeListener {
     Referenceable retrieve(Reference reference) {
         Referenceable referenceable = changes.get(reference)
         if (!referenceable) {
-            referenceable = retrieveFromApplicationMemory(reference)
-            if (referenceable instanceof IfmElement) { // ...
-                ((IfmElement)referenceable).addPropertyChangeListener(this)
+            Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
+            if (appLevelReferenceable) {
+               referenceable =  (Referenceable)appLevelReferenceable.clone() // take a copy
+                if (referenceable instanceof IfmElement) { // ...
+                    ((IfmElement)referenceable).addPropertyChangeListener(this)
+                }
             }
         }
         return referenceable
@@ -32,7 +35,7 @@ class SessionMemory implements Store, PropertyChangeListener {
 
     Reference persist(Referenceable referenceable) {    // Persist the change in session and, on save, in application
         Reference reference = referenceable.getReference()
-        changes.put(reference, referenceable)
+        changes.put(reference, (Referenceable)referenceable)
         return reference
     }
 

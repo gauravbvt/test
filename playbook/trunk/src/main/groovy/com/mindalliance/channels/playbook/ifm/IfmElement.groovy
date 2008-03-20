@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 */
 abstract class IfmElement extends ReferenceableImpl {
 
-    final PropertyChangeSupport pcs = new PropertyChangeSupport(this)
+    PropertyChangeSupport pcs = new PropertyChangeSupport(this)
 
     void addPropertyChangeListener( PropertyChangeListener listener ) {
         this.pcs.addPropertyChangeListener( listener )
@@ -23,6 +23,13 @@ abstract class IfmElement extends ReferenceableImpl {
     void removePropertyChangeListener( PropertyChangeListener listener ) {
         this.pcs.removePropertyChangeListener( listener )
     }
+
+    Object clone() {
+        IfmElement clone = (IfmElement)super.clone()
+        clone.pcs = new PropertyChangeSupport(clone)
+        return clone
+    }
+
 
     void changed(String propName) { // MUST be called when ifmElement is changed other than via a property get/set
         propertyChanged(propName, null, this.@"$propName") // don't care about old value

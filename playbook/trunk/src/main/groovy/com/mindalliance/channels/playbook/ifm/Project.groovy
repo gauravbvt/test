@@ -9,10 +9,10 @@ package com.mindalliance.channels.playbook.ifm
 class Project extends IfmElement {
 
     String name
-    List<Reference> scenarios
+    List<Reference> scenarios = []
 
     void addScenario(Scenario scenario) {
-        scenarios.add(scenario.reference)
+        scenarios.add(scenario.reference) // TODO mkae assigning reference transparent
         changed('scenarios')
     }
 
