@@ -3,13 +3,12 @@ package com.mindalliance.channels.playbook.ifm
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Mar 19, 2008
- * Time: 2:10:46 PM
+ * Date: Mar 21, 2008
+ * Time: 12:07:37 PM
  */
-class Project extends IfmElement {
+class Position extends Resource {
 
-    String name
-    List<Reference> resources = []
-    List<Reference> scenarios = []
-
+    String getType() {
+        return "Position";
+    }
 }

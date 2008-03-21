@@ -3,15 +3,12 @@ package com.mindalliance.channels.playbook.ifm
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Mar 19, 2008
- * Time: 2:11:36 PM
+ * Date: Mar 21, 2008
+ * Time: 12:01:58 PM
  */
-class Scenario extends IfmElement {
+class Resource extends IfmElement {
 
     String name = "No name"
     String description
-    List<Reference> agents = []
-    List<Reference> occurrences = []
-
 
 }

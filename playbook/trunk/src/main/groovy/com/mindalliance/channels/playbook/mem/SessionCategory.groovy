@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.mem
 
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
-import com.mindalliance.channels.playbook.PlaybookSession
+import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.impl.ReferenceImpl

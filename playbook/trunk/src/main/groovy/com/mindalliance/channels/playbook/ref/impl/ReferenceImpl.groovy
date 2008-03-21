@@ -87,8 +87,7 @@ class ReferenceImpl implements Reference, Serializable, GroovyInterceptable {
      }
 
 
-
-    def invokeMethod(String name, Object args) {
+    def invokeMethod(String name, def args) {
         def metamethod = this.class.metaClass.getMetaMethod(name, args)
         if (metamethod == null) {// don't override a defined method
             def value

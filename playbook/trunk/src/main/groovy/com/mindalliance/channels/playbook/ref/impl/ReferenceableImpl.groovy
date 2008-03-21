@@ -56,7 +56,7 @@ import java.beans.PropertyChangeListener
         return new ReferenceImpl(id: getId(), db: getDb())
     }
 
-    private String makeGuid() {
+    String makeGuid() {
         String uuid = "${UUID.randomUUID()}"
         return uuid
     }
@@ -78,12 +78,12 @@ import java.beans.PropertyChangeListener
             // addField  --> fields.add(args[0])
             if (name =~ /^add.+/) {
                 String field = "${name.substring(3).toLowerCase()}s"
-                return doAddToField(field, args[0])
+                return doAddToField(field, args[0].reference)
             }
             // removeField --> fields.remove(fields.indexOf(args[0]))
             if (name =~ /^remove.+/) {
                 String field = "${name.substring(6).toLowerCase()}s"
-                return doRemoveFromField(field, args[0])
+                return doRemoveFromField(field, args[0].reference)
             }
         }
         if (metamethod == null) {
@@ -95,6 +95,9 @@ import java.beans.PropertyChangeListener
     Referenceable doAddToField(String name, def val) {
         def value = (isReferenceable(val)) ? val.reference : val
         List list = (List) this."$name"
+        if(list == null) {
+            throw new Exception("Expecting initialized field $name but not defined but missing in ${this}" )
+        }
         if (!list.contains(value)) {
             list.add(value)
             changed(name)
@@ -105,6 +108,9 @@ import java.beans.PropertyChangeListener
     Referenceable doRemoveFromField(String name, def val) {
         def value = (isReferenceable(val)) ? val.reference : val
         List list = (List) this."$name"
+        if(list == null) {
+            throw new Exception("Expecting initialized field $name but not defined but missing in ${this}" )
+        }
         if (list.contains(val)) {
             list.remove(list.indexOf(val)) // works for int as well
             changed(name)
