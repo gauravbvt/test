@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener
 * Date: Mar 19, 2008
 * Time: 8:49:28 AM
 */
-abstract class ReferenceableImpl implements Referenceable, GroovyInterceptable {
+/*abstract*/ class ReferenceableImpl implements Referenceable, GroovyInterceptable {
 
     String id
     String db
@@ -116,5 +116,18 @@ abstract class ReferenceableImpl implements Referenceable, GroovyInterceptable {
         boolean b = Referenceable.isAssignableFrom(obj.class)
         return b
     }
+
+//    // Kludges for stub generation
+//    public void setMetaClass(MetaClass metaClass) {
+//        super.setMetaClass(metaClass);
+//    }
+//
+//    public MetaClass getMetaClass() {
+//        return super.getMetaClass();
+//    }
+//
+//    public Object getProperty(String s) {
+//        return super.getProperty(s);
+//    }
 
 }

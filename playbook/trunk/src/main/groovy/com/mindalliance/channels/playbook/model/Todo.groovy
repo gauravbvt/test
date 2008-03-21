@@ -5,12 +5,16 @@ package com.mindalliance.channels.playbook.model
  */
 class Todo implements Serializable {
 
-    String name;
-    String priority;
-    Date due;
+    String description = "";
+    String priority = "Normal" ;
+    Date due = new Date( System.currentTimeMillis() );
 
-    Todo( String name, String priority, Date due ) {
-        this.name = name;
+    Todo() {
+    }
+
+    Todo( String description, String priority, Date due ) {
+        this()
+        this.description = description;
         this.priority = priority;
         this.due = due;
     }

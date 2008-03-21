@@ -12,6 +12,7 @@ import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.PropertyModel;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,9 @@ public class HomePage extends Template {
         super( parameters );
         PlaybookSession session = (PlaybookSession) getSession();
         Project p = session.getProject();
-        List<Todo> todos = session.getTodos();
+
+        List<Todo> todos = session.getParticipation() == null ?
+                           new ArrayList<Todo>() : session.getParticipation().getTodos();
 
         add( new Label("title", "Playbook") );
 
@@ -59,7 +62,7 @@ public class HomePage extends Template {
         add( new DataView( "todo", new ListDataProvider( todos )){
             protected void populateItem( Item item ) {
                 Todo t = (Todo) item.getModelObject();
-                item.add( new Label( "todo-name", t.getName() ) );
+                item.add( new Label( "todo-name", t.getDescription() ) );
                 item.add( new Label( "todo-priority", t.getPriority() ) );
                 item.add( new Label( "todo-due", dateFormat.format( t.getDue() )) );
             }
