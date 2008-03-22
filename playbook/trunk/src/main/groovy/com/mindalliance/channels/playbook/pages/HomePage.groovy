@@ -32,49 +32,39 @@ class HomePage extends Template {
         super( parameters )
 
         PlaybookSession session = (PlaybookSession) getSession()
-
         use(SessionCategory) {
-            session.authenticate('admin', 'admin') // TODO remove - needed in test
+
+            session.authenticate('admin', 'admin') // TODO remove - needed in test because gets a new session
 
             Reference p = session.project
             assert p
-
             List todos = session.participation ? session.participation.todos : []
 
             add(new Label("title", "Playbook"))
 
             // Add scenarios to the list
-            def scenariosListView = proxy(
-                    ListView.class,
-                    ["sc-list", p.scenarios],
+            add( proxy(
+                    ListView.class, ["sc-list", p.scenarios],
                     ['populateItem': {listItem ->
                          listItem.add(
                             new Label("sc-item",
                                     new RefPropertyModel(listItem.getModelObject(), "name")))
-                    }]
-            )
-            add(scenariosListView)
-
+                    }]))
 
             // Add resources
-            def resourcesListView = proxy(
-                    ListView.class,
-                    ["r-list", (List) p.resources],
+            add( proxy(
+                    ListView.class, ["r-list", (List) p.resources],
                     ['populateItem': {listItem ->
                          listItem.add(
                             new Label("r-item",
                                     new RefPropertyModel(listItem.getModelObject(), "name")))
-                    }]
-            )
-            add(resourcesListView)
+                    }]))
 
             // Add todos
             final DateFormat dateFormat =
                 DateFormat.getDateInstance(DateFormat.SHORT, session.getLocale());
-
-            def todoDataView = proxy(
-                    DataView.class,
-                    ["todo", new ListDataProvider(todos)],
+            add( proxy(
+                    DataView.class, ["todo", new ListDataProvider(todos)],
                     ['populateItem': {item ->
                         use(SessionCategory) {
                             Reference t = (Reference) item.getModelObject();
@@ -82,10 +72,7 @@ class HomePage extends Template {
                             item.add(new Label("todo-priority", (String) t.priority))
                             item.add(new Label("todo-due", dateFormat.format((Date) t.due)))
                         }
-                    }]
-            )
-            add(todoDataView)
-
+                    }]))
         }
     }
 
