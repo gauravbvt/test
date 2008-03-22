@@ -30,6 +30,7 @@ public class TestMemory extends TestCase {
         app.clearAll()
         session = (PlaybookSession) Session.get()
         sessionMem = session.memory
+        session.application = app
     }
 
     // Tests session-based persistency, dereferencing and operatons on fields
@@ -76,7 +77,6 @@ public class TestMemory extends TestCase {
 
     void testHomePage() {
         use(SessionCategory) {
-            session.application = app
             session.authenticate('admin', 'admin')
             tester.startPage(HomePage.class)
             tester.assertLabel('title', 'Playbook')
