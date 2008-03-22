@@ -20,7 +20,7 @@ class PlaybookSession  extends AuthenticatedWebSession implements Transactionabl
     private Reference user;
     private Reference project;
 
-    private PlaybookApplication application;
+    private PlaybookApplication application;     // TODO
 
     private SessionMemory memory = new SessionMemory();
 
@@ -30,10 +30,15 @@ class PlaybookSession  extends AuthenticatedWebSession implements Transactionabl
 
     }
 
-    public boolean authenticate( String name, String password ) {
+    // For testing only
+    public void setApplication(PlaybookApplication app) {
+        application = app
+    }
+
+    public boolean authenticate( String id, String password ) {
         participation = null;
-        user = application.findUserNamed( name );
-        if ( user != null && user.getPassword().equals( password ) ) {
+        user = application.findUser( id );
+        if ( user != null && user.password == password ) {
             project = application.findProjectsForUser( user )[0]
             participation = application.findParticipation( project, user );
             return true;

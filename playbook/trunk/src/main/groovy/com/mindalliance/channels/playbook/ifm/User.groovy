@@ -10,5 +10,5 @@ class User extends IfmElement {
 
     String name
     String password
-    boolean admin
+    Boolean admin
 }

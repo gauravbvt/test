@@ -21,8 +21,8 @@ class Channels extends IfmElement {
         return ref
     }
 
-    Reference findUserNamed(String name) {
-        return (Reference) users.find(it.name == name)
+    Reference findUser(String id) {
+        return (Reference) users.find{it.id == id}
     }
 
     public List<Reference> findProjectsForUser(Reference user) {
@@ -38,7 +38,7 @@ class Channels extends IfmElement {
     }
 
     public Reference findParticipation(Reference project, Reference user) {
-        return participations.find(it.user == user && it.project == project)
+        return (Reference)participations.find {it.user == user && it.project == project}
     }
 
 }

@@ -34,7 +34,13 @@ import java.beans.PropertyChangeListener
         copy.pcs = new PropertyChangeSupport(copy)
         getProperties().each {name, val ->
             if (!['id', 'db', 'pcs', 'class', 'reference', 'metaClass'].contains(name)) {
-                copy."$name" = val
+                try {
+                    copy."$name" = val
+                }
+                catch (Exception e) {   // Read-only/computed field
+                    // TODO -- put a warning in log
+                    System.out.println("Can't set field $name in $copy")
+                }
             }
         }
         return copy

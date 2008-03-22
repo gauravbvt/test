@@ -5,7 +5,6 @@ import com.mindalliance.channels.playbook.ref.Reference
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.markup.html.basic.Label
 import org.apache.wicket.markup.html.list.ListView
-import org.apache.wicket.model.PropertyModel
 import java.text.DateFormat
 import org.apache.wicket.markup.repeater.data.ListDataProvider
 import com.mindalliance.channels.playbook.mem.SessionCategory
@@ -45,7 +44,7 @@ class HomePage extends Template {
             add(new Label("title", "Playbook"))
 
             // Add scenarios to the list
-            def scenariosListView = proxyClass(
+            def scenariosListView = proxy(
                     ListView.class,
                     ["sc-list", p.scenarios],
                     ['populateItem': {listItem ->
@@ -56,19 +55,9 @@ class HomePage extends Template {
             )
             add(scenariosListView)
 
-            /*add(new ListView("sc-list", (List) p.scenarios)
-            {
-
-
-                protected void populateItem(ListItem listItem) {
-                    listItem.add(
-                            new Label("sc-item",
-                                    new PropertyModel(listItem.getModelObject(), "name")))
-                }
-            });*/
 
             // Add resources
-            def resourcesListView = proxyClass(
+            def resourcesListView = proxy(
                     ListView.class,
                     ["r-list", (List) p.resources],
                     ['populateItem': {listItem ->
@@ -79,19 +68,11 @@ class HomePage extends Template {
             )
             add(resourcesListView)
 
-           /* add(new ListView("r-list", (List) p.resources) {
-                protected void populateItem(ListItem listItem) {
-                    listItem.add(
-                            new Label("r-item",
-                                    new PropertyModel(listItem.getModelObject(), "name")));
-                }
-            });
-*/
             // Add todos
             final DateFormat dateFormat =
                 DateFormat.getDateInstance(DateFormat.SHORT, session.getLocale());
 
-            def todoDataView = proxyClass(
+            def todoDataView = proxy(
                     DataView.class,
                     ["todo", new ListDataProvider(todos)],
                     ['populateItem': {item ->
@@ -103,14 +84,6 @@ class HomePage extends Template {
             )
             add(todoDataView)
 
-            /*add(new DataView("todo", new ListDataProvider(todos)) {
-                protected void populateItem(Item item) {
-                    Todo t = (Todo) item.getModelObject();
-                    item.add(new Label("todo-name", t.getDescription()));
-                    item.add(new Label("todo-priority", t.getPriority()));
-                    item.add(new Label("todo-due", dateFormat.format(t.getDue())));
-                }
-            });*/
         }
     }
 

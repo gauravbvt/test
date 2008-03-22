@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ref
 
-interface Reference {
+interface Reference extends Serializable {
     String getId()
     String getDb()
     Referenceable getReferenced(Store store)

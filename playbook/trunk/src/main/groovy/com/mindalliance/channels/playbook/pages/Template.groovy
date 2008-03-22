@@ -1,12 +1,12 @@
 package com.mindalliance.channels.playbook.pages
 
 import org.apache.wicket.markup.html.WebPage
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authentication.pages.SignOutPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.model.PropertyModel
-import com.mindalliance.channels.playbook.mem.SessionCategory;
+import org.apache.wicket.PageParameters
+import org.apache.wicket.authentication.pages.SignOutPage
+import org.apache.wicket.markup.html.basic.Label
+import org.apache.wicket.markup.html.link.BookmarkablePageLink
+import com.mindalliance.channels.playbook.mem.SessionCategory
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,14 +21,14 @@ class Template extends WebPage {
         super(pageParameters)
 
         use(SessionCategory) {
-            add(new Label("name", new PropertyModel(this, "session.user.name")))
-            add(new Label("project", new PropertyModel(this, "session.project.name")))
+            add(new Label("name", new RefPropertyModel(this, "session.user.name")))
+            add(new Label("project", new RefPropertyModel(this, "session.project.name")))
             add(new BookmarkablePageLink("signout", SignOutPage.class, pageParameters))
         }
 
     }
 
-    protected proxyClass(Class clazz, List constructorArgs, Map behavior) {
+    protected proxy(Class clazz, List constructorArgs, Map behavior) {
         return ProxyGenerator.instantiateAggregateFromBaseClass(behavior, clazz, constructorArgs as Object[])
     }
 }

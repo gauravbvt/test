@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Store
 * Date: Mar 19, 2008
 * Time: 8:47:26 AM
 */
-class ReferenceImpl implements Reference, Serializable, GroovyInterceptable {
+class ReferenceImpl implements Reference, GroovyInterceptable {
 
     String id
     String db
@@ -80,8 +80,15 @@ class ReferenceImpl implements Reference, Serializable, GroovyInterceptable {
          }
          else {
              def value
-             Referenceable referenceable = dereference()
-             value = referenceable."$name"
+             Referenceable referenceable
+             try {
+                 referenceable = dereference()
+                 value = referenceable."$name"
+             }
+             catch (Exception e) {
+                System.out.println("Can't get $name in $referenceable")
+                throw e
+             }
              return value
          }
      }

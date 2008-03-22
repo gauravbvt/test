@@ -35,7 +35,7 @@ public class PlaybookApplication extends AuthenticatedWebApplication
      */
 	public PlaybookApplication() {
         super();
-        memory = new ApplicationMemory();
+        memory = new ApplicationMemory(this);
         load();
     }
 

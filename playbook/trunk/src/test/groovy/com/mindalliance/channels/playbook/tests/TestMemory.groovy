@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.mem.SessionCategory
 import com.mindalliance.channels.playbook.ref.Reference
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
+import com.mindalliance.channels.playbook.pages.HomePage
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -70,6 +71,15 @@ public class TestMemory extends TestCase {
             assertTrue(appLevelProject.name.equals("Your big project"))
             yourProject = sessionMem.retrieve(myProject.reference)
             assertTrue(yourProject.name.equals("Your big project"))
+        }
+    }
+
+    void testHomePage() {
+        use(SessionCategory) {
+            session.application = app
+            session.authenticate('admin', 'admin')
+            tester.startPage(HomePage.class)
+            tester.assertLabel('title', 'Playbook')
         }
     }
 

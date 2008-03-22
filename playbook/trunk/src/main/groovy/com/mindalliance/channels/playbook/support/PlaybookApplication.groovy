@@ -82,12 +82,12 @@ class PlaybookApplication  extends AuthenticatedWebApplication implements Memora
         return getRoot()
     }
 
-    Reference findUser(String name) {
-        return this.channels.findUserNamed(name)
+    Reference findUser(String id) {
+        return this.channels.findUser(id)
     }
 
     List<Reference> findProjectsForUser(Reference user) {
-        return this.channels.getProjectsForUser(user)
+        return this.channels.findProjectsForUser(user)
     }
 
     public Reference findParticipation( Reference project, Reference user ) {
