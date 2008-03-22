@@ -34,7 +34,7 @@ class HomePage extends Template {
         PlaybookSession session = (PlaybookSession) getSession()
         use(SessionCategory) {
 
-            session.authenticate('admin', 'admin') // TODO remove - needed in test because gets a new session
+            session.authenticate('admin', 'admin') // TODO remove - needed in test
 
             Reference p = session.project
             assert p
