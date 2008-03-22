@@ -1,17 +1,20 @@
 package com.mindalliance.channels.playbook.ifm
+
+import com.mindalliance.channels.playbook.ref.Ref
+
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 21, 2008
- * Time: 11:43:17 AM
- */
+* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+* Proprietary and Confidential.
+* User: jf
+* Date: Mar 21, 2008
+* Time: 11:43:17 AM
+*/
 class Person extends Resource {
 
     String firstName
     String middleName
     String lastName
-    Reference address
+    Ref address
     URL photo
 
 }

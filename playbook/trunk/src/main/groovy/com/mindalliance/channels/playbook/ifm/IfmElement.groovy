@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 /**
@@ -16,7 +16,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
     Date createdOn = new Date()
 
     void makeRoot() {
-        Reference root = ApplicationMemory.ROOT
+        Ref root = ApplicationMemory.ROOT
         this.id = root.id
         this.db = root.db
     }

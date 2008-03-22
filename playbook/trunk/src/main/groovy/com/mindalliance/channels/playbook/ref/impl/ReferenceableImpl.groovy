@@ -1,9 +1,10 @@
 package com.mindalliance.channels.playbook.ref.impl
 
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import java.beans.PropertyChangeSupport
 import java.beans.PropertyChangeListener
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -58,8 +59,8 @@ import java.beans.PropertyChangeListener
         return id ?: (id = makeGuid()) // If no id is given, make one
     }
 
-    Reference getReference() {
-        return new ReferenceImpl(id: getId(), db: getDb())
+    Ref getReference() {
+        return new RefImpl(id: getId(), db: getDb())
     }
 
     String makeGuid() {

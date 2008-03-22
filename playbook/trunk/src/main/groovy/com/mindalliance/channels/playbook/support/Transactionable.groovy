@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.support
 
 
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**

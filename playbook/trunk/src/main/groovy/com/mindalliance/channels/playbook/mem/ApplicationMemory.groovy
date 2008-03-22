@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.mem
 
-import com.mindalliance.channels.playbook.ref.impl.ReferenceImpl
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.impl.RefImpl
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.opensymphony.oscache.base.CacheEntry
 import com.opensymphony.oscache.base.Cache
@@ -9,6 +9,7 @@ import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import org.apache.wicket.Application
+import com.mindalliance.channels.playbook.ref.impl.RefImpl
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,7 +22,7 @@ class ApplicationMemory {
 
     public static final String ROOT_ID = 'CHANNELS'
     public static final String ROOT_DB = 'channels'
-    public final static Reference ROOT = new ReferenceImpl(id: ROOT_ID, db: ROOT_DB)
+    public final static Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
     Cache cache
     private Application application
@@ -46,12 +47,12 @@ class ApplicationMemory {
         referenceables.each {store(it)}
     }
 
-    Reference store(Referenceable referenceable) {
+    Ref store(Referenceable referenceable) {
         cache.putInCache(referenceable.getId(), referenceable)
         return referenceable.reference
     }
 
-    Referenceable retrieve(Reference ref) {
+    Referenceable retrieve(Ref ref) {
         Referenceable referenceable
         try {
             referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
@@ -64,7 +65,7 @@ class ApplicationMemory {
         return (Referenceable) referenceable // will be cloned by SessionMemory
     }
 
-    void clear(Reference ref) {
+    void clear(Ref ref) {
         if (ref != root) {
             cache.flushEntry(ref.id)
         }
@@ -75,7 +76,7 @@ class ApplicationMemory {
         initializeContents()
     }
 
-    Reference getRoot() {
+    Ref getRoot() {
         return ROOT
     }
 

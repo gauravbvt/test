@@ -5,7 +5,7 @@ import com.mindalliance.channels.playbook.mem.SessionMemory
 import junit.framework.TestCase
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.SessionCategory
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.pages.HomePage
@@ -36,7 +36,7 @@ public class TestMemory extends TestCase {
     void testMemoryInit() {
         assertTrue(sessionMem.isEmpty())
         use(SessionCategory) {   // From this point on, session memory is "turned on"
-            Reference channels = app.channels
+            Ref channels = app.channels
             assertTrue(channels.about == channels.reference.about)
             def myProject = channels.findProjectNamed('Generic')
             assertTrue(myProject.name == myProject.reference.name)

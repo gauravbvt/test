@@ -1,9 +1,10 @@
 package com.mindalliance.channels.playbook.support;
 
 import com.mindalliance.channels.playbook.ref.Referenceable;
-import com.mindalliance.channels.playbook.ref.Reference;
+import com.mindalliance.channels.playbook.ref.Ref;
 
-import java.util.Collection;
+import java.util.Collection
+import com.mindalliance.channels.playbook.ref.Ref;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,9 +16,9 @@ import java.util.Collection;
 public interface Memorable {
 
     void storeAll(Collection<Referenceable> referenceables)
-    Reference store(Referenceable referenceable)
-    Referenceable retrieve(Reference ref)
-    void clear(Reference ref)
+    Ref store(Referenceable referenceable)
+    Referenceable retrieve(Ref ref)
+    void clear(Ref ref)
     void clearAll()
-    Reference getRoot()
+    Ref getRoot()
 }

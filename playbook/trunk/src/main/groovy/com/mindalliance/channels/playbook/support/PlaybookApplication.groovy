@@ -6,13 +6,14 @@ import com.mindalliance.channels.playbook.pages.HomePage
 import com.mindalliance.channels.playbook.pages.LoginPage
 import com.mindalliance.channels.playbook.support.Memorable
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.Project
 import com.mindalliance.channels.playbook.ifm.Scenario
 import com.mindalliance.channels.playbook.ifm.Person
 import com.mindalliance.channels.playbook.ifm.Organization
 import com.mindalliance.channels.playbook.ifm.User
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -78,19 +79,19 @@ class PlaybookApplication  extends AuthenticatedWebApplication implements Memora
 
     // ----------------------- Data access
 
-    Reference getChannels() {
+    Ref getChannels() {
         return getRoot()
     }
 
-    Reference findUser(String id) {
+    Ref findUser(String id) {
         return this.channels.findUser(id)
     }
 
-    List<Reference> findProjectsForUser(Reference user) {
+    List<Ref> findProjectsForUser(Ref user) {
         return this.channels.findProjectsForUser(user)
     }
 
-    public Reference findParticipation( Reference project, Reference user ) {
+    public Ref findParticipation( Ref project, Ref user ) {
         return this.channels.findParticipation(project, user)
     }
 
@@ -101,15 +102,15 @@ class PlaybookApplication  extends AuthenticatedWebApplication implements Memora
         appMemory.storeAll(referenceable)
     }
 
-    Reference store(Referenceable referenceable) {
+    Ref store(Referenceable referenceable) {
         return appMemory.store(referenceable)
     }
 
-    Referenceable retrieve(Reference ref) {
+    Referenceable retrieve(Ref ref) {
         return appMemory.retrieve(ref)
     }
 
-    void clear(Reference ref) {
+    void clear(Ref ref) {
         appMemory.clear(ref)
     }
 
@@ -117,7 +118,7 @@ class PlaybookApplication  extends AuthenticatedWebApplication implements Memora
         appMemory.clearAll()
     }
 
-    Reference getRoot() {
+    Ref getRoot() {
        appMemory.getRoot()
     }
 

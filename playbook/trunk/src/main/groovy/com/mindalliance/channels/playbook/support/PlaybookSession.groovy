@@ -4,8 +4,9 @@ import org.apache.wicket.authentication.AuthenticatedWebSession
 import com.mindalliance.channels.playbook.mem.SessionMemory
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.Request
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.wicket.authorization.strategies.role.Roles
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,9 +17,9 @@ import org.apache.wicket.authorization.strategies.role.Roles
 */
 class PlaybookSession  extends AuthenticatedWebSession implements Transactionable {
 
-    private Reference participation;
-    private Reference user;
-    private Reference project;
+    private Ref participation;
+    private Ref user;
+    private Ref project;
 
     private PlaybookApplication application;     // TODO
 
@@ -56,11 +57,11 @@ class PlaybookSession  extends AuthenticatedWebSession implements Transactionabl
         return participation != null && participation.user.admin;
     }
 
-    public Reference getParticipation() {
+    public Ref getParticipation() {
         return participation;
     }
 
-    public Reference getProject() {
+    public Ref getProject() {
         return project;
     }
 

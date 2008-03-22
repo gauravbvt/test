@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ref.impl
 
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
 
@@ -11,15 +11,15 @@ import com.mindalliance.channels.playbook.ref.Store
 * Date: Mar 19, 2008
 * Time: 8:47:26 AM
 */
-class ReferenceImpl implements Reference, GroovyInterceptable {
+class RefImpl implements Ref, GroovyInterceptable {
 
     String id
     String db
 
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
     boolean equals(Object obj) {
-       if (!obj instanceof Reference) return false
-       Reference ref = (Reference)obj
+       if (!obj instanceof Ref) return false
+       Ref ref = (Ref)obj
        if (ref.id == null || this.id == null || this.id != ref.id) return false // both ids must be set for equality
        if (ref.db != this.db) return false  // both dbs must be the same and can both be null
        return true
@@ -46,7 +46,7 @@ class ReferenceImpl implements Reference, GroovyInterceptable {
 
     void setId(String val) {
         if (id != null) {
-            throw new Exception("Not allowed to change the id of a Reference once set")
+            throw new Exception("Not allowed to change the id of a Ref once set")
         }
         else {
            id = val
@@ -55,14 +55,14 @@ class ReferenceImpl implements Reference, GroovyInterceptable {
 
     void setDb(String val) {
         if (db != null) {
-            throw new Exception("Not allowed to change the db of a Reference once set")
+            throw new Exception("Not allowed to change the db of a Ref once set")
         }
         else {
            db = val
         }
     }
 
-    Reference getReference() {
+    Ref getReference() {
         return this; // convenience method; returns self
     }
 

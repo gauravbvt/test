@@ -1,17 +1,20 @@
 package com.mindalliance.channels.playbook.ifm
+
+import com.mindalliance.channels.playbook.ref.Ref
+
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 21, 2008
- * Time: 11:42:26 AM
- */
+* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+* Proprietary and Confidential.
+* User: jf
+* Date: Mar 21, 2008
+* Time: 11:42:26 AM
+*/
 class Participation {
 
-    Reference user
-    Reference project
+    Ref user
+    Ref project
     boolean analyst
-    Reference person
-    List<Reference> todos = new ArrayList<Todo>()[]
+    Ref person
+    List<Ref> todos = new ArrayList<Todo>()[]
 
 }

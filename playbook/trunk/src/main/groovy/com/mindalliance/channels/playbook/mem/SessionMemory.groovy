@@ -2,11 +2,12 @@ package com.mindalliance.channels.playbook.mem
 
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
 import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,9 +18,9 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 */
 class SessionMemory implements Store, PropertyChangeListener {
 
-    Map<Reference, Referenceable> changes = new HashMap<Reference, Referenceable>()
+    Map<Ref, Referenceable> changes = new HashMap<Ref, Referenceable>()
 
-    Referenceable retrieve(Reference reference) {
+    Referenceable retrieve(Ref reference) {
         Referenceable referenceable = changes.get(reference)
         if (!referenceable) {
             Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
@@ -31,8 +32,8 @@ class SessionMemory implements Store, PropertyChangeListener {
         return referenceable
     }
 
-    Reference persist(Referenceable referenceable) {    // Persist the change in session and, on save, in application
-        Reference reference = referenceable.getReference()
+    Ref persist(Referenceable referenceable) {    // Persist the change in session and, on save, in application
+        Ref reference = referenceable.getReference()
         changes.put(reference, (Referenceable)referenceable)
         return reference
     }
@@ -52,10 +53,10 @@ class SessionMemory implements Store, PropertyChangeListener {
     }
 
     private void resetChanges() {
-       changes = new HashMap<Reference, Referenceable>()
+       changes = new HashMap<Ref, Referenceable>()
     }
 
-    private Referenceable retrieveFromApplicationMemory(Reference reference) {
+    private Referenceable retrieveFromApplicationMemory(Ref reference) {
         return getApplicationMemory().retrieve(reference)
     }
 

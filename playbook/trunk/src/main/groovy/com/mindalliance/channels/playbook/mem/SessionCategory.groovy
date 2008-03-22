@@ -5,7 +5,8 @@ import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
-import com.mindalliance.channels.playbook.ref.impl.ReferenceImpl
+import com.mindalliance.channels.playbook.ref.impl.RefImpl
+import com.mindalliance.channels.playbook.ref.impl.RefImpl
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,14 +35,14 @@ class SessionCategory {
 
     // REFERENCE
 
-    static Referenceable dereference(ReferenceImpl ref) {
+    static Referenceable dereference(RefImpl ref) {
          if (ref.@id == null) return null
          Store store = locateStore()
          Referenceable referenceable = ref.getReferenced(store)
          return referenceable
      }
 
-    static void doSetProperty(ReferenceImpl ref, String name, def value) {
+    static void doSetProperty(RefImpl ref, String name, def value) {
          if (['id', 'db'].contains(name)) {
              ref.@"$name" = value
          }

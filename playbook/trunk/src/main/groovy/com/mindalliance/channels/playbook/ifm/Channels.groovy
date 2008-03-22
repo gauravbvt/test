@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
-import com.mindalliance.channels.playbook.ref.Reference
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,21 +13,21 @@ import com.mindalliance.channels.playbook.ref.Reference
 class Channels extends IfmElement {
 
     String about
-    List<Reference> projects = []
-    List<Reference> users = []
-    List<Reference> participations = []
+    List<Ref> projects = []
+    List<Ref> users = []
+    List<Ref> participations = []
 
-    Reference findProjectNamed(String name) {
-        Reference ref = (Reference) projects.find {it.name == name}
+    Ref findProjectNamed(String name) {
+        Ref ref = (Ref) projects.find {it.name == name}
         return ref
     }
 
-    Reference findUser(String id) {
-        return (Reference) users.find{it.id == id}
+    Ref findUser(String id) {
+        return (Ref) users.find{it.id == id}
     }
 
-    public List<Reference> findProjectsForUser(Reference user) {
-        List<Reference> result = []
+    public List<Ref> findProjectsForUser(Ref user) {
+        List<Ref> result = []
         if (user.admin)
             result.addAll(projects);
         else {
@@ -37,8 +38,8 @@ class Channels extends IfmElement {
         return result;
     }
 
-    public Reference findParticipation(Reference project, Reference user) {
-        return (Reference)participations.find {it.user == user && it.project == project}
+    public Ref findParticipation(Ref project, Ref user) {
+        return (Ref)participations.find {it.user == user && it.project == project}
     }
 
 }

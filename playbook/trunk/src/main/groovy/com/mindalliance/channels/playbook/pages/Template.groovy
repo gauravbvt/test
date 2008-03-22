@@ -7,6 +7,9 @@ import org.apache.wicket.markup.html.basic.Label
 import org.apache.wicket.markup.html.link.BookmarkablePageLink
 import com.mindalliance.channels.playbook.mem.SessionCategory
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
+import org.apache.wicket.markup.repeater.data.ListDataProvider
+import org.apache.wicket.markup.html.list.ListView
+import org.apache.wicket.markup.repeater.data.DataView
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,6 +29,14 @@ class Template extends WebPage {
             add(new BookmarkablePageLink("signout", SignOutPage.class, pageParameters))
         }
 
+    }
+
+    def listView(String id, List list, Closure populateItems) {
+        return proxy(ListView.class, [id, list], [populateItem: populateItems])
+    }
+
+    def dataView(String id, List list, Closure populateItems) {
+        return proxy(DataView.class, [id, new ListDataProvider(list)], [populateItem: populateItems])
     }
 
     protected proxy(Class clazz, List constructorArgs, Map behavior) {
