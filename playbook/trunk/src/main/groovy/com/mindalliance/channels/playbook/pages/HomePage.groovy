@@ -76,10 +76,12 @@ class HomePage extends Template {
                     DataView.class,
                     ["todo", new ListDataProvider(todos)],
                     ['populateItem': {item ->
-                        Reference t = (Reference)item.getModelObject();
-                        item.add(new Label("todo-name", (String)t.description))
-                        item.add(new Label("todo-priority", (String)t.priority))
-                        item.add(new Label("todo-due", dateFormat.format((Date)t.due)))
+                        use(SessionCategory) {
+                            Reference t = (Reference) item.getModelObject();
+                            item.add(new Label("todo-name", (String) t.description))
+                            item.add(new Label("todo-priority", (String) t.priority))
+                            item.add(new Label("todo-due", dateFormat.format((Date) t.due)))
+                        }
                     }]
             )
             add(todoDataView)
