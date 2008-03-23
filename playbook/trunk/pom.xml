@@ -95,6 +95,22 @@
             <version>1.0-beta-4-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geonames</groupId>
+            <artifactId>geonames</artifactId>
+            <version>0.5</version>
+        </dependency>
+        <dependency>
+            <!-- For geonames -->
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -113,6 +129,17 @@
                     <exclude>**/*.java</exclude>
                 </excludes>
             </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/groovy</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                    <exclude>**/*.groovy</exclude>
+                </excludes>
+            </resource>
         </resources>
         <testResources>
             <testResource>
@@ -123,6 +150,17 @@
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/groovy</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                    <exclude>**/*.groovy</exclude>
                 </excludes>
             </testResource>
         </testResources>

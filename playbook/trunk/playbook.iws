@@ -2,42 +2,14 @@
 <project relativePaths="false" version="4">
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Reference.java" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Store.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Todo.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Todo.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Participation.groovy" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Person.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Referenceable.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/User.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Organization.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Address.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Scenario.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Scenario.groovy" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Referenceable.java" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/System.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Playbook.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/IfmElement.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/IfmElement.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Occurrence.groovy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Reference.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playbook.ipr" afterPath="$PROJECT_DIR$/playbook.ipr" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/AgentGroup.groovy" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Position.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/ref/Store.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Resource.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Resource.groovy" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Template.html" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Template.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playbook.iws" afterPath="$PROJECT_DIR$/playbook.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Project.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Project.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/LoginPage.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/LoginPage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/Agent.groovy" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookApplication.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookApplication.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java" />
     </list>
     <ignored path="playbook.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -99,91 +71,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PlaybookSession.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="0" selection-start="1081" selection-end="1081" vertical-scroll-proportion="0.50093806">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlaybookApplication.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="35" selection-start="1331" selection-end="1331" vertical-scroll-proportion="0.20825516">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/User.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="201" selection-end="201" vertical-scroll-proportion="0.33771107">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Template.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="0" selection-start="911" selection-end="911" vertical-scroll-proportion="0.5065666">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="0" selection-start="4898" selection-end="4898" vertical-scroll-proportion="0.02918288">
+            <state line="152" column="11" selection-start="5082" selection-end="5082" vertical-scroll-proportion="3.3007634">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Reference.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Reference.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="10" selection-start="58" selection-end="58" vertical-scroll-proportion="0.054744527">
-              <folding />
-            </state>
+      <file leaf-file-name="Playbook.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Playbook.html">
+          <provider editor-type-id="HtmlPreview">
+            <state />
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Referenceable.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Referenceable.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="0" selection-start="132" selection-end="132" vertical-scroll-proportion="0.11257035">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Store.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Store.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="23" selection-start="89" selection-end="89" vertical-scroll-proportion="0.08442777">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HomePage.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="6" selection-start="656" selection-end="656" vertical-scroll-proportion="0.14071295">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ApplicationMemory.groovy" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="6" selection-start="830" selection-end="830" vertical-scroll-proportion="0.33208254">
+            <state line="22" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="0.5221519">
               <folding />
             </state>
           </provider>
@@ -241,7 +144,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="com.mindalliance.channels.playbook" />
+          <option name="myItemId" value="c.m.c.playbook" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -300,6 +203,66 @@
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/test" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/webapp" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/webapp" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/webapp/WEB-INF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
       </PATH>
       <PATH>
         <PATH_ELEMENT>
@@ -371,67 +334,15 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="playbook" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="playbook" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="playbook" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="playbook" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref" />
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -461,7 +372,41 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem" />
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -472,12 +417,12 @@
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="0.1" version="1" splitterProportion="0.5">
-      <flattenPackages PackagesPane="false" ProjectPane="true" />
+      <flattenPackages PackagesPane="true" ProjectPane="false" />
       <showMembers />
       <showModules PackagesPane="false" />
       <showLibraryContents PackagesPane="false" />
       <hideEmptyPackages ProjectPane="true" />
-      <abbreviatePackageNames PackagesPane="false" ProjectPane="false" />
+      <abbreviatePackageNames PackagesPane="true" ProjectPane="false" />
       <showStructure PackagesPane="false" ProjectPane="false" />
       <autoscrollToSource PackagesPane="true" ProjectPane="true" />
       <autoscrollFromSource PackagesPane="true" ProjectPane="true" />
@@ -494,7 +439,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="RestoreUpdateTree">
-    <UpdateInfo date="3/20/08 7:55 PM" ActionInfo="_Update">
+    <UpdateInfo date="3/23/08 12:17 PM" ActionInfo="_Update">
       <UpdatedFiles>
         <FILE-GROUP>
           <option name="myUpdateName" value="Updated from server" />
@@ -508,9 +453,9 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="UPDATED" />
-            <PATH vcs="svn" revision="667">$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/TestMemory.groovy</PATH>
-            <PATH vcs="svn" revision="667">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceImpl.groovy</PATH>
-            <PATH vcs="svn" revision="667">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionCategory.groovy</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Referenceable.groovy</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Created" />
@@ -518,6 +463,11 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="CREATED" />
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Location.groovy</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/HomePage.groovy</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/geo</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/geo/GeoService.groovy</PATH>
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/geo/Area.groovy</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Deleted" />
@@ -525,6 +475,7 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="true" />
             <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Address.groovy</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Restored" />
@@ -532,6 +483,7 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="RESTORED" />
+            <PATH vcs="svn" revision="678">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/HomePage.html</PATH>
           </FILE-GROUP>
         </FILE-GROUP>
         <FILE-GROUP>
@@ -561,7 +513,6 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="MERGED" />
-          <PATH vcs="svn" revision="667">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Not in repository" />
@@ -588,6 +539,53 @@
     </UpdateInfo>
   </component>
   <component name="RunManager" selected="Maven.Playbook">
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="buildParameters">
@@ -627,59 +625,12 @@
         </option>
       </MavenSettings>
     </configuration>
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="ADDITIONAL_CLASS_PATH" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration default="true" type="org.codebrewer.idea.jetty.JettyRunConfigurationType" factoryName="Local">
       <option name="WORKING_DIRECTORY" />
@@ -700,6 +651,8 @@
           <MavenBuildParameters>
             <option name="goals">
               <list>
+                <option value="clean" />
+                <option value="compile" />
                 <option value="jetty:run" />
               </list>
             </option>
@@ -790,31 +743,31 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="993" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="2" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24441834" order="8" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24441834" order="8" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" order="1" />
-      <window_info id="Maven Repo Search" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19623972" order="8" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47708577" order="3" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3854289" order="8" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17117117" order="5" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" order="8" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25499412" order="8" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17035218" order="5" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21974148" order="8" />
       <window_info id="FileBrowser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33442354" order="3" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2079906" order="8" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17391305" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20094007" order="7" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23712184" order="8" />
-      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2207686" order="6" />
+      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2976288" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39002454" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24529845" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="6" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.306698" order="2" />
-      <window_info id="Maven Build Output" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38072854" order="8" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15158637" order="2" />
+      <window_info id="Maven Repo Search" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19623972" order="8" />
+      <window_info id="Maven Build Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28554642" order="8" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="5" />
       <window_info id="Maven-2 Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22276822" order="4" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="0" />
@@ -852,79 +805,103 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/groovy/lang/GroovyObjectSupport.class">
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookSession.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="276" selection-end="276" vertical-scroll-proportion="0.20192307">
+        <state line="46" column="41" selection-start="1571" selection-end="1571" vertical-scroll-proportion="0.41185898">
+          <folding>
+            <marker date="1206217610000" expanded="true" signature="1948:1979" placeholder="{...}" />
+            <marker date="1206217610000" expanded="true" signature="2018:2048" placeholder="{...}" />
+            <marker date="1206217610000" expanded="true" signature="2075:2106" placeholder="{...}" />
+            <marker date="1206217610000" expanded="true" signature="2132:2162" placeholder="{...}" />
+            <marker date="1206217610000" expanded="true" signature="2201:2236" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/models/RefPropertyModel.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="6" selection-start="321" selection-end="321" vertical-scroll-proportion="0.28846154">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookSession.java">
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Template.html">
+      <provider editor-type-id="HtmlPreview">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="0" selection-start="1081" selection-end="1081" vertical-scroll-proportion="0.50093806">
+        <state line="11" column="0" selection-start="456" selection-end="456" vertical-scroll-proportion="0.35947713">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/Template.java">
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/LoginPage.html">
+      <provider editor-type-id="HtmlPreview">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="0" selection-start="911" selection-end="911" vertical-scroll-proportion="0.5065666">
+        <state line="10" column="0" selection-start="233" selection-end="233" vertical-scroll-proportion="0.3164557">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/HomePage.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="6" selection-start="582" selection-end="582" vertical-scroll-proportion="0.051896207">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Template.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="6" selection-start="773" selection-end="773" vertical-scroll-proportion="0.34530938">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Playbook.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="6" selection-start="582" selection-end="582" vertical-scroll-proportion="-0.013972056">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookApplication.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="699" selection-end="699" vertical-scroll-proportion="0.38922155">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorReferencesProvider">
+        <state />
+      </provider>
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleGeneralEditorProvider">
+        <state />
+      </provider>
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="0" selection-start="4898" selection-end="4898" vertical-scroll-proportion="0.02918288">
+        <state line="152" column="11" selection-start="5082" selection-end="5082" vertical-scroll-proportion="3.3007634">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Referenceable.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="132" selection-end="132" vertical-scroll-proportion="0.11257035">
-          <folding />
-        </state>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/pages/Playbook.html">
+      <provider editor-type-id="HtmlPreview">
+        <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/model/User.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="201" selection-end="201" vertical-scroll-proportion="0.33771107">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/PlaybookApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="35" selection-start="1331" selection-end="1331" vertical-scroll-proportion="0.20825516">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Reference.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="10" selection-start="58" selection-end="58" vertical-scroll-proportion="0.054744527">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Store.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="23" selection-start="89" selection-end="89" vertical-scroll-proportion="0.08442777">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/HomePage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="6" selection-start="656" selection-end="656" vertical-scroll-proportion="0.14071295">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/ApplicationMemory.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="6" selection-start="830" selection-end="830" vertical-scroll-proportion="0.33208254">
+        <state line="22" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="0.5221519">
           <folding />
         </state>
       </provider>

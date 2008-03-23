@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.support
 
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
-import com.mindalliance.channels.playbook.pages.HomePage
+import com.mindalliance.channels.playbook.pages.Playbook
 import com.mindalliance.channels.playbook.pages.LoginPage
 import com.mindalliance.channels.playbook.support.Memorable
 import com.mindalliance.channels.playbook.ref.Referenceable
@@ -13,7 +13,6 @@ import com.mindalliance.channels.playbook.ifm.Scenario
 import com.mindalliance.channels.playbook.ifm.Person
 import com.mindalliance.channels.playbook.ifm.Organization
 import com.mindalliance.channels.playbook.ifm.User
-import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -40,7 +39,7 @@ class PlaybookApplication  extends AuthenticatedWebApplication implements Memora
     //----------------------
      @Override
      public Class getHomePage() {
-         return HomePage.class;
+         return Playbook.class;
      }
 
      @Override
