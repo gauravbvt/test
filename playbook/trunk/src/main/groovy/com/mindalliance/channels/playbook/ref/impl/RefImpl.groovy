@@ -76,18 +76,27 @@ class RefImpl implements Ref, GroovyInterceptable {
              ref.@"$name" = value
          }
          else {
-             Referenceable referenceable = dereference()
+             Referenceable referenceable = deref()
              referenceable.setProperty(name, value)
          }
      }
 
-    Referenceable dereference() {
+    Referenceable deref() {
          if (this.@id == null) return null
          Store store = PlaybookApplication.locateStore()
          Referenceable referenceable = this.getReferenced(store)
          return referenceable
      }
 
+    // Support for Java code that needs to dereference a Ref
+    // Only supports dot-separated paths such as 'a.b.c' 
+    def deref(String path) {
+        def result = this
+        path.tokenize('.').each() {
+            result = result."$it"
+        }
+        return result
+    }
 
     def get(String name) {
          if (['id', 'db'].contains(name)) {
@@ -97,7 +106,7 @@ class RefImpl implements Ref, GroovyInterceptable {
              def value
              Referenceable referenceable
              try {
-                 referenceable = dereference()
+                 referenceable = deref()
                  value = referenceable."$name"
              }
              catch (Exception e) {
@@ -113,7 +122,7 @@ class RefImpl implements Ref, GroovyInterceptable {
         def metamethod = this.class.metaClass.getMetaMethod(name, args)
         if (metamethod == null) {// don't override a defined method
             def value
-            Referenceable referenceable = dereference()
+            Referenceable referenceable = deref()
             value = referenceable.invokeMethod(name, args)
             return value
         }
@@ -123,14 +132,6 @@ class RefImpl implements Ref, GroovyInterceptable {
         return metamethod.invoke(this, args)
     }
 
-    // Support for Java code that needs to dereference a Ref
-    def deref(String path) {
-        def result = this
-        path.tokenize('.').each() {
-            result = result."$it"
-        }
-        return result
-    }
 
 
 }
