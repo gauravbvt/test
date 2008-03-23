@@ -1,6 +1,9 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.geo.Area
+import com.mindalliance.channels.playbook.geo.UnknownAreaException
+import com.mindalliance.channels.playbook.geo.AmbiguousAreaException
+import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,7 +23,22 @@ class Location extends IfmElement {
     transient Area area  // force recalculate on change and don't persist
 
     Area getArea() { // null if Location is unknown
-        return area ?: (area = Area.locate(this)) // lazy init
+        if (!area) {
+            try {
+                area = Area.locate(this)
+            }
+            catch (UnknownAreaException e) {
+                area = Area.UNKNOWN
+            }
+            catch (AmbiguousAreaException e) {
+                area = Area.ambiguous(e.topos)
+            }
+            catch (ServiceFailureAreaException e) {
+                System.err.println("Geo service failure $e")
+                area = Area.UNKNOWN
+            }
+        }
+        return area
     }
 
     @Override

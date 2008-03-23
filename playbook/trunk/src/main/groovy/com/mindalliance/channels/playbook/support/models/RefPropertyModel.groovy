@@ -1,6 +1,5 @@
 package com.mindalliance.channels.playbook.support.models
 
-import com.mindalliance.channels.playbook.mem.SessionCategory
 import org.apache.wicket.model.IModel
 
 /**
@@ -16,20 +15,18 @@ class RefPropertyModel implements IModel {
     String expression
 
     RefPropertyModel(def ref, String expression) {
-       this.ref = ref
-       this.expression = expression
+        this.ref = ref
+        this.expression = expression
     }
-    
+
     @Override
     Object getObject() {
-        use(SessionCategory) {
-            try {
-                return applyExpression(expression)
-            }
-            catch (Exception e) {
-                System.out.println("*** Failed to apply expression $expression to $ref : $e")
-                throw e
-            }
+        try {
+            return applyExpression(expression)
+        }
+        catch (Exception e) {
+            System.out.println("*** Failed to apply expression $expression to $ref : $e")
+            throw e
         }
     }
 

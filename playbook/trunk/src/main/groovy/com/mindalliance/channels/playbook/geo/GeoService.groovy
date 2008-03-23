@@ -38,6 +38,14 @@ class GeoService {
                area = new Area(topos[0])
                areas[location] = area
             }
+            else {
+                if (topos.size() == 0) {
+                    throw new UnknownAreaException("No known area for location $location")
+                }
+                else { // > 1
+                    throw new AmbiguousAreaException("${topos.size()} areas found for location $location", topos)
+                }
+            }
         }
         return area
     }
@@ -64,7 +72,7 @@ class GeoService {
              }
             if (location.city) {
                 name = location.city
-                tsc.featureCode = CITY[0] // TODO -- Does this cover all? What about PPLA and PPLC?
+                tsc.featureCodes = CITY as String[]
             }
          }
        if (!name) throw new IllegalArgumentException("Incomplete location $location")
@@ -107,13 +115,21 @@ class GeoService {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
             tsc.nameEquals = name
             tsc.featureClass = FeatureClass.A
-            List<Toponym>topos = WebService.search(tsc).toponyms
+            List<Toponym> topos
+            try {
+                topos = WebService.search(tsc).toponyms
+            } catch (Exception e) {
+               throw new ServiceFailureAreaException("Failed to find country $name", e)
+            }
             Toponym countryTopo = (Toponym)topos.find {topo ->
                 topo.countryCode && topo.featureCode =="PCLI"
             }
             if (countryTopo) {
                 area = new Area(countryTopo)
                 areas[location] = area
+            }
+            else {
+                throw new UnknownAreaException("No such country $name")
             }
         }
         return area
@@ -128,7 +144,12 @@ class GeoService {
             tsc.style = Style.FULL
             tsc.nameEquals = name
             tsc.featureCode = 'ADM1'
-            List<Toponym>topos = WebService.search(tsc).toponyms
+            List<Toponym> topos
+            try {
+                topos = WebService.search(tsc).toponyms
+            } catch (Exception e) {
+               throw new ServiceFailureAreaException("Failed to find state $name", e)
+            }
             Toponym stateTopo = (Toponym)topos.find {topo ->
                 topo.featureCode =="ADM1"
             }
@@ -136,6 +157,9 @@ class GeoService {
                 area = new Area(stateTopo)
                 areas[location] = area
             }
+            else {
+                 throw new UnknownAreaException("No such state $name")
+             }
         }
         return area
     }
@@ -149,11 +173,14 @@ class GeoService {
             int statusCode = client.executeMethod(get)
             if (statusCode != HttpStatus.SC_OK) {
               System.err.println("Method failed: " + get.getStatusLine())  // TODO --- log this
-              throw new Exception("Geoname call failed: ${get.getStatusLine()}")
+              throw new ServiceFailureAreaException("Geoname $url call failed: ${get.getStatusLine()}")
             }
             String xml = get.getResponseBodyAsString().toString()
             list = parseResults(xml)
             }
+        catch (Exception e) {
+           throw new ServiceFailureAreaException("Geoname $url call failed", e)
+        }
         finally {
             get.releaseConnection()
         }

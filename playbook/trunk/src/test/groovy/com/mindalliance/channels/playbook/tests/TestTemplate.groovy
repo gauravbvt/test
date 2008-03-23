@@ -1,10 +1,11 @@
-package com.mindalliance.channels.playbook.pages
+package com.mindalliance.channels.playbook.tests
 
 import org.apache.wicket.markup.html.WebPage
 import org.apache.wicket.PageParameters
 import org.apache.wicket.authentication.pages.SignOutPage
 import org.apache.wicket.markup.html.basic.Label
 import org.apache.wicket.markup.html.link.BookmarkablePageLink
+import com.mindalliance.channels.playbook.mem.SessionCategory
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 import org.apache.wicket.markup.repeater.data.ListDataProvider
 import org.apache.wicket.markup.html.list.ListView
@@ -17,9 +18,9 @@ import org.apache.wicket.markup.repeater.data.DataView
 * Date: Mar 21, 2008
 * Time: 11:04:33 AM
 */
-class Template extends WebPage {
+class TestTemplate extends WebPage {
 
-    protected Template(final PageParameters pageParameters) {
+    protected TestTemplate(final PageParameters pageParameters) {
         super(pageParameters)
 
         add(new Label("name", new RefPropertyModel(this, "session.user.name")))

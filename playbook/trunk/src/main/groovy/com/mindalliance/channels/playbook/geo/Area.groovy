@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.geo
 
-import org.geonames.Toponym
 import com.mindalliance.channels.playbook.ifm.Location
+import org.geonames.Toponym
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,12 +12,28 @@ import com.mindalliance.channels.playbook.ifm.Location
 */
 class Area {
 
+    static final Area UNKNOWN = new UnknownArea()
+
     private Toponym topo
     private List<Area>nearby
     private List<Area> hierarchy
 
+    Area() {}
+
     Area(Toponym topo) {
         this.topo = topo
+    }
+
+    static AmbiguousArea ambiguous(List<Toponym> topos) {
+        return new AmbiguousArea(topos)
+    }
+
+    boolean isUnknow() {
+        return false
+    }
+
+    boolean isAmbiguous() {
+        return false
     }
 
     static Area locate(Location location) {

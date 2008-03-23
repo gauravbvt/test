@@ -5,6 +5,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 import java.beans.PropertyChangeSupport
 import java.beans.PropertyChangeListener
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Store
+import com.mindalliance.channels.playbook.support.PlaybookSession
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -77,8 +79,12 @@ import com.mindalliance.channels.playbook.ref.Ref
     }
 
     void doSetProperty(String name, def value) {
+        def old = this."$name"
         String setterName = "set${name[0].toUpperCase()}${name.substring(1)}"
         this."$setterName"(value)
+        if (!['id', 'db', 'pcs'].contains(name)) {
+            this.propertyChanged(name, old, value)
+        }
     }
 
     // Adds add<Field> and remove<Field> methods if none -- expects List <fields> to be defined
@@ -145,17 +151,10 @@ import com.mindalliance.channels.playbook.ref.Ref
         // default is do nothing
     }
 
-//    // Kludges for stub generation
-//    public void setMetaClass(MetaClass metaClass) {
-//        super.setMetaClass(metaClass);
-//    }
-//
-//    public MetaClass getMetaClass() {
-//        return super.getMetaClass();
-//    }
-//
-//    public Object getProperty(String s) {
-//        return super.getProperty(s);
-//    }
+    void persist() {
+        Store store = PlayBookApplication.locateStore()
+        store.persist(this)
+    }
+    
 
 }

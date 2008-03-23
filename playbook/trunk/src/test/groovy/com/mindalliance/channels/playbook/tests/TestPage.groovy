@@ -1,12 +1,11 @@
 package com.mindalliance.channels.playbook.tests
+
 import org.apache.wicket.PageParameters
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.markup.html.basic.Label
 import java.text.DateFormat
-import com.mindalliance.channels.playbook.mem.SessionCategory
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
-import com.mindalliance.channels.playbook.pages.Template
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +14,7 @@ import com.mindalliance.channels.playbook.pages.Template
 * Date: Mar 21, 2008
 * Time: 11:04:05 AM
 */
-class TestPage extends Template {
+class TestPage extends TestTemplate {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +28,6 @@ class TestPage extends Template {
         super(parameters)
 
         PlaybookSession session = (PlaybookSession) getSession()
-        use(SessionCategory) {
 
             if (!session.project) session.authenticate('admin', 'admin') // TODO remove - needed in test
 
@@ -58,14 +56,11 @@ class TestPage extends Template {
             DateFormat.getDateInstance(DateFormat.SHORT, session.getLocale());
 
             add(dataView('todo', todos, {item ->
-                use(SessionCategory) {
                     Ref t = (Ref) item.getModelObject();
                     item.add(new Label("todo-name", (String) t.description))
                     item.add(new Label("todo-priority", (String) t.priority))
                     item.add(new Label("todo-due", dateFormat.format((Date) t.due)))
-                }
             }))
-        }
     }
 
 }

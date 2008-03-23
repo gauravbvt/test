@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ref.impl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -71,8 +72,22 @@ class RefImpl implements Ref, GroovyInterceptable {
     }
 
     void doSetProperty(String name, def value) {
-        this.@"$name" = value
-    }
+         if (['id', 'db'].contains(name)) {
+             ref.@"$name" = value
+         }
+         else {
+             Referenceable referenceable = dereference()
+             referenceable.setProperty(name, value)
+         }
+     }
+
+    Referenceable dereference() {
+         if (this.@id == null) return null
+         Store store = PlaybookApplication.locateStore()
+         Referenceable referenceable = this.getReferenced(store)
+         return referenceable
+     }
+
 
     def get(String name) {
          if (['id', 'db'].contains(name)) {
@@ -108,9 +123,6 @@ class RefImpl implements Ref, GroovyInterceptable {
         return metamethod.invoke(this, args)
     }
 
-    Referenceable dereference() {
-        throw new Exception("Must be executed within a session")
-    }
 
 
 
