@@ -39,6 +39,8 @@ public class TestPlaybook extends TestCase {
         Ref channels = app.channels
         assertTrue(channels.about == channels.reference.about)
         def myProject = channels.findProjectNamed('Generic')
+        String scenarioName = myProject.deref('scenarios')[0].deref('name')
+        assert scenarioName.startsWith("Scenario")
         assertTrue(myProject.name == myProject.reference.name)
         String name = myProject.name
         assertTrue(name.equals("Generic"))

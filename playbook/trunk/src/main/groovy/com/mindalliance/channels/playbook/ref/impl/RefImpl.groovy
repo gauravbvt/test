@@ -123,7 +123,14 @@ class RefImpl implements Ref, GroovyInterceptable {
         return metamethod.invoke(this, args)
     }
 
-
+    // Support for Java code that needs to dereference a Ref
+    def deref(String path) {
+        def result = this
+        path.tokenize('.').each() {
+            result = result."$it"
+        }
+        return result
+    }
 
 
 }
