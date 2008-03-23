@@ -1,5 +1,4 @@
-package com.mindalliance.channels.playbook.pages
-
+package com.mindalliance.channels.playbook.tests
 import org.apache.wicket.PageParameters
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookSession
@@ -7,6 +6,7 @@ import org.apache.wicket.markup.html.basic.Label
 import java.text.DateFormat
 import com.mindalliance.channels.playbook.mem.SessionCategory
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
+import com.mindalliance.channels.playbook.pages.Template
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +15,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 * Date: Mar 21, 2008
 * Time: 11:04:05 AM
 */
-class HomePage extends Template {
+class TestPage extends Template {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,11 +25,13 @@ class HomePage extends Template {
 	 * @param parameters
 	 *            Page parameters
 	 */
-    HomePage(final PageParameters parameters) {
+    TestPage(final PageParameters parameters) {
         super(parameters)
 
         PlaybookSession session = (PlaybookSession) getSession()
         use(SessionCategory) {
+
+            if (!session.project) session.authenticate('admin', 'admin') // TODO remove - needed in test
 
             Ref p = session.project
             assert p
@@ -54,7 +56,7 @@ class HomePage extends Template {
             // Add todos
             final DateFormat dateFormat =
             DateFormat.getDateInstance(DateFormat.SHORT, session.getLocale());
-            
+
             add(dataView('todo', todos, {item ->
                 use(SessionCategory) {
                     Ref t = (Ref) item.getModelObject();

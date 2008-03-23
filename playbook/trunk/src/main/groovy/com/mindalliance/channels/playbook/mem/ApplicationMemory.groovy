@@ -48,7 +48,9 @@ class ApplicationMemory {
     }
 
     Ref store(Referenceable referenceable) {
+        referenceable.beforeStore()
         cache.putInCache(referenceable.getId(), referenceable)
+        referenceable.afterStore()
         return referenceable.reference
     }
 
@@ -56,6 +58,7 @@ class ApplicationMemory {
         Referenceable referenceable
         try {
             referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
+            referenceable.afterRetrieve()
         }
         catch (Exception e) {
             // Do nothing

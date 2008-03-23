@@ -48,8 +48,11 @@ import com.mindalliance.channels.playbook.ref.Ref
     }
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
+        changed()
         propertyChanged(propName, null, this.@"$propName") // don't care about old value
     }
+
+    void changed() {} // Default is do nothing
 
     void propertyChanged(String name, def old, def value) {
         pcs.firePropertyChange(name, old, value)
@@ -128,6 +131,18 @@ import com.mindalliance.channels.playbook.ref.Ref
     static boolean isReferenceable(def obj) {
         boolean b = Referenceable.isAssignableFrom(obj.class)
         return b
+    }
+
+    public void beforeStore() {
+        // default is do nothing
+    }
+
+    public void afterStore() {
+        // default is do nothing
+    }
+
+    public void afterRetrieve() {
+        // default is do nothing
     }
 
 //    // Kludges for stub generation
