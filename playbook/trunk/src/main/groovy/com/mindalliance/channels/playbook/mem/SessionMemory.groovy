@@ -16,7 +16,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Mar 19, 2008
 * Time: 10:06:30 AM
 */
-class SessionMemory implements Store, PropertyChangeListener {
+class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     Map<Ref, Referenceable> changes = new HashMap<Ref, Referenceable>()
 
@@ -66,7 +66,7 @@ class SessionMemory implements Store, PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
        Referenceable referenceable = (Referenceable)evt.source
-       persist(referenceable)  
+       persist(referenceable)
     }
 
     public boolean isEmpty() {

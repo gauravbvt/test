@@ -18,7 +18,7 @@ import com.mindalliance.channels.playbook.ref.impl.RefImpl
 * Date: Mar 19, 2008
 * Time: 10:06:15 AM
 */
-class ApplicationMemory {
+class ApplicationMemory implements Serializable {
 
     public static final String ROOT_ID = 'CHANNELS'
     public static final String ROOT_DB = 'channels'

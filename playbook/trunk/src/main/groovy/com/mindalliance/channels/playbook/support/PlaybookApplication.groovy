@@ -24,7 +24,7 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 * Date: Mar 21, 2008
 * Time: 11:01:36 AM
 */
-class PlaybookApplication extends AuthenticatedWebApplication implements Memorable {
+class PlaybookApplication extends AuthenticatedWebApplication implements Memorable, Serializable {
 
     ApplicationMemory appMemory
     String message

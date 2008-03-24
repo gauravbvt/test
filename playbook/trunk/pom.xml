@@ -188,7 +188,7 @@
                         <goals>
                             <goal>generateStubs</goal>
                             <goal>compile</goal>
-                            <!--<goal>generateTestStubs</goal>-->
+                            <goal>generateTestStubs</goal>
                             <goal>testCompile</goal>
                         </goals>
                         <configuration>
@@ -214,7 +214,7 @@
                   <phase>process-sources</phase>
                   <configuration>
                     <tasks>
-                        <patch patchfile="kludge.patch" dir="${pom.basedir}/target" strip="0"/>
+                        <patch patchfile="kludge.patch" backups="false" dir="${pom.basedir}/target" strip="0"/>
                     </tasks>
                   </configuration>
                   <goals>

@@ -13,7 +13,7 @@ import org.apache.wicket.authorization.strategies.role.Roles
 * Date: Mar 21, 2008
 * Time: 11:20:47 AM
 */
-class PlaybookSession extends KludgeWebSession implements Transactionable {
+class PlaybookSession extends KludgeWebSession implements Transactionable, Serializable {
 
     private Ref participation;
     private Ref user;

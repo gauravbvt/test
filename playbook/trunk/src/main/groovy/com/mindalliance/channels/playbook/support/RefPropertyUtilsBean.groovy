@@ -12,7 +12,7 @@ import org.apache.commons.beanutils.PropertyUtilsBean
 class RefPropertyUtilsBean extends PropertyUtilsBean {
 
     @Override
-    def getSimpleProperty(def obj, String prop) throws Exception {
+    def getSimpleProperty(def obj, String prop) {
       def result = obj."$prop"
       return result
     }
