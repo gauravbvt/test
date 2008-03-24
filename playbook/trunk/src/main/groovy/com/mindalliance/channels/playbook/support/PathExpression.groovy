@@ -27,7 +27,13 @@ class PathExpression {
     static def eval(def obj, String path) {
         def result
         RefPropertyUtilsBean utils = new RefPropertyUtilsBean()
-        result = utils.getNestedProperty(obj, path)
+        try {
+            result = utils.getNestedProperty(obj, path)
+        }
+        catch (Exception e) {
+            System.err.println("Evaluation of path $path failed : $e")    // TODO -- use logger
+            return null
+        }
         return result
     }
 

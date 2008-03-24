@@ -9,7 +9,6 @@ import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import org.apache.wicket.Application
-import com.mindalliance.channels.playbook.ref.impl.RefImpl
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
