@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.support.models
 
 import org.apache.wicket.model.IModel
+import com.mindalliance.channels.playbook.support.PathExpression
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,7 +23,7 @@ class RefPropertyModel implements IModel {
     @Override
     Object getObject() {
         try {
-            return applyExpression(expression)
+            return PathExpression.eval(ref, expression)
         }
         catch (Exception e) {
             System.out.println("*** Failed to apply expression $expression to $ref : $e")
@@ -38,12 +39,4 @@ class RefPropertyModel implements IModel {
         // Nothing to do
     }
 
-    private def applyExpression(String expression) {
-        List properties = expression.tokenize('.')
-        def result = ref
-        properties.each {
-            result = result[it]
-        }
-        return result
-    }
 }

@@ -4,6 +4,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.support.PathExpression
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,6 +16,10 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 class RefDataProvider implements IDataProvider {
 
     List<Ref> refs
+
+    RefDataProvider(def object, String path) {
+        refs = (List<Ref>)PathExpression.eval(object, path)
+    }
 
     RefDataProvider(List list) {
        refs = []

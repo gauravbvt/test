@@ -15,7 +15,4 @@ class Todo extends IfmElement {
     String priority = "Normal" ;
     Date due = new Date();
 
-    Todo( String description ) {
-        this.description = description
-    }
 }
