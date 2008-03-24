@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.Location
 import com.mindalliance.channels.playbook.geo.Area
+import com.mindalliance.channels.playbook.tests.pages.TestPage
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

@@ -15,8 +15,8 @@ class RefModel implements IModel {
 
     Ref ref
 
-    RefModel(Ref ref) {
-        this.ref = ref
+    RefModel(def obj) {
+        setObject(obj)
     }
 
     RefModel(Referenceable referenceable) {

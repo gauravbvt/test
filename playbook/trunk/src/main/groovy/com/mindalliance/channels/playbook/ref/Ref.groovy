@@ -5,4 +5,6 @@ interface Ref extends Serializable {
     String getDb()
     Referenceable getReferenced(Store store)
     Ref getReference()
+    Referenceable deref()
+    Object deref(String path)
 }

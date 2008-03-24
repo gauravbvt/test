@@ -16,8 +16,19 @@ class RefDataProvider implements IDataProvider {
 
     List<Ref> refs
 
-    RefDataProvider(List<Ref> list) {
-       refs = list
+    RefDataProvider(List list) {
+       refs = []
+       list.each() {item ->
+           if (item instanceof Referenceable) {
+               refs.add(tiem.reference)
+           }
+           else if (item instanceof Ref) {
+               refs.add(item)
+           }
+           else {
+               throw new IllegalArgumentException("$item is neither a Ref or a Referenceable")
+           }
+       }
     }
 
     Iterator iterator(int first, int count) {
