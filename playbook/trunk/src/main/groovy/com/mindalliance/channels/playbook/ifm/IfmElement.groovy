@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 * Date: Mar 19, 2008
 * Time: 12:36:45 PM
 */
-/*abstract*/ class IfmElement extends ReferenceableImpl {
+/*abstract*/ class IfmElement extends ReferenceableImpl implements Serializable {
 
     Date createdOn = new Date()
 

@@ -1,12 +1,10 @@
 package com.mindalliance.channels.playbook.support
 
-import org.apache.wicket.authentication.AuthenticatedWebSession
 import com.mindalliance.channels.playbook.mem.SessionMemory
-import org.apache.wicket.authentication.AuthenticatedWebApplication
+import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.wicket.Request
-import com.mindalliance.channels.playbook.ref.Ref
+import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.authorization.strategies.role.Roles
-import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +13,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Mar 21, 2008
 * Time: 11:20:47 AM
 */
-class PlaybookSession  extends AuthenticatedWebSession implements Transactionable {
+class PlaybookSession extends KludgeWebSession implements Transactionable {
 
     private Ref participation;
     private Ref user;
@@ -24,6 +22,9 @@ class PlaybookSession  extends AuthenticatedWebSession implements Transactionabl
     private PlaybookApplication application;     // TODO
 
     private SessionMemory memory = new SessionMemory();
+
+    public PlaybookSession(){
+    }
 
     public PlaybookSession( AuthenticatedWebApplication application, Request request ) {
         super( application, request );

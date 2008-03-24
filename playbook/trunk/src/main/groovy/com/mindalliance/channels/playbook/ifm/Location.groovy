@@ -20,7 +20,7 @@ class Location extends IfmElement {
     String state    // required if either county or city set
     String country  // required
     String code
-    transient Area area  // force recalculate on change and don't persist
+    Area area  // force recalculate on change and don't persist
 
     Area getArea() { // null if Location is unknown
         if (!area) {

@@ -1,4 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
+
+import java.lang.System
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -12,4 +15,7 @@ class Todo extends IfmElement {
     String priority = "Normal" ;
     Date due = new Date( System.currentTimeMillis() );
 
+    Todo( String description ) {
+        this.description = description
+    }
 }

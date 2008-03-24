@@ -181,7 +181,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <!--<goal>generateStubs</goal>-->
+                            <goal>generateStubs</goal>
                             <goal>compile</goal>
                             <!--<goal>generateTestStubs</goal>-->
                             <goal>testCompile</goal>
@@ -200,6 +200,23 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+              <artifactId>maven-antrun-plugin</artifactId>
+
+              <executions>
+                <execution>
+                  <phase>process-sources</phase>
+                  <configuration>
+                    <tasks>
+                        <patch patchfile="kludge.patch" dir="${pom.basedir}/target" strip="0"/>
+                    </tasks>
+                  </configuration>
+                  <goals>
+                    <goal>run</goal>
+                  </goals>
+                </execution>
+              </executions>
             </plugin>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
