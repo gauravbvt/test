@@ -10,6 +10,8 @@ import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.Location
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.tests.pages.TestPage
+import com.mindalliance.channels.playbook.ifm.Participation
+import com.mindalliance.channels.playbook.ifm.Todo
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -77,6 +79,16 @@ public class TestPlaybook extends TestCase {
     }
 
     void testPageRender() {
+        Ref channels = app.channels
+        def project = channels.findProjectNamed('Generic')
+        def user = channels.users[0]
+        def participation = new Participation(user:user, project:project, analyst:true)
+        Todo todo = new Todo(description:'Todo 1', due: new Date())
+        participation.addTodo(todo.persist())
+        todo = new Todo(description:'Todo 2', due: new Date())
+        participation.addTodo(todo.persist())
+        channels.addParticipation(participation.persist())
+        session.commit()
         session.authenticate('admin', 'admin')
         tester.startPage(TestPage.class)
         tester.assertLabel('title', 'Playbook')

@@ -15,6 +15,7 @@ import com.mindalliance.channels.playbook.ifm.Organization
 import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

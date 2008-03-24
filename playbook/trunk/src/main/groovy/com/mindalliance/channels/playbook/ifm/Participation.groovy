@@ -9,12 +9,12 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Mar 21, 2008
 * Time: 11:42:26 AM
 */
-class Participation {
+class Participation extends IfmElement {
 
     Ref user
     Ref project
-    boolean analyst
+    Boolean analyst
     Ref person
-    List<Ref> todos = new ArrayList<Todo>()[]
+    List<Ref> todos = []
 
 }

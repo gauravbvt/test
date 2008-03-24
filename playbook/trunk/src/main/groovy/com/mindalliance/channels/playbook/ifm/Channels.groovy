@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,7 +38,7 @@ class Channels extends IfmElement {
     }
 
     public Ref findParticipation(Ref project, Ref user) {
-        return (Ref)participations.find {it.user == user && it.project == project}
+        return (Ref)participations.find() {it.user == user && it.project == project}
     }
 
 }

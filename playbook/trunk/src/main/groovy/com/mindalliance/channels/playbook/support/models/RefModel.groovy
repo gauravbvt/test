@@ -19,13 +19,9 @@ class RefModel implements IModel {
         setObject(obj)
     }
 
-    RefModel(Referenceable referenceable) {
-        ref = referenceable.reference
-    }
-
-    // Returns a Referenceable
+    // Returns a Ref
     Object getObject() {
-       return ref.deref()
+       return ref
     }
 
     void setObject(Object object) {

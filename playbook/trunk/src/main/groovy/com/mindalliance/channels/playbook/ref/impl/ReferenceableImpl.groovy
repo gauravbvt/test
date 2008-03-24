@@ -4,9 +4,8 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import java.beans.PropertyChangeSupport
 import java.beans.PropertyChangeListener
-import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Store
-import com.mindalliance.channels.playbook.support.PlaybookSession
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -151,9 +150,10 @@ import com.mindalliance.channels.playbook.support.PlaybookSession
         // default is do nothing
     }
 
-    void persist() {
-        Store store = PlayBookApplication.locateStore()
+    Ref persist() {
+        Store store = PlaybookApplication.locateStore()
         store.persist(this)
+        return this.reference
     }
     
 

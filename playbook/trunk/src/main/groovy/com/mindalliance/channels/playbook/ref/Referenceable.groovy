@@ -7,4 +7,5 @@ interface Referenceable extends java.io.Serializable {
     void beforeStore()
     void afterStore()
     void afterRetrieve()
+    Ref persist()
 }

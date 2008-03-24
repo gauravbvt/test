@@ -20,7 +20,7 @@ class RefDataProvider implements IDataProvider {
        refs = []
        list.each() {item ->
            if (item instanceof Referenceable) {
-               refs.add(tiem.reference)
+               refs.add(item.reference)
            }
            else if (item instanceof Ref) {
                refs.add(item)
@@ -40,7 +40,16 @@ class RefDataProvider implements IDataProvider {
     }
 
     IModel model(Object object) {
-        Ref ref = (Ref)object
+        Ref ref
+        if (object instanceof Referenceable) {
+               ref = object.reference
+           }
+           else if (object instanceof Ref) {
+               ref = (Ref)object
+           }
+           else {
+               throw new IllegalArgumentException("$object is neither a Ref or a Referenceable")
+           }
         return new RefModel(ref)
     }
 
