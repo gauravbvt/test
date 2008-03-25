@@ -16,6 +16,7 @@ import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.ifm.Participation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -76,6 +77,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             p.addResource(store(new Organization(name: "ACME Inc.")));
 
             channels.addProject(store(p))
+            channels.addParticipation(
+                    store( new Participation(
+                            user    : user.getReference(),
+                            project : p.getReference() ) ) )
 
             store(channels)
         }

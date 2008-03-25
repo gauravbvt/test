@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.wicket.Request
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.authorization.strategies.role.Roles
+import com.mindalliance.channels.playbook.ifm.Participation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -42,7 +43,7 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         user = application.findUser( id );
         if ( user != null && user.password == password ) {
             project = application.findProjectsForUser( user )[0]
-            participation = application.findParticipation( project, user );
+            participation = application.findParticipation( project, user )
             return true;
         }
         else
@@ -55,7 +56,7 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     }
 
     public boolean isAdmin() {
-        return participation != null && participation.user.admin;
+        return user.admin;
     }
 
     public Ref getParticipation() {

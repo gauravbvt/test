@@ -12,6 +12,8 @@
 
     <div wicket:id="tabs">[Tabs]</div>
 
+    <div id="todos" wicket:id="todos"/>
+
     <div id="signout">
         <hr/>
         <p>You are logged in as
@@ -20,9 +22,9 @@
             &mdash; <a wicket:id="signout">Sign out</a></p>
     </div>
 
-    <form id="page_controls" action="">
-        <input type="button" name="save" title="Commit your modifications" value="Save"/>
-        <input type="button" name="revert" title="Forget your changes" value="Revert"/>
+    <form wicket:id="page_controls">
+        <input type="submit" wicket:id="save_button" value="Save"/>
+        <input type="submit" wicket:id="revert_button" value="Revert"/>
     </form>
 </body>
 </html>
