@@ -24,7 +24,7 @@ class RefDataProvider implements IDataProvider {
     }
 
     private List<Ref> allRefs() {
-        return (List<Ref>)PathExpression.eval(source, path)
+        return (List<Ref>)PathExpression.getNestedProperty(source, path)
     }
 
     Iterator iterator(int first, int count) {

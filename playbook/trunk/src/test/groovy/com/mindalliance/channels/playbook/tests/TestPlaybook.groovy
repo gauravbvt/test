@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.tests.pages.TestPage
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.Todo
+import com.mindalliance.channels.playbook.support.PathExpression
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,6 +40,7 @@ public class TestPlaybook extends TestCase {
     void testSerialization() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream()
         ObjectOutputStream os = new ObjectOutputStream(bos)
+        os.writeObject(app)
         os.writeObject(session)
     }
 
@@ -58,6 +60,7 @@ public class TestPlaybook extends TestCase {
         channels.removeProject(myProject)
         assertTrue(session.transactionCount == 1)
         // Modify project in session memory
+        PathExpression.setNestedProperty(myProject, "name", "Your project")
         myProject.name = "Your project"
         assertNotNull(myProject.createdOn)
         assertTrue(session.transactionCount == 2)

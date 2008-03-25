@@ -24,17 +24,28 @@ class PathExpression {
 
     */
 
-    static def eval(def obj, String path) {
+    static def getNestedProperty(def holder, String path) {
         def result
         RefPropertyUtilsBean utils = new RefPropertyUtilsBean()
         try {
-            result = utils.getNestedProperty(obj, path)
+            result = utils.getNestedProperty(holder, path)
         }
         catch (Exception e) {
-            System.err.println("Evaluation of path $path failed : $e")    // TODO -- use logger
+            System.err.println("Evaluation of path $path on $holder failed : $e")    // TODO -- use logger
             return null
         }
         return result
+    }
+
+    static void setNestedProperty(def holder, String path, def obj) {
+        RefPropertyUtilsBean utils = new RefPropertyUtilsBean()
+        try {
+            utils.setNestedProperty(holder, path, obj)
+        }
+        catch (Exception e) {
+            System.err.println("Evaluation of path $path on $holder failed : $e")    // TODO -- use logger
+        }
+
     }
 
 }
