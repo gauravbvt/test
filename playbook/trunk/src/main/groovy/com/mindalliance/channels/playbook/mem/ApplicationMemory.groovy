@@ -23,11 +23,15 @@ class ApplicationMemory implements Serializable {
     public static final String ROOT_DB = 'channels'
     public final static Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
-    Cache cache
+    static Cache cache
     private Application application
 
     ApplicationMemory(Application app) {
         application = app
+        if (!cache) ApplicationMemory.initializeCache()
+    }
+
+    static synchronized void initializeCache() {
         boolean useMemoryCaching = true
         boolean unlimitedDiskCache = true
         boolean overflowPersistence = false
