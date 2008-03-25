@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.support.models
 
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,11 +13,11 @@ import com.mindalliance.channels.playbook.support.PathExpression
 */
 class RefPropertyModel implements IModel {
 
-    def ref
+    Ref ref
     String expression
 
-    RefPropertyModel(def ref, String expression) {
-        this.ref = ref
+    RefPropertyModel(def obj, String expression) {
+        this.ref = obj.reference
         this.expression = expression
     }
 
@@ -32,7 +33,7 @@ class RefPropertyModel implements IModel {
     }
 
     public void setObject(Object ref) {
-        this.ref = ref
+        this.ref = (Ref)ref
     }
 
     public void detach() {

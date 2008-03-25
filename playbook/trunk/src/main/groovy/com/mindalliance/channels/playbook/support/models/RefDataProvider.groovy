@@ -15,15 +15,18 @@ import com.mindalliance.channels.playbook.support.PathExpression
 */
 class RefDataProvider implements IDataProvider {
 
+    def source
     List<Ref> refs
+    String path
 
     RefDataProvider(def object, String path) {
-        refs = (List<Ref>)PathExpression.eval(object, path)
+        source = obj
+        this.path = path
     }
 
-    RefDataProvider(List list) {
+    RefDataProvider(List items) {
        refs = []
-       list.each() {item ->
+       items.each() {item ->
            if (item instanceof Referenceable) {
                refs.add(item.reference)
            }
@@ -36,12 +39,22 @@ class RefDataProvider implements IDataProvider {
        }
     }
 
+    private List<Ref> allRefs() {
+        if (refs) {
+            return refs
+        }
+        else {
+            assert path && source
+            return (List<Ref>)PathExpression.eval(source, path)
+        }
+    }
+
     Iterator iterator(int first, int count) {
-        return refs.subList(first, first+count).iterator()
+        return allRefs().subList(first, first+count).iterator()
     }
 
     int size() {
-        return refs.size()
+        return allRefs().size()
     }
 
     IModel model(Object object) {

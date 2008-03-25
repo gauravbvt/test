@@ -35,7 +35,7 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
         copy.db = this.@db
         copy.pcs = new PropertyChangeSupport(copy)
         getProperties().each {name, val ->
-            if (!['id', 'db', 'pcs', 'class', 'reference', 'metaClass'].contains(name)) {
+            if (!transientProperties().contains(name)) {
                 try {
                     copy."$name" = val
                 }
@@ -46,6 +46,10 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
             }
         }
         return copy
+    }
+
+    List<String> transientProperties() {
+        return ['id', 'db', 'pcs', 'class', 'reference', 'metaClass']
     }
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
@@ -154,6 +158,10 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
         Store store = PlaybookApplication.locateStore()
         store.persist(this)
         return this.reference
+    }
+
+    Referenceable deref() {
+        return this
     }
     
 
