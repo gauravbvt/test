@@ -23,7 +23,7 @@ import java.text.DateFormat;
  * Date: Mar 23, 2008
  * Time: 8:31:00 PM
  */
-public class TestPage  extends TestTemplate {
+public class TestPage extends TestTemplate {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,10 +41,6 @@ public class TestPage  extends TestTemplate {
             if (session.getProject() == null) session.authenticate("admin", "admin"); // needed in test
 
             Ref p = session.getProject();
-            List todos = new ArrayList();
-            if (session.getParticipation() != null) {
-                todos = (List)session.getParticipation().deref("todos");
-            }
 
             add(new Label("title", "Playbook"));
 
@@ -71,7 +67,7 @@ public class TestPage  extends TestTemplate {
             final DateFormat dateFormat =
             DateFormat.getDateInstance(DateFormat.SHORT, session.getLocale());
 
-        add(new DataView("todo", new RefDataProvider(todos) ) {
+        add(new DataView("todo", new RefDataProvider(session, "participation.todos") ) {
             public void populateItem(Item item) {
                Ref t = (Ref) item.getModelObject();
                     item.add(new Label("todo-name", (String) t.deref("description")));

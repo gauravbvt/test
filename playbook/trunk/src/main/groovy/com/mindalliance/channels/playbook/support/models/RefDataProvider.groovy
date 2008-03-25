@@ -16,37 +16,15 @@ import com.mindalliance.channels.playbook.support.PathExpression
 class RefDataProvider implements IDataProvider {
 
     def source
-    List<Ref> refs
     String path
 
-    RefDataProvider(def object, String path) {
+    RefDataProvider(def obj, String path) {
         source = obj
         this.path = path
     }
 
-    RefDataProvider(List items) {
-       refs = []
-       items.each() {item ->
-           if (item instanceof Referenceable) {
-               refs.add(item.reference)
-           }
-           else if (item instanceof Ref) {
-               refs.add(item)
-           }
-           else {
-               throw new IllegalArgumentException("$item is neither a Ref or a Referenceable")
-           }
-       }
-    }
-
     private List<Ref> allRefs() {
-        if (refs) {
-            return refs
-        }
-        else {
-            assert path && source
-            return (List<Ref>)PathExpression.eval(source, path)
-        }
+        return (List<Ref>)PathExpression.eval(source, path)
     }
 
     Iterator iterator(int first, int count) {
