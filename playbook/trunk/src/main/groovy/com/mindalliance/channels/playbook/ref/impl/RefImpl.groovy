@@ -33,6 +33,10 @@ class RefImpl implements Ref, GroovyInterceptable {
         return hash
     }
 
+    String toString() {
+        return "Ref<$id,$db>"
+    }
+
     public Referenceable getReferenced(Store store) {
         return store.retrieve(this)
     }
@@ -107,11 +111,17 @@ class RefImpl implements Ref, GroovyInterceptable {
              Referenceable referenceable
              try {
                  referenceable = deref()
-                 value = referenceable."$name"
+                 if (referenceable) {
+                    value = referenceable."$name"
+                 }
+                 else {
+                     System.out.println("${this.toString()} is stale")  // TODO log this
+                     throw new StaleRefException("${this.toString()} is stale")
+                 }
              }
              catch (Exception e) {
-                System.out.println("Can't get $name in $referenceable")
-                throw e
+                System.out.println("Can't get $name in $referenceable")  // TODO log this
+                throw new IllegalArgumentException("Can't get $name in $referenceable")
              }
              return value
          }
