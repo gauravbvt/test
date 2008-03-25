@@ -32,18 +32,20 @@ class ApplicationMemory implements Serializable {
     }
 
     static synchronized void initializeCache() {
-        boolean useMemoryCaching = true
-        boolean unlimitedDiskCache = true
-        boolean overflowPersistence = false
-        boolean blocking = true
-        String algorithmClass = 'com.opensymphony.oscache.base.algorithm.UnlimitedCache'
-        int capacity = -1
-        cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
-        DiskPersistenceListener listener = new DiskPersistenceListener()
-        Config config = new Config()
-        config.set('cache.path', "./target/work/cache") // TODO change this
-        listener.configure(config)
-        cache.setPersistenceListener(listener)
+        if (!cache) {  // in the highly unlikely event of a race condition, test again
+            boolean useMemoryCaching = true
+            boolean unlimitedDiskCache = true
+            boolean overflowPersistence = false
+            boolean blocking = true
+            String algorithmClass = 'com.opensymphony.oscache.base.algorithm.UnlimitedCache'
+            int capacity = -1
+            cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
+            DiskPersistenceListener listener = new DiskPersistenceListener()
+            Config config = new Config()
+            config.set('cache.path', "./target/work/cache") // TODO change this
+            listener.configure(config)
+            cache.setPersistenceListener(listener)
+        }
     }
 
     void storeAll(Collection<Referenceable> referenceables) {

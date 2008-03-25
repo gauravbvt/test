@@ -36,6 +36,12 @@ public class TestPlaybook extends TestCase {
         session.application = app
     }
 
+    void testSerialization() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream()
+        ObjectOutputStream os = new ObjectOutputStream(bos)
+        os.writeObject(session)
+    }
+
     // Tests session-based persistency, dereferencing and operatons on fields
     void testMemory() {
         assertTrue(sessionMem.isEmpty())
