@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.Todo;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -13,7 +15,6 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -29,18 +30,15 @@ public class TodoPanel extends Panel {
 
         Form form = new Form( "todos" ){
             protected void onSubmit() {
-                List<Todo> todos = getTodos();
-                if ( todos.size() > 0 ) {
-                    Todo first = (Todo) (todos.get(0).deref());
-                    first.getDescription();
-                }
+                Playbook p = (Playbook) getPage();
+                p.refreshControls();
             }
         };
         add( form );
 
         final RefreshingView lv = new RefreshingView( "todo" ){
             protected Iterator getItemModels() {
-                final List<Todo> todos = getTodos();
+                final List<Ref> todos = getTodos();
                 return new ModelIteratorAdapter( todos.iterator() ) {
                     protected IModel model( Object o ) {
                         return new Model( (Serializable) o );
@@ -49,13 +47,14 @@ public class TodoPanel extends Panel {
             }
 
             protected void populateItem( final Item item ) {
-                Todo todo = (Todo) item.getModelObject();
-                item.add( new TextField( "todo-name", new PropertyModel( todo, "description" ) ){} );
-                item.add( new TextField( "todo-priority", new PropertyModel( todo, "priority" ) ) );
-                item.add( new TextField( "todo-due", new PropertyModel( todo, "due" )) );
+                Ref todo = (Ref) item.getModelObject();
+                item.add( new TextField( "todo-name", new RefPropertyModel( todo, "description" ) ){} );
+                item.add( new TextField( "todo-priority", new RefPropertyModel( todo, "priority" ) ) );
+                item.add( new DateTextField( "todo-due",
+                             new RefPropertyModel( todo,"due") ) );
                 item.add( new Button( "todo-remove" ) {
                     public void onSubmit() {
-                        Todo todo = (Todo) item.getModelObject();
+                        Ref todo = (Ref) item.getModelObject();
                         getParticipation().removeTodo( todo );
                     }
                 } );
@@ -66,7 +65,7 @@ public class TodoPanel extends Panel {
             public void onSubmit() {
                 final Todo todo = new Todo();
                 todo.persist();
-                getParticipation().addTodo( todo );
+                getParticipation().addTodo( todo.getReference() );
             } } );
         Button submit = new Button( "todo-submit" );
         form.add( submit );
@@ -78,9 +77,9 @@ public class TodoPanel extends Panel {
         return (Participation) ( s.getParticipation().deref() );
     }
 
-    List<Todo> getTodos() {
+    List<Ref> getTodos() {
         PlaybookSession s = (PlaybookSession) getSession();
         Ref p = s.getParticipation();
-        return (List<Todo>) p.deref( "todos" );
+        return (List<Ref>) p.get( "todos" );
     }
 }

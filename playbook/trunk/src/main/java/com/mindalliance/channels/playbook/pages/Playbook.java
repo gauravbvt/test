@@ -24,6 +24,8 @@ import java.util.List;
 @AuthorizeInstantiation( { "USER", "ADMIN" })
 public class Playbook extends WebPage {
 
+    private Form pageControls;
+
     public Playbook( PageParameters parms ){
         super( parms );
         final PlaybookSession session = (PlaybookSession) getSession();
@@ -51,7 +53,7 @@ public class Playbook extends WebPage {
         add( new TodoPanel( "todos" ) );
 
         //--------------
-        Form pageControls = new Form("page_controls");
+        pageControls = new Form("page_controls");
         pageControls.add( new Button("save_button") {
             public boolean isEnabled() {
                 return !session.getMemory().isEmpty();
@@ -69,6 +71,10 @@ public class Playbook extends WebPage {
                 session.getMemory().abort();
             }
         });
+        add( pageControls );
+    }
+
+    public void refreshControls() {
         add( pageControls );
     }
 

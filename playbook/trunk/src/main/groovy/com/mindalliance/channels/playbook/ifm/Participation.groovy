@@ -17,12 +17,12 @@ class Participation extends IfmElement {
     Ref person
     List<Ref> todos = []
 
-    void addTodo( Todo todo ) {
+    void addTodo( Ref todo ) {
         todos.add( todo )
         changed( "todos" )
     }
 
-    void removeTodo( Todo todo ) {
+    void removeTodo( Ref todo ) {
         todos.remove( todo )
         changed( "todos" )
     }

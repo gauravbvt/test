@@ -7,4 +7,5 @@ interface Ref extends Serializable {
     Ref getReference()
     Referenceable deref()
     Object deref(String path)
+    Object get(String name)
 }

@@ -17,17 +17,11 @@
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.html" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ContentPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.html" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ContentPanel.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playbook.iws" afterPath="$PROJECT_DIR$/playbook.iws" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenarioChooser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenarioChooser.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="playbook.iws" />
@@ -95,55 +89,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ResourcesPanel.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.html">
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="29" selection-start="334" selection-end="355" vertical-scroll-proportion="0.44836956">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ResourcesPanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="269" selection-end="269" vertical-scroll-proportion="0.4390244">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ScenariosPanel.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.html">
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="37" selection-start="363" selection-end="363" vertical-scroll-proportion="0.44836956">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ScenarioChooser.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenarioChooser.html">
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="447" selection-end="447" vertical-scroll-proportion="0.509915">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="TodoPanel.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="27" selection-start="2768" selection-end="2768" vertical-scroll-proportion="0.7265823">
+            <state line="50" column="50" selection-start="1860" selection-end="1860" vertical-scroll-proportion="0.44245523">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -151,52 +100,73 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ScenarioChooser.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenarioChooser.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="8" selection-start="233" selection-end="233" vertical-scroll-proportion="0.4390244">
+            <state line="271" column="29" selection-start="9527" selection-end="9527" vertical-scroll-proportion="1.6236559">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ContentPanel.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ContentPanel.html">
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
+      <file leaf-file-name="Todo.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Todo.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="36" selection-start="376" selection-end="376" vertical-scroll-proportion="0.44836956">
+            <state line="15" column="7" selection-start="337" selection-end="337" vertical-scroll-proportion="0.5541872">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TodoPanel.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html">
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
+      <file leaf-file-name="Participation.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="0" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.7961956">
+            <state line="5" column="13" selection-start="116" selection-end="116" vertical-scroll-proportion="0.18472907">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ScenariosPanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.java">
+      <file leaf-file-name="Ref.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="34" selection-start="335" selection-end="335" vertical-scroll-proportion="0.58536583">
+            <state line="9" column="28" selection-start="274" selection-end="274" vertical-scroll-proportion="0.33251232">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ContentPanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ContentPanel.java">
+      <file leaf-file-name="RefImpl.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/RefImpl.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="33" selection-start="193" selection-end="193" vertical-scroll-proportion="0.3292683">
+            <state line="109" column="0" selection-start="2968" selection-end="2968" vertical-scroll-proportion="0.7493606">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Playbook.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="58" column="0" selection-start="2283" selection-end="2283" vertical-scroll-proportion="0.9028133">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SessionMemory.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="72" column="0" selection-start="2393" selection-end="2393" vertical-scroll-proportion="1.4782609">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlaybookSession.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookSession.groovy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="62" column="0" selection-start="1832" selection-end="1832" vertical-scroll-proportion="0.9411765">
               <folding />
             </state>
           </provider>
@@ -305,6 +275,10 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="playbook" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -524,6 +498,40 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/models" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -910,6 +918,14 @@
           </MavenBuilderState>
         </option>
       </MavenSettings>
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="41442" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="false" />
       </method>
@@ -971,14 +987,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="993" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="2" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24441834" order="8" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" order="1" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.45828438" order="3" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.45828438" order="3" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3584019" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17035218" order="5" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21974148" order="8" />
@@ -986,7 +1002,7 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17391305" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20094007" order="7" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19133279" order="8" />
-      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20196238" order="6" />
+      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20196238" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27064595" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
@@ -1012,7 +1028,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Almost a todo list" />
+    <option name="LAST_COMMIT_MESSAGE" value="A todo list" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -1030,6 +1046,7 @@
     <MESSAGE value="Fixed pom:&#10;  - Added dependency to geonames (req. manual download)&#10;  - Added dependency to http client&#10;  - Included test resources&#10;  - &quot;mvn clean compile jetty:run&quot; now works." />
     <MESSAGE value="Serialization fix" />
     <MESSAGE value="Almost a todo list" />
+    <MESSAGE value="A todo list" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1070,96 +1087,81 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.html">
-      <provider editor-type-id="HtmlPreview">
-        <state />
-      </provider>
+    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/ScriptBytecodeAdapter.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="29" selection-start="334" selection-end="355" vertical-scroll-proportion="0.44836956">
+        <state line="141" column="0" selection-start="12620" selection-end="12620" vertical-scroll-proportion="0.35038364">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="0" selection-start="2393" selection-end="2393" vertical-scroll-proportion="1.4782609">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookSession.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="0" selection-start="1832" selection-end="1832" vertical-scroll-proportion="0.9411765">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="28" selection-start="274" selection-end="274" vertical-scroll-proportion="0.33251232">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///home/denis/.m2/repository/org/apache/wicket/wicket/1.3.1/wicket-1.3.1.jar!/org/apache/wicket/MarkupContainer.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="132" column="0" selection-start="6764" selection-end="6764" vertical-scroll-proportion="0.769821">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/RefImpl.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="109" column="0" selection-start="2968" selection-end="2968" vertical-scroll-proportion="0.7493606">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="13" selection-start="116" selection-end="116" vertical-scroll-proportion="0.18472907">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Todo.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="7" selection-start="337" selection-end="337" vertical-scroll-proportion="0.5541872">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="222" column="28" selection-start="7724" selection-end="7724" vertical-scroll-proportion="0.2556818">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ContentPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="33" selection-start="193" selection-end="193" vertical-scroll-proportion="0.3292683">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ResourcesPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="269" selection-end="269" vertical-scroll-proportion="0.4390244">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.html">
-      <provider editor-type-id="HtmlPreview">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="37" selection-start="363" selection-end="363" vertical-scroll-proportion="0.44836956">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenariosPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="34" selection-start="335" selection-end="335" vertical-scroll-proportion="0.58536583">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenarioChooser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="8" selection-start="233" selection-end="233" vertical-scroll-proportion="0.4390244">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ScenarioChooser.html">
-      <provider editor-type-id="HtmlPreview">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="447" selection-end="447" vertical-scroll-proportion="0.509915">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/ContentPanel.html">
-      <provider editor-type-id="HtmlPreview">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="36" selection-start="376" selection-end="376" vertical-scroll-proportion="0.44836956">
+        <state line="271" column="29" selection-start="9527" selection-end="9527" vertical-scroll-proportion="1.6236559">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="27" selection-start="2768" selection-end="2768" vertical-scroll-proportion="0.7265823">
+        <state line="50" column="50" selection-start="1860" selection-end="1860" vertical-scroll-proportion="0.44245523">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html">
-      <provider editor-type-id="HtmlPreview">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.7961956">
+        <state line="58" column="0" selection-start="2283" selection-end="2283" vertical-scroll-proportion="0.9028133">
           <folding />
         </state>
       </provider>
