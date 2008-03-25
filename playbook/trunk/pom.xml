@@ -229,6 +229,8 @@
                             <maxIdleTime>60000</maxIdleTime>
                         </connector>
                     </connectors>
+                    <stopPort>8082</stopPort>
+                    <stopKey>CloseSesame</stopKey>
                 </configuration>
             </plugin>
             <plugin>

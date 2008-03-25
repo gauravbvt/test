@@ -5,10 +5,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 /**
  * ...
  */
-public class ResourcesPanel extends Panel {
+public class ScenarioChooser extends Panel {
 
-    public ResourcesPanel( String s ) {
+    public ScenarioChooser( String s ) {
         super( s );
-        add( new ContentPanel( "contents" ) );
+
+        
     }
 }

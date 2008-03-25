@@ -43,7 +43,9 @@ public class Playbook extends WebPage {
             public Panel getPanel( String s ) {
                 return new ScenariosPanel(s);
             } } );
-        add( new TabbedPanel( "tabs", tabs ) );
+        final TabbedPanel tabPanel = new TabbedPanel( "tabs", tabs );
+        tabPanel.setSelectedTab( 0 );
+        add( tabPanel );
 
         //--------------
         add( new TodoPanel( "todos" ) );

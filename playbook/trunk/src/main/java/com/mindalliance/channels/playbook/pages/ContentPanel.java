@@ -5,10 +5,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 /**
  * ...
  */
-public class ResourcesPanel extends Panel {
+public class ContentPanel extends Panel {
 
-    public ResourcesPanel( String s ) {
+    public ContentPanel( String s ) {
         super( s );
-        add( new ContentPanel( "contents" ) );
     }
 }

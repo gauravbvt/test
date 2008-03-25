@@ -38,7 +38,7 @@ public class TodoPanel extends Panel {
         };
         add( form );
 
-        RefreshingView rv = new RefreshingView( "todo" ){
+        final RefreshingView lv = new RefreshingView( "todo" ){
             protected Iterator getItemModels() {
                 final List<Todo> todos = getTodos();
                 return new ModelIteratorAdapter( todos.iterator() ) {
@@ -53,7 +53,7 @@ public class TodoPanel extends Panel {
                 item.add( new TextField( "todo-name", new PropertyModel( todo, "description" ) ){} );
                 item.add( new TextField( "todo-priority", new PropertyModel( todo, "priority" ) ) );
                 item.add( new TextField( "todo-due", new PropertyModel( todo, "due" )) );
-                item.add( new Button( "todo-remove" ){
+                item.add( new Button( "todo-remove" ) {
                     public void onSubmit() {
                         Todo todo = (Todo) item.getModelObject();
                         getParticipation().removeTodo( todo );
@@ -61,15 +61,16 @@ public class TodoPanel extends Panel {
                 } );
             }
         };
-
-        form.add( rv );
+        form.add( lv );
         form.add( new Button( "todo-new" ){
             public void onSubmit() {
                 final Todo todo = new Todo();
                 todo.persist();
                 getParticipation().addTodo( todo );
-            }
-        } );
+            } } );
+        Button submit = new Button( "todo-submit" );
+        form.add( submit );
+        form.setDefaultButton( submit );
     }
 
     Participation getParticipation() {
