@@ -13,27 +13,27 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class RefPropertyModel implements IModel {
 
-    Ref ref
+    def source
     String expression
 
     RefPropertyModel(def obj, String expression) {
-        this.ref = obj.reference
+        source = obj
         this.expression = expression
     }
 
     @Override
     Object getObject() {
         try {
-            return PathExpression.eval(ref, expression)
+            return PathExpression.eval(source, expression)
         }
         catch (Exception e) {
-            System.out.println("*** Failed to apply expression $expression to $ref : $e")
+            System.out.println("*** Failed to apply expression $expression to $source : $e")
             throw e
         }
     }
 
-    public void setObject(Object ref) {
-        this.ref = (Ref)ref
+    public void setObject(def obj) {
+        source = obj
     }
 
     public void detach() {
