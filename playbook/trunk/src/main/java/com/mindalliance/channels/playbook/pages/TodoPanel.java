@@ -66,6 +66,8 @@ public class TodoPanel extends Panel {
                 final Todo todo = new Todo();
                 todo.persist();
                 getParticipation().addTodo( todo.getReference() );
+
+
             } } );
         Button submit = new Button( "todo-submit" );
         form.add( submit );
@@ -74,7 +76,9 @@ public class TodoPanel extends Panel {
 
     Participation getParticipation() {
         PlaybookSession s = (PlaybookSession) getSession();
-        return (Participation) ( s.getParticipation().deref() );
+        final Participation participation = (Participation) ( s.getParticipation().deref() );
+        participation.persist();
+        return participation;
     }
 
     List<Ref> getTodos() {

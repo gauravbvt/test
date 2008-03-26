@@ -17,12 +17,8 @@
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playbook.iws" afterPath="$PROJECT_DIR$/playbook.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy" afterPath="$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html" afterPath="$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="playbook.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -89,10 +85,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TodoPanel.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="TodoPanel.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="50" selection-start="1860" selection-end="1860" vertical-scroll-proportion="0.44245523">
+            <state line="42" column="108" selection-start="1574" selection-end="1574" vertical-scroll-proportion="0.6970387">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -100,64 +96,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="271" column="29" selection-start="9527" selection-end="9527" vertical-scroll-proportion="1.6236559">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Todo.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Todo.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="7" selection-start="337" selection-end="337" vertical-scroll-proportion="0.5541872">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Participation.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="116" selection-end="116" vertical-scroll-proportion="0.18472907">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Ref.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="28" selection-start="274" selection-end="274" vertical-scroll-proportion="0.33251232">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RefImpl.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/RefImpl.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="109" column="0" selection-start="2968" selection-end="2968" vertical-scroll-proportion="0.7493606">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Playbook.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Playbook.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="0" selection-start="2283" selection-end="2283" vertical-scroll-proportion="0.9028133">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SessionMemory.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="0" selection-start="2393" selection-end="2393" vertical-scroll-proportion="1.4782609">
+            <state line="75" column="20" selection-start="2789" selection-end="2789" vertical-scroll-proportion="1.191344">
               <folding />
             </state>
           </provider>
@@ -166,7 +108,16 @@
       <file leaf-file-name="PlaybookSession.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookSession.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="0" selection-start="1832" selection-end="1832" vertical-scroll-proportion="0.9411765">
+            <state line="70" column="0" selection-start="1969" selection-end="1969" vertical-scroll-proportion="1.1571754">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ScriptBytecodeAdapter.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/ScriptBytecodeAdapter.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="141" column="0" selection-start="12620" selection-end="12620" vertical-scroll-proportion="0.33257404">
               <folding />
             </state>
           </provider>
@@ -279,6 +230,230 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="Libraries" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.codehaus.groovy:groovy-all-minimal:1.5.1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.codehaus.groovy:groovy-all-minimal:1.5.1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.codehaus.groovy:groovy-all-minimal:1.5.1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/typehandling" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.codehaus.groovy:groovy-all-minimal:1.5.1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/metaclass" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.codehaus.groovy:groovy-all-minimal:1.5.1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/reflection" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.codehaus.groovy:groovy-all-minimal:1.5.1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.apache.wicket:wicket:1.3.2" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/apache/wicket/wicket/1.3.2/wicket-1.3.2.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="org.apache.wicket:wicket:1.3.2" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/apache/wicket/wicket/1.3.2/wicket-1.3.2.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/denis/.m2/repository/org/apache/wicket/wicket/1.3.2/wicket-1.3.2.jar!/org/apache/wicket" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -531,6 +706,78 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
@@ -598,7 +845,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="RestoreUpdateTree">
-    <UpdateInfo date="3/25/08 2:32 PM" ActionInfo="_Update">
+    <UpdateInfo date="3/25/08 8:37 PM" ActionInfo="_Update">
       <UpdatedFiles>
         <FILE-GROUP>
           <option name="myUpdateName" value="Updated from server" />
@@ -612,11 +859,7 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="UPDATED" />
-            <PATH vcs="svn" revision="697">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PathExpression.groovy</PATH>
-            <PATH vcs="svn" revision="697">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/models/RefDataProvider.groovy</PATH>
-            <PATH vcs="svn" revision="697">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/models/RefPropertyModel.groovy</PATH>
-            <PATH vcs="svn" revision="697">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/RefPropertyUtilsBean.groovy</PATH>
-            <PATH vcs="svn" revision="697">$PROJECT_DIR$/src/test/groovy/com/mindalliance/channels/playbook/tests/TestPlaybook.groovy</PATH>
+            <PATH vcs="svn" revision="700">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/RefImpl.groovy</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Created" />
@@ -624,6 +867,7 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="CREATED" />
+            <PATH vcs="svn" revision="700">$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/StaleRefException.groovy</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Deleted" />
@@ -994,7 +1238,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" order="1" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.45828438" order="3" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4253819" order="3" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3584019" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17035218" order="5" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21974148" order="8" />
@@ -1004,7 +1248,7 @@
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19133279" order="8" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20196238" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27064595" order="0" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27064595" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="6" />
@@ -1028,7 +1272,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="A todo list" />
+    <option name="LAST_COMMIT_MESSAGE" value="Latest" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -1047,6 +1291,8 @@
     <MESSAGE value="Serialization fix" />
     <MESSAGE value="Almost a todo list" />
     <MESSAGE value="A todo list" />
+    <MESSAGE value="An almost revertable todo list" />
+    <MESSAGE value="Latest" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1087,82 +1333,82 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/ScriptBytecodeAdapter.class">
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="141" column="0" selection-start="12620" selection-end="12620" vertical-scroll-proportion="0.35038364">
+        <state line="70" column="0" selection-start="2244" selection-end="2244" vertical-scroll-proportion="-1.3006834">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/mem/SessionMemory.groovy">
+    <entry file="jar:///home/denis/.m2/repository/org/apache/wicket/wicket/1.3.2/wicket-1.3.2-sources.jar!/org/apache/wicket/Component.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="0" selection-start="2393" selection-end="2393" vertical-scroll-proportion="1.4782609">
+        <state line="1754" column="0" selection-start="53032" selection-end="53032" vertical-scroll-proportion="0.33174226">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookSession.groovy">
+    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/metaclass/MetaClassRegistryImpl.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="0" selection-start="1832" selection-end="1832" vertical-scroll-proportion="0.9411765">
+        <state line="35" column="0" selection-start="1751" selection-end="1751" vertical-scroll-proportion="0.34837094">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/Ref.groovy">
+    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/InvokerHelper.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="28" selection-start="274" selection-end="274" vertical-scroll-proportion="0.33251232">
+        <state line="122" column="0" selection-start="6416" selection-end="6416" vertical-scroll-proportion="0.43609023">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///home/denis/.m2/repository/org/apache/wicket/wicket/1.3.1/wicket-1.3.1.jar!/org/apache/wicket/MarkupContainer.class">
+    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/reflection/ReflectionCache.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="0" selection-start="6764" selection-end="6764" vertical-scroll-proportion="0.769821">
+        <state line="21" column="0" selection-start="1020" selection-end="1020" vertical-scroll-proportion="0.5864662">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ref/impl/RefImpl.groovy">
+    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/typehandling/DefaultTypeTransformation.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="0" selection-start="2968" selection-end="2968" vertical-scroll-proportion="0.7493606">
+        <state line="85" column="0" selection-start="3770" selection-end="3770" vertical-scroll-proportion="0.7368421">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Participation.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="116" selection-end="116" vertical-scroll-proportion="0.18472907">
+        <state line="26" column="0" selection-start="541" selection-end="541" vertical-scroll-proportion="0.67391306">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/ifm/Todo.groovy">
+    <entry file="jar:///home/denis/.m2/repository/org/codehaus/groovy/groovy-all-minimal/1.5.1/groovy-all-minimal-1.5.1.jar!/org/codehaus/groovy/runtime/ScriptBytecodeAdapter.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="7" selection-start="337" selection-end="337" vertical-scroll-proportion="0.5541872">
+        <state line="141" column="0" selection-start="12620" selection-end="12620" vertical-scroll-proportion="0.33257404">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/groovy/com/mindalliance/channels/playbook/support/PlaybookSession.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="271" column="29" selection-start="9527" selection-end="9527" vertical-scroll-proportion="1.6236559">
+        <state line="70" column="0" selection-start="1969" selection-end="1969" vertical-scroll-proportion="1.1571754">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="20" selection-start="2789" selection-end="2789" vertical-scroll-proportion="1.191344">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/TodoPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="50" selection-start="1860" selection-end="1860" vertical-scroll-proportion="0.44245523">
+        <state line="42" column="108" selection-start="1574" selection-end="1574" vertical-scroll-proportion="0.6970387">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mindalliance/channels/playbook/pages/Playbook.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="0" selection-start="2283" selection-end="2283" vertical-scroll-proportion="0.9028133">
-          <folding />
         </state>
       </provider>
     </entry>

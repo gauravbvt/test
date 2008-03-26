@@ -30,10 +30,15 @@ public class Playbook extends WebPage {
         super( parms );
         final PlaybookSession session = (PlaybookSession) getSession();
 
+        load( session );
+    }
+
+    private void load( final PlaybookSession session ) {
+
         add( new Label("title", "Playbook" ));
         add( new Label("name", new RefPropertyModel(session, "user.name")));
         add( new Label("project", new RefPropertyModel(session, "project.name")));
-        add( new BookmarkablePageLink("signout", SignOutPage.class, parms));
+        add( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         //--------------
         List<AbstractTab> tabs = new ArrayList<AbstractTab>();
@@ -69,6 +74,8 @@ public class Playbook extends WebPage {
             }
             public void onSubmit() {
                 session.getMemory().abort();
+//                Playbook.this.removeAll();
+//                load( session );
             }
         });
         add( pageControls );
