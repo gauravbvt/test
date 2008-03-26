@@ -14,9 +14,9 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
  * Date: Mar 23, 2008
  * Time: 8:29:28 PM
  */
-public class TestTemplate  extends WebPage {
+public class Template extends WebPage {
 
-    protected TestTemplate(final PageParameters pageParameters) {
+    protected Template(final PageParameters pageParameters) {
         super(pageParameters);
 
         add(new Label("name", new RefPropertyModel(this, "session.user.name")));

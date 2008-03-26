@@ -12,7 +12,6 @@ import com.mindalliance.channels.playbook.support.models.RefDataProvider;
 import com.mindalliance.channels.playbook.ref.Ref;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 
@@ -23,7 +22,7 @@ import java.text.DateFormat;
  * Date: Mar 23, 2008
  * Time: 8:31:00 PM
  */
-public class TestPage extends TestTemplate {
+public class SomePage extends Template {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +32,7 @@ public class TestPage extends TestTemplate {
 	 * @param parameters
 	 *            Page parameters
 	 */
-    public TestPage(final PageParameters parameters) {
+    public SomePage(final PageParameters parameters) {
         super(parameters);
 
         PlaybookSession session = (PlaybookSession) getSession();

@@ -28,7 +28,7 @@ class Area {
         return new AmbiguousArea(topos)
     }
 
-    boolean isUnknow() {
+    boolean isUnknown() {
         return false
     }
 
@@ -37,7 +37,7 @@ class Area {
     }
 
     static Area locate(Location location) {
-         assert location.country
+         if (!location.country) throw new AreaException("Country not named")
          Area area = GeoService.locate(location)    // return null if the location is unknown or ambiguous
          return area
     }

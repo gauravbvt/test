@@ -20,11 +20,15 @@ import org.geonames.Style
 */
 class GeoService {
 
+    static final String COUNTRY = 'PCLI'
     static final List<String> CITY = ['PPL', 'PPLA', 'PPLC']
     static final String COUNTY = 'ADM2'
     static final String STATE = 'ADM1'
 
-    static Map<Location,Area> areas = Collections.synchronizedMap(new HashMap<Location,Area>())
+    static final String SEARCH = 'search'
+    static final String CODE = 'code'
+
+    static Map<Location, Area> areas = Collections.synchronizedMap(new HashMap<Location, Area>())
 
     // Find the area identified by the location
     static Area locate(Location location) {
@@ -34,15 +38,15 @@ class GeoService {
             Toponym topo
             ToponymSearchCriteria tsc = searchCriteriaFrom(location)
             List<Toponym> topos = WebService.search(tsc).toponyms
-            if (topos.size() == 1) {  // successful, unambiguous search
-               area = new Area(topos[0])
-               areas[location] = area
+            if (topos.size() == 1) {// successful, unambiguous search
+                area = new Area(topos[0])
+                areas[location] = area
             }
             else {
                 if (topos.size() == 0) {
                     throw new UnknownAreaException("No known area for location $location")
                 }
-                else { // > 1
+                else {// > 1
                     throw new AmbiguousAreaException("${topos.size()} areas found for location $location", topos)
                 }
             }
@@ -51,49 +55,52 @@ class GeoService {
     }
 
     static private ToponymSearchCriteria searchCriteriaFrom(Location location) {
-       ToponymSearchCriteria tsc = new ToponymSearchCriteria()
-       tsc.style = Style.FULL
-       // Set search country code
-       Area country = findCountry(location.country)
-       assert country
-       Area state
-       tsc.countryCode = country.countryCode
-       String name
-       String featureClass
-        if (location.state) {
-             name = location.state
-             tsc.featureCode = STATE
-             state = findState(country, location.state)
-             assert state
-             tsc.adminCode1 = state.adminCode1
-             if (location.county) {
-                 name = location.county
-                 tsc.featureCode = COUNTY
-             }
-            if (location.city) {
-                name = location.city
-                tsc.featureCodes = CITY as String[]
+        String name
+        ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+        tsc.style = Style.FULL
+        if (location.country) {
+            name = location.country
+            // Set search country code
+            Area country = findCountry(name)
+            if (!country) {throw new UnknownAreaException("Unknown country $name")}
+            Area state
+            tsc.countryCode = country.countryCode
+            String featureClass
+            if (location.state) {
+                name = location.state
+                tsc.featureCode = STATE
+                state = findState(country, name)
+                if (!state) {throw new UnknownAreaException("Unknown state $name")}
+                tsc.adminCode1 = state.adminCode1
+                if (location.county) {
+                    name = location.county
+                    tsc.featureCode = COUNTY
+                }
+                if (location.city) {
+                    name = location.city
+                    tsc.featureCodes = CITY as String[]
+                }
             }
-         }
-       if (!name) throw new IllegalArgumentException("Incomplete location $location")
-       tsc.nameEquals = name
-       return tsc
+        }
+        if (!name) throw new AreaException("Incomplete location $location")
+        tsc.nameEquals = name
+        return tsc
     }
 
     // Return nearby areas of the same kind
     static List<Area> findNearbyAreas(Area area) {
-       // http://ws.geonames.org/findNearby?lat=48.865618158309374&lng=2.344207763671875&featureClass=P&featureCode=PPLA&featureCode=PPL&featureCode=PPLC
-       String url = WebService.geonamesServer
-       url += '/findNearby?'
-       url += "lat=${area.latitude}&lng=${area.longitude}"
-       if (area.isCityLike()) {
-           url += "&featureCode=PPLA&featureCode=PPL&featureCode=PPLC"
-       }
-       else {
-           url += "&featureCode=${area.featureCode}"
-       }
-       List<Area> list = doRestCall(url)
-       return list
+        // http://ws.geonames.org/findNearby?lat=48.865618158309374&lng=2.344207763671875&featureClass=P&featureCode=PPLA&featureCode=PPL&featureCode=PPLC
+        String url = WebService.geonamesServer
+        url += '/findNearby?'
+        url += "lat=${area.latitude}&lng=${area.longitude}"
+        if (area.isCityLike()) {
+            url += "&featureCode=PPLA&featureCode=PPL&featureCode=PPLC"
+        }
+        else {
+            url += "&featureCode=${area.featureCode}"
+        }
+        List<Area> list = doRestCall(url)
+        return list
     }
 
     static List<Area> findHierarchy(Area area) {
@@ -119,10 +126,10 @@ class GeoService {
             try {
                 topos = WebService.search(tsc).toponyms
             } catch (Exception e) {
-               throw new ServiceFailureAreaException("Failed to find country $name", e)
+                throw new ServiceFailureAreaException("Failed to find country $name", e)
             }
-            Toponym countryTopo = (Toponym)topos.find {topo ->
-                topo.countryCode && topo.featureCode =="PCLI"
+            Toponym countryTopo = (Toponym) topos.find {topo ->
+                topo.countryCode && topo.featureCode == "PCLI"
             }
             if (countryTopo) {
                 area = new Area(countryTopo)
@@ -148,23 +155,131 @@ class GeoService {
             try {
                 topos = WebService.search(tsc).toponyms
             } catch (Exception e) {
-               throw new ServiceFailureAreaException("Failed to find state $name", e)
+                throw new ServiceFailureAreaException("Failed to find state $name", e)
             }
-            Toponym stateTopo = (Toponym)topos.find {topo ->
-                topo.featureCode =="ADM1"
+            Toponym stateTopo = (Toponym) topos.find {topo ->
+                topo.featureCode == "ADM1"
             }
             if (stateTopo) {
                 area = new Area(stateTopo)
                 areas[location] = area
             }
             else {
-                 throw new UnknownAreaException("No such state $name")
-             }
+                throw new UnknownAreaException("No such state $name")
+            }
         }
         return area
     }
 
-    static List<Area> doRestCall(String url) {
+    static boolean exists(String name, List<String> featureCodes) throws Exception {
+        ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+        tsc.name = name
+        tsc.featureCodes = featureCodes as String[]
+        List<Toponym> topos
+        try {
+            topos = WebService.search(tsc).toponyms
+        } catch (Exception e) {
+            System.err.println("Geonames search failed: $e") // TODO - log this
+            throw e
+        }
+        boolean exists = !topos.isEmpty()
+        return exists
+    }
+
+    static List<String> findCandidateCountryNames(String input, int max) {
+        ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+        tsc.nameStartsWith = input
+        tsc.featureCode = COUNTRY
+        tsc.maxRows = max
+        tsc.style = Style.SHORT
+        List<String> names = []
+        try {
+            List<Toponym> topos = WebService.search(tsc).toponyms
+            names = topos.collect {topo -> topo.name}
+        }
+        catch (Exception e) {
+            System.err.println("Failed to look up candidate country names: $e")
+        }
+        return names
+    }
+
+    static List<String> findCandidateStateNames(String input, String countryName, int max) {
+        List<String> names = []
+        try {
+            Area country = findCountry(countryName)
+            ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+            tsc.nameStartsWith = input
+            tsc.featureCode = STATE
+            tsc.countryCode = country.topo.countryCode
+            tsc.maxRows = max
+            tsc.style = Style.SHORT
+            List<Toponym> topos = WebService.search(tsc).toponyms
+            names = topos.collect {topo -> topo.name}
+        }
+        catch (Exception e) {
+            System.err.println("Failed to look up candidate state names: $e")
+        }
+        return names
+    }
+
+    static List<String> findCandidateCityNames(String input, String countryName, String stateName, int max) {
+        List<String> names = []
+        try {
+            Area country = findCountry(countryName)
+            Area state = findState(country, stateName)
+            ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+            tsc.nameStartsWith = input
+            tsc.featureCodes = CITY as String[]
+            tsc.countryCode = country.topo.countryCode
+            tsc.adminCode1 = state.topo.adminCode1        
+            tsc.maxRows = max
+            tsc.style = Style.SHORT
+            List<Toponym> topos = WebService.search(tsc).toponyms
+            names = topos.collect {topo -> topo.name}
+        }
+        catch (Exception e) {
+            System.err.println("Failed to look up candidate city names: $e")
+        }
+        return names
+    }
+
+    static boolean validateCode(String code, String countryName, String stateName, String cityName) {
+        try {
+            assert code
+            Area country
+            if (countryName) country= findCountry(countryName)
+            Area state
+            if (stateName) state = findState(country, stateName)
+            String url = WebService.geonamesServer
+            url += "/postalCodeSearch?postalcode=$code&maxRows=1"
+            if (countryName) url += "&country=${country.topo.countryCode}"
+            List<Area> list = doRestCall(url, CODE)
+            if (list) {
+               Area codeArea = list[0]
+                if (country) {
+                  if (codeArea.topo.countryCode != country.topo.countryCode) return false
+                 }
+               if (state) {
+                if (codeArea.topo.adminCode1 != state.topo.adminCode1) return false
+               }
+               if (cityName) {
+                   if (!cityName.equalsIgnoreCase(codeArea.topo.name)) return false
+               }
+               return true
+            }
+        } catch (AreaException e) {
+            System.err.println("Failed to validate code: $e")
+        }
+        return false
+    }
+
+    // SUPPORT
+
+    private static List<Area> doRestCall(String url) {
+        return doRestCall(url, SEARCH)
+    }
+
+    private static List<Area> doRestCall(String url, String resultType) {
         List<Area> list = []
         HttpClient client = new HttpClient()
         GetMethod get = new GetMethod(url)
@@ -172,14 +287,22 @@ class GeoService {
         try {
             int statusCode = client.executeMethod(get)
             if (statusCode != HttpStatus.SC_OK) {
-              System.err.println("Method failed: " + get.getStatusLine())  // TODO --- log this
-              throw new ServiceFailureAreaException("Geoname $url call failed: ${get.getStatusLine()}")
+                System.err.println("Method failed: " + get.getStatusLine()) // TODO --- log this
+                throw new ServiceFailureAreaException("Geoname $url call failed: ${get.getStatusLine()}")
             }
             String xml = get.getResponseBodyAsString().toString()
-            list = parseResults(xml)
+            if (resultType == SEARCH) {
+                list = parseSearchResults(xml)
             }
+            else if (resultType == CODE) {
+                list = parseCodeResults(xml)
+            }
+            else {
+                throw new IllegalArgumentException("Unsupported result type")
+            }
+        }
         catch (Exception e) {
-           throw new ServiceFailureAreaException("Geoname $url call failed", e)
+            throw new ServiceFailureAreaException("Geoname $url call failed", e)
         }
         finally {
             get.releaseConnection()
@@ -187,7 +310,7 @@ class GeoService {
         return list
     }
 
-    static private List<Area> parseResults(String xml) {
+    static private List<Area> parseSearchResults(String xml) {
         List<Area> list = []
         GPathResult res = new XmlSlurper().parseText(xml)
         res.geoname.each() {geo ->
@@ -211,4 +334,21 @@ class GeoService {
         }
         return list
     }
+
+    static private List<Area> parseCodeResults(String xml) {
+        List<Area> list = []
+        GPathResult res = new XmlSlurper().parseText(xml)
+        res.code.each() {code ->
+            Toponym topo = new Toponym()
+            topo.name = code.name.text()
+            topo.latitude = Double.parseDouble(code.lat.text())
+            topo.longitude = Double.parseDouble(code.lng.text())
+            topo.countryCode = code.countryCode.text()
+            topo.adminCode1 = code.adminCode1.text()
+            topo.adminCode2 = code.adminCode2.text()
+            list.add(new Area(topo))
+        }
+        return list
+    }
+
 }

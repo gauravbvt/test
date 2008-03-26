@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="panel">
+        <table>
+            <tr>
+                <td><label for="country">Country:</label></td>
+                <td><input type="text" wicket:id="country" id="country"/></td>
+            </tr>
+            <tr>
+                <td><label for="state">State:</label></td>
+                <td><input type="text" wicket:id="state" id="state"/></td>
+            </tr>
+            <tr>
+                <td><label for="city">City:</label></td>
+                <td><input type="text" wicket:id="city" id="city"/></td>
+            </tr>
+            <tr>
+                <td><label for="street">Street:</label></td>
+                <td><input type="text" wicket:id="street" id="street"/></td>
+            </tr>
+            <tr>
+                <td><label for="code">Zip code:</label></td>
+                <td><input type="text" wicket:id="code" id="code"/></td>
+            </tr>
+        </table>
+    </div>
+    <div wicket:id="locationFeedback">[feedback]</div>
+    <a href="#" wicket:id = "verify">Verify location</a>
+</wicket:panel>
+</body>
+</html>

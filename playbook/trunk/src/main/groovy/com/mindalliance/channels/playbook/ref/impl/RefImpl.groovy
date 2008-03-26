@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.support.PathExpression
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -95,10 +96,12 @@ class RefImpl implements Ref, GroovyInterceptable {
     // Support for Java code that needs to dereference a Ref
     // Only supports dot-separated paths such as 'a.b.c' 
     def deref(String path) {
+/*
         def result = this
         path.tokenize('.').each() {
             result = result."$it"
         }
+*/      def result = PathExpression.getNestedProperty(this, path)
         return result
     }
 
@@ -121,12 +124,16 @@ class RefImpl implements Ref, GroovyInterceptable {
              }
              catch (Exception e) {
                 System.out.println("Can't get $name in $referenceable")  // TODO log this
-                throw new IllegalArgumentException("Can't get $name in $referenceable")
+                // throw new IllegalArgumentException("Can't get $name in $referenceable")
              }
              return value
          }
      }
 
+    void forget() {
+        Store store = PlaybookApplication.locateStore()
+        store.forget(this)
+    }
 
     def invokeMethod(String name, def args) {
         def metamethod = this.class.metaClass.getMetaMethod(name, args)
@@ -136,15 +143,10 @@ class RefImpl implements Ref, GroovyInterceptable {
             value = referenceable.invokeMethod(name, args)
             return value
         }
-        if (metamethod == null) {
+        if (metamethod == null) {  // TODO - ????
             throw new Exception("No method named $name")
         }
         return metamethod.invoke(this, args)
-    }
-
-    void forget() {
-        Store store = PlaybookApplication.locateStore()
-        store.forget(this) 
     }
 
 }

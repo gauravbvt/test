@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.Location
 */
 class UnknownArea extends Area{
 
-    boolean isUnknow() {
+    boolean isUnknown() {
         return true
     }
 

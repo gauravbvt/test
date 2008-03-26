@@ -9,5 +9,6 @@ package com.mindalliance.channels.playbook.ref
 interface Bean extends Serializable {
 
    Bean copy()
+   void detach()  // detach any field value that should or can not be serialized
     
 }

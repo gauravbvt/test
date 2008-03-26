@@ -8,8 +8,16 @@ package com.mindalliance.channels.playbook.ifm
  */
 class Organization extends Resource {
 
+    Location address = new Location() // not a Ref because not an independent element (is a component of the Organization)
+
     String getType() {
         return "Organization";
     }
+
+    void beforeStore() {
+        address.detach()
+    }
+
+
 
 }

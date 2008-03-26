@@ -17,16 +17,16 @@ class BeanImpl implements Bean {
             if (!transientProperties().contains(name)) {
                 try {
                     def value
-                    switch(val) {
+                    switch (val) {
                         case Bean.class: value = val.copy(); break
-                        case Cloneable.class: value= val.clone(); break
+                        case Cloneable.class: value = val.clone(); break
                         default: value = val
                     }
                     copy."$name" = value
                 }
-                catch (Exception e) {   // Read-only/computed field
+                catch (Exception e) {// Read-only/computed field
                     // TODO -- put a warning in log
-                    System.out.println("Can't set field $name in $copy")
+                    // System.out.println("Can't set field $name in $copy")
                 }
             }
         }
@@ -34,8 +34,19 @@ class BeanImpl implements Bean {
     }
 
     protected List transientProperties() {
-        return []
+        return ['class', 'metaClass']
     }
 
+    // Detach any field value that should or can not be serialized
+    void detach() {} // do nothing
 
+    Set<MetaProperty> metaProperties() {
+        Set<MetaProperty> set = new HashSet<MetaProperty>()
+        getProperties().each {name, val ->
+            if (!transientProperties().contains(name)) {
+               set.add(new MetaProperty(name, val.class))
+            }
+        }
+        return set
+    }
 }

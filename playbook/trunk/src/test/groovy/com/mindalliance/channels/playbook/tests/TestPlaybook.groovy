@@ -9,10 +9,14 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.Location
 import com.mindalliance.channels.playbook.geo.Area
-import com.mindalliance.channels.playbook.tests.pages.TestPage
+import com.mindalliance.channels.playbook.tests.pages.SomePage
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.Todo
 import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.tests.pages.SomePage
+import com.mindalliance.channels.playbook.pages.forms.PersonForm
+import org.apache.wicket.Component
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -37,7 +41,7 @@ public class TestPlaybook extends TestCase {
         session.application = app
     }
 
-    void testSerialization() {
+   void testSerialization() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream()
         ObjectOutputStream os = new ObjectOutputStream(bos)
         os.writeObject(app)
@@ -49,7 +53,11 @@ public class TestPlaybook extends TestCase {
         assertTrue(sessionMem.isEmpty())
         Ref channels = app.channels
         assertTrue(channels.about == channels.reference.about)
-        def myProject = channels.findProjectNamed('Generic')
+        Ref myProject = channels.findProjectNamed('Generic')
+        def metaProps = myProject.metaProperties()
+        assert metaProps.size() == 4
+        metaProps = metaProps.findAll{it.isScalar()}
+        assert metaProps.size() == 2
         String scenarioName = myProject.deref('scenarios')[0].deref('name')
         assert scenarioName.startsWith("Scenario")
         assertTrue(myProject.name == myProject.reference.name)
@@ -99,7 +107,7 @@ public class TestPlaybook extends TestCase {
         channels.addParticipation(participation.persist())
         session.commit()
         session.authenticate('admin', 'admin')
-        tester.startPage(TestPage.class)
+        tester.startPage(SomePage.class)
         tester.assertLabel('title', 'Playbook')
     }
 
@@ -112,6 +120,14 @@ public class TestPlaybook extends TestCase {
         // List<Area> nearby = area.findNearbyAreas()
         Location maine = new Location(country: 'United States', state: 'Maine')
         assert area.isWithinLocation(maine)
+    }
+    
+    void testLocationPanel() {
+        tester.startPage(PersonForm.class)
+        def locationPanel = tester.getComponentFromLastRenderedPage('person:location')
+        def countryTextField = locationPanel.get('panel:country')
+        assert countryTextField
+        tester.executeAjaxEvent(countryTextField, 'onchange')        
     }
 
 }

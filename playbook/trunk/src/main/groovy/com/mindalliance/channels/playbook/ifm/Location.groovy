@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.geo.UnknownAreaException
 import com.mindalliance.channels.playbook.geo.AmbiguousAreaException
 import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+import com.mindalliance.channels.playbook.geo.AreaException
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,48 +17,63 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 class Location extends BeanImpl {
 
     String street = ''
-    String city = ''     // required if street set
+    String city = '' // required if street set
     String county = ''
-    String state = ''    // required if either county or city set
-    String country = ''  // required
+    String state = '' // required if either county or city set
+    String country = '' // required
     String code = ''
-    Area area  // force recalculate on change and don't persist
+    Area area // force recalculate on change and don't persist
 
-    Area getArea() { // null if Location is unknown
-        if (!area) {
-            try {
-                area = Area.locate(this)
-            }
-            catch (UnknownAreaException e) {
-                area = Area.UNKNOWN
-            }
-            catch (AmbiguousAreaException e) {
-                area = Area.ambiguous(e.topos)
-            }
-            catch (ServiceFailureAreaException e) {
-                System.err.println("Geo service failure $e")
-                area = Area.UNKNOWN
-            }
+    Area getArea() {
+        return getArea(true)
+    }
+    
+    Area getArea(boolean remember) {
+        Area a = area
+        if (!a) {
+            a = findArea()
+            if (remember) area = a
         }
-        return area
+        return a
+    }
+
+    Area findArea() {// null if Location is unknown
+        Area a
+        try {
+            a = Area.locate(this)
+        }
+        catch (UnknownAreaException e) {
+            a = Area.UNKNOWN
+        }
+        catch (AmbiguousAreaException e) {
+            a = Area.ambiguous(e.topos)
+        }
+        catch (ServiceFailureAreaException e) {
+            System.err.println("Geo service failure $e")
+            a = Area.UNKNOWN
+        }
+        catch (AreaException e) {
+            a = Area.UNKNOWN
+        }
+        return a
     }
 
     @Override
-    List<String>transientProperties() {
+    List<String> transientProperties() {
         return super.transientProperties() + ['area']
     }
 
     @Override
     boolean equals(Object obj) {
-      if (!obj instanceof Location) return false
-      Location loc = (Location)obj
-      if (street != loc.street) return false
-      if (city != loc.city) return false
-      if (county != loc.county) return false
-      if (state != loc.state) return false
-      if (country != loc.country) return false
-      if (code != loc.code) return false
-      return true
+        if (!obj instanceof Location) return false
+        Location loc = (Location) obj
+        if (street != loc.street) return false
+        if (city != loc.city) return false
+        if (county != loc.county) return false
+        if (state != loc.state) return false
+        if (country != loc.country) return false
+        if (code != loc.code) return false
+        return true
     }
 
     @Override
@@ -76,11 +92,8 @@ class Location extends BeanImpl {
         return "<street:$street\ncity:$city\ncounty:$county\nstate:$state\ncountry:$country\ncode:$code>"
     }
 
-    void changed() {
-        area = null
-    }
-
-    void beforeStore() {
+    @Override
+    void detach() {
         area = null
     }
 

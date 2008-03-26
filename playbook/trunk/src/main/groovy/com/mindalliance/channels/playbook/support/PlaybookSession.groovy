@@ -5,7 +5,6 @@ import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.wicket.Request
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.authorization.strategies.role.Roles
-import com.mindalliance.channels.playbook.ifm.Participation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
