@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="Graph Modules">
+    <taskdef name="groovyc"
+                 classname="org.codehaus.groovy.ant.Groovyc"
+                 classpath="../../common/lib/groovy-all-1.5.4.jar"/>
+
+
+    <target name="init">
+
+		<property name="dist.dir" value="${basedir}/dist"/>
+		<property name="src.dir" value="${basedir}/src"/>
+        <mkdir dir="${basedir}/dist"/>
+    </target>
+    <target name="compile">
+        <groovyc srcdir="${src.dir}" destdir="${dist.dir}">
+          <javac  debug="on" />
+        </groovyc>
+
+    </target>
+
+    <target depends="init,compile" name="jar">
+        <mkdir dir="${dist.dir}"/>
+        <jar basedir="${src.dir}" compress="true" destfile="${dist.dir}/graphviz.jar">
+		    <include name="**/*"/>
+		    <exclude name="**/.nbattrs*"/>
+		    <exclude name="**/.svn"/>
+	        <exclude name="**/*.java"/>
+        </jar>
+    </target>
+
+    <target name="copy" depends="jar">
+        <copy file="${dist.dir}/graphviz.jar" todir="../modules/mod-graph/lib"/>
+    </target>
+    <target name="all" depends="init, compile, jar, copy"/>
+</project>

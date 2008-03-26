@@ -3,6 +3,8 @@ package com.mindalliance.graph.accessor
 import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
 import com.mindalliance.channels.nk.NetKernelCategory
+import com.mindalliance.channels.graph.GraphVizRenderer
+import com.ten60.netkernel.urii.aspect.StringAspect
 
 /**
  * This accessor shells out to the graphviz 'dot' command.  It requires the graphviz package be in the running
@@ -21,14 +23,12 @@ class RenderDot extends AbstractAccessor {
 
     protected void source(INKFConvenienceHelper context) {
         use(NetKernelCategory) {
-            def source = context.source;
+            def source = context.sourceString("this:param:source");
             def mimeType = context.sourceString("this:param:format");
-
-            def resp = context.subrequest("active:exec",
-                    [mimeType: mimeType,
-                     command: "data:" + mimeType + ",dot%20-T" + typeMap[mimeType],
-                     stdin: source]);
-            context.respond(resp, mimeType, true);
+            def renderer = new GraphVizRenderer(source)
+            def output = new StringWriter()
+            renderer.render(output)
+            context.respond(new StringAspect(output.toString()), mimeType, true);
         }
     }
 }

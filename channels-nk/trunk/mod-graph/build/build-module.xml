@@ -16,9 +16,11 @@
 		<property name="lib" value="${base}/lib"/>
 		<property name="mod-graph-lib" value="${src}/lib"/>
 		<property name="dist.dir" value="../../dist"/>
-	</target>
+    </target>
+
 
     <target depends="init" name="compile">
+
         <groovyc srcdir="${src}" destdir="${dst}">
           <classpath>
 				<fileset dir="${netkernel.home.dir}">
@@ -28,6 +30,9 @@
                 <include name="modules/ext-kernel-*.jar"/>
 				</fileset>
           		<fileset dir="../../common/lib">
+          			<include name="*.jar"/>
+          		</fileset>
+                <fileset dir="${mod-graph-lib}">
           			<include name="*.jar"/>
           		</fileset>
               <fileset dir="${dist.dir}">
