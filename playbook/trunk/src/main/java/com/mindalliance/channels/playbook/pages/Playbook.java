@@ -28,12 +28,11 @@ public class Playbook extends WebPage {
 
     public Playbook( PageParameters parms ){
         super( parms );
-        final PlaybookSession session = (PlaybookSession) getSession();
-
-        load( session );
+        load();
     }
 
-    private void load( final PlaybookSession session ) {
+    private void load() {
+        final PlaybookSession session = (PlaybookSession) getSession();
 
         add( new Label("title", "Playbook" ));
         add( new Label("name", new RefPropertyModel(session, "user.name")));
@@ -75,7 +74,7 @@ public class Playbook extends WebPage {
             public void onSubmit() {
                 session.getMemory().abort();
 //                Playbook.this.removeAll();
-//                load( session );
+//                load();
             }
         });
         add( pageControls );

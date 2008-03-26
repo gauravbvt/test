@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.Todo;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.Button;
@@ -14,7 +15,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -41,7 +41,7 @@ public class TodoPanel extends Panel {
                 final List<Ref> todos = getTodos();
                 return new ModelIteratorAdapter( todos.iterator() ) {
                     protected IModel model( Object o ) {
-                        return new Model( (Serializable) o );
+                        return new RefModel( (Serializable) o );
                     }
                 };
             }
@@ -76,9 +76,7 @@ public class TodoPanel extends Panel {
 
     Participation getParticipation() {
         PlaybookSession s = (PlaybookSession) getSession();
-        final Participation participation = (Participation) ( s.getParticipation().deref() );
-        participation.persist();
-        return participation;
+        return (Participation) ( s.getParticipation().deref() );
     }
 
     List<Ref> getTodos() {
