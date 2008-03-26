@@ -37,7 +37,9 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
         getProperties().each {name, val ->
             if (!transientProperties().contains(name)) {
                 try {
-                    copy."$name" = val
+                    def value
+                    value = (val instanceof Cloneable) ? val.clone() : val
+                    copy."$name" = value
                 }
                 catch (Exception e) {   // Read-only/computed field
                     // TODO -- put a warning in log
@@ -158,6 +160,10 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
         Store store = PlaybookApplication.locateStore()
         store.persist(this)
         return this.reference
+    }
+
+    void forget() {
+        this.reference.forget()
     }
 
     Referenceable deref() {

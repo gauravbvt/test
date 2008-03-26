@@ -142,6 +142,9 @@ class RefImpl implements Ref, GroovyInterceptable {
         return metamethod.invoke(this, args)
     }
 
-
+    void forget() {
+        Store store = PlaybookApplication.locateStore()
+        store.forget(this) 
+    }
 
 }

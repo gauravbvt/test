@@ -8,5 +8,6 @@ interface Referenceable extends java.io.Serializable {
     void afterStore()
     void afterRetrieve()
     Ref persist()
+    void forget()
     Referenceable deref() // noop - returns self
 }
