@@ -12,7 +12,7 @@
         <mkdir dir="${basedir}/dist"/>
     </target>
     <target name="compile">
-        <groovyc srcdir="${src.dir}" destdir="${dist.dir}">
+        <groovyc srcdir="${src.dir}" destdir="${src.dir}">
           <javac  debug="on" />
         </groovyc>
 

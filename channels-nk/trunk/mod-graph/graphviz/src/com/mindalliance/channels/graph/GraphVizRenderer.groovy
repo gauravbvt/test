@@ -9,7 +9,7 @@ class GraphVizRenderer {
 
 
     public GraphVizRenderer(String dot) {
-        dotWriter = new StringWriter();
+        dotWriter = new StringWriter(dot);
     }
 
     public GraphVizRenderer() {
