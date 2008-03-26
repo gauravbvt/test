@@ -27,7 +27,7 @@ class RenderDot extends AbstractAccessor {
             def mimeType = context.sourceString("this:param:format");
             def renderer = new GraphVizRenderer(source)
             def output = new StringWriter()
-            renderer.render(output)
+            renderer.render(output, typeMap[mimeType])
             context.respond(new StringAspect(output.toString()), mimeType, true);
         }
     }

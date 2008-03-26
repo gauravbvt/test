@@ -4,8 +4,6 @@ import com.mindalliance.channels.nk.accessors.AbstractAccessor
 import org.ten60.netkernel.layer1.nkf.INKFConvenienceHelper
 import com.mindalliance.channels.nk.NetKernelCategory
 import com.mindalliance.channels.graph.GraphVizBuilder
-import com.mindalliance.channels.graph.GraphVizBuilder
-
 /**
 *
 */

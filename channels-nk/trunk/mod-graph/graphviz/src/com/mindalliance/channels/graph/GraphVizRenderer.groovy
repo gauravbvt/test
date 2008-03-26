@@ -9,7 +9,9 @@ class GraphVizRenderer {
 
 
     public GraphVizRenderer(String dot) {
-        dotWriter = new StringWriter(dot);
+        dotWriter = new StringWriter();
+        dotWriter.write(dot);
+        dotWriter.close();
     }
 
     public GraphVizRenderer() {
@@ -17,7 +19,7 @@ class GraphVizRenderer {
     }
 
     public GraphVizBuilder getBuilder(styles = []) {
-
+        dotWriter = new StringWriter();
         return new GraphVizBuilder(dotWriter, styles)
     }
 
@@ -34,14 +36,17 @@ class GraphVizRenderer {
     }
 
     private renderProcess(output,format) {
-
-        def command="dot -T${format}"
-        def proc = command.execute()
-        proc.withWriter({Writer wr ->
-            wr.print dotWriter.toString()
-        })
-        proc.consumeProcessOutputStream(output)
-        proc.waitFor()
+        if (dotWriter != null) {
+            def command="dot -T${format}"
+            def proc = command.execute()
+            proc.withWriter({Writer wr ->
+                wr.print dotWriter.toString()
+            })
+            proc.consumeProcessOutputStream(output)
+            proc.waitFor()
+        } else {
+            throw new Exception("Dot input not defined")
+        }
     }
 
     def getDot() {

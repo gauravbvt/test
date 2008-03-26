@@ -25,6 +25,7 @@
 		    <exclude name="**/.nbattrs*"/>
 		    <exclude name="**/.svn"/>
 	        <exclude name="**/*.java"/>
+            <exclude name="**/*.groovy"/>
         </jar>
     </target>
 

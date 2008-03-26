@@ -109,6 +109,10 @@ class GraphVizBuilder extends BuilderSupport {
             _bw.newLine()
             prefixStack.push("${graphName}_");
             break;
+        case "nothing":
+            attributes = [style: 'invisible']
+            writeNode(name, attributes)
+            break;
         default:
             writeNode(name,attributes);
             break;
@@ -141,10 +145,14 @@ class GraphVizBuilder extends BuilderSupport {
 
     protected void processAttributes(attributes) {
         if (attributes['template']) {
-            def templateVals = styleMap[attributes['template']]
+            def templates = attributes['template'].split(',')
+            templates.each() {name->
+                def templateVals = styleMap[name]
+                if (templateVals)
+                    templateVals.each() { key, value -> if (!(attributes[key])) attributes[key] = value;}
+            }
+
             attributes.remove('template')
-            if (templateVals)
-                templateVals.each() { key, value -> attributes[key] = value;}
         }
         attributes.each {key, value -> attributes[key] = value.replace("\n", "\\n").replace("\t", "\\t");}
     }
