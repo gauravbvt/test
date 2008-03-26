@@ -105,8 +105,8 @@ import com.mindalliance.channels.playbook.ref.Bean
     Referenceable doAddToField(String name, def val) {
         def value = (isReferenceable(val)) ? val.reference : val
         List list = (List) this."$name"
-        if(list == null) {
-            throw new Exception("Expecting initialized field $name but not defined but missing in ${this}" )
+        if (list == null) {
+            throw new Exception("Expecting initialized field $name but not defined but missing in ${this}")
         }
         if (!list.contains(value)) {
             list.add(value)
@@ -118,8 +118,8 @@ import com.mindalliance.channels.playbook.ref.Bean
     Referenceable doRemoveFromField(String name, def val) {
         def value = (isReferenceable(val)) ? val.reference : val
         List list = (List) this."$name"
-        if(list == null) {
-            throw new Exception("Expecting initialized field $name but not defined but missing in ${this}" )
+        if (list == null) {
+            throw new Exception("Expecting initialized field $name but not defined but missing in ${this}")
         }
         if (list.contains(val)) {
             list.remove(list.indexOf(val)) // works for int as well
@@ -158,6 +158,16 @@ import com.mindalliance.channels.playbook.ref.Bean
     Referenceable deref() {
         return this
     }
-    
 
+    List<RefMetaProperty> metaProperties() {
+        List<RefMetaProperty> list = []
+        getProperties().each {name, val ->
+            if (!transientProperties().contains(name)) {
+                MetaProperty mp = this.getMetaClass().getMetaProperty(name)
+                list.add(new RefMetaProperty(mp.name, mp.type))
+            }
+        }
+        list.sort()
+        return list
+    }
 }

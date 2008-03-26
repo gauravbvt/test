@@ -40,13 +40,4 @@ class BeanImpl implements Bean {
     // Detach any field value that should or can not be serialized
     void detach() {} // do nothing
 
-    Set<MetaProperty> metaProperties() {
-        Set<MetaProperty> set = new HashSet<MetaProperty>()
-        getProperties().each {name, val ->
-            if (!transientProperties().contains(name)) {
-               set.add(this.getMetaClass().getMetaProperty(name))
-            }
-        }
-        return set
-    }
 }

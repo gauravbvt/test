@@ -5,6 +5,7 @@ import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -49,24 +50,16 @@ class RefDataProvider implements IDataProvider {
         return new RefModel(ref)
     }
 
-    List<com.mindalliance.channels.playbook.ref.impl.MetaProperty> getColumns() {
-        Map<String,MetaProperty> set = new HashMap<String,MetaProperty>();
-        List<com.mindalliance.channels.playbook.ref.impl.MetaProperty> result =
-            new ArrayList<com.mindalliance.channels.playbook.ref.impl.MetaProperty>();
-
-        allRefs().each { Ref ref ->
-            ref.metaProperties().each { MetaProperty mp ->
-                if ( !Collection.class.isAssignableFrom(mp.type)
-                     && !set.containsKey( mp.getName() ) ) {
-                    result.add( new com.mindalliance.channels.playbook.ref.impl.MetaProperty(
-                       mp.getName(), mp.type ) );
-                    set.put( mp.getName(), mp );
-                    }
-                }
+    List<RefMetaProperty> getColumns() {
+        Set<RefMetaProperty> set = new HashSet<RefMetaProperty>()
+        allRefs().each {ref ->
+            set.addAll(ref.metaProperties().findAll {mp -> mp.isScalar()})
         }
-        return result;
+        List<RefMetaProperty> list = []
+        list.addAll(set)
+        list.sort()
+        return list
     }
-
 
     void detach() {
        // Do nothing - nothing to detach with Ref's
