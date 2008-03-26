@@ -44,7 +44,7 @@ class BeanImpl implements Bean {
         Set<MetaProperty> set = new HashSet<MetaProperty>()
         getProperties().each {name, val ->
             if (!transientProperties().contains(name)) {
-               set.add(new MetaProperty(name, val.class))
+               set.add(this.getMetaClass().getMetaProperty(name))
             }
         }
         return set

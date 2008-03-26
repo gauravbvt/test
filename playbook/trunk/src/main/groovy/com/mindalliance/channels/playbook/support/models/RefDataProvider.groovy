@@ -5,7 +5,6 @@ import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.PathExpression
-import com.mindalliance.channels.playbook.ref.impl.MetaProperty
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -51,13 +50,13 @@ class RefDataProvider implements IDataProvider {
     }
 
     List<MetaProperty> getColumns() {
-        MetaProperty a
         Set<MetaProperty> set = new HashSet<MetaProperty>()
         allRefs().each {ref ->
-            set.addAll(ref.metaProperties().findAll {it.isScalar()})
+            set.addAll(ref.metaProperties().findAll {mp -> !Collection.class.isAssignableFrom(mp.type)})
         }
         return set as List<MetaProperty>
     }
+    
 
     void detach() {
        // Do nothing - nothing to detach with Ref's

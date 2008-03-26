@@ -56,7 +56,7 @@ public class TestPlaybook extends TestCase {
         Ref myProject = channels.findProjectNamed('Generic')
         def metaProps = myProject.metaProperties()
         assert metaProps.size() == 4
-        metaProps = metaProps.findAll{it.isScalar()}
+        metaProps = metaProps.findAll{!Collection.class.isAssignableFrom(it.type)}
         assert metaProps.size() == 2
         String scenarioName = myProject.deref('scenarios')[0].deref('name')
         assert scenarioName.startsWith("Scenario")
