@@ -6,8 +6,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
-import com.mindalliance.channels.playbook.ifm.IfmElement
-import com.mindalliance.channels.playbook.ref.Ref
+
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
