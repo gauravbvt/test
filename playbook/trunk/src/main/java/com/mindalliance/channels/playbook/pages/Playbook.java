@@ -47,8 +47,13 @@ public class Playbook extends WebPage {
             } } );
         tabs.add( new AbstractTab( new Model("Scenarios") ){
             public Panel getPanel( String s ) {
-                return new ScenariosPanel(s);
+                return new ScenariosPanel(s,null);
             } } );
+        if ( session.isAdmin() )
+            tabs.add( new AbstractTab( new Model("Administration") ){
+                public Panel getPanel( String s ) {
+                    return new AdminPanel(s);
+                } } );
         final TabbedPanel tabPanel = new TabbedPanel( "tabs", tabs );
         tabPanel.setSelectedTab( 0 );
         add( tabPanel );

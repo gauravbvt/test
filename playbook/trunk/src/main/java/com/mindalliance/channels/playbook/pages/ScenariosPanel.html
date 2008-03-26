@@ -8,15 +8,22 @@
 <body>
 <wicket:panel>
     <hr/>
-    <h2>Scenarios</h2>
-    <div wicket:id="scenario-chooser" id="scenario-chooser">
-        [ Scenario Chooser ]
-    </div>
+    <h2 wicket:id="sc-name">Scenario</h2>
+    <p wicket:id="sc-desc"/>
     <div wicket:id="contents" id="scenario-content">
            [Contents]
     </div>
     <div id="scenario-filter">
            [Filter]
+    </div>
+    <div class="sc-picker">
+        <form wicket:id="sc-form">
+            <p>Look at scenario <select wicket:id="sc-list">
+                <option>Scenario 1</option>
+                <option>Scenario 2</option>
+                <option>Scenario 3</option>
+            </select></p>
+        </form>
     </div>
 </wicket:panel>
 </body>

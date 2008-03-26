@@ -9,7 +9,12 @@
 <wicket:panel>
     <div class="content-list">
         <table>
-            <tr><td>[ Content list ]</td></tr>
+            <tr>
+                <th wicket:id="content-col"><span wicket:id="content-col-name">Col 1</span></th>
+            </tr>
+            <tr wicket:id="content-row">
+                <td wicket:id="content-cell"><span wicket:id="content-cell-value">[Content]</span></td>
+            </tr>
         </table>
     </div>
     <div class="content-form">

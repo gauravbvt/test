@@ -49,14 +49,24 @@ class RefDataProvider implements IDataProvider {
         return new RefModel(ref)
     }
 
-    List<MetaProperty> getColumns() {
-        Set<MetaProperty> set = new HashSet<MetaProperty>()
-        allRefs().each {ref ->
-            set.addAll(ref.metaProperties().findAll {mp -> !Collection.class.isAssignableFrom(mp.type)})
+    List<com.mindalliance.channels.playbook.ref.impl.MetaProperty> getColumns() {
+        Map<String,MetaProperty> set = new HashMap<String,MetaProperty>();
+        List<com.mindalliance.channels.playbook.ref.impl.MetaProperty> result =
+            new ArrayList<com.mindalliance.channels.playbook.ref.impl.MetaProperty>();
+
+        allRefs().each { Ref ref ->
+            ref.metaProperties().each { MetaProperty mp ->
+                if ( !Collection.class.isAssignableFrom(mp.type)
+                     && !set.containsKey( mp.getName() ) ) {
+                    result.add( new com.mindalliance.channels.playbook.ref.impl.MetaProperty(
+                       mp.getName(), mp.type ) );
+                    set.put( mp.getName(), mp );
+                    }
+                }
         }
-        return set as List<MetaProperty>
+        return result;
     }
-    
+
 
     void detach() {
        // Do nothing - nothing to detach with Ref's

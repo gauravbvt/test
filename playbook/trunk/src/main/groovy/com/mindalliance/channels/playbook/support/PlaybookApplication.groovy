@@ -44,8 +44,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-       // return Playbook.class
-       return PersonForm.class
+       return Playbook.class
     }
 
     @Override
@@ -65,20 +64,27 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             Channels channels = new Channels(about: "About Channels")
             channels.makeRoot()
 
-            User user = new User(id: "admin", name: 'Administrator', password: "admin")
-            user.admin = true
+            User admin = new User(id: "admin", name: 'Administrator', password: "admin")
+            admin.admin = true
+            channels.addUser(store(admin))
+
+            User user = new User(id: "user", name: 'Normal User', password: "user")
             channels.addUser(store(user))
 
             // A default project for everyone, for now...
             Project p = new Project(name: 'Generic')
-            p.addScenario(store(new Scenario(name: "Scenario A")));
-            p.addScenario(store(new Scenario(name: "Scenario B")));
-            p.addScenario(store(new Scenario(name: "Scenario C")));
+            p.addScenario(store(new Scenario(name: "Scenario A", description: "This is scenario A")));
+            p.addScenario(store(new Scenario(name: "Scenario B", description: "This is scenario B")));
+            p.addScenario(store(new Scenario(name: "Scenario C", description: "This is scenario C")));
 
             p.addResource(store(new Person(name: "Joe Shmoe")));
             p.addResource(store(new Organization(name: "ACME Inc.")));
 
             channels.addProject(store(p))
+            channels.addParticipation(
+                    store( new Participation(
+                            user    : admin.getReference(),
+                            project : p.getReference() ) ) )
             channels.addParticipation(
                     store( new Participation(
                             user    : user.getReference(),

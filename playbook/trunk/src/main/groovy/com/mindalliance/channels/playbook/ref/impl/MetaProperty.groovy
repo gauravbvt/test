@@ -6,7 +6,7 @@ package com.mindalliance.channels.playbook.ref.impl
  * Date: Mar 26, 2008
  * Time: 3:48:57 PM
  */
-class MetaProperty {
+class MetaProperty implements Serializable {
 
     String propertyName
     Class valueClass
