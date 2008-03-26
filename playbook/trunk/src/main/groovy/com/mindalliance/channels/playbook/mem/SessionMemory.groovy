@@ -19,6 +19,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     Map<Ref, Referenceable> changes = new HashMap<Ref, Referenceable>()
+    Set<Ref> deletes = new HashSet<Ref>()
 
     Referenceable retrieve(Ref reference) {
         Referenceable referenceable = changes.get(reference)
@@ -38,6 +39,11 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return reference
     }
 
+    void forget(Ref ref) {
+        changes.remove(ref)
+        deletes.add(ref)
+    }
+
     String getDefaultDb() {
         return ApplicationMemory.ROOT_DB;
     }
@@ -45,15 +51,17 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     void commit() {
         Collection<Referenceable> values = (Collection<Referenceable>)changes.values()
         getApplicationMemory().storeAll(values)
-        resetChanges()
+        getApplicationMemory().deleteAll(deletes)
+        reset()
     }
 
     void abort() {
-        resetChanges()
+        reset()
     }
 
-    private void resetChanges() {
+    private void reset() {
        changes = new HashMap<Ref, Referenceable>()
+       deletes = new HashSet<Ref>()
     }
 
     private Referenceable retrieveFromApplicationMemory(Ref reference) {

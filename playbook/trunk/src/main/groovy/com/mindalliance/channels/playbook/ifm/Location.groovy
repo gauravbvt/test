@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.geo.UnknownAreaException
 import com.mindalliance.channels.playbook.geo.AmbiguousAreaException
 import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,14 +13,14 @@ import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 * Date: Mar 21, 2008
 * Time: 11:45:49 AM
 */
-class Location extends IfmElement {
+class Location extends BeanImpl {
 
-    String street
-    String city     // required if street set
-    String county
-    String state    // required if either county or city set
-    String country  // required
-    String code
+    String street = ''
+    String city = ''     // required if street set
+    String county = ''
+    String state = ''    // required if either county or city set
+    String country = ''  // required
+    String code = ''
     Area area  // force recalculate on change and don't persist
 
     Area getArea() { // null if Location is unknown
@@ -39,6 +40,11 @@ class Location extends IfmElement {
             }
         }
         return area
+    }
+
+    @Override
+    List<String>transientProperties() {
+        return super.transientProperties() + ['area']
     }
 
     @Override

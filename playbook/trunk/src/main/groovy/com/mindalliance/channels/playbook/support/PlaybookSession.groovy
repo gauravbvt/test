@@ -82,4 +82,10 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     public int getTransactionCount() {
         return memory.size;
     }
+
+    // Java support
+
+    Ref getUser() {
+        return user
+    }
 }

@@ -6,6 +6,7 @@ import java.beans.PropertyChangeSupport
 import java.beans.PropertyChangeListener
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.ref.Bean
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +15,7 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 * Date: Mar 19, 2008
 * Time: 8:49:28 AM
 */
-/*abstract*/ class ReferenceableImpl implements Referenceable, GroovyInterceptable {
+/*abstract*/ class ReferenceableImpl extends BeanImpl implements Referenceable, GroovyInterceptable {
 
     String id
     String db
@@ -29,29 +30,17 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
         this.pcs.removePropertyChangeListener(listener)
     }
 
-    Referenceable copy() {
-        Referenceable copy = (Referenceable) this.class.newInstance()
+    @Override
+    Bean copy() {
+        Referenceable copy = (Referenceable) super.copy()
         copy.id = this.@id
         copy.db = this.@db
         copy.pcs = new PropertyChangeSupport(copy)
-        getProperties().each {name, val ->
-            if (!transientProperties().contains(name)) {
-                try {
-                    def value
-                    value = (val instanceof Cloneable) ? val.clone() : val
-                    copy."$name" = value
-                }
-                catch (Exception e) {   // Read-only/computed field
-                    // TODO -- put a warning in log
-                    System.out.println("Can't set field $name in $copy")
-                }
-            }
-        }
         return copy
     }
 
-    List<String> transientProperties() {
-        return ['id', 'db', 'pcs', 'class', 'reference', 'metaClass']
+    protected List<String> transientProperties() {
+        return super.transientProperties() + ['id', 'db', 'pcs', 'class', 'reference', 'metaClass']
     }
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set

@@ -59,6 +59,14 @@ class ApplicationMemory implements Serializable {
         return referenceable.reference
     }
 
+    void deleteAll(Set<Ref> deletes) {
+        deletes.each {delete(it) }
+    }
+
+    void delete(Ref ref) {
+        cache.flushEntry(ref.id)
+    }
+
     Referenceable retrieve(Ref ref) {
         Referenceable referenceable
         try {
