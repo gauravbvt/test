@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.panels;
+package com.mindalliance.channels.playbook.pages.forms;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -29,31 +29,41 @@ import com.mindalliance.channels.playbook.geo.Area;
  */
 public class LocationPanel extends Panel {
 
-    final WebMarkupContainer div;
-    final AutoCompleteTextField countryField;
-    final AutoCompleteTextField stateField;
-    final AutoCompleteTextField cityField;
-    final TextField streetField;
-    final TextField codeField;
-    final FeedbackPanel feedback;
     Location location;
 
     public LocationPanel(String id, Location loc) {
         super(id);    //To change body of overridden methods use File | Settings | File Templates.
         location = (Location)loc.copy();
-        div = new WebMarkupContainer("panel");
+        load();
+    }
+
+    private void load() {
+        final FeedbackPanel feedback = new FeedbackPanel("locationFeedback", IFeedbackMessageFilter.ALL);
+        final WebMarkupContainer div = new WebMarkupContainer("panel");
         add(div);
         // Country
-        countryField = new AutoCompleteTextField("country", new PropertyModel(location, "country")) {
+        final TextField codeField = new TextField("code", new PropertyModel(location, "code"));
+        final AutoCompleteTextField countryField = new AutoCompleteTextField("country", new PropertyModel(location, "country")) {
             protected Iterator getChoices(String input) {
                 return countryIterator(input, 10);
+            }
+        };
+        final AutoCompleteTextField stateField = new AutoCompleteTextField("state", new PropertyModel(location, "state")) {
+            protected Iterator getChoices(String input) {
+                return stateIterator(input, countryField.getModelObjectAsString(),  10);
+            }
+
+        };
+        final AutoCompleteTextField cityField = new AutoCompleteTextField("city", new PropertyModel(location, "city")) {
+            protected Iterator getChoices(String input) {
+                return cityIterator(input, countryField.getModelObjectAsString(), stateField.getModelObjectAsString(), 10);
             }
         };
 
        countryField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                String countryName = countryField.getModelObjectAsString();
+                // String countryName = countryField.getModelObjectAsString();
                 // System.out.println("Updating country to " + countryName);
                 stateField.setModelObject("");
                 target.addComponent(stateField);
@@ -67,17 +77,11 @@ public class LocationPanel extends Panel {
 //        countryField.add(GeoValidator.countryExists());
         div.add(countryField);
         // State field
-        stateField = new AutoCompleteTextField("state", new PropertyModel(location, "state")) {
-            protected Iterator getChoices(String input) {
-                return stateIterator(input, countryField.getModelObjectAsString(),  10);
-            }
-
-        };
         stateField.setOutputMarkupId(true);
         stateField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                String stateName = stateField.getModelObjectAsString();
+                // String stateName = stateField.getModelObjectAsString();
                 // System.out.println("Updating state to " + stateName);
                 cityField.setModelObject("");
                 target.addComponent(cityField);
@@ -89,11 +93,6 @@ public class LocationPanel extends Panel {
 //        stateField.add(GeoValidator.stateExists());
         div.add(stateField);
         // City field
-        cityField = new AutoCompleteTextField("city", new PropertyModel(location, "city")) {
-            protected Iterator getChoices(String input) {
-                return cityIterator(input, countryField.getModelObjectAsString(), stateField.getModelObjectAsString(), 10);
-            }
-        };
         cityField.setOutputMarkupId(true);
         cityField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -104,10 +103,9 @@ public class LocationPanel extends Panel {
         });
         div.add(cityField);
         // Street field
-        streetField = new TextField("street", new PropertyModel(location, "street"));
+        final TextField streetField = new TextField("street", new PropertyModel(location, "street"));
         div.add(streetField);
         // Code field
-        codeField = new TextField("code", new PropertyModel(location, "code"));
         codeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -117,7 +115,6 @@ public class LocationPanel extends Panel {
         });
         div.add(codeField);
         // Feedback
-        feedback = new FeedbackPanel("locationFeedback", IFeedbackMessageFilter.ALL);
         feedback.setOutputMarkupId(true);
         add(feedback);
         add(new AjaxLink("verify", new Model(location)) {
@@ -137,7 +134,7 @@ public class LocationPanel extends Panel {
                           info("Code is valid");
                        }
                        else {
-                          error("Code not validated"); 
+                          error("Code not validated");
                        }
                    }
                 }
