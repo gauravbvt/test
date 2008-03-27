@@ -9,7 +9,8 @@ interface Referenceable extends Bean {
     void afterStore()
     void afterRetrieve()
     Ref persist()
-    void forget()
+    void delete()
+    void reset()
     Referenceable deref() // noop - returns self
     List<RefMetaProperty>metaProperties()
 }

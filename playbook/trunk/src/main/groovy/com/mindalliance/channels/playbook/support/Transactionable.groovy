@@ -15,6 +15,7 @@ interface Transactionable {
 
     void commit()
     void abort()
-    int getTransactionCount()
+    int getPendingChangesCount()
+    int getPendingDeletesCount()
 
 }

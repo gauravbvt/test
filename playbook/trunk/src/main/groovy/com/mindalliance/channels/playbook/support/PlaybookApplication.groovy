@@ -17,7 +17,7 @@ import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.pages.forms.PersonForm
+import com.mindalliance.channels.playbook.pages.forms.PersonPanel
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

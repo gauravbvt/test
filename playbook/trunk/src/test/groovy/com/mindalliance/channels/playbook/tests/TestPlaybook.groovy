@@ -67,15 +67,22 @@ public class TestPlaybook extends TestCase {
         assertTrue(myProject.name == myProject.reference.name)
         String name = myProject.name
         assertTrue(name.equals("Generic"))
-        assertTrue(session.transactionCount == 0)
+        assertTrue(session.pendingChangesCount == 0)
         // Remove project from channels
         channels.removeProject(myProject)
-        assertTrue(session.transactionCount == 1)
+        assertTrue(session.pendingChangesCount == 1)
         // Modify project in session memory
         PathExpression.setNestedProperty(myProject, "name", "Your project")
         myProject.name = "Your project"
         assertNotNull(myProject.createdOn)
-        assertTrue(session.transactionCount == 2)
+        assertTrue(session.pendingChangesCount == 2)
+        // reset and redo change
+        myProject.reset()
+        assertTrue(session.pendingChangesCount == 1)
+        assertTrue(name.equals("Generic"))
+        myProject.name = "Your project"
+        assertTrue(session.pendingChangesCount == 2)
+        //
         def yourProject = sessionMem.retrieve(myProject.reference)
         assertTrue(myProject.equals(yourProject.reference))
         assertTrue(yourProject.name.equals("Your project"))
@@ -86,31 +93,34 @@ public class TestPlaybook extends TestCase {
         def appLevelProject = app.retrieve(yourProject.reference)
         assertTrue(appLevelProject.name.equals("Generic"))
         channels.about = "About new Channels"
-        assertTrue(session.transactionCount == 2)
+        assertTrue(session.pendingChangesCount == 2)
         // Commit session changes to application memory
         session.commit()
         // Verify that session memory is now empty
-        assertTrue(session.transactionCount == 0)
+        assertTrue(session.pendingChangesCount == 0)
         // that the project has been updated to application memory and is visible thru empty session memory
         channels = app.getRoot()
         appLevelProject = channels.projects[0]
         assertTrue(appLevelProject.name.equals("Your big project"))
         yourProject = sessionMem.retrieve(myProject.reference)
         assertTrue(yourProject.name.equals("Your big project"))
-        // Create and the forget a project
+        // Create and the delete a project
         Ref newProject = new Project(name: "new project").persist()
-        assertTrue(session.transactionCount == 1)
-        newProject.forget()
-        assertTrue(session.transactionCount == 0)
+        assertTrue(session.pendingChangesCount == 1)
+        newProject.delete()
+        assertTrue(session.pendingChangesCount == 0)
+        assertTrue(session.pendingDeletesCount == 1)
         Ref anotherProject = new Project(name: "another new project").persist()
         session.commit()
-        assertTrue(session.transactionCount == 0)
+        assertTrue(session.pendingChangesCount == 0)
+        assertTrue(session.pendingDeletesCount == 0)
         Project p = (Project)anotherProject.deref()
         assert p.name == "another new project"
-        anotherProject.forget()
+        anotherProject.delete()
+        assertNull anotherProject.deref()
+        assert app.retrieve(anotherProject) != null
         session.commit()
-        p = (Project)anotherProject.deref()
-        assert p == null
+        assertNull anotherProject.deref()
     }
 
     void testPageRender() {

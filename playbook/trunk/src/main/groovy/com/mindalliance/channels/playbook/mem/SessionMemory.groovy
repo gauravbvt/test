@@ -21,26 +21,35 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Set<Ref> deletes = new HashSet<Ref>()
 
     Referenceable retrieve(Ref reference) {
-        Referenceable referenceable = changes.get(reference)
-        if (!referenceable) {
-            Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
-            if (appLevelReferenceable) {
-               referenceable =  (Referenceable)appLevelReferenceable.copy() // take a copy
-               referenceable.addPropertyChangeListener(this) // register with this session memory
-            }
+        if (deletes.contains(reference)) {  // deleted in session
+            return null
         }
-        return referenceable
+        else {
+            Referenceable referenceable = changes.get(reference)
+            if (!referenceable) {
+                Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
+                if (appLevelReferenceable) {
+                    referenceable = (Referenceable) appLevelReferenceable.copy() // take a copy
+                    referenceable.addPropertyChangeListener(this) // register with this session memory
+                }
+            }
+            return referenceable
+        }
     }
 
-    Ref persist(Referenceable referenceable) {    // Persist the change in session and, on save, in application
+    Ref persist(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
-        changes.put(reference, (Referenceable)referenceable)
+        changes.put(reference, (Referenceable) referenceable)
         return reference
     }
 
-    void forget(Ref ref) {
+    void delete(Ref ref) {
         changes.remove(ref)
         deletes.add(ref)
+    }
+
+    void reset(Ref ref) {
+        changes.remove(ref)
     }
 
     String getDefaultDb() {
@@ -48,7 +57,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void commit() {
-        Collection<Referenceable> values = (Collection<Referenceable>)changes.values()
+        Collection<Referenceable> values = (Collection<Referenceable>) changes.values()
         getApplicationMemory().storeAll(values)
         getApplicationMemory().deleteAll(deletes)
         reset()
@@ -59,8 +68,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     private void reset() {
-       changes = new HashMap<Ref, Referenceable>()
-       deletes = new HashSet<Ref>()
+        changes = new HashMap<Ref, Referenceable>()
+        deletes = new HashSet<Ref>()
     }
 
     private Referenceable retrieveFromApplicationMemory(Ref reference) {
@@ -71,18 +80,22 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return PlaybookApplication.get().getMemory()
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-       Referenceable referenceable = (Referenceable)evt.source
-       persist(referenceable)
+    void propertyChange(PropertyChangeEvent evt) {
+        Referenceable referenceable = (Referenceable) evt.source
+        persist(referenceable)
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return changes.isEmpty()
     }
 
-    public int getSize() {
+    int getSize() {
         int size = changes.size()
         return size
+    }
+
+    int getPendingDeletesCount() {
+        return deletes.size()
     }
 
 }

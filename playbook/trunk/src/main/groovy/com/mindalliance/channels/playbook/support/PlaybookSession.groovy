@@ -78,8 +78,12 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         memory.abort()
     }
 
-    public int getTransactionCount() {
+    public int getPendingChangesCount() {
         return memory.size;
+    }
+
+    int getPendingDeletesCount() {
+        return memory.getPendingDeletesCount()
     }
 
     // Java support

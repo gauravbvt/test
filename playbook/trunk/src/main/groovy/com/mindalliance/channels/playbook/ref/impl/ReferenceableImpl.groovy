@@ -151,8 +151,12 @@ import com.mindalliance.channels.playbook.ref.Bean
         return this.reference
     }
 
-    void forget() {
-        this.reference.forget()
+    void delete() {
+        this.reference.delete()
+    }
+
+    void reset() {
+        this.reference.reset()
     }
 
     Referenceable deref() {
