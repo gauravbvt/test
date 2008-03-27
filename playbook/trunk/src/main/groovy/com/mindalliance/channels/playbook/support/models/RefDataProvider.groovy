@@ -4,8 +4,9 @@ import org.apache.wicket.markup.repeater.data.IDataProvider
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,7 +26,7 @@ class RefDataProvider implements IDataProvider {
     }
 
     private List<Ref> allRefs() {
-        return (List<Ref>)PathExpression.getNestedProperty(source, path)
+        return (List<Ref>)RefUtils.get(source, path)
     }
 
     Iterator iterator(int first, int count) {

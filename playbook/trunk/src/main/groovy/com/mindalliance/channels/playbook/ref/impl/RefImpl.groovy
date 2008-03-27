@@ -4,7 +4,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
-import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -101,7 +102,7 @@ class RefImpl implements Ref, GroovyInterceptable {
         path.tokenize('.').each() {
             result = result."$it"
         }
-*/      def result = PathExpression.getNestedProperty(this, path)
+*/      def result = RefUtils.get(this, path)
         return result
     }
 

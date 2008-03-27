@@ -12,13 +12,15 @@ import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.tests.pages.SomePage
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.Todo
-import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.tests.pages.SomePage
 import com.mindalliance.channels.playbook.pages.forms.PersonPanel
 import org.apache.wicket.Component
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField
 import com.mindalliance.channels.playbook.pages.forms.PersonPanel
 import com.mindalliance.channels.playbook.ifm.Project
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel
+import com.mindalliance.channels.playbook.ifm.Scenario
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -72,7 +74,7 @@ public class TestPlaybook extends TestCase {
         channels.removeProject(myProject)
         assertTrue(session.pendingChangesCount == 1)
         // Modify project in session memory
-        PathExpression.setNestedProperty(myProject, "name", "Your project")
+        RefUtils.set(myProject, "name", "Your project")
         myProject.name = "Your project"
         assertNotNull(myProject.createdOn)
         assertTrue(session.pendingChangesCount == 2)
@@ -149,6 +151,17 @@ public class TestPlaybook extends TestCase {
         Location maine = new Location(country: 'United States', state: 'Maine')
         assert area.isWithinLocation(maine)
         assert maine > portland
+    }
+
+    void testModels() {
+        Ref channels = app.channels
+        Ref project = new Project(name: "new project").persist()
+        channels.addProject(project)
+        Ref scenario = new Scenario(name: "new scenario").persist()
+        project.addScenario(scenario)
+        RefPropertyModel chained = new  RefPropertyModel(project, "scenarios.name(new scenario)")
+        RefPropertyModel rpm = new RefPropertyModel(chained, "name")
+        assert rpm.getObject() == 'new scenario'
     }
     
  /*   void testLocationPanel() {

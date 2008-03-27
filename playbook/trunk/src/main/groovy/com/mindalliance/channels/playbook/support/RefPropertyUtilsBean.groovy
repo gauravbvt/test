@@ -12,14 +12,24 @@ import org.apache.commons.beanutils.PropertyUtilsBean
 class RefPropertyUtilsBean extends PropertyUtilsBean {
 
     @Override
-    def getSimpleProperty(def holder, String prop) {
-      def result = holder."$prop"
+    def getSimpleProperty(def bean, String prop) {
+      def result = bean."$prop"
       return result
     }
 
     @Override
-    void setSimpleProperty(def holder, String prop, def obj) {
-      holder."$prop" = obj
+    void setSimpleProperty(def bean, String prop, def obj) {
+      bean."$prop" = obj
+    }
+
+    @Override
+    def getMappedProperty(def obj, String name, String key) {
+       def result
+       switch(obj) {
+           case Collection.class: result = obj.find {it."$name" == key}; break
+           default: result = super.getMappedProperty(obj, name, key)
+       }
+       return result
     }
 
 }

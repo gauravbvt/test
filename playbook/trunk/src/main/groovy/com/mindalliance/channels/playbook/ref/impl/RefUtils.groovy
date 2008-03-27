@@ -9,7 +9,7 @@ import org.apache.commons.beanutils.PropertyUtilsBean
 * Date: Mar 24, 2008
 * Time: 8:19:06 AM
 */
-class PathExpression {
+class RefUtils {
 
     /*
     From org.apache.commons.beanutils.PropertyUtilsBean:
@@ -24,7 +24,7 @@ class PathExpression {
 
     */
 
-    static def getNestedProperty(def holder, String path) {
+    static def get(def holder, String path) {
         def result
         RefPropertyUtilsBean utils = new RefPropertyUtilsBean()
         try {
@@ -37,7 +37,7 @@ class PathExpression {
         return result
     }
 
-    static void setNestedProperty(def holder, String path, def obj) {
+    static void set(def holder, String path, def obj) {
         RefPropertyUtilsBean utils = new RefPropertyUtilsBean()
         try {
             utils.setNestedProperty(holder, path, obj)

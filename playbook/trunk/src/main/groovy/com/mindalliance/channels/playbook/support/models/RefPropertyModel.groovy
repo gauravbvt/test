@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.support.models
 
 import org.apache.wicket.model.IModel
-import com.mindalliance.channels.playbook.support.PathExpression
+import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.model.IChainingModel
 
 /**
@@ -25,7 +25,7 @@ class RefPropertyModel implements IChainingModel {
     Object getObject() {
         def holder = getPropertyHolder()
         try {
-            return PathExpression.getNestedProperty(holder, expression)
+            return RefUtils.get(holder, expression)
         }
         catch (Exception e) {
             System.out.println("*** Failed to eval expression $expression on $target : $e")
@@ -40,7 +40,7 @@ class RefPropertyModel implements IChainingModel {
     public void setObject(def obj) {
         def holder = getPropertyHolder()
         try {
-            PathExpression.setNestedProperty(holder, expression, obj)
+            RefUtils.set(holder, expression, obj)
         }
         catch (Exception e) {
             System.out.println("*** Failed to set $target at $expression to $obj : $e")
