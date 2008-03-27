@@ -37,6 +37,10 @@ class Location extends BeanImpl implements Comparable {
         return a
     }
 
+    boolean isAreaDefined() {
+        return getArea().isDefined()
+    }
+
     Area findArea() {// null if Location is unknown
         Area a
         try {
