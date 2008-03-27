@@ -8,17 +8,22 @@
 <body>
 <wicket:panel>
     <div class="content-list">
+        <h3>List</h3>
+        <span wicket:id="content-pager">[Pager]</span>
         <table>
             <tr>
                 <th wicket:id="content-col"><span wicket:id="content-col-name">Col 1</span></th>
+                <th> </th>
             </tr>
             <tr wicket:id="content-row">
                 <td wicket:id="content-cell"><span wicket:id="content-cell-value">[Content]</span></td>
+                <td><a href="" wicket:id="row-select">select</a></td>
             </tr>
         </table>
     </div>
     <div class="content-form">
-        [ Contents form ]
+        <h3>Details</h3>
+        <span wicket:id="content-form">[ Contents form ]</span>
     </div>
 </wicket:panel>
 </body>

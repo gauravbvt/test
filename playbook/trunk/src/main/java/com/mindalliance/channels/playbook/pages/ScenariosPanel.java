@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.pages;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.RefDataProvider;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -10,6 +9,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
@@ -19,25 +19,28 @@ import java.util.List;
 public class ScenariosPanel extends Panel {
 
     /** The selected scenario. */
-    private RefModel scenarioModel;
+    private IModel scenario;
 
-    public ScenariosPanel( String id, Ref scenario ) {
-        super( id );
-        PlaybookSession session = (PlaybookSession) getSession();
-        final List<Ref> scenarios = (List<Ref>) session.getProject().get( "scenarios" );
+    public ScenariosPanel( String id, IModel project ) {
+        super( id, project );
+        final IModel scenarios = new RefPropertyModel( project, "scenarios" );
 
-        scenarioModel = new RefModel(
-            scenario != null ? scenario
-                             : scenarios.size() > 0 ?  scenarios.get(0)
-                             : null );
+        if ( scenario == null ) {
+            List<Ref> ss = (List<Ref>) scenarios.getObject();
+            if ( ss.size() > 0 )
+                scenario = new RefModel( ss.get(0) );
+        }
 
-        refresh( scenarioModel.getRef() );
+        add( new ContentPanel( "contents", new RefDataProvider( scenario.getObject(), "occurrences" ) ) );
+        add( new Label( "sc-name", new RefPropertyModel( scenario, "name" ) ) );
+        add( new Label( "sc-desc", new RefPropertyModel( scenario, "description" ) ) );
+        add( new FilterPanel( "filter" ) );
 
         final Form form = new Form( "sc-form" );
         add( form );
 
         form.add( new DropDownChoice(
-            "sc-list", scenarioModel, scenarios,
+            "sc-list", scenario, scenarios,
                 new IChoiceRenderer() {
                     public Object getDisplayValue( Object object ) {
                         Ref s = (Ref) object;
@@ -50,7 +53,7 @@ public class ScenariosPanel extends Panel {
                 } ) {
 
             protected boolean isSelected( Object object, int index, String selected ) {
-                return object == scenarioModel;
+                return object == scenario;
             }
 
             protected boolean wantOnSelectionChangedNotifications() {
@@ -58,14 +61,15 @@ public class ScenariosPanel extends Panel {
             }
 
             protected void onSelectionChanged( Object newSelection ) {
-                refresh( (Ref) newSelection );
                 // TODO store in user preference
             } } );
     }
 
-    private void refresh( Ref scenarioRef ) {
-        addOrReplace( new ContentPanel( "contents", new RefDataProvider( scenarioRef, "occurrences" ) ) );
-        addOrReplace( new Label( "sc-name", new RefPropertyModel( scenarioRef, "name" ) ) );
-        addOrReplace( new Label( "sc-desc", new RefPropertyModel( scenarioRef, "description" ) ) );
+    public IModel getScenario() {
+        return scenario;
+    }
+
+    public void setScenario( IModel scenario ) {
+        this.scenario = scenario;
     }
 }

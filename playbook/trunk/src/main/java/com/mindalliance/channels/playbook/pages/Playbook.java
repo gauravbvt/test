@@ -13,7 +13,9 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +26,6 @@ import java.util.List;
 @AuthorizeInstantiation( { "USER", "ADMIN" })
 public class Playbook extends WebPage {
 
-    private Form pageControls;
-
     public Playbook( PageParameters parms ){
         super( parms );
         load();
@@ -33,36 +33,38 @@ public class Playbook extends WebPage {
 
     private void load() {
         final PlaybookSession session = (PlaybookSession) getSession();
+        setModel( new Model( session ) );
 
         add( new Label("title", "Playbook" ));
-        add( new Label("name", new RefPropertyModel(session, "user.name")));
-        add( new Label("project", new RefPropertyModel(session, "project.name")));
+        add( new Label("name", new RefPropertyModel(getModel(), "user.name")));
+        add( new Label("project", new RefPropertyModel(getModel(), "project.name")));
         add( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         //--------------
+        final IModel projectModel = new PropertyModel( getModel(), "project" );
         List<AbstractTab> tabs = new ArrayList<AbstractTab>();
         tabs.add( new AbstractTab( new Model("Resources") ){
             public Panel getPanel( String s ) {
-                return new ResourcesPanel(s);
+                return new ResourcesPanel( s, projectModel );
             } } );
         tabs.add( new AbstractTab( new Model("Scenarios") ){
             public Panel getPanel( String s ) {
-                return new ScenariosPanel(s,null);
+                return new ScenariosPanel( s, projectModel );
             } } );
         if ( session.isAdmin() )
             tabs.add( new AbstractTab( new Model("Administration") ){
                 public Panel getPanel( String s ) {
-                    return new AdminPanel(s);
+                    return new AdminPanel( s, projectModel );
                 } } );
         final TabbedPanel tabPanel = new TabbedPanel( "tabs", tabs );
         tabPanel.setSelectedTab( 0 );
         add( tabPanel );
 
         //--------------
-        add( new TodoPanel( "todos" ) );
+        add( new TodoPanel( "todos", new RefPropertyModel( getModel(), "participation" ) ) );
 
         //--------------
-        pageControls = new Form("page_controls");
+        Form pageControls = new Form( "page_controls" );
         pageControls.add( new Button("save_button") {
             public boolean isEnabled() {
                 return !session.getMemory().isEmpty();
@@ -78,15 +80,8 @@ public class Playbook extends WebPage {
             }
             public void onSubmit() {
                 session.getMemory().abort();
-//                Playbook.this.removeAll();
-//                load();
             }
         });
         add( pageControls );
     }
-
-    public void refreshControls() {
-        add( pageControls );
-    }
-
 }

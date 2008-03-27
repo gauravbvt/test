@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.pages;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.Todo;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -16,7 +15,6 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,23 +23,19 @@ import java.util.List;
  */
 public class TodoPanel extends Panel {
 
-    public TodoPanel( String s ) {
-        super( s );
+    public TodoPanel( String s, IModel participation ) {
+        super( s, participation );
 
-        Form form = new Form( "todos" ){
-            protected void onSubmit() {
-                Playbook p = (Playbook) getPage();
-                p.refreshControls();
-            }
-        };
+        Form form = new Form( "todos" );
         add( form );
 
-        final RefreshingView lv = new RefreshingView( "todo" ){
+        final RefreshingView lv = new RefreshingView( "todo", new RefPropertyModel( participation, "todos" ) ){
             protected Iterator getItemModels() {
-                final List<Ref> todos = getTodos();
-                return new ModelIteratorAdapter( todos.iterator() ) {
+                final IModel model = getModel();
+                final List list = (List) model.getObject();
+                return new ModelIteratorAdapter( list.iterator() ) {
                     protected IModel model( Object o ) {
-                        return new RefModel( (Serializable) o );
+                        return new RefModel( o );
                     }
                 };
             }
@@ -56,6 +50,7 @@ public class TodoPanel extends Panel {
                     public void onSubmit() {
                         Ref todo = (Ref) item.getModelObject();
                         getParticipation().removeTodo( todo );
+                        todo.delete();
                     }
                 } );
             }
@@ -75,13 +70,7 @@ public class TodoPanel extends Panel {
     }
 
     Participation getParticipation() {
-        PlaybookSession s = (PlaybookSession) getSession();
-        return (Participation) ( s.getParticipation().deref() );
-    }
-
-    List<Ref> getTodos() {
-        PlaybookSession s = (PlaybookSession) getSession();
-        Ref p = s.getParticipation();
-        return (List<Ref>) p.get( "todos" );
+        Ref p = (Ref) getModel().getObject();
+        return (Participation) ( p.deref() );
     }
 }

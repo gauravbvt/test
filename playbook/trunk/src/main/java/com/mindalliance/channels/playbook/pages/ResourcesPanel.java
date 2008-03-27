@@ -1,21 +1,19 @@
 package com.mindalliance.channels.playbook.pages;
 
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.RefDataProvider;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
 /**
  * ...
  */
 public class ResourcesPanel extends Panel {
 
-    public ResourcesPanel( String id ) {
-        super( id );
+    public ResourcesPanel( String id, IModel model ) {
+        super( id, model );
 
-        PlaybookSession s = (PlaybookSession) getSession();
-        Ref project = s.getProject();
-
-        add( new ContentPanel( "contents", new RefDataProvider( project, "resources" ) ) );
+        add( new ContentPanel( "contents",
+                new RefDataProvider( model.getObject(), "resources" ) ) );
+        add( new FilterPanel( "filter" ) );
     }
 }

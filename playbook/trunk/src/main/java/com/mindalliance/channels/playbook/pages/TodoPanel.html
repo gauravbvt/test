@@ -7,9 +7,9 @@
         lang="en">
 <body>
 <wicket:panel>
-    <hr/>
-    <h2>Todo</h2>
     <form wicket:id="todos">
+        <hr/>
+        <h2>Todo</h2>
         <table>
             <thead>
                 <tr>
@@ -29,7 +29,7 @@
             </tbody>
         </table>
         <input type="submit" wicket:id="todo-new" value="New"/>
-        <input type="submit" wicket:id="todo-submit" value="Submit"/>
+        <input style="visibility: hidden;" type="submit" wicket:id="todo-submit" value="Submit"/>
     </form>
 </wicket:panel>
 </body>
