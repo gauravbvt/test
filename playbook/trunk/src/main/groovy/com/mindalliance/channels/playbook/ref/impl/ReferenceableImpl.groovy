@@ -161,13 +161,12 @@ import com.mindalliance.channels.playbook.ref.Bean
 
     List<RefMetaProperty> metaProperties() {
         List<RefMetaProperty> list = []
-        getProperties().each {name, val ->
-            if (!transientProperties().contains(name)) {
-                MetaProperty mp = this.getMetaClass().getMetaProperty(name)
-                list.add(new RefMetaProperty(mp.name, mp.type))
-            }
+        beanProperties().each {name, val ->
+            MetaProperty mp = this.getMetaClass().getMetaProperty(name)
+            list.add(new RefMetaProperty(mp.name, mp.type))
         }
         list.sort()
         return list
     }
+
 }

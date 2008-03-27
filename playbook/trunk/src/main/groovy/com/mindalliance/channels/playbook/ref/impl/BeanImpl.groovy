@@ -13,21 +13,19 @@ class BeanImpl implements Bean {
 
     Bean copy() {
         Bean copy = (Bean) this.class.newInstance()
-        getProperties().each {name, val ->
-            if (!transientProperties().contains(name)) {
-                try {
-                    def value
-                    switch (val) {
-                        case Bean.class: value = val.copy(); break
-                        case Cloneable.class: value = val.clone(); break
-                        default: value = val
-                    }
-                    copy."$name" = value
+        beanProperties().each {name, val ->
+            try {
+                def value
+                switch (val) {
+                    case Bean.class: value = val.copy(); break
+                    case Cloneable.class: value = val.clone(); break
+                    default: value = val
                 }
-                catch (Exception e) {// Read-only/computed field
-                    // TODO -- put a warning in log
-                    // System.out.println("Can't set field $name in $copy")
-                }
+                copy."$name" = value
+            }
+            catch (Exception e) {// Read-only/computed field
+                // TODO -- put a warning in log
+                // System.out.println("Can't set field $name in $copy")
             }
         }
         return copy
@@ -35,6 +33,17 @@ class BeanImpl implements Bean {
 
     protected List transientProperties() {
         return ['class', 'metaClass']
+    }
+
+    Map beanProperties() {
+        return getProperties().findAll {name, val -> !transientProperties().contains(name)}
+    }
+
+    void setFrom(Bean bean) {
+        if (!this.class.isAssignableFrom(bean.class)) throw new IllegalArgumentException("Can't copy from $bean")
+        bean.beanProperties() {name, val ->
+            this."$name" = val
+        }
     }
 
     // Detach any field value that should or can not be serialized

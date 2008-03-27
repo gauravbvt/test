@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.geo.AreaException
 * Date: Mar 21, 2008
 * Time: 11:45:49 AM
 */
-class Location extends BeanImpl {
+class Location extends BeanImpl implements Comparable {
 
     String street = ''
     String city = '' // required if street set
@@ -95,6 +95,11 @@ class Location extends BeanImpl {
     @Override
     void detach() {
         area = null
+    }
+
+    public int compareTo(Object other) {
+        if (!other instanceof Location) throw new IllegalArgumentException("Can't compare a location to $other")
+        return this.getArea().compareTo(other.getArea())
     }
 
 }

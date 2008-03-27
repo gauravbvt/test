@@ -54,4 +54,5 @@ class UnknownArea extends Area{
     boolean isCityLike() {
         return false
     }
+
 }

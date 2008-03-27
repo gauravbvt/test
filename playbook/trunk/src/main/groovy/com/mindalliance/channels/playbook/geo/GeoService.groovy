@@ -246,12 +246,13 @@ class GeoService {
     static boolean validateCode(String code, String countryName, String stateName, String cityName) {
         try {
             assert code
+            String encodedCode = URLEncoder.encode(code)
             Area country
             if (countryName) country= findCountry(countryName)
             Area state
             if (stateName) state = findState(country, stateName)
             String url = WebService.geonamesServer
-            url += "/postalCodeSearch?postalcode=$code&maxRows=1"
+            url += "/postalCodeSearch?postalcode=$encodedCode&maxRows=1"
             if (countryName) url += "&country=${country.topo.countryCode}"
             List<Area> list = doRestCall(url, CODE)
             if (list) {

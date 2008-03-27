@@ -10,5 +10,6 @@ interface Bean extends Serializable {
 
    Bean copy()
    void detach()  // detach any field value that should or can not be serialized
+   void setFrom(Bean bean)
     
 }

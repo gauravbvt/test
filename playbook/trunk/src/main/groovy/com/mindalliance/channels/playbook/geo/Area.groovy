@@ -10,7 +10,7 @@ import org.geonames.Toponym
 * Date: Mar 22, 2008
 * Time: 12:24:25 PM
 */
-class Area {
+class Area implements Comparable {
 
     static final Area UNKNOWN = new UnknownArea()
 
@@ -26,6 +26,10 @@ class Area {
 
     static AmbiguousArea ambiguous(List<Toponym> topos) {
         return new AmbiguousArea(topos)
+    }
+
+    boolean isDefined() {
+        return !(isUnknown() || isAmbiguous())
     }
 
     boolean isUnknown() {
@@ -102,5 +106,25 @@ class Area {
     // forward all the gets to toponym    
     def get(String prop)  {
         return topo."$prop"
+    }
+
+    int compareTo(Object other) {
+        if (!isDefined()) throw new Exception("Can conly compare a defined area")
+        if (!other instanceof Area) throw new IllegalArgumentException("Can't compare an Area to $other")
+        if (other.isUnknown()) throw new IllegalArgumentException("Can't compare to an unknow area")
+        if (other.isAmbiguous()) throw new IllegalArgumentException("Can't compare to an ambiguous area")
+        if (typeCode() > other.typeCode()) return 1
+        if (typeCode() < other.typeCode()) return -1
+        return topo.name.compareTo(other.topo.name)
+    }
+
+    int typeCode() {
+        if (isGlobe()) return 5
+        if (isContinent()) return 4
+        if (isCountry()) return 3
+        if (isStateLike()) return 2
+        if (isCountyLike()) return 1
+        if (isCityLike()) return 0
+        return -1
     }
 }

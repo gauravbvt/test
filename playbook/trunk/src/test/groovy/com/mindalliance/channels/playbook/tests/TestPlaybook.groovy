@@ -14,9 +14,11 @@ import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.Todo
 import com.mindalliance.channels.playbook.support.PathExpression
 import com.mindalliance.channels.playbook.tests.pages.SomePage
-import com.mindalliance.channels.playbook.pages.forms.PersonForm
+import com.mindalliance.channels.playbook.pages.forms.PersonPanel
 import org.apache.wicket.Component
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField
+import com.mindalliance.channels.playbook.pages.forms.PersonPanel
+import com.mindalliance.channels.playbook.ifm.Project
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -54,10 +56,12 @@ public class TestPlaybook extends TestCase {
         Ref channels = app.channels
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
+        // Test metaproperties
         def metaProps = myProject.metaProperties()
         assert metaProps.size() == 4
         metaProps = metaProps.findAll{it.isScalar()}
         assert metaProps.size() == 2
+        //
         String scenarioName = myProject.deref('scenarios')[0].deref('name')
         assert scenarioName.startsWith("Scenario")
         assertTrue(myProject.name == myProject.reference.name)
@@ -76,7 +80,7 @@ public class TestPlaybook extends TestCase {
         assertTrue(myProject.equals(yourProject.reference))
         assertTrue(yourProject.name.equals("Your project"))
         yourProject.name = "Your big project"
-        // Add project to channels
+        // Put project back into channels
         channels.addProject(yourProject)
         // Verify that project in application scope still unchanged
         def appLevelProject = app.retrieve(yourProject.reference)
@@ -93,6 +97,20 @@ public class TestPlaybook extends TestCase {
         assertTrue(appLevelProject.name.equals("Your big project"))
         yourProject = sessionMem.retrieve(myProject.reference)
         assertTrue(yourProject.name.equals("Your big project"))
+        // Create and the forget a project
+        Ref newProject = new Project(name: "new project").persist()
+        assertTrue(session.transactionCount == 1)
+        newProject.forget()
+        assertTrue(session.transactionCount == 0)
+        Ref anotherProject = new Project(name: "another new project").persist()
+        session.commit()
+        assertTrue(session.transactionCount == 0)
+        Project p = (Project)anotherProject.deref()
+        assert p.name == "another new project"
+        anotherProject.forget()
+        session.commit()
+        p = (Project)anotherProject.deref()
+        assert p == null
     }
 
     void testPageRender() {
@@ -120,14 +138,15 @@ public class TestPlaybook extends TestCase {
         // List<Area> nearby = area.findNearbyAreas()
         Location maine = new Location(country: 'United States', state: 'Maine')
         assert area.isWithinLocation(maine)
+        assert maine > portland
     }
     
-    void testLocationPanel() {
-        tester.startPage(PersonForm.class)
+ /*   void testLocationPanel() {
+        tester.startPage(PersonPanel.class)
         def locationPanel = tester.getComponentFromLastRenderedPage('person:location')
         def countryTextField = locationPanel.get('panel:country')
         assert countryTextField
         tester.executeAjaxEvent(countryTextField, 'onchange')        
-    }
+    }*/
 
 }
