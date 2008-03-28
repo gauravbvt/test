@@ -7,6 +7,7 @@ import java.beans.PropertyChangeListener
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ref.Bean
+import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -45,7 +46,7 @@ import com.mindalliance.channels.playbook.ref.Bean
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
         changed()
-        System.out.println("^^^ changed: ${getType()}.$propName")
+        if (ApplicationMemory.DEBUG) System.out.println("^^^ changed: ${getType()}.$propName")
         propertyChanged(propName, null, this.@"$propName") // don't care about old value
     }
 

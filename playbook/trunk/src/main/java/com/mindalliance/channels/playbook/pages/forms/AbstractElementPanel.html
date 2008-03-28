@@ -4,12 +4,11 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
-<div wicket:id ="person">[Person panel]</div>
-<div wicket:id="debug">
-    Person = <span wicket:id="personString">[person as string]</span><br/>
-    Location = <span wicket:id="locationString">[location as string</span>
-</div>
-<a href="#" wicket:id="save">Save</a>
-<a href="#" wicket:id="reset">Reset</a>
+<wicket:panel>
+    <div wicket:id="feedback">[feedback panel</div>
+    <form wicket:id="elementForm">
+        <wicket:child/>
+    </form>
+</wicket:panel>
 </body>
 </html>

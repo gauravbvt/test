@@ -6,7 +6,7 @@
         xml:lang="en"
         lang="en">
 <body>
-<wicket:panel>
+<wicket:extend>
     <div wicket:id="location">
         <table>
             <tr>
@@ -19,11 +19,11 @@
             </tr>
             <tr>
                 <td>County:</td>
-                <td><input type="text" wicket:id="county" /></td>
+                <td><input type="text" wicket:id="county"/></td>
             </tr>
             <tr>
                 <td>City:</td>
-                <td><input type="text" wicket:id="city" /></td>
+                <td><input type="text" wicket:id="city"/></td>
             </tr>
             <tr>
                 <td>Street:</td>
@@ -36,7 +36,7 @@
         </table>
     </div>
     <div wicket:id="locationFeedback">[feedback]</div>
-    <a href="#" wicket:id = "verify">Verify location</a>
-</wicket:panel>
+    <a href="#" wicket:id="verify">Verify location</a>
+</wicket:extend>
 </body>
 </html>
