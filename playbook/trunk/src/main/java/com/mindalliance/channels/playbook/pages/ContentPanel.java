@@ -1,8 +1,8 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.pages.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
-import com.mindalliance.channels.playbook.support.models.RefDataProvider;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,13 +12,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * ...
@@ -28,22 +26,21 @@ public class ContentPanel extends Panel {
     private static final int ITEMS_PER_PAGE = 10;
     private Ref selected ;
 
-    public ContentPanel( String s, RefDataProvider data ) {
+    public ContentPanel( String s, IDataProvider data ) {
         super( s );
 
-        final List<RefMetaProperty> colNames = data.getColumns();
-        if ( colNames.size() > 0 ) {
+        if ( data.size() > 0 ) {
             // Assume we have at least a row to select
             // Select the first one
 
             setSelected( (Ref) data.iterator(0,1).next() );
         }
 
-        add( new DataView( "content-col", new ListDataProvider( colNames ) ){
+        final ColumnProvider cp = new ColumnProvider( data );
+        add( new DataView( "content-col", cp ){
             protected void populateItem( Item item ) {
                 RefMetaProperty mp = (RefMetaProperty) item.getModelObject();
-                final String colName = deCamelCase( mp.getPropertyName() );
-                item.add( new Label( "content-col-name", colName ));
+                item.add( new Label( "content-col-name", mp.getDisplayName() ));
             }
         } );
 
@@ -51,11 +48,11 @@ public class ContentPanel extends Panel {
             protected void populateItem( final Item item ) {
                 item.add( new DataView( "content-cell", new IDataProvider() {
                     public Iterator iterator( int first, int count ) {
-                        return colNames.subList( first, first + count ).iterator();
+                        return cp.iterator( first, count );
                     }
 
                     public int size() {
-                        return colNames.size();
+                        return cp.size();
                     }
 
                     public IModel model( Object object ) {
@@ -103,10 +100,5 @@ public class ContentPanel extends Panel {
 
     public void setSelected( Ref selected ) {
         this.selected = selected;
-    }
-
-    private String deCamelCase( String propertyName ) {
-        // TODO
-        return propertyName;
     }
 }

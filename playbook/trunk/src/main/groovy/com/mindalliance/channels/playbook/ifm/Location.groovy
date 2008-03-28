@@ -31,7 +31,7 @@ class Location extends BeanImpl implements Comparable {
     Area getArea() {
         return getArea(true)
     }
-    
+
     Area getArea(boolean remember) {
         Area a = area
         if (!a) {

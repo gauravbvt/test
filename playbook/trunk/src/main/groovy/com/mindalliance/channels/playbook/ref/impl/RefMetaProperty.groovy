@@ -9,11 +9,17 @@ package com.mindalliance.channels.playbook.ref.impl
 class RefMetaProperty implements Serializable, Comparable {
 
     String propertyName
+    String displayName
     Class type
 
     RefMetaProperty(String name, Class type) {
+        this( name, type, name )
+    }
+
+    RefMetaProperty(String name, Class type, String displayName ) {
         this.propertyName = name
         this.type = type
+        this.displayName = displayName
     }
 
     boolean equals(def obj) {

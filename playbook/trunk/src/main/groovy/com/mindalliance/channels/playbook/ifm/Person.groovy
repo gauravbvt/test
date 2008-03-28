@@ -30,4 +30,5 @@ class Person extends Resource {
         return "$fn $md $ln"
     }
 
+    String getType() { "Person" }
 }

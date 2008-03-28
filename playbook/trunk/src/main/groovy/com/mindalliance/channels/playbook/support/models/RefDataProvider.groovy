@@ -6,7 +6,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
-import com.mindalliance.channels.playbook.support.RefUtils
+import org.apache.wicket.model.Model
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

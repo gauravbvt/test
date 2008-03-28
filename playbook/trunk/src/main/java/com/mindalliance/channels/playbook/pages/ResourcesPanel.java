@@ -12,8 +12,9 @@ public class ResourcesPanel extends Panel {
     public ResourcesPanel( String id, IModel model ) {
         super( id, model );
 
-        add( new ContentPanel( "contents",
-                new RefDataProvider( model.getObject(), "resources" ) ) );
-        add( new FilterPanel( "filter" ) );
+        final RefDataProvider rawData = new RefDataProvider( model.getObject(), "resources" );
+        final FilterPanel filter = new FilterPanel( "filter", rawData );
+        add( filter );
+        add( new ContentPanel( "contents", filter.getRawData() ) );
     }
 }

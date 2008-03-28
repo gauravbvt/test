@@ -31,10 +31,12 @@ public class ScenariosPanel extends Panel {
                 scenario = new RefModel( ss.get(0) );
         }
 
+        final FilterPanel filter = new FilterPanel( "filter",
+            new RefDataProvider( scenario.getObject(), "occurrences" ) );
+        add( filter );
         add( new ContentPanel( "contents", new RefDataProvider( scenario.getObject(), "occurrences" ) ) );
         add( new Label( "sc-name", new RefPropertyModel( scenario, "name" ) ) );
         add( new Label( "sc-desc", new RefPropertyModel( scenario, "description" ) ) );
-        add( new FilterPanel( "filter" ) );
 
         final Form form = new Form( "sc-form" );
         add( form );
@@ -53,7 +55,7 @@ public class ScenariosPanel extends Panel {
                 } ) {
 
             protected boolean isSelected( Object object, int index, String selected ) {
-                return object == scenario;
+                return object == scenario.getObject();
             }
 
             protected boolean wantOnSelectionChangedNotifications() {
