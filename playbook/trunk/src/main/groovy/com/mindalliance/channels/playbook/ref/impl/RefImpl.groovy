@@ -169,5 +169,9 @@ class RefImpl implements Ref, GroovyInterceptable {
         deref().changed(propName)
     }
 
+    public String getType() {
+        return deref().getType()
+    }
+
 
 }

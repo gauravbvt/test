@@ -15,4 +15,5 @@ interface Referenceable extends Bean {
     void reset() // remove pending change or delete from session
     Referenceable deref() // noop - returns self
     List<RefMetaProperty>metaProperties()
+    String getType() // return a short string identifying the type of the referenceable
 }

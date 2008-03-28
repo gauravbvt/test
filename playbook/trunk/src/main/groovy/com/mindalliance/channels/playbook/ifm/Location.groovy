@@ -120,4 +120,9 @@ class Location extends BeanImpl implements Comparable {
         return this.getArea().compareTo(other.getArea())
     }
 
+   private void writeObject(ObjectOutputStream oos) throws IOException {
+       area = null
+       oos.defaultWriteObject()
+    }
+
 }

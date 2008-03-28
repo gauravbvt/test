@@ -10,8 +10,6 @@ class Organization extends Resource {
 
     Location address = new Location() // not a Ref because not an independent element (is a component of the Organization)
 
-    String getType() { "Organization" }
-
     void beforeStore() {
         address.detach()
     }

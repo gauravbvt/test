@@ -8,7 +8,4 @@ package com.mindalliance.channels.playbook.ifm
  */
 class System extends Resource {
 
-    String getType() {
-        return "System";
-    }
 }

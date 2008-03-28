@@ -182,4 +182,10 @@ import com.mindalliance.channels.playbook.ref.Bean
         this.setFrom(fresh)
     }
 
+    String getType() {    // Default
+        String cn = this.class.name
+        String type = "${cn.substring(cn.lastIndexOf('.') + 1)}"
+        return type
+    }
+
 }

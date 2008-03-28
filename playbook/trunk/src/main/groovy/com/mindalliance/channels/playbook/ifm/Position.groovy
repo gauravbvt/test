@@ -10,10 +10,6 @@ class Position extends Resource {
 
     Location jurisdiction = new Location()
 
-    String getType() {
-        return "Position";
-    }
-
     void beforeStore() {
         jurisdiction.detach()
     }
