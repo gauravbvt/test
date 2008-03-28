@@ -40,7 +40,7 @@ import com.mindalliance.channels.playbook.ref.Bean
     }
 
     protected List<String> transientProperties() {
-        return super.transientProperties() + ['id', 'db', 'pcs', 'reference']
+        return super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type']
     }
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
