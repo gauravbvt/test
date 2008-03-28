@@ -19,6 +19,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.Person;
 import com.mindalliance.channels.playbook.ifm.Location;
+import com.mindalliance.channels.playbook.ifm.User;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -56,7 +57,8 @@ public class PersonTest extends WebPage {
         debugDiv.add(locationLabel);
         AjaxLink saveLink = new AjaxLink("save") {
             public void onClick(AjaxRequestTarget target) {
-                ((PlaybookSession) Session.get()).commit();
+                PlaybookSession session = (PlaybookSession)Session.get();
+                session.commit();
                 Person p = (Person)person.deref();
                 Location loc = (Location)RefUtils.get(person, "address");
                 System.out.print("COMMIT: " + (String) RefUtils.get(person, "name") + "\n");
@@ -67,11 +69,12 @@ public class PersonTest extends WebPage {
         };
         AjaxLink resetLink = new AjaxLink("reset") {
             public void onClick(AjaxRequestTarget target) {
-                ((PlaybookSession) Session.get()).abort();
+                PlaybookSession session = (PlaybookSession)Session.get();
+                session.abort();
                 System.out.print("ABORT: " + (String) RefUtils.get(person, "name") + "\n");
                 System.out.print("ABORT: " + (String) RefUtils.get(person, "address.name") + "\n");
                 personPanel.setOutputMarkupId(true);
-                personPanel.refresh(person, target);
+                personPanel.refresh(target);
                 target.addComponent(personLabel);
                 target.addComponent(locationLabel);
             }
@@ -86,6 +89,7 @@ public class PersonTest extends WebPage {
         person = (Ref)RefUtils.get(user, "person");
         if (person == null) {
             person = new Person().persist();
+            RefUtils.set(user, "person", person);
             person.commit();
             user.commit();
         }

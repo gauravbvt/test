@@ -12,4 +12,5 @@ interface Ref extends Serializable {
     void delete()
     void commit() // commit only this Ref
     void become(Ref ref) // take the id and db of ref
+    void changed(String propName) // the propName of the referenced Referenceable changed
 }

@@ -35,9 +35,9 @@ public class PersonPanel extends Panel {
     TextField lastNameField;
     LocationPanel locationPanel;
 
-    public PersonPanel(String id, final Ref person) {
+    public PersonPanel(String id, Ref p) {
         super(id);
-        this.person = person;
+        person = p;
         load();
     }
 
@@ -90,14 +90,13 @@ public class PersonPanel extends Panel {
         form.removePersistentFormComponentValues(true);
         add(form);
         // Location panel
-        locationPanel = new LocationPanel("location", (Location) person.deref("address"));
+        locationPanel = new LocationPanel("location", person, "address");
         locationPanel.setOutputMarkupId(true);
         add(locationPanel);
     }
 
-    public void refresh(Ref person, AjaxRequestTarget target) {
-        this.person.become(person);
-        locationPanel.refresh((Location)person.deref("address"), target);
+    public void refresh(AjaxRequestTarget target) {
+        locationPanel.refresh(target);
         target.addComponent(firstNameField);
         target.addComponent(middleNameField);
         target.addComponent(lastNameField);

@@ -177,4 +177,9 @@ import com.mindalliance.channels.playbook.ref.Bean
         this.reference.commit()
     }
 
+    void refresh() { // sync state from store
+        Referenceable fresh = this.reference.deref() // get fresh copy
+        this.setFrom(fresh)
+    }
+
 }

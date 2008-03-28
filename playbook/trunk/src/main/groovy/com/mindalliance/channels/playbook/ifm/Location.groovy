@@ -99,13 +99,15 @@ class Location extends BeanImpl implements Comparable {
     String toString() {
         String s = street ? (street + ', ') : ''
         String ci = city ? (city + ', ') : ''
+        String ct = county ? (county + ', ') : ''
         String sa = state ? (state + ', ') : ''
         String cn = country ? (country + ', ') : ''
-        String cd = code ? (code + ', ') : ''
-        String string = "$s$ci$sa$cn$cd"
+        String cd = code ? code : ''
+        String string = "$s$ci$ct$sa$cn$cd"
         if (string && string[string.size()-1] == ',') {
             string = "${string[0..string.size()-2]}"
         }
+        return string
     }
 
     @Override

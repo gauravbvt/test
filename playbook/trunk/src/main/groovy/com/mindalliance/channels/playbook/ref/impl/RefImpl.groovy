@@ -165,5 +165,9 @@ class RefImpl implements Ref, GroovyInterceptable {
         store.commit(this)
     }
 
+    public void changed(String propName) {
+        deref().changed(propName)
+    }
+
 
 }
