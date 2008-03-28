@@ -173,4 +173,8 @@ import com.mindalliance.channels.playbook.ref.Bean
         return list
     }
 
+    void commit() {
+        this.reference.commit()
+    }
+
 }

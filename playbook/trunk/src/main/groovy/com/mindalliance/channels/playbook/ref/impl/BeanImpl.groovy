@@ -40,9 +40,17 @@ class BeanImpl implements Bean {
     }
 
     void setFrom(Bean bean) {
-        if (!this.class.isAssignableFrom(bean.class)) throw new IllegalArgumentException("Can't copy from $bean")
-        bean.beanProperties() {name, val ->
-            this."$name" = val
+        if (bean) {
+            if (!this.class.isAssignableFrom(bean.class)) throw new IllegalArgumentException("Can't copy from $bean")
+            bean.beanProperties().each {name, val ->
+                try {
+                    this."$name" = val
+                }
+                catch (Exception e) {
+                    // TODO -- put a warning in log
+                    System.out.println("Can't set field $name in ${bean.class.name}")
+                }
+            }
         }
     }
 

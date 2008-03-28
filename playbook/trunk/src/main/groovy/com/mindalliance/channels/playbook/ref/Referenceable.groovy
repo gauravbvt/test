@@ -10,7 +10,8 @@ interface Referenceable extends Bean {
     void afterRetrieve()
     Ref persist()
     void delete()
-    void reset()
+    void commit() // commit only this
+    void reset() // remove pending change or delete from session
     Referenceable deref() // noop - returns self
     List<RefMetaProperty>metaProperties()
 }

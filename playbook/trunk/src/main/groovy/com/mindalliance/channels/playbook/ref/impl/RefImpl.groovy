@@ -155,4 +155,15 @@ class RefImpl implements Ref, GroovyInterceptable {
         return metamethod.invoke(this, args)
     }
 
+    void become(Ref ref) {
+        this.id = ref.id
+        this.db = ref.db
+    }
+
+    public void commit() {
+        Store store = PlaybookApplication.locateStore()
+        store.commit(this)
+    }
+
+
 }

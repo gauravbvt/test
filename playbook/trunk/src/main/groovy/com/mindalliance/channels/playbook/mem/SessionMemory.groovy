@@ -48,9 +48,6 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         deletes.add(ref)
     }
 
-    void reset(Ref ref) {
-        changes.remove(ref)
-    }
 
     String getDefaultDb() {
         return ApplicationMemory.ROOT_DB;
@@ -65,6 +62,27 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     void abort() {
         reset()
+    }
+
+    public void commit(Ref ref) {
+       if (changes.containsKey(ref)) {
+           Referenceable referenceable = changes.get(ref)
+           changes.remove(ref)
+           getApplicationMemory().store(referenceable)
+       }
+       else if (deletes.contains(ref)) {
+           deletes.remove(ref)
+           getApplicationMemory().delete(ref)
+       }
+    }
+
+    public void reset(Ref ref) {
+        if (changes.containsKey(ref)) {
+            changes.remove(ref)
+        }
+        else if (deletes.contains(ref)) {
+            deletes.remove(ref)
+        }
     }
 
     private void reset() {

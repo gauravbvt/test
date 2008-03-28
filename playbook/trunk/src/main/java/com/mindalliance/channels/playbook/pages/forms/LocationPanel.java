@@ -30,51 +30,74 @@ import com.mindalliance.channels.playbook.geo.Area;
 public class LocationPanel extends Panel {
 
     Location location;
+    WebMarkupContainer div;
+    AutoCompleteTextField countryField;
+    AutoCompleteTextField stateField;
+    AutoCompleteTextField countyField;
+    AutoCompleteTextField cityField;
+    TextField streetField;
+    TextField codeField;
+    FeedbackPanel feedback;
 
     public LocationPanel(String id, Location loc) {
         super(id);    //To change body of overridden methods use File | Settings | File Templates.
-        location = (Location)loc.copy();
+        location = loc;
         load();
     }
 
     private void load() {
-        final FeedbackPanel feedback = new FeedbackPanel("locationFeedback", IFeedbackMessageFilter.ALL);
-        final WebMarkupContainer div = new WebMarkupContainer("panel");
+        feedback = new FeedbackPanel("locationFeedback", IFeedbackMessageFilter.ALL);
+        div = new WebMarkupContainer("location");
         add(div);
-        // Country
-        final TextField codeField = new TextField("code", new PropertyModel(location, "code"));
-        final AutoCompleteTextField countryField = new AutoCompleteTextField("country", new PropertyModel(location, "country")) {
+        // Fields
+        countryField = new AutoCompleteTextField("country", new PropertyModel(location, "country")) {
             protected Iterator getChoices(String input) {
                 return countryIterator(input, 10);
             }
         };
-        final AutoCompleteTextField stateField = new AutoCompleteTextField("state", new PropertyModel(location, "state")) {
+        stateField = new AutoCompleteTextField("state", new PropertyModel(location, "state")) {
             protected Iterator getChoices(String input) {
-                return stateIterator(input, countryField.getModelObjectAsString(),  10);
+                return stateIterator(input, location.getCountry(),  10);
             }
 
         };
-        final AutoCompleteTextField cityField = new AutoCompleteTextField("city", new PropertyModel(location, "city")) {
+        countyField = new AutoCompleteTextField("county", new PropertyModel(location, "county")) {
             protected Iterator getChoices(String input) {
-                return cityIterator(input, countryField.getModelObjectAsString(), stateField.getModelObjectAsString(), 10);
+                return countyIterator(input, location.getCountry(), location.getState(),  10);
+            }
+
+        };
+        cityField = new AutoCompleteTextField("city", new PropertyModel(location, "city")) {
+            protected Iterator getChoices(String input) {
+                return cityIterator(input, location.getCountry(), location.getState(), location.getCounty(), 10);
             }
         };
-
+        streetField = new TextField("street", new PropertyModel(location, "street"));
+        streetField.setPersistent(false);
+        codeField = new TextField("code", new PropertyModel(location, "code"));
+        codeField.setPersistent(false);
+       // Ajax
+       // Country field
        countryField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countryName = countryField.getModelObjectAsString();
                 // System.out.println("Updating country to " + countryName);
-                stateField.setModelObject("");
+                location.setState("");
+                location.setCounty("");
+                location.setCity("");
+                location.setStreet("");
+                location.setCode("");
                 target.addComponent(stateField);
-                cityField.setModelObject("");
+                target.addComponent(countyField);
                 target.addComponent(cityField);
+                target.addComponent(streetField);
+                target.addComponent(codeField);
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
-
-//        countryField.add(GeoValidator.countryExists());
+        // countryField.add(GeoValidator.countryExists());
         div.add(countryField);
         // State field
         stateField.setOutputMarkupId(true);
@@ -83,8 +106,14 @@ public class LocationPanel extends Panel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String stateName = stateField.getModelObjectAsString();
                 // System.out.println("Updating state to " + stateName);
-                cityField.setModelObject("");
+                location.setCounty("");
+                location.setCity("");
+                location.setStreet("");
+                location.setCode("");
+                target.addComponent(countyField);
                 target.addComponent(cityField);
+                target.addComponent(streetField);
+                target.addComponent(codeField);
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
@@ -92,23 +121,57 @@ public class LocationPanel extends Panel {
 
 //        stateField.add(GeoValidator.stateExists());
         div.add(stateField);
+        // County field
+        countyField.setOutputMarkupId(true);
+        countyField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                // String countyName = countyField.getModelObjectAsString();
+                // System.out.println("Updating county to " + countyName);
+                location.setCity("");
+                location.setStreet("");
+                location.setCode("");
+                target.addComponent(cityField);
+                target.addComponent(streetField);
+                target.addComponent(codeField);
+                feedback.setModel(new FeedbackMessagesModel(feedback));
+                target.addComponent(feedback);
+            }
+        });
+        div.add(countyField);
         // City field
         cityField.setOutputMarkupId(true);
         cityField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                // String cityName = cityField.getModelObjectAsString();
+                // System.out.println("Updating city to " + cityName);
+                location.setStreet("");
+                location.setCode("");
+                target.addComponent(streetField);
+                target.addComponent(codeField);
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
         div.add(cityField);
         // Street field
-        final TextField streetField = new TextField("street", new PropertyModel(location, "street"));
+        streetField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                // String streetName = streetField.getModelObjectAsString();
+                // System.out.println("Updating street to " + streetName);
+                feedback.setModel(new FeedbackMessagesModel(feedback));
+                target.addComponent(feedback);
+            }
+        });
         div.add(streetField);
         // Code field
         codeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                // String streetName = streetField.getModelObjectAsString();
+                 // System.out.println("Updating street to " + streetName);
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
@@ -147,15 +210,33 @@ public class LocationPanel extends Panel {
         });
     }
 
+
     // Get modified copy of original location
     public Location getLocation() {
         return location;
     }
 
+    public void onDetach() {
+        location.detach();
+        super.onDetach();
+    }
+
+    public void refresh(Location location, AjaxRequestTarget target) {
+        this.location.setFrom(location);
+        target.addComponent(countryField);
+        target.addComponent(stateField);
+        target.addComponent(countyField);
+        target.addComponent(cityField);
+        target.addComponent(streetField);
+        target.addComponent(codeField);
+        feedback.setModel(new FeedbackMessagesModel(feedback));
+        target.addComponent(feedback);
+    }
+
     private boolean isValidCode(Location location) {
         String code = location.getCode();
         if (code != null && code.length() > 0) {
-           return GeoService.validateCode(code, location.getCountry(), location.getState(), location.getCity());
+           return GeoService.validateCode(code, location.getCountry(), location.getState(), location.getCounty(), location.getCity());
         }
         else {
             return true;
@@ -178,11 +259,19 @@ public class LocationPanel extends Panel {
         return choices.iterator();
     }
 
-    private Iterator cityIterator(String input, String countryName, String stateName, int max) {
+    private Iterator countyIterator(String input, String countryName, String stateName, int max) {
         if (Strings.isEmpty(input)) {
             return Collections.EMPTY_LIST.iterator();
         }
-        List choices = GeoService.findCandidateCityNames(input, countryName, stateName, max);
+        List choices = GeoService.findCandidateCountyNames(input, countryName, stateName, max);
+        return choices.iterator();
+    }
+
+    private Iterator cityIterator(String input, String countryName, String stateName, String countyName, int max) {
+        if (Strings.isEmpty(input)) {
+            return Collections.EMPTY_LIST.iterator();
+        }
+        List choices = GeoService.findCandidateCityNames(input, countryName, stateName, countyName, max);
         return choices.iterator();
     }
 }

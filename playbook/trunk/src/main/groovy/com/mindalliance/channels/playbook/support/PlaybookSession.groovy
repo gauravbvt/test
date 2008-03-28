@@ -78,6 +78,14 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         memory.abort()
     }
 
+    public void commit(Ref ref) {
+        memory.commit(ref)
+    }
+
+    public void reset(Ref ref) {
+        memory.reset(ref)
+    }
+
     public int getPendingChangesCount() {
         return memory.size;
     }
@@ -91,4 +99,6 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     Ref getUser() {
         return user
     }
+
+
 }

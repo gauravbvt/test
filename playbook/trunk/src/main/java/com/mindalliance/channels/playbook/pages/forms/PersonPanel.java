@@ -7,7 +7,13 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.Session;
+import org.apache.wicket.feedback.FeedbackMessagesModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.LocationPanel;
 import com.mindalliance.channels.playbook.ifm.Person;
@@ -22,7 +28,12 @@ import com.mindalliance.channels.playbook.ifm.Location;
  */
 public class PersonPanel extends Panel {
 
-    final Ref person;
+    Ref person;
+    FeedbackPanel feedback;
+    TextField firstNameField;
+    TextField middleNameField;
+    TextField lastNameField;
+    LocationPanel locationPanel;
 
     public PersonPanel(String id, final Ref person) {
         super(id);
@@ -31,26 +42,66 @@ public class PersonPanel extends Panel {
     }
 
     private void load() {
-        final Person copy = (Person) person.deref().copy();
-        final LocationPanel locationPanel = new LocationPanel("location", (Location) copy.getAddress());
-        add(new FeedbackPanel("feedback"));
-        Form form = new Form("person") {
-            public void onSubmit() {
-                Location editedLocation = locationPanel.getLocation();
-                copy.setAddress(editedLocation);
-                person.deref().setFrom(copy);
+        // feedback panel
+        feedback = new FeedbackPanel("feedback");
+        feedback.setOutputMarkupId(true);
+        add(feedback);
+        // firstName
+        firstNameField = new TextField("firstName", new RefPropertyModel(person, "firstName"));
+        System.out.print((String) "First name = " + (String) RefUtils.get(person, "firstName"));
+        firstNameField.setRequired(true);
+        firstNameField.setPersistent(false);
+        firstNameField.setOutputMarkupId(true);
+        firstNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.addComponent(feedback);
             }
-        };
-        form.add(new TextField("firstName", new RefPropertyModel(copy, "firstName")).setRequired(true));
-        form.add(new TextField("middleName", new RefPropertyModel(copy, "middleName")));
-        form.add(new TextField("lastName", new RefPropertyModel(copy, "lastName")).setRequired(true));
-        form.add(locationPanel);
-        form.add(new Button("cancel").add(new AjaxEventBehavior("onclick") {
-            protected void onEvent(AjaxRequestTarget target) {
-               /// TODO reset, reload
+        });
+        // middleName
+        middleNameField = new TextField("middleName", new RefPropertyModel(person, "middleName"));
+        System.out.print((String) "Middle name = " + (String) RefUtils.get(person, "middleName"));
+        middleNameField.setPersistent(false);
+        middleNameField.setRequired(true);
+        middleNameField.setOutputMarkupId(true);
+        middleNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.addComponent(feedback);
             }
-        }));
+        });
+        // lastName
+        lastNameField = new TextField("lastName", new RefPropertyModel(person, "lastName"));
+        System.out.print((String) "Last name = " + (String) RefUtils.get(person, "lastName"));
+        lastNameField.setPersistent(false);
+        lastNameField.setRequired(true);
+        lastNameField.setOutputMarkupId(true);
+        lastNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.addComponent(feedback);
+            }
+        });
+        // form
+        Form form = new Form("person");
+        form.add(firstNameField);
+        form.add(middleNameField);
+        form.add(lastNameField);
+        form.removePersistentFormComponentValues(true);
         add(form);
+        // Location panel
+        locationPanel = new LocationPanel("location", (Location) person.deref("address"));
+        locationPanel.setOutputMarkupId(true);
+        add(locationPanel);
+    }
+
+    public void refresh(Ref person, AjaxRequestTarget target) {
+        this.person.become(person);
+        locationPanel.refresh((Location)person.deref("address"), target);
+        target.addComponent(firstNameField);
+        target.addComponent(middleNameField);
+        target.addComponent(lastNameField);
+        target.addComponent(locationPanel);
     }
 
 }

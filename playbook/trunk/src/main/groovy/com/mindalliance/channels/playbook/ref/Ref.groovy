@@ -8,6 +8,8 @@ interface Ref extends Serializable {
     Referenceable deref()
     Object deref(String path)
     Object get(String name)
-    void reset()
+    void reset() // remove from session (pending change or delete)
     void delete()
+    void commit() // commit only this Ref
+    void become(Ref ref) // take the id and db of ref
 }

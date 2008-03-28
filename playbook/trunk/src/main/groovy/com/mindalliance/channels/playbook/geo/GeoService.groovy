@@ -75,6 +75,9 @@ class GeoService {
                 if (location.county) {
                     name = location.county
                     tsc.featureCode = COUNTY
+                    Area county = findCounty(country, state, name)
+                    if (!county) {throw new UnknownAreaException("Unknown county $name")}
+                    tsc.adminCode2 = county.adminCode2
                 }
                 if (location.city) {
                     name = location.city
@@ -149,6 +152,7 @@ class GeoService {
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
             tsc.style = Style.FULL
+            tsc.countryCode = country.topo.countryCode
             tsc.nameEquals = name
             tsc.featureCode = 'ADM1'
             List<Toponym> topos
@@ -166,6 +170,37 @@ class GeoService {
             }
             else {
                 throw new UnknownAreaException("No such state $name")
+            }
+        }
+        return area
+    }
+
+    static Area findCounty(Area country, Area state, String name) {
+        Area area
+        Location location = new Location(country: country.countryName, state: state.name, county:name)
+        area = areas[location]
+        if (!area) {
+            ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+            tsc.style = Style.FULL
+            tsc.countryCode = country.topo.countryCode
+            tsc.adminCode1 = state.topo.adminCode1
+            tsc.nameEquals = name
+            tsc.featureCode = 'ADM2'
+            List<Toponym> topos
+            try {
+                topos = WebService.search(tsc).toponyms
+            } catch (Exception e) {
+                throw new ServiceFailureAreaException("Failed to find county $name", e)
+            }
+            Toponym stateTopo = (Toponym) topos.find {topo ->
+                topo.featureCode == "ADM2"
+            }
+            if (stateTopo) {
+                area = new Area(stateTopo)
+                areas[location] = area
+            }
+            else {
+                throw new UnknownAreaException("No such county $name")
             }
         }
         return area
@@ -200,7 +235,7 @@ class GeoService {
         catch (Exception e) {
             System.err.println("Failed to look up candidate country names: $e")
         }
-        return names
+        return names.sort()
     }
 
     static List<String> findCandidateStateNames(String input, String countryName, int max) {
@@ -219,19 +254,43 @@ class GeoService {
         catch (Exception e) {
             System.err.println("Failed to look up candidate state names: $e")
         }
-        return names
+        return names.sort()
     }
 
-    static List<String> findCandidateCityNames(String input, String countryName, String stateName, int max) {
+    static List<String> findCandidateCountyNames(String input, String countryName, String stateName, int max)  {
         List<String> names = []
         try {
             Area country = findCountry(countryName)
             Area state = findState(country, stateName)
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
             tsc.nameStartsWith = input
+            tsc.featureCodes = COUNTY as String[]
+            tsc.countryCode = country.topo.countryCode
+            tsc.adminCode1 = state.topo.adminCode1
+            tsc.maxRows = max
+            tsc.style = Style.SHORT
+            List<Toponym> topos = WebService.search(tsc).toponyms
+            names = topos.collect {topo -> topo.name}
+        }
+        catch (Exception e) {
+            System.err.println("Failed to look up candidate county names: $e")
+        }
+        return names.sort()
+    }
+
+    static List<String> findCandidateCityNames(String input, String countryName, String stateName, String countyName, int max) {
+        List<String> names = []
+        try {
+            Area country = findCountry(countryName)
+            Area state = findState(country, stateName)
+            Area county
+            if (countyName) county = findCounty(country, state, countyName)
+            ToponymSearchCriteria tsc = new ToponymSearchCriteria()
+            tsc.nameStartsWith = input
             tsc.featureCodes = CITY as String[]
             tsc.countryCode = country.topo.countryCode
-            tsc.adminCode1 = state.topo.adminCode1        
+            tsc.adminCode1 = state.topo.adminCode1
+            if (county) tsc.adminCode2 = county.topo.adminCode2
             tsc.maxRows = max
             tsc.style = Style.SHORT
             List<Toponym> topos = WebService.search(tsc).toponyms
@@ -240,10 +299,10 @@ class GeoService {
         catch (Exception e) {
             System.err.println("Failed to look up candidate city names: $e")
         }
-        return names
+        return names.sort()
     }
 
-    static boolean validateCode(String code, String countryName, String stateName, String cityName) {
+    static boolean validateCode(String code, String countryName, String stateName, String countyName, String cityName) {
         try {
             assert code
             String encodedCode = URLEncoder.encode(code)
@@ -251,6 +310,8 @@ class GeoService {
             if (countryName) country= findCountry(countryName)
             Area state
             if (stateName) state = findState(country, stateName)
+            Area county
+            if (countyName) county = findCounty(country, state, countyName)
             String url = WebService.geonamesServer
             url += "/postalCodeSearch?postalcode=$encodedCode&maxRows=1"
             if (countryName) url += "&country=${country.topo.countryCode}"
@@ -263,6 +324,9 @@ class GeoService {
                if (state) {
                 if (codeArea.topo.adminCode1 != state.topo.adminCode1) return false
                }
+                if (county) {
+                 if (codeArea.topo.adminCode2 != county.topo.adminCode2) return false
+                }
                if (cityName) {
                    if (!cityName.equalsIgnoreCase(codeArea.topo.name)) return false
                }

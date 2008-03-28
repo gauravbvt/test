@@ -15,6 +15,8 @@ interface Transactionable {
 
     void commit()
     void abort()
+    void commit(Ref ref) // commit only this Ref
+    void reset(Ref reference)  // remove from session only
     int getPendingChangesCount()
     int getPendingDeletesCount()
 

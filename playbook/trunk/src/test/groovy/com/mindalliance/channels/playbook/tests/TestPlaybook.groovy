@@ -13,14 +13,10 @@ import com.mindalliance.channels.playbook.tests.pages.SomePage
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.Todo
 import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.tests.pages.SomePage
-import com.mindalliance.channels.playbook.pages.forms.PersonPanel
-import org.apache.wicket.Component
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField
-import com.mindalliance.channels.playbook.pages.forms.PersonPanel
 import com.mindalliance.channels.playbook.ifm.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 import com.mindalliance.channels.playbook.ifm.Scenario
+import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -78,22 +74,31 @@ public class TestPlaybook extends TestCase {
         myProject.name = "Your project"
         assertNotNull(myProject.createdOn)
         assertTrue(session.pendingChangesCount == 2)
+        // partial commit
+        myProject.commit()
+        assertTrue(session.pendingChangesCount == 1)
+        myProject.name = "Big project"
+        assertTrue(session.pendingChangesCount == 2)
+        myProject.delete()
+        assertTrue(session.pendingChangesCount == 1)
+        assertTrue(session.pendingDeletesCount == 1)
         // reset and redo change
         myProject.reset()
         assertTrue(session.pendingChangesCount == 1)
-        assertTrue(name.equals("Generic"))
-        myProject.name = "Your project"
+        assertTrue(session.pendingDeletesCount == 0)
+        assertTrue(myProject.name.equals("Your project"))
+        myProject.name = "Your own project"
         assertTrue(session.pendingChangesCount == 2)
         //
         def yourProject = sessionMem.retrieve(myProject.reference)
         assertTrue(myProject.equals(yourProject.reference))
-        assertTrue(yourProject.name.equals("Your project"))
+        assertTrue(yourProject.name.equals("Your own project"))
         yourProject.name = "Your big project"
         // Put project back into channels
         channels.addProject(yourProject)
         // Verify that project in application scope still unchanged
         def appLevelProject = app.retrieve(yourProject.reference)
-        assertTrue(appLevelProject.name.equals("Generic"))
+        assertTrue(appLevelProject.name.equals("Your project"))
         channels.about = "About new Channels"
         assertTrue(session.pendingChangesCount == 2)
         // Commit session changes to application memory
@@ -164,12 +169,13 @@ public class TestPlaybook extends TestCase {
         assert rpm.getObject() == 'new scenario'
     }
     
- /*   void testLocationPanel() {
-        tester.startPage(PersonPanel.class)
-        def locationPanel = tester.getComponentFromLastRenderedPage('person:location')
-        def countryTextField = locationPanel.get('panel:country')
+   void testLocationPanel() {
+        tester.startPage(PersonTest.class)
+        def personPanel = tester.getComponentFromLastRenderedPage('person')
+        def locationPanel = personPanel.get('location')
+        def countryTextField = locationPanel.get('location:country')
         assert countryTextField
         tester.executeAjaxEvent(countryTextField, 'onchange')        
-    }*/
+    }
 
 }

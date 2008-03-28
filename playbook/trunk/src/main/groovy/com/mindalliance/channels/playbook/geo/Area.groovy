@@ -10,7 +10,7 @@ import org.geonames.Toponym
 * Date: Mar 22, 2008
 * Time: 12:24:25 PM
 */
-class Area implements Comparable {
+class Area implements Comparable, Serializable {
 
     static final Area UNKNOWN = new UnknownArea()
 

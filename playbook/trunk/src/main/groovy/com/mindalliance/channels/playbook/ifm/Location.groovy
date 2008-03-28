@@ -24,6 +24,10 @@ class Location extends BeanImpl implements Comparable {
     String code = ''
     Area area // force recalculate on change and don't persist
 
+    String getName() {
+        return toString()
+    }
+
     Area getArea() {
         return getArea(true)
     }
@@ -93,7 +97,15 @@ class Location extends BeanImpl implements Comparable {
     }
 
     String toString() {
-        return "<street:$street\ncity:$city\ncounty:$county\nstate:$state\ncountry:$country\ncode:$code>"
+        String s = street ? (street + ', ') : ''
+        String ci = city ? (city + ', ') : ''
+        String sa = state ? (state + ', ') : ''
+        String cn = country ? (country + ', ') : ''
+        String cd = code ? (code + ', ') : ''
+        String string = "$s$ci$sa$cn$cd"
+        if (string && string[string.size()-1] == ',') {
+            string = "${string[0..string.size()-2]}"
+        }
     }
 
     @Override

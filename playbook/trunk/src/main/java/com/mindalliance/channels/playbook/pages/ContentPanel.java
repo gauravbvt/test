@@ -88,7 +88,7 @@ public class ContentPanel extends Panel {
             }
         };
         add( table );
-        add( new FormPanel( "content-form", new PropertyModel( this, "selected" ) ) );
+        add( new FormPanel( "content-form", new PropertyModel( this, "selected" ) ) ); // TODO plug forms here
 
         if ( data.size() > ITEMS_PER_PAGE ) {
             table.setItemsPerPage( ITEMS_PER_PAGE );
