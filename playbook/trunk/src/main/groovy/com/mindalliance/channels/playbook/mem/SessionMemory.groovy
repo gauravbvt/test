@@ -33,6 +33,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                     referenceable.addPropertyChangeListener(this) // register with this session memory
                 }
             }
+            else {
+                if (ApplicationMemory.DEBUG) System.out.println("<== from session: ${referenceable.type} $referenceable")
+            }
             return referenceable
         }
     }
@@ -40,6 +43,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Ref persist(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
         changes.put(reference, (Referenceable) referenceable)
+        if (ApplicationMemory.DEBUG) System.out.println("==> to session: ${referenceable.type} $referenceable")
         return reference
     }
 
@@ -91,7 +95,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     private Referenceable retrieveFromApplicationMemory(Ref reference) {
-        return getApplicationMemory().retrieve(reference)
+        Referenceable referenceable = getApplicationMemory().retrieve(reference)
+        return referenceable
     }
 
     private ApplicationMemory getApplicationMemory() {

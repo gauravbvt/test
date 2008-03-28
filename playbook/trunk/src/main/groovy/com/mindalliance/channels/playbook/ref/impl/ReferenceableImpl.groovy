@@ -45,6 +45,7 @@ import com.mindalliance.channels.playbook.ref.Bean
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
         changed()
+        System.out.println("^^^ changed: ${getType()}.$propName")
         propertyChanged(propName, null, this.@"$propName") // don't care about old value
     }
 

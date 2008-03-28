@@ -48,7 +48,7 @@ public class PersonPanel extends Panel {
         add(feedback);
         // firstName
         firstNameField = new TextField("firstName", new RefPropertyModel(person, "firstName"));
-        System.out.print((String) "First name = " + (String) RefUtils.get(person, "firstName"));
+        // System.out.print((String) "First name = " + (String) RefUtils.get(person, "firstName"));
         firstNameField.setRequired(true);
         firstNameField.setPersistent(false);
         firstNameField.setOutputMarkupId(true);
@@ -72,7 +72,7 @@ public class PersonPanel extends Panel {
         });
         // lastName
         lastNameField = new TextField("lastName", new RefPropertyModel(person, "lastName"));
-        System.out.print((String) "Last name = " + (String) RefUtils.get(person, "lastName"));
+        // System.out.print((String) "Last name = " + (String) RefUtils.get(person, "lastName"));
         lastNameField.setPersistent(false);
         lastNameField.setRequired(true);
         lastNameField.setOutputMarkupId(true);
@@ -96,6 +96,7 @@ public class PersonPanel extends Panel {
     }
 
     public void refresh(AjaxRequestTarget target) {
+        person.changed("address"); // forces an immediate persist to session - needed to ensure location is in sync
         locationPanel.refresh(target);
         target.addComponent(firstNameField);
         target.addComponent(middleNameField);

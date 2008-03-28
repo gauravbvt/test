@@ -54,6 +54,7 @@ public class TestPlaybook extends TestCase {
         Ref channels = app.channels
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
+        assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
         assert metaProps.size() == 4

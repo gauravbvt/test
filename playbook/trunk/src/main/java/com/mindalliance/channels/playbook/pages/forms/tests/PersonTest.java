@@ -59,8 +59,7 @@ public class PersonTest extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 PlaybookSession session = (PlaybookSession)Session.get();
                 session.commit();
-                Person p = (Person)person.deref();
-                Location loc = (Location)RefUtils.get(person, "address");
+                personPanel.refresh(target);
                 System.out.print("COMMIT: " + (String) RefUtils.get(person, "name") + "\n");
                 System.out.print("COMMIT: " + (String) RefUtils.get(person, "address.name") + "\n");
                 target.addComponent(personLabel);
@@ -70,11 +69,11 @@ public class PersonTest extends WebPage {
         AjaxLink resetLink = new AjaxLink("reset") {
             public void onClick(AjaxRequestTarget target) {
                 PlaybookSession session = (PlaybookSession)Session.get();
-                session.abort();
+                session.abort();    
+                personPanel.refresh(target);
                 System.out.print("ABORT: " + (String) RefUtils.get(person, "name") + "\n");
                 System.out.print("ABORT: " + (String) RefUtils.get(person, "address.name") + "\n");
                 personPanel.setOutputMarkupId(true);
-                personPanel.refresh(target);
                 target.addComponent(personLabel);
                 target.addComponent(locationLabel);
             }

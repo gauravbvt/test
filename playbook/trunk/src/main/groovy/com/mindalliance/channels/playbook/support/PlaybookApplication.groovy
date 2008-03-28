@@ -78,7 +78,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             p.addScenario(store(new Scenario(name: "Scenario B", description: "This is scenario B")));
             p.addScenario(store(new Scenario(name: "Scenario C", description: "This is scenario C")));
 
-            p.addResource(store(new Person(name: "Joe Shmoe")));
+            p.addResource(store(new Person(firstName: "Joe", lastName: "Shmoe")));
             p.addResource(store(new Organization(name: "ACME Inc.")));
 
             channels.addProject(store(p))

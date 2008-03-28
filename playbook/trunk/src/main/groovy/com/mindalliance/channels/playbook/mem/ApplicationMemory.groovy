@@ -23,6 +23,7 @@ class ApplicationMemory implements Serializable {
     public static final String ROOT_DB = 'channels'
     public final static Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
+    static DEBUG = false
     static Cache cache
     private Application application
 
@@ -55,6 +56,7 @@ class ApplicationMemory implements Serializable {
     Ref store(Referenceable referenceable) {
         referenceable.beforeStore()
         cache.putInCache(referenceable.getId(), referenceable)
+        if (DEBUG) System.out.println("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
         return referenceable.reference
     }
@@ -71,6 +73,7 @@ class ApplicationMemory implements Serializable {
         Referenceable referenceable
         try {
             referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
+            if (DEBUG) System.out.println("<== from application: ${referenceable.type} $referenceable")
             referenceable.afterRetrieve()
         }
         catch (Exception e) {

@@ -9,9 +9,9 @@ package com.mindalliance.channels.playbook.ifm
 */
 class Person extends Resource {
 
-    String firstName = '?'
-    String middleName = '?'
-    String lastName = '?'
+    String firstName = ''
+    String middleName = ''
+    String lastName = ''
     Location address = new Location() // not a Ref because not an independent element (is a component of the Person)
     URL photo
 
@@ -19,6 +19,7 @@ class Person extends Resource {
         if (propName == 'address') {
             address.detach()
         }
+        super.changed(propName)
     }
     
     void beforeStore() {

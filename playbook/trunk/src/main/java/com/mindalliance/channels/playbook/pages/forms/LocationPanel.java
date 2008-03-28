@@ -5,8 +5,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -62,24 +60,27 @@ public class LocationPanel extends Panel {
         };
         stateField = new AutoCompleteTextField("state", new RefPropertyModel(located, propName +".state")) {
             protected Iterator getChoices(String input) {
-                String stateName = stateField.getModelObjectAsString();
-                return stateIterator(input, stateName,  10);
+                // String countryName = (String)countryField.getModel().getObject();
+                String countryName = (String)RefUtils.get(located,  propName +".country");
+                return stateIterator(input, countryName,  10);
             }
 
         };
         countyField = new AutoCompleteTextField("county", new RefPropertyModel(located, propName +".county")) {
             protected Iterator getChoices(String input) {
-                String countryName = countryField.getModelObjectAsString();
-                String stateName = stateField.getModelObjectAsString();
+                // String countryName = (String)countryField.getModel().getObject();
+                // String stateName = (String)stateField.getModel().getObject();
+                String countryName = (String)RefUtils.get(located,  propName +".country");
+                String stateName = (String)RefUtils.get(located,  propName +".state");
                 return countyIterator(input, countryName, stateName,  10);
             }
 
         };
         cityField = new AutoCompleteTextField("city", new RefPropertyModel(located, propName +".city")) {
             protected Iterator getChoices(String input) {
-                String countryName = countryField.getModelObjectAsString();
-                String stateName = stateField.getModelObjectAsString();
-                String countyName = countyField.getModelObjectAsString();
+                String countryName = (String)countryField.getModel().getObject();
+                String stateName = (String)stateField.getModel().getObject();
+                String countyName = (String)countyField.getModel().getObject();
                 return cityIterator(input, countryName, stateName, countyName, 10);
             }
         };
@@ -92,7 +93,7 @@ public class LocationPanel extends Panel {
        countryField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                // String countryName = countryField.getModelObjectAsString();
+                // String countryName = (String)countryField.getModel().getObject();
                 // System.out.println("Updating country to " + countryName);
                 RefUtils.set(located,propName + ".state", "");
                 RefUtils.set(located,propName + ".county", "");
@@ -100,6 +101,7 @@ public class LocationPanel extends Panel {
                 RefUtils.set(located,propName + ".street", "");
                 RefUtils.set(located,propName + ".code", "");
                 located.changed(propName);
+                // System.out.println("Location = " + located.deref(propName).toString());
                 target.addComponent(stateField);
                 target.addComponent(countyField);
                 target.addComponent(cityField);
@@ -116,13 +118,14 @@ public class LocationPanel extends Panel {
         stateField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                // String stateName = stateField.getModelObjectAsString();
+                // String stateName = stateField..getModel().getObject();
                 // System.out.println("Updating state to " + stateName);
                 RefUtils.set(located,propName + ".county", "");
                 RefUtils.set(located,propName + ".city", "");
                 RefUtils.set(located,propName + ".street", "");
                 RefUtils.set(located,propName + ".code", "");
                 located.changed(propName);
+                // System.out.println("Location = " + located.deref(propName).toString());
                 target.addComponent(countyField);
                 target.addComponent(cityField);
                 target.addComponent(streetField);
@@ -139,12 +142,13 @@ public class LocationPanel extends Panel {
         countyField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                // String countyName = countyField.getModelObjectAsString();
+                // String countyName = countyField..getModel().getObject();
                 // System.out.println("Updating county to " + countyName);
                 RefUtils.set(located,propName + ".city", "");
                 RefUtils.set(located,propName + ".street", "");
                 RefUtils.set(located,propName + ".code", "");
                 located.changed(propName);
+                // System.out.println("Location = " + located.deref(propName).toString());
                 target.addComponent(cityField);
                 target.addComponent(streetField);
                 target.addComponent(codeField);
@@ -158,11 +162,12 @@ public class LocationPanel extends Panel {
         cityField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                // String cityName = cityField.getModelObjectAsString();
+                // String cityName = cityField.getModel().getObject();
                 // System.out.println("Updating city to " + cityName);
                 RefUtils.set(located,propName + ".street", "");
                 RefUtils.set(located,propName + ".code", "");
                 located.changed(propName);
+                // System.out.println("Location = " + located.deref(propName).toString());
                 target.addComponent(streetField);
                 target.addComponent(codeField);
                 feedback.setModel(new FeedbackMessagesModel(feedback));
@@ -174,9 +179,10 @@ public class LocationPanel extends Panel {
         streetField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                // String streetName = streetField.getModelObjectAsString();
+                // String streetName = streetField.getModel().getObject();
                 // System.out.println("Updating street to " + streetName);
                 located.changed(propName);
+                System.out.println("Location = " + located.deref(propName).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
@@ -186,9 +192,10 @@ public class LocationPanel extends Panel {
         codeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                // String streetName = streetField.getModelObjectAsString();
+                // String streetName = streetField.getModel().getObject();
                  // System.out.println("Updating street to " + streetName);
                 located.changed(propName);
+                // System.out.println("Location = " + located.deref(propName).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
