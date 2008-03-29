@@ -195,7 +195,13 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
     public Class formClass() {
         String type = getType()
         String className = "$FORM_PACKAGE.type"
-        return Class.forName(className)
+        try {
+            return  Class.forName(className)
+        }
+        catch(Exception e) {
+            System.err.println("No form class $className")
+            return null
+        }
     }
 
 }
