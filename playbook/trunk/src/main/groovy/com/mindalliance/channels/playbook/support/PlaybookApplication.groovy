@@ -12,11 +12,11 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
 import com.mindalliance.channels.playbook.ifm.context.environment.Person
 import com.mindalliance.channels.playbook.ifm.context.environment.Organization
-import com.mindalliance.channels.playbook.ifm.project.User
+import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
-import com.mindalliance.channels.playbook.ifm.project.Participation
+import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 
 /**
