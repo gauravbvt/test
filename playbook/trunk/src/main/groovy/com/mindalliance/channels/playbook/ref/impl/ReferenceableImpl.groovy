@@ -194,7 +194,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
     public Class formClass() {
         String type = getType()
-        String className = "$FORM_PACKAGE.type"
+        String className = "${FORM_PACKAGE}.$type"
         try {
             return  Class.forName(className)
         }
