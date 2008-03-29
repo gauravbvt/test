@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.project
 
 import com.mindalliance.channels.playbook.ref.Ref
 
@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Mar 21, 2008
 * Time: 11:42:26 AM
 */
-class Participation extends IfmElement {
+class Participation extends ProjectElement {
 
     Ref user
     Ref project

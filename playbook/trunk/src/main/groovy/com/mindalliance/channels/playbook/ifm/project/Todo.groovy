@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.project
 
 import java.lang.System
 
@@ -9,7 +9,7 @@ import java.lang.System
  * Date: Mar 21, 2008
  * Time: 11:43:55 AM
  */
-class Todo extends IfmElement {
+class Todo extends ProjectElement {
 
     String description = "";
     String priority = "Normal" ;

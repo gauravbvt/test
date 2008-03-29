@@ -8,15 +8,15 @@ import com.mindalliance.channels.playbook.support.Memorable
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
-import com.mindalliance.channels.playbook.ifm.Project
-import com.mindalliance.channels.playbook.ifm.Scenario
-import com.mindalliance.channels.playbook.ifm.Person
-import com.mindalliance.channels.playbook.ifm.Organization
-import com.mindalliance.channels.playbook.ifm.User
+import com.mindalliance.channels.playbook.ifm.project.Project
+import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
+import com.mindalliance.channels.playbook.ifm.context.environment.Person
+import com.mindalliance.channels.playbook.ifm.context.environment.Organization
+import com.mindalliance.channels.playbook.ifm.project.User
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
-import com.mindalliance.channels.playbook.ifm.Participation
+import com.mindalliance.channels.playbook.ifm.project.Participation
 import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 
 /**

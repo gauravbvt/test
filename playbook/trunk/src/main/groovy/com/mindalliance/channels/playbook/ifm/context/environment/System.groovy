@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.context.environment
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.

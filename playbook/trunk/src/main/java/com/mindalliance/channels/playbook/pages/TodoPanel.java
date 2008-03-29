@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages;
 
-import com.mindalliance.channels.playbook.ifm.Participation;
-import com.mindalliance.channels.playbook.ifm.Todo;
+import com.mindalliance.channels.playbook.ifm.project.Participation;
+import com.mindalliance.channels.playbook.ifm.project.Todo;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;

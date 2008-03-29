@@ -10,12 +10,12 @@ import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.Location
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.tests.pages.SomePage
-import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.Todo
+import com.mindalliance.channels.playbook.ifm.project.Participation
+import com.mindalliance.channels.playbook.ifm.project.Todo
 import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.ifm.Project
+import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
-import com.mindalliance.channels.playbook.ifm.Scenario
+import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
 import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 
 /**

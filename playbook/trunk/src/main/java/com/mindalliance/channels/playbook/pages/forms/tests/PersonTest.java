@@ -3,23 +3,16 @@ package com.mindalliance.channels.playbook.pages.forms.tests;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import com.mindalliance.channels.playbook.pages.forms.PersonPanel;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.Person;
-import com.mindalliance.channels.playbook.ifm.Location;
-import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.ifm.context.environment.Person;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

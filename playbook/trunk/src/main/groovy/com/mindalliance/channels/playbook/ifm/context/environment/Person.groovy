@@ -1,4 +1,6 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.context.environment
+
+import com.mindalliance.channels.playbook.ifm.Location
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

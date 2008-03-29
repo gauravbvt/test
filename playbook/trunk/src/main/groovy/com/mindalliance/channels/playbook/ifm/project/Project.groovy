@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.project
 
 import com.mindalliance.channels.playbook.ref.Ref
 
@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Mar 19, 2008
 * Time: 2:10:46 PM
 */
-class Project extends IfmElement {
+class Project extends ProjectElement {
 
     String name
     List<Ref> resources = []
