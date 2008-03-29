@@ -15,6 +15,11 @@ class Participation extends IfmElement {
     Ref project
     Boolean analyst
     Ref person
+
+    // TODO
+    // make list computable from Todos as ParticipationElements
+    // Also change addTodo and removeTodo accordingly
+
     List<Ref> todos = []
 
     void addTodo( Ref todo ) {

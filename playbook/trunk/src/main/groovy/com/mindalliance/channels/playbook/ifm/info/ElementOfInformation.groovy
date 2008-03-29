@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 
@@ -7,8 +7,9 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 * Proprietary and Confidential.
 * User: jf
 * Date: Mar 29, 2008
-* Time: 9:06:25 AM
+* Time: 1:06:55 PM
 */
-class InformationSpecification extends BeanImpl {
-
+class ElementOfInformation extends BeanImpl {
+    String topic = 'Unspecified'
+    String content = ''
 }

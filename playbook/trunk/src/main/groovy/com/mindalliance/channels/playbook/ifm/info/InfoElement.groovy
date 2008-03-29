@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.project.scenario
+package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 
@@ -7,11 +7,8 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 * Proprietary and Confidential.
 * User: jf
 * Date: Mar 29, 2008
-* Time: 7:56:21 AM
+* Time: 1:16:29 PM
 */
-class ScenarioElement extends IfmElement {
-
-    String name = ''
-    String description = ''
+class InfoElement extends IfmElement {
 
 }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.project.scenario.act
 
 import com.mindalliance.channels.playbook.ifm.project.scenario.Occurrence
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,4 +12,7 @@ import com.mindalliance.channels.playbook.ifm.project.scenario.Occurrence
 */
 /* abstract */class InformationAct extends Occurrence {
 
+    Ref agent
+    List<Ref> respectedAgreements = [] // list of Agreement
+    List<Ref> brokenAgreements = [] // list of Agreement
 }

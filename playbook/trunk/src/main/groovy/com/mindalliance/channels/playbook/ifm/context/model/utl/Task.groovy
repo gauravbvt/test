@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Time: 8:57:43 AM
 */
 class Task extends UtlElement {
+
     Ref function
     Ref superTask
     List<Ref> eventSpecifications = []  // list of EventSpecifications

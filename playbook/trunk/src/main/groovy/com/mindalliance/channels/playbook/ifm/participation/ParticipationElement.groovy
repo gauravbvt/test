@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.context.model.utl
+package com.mindalliance.channels.playbook.ifm.participation
 
 import com.mindalliance.channels.playbook.ref.Ref
 
@@ -7,9 +7,9 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Proprietary and Confidential.
 * User: jf
 * Date: Mar 29, 2008
-* Time: 8:57:28 AM
+* Time: 1:36:59 PM
 */
-class Function extends UtlElement {
+class ParticipationElement {
 
-    List<Ref> objectives
+    Ref participation
 }

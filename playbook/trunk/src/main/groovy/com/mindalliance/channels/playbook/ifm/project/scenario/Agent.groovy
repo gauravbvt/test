@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.project.scenario
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.context.model.Role
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,9 +12,10 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 */
 class Agent extends ScenarioElement  implements Comparable {
 
-    String id
-    String name = "No name"
-    String description = ''
+    String tag ='' // e.g. 'Blue team'
+    boolean individual = true // is thi Agent meant to represent an individual, as opposed to a team?
+    List<Ref> identities = [] // a list of Resource
+    List<Role> roles =[] // roles in addition to those implied by identities
 
     int compareTo(Object o) {
         if ( o != null && o instanceof Agent )

@@ -11,4 +11,5 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 */
 class EventSpecification extends BeanImpl {
 
+    // The name and description will be used to do semantic proximity matching
 }

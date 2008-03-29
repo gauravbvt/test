@@ -127,4 +127,20 @@ class Area implements Comparable, Serializable {
         if (isCityLike()) return 0
         return -1
     }
+
+    List<String> areaTypeNames() {
+        return ['Globe', 'Continent', 'Country', 'State', 'County', 'City']
+    }
+
+    String featureCodeFromTypeName(String typeName) {
+        switch(typeName) {
+            case 'Globe': return null; break
+            case 'Continent': return 'CONT'; break
+            case 'Country': return 'PCLI'; break
+            case 'State': return 'ADM1'; break
+            case 'County': return 'ADM2'; break
+            case 'City': return 'PPL'; break
+            default: throw new IllegalArgumentException("Unknow area type name $typeName")
+        }
+    }
 }

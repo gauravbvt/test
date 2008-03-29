@@ -13,4 +13,8 @@ class AgentGroup extends Agent {
 
     List<Ref> agents = []
 
+    boolean isIndividual() {
+        return false
+    }
+
 }

@@ -12,10 +12,12 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 */
 class Scenario extends ProjectElement {
 
-    String name = "No name"
-    String description
+    String name = ''
+    String description = ''
     List<Ref> agents = []
     List<Ref> occurrences = []
-
+    List<Ref> informations = []
+    List<Ref> informationNeeds = []
+    List<Ref> assignments = []
 
 }

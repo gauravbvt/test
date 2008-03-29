@@ -11,6 +11,8 @@ import java.lang.System
  */
 class Todo extends IfmElement {
 
+    // TODO -- moved to .ifm.participation, extends ParticipationElement
+
     String description = "";
     String priority = "Normal" ;
     Date due = new Date();
