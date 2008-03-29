@@ -16,4 +16,5 @@ interface Referenceable extends Bean {
     Referenceable deref() // noop - returns self
     List<RefMetaProperty>metaProperties()
     String getType() // return a short string identifying the type of the referenceable
+    Class formClass() // the class of the form to edit this
 }

@@ -173,5 +173,9 @@ class RefImpl implements Ref, GroovyInterceptable {
         return deref().getType()
     }
 
+    public Class formClass() {
+        return deref().formClass() //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 
 }

@@ -18,6 +18,8 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 */
 /*abstract*/ class ReferenceableImpl extends BeanImpl implements Referenceable, GroovyInterceptable {
 
+    static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
+
     String id
     String db
 
@@ -188,6 +190,12 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
         String cn = this.class.name
         String type = "${cn.substring(cn.lastIndexOf('.') + 1)}"
         return type
+    }
+
+    public Class formClass() {
+        String type = getType()
+        String className = "$FORM_PACKAGE.type"
+        return Class.forName(className)
     }
 
 }
