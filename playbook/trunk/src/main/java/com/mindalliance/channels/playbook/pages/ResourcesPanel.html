@@ -9,9 +9,11 @@
 <wicket:panel>
     <hr/>
     <h2>Resources</h2>
-    <div wicket:id="filter"/>
-    <div wicket:id="contents" id="resources-content">
-           [Contents]
+    <div class="filtered-content">
+        <div class="content-filter" wicket:id="filter"/>
+        <div id="content" wicket:id="contents">
+               [Contents]
+        </div>
     </div>
 </wicket:panel>
 </body>

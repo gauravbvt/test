@@ -7,8 +7,13 @@
         lang="en">
 <body>
 <wicket:panel>
-    <ul><li><span>Text</span></li>
-        <span></span>
+    <ul>
+        <span wicket:id="treeOrLeaf">
+            <li wicket:id="leaf">
+                <span wicket:id="tree-label">[Label]</span>
+            </li>
+            <span wicket:id="tree"/>
+        </span>
     </ul>
 </wicket:panel>
 </body>

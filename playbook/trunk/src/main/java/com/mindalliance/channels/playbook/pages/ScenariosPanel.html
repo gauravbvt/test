@@ -10,13 +10,15 @@
     <hr/>
     <h2 wicket:id="sc-name">Scenario</h2>
     <p wicket:id="sc-desc"/>
-    <div wicket:id="filter"/>
-    <div wicket:id="contents" id="scenario-content">
-           [Contents]
+    <div class="filtered-content">
+        <div class="content-filter" wicket:id="filter"/>
+        <div id="content" wicket:id="contents">
+               [Contents]
+        </div>
     </div>
     <div class="sc-picker">
         <form wicket:id="sc-form">
-            <p>Look at scenario <select wicket:id="sc-list">
+            <p>Switch to <select wicket:id="sc-list">
                 <option>Scenario 1</option>
                 <option>Scenario 2</option>
                 <option>Scenario 3</option>

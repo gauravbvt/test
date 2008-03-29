@@ -51,11 +51,16 @@ public class Playbook extends WebPage {
             public Panel getPanel( String s ) {
                 return new ScenariosPanel( s, projectModel );
             } } );
-        if ( session.isAdmin() )
-            tabs.add( new AbstractTab( new Model("Administration") ){
+        if ( session.isAdmin() ) {
+            tabs.add( new AbstractTab( new Model("Project") ){
                 public Panel getPanel( String s ) {
-                    return new AdminPanel( s, projectModel );
+                    return new ProjectPanel( s, projectModel );
                 } } );
+            tabs.add( new AbstractTab( new Model("System") ){
+                public Panel getPanel( String s ) {
+                    return new SystemPanel( s, projectModel );
+                } } );
+        }
         final TabbedPanel tabPanel = new TabbedPanel( "tabs", tabs );
         tabPanel.setSelectedTab( 0 );
         add( tabPanel );

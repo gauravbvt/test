@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -29,6 +30,9 @@ public class TodoPanel extends Panel {
         Form form = new Form( "todos" );
         add( form );
 
+        final WebMarkupContainer table = new WebMarkupContainer( "todo-table" );
+        form.add( table );
+
         final RefreshingView lv = new RefreshingView( "todo", new RefPropertyModel( participation, "todos" ) ){
             protected Iterator getItemModels() {
                 final IModel model = getModel();
@@ -49,19 +53,24 @@ public class TodoPanel extends Panel {
                 item.add( new Button( "todo-remove" ) {
                     public void onSubmit() {
                         Ref todo = (Ref) item.getModelObject();
-                        getParticipation().removeTodo( todo );
+                        final Participation part = getParticipation();
+                        part.removeTodo( todo );
                         todo.delete();
+                        table.setVisible( part.getTodos().size() > 0 );
                     }
                 } );
             }
         };
-        form.add( lv );
+
+        table.setVisible( getParticipation().getTodos().size() > 0 );
+
+        table.add( lv );
         form.add( new Button( "todo-new" ){
             public void onSubmit() {
                 final Todo todo = new Todo();
                 todo.persist();
                 getParticipation().addTodo( todo.getReference() );
-
+                table.setVisible( true );
 
             } } );
         Button submit = new Button( "todo-submit" );

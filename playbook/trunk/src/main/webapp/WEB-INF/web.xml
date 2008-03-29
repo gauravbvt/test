@@ -5,7 +5,9 @@
 	 version="2.4">
 
 	<display-name>playbook</display-name>
-
+    <icon>
+        <small-icon>/favicon.ico</small-icon>
+    </icon>
 	 <!--
 	      There are three means to configure Wickets configuration mode and they are
 	      tested in the order given.

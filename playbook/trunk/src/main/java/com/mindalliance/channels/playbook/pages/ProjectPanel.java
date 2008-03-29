@@ -8,9 +8,9 @@ import org.apache.wicket.model.IModel;
  * ...
  */
 @AuthorizeInstantiation( { "ADMIN" })
-public class AdminPanel extends Panel {
+public class ProjectPanel extends Panel {
 
-    public AdminPanel( String id, IModel model ) {
+    public ProjectPanel( String id, IModel model ) {
         super( id, model );
     }
 }

@@ -16,9 +16,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,10 +29,10 @@ import java.util.Set;
 public class ColumnProvider implements IDataProvider {
 
     private Set<Class<?>> classes = new HashSet<Class<?>>();
+    private Map<String,RefMetaProperty> index = new HashMap<String,RefMetaProperty>();
     private List<RefMetaProperty> columns = new ArrayList<RefMetaProperty>();
 
     public ColumnProvider( IDataProvider data ) {
-        Set<String> check = new HashSet<String>();
         Iterator i = data.iterator( 0, data.size() );
         while ( i.hasNext() ){
             Object item = i.next();
@@ -45,15 +47,15 @@ public class ColumnProvider implements IDataProvider {
                 for ( PropertyDescriptor pd : props ){
                     final String name = pd.getName();
                     final Method getter = pd.getReadMethod();
-                    if ( !check.contains( name ) && getter != null ) {
+                    if ( !index.containsKey( name ) && getter != null ) {
                         final Class<?> type = pd.getPropertyType();
                         if ( !type.isArray() && !Collection.class.isAssignableFrom( type ) ) {
                             final Object value = getter.invoke( item );
                             if ( value != null && !value.toString().trim().isEmpty() ) {
-                                check.add( name );
-                                columns.add( new RefMetaProperty( name, type, toDisplay( name ) ) );
+                                final RefMetaProperty rmp = new RefMetaProperty( name, type, toDisplay( name ) );
+                                index.put( name, rmp );
+                                columns.add( rmp );
                             }
-
                         }
                     }
                 }
@@ -99,5 +101,13 @@ public class ColumnProvider implements IDataProvider {
 
     public Set<Class<?>> getClasses() {
         return Collections.unmodifiableSet( classes );
+    }
+
+    public boolean includes( String name ) {
+        return index.containsKey( name );
+    }
+
+    public RefMetaProperty get( String name ) {
+        return index.get( name );
     }
 }

@@ -8,23 +8,25 @@
         <link rel="stylesheet" type="text/css" href="playbook.css"/>
     </head>
 <body>
-    <h1>Mind-Alliance Playbook</h1>
+    <h1><span>Mind-Alliance Playbook</span></h1>
 
-    <div wicket:id="tabs">[Tabs]</div>
+    <div id="tabs" wicket:id="tabs">[Tabs]</div>
 
     <div id="todos" wicket:id="todos"/>
 
     <div id="signout">
         <hr/>
-        <p>You are logged in as
+        <p>Logged in as
             <span wicket:id="name">Someone</span>
             in project &laquo;<span wicket:id="project">X</span>&raquo;
             &mdash; <a wicket:id="signout">Sign out</a></p>
     </div>
 
-    <form wicket:id="page_controls">
-        <input type="submit" wicket:id="save_button" value="Save"/>
-        <input type="submit" wicket:id="revert_button" value="Revert"/>
-    </form>
+    <div id="controls">
+        <form wicket:id="page_controls">
+            <input type="submit" wicket:id="save_button" value="Save"/>
+            <input type="submit" wicket:id="revert_button" value="Revert"/>
+        </form>
+    </div>
 </body>
 </html>

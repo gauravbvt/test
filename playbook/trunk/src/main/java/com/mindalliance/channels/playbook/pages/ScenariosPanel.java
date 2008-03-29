@@ -1,5 +1,6 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.pages.filters.RootFilter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefDataProvider;
 import com.mindalliance.channels.playbook.support.models.RefModel;
@@ -32,6 +33,7 @@ public class ScenariosPanel extends Panel {
         }
 
         final FilterPanel filter = new FilterPanel( "filter",
+            new RootFilter(),
             new RefDataProvider( scenario.getObject(), "occurrences" ) );
         add( filter );
         add( new ContentPanel( "contents", new RefDataProvider( scenario.getObject(), "occurrences" ) ) );
