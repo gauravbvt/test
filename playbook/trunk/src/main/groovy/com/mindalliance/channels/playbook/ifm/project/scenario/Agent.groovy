@@ -9,11 +9,11 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 * Date: Mar 21, 2008
 * Time: 12:03:14 PM
 */
-class Agent extends IfmElement  implements Comparable {
+class Agent extends ScenarioElement  implements Comparable {
 
     String id
     String name = "No name"
-    String description
+    String description = ''
 
     int compareTo(Object o) {
         if ( o != null && o instanceof Agent )

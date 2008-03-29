@@ -57,9 +57,9 @@ public class TestPlaybook extends TestCase {
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
-        assert metaProps.size() == 4
+        assert metaProps.size() == 8
         metaProps = metaProps.findAll{it.isScalar()}
-        assert metaProps.size() == 2
+        assert metaProps.size() == 4
         //
         String scenarioName = myProject.deref('scenarios')[0].deref('name')
         assert scenarioName.startsWith("Scenario")

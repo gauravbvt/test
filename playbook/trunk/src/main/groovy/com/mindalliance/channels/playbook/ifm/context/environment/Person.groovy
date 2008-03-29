@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.context.environment
 
 import com.mindalliance.channels.playbook.ifm.Location
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +17,7 @@ class Person extends Resource {
     String lastName = ''
     Location address = new Location() // not a Ref because not an independent element (is a component of the Person)
     URL photo
+    List<Ref> positions = []
 
     void changed(String propName) {
         if (propName == 'address') {

@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.context.environment.EnvironmentEle
 */
 class Resource extends EnvironmentElement {
 
-    String name = "No name"
-    String description
+    String name = 'No name'
+    String description = ''
 
 }

@@ -14,11 +14,20 @@ class Organization extends Resource {
 
     Location address = new Location() // not a Ref because not an independent element (is a component of the Organization)
     Ref parent
-    List<Ref> positions
-    List<Ref> systems
+    // List<Ref> positions = []
+    List<Ref> systems = []
+    Location jurisdiction = new Location()
+    List<Ref> organizationTypes = []
 
     void beforeStore() {
         address.detach()
+        jurisdiction.detach()
+    }
+
+    List<Ref>getPositions() {
+        currentProject().resources().findAll {res ->
+            res.type == 'Position' && res.organization == this
+        }
     }
 
 

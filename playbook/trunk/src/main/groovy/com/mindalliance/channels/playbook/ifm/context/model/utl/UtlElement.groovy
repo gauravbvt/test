@@ -11,4 +11,7 @@ import com.mindalliance.channels.playbook.ifm.context.model.ModelElement
 */
 class UtlElement extends ModelElement {
 
+    String name = ''
+    String description = ''
+    List<String> documents = []   // list of URLs
 }
