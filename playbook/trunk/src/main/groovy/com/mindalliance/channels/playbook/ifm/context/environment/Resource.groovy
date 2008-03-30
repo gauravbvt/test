@@ -14,4 +14,5 @@ class Resource extends EnvironmentElement {
     String name = 'No name'
     String description = ''
 
+    String toString() { name }
 }

@@ -294,5 +294,8 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <UsedPathMacros>
+    <macro name="GROOVY_ECLIPSE_HOME" />
+  </UsedPathMacros>
 </project>
 

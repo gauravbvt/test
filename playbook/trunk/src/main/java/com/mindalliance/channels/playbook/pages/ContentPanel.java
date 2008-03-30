@@ -44,6 +44,9 @@ public class ContentPanel extends Panel {
             }
         } );
 
+        final FormPanel formPanel = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
+        add( formPanel );
+
         final DataView table = new DataView( "content-row", data ) {
             protected void populateItem( final Item item ) {
                 item.add( new DataView( "content-cell", new IDataProvider() {
@@ -71,13 +74,14 @@ public class ContentPanel extends Panel {
 
                 item.add(new Link("row-select") {
                     public void onClick() {
-                        ContentPanel.this.setSelected( (Ref) item.getModelObject() );
+                        setSelected( (Ref) item.getModelObject() );
+                        formPanel.modelChanged();
                     }
                 } ) ;
                 item.add( new AttributeModifier( "class", true, new AbstractReadOnlyModel() {
                     public Object getObject() {
                         String style = ( item.getIndex() % 2 == 1 ) ? "even" : "odd";
-                        if ( item.getModel() == getSelected() )
+                        if ( item.getModelObject() == getSelected() )
                             style += " selected";
                         return style;
                     }
@@ -85,13 +89,23 @@ public class ContentPanel extends Panel {
             }
         };
         add( table );
-        add( new FormPanel( "content-form", new PropertyModel( this, "selected" ) ) ); // TODO plug forms here
 
-        if ( data.size() > ITEMS_PER_PAGE ) {
-            table.setItemsPerPage( ITEMS_PER_PAGE );
-            add( new PagingNavigator( "content-pager", table ) );
-        } else
-            add( new Label( "content-pager" ) );
+        table.setItemsPerPage( ITEMS_PER_PAGE );
+        final PagingNavigator nav = new PagingNavigator( "content-pager", table );
+        add( nav );
+        nav.setVisible( data.size() > ITEMS_PER_PAGE );
+
+        add( new Link( "content-add" ){
+            public void onClick() {
+            }
+        } );
+
+        add( new Link( "content-delete" ){
+            public void onClick() {
+            }
+        } );
+
+
     }
 
     public Ref getSelected() {
