@@ -17,4 +17,5 @@ interface Referenceable extends Bean {
     List<RefMetaProperty>metaProperties()
     String getType() // return a short string identifying the type of the referenceable
     Class formClass() // the class of the form to edit this
+    Ref find(String listPropName, Map<String, Object>args) // find the first element in named Ref list property that has all valued properties in args
 }

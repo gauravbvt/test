@@ -160,22 +160,49 @@ class RefImpl implements Ref, GroovyInterceptable {
         this.db = ref.db
     }
 
-    public void commit() {
+    void commit() {
         Store store = PlaybookApplication.locateStore()
         store.commit(this)
     }
 
-    public void changed(String propName) {
+    void changed(String propName) {
         deref().changed(propName)
     }
 
-    public String getType() {
+    String getType() {
         return deref().getType()
     }
 
-    public Class formClass() {
+    Class formClass() {
         return deref().formClass() //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    List drillDown(String listPropName, List drillDownPropNames, Map<String, Object>ddValues) {
+        return deref().drillDown(listPropName, drillDownPropNames, ddValues)
+    }
+
+    Ref find(String listPropName, Map<String, Object>args) {
+        return deref().find(listPropName, args)
+    }
+
+    void add(Ref ref) {
+        this.add(ref.deref())
+    }
+
+    void add(Referenceable referenceable) {
+        String type = referenceable.type
+        this.add(referenceable, type)
+    }
+
+    void add(Ref ref, String type) {
+        this.add(ref.deref(), type)
+    }
+
+    void add(Referenceable referenceable, String type) {
+        referenceable.persist() // make sure it is persisted
+        this."add$type"(referenceable)
+    }
+
 
 
 }

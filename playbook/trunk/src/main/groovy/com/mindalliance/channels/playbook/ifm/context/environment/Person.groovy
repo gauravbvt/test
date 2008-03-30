@@ -19,6 +19,7 @@ class Person extends Resource {
     URL photo
     List<Ref> positions = []
 
+    @Override
     void changed(String propName) {
         if (propName == 'address') {
             address.detach()
@@ -34,11 +35,26 @@ class Person extends Resource {
         return toString()
     }
 
+    @Override
     String toString() {
         String fn = firstName ?: ''
         String md = middleName ?: ''
         String ln = lastName ?: ''
         return "$fn $md $ln"
     }
+
+    List<Ref> findOrganizationsWithPositions() {  // that are not yet assigned to this Person
+        Ref project = currentProject()
+        List<Ref> orgs = project.resources.findAll {res ->
+             res.type == 'Organization' && res.positions.any {position -> !this.positions.contains(position)}
+        }
+        return orgs
+    }
+
+    List<Ref> findPositionNamesInOrganization(Ref org) { // leaving out those of positions this person has
+        List<Ref> refs = org.positions.findAll {position -> !this.positions.contains(position)}
+        return refs
+    }
+
 
 }

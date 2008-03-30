@@ -181,27 +181,37 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
         this.reference.commit()
     }
 
-    void refresh() { // sync state from store
+    void refresh() {// sync state from store
         Referenceable fresh = this.reference.deref() // get fresh copy
         this.setFrom(fresh)
     }
 
-    String getType() {    // Default
+    String getType() {// Default
         String cn = this.class.name
         String type = "${cn.substring(cn.lastIndexOf('.') + 1)}"
         return type
     }
 
-    public Class formClass() {
+    Class formClass() {
         String type = getType()
         String className = "${FORM_PACKAGE}.${type}Panel"
         try {
-            return  Class.forName(className)
+            return Class.forName(className)
         }
-        catch(Exception e) {
+        catch (Exception e) {
             System.err.println("No form class $className")
             return null
         }
+    }
+
+    Ref find(String listPropName, Map<String, Object>args) {
+        List<Ref> list = this."$listPropName"
+        Ref ref = (Ref)list.find {ref ->
+            args.every {prop, val ->
+                ref."$prop" == val
+            }
+        }
+        return ref
     }
 
 }

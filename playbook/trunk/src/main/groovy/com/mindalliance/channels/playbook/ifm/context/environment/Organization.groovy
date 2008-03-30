@@ -25,7 +25,7 @@ class Organization extends Resource {
     }
 
     List<Ref>getPositions() {
-        currentProject().resources().findAll {res ->
+        currentProject().resources.findAll {res ->
             res.type == 'Position' && res.organization == this
         }
     }

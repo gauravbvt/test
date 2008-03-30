@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ifm
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.support.PlaybookSession
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,6 +15,11 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 /*abstract*/ class IfmElement extends ReferenceableImpl implements Serializable {
 
     Date createdOn = new Date()
+
+    Ref currentProject() {
+        PlaybookSession session = (PlaybookSession)Session.get()
+        return session.project
+    }
 
     void makeRoot() {
         Ref root = ApplicationMemory.ROOT
