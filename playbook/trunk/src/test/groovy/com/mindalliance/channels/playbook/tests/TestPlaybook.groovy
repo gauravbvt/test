@@ -41,7 +41,7 @@ public class TestPlaybook extends TestCase {
         session.application = app
     }
 
-   void testSerialization() {
+    void testSerialization() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream()
         ObjectOutputStream os = new ObjectOutputStream(bos)
         os.writeObject(app)
@@ -58,7 +58,7 @@ public class TestPlaybook extends TestCase {
         // Test metaproperties
         def metaProps = myProject.metaProperties()
         assert metaProps.size() == 8
-        metaProps = metaProps.findAll{it.isScalar()}
+        metaProps = metaProps.findAll {it.isScalar()}
         assert metaProps.size() == 4
         //
         String scenarioName = myProject.deref('scenarios')[0].deref('name')
@@ -123,7 +123,7 @@ public class TestPlaybook extends TestCase {
         session.commit()
         assertTrue(session.pendingChangesCount == 0)
         assertTrue(session.pendingDeletesCount == 0)
-        Project p = (Project)anotherProject.deref()
+        Project p = (Project) anotherProject.deref()
         assert p.name == "another new project"
         anotherProject.delete()
         assertNull anotherProject.deref()
@@ -132,15 +132,14 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
     }
 
-/*
     void testPageRender() {
         Ref channels = app.channels
         def project = channels.findProjectNamed('Generic')
         def user = channels.users[0]
-        def participation = new Participation(user:user, project:project, analyst:true)
-        Todo todo = new Todo(description:'Todo 1', due: new Date())
+        def participation = new Participation(user: user, project: project, analyst: true)
+        Todo todo = new Todo(description: 'Todo 1', due: new Date())
         participation.addTodo(todo.persist())
-        todo = new Todo(description:'Todo 2', due: new Date())
+        todo = new Todo(description: 'Todo 2', due: new Date())
         participation.addTodo(todo.persist())
         channels.addParticipation(participation.persist())
         session.commit()
@@ -148,7 +147,6 @@ public class TestPlaybook extends TestCase {
         tester.startPage(SomePage.class)
         tester.assertLabel('title', 'Playbook')
     }
-*/
 
     void testAreas() {
         Location portland = new Location(country: 'United States', state: 'Maine', city: 'Portland')
@@ -168,18 +166,18 @@ public class TestPlaybook extends TestCase {
         channels.addProject(project)
         Ref scenario = new Scenario(name: "new scenario").persist()
         project.addScenario(scenario)
-        RefPropertyModel chained = new  RefPropertyModel(project, "scenarios.name(new scenario)")
+        RefPropertyModel chained = new RefPropertyModel(project, "scenarios.name(new scenario)")
         RefPropertyModel rpm = new RefPropertyModel(chained, "name")
         assert rpm.getObject() == 'new scenario'
     }
-    
- /*  void testLocationPanel() {
+
+    void testLocationPanel() {
         tester.startPage(PersonTest.class)
         def personPanel = tester.getComponentFromLastRenderedPage('person')
         def locationPanel = personPanel.get('elementForm:location')
         def countryTextField = locationPanel.get('location:country')
         assert countryTextField
-        tester.executeAjaxEvent(countryTextField, 'onchange')        
-    }*/
+        tester.executeAjaxEvent(countryTextField, 'onchange')
+    }
 
 }

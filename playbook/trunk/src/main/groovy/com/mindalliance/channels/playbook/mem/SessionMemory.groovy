@@ -54,7 +54,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
 
     String getDefaultDb() {
-        return ApplicationMemory.ROOT_DB;
+        return ApplicationMemory.getDefaultDb();
     }
 
     void commit() {
@@ -109,7 +109,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     boolean isEmpty() {
-        return changes.isEmpty()
+        return changes.isEmpty() && deletes.isEmpty()
     }
 
     int getSize() {

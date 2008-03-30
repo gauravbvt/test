@@ -9,6 +9,7 @@ import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import org.apache.wicket.Application
+import com.mindalliance.channels.playbook.ref.Store
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,7 +24,7 @@ class ApplicationMemory implements Serializable {
     public static final String ROOT_DB = 'channels'
     public final static Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
-    static DEBUG = false
+    static DEBUG = true
     static Cache cache
     private Application application
 
@@ -123,4 +124,5 @@ class ApplicationMemory implements Serializable {
         }
         return empty
     }
+
 }

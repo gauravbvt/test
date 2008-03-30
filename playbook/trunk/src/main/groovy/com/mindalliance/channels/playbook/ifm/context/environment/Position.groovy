@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 class Position extends Resource {
 
     Location jurisdiction = new Location()
-    Organization organization // required
+    Ref organization // required
     List<Ref> roles = []
 
     void beforeStore() {

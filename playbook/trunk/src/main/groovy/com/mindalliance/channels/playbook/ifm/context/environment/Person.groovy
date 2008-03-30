@@ -48,12 +48,15 @@ class Person extends Resource {
         List<Ref> orgs = project.resources.findAll {res ->
              res.type == 'Organization' && res.positions.any {position -> !this.positions.contains(position)}
         }
-        return orgs
+        return orgs.sort{a,b -> a.toString().compareTo(b.toString())}
     }
 
-    List<Ref> findPositionNamesInOrganization(Ref org) { // leaving out those of positions this person has
-        List<Ref> refs = org.positions.findAll {position -> !this.positions.contains(position)}
-        return refs
+    List<String> findPositionNamesInOrganization(String orgString) { // leaving out those of positions this person has
+        List<Ref> list = org.positions.findAll {position ->
+            // TODO -- make sure that organization.toString() is distinctive
+            position.organization.toString() == orgString  && !this.positions.contains(position)}
+        List<String> names = list.collect {position -> position.name}
+        return names.sort()
     }
 
 

@@ -17,7 +17,7 @@ import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
+import com.mindalliance.channels.playbook.ifm.context.environment.Position
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -74,13 +74,26 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
             // A default project for everyone, for now...
             Project p = new Project(name: 'Generic')
-            p.addScenario(store(new Scenario(name: "Scenario A", description: "This is scenario A")));
-            p.addScenario(store(new Scenario(name: "Scenario B", description: "This is scenario B")));
-            p.addScenario(store(new Scenario(name: "Scenario C", description: "This is scenario C")));
+            p.addScenario(store(new Scenario(name: "Scenario A", description: "This is scenario A")))
+            p.addScenario(store(new Scenario(name: "Scenario B", description: "This is scenario B")))
+            p.addScenario(store(new Scenario(name: "Scenario C", description: "This is scenario C")))
 
-            p.addResource(store(new Person(firstName: "Joe", lastName: "Shmoe")));
-            p.addResource(store(new Organization(name: "ACME Inc.")));
+            Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
+            p.addResource(joe)
+            Ref acme = store(new Organization(name: "ACME Inc."))
+            Ref nadir = store(new Organization(name: "NADIR Inc."))
+            p.addResource(acme)
 
+            Ref pos1 = store(new Position(name: 'Position 1', organization: acme))
+            store(new Position(name: 'Position 2', organization: acme))
+            store(new Position(name: 'Position 3', organization: acme))
+
+            Ref pos4 = store(new Position(name: 'Position 4', organization: nadir))
+            store(new Position(name: 'Position 5', organization: nadir))
+
+            joe.addPosition(pos1)
+            joe.addPosition(pos4)
+            store(joe)
             channels.addProject(store(p))
             channels.addParticipation(
                     store( new Participation(
@@ -143,7 +156,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     // Util
     static Store locateStore() {
         PlaybookSession session = (PlaybookSession) Session.get()
-        return (Store) session.memory
+        return session.memory
     }
 
 }
