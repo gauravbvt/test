@@ -3,7 +3,8 @@
 if [ -f kludge.patch~ ]; then
 	echo "**** Finalizing patch"
 	rm kludge.patch~
-	find -name "*.orig" | xargs rm -v
+	find -name "*.orig" | xargs rm
+	find -name "*.rej" | xargs rm
 	cd target
 	diff -Naur groovy-stubs-orig/ groovy-stubs/ >../kludge.patch
 else
