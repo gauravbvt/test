@@ -114,6 +114,7 @@ div.content-list table thead tr th {
 }
 div.content-list th, div.content-list td {
     padding: 0px 5px;
+    cursor: pointer;
 }
 
 div.content-footer {

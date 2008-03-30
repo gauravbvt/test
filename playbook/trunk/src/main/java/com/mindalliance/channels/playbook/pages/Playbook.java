@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.authentication.pages.SignOutPage;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -16,6 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,7 @@ public class Playbook extends WebPage {
 
             public void onSubmit() {
                 session.getMemory().commit();
+                setResponsePage( Playbook.this );
             }
         });
         pageControls.add( new Button("revert_button") {
@@ -85,8 +88,10 @@ public class Playbook extends WebPage {
             }
             public void onSubmit() {
                 session.getMemory().abort();
+                setResponsePage( Playbook.this );
             }
         });
+        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         add( pageControls );
     }
 }

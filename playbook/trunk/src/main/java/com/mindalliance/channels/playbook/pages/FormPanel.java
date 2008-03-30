@@ -16,29 +16,34 @@ public class FormPanel extends Panel {
 
     public FormPanel( String id, IModel content ) {
         super( id, content );
+        setOutputMarkupId( true );
         resetForm();
     }
 
-    private void resetForm() {
+    public void resetForm() {
         Ref ref = (Ref) getModelObject();
-        Class formClass = ref.formClass();
-        if ( formClass != null ) try {
-            Constructor c = formClass.getConstructor( String.class, Ref.class );
-            Component form = (Component) c.newInstance( "form-details", ref );
-            addOrReplace( form );
-            return;
+        if ( ref != null ) {
+            Class formClass = ref.formClass();
+            if ( formClass != null ) try {
+                Constructor c = formClass.getConstructor( String.class, Ref.class );
+                Component form = (Component) c.newInstance( "form-details", ref );
+                addOrReplace( form );
+                return;
 
-        } catch ( NoSuchMethodException e ) {
-            e.printStackTrace();
-        } catch ( InvocationTargetException e ) {
-            e.printStackTrace();
-        } catch ( IllegalAccessException e ) {
-            e.printStackTrace();
-        } catch ( InstantiationException e ) {
-            e.printStackTrace();
+            } catch ( NoSuchMethodException e ) {
+                e.printStackTrace();
+            } catch ( InvocationTargetException e ) {
+                e.printStackTrace();
+            } catch ( IllegalAccessException e ) {
+                e.printStackTrace();
+            } catch ( InstantiationException e ) {
+                e.printStackTrace();
+            }
+
+            addOrReplace( new Label( "form-details", ref.deref().toString() ) );
+        } else {
+            addOrReplace( new Label( "form-details", "" ) );            
         }
-
-        addOrReplace( new Label( "form-details", ref.deref().toString() ) );
     }
 
     protected void onModelChanged() {

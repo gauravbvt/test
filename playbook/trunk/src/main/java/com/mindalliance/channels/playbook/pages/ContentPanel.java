@@ -5,6 +5,10 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
@@ -36,8 +40,12 @@ public class ContentPanel extends Panel {
             setSelected( (Ref) data.iterator(0,1).next() );
         }
 
+        final WebMarkupContainer table = new WebMarkupContainer( "content-table" );
+        table.setOutputMarkupId( true );
+        add( table );
+
         final ColumnProvider cp = new ColumnProvider( data );
-        add( new DataView( "content-col", cp ){
+        table.add( new DataView( "content-col", cp ){
             protected void populateItem( Item item ) {
                 RefMetaProperty mp = (RefMetaProperty) item.getModelObject();
                 item.add( new Label( "content-col-name", mp.getDisplayName() ));
@@ -47,9 +55,9 @@ public class ContentPanel extends Panel {
         final FormPanel formPanel = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
         add( formPanel );
 
-        final DataView table = new DataView( "content-row", data ) {
+        final DataView rows = new DataView( "content-row", data ) {
             protected void populateItem( final Item item ) {
-                item.add( new DataView( "content-cell", new IDataProvider() {
+                final IDataProvider dp = new IDataProvider() {
                     public Iterator iterator( int first, int count ) {
                         return cp.iterator( first, count );
                     }
@@ -65,19 +73,33 @@ public class ContentPanel extends Panel {
 
                     public void detach() {
                     }
-                } ) {
-
-                    protected void populateItem( Item item ) {
-                        item.add( new Label( "content-cell-value", item.getModelObjectAsString() ) );
+                };
+                final DataView child = new DataView( "content-cell", dp ) {
+                    protected void populateItem( final Item cellItem ) {
+                        cellItem.add( new Label( "content-cell-value", cellItem.getModelObjectAsString() ) );
+                        cellItem.add( new AjaxEventBehavior( "onClick" ) {
+                            protected void onEvent( AjaxRequestTarget target ) {
+                                setSelected( (Ref) item.getModelObject() );
+                                formPanel.modelChanged();
+                                target.addComponent( formPanel );
+                                target.addComponent( table );
+                            }
+                        } );
                     }
-                } );
+                };
+                item.add( child );
 
-                item.add(new Link("row-select") {
-                    public void onClick() {
+                item.add(new AjaxFallbackLink("row-select") {
+                    public void onClick( AjaxRequestTarget target ) {
                         setSelected( (Ref) item.getModelObject() );
                         formPanel.modelChanged();
+                        if ( target != null ) {
+                            target.addComponent( formPanel );
+                            target.addComponent( table );
+                        }
                     }
                 } ) ;
+
                 item.add( new AttributeModifier( "class", true, new AbstractReadOnlyModel() {
                     public Object getObject() {
                         String style = ( item.getIndex() % 2 == 1 ) ? "even" : "odd";
@@ -86,12 +108,13 @@ public class ContentPanel extends Panel {
                         return style;
                     }
                 } ) );
+
             }
         };
-        add( table );
+        table.add( rows );
 
-        table.setItemsPerPage( ITEMS_PER_PAGE );
-        final PagingNavigator nav = new PagingNavigator( "content-pager", table );
+        rows.setItemsPerPage( ITEMS_PER_PAGE );
+        final PagingNavigator nav = new PagingNavigator( "content-pager", rows );
         add( nav );
         nav.setVisible( data.size() > ITEMS_PER_PAGE );
 
