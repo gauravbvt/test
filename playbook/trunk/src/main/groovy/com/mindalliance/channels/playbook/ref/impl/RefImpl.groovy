@@ -174,7 +174,7 @@ class RefImpl implements Ref, GroovyInterceptable {
     }
 
     Class formClass() {
-        return deref().formClass() //To change body of implemented methods use File | Settings | File Templates.
+        return deref().formClass() //To change body of implemented meth, ods use File | Settings | File Templates.
     }
 
     List drillDown(String listPropName, List drillDownPropNames, Map<String, Object>ddValues) {
@@ -203,6 +203,23 @@ class RefImpl implements Ref, GroovyInterceptable {
         this."add$type"(referenceable)
     }
 
+    void remove(Ref ref) {
+        this.remove(ref.deref())
+    }
+
+    void remove(Referenceable referenceable) {
+        String type = referenceable.type
+        this.remove(referenceable, type)
+    }
+
+    void remove(Ref ref, String type) {
+        this.remove(ref.deref(), type)
+    }
+
+    void remove(Referenceable referenceable, String type) {
+        referenceable.persist() // make sure it is persisted
+        this."remove$type"(referenceable)
+    }
 
 
 }

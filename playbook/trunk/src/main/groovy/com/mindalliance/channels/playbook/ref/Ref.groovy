@@ -20,4 +20,9 @@ interface Ref extends Serializable {
     void add(Ref ref) // ditto on ref.deref()
     void add(Referenceable referenceable, String type)  // use type parameter to compose add<Type>(referenceable)
     void add(Ref ref, String type)  // ditto on ref.deref()
+    void remove(Referenceable referenceable) // becomes add<Referenceable_type>(referenceable), e.g. add(aPosition) -> addPOsition(aPosition)
+    void remove(Ref ref) // ditto on ref.deref()
+    void remove(Referenceable referenceable, String type)  // use type parameter to compose add<Type>(referenceable)
+    void remove(Ref ref, String type)  // ditto on ref.deref()
+
 }
