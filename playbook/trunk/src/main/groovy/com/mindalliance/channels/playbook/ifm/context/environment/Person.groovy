@@ -37,24 +37,34 @@ class Person extends Resource {
 
     @Override
     String toString() {
-        String fn = firstName ?: ''
-        String md = middleName ?: ''
-        String ln = lastName ?: ''
-        return "$fn $md $ln"
+        String s = ''
+        if (firstName.trim()) s += firstName
+        if (middleName.trim()) {
+            if (s) s += ' '
+            s += middleName
+        }
+        if (lastName.trim()) {
+            if (s) s += ' '
+            s += lastName
+        }
+        return s
     }
 
-    List<Ref> findOrganizationsWithPositions() {  // that are not yet assigned to this Person
+    List<Ref> findOrganizationsWithOtherPositions() {  // that are not yet assigned to this Person
         Ref project = currentProject()
         List<Ref> orgs = project.resources.findAll {res ->
-             res.type == 'Organization' && res.positions.any {position -> !this.positions.contains(position)}
+             def dres =  res.deref()
+             def list = (res.type == 'Organization') ? res.findPositions() : []
+             res.type == 'Organization' && res.findPositions().any {position -> !this.positions.contains(position)}
         }
         return orgs.sort{a,b -> a.toString().compareTo(b.toString())}
     }
 
-    List<String> findPositionNamesInOrganization(String orgString) { // leaving out those of positions this person has
-        List<Ref> list = org.positions.findAll {position ->
-            // TODO -- make sure that organization.toString() is distinctive
-            position.organization.toString() == orgString  && !this.positions.contains(position)}
+    List<String> findOtherPositionNamesInOrganizationNamed(String orgName) { // leaving out those of positions this person has
+        Ref org = currentProject().findResourceNamed("Organization", orgName)
+        List<Ref> list = org.findPositions().findAll {position ->
+            position.organization.name == orgName  && !this.positions.contains(position)
+        }
         List<String> names = list.collect {position -> position.name}
         return names.sort()
     }

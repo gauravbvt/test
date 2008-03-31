@@ -19,4 +19,11 @@ class Project extends IfmElement {
     List<Ref> roles = []
     List<Ref> tasks = []
 
+    Ref findResourceNamed(String type, String name) {
+        Ref res = (Ref)resources.find {res ->
+            res.type == type && res.name.equalsIgnoreCase(name)
+        }
+        return res
+    }
+
 }

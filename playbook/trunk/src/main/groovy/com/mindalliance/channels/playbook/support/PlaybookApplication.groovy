@@ -18,6 +18,7 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.context.environment.Position
+import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -44,8 +45,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-      // return PersonTest.class
-      return Playbook.class
+      return PersonTest.class
+      // return Playbook.class
     }
 
     @Override
@@ -83,13 +84,15 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             Ref acme = store(new Organization(name: "ACME Inc."))
             Ref nadir = store(new Organization(name: "NADIR Inc."))
             p.addResource(acme)
-
+            p.addResource(nadir)
             Ref pos1 = store(new Position(name: 'Position 1', organization: acme))
-            store(new Position(name: 'Position 2', organization: acme))
-            store(new Position(name: 'Position 3', organization: acme))
+            p.addResource(pos1)
+            p.addResource(store(new Position(name: 'Position 2', organization: acme)))
+            p.addResource(store(new Position(name: 'Position 3', organization: acme)))
 
             Ref pos4 = store(new Position(name: 'Position 4', organization: nadir))
-            store(new Position(name: 'Position 5', organization: nadir))
+            p.addResource(pos4)
+            p.addResource(store(new Position(name: 'Position 5', organization: nadir)))
 
             joe.addPosition(pos1)
             joe.addPosition(pos4)

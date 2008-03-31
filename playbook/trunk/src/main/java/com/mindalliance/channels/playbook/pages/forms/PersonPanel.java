@@ -3,12 +3,22 @@ package com.mindalliance.channels.playbook.pages.forms;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.model.IModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.LocationPanel;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,6 +32,7 @@ public class PersonPanel extends AbstractElementPanel {
     TextField firstNameField;
     TextField middleNameField;
     TextField lastNameField;
+    PositionsPanel positionsPanel;
     LocationPanel locationPanel;
 
     public PersonPanel(String id, Ref p) {
@@ -43,6 +54,10 @@ public class PersonPanel extends AbstractElementPanel {
         addElementField(firstNameField);
         addElementField(middleNameField);
         addElementField(lastNameField);
+        // Positions panel
+        String[] ddPropNames = {"organization.name","name"};
+        positionsPanel = new PositionsPanel("positions", element, "positions", ddPropNames);
+        addRefListPanel(positionsPanel);
         // Location panel
         locationPanel = new LocationPanel("location", element, "address");
         addComponentPanel(locationPanel, "address");

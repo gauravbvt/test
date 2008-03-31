@@ -24,10 +24,14 @@ class Organization extends Resource {
         jurisdiction.detach()
     }
 
-    List<Ref>getPositions() {
+    List<Ref>findPositions() {
         currentProject().resources.findAll {res ->
-            res.type == 'Position' && res.organization == this
+            res.type == 'Position' && res.organization == this.reference
         }
+    }
+
+    Ref findPositionNamed(String name) {
+        return (Ref)findPositions().find {position -> position.name.equalsIgnoreCase(name)}
     }
 
 

@@ -29,6 +29,7 @@ abstract public class AbstractElementPanel extends Panel {
     Form elementForm;
     List<FormComponent> fields = new ArrayList<FormComponent>();
     Map<String, AbstractComponentPanel> components = new HashMap<String, AbstractComponentPanel>();
+    List<Panel> refListPanels = new ArrayList<Panel>();
 
     public AbstractElementPanel(String id, Ref element) {
         super(id);
@@ -39,6 +40,10 @@ abstract public class AbstractElementPanel extends Panel {
 
     protected void init() {
         this.add(new SimpleAttributeModifier("class", "element"));
+    }
+
+    protected Form getElementForm() {
+        return elementForm;
     }
 
     protected void load() {
@@ -75,8 +80,12 @@ abstract public class AbstractElementPanel extends Panel {
         elementForm.add(componentPanel);
     }
 
+    protected void addRefListPanel(Panel refListPanel) {
+        refListPanels.add(refListPanel);
+        elementForm.add(refListPanel);
+    }
+
     public void refresh(AjaxRequestTarget target) {
-        element.changed("address"); // forces an immediate persist to session - needed to ensure location is in sync
         for (FormComponent field : fields) {
             target.addComponent(field);
         }
@@ -84,6 +93,9 @@ abstract public class AbstractElementPanel extends Panel {
             element.changed(propName); // forces an immediate persist to session - needed to ensure component and element are in sync
             AbstractComponentPanel componentPanel = components.get(propName);
             componentPanel.refresh(target);
+        }
+        for (Panel refListPanel : refListPanels) {
+            target.addComponent(refListPanel);
         }
     }
 }

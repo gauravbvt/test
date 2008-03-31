@@ -208,6 +208,8 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
         List<Ref> list = this."$listPropName"
         Ref ref = (Ref)list.find {ref ->
             args.every {prop, val ->
+                def propVal = ref."$prop"
+                // System.out.println("$prop -> $val =:= $propVal")
                 ref."$prop" == val
             }
         }

@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.PlaybookSession
+import org.apache.wicket.Session
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

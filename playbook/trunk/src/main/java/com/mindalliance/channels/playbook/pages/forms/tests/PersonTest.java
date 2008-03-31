@@ -5,14 +5,18 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
+import org.apache.wicket.Application;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.playbook.pages.forms.PersonPanel;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.context.environment.Person;
+import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ifm.project.Project;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -37,7 +41,10 @@ public class PersonTest extends WebPage {
     private void load() {
         session = (PlaybookSession) Session.get();
         session.authenticate("admin", "admin");
-        commitUserPersonIfNeeded();
+        // commitUserPersonIfNeeded();
+        Ref channels = ((PlaybookApplication) Application.get()).getChannels();
+        Project project = (Project)((Channels)channels.deref()).findProjectNamed("Generic").deref();
+        person = project.findResourceNamed("Person", "Joe Shmoe");
         final PersonPanel personPanel = new PersonPanel("person", person);
         add(personPanel);
         debugDiv = new WebMarkupContainer("debug");
