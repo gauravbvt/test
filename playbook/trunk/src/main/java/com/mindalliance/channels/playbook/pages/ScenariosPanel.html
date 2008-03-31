@@ -6,16 +6,8 @@
         xml:lang="en"
         lang="en">
 <body>
-<wicket:panel>
-    <hr/>
-    <h2 wicket:id="sc-name">Scenario</h2>
+<wicket:panel><wicket:extend>
     <p wicket:id="sc-desc"/>
-    <div class="filtered-content">
-        <div class="content-filter" wicket:id="filter"/>
-        <div id="content" wicket:id="contents">
-               [Contents]
-        </div>
-    </div>
     <div class="sc-picker">
         <form wicket:id="sc-form">
             <p>Switch to <select wicket:id="sc-list">
@@ -25,6 +17,6 @@
             </select></p>
         </form>
     </div>
-</wicket:panel>
+</wicket:extend></wicket:panel>
 </body>
 </html>

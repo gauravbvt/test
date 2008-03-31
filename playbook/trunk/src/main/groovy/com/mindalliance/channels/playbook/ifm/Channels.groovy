@@ -41,4 +41,13 @@ class Channels extends IfmElement {
         return (Ref)participations.find() {it.user == user && it.project == project}
     }
 
+    public List<Ref> getAll() {
+        List<Ref> result = []
+        result.addAll( projects )
+        result.addAll( users )
+        result.addAll( participations )
+
+        return result
+    }
+
 }

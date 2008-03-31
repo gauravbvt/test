@@ -15,4 +15,6 @@ class User extends IfmElement {
     String password
     Boolean admin
     Ref Person
+
+    String toString() { name }
 }

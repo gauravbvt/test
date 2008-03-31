@@ -1,9 +1,10 @@
-package com.mindalliance.channels.playbook.pages.support.models;
+package com.mindalliance.channels.playbook.support.models;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -26,14 +27,41 @@ import java.util.Set;
 /**
  * ...
  */
-public class ColumnProvider implements IDataProvider {
+public class ColumnProvider implements IDataProvider, IDetachable {
 
-    private Set<Class<?>> classes = new HashSet<Class<?>>();
-    private Map<String,RefMetaProperty> index = new HashMap<String,RefMetaProperty>();
-    private List<RefMetaProperty> columns = new ArrayList<RefMetaProperty>();
+    private IDataProvider data;
+    private Set<Class<?>> classes ;
+    private Map<String,RefMetaProperty> index ;
+    private List<RefMetaProperty> columns ;
 
     public ColumnProvider( IDataProvider data ) {
+        this.data = data;
+    }
+
+    private List<RefMetaProperty> getColumns() {
+        if ( columns == null )
+            populate();
+        return columns;
+    }
+
+    private Map<String, RefMetaProperty> getIndex() {
+        if ( index == null )
+            populate();
+        return index;
+    }
+
+    public Set<Class<?>> getClasses() {
+        if ( classes == null )
+            populate();
+        return Collections.unmodifiableSet( classes );
+    }
+
+    private void populate() {
         Iterator i = data.iterator( 0, data.size() );
+        classes = new HashSet<Class<?>>();
+        index = new HashMap<String,RefMetaProperty>();
+        columns = new ArrayList<RefMetaProperty>();
+
         while ( i.hasNext() ){
             Object item = i.next();
             if ( item instanceof Ref )
@@ -70,11 +98,11 @@ public class ColumnProvider implements IDataProvider {
     }
 
     public Iterator<RefMetaProperty> iterator( int first, int count ) {
-        return columns.subList( first, first+count ).iterator();
+        return getColumns().subList( first, first+count ).iterator();
     }
 
     public int size() {
-        return columns.size();
+        return getColumns().size();
     }
 
     public IModel model( Object object ) {
@@ -82,6 +110,9 @@ public class ColumnProvider implements IDataProvider {
     }
 
     public void detach() {
+        columns = null;
+        index = null;
+        classes = null;
     }
 
     public static String toDisplay( String propName ) {
@@ -99,15 +130,11 @@ public class ColumnProvider implements IDataProvider {
         return b.toString();
     }
 
-    public Set<Class<?>> getClasses() {
-        return Collections.unmodifiableSet( classes );
-    }
-
     public boolean includes( String name ) {
-        return index.containsKey( name );
+        return getIndex().containsKey( name );
     }
 
     public RefMetaProperty get( String name ) {
-        return index.get( name );
+        return getIndex().get( name );
     }
 }

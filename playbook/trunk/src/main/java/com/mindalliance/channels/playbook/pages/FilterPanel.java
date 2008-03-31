@@ -3,8 +3,9 @@ package com.mindalliance.channels.playbook.pages;
 import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.filters.ParentFilter;
-import com.mindalliance.channels.playbook.pages.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.support.models.ColumnProvider;
+import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import org.apache.wicket.extensions.markup.html.tree.Tree;
@@ -12,7 +13,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.IModel;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -26,17 +26,15 @@ import java.util.TreeSet;
  */
 public class FilterPanel extends Panel {
 
-    private IDataProvider rawData;
-    private Filter filter;
+    private ContainerModel rawData;
 
-    public FilterPanel( String id, Filter filter, IDataProvider rawData ) {
+    public FilterPanel( String id, ContainerModel rawData ) {
         super( id );
-        this.filter = filter;
         this.rawData = rawData;
         final Form form = new Form( "filter-form" );
         add( form );
 
-        final Tree tree = new Tree( "filter-tree", new DefaultTreeModel( filter ) ){
+        final Tree tree = new Tree( "filter-tree", new DefaultTreeModel( rawData.getFilter() ) ){
             protected String renderNode( TreeNode treeNode ) {
                 Filter f = (Filter) treeNode;
                 return f.isExpanded()? f.getExpandedText() : f.getCollapsedText();
@@ -51,6 +49,8 @@ public class FilterPanel extends Panel {
              */
             protected void onJunctionLinkClicked( AjaxRequestTarget target, TreeNode node ) {
                 super.onJunctionLinkClicked( target, node );
+                Filter f = (Filter) node;
+                f.setExpanded( getTreeState().isNodeExpanded( node ) );
             }
 
             /**
@@ -61,17 +61,20 @@ public class FilterPanel extends Panel {
              */
             protected void onNodeLinkClicked( AjaxRequestTarget target, TreeNode node ) {
                 super.onNodeLinkClicked( target, node );
+                Filter f = (Filter) node;
+                f.setSelected( getTreeState().isNodeSelected( node ) );
             }
 
             protected void populateTreeItem( WebMarkupContainer webMarkupContainer, int i ) {
                 super.populateTreeItem( webMarkupContainer, i );
         }
         };
+        tree.getTreeState().setAllowSelectMultiple( true );
         tree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
         form.add( tree );
     }
 
-
+    // TODO move somewhere else...
     protected void addOrgs( Filter parent, ColumnProvider cp, IDataProvider data ) {
         if ( !cp.includes( "parent" ) )
             parent.add( new ParentFilter() );
@@ -100,31 +103,12 @@ public class FilterPanel extends Panel {
     protected void addPersons( Filter parent, ColumnProvider cp, IDataProvider data ) {
     }
 
-    public IDataProvider getFilteredData() {
-        return new IDataProvider(){
-
-            public void detach() {
-            }
-
-            public Iterator iterator( int first, int count ) {
-                return rawData.iterator( first, count );
-            }
-
-            public IModel model( Object object ) {
-                return rawData.model( object );
-            }
-
-            public int size() {
-                return rawData.size();
-            }
-        };
+    public ContainerModel getFilteredData() {
+        // TODO implement this
+        return getRawData();
     }
 
-    public IDataProvider getRawData() {
+    public ContainerModel getRawData() {
         return rawData;
-    }
-
-    public void setRawData( IDataProvider rawData ) {
-        this.rawData = rawData;
     }
 }

@@ -27,19 +27,29 @@ div#filter {
     border: 1px dotted red;
 }
 
-tr.selected, div.row-selected {
+/* ----------------- Color Palette */
+tr.selected, div.row-selected, div.new-item-choices a:hover, div.tab-row li {
     background-color: #dee4d9 !important;
+    color: black;
+}
+div.content-list table thead, h1 {
+   background: #c3c7ac url("back.png") repeat;
+   border: 1px outset #c3c7ac;
+   color: black;
+}
+
+body, div.content-list {
+    background-color: white;
+    color: black;
 }
 
 /* ----------------- Forms */
-input[ type="submit" ], input[ type="button" ] {
+input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
     font-size: small;
 }
 
 /* ----------------- Header */
 h1 {
-    margin: 0px 0px 0.4em 0px;
-    background: #c3c7ac url("back.png") repeat;
     height: 74px;
     text-indent: -100em;
 }
@@ -64,15 +74,35 @@ div.tab-panel h2 {
     margin-bottom: 5px;
 }
 
+div.tab-row {
+    margin-top: 1px;
+}
+
 div.tab-row ul {
+    display: block;
     list-style: none;
 }
-div.tab-row li {
-    display: inline;
-}
+
 div.tab-row li.selected {
     font-weight: bold;
+    color: #761743;
+    background-color: #c3c7ac;
 }
+div.tab-row li {
+    border: 1px outset #c3c7ac;
+    margin: 1px 5px 0px 0px;
+    display: inline;
+    padding: 0px 5px;
+}
+div.tab-row a {
+    text-decoration: none;
+    color: black;
+}
+div.tab-row a span {
+     width: 7em;
+ }
+ 
+
 
 /* ----------------- Contents */
 div.filtered-content {
@@ -94,7 +124,7 @@ div.content-form {
 }
 
 div.wicket-tree {
-    margin: 0px !important;
+    margin: 2px 0px 0px 1px !important;
     width: inherit !important;
 }
 
@@ -102,12 +132,6 @@ div.wicket-tree {
 div.content-list > table {
     width: 100%;
 }
-
-div.content-list table thead {
-    background-image: url("back.png");
-    background-color: #c3c7ac;
-    background-repeat: repeat;
- }
 
 div.content-list table thead tr th {
     text-align: left;
@@ -131,6 +155,31 @@ span.content-pager {
 span.content-buttons {
     display: block;
     text-align: right;   
+}
+
+/* ----------------- Popups */
+div.new-item-choices {
+    border: 1px solid black;
+    text-align: left;
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    z-index: 10;
+    background: white;
+    color: black;
+    margin-top: 5px;
+}
+div.new-item-choices ul {
+    list-style: none;
+}
+div.new-item-choices li {
+    display: block;
+}
+div.new-item-choices a, div.new-item-choices a:visited {
+    text-decoration: none;
+    color:black;
+}
+div.new-item-choices a span {
 }
 
 /* ----------------- Scenarios */

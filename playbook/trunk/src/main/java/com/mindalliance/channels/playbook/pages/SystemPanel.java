@@ -1,14 +1,16 @@
 package com.mindalliance.channels.playbook.pages;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
+import com.mindalliance.channels.playbook.support.models.ContainerModel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 
 /**
  * ...
  */
-public class SystemPanel extends Panel {
+public class SystemPanel extends TabPanel {
 
-    public SystemPanel( String id, IModel model ) {
+    public SystemPanel( String id, ContainerModel model ) {
         super( id, model );
+        add( new Label( "content-title", new Model( "System" ) ) );
     }
 }

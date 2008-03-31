@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * ...
+ * Todo Ajaxify
  */
 public class TodoPanel extends Panel {
 

@@ -7,7 +7,15 @@
         lang="en">
 <body>
 <wicket:panel>
-    <wicket:extend></wicket:extend>
+    <hr/>
+    <h2 wicket:id="content-title">Resources</h2>
+    <wicket:child/>
+    <div class="filtered-content">
+        <div class="content-filter" wicket:id="filter"/>
+        <div id="content" wicket:id="contents">
+               [Contents]
+        </div>
+    </div>
 </wicket:panel>
 </body>
 </html>

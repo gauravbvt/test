@@ -1,11 +1,16 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ifm.IfmElement;
+import com.mindalliance.channels.playbook.ifm.Participation;
+import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
 import com.mindalliance.channels.playbook.ifm.context.environment.Person;
 import com.mindalliance.channels.playbook.ifm.context.environment.Position;
-import com.mindalliance.channels.playbook.pages.support.models.ColumnProvider;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
+import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.project.scenario.Event;
+import com.mindalliance.channels.playbook.ifm.project.scenario.act.Activity;
+import com.mindalliance.channels.playbook.support.models.ColumnProvider;
+import com.mindalliance.channels.playbook.support.models.ContainerModel;
 
 import javax.swing.tree.TreeNode;
 import java.io.Serializable;
@@ -183,9 +188,9 @@ abstract public class Filter implements TreeNode, Serializable {
      */
     abstract protected boolean localMatch( Object object );
 
-    public static Filter[] Resources( IDataProvider data ) {
+    public static Filter[] Resources( ContainerModel data ) {
         List<Filter> result = new ArrayList<Filter>();
-        ColumnProvider cp = new ColumnProvider( data );
+        ColumnProvider cp = data.getColumnProvider();
 
         if ( cp.getClasses().contains( Organization.class ) ) {
             Filter filter = new ClassFilter( Organization.class, "all organizations", "organizations..." );
@@ -209,10 +214,44 @@ abstract public class Filter implements TreeNode, Serializable {
             result.add( filter );
          }
 
-        if ( cp.getClasses().contains( Position.class ) ) {
-            Filter filter = new ClassFilter( Position.class, "all positions", "positions..." );
+        return result.toArray( new Filter[ result.size() ] );
+    }
+
+    public static Filter[] ScenarioItems( ContainerModel data ) {
+        List<Filter> result = new ArrayList<Filter>();
+        ColumnProvider cp = data.getColumnProvider();
+
+        if ( cp.getClasses().contains( Event.class ) ) {
+            Filter filter = new ClassFilter( Event.class, "all events", "events..." );
             result.add( filter );
-         }
+        }
+
+        if ( cp.getClasses().contains( Activity.class ) ) {
+            Filter filter = new ClassFilter( Activity.class, "all activities", "activities..." );
+            result.add( filter );
+        }
+
+        return result.toArray( new Filter[ result.size() ] );
+    }
+
+    public static Filter[] SystemItems( ContainerModel data ) {
+        List<Filter> result = new ArrayList<Filter>();
+        ColumnProvider cp = data.getColumnProvider();
+
+        if ( cp.getClasses().contains( User.class ) ) {
+            Filter filter = new ClassFilter( User.class, "all users", "users..." );
+            result.add( filter );
+        }
+
+        if ( cp.getClasses().contains( Project.class ) ) {
+            Filter filter = new ClassFilter( Project.class, "all projects", "projects..." );
+            result.add( filter );
+        }
+
+        if ( cp.getClasses().contains( Participation.class ) ) {
+            Filter filter = new ClassFilter( Participation.class, "all participations", "participations..." );
+            result.add( filter );
+        }
 
         return result.toArray( new Filter[ result.size() ] );
     }

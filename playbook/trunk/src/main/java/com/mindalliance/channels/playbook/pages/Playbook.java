@@ -1,6 +1,21 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.ifm.Participation;
+import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
+import com.mindalliance.channels.playbook.ifm.context.environment.Person;
+import com.mindalliance.channels.playbook.ifm.context.environment.Position;
+import com.mindalliance.channels.playbook.ifm.context.environment.System;
+import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.project.scenario.Event;
+import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario;
+import com.mindalliance.channels.playbook.ifm.project.scenario.act.Activity;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.filters.RootFilter;
+import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.models.ContainerModel;
+import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
@@ -16,10 +31,10 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,27 +58,51 @@ public class Playbook extends WebPage {
         add( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         //--------------
-        final IModel projectModel = new PropertyModel( getModel(), "project" );
+        final IModel projectModel = new RefPropertyModel( getModel(), "project" );
         List<AbstractTab> tabs = new ArrayList<AbstractTab>();
         tabs.add( new AbstractTab( new Model("Resources") ){
             public Panel getPanel( String s ) {
-                return new ResourcesPanel( s, projectModel );
+                final Class<?>[] classes = {
+                    Person.class, Organization.class, Position.class, System.class };
+                return new ResourcesPanel( s,
+                    new ContainerModel( projectModel, "resources" , Arrays.asList( classes ) ){
+                        public Filter getFilter() {
+                            return new RootFilter( Filter.Resources( this ) );
+                        }
+                    } );
             } } );
+
         tabs.add( new AbstractTab( new Model("Scenarios") ){
+            final Class<?>[] classes = { // TODO fix this
+                Event.class, Activity.class };
             public Panel getPanel( String s ) {
-                return new ScenariosPanel( s, projectModel );
+                return new ScenariosPanel( s, projectModel, Arrays.asList( classes ) );
             } } );
+
         if ( session.isAdmin() ) {
             tabs.add( new AbstractTab( new Model("Project") ){
                 public Panel getPanel( String s ) {
-                    return new ProjectPanel( s, projectModel );
+                    final Class<?>[] classes = {
+                        Scenario.class };
+                    return new ProjectPanel( s,
+                        new ContainerModel( projectModel, "scenarios" , Arrays.asList( classes ) ) );
                 } } );
+
             tabs.add( new AbstractTab( new Model("System") ){
+                final Class<?>[] classes = {
+                    User.class, Project.class, Participation.class };
                 public Panel getPanel( String s ) {
-                    return new SystemPanel( s, projectModel );
+                    PlaybookApplication pa = (PlaybookApplication) session.getApplication();
+                    return new SystemPanel( s,
+                        new ContainerModel( new RefModel( pa.getChannels() ), "all" , Arrays.asList( classes ) ){
+                            public Filter getFilter() {
+                                return new RootFilter( Filter.SystemItems( this ) );
+                            }
+                        } );
                 } } );
         }
         final TabbedPanel tabPanel = new TabbedPanel( "tabs", tabs );
+        // Todo Save/Restore from user prefs
         tabPanel.setSelectedTab( 0 );
         add( tabPanel );
 
