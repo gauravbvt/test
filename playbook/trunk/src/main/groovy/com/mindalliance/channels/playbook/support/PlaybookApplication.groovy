@@ -45,8 +45,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-      return PersonTest.class
-      // return Playbook.class
+      // return PersonTest.class
+      return Playbook.class
     }
 
     @Override
