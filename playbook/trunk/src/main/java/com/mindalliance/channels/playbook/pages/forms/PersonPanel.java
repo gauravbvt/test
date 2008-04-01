@@ -59,7 +59,7 @@ public class PersonPanel extends AbstractElementPanel {
         positionsPanel = new PositionsPanel("positions", element, "positions", ddPropNames);
         addRefListPanel(positionsPanel);
         // Location panel
-        locationPanel = new LocationPanel("location", element, "address");
+        locationPanel = new LocationPanel("address", element, "address");
         addComponentPanel(locationPanel, "address");
     }
 

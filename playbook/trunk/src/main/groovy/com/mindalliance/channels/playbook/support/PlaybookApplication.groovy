@@ -19,6 +19,10 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.context.environment.Position
 import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
+import com.mindalliance.channels.playbook.ifm.context.model.Domain
+import com.mindalliance.channels.playbook.ifm.context.model.OrganizationType
+import com.mindalliance.channels.playbook.geo.Area
+import com.mindalliance.channels.playbook.pages.forms.tests.OrganizationTest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -47,6 +51,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     public Class getHomePage() {
       // return PersonTest.class
       return Playbook.class
+      // return OrganizationTest.class
     }
 
     @Override
@@ -97,7 +102,22 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             joe.addPosition(pos1)
             joe.addPosition(pos4)
             store(joe)
+
+            Ref law = store(new Domain(name: 'Law Enforcement'))
+            Ref health = store(new Domain(name: 'Public Health'))
+            Ref biz = store(new Domain(name: 'Business'))
+            Ref gov = store(new Domain(name: 'Government'))
+            p.addModelElement(law)
+            p.addModelElement(health)
+            p.addModelElement(biz)
+            p.addModelElement(gov)
+
+            p.addModelElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: Area.STATE)))
+            p.addModelElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: Area.GLOBE)))
+            p.addModelElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: Area.COUNTY)))
+
             channels.addProject(store(p))
+           
             channels.addParticipation(
                     store( new Participation(
                             user    : admin.getReference(),

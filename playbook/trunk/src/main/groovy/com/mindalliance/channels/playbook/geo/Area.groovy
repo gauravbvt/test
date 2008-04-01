@@ -13,6 +13,12 @@ import org.geonames.Toponym
 class Area implements Comparable, Serializable {
 
     static final Area UNKNOWN = new UnknownArea()
+    static final String GLOBE = 'Globe'
+    static final String CONTINENT = 'Continent'
+    static final String COUNTRY = 'Country'
+    static final String STATE = 'State'
+    static final String COUNTY = 'County'
+    static final String CITY = 'City'
 
     private Toponym topo
     private List<Area>nearby

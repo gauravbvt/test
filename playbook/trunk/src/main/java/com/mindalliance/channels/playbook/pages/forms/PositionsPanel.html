@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div wicket:id="refListEditor">
+    <div wicket:id="refListEditor">  <!-- required id -->
         <table>
             <thead>
                 <tr>
@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr wicket:id="refList">
+                <tr wicket:id="refList"> <!-- required id -->
                     <td wicket:id="organization.name">[Organization]</td>
                     <td wicket:id="name">[Name]</td>
                     <td><a href="#" wicket:id="remove">Remove</a></td>

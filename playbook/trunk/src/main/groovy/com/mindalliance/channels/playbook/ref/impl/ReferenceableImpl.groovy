@@ -49,7 +49,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
         changed()
         if (ApplicationMemory.DEBUG) System.out.println("^^^ changed: ${getType()}.$propName")
-        propertyChanged(propName, null, this.@"$propName") // don't care about old value
+        propertyChanged(propName, null, this."$propName") // don't care about old value
     }
 
     void changed() {} // Default is do nothing
@@ -91,12 +91,12 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
         if (metamethod == null) {// don't override a defined method
             // addField  --> fields.add(args[0])
             if (name =~ /^add.+/) {
-                String field = "${name.substring(3).toLowerCase()}s"
+                String field = "${decapitalize(name.substring(3))}s"
                 return doAddToField(field, args[0].reference)
             }
             // removeField --> fields.remove(fields.indexOf(args[0]))
             if (name =~ /^remove.+/) {
-                String field = "${name.substring(6).toLowerCase()}s"
+                String field = "${decapitalize(name.substring(6))}s"
                 return doRemoveFromField(field, args[0].reference)
             }
         }
@@ -104,6 +104,16 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
             throw new Exception("No method named $name")
         }
         return metamethod.invoke(this, args)
+    }
+
+    String decapitalize(String s) {
+        if (s.size() > 1) {
+           return "${s[0].toLowerCase()}${s[1..s.size()-1]}"
+        }
+        else {
+            return s.toLowerCase()
+        }
+
     }
 
     Referenceable doAddToField(String name, def val) {

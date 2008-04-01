@@ -82,6 +82,7 @@ abstract public class AbstractElementPanel extends Panel {
 
     protected void addRefListPanel(Panel refListPanel) {
         refListPanels.add(refListPanel);
+        refListPanel.setOutputMarkupId(true);
         elementForm.add(refListPanel);
     }
 

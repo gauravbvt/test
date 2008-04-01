@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="refListEditor">  <!-- required id -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Jurisdiction type</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr wicket:id="refList"> <!-- required id -->
+                    <td wicket:id="domain.name">[Domain name]</td>
+                    <td wicket:id="jurisdictionType">[Jurisdicition type]</td>
+                    <td wicket:id="name">[Name]</td>
+                    <td><a href="#" wicket:id="remove">Remove</a></td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- <input wicket:id="with.domain.name"/> -->
+                        <select wicket:id="with.domain.name">
+                            <option>[option]</option>
+                         </select>
+                    </td>
+                    <td>
+                        <!-- <input wicket:id="with.jurisdictionType"/> -->
+                        <select wicket:id="with.jurisdictionType">
+                             <option>[option]</option>
+                          </select>
+                     </td>
+                    <td>
+                        <!-- <input wicket:id="with.name"/> -->
+                        <select wicket:id="with.name">
+                             <option>[option]</option>
+                          </select>
+                    </td>
+                    <td><a wicket:id="add">Add</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</wicket:panel>
+</body>
+</html>

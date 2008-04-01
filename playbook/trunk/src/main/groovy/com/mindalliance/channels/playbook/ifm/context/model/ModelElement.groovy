@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 */
 class ModelElement extends IfmElement {
 
-    String name = ''
+    String name = ''  // -- required
     String description = ''
     List<String> documents = []   // list of String describing documentation (may contain URLs in the text)
 

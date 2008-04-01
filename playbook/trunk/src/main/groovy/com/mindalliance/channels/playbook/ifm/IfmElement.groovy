@@ -17,11 +17,6 @@ import org.apache.wicket.Session
 
     Date createdOn = new Date()
 
-    Ref currentProject() {
-        PlaybookSession session = (PlaybookSession)Session.get()
-        return session.project
-    }
-
     void makeRoot() {
         Ref root = ApplicationMemory.ROOT
         this.id = root.id

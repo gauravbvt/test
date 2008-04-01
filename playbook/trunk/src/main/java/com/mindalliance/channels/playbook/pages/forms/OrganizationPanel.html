@@ -6,19 +6,15 @@
 <body>
 <wicket:extend>
     <fieldset>
-        <legend>Identity</legend>
+        <legend>About</legend>
         <table>
             <tr>
-                <td>First name:</td>
-                <td><input wicket:id="firstName" type="text"/></td>
+                <td>Name:</td>
+                <td><input wicket:id="name" type="text"/></td>
             </tr>
             <tr>
-                <td>Middle name:</td>
-                <td><input wicket:id="middleName" type="text"/></td>
-            </tr>
-            <tr>
-                <td>Last name:</td>
-                <td><input wicket:id="lastName" type="text"/></td>
+                <td>Description:</td>
+                <td><input wicket:id="description" type="text"/></td>
             </tr>
         </table>
     </fieldset>
@@ -27,8 +23,12 @@
         <div wicket:id="address">[A location panel]</div>
     </fieldset>
     <fieldset>
-        <legend>Positions</legend>
-        <div wicket:id="positions">[list of positions]</div>
+        <legend>Jurisdiction</legend>
+        <div wicket:id="jurisdication">[A location panel]</div>
+    </fieldset>
+    <fieldset>
+        <legend>Organization types</legend>
+        <div wicket:id="organizationTypes">[list of organization types]</div>
     </fieldset>
 </wicket:extend>
 </body>

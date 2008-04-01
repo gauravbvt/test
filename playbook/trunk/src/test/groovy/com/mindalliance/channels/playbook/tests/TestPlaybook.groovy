@@ -174,7 +174,7 @@ public class TestPlaybook extends TestCase {
     void testLocationPanel() {
         tester.startPage(PersonTest.class)
         def personPanel = tester.getComponentFromLastRenderedPage('person')
-        def locationPanel = personPanel.get('elementForm:location')
+        def locationPanel = personPanel.get('elementForm:address')
         def countryTextField = locationPanel.get('location:country')
         assert countryTextField
         tester.executeAjaxEvent(countryTextField, 'onchange')
