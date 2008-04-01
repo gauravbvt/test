@@ -35,4 +35,8 @@ class Project extends IfmElement {
         return res
     }
 
+    List<Ref> findAllResourcesOfType(String type) {
+        return (List<Ref>)resources.findAll {res -> res.type == type}
+    }
+
 }

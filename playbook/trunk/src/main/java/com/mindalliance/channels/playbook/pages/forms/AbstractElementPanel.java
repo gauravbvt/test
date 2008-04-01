@@ -8,7 +8,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.Referenceable;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -69,10 +71,16 @@ abstract public class AbstractElementPanel extends Panel {
         field.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                updatedField(getFormComponent());
                 target.addComponent(feedback);
             }
         });
         elementForm.add(field);
+    }
+
+    // DEFAULT
+    protected void updatedField(Component component) {
+        // do nothing
     }
 
     protected void addComponentPanel(AbstractComponentPanel componentPanel, String propName) {
@@ -99,4 +107,14 @@ abstract public class AbstractElementPanel extends Panel {
             target.addComponent(refListPanel);
         }
     }
+
+    protected String valueOf(Component field) {
+        return (String)field.getModel().getObject();
+    }
+
+    protected Referenceable getElement() {
+        return element.deref();
+    }
+
+
 }
