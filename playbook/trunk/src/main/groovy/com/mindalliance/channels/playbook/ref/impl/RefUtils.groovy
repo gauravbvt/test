@@ -48,4 +48,23 @@ class RefUtils {
 
     }
 
+    static  String decapitalize(String s) {
+        if (s.size() > 1) {
+           return "${s[0].toLowerCase()}${s[1..s.size()-1]}"
+        }
+        else {
+            return s.toLowerCase()
+        }
+    }
+
+    static  String capitalize(String s) {
+        if (s.size() > 1) {
+           return "${s[0].toUpperCase()}${s[1..s.size()-1]}"
+        }
+        else {
+            return s.toUpperCase()
+        }
+    }
+
+
 }

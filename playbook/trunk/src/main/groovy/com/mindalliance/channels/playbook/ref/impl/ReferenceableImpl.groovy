@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -91,12 +92,14 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
         if (metamethod == null) {// don't override a defined method
             // addField  --> fields.add(args[0])
             if (name =~ /^add.+/) {
-                String field = "${decapitalize(name.substring(3))}s"
+                String field = "${RefUtils.decapitalize(name.substring(3))}"
+                if (!field.endsWith('s')) field = "${field}s"
                 return doAddToField(field, args[0].reference)
             }
             // removeField --> fields.remove(fields.indexOf(args[0]))
             if (name =~ /^remove.+/) {
-                String field = "${decapitalize(name.substring(6))}s"
+                String field = "${RefUtils.decapitalize(name.substring(6))}"
+                if (!field.endsWith('s')) field = "${field}s"
                 return doRemoveFromField(field, args[0].reference)
             }
         }
@@ -104,16 +107,6 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
             throw new Exception("No method named $name")
         }
         return metamethod.invoke(this, args)
-    }
-
-    String decapitalize(String s) {
-        if (s.size() > 1) {
-           return "${s[0].toLowerCase()}${s[1..s.size()-1]}"
-        }
-        else {
-            return s.toLowerCase()
-        }
-
     }
 
     Referenceable doAddToField(String name, def val) {
