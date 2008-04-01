@@ -6,7 +6,7 @@ package com.mindalliance.channels.playbook.ifm
  * Date: Mar 29, 2008
  * Time: 12:29:01 PM
  */
-class Level {
+class Level implements Serializable {
 
     static int NONE = 0
     static int LOW = 1
@@ -24,7 +24,7 @@ class Level {
     private int value = 0
 
     Level(int value) {
-        if ([0..4].contains(value)) this.value = value
+        if ((0..4).contains(value)) this.value = value
         else throw new IllegalArgumentException("Invalid level value $value")
     }
 

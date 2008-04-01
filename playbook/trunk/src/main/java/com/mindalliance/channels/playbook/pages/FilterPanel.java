@@ -9,8 +9,6 @@ import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import org.apache.wicket.extensions.markup.html.tree.Tree;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 
@@ -31,8 +29,6 @@ public class FilterPanel extends Panel {
     public FilterPanel( String id, ContainerModel rawData ) {
         super( id );
         this.rawData = rawData;
-        final Form form = new Form( "filter-form" );
-        add( form );
 
         final Tree tree = new Tree( "filter-tree", new DefaultTreeModel( rawData.getFilter() ) ){
             protected String renderNode( TreeNode treeNode ) {
@@ -64,14 +60,10 @@ public class FilterPanel extends Panel {
                 Filter f = (Filter) node;
                 f.setSelected( getTreeState().isNodeSelected( node ) );
             }
-
-            protected void populateTreeItem( WebMarkupContainer webMarkupContainer, int i ) {
-                super.populateTreeItem( webMarkupContainer, i );
-        }
         };
         tree.getTreeState().setAllowSelectMultiple( true );
         tree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
-        form.add( tree );
+        add( tree );
     }
 
     // TODO move somewhere else...

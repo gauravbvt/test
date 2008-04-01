@@ -18,7 +18,6 @@ import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.authentication.pages.SignOutPage;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -31,7 +30,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +92,7 @@ public class Playbook extends WebPage {
                 public Panel getPanel( String s ) {
                     PlaybookApplication pa = (PlaybookApplication) session.getApplication();
                     return new SystemPanel( s,
-                        new ContainerModel( new RefModel( pa.getChannels() ), "all" , Arrays.asList( classes ) ){
+                        new ContainerModel( new RefModel( pa.getChannels() ), "allItems" , Arrays.asList( classes ) ){
                             public Filter getFilter() {
                                 return new RootFilter( Filter.SystemItems( this ) );
                             }
@@ -105,9 +103,6 @@ public class Playbook extends WebPage {
         // Todo Save/Restore from user prefs
         tabPanel.setSelectedTab( 0 );
         add( tabPanel );
-
-        //--------------
-        add( new TodoPanel( "todos", new RefPropertyModel( getModel(), "participation" ) ) );
 
         //--------------
         Form pageControls = new Form( "page_controls" );
@@ -130,7 +125,7 @@ public class Playbook extends WebPage {
                 setResponsePage( Playbook.this );
             }
         });
-        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
+//        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         add( pageControls );
     }
 }

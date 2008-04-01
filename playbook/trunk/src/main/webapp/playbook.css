@@ -1,30 +1,37 @@
+html,body {
+    height: 99.5%;
+ }
+ body {
+     margin: 5px;
+}
+div.everything {
+    max-width:80em;
+    min-width:53em;
+    min-height: 25em;
+    position: relative;
+    min-height: 98%;
+    margin: 0px auto;
+}
+ 
 * {
     margin: 0;
     padding: 0;
 }
 
+/* ----------------- Fonts */
 body, input {
+    font-size: 1em;
     font-family: arial, helvetica, sans-serif;
 }
 
-body {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    font-size: 1em;
-    max-width:80em;
-    min-width:53em;
-    min-height: 25em;
-    margin: 0.4em auto;
+/* ----------------- Links */
+a {
+    color: black;
+    background-color: transparent;
+    text-decoration: none;
 }
-
-hr,  h3 {
-    display: none;
-}
-
-div#todos, div.content-form,
-div#filter {
-    border: 1px dotted red;
+a:hover {
+    color: #761743;
 }
 
 /* ----------------- Color Palette */
@@ -32,9 +39,9 @@ tr.selected, div.row-selected, div.new-item-choices a:hover, div.tab-row li {
     background-color: #dee4d9 !important;
     color: black;
 }
-div.content-list table thead, h1 {
+div.content-list th, h1, div.content-footer, div#todos h2, div.content-filter h3 { 
    background: #c3c7ac url("back.png") repeat;
-   border: 1px outset #c3c7ac;
+   border: 1px outset gray;
    color: black;
 }
 
@@ -65,10 +72,24 @@ h1 span {
     margin-top: 1em;
 }
 
+h2.login {
+    margin-top: 1em;
+}
+
 /* ----------------- Tabs */
+div#tabs {
+    position: absolute;
+    top: 76px;
+    bottom: 0px;
+    width: 100%;
+}
+
 div.tab-panel {
-    position: relative;
-    margin: 5px 0px;
+    position: absolute;
+    bottom: 0px;
+    top: 25px;
+    left: 0;
+    right: 0;
 }
 div.tab-panel h2 {
     margin-bottom: 5px;
@@ -95,32 +116,43 @@ div.tab-row li {
     padding: 0px 5px;
 }
 div.tab-row a {
-    text-decoration: none;
     color: black;
 }
-div.tab-row a span {
-     width: 7em;
- }
- 
-
+div.tab-row a:hover {
+    border: none;
+}
 
 /* ----------------- Contents */
+hr, div.content-list h3, div.content-form h3 {
+    display: none;
+}
+
 div.filtered-content {
     margin-top: 5px;
+    position: absolute;
+    top: 26px;
+    bottom: 0;
+    width: 100%;
 }
 div.content-filter {
-    float: left;
-    width: 37%;
+    width: 36.45%;
+    top: 0px;
+    bottom: 6.5em;
+    position: absolute;
 }
 div#content {
     margin-left: 37%;
-    padding-left: 5px;
 }
 div.content-list {
  }
 div.content-form {
-    margin-top: 5px;
-    min-height: 1in;
+    margin: 5px 0px 0px 5px;
+    position:absolute;
+    left:37%;
+    right: 0;
+    top:15em;
+    bottom: 0px;
+    overflow:auto;
 }
 
 div.wicket-tree {
@@ -128,59 +160,74 @@ div.wicket-tree {
     width: inherit !important;
 }
 
+div#todos {
+    position: absolute;
+    width: 36.45%;
+    height: 6em;
+    bottom: 0px;
+    overflow: auto;
+}
+div#todos form {
+}
+
 /* ----------------- Content table */
-div.content-list > table {
+div.content-list table {
     width: 100%;
+    margin: -2px 0px 0px -2px;
+}
+
+div.content-list thead {
+}
+
+div.content-list tbody {
 }
 
 div.content-list table thead tr th {
     text-align: left;
 }
-div.content-list th, div.content-list td {
+div.content-list table tbody tr td {
+}
+div.content-list th, div.content-list td, div#todos h2, div.content-filter h3 {
     padding: 0px 5px;
+    font-size: medium;
+}
+div.content-list td {
     cursor: pointer;
 }
 
+/* ----------------- Content table controls */
 div.content-footer {
     margin-top: 1em;
     position: relative;
+    font-size: smaller;
 }
-
 span.content-pager {
     display: block;
     position: absolute;
     bottom: 0;
 }
 
-span.content-buttons {
-    display: block;
-    text-align: right;   
-}
+div.content-buttons {
+    padding: 1px 5px;
+    text-align: right;
+ }
 
-/* ----------------- Popups */
-div.new-item-choices {
-    border: 1px solid black;
-    text-align: left;
-    position: absolute;
-    right: 0;
-    padding: 5px;
-    z-index: 10;
-    background: white;
-    color: black;
-    margin-top: 5px;
+div.content-buttons ul {
+    display: inline;
 }
-div.new-item-choices ul {
-    list-style: none;
+div.content-buttons li {
+    display: inline;
 }
 div.new-item-choices li {
-    display: block;
+    margin: 0px 0px 0px 5px;
+} 
+.new-item-choices li:before {
+     content: " \2013  "; 
 }
-div.new-item-choices a, div.new-item-choices a:visited {
-    text-decoration: none;
-    color:black;
-}
-div.new-item-choices a span {
-}
+
+div.content-buttons li.new-header {
+    display: none;
+ }
 
 /* ----------------- Scenarios */
 div.sc-picker {
@@ -203,3 +250,4 @@ div#signout {
     right: 5px;;
     font-size: smaller;
 }
+

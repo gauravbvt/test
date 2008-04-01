@@ -10,8 +10,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -37,7 +35,7 @@ import java.util.Iterator;
  */
 public class ContentPanel extends Panel {
 
-    private static final int ITEMS_PER_PAGE = 10;
+    private static final int ITEMS_PER_PAGE = 8;
     private Ref selected ;
     private boolean popupDisplayed; // post midnight hack...
 
@@ -144,28 +142,11 @@ public class ContentPanel extends Panel {
             }
         } );
 
-
-        final WebMarkupContainer popup = new WebMarkupContainer( "new-popup" ) {
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-//                tag.put( "onMouseOut", "this.style.display='none';" );
-                if ( !popupDisplayed )
-                    tag.put( "style", "display='none';");
-                else
-                    tag.put( "style", "display='block';");
-                popupDisplayed = false;
-            }
-        };
+        final WebMarkupContainer popup = new WebMarkupContainer( "new-popup" );
         popup.setOutputMarkupId( true );
         tableNav.add( popup );
 
-        tableNav.add( new AjaxLink( "new-item" ){
-            public void onClick( AjaxRequestTarget target ) {
-                popupDisplayed = true;
-                target.addComponent( tableNav );
-            }
-        } );
-
+        tableNav.add( new Label( "new-item", "Add" ) );
 
         popup.add( new ListView( "new-items", container.getAllowedClasses() ){
             protected void populateItem( final ListItem item ) {
@@ -174,7 +155,8 @@ public class ContentPanel extends Panel {
                     public void onClick() {
                         try {
                             final Referenceable ref = (Referenceable) c.newInstance();
-                            container.add( ref.persist() );
+                            container.add( ref );
+                            getPage().renderPage();
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
                         } catch ( IllegalAccessException e ) {
@@ -183,8 +165,8 @@ public class ContentPanel extends Panel {
                     }
                 };
                 item.add( link );
-                String displayName = c.getName();
-                displayName = "new " + displayName.substring( displayName.lastIndexOf( '.' )+1 );
+                String displayName = c.getName().toLowerCase();
+                displayName = "Add " + displayName.substring( displayName.lastIndexOf( '.' )+1 );
                 link.add( new Label( "new-item-text", displayName ) );
             }
         } );

@@ -39,24 +39,20 @@ public class ContainerModel extends RefPropertyModel implements IDataProvider {
         return getContents().get( index );
     }
 
-    public void add( Ref ref ) {
-        Ref target = (Ref) super.getChainedModel().getObject();
-        target.add( ref );
-    }
-
     public void add( Referenceable ref ) {
         Ref target = (Ref) super.getChainedModel().getObject();
-        target.add( ref );
+        target.add( ref, super.getExpression() );
+        detach();
     }
 
     public void remove( Ref ref ) {
         Ref target = (Ref) super.getChainedModel().getObject();
-        target.remove( ref );
+        target.remove( ref, super.getExpression() );
+        detach();
     }
 
     public void remove( Referenceable ref ) {
-        Ref target = (Ref) super.getChainedModel().getObject();
-        target.remove( ref );
+        remove( ref.getReference() );
     }
 
     //==================================

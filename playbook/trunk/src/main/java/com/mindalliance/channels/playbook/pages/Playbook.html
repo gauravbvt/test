@@ -6,27 +6,41 @@
     <head>
         <title wicket:id="title">Untitled</title>
         <link rel="stylesheet" type="text/css" href="playbook.css"/>
+        <style id="org-apache-wicket-examples-ajax-builtin-AutoCompletePage-0">
+               .wicket-aa {
+                    font-size: 12px;
+                    background-color: white;
+                    border-width: 1px;
+                    border-color: #cccccc;
+                    border-style: solid;
+                    padding: 2px;
+                    margin: 1px 0 0 0;
+                    text-align:left;
+                }
+                .wicket-aa ul { list-style:none; padding: 2px; margin:0; }
+                .wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; }
+        </style>
     </head>
 <body>
-    <h1><span>Mind-Alliance Playbook</span></h1>
+    <div class="everything">
+        <h1><span>Mind-Alliance Playbook</span></h1>
 
-    <div id="tabs" wicket:id="tabs">[Tabs]</div>
+        <div id="tabs" wicket:id="tabs">[Tabs]</div>
 
-    <div id="todos" wicket:id="todos"/>
+        <div id="signout">
+            <hr/>
+            <p>Logged in as
+                <span wicket:id="name">Someone</span>
+                in project &laquo;<span wicket:id="project">X</span>&raquo;
+                &mdash; <a wicket:id="signout">Sign out</a></p>
+        </div>
 
-    <div id="signout">
-        <hr/>
-        <p>Logged in as
-            <span wicket:id="name">Someone</span>
-            in project &laquo;<span wicket:id="project">X</span>&raquo;
-            &mdash; <a wicket:id="signout">Sign out</a></p>
-    </div>
-
-    <div id="controls">
-        <form wicket:id="page_controls">
-            <input type="submit" wicket:id="save_button" value="Save"/>
-            <input type="submit" wicket:id="revert_button" value="Revert"/>
-        </form>
+        <div id="controls">
+            <form wicket:id="page_controls">
+                <input type="submit" wicket:id="save_button" value="Save"/>
+                <input type="submit" wicket:id="revert_button" value="Revert"/>
+            </form>
+        </div>
     </div>
 </body>
 </html>

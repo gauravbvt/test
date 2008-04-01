@@ -24,7 +24,7 @@ class ApplicationMemory implements Serializable {
     public static final String ROOT_DB = 'channels'
     public final static Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
-    static DEBUG = false
+    static DEBUG = true
     static Cache cache
     private Application application
 

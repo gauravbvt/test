@@ -23,19 +23,21 @@
         </table>
         <div class="content-footer">
             <span class="content-pager" wicket:id="content-pager">[Pager]</span>
-            <span class="content-buttons">
-                <a wicket:id="content-delete">Delete</a>
-                <a wicket:id="new-item">New...</a>
-                <div wicket:id="new-popup" class="new-item-choices">
-                    <ul>
-                        <li wicket:id="new-items">
-                            <a href="#" wicket:id="new-item-link">
-                                <span wicket:id="new-item-text">Text</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </span>
+            <div class="content-buttons">
+                <ul>
+                    <li><a wicket:id="content-delete">Delete</a></li>
+                    <li class="new-header"><a wicket:id="new-item">Add</a></li>
+                    <span wicket:id="new-popup" class="new-item-choices">
+                        <ul>
+                            <li wicket:id="new-items">
+                                <a href="#" wicket:id="new-item-link">
+                                    <span wicket:id="new-item-text">Text</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </span>
+                </ul>
+            </div>
         </div>
 
     </div>

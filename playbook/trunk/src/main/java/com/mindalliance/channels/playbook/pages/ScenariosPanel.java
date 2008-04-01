@@ -32,10 +32,11 @@ public class ScenariosPanel extends TabPanel {
 
         // TODO save/restore scenario selection
         IModel scenarios = new RefPropertyModel( project, "scenarios" );
-        final ContainerModel propertyModel = (ContainerModel) getModel();
-        scenario = (IModel) propertyModel.getTarget();
+        final ContainerModel containerModel = (ContainerModel) getModel();
+        scenario = (IModel) containerModel.getTarget();
         List<Ref> ss = (List<Ref>) scenarios.getObject();
         scenario.setObject( ss.get(0) );
+        containerModel.detach();
 
         PropertyModel sp = new PropertyModel( this, "scenario" );
         add( new Label( "content-title", new RefPropertyModel( sp.getObject(), "name" ) ) );
