@@ -201,7 +201,7 @@ class RefImpl implements Ref, GroovyInterceptable {
     void add(Referenceable referenceable, String type) {
         referenceable.persist() // make sure it is persisted TODO -- first test that it is *not* in the app memory
         String suffix = RefUtils.capitalize(type)
-        this."add$suffix"(referenceable)
+        this."add$suffix"(referenceable.reference)
     }
 
     void remove(Ref ref) {
@@ -220,7 +220,7 @@ class RefImpl implements Ref, GroovyInterceptable {
     void remove(Referenceable referenceable, String type) {
         referenceable.persist() // make sure it is persisted TODO -- first test that it is *not* in the app memory
         String suffix = RefUtils.capitalize(type)
-        this."remove$suffix"(referenceable)
+        this."remove$suffix"(referenceable.reference)
     }
 
 
