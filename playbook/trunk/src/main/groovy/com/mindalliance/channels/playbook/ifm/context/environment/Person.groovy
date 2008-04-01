@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.context.environment
 
 import com.mindalliance.channels.playbook.ifm.Location
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.project.Project
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
