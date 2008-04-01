@@ -18,6 +18,7 @@ import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.authentication.pages.SignOutPage;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -30,6 +31,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,7 +127,7 @@ public class Playbook extends WebPage {
                 setResponsePage( Playbook.this );
             }
         });
-//        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
+        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         add( pageControls );
     }
 }
