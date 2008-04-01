@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.*;
 styleTemplate = [graph: [rankdir: 'LR', fontname: 'Helvetica'],
                  primary1: [shape: 'octagon', color: 'red'],
                  primary2: [color: 'blue', style: 'filled, rounded'],
+                 node: [fontname: 'Helvetica', fillcolor: 'white', style: 'filled'],
                  secondary: [shape: 'diamond', color: 'blue', style: 'filled,bold']
 ];
 

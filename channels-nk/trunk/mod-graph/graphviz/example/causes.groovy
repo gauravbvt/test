@@ -102,7 +102,7 @@ println "Building Cause and Effect graph"
 drawGraph(builder)
 
 println "Rendering Cause and Effect SVG to output/causes.svg"
-def out = new FileWriter(new File('output/causes.svg'))
+def out = new FileOutputStream(new File('output/causes.svg'))
 println renderer.dot
 renderer.render(out, "svg")
 out.close()
