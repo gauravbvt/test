@@ -33,7 +33,7 @@ import javax.servlet.jsp.PageContext;
  * It ought to be refactored using YAML object wrappers that handle OSCache CacheEntry elements containing IFM POGOs. 
  *
  */
-class YamlPersistenceListener implements PersistenceListener, Serializable {
+public class YamlPersistenceListener implements PersistenceListener, Serializable {
     public final static String CACHE_PATH_KEY = "cache.path";
 
     /**
