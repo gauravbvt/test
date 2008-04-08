@@ -24,6 +24,11 @@ class Location extends BeanImpl implements Comparable {
     String code = ''
     Area area // force recalculate on change and don't persist
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['area']
+    }
+
     String getName() {
         return toString()
     }
@@ -64,11 +69,6 @@ class Location extends BeanImpl implements Comparable {
             a = Area.UNKNOWN
         }
         return a
-    }
-
-    @Override
-    List<String> transientProperties() {
-        return super.transientProperties() + ['area']
     }
 
     @Override

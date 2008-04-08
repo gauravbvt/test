@@ -5,7 +5,6 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

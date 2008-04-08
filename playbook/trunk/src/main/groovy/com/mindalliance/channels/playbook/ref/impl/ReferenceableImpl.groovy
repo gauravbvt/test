@@ -19,8 +19,6 @@ import com.mindalliance.channels.playbook.support.RefUtils
 */
 /*abstract*/ class ReferenceableImpl extends BeanImpl implements Referenceable, GroovyInterceptable {
 
-    static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
-
     String id
     String db
 
@@ -197,7 +195,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 
     Class formClass() {
         String type = getType()
-        String className = "${FORM_PACKAGE}.${type}Panel"
+        String className = "${PlaybookApplication.FORM_PACKAGE}.${type}Panel"
         try {
             return Class.forName(className)
         }

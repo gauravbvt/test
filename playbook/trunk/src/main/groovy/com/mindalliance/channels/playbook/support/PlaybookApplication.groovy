@@ -18,11 +18,13 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.context.environment.Position
+import com.mindalliance.channels.playbook.ifm.context.environment.System
 import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 import com.mindalliance.channels.playbook.ifm.context.model.Domain
 import com.mindalliance.channels.playbook.ifm.context.model.OrganizationType
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.pages.forms.tests.OrganizationTest
+import com.mindalliance.channels.playbook.pages.forms.tests.SystemTest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,6 +35,8 @@ import com.mindalliance.channels.playbook.pages.forms.tests.OrganizationTest
 */
 class PlaybookApplication extends AuthenticatedWebApplication implements Memorable, Serializable {
 
+    static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
+    
     ApplicationMemory appMemory
     String message
 
@@ -49,9 +53,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-      // return PersonTest.class
       return Playbook.class
+      // return PersonTest.class
       // return OrganizationTest.class
+      // return SystemTest.class
     }
 
     @Override
@@ -115,6 +120,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             p.addModelElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: Area.STATE)))
             p.addModelElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: Area.GLOBE)))
             p.addModelElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: Area.COUNTY)))
+
+            p.addResource(store(new System()))
 
             channels.addProject(store(p))
            

@@ -12,12 +12,18 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 */
 class Scenario extends ProjectElement {
 
-    String name = ''
+    String name = 'No name'  // Required, unique
     String description = ''
     List<Ref> agents = []
     List<Ref> occurrences = []
     List<Ref> informations = []
     List<Ref> informationNeeds = []
     List<Ref> assignments = []
+
+    List<Ref> findInformationActsForAgent(String name) {
+        List<Ref> ias = occurrences.findall {occ ->
+            occ.isInformationAct() && ((occ.agent.name.equalsIgnoreCase(name)) || occ.target && occ.target.name.equalsIgnoreCase(name))
+        }
+    }
 
 }

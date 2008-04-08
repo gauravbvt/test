@@ -16,6 +16,11 @@ class Channels extends IfmElement {
     List<Ref> users = []
     List<Ref> participations = []
 
+    @Override
+    protected List transientProperties() {
+        return super.transientProperties() + ['allItems']
+    }
+
     Ref findProjectNamed(String name) {
         Ref ref = (Ref) projects.find {it.name == name}
         return ref

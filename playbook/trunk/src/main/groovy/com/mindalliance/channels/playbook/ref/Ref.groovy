@@ -24,5 +24,6 @@ interface Ref extends Serializable {
     void remove(Ref ref) // ditto on ref.deref()
     void remove(Referenceable referenceable, String type)  // use type parameter to compose add<Type>(referenceable)
     void remove(Ref ref, String type)  // ditto on ref.deref()
+    // TODO - add Ref persist()
 
 }

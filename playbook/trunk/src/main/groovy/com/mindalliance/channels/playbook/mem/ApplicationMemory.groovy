@@ -9,7 +9,7 @@ import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import org.apache.wicket.Application
-import com.mindalliance.channels.playbook.ref.Store
+import com.mindalliance.channels.playbook.support.persistence.YamlPersistenceListener
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,9 +20,9 @@ import com.mindalliance.channels.playbook.ref.Store
 */
 class ApplicationMemory implements Serializable {
 
-    public static final String ROOT_ID = 'CHANNELS'
-    public static final String ROOT_DB = 'channels'
-    public final static Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
+    static final String ROOT_ID = 'CHANNELS'
+    static final String ROOT_DB = 'channels'
+    static final Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
     static DEBUG = false
     static Cache cache
@@ -42,9 +42,9 @@ class ApplicationMemory implements Serializable {
             String algorithmClass = 'com.opensymphony.oscache.base.algorithm.UnlimitedCache'
             int capacity = -1
             cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
-            DiskPersistenceListener listener = new DiskPersistenceListener()
+            YamlPersistenceListener listener = new YamlPersistenceListener()
             Config config = new Config()
-            config.set('cache.path', "./target/work/cache") // TODO change this
+            config.set('cache.path', "./target/work/cache")
             listener.configure(config)
             cache.setPersistenceListener(listener)
         }
