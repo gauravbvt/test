@@ -1,2 +1,0 @@
-handlers:
-  com.mindalliance.channels.playbook.ref.impl.BeanImp: com.mindalliance.channels.playbook.support.persistence.IfmBeanWrapper 
