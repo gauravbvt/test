@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.project.Project
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -89,4 +90,14 @@ class Channels extends IfmElement {
         }
     }
 
+    // Queries
+
+    List<Ref> findNamedResource(Map args) {  // args = [type:<type>, name:<name>]
+        List<Ref> results = []
+        Ref project = Project.currentProject()
+        Ref resource = project.findResourceNamed(args.type, args.person)
+        results.add(resource)
+        return results
+    }
+    
 }

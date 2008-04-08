@@ -38,6 +38,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
     
     ApplicationMemory appMemory
+    QueryHandler queryHandler = new QueryHandler()
     String message
 
     PlaybookApplication() {
@@ -48,6 +49,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
     ApplicationMemory getMemory() {
         return appMemory
+    }
+
+    QueryHandler getQueryHandler() {
+        return queryHandler()
     }
 
     //----------------------

@@ -17,8 +17,8 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 // Not much to abstract...
 abstract public class AbstractComponentPanel extends Panel {
 
-    Ref element;
-    String propName;
+    Ref element;     // element containing the component to be edited
+    String propName; // name of the element's property which value is the component to be edited
 
     public AbstractComponentPanel(String id, Ref element, String propName) {
         super(id);

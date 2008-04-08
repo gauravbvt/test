@@ -136,6 +136,10 @@ class RefImpl implements Ref, GroovyInterceptable {
         store.delete(this)
     }
 
+    Ref persist() {
+        this.deref().persist()
+    }
+
     void reset() {
         Store store = PlaybookApplication.locateStore()
         store.reset(this)
@@ -222,6 +226,10 @@ class RefImpl implements Ref, GroovyInterceptable {
         referenceable.persist() // make sure it is persisted TODO -- first test that it is *not* in the app memory
         String suffix = RefUtils.capitalize(type)
         this."remove$suffix"(referenceable.reference)
+    }
+
+    List<Ref> executeQuery(String query, Map<String, Object> args) {
+        return PlaybookApplication.getQueryHandler().executeQuery(this, query, args)
     }
 
 

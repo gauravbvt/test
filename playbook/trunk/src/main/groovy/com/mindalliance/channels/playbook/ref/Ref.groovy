@@ -8,6 +8,7 @@ interface Ref extends Serializable {
     Referenceable deref()
     Object deref(String path)
     Object get(String name)
+    Ref persist()
     void reset() // remove from session (pending change or delete)
     void delete()
     void commit() // commit only this Ref
@@ -24,6 +25,5 @@ interface Ref extends Serializable {
     void remove(Ref ref) // ditto on ref.deref()
     void remove(Referenceable referenceable, String type)  // use type parameter to compose add<Type>(referenceable)
     void remove(Ref ref, String type)  // ditto on ref.deref()
-    // TODO - add Ref persist()
-
+    List<Ref> executeQuery(String query, Map<String,Object> args)
 }
