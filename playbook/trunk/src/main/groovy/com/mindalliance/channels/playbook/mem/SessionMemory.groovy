@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
+import org.apache.log4j.Logger
 
 
 /**
@@ -34,7 +35,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 }
             }
             else {
-                if (ApplicationMemory.DEBUG) System.out.println("<== from session: ${referenceable.type} $referenceable")
+                if (ApplicationMemory.DEBUG)  Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
             }
             return referenceable
         }
@@ -43,7 +44,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Ref persist(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
         changes.put(reference, (Referenceable) referenceable)
-        if (ApplicationMemory.DEBUG) System.out.println("==> to session: ${referenceable.type} $referenceable")
+        if (ApplicationMemory.DEBUG)  Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
         return reference
     }
 

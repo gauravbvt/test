@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.RefUtils
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -47,7 +48,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
         changed()
-        if (ApplicationMemory.DEBUG) System.out.println("^^^ changed: ${getType()}.$propName")
+        if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("^^^ changed: ${getType()}.$propName")
         propertyChanged(propName, null, this."$propName") // don't care about old value
     }
 
@@ -200,7 +201,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
             return Class.forName(className)
         }
         catch (Exception e) {
-            System.err.println("No form class $className")
+            Logger.getLogger(this.class.name).warn("No form class $className", e)
             return null
         }
     }
@@ -210,7 +211,6 @@ import com.mindalliance.channels.playbook.support.RefUtils
         Ref ref = (Ref)list.find {ref ->
             args.every {prop, val ->
                 def propVal = ref."$prop"
-                // System.out.println("$prop -> $val =:= $propVal")
                 ref."$prop" == val
             }
         }

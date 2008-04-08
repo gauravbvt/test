@@ -10,6 +10,7 @@ import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.support.persistence.YamlPersistenceListener
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -57,7 +58,7 @@ class ApplicationMemory implements Serializable {
     Ref store(Referenceable referenceable) {
         referenceable.beforeStore()
         cache.putInCache(referenceable.getId(), referenceable)
-        if (DEBUG) System.out.println("==> to application: ${referenceable.type} $referenceable")
+        if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
         return referenceable.reference
     }
@@ -74,13 +75,12 @@ class ApplicationMemory implements Serializable {
         Referenceable referenceable
         try {
             referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
-            if (DEBUG) System.out.println("<== from application: ${referenceable.type} $referenceable")
+            if (DEBUG)  Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
             referenceable.afterRetrieve()
         }
         catch (Exception e) {
             // Do nothing
-            System.err.println(e)
-            // TODO log warning
+            Logger.getLogger(this.class.name).warn("Failed to retrieve $ref")
         }
         return (Referenceable) referenceable // will be cloned by SessionMemory
     }
@@ -119,8 +119,7 @@ class ApplicationMemory implements Serializable {
             empty = false
         }
         catch (NeedsRefreshException nre) {
-            // TODO use logger
-            System.out.println("Cache is empty")
+            Logger.getLogger(this.class.name).info("Cache is empty")
         }
         return empty
     }

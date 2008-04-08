@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.RefUtils
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -118,12 +119,12 @@ class RefImpl implements Ref, GroovyInterceptable {
                     value = referenceable."$name"
                  }
                  else {
-                     System.out.println("${this.toString()} is stale")  // TODO log this
+                     Logger.getLogger(this.getClass().getName()).warn("${this.toString()} is stale")
                      throw new StaleRefException("${this.toString()} is stale")
                  }
              }
              catch (Exception e) {
-                System.out.println("Can't get $name in $referenceable")  // TODO log this
+                Logger.getLogger(this.class.name).warn("Can't get $name in $referenceable", e)
                 // throw new IllegalArgumentException("Can't get $name in $referenceable")
              }
              return value
@@ -148,7 +149,8 @@ class RefImpl implements Ref, GroovyInterceptable {
             value = referenceable.invokeMethod(name, args)
             return value
         }
-        if (metamethod == null) {  // TODO - ????
+        if (metamethod == null) {
+            Logger.getLogger(this.class.name).warn("No method named $name")
             throw new Exception("No method named $name")
         }
         return metamethod.invoke(this, args)

@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.geo.AmbiguousAreaException
 import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.geo.AreaException
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,7 +27,7 @@ class Location extends BeanImpl implements Comparable {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['area']
+        return super.transientProperties() + ['area', 'name', 'areaDefined']
     }
 
     String getName() {
@@ -62,7 +63,7 @@ class Location extends BeanImpl implements Comparable {
             a = Area.ambiguous(e.topos)
         }
         catch (ServiceFailureAreaException e) {
-            System.err.println("Geo service failure $e")
+            Logger.getLogger(this.class.name).warn("Geo service failure", e)
             a = Area.UNKNOWN
         }
         catch (AreaException e) {

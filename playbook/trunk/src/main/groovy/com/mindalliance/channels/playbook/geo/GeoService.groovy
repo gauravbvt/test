@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.methods.GetMethod
 import org.apache.commons.httpclient.HttpStatus
 import groovy.util.slurpersupport.GPathResult
 import org.geonames.Style
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -214,7 +215,7 @@ class GeoService {
         try {
             topos = WebService.search(tsc).toponyms
         } catch (Exception e) {
-            System.err.println("Geonames search failed: $e") // TODO - log this
+            Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Geonames search failed for $name", e)
             throw e
         }
         boolean exists = !topos.isEmpty()
@@ -233,7 +234,7 @@ class GeoService {
             names = topos.collect {topo -> topo.name}
         }
         catch (Exception e) {
-            System.err.println("Failed to look up candidate country names: $e")
+            Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Failed to look up candidate country names for $input", e)
         }
         return names.sort()
     }
@@ -252,7 +253,7 @@ class GeoService {
             names = topos.collect {topo -> topo.name}
         }
         catch (Exception e) {
-            System.err.println("Failed to look up candidate state names: $e")
+            Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Failed to look up candidate state names for $input", e)
         }
         return names.sort()
     }
@@ -273,7 +274,7 @@ class GeoService {
             names = topos.collect {topo -> topo.name}
         }
         catch (Exception e) {
-            System.err.println("Failed to look up candidate county names: $e")
+            Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Failed to look up candidate county names for $input", e)
         }
         return names.sort()
     }
@@ -297,7 +298,7 @@ class GeoService {
             names = topos.collect {topo -> topo.name}
         }
         catch (Exception e) {
-            System.err.println("Failed to look up candidate city names: $e")
+            Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Failed to look up candidate city name for $input", e)
         }
         return names.sort()
     }
@@ -333,7 +334,7 @@ class GeoService {
                return true
             }
         } catch (AreaException e) {
-            System.err.println("Failed to validate code: $e")
+            Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Failed to validate code $code", e)
         }
         return false
     }
@@ -352,7 +353,7 @@ class GeoService {
         try {
             int statusCode = client.executeMethod(get)
             if (statusCode != HttpStatus.SC_OK) {
-                System.err.println("Method failed: " + get.getStatusLine()) // TODO --- log this
+                Logger.getLogger('com.mindalliance.channels.playbook.geo.GeoService').warn("Geoname $url call failed: ${get.getStatusLine()}")
                 throw new ServiceFailureAreaException("Geoname $url call failed: ${get.getStatusLine()}")
             }
             String xml = get.getResponseBodyAsString().toString()

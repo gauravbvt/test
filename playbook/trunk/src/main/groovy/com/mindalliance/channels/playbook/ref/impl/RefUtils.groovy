@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.support
 
-import org.apache.commons.beanutils.PropertyUtilsBean
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,7 +31,7 @@ class RefUtils {
             result = utils.getNestedProperty(holder, path)
         }
         catch (Exception e) {
-            System.err.println("Evaluation of path $path on $holder failed : $e")    // TODO -- use logger
+            Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed", e)
             return null
         }
         return result
@@ -43,7 +43,7 @@ class RefUtils {
             utils.setNestedProperty(holder, path, obj)
         }
         catch (Exception e) {
-            System.err.println("Evaluation of path $path on $holder failed : $e")    // TODO -- use logger
+            Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed", e) 
         }
 
     }

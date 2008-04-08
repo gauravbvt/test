@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.feedback.FeedbackMessagesModel;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
@@ -182,7 +183,7 @@ public class LocationPanel extends AbstractComponentPanel {
                 // String streetName = streetField.getModel().getObject();
                 // System.out.println("Updating street to " + streetName);
                 element.changed(propName);
-                System.out.println("Location = " + element.deref(propName).toString());
+                // System.out.println("Location = " + element.deref(propName).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
@@ -226,7 +227,7 @@ public class LocationPanel extends AbstractComponentPanel {
                    }
                 }
                 catch (Exception e) {
-                    System.err.println(e); // TODO Log this
+                    Logger.getLogger(this.getClass().getName()).warn("Could not verify location due to system error", e);
                     error("Could not verify location due to system error");
                 }
                 target.addComponent(feedback);

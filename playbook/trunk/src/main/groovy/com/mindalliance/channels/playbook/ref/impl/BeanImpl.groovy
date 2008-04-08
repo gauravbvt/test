@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.persistence.PersistentRef
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,8 +35,7 @@ class BeanImpl implements Bean {
                 copy."$name" = value
             }
             catch (Exception e) {// Read-only/computed field
-                // TODO -- put a warning in log
-                // System.out.println("Can't set field $name in $copy")
+                Logger.getLogger(this.getClass().getName()).warn("Can't set field $name in ${this.class.name}")
             }
         }
         return copy
@@ -57,8 +57,7 @@ class BeanImpl implements Bean {
                     this."$name" = val
                 }
                 catch (Exception e) {
-                    // TODO -- put a warning in log
-                    System.out.println("Can't set field $name in ${bean.class.name}")
+                    Logger.getLogger(this.getClass().getName()).warn("Can't set field $name in ${bean.class.name}",e)
                 }
             }
         }

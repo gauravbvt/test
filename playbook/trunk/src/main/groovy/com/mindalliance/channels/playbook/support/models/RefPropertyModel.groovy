@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.support.models
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.model.IChainingModel
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,7 +29,7 @@ class RefPropertyModel implements IChainingModel {
             return RefUtils.get(holder, expression)
         }
         catch (Exception e) {
-            System.out.println("*** Failed to eval expression $expression on $target : $e")
+            Logger.getLogger(this.class.name).warn("Failed to eval expression $expression on $target", e)
             throw e
         }
     }
@@ -43,7 +44,7 @@ class RefPropertyModel implements IChainingModel {
             RefUtils.set(holder, expression, obj)
         }
         catch (Exception e) {
-            System.out.println("*** Failed to set $target at $expression to $obj : $e")
+            Logger.getLogger(this.class.name).warn("Failed to set $target at $expression to $obj", e)
             throw e
         }
     }
