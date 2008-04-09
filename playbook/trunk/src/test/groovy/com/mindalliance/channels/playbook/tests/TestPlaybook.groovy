@@ -16,7 +16,6 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
-import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -57,9 +56,9 @@ public class TestPlaybook extends TestCase {
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
-        assert metaProps.size() == 8
+        assert metaProps.size() == 9
         metaProps = metaProps.findAll {it.isScalar()}
-        assert metaProps.size() == 4
+        assert metaProps.size() == 5
         //
         String scenarioName = myProject.deref('scenarios')[0].deref('name')
         assert scenarioName.startsWith("Scenario")
@@ -72,7 +71,9 @@ public class TestPlaybook extends TestCase {
         assertTrue(session.pendingChangesCount == 1)
         // Modify project in session memory
         RefUtils.set(myProject, "name", "Your project")
+        Date lastModified = myProject.lastModified
         myProject.name = "Your project"
+        assertTrue(lastModified.before(myProject.lastModified))
         assertNotNull(myProject.createdOn)
         assertTrue(session.pendingChangesCount == 2)
         // partial commit
@@ -169,15 +170,6 @@ public class TestPlaybook extends TestCase {
         RefPropertyModel chained = new RefPropertyModel(project, "scenarios.name(new scenario)")
         RefPropertyModel rpm = new RefPropertyModel(chained, "name")
         assert rpm.getObject() == 'new scenario'
-    }
-
-    void testLocationPanel() {
-        tester.startPage(PersonTest.class)
-        def personPanel = tester.getComponentFromLastRenderedPage('person')
-        def locationPanel = personPanel.get('elementForm:address')
-        def countryTextField = locationPanel.get('location:country')
-        assert countryTextField
-        tester.executeAjaxEvent(countryTextField, 'onchange')
     }
 
 }

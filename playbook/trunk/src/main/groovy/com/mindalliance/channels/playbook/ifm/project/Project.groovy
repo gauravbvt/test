@@ -35,6 +35,13 @@ class Project extends IfmElement {
         return res
     }
 
+    Ref findAResource(String type) {
+        Ref res = (Ref) resources.find {res ->
+            res.type == type
+        }
+        return res
+    }
+
     Ref findScenarioNamed(String type, String name) {
         Ref sc = (Ref) scenarios.find {sc ->
             sc.type == type && sc.name.equalsIgnoreCase(name)

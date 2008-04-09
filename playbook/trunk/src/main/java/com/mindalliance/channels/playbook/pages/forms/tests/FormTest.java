@@ -2,23 +2,29 @@ package com.mindalliance.channels.playbook.pages.forms.tests;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.Application;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
+import com.mindalliance.channels.playbook.support.QueryHandler;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementPanel;
+import com.mindalliance.channels.playbook.pages.FormPanel;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,12 +33,11 @@ import java.util.HashMap;
  * Date: Apr 8, 2008
  * Time: 1:58:50 PM
  */
-abstract public class FormTest  extends WebPage {
+public class FormTest extends WebPage {
 
     PlaybookSession session;
     Label elementLabel;
-    Ref element;
-    AbstractElementPanel form;
+    Ref selected;
     WebMarkupContainer debugDiv;
 
     public FormTest(PageParameters parms) {
@@ -44,57 +49,97 @@ abstract public class FormTest  extends WebPage {
         }
     }
 
+    public Ref getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Ref selected) {
+        this.selected = selected;
+    }
+
     private void load() throws Exception {
         session = (PlaybookSession) Session.get();
         session.authenticate("admin", "admin");
-        element = getFormElement();
-        Class formClass = element.deref().formClass();
-        Class[] args = new Class[2];
-        args[0] = String.class;
-        args[1] = Ref.class;
-        form = (AbstractElementPanel)formClass.getConstructor(args).newInstance("element", element);
-        add(form);
+        final FormPanel formPanel = new FormPanel("content-form", new PropertyModel(this, "selected"));
+        add(formPanel);
+        final DropDownChoice typesDropDown = new DropDownChoice("types", new Model(), new ArrayList());
+        typesDropDown.setChoices(getTypeChoices());
+        typesDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate(AjaxRequestTarget target) {
+                String type = (String) typesDropDown.getModel().getObject();
+                try {
+                    setSelected(getElementOfType(type));
+                    formPanel.modelChanged();
+                    target.addComponent(formPanel);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (selected != null) {
+                    elementLabel = new Label("elementString", new RefPropertyModel(selected, "name"));
+                    elementLabel.setOutputMarkupId(true);
+                    debugDiv.addOrReplace(elementLabel);
+                    debugDiv.setOutputMarkupId(true);
+                    target.addComponent(debugDiv);
+                }
+            }
+        });
+        add(typesDropDown);
         debugDiv = new WebMarkupContainer("debug");
-        add(debugDiv);
-        elementLabel = new Label("elementString", new RefPropertyModel(element, "name"));
+        elementLabel = new Label("elementString", "");
         elementLabel.setOutputMarkupId(true);
         debugDiv.add(elementLabel);
+        add(debugDiv);
         AjaxLink saveLink = new AjaxLink("save") {
             public void onClick(AjaxRequestTarget target) {
-                PlaybookSession session = (PlaybookSession)Session.get();
+                PlaybookSession session = (PlaybookSession) Session.get();
                 session.commit();
-                form.refresh(target);
-                System.out.print("COMMIT: " + RefUtils.get(element, "name") + "\n");
+                formPanel.resetForm();
+                target.addComponent( formPanel );
+                System.out.print("COMMIT: " + RefUtils.get(selected, "name") + "\n");
                 target.addComponent(elementLabel);
             }
         };
         AjaxLink resetLink = new AjaxLink("reset") {
             public void onClick(AjaxRequestTarget target) {
-                PlaybookSession session = (PlaybookSession)Session.get();
+                PlaybookSession session = (PlaybookSession) Session.get();
                 session.abort();
-                form.refresh(target);
-                System.out.print("ABORT: " +  RefUtils.get(element, "name") + "\n");
-                form.setOutputMarkupId(true);
-                target.addComponent(form);
+                formPanel.resetForm();
+                target.addComponent( formPanel );
+                System.out.print("ABORT: " + RefUtils.get(selected, "name") + "\n");
             }
         };
         add(saveLink);
         add(resetLink);
     }
 
-    protected Ref getFormElement() {
-        PageParameters params = getPageParameters();
-        String query = params.getString("query");
-        Map<String, Object> args = new HashMap<String,Object>();
-        for (Object key : params.keySet()) {
-           String name = (String)key;
-           if (!name.equalsIgnoreCase("query")) {
-               args.put(name, params.getString(name));
-           }
-        }
-        PlaybookApplication app = (PlaybookApplication)Application.get();
-        Ref channels = app.getChannels();
-        List<Ref> results = channels.executeQuery(query, args);
-        return results.get(0);
+    private List getTypeChoices() {
+        List choices = new ArrayList();
+        choices.add("Person");
+        choices.add("Organization");
+        choices.add("System");
+        return choices;
     }
+
+    private Ref getElementOfType(String type) throws Exception {
+        PlaybookApplication app = (PlaybookApplication) Application.get();
+        QueryHandler qh = app.getQueryHandler();
+        Map<String, Object> args = new HashMap<String, Object>();
+        Ref channels = app.getChannels();
+        List<Ref> results = null;
+        args.put("type", type);
+
+        if (type.equals("Person")) {
+            results = qh.executeQuery(channels, "findAResource", args);
+        } else if (type.equals("Organization")) {
+            results = qh.executeQuery(channels, "findAResource", args);
+        } else if (type.equals("System")) {
+            results = qh.executeQuery(channels, "findAResource", args);
+        }
+        if (results != null && results.size() > 0) {
+            return results.get(0);
+        } else {
+            throw new Exception("Failed to get element");
+        }
+    }
+
 }

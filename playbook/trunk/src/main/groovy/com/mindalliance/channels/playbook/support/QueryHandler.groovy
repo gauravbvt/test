@@ -17,7 +17,9 @@ class QueryHandler implements Serializable {
     List<Ref> executeQuery(Ref ref, String query, Map<String,Object>args) {
         Referenceable referenceable = ref.deref()
         // TODO -- SECURITY HOLE - make sure query is authorized
-        List<Ref> results = (List<Ref>)referenceable."$query"(args)
+        List<Ref> results = []
+        results += referenceable."$query"(args)
+        return results
     }
 
 }

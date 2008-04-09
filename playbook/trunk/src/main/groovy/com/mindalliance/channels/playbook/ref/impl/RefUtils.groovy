@@ -31,7 +31,7 @@ class RefUtils {
             result = utils.getNestedProperty(holder, path)
         }
         catch (Exception e) {
-            Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed", e)
+            Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed")
             return null
         }
         return result
@@ -43,7 +43,7 @@ class RefUtils {
             utils.setNestedProperty(holder, path, obj)
         }
         catch (Exception e) {
-            Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed", e) 
+            Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed")
         }
 
     }

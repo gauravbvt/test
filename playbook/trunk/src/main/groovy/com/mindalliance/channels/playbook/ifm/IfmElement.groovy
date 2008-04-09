@@ -16,11 +16,17 @@ import org.apache.wicket.Session
 /*abstract*/ class IfmElement extends ReferenceableImpl implements Serializable {
 
     Date createdOn = new Date()
+    Date lastModified = new Date()
 
     void makeRoot() {
         Ref root = ApplicationMemory.ROOT
         this.id = root.id
         this.db = root.db
+    }
+
+    void changed() {
+       super.changed()
+       lastModified = new Date()
     }
 
 }

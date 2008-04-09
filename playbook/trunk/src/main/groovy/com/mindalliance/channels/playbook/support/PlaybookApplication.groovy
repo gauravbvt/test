@@ -19,12 +19,10 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.context.environment.Position
 import com.mindalliance.channels.playbook.ifm.context.environment.System
-import com.mindalliance.channels.playbook.pages.forms.tests.PersonTest
 import com.mindalliance.channels.playbook.ifm.context.model.Domain
 import com.mindalliance.channels.playbook.ifm.context.model.OrganizationType
 import com.mindalliance.channels.playbook.geo.Area
-import com.mindalliance.channels.playbook.pages.forms.tests.OrganizationTest
-import com.mindalliance.channels.playbook.pages.forms.tests.SystemTest
+import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -52,16 +50,14 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     }
 
     QueryHandler getQueryHandler() {
-        return queryHandler()
+        return queryHandler
     }
 
     //----------------------
     @Override
     public Class getHomePage() {
       return Playbook.class
-      // return PersonTest.class
-      // return OrganizationTest.class
-      // return SystemTest.class
+      // return FormTest.class
     }
 
     @Override

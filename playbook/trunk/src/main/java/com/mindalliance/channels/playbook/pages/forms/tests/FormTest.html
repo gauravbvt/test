@@ -4,7 +4,13 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
-<div wicket:id ="element">[Element form]</div>
+<fieldset>
+    <legend>Type</legend>
+    <select wicket:id="types">
+        <option>[A type]</option>
+    </select>
+</fieldset>
+<div wicket:id ="content-form">[Form panel]</div>
 <div wicket:id="debug">
     Edited = <span wicket:id="elementString">[element as string]</span><br/>
 </div>

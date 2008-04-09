@@ -47,7 +47,6 @@ import org.apache.log4j.Logger
     }
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
-        changed()
         if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("^^^ changed: ${getType()}.$propName")
         propertyChanged(propName, null, this."$propName") // don't care about old value
     }
@@ -55,6 +54,7 @@ import org.apache.log4j.Logger
     void changed() {} // Default is do nothing
 
     void propertyChanged(String name, def old, def value) {
+        changed()
         pcs.firePropertyChange(name, old, value)
     }
 
