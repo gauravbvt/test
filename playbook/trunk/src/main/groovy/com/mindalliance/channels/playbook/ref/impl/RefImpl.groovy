@@ -124,7 +124,7 @@ class RefImpl implements Ref, GroovyInterceptable {
                  }
              }
              catch (Exception e) {
-                Logger.getLogger(this.class.name).warn("Can't get $name in $referenceable", e)
+                Logger.getLogger(this.class.name).warn("Can't get $name in $referenceable")
                 // throw new IllegalArgumentException("Can't get $name in $referenceable")
              }
              return value
