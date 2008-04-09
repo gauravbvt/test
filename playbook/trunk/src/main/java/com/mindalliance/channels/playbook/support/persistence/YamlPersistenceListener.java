@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ho.yaml.Yaml;
 
 import java.io.*;
@@ -365,6 +366,7 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
             }
             Yaml.dump(object, file);
         } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).error("Unable to write '" + file + "' in the cache", e);
             int count = DELETE_COUNT;
             while (file.exists() && !file.delete() && count != 0) {
                 count--;
@@ -526,6 +528,7 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
                     }
                 }
             } catch (Exception e) {
+                Logger.getLogger(this.getClass().getName()).error("Unable to read '" + file.getAbsolutePath() + "' from the cache", e);
                 // We expect this exception to occur.
                 // This is when the item will be invalidated (written or deleted)
                 // during read.

@@ -7,20 +7,11 @@
 <wicket:extend>
     <fieldset>
         <legend>Identity</legend>
-        <table>
-            <tr>
-                <td>First name:</td>
-                <td><input wicket:id="firstName" type="text"/></td>
-            </tr>
-            <tr>
-                <td>Middle name:</td>
-                <td><input wicket:id="middleName" type="text"/></td>
-            </tr>
-            <tr>
-                <td>Last name:</td>
-                <td><input wicket:id="lastName" type="text"/></td>
-            </tr>
-        </table>
+        <ul>
+            <li><label><span>First name:</span><input wicket:id="firstName" type="text"/></label></li>
+            <li><label><span>Middle name:</span><input wicket:id="middleName" type="text"/></label></li>
+            <li><label><span>Last name:</span><input wicket:id="lastName" type="text"/></label></li>
+        </ul>
     </fieldset>
     <fieldset>
         <legend>Address</legend>

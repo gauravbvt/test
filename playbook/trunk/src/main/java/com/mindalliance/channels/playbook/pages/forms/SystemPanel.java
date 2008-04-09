@@ -27,8 +27,8 @@ import groovyjarjarantlr.collections.impl.LList;
  */
 public class SystemPanel extends AbstractElementPanel {
     TextField nameField;
-    TextField descriptionField;   // TODO -- find out why TextArea does not work
-    TextField accessField;
+    TextArea descriptionField;   // TODO -- find out why TextArea does not work
+    TextArea accessField;
     TextField organizationField;
     AutoCompleteTextField organizationPanel;
 
@@ -46,9 +46,10 @@ public class SystemPanel extends AbstractElementPanel {
     protected void load() {
         super.load();
         nameField = new TextField("name", new RefPropertyModel(element, "name"));
-        descriptionField = new TextField("description", new RefPropertyModel(element, "description"));
-        accessField = new TextField("access", new RefPropertyModel(element, "access"));
-        organizationField = new AutoCompleteTextField("organization", new Model("")) {
+        descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
+        accessField = new TextArea("access", new RefPropertyModel(element, "access"));
+        String orgName = (String)RefUtils.getOrDefault(element, "organization.name", "");
+        organizationField = new AutoCompleteTextField("organization", new Model(orgName)) {
             protected Iterator getChoices(String input) {
                 List<String> orgNames = Organization.findAllOrganizationNames();
                 List<String>choices = new ArrayList<String>();
@@ -60,6 +61,7 @@ public class SystemPanel extends AbstractElementPanel {
                 return choices.iterator();
             }
         };
+        organizationField.setOutputMarkupId(true);
         addElementField(nameField);
         addElementField(descriptionField);
         addElementField(organizationField);
@@ -68,12 +70,14 @@ public class SystemPanel extends AbstractElementPanel {
 
     @Override
      public void refresh(AjaxRequestTarget target) {
+        String orgName = (String)RefUtils.getOrDefault(element, "organization.name", "");
+        organizationField.getModel().setObject(orgName);
         super.refresh(target);
-        element.changed("name"); // forces an immediate persist to session
+        element.changed("name"); // TODO -- kludge - forces an immediate persist to session
     }
 
     @Override
-    protected void updatedField(Component component) {
+    protected void updatedField(Component component, AjaxRequestTarget target) {
         if (component == organizationField) {
             String orgName = valueOf(organizationField);
             Project project = (Project)Project.currentProject().deref();

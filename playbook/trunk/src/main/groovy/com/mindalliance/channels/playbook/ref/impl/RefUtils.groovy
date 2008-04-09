@@ -24,6 +24,12 @@ class RefUtils {
 
     */
 
+
+    static def getOrDefault(def holder, String path, def defaultValue) {
+        def result = get(holder, path)
+        return result ?: defaultValue
+    }
+
     static def get(def holder, String path) {
         def result
         RefPropertyUtilsBean utils = new RefPropertyUtilsBean()

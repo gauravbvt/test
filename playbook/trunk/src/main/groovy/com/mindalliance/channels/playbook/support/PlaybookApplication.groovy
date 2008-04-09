@@ -92,7 +92,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
             Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
             p.addResource(joe)
-            Ref acme = store(new Organization(name: "ACME Inc."))
+            Ref acme = store(new Organization(name: "ACME Inc.", description: 'A big company'))
             Ref nadir = store(new Organization(name: "NADIR Inc."))
             p.addResource(acme)
             p.addResource(nadir)

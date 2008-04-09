@@ -71,7 +71,7 @@ abstract public class AbstractElementPanel extends Panel {
         field.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                updatedField(getFormComponent());
+                updatedField(getFormComponent(), target);
                 target.addComponent(feedback);
             }
         });
@@ -79,7 +79,7 @@ abstract public class AbstractElementPanel extends Panel {
     }
 
     // DEFAULT
-    protected void updatedField(Component component) {
+    protected void updatedField(Component component, AjaxRequestTarget target) {
         // do nothing
     }
 

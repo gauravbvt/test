@@ -7,24 +7,14 @@
 <wicket:extend>
     <fieldset>
         <legend>About</legend>
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td><input wicket:id="name" type="text"/></td>
-        </tr>
-        <tr>
-            <td>Description:</td>
-            <td><input wicket:id="description" type="text"/></td>
-        </tr>
-        <tr>
-            <td>Organization:</td>
-            <td><input wicket:id="organization" type="text"/></td>
-        </tr>
-        <tr>
-            <td>Access:</td>
-            <td><input wicket:id="access" type="text"/></td>
-        </tr>
-    </table>
+        <ul>
+            <li><label><span>Name:</span><input wicket:id="name" type="text"/></label></li>
+            <li><label><span>Description:</span><textarea wicket:id="description" rows="2"
+                                                          cols="40">{description]</textarea></label></li>
+            <li><label><span>Organization:</span><input wicket:id="organization" type="text"/></label></li>
+            <li><label><span>Access:</span><textarea wicket:id="access" rows="2" cols="40">[access]</textarea></label>
+            </li>
+        </ul>
     </fieldset>
 </wicket:extend>
 </body>
