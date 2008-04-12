@@ -42,7 +42,7 @@ public class FormPanel extends Panel {
 
             addOrReplace( new Label( "form-details", ref.deref().toString() ) );
         } else {
-            addOrReplace( new Label( "form-details", "" ) );            
+            addOrReplace( new Label( "form-details", "" ) );
         }
     }
 

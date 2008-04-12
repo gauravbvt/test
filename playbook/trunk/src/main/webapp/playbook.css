@@ -1,21 +1,56 @@
-html,body {
-    height: 99.5%;
- }
- body {
-     margin: 5px;
-}
-div.everything {
-    max-width:80em;
-    min-width:53em;
-    min-height: 25em;
-    position: relative;
-    min-height: 98%;
-    margin: 0px auto;
-}
- 
 * {
     margin: 0;
     padding: 0;
+}
+
+/* ----------------- Layout */
+html {
+    margin: 5px;
+}
+ 
+ body {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 10px;
+    left: 0px;
+}
+div#everything {
+    margin: 0px auto;
+    min-height: 30em;
+    min-width: 50em;
+    max-width: 80em;
+}
+ 
+div.p-table, div#everything {
+    display: table;
+    table-layout: auto;
+}
+
+div.p-row, div#tab-content, div.tab-row {
+     display: table-row;
+}
+
+div.tab-left {
+    padding-right: 5px;
+}
+
+div.p-cell, div.tab-row ul {
+    vertical-align: top;
+    display: table-cell;
+    position: relative;
+}
+
+.tall {
+    height: 100%;
+}
+
+.wide {
+    width: 100%;
+}
+
+div.content-filter {
+    padding-bottom: 5px;
 }
 
 /* ----------------- Fonts */
@@ -24,25 +59,48 @@ body, input {
     font-family: arial, helvetica, sans-serif;
 }
 
-/* ----------------- Links */
-a {
-    color: black;
-    background-color: transparent;
-    text-decoration: none;
-}
-a:hover {
-    color: #761743;
+input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
+    font-size: small;
+    font-weight: normal;
 }
 
-/* ----------------- Color Palette */
-tr.selected, div.row-selected, div.new-item-choices a:hover, div.tab-row li {
+/* ----------------- Links */
+a, #todos input[ type='submit'], #todos input[ type='button' ] {
+    color: green;
+    background-color: transparent;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+#todos input[ type='submit'], #todos input[ type='button' ] {
+    color: green !important;
+}
+
+div.content-buttons,#todos input[ type='submit'], #todos input[ type='button' ], 
+div#signout, div.content-pager {
+    text-align: right;
+    font-size: small;
+    font-weight: normal;
+    border: none;
+ }
+
+/* ----------------- Hovers */
+input:hover, a:hover, #todos input[ type='submit']:hover, #todos input[ type='button' ]:hover {
     background-color: #dee4d9 !important;
     color: black;
 }
-div.content-list th, h1, div.content-footer, div#todos h2, div.content-filter h3 { 
+
+/* ----------------- Selections */
+tr.selected, div.row-selected, div.tab-row li.selected, div.list-type li.selected {
+    background: #dee4d9 !important;
+    color: black;
+}
+
+/* ----------------- Colors/Textures */
+th, h1, div.content-footer, div.content-filter h3, td.todo-new, div.tab-row li, div.list-type li { 
    background: #c3c7ac url("back.png") repeat;
    border: 1px outset gray;
    color: black;
+   text-align: left;
 }
 
 body, div.content-list {
@@ -51,75 +109,90 @@ body, div.content-list {
 }
 
 /* ----------------- Forms */
-input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
-    font-size: small;
+div.content-form > div form {
+    padding: 5px 5px 0px;
 }
 
-/* ----------------- Header */
+input[type='text'], input[type=''], input[type='password'] {
+    border: none;
+}
+
+label {
+     margin: 0px 0px 0px 5px;
+}
+label span {
+    display: block;
+    float: left;
+    font-weight: bold;
+    margin: 0px 5px 0px 0px;
+    text-align: right;
+    width: 10em;
+    
+}
+legend {
+}
+fieldset {
+    padding: 0px 5px 5px;
+}
+
+fieldset ul  {
+    list-style: none;
+}
+
+/* ----------------- Headers */
 h1 {
     height: 74px;
-    text-indent: -100em;
+    position: relative;
 }
-h1 span {
+h1 > span {
     display: block;
     height: 74px;
     width: 256px;
     background-image: url("header.png");
     background-repeat: no-repeat;
+    text-indent: -100em;
 }
 
-#signInForm1 {
+#signInForm1, h2.login {
     margin-top: 1em;
 }
 
-h2.login {
-    margin-top: 1em;
+div#tab-title h2 {
+    padding: 5px 0px 0px 0px;
 }
 
-/* ----------------- Tabs */
-div#tabs {
-    position: absolute;
-    top: 76px;
-    bottom: 0px;
-    width: 100%;
-}
-
-div.tab-panel {
-    position: absolute;
-    bottom: 0px;
-    top: 25px;
-    left: 0;
-    right: 0;
-}
 div.tab-panel h2 {
     margin-bottom: 5px;
 }
 
-div.tab-row {
-    margin-top: 1px;
+div.content-footer {
+    padding: 1px 5px;
 }
 
+/* ----------------- Tabs */
 div.tab-row ul {
-    display: block;
-    list-style: none;
+    padding-top: 1px;
 }
-
-div.tab-row li.selected {
-    font-weight: bold;
-    color: #761743;
-    background-color: #c3c7ac;
+div.tab-row ul, div.list-type ul {
+   list-style: none;
 }
 div.tab-row li {
-    border: 1px outset #c3c7ac;
-    margin: 1px 5px 0px 0px;
+    margin-right: 5px;
+}
+div.tab-row li.selected, div.list-type li.selected {
+    font-weight: bold;
+}
+div.tab-row li, div.list-type li {
     display: inline;
     padding: 0px 5px;
 }
-div.tab-row a {
+div.tab-row a, div.list-type a {
     color: black;
 }
-div.tab-row a:hover {
-    border: none;
+
+div.list-type {
+    text-align: right;
+    margin-bottom: 1px;
 }
 
 /* ----------------- Contents */
@@ -127,90 +200,69 @@ hr, div.content-list h3, div.content-form h3 {
     display: none;
 }
 
-div.filtered-content {
-    margin-top: 5px;
-    position: absolute;
-    top: 26px;
-    bottom: 0;
-    width: 100%;
-}
-div.content-filter {
-    width: 36.45%;
-    top: 0px;
-    bottom: 6.5em;
-    position: absolute;
-}
-div#content {
-    margin-left: 37%;
-}
-div.content-list {
- }
-div.content-form {
-    margin: 5px 0px 0px 5px;
-    position:absolute;
-    left:37%;
-    right: 0;
-    top:15em;
-    bottom: 0px;
-    overflow:auto;
-}
-
 div.wicket-tree {
     margin: 2px 0px 0px 1px !important;
-    width: inherit !important;
+    width: auto !important;
+    border: none !important;
 }
 
-div#todos {
-    position: absolute;
-    width: 36.45%;
-    height: 6em;
-    bottom: 0px;
-    overflow: auto;
+div.wicket-tree div.a_ {
+    width: auto !important;
+    padding: 0px !important;
 }
-div#todos form {
+ 
+ div.wicket-tree div.a_ input {
+     float: right;
+     margin: 3px 5px 0px;
+}
+ 
+#todos input[type='text'] { 
+}
+#todos input[ type='submit' ], #todos input[ type='button' ] {
+    border: none;
+    background-color: transparent;
+    text-align: right;
+}
+td.todo-new {
+    padding: 0px 2px;
+    text-align: right;
 }
 
-/* ----------------- Content table */
-div.content-list table {
+#todos tr {
+}
+#todos td {
+}
+/* ----------------- Actual Tables */
+table {
     width: 100%;
-    margin: -2px 0px 0px -2px;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
-div.content-list thead {
-}
-
-div.content-list tbody {
-}
-
-div.content-list table thead tr th {
-    text-align: left;
-}
-div.content-list table tbody tr td {
-}
-div.content-list th, div.content-list td, div#todos h2, div.content-filter h3 {
+th, td, div.content-filter h3 {
     padding: 0px 5px;
     font-size: medium;
 }
+tbody, div.content-form li {
+    line-height: 1.5em;
+ }
+
 div.content-list td {
     cursor: pointer;
 }
 
-/* ----------------- Content table controls */
-div.content-footer {
-    margin-top: 1em;
-    position: relative;
-    font-size: smaller;
-}
-span.content-pager {
-    display: block;
-    position: absolute;
-    bottom: 0;
+div.content-list table {
+    padding-bottom: 5px;
 }
 
-div.content-buttons {
-    padding: 1px 5px;
-    text-align: right;
- }
+tr.content-spacer {
+    height: 2px;
+}
+
+/* ----------------- Content table controls */
+div.content-pager {
+    float: left;
+}
 
 div.content-buttons ul {
     display: inline;
@@ -218,9 +270,7 @@ div.content-buttons ul {
 div.content-buttons li {
     display: inline;
 }
-div.new-item-choices li {
-    margin: 0px 0px 0px 5px;
-} 
+
 .new-item-choices li:before {
      content: " \2013  "; 
 }
@@ -231,23 +281,19 @@ div.content-buttons li.new-header {
 
 /* ----------------- Scenarios */
 div.sc-picker {
-    position:absolute;
-    right:0pt;
-    top:0pt;
+    float: right;
 }
 
 /* ----------------- Page controls */
 div#controls {
     position: absolute;
     right: 5px;
-    top: 49px;
+    bottom: 3px;
 }
 
 /* ----------------- Signout */
 div#signout {
     position: absolute;
-    top: 5px;
-    right: 5px;;
-    font-size: smaller;
+    top: 2px;
+    right: 5px;
 }
-

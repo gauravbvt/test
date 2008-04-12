@@ -9,26 +9,26 @@
 <wicket:panel>
     <form wicket:id="todos">
         <hr/>
-        <h2>Todo</h2>
         <table wicket:id="todo-table">
             <thead>
                 <tr>
-                    <th>What</th>
+                    <th>Todo</th>
                     <th>Priority</th>
                     <th>Due</th>
-                    <th> </th>
+                    <td class="todo-new"><input type="submit" value="New" wicket:id="todo-new"/></td>
                 </tr>
             </thead>
             <tbody>
+                <tr class="content-spacer"><td></td></tr>
                 <tr wicket:id="todo">
-                    <td><input wicket:id="todo-name"/></td>
-                    <td><input wicket:id="todo-priority"/></td>
-                    <td><input wicket:id="todo-due"/></td>
-                    <td><input type="submit" value="Remove" wicket:id="todo-remove"/></td>
+                    <td><input type="text" wicket:id="todo-name"/></td>
+                    <td><input type="text" size="7" wicket:id="todo-priority"/></td>
+                    <td><input type="text" size="8" wicket:id="todo-due"/></td>
+                    <td><input type="button" value="Remove" wicket:id="todo-remove"/></td>
                 </tr>
             </tbody>
         </table>
-        <input type="submit" wicket:id="todo-new" value="New"/>
+
         <input style="visibility: hidden;" type="submit" wicket:id="todo-submit" value="Submit"/>
     </form>
 </wicket:panel>

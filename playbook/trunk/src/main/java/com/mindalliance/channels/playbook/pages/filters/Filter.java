@@ -69,6 +69,10 @@ abstract public class Filter implements TreeNode, Serializable {
         return expandedText;
     }
 
+    public String getText() {
+        return isExpanded()? getExpandedText() : getCollapsedText();
+    }
+
     public void setExpandedText( String expandedText ) {
         this.expandedText = expandedText;
     }

@@ -22,25 +22,30 @@
         </style>
     </head>
 <body>
-    <div class="everything">
-        <h1><span>Mind-Alliance Playbook</span></h1>
+    <div id="everything" class="wide tall">
+        <div class="p-row title">
+            <div class="p-cell">
+                <h1><span>Mind-Alliance Playbook</span>
 
-        <div id="tabs" wicket:id="tabs">[Tabs]</div>
+                <div id="signout">
+                    <p>Logged in as
+                        <span wicket:id="name">Someone</span>
+                        in project &laquo;<span wicket:id="project">X</span>&raquo;
+                        &mdash; <a wicket:id="signout">Sign out</a></p>
+                </div>
 
-        <div id="signout">
-            <hr/>
-            <p>Logged in as
-                <span wicket:id="name">Someone</span>
-                in project &laquo;<span wicket:id="project">X</span>&raquo;
-                &mdash; <a wicket:id="signout">Sign out</a></p>
+                <div id="controls">
+                    <form wicket:id="page_controls">
+                        <input type="submit" wicket:id="save_button" value="Save"/>
+                        <input type="submit" wicket:id="revert_button" value="Revert"/>
+                    </form>
+                </div>
+                <hr/>
+                </h1>
+            </div>
         </div>
 
-        <div id="controls">
-            <form wicket:id="page_controls">
-                <input type="submit" wicket:id="save_button" value="Save"/>
-                <input type="submit" wicket:id="revert_button" value="Revert"/>
-            </form>
-        </div>
+        <div wicket:id="tabs">[Tabs]</div>
     </div>
 </body>
 </html>

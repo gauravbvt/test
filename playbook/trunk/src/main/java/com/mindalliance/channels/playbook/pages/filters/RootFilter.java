@@ -7,6 +7,7 @@ public class RootFilter extends Filter {
 
     public RootFilter( Filter... children ) {
         super( "Show everything", "Show...", children );
+        setSelected( true );
     }
 
     /**

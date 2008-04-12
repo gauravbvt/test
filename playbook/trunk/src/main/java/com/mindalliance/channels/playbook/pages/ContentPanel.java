@@ -7,7 +7,6 @@ import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,11 +21,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.wicketstuff.yui.markup.html.menu2.contextMenu.MenuItem;
-import org.wicketstuff.yui.markup.html.menu2.contextMenu.YuiContextMenu;
-import org.wicketstuff.yui.markup.html.menu2.contextMenu.YuiContextMenuBehavior;
 
 import java.util.Iterator;
 
@@ -35,7 +30,7 @@ import java.util.Iterator;
  */
 public class ContentPanel extends Panel {
 
-    private static final int ITEMS_PER_PAGE = 8;
+    private static final int ITEMS_PER_PAGE = 6;
     private Ref selected ;
     private boolean popupDisplayed; // post midnight hack...
 
@@ -47,6 +42,7 @@ public class ContentPanel extends Panel {
         add( tableNav );
 
         final WebMarkupContainer table = new WebMarkupContainer( "content-table" );
+        table.setOutputMarkupId( true );
 
         if ( container.size() > 0 ) {
             // We have at least a row to select. Select the first one.
@@ -92,7 +88,7 @@ public class ContentPanel extends Panel {
                         final Object mo = cellItem.getModelObject();
                         String mos = mo == null ? ""
                                    : mo instanceof Ref ? ((Ref) mo).deref().toString()
-                                   : mo.toString();
+                                   : cellItem.getModelObjectAsString();
                         cellItem.add( new Label( "content-cell-value", mos ) );
                         cellItem.add( new AjaxEventBehavior( "onClick" ) {
                             protected void onEvent( AjaxRequestTarget target ) {
@@ -100,6 +96,7 @@ public class ContentPanel extends Panel {
                                 formPanel.modelChanged();
                                 target.addComponent( formPanel );
                                 target.addComponent( tableNav );
+                                target.addComponent( table );
                             }
                         } );
                     }
@@ -126,7 +123,7 @@ public class ContentPanel extends Panel {
         rows.setItemsPerPage( ITEMS_PER_PAGE );
         table.add( rows );
 
-        tableNav.add( table );
+        add( table );
 
         final PagingNavigator nav = new PagingNavigator( "content-pager", rows );
         nav.setVisible( container.size() > ITEMS_PER_PAGE );
@@ -146,7 +143,7 @@ public class ContentPanel extends Panel {
         popup.setOutputMarkupId( true );
         tableNav.add( popup );
 
-        tableNav.add( new Label( "new-item", "Add" ) );
+        tableNav.add( new Label( "new-item", "Add a..." ) );
 
         popup.add( new ListView( "new-items", container.getAllowedClasses() ){
             protected void populateItem( final ListItem item ) {
@@ -166,7 +163,7 @@ public class ContentPanel extends Panel {
                 };
                 item.add( link );
                 String displayName = c.getName().toLowerCase();
-                displayName = "Add " + displayName.substring( displayName.lastIndexOf( '.' )+1 );
+                displayName = "New " + displayName.substring( displayName.lastIndexOf( '.' )+1 );
                 link.add( new Label( "new-item-text", displayName ) );
             }
         } );
@@ -180,36 +177,36 @@ public class ContentPanel extends Panel {
         this.selected = selected;
     }
 
-    private void addMenu( String id, Component component, MenuItem... items ) {
-        YuiContextMenu menu = new YuiContextMenu( id );
-        for ( MenuItem item : items )
-            menu.add( item );
-
-        YuiContextMenuBehavior cmBehavior = new YuiContextMenuBehavior( menu );
-
-		component.setOutputMarkupId(true);
-
-		cmBehavior.applyAttributes( component, menu, new Model(id) );
- 		component.add( cmBehavior );
-    }
+//    private void addMenu( String id, Component component, MenuItem... items ) {
+//        YuiContextMenu menu = new YuiContextMenu( id );
+//        for ( MenuItem item : items )
+//            menu.add( item );
+//
+//        YuiContextMenuBehavior cmBehavior = new YuiContextMenuBehavior( menu );
+//
+//		component.setOutputMarkupId(true);
+//
+//		cmBehavior.applyAttributes( component, menu, new Model(id) );
+// 		component.add( cmBehavior );
+//    }
 
     //============================
-    abstract static class QuickMenuItem extends MenuItem {
-
-        public QuickMenuItem( String id, String text ) {
-            super( id, text );
-        }
-
-        /**
-         * Called when no javascript.
-         */
-        abstract public void onClick();
-
-        /**
-         * Called when javascript enabled on client.
-         * @param ajaxRequestTarget the target
-         * @param id the id
-         */
-        abstract public void onClick( AjaxRequestTarget ajaxRequestTarget, String id );
-    }
+//    abstract static class QuickMenuItem extends MenuItem {
+//
+//        public QuickMenuItem( String id, String text ) {
+//            super( id, text );
+//        }
+//
+//        /**
+//         * Called when no javascript.
+//         */
+//        abstract public void onClick();
+//
+//        /**
+//         * Called when javascript enabled on client.
+//         * @param ajaxRequestTarget the target
+//         * @param id the id
+//         */
+//        abstract public void onClick( AjaxRequestTarget ajaxRequestTarget, String id );
+//    }
 }
