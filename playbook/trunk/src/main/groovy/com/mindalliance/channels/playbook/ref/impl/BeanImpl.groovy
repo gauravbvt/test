@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.ref.impl
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.persistence.PersistentRef
-import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
 import org.apache.log4j.Logger
 
@@ -16,7 +15,7 @@ import org.apache.log4j.Logger
 */
 class BeanImpl implements Bean {
 
-    String version
+    String version         // TODO -- belongs in IfmElement
 
     String getVersion() {
         return '1.0.0' // default
@@ -102,8 +101,8 @@ class BeanImpl implements Bean {
                 }
                 break
             case List:
+                value = []
                 val.each {item ->
-                    value = []
                     value.add(valueFromPersisted(item))
                 }
                 break

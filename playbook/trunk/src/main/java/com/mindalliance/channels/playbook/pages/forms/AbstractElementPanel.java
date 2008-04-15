@@ -4,11 +4,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.IFormVisitorParticipant;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Component;
+import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 
@@ -63,7 +64,7 @@ abstract public class AbstractElementPanel extends Panel {
         add(elementForm);
     }
 
-    protected void addElementField(FormComponent field) {
+    protected void addElementField(final FormComponent field) {
         fields.add(field);
         field.setRequired(true);
         field.setPersistent(false);
@@ -74,9 +75,25 @@ abstract public class AbstractElementPanel extends Panel {
                 updatedField(getFormComponent(), target);
                 target.addComponent(feedback);
             }
+            protected void onError(AjaxRequestTarget target, RuntimeException e) {
+                Logger.getLogger(this.getClass()).error("Error updating "+ field + ": " + e);
+                field.clearInput();
+                target.addComponent(field);
+                target.addComponent(feedback);
+            }
         });
         elementForm.add(field);
     }
+
+/*    private void validateFormComponents(AjaxRequestTarget target) {
+        elementForm.visitFormComponents(new FormComponent.IVisitor() {
+            public Object formComponent(IFormVisitorParticipant iFormVisitorParticipant) {
+               FormComponent formComponent = (FormComponent)iFormVisitorParticipant;
+               formComponent.validate();
+                return formComponent;
+            }
+        });
+    }*/
 
     // DEFAULT
     protected void updatedField(Component component, AjaxRequestTarget target) {

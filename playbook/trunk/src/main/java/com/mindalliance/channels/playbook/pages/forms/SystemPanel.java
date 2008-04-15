@@ -46,6 +46,7 @@ public class SystemPanel extends AbstractElementPanel {
     protected void load() {
         super.load();
         nameField = new TextField("name", new RefPropertyModel(element, "name"));
+        nameField.setRequired(true);
         descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
         accessField = new TextArea("access", new RefPropertyModel(element, "access"));
         String orgName = (String)RefUtils.getOrDefault(element, "organization.name", "");

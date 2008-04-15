@@ -16,7 +16,7 @@ class Organization extends Resource {
     Location address = new Location() // not a Ref because not an independent element (is a component of the Organization)
     Ref parent
     // List<Ref> positions = []
-    List<Ref> systems = []
+    List<Ref> systems = []  // TODO -- remove
     Location jurisdiction = new Location()
     List<Ref> organizationTypes = []
 

@@ -59,7 +59,9 @@ public class FormTest extends WebPage {
 
     private void load() throws Exception {
         session = (PlaybookSession) Session.get();
-        session.authenticate("admin", "admin");
+        if (!session.authenticate("admin", "admin")) {
+            throw new Exception ("User not authenticated");
+        }
         final FormPanel formPanel = new FormPanel("content-form", new PropertyModel(this, "selected"));
         add(formPanel);
         final DropDownChoice typesDropDown = new DropDownChoice("types", new Model(), new ArrayList());
