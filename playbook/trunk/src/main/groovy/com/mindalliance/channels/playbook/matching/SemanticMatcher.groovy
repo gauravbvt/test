@@ -23,7 +23,7 @@ import org.apache.log4j.Logger
 class SemanticMatcher {
 
     static final double POWER = 0.6   // between 0 and 1, lower value lifts more
-    static final double BEST_MATCH_FACTOR = 2.0
+    static final double BEST_MATCH_FACTOR = 1.0
 
     static int NONE = 0
     static int LOW = 1

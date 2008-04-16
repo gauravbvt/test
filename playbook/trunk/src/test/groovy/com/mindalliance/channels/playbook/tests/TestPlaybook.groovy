@@ -167,8 +167,10 @@ public class TestPlaybook extends TestCase {
         assert score2 == SemanticMatcher.MEDIUM
         int score3 = matcher.semanticProximity("avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.", "avian influenza, sometimes avian flu, and commonly bird flu refers to influenza caused by viruses adapted to birds.")
         assert score3 == SemanticMatcher.VERY_HIGH
-        int score4 = matcher.semanticProximity("my summer vacations", "plane crash in the Andes")
+        int score4 = matcher.semanticProximity("my summer vacation", "plane crash in the Andes")
         assert score4 == SemanticMatcher.LOW
+        int score5 = matcher.semanticProximity("autopsy report of plague", "account of death by contagious disease")
+        assert score5 == SemanticMatcher.HIGH
 
     }
 
