@@ -130,6 +130,21 @@
             <version>0.5</version>
         </dependency>
         <dependency>
+            <groupId>jwordnetsim</groupId>
+            <artifactId>jwordnetsim</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>postagger</groupId>
+            <artifactId>postagger</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jwnl</groupId>
+            <artifactId>jwnl</artifactId>
+            <version>14.1</version>
+        </dependency>
+        <dependency>
             <!-- For geonames -->
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>

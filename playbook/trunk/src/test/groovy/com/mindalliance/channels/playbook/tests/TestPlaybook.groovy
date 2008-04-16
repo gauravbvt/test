@@ -16,6 +16,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
+import com.mindalliance.channels.playbook.matching.SemanticMatcher
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,7 +32,7 @@ public class TestPlaybook extends TestCase {
     PlaybookSession session
     SessionMemory sessionMem
 
-    protected void setUp() {
+   protected void setUp() {
         app = new PlaybookApplication()
         tester = new WicketTester(app, "./src/main/webapp")
         app.clearAll()
@@ -56,7 +57,7 @@ public class TestPlaybook extends TestCase {
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
-        assert metaProps.size() == 9
+        assert metaProps.size() == 10
         metaProps = metaProps.findAll {it.isScalar()}
         assert metaProps.size() == 5
         //
@@ -133,22 +134,6 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
     }
 
-    void testPageRender() {
-        Ref channels = app.channels
-        def project = channels.findProjectNamed('Generic')
-        def user = channels.users[0]
-        def participation = new Participation(user: user, project: project, analyst: true)
-        Todo todo = new Todo(description: 'Todo 1', due: new Date())
-        participation.addTodo(todo.persist())
-        todo = new Todo(description: 'Todo 2', due: new Date())
-        participation.addTodo(todo.persist())
-        channels.addParticipation(participation.persist())
-        session.commit()
-        session.authenticate('admin', 'admin')
-        tester.startPage(SomePage.class)
-        tester.assertLabel('title', 'Playbook')
-    }
-
     void testAreas() {
         Location portland = new Location(country: 'United States', state: 'Maine', city: 'Portland')
         Area area = portland.getArea()
@@ -170,6 +155,21 @@ public class TestPlaybook extends TestCase {
         RefPropertyModel chained = new RefPropertyModel(project, "scenarios.name(new scenario)")
         RefPropertyModel rpm = new RefPropertyModel(chained, "name")
         assert rpm.getObject() == 'new scenario'
+    }
+
+    void testSemanticMatching() {
+        SemanticMatcher matcher = SemanticMatcher.getInstance()
+        assert matcher.semanticProximity("", "") == SemanticMatcher.NONE
+        assert matcher.semanticProximity("", "hello world") == SemanticMatcher.NONE
+        int score1 = matcher.semanticProximity("terrorism, terrorist attack, John Doe", "John Doe, terror incident, crime")
+        assert score1 == SemanticMatcher.VERY_HIGH
+        int score2 = matcher.semanticProximity("pandemic flu, epidemic, quarantine", "disease, public health")
+        assert score2 == SemanticMatcher.MEDIUM
+        int score3 = matcher.semanticProximity("avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.", "avian influenza, sometimes avian flu, and commonly bird flu refers to influenza caused by viruses adapted to birds.")
+        assert score3 == SemanticMatcher.VERY_HIGH
+        int score4 = matcher.semanticProximity("my summer vacations", "plane crash in the Andes")
+        assert score4 == SemanticMatcher.LOW
+
     }
 
 }
