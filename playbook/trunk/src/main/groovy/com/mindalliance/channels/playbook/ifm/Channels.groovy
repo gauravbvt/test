@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.Project
+import com.mindalliance.channels.playbook.ifm.context.model.Model
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +16,7 @@ class Channels extends IfmElement {
     String about
     List<Ref> projects = []
     List<Ref> users = []
-    List<Ref> participations = []
+    List<Ref> models = []
 
     @Override
     protected List transientProperties() {
@@ -27,67 +28,34 @@ class Channels extends IfmElement {
         return ref
     }
 
+    Ref findModelNamed(String name) {
+        Ref ref = (Ref) models.find {it.name == name}
+        return ref
+    }
+
     Ref findUser(String id) {
         return (Ref) users.find{it.id == id}
     }
 
+    Ref findModel(String id) {
+        return (Ref) models.find{it.id == id}
+    }
+
     public List<Ref> findProjectsForUser(Ref user) {
         List<Ref> result = []
-        if (user.admin)
-            result.addAll(projects);
-        else {
-            participations.each {
-                if (it.user == user) result.add(it.project)
-            }
+        projects.each {
+            if (it.isParticipant(user)) result.add(it)
         }
         return result;
     }
 
-    public Ref findParticipation(Ref project, Ref user) {
-        return (Ref)participations.find() {it.user == user && it.project == project}
-    }
-
-    public List<Ref> getAllItems() {
+    public List<Ref> findModelsForUser(Ref user) {
         List<Ref> result = []
-        result.addAll( projects )
-        result.addAll( users )
-        result.addAll( participations )
-
-        return result
-    }
-
-    public void removeAllItems( Ref item ) {
-        switch ( item.getType() ) {
-            case "Project" :
-                removeProject( item )
-                changed( "projects" )
-                break;
-            case "User" :
-                removeUser( item )
-                changed( "users" )
-                break;
-            case "Participation" :
-                removeParticipation( item )
-                changed( "participations" )
-                break;
-        }
-    }
-
-    public void addAllItems( Ref item ) {
-        switch ( item.getType() ) {
-            case "Project" :
-                addProject( item )
-                changed( "projects" )
-                break;
-            case "User" :
-                addUser( item )
-                changed( "users" )
-                break;
-            case "Participation" :
-                addParticipation( item )
-                changed( "participations" )
-                break;
-        }
+        if ( user.analyst )
+            models.each {
+                if (it.isAnalyst(user)) result.add(it)
+            }
+        return result;
     }
 
     // Queries
@@ -108,4 +76,11 @@ class Channels extends IfmElement {
         return results
     }
 
+    static List<Class<?>> adminClasses() {
+        [ User.class ]
+    }
+
+    static List<Class<?>> contentClasses() {
+        [ User.class, Project.class, Model.class ]
+    }
 }

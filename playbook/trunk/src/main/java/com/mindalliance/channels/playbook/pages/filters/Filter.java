@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.project.scenario.Event;
 import com.mindalliance.channels.playbook.ifm.project.scenario.act.Activity;
 import com.mindalliance.channels.playbook.support.models.ColumnProvider;
-import com.mindalliance.channels.playbook.support.models.ContainerModel;
+import com.mindalliance.channels.playbook.support.models.Container;
 
 import javax.swing.tree.TreeNode;
 import java.io.Serializable;
@@ -34,6 +34,7 @@ abstract public class Filter implements TreeNode, Serializable {
 
     List<Filter> children = new ArrayList<Filter>();
 
+    //-------------------------
     protected Filter( String collapsedText, String expandedText, Filter... children ) {
         setCollapsedText( collapsedText );
         setExpandedText( expandedText );
@@ -49,6 +50,7 @@ abstract public class Filter implements TreeNode, Serializable {
         this( text, text, children );
     }
 
+    //-------------------------
     /**
      * Specify what kind of objects are allowed by this filter.
      * @return A superclass
@@ -192,7 +194,7 @@ abstract public class Filter implements TreeNode, Serializable {
      */
     abstract protected boolean localMatch( Object object );
 
-    public static Filter[] Resources( ContainerModel data ) {
+    public static Filter[] Resources( Container data ) {
         List<Filter> result = new ArrayList<Filter>();
         ColumnProvider cp = data.getColumnProvider();
 
@@ -221,7 +223,7 @@ abstract public class Filter implements TreeNode, Serializable {
         return result.toArray( new Filter[ result.size() ] );
     }
 
-    public static Filter[] ScenarioItems( ContainerModel data ) {
+    public static Filter[] ScenarioItems( Container data ) {
         List<Filter> result = new ArrayList<Filter>();
         ColumnProvider cp = data.getColumnProvider();
 
@@ -238,7 +240,7 @@ abstract public class Filter implements TreeNode, Serializable {
         return result.toArray( new Filter[ result.size() ] );
     }
 
-    public static Filter[] SystemItems( ContainerModel data ) {
+    public static Filter[] SystemItems( Container data ) {
         List<Filter> result = new ArrayList<Filter>();
         ColumnProvider cp = data.getColumnProvider();
 

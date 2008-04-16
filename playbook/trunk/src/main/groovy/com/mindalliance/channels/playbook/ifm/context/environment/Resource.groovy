@@ -15,4 +15,14 @@ class Resource extends EnvironmentElement {
     String description = ''
 
     String toString() { name }
+
+    /**
+     * Return subclass that a project user may want to create.
+     */
+    static List<Class<?>> contentClasses() {
+        [
+            Organization.class, Person.class, System.class,
+            Position.class
+        ]
+    }
 }

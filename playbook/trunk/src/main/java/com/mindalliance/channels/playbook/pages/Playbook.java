@@ -1,18 +1,8 @@
 package com.mindalliance.channels.playbook.pages;
 
-import com.mindalliance.channels.playbook.ifm.Participation;
-import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
-import com.mindalliance.channels.playbook.ifm.context.environment.Person;
-import com.mindalliance.channels.playbook.ifm.context.environment.Position;
-import com.mindalliance.channels.playbook.ifm.context.environment.System;
-import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario;
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.pages.filters.RootFilter;
-import com.mindalliance.channels.playbook.support.PlaybookApplication;
+import com.mindalliance.channels.playbook.ifm.Tab;
+import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
-import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
@@ -26,17 +16,15 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * ...
  */
-@AuthorizeInstantiation( { "USER", "ADMIN" })
+@AuthorizeInstantiation( { "USER" } )
 public class Playbook extends WebPage {
 
     public Playbook( PageParameters parms ){
@@ -54,44 +42,7 @@ public class Playbook extends WebPage {
         add( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         //--------------
-        final IModel projectModel = new RefPropertyModel( getModel(), "project" );
-        List<AbstractTab> tabs = new ArrayList<AbstractTab>();
-
-        tabs.add( new AbstractTab( new Model("Resources") ){
-            public Panel getPanel( String s ) {
-                final Class<?>[] classes = {
-                    Person.class, Organization.class, Position.class, System.class };
-                return new ResourcesPanel( s,
-                    new ContainerModel( projectModel, "resources" , Arrays.asList( classes ) ){
-                        public Filter getFilter() {
-                            return new RootFilter( Filter.Resources( this ) );
-                        }
-                    } );
-            } } );
-
-        if ( session.isAdmin() ) {
-            tabs.add( new AbstractTab( new Model("Project") ){
-                public Panel getPanel( String s ) {
-                    final Class<?>[] classes = {
-                        Scenario.class };
-                    return new ProjectPanel( s,
-                        new ContainerModel( projectModel, "scenarios" , Arrays.asList( classes ) ) );
-                } } );
-
-            tabs.add( new AbstractTab( new Model("System") ){
-                final Class<?>[] classes = {
-                    User.class, Project.class, Participation.class };
-                public Panel getPanel( String s ) {
-                    PlaybookApplication pa = (PlaybookApplication) session.getApplication();
-                    return new SystemPanel( s,
-                        new ContainerModel( new RefModel( pa.getChannels() ), "allItems" , Arrays.asList( classes ) ){
-                            public Filter getFilter() {
-                                return new RootFilter( Filter.SystemItems( this ) );
-                            }
-                        } );
-                } } );
-        }
-        final TabbedPanel tabPanel = new TabbedPanel( "tabs", tabs );
+        final TabbedPanel tabPanel = new TabbedPanel( "tabs", createUserTabs( session ) );
         tabPanel.setRenderBodyOnly( true );
         // Todo Save/Restore from user prefs
         tabPanel.setSelectedTab( 0 );
@@ -120,5 +71,32 @@ public class Playbook extends WebPage {
         });
 //        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         add( pageControls );
+    }
+
+    private List<AbstractTab> createUserTabs( PlaybookSession session ) {
+        List<AbstractTab> result = new ArrayList<AbstractTab>();
+        Ref p =  session.getParticipation();
+
+        if ( p != null ) {
+            // Regular project participants
+            // TODO initialize from participation tabs
+            // TODO initialize from shared manager tabs
+            result.add( createTab( new Tab().persist() ) );
+        } else {
+            // Admin or Analyst without a project
+            // Create an 'everything' tab for now
+            // TODO get tabs from somewhere
+            result.add( createTab( new Tab().persist() ) );
+        }
+
+        return result;
+    }
+
+    private AbstractTab createTab( final Ref tab ) {
+        return new AbstractTab( new RefPropertyModel( tab, "name" ) ) {
+            public Panel getPanel( String panelId ) {
+                return new TabPanel( panelId, new RefModel(tab) );
+            }
+        };
     }
 }

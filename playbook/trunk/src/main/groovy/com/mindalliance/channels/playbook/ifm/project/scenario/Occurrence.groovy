@@ -16,4 +16,11 @@ class Occurrence extends ScenarioElement {
     Duration delay = new Duration(0) // default is no delay between
     Duration maxDuration  // if unspecified, until "end of scenario" or until terminated (event, activity)
 
+    /**
+     * Return classes that a project user can add.
+     */
+    static List<Class<?>> contentClasses() {
+        [ Event.class ]
+    }
+
 }

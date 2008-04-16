@@ -1,10 +1,7 @@
 package com.mindalliance.channels.playbook.support.models;
 
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.pages.filters.RootFilter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
@@ -15,7 +12,7 @@ import java.util.List;
 /**
  * ...
  */
-public class ContainerModel extends RefPropertyModel implements IDataProvider {
+public class ContainerModel extends RefPropertyModel implements Container {
 
     private List<Class<?>> allowedClasses;
     private ColumnProvider columnProvider;
@@ -26,10 +23,6 @@ public class ContainerModel extends RefPropertyModel implements IDataProvider {
         this.allowedClasses = Collections.unmodifiableList( allowedClasses );
     }
 
-    public Filter getFilter() {
-        return new RootFilter();
-    }
-
     public Object getTarget() {
         return super.getTarget();
     }
@@ -37,6 +30,10 @@ public class ContainerModel extends RefPropertyModel implements IDataProvider {
     //==================================
     public Ref get( int index ) {
         return getContents().get( index );
+    }
+
+    public boolean contains( Ref ref ) {
+        return getContents().contains( ref );
     }
 
     public void add( Referenceable ref ) {

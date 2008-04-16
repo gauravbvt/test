@@ -18,6 +18,7 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     private Ref participation;
     private Ref user;
     private Ref project;
+    private Ref model;
 
     private PlaybookApplication application;     // TODO
 
@@ -50,6 +51,18 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     }
 
     public Roles getRoles() {
+        if ( isSignedIn() ) {
+            List<String> roles = [ "USER" ]
+            if ( isAdmin() )
+                roles.add( "ADMIN" )
+            if ( isManager() )
+                roles.add( "MANAGER" )
+            if ( isAnalyst() )
+                roles.add( "ANALYST" )
+
+            return new Roles( roles.toArray( new String[ roles.size() ] ) )
+        } else
+            return null
         return isSignedIn()?
                new Roles( isAdmin()? Roles.ADMIN : Roles.USER ) : null;
     }
@@ -58,12 +71,24 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         return user.admin;
     }
 
+    public boolean isManager() {
+        return user.manager;
+    }
+
+    public boolean isAnalyst() {
+        return user.analyst;
+    }
+
     public Ref getParticipation() {
         return participation;
     }
 
     public Ref getProject() {
         return project;
+    }
+
+    public Ref getModel() {
+        return model;
     }
 
     public SessionMemory getMemory() {

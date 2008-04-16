@@ -13,8 +13,13 @@ class User extends IfmElement {
 
     String name = 'No name'
     String password
-    Boolean admin
-    Ref Person
+    boolean admin
+    boolean analyst
+    boolean manager
+
+    // Selections
+    Ref selectedProject
+    Ref selectedModel
 
     String toString() { name }
 }

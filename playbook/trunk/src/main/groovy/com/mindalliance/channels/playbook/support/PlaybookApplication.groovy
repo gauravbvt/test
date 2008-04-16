@@ -23,6 +23,7 @@ import com.mindalliance.channels.playbook.ifm.context.model.Domain
 import com.mindalliance.channels.playbook.ifm.context.model.OrganizationType
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
+import com.mindalliance.channels.playbook.ifm.context.model.Model
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,7 +35,7 @@ import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 class PlaybookApplication extends AuthenticatedWebApplication implements Memorable, Serializable {
 
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
-    
+
     ApplicationMemory appMemory
     QueryHandler queryHandler = new QueryHandler()
     String message
@@ -109,31 +110,35 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             joe.addPosition(pos4)
             store(joe)
 
+            Model m = new Model()
+
             Ref law = store(new Domain(name: 'Law Enforcement'))
             Ref health = store(new Domain(name: 'Public Health'))
             Ref biz = store(new Domain(name: 'Business'))
             Ref gov = store(new Domain(name: 'Government'))
-            p.addModelElement(law)
-            p.addModelElement(health)
-            p.addModelElement(biz)
-            p.addModelElement(gov)
+            m.addElement(law)
+            m.addElement(health)
+            m.addElement(biz)
+            m.addElement(gov)
 
-            p.addModelElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: Area.STATE)))
-            p.addModelElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: Area.GLOBE)))
-            p.addModelElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: Area.COUNTY)))
+            m.addElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: Area.STATE)))
+            m.addElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: Area.GLOBE)))
+            m.addElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: Area.COUNTY)))
+            channels.addModel( store(m) );
+            p.addModel( m );
 
             p.addResource(store(new System()))
-
-            channels.addProject(store(p))
-           
-            channels.addParticipation(
+            p.addParticipation(
                     store( new Participation(
                             user    : admin.getReference(),
                             project : p.getReference() ) ) )
-            channels.addParticipation(
+            p.addParticipation(
                     store( new Participation(
                             user    : user.getReference(),
                             project : p.getReference() ) ) )
+
+            channels.addProject(store(p))
+
 
             store(channels)
         }
@@ -154,10 +159,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     }
 
     public Ref findParticipation(Ref project, Ref user) {
-        return this.channels.findParticipation(project, user)
+        return project.findParticipation(user)
     }
-
-
 
     // ----------------------- Memorable
     void storeAll(Collection<Referenceable> referenceables) {

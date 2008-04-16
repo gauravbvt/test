@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +14,7 @@ class Participation extends IfmElement {
 
     Ref user
     Ref project
-    Boolean analyst
+    boolean manager
     Ref person
 
     // TODO
@@ -21,6 +22,8 @@ class Participation extends IfmElement {
     // Also change addTodo and removeTodo accordingly
 
     List<Ref> todos = []
+
+    List<Ref> tabs = []
 
     void addTodo( Ref todo ) {
         todos.add( todo )
@@ -30,6 +33,20 @@ class Participation extends IfmElement {
     void removeTodo( Ref todo ) {
         todos.remove( todo )
         changed( "todos" )
+    }
+
+    void addTab( Ref tab ) {
+        tabs.add( tab );
+        changed( "tabs" );
+    }
+
+    void removeTab( Ref tab ) {
+        tabs.remove( tab );
+        changed( "tabs" );
+    }
+
+    static List<Class<?>> contentClasses() {
+        [ Todo.class, Tab.class ]
     }
 
 }

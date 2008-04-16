@@ -1,10 +1,10 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.support.models.ColumnProvider;
-import com.mindalliance.channels.playbook.support.models.ContainerModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -32,10 +32,9 @@ public class ContentPanel extends Panel {
 
     private static final int ITEMS_PER_PAGE = 6;
     private Ref selected ;
-    private boolean popupDisplayed; // post midnight hack...
 
-    public ContentPanel( String s, final ContainerModel container ) {
-        super( s );
+    public ContentPanel( String s, final IModel container ) {
+        super( s, container );
 
         final WebMarkupContainer tableNav = new WebMarkupContainer( "content-tablenav" );
         tableNav.setOutputMarkupId( true );
@@ -44,17 +43,17 @@ public class ContentPanel extends Panel {
         final WebMarkupContainer table = new WebMarkupContainer( "content-table" );
         table.setOutputMarkupId( true );
 
-        if ( container.size() > 0 ) {
+        if ( getContainer().size() > 0 ) {
             // We have at least a row to select. Select the first one.
             // Todo Get selection from user prefs somehow
-            setSelected( container.get( 0 ) );
+            setSelected( getContainer().get( 0 ) );
         } else
             table.setVisible( false );
 
         final FormPanel formPanel = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
         add( formPanel );
 
-        final ColumnProvider cp = container.getColumnProvider();
+        final ColumnProvider cp = getContainer().getColumnProvider();
         table.add( new DataView( "content-col", cp ){
             protected void populateItem( Item item ) {
                 RefMetaProperty mp = (RefMetaProperty) item.getModelObject();
@@ -63,7 +62,7 @@ public class ContentPanel extends Panel {
         } );
 
 
-        final DataView rows = new DataView( "content-row", container ) {
+        final DataView rows = new DataView( "content-row", getContainer() ) {
             protected void populateItem( final Item item ) {
                 final IDataProvider dp = new IDataProvider() {
                     public Iterator iterator( int first, int count ) {
@@ -126,7 +125,7 @@ public class ContentPanel extends Panel {
         add( table );
 
         final PagingNavigator nav = new PagingNavigator( "content-pager", rows );
-        nav.setVisible( container.size() > ITEMS_PER_PAGE );
+        nav.setVisible( getContainer().size() > ITEMS_PER_PAGE );
         tableNav.add( nav );
 
         tableNav.add( new Link( "content-delete" ){
@@ -135,7 +134,7 @@ public class ContentPanel extends Panel {
             }
 
             public void onClick() {
-                container.remove( getSelected() );
+                getContainer().remove( getSelected() );
             }
         } );
 
@@ -145,14 +144,14 @@ public class ContentPanel extends Panel {
 
         tableNav.add( new Label( "new-item", "Add a..." ) );
 
-        popup.add( new ListView( "new-items", container.getAllowedClasses() ){
+        popup.add( new ListView( "new-items", getContainer().getAllowedClasses() ){
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final Link link = new Link( "new-item-link" ) {
                     public void onClick() {
                         try {
                             final Referenceable ref = (Referenceable) c.newInstance();
-                            container.add( ref );
+                            getContainer().add( ref );
                             getPage().renderPage();
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
@@ -175,6 +174,10 @@ public class ContentPanel extends Panel {
 
     public void setSelected( Ref selected ) {
         this.selected = selected;
+    }
+
+    private Tab getContainer() {
+        return (Tab) ((Ref)getModelObject()).deref();
     }
 
 //    private void addMenu( String id, Component component, MenuItem... items ) {
