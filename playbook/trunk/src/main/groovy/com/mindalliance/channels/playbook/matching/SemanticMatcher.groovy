@@ -22,7 +22,7 @@ import org.apache.log4j.Logger
  */
 class SemanticMatcher {
 
-    static final double POWER = 0.6   // between 0 and 1, lower value lifts more
+    static final double POWER = 0.6 // between 0 and 1, lower value lifts more
     static final double BEST_MATCH_FACTOR = 1.0
 
     static int NONE = 0
@@ -49,7 +49,7 @@ class SemanticMatcher {
             instance.similarityMeasure = initializeSimilarityMeasure()
             instance.logger = Logger.getLogger(instance.class)
         }
-            return instance
+        return instance
     }
 
     static initializeJWNL() {
@@ -58,7 +58,7 @@ class SemanticMatcher {
     }
 
     static SimilarityMeasure initializeSimilarityMeasure() {
-        return SimilarityMeasure.newInstance([simType:"shef.nlp.wordnet.similarity.JCn", infocontent:"file:config/semantic/ic-bnc-resnik-add1.dat"])
+        return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: "file:config/semantic/ic-bnc-resnik-add1.dat"])
     }
 
     int semanticProximity(String text, String otherText) {
@@ -69,22 +69,22 @@ class SemanticMatcher {
         List otherWords = posAnalyze(otherText)
         // Get the synsets for the common nouns in each text
         double conceptualSimilarity = computeSynsetsSimilarity(extractPhrases(words),
-                                                               extractPhrases(otherWords))
+                extractPhrases(otherWords))
         logger.info("Conceptual similarity = $conceptualSimilarity")
         // Calculate shared proper noun ratio between texts
         double instanceOverlap = computeInstanceOverlap(extractProperNouns(words),
-                                                        extractProperNouns(otherWords))
+                extractProperNouns(otherWords))
         // Combine both measures into a proximity rating
         logger.info("Instance overlap = $instanceOverlap")
         double score = conceptualSimilarity
-        if (instanceOverlap) {  // and there's instance overlap, which is a big deal
-           double boost = conceptualSimilarity * instanceOverlap
-           logger.debug("$boost : boost from instance overlap = conceptualSimilarity * instanceOverlap")
-           score = minimum(1.0, score + boost)
+        if (instanceOverlap) {// and there's instance overlap, which is a big deal
+            double boost = conceptualSimilarity * instanceOverlap
+            logger.debug("$boost : boost from instance overlap = conceptualSimilarity * instanceOverlap")
+            score = minimum(1.0, score + boost)
         }
         score = Math.pow(score, POWER) // to lift the curve
         int matchingLevel = matchingLevel(score)
-        logger.info("---- Match is ${matchingLevelString(matchingLevel)} ($score)")
+        logger.info("---- Match is ${matchingLevelString(matchingLevel)}")
         return matchingLevel
     }
 
@@ -98,7 +98,7 @@ class SemanticMatcher {
     }
 
     String matchingLevelString(int level) {
-        switch(level) {
+        switch (level) {
             case NONE: return 'none'
             case LOW: return 'low'
             case MEDIUM: return 'medium'
@@ -113,10 +113,10 @@ class SemanticMatcher {
         List sentences = tagger.tokenizeText(new StringReader(text))
         sentences = tagger.process(sentences)
         List<HasWord> words = []
-        sentences.each { sentence ->
-           sentence.each { word ->
-            words.add(word)
-           }
+        sentences.each {sentence ->
+            sentence.each {word ->
+                words.add(word)
+            }
         }
         return words
     }
@@ -129,24 +129,24 @@ class SemanticMatcher {
             if (isVerb(word)) {
                 logger.debug("Found phrase [$word]")
                 phrases.add(word)
-                phrase = ""   // reset phrase
+                phrase = "" // reset phrase
             }
             else if (isAdjective(word)) {
                 phrase = word.value() // start a new phrase with it
             }
             else if (isCommonNoun(word)) {
-               logger.debug("Found phrase [$word]")
-               phrases.add(word)
-               if (phrase.size() > 0) {
-                   phrase += " ${word.value()}"
-                   TaggedWord taggedWord = new TaggedWord(phrase, word.tag())
-                   logger.debug("Found phrase [$taggedWord]")
-                   phrases.add(taggedWord)
-                   phrase = ""
-               }
-               else {
-                   phrase = word.value()  // start a new phrase with it
-               }
+                logger.debug("Found phrase [$word]")
+                phrases.add(word)
+                if (phrase.size() > 0) {
+                    phrase += " ${word.value()}"
+                    TaggedWord taggedWord = new TaggedWord(phrase, word.tag())
+                    logger.debug("Found phrase [$taggedWord]")
+                    phrases.add(taggedWord)
+                    phrase = ""
+                }
+                else {
+                    phrase = word.value() // start a new phrase with it
+                }
             }
             else {
                 phrase = "" // reset the phrase
@@ -159,7 +159,7 @@ class SemanticMatcher {
     private List<String> extractProperNouns(List<HasWord> words) {
         Set<String> properNouns = new HashSet<String>()
         String composed = ""
-        words.each{ word ->
+        words.each {word ->
             if (isProperNoun(word)) {
                 if (composed.size() > 0) composed += " "
                 composed += "${word.value()}"
@@ -180,21 +180,21 @@ class SemanticMatcher {
     }
 
     private boolean isCommonNoun(HasWord word) {
-       if (word instanceof HasTag && ['NN','NNS'].contains(word.tag())) {
-           return true
-       }
-       else {
-         return false
-       }
+        if (word instanceof HasTag && ['NN', 'NNS'].contains(word.tag())) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 
     private boolean isVerb(HasWord word) {
-       if (word instanceof HasTag && ['VB','VBD','VBG','VBN','VBP','VBZ'].contains(word.tag())) {
-           return true
-       }
-       else {
-         return false
-       }
+        if (word instanceof HasTag && ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ'].contains(word.tag())) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 
     private boolean isAdjective(HasWord word) {
@@ -202,30 +202,25 @@ class SemanticMatcher {
             return true
         }
         else {
-          return false
+            return false
         }
-     }
-
-    private boolean isProperNoun(HasWord word) {
-       if (word instanceof HasTag && ['NNP','NNPS'].contains(word.tag())) {
-           return true
-       }
-       else {
-        return false
-       }
     }
 
-    private double computeSynsetsSimilarity(List words, List otherWords)  {
-        double similarity
-        List<Synset> synsets = findSynsets(words)
-        List<Synset> otherSynsets = findSynsets(otherWords)
-        if (synsets.size() > otherSynsets.size()) {
-            similarity = computeCombinedSimilarity(synsets, otherSynsets)
+    private boolean isProperNoun(HasWord word) {
+        if (word instanceof HasTag && ['NNP', 'NNPS'].contains(word.tag())) {
+            return true
         }
         else {
-            similarity = computeCombinedSimilarity(otherSynsets, synsets)
+            return false
         }
-        return similarity
+    }
+
+    private double computeSynsetsSimilarity(List words, List otherWords) {
+        List<Synset> synsets = findSynsets(words)
+        List<Synset> otherSynsets = findSynsets(otherWords)
+        double sim1 = computeCombinedSimilarity(synsets, otherSynsets)
+        double sim2 = computeCombinedSimilarity(otherSynsets, synsets)
+        return (sim1 + sim2) / 2.0
     }
 
     private List<Synset> findSynsets(List<HasWord> words) {
@@ -233,11 +228,13 @@ class SemanticMatcher {
         words.each {word ->
             POS pos = posOf(word)
             IndexWord indexWord = morpher.lookupBaseForm(pos, word.value())
-            indexWord.synsetOffsets.each {offset ->
-                Synset synset = dictionary.getSynsetAt(pos, offset)
-                if (!synsets.any {it.offset == synset.offset} ) {
-                    synsets.add(synset)
-                    logger.debug("[$word] => $synset")
+            if (indexWord) {
+                indexWord.synsetOffsets.each {offset ->
+                    Synset synset = dictionary.getSynsetAt(pos, offset)
+                    if (!synsets.any {it.offset == synset.offset}) {
+                        synsets.add(synset)
+                        logger.debug("[$word] => $synset")
+                    }
                 }
             }
         }
@@ -250,12 +247,13 @@ class SemanticMatcher {
         else throw new IllegalArgumentException("No recognized POS for $word")
     }
 
-    private double computeCombinedSimilarity(List<Synset> manySynsets, List<Synset> fewerSynsets) {
+    private double computeCombinedSimilarity(List<Synset> synsets, List<Synset> otherSynsets) {
+        if (!synsets || !otherSynsets) return 0.0
         List similarities = []
         double overallBest = 0.0
-        manySynsets.each {synset ->
+        synsets.each {synset ->
             double best = 0.0
-            fewerSynsets.each {otherSynset ->
+            otherSynsets.each {otherSynset ->
                 best = maximum(best, similarity(synset, otherSynset))
             }
             logger.debug("$best is best match score for $synset")
@@ -280,8 +278,9 @@ class SemanticMatcher {
     }
 
     private double similarity(Synset synset, Synset otherSynset) {
+        if (synset.offset == otherSynset.offset) return 1.0
         double similarity = similarityMeasure.getSimilarity(synset, otherSynset)
-        similarity = minimum(1.0, similarity)  // cap it at 1.0, or else astronomical numbers for identity match
+        similarity = minimum(1.0, similarity) // cap it at 1.0, or else astronomical numbers for identity match
         logger.debug("Similarity = $similarity for $synset and $otherSynset")
         similarityMeasure.addToCache(synset, otherSynset, similarity)
         return similarity
@@ -289,9 +288,9 @@ class SemanticMatcher {
 
     private double computeInstanceOverlap(List<String> properNouns, List<String> otherProperNouns) {
         List<String> shared = properNouns.intersect(otherProperNouns)
-        int minSampleSize =  minimum(properNouns.size(), otherProperNouns.size())
+        int minSampleSize = minimum(properNouns.size(), otherProperNouns.size())
         double score = 0.0
-        score = (minSampleSize) ? score = (double)(shared.size() / minSampleSize) : 0.0
+        score = (minSampleSize) ? score = (double) (shared.size() / minSampleSize) : 0.0
         return score
     }
 

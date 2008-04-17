@@ -17,6 +17,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
 import com.mindalliance.channels.playbook.matching.SemanticMatcher
+import org.apache.log4j.Logger
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -159,18 +160,41 @@ public class TestPlaybook extends TestCase {
 
     void testSemanticMatching() {
         SemanticMatcher matcher = SemanticMatcher.getInstance()
-        assert matcher.semanticProximity("", "") == SemanticMatcher.NONE
-        assert matcher.semanticProximity("", "hello world") == SemanticMatcher.NONE
-        int score1 = matcher.semanticProximity("terrorism, terrorist attack, John Doe", "John Doe, terror incident, crime")
-        assert score1 == SemanticMatcher.VERY_HIGH
-        int score2 = matcher.semanticProximity("pandemic flu, epidemic, quarantine", "disease, public health")
-        assert score2 == SemanticMatcher.MEDIUM
-        int score3 = matcher.semanticProximity("avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.", "avian influenza, sometimes avian flu, and commonly bird flu refers to influenza caused by viruses adapted to birds.")
-        assert score3 == SemanticMatcher.VERY_HIGH
-        int score4 = matcher.semanticProximity("my summer vacation", "plane crash in the Andes")
-        assert score4 == SemanticMatcher.LOW
-        int score5 = matcher.semanticProximity("autopsy report of plague", "account of death by contagious disease")
-        assert score5 == SemanticMatcher.HIGH
+        Logger logger = Logger.getLogger(matcher.class)
+        int score
+        long msecs
+        score = matcher.semanticProximity("", "")
+        assert score == SemanticMatcher.NONE
+        score = matcher.semanticProximity("", "hello world")
+        assert score == SemanticMatcher.NONE
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("I flew to Europe on Delta Airlines", "an American Airlines plane crashed on take off")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.LOW
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("the quick fox jumped over the lazy dog", "tea for two at the Ritz")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.LOW
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("terrorism, John Doe", "John Doe committed a violent crime")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.MEDIUM
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("pandemic flu, epidemic, quarantine", "disease, public health")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.MEDIUM
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("IED set off in a train station", "explosive detonated on public transportation")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.MEDIUM
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("autopsy report of plague", "account of death by contagious disease")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.HIGH
+        msecs = System.currentTimeMillis()
+        score = matcher.semanticProximity("avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.", "avian influenza, sometimes avian flu, and commonly bird flu refers to influenza caused by viruses adapted to birds.")
+        logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
+        assert score == SemanticMatcher.VERY_HIGH
 
     }
 
