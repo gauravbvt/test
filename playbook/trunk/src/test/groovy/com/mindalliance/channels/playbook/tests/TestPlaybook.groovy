@@ -9,9 +9,6 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.Location
 import com.mindalliance.channels.playbook.geo.Area
-import com.mindalliance.channels.playbook.tests.pages.SomePage
-import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.Todo
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel

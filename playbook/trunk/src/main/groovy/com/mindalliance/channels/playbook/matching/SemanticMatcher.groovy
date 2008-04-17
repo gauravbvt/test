@@ -23,7 +23,11 @@ import org.apache.log4j.Logger
 class SemanticMatcher {
 
     static final double POWER = 0.6 // between 0 and 1, lower value lifts more
-    static final double BEST_MATCH_FACTOR = 1.0
+    static final double BEST_MATCH_FACTOR = 1.0 // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
+
+    static final String TAGGER_TRAINED_DATA = './config/semantic/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
+    static final String JWNL_PROPERTIES = './config/semantic/jwnl_properties.xml'
+    static final String SIMILARITY_DATA = 'file:config/semantic/ic-bnc-resnik-add1.dat'
 
     static int NONE = 0
     static int LOW = 1
@@ -31,7 +35,7 @@ class SemanticMatcher {
     static int HIGH = 3
     static int VERY_HIGH = 4
 
-    static SemanticMatcher instance
+    static SemanticMatcher instance  // singleton
 
     private Dictionary dictionary
     private MaxentTagger tagger
@@ -45,7 +49,7 @@ class SemanticMatcher {
             initializeJWNL()
             instance.dictionary = Dictionary.getInstance()
             instance.morpher = instance.dictionary.morphologicalProcessor
-            instance.tagger = new MaxentTagger('./config/semantic/wsj3t0-18-bidirectional/train-wsj-0-18.holder')
+            instance.tagger = new MaxentTagger(TAGGER_TRAINED_DATA)
             instance.similarityMeasure = initializeSimilarityMeasure()
             instance.logger = Logger.getLogger(instance.class)
         }
@@ -53,12 +57,12 @@ class SemanticMatcher {
     }
 
     static initializeJWNL() {
-        FileInputStream is = new FileInputStream('./config/semantic/jwnl_properties.xml')
+        FileInputStream is = new FileInputStream(JWNL_PROPERTIES)
         JWNL.initialize(is)
     }
 
     static SimilarityMeasure initializeSimilarityMeasure() {
-        return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: "file:config/semantic/ic-bnc-resnik-add1.dat"])
+        return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: SIMILARITY_DATA])
     }
 
     int semanticProximity(String text, String otherText) {
