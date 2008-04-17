@@ -1,19 +1,9 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
-import com.mindalliance.channels.playbook.ifm.IfmElement;
-import com.mindalliance.channels.playbook.ifm.Participation;
-import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.resources.Organization;
-import com.mindalliance.channels.playbook.ifm.resources.Person;
-import com.mindalliance.channels.playbook.ifm.resources.Position;
-import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.Container;
 
 import javax.swing.tree.TreeNode;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -25,38 +15,30 @@ abstract public class Filter implements TreeNode, Serializable {
 
     private String collapsedText;
     private String expandedText;
+    private Container container;
+
     private boolean expanded;
     private boolean selected;
     private Filter parent;
-    private Class rootClass = IfmElement.class;
 
-    List<Filter> children = new ArrayList<Filter>();
+    private List<Filter> children;
 
     //-------------------------
-    protected Filter( String collapsedText, String expandedText, Filter... children ) {
-        setCollapsedText( collapsedText );
-        setExpandedText( expandedText );
-
-        if ( children.length > 0 ) {
-            this.children.addAll( Arrays.asList( children ) );
-            for ( Filter child : this.children )
-                child.setParent( this );
-        }
+    protected Filter( String collapsedText, String expandedText, Container container ) {
+        this.collapsedText = collapsedText;
+        this.expandedText = expandedText;
+        this.container = container;
     }
 
-    public Filter( String text, Filter... children ) {
-        this( text, text, children );
+    public Filter( String text, Container container ) {
+        this( text, text, container );
+    }
+
+    public final Container getContainer() {
+        return container;
     }
 
     //-------------------------
-    /**
-     * Specify what kind of objects are allowed by this filter.
-     * @return A superclass
-     */
-    public Class getRootClass() {
-        return rootClass;
-    }
-
     public String getCollapsedText() {
         return collapsedText;
     }
@@ -91,8 +73,9 @@ abstract public class Filter implements TreeNode, Serializable {
 
     public void setSelected( boolean selected ) {
         this.selected = selected;
-        for ( Filter kid : children )
-            kid.setSelected( selected );
+        if ( children != null )
+            for ( Filter kid : getChildren() )
+                kid.setSelected( selected );
 
         if ( !selected && parent != null )
             parent.childDeselected();
@@ -132,54 +115,68 @@ abstract public class Filter implements TreeNode, Serializable {
      * Returns true if the receiver is a leaf.
      */
     public final boolean isLeaf() {
-        return children.isEmpty();
+        return getChildren().isEmpty();
+    }
+
+    /**
+     * Force recomputing of children on next access.
+     */
+    public synchronized void resetChildren() {
+        if ( children != null )
+            for ( Filter f : children ) {
+                f.resetChildren();
+            }
+        children = null;
+    }
+
+    private synchronized List<Filter> getChildren() {
+        if ( children == null ) {
+            children = createChildren();
+            for ( Filter f : children ) {
+                f.setParent( this );
+                f.setSelected( this.isSelected() );
+            }
+        }
+        return children;
     }
 
     /**
      * Returns the children of the receiver as an <code>Enumeration</code>.
      */
     public final Enumeration<Filter> children() {
-        return new EnumerationAdaptor<Filter>( children.iterator() );
+        return new EnumerationAdaptor<Filter>( getChildren().iterator() );
     }
     /**
      * Returns the child <code>TreeNode</code> at index <code>childIndex</code>.
      */
     public final TreeNode getChildAt( int childIndex ) {
-        return children.get( childIndex );
+        return getChildren().get( childIndex );
     }
 
     /**
      * Returns the number of children <code>TreeNode</code>s the receiver contains.
      */
     public final int getChildCount() {
-        return children.size();
-    }
-
-    public final void add( Filter child ) {
-        if ( children == null )
-            children = new ArrayList<Filter>();
-        children.add( child );
-        child.setParent( this );
+        return getChildren().size();
     }
 
     /**
-     * This is this filter applies to the given object.
+     * Test if this filter applies to the given object.
      * @param object the object.
-     * @return  true if the object should be included in the results.
+     * @return  true if the object should be removed from the results,
+     * false if object does not apply
      */
-    public boolean match( Object object ) {
-        if ( !isSelected() && getChildCount() > 0 && isExpanded() ) {
-            // OR the match of all children
-            for ( Filter f : children )
-                if ( f.match( object ) )
+    public boolean filter( Object object ) {
+
+        if ( !isSelected() && ( !isExpanded() || getChildCount() == 0 ) )
+            return !match( object );
+
+        else if ( !isSelected() )
+            for ( Filter f : getChildren() )
+                if ( f.filter( object ) )
                     return true;
 
-            return false;
-
-        } else {
-            // selected || no kids || collapsed
-            return localMatch( object );
-        }
+        return false;
     }
 
     //-------------------------
@@ -190,77 +187,13 @@ abstract public class Filter implements TreeNode, Serializable {
      * @param object the object
      * @return true if the object satisfies this filter.
      */
-    abstract protected boolean localMatch( Object object );
+    abstract public boolean match( Object object );
 
-    public static Filter[] Resources( Container data ) {
-        List<Filter> result = new ArrayList<Filter>();
-        ColumnProvider cp = data.getColumnProvider();
-
-        if ( cp.getClasses().contains( Organization.class ) ) {
-            Filter filter = new ClassFilter( Organization.class, "all organizations", "organizations..." );
-            result.add( filter );
-//            addOrgs( filter, cp, data );
-        }
-
-        if ( cp.getClasses().contains( Person.class ) ) {
-            Filter filter = new ClassFilter( Person.class, "all persons", "persons..." );
-            result.add( filter );
-            //addPersons( filter, cp, data );
-        }
-
-        if ( cp.getClasses().contains( Position.class ) ) {
-            Filter filter = new ClassFilter( Position.class, "all positions", "positions..." );
-            result.add( filter );
-         }
-
-        if ( cp.getClasses().contains( System.class ) ) {
-            Filter filter = new ClassFilter( System.class, "all systems", "systems..." );
-            result.add( filter );
-         }
-
-        return result.toArray( new Filter[ result.size() ] );
-    }
-
-/*
-    public static Filter[] ScenarioItems( Container data ) {
-        List<Filter> result = new ArrayList<Filter>();
-        ColumnProvider cp = data.getColumnProvider();
-
-        if ( cp.getClasses().contains( Event.class ) ) {
-            Filter filter = new ClassFilter( Event.class, "all events", "events..." );
-            result.add( filter );
-        }
-
-        if ( cp.getClasses().contains( Activity.class ) ) {
-            Filter filter = new ClassFilter( Activity.class, "all activities", "activities..." );
-            result.add( filter );
-        }
-
-        return result.toArray( new Filter[ result.size() ] );
-    }
-*/
-
-    public static Filter[] SystemItems( Container data ) {
-        List<Filter> result = new ArrayList<Filter>();
-        ColumnProvider cp = data.getColumnProvider();
-
-        if ( cp.getClasses().contains( User.class ) ) {
-            Filter filter = new ClassFilter( User.class, "all users", "users..." );
-            result.add( filter );
-        }
-
-        if ( cp.getClasses().contains( Project.class ) ) {
-            Filter filter = new ClassFilter( Project.class, "all projects", "projects..." );
-            result.add( filter );
-        }
-
-        if ( cp.getClasses().contains( Participation.class ) ) {
-            Filter filter = new ClassFilter( Participation.class, "all participations", "participations..." );
-            result.add( filter );
-        }
-
-        return result.toArray( new Filter[ result.size() ] );
-    }
+    /**
+     * Create the children of this filter given a container.
+     * @return filters to add to this one
+     */
+    abstract protected List<Filter> createChildren();
 
     //===================================================
     static class EnumerationAdaptor<T> implements Serializable, Enumeration<T> {

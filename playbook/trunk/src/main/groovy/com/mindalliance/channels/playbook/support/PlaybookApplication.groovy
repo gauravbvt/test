@@ -2,14 +2,13 @@ package com.mindalliance.channels.playbook.support
 
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
-import com.mindalliance.channels.playbook.pages.Playbook
+import com.mindalliance.channels.playbook.pages.PlaybookPage
 import com.mindalliance.channels.playbook.pages.LoginPage
 import com.mindalliance.channels.playbook.support.Memorable
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.resources.Person
 import com.mindalliance.channels.playbook.ifm.resources.Organization
 import com.mindalliance.channels.playbook.ifm.User
@@ -21,10 +20,10 @@ import com.mindalliance.channels.playbook.ifm.resources.Position
 import com.mindalliance.channels.playbook.ifm.resources.System
 import com.mindalliance.channels.playbook.ifm.model.Domain
 import com.mindalliance.channels.playbook.ifm.model.OrganizationType
-import com.mindalliance.channels.playbook.geo.Area
-import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ifm.model.LocationType
+import com.mindalliance.channels.playbook.pages.PlaybookPage
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -58,7 +57,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-      return Playbook.class
+      return PlaybookPage.class
       // return FormTest.class
     }
 
@@ -126,7 +125,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
             Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
             p.addResource(joe)
-            
+
             Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
             Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
             p.addResource(acme)

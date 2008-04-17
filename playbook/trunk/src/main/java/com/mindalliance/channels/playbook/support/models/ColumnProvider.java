@@ -4,7 +4,6 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -27,30 +26,30 @@ import java.util.Set;
 /**
  * ...
  */
-public class ColumnProvider implements IDataProvider, IDetachable {
+public class ColumnProvider implements IDataProvider {
 
-    private IDataProvider data;
+    private Container data;
     private Set<Class<?>> classes ;
     private Map<String,RefMetaProperty> index ;
     private List<RefMetaProperty> columns ;
 
-    public ColumnProvider( IDataProvider data ) {
+    public ColumnProvider( Container data ) {
         this.data = data;
     }
 
-    private List<RefMetaProperty> getColumns() {
+    private synchronized List<RefMetaProperty> getColumns() {
         if ( columns == null )
             populate();
         return columns;
     }
 
-    private Map<String, RefMetaProperty> getIndex() {
+    private synchronized Map<String, RefMetaProperty> getIndex() {
         if ( index == null )
             populate();
         return index;
     }
 
-    public Set<Class<?>> getClasses() {
+    public synchronized Set<Class<?>> getClasses() {
         if ( classes == null )
             populate();
         return Collections.unmodifiableSet( classes );
@@ -109,7 +108,7 @@ public class ColumnProvider implements IDataProvider, IDetachable {
         return new Model( (Serializable) object );
     }
 
-    public void detach() {
+    public synchronized void detach() {
         columns = null;
         index = null;
         classes = null;

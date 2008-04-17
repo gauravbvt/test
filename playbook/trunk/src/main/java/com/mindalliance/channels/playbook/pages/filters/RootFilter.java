@@ -1,22 +1,14 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
+import com.mindalliance.channels.playbook.support.models.Container;
+
 /**
  * ...
  */
-public class RootFilter extends Filter {
+public class RootFilter extends ClassFilter {
 
-    public RootFilter( Filter... children ) {
-        super( "Show everything", "Show...", children );
+    public RootFilter( Container container ) {
+        super( "Show everything", "Show...", Object.class, container );
         setSelected( true );
-    }
-
-    /**
-     * Test an object for inclusion, assuming either selected, collapsed or no children.
-     *
-     * @param object the object
-     * @return true if the object satisfies this filter.
-     */
-    protected boolean localMatch( Object object ) {
-        return isSelected();
     }
 }

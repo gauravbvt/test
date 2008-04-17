@@ -8,6 +8,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.models.ColumnProvider
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.support.models.RefModel
+import com.mindalliance.channels.playbook.pages.filters.RootFilter
+import com.mindalliance.channels.playbook.support.models.FilteredContainer
 
 /**
 * ...
@@ -19,32 +21,56 @@ class Tab extends IfmElement implements Container {
     String name = 'Everything'
     Container base
     ColumnProvider columnProvider = new ColumnProvider( this )
+    Container buffer
 
+    //---------------------------------
     Tab() {
-        this.base = new UserScope()
+        this( new UserScope() )
+    }
+
+    Tab( Container base ) {
+        super()
+        this.base = base
     }
 
     String toString() {
         name
     }
 
-    public void add(Referenceable ref) {
-        base.add( ref );
+    //---------------------------------
+    public synchronized Filter getFilter() {
+        if ( filter == null )
+            filter = new RootFilter( base );
+
+        return filter
     }
 
+    public synchronized Container getBuffer() {
+        if ( buffer == null )
+            buffer = new FilteredContainer( base, getFilter() ) 
+
+        return buffer
+    }
+
+    public synchronized void detach() {
+        super.detach()
+        if ( filter != null )
+            filter.resetChildren();
+
+        buffer.detach();
+    }
+
+    //---------------------------------
     public boolean contains(Ref ref) {
-        // TODO complete this
-        return base.contains( ref );
+        return getBuffer().contains( ref );
     }
 
     public Ref get(int index) {
-        // TODO complete this
-        return base.get( index );
+        return getBuffer().get( index );
     }
 
     public List<Class<?>> getAllowedClasses() {
-        // TODO complete this
-        return base.getAllowedClasses();
+        return getBuffer().getAllowedClasses();
     }
 
     public Object getObject() {
@@ -56,29 +82,33 @@ class Tab extends IfmElement implements Container {
             base.setObject( object )
         else
             setBase( (Container) object );
+        detach();
     }
 
-    public Iterator<Ref> iterator(int first, int count) {
-        // TODO complete this
-        return base.iterator( first, count );
+    public Iterator<Ref> iterator( int first, int count ) {
+        return getBuffer().iterator( first, count );
     }
 
-    public IModel model(Object object) {
-        return new RefModel( object );
+    public IModel model( Object object ) {
+        return base.model( object );
+    }
+
+    public void add( Referenceable ref ) {
+        getBuffer().add( ref );
+        detach()
     }
 
     public void remove(Ref ref) {
         base.remove( ref )
+        detach()
     }
 
     public void remove(Referenceable ref) {
         base.remove( ref )
+        detach()
     }
 
     public int size() {
-        // TODO complete this
-        return base.size();
+        return getBuffer().size();
     }
-
-
 }

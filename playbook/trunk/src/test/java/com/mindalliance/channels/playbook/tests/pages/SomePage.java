@@ -41,7 +41,7 @@ public class SomePage extends Template {
 
             Ref p = session.getProject();
 
-            add(new Label("title", "Playbook"));
+            add(new Label("title", "PlaybookPage"));
 
             // Add scenarios to the list
             add(new ListView("sc-list", (List)p.deref("scenarios")) {

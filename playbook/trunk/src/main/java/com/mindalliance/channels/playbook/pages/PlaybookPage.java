@@ -25,9 +25,9 @@ import java.util.List;
  * ...
  */
 @AuthorizeInstantiation( { "USER" } )
-public class Playbook extends WebPage {
+public class PlaybookPage extends WebPage {
 
-    public Playbook( PageParameters parms ){
+    public PlaybookPage( PageParameters parms ){
         super( parms );
         load();
     }
@@ -36,7 +36,7 @@ public class Playbook extends WebPage {
         final PlaybookSession session = (PlaybookSession) getSession();
         setModel( new Model( session ) );
 
-        add( new Label("title", "Playbook" ));
+        add( new Label("title", "PlaybookPage" ));
         add( new Label("name", new RefPropertyModel(getModel(), "user.name")));
         add( new Label("project", new RefPropertyModel(getModel(), "project.name")));
         add( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
@@ -57,7 +57,7 @@ public class Playbook extends WebPage {
 
             public void onSubmit() {
                 session.getMemory().commit();
-                setResponsePage( Playbook.this );
+                setResponsePage( PlaybookPage.this );
             }
         });
         pageControls.add( new Button("revert_button") {
@@ -66,7 +66,7 @@ public class Playbook extends WebPage {
             }
             public void onSubmit() {
                 session.getMemory().abort();
-                setResponsePage( Playbook.this );
+                setResponsePage( PlaybookPage.this );
             }
         });
 //        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
