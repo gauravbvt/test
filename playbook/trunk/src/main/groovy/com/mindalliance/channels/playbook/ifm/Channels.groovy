@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.context.model.Model
+import com.mindalliance.channels.playbook.ifm.model.Model
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

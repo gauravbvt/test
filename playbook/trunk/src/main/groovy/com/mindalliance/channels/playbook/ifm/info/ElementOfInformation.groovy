@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 * Time: 1:06:55 PM
 */
 class ElementOfInformation extends BeanImpl {
-    String topic = 'Unspecified'
+    
+    String topic = ''
     String content = ''
 }

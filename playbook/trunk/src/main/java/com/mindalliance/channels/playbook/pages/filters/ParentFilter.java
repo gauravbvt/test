@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
+import com.mindalliance.channels.playbook.ifm.resources.Organization;
 import com.mindalliance.channels.playbook.ref.Ref;
 
 import java.text.MessageFormat;

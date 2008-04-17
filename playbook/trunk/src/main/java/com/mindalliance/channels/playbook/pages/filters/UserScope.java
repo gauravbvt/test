@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.filters;
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.context.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.Model;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;

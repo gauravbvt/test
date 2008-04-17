@@ -3,12 +3,10 @@ package com.mindalliance.channels.playbook.pages.filters;
 import com.mindalliance.channels.playbook.ifm.IfmElement;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
-import com.mindalliance.channels.playbook.ifm.context.environment.Person;
-import com.mindalliance.channels.playbook.ifm.context.environment.Position;
+import com.mindalliance.channels.playbook.ifm.resources.Organization;
+import com.mindalliance.channels.playbook.ifm.resources.Person;
+import com.mindalliance.channels.playbook.ifm.resources.Position;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.project.scenario.Event;
-import com.mindalliance.channels.playbook.ifm.project.scenario.act.Activity;
 import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.Container;
 
@@ -223,6 +221,7 @@ abstract public class Filter implements TreeNode, Serializable {
         return result.toArray( new Filter[ result.size() ] );
     }
 
+/*
     public static Filter[] ScenarioItems( Container data ) {
         List<Filter> result = new ArrayList<Filter>();
         ColumnProvider cp = data.getColumnProvider();
@@ -239,6 +238,7 @@ abstract public class Filter implements TreeNode, Serializable {
 
         return result.toArray( new Filter[ result.size() ] );
     }
+*/
 
     public static Filter[] SystemItems( Container data ) {
         List<Filter> result = new ArrayList<Filter>();

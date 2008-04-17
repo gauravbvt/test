@@ -4,8 +4,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.context.environment.Person;
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
+import com.mindalliance.channels.playbook.ifm.resources.Person;
+import com.mindalliance.channels.playbook.ifm.resources.Organization;
 
 import java.util.*;
 

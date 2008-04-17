@@ -9,14 +9,12 @@ import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
+import com.mindalliance.channels.playbook.ifm.resources.Organization;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-
-import groovyjarjarantlr.collections.impl.LList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,10 +25,9 @@ import groovyjarjarantlr.collections.impl.LList;
  */
 public class SystemPanel extends AbstractElementPanel {
     TextField nameField;
-    TextArea descriptionField;   // TODO -- find out why TextArea does not work
+    TextArea descriptionField;
     TextArea accessField;
-    TextField organizationField;
-    AutoCompleteTextField organizationPanel;
+    AutoCompleteTextField organizationField;
 
     public SystemPanel(String id, Ref p) {
         super(id, p);

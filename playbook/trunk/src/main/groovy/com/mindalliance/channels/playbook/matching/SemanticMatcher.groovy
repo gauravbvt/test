@@ -22,7 +22,7 @@ import org.apache.log4j.Logger
  */
 class SemanticMatcher {
 
-    static final double POWER = 0.6 // between 0 and 1, lower value lifts more
+    static final double POWER = 0.6 // between 0 and 1, lower value lifts asymptotic scoring curve more
     static final double BEST_MATCH_FACTOR = 1.0 // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
 
     static final String TAGGER_TRAINED_DATA = './config/semantic/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
@@ -284,7 +284,7 @@ class SemanticMatcher {
     private double similarity(Synset synset, Synset otherSynset) {
         if (synset.offset == otherSynset.offset) return 1.0
         double similarity = similarityMeasure.getSimilarity(synset, otherSynset)
-        similarity = minimum(1.0, similarity) // cap it at 1.0, or else astronomical numbers for identity match
+        similarity = minimum(1.0, similarity) // cap it at 1.0
         logger.debug("Similarity = $similarity for $synset and $otherSynset")
         similarityMeasure.addToCache(synset, otherSynset, similarity)
         return similarity

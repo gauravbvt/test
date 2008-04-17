@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.geo
 
-import com.mindalliance.channels.playbook.ifm.Location
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import org.geonames.Toponym
 import org.geonames.WebService
 import org.geonames.ToponymSearchCriteria
@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.HttpStatus
 import groovy.util.slurpersupport.GPathResult
 import org.geonames.Style
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -29,10 +30,10 @@ class GeoService {
     static final String SEARCH = 'search'
     static final String CODE = 'code'
 
-    static Map<Location, Area> areas = Collections.synchronizedMap(new HashMap<Location, Area>())
+    static Map<GeoLocation, Area> areas = Collections.synchronizedMap(new HashMap<GeoLocation, Area>())
 
     // Find the area identified by the location
-    static Area locate(Location location) {
+    static Area locate(GeoLocation location) {
         assert location.country
         Area area = areas[location]
         if (!area) {
@@ -55,7 +56,7 @@ class GeoService {
         return area
     }
 
-    static private ToponymSearchCriteria searchCriteriaFrom(Location location) {
+    static private ToponymSearchCriteria searchCriteriaFrom(GeoLocation location) {
         String name
         ToponymSearchCriteria tsc = new ToponymSearchCriteria()
         tsc.style = Style.FULL
@@ -120,7 +121,7 @@ class GeoService {
 
     static Area findCountry(String name) {
         Area area
-        Location location = new Location(country: name)
+        GeoLocation location = new GeoLocation(country: name)
         area = areas[location]
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
@@ -148,7 +149,7 @@ class GeoService {
 
     static Area findState(Area country, String name) {
         Area area
-        Location location = new Location(country: country.countryName, state: name)
+        GeoLocation location = new GeoLocation(country: country.countryName, state: name)
         area = areas[location]
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
@@ -178,7 +179,7 @@ class GeoService {
 
     static Area findCounty(Area country, Area state, String name) {
         Area area
-        Location location = new Location(country: country.countryName, state: state.name, county:name)
+        GeoLocation location = new GeoLocation(country: country.countryName, state: state.name, county:name)
         area = areas[location]
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()

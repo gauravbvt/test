@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.geo
 
-import com.mindalliance.channels.playbook.ifm.Location
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,7 +23,7 @@ class UnknownArea extends Area{
         throw new Exception("Area is unknown")
     }
 
-    boolean isWithinLocation(Location location) {
+    boolean isWithinLocation(GeoLocation location) {
         throw new Exception("Area is unknown")
     }
 

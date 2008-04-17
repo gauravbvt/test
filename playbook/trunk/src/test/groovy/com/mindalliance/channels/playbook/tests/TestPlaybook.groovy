@@ -7,14 +7,14 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
-import com.mindalliance.channels.playbook.ifm.Location
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel
-import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
 import com.mindalliance.channels.playbook.matching.SemanticMatcher
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,7 +30,7 @@ public class TestPlaybook extends TestCase {
     PlaybookSession session
     SessionMemory sessionMem
 
-   protected void setUp() {
+    protected void setUp() {
         app = new PlaybookApplication()
         tester = new WicketTester(app, "./src/main/webapp")
         app.clearAll()
@@ -55,12 +55,12 @@ public class TestPlaybook extends TestCase {
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
-        assert metaProps.size() == 10
+        assert metaProps.size() == 11
         metaProps = metaProps.findAll {it.isScalar()}
         assert metaProps.size() == 5
         //
-        String scenarioName = myProject.deref('scenarios')[0].deref('name')
-        assert scenarioName.startsWith("Scenario")
+        String playbookName = myProject.deref('playbooks')[0].deref('name')
+        assert playbookName.startsWith("Playbook")
         assertTrue(myProject.name == myProject.reference.name)
         String name = myProject.name
         assertTrue(name.equals("Generic"))
@@ -133,13 +133,13 @@ public class TestPlaybook extends TestCase {
     }
 
     void testAreas() {
-        Location portland = new Location(country: 'United States', state: 'Maine', city: 'Portland')
+        GeoLocation portland = new GeoLocation(country: 'United States', state: 'Maine', city: 'Portland')
         Area area = portland.getArea()
         assert area.isCityLike()
         List<Area> hierarchy = area.findHierarchy()
         Area containing = area.findContainingArea()
         // List<Area> nearby = area.findNearbyAreas()
-        Location maine = new Location(country: 'United States', state: 'Maine')
+        GeoLocation maine = new GeoLocation(country: 'United States', state: 'Maine')
         assert area.isWithinLocation(maine)
         assert maine > portland
     }
@@ -148,11 +148,11 @@ public class TestPlaybook extends TestCase {
         Ref channels = app.channels
         Ref project = new Project(name: "new project").persist()
         channels.addProject(project)
-        Ref scenario = new Scenario(name: "new scenario").persist()
-        project.addScenario(scenario)
-        RefPropertyModel chained = new RefPropertyModel(project, "scenarios.name(new scenario)")
+        Ref playbook = new Playbook(name: "new playbook").persist()
+        project.addPlaybook(playbook)
+        RefPropertyModel chained = new RefPropertyModel(project, "playbooks.name(new playbook)")
         RefPropertyModel rpm = new RefPropertyModel(chained, "name")
-        assert rpm.getObject() == 'new scenario'
+        assert rpm.getObject() == 'new playbook'
     }
 
     void testSemanticMatching() {
@@ -192,7 +192,6 @@ public class TestPlaybook extends TestCase {
         score = matcher.semanticProximity("avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.", "avian influenza, sometimes avian flu, and commonly bird flu refers to influenza caused by viruses adapted to birds.")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
         assert score == SemanticMatcher.VERY_HIGH
-
     }
 
 }

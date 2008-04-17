@@ -17,8 +17,8 @@ public class OrganizationPanel extends AbstractElementPanel {
     TextField nameField;
     TextArea descriptionField;
     OrganizationTypesPanel organizationTypesPanel;
-    LocationPanel addressPanel;
-    LocationPanel jurisdictionPanel;
+    GeoLocationPanel addressPanel;
+    GeoLocationPanel jurisdictionPanel;
 
     public OrganizationPanel(String id, Ref p) {
         super(id, p);
@@ -42,10 +42,10 @@ public class OrganizationPanel extends AbstractElementPanel {
         organizationTypesPanel = new OrganizationTypesPanel("organizationTypes", element, "organizationTypes", ddOTPropNames);
         addRefListPanel(organizationTypesPanel);
         // Address location panel
-        addressPanel = new LocationPanel("address", element, "address");
+        addressPanel = new GeoLocationPanel("address", element, "address");
         addComponentPanel(addressPanel, "address");
         // Jurisdication location panel
-        jurisdictionPanel = new LocationPanel("jurisdication", element, "jurisdiction");
+        jurisdictionPanel = new GeoLocationPanel("jurisdication", element, "jurisdiction");
         addComponentPanel(jurisdictionPanel, "jurisdiction");
     }
 

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages;
 
 import com.mindalliance.channels.playbook.ifm.Tab;
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
+import com.mindalliance.channels.playbook.ifm.resources.Organization;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.filters.FilterTree;
 import com.mindalliance.channels.playbook.pages.filters.ParentFilter;

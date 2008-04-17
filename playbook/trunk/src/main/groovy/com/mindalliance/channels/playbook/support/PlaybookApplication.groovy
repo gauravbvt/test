@@ -9,21 +9,22 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.project.scenario.Scenario
-import com.mindalliance.channels.playbook.ifm.context.environment.Person
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.resources.Person
+import com.mindalliance.channels.playbook.ifm.resources.Organization
 import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.context.environment.Position
-import com.mindalliance.channels.playbook.ifm.context.environment.System
-import com.mindalliance.channels.playbook.ifm.context.model.Domain
-import com.mindalliance.channels.playbook.ifm.context.model.OrganizationType
+import com.mindalliance.channels.playbook.ifm.resources.Position
+import com.mindalliance.channels.playbook.ifm.resources.System
+import com.mindalliance.channels.playbook.ifm.model.Domain
+import com.mindalliance.channels.playbook.ifm.model.OrganizationType
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
-import com.mindalliance.channels.playbook.ifm.context.model.Model
+import com.mindalliance.channels.playbook.ifm.model.Model
+import com.mindalliance.channels.playbook.ifm.model.LocationType
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -85,32 +86,21 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             User user = new User(id: "user", name: 'Normal User', password: "user")
             channels.addUser(store(user))
 
-            // A default project for everyone, for now...
-            Project p = new Project(name: 'Generic')
-            p.addScenario(store(new Scenario(name: "Scenario A", description: "This is scenario A")))
-            p.addScenario(store(new Scenario(name: "Scenario B", description: "This is scenario B")))
-            p.addScenario(store(new Scenario(name: "Scenario C", description: "This is scenario C")))
-
-            Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
-            p.addResource(joe)
-            Ref acme = store(new Organization(name: "ACME Inc.", description: 'A big company'))
-            Ref nadir = store(new Organization(name: "NADIR Inc."))
-            p.addResource(acme)
-            p.addResource(nadir)
-            Ref pos1 = store(new Position(name: 'Position 1', organization: acme))
-            p.addResource(pos1)
-            p.addResource(store(new Position(name: 'Position 2', organization: acme)))
-            p.addResource(store(new Position(name: 'Position 3', organization: acme)))
-
-            Ref pos4 = store(new Position(name: 'Position 4', organization: nadir))
-            p.addResource(pos4)
-            p.addResource(store(new Position(name: 'Position 5', organization: nadir)))
-
-            joe.addPosition(pos1)
-            joe.addPosition(pos4)
-            store(joe)
-
+            // Model elements
             Model m = new Model()
+
+            Ref globe = store(new LocationType(name:'Globe'))
+            Ref continent = store(new LocationType(name:'Globe', parent: globe))
+            Ref country = store(new LocationType(name:'Country', parent: continent))
+            Ref state = store(new LocationType(name:'State', parent: country))
+            Ref county = store(new LocationType(name:'County', parent: state))
+            Ref city = store(new LocationType(name:'County', parent: county))
+            m.addElement(globe)
+            m.addElement(continent)
+            m.addElement(country)
+            m.addElement(state)
+            m.addElement(county)
+            m.addElement(city)
 
             Ref law = store(new Domain(name: 'Law Enforcement'))
             Ref health = store(new Domain(name: 'Public Health'))
@@ -121,11 +111,42 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             m.addElement(biz)
             m.addElement(gov)
 
-            m.addElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: Area.STATE)))
-            m.addElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: Area.GLOBE)))
-            m.addElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: Area.COUNTY)))
+            m.addElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: state)))
+            m.addElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe)))
+            m.addElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county)))
             channels.addModel( store(m) );
+
+
+            // A default project for everyone, for now...
+            Project p = new Project(name: 'Generic')
             p.addModel( m );
+            p.addPlaybook(store(new Playbook(name: "Playbook A", description: "This is Playbook A")))
+            p.addPlaybook(store(new Playbook(name: "Playbook B", description: "This is Playbook B")))
+            p.addPlaybook(store(new Playbook(name: "Playbook C", description: "This is Playbook C")))
+
+            Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
+            p.addResource(joe)
+            
+            Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
+            Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
+            p.addResource(acme)
+            p.addResource(nadir)
+            Ref pos1 = store(new Position(name: 'Position 1'))
+            Ref pos2 = store(new Position(name: 'Position 2'))
+            Ref pos3 = store(new Position(name: 'Position 3'))
+            acme.addPosition(pos1)
+            acme.addPosition(pos2)
+            acme.addPosition(pos3)
+            store(acme)
+            Ref pos4 = store(new Position(name: 'Position 4'))
+            Ref pos5 = store(new Position(name: 'Position 5'))
+            nadir.addPosition(pos4)
+            nadir.addPosition(pos5)
+            store(nadir)
+
+            joe.addPosition(pos1)
+            joe.addPosition(pos4)
+            store(joe)
 
             p.addResource(store(new System()))
             p.addParticipation(

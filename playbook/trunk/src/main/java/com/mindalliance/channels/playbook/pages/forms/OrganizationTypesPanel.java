@@ -1,8 +1,8 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.context.environment.Organization;
-import com.mindalliance.channels.playbook.ifm.context.model.OrganizationType;
+import com.mindalliance.channels.playbook.ifm.resources.Organization;
+import com.mindalliance.channels.playbook.ifm.model.OrganizationType;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.Component;

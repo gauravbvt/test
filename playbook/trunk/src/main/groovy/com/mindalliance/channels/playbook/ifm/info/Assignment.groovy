@@ -1,8 +1,8 @@
 package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.Location
-import com.mindalliance.channels.playbook.ifm.context.model.Responsibility
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+import org.joda.time.Duration
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,10 +13,9 @@ import com.mindalliance.channels.playbook.ifm.context.model.Responsibility
 */
 // Assignment of a Responsibility to any agent with a given role, possibly within a given type of organization
 // and possiblylimited to some location
-class Assignment extends InfoElement {
+class Assignment extends BeanImpl {
 
-    Ref role // required
-    Ref organizationType
-    Location location = new Location()
-    Responsibility responsibility // required
+    List<InformationTemplate> n2kInformation // what must be known if knowable -- required
+    Ref mustDoTaskType // what to do, if anything, when all the above is known
+    Duration maxReactionTime = Duration.ZERO // maximum reaction time -- defaults to "zero"
 }

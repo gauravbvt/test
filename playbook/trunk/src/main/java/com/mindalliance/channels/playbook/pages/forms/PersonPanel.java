@@ -18,7 +18,7 @@ public class PersonPanel extends AbstractElementPanel {
     TextField middleNameField;
     TextField lastNameField;
     PositionsPanel positionsPanel;
-    LocationPanel locationPanel;
+    GeoLocationPanel locationPanel;
 
     public PersonPanel(String id, Ref p) {
         super(id, p);
@@ -43,8 +43,8 @@ public class PersonPanel extends AbstractElementPanel {
         String[] ddPropNames = {"organization.name","name"};
         positionsPanel = new PositionsPanel("positions", element, "positions", ddPropNames);
         addRefListPanel(positionsPanel);
-        // Location panel
-        locationPanel = new LocationPanel("address", element, "address");
+        // GeoLocation panel
+        locationPanel = new GeoLocationPanel("address", element, "address");
         addComponentPanel(locationPanel, "address");
     }
 

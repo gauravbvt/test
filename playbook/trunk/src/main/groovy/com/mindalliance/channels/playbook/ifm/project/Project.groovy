@@ -2,9 +2,7 @@ package com.mindalliance.channels.playbook.ifm.project
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.IfmElement
-import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.context.environment.Resource
-import com.mindalliance.channels.playbook.ifm.project.scenario.Occurrence
+import com.mindalliance.channels.playbook.ifm.resources.Resource
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.Session
 
@@ -21,8 +19,9 @@ class Project extends IfmElement {
     String description = ''
     List<Ref> participations = []
     List<Ref> resources = []
-    List<Ref> scenarios = []
+    List<Ref> playbooks = []
     List<Ref> models = []
+    List<Ref> policies = []
     List<Ref> analysisElements = []
 
     static Ref currentProject() {
@@ -46,8 +45,8 @@ class Project extends IfmElement {
         return res
     }
 
-    Ref findScenarioNamed(String type, String name) {
-        Ref sc = (Ref) scenarios.find {sc ->
+    Ref findPlaybookNamed(String type, String name) {
+        Ref sc = (Ref) playbooks.find {sc ->
             sc.type == type && sc.name.equalsIgnoreCase(name)
         }
         return res

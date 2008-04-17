@@ -11,10 +11,8 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 * Date: Mar 29, 2008
 * Time: 9:04:20 AM
 */
-class Information extends InfoElement {
+class Information extends AbstractInformation {
 
-    Ref about // a scenario element     -- required
-    Duration timeToLive // unspecified means forever
-    List<ElementOfInformation> elementOfInformations = []
+    Ref aboutEvent // an event description     -- required
 
 }
