@@ -5,25 +5,29 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.opensymphony.oscache.base.CacheEntry
 import com.opensymphony.oscache.base.Cache
-import com.opensymphony.oscache.plugins.diskpersistence.DiskPersistenceListener
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.support.persistence.YamlPersistenceListener
 import org.apache.log4j.Logger
+import org.ho.yaml.YamlEncoder
+import org.ho.yaml.YamlDecoder
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 19, 2008
-* Time: 10:06:15 AM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 19, 2008
+ * Time: 10:06:15 AM
+ */
 class ApplicationMemory implements Serializable {
 
     static final String ROOT_ID = 'CHANNELS'
     static final String ROOT_DB = 'channels'
     static final Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
+
+    static final String EXPORT_DIRECTORY = 'data/yaml'
 
     static DEBUG = false
     static Cache cache
@@ -72,10 +76,10 @@ class ApplicationMemory implements Serializable {
     }
 
     Referenceable retrieve(Ref ref) {
-        Referenceable referenceable
+        Referenceable referenceable = null
         try {
             referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
-            if (DEBUG)  Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
+            if (DEBUG) Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
             referenceable.afterRetrieve()
         }
         catch (Exception e) {
@@ -100,6 +104,81 @@ class ApplicationMemory implements Serializable {
         return ROOT
     }
 
+    // Creates a single YAML file named "<name>.yml" with ref and all that it references transitively
+    int exportRef(Ref ref, String name) {
+        int count = 0
+        File file = new File(EXPORT_DIRECTORY, "${name}.yml")
+        if (file.exists()) { // make a backup
+            backupFile(file)
+        }
+        FileOutputStream out = new FileOutputStream(file)
+        YamlEncoder enc = new YamlEncoder(out)
+        List<Ref> queue = [ref]
+        Set<Ref> exported = new HashSet<Ref>()
+        try {
+            while (queue) {
+                Ref next = (Ref) queue.pop()
+                exported.add(next)
+                Referenceable referenceable = retrieve(next)
+                referenceable.references().each {aRef ->
+                    if (!exported.contains(aRef)) {
+                        queue.add(aRef)
+                    }
+                }
+                enc.writeObject(referenceable.toMap())
+                count++
+            }
+            enc.flush()
+            Logger.getLogger(this.class.name).info("Finished exporting ${ref.deref()} to $name ($count elements)")
+        }
+        catch (Exception e) {
+            Logger.getLogger(this.class.name).error("Failed while exporting $name", e)
+        }
+        finally {
+            enc.close()
+        }
+        return count
+    }
+
+    private void backupFile(File file) {
+        Date now = new Date()
+        String bkName = "${file.getAbsolutePath()}_${now}_.bak"
+        FileWriter copy = new FileWriter(bkName)
+        try {
+            file.eachLine {line ->
+                copy.write(line)
+            }
+        }
+        finally {
+            copy.close()
+        }
+    }
+
+    // Create and store all elements serialized in file named <name>.yml
+    int importRef(String name) {
+        int count = 0
+        File file = new File(EXPORT_DIRECTORY, "${name}.yml")
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Import failed: unknown file $name")
+        }
+        FileInputStream input = new FileInputStream(file)
+        YamlDecoder dec = new YamlDecoder(input)
+        try {
+            while (true) {
+                Referenceable referenceable = (Referenceable)BeanImpl.fromMap((Map) dec.readObject())
+                store(referenceable)
+                count++
+            }
+        }
+        catch (EOFException e) {
+            Logger.getLogger(this.class.name).info("Finished importing $name ($count elements)")
+        }
+        finally {
+            dec.close()
+        }
+        return count
+    }
+
     private void initialize() {
         if (isEmpty()) {
             initializeContents()
@@ -115,7 +194,7 @@ class ApplicationMemory implements Serializable {
     private boolean isEmpty() {
         boolean empty = true
         try {
-            def root = cache.getFromCache(ROOT_ID, CacheEntry.INDEFINITE_EXPIRY)
+            cache.getFromCache(ROOT_ID, CacheEntry.INDEFINITE_EXPIRY)
             empty = false
         }
         catch (NeedsRefreshException nre) {

@@ -14,7 +14,7 @@ class PlaceLocation extends Location {   // any kind of real or abstract locatio
 
     List<String> directions = [] // names of outer locations, in order of containment  e.g. building X, floor Y, room Z
 
-    transient Place place // identified by name and directions from some "places service"
+    Place place // identified by name and directions from some "places service"
 
     @Override
     List<String> transientProperties() {

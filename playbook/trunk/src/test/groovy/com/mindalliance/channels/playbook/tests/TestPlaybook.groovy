@@ -132,6 +132,13 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
     }
 
+    void testExportImport() {
+       int exportCount = app.memory.exportRef(app.getChannels(), 'channels')
+       assert exportCount > 0
+       int importCount = app.memory.importRef('channels')
+       assert importCount == exportCount
+    }
+
     void testAreas() {
         GeoLocation portland = new GeoLocation(country: 'United States', state: 'Maine', city: 'Portland')
         Area area = portland.getArea()
@@ -155,7 +162,7 @@ public class TestPlaybook extends TestCase {
         assert rpm.getObject() == 'new playbook'
     }
 
-    void testSemanticMatching() {
+   void testSemanticMatching() {
         SemanticMatcher matcher = SemanticMatcher.getInstance()
         Logger logger = Logger.getLogger(matcher.class)
         int score

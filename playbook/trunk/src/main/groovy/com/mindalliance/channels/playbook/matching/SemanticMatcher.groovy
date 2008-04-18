@@ -25,9 +25,9 @@ class SemanticMatcher {
     static final double POWER = 0.6 // between 0 and 1, lower value lifts asymptotic scoring curve more
     static final double BEST_MATCH_FACTOR = 1.0 // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
 
-    static final String TAGGER_TRAINED_DATA = './config/semantic/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
-    static final String JWNL_PROPERTIES = './config/semantic/jwnl_properties.xml'
-    static final String SIMILARITY_DATA = 'file:config/semantic/ic-bnc-resnik-add1.dat'
+    static final String TAGGER_TRAINED_DATA = './data/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
+    static final String JWNL_PROPERTIES = '/config/semantic/jwnl_properties.xml'
+    static final String SIMILARITY_DATA = '/config/semantic/ic-bnc-resnik-add1.dat'
 
     static int NONE = 0
     static int LOW = 1
@@ -57,12 +57,15 @@ class SemanticMatcher {
     }
 
     static initializeJWNL() {
-        FileInputStream is = new FileInputStream(JWNL_PROPERTIES)
+        InputStream is = ClassLoader.getResourceAsStream(JWNL_PROPERTIES)
         JWNL.initialize(is)
     }
 
     static SimilarityMeasure initializeSimilarityMeasure() {
-        return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: SIMILARITY_DATA])
+       // return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: SIMILARITY_DATA])
+       URL url = ClassLoader.getResource(SIMILARITY_DATA)
+       SimilarityMeasure sm = SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: url.toExternalForm()])
+       return sm
     }
 
     int semanticProximity(String text, String otherText) {
@@ -273,11 +276,11 @@ class SemanticMatcher {
         return score
     }
 
-    static private double maximum(double x, double y) {
+    private double maximum(double x, double y) {
         return (x > y) ? x : y
     }
 
-    static private double minimum(double x, double y) {
+    private double minimum(double x, double y) {
         return (x < y) ? x : y
     }
 

@@ -7,12 +7,12 @@ import com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
 import org.apache.log4j.Logger
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 26, 2008
-* Time: 6:56:49 AM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 26, 2008
+ * Time: 6:56:49 AM
+ */
 class BeanImpl implements Bean {
 
     String version         // TODO -- belongs in IfmElement
@@ -56,7 +56,7 @@ class BeanImpl implements Bean {
                     this."$name" = val
                 }
                 catch (Exception e) {
-                    Logger.getLogger(this.getClass().getName()).warn("Can't set field $name in ${bean.class.name}",e)
+                    Logger.getLogger(this.getClass().getName()).warn("Can't set field $name in ${bean.class.name}", e)
                 }
             }
         }
@@ -110,6 +110,28 @@ class BeanImpl implements Bean {
                 value = val
         }
         return value
+    }
+
+    List<Ref> references() {
+        List<Ref> references = findAllReferencesIn(this)
+        return references
+    }
+
+    static List<Ref> findAllReferencesIn(def obj) {
+        List<Ref> references = []
+        switch (obj) {
+            case Ref:
+                references.add(obj)
+                break
+            case Bean:
+                obj.beanProperties().each{key, val ->
+                    references.addAll(findAllReferencesIn(val))
+                }
+                break
+            case List:
+                obj.each { references.addAll(findAllReferencesIn(it)) }
+        }
+        return references
     }
 
     Map toMap() {
