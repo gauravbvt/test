@@ -202,13 +202,16 @@ hr, div.content-list h3, div.content-form h3 {
 
 div.wicket-tree {
     margin: 2px 0px 0px 1px !important;
-    width: auto !important;
+    width: 18em !important;
     border: none !important;
 }
 
 div.wicket-tree div.a_ {
     width: auto !important;
     padding: 0px !important;
+}
+
+div.wicket-tree div.a_ > div {
 }
  
  div.wicket-tree div.a_ input {
@@ -249,6 +252,7 @@ tbody, div.content-form li {
 
 div.content-list td {
     cursor: pointer;
+    vertical-align: top;
 }
 
 div.content-list table {

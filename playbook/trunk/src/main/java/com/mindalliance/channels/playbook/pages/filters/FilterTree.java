@@ -13,11 +13,13 @@ import javax.swing.tree.TreeNode;
 /**
  * ...
  */
-public class FilterTree extends Tree {
+public abstract class FilterTree extends Tree {
 
     public FilterTree( String id, TreeModel model ) {
         super( id, model );
     }
+
+    public abstract void onCheckBoxUpdate( AjaxRequestTarget target, Filter filter );
 
     @Override
     protected String renderNode( TreeNode node ) {
@@ -31,31 +33,22 @@ public class FilterTree extends Tree {
         final AjaxCheckBox checkBox = new AjaxCheckBox( "filter-check",
             new PropertyModel( item.getModelObject(), "selected" ) ){
 
-            protected void onSelectionChanged( Object newSelection ) {
-                getModel().setObject( newSelection );
-                Filter f = (Filter) item.getModelObject();
-                // TODO fix the following
-                if ( f.isExpanded() )
-                    getTreeState().expandNode(  f );
-                else
-                    getTreeState().collapseNode( f );
-            }
-
-            protected boolean wantOnSelectionChangedNotifications() {
-                return true;
-            }
-
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( FilterTree.this );
+                onCheckBoxUpdate( target, (Filter) item.getModelObject() );
             }
         };
         checkBox.setOutputMarkupId( true );
 
         item.add( checkBox );
+        Filter f = (Filter) item.getModelObject();
+        if ( f.isExpanded() )
+        getTreeState().expandNode( f );
     }
 
     protected MarkupContainer newNodeLink( MarkupContainer parent, String id, TreeNode node ) {
-        return new WebMarkupContainer( id );
+        final WebMarkupContainer markupContainer = new WebMarkupContainer( id );
+        markupContainer.setRenderBodyOnly( true );
+        return markupContainer;
     }
 
     protected void onJunctionLinkClicked( AjaxRequestTarget target, TreeNode node ) {

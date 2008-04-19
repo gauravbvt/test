@@ -35,6 +35,9 @@ public class UserScope implements Serializable, Container {
     public UserScope() {
     }
 
+    public String toString() {
+        return MessageFormat.format( "{0}''s scope", getUser() );
+    }
     //================================
     public synchronized List<Class<?>> getAllowedClasses() {
         if ( allowedClasses == null ) {

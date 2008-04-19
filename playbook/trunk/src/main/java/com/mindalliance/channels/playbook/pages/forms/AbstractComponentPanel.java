@@ -43,7 +43,8 @@ abstract public class AbstractComponentPanel extends Panel {
 
     public void onDetach() {
         Bean bean = (Bean) RefUtils.get(element, propName);
-        bean.detach();
+        if ( bean != null )
+            bean.detach();
         super.onDetach();
     }
 

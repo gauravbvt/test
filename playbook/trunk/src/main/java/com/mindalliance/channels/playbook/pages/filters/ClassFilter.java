@@ -1,5 +1,6 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
+import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
@@ -45,8 +46,8 @@ public class ClassFilter extends Filter {
         return filtersType;
     }
 
-    public boolean match( Object object ) {
-        return getObjectType().isAssignableFrom( object.getClass() );
+    public boolean match( Ref object ) {
+        return getObjectType().isAssignableFrom( object.deref().getClass() );
     }
 
     protected List<Filter> createChildren() {

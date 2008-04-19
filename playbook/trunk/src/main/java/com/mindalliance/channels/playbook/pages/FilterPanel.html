@@ -8,7 +8,10 @@
 <body>
 <wicket:panel>
     <h3>Filter</h3>
-    <span wicket:id="filter-tree"/>
+    <form wicket:id="filter-form">
+        <span wicket:id="filter-tree"/>
+        <input wicket:id="filter-apply" type="submit" name="Apply" value="apply"/>
+    </form>
 </wicket:panel>
 </body>
 </html>

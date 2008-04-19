@@ -177,7 +177,8 @@ public class ContentPanel extends Panel {
     }
 
     private Tab getContainer() {
-        return (Tab) ((Ref)getModelObject()).deref();
+        final Ref ref = (Ref) getModelObject();
+        return (Tab) ref.deref();
     }
 
 //    private void addMenu( String id, Component component, MenuItem... items ) {

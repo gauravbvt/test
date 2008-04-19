@@ -1,5 +1,6 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
+import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.Container;
 
 import javax.swing.tree.TreeNode;
@@ -19,6 +20,7 @@ abstract public class Filter implements TreeNode, Serializable {
 
     private boolean expanded;
     private boolean selected;
+    private boolean invalid;
     private Filter parent;
 
     private List<Filter> children;
@@ -38,6 +40,9 @@ abstract public class Filter implements TreeNode, Serializable {
         return container;
     }
 
+    public String toString() {
+        return getText();
+    }
     //-------------------------
     public String getCollapsedText() {
         return collapsedText;
@@ -79,6 +84,14 @@ abstract public class Filter implements TreeNode, Serializable {
 
         if ( !selected && parent != null )
             parent.childDeselected();
+    }
+
+    public boolean isInvalid() {
+        return invalid;
+    }
+
+    public void setInvalid( boolean invalid ) {
+        this.invalid = invalid;
     }
 
     /**
@@ -166,10 +179,10 @@ abstract public class Filter implements TreeNode, Serializable {
      * @return  true if the object should be removed from the results,
      * false if object does not apply
      */
-    public boolean filter( Object object ) {
+    public boolean filter( Ref object ) {
 
         if ( !isSelected() && ( !isExpanded() || getChildCount() == 0 ) )
-            return !match( object );
+            return match( object );
 
         else if ( !isSelected() )
             for ( Filter f : getChildren() )
@@ -187,7 +200,7 @@ abstract public class Filter implements TreeNode, Serializable {
      * @param object the object
      * @return true if the object satisfies this filter.
      */
-    abstract public boolean match( Object object );
+    abstract public boolean match( Ref object );
 
     /**
      * Create the children of this filter given a container.

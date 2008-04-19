@@ -7,7 +7,6 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.models.ColumnProvider
 import org.apache.wicket.model.IModel
-import com.mindalliance.channels.playbook.support.models.RefModel
 import com.mindalliance.channels.playbook.pages.filters.RootFilter
 import com.mindalliance.channels.playbook.support.models.FilteredContainer
 
@@ -47,7 +46,7 @@ class Tab extends IfmElement implements Container {
 
     public synchronized Container getBuffer() {
         if ( buffer == null )
-            buffer = new FilteredContainer( base, getFilter() ) 
+            buffer = new FilteredContainer( base, getFilter() )
 
         return buffer
     }
@@ -55,9 +54,9 @@ class Tab extends IfmElement implements Container {
     public synchronized void detach() {
         super.detach()
         if ( filter != null )
-            filter.resetChildren();
+            filter.setInvalid( true )
 
-        buffer.detach();
+        buffer.detach()
     }
 
     //---------------------------------
