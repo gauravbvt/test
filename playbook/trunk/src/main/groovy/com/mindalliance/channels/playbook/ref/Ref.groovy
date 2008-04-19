@@ -26,4 +26,6 @@ interface Ref extends Serializable {
     void remove(Referenceable referenceable, String type)  // use type parameter to compose add<Type>(referenceable)
     void remove(Ref ref, String type)  // ditto on ref.deref()
     List<Ref> executeQuery(String query, Map<String,Object> args)
+    boolean save() // commit self and all references (transitively) then export self and references to file named = id
+    List<Ref> references()
 }

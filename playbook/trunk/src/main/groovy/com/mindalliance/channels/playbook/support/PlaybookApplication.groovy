@@ -26,12 +26,12 @@ import com.mindalliance.channels.playbook.pages.PlaybookPage
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 21, 2008
-* Time: 11:01:36 AM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 21, 2008
+ * Time: 11:01:36 AM
+ */
 class PlaybookApplication extends AuthenticatedWebApplication implements Memorable, Serializable {
 
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
@@ -43,7 +43,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     PlaybookApplication() {
         super()
         appMemory = new ApplicationMemory(this)
-        appMemory.initialize()
     }
 
     ApplicationMemory getMemory() {
@@ -57,8 +56,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-      return PlaybookPage.class
-      // return FormTest.class
+        return PlaybookPage.class
+        // return FormTest.class
     }
 
     @Override
@@ -88,12 +87,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             // Model elements
             Model m = new Model()
 
-            Ref globe = store(new LocationType(name:'Globe'))
-            Ref continent = store(new LocationType(name:'Globe', parent: globe))
-            Ref country = store(new LocationType(name:'Country', parent: continent))
-            Ref state = store(new LocationType(name:'State', parent: country))
-            Ref county = store(new LocationType(name:'County', parent: state))
-            Ref city = store(new LocationType(name:'County', parent: county))
+            Ref globe = store(new LocationType(name: 'Globe'))
+            Ref continent = store(new LocationType(name: 'Globe', parent: globe))
+            Ref country = store(new LocationType(name: 'Country', parent: continent))
+            Ref state = store(new LocationType(name: 'State', parent: country))
+            Ref county = store(new LocationType(name: 'County', parent: state))
+            Ref city = store(new LocationType(name: 'County', parent: county))
             m.addElement(globe)
             m.addElement(continent)
             m.addElement(country)
@@ -113,12 +112,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             m.addElement(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: state)))
             m.addElement(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe)))
             m.addElement(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county)))
-            channels.addModel( store(m) );
-
+            channels.addModel(store(m));
 
             // A default project for everyone, for now...
             Project p = new Project(name: 'Generic')
-            p.addModel( m );
+            p.addModel(m);
             p.addPlaybook(store(new Playbook(name: "Playbook A", description: "This is Playbook A")))
             p.addPlaybook(store(new Playbook(name: "Playbook B", description: "This is Playbook B")))
             p.addPlaybook(store(new Playbook(name: "Playbook C", description: "This is Playbook C")))
@@ -149,13 +147,13 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
             p.addResource(store(new System()))
             p.addParticipation(
-                    store( new Participation(
-                            user    : admin.getReference(),
-                            project : p.getReference() ) ) )
+                    store(new Participation(
+                            user: admin.getReference(),
+                            project: p.getReference())))
             p.addParticipation(
-                    store( new Participation(
-                            user    : user.getReference(),
-                            project : p.getReference() ) ) )
+                    store(new Participation(
+                            user: user.getReference(),
+                            project: p.getReference())))
 
             channels.addProject(store(p))
 
@@ -166,8 +164,20 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
     // ----------------------- Data access
 
-    Ref getChannels() {
-        return getRoot()
+    Ref getChannels() {  // Load memory from file if needed
+        Ref channels = getRoot()
+        if (channels.deref() == null) {
+            if (!load(channels)) {  // if no export file, bootstrap memory and export
+                initializeContents()
+                channels.save()
+            }
+        }
+        return channels
+    }
+
+    boolean load(Ref ref) {
+        int count = memory.importRef(ref.toString())
+        return count > 0
     }
 
     Ref findUser(String id) {
@@ -182,7 +192,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         return project.findParticipation(user)
     }
 
-    // ----------------------- Memorable
+// ----------------------- Memorable
     void storeAll(Collection<Referenceable> referenceables) {
         appMemory.storeAll(referenceable)
     }
@@ -207,7 +217,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         appMemory.getRoot()
     }
 
-    // Util
+// Util
     static Store locateStore() {
         PlaybookSession session = (PlaybookSession) Session.get()
         return session.memory

@@ -36,6 +36,7 @@ public class TestPlaybook extends TestCase {
         app.clearAll()
         session = (PlaybookSession) Session.get()
         sessionMem = session.memory
+        sessionMem.reset()
         session.application = app
     }
 
@@ -132,19 +133,23 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
     }
 
+
     void testExportImport() {
-       int exportCount = app.memory.exportRef(app.getChannels(), 'channels')
+       Ref channels = app.getChannels()
+       int exportCount = app.memory.exportRef(channels, 'channels')
        assert exportCount > 0
        int importCount = app.memory.importRef('channels')
        assert importCount == exportCount
+       app.getChannels().save()
     }
+
 
     void testAreas() {
         GeoLocation portland = new GeoLocation(country: 'United States', state: 'Maine', city: 'Portland')
         Area area = portland.getArea()
         assert area.isCityLike()
-        List<Area> hierarchy = area.findHierarchy()
-        Area containing = area.findContainingArea()
+        // List<Area> hierarchy = area.findHierarchy()
+        // Area containing = area.findContainingArea()
         // List<Area> nearby = area.findNearbyAreas()
         GeoLocation maine = new GeoLocation(country: 'United States', state: 'Maine')
         assert area.isWithinLocation(maine)

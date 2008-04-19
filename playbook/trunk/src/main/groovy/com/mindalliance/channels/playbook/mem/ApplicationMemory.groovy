@@ -13,6 +13,8 @@ import org.apache.log4j.Logger
 import org.ho.yaml.YamlEncoder
 import org.ho.yaml.YamlDecoder
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+import java.text.SimpleDateFormat
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,12 +30,13 @@ class ApplicationMemory implements Serializable {
     static final Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
     static final String EXPORT_DIRECTORY = 'data/yaml'
+    static final String BACKUP_DIRECTORY = 'data/yaml/backup'
 
     static DEBUG = false
     static Cache cache
-    private Application application
+    private PlaybookApplication application
 
-    ApplicationMemory(Application app) {
+    ApplicationMemory(PlaybookApplication app) {
         application = app
         if (!cache) ApplicationMemory.initializeCache()
     }
@@ -97,7 +100,6 @@ class ApplicationMemory implements Serializable {
 
     void clearAll() {
         cache.clear()
-        initializeContents()
     }
 
     Ref getRoot() {
@@ -106,12 +108,14 @@ class ApplicationMemory implements Serializable {
 
     // Creates a single YAML file named "<name>.yml" with ref and all that it references transitively
     int exportRef(Ref ref, String name) {
+        String fileName = "${name}.yml"
         int count = 0
-        File file = new File(EXPORT_DIRECTORY, "${name}.yml")
+        File file = new File(EXPORT_DIRECTORY, fileName)
         if (file.exists()) { // make a backup
-            backupFile(file)
+            backupFile(fileName, file)
         }
-        FileOutputStream out = new FileOutputStream(file)
+        File tempFile = new File(EXPORT_DIRECTORY, "_$fileName")
+        FileOutputStream out = new FileOutputStream(tempFile)
         YamlEncoder enc = new YamlEncoder(out)
         List<Ref> queue = [ref]
         Set<Ref> exported = new HashSet<Ref>()
@@ -129,10 +133,13 @@ class ApplicationMemory implements Serializable {
                 count++
             }
             enc.flush()
-            Logger.getLogger(this.class.name).info("Finished exporting ${ref.deref()} to $name ($count elements)")
+            tempFile.renameTo(file)
+            Logger.getLogger(this.class.name).info("Finished exporting $ref to $fileName ($count elements)")
         }
         catch (Exception e) {
-            Logger.getLogger(this.class.name).error("Failed while exporting $name", e)
+            count == 0
+            try {tempFile.delete()} catch (Exception exc) {}
+            Logger.getLogger(this.class.name).error("Failed while exporting $ref", e)
         }
         finally {
             enc.close()
@@ -140,17 +147,20 @@ class ApplicationMemory implements Serializable {
         return count
     }
 
-    private void backupFile(File file) {
+    private void backupFile(String name, File file) {
         Date now = new Date()
-        String bkName = "${file.getAbsolutePath()}_${now}_.bak"
-        FileWriter copy = new FileWriter(bkName)
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss_z", Locale.getDefault());
+        String timestamp = formatter.format(now);
+        String bkName = "${name}_${timestamp}.bak"
+        File copy = new File(BACKUP_DIRECTORY, bkName)
+        FileWriter out = new FileWriter(copy)
         try {
             file.eachLine {line ->
-                copy.write(line)
+                out.write(line)
             }
         }
         finally {
-            copy.close()
+            out.close()
         }
     }
 
@@ -159,36 +169,27 @@ class ApplicationMemory implements Serializable {
         int count = 0
         File file = new File(EXPORT_DIRECTORY, "${name}.yml")
         if (!file.exists()) {
-            throw new IllegalArgumentException("Import failed: unknown file $name")
+            Logger.getLogger(this.class.name).info("Import failed: unknown file $name")
         }
-        FileInputStream input = new FileInputStream(file)
-        YamlDecoder dec = new YamlDecoder(input)
-        try {
-            while (true) {
-                Referenceable referenceable = (Referenceable)BeanImpl.fromMap((Map) dec.readObject())
-                store(referenceable)
-                count++
+        else {
+            FileInputStream input = new FileInputStream(file)
+            YamlDecoder dec = new YamlDecoder(input)
+            try {
+                while (true) {
+                    Map map = (Map) dec.readObject()
+                    Referenceable referenceable = (Referenceable) BeanImpl.fromMap(map)
+                    store(referenceable)
+                    count++
+                }
+            }
+            catch (EOFException e) {
+                Logger.getLogger(this.class.name).info("Finished importing $name ($count elements)")
+            }
+            finally {
+                dec.close()
             }
         }
-        catch (EOFException e) {
-            Logger.getLogger(this.class.name).info("Finished importing $name ($count elements)")
-        }
-        finally {
-            dec.close()
-        }
         return count
-    }
-
-    private void initialize() {
-        if (isEmpty()) {
-            initializeContents()
-        }
-    }
-
-    // Should get initialize contents from file?
-    // MUST store a Referenceable with id = ROOT_ID and db = ROOT_DB
-    private void initializeContents() {
-        application.initializeContents()
     }
 
     private boolean isEmpty() {

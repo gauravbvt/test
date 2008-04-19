@@ -19,4 +19,5 @@ interface Referenceable extends Bean {
     Class formClass() // the class of the form to edit this
     Ref find(String listPropName, Map<String, Object>args) // find the first element in named Ref list property that has all valued properties in args
     List<Ref> references() // find all references in this
+    boolean save() // commit self and all references(tranisitively) then export self and references to file
 }

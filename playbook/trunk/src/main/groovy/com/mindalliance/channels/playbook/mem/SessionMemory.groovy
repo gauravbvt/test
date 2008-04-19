@@ -10,23 +10,21 @@ import org.apache.log4j.Logger
 
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 19, 2008
-* Time: 10:06:30 AM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 19, 2008
+ * Time: 10:06:30 AM
+ */
 class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     Map<Ref, Referenceable> changes = new HashMap<Ref, Referenceable>()
     Set<Ref> deletes = new HashSet<Ref>()
 
     Referenceable retrieve(Ref reference) {
-        if (deletes.contains(reference)) {  // deleted in session
-            return null
-        }
-        else {
-            Referenceable referenceable = changes.get(reference)
+        Referenceable referenceable = null
+        if (!deletes.contains(reference)) {  // deleted in session
+            referenceable = changes.get(reference)
             if (!referenceable) {
                 Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
                 if (appLevelReferenceable) {
@@ -35,16 +33,16 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 }
             }
             else {
-                if (ApplicationMemory.DEBUG)  Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
+                if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
             }
-            return referenceable
         }
+        return referenceable
     }
 
     Ref persist(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
         changes.put(reference, (Referenceable) referenceable)
-        if (ApplicationMemory.DEBUG)  Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
+        if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
         return reference
     }
 
@@ -70,15 +68,15 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     public void commit(Ref ref) {
-       if (changes.containsKey(ref)) {
-           Referenceable referenceable = changes.get(ref)
-           changes.remove(ref)
-           getApplicationMemory().store(referenceable)
-       }
-       else if (deletes.contains(ref)) {
-           deletes.remove(ref)
-           getApplicationMemory().delete(ref)
-       }
+        if (changes.containsKey(ref)) {
+            Referenceable referenceable = changes.get(ref)
+            changes.remove(ref)
+            getApplicationMemory().store(referenceable)
+        }
+        else if (deletes.contains(ref)) {
+            deletes.remove(ref)
+            getApplicationMemory().delete(ref)
+        }
     }
 
     public void reset(Ref ref) {
@@ -122,4 +120,10 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return deletes.size()
     }
 
+    public boolean save(Ref ref) {
+        ref.references().each {it.commit()}
+        this.commit()
+        int count = getApplicationMemory().exportRef(ref, ref.toString())
+        return count > 0
+    }
 }

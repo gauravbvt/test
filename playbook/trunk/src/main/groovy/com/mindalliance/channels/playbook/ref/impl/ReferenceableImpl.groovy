@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
+import org.apache.wicket.Application
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -217,4 +218,19 @@ import org.apache.log4j.Logger
         return ref
     }
 
+    Map toMap() {
+        Map map = super.toMap()
+        map = map + [id:id, db:db]
+        return map
+    }
+
+    void initFromMap(Map map) {
+        super.initFromMap(map)
+        id = map['id']
+        db = map['db']
+    }
+
+    public boolean save() {
+        this.reference.save()
+    }
 }

@@ -232,5 +232,14 @@ class RefImpl implements Ref, GroovyInterceptable {
         return PlaybookApplication.getQueryHandler().executeQuery(this, query, args)
     }
 
+    List<Ref> references() {
+        return this.deref().references()
+    }
+
+    boolean save() {
+        Store store = PlaybookApplication.locateStore()
+        return store.save(this)
+    }
+
 
 }
