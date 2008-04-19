@@ -223,4 +223,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         return session.memory
     }
 
+    void save() {
+        this.channels.save()
+    }
+
 }
