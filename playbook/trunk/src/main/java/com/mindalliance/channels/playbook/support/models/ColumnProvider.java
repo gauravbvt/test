@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.support.models;
 
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,15 +28,21 @@ import java.util.Set;
 /**
  * ...
  */
-public class ColumnProvider implements IDataProvider {
+public class ColumnProvider extends BeanImpl implements IDataProvider {
 
     private Container data;
-    private Set<Class<?>> classes ;
-    private Map<String,RefMetaProperty> index ;
-    private List<RefMetaProperty> columns ;
+    private transient Set<Class<?>> classes ;
+    private transient Map<String,RefMetaProperty> index ;
+    private transient List<RefMetaProperty> columns ;
 
     public ColumnProvider( Container data ) {
         this.data = data;
+    }
+
+    public List transientProperties() {
+        final List list = super.transientProperties();
+        list.addAll( Arrays.asList( "classes", "index", "columns" ) );
+        return list;
     }
 
     private synchronized List<RefMetaProperty> getColumns() {

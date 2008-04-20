@@ -93,12 +93,12 @@ public class PlaybookPage extends WebPage {
                 part.addTab( tabRef );
                 PlaybookSession ps = (PlaybookSession) getSession();
 
-                // TODO the following produces errors not work...
-                //      ps.getMemory().commit();
+                // TODO the following produces errors...
+                ps.getMemory().commit();
                 // neither does:
                 //      p.commit(); tabRef.commit();
                 // or:
-                tabRef.commit(); p.commit();
+                //      tabRef.commit(); p.commit();
 
                 result.add( createTab( tabRef ) );
             }

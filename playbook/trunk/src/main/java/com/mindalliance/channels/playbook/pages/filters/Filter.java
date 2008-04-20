@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.models.Container;
 
 import javax.swing.tree.TreeNode;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * A node in the filter tree.
  */
-abstract public class Filter implements TreeNode, Serializable {
+abstract public class Filter extends BeanImpl implements TreeNode, Serializable {
 
     private String collapsedText;
     private String expandedText;
@@ -40,9 +41,22 @@ abstract public class Filter implements TreeNode, Serializable {
         return container;
     }
 
+    public final void getContainer( Container container ) {
+        this.container = container;
+    }
+
     public String toString() {
         return getText();
     }
+
+    public List transientProperties() {
+        List result = super.transientProperties();
+        if ( !isExpanded() && isSelected() )
+            result.add( "children" );
+
+        return result;
+    }
+
     //-------------------------
     public String getCollapsedText() {
         return collapsedText;

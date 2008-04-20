@@ -19,7 +19,7 @@ class Tab extends IfmElement implements Container {
     Filter filter
     String name = 'Everything'
     Container base
-    ColumnProvider columnProvider = new ColumnProvider( this )
+    ColumnProvider columnProvider
     Container buffer
 
     //---------------------------------
@@ -36,7 +36,18 @@ class Tab extends IfmElement implements Container {
         name
     }
 
+    List transientProperties() {
+        super.transientProperties() + [ "columnProvider", "buffer" ]
+    }
+
     //---------------------------------
+    public synchronized ColumnProvider getColumnProvider() {
+        if ( columnProvider == null )
+            columnProvider = new ColumnProvider( this );
+
+        return columnProvider
+    }
+
     public synchronized Filter getFilter() {
         if ( filter == null )
             filter = new RootFilter( base );

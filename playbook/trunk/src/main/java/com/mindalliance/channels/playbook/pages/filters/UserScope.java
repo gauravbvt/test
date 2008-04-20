@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ifm.model.Model;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.ColumnProvider;
@@ -15,21 +16,21 @@ import com.mindalliance.channels.playbook.support.models.RefModel;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
 
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * Wrapper for all contents accessible by the current user (the object
  * of this model).
  */
-public class UserScope implements Serializable, Container {
+public class UserScope extends BeanImpl implements Container {
 
     private transient User user;
     private transient List<Ref> contents;
-    private ColumnProvider columnProvider = new ColumnProvider( this );
+    private transient ColumnProvider columnProvider;
     private transient List<Class<?>> allowedClasses;
 
     public UserScope() {
@@ -38,6 +39,13 @@ public class UserScope implements Serializable, Container {
     public String toString() {
         return MessageFormat.format( "{0}''s scope", getUser() );
     }
+
+    public List transientProperties() {
+        final List result = super.transientProperties();
+        result.addAll( Arrays.asList( "user", "contents", "allowedClasses" ) );
+        return result;
+    }
+
     //================================
     public synchronized List<Class<?>> getAllowedClasses() {
         if ( allowedClasses == null ) {
@@ -176,10 +184,6 @@ public class UserScope implements Serializable, Container {
         remove( ref.deref() );
     }
 
-    public ColumnProvider getColumnProvider() {
-        return columnProvider;
-    }
-
     public IModel model( Object object ) {
         return new RefModel( object );
     }
@@ -188,7 +192,15 @@ public class UserScope implements Serializable, Container {
         user = null;
         contents = null;
         allowedClasses = null;
-        columnProvider.detach();
+        if ( columnProvider != null )
+            columnProvider.detach();
+    }
+
+    public synchronized ColumnProvider getColumnProvider() {
+        if ( columnProvider == null )
+            columnProvider = new ColumnProvider( this );
+
+        return columnProvider;
     }
 
     //================================
