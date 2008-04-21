@@ -24,6 +24,7 @@ import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ifm.model.LocationType
 import com.mindalliance.channels.playbook.pages.PlaybookPage
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -217,7 +218,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         appMemory.getRoot()
     }
 
-// Util
     static Store locateStore() {
         PlaybookSession session = (PlaybookSession) Session.get()
         return session.memory
@@ -227,4 +227,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         this.channels.save()
     }
 
+    // Util
+
+    Ref createNewElement(String type) {
+        Class clazz = (Class)Eval.me("${type}.class")
+        return clazz.newInstance()
+    }
 }

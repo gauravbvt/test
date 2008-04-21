@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ...
@@ -121,4 +122,18 @@ public class FilteredContainer implements Container {
         getData().add( ref );
         detach();
     }
+
+    // Mappable
+
+    // Converts self to a map with key = property name and value = a JavaBean or simple data type
+    public Map toMap() {
+        return null;  // TODO
+    }// Initializes self from a map
+
+    public void initFromMap(Map map) {
+        // TODO
+    }
+
+    // end Mappable
+    
 }

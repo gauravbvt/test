@@ -15,6 +15,7 @@ import org.ho.yaml.YamlDecoder
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import java.text.SimpleDateFormat
 import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.support.Mapper
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -177,7 +178,7 @@ class ApplicationMemory implements Serializable {
             try {
                 while (true) {
                     Map map = (Map) dec.readObject()
-                    Referenceable referenceable = (Referenceable) BeanImpl.fromMap(map)
+                    Referenceable referenceable = (Referenceable) Mapper.fromMap(map)
                     store(referenceable)
                     count++
                 }

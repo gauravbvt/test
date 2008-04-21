@@ -10,12 +10,14 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 9:50:16 AM
 */
-class Location extends BeanImpl {
+abstract class Location extends BeanImpl {
 
     Ref locationType
 
     boolean isGeoLocation() {
         return false
     }
+
+    abstract GeoLocation findGeoLocation()
 
 }

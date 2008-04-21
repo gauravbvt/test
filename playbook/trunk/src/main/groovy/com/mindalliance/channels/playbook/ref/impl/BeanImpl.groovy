@@ -5,6 +5,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.persistence.PersistentRef
 import com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.support.persistence.Mappable
+import com.mindalliance.channels.playbook.support.Mapper
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -67,49 +69,15 @@ class BeanImpl implements Bean {
 
     // ****** Persistence support for YAML
 
-    static Bean fromMap(Map map) {
-        String className = (String) map.get(CacheEntryBean.CLASS_NAME_KEY)
-        Class aClass = Class.forName(className)
-        Bean bean = (Bean) aClass.newInstance()
-        bean.initFromMap(map)
-        return bean
-    }
-
     void initFromMap(Map map) {
         // TODO -- manage versioning here
         Set propNames = beanProperties().keySet();
         map.each {key, val ->
             if (propNames.contains(key)) {
-                def value = valueFromPersisted(val)
+                def value = Mapper.valueFromPersisted(val)
                 this."$key" = value
             }
         }
-    }
-
-    static def valueFromPersisted(def val) {
-        def value
-        switch (val) {
-            case PersistentRef:
-                value = val.toRef()
-                break
-            case Map:
-                if (val.containsKey(CacheEntryBean.CLASS_NAME_KEY)) {
-                    value = fromMap(val)
-                }
-                else {
-                    value = val
-                }
-                break
-            case List:
-                value = []
-                val.each {item ->
-                    value.add(valueFromPersisted(item))
-                }
-                break
-            default:
-                value = val
-        }
-        return value
     }
 
     List<Ref> references() {
@@ -137,33 +105,11 @@ class BeanImpl implements Bean {
     Map toMap() {
         Map map = [:]
         beanProperties().each {key, val ->
-            def value = toPersistedValue(val)
+            def value = Mapper.toPersistedValue(val)
             map.put(key, value)
         }
-        map.put(CacheEntryBean.CLASS_NAME_KEY, this.class.name)
+        map.put(Mappable.CLASS_NAME_KEY, this.class.name)
         return map
-    }
-
-    static def toPersistedValue(def val) {
-        def value
-        switch (val) {
-            case Ref:
-                value = PersistentRef.fromRef((Ref) val)
-                break
-            case List:
-                List pList = []
-                val.each {item ->
-                    pList.add(toPersistedValue(item))
-                }
-                value = pList
-                break
-            case Bean:
-                value = val.toMap()
-                break
-            default:
-                value = val
-        }
-        return value
     }
 
 }

@@ -131,4 +131,7 @@ class GeoLocation extends Location implements Comparable {
        oos.defaultWriteObject()
     }
 
+    public GeoLocation findGeoLocation() {
+        return this
+    }
 }

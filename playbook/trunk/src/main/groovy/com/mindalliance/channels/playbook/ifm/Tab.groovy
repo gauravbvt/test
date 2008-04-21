@@ -36,8 +36,13 @@ class Tab extends IfmElement implements Container {
         name
     }
 
+    Map toMap() {
+        Map map = super.toMap()
+        return map
+    }
+
     List transientProperties() {
-        super.transientProperties() + [ "columnProvider", "buffer" ]
+        super.transientProperties() + [ "columnProvider", "buffer", "allowedClasses", "object" ]
     }
 
     //---------------------------------

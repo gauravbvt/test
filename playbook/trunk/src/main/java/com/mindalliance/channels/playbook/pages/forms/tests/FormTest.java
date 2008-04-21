@@ -140,7 +140,7 @@ public class FormTest extends WebPage {
         if (results != null && results.size() > 0) {
             return results.get(0);
         } else {
-            throw new Exception("Failed to get element");
+            return app.createNewElement(type);
         }
     }
 

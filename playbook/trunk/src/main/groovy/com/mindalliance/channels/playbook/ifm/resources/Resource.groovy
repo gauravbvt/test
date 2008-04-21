@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.resources.System
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,7 +13,7 @@ import com.mindalliance.channels.playbook.ifm.resources.System
 * Date: Apr 17, 2008
 * Time: 11:16:29 AM
 */
-class Resource extends IfmElement {
+class Resource extends IfmElement implements Locatable {
 
     String name = 'No name'
     String description = ''
@@ -39,4 +40,7 @@ class Resource extends IfmElement {
         if (location) location.detach()
     }
 
+    public GeoLocation findGeoLocation() {
+        return location.findGeoLocation()
+    }
 }

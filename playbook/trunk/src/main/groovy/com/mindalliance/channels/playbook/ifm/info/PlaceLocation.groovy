@@ -1,7 +1,8 @@
 package com.mindalliance.channels.playbook.ifm.info
 
-import com.mindalliance.channels.playbook.places.Place
+import com.mindalliance.channels.playbook.ifm.environment.Place
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.project.Project
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,7 +19,7 @@ class PlaceLocation extends Location {   // any kind of real or abstract locatio
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['place', 'name']
+        return super.transientProperties() + ['place', 'name', 'geoLocation']
     }
 
     String getName() {
@@ -30,7 +31,7 @@ class PlaceLocation extends Location {   // any kind of real or abstract locatio
     }
 
     Ref getPlace() {
-        // TODO -- find place if null from directions 
+        place = Project.currentProject().findPlace(directions)
     }
 
     @Override
@@ -38,4 +39,7 @@ class PlaceLocation extends Location {   // any kind of real or abstract locatio
         place = null
     }
 
+    public GeoLocation findGeoLocation() {
+        return this.place?.geoLocation
+    }
 }

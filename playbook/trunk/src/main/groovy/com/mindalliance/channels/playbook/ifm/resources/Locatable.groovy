@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.resources
 
-import com.mindalliance.channels.playbook.ifm.info.Location
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 */
 interface Locatable {
 
-    Location getLocation()
+    GeoLocation findGeoLocation()
 
 }

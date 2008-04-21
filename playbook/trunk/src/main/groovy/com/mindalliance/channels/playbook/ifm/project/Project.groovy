@@ -21,7 +21,7 @@ class Project extends IfmElement {
     List<Ref> resources = []
     List<Ref> playbooks = []
     List<Ref> models = []
-    List<Ref> policies = []
+    List<Ref> environments = []
     List<Ref> analysisElements = []
 
     static Ref currentProject() {
@@ -59,6 +59,15 @@ class Project extends IfmElement {
     Ref findParticipation( Ref user ) {
         Ref p = (Ref) participations.find {p -> p.user == user }
         return p
+    }
+
+    Ref findPlace(List<String> directions) {
+        Ref place
+        environments.each {env ->
+            place = env.findPlace(directions)
+            if (place) return place
+        }
+        return null
     }
 
     Boolean isParticipant( Ref user ) {

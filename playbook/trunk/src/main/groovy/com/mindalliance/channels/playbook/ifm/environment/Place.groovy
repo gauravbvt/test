@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.places
+package com.mindalliance.channels.playbook.ifm.environment
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
@@ -18,5 +18,17 @@ class Place extends IfmElement {
     Ref locationType
     Ref outerPlace
     GeoLocation geoLocation // where the place is located, if applicable
+
+    GeoLocation findGeoLocation() {
+        if (geoLocation){
+            return geoLocation
+        }
+        else if (outerPlace) {
+            return outerPlace.findGeoLocation()
+        }
+        else {
+            return null
+        }
+    }
 
 }

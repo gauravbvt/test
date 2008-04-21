@@ -4,10 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import org.apache.wicket.model.IModel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * ...
@@ -94,4 +91,17 @@ public class ContainerModel extends RefPropertyModel implements Container {
     public IModel model( Object object ) {
         return new RefModel( object );
     }
+
+    // Mappable
+
+    // Converts self to a map with key = property name and value = a JavaBean or simple data type
+    public Map toMap() {
+        return null;  // TODO
+    }// Initializes self from a map
+
+    public void initFromMap(Map map) {
+        // TODO
+    }
+
+    // end Mappable
 }

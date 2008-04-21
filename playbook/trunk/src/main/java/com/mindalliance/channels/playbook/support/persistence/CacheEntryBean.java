@@ -13,8 +13,6 @@ import java.util.Set;
  */
 public class CacheEntryBean {
 
-    public static final String CLASS_NAME_KEY = "_bean_class_";
-
     private static final byte NOT_YET = -1;
     private Object content = null;
     private Set groups = null;

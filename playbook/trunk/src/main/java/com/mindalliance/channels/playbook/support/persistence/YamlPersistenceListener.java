@@ -8,6 +8,7 @@ import com.opensymphony.oscache.web.ServletCacheAdministrator;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.mem.ApplicationMemory;
+import com.mindalliance.channels.playbook.support.Mapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -358,9 +359,9 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
                 CacheEntry ce = (CacheEntry) object;
                 object = new CacheEntryBean(ce);
                 Object content = ce.getContent();
-                if (content instanceof Bean) {
-                    Bean bean = (Bean) content;
-                    Map propMap = bean.toMap();
+                if (content instanceof Mappable) {
+                    Mappable mappable = (Mappable) content;
+                    Map propMap = mappable.toMap();
                     ((CacheEntryBean) object).setContent(propMap); // Includes key _bean_class_ with value the name of class implementing Bean
                 }
             }
@@ -521,9 +522,9 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
                     Object content = ((CacheEntry) readContent).getContent();
                     if (content instanceof Map) {
                         Map mapContent = (Map) content;
-                        if (mapContent.containsKey(CacheEntryBean.CLASS_NAME_KEY)) {
-                            Bean bean = BeanImpl.fromMap(mapContent);
-                            ((CacheEntry) readContent).setContent(bean);
+                        if (mapContent.containsKey(Mappable.CLASS_NAME_KEY)) {
+                            Mappable mappable = Mapper.fromMap(mapContent);
+                            ((CacheEntry) readContent).setContent(mappable);
                         }
                     }
                 }

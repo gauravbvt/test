@@ -1,4 +1,7 @@
 package com.mindalliance.channels.playbook.ref
+
+import com.mindalliance.channels.playbook.support.persistence.Mappable
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -6,12 +9,10 @@ package com.mindalliance.channels.playbook.ref
  * Date: Mar 26, 2008
  * Time: 6:55:19 AM
  */
-interface Bean extends Serializable {
+interface Bean extends Serializable, Mappable {
 
    Bean copy()
    void detach()  // detach any field value that should or can not be serialized
    void setFrom(Bean bean)
    Map beanProperties()
-   void initFromMap(Map map)
-   Map toMap()
 }

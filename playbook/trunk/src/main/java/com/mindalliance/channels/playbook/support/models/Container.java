@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.support.models;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
+import com.mindalliance.channels.playbook.support.persistence.Mappable;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * ...
  */
-public interface Container extends IDataProvider, IModel {
+public interface Container extends IDataProvider, IModel, Mappable {
 
     Ref get( int index );
 

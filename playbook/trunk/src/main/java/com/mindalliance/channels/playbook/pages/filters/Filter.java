@@ -3,17 +3,17 @@ package com.mindalliance.channels.playbook.pages.filters;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.models.Container;
+import com.mindalliance.channels.playbook.support.persistence.Mappable;
+import com.mindalliance.channels.playbook.support.Mapper;
 
 import javax.swing.tree.TreeNode;
 import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A node in the filter tree.
  */
-abstract public class Filter extends BeanImpl implements TreeNode, Serializable {
+abstract public class Filter extends BeanImpl implements TreeNode, Serializable, Mappable {
 
     private String collapsedText;
     private String expandedText;
@@ -27,6 +27,8 @@ abstract public class Filter extends BeanImpl implements TreeNode, Serializable 
     private List<Filter> children;
 
     //-------------------------
+    public Filter() {}
+
     protected Filter( String collapsedText, String expandedText, Container container ) {
         this.collapsedText = collapsedText;
         this.expandedText = expandedText;
@@ -36,6 +38,36 @@ abstract public class Filter extends BeanImpl implements TreeNode, Serializable 
     public Filter( String text, Container container ) {
         this( text, text, container );
     }
+
+    // Mappable
+
+    public Map toMap() {
+        Map map = new HashMap();
+        map.put("collapsedText", collapsedText);
+        map.put("expandedText", expandedText);
+        map.put("expanded", expanded);
+        map.put("selected", selected);
+        map.put("invalid", invalid);
+        if (container != null) map.put("container", container.toMap());
+        if (parent != null) map.put("parent", parent.toMap());
+        return map;
+    }
+
+    public void initFromMap(Map map) {
+        collapsedText = (String)map.get("collapsedText");
+        expandedText = (String)map.get("expandedText");
+        expanded = (Boolean)map.get("expanded");
+        selected = (Boolean)map.get("selected");
+        invalid = (Boolean)map.get("invalid");
+        if (map.containsKey("container")) {
+            container = (Container)Mapper.fromMap((Map)map.get("container"));
+        }
+        if (map.containsKey("parent")) {
+            parent = (Filter)Mapper.fromMap((Map)map.get("parent"));
+        }
+    }
+
+    // end Mappable
 
     public final Container getContainer() {
         return container;

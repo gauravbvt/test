@@ -17,10 +17,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Wrapper for all contents accessible by the current user (the object
@@ -36,15 +33,22 @@ public class UserScope extends BeanImpl implements Container {
     public UserScope() {
     }
 
+    @Override
+    public Map beanProperties() {  // all bean properties are transient
+        return new HashMap();
+    }
+
     public String toString() {
         return MessageFormat.format( "{0}''s scope", getUser() );
     }
 
+/*
     public List transientProperties() {
         final List result = super.transientProperties();
         result.addAll( Arrays.asList( "user", "contents", "allowedClasses" ) );
         return result;
     }
+*/
 
     //================================
     public synchronized List<Class<?>> getAllowedClasses() {
