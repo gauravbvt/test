@@ -18,6 +18,6 @@ public abstract class AbstractFilters {
      * Get a list of filters applicable to the given object.
      * @param container the objects
      */
-    abstract public List<Filter> getFilters( Container container );
+    abstract public List<AbstractFilter> getFilters( Container container );
 
 }

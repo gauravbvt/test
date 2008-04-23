@@ -17,23 +17,7 @@ class Participation extends IfmElement {
     boolean manager
     Ref person
 
-    // TODO
-    // make list computable from Todos as ParticipationElements
-    // Also change addTodo and removeTodo accordingly
-
-    List<Ref> todos = []
-
     List<Ref> tabs = []
-
-    void addTodo( Ref todo ) {
-        todos.add( todo )
-        changed( "todos" )
-    }
-
-    void removeTodo( Ref todo ) {
-        todos.remove( todo )
-        changed( "todos" )
-    }
 
     void addTab( Ref tab ) {
         tabs.add( tab );
@@ -46,7 +30,7 @@ class Participation extends IfmElement {
     }
 
     static List<Class<?>> contentClasses() {
-        [ Todo.class, Tab.class ]
+        [ Tab.class ]
     }
 
 }

@@ -52,6 +52,11 @@ div.p-cell, div.tab-row ul {
 div.content-filter {
     padding-bottom: 5px;
 }
+div.content-filter input[ type='submit' ] {
+    margin-top: 5px;
+    float: right;
+    
+}
 
 /* ----------------- Fonts */
 body, input {

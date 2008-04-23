@@ -18,13 +18,17 @@ import java.util.TreeSet;
 /**
  * Accept anything of the given objectType.
  */
-public class ClassFilter extends Filter {
+public class ClassFilter extends AbstractFilter {
 
     private Class<?> objectType;
     private Class<?> filtersType;
 
-    public ClassFilter( String collapsed, String expanded, Class<?> objectType, Container container ) {
-        super( collapsed, expanded, container );
+    public ClassFilter() {
+        super();
+    }
+
+    public ClassFilter( String collapsed, String expanded, Class<?> objectType ) {
+        super( collapsed, expanded );
         this.objectType = objectType;
 
         try {
@@ -34,12 +38,48 @@ public class ClassFilter extends Filter {
         }
     }
 
-    public ClassFilter( Class<?> objectType, Container container ) {
-        this( collapsedText( objectType ), expandedText( objectType ), objectType, container );
+    public ClassFilter( Class<?> objectType ) {
+        this( collapsedText( objectType ), expandedText( objectType ), objectType );
+    }
+
+    public Map toMap() {
+        Map map = super.toMap();
+        map.put( "objectType", getObjectType().getName() );
+        if ( getFiltersType() != null )
+            map.put( "filtersType", getFiltersType().getName() );
+
+        return map;
+    }
+
+    public void initFromMap( Map map ) {
+        super.initFromMap( map );
+        try {
+            objectType = Class.forName( (String) map.get( "objectType" ) );
+            if ( map.containsKey( "filtersType" ) )
+                filtersType = Class.forName( (String) map.get( "filtersType" ) );
+        } catch ( ClassNotFoundException e ) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map beanProperties() {
+        Map map = super.beanProperties();
+        map.put( "objectType", getObjectType() );
+        if ( filtersType != null )
+            map.put( "filtersType", filtersType );
+        return map;
     }
 
     public final Class<?> getObjectType() {
         return objectType;
+    }
+
+    public void setObjectType( Class<?> objectType ) {
+        this.objectType = objectType;
+    }
+
+    public void setFiltersType( Class<?> filtersType ) {
+        this.filtersType = filtersType;
     }
 
     public Class<?> getFiltersType() {
@@ -50,14 +90,17 @@ public class ClassFilter extends Filter {
         return getObjectType().isAssignableFrom( object.deref().getClass() );
     }
 
-    protected List<Filter> createChildren() {
-        List<Filter> result = new ArrayList<Filter>();
+    protected List<AbstractFilter> createChildren() {
+        List<AbstractFilter> result = new ArrayList<AbstractFilter>();
         Set<Class<?>> subclasses = getSubclasses( getObjectType() );
         Container filtered = new FilteredContainer( getContainer(), this, true );
 
         if ( subclasses.size() > 1 )
-            for ( Class<?> c : subclasses )
-                result.add( new ClassFilter( c, filtered ) );
+            for ( Class<?> c : subclasses ) {
+                ClassFilter cf = new ClassFilter( c );
+                cf.setContainer( filtered );
+                result.add( cf );
+            }
         else if ( getFiltersType() != null ) try {
             // Apply specialized filters
             AbstractFilters fs = (AbstractFilters) getFiltersType().newInstance();

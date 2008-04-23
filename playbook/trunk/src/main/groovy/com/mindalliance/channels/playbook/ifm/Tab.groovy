@@ -1,6 +1,5 @@
 package com.mindalliance.channels.playbook.ifm
 
-import com.mindalliance.channels.playbook.pages.filters.Filter
 import com.mindalliance.channels.playbook.support.models.Container
 import com.mindalliance.channels.playbook.pages.filters.UserScope
 import com.mindalliance.channels.playbook.ref.Referenceable
@@ -9,6 +8,7 @@ import com.mindalliance.channels.playbook.support.models.ColumnProvider
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.pages.filters.RootFilter
 import com.mindalliance.channels.playbook.support.models.FilteredContainer
+import com.mindalliance.channels.playbook.pages.filters.Filter
 
 /**
 * ...
@@ -41,6 +41,10 @@ class Tab extends IfmElement implements Container {
         return map
     }
 
+    public void initFromMap(Map map) {
+        super.initFromMap(map);
+    }
+
     List transientProperties() {
         super.transientProperties() + [ "columnProvider", "buffer", "allowedClasses", "object" ]
     }
@@ -69,10 +73,8 @@ class Tab extends IfmElement implements Container {
 
     public synchronized void detach() {
         super.detach()
-        if ( filter != null )
-            filter.setInvalid( true )
-
-        buffer.detach()
+        if ( buffer != null )
+            buffer.detach()
     }
 
     //---------------------------------

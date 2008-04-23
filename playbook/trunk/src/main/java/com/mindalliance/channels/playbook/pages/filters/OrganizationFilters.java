@@ -22,15 +22,15 @@ public class OrganizationFilters extends AbstractFilters {
         super();
     }
 
-    public List<Filter> getFilters( Container data ) {
-        List<Filter> result = new ArrayList<Filter>();
+    public List<AbstractFilter> getFilters( Container data ) {
+        List<AbstractFilter> result = new ArrayList<AbstractFilter>();
 
         addParentFilters( result, data );
 
         return result;
     }
 
-    private void addParentFilters( List<Filter> result, Container data ) {
+    private void addParentFilters( List<AbstractFilter> result, Container data ) {
         if ( data.getColumnProvider().includes( "parent" ) ) {
             // We have some parent orgs. Check if we can differentiate
 

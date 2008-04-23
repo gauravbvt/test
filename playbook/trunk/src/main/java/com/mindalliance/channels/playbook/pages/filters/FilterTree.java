@@ -7,6 +7,7 @@ import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.PropertyModel;
 
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
@@ -20,6 +21,7 @@ public abstract class FilterTree extends Tree {
     }
 
     public abstract void onCheckBoxUpdate( AjaxRequestTarget target, Filter filter );
+    public abstract void onExpandCollapse( AjaxRequestTarget target, Filter filter );
 
     @Override
     protected String renderNode( TreeNode node ) {
@@ -31,7 +33,7 @@ public abstract class FilterTree extends Tree {
     protected void populateTreeItem( final WebMarkupContainer item, int level ) {
         super.populateTreeItem( item, level );
         final AjaxCheckBox checkBox = new AjaxCheckBox( "filter-check",
-            new PropertyModel( item.getModelObject(), "selected" ) ){
+            new PropertyModel( item.getModelObject(), "forceSelected" ) ){
 
             protected void onUpdate( AjaxRequestTarget target ) {
                 onCheckBoxUpdate( target, (Filter) item.getModelObject() );
@@ -42,7 +44,7 @@ public abstract class FilterTree extends Tree {
         item.add( checkBox );
         Filter f = (Filter) item.getModelObject();
         if ( f.isExpanded() )
-        getTreeState().expandNode( f );
+            getTreeState().expandNode( f );
     }
 
     protected MarkupContainer newNodeLink( MarkupContainer parent, String id, TreeNode node ) {
@@ -55,5 +57,9 @@ public abstract class FilterTree extends Tree {
         super.onJunctionLinkClicked( target, node );
         Filter f = (Filter) node;
         f.setExpanded( getTreeState().isNodeExpanded( node ) );
+        DefaultTreeModel model = (DefaultTreeModel) getModelObject();
+        model.nodeStructureChanged( node );
+        updateTree( target );
+        onExpandCollapse( target, f );
     }
 }

@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.authentication.pages.SignOutPage;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -18,6 +19,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +70,7 @@ public class PlaybookPage extends WebPage {
                 setResponsePage( PlaybookPage.this );
             }
         });
-//        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
+        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         add( pageControls );
 
         // Todo Save/Restore from user prefs
@@ -91,14 +93,8 @@ public class PlaybookPage extends WebPage {
                 final Tab tab = new Tab();
                 final Ref tabRef = tab.persist();
                 part.addTab( tabRef );
-                PlaybookSession ps = (PlaybookSession) getSession();
 
-                // TODO the following produces errors...
-                ps.getMemory().commit();
-                // neither does:
-                //      p.commit(); tabRef.commit();
-                // or:
-                //      tabRef.commit(); p.commit();
+                tabRef.commit(); p.commit();
 
                 result.add( createTab( tabRef ) );
             }

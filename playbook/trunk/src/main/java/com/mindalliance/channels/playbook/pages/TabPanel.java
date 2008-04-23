@@ -20,6 +20,7 @@ public class TabPanel extends Panel {
         final WebMarkupContainer left = new WebMarkupContainer( "tab-left" );
         left.add( new FilterPanel( "filter", model ){
             public void onFilterApplied() {
+//                left.renderComponent();
 //                right.renderComponent();
             }
         } );

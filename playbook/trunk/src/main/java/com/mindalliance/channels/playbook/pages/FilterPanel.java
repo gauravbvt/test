@@ -18,8 +18,11 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class FilterPanel extends Panel {
 
+    private Filter filter;
+
     public FilterPanel( String id, IModel model ) {
         super( id, model );
+        setFilter( getTab().getFilter() );
 
         final Button applyButton = new Button( "filter-apply" );
 
@@ -29,24 +32,30 @@ public class FilterPanel extends Panel {
         // meanwhile...
         applyButton.setEnabled( false );
 
+        final FilterTree tree = new FilterTree( "filter-tree", new DefaultTreeModel( getFilter() )){
+            public void onCheckBoxUpdate( AjaxRequestTarget target, Filter filter ) {
+                applyButton.setEnabled( true );
+                target.addComponent( this );
+                target.addComponent( applyButton );
+            }
+
+            public void onExpandCollapse( AjaxRequestTarget target, Filter filter ) {
+            }
+        };
+        tree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
 
         final Form form = new Form( "filter-form" ){
             protected void onSubmit() {
                 super.onSubmit();
                 applyButton.setEnabled( false );
-                getTab().commit();
-                onFilterApplied();
+                Tab tab = getTab();
+                tab.persist();
+                tab.setFilter( getFilter() );
+                tab.commit();
+                onFilterApplied( getFilter() );
             }
         };
 
-        final FilterTree tree = new FilterTree( "filter-tree", new DefaultTreeModel( getTab().getFilter() ) ){
-            public void onCheckBoxUpdate( AjaxRequestTarget target, Filter filter ) {
-                applyButton.setEnabled( true );
-                target.addComponent( form );
-                target.addComponent( applyButton );
-            }
-        };
-        tree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
 
         form.add( tree );
         form.add( applyButton );
@@ -59,6 +68,15 @@ public class FilterPanel extends Panel {
 
     /**
      * Override this for specific page behaviors.
+     * @param filter the filter that was actually applied
      */
-    public void onFilterApplied(){}
+    public void onFilterApplied( Filter filter ){}
+
+    public final Filter getFilter() {
+        return filter;
+    }
+
+    public final void setFilter( Filter filter ) {
+        this.filter = filter;
+    }
 }

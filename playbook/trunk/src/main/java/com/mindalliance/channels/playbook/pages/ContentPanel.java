@@ -4,7 +4,6 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
-import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -43,17 +42,18 @@ public class ContentPanel extends Panel {
         final WebMarkupContainer table = new WebMarkupContainer( "content-table" );
         table.setOutputMarkupId( true );
 
-        if ( getContainer().size() > 0 ) {
+        final Tab tab = getTab();
+        if ( tab.size() > 0 ) {
             // We have at least a row to select. Select the first one.
             // Todo Get selection from user prefs somehow
-            setSelected( getContainer().get( 0 ) );
+            setSelected( tab.get( 0 ) );
         } else
             table.setVisible( false );
 
         final FormPanel formPanel = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
         add( formPanel );
 
-        final ColumnProvider cp = getContainer().getColumnProvider();
+        final IDataProvider cp = new DeferredProvider( true );
         table.add( new DataView( "content-col", cp ){
             protected void populateItem( Item item ) {
                 RefMetaProperty mp = (RefMetaProperty) item.getModelObject();
@@ -62,7 +62,7 @@ public class ContentPanel extends Panel {
         } );
 
 
-        final DataView rows = new DataView( "content-row", getContainer() ) {
+        final DataView rows = new DataView( "content-row", new DeferredProvider( false ) ) {
             protected void populateItem( final Item item ) {
                 final IDataProvider dp = new IDataProvider() {
                     public Iterator iterator( int first, int count ) {
@@ -81,6 +81,7 @@ public class ContentPanel extends Panel {
                     public void detach() {
                     }
                 };
+
 
                 item.add( new DataView( "content-cell", dp ) {
                     protected void populateItem( final Item cellItem ) {
@@ -125,7 +126,7 @@ public class ContentPanel extends Panel {
         add( table );
 
         final PagingNavigator nav = new PagingNavigator( "content-pager", rows );
-        nav.setVisible( getContainer().size() > ITEMS_PER_PAGE );
+        nav.setVisible( tab.size() > ITEMS_PER_PAGE );
         tableNav.add( nav );
 
         tableNav.add( new Link( "content-delete" ){
@@ -134,7 +135,7 @@ public class ContentPanel extends Panel {
             }
 
             public void onClick() {
-                getContainer().remove( getSelected() );
+                tab.remove( getSelected() );
             }
         } );
 
@@ -144,14 +145,14 @@ public class ContentPanel extends Panel {
 
         tableNav.add( new Label( "new-item", "Add a..." ) );
 
-        popup.add( new ListView( "new-items", getContainer().getAllowedClasses() ){
+        popup.add( new ListView( "new-items", tab.getAllowedClasses() ){
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final Link link = new Link( "new-item-link" ) {
                     public void onClick() {
                         try {
                             final Referenceable ref = (Referenceable) c.newInstance();
-                            getContainer().add( ref );
+                            tab.add( ref );
                             getPage().renderPage();
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
@@ -176,9 +177,44 @@ public class ContentPanel extends Panel {
         this.selected = selected;
     }
 
-    private Tab getContainer() {
+    private Tab getTab() {
         final Ref ref = (Ref) getModelObject();
         return (Tab) ref.deref();
+    }
+
+    //============================
+    public class DeferredProvider implements IDataProvider {
+        private transient IDataProvider actual;
+        private boolean column;
+
+        public DeferredProvider( boolean column ) {
+            this.column = column;
+        }
+
+        private synchronized IDataProvider getActual() {
+            if ( actual == null )
+                actual = column ? getTab().getColumnProvider()
+                                : getTab();
+            return actual;
+        }
+
+        public synchronized void detach() {
+            if ( actual != null )
+                getActual().detach();
+            actual = null;
+        }
+
+        public Iterator iterator( int first, int count ) {
+            return getActual().iterator( first, count );
+        }
+
+        public IModel model( Object object ) {
+            return getActual().model( object );
+        }
+
+        public int size() {
+            return getActual().size();
+        }
     }
 
 //    private void addMenu( String id, Component component, MenuItem... items ) {

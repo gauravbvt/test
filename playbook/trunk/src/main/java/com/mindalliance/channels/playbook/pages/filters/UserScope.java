@@ -42,14 +42,6 @@ public class UserScope extends BeanImpl implements Container {
         return MessageFormat.format( "{0}''s scope", getUser() );
     }
 
-/*
-    public List transientProperties() {
-        final List result = super.transientProperties();
-        result.addAll( Arrays.asList( "user", "contents", "allowedClasses" ) );
-        return result;
-    }
-*/
-
     //================================
     public synchronized List<Class<?>> getAllowedClasses() {
         if ( allowedClasses == null ) {
@@ -116,7 +108,6 @@ public class UserScope extends BeanImpl implements Container {
                 Ref partRef = project.findParticipation( uRef );
                 if ( partRef != null ) {
                     Participation part = (Participation) partRef.deref();
-                    result.addAll( part.getTodos() );
                     result.addAll( part.getTabs() );
                 }
             }

@@ -29,6 +29,7 @@ class BeanImpl implements Bean {
             try {
                 def value
                 switch (val) {
+                    case {it instanceof Class}: value = val; break
                     case Bean.class: value = val.copy(); break
                     case Cloneable.class: value = val.clone(); break
                     default: value = val
