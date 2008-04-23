@@ -1,6 +1,6 @@
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.java groovy-stubs/main/com/mindalliance/channels/playbook/ifm/Tab.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-18 17:30:29.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-23 15:08:52.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-23 15:08:52.000000000 -0400
 @@ -46,6 +46,7 @@
  	public IModel model(Object object){ throw new Error(); };
  
@@ -9,24 +9,12 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.jav
  
  	/**
  	 * Setter for 'Base' property.
-diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/info/PlaceLocation.java groovy-stubs/main/com/mindalliance/channels/playbook/ifm/info/PlaceLocation.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/info/PlaceLocation.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ifm/info/PlaceLocation.java	2008-04-18 17:30:29.000000000 -0400
-@@ -47,7 +47,7 @@
- 	/**
- 	 * Setter for 'Place' property.
- 	 */
--	public transient void setPlace(Place value){ throw new Error(); };
-+	public void setPlace(Place value){ throw new Error(); };
- 
- 	public List transientProperties(){ throw new Error(); };
- 
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/SessionMemory.java groovy-stubs/main/com/mindalliance/channels/playbook/mem/SessionMemory.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-18 17:30:29.000000000 -0400
-@@ -68,6 +68,8 @@
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-23 15:08:52.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-23 15:08:52.000000000 -0400
+@@ -90,6 +90,8 @@
  	 */
- 	public void setChanges(Map value){ throw new Error(); };
+ 	public void setChanges(Set value){ throw new Error(); };
  
 +	public void commit(){ throw new Error(); };
 +
@@ -34,22 +22,25 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/Session
  
  	public int getPendingDeletesCount(){ throw new Error(); };
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.java groovy-stubs/main/com/mindalliance/channels/playbook/ref/Ref.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-18 17:30:29.000000000 -0400
-@@ -17,8 +17,12 @@
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-23 15:08:52.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-23 15:08:52.000000000 -0400
+@@ -22,11 +22,15 @@
+  */
  public interface Ref extends Serializable {
  
- 	Object deref(String path);
 +	Referenceable deref();
+ 	Object deref(String path);
  
- 	void remove(Ref ref, String type);
+ 	boolean save();
+ 
 +	void remove(Ref ref);
-+	void remove(Referenceable ref, String type);
+ 	void remove(Ref ref, String type);
 +	void remove(Referenceable ref);
++	void remove(Referenceable ref, String type);
  
  	void become(Ref ref);
  
-@@ -27,6 +31,9 @@
+@@ -35,6 +39,9 @@
  	Referenceable getReferenced(Store store);
  
  	void add(Ref ref, String type);
@@ -60,30 +51,25 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.jav
  	void changed(String propName);
  
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-18 17:30:29.000000000 -0400
-@@ -26,15 +26,19 @@
-  *
-  * @source-type GROOVY
-  */
--public class RefImpl extends java.lang.Object implements Ref, GroovyInterceptable {
-+public class RefImpl extends java.lang.Object implements Ref {
- 
- 	public String id;
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-23 15:08:52.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-23 15:12:05.000000000 -0400
+@@ -32,11 +32,15 @@
  
  	public String db;
  
- 	public java.lang.Object deref(String path){ throw new Error(); };
 +	public Referenceable deref(){ throw new Error(); };
+ 	public java.lang.Object deref(String path){ throw new Error(); };
  
- 	public void remove(Referenceable referenceable, String type){ throw new Error(); };
+ 	public boolean save(){ throw new Error(); };
+ 
 +	public void remove(Referenceable referenceable){ throw new Error(); };
-+	public void remove(Ref referenceable, String type){ throw new Error(); };
-+	public void remove(Ref referenceable){ throw new Error(); };
+ 	public void remove(Referenceable referenceable, String type){ throw new Error(); };
++	public void remove(Ref reference){ throw new Error(); };
++	public void remove(Ref reference, String type){ throw new Error(); };
  
  	public void become(Ref ref){ throw new Error(); };
  
-@@ -45,6 +49,9 @@
+@@ -47,6 +51,9 @@
  	public Referenceable getReferenced(Store store){ throw new Error(); };
  
  	public void add(Referenceable referenceable, String type){ throw new Error(); };
@@ -94,27 +80,9 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/Re
  	public List drillDown(String listPropName, List drillDownPropNames, Map ddValues){ throw new Error(); };
  
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-18 17:31:32.000000000 -0400
-@@ -30,7 +30,7 @@
-  *
-  * @source-type GROOVY
-  */
--public class ReferenceableImpl extends BeanImpl implements Referenceable, GroovyInterceptable {
-+public class ReferenceableImpl extends BeanImpl implements Referenceable {
- 
- 	public String id;
- 
-@@ -43,7 +43,7 @@
- 	/**
- 	 * Setter for 'Pcs' property.
- 	 */
--	public transient void setPcs(PropertyChangeSupport value){ throw new Error(); };
-+	public void setPcs(PropertyChangeSupport value){ throw new Error(); };
- 
- 	public Ref persist(){ throw new Error(); };
- 
-@@ -51,6 +51,8 @@
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-23 15:08:52.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-23 15:08:52.000000000 -0400
+@@ -53,6 +53,8 @@
  
  	public void changed(){ throw new Error(); };
  
@@ -124,8 +92,8 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/Re
  
  	public void commit(){ throw new Error(); };
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/support/PlaybookSession.java groovy-stubs/main/com/mindalliance/channels/playbook/support/PlaybookSession.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-18 17:30:29.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-18 17:30:29.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-23 15:08:52.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-23 15:08:52.000000000 -0400
 @@ -63,6 +63,8 @@
  
  	public Roles getRoles(){ throw new Error(); };
