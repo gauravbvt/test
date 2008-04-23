@@ -80,8 +80,10 @@ public class UserScope extends BeanImpl implements Container {
             if ( u.getManager() ) {
                 for ( Ref pRef: (List<Ref>) getApplication().findProjectsForUser( uRef ) ) {
                     Project p = (Project) pRef.deref();
-                    if ( p.isManager( uRef ) )
+                    if ( p.isManager( uRef ) ) {
                         result.add( pRef );
+                        p.addManagerContents( result );
+                    }
                 }
             }
 
@@ -90,7 +92,7 @@ public class UserScope extends BeanImpl implements Container {
                     Model m = (Model) mRef.deref();
                     if ( m.isAnalyst( uRef ) ) {
                         result.add( mRef );
-                        result.addAll( m.getElements() );
+                        m.addContents( result );
                     }
                 }
             }
@@ -98,12 +100,11 @@ public class UserScope extends BeanImpl implements Container {
             // Add assigned project contents
             for ( Ref pRef: (List<Ref>) getApplication().findProjectsForUser( uRef ) ) {
                 Project project = (Project) pRef.deref();
-
-                result.addAll( project.getResources() );
+                project.addContents( result );
                 for ( Ref mRef: (List<Ref>) project.getModels() ) {
                     Model m = (Model) mRef.deref();
                     if ( !m.isAnalyst( uRef ) )
-                        result.addAll( m.getElements() );
+                        m.addContents( result );
                 }
                 Ref partRef = project.findParticipation( uRef );
                 if ( partRef != null ) {

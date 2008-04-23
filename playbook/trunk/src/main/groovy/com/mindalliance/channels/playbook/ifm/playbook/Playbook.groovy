@@ -21,4 +21,18 @@ class Playbook extends IfmElement {
             (ia.actor == resource) || (ia.isFlowAct() && ia.targetResource == resource)
         }
     }
+
+    /**
+     * Return classes a project participant can add.
+     */
+    static List<Class<?>> contentClasses() {
+        [ Assignation.class, Confirmation.class, Denial.class,
+          InformationTransfer.class, Observation.class, Query.class,
+          Task.class, Verification.class
+        ]
+    }
+
+    void addContents( List<Ref> results ) {
+        results.addAll( informationActs )
+    }
 }

@@ -18,7 +18,7 @@ import java.util.TreeSet;
 /**
  * Accept anything of the given objectType.
  */
-public class ClassFilter extends AbstractFilter {
+public class ClassFilter extends Filter {
 
     private Class<?> objectType;
     private Class<?> filtersType;
@@ -90,8 +90,8 @@ public class ClassFilter extends AbstractFilter {
         return getObjectType().isAssignableFrom( object.deref().getClass() );
     }
 
-    protected List<AbstractFilter> createChildren() {
-        List<AbstractFilter> result = new ArrayList<AbstractFilter>();
+    protected List<Filter> createChildren() {
+        List<Filter> result = new ArrayList<Filter>();
         Set<Class<?>> subclasses = getSubclasses( getObjectType() );
         Container filtered = new FilteredContainer( getContainer(), this, true );
 

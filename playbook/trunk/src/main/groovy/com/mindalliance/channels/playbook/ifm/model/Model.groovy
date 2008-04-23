@@ -33,7 +33,16 @@ class Model  extends IfmElement {
      * Return what model content an analyst can create.
      */
     static List<Class<?>> contentClasses() {
-        [ Role.class, OrganizationType.class ]
+        [
+          Domain.class, EventType.class, IssueType.class,
+          LocationType.class, OrganizationType.class,
+          PurposeType.class, RelationshipType.class,
+          Role.class, TaskType.class
+        ]
+    }
+
+    void addContents( List<Ref> results ) {
+        results.addAll( elements );
     }
 
     /**

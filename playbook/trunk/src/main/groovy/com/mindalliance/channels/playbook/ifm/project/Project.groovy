@@ -4,6 +4,10 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.resources.Resource
 import com.mindalliance.channels.playbook.support.PlaybookSession
+import com.mindalliance.channels.playbook.ifm.environment.Environment
+import com.mindalliance.channels.playbook.ifm.environment.Place
+import com.mindalliance.channels.playbook.ifm.environment.Policy
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import org.apache.wicket.Session
 
 /**
@@ -85,15 +89,27 @@ class Project extends IfmElement {
     static List<Class<?>> contentClasses() {
         List<Class<?>> result = new ArrayList<Class<?>>()
         result.addAll( Resource.contentClasses() )
-//        result.addAll( Occurrence.contentClasses() )
+        result.addAll( [ Environment.class, Place.class, Policy.class ] )
+        result.addAll( Playbook.contentClasses() )
         return result
+    }
+
+    void addContents( List<Ref> result ) {
+        playbooks.each { it.addContents( result ) }
+        result.addAll( resources )
+        result.addAll( environments )
+        result.addAll( analysisElements )
+    }
+
+    void addManagerContents( List<Ref> result ) {
+        result.addAll( playbooks )
     }
 
     /**
      * Return system objects that a project manager can add.
      */
     static List<Class<?>> managerClasses() {
-        [ Project.class ]
+        [ Project.class, Playbook.class ]
     }
 
 }

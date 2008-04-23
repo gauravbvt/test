@@ -19,12 +19,12 @@ public class FilteredContainer implements Container {
     private Filter filter;
     private transient List<Ref> buffer;
     private transient ColumnProvider columnProvider;
-    private boolean inverted;
+    private boolean strict;
 
-    public FilteredContainer( Container data, Filter filter, boolean inverted ) {
+    public FilteredContainer( Container data, Filter filter, boolean strict ) {
          this.data = data;
          this.filter = filter;
-         this.inverted = inverted;
+         this.strict = strict;
      }
 
     public FilteredContainer( Container data, Filter filter ) {
@@ -39,12 +39,12 @@ public class FilteredContainer implements Container {
         return filter;
     }
 
-    public boolean isInverted() {
-        return inverted;
+    public boolean isStrict() {
+        return strict;
     }
 
-    public void setInverted( boolean inverted ) {
-        this.inverted = inverted;
+    public void setStrict( boolean strict ) {
+        this.strict = strict;
     }
 
     public synchronized void detach() {
@@ -59,7 +59,7 @@ public class FilteredContainer implements Container {
             buffer = new ArrayList<Ref>();
             for ( Iterator i = getData().iterator(0,getData().size() ); i.hasNext(); ) {
                 final Ref ref = (Ref) i.next();
-                if ( isInverted() ) {
+                if ( isStrict() ) {
                     if ( getFilter().match( ref ) )
                         buffer.add( ref );
                 } else {
@@ -135,5 +135,5 @@ public class FilteredContainer implements Container {
     }
 
     // end Mappable
-    
+
 }
