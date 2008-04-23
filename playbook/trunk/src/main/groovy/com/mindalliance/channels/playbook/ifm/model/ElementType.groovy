@@ -15,4 +15,8 @@ class ElementType extends IfmElement {
     String description = ''
     List<? extends ElementType> extendedTypes  = []
 
+    String toString() {
+        return name
+    }
+
 }

@@ -10,7 +10,6 @@ import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
-import org.apache.wicket.Application
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -72,7 +71,14 @@ import org.apache.wicket.Application
         return uuid
     }
 
+    void checkModifyingAllowed() {
+        if (!this.reference.isModifiable()) {
+            throw new NotModifiableException("Modifying ${this.toString()} not allowed (do ref.begin() first)")
+        }
+    }
+
     void setProperty(String name, def val) {
+        checkModifyingAllowed()
         def value = (val instanceof Referenceable) ? val.reference : val
         doSetProperty(name, value)
     }
@@ -110,6 +116,7 @@ import org.apache.wicket.Application
     }
 
     Referenceable doAddToField(String name, def val) {
+        checkModifyingAllowed()
         def value = (isReferenceable(val)) ? val.reference : val
         List list = (List) this."$name"
         if (list == null) {
@@ -123,6 +130,7 @@ import org.apache.wicket.Application
     }
 
     Referenceable doRemoveFromField(String name, def val) {
+        checkModifyingAllowed()
         def value = (isReferenceable(val)) ? val.reference : val
         List list = (List) this."$name"
         if (list == null) {

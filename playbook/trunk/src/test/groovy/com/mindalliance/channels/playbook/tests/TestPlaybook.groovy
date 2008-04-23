@@ -7,7 +7,6 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.Project
@@ -15,6 +14,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel
 import com.mindalliance.channels.playbook.matching.SemanticMatcher
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -53,6 +53,7 @@ public class TestPlaybook extends TestCase {
         Ref channels = app.channels
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
+        myProject.begin()
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
@@ -67,6 +68,7 @@ public class TestPlaybook extends TestCase {
         assertTrue(name.equals("Generic"))
         assertTrue(session.pendingChangesCount == 0)
         // Remove project from channels
+        channels.begin()
         channels.removeProject(myProject)
         assertTrue(session.pendingChangesCount == 1)
         // Modify project in session memory
@@ -79,6 +81,7 @@ public class TestPlaybook extends TestCase {
         // partial commit
         myProject.commit()
         assertTrue(session.pendingChangesCount == 1)
+        myProject.begin()
         myProject.name = "Big project"
         assertTrue(session.pendingChangesCount == 2)
         myProject.delete()
@@ -89,6 +92,7 @@ public class TestPlaybook extends TestCase {
         assertTrue(session.pendingChangesCount == 1)
         assertTrue(session.pendingDeletesCount == 0)
         assertTrue(myProject.name.equals("Your project"))
+        myProject.begin()
         myProject.name = "Your own project"
         assertTrue(session.pendingChangesCount == 2)
         //
@@ -115,7 +119,7 @@ public class TestPlaybook extends TestCase {
         yourProject = sessionMem.retrieve(myProject.reference)
         assertTrue(yourProject.name.equals("Your big project"))
         // Create and the delete a project
-        Ref newProject = new Project(name: "new project").persist()
+        Ref newProject = new Project(name: "new project").persist() 
         assertTrue(session.pendingChangesCount == 1)
         newProject.delete()
         assertTrue(session.pendingChangesCount == 0)
@@ -126,6 +130,7 @@ public class TestPlaybook extends TestCase {
         assertTrue(session.pendingDeletesCount == 0)
         Project p = (Project) anotherProject.deref()
         assert p.name == "another new project"
+        anotherProject.begin()
         anotherProject.delete()
         assertNull anotherProject.deref()
         assert app.retrieve(anotherProject) != null
@@ -145,20 +150,21 @@ public class TestPlaybook extends TestCase {
 
 
     void testAreas() {
-        GeoLocation portland = new GeoLocation(country: 'United States', state: 'Maine', city: 'Portland')
+        AreaInfo portland = new AreaInfo(country: 'United States', state: 'Maine', city: 'Portland')
         Area area = portland.getArea()
         assert area.isCityLike()
         // List<Area> hierarchy = area.findHierarchy()
         // Area containing = area.findContainingArea()
         // List<Area> nearby = area.findNearbyAreas()
-        GeoLocation maine = new GeoLocation(country: 'United States', state: 'Maine')
-        assert area.isWithinLocation(maine)
+        AreaInfo maine = new AreaInfo(country: 'United States', state: 'Maine')
+        assert area.isWithin(maine.getArea())
         assert maine > portland
     }
 
     void testModels() {
         Ref channels = app.channels
         Ref project = new Project(name: "new project").persist()
+        channels.begin()
         channels.addProject(project)
         Ref playbook = new Playbook(name: "new playbook").persist()
         project.addPlaybook(playbook)

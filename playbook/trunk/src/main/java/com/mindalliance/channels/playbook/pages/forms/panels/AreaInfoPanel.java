@@ -1,37 +1,50 @@
-package com.mindalliance.channels.playbook.pages.forms;
+package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.feedback.FeedbackMessagesModel;
-import org.apache.wicket.feedback.IFeedbackMessageFilter;
-import org.apache.log4j.Logger;
-
-import java.util.*;
-
-import com.mindalliance.channels.playbook.ifm.info.Location;
-import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
-import com.mindalliance.channels.playbook.geo.GeoService;
-import com.mindalliance.channels.playbook.geo.Area;
+import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.info.Location;
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
+import com.mindalliance.channels.playbook.geo.Area;
+import com.mindalliance.channels.playbook.geo.GeoService;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessagesModel;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.util.string.Strings;
+import org.apache.log4j.Logger;
+
+import java.util.Iterator;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Mar 24, 2008
- * Time: 3:26:36 PM
+ * Date: Apr 22, 2008
+ * Time: 8:55:01 PM
  */
-public class GeoLocationPanel extends AbstractComponentPanel {
+public class AreaInfoPanel extends AbstractComponentPanel {
 
-    WebMarkupContainer div;
+    public AreaInfoPanel(String id, Ref element, String propPath, boolean readOnly) {
+        super(id, element, propPath, readOnly);
+    }
+
+    public AreaInfoPanel(String id, Ref element, String propPath) {
+        super(id, element, propPath);
+    }
+
+    AreaInfo areaInfo;
+    WebMarkupContainer editableDiv;
+    WebMarkupContainer readOnlyDiv;
     AutoCompleteTextField countryField;
     AutoCompleteTextField stateField;
     AutoCompleteTextField countyField;
@@ -40,10 +53,6 @@ public class GeoLocationPanel extends AbstractComponentPanel {
     TextField codeField;
     FeedbackPanel feedback;
 
-    public GeoLocationPanel(String id, Ref element, String propPath) {
-        super(id, element, propPath);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
     protected void init() {
         super.init();
         // Do amything else?
@@ -51,9 +60,28 @@ public class GeoLocationPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
-        feedback = new FeedbackPanel("locationFeedback", IFeedbackMessageFilter.ALL);
-        div = new WebMarkupContainer("location");
-        add(div);
+        areaInfo = (AreaInfo)RefUtils.get(element, propPath);
+        editableDiv = new WebMarkupContainer("editable");
+        addToPanel(editableDiv);
+        readOnlyDiv = new WebMarkupContainer("readOnly");
+        addToPanel(readOnlyDiv);
+        loadReadOnly();
+        loadEditable();
+        if (isReadOnly()) {
+            editableDiv.setVisible(false);
+        }
+        else {
+            readOnlyDiv.setVisible(false);
+        }
+    }
+
+    private void loadReadOnly() {
+        Label areaInfoLabel = new Label("areaInfoString", areaInfo.toString());
+        readOnlyDiv.add(areaInfoLabel);
+    }
+
+    private void loadEditable() {
+        feedback = new FeedbackPanel("areaInfoFeedback", IFeedbackMessageFilter.ALL);
         // Fields
         countryField = new AutoCompleteTextField("country", new RefPropertyModel(element, propPath +".country")) {
             protected Iterator getChoices(String input) {
@@ -63,7 +91,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
         stateField = new AutoCompleteTextField("state", new RefPropertyModel(element, propPath +".state")) {
             protected Iterator getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
-                String countryName = (String)RefUtils.get(element,  propPath +".country");
+                String countryName = (String) RefUtils.get(element,  propPath +".country");
                 return stateIterator(input, countryName,  10);
             }
 
@@ -114,7 +142,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
             }
         });
         // countryField.add(GeoValidator.countryExists());
-        div.add(countryField);
+        editableDiv.add(countryField);
         // State field
         stateField.setOutputMarkupId(true);
         stateField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -138,7 +166,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
         });
 
 //        stateField.add(GeoValidator.stateExists());
-        div.add(stateField);
+        editableDiv.add(stateField);
         // County field
         countyField.setOutputMarkupId(true);
         countyField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -158,7 +186,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
                 target.addComponent(feedback);
             }
         });
-        div.add(countyField);
+        editableDiv.add(countyField);
         // City field
         cityField.setOutputMarkupId(true);
         cityField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -176,7 +204,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
                 target.addComponent(feedback);
             }
         });
-        div.add(cityField);
+        editableDiv.add(cityField);
         // Street field
         streetField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -189,7 +217,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
                 target.addComponent(feedback);
             }
         });
-        div.add(streetField);
+        editableDiv.add(streetField);
         // Code field
         codeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -202,7 +230,7 @@ public class GeoLocationPanel extends AbstractComponentPanel {
                 target.addComponent(feedback);
             }
         });
-        div.add(codeField);
+        editableDiv.add(codeField);
         // Feedback
         feedback.setOutputMarkupId(true);
         add(feedback);

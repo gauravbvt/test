@@ -4,19 +4,19 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.resources.Resource
 import com.mindalliance.channels.playbook.support.PlaybookSession
+import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.environment.Environment
 import com.mindalliance.channels.playbook.ifm.environment.Place
 import com.mindalliance.channels.playbook.ifm.environment.Policy
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
-import org.apache.wicket.Session
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 19, 2008
-* Time: 2:10:46 PM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 19, 2008
+ * Time: 2:10:46 PM
+ */
 class Project extends IfmElement {
 
     String name = 'Unnamed'
@@ -57,59 +57,99 @@ class Project extends IfmElement {
     }
 
     List<Ref> findAllResourcesOfType(String type) {
-        return (List<Ref>)resources.findAll {res -> res.type == type}
+        return (List<Ref>) resources.findAll {res -> res.type == type}
     }
 
-    Ref findParticipation( Ref user ) {
+    Ref findParticipation(Ref user) {
         Ref p = (Ref) participations.find {p -> p.user == user }
         return p
     }
 
-    Ref findPlace(List<String> directions) {
-        Ref place
+    List<String> findAllPlaceNames() {
+        List<String> names = []
         environments.each {env ->
-            place = env.findPlace(directions)
-            if (place) return place
+            env.places.each {place ->
+                names.add(place.name)
+            }
+        }
+        return names
+    }
+
+    Ref findPlaceNamed(String placeName) {
+        environments.each {env ->
+            env.places.each {place ->
+                if (place.name == placeName) return place
+            }
         }
         return null
     }
 
+    boolean atleastOnePlaceTypeDefined() {
+        Ref model = (Ref)models.find {model ->
+            model.elementTypes.size() > 0
+        }
+        return model != null
+    }
+
+    boolean atLeastOnePlaceTypesNarrowing(Ref placeType) {
+        models.each {model ->
+            if (model.placeTypes.any {it.parent == placeType })  return true
+        }
+        return false
+    }
+
+    List<Ref> findPlaceTypesNarrowing(Ref placeType) {
+        List<Ref> narrowing = []
+        models.each {model ->
+            model.placeTypes.each {pt ->
+               if (placeType == null && pt.parent == null) { // top level place types narrow undefined place type
+                   narrowing.add(pt)
+               }
+               else if (pt.parent == placeType) {
+                   narrowing.add(pt)
+               }
+            }
+        }
+        return narrowing
+    }
+
     Boolean isParticipant( Ref user ) {
-        return findParticipation( user ) != null ;
-    }
+         return findParticipation( user ) != null ;
+     }
 
-    Boolean isManager( Ref user ) {
-        Ref ref = findParticipation(user)
-        return ref != null && ref.manager ;
-    }
+     Boolean isManager( Ref user ) {
+         Ref ref = findParticipation(user)
+         return ref != null && ref.manager ;
+     }
 
-    /**
-     * Return project contents that a participant can add.
-     */
-    static List<Class<?>> contentClasses() {
-        List<Class<?>> result = new ArrayList<Class<?>>()
-        result.addAll( Resource.contentClasses() )
-        result.addAll( [ Environment.class, Place.class, Policy.class ] )
-        result.addAll( Playbook.contentClasses() )
-        return result
-    }
+     /**
+      * Return project contents that a participant can add.
+      */
+     static List<Class<?>> contentClasses() {
+         List<Class<?>> result = new ArrayList<Class<?>>()
+         result.addAll( Resource.contentClasses() )
+         result.addAll( [ Environment.class, Place.class, Policy.class ] )
+         result.addAll( Playbook.contentClasses() )
+         return result
+     }
 
-    void addContents( List<Ref> result ) {
-        playbooks.each { it.addContents( result ) }
-        result.addAll( resources )
-        result.addAll( environments )
-        result.addAll( analysisElements )
-    }
+     void addContents( List<Ref> result ) {
+         playbooks.each { it.addContents( result ) }
+         result.addAll( resources )
+         result.addAll( environments )
+         result.addAll( analysisElements )
+     }
 
-    void addManagerContents( List<Ref> result ) {
-        result.addAll( playbooks )
-    }
+     void addManagerContents( List<Ref> result ) {
+         result.addAll( playbooks )
+     }
 
-    /**
-     * Return system objects that a project manager can add.
-     */
-    static List<Class<?>> managerClasses() {
-        [ Project.class, Playbook.class ]
-    }
+     /**
+      * Return system objects that a project manager can add.
+      */
+     static List<Class<?>> managerClasses() {
+         [ Project.class, Playbook.class ]
+     }
+
 
 }

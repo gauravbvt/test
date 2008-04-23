@@ -6,10 +6,15 @@
         xml:lang="en"
         lang="en">
 <body>
-<wicket:panel>
-    <div wicket:id="component">
-        <wicket:child/>
-    </div>
-</wicket:panel>
+<wicket:extend>
+    <fieldset>
+        <legend>Area</legend>
+        <div wicket:id="areaInfo">[Area info]</div>
+    </fieldset>
+    <fieldset>
+        <legend>Latitude/longitude</legend>
+        <div wicket:id="latLong">[latitude and longitude]</div>
+    </fieldset>
+ </wicket:extend>
 </body>
 </html>

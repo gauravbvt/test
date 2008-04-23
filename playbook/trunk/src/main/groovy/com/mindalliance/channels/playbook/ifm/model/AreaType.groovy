@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 3:39:39 PM
 */
-class LocationType extends ElementType {
+class AreaType extends ElementType {
 
     Ref parent
 }

@@ -5,16 +5,16 @@ import com.mindalliance.channels.playbook.geo.UnknownAreaException
 import com.mindalliance.channels.playbook.geo.AmbiguousAreaException
 import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 import com.mindalliance.channels.playbook.geo.AreaException
-import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 21, 2008
-* Time: 11:45:49 AM
-*/
-class GeoLocation extends Location implements Comparable {
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Apr 21, 2008
+ * Time: 3:23:23 PM
+ */
+class AreaInfo extends BeanImpl  implements Comparable {
 
     String street = ''
     String city = '' // required if street set
@@ -23,11 +23,6 @@ class GeoLocation extends Location implements Comparable {
     String country = '' // required
     String code = ''
     Area area // force recalculate on change and don't persist
-
-    @Override
-    boolean isGeoLocation() {
-        return true
-    }
 
 
     @Override
@@ -79,8 +74,8 @@ class GeoLocation extends Location implements Comparable {
 
     @Override
     boolean equals(Object obj) {
-        if (!obj instanceof GeoLocation) return false
-        GeoLocation loc = (GeoLocation) obj
+        if (!obj instanceof AreaInfo) return false
+        AreaInfo loc = (AreaInfo) obj
         if (street != loc.street) return false
         if (city != loc.city) return false
         if (county != loc.county) return false
@@ -122,16 +117,12 @@ class GeoLocation extends Location implements Comparable {
     }
 
     public int compareTo(Object other) {
-        if (!other instanceof GeoLocation) throw new IllegalArgumentException("Can't compare a location to $other")
+        if (!other instanceof AreaInfo) throw new IllegalArgumentException("Can't compare an AreaInfo to $other")
         return this.getArea().compareTo(other.getArea())
     }
 
    private void writeObject(ObjectOutputStream oos) throws IOException {
        area = null
        oos.defaultWriteObject()
-    }
-
-    public GeoLocation findGeoLocation() {
-        return this
     }
 }

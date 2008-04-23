@@ -16,10 +16,37 @@ class Model  extends IfmElement {
     Boolean shared
 
     List<Ref> participations = []
-    List<Ref> elements = []
+    List<Ref> areaTypes = []
+    List<Ref> domains = []
+    List<Ref> eventTypes = []
+    List<Ref> issueTypes = []
+    List<Ref> organizationTypes = []
+    List<Ref> placeTypes = []
+    List<Ref> purposeTypes = []
+    List<Ref> relationshipTypes = []
+    List<Ref> roles = []
+    List<Ref> taskTypes = []
 
     String toString() {
         name
+    }
+
+    protected List<String> transientProperties() {
+        return super.transientProperties() + ['elements']
+    }
+
+
+    List<Ref> getElements() {
+        List<Ref> elements = []
+        elements.addAll(domains)
+        elements.addAll(eventTypes)
+        elements.addAll(issueTypes)
+        elements.addAll(placeTypes)
+        elements.addAll(purposeTypes)
+        elements.addAll(relationshipTypes)
+        elements.addAll(roles)
+        elements.addAll(taskTypes)
+        return elements
     }
 
     Boolean isAnalyst( Ref user ) {
@@ -35,7 +62,7 @@ class Model  extends IfmElement {
     static List<Class<?>> contentClasses() {
         [
           Domain.class, EventType.class, IssueType.class,
-          LocationType.class, OrganizationType.class,
+          PlaceType.class, AreaType.class, OrganizationType.class,
           PurposeType.class, RelationshipType.class,
           Role.class, TaskType.class
         ]

@@ -7,6 +7,8 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 
 /**
@@ -18,19 +20,21 @@ import org.apache.log4j.Logger
  */
 class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
-    Map<Ref, Referenceable> changes = new HashMap<Ref, Referenceable>()
+    Map<Ref, Referenceable> begun =  new HashMap<Ref, Referenceable>()
+    Set<Ref> changes = new HashSet<Ref>()
     Set<Ref> deletes = new HashSet<Ref>()
 
     Referenceable retrieve(Ref reference) {
         Referenceable referenceable = null
         if (!deletes.contains(reference)) {  // deleted in session
-            referenceable = changes.get(reference)
+            referenceable = begun.get(reference)
             if (!referenceable) {
                 Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
-                if (appLevelReferenceable) {
+        /*        if (appLevelReferenceable) {
                     referenceable = (Referenceable) appLevelReferenceable.copy() // take a copy
                     referenceable.addPropertyChangeListener(this) // register with this session memory
-                }
+                }*/
+                referenceable =  appLevelReferenceable
             }
             else {
                 if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
@@ -39,16 +43,47 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return referenceable
     }
 
-    Ref persist(Referenceable referenceable) {// Persist the change in session and, on save, in application
+    void begin(Ref ref) {
+        if (!begun.containsKey(ref)) {
+            Referenceable referenceable
+            use (NoSessionCategory) {
+                Referenceable original = retrieveFromApplicationMemory(ref)
+                if (original) {
+                    referenceable = (Referenceable)original.copy() // take a copy
+                    referenceable.addPropertyChangeListener(this) // register with this session memory
+                    begun.put(ref, referenceable)
+                }
+            }
+        }
+        else {
+            Logger.getLogger(this.class).warn("Doing begin() on $ref already in session")
+        }
+    }
+
+    Ref persist(Referenceable referenceable) {
+        Ref ref = referenceable.reference
+        begun.put(ref, referenceable)
+        hasChanged(referenceable)
+        return ref
+    }
+
+    Ref hasChanged(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
-        changes.put(reference, (Referenceable) referenceable)
+        assert begun.containsKey(reference)
+        changes.add(reference)
         if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
         return reference
     }
 
     void delete(Ref ref) {
-        changes.remove(ref)
-        deletes.add(ref)
+        if (begun.containsKey(ref)) {
+            begun.remove(ref)
+            changes.remove(ref)
+            deletes.add(ref)
+        }
+        else {
+            throw new NotModifiableException("Can't delete $ref : do begin() first")
+        }
     }
 
 
@@ -57,8 +92,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void commit() {
-        Collection<Referenceable> values = (Collection<Referenceable>) changes.values()
-        getApplicationMemory().storeAll(values)
+        List<Referenceable> toCommit = []
+        changes.each { toCommit.add(begun.get((Ref)it)) }
+        getApplicationMemory().storeAll(toCommit)
         getApplicationMemory().deleteAll(deletes)
         reset()
     }
@@ -68,9 +104,10 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     public void commit(Ref ref) {
-        if (changes.containsKey(ref)) {
-            Referenceable referenceable = changes.get(ref)
+        if (changes.contains(ref)) {
+            Referenceable referenceable = begun.get(ref)
             changes.remove(ref)
+            begun.remove(ref)
             getApplicationMemory().store(referenceable)
         }
         else if (deletes.contains(ref)) {
@@ -80,7 +117,10 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     public void reset(Ref ref) {
-        if (changes.containsKey(ref)) {
+        if (begun.containsKey(ref)) {
+            begun.remove(ref)
+        }
+        if (changes.contains(ref)) {
             changes.remove(ref)
         }
         else if (deletes.contains(ref)) {
@@ -89,8 +129,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     private void reset() {
-        changes = new HashMap<Ref, Referenceable>()
+        changes = new HashSet<Ref>()
         deletes = new HashSet<Ref>()
+        begun = new HashMap<Ref, Referenceable>()
     }
 
     private Referenceable retrieveFromApplicationMemory(Ref reference) {
@@ -99,19 +140,19 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     private ApplicationMemory getApplicationMemory() {
-        return PlaybookApplication.get().getMemory()
+        return PlaybookApplication.current().getMemory()
     }
 
     void propertyChange(PropertyChangeEvent evt) {
         Referenceable referenceable = (Referenceable) evt.source
-        persist(referenceable)
+        hasChanged(referenceable)
     }
 
-    boolean isEmpty() {
+    boolean isEmpty() {  // no changes?
         return changes.isEmpty() && deletes.isEmpty()
     }
 
-    int getSize() {
+    int getSize() { // number of changes
         int size = changes.size()
         return size
     }
@@ -125,5 +166,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         this.commit()
         int count = getApplicationMemory().exportRef(ref, ref.toString())
         return count > 0
+    }
+
+    boolean isModifiable(Ref ref) {
+        return begun.containsKey(ref)
     }
 }

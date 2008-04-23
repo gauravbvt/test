@@ -5,12 +5,12 @@ interface Ref extends Serializable {
     String getDb()
     Referenceable getReferenced(Store store)
     Ref getReference()
-    Referenceable deref()
+    Referenceable deref()  // get Referenceable from session or from application (don't copy it nor register it to session)
     Object deref(String path)
     Object get(String name)
-    Ref persist()
-    void reset() // remove from session (pending change or delete)
-    void delete()
+    Ref persist() // add modifiable copy to session change set
+    void reset() // remove from session pending change or deletion
+    void delete() // add to session deleted set
     void commit() // commit only this Ref
     void become(Ref ref) // take the id and db of ref
     void changed(String propName) // the propName of the referenced Referenceable changed
@@ -28,4 +28,7 @@ interface Ref extends Serializable {
     List<Ref> executeQuery(String query, Map<String,Object> args)
     boolean save() // commit self and all references (transitively) then export self and references to file named = id
     List<Ref> references()
+    void begin() // returns a modifiable copy with current session as change listener. Noop if referenceable already in session.
+    boolean isModifiable() // is this.deref() modifiable
+    
 }

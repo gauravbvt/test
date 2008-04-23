@@ -1,6 +1,5 @@
 package com.mindalliance.channels.playbook.geo
 
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import org.geonames.Toponym
 import org.geonames.WebService
 import org.geonames.ToponymSearchCriteria
@@ -11,7 +10,7 @@ import org.apache.commons.httpclient.HttpStatus
 import groovy.util.slurpersupport.GPathResult
 import org.geonames.Style
 import org.apache.log4j.Logger
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,64 +29,64 @@ class GeoService {
     static final String SEARCH = 'search'
     static final String CODE = 'code'
 
-    static Map<GeoLocation, Area> areas = Collections.synchronizedMap(new HashMap<GeoLocation, Area>())
+    static Map<AreaInfo, Area> areas = Collections.synchronizedMap(new HashMap<AreaInfo, Area>())
 
     // Find the area identified by the location
-    static Area locate(GeoLocation location) {
-        assert location.country
-        Area area = areas[location]
+    static Area locate(AreaInfo areaInfo) {
+        assert areaInfo.country
+        Area area = areas[areaInfo]
         if (!area) {
             Toponym topo
-            ToponymSearchCriteria tsc = searchCriteriaFrom(location)
+            ToponymSearchCriteria tsc = searchCriteriaFrom(areaInfo)
             List<Toponym> topos = WebService.search(tsc).toponyms
             if (topos.size() == 1) {// successful, unambiguous search
                 area = new Area(topos[0])
-                areas[location] = area
+                areas[areaInfo] = area
             }
             else {
                 if (topos.size() == 0) {
-                    throw new UnknownAreaException("No known area for location $location")
+                    throw new UnknownAreaException("No known area for location $areaInfo")
                 }
                 else {// > 1
-                    throw new AmbiguousAreaException("${topos.size()} areas found for location $location", topos)
+                    throw new AmbiguousAreaException("${topos.size()} areas found for location $areaInfo", topos)
                 }
             }
         }
         return area
     }
 
-    static private ToponymSearchCriteria searchCriteriaFrom(GeoLocation location) {
+    static private ToponymSearchCriteria searchCriteriaFrom(AreaInfo areaInfo) {
         String name
         ToponymSearchCriteria tsc = new ToponymSearchCriteria()
         tsc.style = Style.FULL
-        if (location.country) {
-            name = location.country
+        if (areaInfo.country) {
+            name = areaInfo.country
             // Set search country code
             Area country = findCountry(name)
             if (!country) {throw new UnknownAreaException("Unknown country $name")}
             Area state
             tsc.countryCode = country.countryCode
             String featureClass
-            if (location.state) {
-                name = location.state
+            if (areaInfo.state) {
+                name = areaInfo.state
                 tsc.featureCode = STATE
                 state = findState(country, name)
                 if (!state) {throw new UnknownAreaException("Unknown state $name")}
                 tsc.adminCode1 = state.adminCode1
-                if (location.county) {
-                    name = location.county
+                if (areaInfo.county) {
+                    name = areaInfo.county
                     tsc.featureCode = COUNTY
                     Area county = findCounty(country, state, name)
                     if (!county) {throw new UnknownAreaException("Unknown county $name")}
                     tsc.adminCode2 = county.adminCode2
                 }
-                if (location.city) {
-                    name = location.city
+                if (areaInfo.city) {
+                    name = areaInfo.city
                     tsc.featureCodes = CITY as String[]
                 }
             }
         }
-        if (!name) throw new AreaException("Incomplete location $location")
+        if (!name) throw new AreaException("Incomplete location $areaInfo")
         tsc.nameEquals = name
         return tsc
     }
@@ -121,8 +120,8 @@ class GeoService {
 
     static Area findCountry(String name) {
         Area area
-        GeoLocation location = new GeoLocation(country: name)
-        area = areas[location]
+        AreaInfo areaInfo = new AreaInfo(country: name)
+        area = areas[areaInfo]
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
             tsc.nameEquals = name
@@ -138,7 +137,7 @@ class GeoService {
             }
             if (countryTopo) {
                 area = new Area(countryTopo)
-                areas[location] = area
+                areas[areaInfo] = area
             }
             else {
                 throw new UnknownAreaException("No such country $name")
@@ -149,8 +148,8 @@ class GeoService {
 
     static Area findState(Area country, String name) {
         Area area
-        GeoLocation location = new GeoLocation(country: country.countryName, state: name)
-        area = areas[location]
+        AreaInfo areaInfo = new AreaInfo(country: country.countryName, state: name)
+        area = areas[areaInfo]
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
             tsc.style = Style.FULL
@@ -168,7 +167,7 @@ class GeoService {
             }
             if (stateTopo) {
                 area = new Area(stateTopo)
-                areas[location] = area
+                areas[areaInfo] = area
             }
             else {
                 throw new UnknownAreaException("No such state $name")
@@ -179,8 +178,8 @@ class GeoService {
 
     static Area findCounty(Area country, Area state, String name) {
         Area area
-        GeoLocation location = new GeoLocation(country: country.countryName, state: state.name, county:name)
-        area = areas[location]
+        AreaInfo areaInfo = new AreaInfo(country: country.countryName, state: state.name, county:name)
+        area = areas[areaInfo]
         if (!area) {
             ToponymSearchCriteria tsc = new ToponymSearchCriteria()
             tsc.style = Style.FULL
@@ -199,7 +198,7 @@ class GeoService {
             }
             if (stateTopo) {
                 area = new Area(stateTopo)
-                areas[location] = area
+                areas[areaInfo] = area
             }
             else {
                 throw new UnknownAreaException("No such county $name")

@@ -7,12 +7,10 @@ import com.opensymphony.oscache.base.CacheEntry
 import com.opensymphony.oscache.base.Cache
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
-import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.support.persistence.YamlPersistenceListener
 import org.apache.log4j.Logger
 import org.ho.yaml.YamlEncoder
 import org.ho.yaml.YamlDecoder
-import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import java.text.SimpleDateFormat
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.Mapper
@@ -176,11 +174,13 @@ class ApplicationMemory implements Serializable {
             FileInputStream input = new FileInputStream(file)
             YamlDecoder dec = new YamlDecoder(input)
             try {
-                while (true) {
-                    Map map = (Map) dec.readObject()
-                    Referenceable referenceable = (Referenceable) Mapper.fromMap(map)
-                    store(referenceable)
-                    count++
+                use(NoSessionCategory) {
+                    while (true) {
+                        Map map = (Map) dec.readObject()
+                        Referenceable referenceable = (Referenceable) Mapper.fromMap(map)
+                        store(referenceable)
+                        count++
+                    }
                 }
             }
             catch (EOFException e) {

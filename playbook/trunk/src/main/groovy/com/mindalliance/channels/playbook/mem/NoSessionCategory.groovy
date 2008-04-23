@@ -15,6 +15,10 @@ class NoSessionCategory {
 
     // REFERENCEABLE
 
+    static void checkModifyingAllowed(ReferenceableImpl self) {
+        // Do nothing       
+    }
+
    static void doSetProperty(ReferenceableImpl self, String name, def value) {
          String setterName = "set${name[0].toUpperCase()}${name.substring(1)}"
          self."$setterName"(value)

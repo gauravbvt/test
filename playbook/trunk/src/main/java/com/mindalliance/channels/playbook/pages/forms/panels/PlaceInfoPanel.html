@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+   <table>
+       <tr wicket:child="placeItems">
+           <td>
+               <select wicket:child="placeType"><option>[a place type]</option></select>
+           </td>
+           <td>
+               <input wicket:child="placeName" type="text"/>
+           </td>
+       </tr>
+   </table>
+ </wicket:extend>
+</body>
+</html>

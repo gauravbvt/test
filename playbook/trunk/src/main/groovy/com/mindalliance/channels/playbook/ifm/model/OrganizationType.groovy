@@ -15,7 +15,7 @@ class OrganizationType extends ElementType {
 
     Ref domain // domain for this type of organization
     Location within // containing area of the jurisdiction e.g. New Jersey -- required
-    Ref jurisdictionType  // a LocationType -- jurisdiction over what types of locations
+    Ref jurisdictionType  // a AreaType -- jurisdiction over what types of locations
 
     // Find all domain names of known Organization Types
     static List<String> findDomainNames() {

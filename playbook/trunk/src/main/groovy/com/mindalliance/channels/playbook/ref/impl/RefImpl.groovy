@@ -8,12 +8,12 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 19, 2008
-* Time: 8:47:26 AM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 19, 2008
+ * Time: 8:47:26 AM
+ */
 class RefImpl implements Ref, GroovyInterceptable {
 
     String id
@@ -21,11 +21,11 @@ class RefImpl implements Ref, GroovyInterceptable {
 
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
     boolean equals(Object obj) {
-       if (!obj instanceof Ref) return false
-       Ref ref = (Ref)obj
-       if (ref.id == null || this.id == null || this.id != ref.id) return false // both ids must be set for equality
-       if (ref.db != this.db) return false  // both dbs must be the same and can both be null
-       return true
+        if (!obj instanceof Ref) return false
+        Ref ref = (Ref) obj
+        if (ref.id == null || this.id == null || this.id != ref.id) return false // both ids must be set for equality
+        if (ref.db != this.db) return false  // both dbs must be the same and can both be null
+        return true
     }
 
     int hashCode() {
@@ -39,12 +39,32 @@ class RefImpl implements Ref, GroovyInterceptable {
         return "Ref<$id,$db>"
     }
 
+    Referenceable deref() {   // returns Referenceable from session change set or UNCOPIED referenceable from application
+        if (this.@id == null) return null
+        Store store = PlaybookApplication.locateStore()
+        Referenceable referenceable = this.getReferenced(store)
+        return referenceable
+    }
+
+    // Support for Java code that needs to dereference a Ref
+    // Only supports dot-separated paths such as 'a.b.c'
+    def deref(String path) {
+/*
+        def result = this
+        path.tokenize('.').each() {
+            result = result."$it"
+        }
+*/
+        def result = RefUtils.get(this, path)
+        return result
+    }
+
     public Referenceable getReferenced(Store store) {
         return store.retrieve(this)
     }
 
     String getDb() {
-       return db
+        return db
     }
 
     String getId() {
@@ -56,7 +76,7 @@ class RefImpl implements Ref, GroovyInterceptable {
             throw new Exception("Not allowed to change the id of a Ref once set")
         }
         else {
-           id = val
+            id = val
         }
     }
 
@@ -65,7 +85,7 @@ class RefImpl implements Ref, GroovyInterceptable {
             throw new Exception("Not allowed to change the db of a Ref once set")
         }
         else {
-           db = val
+            db = val
         }
     }
 
@@ -78,58 +98,39 @@ class RefImpl implements Ref, GroovyInterceptable {
     }
 
     void doSetProperty(String name, def value) {
-         if (['id', 'db'].contains(name)) {
-             ref.@"$name" = value
-         }
-         else {
-             Referenceable referenceable = deref()
-             referenceable.setProperty(name, value)
-         }
-     }
-
-    Referenceable deref() {
-         if (this.@id == null) return null
-         Store store = PlaybookApplication.locateStore()
-         Referenceable referenceable = this.getReferenced(store)
-         return referenceable
-     }
-
-    // Support for Java code that needs to dereference a Ref
-    // Only supports dot-separated paths such as 'a.b.c' 
-    def deref(String path) {
-/*
-        def result = this
-        path.tokenize('.').each() {
-            result = result."$it"
+        if (['id', 'db'].contains(name)) {
+            ref.@"$name" = value
         }
-*/      def result = RefUtils.get(this, path)
-        return result
+        else {
+            Referenceable referenceable = deref()
+            referenceable.setProperty(name, value)
+        }
     }
 
     def get(String name) {
-         if (['id', 'db'].contains(name)) {
-             return ref.@"$name"
-         }
-         else {
-             def value
-             Referenceable referenceable
-             try {
-                 referenceable = deref()
-                 if (referenceable) {
+        if (['id', 'db'].contains(name)) {
+            return ref.@"$name"
+        }
+        else {
+            def value
+            Referenceable referenceable
+            try {
+                referenceable = deref()
+                if (referenceable) {
                     value = referenceable."$name"
-                 }
-                 else {
-                     Logger.getLogger(this.getClass().getName()).warn("${this.toString()} is stale")
-                     throw new StaleRefException("${this.toString()} is stale")
-                 }
-             }
-             catch (Exception e) {
+                }
+                else {
+                    Logger.getLogger(this.getClass().getName()).warn("${this.toString()} is stale")
+                    throw new StaleRefException("${this.toString()} is stale")
+                }
+            }
+            catch (Exception e) {
                 Logger.getLogger(this.class.name).warn("Can't get $name in $referenceable")
                 // throw new IllegalArgumentException("Can't get $name in $referenceable")
-             }
-             return value
-         }
-     }
+            }
+            return value
+        }
+    }
 
     void delete() {
         Store store = PlaybookApplication.locateStore()
@@ -170,6 +171,11 @@ class RefImpl implements Ref, GroovyInterceptable {
         store.commit(this)
     }
 
+    boolean isModifiable() {
+        Store store = PlaybookApplication.locateStore()
+        store.isModifiable(this)
+    }
+
     void changed(String propName) {
         deref().changed(propName)
     }
@@ -182,11 +188,11 @@ class RefImpl implements Ref, GroovyInterceptable {
         return deref().formClass() //To change body of implemented meth, ods use File | Settings | File Templates.
     }
 
-    List drillDown(String listPropName, List drillDownPropNames, Map<String, Object>ddValues) {
+    List drillDown(String listPropName, List drillDownPropNames, Map<String, Object> ddValues) {
         return deref().drillDown(listPropName, drillDownPropNames, ddValues)
     }
 
-    Ref find(String listPropName, Map<String, Object>args) {
+    Ref find(String listPropName, Map<String, Object> args) {
         return deref().find(listPropName, args)
     }
 
@@ -239,6 +245,14 @@ class RefImpl implements Ref, GroovyInterceptable {
     boolean save() {
         Store store = PlaybookApplication.locateStore()
         return store.save(this)
+    }
+
+    // Returns a modifiable copy with current session as change listener.  Noop if referenceable already in session.
+    void begin() {
+        if (this.@id != null) {
+            Store store = PlaybookApplication.locateStore()
+            store.begin(this)
+        }
     }
 
 

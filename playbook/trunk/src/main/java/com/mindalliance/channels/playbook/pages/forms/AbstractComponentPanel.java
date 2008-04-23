@@ -1,11 +1,14 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.project.Project;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,15 +20,32 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 // Not much to abstract...
 abstract public class AbstractComponentPanel extends Panel {
 
-    Ref element;     // element containing the component to be edited
-    String propName; // name of the element's property which value is the component to be edited
+    boolean readOnly = false;
+    protected Project project;
+    protected Ref element;     // element containing the component to be edited
+    protected String propPath; // path to the element's property which value is the component to be edited
+    WebMarkupContainer div;
 
-    public AbstractComponentPanel(String id, Ref element, String propName) {
+
+    public AbstractComponentPanel(String id, Ref element, String propPath, boolean readOnly) {
+        super(id);
+        this.readOnly = readOnly;
+        this.element = element;
+        this.propPath = propPath;
+        load();
+        init();
+    }
+
+    public AbstractComponentPanel(String id, Ref element, String propPath) {
         super(id);
         this.element = element;
-        this.propName = propName;
-        init();
+        this.propPath = propPath;
         load();
+        init();
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 
     protected void init() {
@@ -34,7 +54,28 @@ abstract public class AbstractComponentPanel extends Panel {
     }
 
     protected void load() {
-       // Do nothing
+      project = (Project)Project.currentProject().deref();
+      div = new WebMarkupContainer("component");
+      div.setOutputMarkupId(true);
+      add(div);
+    }
+
+    protected void elementChanged() {
+        int index = propPath.indexOf('.');
+        String propName;
+        if (index < 0) {
+            propName = propPath;
+        }
+        else {
+            propName = propPath.substring(0, index-1);
+        }
+        element.changed(propName);
+    }
+
+    protected void addToPanel(Component component) {
+        component.setOutputMarkupId(true);
+        div.addOrReplace(component);
+        component.setEnabled(this.isReadOnly()); 
     }
 
     public void refresh(AjaxRequestTarget target) {
@@ -42,7 +83,7 @@ abstract public class AbstractComponentPanel extends Panel {
     }
 
     public void onDetach() {
-        Bean bean = (Bean) RefUtils.get(element, propName);
+        Bean bean = (Bean) RefUtils.get(element, propPath);
         if ( bean != null )
             bean.detach();
         super.onDetach();

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.geo
 
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import org.geonames.Toponym
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,9 +46,9 @@ class Area implements Comparable, Serializable {
         return false
     }
 
-    static Area locate(GeoLocation location) {
-         if (!location.country) throw new AreaException("Country not named")
-         Area area = GeoService.locate(location)    // return null if the location is unknown or ambiguous
+    static Area locate(AreaInfo areaInfo) {
+         if (!areaInfo.country) throw new AreaException("Country not named")
+         Area area = GeoService.locate(areaInfo)    // return null if the location is unknown or ambiguous
          return area
     }
 
@@ -69,8 +69,7 @@ class Area implements Comparable, Serializable {
     }
 
     // Whether this place is within a given location
-    boolean isWithinLocation(GeoLocation location)  {
-        Area area = locate(location)
+    boolean isWithin(Area area)  {
         List<Area> hier = findHierarchy()
         boolean within =  hier.any {
             it.geonameId && it.geonameId == area.geonameId

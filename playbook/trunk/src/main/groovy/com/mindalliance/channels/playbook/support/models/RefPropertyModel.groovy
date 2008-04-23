@@ -34,7 +34,7 @@ class RefPropertyModel implements IChainingModel {
         }
     }
 
-    private def getPropertyHolder() {
+    public def getPropertyHolder() {
         return (target instanceof IModel) ? ((IModel)target).getObject() : target
     }
 

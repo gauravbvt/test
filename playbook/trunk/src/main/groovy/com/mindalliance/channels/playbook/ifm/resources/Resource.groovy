@@ -4,7 +4,7 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.resources.System
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation
+import com.mindalliance.channels.playbook.ifm.Locatable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,11 +36,21 @@ class Resource extends IfmElement implements Locatable {
         ]
     }
 
+    @Override
     void beforeStore() {
+        super.beforeStore()
         if (location) location.detach()
     }
 
-    public GeoLocation findGeoLocation() {
-        return location.findGeoLocation()
+    @Override
+    void changed(String propName) {
+        if (propName == 'location') {
+            location.detach()
+        }
+        super.changed(propName)
+    }
+
+    public Location getLocation() {
+        return location
     }
 }

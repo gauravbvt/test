@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,21 +15,11 @@ class Person extends Resource {
     String middleName = ''
     String lastName = ''
     List<Ref> positions = []
-    GeoLocation address
 
     void beforeStore() {
         super.beforeStore()
-        if (address) address.detach()
     }
 
-
-    @Override
-    void changed(String propName) {
-        if (propName == 'address') {
-            address.detach()
-        }
-        super.changed(propName)
-    }
 
     String getName() {
         return toString()
