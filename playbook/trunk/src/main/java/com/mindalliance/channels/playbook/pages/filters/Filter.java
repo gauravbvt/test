@@ -48,8 +48,6 @@ abstract public class Filter implements TreeNode, Serializable, Mappable {
             return getParent().getRoot();
     }
 
-    // Mappable
-
     public Map toMap() {
         Map map = new HashMap();
         map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
@@ -72,8 +70,6 @@ abstract public class Filter implements TreeNode, Serializable, Mappable {
         }
     }
 
-    // end Mappable
-
     public final synchronized Container getContainer() {
         if ( container == null ) {
             Filter p = getParent();
@@ -90,17 +86,6 @@ abstract public class Filter implements TreeNode, Serializable, Mappable {
 
     public String toString() {
         return getText();
-    }
-
-    public Map beanProperties() {
-        Map<String,Object> result = new HashMap<String,Object>();
-        result.put( "collapsedText", getCollapsedText() );
-        result.put( "expandedText", getExpandedText() );
-        result.put( "expanded", isExpanded() );
-        result.put( "selected", isSelected() );
-        if ( childrenRequired() )
-            result.put( "children", getChildren() );
-        return result;
     }
 
     /**
@@ -290,6 +275,32 @@ abstract public class Filter implements TreeNode, Serializable, Mappable {
      * @return true if the filter matches the object.
      */
     abstract public boolean match( Ref object );
+
+    /**
+     * Test if this filter would allow creation of objects
+     * of the given class, without consideration of selection
+     * and/or children.
+     * @param c the class
+     * @return  true if this filter allows this class
+     */
+    abstract protected boolean strictlyAllowsClass( Class<?> c );
+
+    /**
+     * Test if this filter would allow creation of objects
+     * of the given class.
+     * @param clazz the class
+     * @return  true if this filter (or children) allows
+     * this class
+     */
+    public boolean allowsClass( Class<?> clazz ) {
+        if ( isSelected() )
+            return strictlyAllowsClass( clazz );
+        else for ( Filter f : getChildren() )
+            if ( f.allowsClass( clazz ) )
+                return true;
+
+        return false;
+    }
 
     //===================================================
     static class EnumerationAdaptor<T> implements Serializable, Enumeration<T> {

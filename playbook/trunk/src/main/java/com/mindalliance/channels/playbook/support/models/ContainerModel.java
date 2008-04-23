@@ -29,6 +29,10 @@ public class ContainerModel extends RefPropertyModel implements Container {
         return getContents().get( index );
     }
 
+    public int indexOf( Ref ref ) {
+        return getContents().indexOf( ref );
+    }
+
     public boolean contains( Ref ref ) {
         return getContents().contains( ref );
     }

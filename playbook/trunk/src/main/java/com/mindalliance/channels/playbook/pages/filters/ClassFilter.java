@@ -62,14 +62,6 @@ public class ClassFilter extends Filter {
         }
     }
 
-    public Map beanProperties() {
-        Map map = super.beanProperties();
-        map.put( "objectType", getObjectType() );
-        if ( filtersType != null )
-            map.put( "filtersType", filtersType );
-        return map;
-    }
-
     public final Class<?> getObjectType() {
         return objectType;
     }
@@ -88,6 +80,10 @@ public class ClassFilter extends Filter {
 
     public boolean match( Ref object ) {
         return getObjectType().isAssignableFrom( object.deref().getClass() );
+    }
+
+    protected boolean strictlyAllowsClass( Class<?> c ) {
+        return getObjectType().isAssignableFrom( c );
     }
 
     protected List<Filter> createChildren() {

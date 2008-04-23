@@ -112,7 +112,7 @@ public class ContentPanel extends Panel {
                 item.add( new AttributeModifier( "class", true, new AbstractReadOnlyModel() {
                     public Object getObject() {
                         String style = ( item.getIndex() % 2 == 1 ) ? "even" : "odd";
-                        if ( item.getModelObject() == getSelected() )
+                        if ( item.getModelObject().equals( getSelected() ) )
                             style += " selected";
                         return style;
                     }
@@ -135,7 +135,12 @@ public class ContentPanel extends Panel {
             }
 
             public void onClick() {
+                int index = tab.indexOf( getSelected() );
                 tab.remove( getSelected() );
+                if ( tab.size() == 0 )
+                    setSelected( null );
+                else
+                    setSelected( tab.get( Math.min( index, tab.size()-1 ) ) );
             }
         } );
 
@@ -145,15 +150,20 @@ public class ContentPanel extends Panel {
 
         tableNav.add( new Label( "new-item", "Add a..." ) );
 
-        popup.add( new ListView( "new-items", tab.getAllowedClasses() ){
+        popup.add( new ListView( "new-items", new RefPropertyModel( this, "tab.allowedClasses" ) ){
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final Link link = new Link( "new-item-link" ) {
                     public void onClick() {
                         try {
-                            final Referenceable ref = (Referenceable) c.newInstance();
-                            tab.add( ref );
-                            getPage().renderPage();
+                            final Referenceable object = (Referenceable) c.newInstance();
+                            tab.add( object );
+                            Ref ref = object.getReference();
+                            setSelected( ref );
+                            rows.setCurrentPage( tab.indexOf( ref ) / rows.getItemsPerPage() );
+                            tableNav.renderComponent();
+                            formPanel.modelChanged();
+//                            getPage().renderPage();
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
                         } catch ( IllegalAccessException e ) {

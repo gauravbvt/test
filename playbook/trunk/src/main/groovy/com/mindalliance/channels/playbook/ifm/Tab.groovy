@@ -86,6 +86,10 @@ class Tab extends IfmElement implements Container {
         return getBuffer().get( index );
     }
 
+    public int indexOf(Ref ref) {
+        return getBuffer().indexOf( ref );
+    }
+
     public List<Class<?>> getAllowedClasses() {
         return getBuffer().getAllowedClasses();
     }

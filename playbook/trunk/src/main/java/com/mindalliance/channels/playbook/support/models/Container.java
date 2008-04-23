@@ -16,6 +16,8 @@ public interface Container extends IDataProvider, IModel, Mappable {
 
     Ref get( int index );
 
+    int indexOf( Ref ref );
+
     boolean contains( Ref ref );
 
     void add( Referenceable ref );

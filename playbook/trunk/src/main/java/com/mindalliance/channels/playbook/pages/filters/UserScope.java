@@ -135,10 +135,13 @@ public class UserScope extends BeanImpl implements Container {
         return getContents().size();
     }
 
+    public int indexOf( Ref ref ) {
+        return getContents().indexOf( ref );
+    }
+
     //================================
     private Ref getTarget( Referenceable object ) {
         final Class<? extends Referenceable> objectClass = object.getClass();
-        if ( ! getAllowedClasses().contains( objectClass ) )
 
         if ( Channels.contentClasses().contains( objectClass ) )
             return getChannels().getReference();
@@ -168,12 +171,18 @@ public class UserScope extends BeanImpl implements Container {
             );
     }
 
-    public void add( Referenceable ref ) {
-        getTarget( ref ).add( ref );
+    public void add( Referenceable object ) {
+        Ref target = getTarget( object );
+        target.begin();
+        target.add( object );
+        detach();
     }
 
     public void remove( Referenceable ref ) {
-        getTarget( ref ).remove( ref );
+        Ref target = getTarget( ref );
+        target.begin();
+        target.remove( ref );
+        detach();
     }
 
     public void remove( Ref ref ) {

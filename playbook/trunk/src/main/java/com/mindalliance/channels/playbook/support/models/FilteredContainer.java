@@ -19,6 +19,7 @@ public class FilteredContainer implements Container {
     private Filter filter;
     private transient List<Ref> buffer;
     private transient ColumnProvider columnProvider;
+    private transient List<Class<?>> allowedClasses;
     private boolean strict;
 
     public FilteredContainer( Container data, Filter filter, boolean strict ) {
@@ -52,6 +53,7 @@ public class FilteredContainer implements Container {
         if ( columnProvider != null )
             columnProvider.detach();
         buffer = null;
+        allowedClasses = null;
     }
 
     private synchronized List<Ref> getBuffer() {
@@ -91,8 +93,19 @@ public class FilteredContainer implements Container {
         return getBuffer().get( index );
     }
 
-    public List<Class<?>> getAllowedClasses() {
-        return null;
+    public int indexOf( Ref ref ) {
+        return getBuffer().indexOf( ref );
+    }
+
+    public synchronized List<Class<?>> getAllowedClasses() {
+        if ( allowedClasses == null ) {
+            List<Class<?>> ac = new ArrayList<Class<?>>();
+            for ( Class<?> c : getData().getAllowedClasses() )
+                if ( getFilter().allowsClass( c ) )
+                    ac.add( c );
+            allowedClasses = ac;
+        }
+        return allowedClasses;
     }
 
     public synchronized ColumnProvider getColumnProvider() {
