@@ -14,7 +14,7 @@ import org.apache.log4j.Logger
  * Date: Mar 19, 2008
  * Time: 8:47:26 AM
  */
-class RefImpl implements Ref, GroovyInterceptable {
+class RefImpl implements Ref {
 
     String id
     String db
@@ -146,19 +146,18 @@ class RefImpl implements Ref, GroovyInterceptable {
         store.reset(this)
     }
 
+    // Forward to referenceable
     def invokeMethod(String name, def args) {
-        def metamethod = this.class.metaClass.getMetaMethod(name, args)
-        if (metamethod == null) {// don't override a defined method
-            def value
-            Referenceable referenceable = deref()
-            value = referenceable.invokeMethod(name, args)
-            return value
-        }
+        def value
+        Referenceable referenceable = deref()
+        def metamethod = referenceable.class.metaClass.getMetaMethod(name, args)
         if (metamethod == null) {
-            Logger.getLogger(this.class.name).warn("No method named $name")
-            throw new Exception("No method named $name")
+          value = referenceable.invokeMethod(name, args)
         }
-        return metamethod.invoke(this, args)
+        else {
+          value = referenceable.metaClass.invokeMethod(referenceable, name, args)
+        }
+        return value
     }
 
     void become(Ref ref) {

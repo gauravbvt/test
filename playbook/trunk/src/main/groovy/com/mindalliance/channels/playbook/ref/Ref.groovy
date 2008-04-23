@@ -1,5 +1,11 @@
 package com.mindalliance.channels.playbook.ref
-
+/**
+ * Ref.deref() retrieves a Referenceable from session scope if there else from application scope.
+ * Ref.begin() immediately puts a copy of Ref.deref() in session scope
+ * Referenceable.persist() puts it in session scope and immediately marks it as changed (this is usually applied to a newly created Referenceable)
+ * A Referenceable must be in session scope (it is keyed by its Ref) to be changed, except when changes are done within use (NoSessionCategory) {...}
+ * A Ref must be in session to be deleted, except when within a NoSessionCategory
+ */
 interface Ref extends Serializable {
     String getId()
     String getDb()

@@ -12,13 +12,13 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 19, 2008
-* Time: 8:49:28 AM
-*/
-/*abstract*/ class ReferenceableImpl extends BeanImpl implements Referenceable, GroovyInterceptable {
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 19, 2008
+ * Time: 8:49:28 AM
+ */
+/*abstract*/ class ReferenceableImpl extends BeanImpl implements Referenceable {
 
     String id
     String db
@@ -94,26 +94,20 @@ import org.apache.log4j.Logger
 
     // Adds add<Field> and remove<Field> methods if none -- expects List <fields> to be defined
     def invokeMethod(String name, def args) {
-        def metamethod = this.class.metaClass.getMetaMethod(name, args)
-        if (metamethod == null) {// don't override a defined method
-            // addField  --> fields.add(args[0])
-            if (name =~ /^add.+/) {
-                String field = "${RefUtils.decapitalize(name.substring(3))}"
-                if (!field.endsWith('s')) field = "${field}s"
-                return doAddToField(field, args[0].reference)
-            }
-            // removeField --> fields.remove(fields.indexOf(args[0]))
-            if (name =~ /^remove.+/) {
-                String field = "${RefUtils.decapitalize(name.substring(6))}"
-                if (!field.endsWith('s')) field = "${field}s"
-                return doRemoveFromField(field, args[0].reference)
-            }
+        // addField  --> fields.add(args[0])
+        if (name =~ /^add.+/) {
+            String field = "${RefUtils.decapitalize(name.substring(3))}"
+            if (!field.endsWith('s')) field = "${field}s"
+            return doAddToField(field, args[0].reference)
         }
-        if (metamethod == null) {
-            throw new Exception("No method named $name")
+        // removeField --> fields.remove(fields.indexOf(args[0]))
+        if (name =~ /^remove.+/) {
+            String field = "${RefUtils.decapitalize(name.substring(6))}"
+            if (!field.endsWith('s')) field = "${field}s"
+            return doRemoveFromField(field, args[0].reference)
         }
-        return metamethod.invoke(this, args)
     }
+
 
     Referenceable doAddToField(String name, def val) {
         checkModifyingAllowed()
@@ -215,9 +209,9 @@ import org.apache.log4j.Logger
         }
     }
 
-    Ref find(String listPropName, Map<String, Object>args) {
+    Ref find(String listPropName, Map<String, Object> args) {
         List<Ref> list = this."$listPropName"
-        Ref ref = (Ref)list.find {ref ->
+        Ref ref = (Ref) list.find {ref ->
             args.every {prop, val ->
                 def propVal = ref."$prop"
                 ref."$prop" == val
@@ -228,7 +222,7 @@ import org.apache.log4j.Logger
 
     Map toMap() {
         Map map = super.toMap()
-        map = map + [id:id, db:db]
+        map = map + [id: id, db: db]
         return map
     }
 
