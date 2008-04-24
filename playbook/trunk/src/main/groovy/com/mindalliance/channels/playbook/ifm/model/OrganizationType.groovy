@@ -19,7 +19,7 @@ class OrganizationType extends ElementType {
 
     // Find all domain names of known Organization Types
     static List<String> findDomainNames() {
-        Ref project = Project.currentProject()
+        Ref project = Project.current()
         Set<String> domainNames = new HashSet<String>()
         project.modelElements.each{ me ->
             if (me.type == "OrganizationType") {
@@ -30,7 +30,7 @@ class OrganizationType extends ElementType {
     }
 
     static Ref findOrganizationTypeNamed(String name) {
-        Ref project = Project.currentProject()
+        Ref project = Project.current()
         Ref res = (Ref) project.modelElements.find {me ->
             me.type == 'OrganizationType' && me.name.equalsIgnoreCase(name)
         }

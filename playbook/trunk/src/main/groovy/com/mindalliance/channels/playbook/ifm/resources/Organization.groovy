@@ -25,7 +25,7 @@ class Organization extends Resource {
     }
 
     List<Ref>findPositions() {
-        Project.currentProject().resources.findAll {res ->
+        Project.current().resources.findAll {res ->
             res.type == 'Position' && res.organization == this.reference
         }
     }
@@ -37,7 +37,7 @@ class Organization extends Resource {
     List<String> findJurisdictionTypesOfOrganizationTypesInDomainNamed(String domainName) {
         // Find all OrgTypes in a given domain
         // Collect all jurisdiction types
-        Ref project = Project.currentProject()
+        Ref project = Project.current()
         Set<String> jurTypes = new HashSet<String>()
         project.modelElements.each { me->
             if (me.type == 'OrganizationType') {
@@ -48,7 +48,7 @@ class Organization extends Resource {
     }
 
     List<String>findNamesOfOrganizationTypesInNamedDomainAndOfJurisdictionType(String domainName, String jurType) {
-        Ref project = Project.currentProject()
+        Ref project = Project.current()
         Set<String> names = new HashSet<String>()
         project.modelElements.each { me->
             if (me.type == 'OrganizationType') {
@@ -61,7 +61,7 @@ class Organization extends Resource {
     }
 
     static List<Ref> findAllOrganizations() {
-        Ref project = Project.currentProject()
+        Ref project = Project.current()
         return project.resources.findAll {res ->
             res.type == 'Organization'
         }

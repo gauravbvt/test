@@ -11,8 +11,12 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 */
 class ContactInfo extends BeanImpl {
 
-    static final List<String> MEDIA = ['email', 'phone', 'fax', 'web', 'messaging', 'cell', 'pager', 'radio']
-    String medium = 'telephone'// one of MEDIA
+    public static List<String> getMedia() {
+        return ['email', 'phone', 'fax', 'web', 'messaging', 'cell', 'pager', 'radio']
+    }
+    
+    String medium // one of MEDIA
     String endPoint = ''
+
 
 }

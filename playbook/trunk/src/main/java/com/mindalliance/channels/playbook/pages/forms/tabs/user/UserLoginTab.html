@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+     <fieldset>
+         <legend>Authentication</legend>
+         <label><span>Name:</span><input wicket:id="name" type="text" size="60"/></label>
+         <label><span>Password:</span><input wicket:id="password" size = "30"/></label>
+     </fieldset>
+    <fieldset>
+        <legend>Privileges</legend>
+        <label><span>Manager</span><input wicket:id="manager" type="checkbox"/></label>
+        <label><span>Analyst</span><input wicket:id="analyst" type="checkbox"/></label>
+        <label><span>Administrator</span><input wicket:id="admin" type="checkbox"/></label>
+    </fieldset>
+</wicket:extend>
+</body>
+</html>

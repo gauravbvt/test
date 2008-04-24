@@ -146,16 +146,16 @@ class RefImpl implements Ref {
         store.reset(this)
     }
 
-    // Forward to referenceable
+    // Forward undefined methods to referenceable
     def invokeMethod(String name, def args) {
         def value
         Referenceable referenceable = deref()
         def metamethod = referenceable.class.metaClass.getMetaMethod(name, args)
         if (metamethod == null) {
-          value = referenceable.invokeMethod(name, args)
+          value = referenceable.invokeMethod(name, args)  // call referenceable's undefined method handler
         }
         else {
-          value = referenceable.metaClass.invokeMethod(referenceable, name, args)
+          value = referenceable.metaClass.invokeMethod(referenceable, name, args)  // invoke referenceable's defined method
         }
         return value
     }

@@ -199,7 +199,7 @@ import org.apache.log4j.Logger
 
     Class formClass() {
         String type = getType()
-        String className = "${PlaybookApplication.FORM_PACKAGE}.${type}Panel"
+        String className = "${PlaybookApplication.FORM_PACKAGE}.${type}Form"
         try {
             return Class.forName(className)
         }

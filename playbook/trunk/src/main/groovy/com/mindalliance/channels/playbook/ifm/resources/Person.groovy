@@ -41,7 +41,7 @@ class Person extends Resource {
     }
 
     List<Ref> findOrganizationsWithOtherPositions() {  // that are not yet assigned to this Person
-        Ref project = Project.currentProject()
+        Ref project = Project.current()
         List<Ref> orgs = project.resources.findAll {res ->
              def dres =  res.deref()
              def list = (res.type == 'Organization') ? res.findPositions() : []
@@ -51,7 +51,7 @@ class Person extends Resource {
     }
 
     List<String> findOtherPositionNamesInOrganizationNamed(String orgName) { // leaving out those of positions this person has
-        Ref org = Project.currentProject().findResourceNamed("Organization", orgName)
+        Ref org = Project.current().findResourceNamed("Organization", orgName)
         List<Ref> list = org.findPositions().findAll {position ->
             position.organization.name == orgName  && !this.positions.contains(position)
         }

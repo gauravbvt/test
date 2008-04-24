@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+     <fieldset>
+         <legend>Name</legend>
+         <input wicket:id="name" type="text" size="60"/>
+     </fieldset>
+    <fieldset>
+        <legend>Description</legend>
+        <textarea wicket:id="description" rows="4" cols = "60">[description]</textarea>
+    </fieldset>
+    <fieldset>
+        <legend>Contact info</legend>
+        <table>
+            <tr wicket:id="contactInfos">
+                <td> <select wicket:id="medium"><option>[a medium]</option></select></td>
+                <td><input wicket:id="endPoint" type="text" size="60"/></td>
+            </tr>
+        </table>
+    </fieldset>
+     <wicket:child/>
+</wicket:extend>
+</body>
+</html>

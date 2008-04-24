@@ -37,6 +37,7 @@ abstract public class AbstractElementPanel extends Panel {
     public AbstractElementPanel(String id, Ref element) {
         super(id);
         this.element = element;
+        element.begin(); // put element in session
         init();
         load();
     }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+     <fieldset>
+         <legend>Relationships</legend>
+         <ul>
+             <li wicket:id="relationships">
+                 <a wicket:id="relationshipLink" href="#"><span wicket:id="relationshipName">[relationship name]</span></a>
+             </li>
+         </ul>
+         <div wicket:id="relationshipDescription">[description]</div>
+     </fieldset>
+    <fieldset>
+        <legend>Agreements</legend>
+        <ul>
+            <li wicket:id="agreements">
+                <a wicket:id="agreementLink" href="#"><span wicket:id="agreementName">[agreement name]</span></a>
+            </li>
+        </ul>
+        <div wicket:id="agreementDescription">[description]</div>
+    </fieldset>
+     <wicket:child/>
+</wicket:extend>
+</body>
+</html>

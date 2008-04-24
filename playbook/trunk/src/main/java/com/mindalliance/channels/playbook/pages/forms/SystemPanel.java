@@ -78,7 +78,7 @@ public class SystemPanel extends AbstractElementPanel {
     protected void updatedField(Component component, AjaxRequestTarget target) {
         if (component == organizationField) {
             String orgName = valueOf(organizationField);
-            Project project = (Project)Project.currentProject().deref();
+            Project project = (Project)Project.current().deref();
             Ref organization = project.findResourceNamed("Organization", orgName);
             if (organization != null) {
                 RefUtils.set(element, "organization", organization);

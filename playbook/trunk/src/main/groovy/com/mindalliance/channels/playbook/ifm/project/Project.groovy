@@ -28,7 +28,7 @@ class Project extends IfmElement {
     List<Ref> environments = []
     List<Ref> analysisElements = []
 
-    static Ref currentProject() {
+    static Ref current() {
         PlaybookSession session = (PlaybookSession) Session.get()
         return session.project
     }

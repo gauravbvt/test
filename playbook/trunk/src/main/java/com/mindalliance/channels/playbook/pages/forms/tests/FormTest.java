@@ -18,8 +18,13 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.QueryHandler;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementPanel;
 import com.mindalliance.channels.playbook.pages.FormPanel;
+import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.ifm.Tab;
+import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +73,7 @@ public class FormTest extends WebPage {
         typesDropDown.setChoices(getTypeChoices());
         typesDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
-                String type = (String) typesDropDown.getModel().getObject();
+                Class type = (Class) typesDropDown.getModel().getObject();
                 try {
                     setSelected(getElementOfType(type));
                     formPanel.modelChanged();
@@ -116,31 +121,37 @@ public class FormTest extends WebPage {
 
     private List getTypeChoices() {
         List choices = new ArrayList();
-        choices.add("Person");
-        choices.add("Organization");
-        choices.add("System");
+        choices.add(User.class);
+        choices.add(Project.class);
+        choices.add(Tab.class);
         return choices;
     }
 
-    private Ref getElementOfType(String type) throws Exception {
+    private Ref getElementOfType(Class type) throws Exception {
         PlaybookApplication app = (PlaybookApplication) Application.get();
         QueryHandler qh = app.getQueryHandler();
         Map<String, Object> args = new HashMap<String, Object>();
         Ref channels = app.getChannels();
-        List<Ref> results = null;
+        List<Ref> results = new ArrayList<Ref>();
         args.put("type", type);
-
-        if (type.equals("Person")) {
+        if (type.equals(User.class)) {
+            results.add( ((Channels)channels.deref()).findUser("admin") );
+        }
+        else if (type.equals(Project.class)) {
+            results.add(Project.current());
+        }
+        /*else if (type.equals("Person")) {
             results = qh.executeQuery(channels, "findAResource", args);
         } else if (type.equals("Organization")) {
             results = qh.executeQuery(channels, "findAResource", args);
         } else if (type.equals("System")) {
             results = qh.executeQuery(channels, "findAResource", args);
-        }
-        if (results != null && results.size() > 0) {
+        }*/
+        if (results.size() > 0) {
             return results.get(0);
         } else {
-            return app.createNewElement(type);
+            Ref ref = ((Referenceable)type.newInstance()).persist();  // Resetting the form will cause a null pointer exception
+            return ref;
         }
     }
 

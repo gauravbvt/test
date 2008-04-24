@@ -54,7 +54,7 @@ abstract public class AbstractComponentPanel extends Panel {
     }
 
     protected void load() {
-      project = (Project)Project.currentProject().deref();
+      project = (Project)Project.current().deref();
       div = new WebMarkupContainer("component");
       div.setOutputMarkupId(true);
       add(div);
