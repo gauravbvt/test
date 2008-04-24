@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.user.UserLoginTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.user.UserAboutTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -15,16 +15,16 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class UserForm extends AbstractElementForm {
 
-    UserLoginTab identityTab;
+    UserAboutTab identityTab;
 
     public UserForm(String id, Ref element) {
         super(id, element);
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Login")) {
+        tabs.add(new AbstractTab(new Model("About")) {
             public Panel getPanel(String panelId) {
-                return new UserLoginTab(panelId, element);
+                return new UserAboutTab(panelId, element);
             }
         });
     }

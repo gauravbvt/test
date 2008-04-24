@@ -6,17 +6,18 @@
 <body>
 <wicket:extend>
     <fieldset>
-        <legend>Identity</legend>
+        <legend>Authentication</legend>
         <ul>
             <li><label><span>Name:</span><input wicket:id="name" type="text" size="60"/></label></li>
-            <li><label><span>Description:</span><textarea wicket:id="description" rows="4"
-                                                          cols="60">[description]</textarea></label></li>
+            <li><label><span>Password:</span><input wicket:id="password" size="30"/></label></li>
         </ul>
     </fieldset>
     <fieldset>
-        <legend>Sharing</legend>
+        <legend>Privileges</legend>
         <ul>
-            <li><label><span>Shared</span><input wicket:id="shared" type="checkbox"/></label></li>
+            <li><label><span>Manager</span><input wicket:id="manager" type="checkbox"/></label></li>
+            <li><label><span>Analyst</span><input wicket:id="analyst" type="checkbox"/></label></li>
+            <li><label><span>Administrator</span><input wicket:id="admin" type="checkbox"/></label></li>
         </ul>
     </fieldset>
 </wicket:extend>
