@@ -49,10 +49,11 @@ public class UserScope extends BeanImpl implements Container {
             final User u = getUser();
             if ( u.getAdmin() )
                 result.addAll( Channels.adminClasses() );
-            if ( u.getAnalyst() )
+            if ( u.getAnalyst() ) {
                 result.addAll( Model.analystClasses() );
-            if ( getModel() != null )
-                result.addAll( Model.contentClasses() );
+                if ( getModel() != null )
+                    result.addAll( Model.contentClasses() );
+            }
             if ( u.getManager() )
                 result.addAll( Project.managerClasses() );
 
@@ -101,11 +102,6 @@ public class UserScope extends BeanImpl implements Container {
             for ( Ref pRef: (List<Ref>) getApplication().findProjectsForUser( uRef ) ) {
                 Project project = (Project) pRef.deref();
                 project.addContents( result );
-                for ( Ref mRef: (List<Ref>) project.getModels() ) {
-                    Model m = (Model) mRef.deref();
-                    if ( !m.isAnalyst( uRef ) )
-                        m.addContents( result );
-                }
                 Ref partRef = project.findParticipation( uRef );
                 if ( partRef != null ) {
                     Participation part = (Participation) partRef.deref();

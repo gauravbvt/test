@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
+import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -172,8 +173,7 @@ public class ContentPanel extends Panel {
                     }
                 };
                 item.add( link );
-                String displayName = c.getName().toLowerCase();
-                displayName = "New " + displayName.substring( displayName.lastIndexOf( '.' )+1 );
+                String displayName = "New " + ColumnProvider.toDisplay( c.getSimpleName() );
                 link.add( new Label( "new-item-text", displayName ) );
             }
         } );
