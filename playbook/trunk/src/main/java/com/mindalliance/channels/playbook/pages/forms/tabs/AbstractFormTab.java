@@ -83,12 +83,12 @@ public class AbstractFormTab extends Panel {
 
     protected void addInputField(FormComponent inputField) {
         inputFields.add(inputField);
-        add(inputField);
+        addOrReplace(inputField);
     }
 
-    protected void addContainer(Component view) {
-        view.setOutputMarkupId(true);
-        super.add(view);
+    protected void addContainer(MarkupContainer container) {
+        container.setOutputMarkupId(true);
+        super.addOrReplace(container);
     }
 
 }

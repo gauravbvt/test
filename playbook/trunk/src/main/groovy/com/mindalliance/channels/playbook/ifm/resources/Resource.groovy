@@ -19,7 +19,7 @@ class Resource extends IfmElement implements Locatable {
     String description = ''
     List<ContactInfo> contactInfos = []
     List<Ref> roles = []
-    Location location
+    Location location = new Location()
     List<Agreement> agreements = []
     List<Relationship> relationships  = []
     boolean effective = true // whether the resource is operational in real life

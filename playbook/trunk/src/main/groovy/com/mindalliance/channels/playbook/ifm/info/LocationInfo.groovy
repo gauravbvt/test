@@ -12,11 +12,16 @@ import com.mindalliance.channels.playbook.geo.Area
  */
 class LocationInfo extends BeanImpl {
 
-    AreaInfo areaInfo
-    LatLong latLong  // takes precedence on areaInfo for latlong
+    AreaInfo areaInfo = new AreaInfo()
+    LatLong latLong = new LatLong()  // takes precedence on areaInfo for latlong
+
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['longitude', 'latitude']
+    }
 
     double getLongitude() {
-        if (latLong) return latLong.longitude
+        if (latLong.isSet()) return latLong.longitude
         double longitude = -1
         if (areaInfo) {
             Area area = areaInfo.getArea()
@@ -28,7 +33,7 @@ class LocationInfo extends BeanImpl {
     }
 
     double getLatitude() {
-        if (latLong) return latLong.latitude
+        if (latLong.isSet()) return latLong.latitude
         double latitude = -1
         if (areaInfo) {
             Area area = areaInfo.getArea()

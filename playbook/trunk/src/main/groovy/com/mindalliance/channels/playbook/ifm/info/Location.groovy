@@ -13,8 +13,14 @@ import com.mindalliance.channels.playbook.ref.Ref
 class Location extends BeanImpl {
 
     Ref place       // a place is a named locationInfo is given
-    LocationInfo locationInfo  // or else an unnamed locationInfo is given (not both)
-    PlaceInfo placeInfo  // and then place details  
+    LocationInfo locationInfo = new LocationInfo()  // or else an unnamed locationInfo is given (not both)
+    PlaceInfo placeInfo = new PlaceInfo()  // and then place details
+
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['longitude', 'latitude']
+    }
+    
 
     double getLongitude() {
         double longitude = -1.0

@@ -62,7 +62,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                 elementChanged();
             }
         });
-        final TextField latitudeField = new TextField("longitude", new Model("" + latLong.getLatitude()));
+        final TextField latitudeField = new TextField("latitude", new Model("" + latLong.getLatitude()));
         latitudeField.add(NumberValidator.minimum(-90.0));
         latitudeField.add(NumberValidator.maximum(90.0));
         latitudeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -85,11 +85,6 @@ public class LatLongPanel extends AbstractComponentPanel {
     protected void init() {
         super.init();
         //
-    }
-
-    public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        // TODO
     }
     
 }

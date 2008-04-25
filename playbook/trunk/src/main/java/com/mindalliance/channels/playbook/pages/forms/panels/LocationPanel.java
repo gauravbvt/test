@@ -27,12 +27,12 @@ public class LocationPanel extends AbstractComponentPanel {
 
     public LocationPanel(String id, Ref element, String propPath) {
         super(id, element, propPath);
-        location = (Location)RefUtils.get(element, propPath);
     }
 
     @Override
     protected void load() {
         super.load();
+        location = (Location)RefUtils.get(element, propPath);
         loadPlaceField();
         placeInfoPanel = new PlaceInfoPanel("placeInfo", element, propPath + ".placeInfo");
         addToPanel(placeInfoPanel);
@@ -40,15 +40,11 @@ public class LocationPanel extends AbstractComponentPanel {
         addToPanel(locationInfoPanel);
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        initPlaceField();
-    }
-
     // placeField
     private void loadPlaceField() {
-        placeField = new DropDownChoice("place",  new Model(), new ArrayList());
+        List<String> placeNames = project.findAllPlaceNames();
+        String placeName = (String)RefUtils.get(element, "place.name");
+        placeField = new DropDownChoice("place",  new Model(placeName), placeNames);
         placeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
@@ -65,14 +61,6 @@ public class LocationPanel extends AbstractComponentPanel {
         addToPanel(placeField);
     }
 
-    private void initPlaceField() {
-        List<String> placeNames = project.findAllPlaceNames();
-        placeField.setChoices(placeNames);
-        placeField.setNullValid(true);
-        String placeName = (String)RefUtils.get(element, "place.name");
-        placeField.setModelObject(placeName);
-    }
-
     // locationInfoPanel
     private LocationInfoPanel makeLocationInfoPanel() {
         // If place is set, show the place's locationInfo (readOnly)
@@ -82,15 +70,9 @@ public class LocationPanel extends AbstractComponentPanel {
         lip = new LocationInfoPanel("locationInfo", location.getPlace(), "locationInfo", true); // readOnly
        }
        else {
-        lip = new LocationInfoPanel("locationInfo", element, "locationInfo");
+        lip = new LocationInfoPanel("locationInfo", element, "location.locationInfo");
        }
         return lip;
     }
-
-    public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        // TODO
-    }
-
 
 }

@@ -236,18 +236,6 @@ public class GeoLocationPanel extends AbstractComponentPanel {
         });
     }
 
-    public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        target.addComponent(countryField);
-        target.addComponent(stateField);
-        target.addComponent(countyField);
-        target.addComponent(cityField);
-        target.addComponent(streetField);
-        target.addComponent(codeField);
-        feedback.setModel(new FeedbackMessagesModel(feedback));
-        target.addComponent(feedback);
-    }
-
     private boolean isValidCode(Location location) {
         AreaInfo loc = location.getLocationInfo().getAreaInfo();
         String code = loc.getCode();

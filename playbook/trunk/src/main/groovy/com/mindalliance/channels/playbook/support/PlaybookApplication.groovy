@@ -27,6 +27,9 @@ import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import com.mindalliance.channels.playbook.ifm.model.AreaType
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
+import com.mindalliance.channels.playbook.ifm.model.PlaceType
+import com.mindalliance.channels.playbook.ifm.environment.Environment
+import com.mindalliance.channels.playbook.ifm.environment.Place
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,6 +41,7 @@ import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 class PlaybookApplication extends AuthenticatedWebApplication implements Memorable, Serializable {
 
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
+    static final String FORM_SUFFIX = 'Form'
 
     ApplicationMemory appMemory
     QueryHandler queryHandler = new QueryHandler()
@@ -91,21 +95,39 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         channels.addUser(store(user))
 
         // Model elements
-        Model m = new Model()
+        Model m = new Model(name: 'default')
 
-        Ref globe = store(new AreaType(name: 'Globe'))
-        Ref continent = store(new AreaType(name: 'Globe', parent: globe))
-        Ref country = store(new AreaType(name: 'Country', parent: continent))
-        Ref state = store(new AreaType(name: 'State', parent: country))
-        Ref county = store(new AreaType(name: 'County', parent: state))
-        Ref city = store(new AreaType(name: 'County', parent: county))
-        m.addAreaType(globe)
-        m.addAreaType(continent)
-        m.addAreaType(country)
-        m.addAreaType(state)
-        m.addAreaType(county)
-        m.addAreaType(city)
-
+        AreaType globe = new AreaType(name: 'Globe')
+        AreaType continent = new AreaType(name: 'Globe')
+        continent.narrow(globe.reference)
+        AreaType country = new AreaType(name: 'Country')
+        country.narrow(continent.reference)
+        AreaType state = new AreaType(name: 'State')
+        state.narrow(country.reference)
+        AreaType county = new AreaType(name: 'County')
+        county.narrow(state.reference)
+        AreaType city = new AreaType(name: 'County')
+        city.narrow(county.reference)
+        m.addAreaType(store(globe))
+        m.addAreaType(store(continent))
+        m.addAreaType(store(country))
+        m.addAreaType(store(state))
+        m.addAreaType(store(county))
+        m.addAreaType(store(city))
+        PlaceType airport = new PlaceType(name:'Airport')
+        PlaceType runway = new PlaceType(name:'Runway')
+        runway.narrow(airport.reference)
+        PlaceType building = new PlaceType(name: 'Building')
+        building.narrow(airport.reference)
+        PlaceType floor = new PlaceType(name: 'Floor')
+        floor.narrow(building.reference)
+        PlaceType room = new PlaceType(name: 'Room')
+        room.narrow(floor.reference)
+        m.addPlaceType(store(airport))
+        m.addPlaceType(store(runway))
+        m.addPlaceType(store(building))
+        m.addPlaceType(store(floor))
+        m.addPlaceType(store(room))
         Ref law = store(new Domain(name: 'Law Enforcement'))
         Ref health = store(new Domain(name: 'Public Health'))
         Ref biz = store(new Domain(name: 'Business'))
@@ -115,13 +137,20 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addDomain(biz)
         m.addDomain(gov)
 
-        m.addOrganizationType(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: state)))
-        m.addOrganizationType(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe)))
-        m.addOrganizationType(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county)))
+        m.addOrganizationType(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: state.reference)))
+        m.addOrganizationType(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe.reference)))
+        m.addOrganizationType(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county.reference)))
         channels.addModel(store(m));
-
+        // Environment elements
+        Environment env =new Environment(name: 'default')
+        Ref wtc = store(new Place(name: "WTC", placeType: building.reference))
+        env.addPlace(wtc)
+        Ref jfk = store(new Place (name: "JFK", placeType: airport.reference))
+        env.addPlace(jfk)
+        channels.addEnvironment(store(env))
         // A default project for everyone, for now...
         Project p = new Project(name: 'Generic')
+        p.addEnvironment(env)
         p.addModel(m);
         p.addPlaybook(store(new Playbook(name: "Playbook A", description: "This is Playbook A")))
         p.addPlaybook(store(new Playbook(name: "Playbook B", description: "This is Playbook B")))

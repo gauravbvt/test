@@ -10,8 +10,6 @@ import com.mindalliance.channels.playbook.ifm.resources.Person
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.environment.Environment
-import com.mindalliance.channels.playbook.ifm.environment.Place
-import com.mindalliance.channels.playbook.ifm.environment.Policy
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.model.Model
@@ -100,7 +98,8 @@ class Project extends IfmElement {
         return p
     }
 
-    List<String> findAllPlaceNames() {
+
+        List<String> findAllPlaceNames() {
         List<String> names = []
         environments.each {env ->
             env.places.each {place ->
@@ -120,29 +119,55 @@ class Project extends IfmElement {
     }
 
     boolean atleastOnePlaceTypeDefined() {
-        Ref model = (Ref)models.find {model ->
-            model.elementTypes.size() > 0
+        Ref model = (Ref) models.find {model ->
+            model.placeTypes.size() > 0
         }
         return model != null
     }
 
-    boolean atLeastOnePlaceTypesNarrowing(Ref placeType) {
+    List<Ref> findAllTypes(String typeType) {
+        List<Ref> types = []
+        String propName = RefUtils.decapitalize("${typeType}s")
         models.each {model ->
-            if (model.placeTypes.any {it.parent == placeType })  return true
+            types.addAll(model."$propName")
         }
-        return false
+        return types
+    }
+
+    Ref findElementTypeNamed(String typeType, String elementTypeName) {
+        String propName = RefUtils.decapitalize("${typeType}s")
+        Ref namedType = null
+        models.each {model ->
+            List list = model."$propName"
+            list.each {type ->
+                String typeName = type.name
+                if (typeName.equalsIgnoreCase(elementTypeName)) {
+                    namedType = type
+                    return namedType    // TODO -- HOW COMES THIS DOES NOT EXIT THE METHOD?
+                }
+            }
+        }
+        return namedType
+    }
+
+    List<Ref> findAllTypesNarrowing(Ref elementType) {
+        List<Ref> types = []
+        findAllTypes(elementType.type).each {type ->
+            if (type.narrows(elementType)) types.add(type)
+        }
+        return types
     }
 
     List<Ref> findPlaceTypesNarrowing(Ref placeType) {
         List<Ref> narrowing = []
         models.each {model ->
             model.placeTypes.each {pt ->
-               if (placeType == null && pt.parent == null) { // top level place types narrow undefined place type
-                   narrowing.add(pt)
-               }
-               else if (pt.parent == placeType) {
-                   narrowing.add(pt)
-               }
+                if (placeType == null && pt.parent == null) { // top level place types narrow undefined place type
+                    narrowing.add(pt)
+                }
+                else if (pt.parent == placeType) {
+                    narrowing.add(pt)
+                }
             }
         }
         return narrowing

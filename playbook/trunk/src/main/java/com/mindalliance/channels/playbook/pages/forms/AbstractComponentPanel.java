@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -67,7 +68,7 @@ abstract public class AbstractComponentPanel extends Panel {
             propName = propPath;
         }
         else {
-            propName = propPath.substring(0, index-1);
+            propName = propPath.substring(0, index);
         }
         element.changed(propName);
     }
@@ -78,15 +79,17 @@ abstract public class AbstractComponentPanel extends Panel {
         component.setEnabled(this.isReadOnly()); 
     }
 
-    public void refresh(AjaxRequestTarget target) {
-       // Do nothing
-    }
-
     public void onDetach() {
         Bean bean = (Bean) RefUtils.get(element, propPath);
         if ( bean != null )
             bean.detach();
         super.onDetach();
+    }
+
+    public void addContainer(MarkupContainer container) {
+        container.setOutputMarkupId(true);
+        div.addOrReplace(container);
+        container.setEnabled(this.isReadOnly());
     }
 
 }

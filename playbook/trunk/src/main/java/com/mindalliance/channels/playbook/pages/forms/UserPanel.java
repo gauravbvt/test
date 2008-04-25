@@ -35,10 +35,4 @@ public class UserPanel  extends AbstractElementPanel {
         addElementField(passwordField);
     }
 
-    @Override
-     public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        element.changed("name"); // forces an immediate persist to session
-    }
-
 }

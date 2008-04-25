@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:extend>
-    <div wicket:child="editable">
+    <div wicket:id="editable">
         <ul>
             <li><label><span>Country:</span><input type="text" wicket:id="country"/></label></li>
             <li><label><span>State:</span><input type="text" wicket:id="state"/></label></li>
@@ -19,8 +19,8 @@
         <div wicket:id="areaInfoFeedback">[feedback]</div>
         <a href="#" wicket:id="verify">Verify area info</a>
     </div>
-    <div wicket:child="readOnly">
-        <span wicket:child="areaInfoString">[area string]</span>
+    <div wicket:id="readOnly">
+        <span wicket:id="areaInfoString">[area string]</span>
     </div>
 </wicket:extend>
 </body>

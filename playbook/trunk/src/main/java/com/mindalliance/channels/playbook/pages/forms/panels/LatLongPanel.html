@@ -7,12 +7,12 @@
         lang="en">
 <body>
 <wicket:extend>
-    <div wicket:child="editable">
+    <div wicket:id="editable">
         <label><span>Longitude:</span><input type="text" wicket:id="longitude"/></label>
         <label><span>Latitude:</span><input type="text" wicket:id="latitude"/></label>
     </div>
-    <div wicket:child="readOnly">
-        <span wicket:child="latLongString">[lat long string]</span>
+    <div wicket:id="readOnly">
+        <span wicket:id="latLongString">[lat long string]</span>
     </div>
  </wicket:extend>
 </body>

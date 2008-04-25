@@ -130,7 +130,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 RefUtils.set(element,propPath + ".city", "");
                 RefUtils.set(element,propPath + ".street", "");
                 RefUtils.set(element,propPath + ".code", "");
-                element.changed(propPath);
+                elementChanged();
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(stateField);
                 target.addComponent(countyField);
@@ -154,7 +154,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 RefUtils.set(element,propPath + ".city", "");
                 RefUtils.set(element,propPath + ".street", "");
                 RefUtils.set(element,propPath + ".code", "");
-                element.changed(propPath);
+                elementChanged();
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(countyField);
                 target.addComponent(cityField);
@@ -177,7 +177,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 RefUtils.set(element,propPath + ".city", "");
                 RefUtils.set(element,propPath + ".street", "");
                 RefUtils.set(element,propPath + ".code", "");
-                element.changed(propPath);
+                elementChanged();
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(cityField);
                 target.addComponent(streetField);
@@ -196,7 +196,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 // System.out.println("Updating city to " + cityName);
                 RefUtils.set(element,propPath + ".street", "");
                 RefUtils.set(element,propPath + ".code", "");
-                element.changed(propPath);
+                elementChanged();
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(streetField);
                 target.addComponent(codeField);
@@ -211,7 +211,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String streetName = streetField.getModel().getObject();
                 // System.out.println("Updating street to " + streetName);
-                element.changed(propPath);
+                elementChanged();
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
@@ -224,7 +224,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String streetName = streetField.getModel().getObject();
                  // System.out.println("Updating street to " + streetName);
-                element.changed(propPath);
+                elementChanged();
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
@@ -233,8 +233,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         editableDiv.add(codeField);
         // Feedback
         feedback.setOutputMarkupId(true);
-        add(feedback);
-        add(new AjaxLink("verify", new RefPropertyModel(element, propPath)) {
+        editableDiv.add(feedback);
+        editableDiv.add(new AjaxLink("verify", new RefPropertyModel(element, propPath)) {
             public void onClick(AjaxRequestTarget target) {
                 try {
                    Location loc = (Location)getModelObject();
@@ -262,18 +262,6 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 target.addComponent(feedback);
             }
         });
-    }
-
-    public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        target.addComponent(countryField);
-        target.addComponent(stateField);
-        target.addComponent(countyField);
-        target.addComponent(cityField);
-        target.addComponent(streetField);
-        target.addComponent(codeField);
-        feedback.setModel(new FeedbackMessagesModel(feedback));
-        target.addComponent(feedback);
     }
 
     private boolean isValidCode(Location location) {

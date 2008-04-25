@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.environment
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.info.LocationInfo
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,6 +14,7 @@ import com.mindalliance.channels.playbook.ifm.info.LocationInfo
 class Place extends IfmElement {
 
     String name = ''
+    Ref placeType
     LocationInfo locationInfo = new LocationInfo() // -- required
     
 }

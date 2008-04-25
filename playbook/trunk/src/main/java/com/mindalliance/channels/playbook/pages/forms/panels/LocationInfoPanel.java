@@ -39,10 +39,4 @@ public class LocationInfoPanel extends AbstractComponentPanel {
         //
     }
 
-    public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        // TODO
-    }
-    
-
 }

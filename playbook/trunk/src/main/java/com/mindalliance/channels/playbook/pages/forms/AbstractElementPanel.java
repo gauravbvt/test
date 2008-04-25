@@ -112,20 +112,6 @@ abstract public class AbstractElementPanel extends Panel {
         elementForm.add(refListPanel);
     }
 
-    public void refresh(AjaxRequestTarget target) {
-        for (FormComponent field : fields) {
-            target.addComponent(field);
-        }
-        for (String propName : components.keySet()) {
-            element.changed(propName); // forces an immediate persist to session - needed to ensure component and element are in sync
-            AbstractComponentPanel componentPanel = components.get(propName);
-            componentPanel.refresh(target);
-        }
-        for (Panel refListPanel : refListPanels) {
-            target.addComponent(refListPanel);
-        }
-    }
-
     protected String valueOf(Component field) {
         return (String)field.getModel().getObject();
     }

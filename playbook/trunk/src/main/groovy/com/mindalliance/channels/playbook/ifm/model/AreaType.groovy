@@ -11,5 +11,4 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class AreaType extends ElementType {
 
-    Ref parent
 }

@@ -49,14 +49,5 @@ public class OrganizationPanel extends AbstractElementPanel {
         addComponentPanel(jurisdictionPanel, "jurisdiction");
     }
 
-    @Override
-     public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        element.changed("name"); // forces an immediate persist to session - needed to ensure location is in sync
-        addressPanel.refresh(target);
-        jurisdictionPanel.refresh(target);
-        organizationTypesPanel.refresh(target);
-    }
-
 
 }

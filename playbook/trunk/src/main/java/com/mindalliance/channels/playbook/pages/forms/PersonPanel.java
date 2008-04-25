@@ -48,11 +48,5 @@ public class PersonPanel extends AbstractElementPanel {
         addComponentPanel(locationPanel, "address");
     }
 
-    @Override
-     public void refresh(AjaxRequestTarget target) {
-        super.refresh(target);
-        element.changed("address"); // forces an immediate persist to session - needed to ensure location is in sync
-        locationPanel.refresh(target);
-    }
 
 }

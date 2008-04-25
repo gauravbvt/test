@@ -66,15 +66,8 @@ public class SystemPanel extends AbstractElementPanel {
         addElementField(accessField);
     }
 
-    @Override
-     public void refresh(AjaxRequestTarget target) {
-        String orgName = (String)RefUtils.getOrDefault(element, "organization.name", "");
-        organizationField.getModel().setObject(orgName);
-        super.refresh(target);
-        element.changed("name"); // TODO -- kludge - forces an immediate persist to session
-    }
 
-    @Override
+
     protected void updatedField(Component component, AjaxRequestTarget target) {
         if (component == organizationField) {
             String orgName = valueOf(organizationField);
