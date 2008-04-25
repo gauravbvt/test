@@ -43,7 +43,7 @@ class Project extends IfmElement {
     }
 
     Ref findAResource(String type) {
-        Ref res = (Ref) resources.find {res ->
+        Ref res = (Ref)resources.find {res ->
             res.type == type
         }
         return res

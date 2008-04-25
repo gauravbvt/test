@@ -1,11 +1,9 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 
 import java.util.List;
@@ -23,7 +21,7 @@ abstract public class AbstractElementForm extends Panel {
     protected Ref element;
     protected Form elementForm;
     protected List tabs = new ArrayList();
-    protected TabbedPanel tabbedPanel;
+    protected AjaxTabbedPanel tabbedPanel;
 
     public AbstractElementForm(String id, Ref element) {
         super(id);
@@ -43,7 +41,7 @@ abstract public class AbstractElementForm extends Panel {
         elementForm.removePersistentFormComponentValues(true);
         elementForm.setOutputMarkupId(true);
         loadTabs();
-        tabbedPanel = new TabbedPanel("tabbedPanel", tabs);
+        tabbedPanel = new AjaxTabbedPanel("tabbedPanel", tabs);
         tabbedPanel.setOutputMarkupId(true);
         elementForm.add(tabbedPanel);
         add(elementForm);

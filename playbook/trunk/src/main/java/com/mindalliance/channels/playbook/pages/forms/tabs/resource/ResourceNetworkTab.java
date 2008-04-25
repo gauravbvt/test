@@ -26,10 +26,10 @@ import java.util.List;
  */
 public class ResourceNetworkTab extends AbstractFormTab {
 
-    RefreshingView relationshipsView;
-    Label relationshipLabel;
-    RefreshingView agreementsView;
-    Label agreementLabel;
+    protected RefreshingView relationshipsView;
+    protected Label relationshipLabel;
+    protected RefreshingView agreementsView;
+    protected Label agreementLabel;
 
     public ResourceNetworkTab(String id, Ref element) {
         super(id, element);

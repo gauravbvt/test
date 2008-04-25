@@ -27,28 +27,4 @@ abstract public class AbstractResourceForm extends AbstractElementForm {
         super(id, element);
     }
 
-    @Override
-    void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who|what")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceIdentityTab(panelId, element);
-            }
-        });
-        tabs.add(new AbstractTab(new Model("Where")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceLocalityTab(panelId, element);
-            }
-        });
-        tabs.add(new AbstractTab(new Model("Responsibilities")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceResponsibilitiesTab(panelId, element);
-            }
-        });
-        tabs.add(new AbstractTab(new Model("Network")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceNetworkTab(panelId, element);
-            }
-        });
-    }
-
 }

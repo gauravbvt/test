@@ -80,9 +80,11 @@ class ApplicationMemory implements Serializable {
     Referenceable retrieve(Ref ref) {
         Referenceable referenceable = null
         try {
-            referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
-            if (DEBUG) Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
-            referenceable.afterRetrieve()
+            use (NoSessionCategory) {
+                referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
+                if (DEBUG) Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
+                referenceable.afterRetrieve()
+            }
         }
         catch (Exception e) {
             // Do nothing

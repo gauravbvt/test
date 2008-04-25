@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
  */
 public class ResourceLocalityTab extends AbstractFormTab {
 
-    LocationPanel locationPanel;
+    protected LocationPanel locationPanel;
 
     public ResourceLocalityTab(String id, Ref element) {
         super(id, element);

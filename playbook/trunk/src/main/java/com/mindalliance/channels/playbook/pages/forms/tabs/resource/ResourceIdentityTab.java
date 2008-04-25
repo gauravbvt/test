@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -12,6 +13,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.resources.ContactInfo;
 import com.mindalliance.channels.playbook.ifm.resources.Resource;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
@@ -19,6 +21,7 @@ import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -29,9 +32,10 @@ import java.util.ArrayList;
  */
 public class ResourceIdentityTab extends AbstractFormTab {
 
-    TextField nameField;
-    TextArea descriptionField;
-    RefreshingView contactInfosView;
+    protected TextField nameField;
+    protected TextArea descriptionField;
+    protected WebMarkupContainer contactInfosDiv;
+    protected RefreshingView contactInfosView;
 
     public ResourceIdentityTab(String id, Ref element) {
         super(id, element);
@@ -46,38 +50,32 @@ public class ResourceIdentityTab extends AbstractFormTab {
         descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
         addInputField(descriptionField);
         // contact infos
+        contactInfosDiv = new WebMarkupContainer("contactInfosDiv");
+        addContainer(contactInfosDiv);
         contactInfosView = new RefreshingView("contactInfos", new RefPropertyModel(element, "contactInfos")) {
-
             protected Iterator getItemModels() {
-                IModel model = getModel();
                 List items = new ArrayList();
-                items.addAll((List) model.getObject());
-                // Add an empty place item if it makes sense to do so
-                items.add(new ContactInfo()); // add one to be added to the list
+                items.addAll((List) getModel().getObject());
+                items.add(new ContactInfo()); // to be added to the resource's contact infos if set
                 return new ModelIteratorAdapter(items.iterator()) {
                     protected IModel model(Object contactInfo) {
                         return new Model((ContactInfo) contactInfo);
                     }
                 };
             }
-
             protected void populateItem(Item item) {
-                ContactInfo contactInfo = (ContactInfo) item.getModelObject();
+                final ContactInfo contactInfo = (ContactInfo) item.getModel().getObject();
                 // Add medium dropdown
-                final DropDownChoice mediumChoice = new DropDownChoice("medium", new RefPropertyModel(contactInfo, "medium"));
-                List<String> media = ContactInfo.getMedia();
-                mediumChoice.setChoices(media);
+                final DropDownChoice mediumChoice = new DropDownChoice("medium",  new RefPropertyModel(contactInfo, "medium"), ContactInfo.getMedia());
                 mediumChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {
-                        // remove all place items downstream, if any
-                        ContactInfo ci = (ContactInfo) ((RefPropertyModel) mediumChoice.getModel()).getPropertyHolder();
-                        List<ContactInfo> contactInfos = ((Resource) element).getContactInfos();
-                        int index = contactInfos.indexOf(ci);
-                        if (index == contactInfos.size()) {
-                            contactInfos.add(ci); // new place item
+                        List<ContactInfo> contactInfos = ((Resource) element.deref()).getContactInfos();
+                        int index = contactInfos.indexOf(contactInfo);
+                        if (index == -1) {   // new contact info
+                            contactInfos.add(contactInfo);
                         }
                         element.changed("contactInfos");
-                        target.addComponent(contactInfosView);
+                        target.addComponent(contactInfosDiv);
                     }
                 });
                 item.add(mediumChoice);
@@ -88,8 +86,10 @@ public class ResourceIdentityTab extends AbstractFormTab {
                         element.changed("contactInfos");
                     }
                 });
+                item.add(endPointField);
             }
         };
+        contactInfosDiv.add(contactInfosView);
     }
 
 }

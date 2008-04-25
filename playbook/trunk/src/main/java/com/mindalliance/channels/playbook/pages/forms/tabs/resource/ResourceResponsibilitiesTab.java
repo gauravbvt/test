@@ -26,8 +26,8 @@ import java.util.List;
  */
 public class ResourceResponsibilitiesTab extends AbstractFormTab {
 
-    RefreshingView rolesView;
-    Label roleLabel;
+    protected RefreshingView rolesView;
+    protected Label roleLabel;
 
     public ResourceResponsibilitiesTab(String id, Ref element) {
         super(id, element);
