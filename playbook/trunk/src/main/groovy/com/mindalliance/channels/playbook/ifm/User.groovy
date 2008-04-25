@@ -17,9 +17,27 @@ class User extends IfmElement {
     boolean analyst
     boolean manager
 
+    List<Ref> tabs = []
+    int selectedTab = 0
+
     // Selections
     Ref selectedProject
     Ref selectedModel
 
     String toString() { name }
+
+    void addTab( Ref tab ) {
+        tabs.add( tab );
+        changed( "tabs" );
+    }
+
+    void removeTab( Ref tab ) {
+        tabs.remove( tab );
+        changed( "tabs" );
+    }
+
+    static List<Class<?>> contentClasses() {
+        [ Tab.class ]
+    }
+
 }

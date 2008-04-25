@@ -57,9 +57,14 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
     }
 
     public synchronized List<RefMetaProperty> getColumns() {
-        if ( columns == null )
-            columns = Collections.unmodifiableList(
-                new ArrayList<RefMetaProperty>( getColumnIndex().values() ) );
+        if ( columns == null ) {
+            ArrayList<RefMetaProperty> list = new ArrayList<RefMetaProperty>( getColumnIndex().values() );
+            if ( getUsage().size() > 1 ) {
+                // More than on class. Add a "Class" column
+                list.add( 0, new RefMetaProperty( "type", String.class, "Type" ) );
+            }
+            columns = Collections.unmodifiableList( list );
+        }
         return columns;
     }
 
@@ -173,6 +178,8 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
     static class ClassUse {
         private Map<PropertyDescriptor,Set<Object>> values = new HashMap<PropertyDescriptor,Set<Object>>();
         private List<PropertyDescriptor> properties;
+        private boolean hasTransients;
+        private Set<String> transients;
 
         public ClassUse( Class<?> c ) {
             properties = new ArrayList<PropertyDescriptor>();
@@ -191,22 +198,59 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
                         properties.add( pd );
                 }
 
+                try {
+                    c.getMethod( "transientProperties" );
+                    hasTransients = true;
+                } catch ( NoSuchMethodException e ) {
+                    hasTransients = false;
+                }
+
             } catch ( IntrospectionException e ) {
                 e.printStackTrace();
             }
         }
 
+        private Set<String> getTransients() {
+            if ( transients == null )
+                transients = new HashSet<String>();
+            return transients;
+        }
+
+        private Set<String> getTransients( Referenceable item ) {
+            if ( transients == null ) {
+                Set<String> result = getTransients();
+                Class itemClass = item.getClass();
+                try {
+                    List<String> t = (List<String>) itemClass.getMethod( "transientProperties" )
+                                            .invoke( item );
+
+                    result.addAll( t );
+
+                } catch ( IllegalAccessException e ) {
+                    e.printStackTrace();
+                } catch ( InvocationTargetException e ) {
+                    e.printStackTrace();
+                } catch ( NoSuchMethodException e ) {
+                    e.printStackTrace();
+                }
+            }
+
+            return transients;
+        }
+
         public void grok( Referenceable item ) {
             try {
                 for ( PropertyDescriptor pd : properties ){
-                    final Method getter = pd.getReadMethod();
-                    final Object value = getter.invoke( item );
-                    Set<Object> propValues = values.get( pd );
-                    if ( propValues == null ) {
-                        propValues = new HashSet<Object>();
-                        values.put( pd, propValues );
+                    if ( !hasTransients || !getTransients( item ).contains( pd.getName() ) ) {
+                        final Method getter = pd.getReadMethod();
+                        final Object value = getter.invoke( item );
+                        Set<Object> propValues = values.get( pd );
+                        if ( propValues == null ) {
+                            propValues = new HashSet<Object>();
+                            values.put( pd, propValues );
+                        }
+                        propValues.add( valueToDisplay( value ) );
                     }
-                    propValues.add( valueToDisplay( value ) );
                 }
             } catch ( InvocationTargetException e ) {
                 e.printStackTrace();
@@ -223,15 +267,18 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
         public Set<RefMetaProperty> getAllColumns() {
             Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
             for ( PropertyDescriptor p : properties )
-                result.add( newRMP( p ) );
+                if ( !hasTransients || !getTransients().contains( p.getName() ) )
+                    result.add( newRMP( p ) );
             return result;
         }
 
         public Set<RefMetaProperty> getDistinctColumns() {
             Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
-            for ( PropertyDescriptor p : properties )
-                if ( values.get( p ).size() > 1 )
-                    result.add( newRMP( p ) );
+            for ( PropertyDescriptor p : properties ) {
+                if ( !hasTransients || !getTransients().contains( p.getName() ) )
+                    if ( values.get( p ).size() > 1 )
+                        result.add( newRMP( p ) );
+            }
             return result;
         }
     }

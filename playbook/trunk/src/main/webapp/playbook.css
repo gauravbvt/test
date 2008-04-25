@@ -52,8 +52,8 @@ div.p-cell, div.tab-row ul {
 div.content-filter {
     padding-bottom: 5px;
 }
-div.content-filter input[ type='submit' ] {
-    margin-top: 5px;
+div.content-filter input[ type='submit' ], div.content-filter input[ type='button' ] {
+    margin: 5px 0px 0px 5px;
     float: right;
     
 }
@@ -67,6 +67,7 @@ body, input {
 input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
     font-size: small;
     font-weight: normal;
+    border: 1px outset gray;
 }
 
 /* ----------------- Links */

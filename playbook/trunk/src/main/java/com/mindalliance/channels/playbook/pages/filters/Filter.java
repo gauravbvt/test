@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.support.persistence.Mappable;
 
 import javax.swing.tree.TreeNode;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,7 +18,7 @@ import java.util.Map;
 /**
  * A node in the filter tree.
  */
-abstract public class Filter implements TreeNode, Serializable, Mappable {
+abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappable {
 
     private String collapsedText;
     private String expandedText;
@@ -39,6 +40,23 @@ abstract public class Filter implements TreeNode, Serializable, Mappable {
 
     public Filter( String text ) {
         this( text, text );
+    }
+
+    public Filter copy() {
+        try {
+            final Filter shallow = (Filter) super.clone();
+
+            if ( children != null ) {
+                List<Filter> cs = new ArrayList<Filter>();
+                for ( Filter c : children )
+                    cs.add( c.copy() );
+                shallow.setChildren( cs );
+            }
+
+            return shallow;
+        } catch ( CloneNotSupportedException e ) {
+           throw new RuntimeException( e );
+        }
     }
 
     public Filter getRoot() {

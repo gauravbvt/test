@@ -42,8 +42,15 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         participation = null;
         user = application.findUser( id );
         if ( user != null && user.password == password ) {
-            project = application.findProjectsForUser( user )[0]
+            project = user.selectedProject
+            if ( project == null )
+                project = application.findProjectsForUser( user )[0]
             participation = application.findParticipation( project, user )
+
+            model = user.selectedModel
+            if ( user.analyst && model == null )
+                model = application.findModelsForUser( user )[0]
+
             return true;
         }
         else

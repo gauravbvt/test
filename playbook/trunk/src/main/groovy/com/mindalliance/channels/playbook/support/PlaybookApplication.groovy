@@ -26,6 +26,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import com.mindalliance.channels.playbook.ifm.model.AreaType
 import org.apache.wicket.Application
+import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -84,6 +85,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
         User admin = new User(id: "admin", name: 'Administrator', password: "admin")
         admin.admin = true
+        admin.analyst = true;
         channels.addUser(store(admin))
 
         User user = new User(id: "user", name: 'Normal User', password: "user")
@@ -91,6 +93,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
         // Model elements
         Model m = new Model()
+
+        ModelParticipation mp = new ModelParticipation();
+        mp.setUser( admin.getReference() );
+        m.addParticipation( store( mp ) );
 
         Ref globe = store(new AreaType(name: 'Globe'))
         Ref continent = store(new AreaType(name: 'Globe', parent: globe))
@@ -192,6 +198,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
     List<Ref> findProjectsForUser(Ref user) {
         return this.channels.findProjectsForUser(user)
+    }
+
+    List<Ref> findModelsForUser(Ref user) {
+        return this.channels.findModelsForUser(user)
     }
 
     public Ref findParticipation(Ref project, Ref user) {

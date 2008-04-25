@@ -164,7 +164,9 @@ public class ContentPanel extends Panel {
                             rows.setCurrentPage( tab.indexOf( ref ) / rows.getItemsPerPage() );
                             tableNav.renderComponent();
                             formPanel.modelChanged();
-//                            getPage().renderPage();
+
+                            // getPage().renderPage();
+
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
                         } catch ( IllegalAccessException e ) {

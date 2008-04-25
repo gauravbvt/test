@@ -16,21 +16,4 @@ class Participation extends IfmElement {
     Ref project
     boolean manager
     Ref person
-
-    List<Ref> tabs = []
-
-    void addTab( Ref tab ) {
-        tabs.add( tab );
-        changed( "tabs" );
-    }
-
-    void removeTab( Ref tab ) {
-        tabs.remove( tab );
-        changed( "tabs" );
-    }
-
-    static List<Class<?>> contentClasses() {
-        [ Tab.class ]
-    }
-
 }
