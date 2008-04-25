@@ -20,6 +20,7 @@ import java.util.TreeSet;
  */
 public class ClassFilter extends Filter {
 
+    private static final String Package = "com.mindalliance.channels.playbook.pages.filters." ;
     private Class<?> objectType;
     private Class<?> filtersType;
 
@@ -32,7 +33,7 @@ public class ClassFilter extends Filter {
         this.objectType = objectType;
 
         try {
-            filtersType = Class.forName( objectType.getSimpleName() + "Filter" );
+            filtersType = Class.forName( Package + objectType.getSimpleName() + "Filters" );
         } catch ( ClassNotFoundException e ) {
             filtersType = null;
         }

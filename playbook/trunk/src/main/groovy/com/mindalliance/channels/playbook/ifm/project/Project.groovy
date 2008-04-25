@@ -3,12 +3,19 @@ package com.mindalliance.channels.playbook.ifm.project
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.resources.Resource
+import com.mindalliance.channels.playbook.ifm.resources.Position
+import com.mindalliance.channels.playbook.ifm.resources.Organization
+import com.mindalliance.channels.playbook.ifm.resources.System
+import com.mindalliance.channels.playbook.ifm.resources.Person
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.environment.Environment
 import com.mindalliance.channels.playbook.ifm.environment.Place
 import com.mindalliance.channels.playbook.ifm.environment.Policy
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.Participation
+import com.mindalliance.channels.playbook.ifm.model.Model
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,6 +41,34 @@ class Project extends IfmElement {
     }
 
     String toString() { name }
+
+    Referenceable doAddToField( String field, Object object ) {
+        switch ( object ) {
+            case Participation: super.doAddToField( "participations", object ); break;
+            case Position:
+            case Person:
+            case System:
+            case Organization:  super.doAddToField( "resources", object ); break;
+            case Playbook:  super.doAddToField( "playbooks", object ); break;
+            case Model:  super.doAddToField( "models", object ); break;
+            case Environment: super.doAddToField( "environments", object ); break;
+            default: super.doAddToField( field, object );
+        }
+    }
+
+    Referenceable doRemoveFromField( String field, Object object ) {
+        switch ( object ) {
+            case Participation: super.doRemoveFromField( "participations", object ); break;
+            case Position:
+            case Person:
+            case System:
+            case Organization:  super.doRemoveFromField( "resources", object ); break;
+            case Playbook:  super.doRemoveFromField( "playbooks", object ); break;
+            case Model:  super.doRemoveFromField( "models", object ); break;
+            case Environment: super.doRemoveFromField( "environments", object ); break;
+            default: super.doRemoveFromField( field, object );
+        }
+    }
 
     Ref findResourceNamed(String type, String name) {
         Ref res = (Ref) resources.find {res ->
@@ -128,7 +163,7 @@ class Project extends IfmElement {
      static List<Class<?>> contentClasses() {
          List<Class<?>> result = new ArrayList<Class<?>>()
          result.addAll( Resource.contentClasses() )
-         result.addAll( [ Environment.class, Place.class, Policy.class ] )
+         result.addAll( [ Environment.class ] )
          result.addAll( Playbook.contentClasses() )
          return result
      }

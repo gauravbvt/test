@@ -8,16 +8,25 @@ import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
+import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.ColumnProvider;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.RefModel;
+import groovy.lang.MissingPropertyException;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Wrapper for all contents accessible by the current user (the object
@@ -175,14 +184,26 @@ public class UserScope extends BeanImpl implements Container {
     public void add( Referenceable object ) {
         Ref target = getTarget( object );
         target.begin();
-        target.add( object );
+        try {
+            target.add( object );
+        } catch ( MissingPropertyException e ) {
+            // TODO remove this hack
+            final ReferenceableImpl ri = (ReferenceableImpl) target.deref();
+            ri.doAddToField( object.getType(), object );
+        }
         detach();
     }
 
     public void remove( Referenceable ref ) {
         Ref target = getTarget( ref );
         target.begin();
-        target.remove( ref );
+        try {
+            target.remove( ref );
+        } catch ( MissingPropertyException e ) {
+            // TODO remove this hack
+            final ReferenceableImpl ri = (ReferenceableImpl) target.deref();
+            ri.doRemoveFromField( ref.getType(), ref );
+        }
         detach();
     }
 

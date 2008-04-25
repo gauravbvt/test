@@ -45,7 +45,8 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
             project = user.selectedProject
             if ( project == null )
                 project = application.findProjectsForUser( user )[0]
-            participation = application.findParticipation( project, user )
+            if ( project != null )
+                participation = application.findParticipation( project, user )
 
             model = user.selectedModel
             if ( user.analyst && model == null )

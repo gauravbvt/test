@@ -34,7 +34,7 @@ class Channels extends IfmElement {
     }
 
     Ref findUser(String id) {
-        return (Ref) users.find{it.id == id}
+        return (Ref) users.find{it.userId == id}
     }
 
     Ref findModel(String id) {

@@ -83,20 +83,15 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         Channels channels = new Channels(about: "About Channels")
         channels.makeRoot()
 
-        User admin = new User(id: "admin", name: 'Administrator', password: "admin")
+        User admin = new User(userId: "admin", name: 'Administrator', password: "admin")
         admin.admin = true
-        admin.analyst = true;
         channels.addUser(store(admin))
 
-        User user = new User(id: "user", name: 'Normal User', password: "user")
+        User user = new User(userId: "user", name: 'Normal User', password: "user")
         channels.addUser(store(user))
 
         // Model elements
         Model m = new Model()
-
-        ModelParticipation mp = new ModelParticipation();
-        mp.setUser( admin.getReference() );
-        m.addParticipation( store( mp ) );
 
         Ref globe = store(new AreaType(name: 'Globe'))
         Ref continent = store(new AreaType(name: 'Globe', parent: globe))

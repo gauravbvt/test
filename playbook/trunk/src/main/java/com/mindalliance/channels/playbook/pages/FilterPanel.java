@@ -65,7 +65,7 @@ public class FilterPanel extends Panel {
         final FilterTree tree = new FilterTree( "filter-tree", new DefaultTreeModel( getFilter() )){
             public void onCheckBoxUpdate( AjaxRequestTarget target, Filter filter ) {
                 applyButton.setEnabled( true );
-                saveButton.setEnabled( true );
+//                saveButton.setEnabled( true );
                 target.addComponent( this );
                 target.addComponent( applyButton );
             }

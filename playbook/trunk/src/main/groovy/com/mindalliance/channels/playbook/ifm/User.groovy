@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 class User extends IfmElement {
 
     String name = 'No name'
+    String userId
     String password
     boolean admin
     boolean analyst

@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
  */
 public class UserAboutTab extends AbstractFormTab {
 
+    TextField idField;
     TextField nameField;
     TextField passwordField;
     CheckBox managerField;
@@ -27,6 +28,9 @@ public class UserAboutTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        // id
+        idField = new TextField("id", new RefPropertyModel(element, "userId"));
+        addInputField(idField);
         // name
         nameField = new TextField("name", new RefPropertyModel(element, "name"));
         addInputField(nameField);

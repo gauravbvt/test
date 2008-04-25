@@ -75,9 +75,13 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
     private synchronized Map<String, RefMetaProperty> getColumnIndex() {
         if ( columnIndex == null ) {
             Map<String, RefMetaProperty> result = new TreeMap<String,RefMetaProperty>();
-            for( ClassUse use : getUsage().values() )
-                for ( RefMetaProperty p : use.getDistinctColumns() )
+            int size = data.size();
+            for( ClassUse use : getUsage().values() ) {
+                Set<RefMetaProperty> l = size == 1 ? use.getAllColumns()
+                                                   : use.getDistinctColumns();
+                for ( RefMetaProperty p : l )
                     result.put( p.getDisplayName(), p );
+            }
 
             columnIndex = result;
         }
