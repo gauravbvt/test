@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.person;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceResponsibilitiesTab;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
@@ -24,7 +25,7 @@ import java.util.List;
  * Date: Apr 24, 2008
  * Time: 3:26:52 PM
  */
-public class PersonResponsibilitiesTab  extends AbstractFormTab {
+public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
     RefreshingView positionsView;
     Label positionLabel;
@@ -35,10 +36,10 @@ public class PersonResponsibilitiesTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        positionLabel = new Label("positionDescription", new Model("Please select a position"));
+        positionLabel = new Label("positionDescription", new Model(""));
         positionsView = new RefreshingView("positions", new RefPropertyModel(element, "positions")) {
             protected Iterator getItemModels() {
-                List<Ref> positions = (List<Ref>) getModel().getObject();
+                List<Ref> positions = (List<Ref>) getModelObject();
                 return new ModelIteratorAdapter(positions.iterator()) {
                     protected IModel model(Object position) {
                         return new RefModel(position);
@@ -61,7 +62,7 @@ public class PersonResponsibilitiesTab  extends AbstractFormTab {
                 item.add(positionLink);
             }
         };
-        add(positionsView);
-        add(positionLabel);
+        addReplaceable(positionsView);
+        addReplaceable(positionLabel);
     }
 }

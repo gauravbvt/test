@@ -5,12 +5,14 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.LatLong;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.validation.validator.NumberValidator;
+import org.apache.log4j.Logger;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,21 +27,17 @@ public class LatLongPanel extends AbstractComponentPanel {
     WebMarkupContainer readOnlyDiv;
     LatLong latLong;
 
-    public LatLongPanel(String id, Ref element, String propPath, boolean readOnly) {
-        super(id, element, propPath, readOnly);
-    }
-
-    public LatLongPanel(String id, Ref element, String propPath) {
-        super(id, element, propPath);
+    public LatLongPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, element, propPath, readOnly, feedback);
     }
     
     protected void load() {
         super.load();
         latLong = (LatLong) RefUtils.get(element, propPath);
         editableDiv = new WebMarkupContainer("editable");
-        addToPanel(editableDiv);
+        addReplaceable(editableDiv);
         readOnlyDiv = new WebMarkupContainer("readOnly");
-        addToPanel(readOnlyDiv);
+        addReplaceable(readOnlyDiv);
         loadEditable();
         loadReadOnly();
         if (isReadOnly()) {
@@ -51,7 +49,8 @@ public class LatLongPanel extends AbstractComponentPanel {
     }
 
     private void loadEditable() {
-        final TextField longitudeField = new TextField("longitude", new Model("" + latLong.getLongitude()));
+        final TextField longitudeField = new TextField("longitude", new Model(latLong.getLongitude()));
+        longitudeField.setType(Double.class);
         longitudeField.add(NumberValidator.minimum(-180.0));
         longitudeField.add(NumberValidator.maximum(180.0));
         longitudeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -60,9 +59,18 @@ public class LatLongPanel extends AbstractComponentPanel {
                 double value = new Double(longitudeField.getModelObjectAsString());
                 latLong.setLongitude(value);
                 elementChanged();
+                target.addComponent(feedback);
+            }
+            @Override
+            protected void onError(AjaxRequestTarget target, RuntimeException e) {
+                Logger.getLogger(this.getClass()).error("Error updating "+ longitudeField + ": " + e);
+                longitudeField.clearInput();
+                target.addComponent(longitudeField);
+                target.addComponent(feedback);
             }
         });
-        final TextField latitudeField = new TextField("latitude", new Model("" + latLong.getLatitude()));
+        final TextField latitudeField = new TextField("latitude", new Model(latLong.getLatitude()));
+        latitudeField.setType(Double.class);
         latitudeField.add(NumberValidator.minimum(-90.0));
         latitudeField.add(NumberValidator.maximum(90.0));
         latitudeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -71,8 +79,16 @@ public class LatLongPanel extends AbstractComponentPanel {
                 double value = new Double(latitudeField.getModelObjectAsString());
                 latLong.setLatitude(value);
                 elementChanged();
+                target.addComponent(feedback);
             }
-        });        
+            @Override
+            protected void onError(AjaxRequestTarget target, RuntimeException e) {
+                Logger.getLogger(this.getClass()).error("Error updating "+ latitudeField + ": " + e);
+                latitudeField.clearInput();
+                target.addComponent(latitudeField);
+                target.addComponent(feedback);
+            }
+        });
         editableDiv.add(longitudeField);
         editableDiv.add(latitudeField);
     }
@@ -80,11 +96,6 @@ public class LatLongPanel extends AbstractComponentPanel {
     private void loadReadOnly() {
         Label latLongLabel = new Label("latLongString", latLong.toString());
         readOnlyDiv.add(latLongLabel);
-    }
-
-    protected void init() {
-        super.init();
-        //
     }
     
 }

@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -99,7 +100,7 @@ class Project extends IfmElement {
     }
 
 
-        List<String> findAllPlaceNames() {
+    List<String> findAllPlaceNames() {
         List<String> names = []
         environments.each {env ->
             env.places.each {place ->
@@ -110,12 +111,15 @@ class Project extends IfmElement {
     }
 
     Ref findPlaceNamed(String placeName) {
-        environments.each {env ->
-            env.places.each {place ->
-                if (place.name == placeName) return place
+        Ref namedPlace
+        environments.any {env ->
+            env.places.any {place ->
+                if (place.name == placeName) { namedPlace = place }
+                namedPlace
             }
+            namedPlace
         }
-        return null
+        return namedPlace
     }
 
     boolean atleastOnePlaceTypeDefined() {
@@ -137,15 +141,16 @@ class Project extends IfmElement {
     Ref findElementTypeNamed(String typeType, String elementTypeName) {
         String propName = RefUtils.decapitalize("${typeType}s")
         Ref namedType = null
-        models.each {model ->
+        models.any {model ->
             List list = model."$propName"
-            list.each {type ->
+            list.any {type ->
                 String typeName = type.name
                 if (typeName.equalsIgnoreCase(elementTypeName)) {
                     namedType = type
-                    return namedType    // TODO -- HOW COMES THIS DOES NOT EXIT THE METHOD?
                 }
+                namedType
             }
+            namedType
         }
         return namedType
     }

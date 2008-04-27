@@ -35,10 +35,10 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        roleLabel = new Label("roleDescription", new Model("Please select a role"));
+        roleLabel = new Label("roleDescription", new Model(""));
         rolesView = new RefreshingView("roles", new RefPropertyModel(element, "roles")) {
             protected Iterator getItemModels() {
-                List<Ref> roles = (List<Ref>) getModel().getObject();
+                List<Ref> roles = (List<Ref>) getModelObject();
                 return new ModelIteratorAdapter(roles.iterator()) {
                     protected IModel model(Object role) {
                         return new RefModel(role);
@@ -61,7 +61,7 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
                 item.add(roleLink);
             }
         };
-        add(rolesView);
-        add(roleLabel);
+        addReplaceable(rolesView);
+        addReplaceable(roleLabel);
     }
 }

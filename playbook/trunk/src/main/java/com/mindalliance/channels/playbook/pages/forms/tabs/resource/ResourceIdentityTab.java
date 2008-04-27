@@ -51,7 +51,7 @@ public class ResourceIdentityTab extends AbstractFormTab {
         addInputField(descriptionField);
         // contact infos
         contactInfosDiv = new WebMarkupContainer("contactInfosDiv");
-        addContainer(contactInfosDiv);
+        addReplaceable(contactInfosDiv);
         contactInfosView = new RefreshingView("contactInfos", new RefPropertyModel(element, "contactInfos")) {
             protected Iterator getItemModels() {
                 List items = new ArrayList();

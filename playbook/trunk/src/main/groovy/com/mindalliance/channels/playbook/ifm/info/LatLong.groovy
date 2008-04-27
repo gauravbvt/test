@@ -20,7 +20,9 @@ class LatLong extends BeanImpl {
     }
 
     String toString() {
-        return "latitude: $latitude, longitude: $longitude"
+        String latitudeString = latitude ? "$latitude" : "?"
+        String longitudeString = longitude ? "$longitude" : "?"
+        return "latitude: $latitudeString, longitude: $longitudeString"
     }
 
     boolean isSet() {

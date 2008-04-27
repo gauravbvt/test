@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -35,12 +36,8 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
     WebMarkupContainer placeItemsDiv;
     RefreshingView placeItemsView;
 
-    public PlaceInfoPanel(String id, Ref element, String propPath, boolean readOnly) {
-        super(id, element, propPath, readOnly);
-    }
-
-    public PlaceInfoPanel(String id, Ref element, String propPath) {
-        super(id, element, propPath);
+    public PlaceInfoPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, element, propPath, readOnly, feedback);
     }
 
     protected void load() {
@@ -99,7 +96,7 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
             }
         };
         placeItemsDiv.add(placeItemsView);
-        addContainer(placeItemsDiv);
+        addReplaceable(placeItemsDiv);
     }
 
     private List<String> placeTypeNameChoicesFor(PlaceItem placeItem) {

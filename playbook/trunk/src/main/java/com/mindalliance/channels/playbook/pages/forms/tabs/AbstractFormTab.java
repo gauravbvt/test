@@ -9,6 +9,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -49,9 +50,11 @@ public class AbstractFormTab extends Panel {
             inputField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
-                    List<Component>dependents = dependencies.get(inputField);
-                    for (Component dependent : dependents) {
-                        target.addComponent(dependent);
+                    List<Component> dependents = dependencies.get(inputField);
+                    if (dependents != null) {
+                        for (Component dependent : dependents) {
+                            target.addComponent(dependent);
+                        }
                     }
                     target.addComponent(feedback);
                 }
@@ -68,12 +71,12 @@ public class AbstractFormTab extends Panel {
 
     protected void addInputField(FormComponent inputField, Component dependentField) {
         addInputField(inputField);
-        List<Component>dependents = getDependentsOf(inputField);
+        List<Component> dependents = getDependentsOf(inputField);
         dependents.add(dependentField);
     }
 
     List<Component> getDependentsOf(Component component) {
-        List<Component>dependents = dependencies.get(component);
+        List<Component> dependents = dependencies.get(component);
         if (dependents == null) {
             dependents = new ArrayList<Component>();
             dependencies.put(component, dependents);
@@ -83,12 +86,12 @@ public class AbstractFormTab extends Panel {
 
     protected void addInputField(FormComponent inputField) {
         inputFields.add(inputField);
-        addOrReplace(inputField);
+        addReplaceable(inputField);
     }
 
-    protected void addContainer(MarkupContainer container) {
-        container.setOutputMarkupId(true);
-        super.addOrReplace(container);
+    protected void addReplaceable(Component component) {
+        component.setOutputMarkupId(true);
+        addOrReplace(component);
     }
 
 }

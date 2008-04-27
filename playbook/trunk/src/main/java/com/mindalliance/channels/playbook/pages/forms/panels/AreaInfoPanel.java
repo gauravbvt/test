@@ -34,12 +34,8 @@ import java.util.List;
  */
 public class AreaInfoPanel extends AbstractComponentPanel {
 
-    public AreaInfoPanel(String id, Ref element, String propPath, boolean readOnly) {
-        super(id, element, propPath, readOnly);
-    }
-
-    public AreaInfoPanel(String id, Ref element, String propPath) {
-        super(id, element, propPath);
+    public AreaInfoPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, element, propPath, readOnly, feedback);
     }
 
     AreaInfo areaInfo;
@@ -62,9 +58,9 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         super.load();
         areaInfo = (AreaInfo)RefUtils.get(element, propPath);
         editableDiv = new WebMarkupContainer("editable");
-        addToPanel(editableDiv);
+        addReplaceable(editableDiv);
         readOnlyDiv = new WebMarkupContainer("readOnly");
-        addToPanel(readOnlyDiv);
+        addReplaceable(readOnlyDiv);
         loadReadOnly();
         loadEditable();
         if (isReadOnly()) {
@@ -237,8 +233,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         editableDiv.add(new AjaxLink("verify", new RefPropertyModel(element, propPath)) {
             public void onClick(AjaxRequestTarget target) {
                 try {
-                   Location loc = (Location)getModelObject();
-                   Area area = loc.getLocationInfo().getAreaInfo().getArea(false);  // don't cache it (won't serialize)
+                   AreaInfo areaInfo = (AreaInfo)getModelObject();
+                   Area area = areaInfo.getArea(false);  // don't cache it (won't serialize)
                    if (area.isUnknown()) {
                        error("Unknown location");
                    }
@@ -247,7 +243,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                    }
                     else {
                        info("Known location");
-                       if (isValidCode(loc)) {
+                       if (isValidCode(areaInfo)) {
                           info("Code is valid");
                        }
                        else {
@@ -264,11 +260,10 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         });
     }
 
-    private boolean isValidCode(Location location) {
-        AreaInfo loc = location.getLocationInfo().getAreaInfo();
-        String code = loc.getCode();
+    private boolean isValidCode(AreaInfo areaInfo) {
+        String code = areaInfo.getCode();
         if (code != null && code.length() > 0) {
-           return GeoService.validateCode(code, loc.getCountry(), loc.getState(), loc.getCounty(), loc.getCity());
+           return GeoService.validateCode(code, areaInfo.getCountry(), areaInfo.getState(), areaInfo.getCounty(), areaInfo.getCity());
         }
         else {
             return true;

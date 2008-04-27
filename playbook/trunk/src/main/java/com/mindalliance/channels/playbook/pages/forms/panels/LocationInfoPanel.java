@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.info.LocationInfo;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,25 +19,17 @@ public class LocationInfoPanel extends AbstractComponentPanel {
     AreaInfoPanel areaInfoPanel;
     LatLongPanel latLongPanel;
 
-    public LocationInfoPanel(String id, Ref element, String propPath, boolean readOnly) {
-        super(id, element, propPath, readOnly);
+    public LocationInfoPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, element, propPath, readOnly, feedback);
     }
 
-    public LocationInfoPanel(String id, Ref element, String propPath) {
-        super(id, element, propPath);
-    }
 
     protected void load() {
         super.load();
-        areaInfoPanel = new AreaInfoPanel("areaInfo", element, propPath + ".areaInfo", isReadOnly());
-        addToPanel(areaInfoPanel);
-        latLongPanel = new LatLongPanel("latLong", element, propPath + ".latLong", isReadOnly());
-        addToPanel(latLongPanel);
-    }
-
-    protected void init() {
-        super.init();
-        //
+        areaInfoPanel = new AreaInfoPanel("areaInfo", element, propPath + ".areaInfo", readOnly, feedback);
+        addReplaceable(areaInfoPanel);
+        latLongPanel = new LatLongPanel("latLong", element, propPath + ".latLong", readOnly, feedback);
+        addReplaceable(latLongPanel);
     }
 
 }

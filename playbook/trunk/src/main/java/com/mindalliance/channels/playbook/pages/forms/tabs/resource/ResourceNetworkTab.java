@@ -38,10 +38,10 @@ public class ResourceNetworkTab extends AbstractFormTab {
     protected void load() {
         super.load();
         // Relationships
-        relationshipLabel = new Label("relationshipDescription", new Model("Please select a relationship"));
+        relationshipLabel = new Label("relationshipDescription", new Model(""));
         relationshipsView = new RefreshingView("relationships", new RefPropertyModel(element, "relationships")) {
             protected Iterator getItemModels() {
-                List<Ref> relationships = (List<Ref>) getModel().getObject();
+                List<Ref> relationships = (List<Ref>) getModelObject();
                 return new ModelIteratorAdapter(relationships.iterator()) {
                     protected IModel model(Object relationship) {
                         return new RefModel(relationship);
@@ -64,10 +64,10 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 item.add(relationshipLink);
             }
         };
-        add(relationshipsView);
-        add(relationshipLabel);
+        addReplaceable(relationshipsView);
+        addReplaceable(relationshipLabel);
         // Agreements
-        agreementLabel = new Label("agreementDescription", new Model("Please select an agreement"));
+        agreementLabel = new Label("agreementDescription", new Model(""));
         agreementsView = new RefreshingView("agreements", new RefPropertyModel(element, "agreements")) {
             protected Iterator getItemModels() {
                 List<Ref> agreements = (List<Ref>) getModel().getObject();
@@ -93,7 +93,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 item.add(agreementLink);
             }
         };
-        add(agreementsView);
-        add(agreementLabel);
+        addReplaceable(agreementsView);
+        addReplaceable(agreementLabel);
     }
 }
