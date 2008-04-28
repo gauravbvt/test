@@ -164,12 +164,18 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
     public void setForceSelected( boolean selected ) {
         setSelected( selected );
+
         if ( children != null )
-            for ( Filter kid : getChildren() )
+            for ( Filter kid : getChildren() ) {
+                assert( equals( kid.getParent() ) );
                 kid.setForceSelected( selected );
+            }
 
         if ( !selected && parent != null )
+        {
+            assert( parent.getChildren().contains( this ) );
             parent.childDeselected();
+        }
     }
 
     /**
