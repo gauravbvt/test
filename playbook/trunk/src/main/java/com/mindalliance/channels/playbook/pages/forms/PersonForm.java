@@ -24,7 +24,7 @@ public class PersonForm extends AbstractResourceForm {
 
     @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who|what")) {
+        tabs.add(new AbstractTab(new Model("Who-what")) {
             public Panel getPanel(String panelId) {
                 return new PersonIdentityTab(panelId, element);
             }

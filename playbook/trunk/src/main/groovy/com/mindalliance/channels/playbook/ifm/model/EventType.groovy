@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 */
 class EventType extends ElementType {
 
-    List<ElementOfInformation> eois = [] // what can usually be known about elements of this type
+    List<String> topics = [] // what can usually be known about elements of this type
 
 }

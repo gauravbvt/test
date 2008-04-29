@@ -17,5 +17,5 @@ class Assignment extends BeanImpl {
 
     List<InformationTemplate> n2kInformation // what must be known if knowable -- required
     Ref mustDoTaskType // what to do, if anything, when all the above is known
-    Duration maxReactionTime = Duration.ZERO // maximum reaction time -- defaults to "zero"
+    Timing maxReactionTime = new Timing(amount:0) // maximum reaction time -- defaults to "zero"
 }

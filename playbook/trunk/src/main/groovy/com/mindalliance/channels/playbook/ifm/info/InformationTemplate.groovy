@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import org.joda.time.Duration
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +14,7 @@ import org.joda.time.Duration
 class InformationTemplate extends AbstractInformation {
 
     EventSpec about // about what kind of event
-    Duration timeToLive = Duration.ZERO // how long before this kind of information usually expires  
-    List<ResourceSpec> credibleSources // from whom is this kind of information credible
+    // Timing timeToLive = new Timing(msecs:0) // how long before this kind of information usually expires
+    List<Ref> organizationTypes // from whom is this kind of information credible
 
 }

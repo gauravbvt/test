@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.resources.System
 import com.mindalliance.channels.playbook.ifm.Locatable
 import com.mindalliance.channels.playbook.ifm.project.Project
+import com.mindalliance.channels.playbook.ifm.Describable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +15,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 * Date: Apr 17, 2008
 * Time: 11:16:29 AM
 */
-class Resource extends IfmElement implements Locatable {
+class Resource extends IfmElement implements Locatable, Describable {
 
     String name = 'No name'
     String description = ''

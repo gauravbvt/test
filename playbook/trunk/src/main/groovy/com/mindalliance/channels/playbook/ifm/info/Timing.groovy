@@ -12,10 +12,10 @@ import org.joda.time.Duration
  */
 class Timing extends BeanImpl {
 
-    static final List<String> units = ['Second', 'Minute', 'Hour', 'Day', 'Week']
+    static final List<String> units = ['seconds', 'minutes', 'hours', 'days', 'weeks']
 
-    long msecs = 0
-    String unit = 'Second'
+    int amount = 0
+    String unit = 'seconds'
     Duration duration
 
     @Override
@@ -28,17 +28,17 @@ class Timing extends BeanImpl {
     }
 
     Duration getDuration() {
-        if (!duration) duration = new Duration(msecs * unitValue())
+        if (!duration) duration = new Duration(amount * unitValue() * 1000)
         return duration
     }
 
     long unitValue() {
         switch(unit) {
-            case 'Second': return 1000
-            case 'Minute': return 60 * 1000
-            case 'Hour': return 60 * 60 * 1000
-            case 'Day': return 24 * 60 * 60 * 1000
-            case 'Week': return 7 * 24 * 60 * 60 * 1000
+            case 'seconds': return 1
+            case 'minutes': return 60
+            case 'hours': return 60 * 60
+            case 'days': return 24 * 60 * 60
+            case 'weeks': return 7 * 24 * 60 * 60
             default: throw new IllegalArgumentException("Unknown time unit $s")
         }
     }

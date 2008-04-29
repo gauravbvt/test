@@ -23,12 +23,9 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.wicketstuff.dojo.markup.html.form.suggestionlist.DojoHtmlSuggestionList;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
-import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -78,7 +75,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
                        edit(withResource, target);
                     }
                 };
-                // with named resource
+                // with tooltipped named resource
                 Label relationshipResourceNameLabel = new Label("relationshipResourceName", new RefPropertyModel(relationship, "withResource.name"));
                 relationshipResourceLink.add(relationshipResourceNameLabel);
                 Ref relationshipType = relationship.getRelationshipType();

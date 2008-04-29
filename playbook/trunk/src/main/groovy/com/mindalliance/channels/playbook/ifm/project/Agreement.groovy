@@ -6,6 +6,7 @@ import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.info.Timing
 import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.ifm.Describable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,16 +15,16 @@ import com.mindalliance.channels.playbook.support.RefUtils
 * Date: Apr 17, 2008
 * Time: 10:43:29 AM
 */
-class Agreement extends IfmElement {
+class Agreement extends IfmElement implements Describable {
 
     static final List<String> DELIVERIES = ['notify', 'answer']
     
     String description = ''
-    Ref fromResource
-    Ref toResource
+    Ref fromResource   // readOnly -- set on creation
+    Ref toResource     // readOnly -- set on creation
     InformationTemplate informationCovered
     String delivery = 'notify' // one of {push,pull}
-    Timing maxDelay = new Timing(msecs:0)
+    Timing maxDelay = new Timing(amount:0)
     boolean effective = false // whether the agreement is in place in real life
 
     String toString() {

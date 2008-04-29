@@ -36,7 +36,7 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
     protected void load() {
         super.load();
-        positionLabel = new Label("positionDescription", new Model(""));
+       /* positionLabel = new Label("positionDescription", new Model(""));
         positionsView = new RefreshingView("positions", new RefPropertyModel(element, "positions")) {
             protected Iterator getItemModels() {
                 List<Ref> positions = (List<Ref>) getModelObject();
@@ -63,6 +63,6 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
             }
         };
         addReplaceable(positionsView);
-        addReplaceable(positionLabel);
+        addReplaceable(positionLabel);*/
     }
 }

@@ -14,10 +14,10 @@ class LocationSpec extends BeanImpl {
 
     static final List<String> RELATIONS = ['same', 'contained', 'containing', 'sameOrAdjoining']
 
-    String relativeTo // one of {location, jurisdiction} of context resource -- required
+    // String relativeTo // one of {location, jurisdiction} of context resource -- required
     Ref areaType // what kind of area -- defaults to location's area type of relative-to if set, else required
     Ref placeType // what kind of place -- defaults to location's place type of relative-to if set, else required
-    String relation = 'same'// one of {same, contained, containing, sameOrAdjoining} -- defaults to "containing"
+    String relation = 'same'// one of {same, contained, containing, sameOrAdjoining} -- defaults to "containing" -- re. jurisdiction, else location
 
 
 }

@@ -15,6 +15,7 @@ import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.ifm.Describable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,7 +24,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
  * Date: Mar 19, 2008
  * Time: 2:10:46 PM
  */
-class Project extends IfmElement {
+class Project extends IfmElement implements Describable {
 
     String name = 'Unnamed'
     String description = ''

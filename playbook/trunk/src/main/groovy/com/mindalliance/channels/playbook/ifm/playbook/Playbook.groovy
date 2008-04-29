@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.Describable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 1:26:15 PM
 */
-class Playbook extends IfmElement {
+class Playbook extends IfmElement implements Describable {
 
     String name = ''
     String description = ''
