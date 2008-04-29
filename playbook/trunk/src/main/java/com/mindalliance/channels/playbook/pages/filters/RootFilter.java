@@ -13,8 +13,12 @@ public class RootFilter extends ClassFilter {
     }
 
     public RootFilter( Container container ) {
+        this( null, true );
+    }
+
+    public RootFilter( Container container, boolean selected ) {
         super( "Show everything", "Show...", ReferenceableImpl.class );
-        setSelected( true );
+        setSelected( selected );
         setContainer( container );
     }
 }

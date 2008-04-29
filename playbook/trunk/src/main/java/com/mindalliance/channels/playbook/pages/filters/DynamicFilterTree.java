@@ -23,13 +23,13 @@ public class DynamicFilterTree extends FilterTree {
 
     public DynamicFilterTree( String id, IModel selections, IModel choices, boolean singleSelect ) {
         super( id, createFilter( selections, choices ), singleSelect );
+        this.computedFilter = super.getFilter();
         this.selections = selections;
         this.choices = choices;
     }
 
     public void detachModels() {
         super.detachModels();
-        computedFilter = null;
         choices.detach();
         selections.detach();
     }
@@ -38,8 +38,7 @@ public class DynamicFilterTree extends FilterTree {
         List<Ref> choiceList = (List<Ref>) choices.getObject();
         List<Ref> selectionList = (List<Ref>) selections.getObject();
 
-        Filter filter = new RootFilter(
-            new RefContainer( choiceList ) );
+        Filter filter = new RootFilter( new RefContainer( choiceList ), false );
         filter.setShowingLeaves( true );
 
         // Set selections
@@ -48,19 +47,21 @@ public class DynamicFilterTree extends FilterTree {
                 filter.selectFirstMatch( sel );
         }
         filter.simplify();
+        filter.setExpanded( true );
         return filter;
     }
 
     public synchronized Filter getFilter() {
-        if ( computedFilter == null )
+        if ( computedFilter == null ) {
             setFilter( createFilter( choices, selections ) );
+        }
 
         return computedFilter;
     }
 
     public void setFilter( Filter filter ) {
-        super.setFilter( filter );
         computedFilter = filter;
+        super.setFilter( filter );
     }
 
     public IModel getChoices() {
@@ -83,8 +84,8 @@ public class DynamicFilterTree extends FilterTree {
 
     public List<Ref> getNewSelections() {
         List<Ref> results = new ArrayList<Ref>();
-        Filter filter = getFilter();
-        for ( Ref ref : new FilteredContainer( filter.getContainer(), filter, false ) )
+        RefContainer data = new RefContainer( (List<Ref>) choices.getObject() );
+        for ( Ref ref : new FilteredContainer( data, getFilter(), false ) )
             results.add( ref );
 
         return results;
