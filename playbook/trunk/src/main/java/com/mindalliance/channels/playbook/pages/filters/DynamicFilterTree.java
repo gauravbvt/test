@@ -22,7 +22,7 @@ public class DynamicFilterTree extends FilterTree {
     }
 
     public DynamicFilterTree( String id, IModel selections, IModel choices, boolean singleSelect ) {
-        super( id, new RootFilter(), singleSelect );
+        super( id, createFilter( selections, choices ), singleSelect );
         this.selections = selections;
         this.choices = choices;
     }
@@ -34,24 +34,27 @@ public class DynamicFilterTree extends FilterTree {
         selections.detach();
     }
 
-    public synchronized Filter getFilter() {
-        if ( computedFilter == null ) {
-            List<Ref> choiceList = (List<Ref>) choices.getObject();
-            List<Ref> selectionList = (List<Ref>) selections.getObject();
+    static public Filter createFilter( IModel selections, IModel choices ) {
+        List<Ref> choiceList = (List<Ref>) choices.getObject();
+        List<Ref> selectionList = (List<Ref>) selections.getObject();
 
-            Filter filter = new RootFilter(
-                new RefContainer( choiceList ) );
-            filter.setShowingLeaves( true );
+        Filter filter = new RootFilter(
+            new RefContainer( choiceList ) );
+        filter.setShowingLeaves( true );
 
-            // Set selections
-            for ( Ref sel : selectionList ) {
-                if ( choiceList.contains( sel ) )
-                    filter.selectFirstMatch( sel );
-            }
-            filter.simplify();
-
-            setFilter( filter );
+        // Set selections
+        for ( Ref sel : selectionList ) {
+            if ( choiceList.contains( sel ) )
+                filter.selectFirstMatch( sel );
         }
+        filter.simplify();
+        return filter;
+    }
+
+    public synchronized Filter getFilter() {
+        if ( computedFilter == null )
+            setFilter( createFilter( choices, selections ) );
+
         return computedFilter;
     }
 
