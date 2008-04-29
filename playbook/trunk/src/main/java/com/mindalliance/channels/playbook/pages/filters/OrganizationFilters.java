@@ -4,10 +4,8 @@ import com.mindalliance.channels.playbook.ifm.resources.Organization;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.Container;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,12 +20,9 @@ public class OrganizationFilters extends AbstractFilters {
         super();
     }
 
-    public List<Filter> getFilters( Container data ) {
-        List<Filter> result = new ArrayList<Filter>();
+    public void addFilters( Container data, List<Filter> result ) {
 
         addParentFilters( result, data );
-
-        return result;
     }
 
     private void addParentFilters( List<Filter> result, Container data ) {
@@ -41,8 +36,7 @@ public class OrganizationFilters extends AbstractFilters {
                             return o1.getName().compareTo( o2.getName() );
                         }
                     } );
-            for ( Iterator i=data.iterator(0,data.size()) ; i.hasNext() ; ) {
-                Ref r = (Ref) i.next();
+            for ( Ref r : data ) {
                 Object obj = r.deref();
                 if ( obj instanceof Organization ) {
                     Organization org = (Organization) obj;

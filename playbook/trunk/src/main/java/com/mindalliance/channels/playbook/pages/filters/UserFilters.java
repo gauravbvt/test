@@ -5,8 +5,8 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.Container;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +27,9 @@ public class UserFilters extends AbstractFilters {
         count.put( type, get( type ) + 1 );
     }
 
-    public List<Filter> getFilters( Container container ) {
-
+    public void addFilters( Container container, List<Filter> result ) {
         final int size = container.size();
-        Iterator i = container.iterator( 0, size );
-        while ( i.hasNext() ) {
-            Ref userRef = (Ref) i.next();
+        for ( Ref userRef : container ) {
             User user = (User) userRef.deref();
             if ( user.getAdmin() )
                 addTo( Type.Admins );
@@ -44,7 +41,6 @@ public class UserFilters extends AbstractFilters {
                 addTo( Type.Normal );
         }
 
-        List<Filter> result = new ArrayList<Filter>();
         if ( get( Type.Admins ) > 0 && get( Type.Admins ) < size )
             result.add( new AdminFilter() );
         if ( get( Type.Managers ) > 0 && get( Type.Managers ) < size )
@@ -53,74 +49,67 @@ public class UserFilters extends AbstractFilters {
             result.add( new AnalystFilter() );
         if ( get( Type.Normal ) > 0 && get( Type.Normal ) < size )
             result.add( new NormalUserFilter() );
-        return result;
     }
 
-    static class AdminFilter extends Filter {
+    static abstract class UserFilter extends Filter {
+
+        public UserFilter( String text ) {
+            super( text, text + "..." );
+        }
+
+        protected List<Filter> createChildren() {
+            if ( isShowingLeaves() ) {
+                List<Filter> results = new ArrayList<Filter>();
+                for ( Ref ref : getContainer() )
+                    results.add( new RefFilter( ref ) );
+                return results;
+
+            } else
+                return Collections.emptyList();
+        }
+
+        protected boolean strictlyAllowsClass( Class<?> c ) {
+            return c.equals( User.class );
+        }
+    }
+
+    static class AdminFilter extends UserFilter {
 
         public AdminFilter() {
             super( "administrators" );
         }
 
-        protected List<Filter> createChildren() {
-            return new ArrayList<Filter>();
-        }
-
         public boolean match( Ref object ) {
             return object.getType().equals( "User" ) && ( (User) object.deref() ).getAdmin();
         }
-
-        protected boolean strictlyAllowsClass( Class<?> c ) {
-            return c.equals( User.class );
-        }
     }
 
-    static class ManagerFilter extends Filter {
+    static class ManagerFilter extends UserFilter {
 
         public ManagerFilter() {
             super( "managers" );
         }
 
-        protected List<Filter> createChildren() {
-            return new ArrayList<Filter>();
-        }
-
         public boolean match( Ref object ) {
             return object.getType().equals( "User" ) && ( (User) object.deref() ).getManager();
         }
-
-        protected boolean strictlyAllowsClass( Class<?> c ) {
-            return c.equals( User.class );
-        }
     }
 
-    static class AnalystFilter extends Filter {
+    static class AnalystFilter extends UserFilter {
 
         public AnalystFilter() {
             super( "analysts" );
         }
 
-        protected List<Filter> createChildren() {
-            return new ArrayList<Filter>();
-        }
-
         public boolean match( Ref object ) {
             return object.getType().equals( "User" ) && ( (User) object.deref() ).getAnalyst();
         }
-
-        protected boolean strictlyAllowsClass( Class<?> c ) {
-            return c.equals( User.class );
-        }
     }
 
-    static class NormalUserFilter extends Filter {
+    static class NormalUserFilter extends UserFilter {
 
         public NormalUserFilter() {
             super( "normal users" );
-        }
-
-        protected List<Filter> createChildren() {
-            return new ArrayList<Filter>();
         }
 
         public boolean match( Ref object ) {
@@ -131,10 +120,5 @@ public class UserFilters extends AbstractFilters {
 
             return false;
         }
-
-        protected boolean strictlyAllowsClass( Class<?> c ) {
-            return c.equals( User.class );
-        }
     }
-
 }

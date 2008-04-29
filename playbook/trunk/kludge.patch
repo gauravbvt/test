@@ -1,6 +1,6 @@
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.java groovy-stubs/main/com/mindalliance/channels/playbook/ifm/Tab.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-23 15:08:52.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-23 15:08:52.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-28 16:00:56.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ifm/Tab.java	2008-04-28 16:01:52.000000000 -0400
 @@ -46,6 +46,7 @@
  	public IModel model(Object object){ throw new Error(); };
  
@@ -9,9 +9,17 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ifm/Tab.jav
  
  	/**
  	 * Setter for 'Base' property.
+@@ -89,6 +90,7 @@
+ 	public Object getObject(){ throw new Error(); };
+ 
+ 	public Iterator iterator(){ throw new Error(); };
++	public Iterator iterator( int first, int count ){ throw new Error(); };
+ 
+ 	public synchronized void detach(){ throw new Error(); };
+ 
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/SessionMemory.java groovy-stubs/main/com/mindalliance/channels/playbook/mem/SessionMemory.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-23 15:08:52.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-23 15:08:52.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-28 16:00:56.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/mem/SessionMemory.java	2008-04-28 16:00:56.000000000 -0400
 @@ -90,6 +90,8 @@
  	 */
  	public void setChanges(Set value){ throw new Error(); };
@@ -22,8 +30,8 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/mem/Session
  
  	public int getPendingDeletesCount(){ throw new Error(); };
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.java groovy-stubs/main/com/mindalliance/channels/playbook/ref/Ref.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-23 15:08:52.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-23 15:08:52.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-28 16:00:56.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/Ref.java	2008-04-28 16:00:56.000000000 -0400
 @@ -22,11 +22,15 @@
   */
  public interface Ref extends Serializable {
@@ -51,8 +59,8 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/Ref.jav
  	void changed(String propName);
  
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-23 15:08:52.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-23 15:12:05.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-28 16:00:56.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/RefImpl.java	2008-04-28 16:00:56.000000000 -0400
 @@ -32,11 +32,15 @@
  
  	public String db;
@@ -80,8 +88,8 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/Re
  	public List drillDown(String listPropName, List drillDownPropNames, Map ddValues){ throw new Error(); };
  
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-23 15:08:52.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-23 15:08:52.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-28 16:00:56.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/ref/impl/ReferenceableImpl.java	2008-04-28 16:00:56.000000000 -0400
 @@ -53,6 +53,8 @@
  
  	public void changed(){ throw new Error(); };
@@ -92,8 +100,8 @@ diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/ref/impl/Re
  
  	public void commit(){ throw new Error(); };
 diff -Naur groovy-stubs-orig/main/com/mindalliance/channels/playbook/support/PlaybookSession.java groovy-stubs/main/com/mindalliance/channels/playbook/support/PlaybookSession.java
---- groovy-stubs-orig/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-23 15:08:52.000000000 -0400
-+++ groovy-stubs/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-23 15:08:52.000000000 -0400
+--- groovy-stubs-orig/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-28 16:00:56.000000000 -0400
++++ groovy-stubs/main/com/mindalliance/channels/playbook/support/PlaybookSession.java	2008-04-28 16:00:56.000000000 -0400
 @@ -63,6 +63,8 @@
  
  	public Roles getRoles(){ throw new Error(); };

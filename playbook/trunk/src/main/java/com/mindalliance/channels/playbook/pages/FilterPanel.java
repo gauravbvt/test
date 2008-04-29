@@ -9,8 +9,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-import javax.swing.tree.DefaultTreeModel;
-
 /**
  * ...
  */
@@ -37,8 +35,8 @@ public class FilterPanel extends Panel {
         // meanwhile...
         applyButton.setEnabled( false );
 
-        tree = new FilterTree( "filter-tree", new DefaultTreeModel( (Filter) getModelObject() )){
-            public void onCheckBoxUpdate( AjaxRequestTarget target, Filter filter ) {
+        tree = new FilterTree( "filter-tree", (Filter) getModelObject() ){
+            public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 applyButton.setEnabled( true );
                 saveButton.setEnabled( true );
                 target.addComponent( this );
@@ -76,13 +74,11 @@ public class FilterPanel extends Panel {
     public void onFilterSave( Filter filter ){}
 
     public final Filter getFilter() {
-        DefaultTreeModel tm = (DefaultTreeModel) tree.getModelObject();
-        return (Filter) tm.getRoot();
+        return tree.getFilter();
     }
 
     public final void setFilter( Filter filter ) {
-        DefaultTreeModel tm = (DefaultTreeModel) tree.getModelObject();
-        tm.setRoot( filter );
+        tree.setFilter( filter );
         setModelObject( filter );
     }
 }

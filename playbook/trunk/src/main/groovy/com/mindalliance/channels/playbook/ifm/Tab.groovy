@@ -73,6 +73,7 @@ class Tab extends IfmElement implements Container {
 
     public synchronized void detach() {
         super.detach()
+        getFilter().invalidate();
         if ( buffer != null )
             buffer.detach()
     }
@@ -110,12 +111,16 @@ class Tab extends IfmElement implements Container {
         return getBuffer().iterator( first, count );
     }
 
+    public Iterator<Ref> iterator() {
+        return getBuffer().iterator();
+    }
+
     public IModel model( Object object ) {
         return base.model( object );
     }
 
     public void add( Referenceable ref ) {
-        getBuffer().add( ref );
+        base.add( ref );
         detach()
     }
 

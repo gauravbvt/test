@@ -1,20 +1,14 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.ifm.Tab;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.Session;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.FilteredContainer;
-import com.mindalliance.channels.playbook.support.models.ColumnProvider;
-import com.mindalliance.channels.playbook.support.PlaybookSession;
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.Tab;
-import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-
-import java.util.List;
 
 /**
  * ...
@@ -29,7 +23,7 @@ public class TabPanel extends Panel {
 
         final WebMarkupContainer left = new WebMarkupContainer( "tab-left" );
         left.add( new FilterPanel( "filter", new RefPropertyModel( tabModel, "filter" ) ) {
-            public void onFilterApplied() {
+            public void onFilterApplied( Filter f ) {
                 final Ref tabRef = getTabRef();
 
                 PlaybookSession ps = (PlaybookSession) PlaybookSession.get();
@@ -40,7 +34,7 @@ public class TabPanel extends Panel {
                 assert( ps.getMemory().getBegun().containsKey( tabRef ));
 
                 Tab tab = (Tab) tabRef.deref();
-                tab.setFilter( getFilter() );
+                tab.setFilter( f );
                 // TODO JF: figure out why this is required, when the above should be sufficient
                 tab.changed( "filter" );
 
@@ -52,23 +46,25 @@ public class TabPanel extends Panel {
             }
 
             public void onFilterSave( Filter filter ) {
-                Tab newTab = new Tab();
-                Ref newTabRef = newTab.persist();
-                Filter f = getFilter().copy();
-                newTab.setBase( new FilteredContainer( getTab().getBase(), f ) );
-                List<Class<?>> c = f.getContainer().getAllowedClasses();
-                if ( c.size() > 0 ) {
-                    // TODO do something smarter here...
-                    newTab.setName( ColumnProvider.toDisplay( c.get(0).getSimpleName() ) + "s" );
-                }
+                  // TODO debug this
 
-                final PlaybookSession s = (PlaybookSession) Session.get();
-                Ref userRef = s.getUser();
-//                userRef.begin();
-                User u = (User) userRef.deref();
-                u.addTab( newTabRef );
-                newTab.commit();
-                userRef.commit();
+//                Tab newTab = new Tab();
+//                Ref newTabRef = newTab.persist();
+//                Filter f = getFilter().copy();
+//                newTab.setBase( new FilteredContainer( getTab().getBase(), f ) );
+//                List<Class<?>> c = f.getContainer().getAllowedClasses();
+//                if ( c.size() > 0 ) {
+//                    // TODO do something smarter here...
+//                    newTab.setName( ColumnProvider.toDisplay( c.get(0).getSimpleName() ) + "s" );
+//                }
+//
+//                final PlaybookSession s = (PlaybookSession) Session.get();
+//                Ref userRef = s.getUser();
+////                userRef.begin();
+//                User u = (User) userRef.deref();
+//                u.addTab( newTabRef );
+//                newTab.commit();
+//                userRef.commit();
             }
         } );
 

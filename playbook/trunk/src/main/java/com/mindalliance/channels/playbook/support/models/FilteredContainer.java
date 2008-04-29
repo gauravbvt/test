@@ -3,24 +3,20 @@ package com.mindalliance.channels.playbook.support.models;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
-import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ...
  */
-public class FilteredContainer implements Container {
+public class FilteredContainer extends RefContainer {
 
     private Container data;
     private Filter filter;
-    private transient List<Ref> buffer;
-    private transient ColumnProvider columnProvider;
-    private transient List<Class<?>> allowedClasses;
     private boolean strict;
+
+    private transient List<Class<?>> allowedClasses;
 
     public FilteredContainer( Container data, Filter filter, boolean strict ) {
          this.data = data;
@@ -49,18 +45,17 @@ public class FilteredContainer implements Container {
     }
 
     public synchronized void detach() {
+        super.detach();
         getData().detach();
-        if ( columnProvider != null )
-            columnProvider.detach();
-        buffer = null;
+        setContents( null );
         allowedClasses = null;
     }
 
-    private synchronized List<Ref> getBuffer() {
+    protected synchronized List<Ref> getContents() {
+        List<Ref> buffer = super.getContents();
         if ( buffer == null ) {
             buffer = new ArrayList<Ref>();
-            for ( Iterator i = getData().iterator(0,getData().size() ); i.hasNext(); ) {
-                final Ref ref = (Ref) i.next();
+            for ( Ref ref : getData() ) {
                 if ( isStrict() ) {
                     if ( getFilter().match( ref ) )
                         buffer.add( ref );
@@ -69,32 +64,9 @@ public class FilteredContainer implements Container {
                         buffer.add( ref );
                 }
             }
+            setContents( buffer );
         }
         return buffer;
-    }
-
-    public Iterator<Ref> iterator( int first, int count ) {
-        return getBuffer().subList( first, first+count ).iterator();
-    }
-
-    public IModel model( Object object ) {
-        return getData().model( object );
-    }
-
-    public int size() {
-        return getBuffer().size();
-    }
-
-    public boolean contains( Ref ref ) {
-        return getBuffer().contains( ref );
-    }
-
-    public Ref get( int index ) {
-        return getBuffer().get( index );
-    }
-
-    public int indexOf( Ref ref ) {
-        return getBuffer().indexOf( ref );
     }
 
     public synchronized List<Class<?>> getAllowedClasses() {
@@ -108,45 +80,13 @@ public class FilteredContainer implements Container {
         return allowedClasses;
     }
 
-    public synchronized ColumnProvider getColumnProvider() {
-        if ( columnProvider == null )
-            columnProvider = new ColumnProvider( this );
-
-        return columnProvider;
-    }
-
     public void remove( Ref ref ) {
         getData().remove( ref );
         detach();
-    }
-
-    public void remove( Referenceable ref ) {
-        remove( ref.getReference() );
-    }
-
-    public Object getObject() {
-        return null;
-    }
-
-    public void setObject( Object object ) {
     }
 
     public void add( Referenceable ref ) {
         getData().add( ref );
         detach();
     }
-
-    // Mappable
-
-    // Converts self to a map with key = property name and value = a JavaBean or simple data type
-    public Map toMap() {
-        return null;  // TODO
-    }// Initializes self from a map
-
-    public void initFromMap(Map map) {
-        // TODO
-    }
-
-    // end Mappable
-
 }

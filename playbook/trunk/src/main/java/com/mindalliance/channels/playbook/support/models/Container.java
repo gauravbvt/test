@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ...
  */
-public interface Container extends IDataProvider, IModel, Mappable {
+public interface Container extends IDataProvider, IModel, Iterable<Ref>, Mappable {
 
     Ref get( int index );
 
@@ -33,6 +33,8 @@ public interface Container extends IDataProvider, IModel, Mappable {
     ColumnProvider getColumnProvider();
 
     Iterator<Ref> iterator( int first, int count );
+
+    Iterator<Ref> iterator();
 
     int size();
 

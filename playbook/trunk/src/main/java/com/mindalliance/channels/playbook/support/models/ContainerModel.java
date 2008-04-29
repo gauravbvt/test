@@ -88,6 +88,10 @@ public class ContainerModel extends RefPropertyModel implements Container {
         return getContents().subList( first, first+count ).iterator();
     }
 
+    public Iterator<Ref> iterator() {
+        return getContents().iterator();
+    }
+
     public int size() {
         return getContents().size();
     }

@@ -98,9 +98,7 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
                 }
             );
 
-            Iterator i = data.iterator( 0, data.size() );
-            while ( i.hasNext() ){
-                Ref ref = (Ref) i.next();
+            for ( Ref ref : data ){
                 Referenceable object = ref.deref();
                 Class<?> objectClass = object.getClass();
                 ClassUse use = result.get( objectClass );

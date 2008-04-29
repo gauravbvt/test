@@ -26,7 +26,9 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
     private boolean expanded;
     private boolean selected;
+    private boolean showingLeaves;
     private Filter parent;
+    private boolean invalid;
 
     private List<Filter> children;
 
@@ -66,6 +68,22 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             return getParent().getRoot();
     }
 
+    public void invalidate() {
+        setInvalid( true );
+        if ( children != null )
+            for( Filter f : children )
+                f.invalidate();
+
+    }
+
+    public boolean isInvalid() {
+        return invalid;
+    }
+
+    public void setInvalid( boolean invalid ) {
+        this.invalid = invalid;
+    }
+
     public Map toMap() {
         Map map = new HashMap();
         map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
@@ -91,8 +109,9 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     public final synchronized Container getContainer() {
         if ( container == null ) {
             Filter p = getParent();
-            container = p == null ? new UserScope()
-                                  : new FilteredContainer( p.getContainer(), p, true );
+            Container pc = p == null ? new UserScope()
+                                     : p.getContainer();
+            container = new FilteredContainer( pc, this, true );
         }
 
         return container;
@@ -154,6 +173,14 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         return selected;
     }
 
+    public boolean isShowingLeaves() {
+        return showingLeaves;
+    }
+
+    public void setShowingLeaves( boolean showingLeaves ) {
+        this.showingLeaves = showingLeaves;
+    }
+
     public void setSelected( boolean selected ) {
         this.selected = selected;
     }
@@ -178,11 +205,29 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         }
     }
 
+    public boolean isUniqueSelection() {
+        return getChildCount() == 0 && isSelected();
+    }
+
+    public void setUniqueSelection( boolean selection ) {
+        getRoot().setForceSelected( false );
+        if ( getChildCount() == 0 )
+            setSelected( selection );
+        else {
+            Filter first = (Filter) getChildAt( 0 );
+            setExpanded( selection );
+            first.setUniqueSelection( selection );
+        }
+
+    }
+
     /**
      * Called by a child when deselected.
      */
     protected void childDeselected() {
         this.selected = false;
+        if ( getParent() != null )
+            getParent().childDeselected();
     }
 
     public final Filter getParent() {
@@ -227,6 +272,8 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     }
 
     public final synchronized List<Filter> getChildren() {
+        // TODO recompute children when invalide, while preserving selections
+
         if ( children == null ) {
             List<Filter> list = createChildren();
             setChildren( list );
@@ -242,6 +289,62 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         this.children = children;
         for ( Filter f : children ) {
             f.setParent( this );
+        }
+    }
+
+    /**
+     * Select the first leaf node matching a ref.
+     * @param ref the ref to match
+     * @return true if a selection was done
+     */
+    public boolean selectFirstMatch( Ref ref ) {
+        if ( match( ref ) ) {
+            List<Filter> fs = getChildren();
+            if ( fs.size() == 0 )
+                return match( ref );
+            else for( Filter kid : fs ) {
+                if ( kid.selectFirstMatch( ref ) )
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Simplify the tree. Enforces the following conditions:
+     * <ol><li>If all simplified children are selected+collapsed, select+collapse this one and
+     *         forget children.</li>
+     *     <li>If all simplified children are deselected+collapsed, deselect+collapse this one and
+     *         forget children.</li>
+     *     <li>If any remaining child is selected, deselect+expand this one</li>
+     *     <li>Otherwise, deselect+collapse this one</li>
+     * </ol>
+     */
+    public synchronized void simplify() {
+        if ( children != null && children.size() > 0 ) {
+            boolean allDeselected = true;
+            boolean allSelected = true;
+
+            for ( Filter kid : children ) {
+                kid.simplify();
+                if ( kid.isSelected() )
+                    allDeselected = false;
+                else
+                    allSelected = false;
+            }
+
+            if ( allDeselected || allSelected ) {
+                resetChildren();
+                setExpanded( false );
+                setSelected( allSelected );
+
+            } else {
+                setExpanded( true );
+                setSelected( false );
+            }
+        } else {
+            setExpanded( false );
+            // keep selection as is
         }
     }
 

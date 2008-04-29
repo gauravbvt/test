@@ -95,19 +95,25 @@ public class ClassFilter extends Filter {
         if ( subclasses.size() > 1 )
             for ( Class<?> c : subclasses ) {
                 ClassFilter cf = new ClassFilter( c );
+                cf.setShowingLeaves( isShowingLeaves() );
                 cf.setContainer( filtered );
                 result.add( cf );
             }
         else if ( getFiltersType() != null ) try {
             // Apply specialized filters
             AbstractFilters fs = (AbstractFilters) getFiltersType().newInstance();
-            return fs.getFilters( filtered );
+            return fs.getFilters( filtered, isShowingLeaves() );
 
             } catch ( InstantiationException e ) {
                 e.printStackTrace();
             } catch ( IllegalAccessException e ) {
                 e.printStackTrace();
             }
+        else if ( isShowingLeaves() ) {
+            for( Ref ref : filtered ) {
+                result.add( new RefFilter( ref ) );
+            }
+        }
 
         return result;
     }
