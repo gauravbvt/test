@@ -33,6 +33,7 @@ import com.mindalliance.channels.playbook.ifm.environment.Place
 import com.mindalliance.channels.playbook.ifm.model.RelationshipType
 import com.mindalliance.channels.playbook.ifm.resources.Relationship
 import com.mindalliance.channels.playbook.ifm.project.Agreement
+import com.mindalliance.channels.playbook.ifm.model.Role
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -151,6 +152,15 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addRelationshipType(store(family))
         m.addRelationshipType(store(immediateFamily))
         m.addRelationshipType(store(client))
+
+        Role boss = new Role(name: 'Boss', description: 'The big kahuna')
+        Role employee = new Role(name: 'Employee', description: 'A salaryman')
+        Role gopher = new Role(name: 'Gopher', description: 'A peon')
+        boss.narrow(employee.reference)
+        gopher.narrow(employee.reference)
+        m.addRole(store(employee))
+        m.addRole(store(boss))
+        m.addRole(store(gopher))
 
         channels.addModel(store(m));
         // Environment elements
