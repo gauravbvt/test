@@ -39,7 +39,6 @@ public class FilterPanel extends Panel {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 applyButton.setEnabled( true );
                 saveButton.setEnabled( true );
-                target.addComponent( this );
                 target.addComponent( applyButton );
             }
 

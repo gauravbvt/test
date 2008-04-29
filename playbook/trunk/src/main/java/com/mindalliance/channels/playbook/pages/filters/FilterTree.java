@@ -59,6 +59,7 @@ public class FilterTree extends Tree {
         if ( !isSingleSelect() || f.getChildCount() == 0 )
             item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ){
                 public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
+                    target.addComponent( FilterTree.this );
                     FilterTree.this.onFilterSelect( target, filter );
                 }
             } );
