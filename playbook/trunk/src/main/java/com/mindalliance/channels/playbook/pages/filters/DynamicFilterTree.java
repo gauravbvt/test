@@ -1,9 +1,11 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 import com.mindalliance.channels.playbook.support.models.RefContainer;
 import org.apache.wicket.model.IModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,6 +72,15 @@ public class DynamicFilterTree extends FilterTree {
     public void setSelections( IModel selections ) {
         detachModels();
         this.selections = selections;
+    }
+
+    public List<Ref> getNewSelections() {
+        List<Ref> results = new ArrayList<Ref>();
+        Filter filter = getFilter();
+        for ( Ref ref : new FilteredContainer( filter.getContainer(), filter, false ) )
+            results.add( ref );
+
+        return results;
     }
 
 }
