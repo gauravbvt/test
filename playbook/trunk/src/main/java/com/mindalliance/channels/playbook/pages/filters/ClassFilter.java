@@ -115,17 +115,24 @@ public class ClassFilter extends Filter {
             }
         }
 
+        // Impersonate...
+        if ( subclasses.size() == 1 ) {
+            Class<?> c = subclasses.iterator().next();
+            setExpandedText( expandedText( c ) );
+            setCollapsedText( collapsedText( c ) );
+        }
+
         return result;
     }
 
     public static String collapsedText( Class<?> clazz ) {
-        return MessageFormat.format( "any {0}",
+        return MessageFormat.format( "Any {0}",
             ColumnProvider.toDisplay( clazz.getSimpleName() ).toLowerCase() );
     }
 
     public static String expandedText( Class<?> clazz ) {
-        return MessageFormat.format( "{0}s...",
-            ColumnProvider.toDisplay( clazz.getSimpleName() ).toLowerCase());
+        String s = ColumnProvider.toDisplay( clazz.getSimpleName() );
+        return MessageFormat.format( "{0}s...", s );
     }
 
     private Set<Class<?>> getSubclasses( Class<?> stopClass ) {

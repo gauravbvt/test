@@ -76,7 +76,7 @@ public class UserFilters extends AbstractFilters {
     static class AdminFilter extends UserFilter {
 
         public AdminFilter() {
-            super( "administrators" );
+            super( "Administrators" );
         }
 
         public boolean match( Ref object ) {
@@ -87,7 +87,7 @@ public class UserFilters extends AbstractFilters {
     static class ManagerFilter extends UserFilter {
 
         public ManagerFilter() {
-            super( "managers" );
+            super( "Managers" );
         }
 
         public boolean match( Ref object ) {
@@ -98,7 +98,7 @@ public class UserFilters extends AbstractFilters {
     static class AnalystFilter extends UserFilter {
 
         public AnalystFilter() {
-            super( "analysts" );
+            super( "Analysts" );
         }
 
         public boolean match( Ref object ) {
@@ -109,7 +109,7 @@ public class UserFilters extends AbstractFilters {
     static class NormalUserFilter extends UserFilter {
 
         public NormalUserFilter() {
-            super( "normal users" );
+            super( "Normal users" );
         }
 
         public boolean match( Ref object ) {

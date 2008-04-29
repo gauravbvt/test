@@ -85,7 +85,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     }
 
     public Map toMap() {
-        Map map = new HashMap();
+        Map<String,Object> map = new HashMap<String,Object>();
         map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
         map.put("collapsedText", collapsedText);
         map.put("expandedText", expandedText);
@@ -243,7 +243,8 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
      * <code>node</code>, -1 will be returned.
      */
     public final int getIndex( TreeNode node ) {
-        return children.indexOf( (Filter) node );
+        Filter o = (Filter) node;
+        return children.indexOf( o );
     }
 
     /**
@@ -272,14 +273,17 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     }
 
     public final synchronized List<Filter> getChildren() {
-        // TODO recompute children when invalide, while preserving selections
-
         if ( children == null ) {
             List<Filter> list = createChildren();
-            setChildren( list );
             for ( Filter f : list ) {
                 f.setSelected( this.isSelected() );
             }
+            setChildren( list );
+            setInvalid( false );
+        } else if ( isInvalid() ) {
+            // TODO recompute while restoring selections
+
+            setInvalid( false );
         }
 
         return children;
