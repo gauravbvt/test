@@ -18,7 +18,11 @@ public class DynamicFilterTree extends FilterTree {
     private transient Filter computedFilter;
 
     public DynamicFilterTree( String id, IModel selections, IModel choices ) {
-        super( id );
+        this( id, selections, choices, false );
+    }
+
+    public DynamicFilterTree( String id, IModel selections, IModel choices, boolean singleSelect ) {
+        super( id, new RootFilter(), singleSelect );
         this.selections = selections;
         this.choices = choices;
     }
