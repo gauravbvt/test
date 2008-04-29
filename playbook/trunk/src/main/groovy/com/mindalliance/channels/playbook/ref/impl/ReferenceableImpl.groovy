@@ -98,13 +98,13 @@ import org.apache.log4j.Logger
         if (name =~ /^add.+/) {
             String field = "${RefUtils.decapitalize(name.substring(3))}"
             if (!field.endsWith('s')) field = "${field}s"
-            return doAddToField(field, args[0].reference)
+            return doAddToField(field, args[0])
         }
         // removeField --> fields.remove(fields.indexOf(args[0]))
         if (name =~ /^remove.+/) {
             String field = "${RefUtils.decapitalize(name.substring(6))}"
             if (!field.endsWith('s')) field = "${field}s"
-            return doRemoveFromField(field, args[0].reference)
+            return doRemoveFromField(field, args[0])
         }
     }
 
@@ -130,8 +130,8 @@ import org.apache.log4j.Logger
         if (list == null) {
             throw new Exception("Expecting initialized field $name but not defined but missing in ${this}")
         }
-        if (list.contains(val)) {
-            list.remove(list.indexOf(val)) // works for int as well
+        if (list.contains(value)) {
+            list.remove(list.indexOf(value)) // works for int as well
             changed(name)
         }
         return this

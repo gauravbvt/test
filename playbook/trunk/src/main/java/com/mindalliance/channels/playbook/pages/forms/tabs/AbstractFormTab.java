@@ -10,6 +10,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 public class AbstractFormTab extends Panel {
 
     protected Ref element;
+    protected Project project;
     protected FeedbackPanel feedback;
     private List<FormComponent> inputFields = new ArrayList<FormComponent>();
     private Map<Component, List<Component>> dependencies = new HashMap<Component, List<Component>>();
@@ -37,7 +39,8 @@ public class AbstractFormTab extends Panel {
         init();
     }
 
-    protected void load() {
+    protected void load() {       
+        project = (Project)Project.current().deref();
         // feedback panel
         feedback = new FeedbackPanel("feedback");
         feedback.setOutputMarkupId(true);
@@ -92,6 +95,13 @@ public class AbstractFormTab extends Panel {
     protected void addReplaceable(Component component) {
         component.setOutputMarkupId(true);
         addOrReplace(component);
+    }
+
+    protected void edit(Ref ref, AjaxRequestTarget target) {
+        System.out.println("TODO: EDIT agreement" + ref);
+        if (ref != null) {
+            // TODO - open breadcrumbed editor on agreement             
+        }
     }
 
 }

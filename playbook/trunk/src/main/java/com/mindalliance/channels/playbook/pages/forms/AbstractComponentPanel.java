@@ -63,15 +63,7 @@ abstract public class AbstractComponentPanel extends Panel {
     }
 
     protected void elementChanged() {
-        int index = propPath.indexOf('.');
-        String propName;
-        if (index < 0) {
-            propName = propPath;
-        }
-        else {
-            propName = propPath.substring(0, index);
-        }
-        element.changed(propName);
+        RefUtils.changed(element, propPath);
     }
 
     public void onDetach() {

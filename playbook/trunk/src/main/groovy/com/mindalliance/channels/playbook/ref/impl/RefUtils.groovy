@@ -1,14 +1,16 @@
 package com.mindalliance.channels.playbook.support
 
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 24, 2008
-* Time: 8:19:06 AM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 24, 2008
+ * Time: 8:19:06 AM
+ */
 class RefUtils {
 
     /*
@@ -51,24 +53,53 @@ class RefUtils {
         catch (Exception e) {
             Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Evaluation of path $path on $holder failed")
         }
-
     }
 
-    static  String decapitalize(String s) {
+    static void add(def holder, String path, def obj) {
+        List list = (List) get(holder, path)
+        list.add(obj)
+        changed(holder, path)
+    }
+
+    static void remove(def holder, String path, def obj) {
+        List list = (List) get(holder, path)
+        list.remove(obj)
+        changed(holder, path)
+    }
+
+    static String decapitalize(String s) {
         if (s.size() > 1) {
-           return "${s[0].toLowerCase()}${s[1..s.size()-1]}"
+            return "${s[0].toLowerCase()}${s[1..s.size() - 1]}"
         }
         else {
             return s.toLowerCase()
         }
     }
 
-    static  String capitalize(String s) {
+    static String capitalize(String s) {
         if (s.size() > 1) {
-           return "${s[0].toUpperCase()}${s[1..s.size()-1]}"
+            return "${s[0].toUpperCase()}${s[1..s.size() - 1]}"
         }
         else {
             return s.toUpperCase()
+        }
+    }
+
+    static boolean hasReference(def obj) {
+        return Referenceable.isAssignableFrom(obj.class) || Ref.isAssignableFrom(obj.class)
+    }
+
+    static void changed(def element, String propPath) {
+        if (hasReference(element)) {
+            int index = propPath.indexOf('.');
+            String propName;
+            if (index < 0) {
+                propName = propPath;
+            }
+            else {
+                propName = propPath.substring(0, index);
+            }
+            element.changed(propName);
         }
     }
 

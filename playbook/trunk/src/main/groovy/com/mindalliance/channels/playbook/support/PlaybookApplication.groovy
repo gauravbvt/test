@@ -30,6 +30,9 @@ import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.PlaceType
 import com.mindalliance.channels.playbook.ifm.environment.Environment
 import com.mindalliance.channels.playbook.ifm.environment.Place
+import com.mindalliance.channels.playbook.ifm.model.RelationshipType
+import com.mindalliance.channels.playbook.ifm.resources.Relationship
+import com.mindalliance.channels.playbook.ifm.project.Agreement
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -140,6 +143,15 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addOrganizationType(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: state.reference)))
         m.addOrganizationType(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe.reference)))
         m.addOrganizationType(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county.reference)))
+
+        RelationshipType family = new RelationshipType(name: 'Family', description: 'In same extended family', fromKind: 'Person', toKind: 'Person')
+        RelationshipType immediateFamily = new RelationshipType(name: 'Immediate family', description: 'In same immediate family', fromKind: 'Person', toKind: 'Person')
+        RelationshipType client = new RelationshipType(name: 'Client', description: 'A business client')
+        immediateFamily.narrow(family.reference)
+        m.addRelationshipType(store(family))
+        m.addRelationshipType(store(immediateFamily))
+        m.addRelationshipType(store(client))
+
         channels.addModel(store(m));
         // Environment elements
         Environment env =new Environment(name: 'default')
@@ -178,9 +190,20 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
         joe.addPosition(pos1)
         joe.addPosition(pos4)
+
+        Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
+        p.addResource(store(jane))
+
+        joe.addRelationship(new Relationship(withResource: jane.reference , relationshipType: immediateFamily.reference))
         store(joe)
 
         p.addResource(store(new System()))
+
+        Ref ag1 = store(new Agreement(fromResource: joe.reference, toResource: jane.reference))
+        Ref ag2 = store(new Agreement(fromResource: joe.reference, toResource: acme.reference))
+        p.addAgreement(ag1)
+        p.addAgreement(ag2)
+
         p.addParticipation(
                 store(new Participation(
                         user: admin.getReference(),

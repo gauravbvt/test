@@ -29,6 +29,7 @@ class Project extends IfmElement {
     String description = ''
     List<Ref> participations = []
     List<Ref> resources = []
+    List<Ref> agreements = []
     List<Ref> playbooks = []
     List<Ref> models = []
     List<Ref> environments = []
@@ -81,6 +82,10 @@ class Project extends IfmElement {
             res.type == type
         }
         return res
+    }
+
+    List<Ref> allResourcesExcept(Ref resource) {
+        return resources.findAll {res -> res != resource }
     }
 
     Ref findPlaybookNamed(String type, String name) {
@@ -176,6 +181,24 @@ class Project extends IfmElement {
             }
         }
         return narrowing
+    }
+
+    List<Ref> findAllApplicableRelationshipTypes(Ref fromResource, Ref toResource) {
+        List<Ref> relTypes = []
+        models.each { model ->
+            relTypes.addAll(
+                    model.relationshipTypes.findAll {rt ->
+                        rt.matchesFrom(fromResource) && rt.matchesTo(toResource)
+            })
+        }
+        return relTypes
+    }
+
+    List<Ref> findAllAgreementsOf(Ref resource) {
+        List<Ref> agreements = agreements.findAll {agreement ->
+            agreement.fromResource == resource
+        }
+        return agreements ?: []
     }
 
     Boolean isParticipant( Ref user ) {

@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.resources.System
 import com.mindalliance.channels.playbook.ifm.Locatable
+import com.mindalliance.channels.playbook.ifm.project.Project
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,9 +21,14 @@ class Resource extends IfmElement implements Locatable {
     List<ContactInfo> contactInfos = []
     List<Ref> roles = []
     Location location = new Location()
-    List<Agreement> agreements = []
     List<Relationship> relationships  = []
     boolean effective = true // whether the resource is operational in real life
+
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['agreements'])
+    }
+
 
     String toString() { name }
 
@@ -50,7 +56,11 @@ class Resource extends IfmElement implements Locatable {
         super.changed(propName)
     }
 
-    public Location getLocation() {
+    Location getLocation() {
         return location
+    }
+
+    List<Ref> allAgreements() {
+        return Project.current().findAllAgreementsOf(this.reference)
     }
 }

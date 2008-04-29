@@ -57,7 +57,7 @@ public class TestPlaybook extends TestCase {
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
-        assert metaProps.size() == 11
+        assert metaProps.size() == 12
         metaProps = metaProps.findAll {it.isScalar()}
         assert metaProps.size() == 5
         //

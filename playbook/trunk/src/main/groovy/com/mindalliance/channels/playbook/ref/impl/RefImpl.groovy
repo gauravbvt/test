@@ -19,6 +19,12 @@ class RefImpl implements Ref {
     String id
     String db
 
+    RefImpl() {}
+    
+    RefImpl(String id) {
+        this.id = id
+    }
+
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
     boolean equals(Object obj) {
         if (!obj instanceof Ref) return false
