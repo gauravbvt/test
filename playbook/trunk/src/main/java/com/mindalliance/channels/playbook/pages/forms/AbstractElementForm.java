@@ -31,7 +31,7 @@ abstract public class AbstractElementForm extends Panel {
         init();
     }
 
-    private void load() {
+    protected void load() {
         elementForm = new Form("elementForm") {
             @Override
             public boolean isTransparentResolver() { // so that the children fields will resolve under it
@@ -44,12 +44,18 @@ abstract public class AbstractElementForm extends Panel {
         tabbedPanel = new AjaxTabbedPanel("tabbedPanel", tabs);
         tabbedPanel.setOutputMarkupId(true);
         elementForm.add(tabbedPanel);
-        add(elementForm);
+        addOrReplace(elementForm);
     }
 
-    private void init() {
+    protected void init() {
         this.add(new SimpleAttributeModifier("class", "element"));
         this.setOutputMarkupId(true);
+    }
+
+    protected void reset() {
+        element.begin(); // make sure element stays in session
+        load();
+        init();
     }
 
 
