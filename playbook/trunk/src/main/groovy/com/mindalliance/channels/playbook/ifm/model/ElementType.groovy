@@ -1,6 +1,5 @@
 package com.mindalliance.channels.playbook.ifm.model
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Describable
 
@@ -11,7 +10,7 @@ import com.mindalliance.channels.playbook.ifm.Describable
 * Date: Apr 17, 2008
 * Time: 12:48:16 PM
 */
-class ElementType extends IfmElement implements Describable {
+class ElementType extends ModelElement implements Describable {
 
     String name = ''           // -- required
     String description = ''

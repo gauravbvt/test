@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.analysis
+package com.mindalliance.channels.playbook.ifm.project.analysis
 
 import com.mindalliance.channels.playbook.ref.Ref
 

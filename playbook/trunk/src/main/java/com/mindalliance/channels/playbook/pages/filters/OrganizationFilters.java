@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
-import com.mindalliance.channels.playbook.ifm.resources.Organization;
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.Container;
 

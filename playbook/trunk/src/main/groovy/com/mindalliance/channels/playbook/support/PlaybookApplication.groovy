@@ -9,31 +9,30 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.resources.Person
-import com.mindalliance.channels.playbook.ifm.resources.Organization
+import com.mindalliance.channels.playbook.ifm.project.resources.Person
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.resources.Position
-import com.mindalliance.channels.playbook.ifm.resources.System
+import com.mindalliance.channels.playbook.ifm.project.resources.Position
+import com.mindalliance.channels.playbook.ifm.project.resources.System
 import com.mindalliance.channels.playbook.ifm.model.Domain
 import com.mindalliance.channels.playbook.ifm.model.OrganizationType
 import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ifm.model.AreaType
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
-import com.mindalliance.channels.playbook.ifm.model.AreaType
 import org.apache.wicket.Application
-import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.PlaceType
-import com.mindalliance.channels.playbook.ifm.environment.Environment
-import com.mindalliance.channels.playbook.ifm.environment.Place
+import com.mindalliance.channels.playbook.ifm.project.environment.Place
 import com.mindalliance.channels.playbook.ifm.model.RelationshipType
-import com.mindalliance.channels.playbook.ifm.resources.Relationship
-import com.mindalliance.channels.playbook.ifm.project.Agreement
+import com.mindalliance.channels.playbook.ifm.project.resources.Relationship
+import com.mindalliance.channels.playbook.ifm.project.environment.Agreement
 import com.mindalliance.channels.playbook.ifm.model.Role
+import com.mindalliance.channels.playbook.ifm.model.MediumType
+import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -167,17 +166,25 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
             new ModelParticipation(user: admin.reference)
             ))
 
+        m.addMediumType(store(new MediumType(name: 'email')))
+        m.addMediumType(store(new MediumType(name: 'phone')))
+        m.addMediumType(store(new MediumType(name: 'fax')))
+        m.addMediumType(store(new MediumType(name: 'web')))
+        m.addMediumType(store(new MediumType(name: 'messaging')))
+        m.addMediumType(store(new MediumType(name: 'cell')))
+        m.addMediumType(store(new MediumType(name: 'pager')))
+        m.addMediumType(store(new MediumType(name: 'radio')))
+
         channels.addModel(store(m));
-        // Environment elements
-        Environment env =new Environment(name: 'default')
-        Ref wtc = store(new Place(name: "WTC", placeType: building.reference))
-        env.addPlace(wtc)
-        Ref jfk = store(new Place (name: "JFK", placeType: airport.reference))
-        env.addPlace(jfk)
-        channels.addEnvironment(store(env))
+
         // A default project for everyone, for now...
         Project p = new Project(name: 'Generic')
-        p.addEnvironment(env)
+        Place wtc = new Place(name: "WTC")
+        wtc.addPlaceType(building.reference)
+        p.addPlace(store(wtc))
+        Place jfk = new Place (name: "JFK")
+        jfk.addPlaceType(airport.reference)
+        p.addPlace(store(jfk))
         p.addModel(m);
         p.addPlaybook(store(new Playbook(name: "Playbook A", description: "This is Playbook A")))
         p.addPlaybook(store(new Playbook(name: "Playbook B", description: "This is Playbook B")))

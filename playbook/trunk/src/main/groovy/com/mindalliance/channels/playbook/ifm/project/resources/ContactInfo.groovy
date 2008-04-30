@@ -1,6 +1,7 @@
-package com.mindalliance.channels.playbook.ifm.resources
+package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +16,7 @@ class ContactInfo extends BeanImpl {
         return ['email', 'phone', 'fax', 'web', 'messaging', 'cell', 'pager', 'radio']
     }
     
-    String medium // one of MEDIA
+    Ref mediumType // one of MEDIA
     String endPoint = ''
 
 

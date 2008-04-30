@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.analysis
+package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
 
@@ -7,10 +7,11 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Proprietary and Confidential.
 * User: jf
 * Date: Apr 17, 2008
-* Time: 2:45:08 PM
+* Time: 11:28:47 AM
 */
-class AgreementCase extends Case {
+class System extends Resource {
 
-    Ref agreement
+    Ref adminPosition
+    String access = '' // access instructions
 
 }

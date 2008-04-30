@@ -12,10 +12,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.resources.ContactInfo;
-import com.mindalliance.channels.playbook.ifm.resources.Resource;
+import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
+import com.mindalliance.channels.playbook.ifm.project.resources.ContactInfo;
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 
 import java.util.Iterator;
@@ -66,9 +68,14 @@ public class ResourceIdentityTab extends AbstractFormTab {
             protected void populateItem(Item item) {
                 final ContactInfo contactInfo = (ContactInfo) item.getModel().getObject();
                 // Add medium dropdown
-                final DropDownChoice mediumChoice = new DropDownChoice("medium",  new RefPropertyModel(contactInfo, "medium"), ContactInfo.getMedia());
+                List<Ref> allMedia = project.findAllTypes("MediumType");
+                final DropDownChoice mediumChoice = new DropDownChoice("mediumType",new Model((Ref)RefUtils.get(contactInfo, "mediumType")),
+                                                                                    new Model((Serializable)allMedia),
+                                                                                    new RefChoiceRenderer("name", "id"));
                 mediumChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {
+                        Ref selectedMediumType = new RefImpl(mediumChoice.getModelObjectAsString());
+                        contactInfo.setMediumType(selectedMediumType);
                         List<ContactInfo> contactInfos = ((Resource) element.deref()).getContactInfos();
                         int index = contactInfos.indexOf(contactInfo);
                         if (index == -1) {   // new contact info

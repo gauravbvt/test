@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <input wicket:id="adHocTopic" type="text"/><br/>
+
+                <div wicket:id="topicChoiceDiv">
+                    <ul>
+                        <li wicket:id="topicChoices">[topic]</li>
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <button wicket:id="addTopic">&gt;&gt;</button><br/>
+                <button wicket:id="removeTopic">&lt;&lt;</button>
+            </td>
+            <td>
+                <div wicket:id="eoisDiv">
+                    <ul>
+                        <li wicket:id="eois">
+                            <span wicket:id="topic">[topic]</span>
+                            <textarea wicket:id="content" cols="40" rows="3">[content]</textarea>
+                            <a wicket:id="deleteEoi" href="#">(delete)</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</wicket:extend>
+</body>
+</html>

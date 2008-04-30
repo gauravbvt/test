@@ -5,62 +5,57 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>Relationships</legend>
-        <table>
-            <tr>
-                <td>
-                    <select wicket:id="resourcesForRelationships">    <!-- replace by FilterTree on all resources -->
-                        <option>[resource name]</option>
-                    </select>
-                </td>
-                <td>
-                    <button wicket:id="addRelationship">Add</button>
-                    <br/>
-                </td>
-                <td>
-                    <div wicket:id="relationshipsDiv">
-                        <ul>
-                            <li wicket:id="relationships">
-                                <a wicket:id="relationshipResourceLink" href = "#"><span wicket:id="relationshipResourceName">[resource name]</span></a> is
-                                <select wicket:id="relationshipType">
-                                    <option>[relationship options]</option>
-                                </select>
-                                <a wicket:id="removeRelationship" href="#">(delete)</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-
-    <fieldset>
-        <legend>Agreements</legend>
-        <table>
-            <tr>
-                <td>
-                    <select wicket:id="resourcesForAgreements">
-                        <option>[resource name]</option>
-                    </select>
-                </td>
-                <td>
-                    <button wicket:id="addAgreement">Add</button>
-                </td>
-                <td>
-                    <div wicket:id="agreementsDiv">
-                        <ul>
-                            <li wicket:id="agreements">
-                                <a wicket:id="agreementLink" href = "#"><span wicket:id="agreement">[Notify so and so]</span></a>
-                                <a wicket:id="removeAgreement" href="#">(delete)</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-
+    <table>
+        <tr>
+            <td>
+                <span wicket:id="resources">[resources tree]</span>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <button wicket:id="addRelationship">Add relationship</button>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>Relationships</legend>
+                                <div wicket:id="relationshipsDiv">
+                                    <ul>
+                                        <li wicket:id="relationships">
+                                            <a wicket:id="relationshipResourceLink" href="#"><span
+                                                    wicket:id="relationshipResourceName">[resource name]</span></a> is
+                                            <select wicket:id="relationshipType">
+                                                <option>[relationship options]</option>
+                                            </select>
+                                            <a wicket:id="removeRelationship" href="#">(delete)</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button wicket:id="addAgreement">Add agreement</button>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>Agreements</legend>
+                                <div wicket:id="agreementsDiv">
+                                    <ul>
+                                        <li wicket:id="agreements">
+                                            <a wicket:id="agreementLink" href="#"><span wicket:id="agreement">[Notify so and so]</span></a>
+                                            <a wicket:id="removeAgreement" href="#">(delete)</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
     <wicket:child/>
 </wicket:extend>
 </body>

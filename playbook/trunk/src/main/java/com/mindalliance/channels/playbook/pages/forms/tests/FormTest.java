@@ -19,12 +19,11 @@ import com.mindalliance.channels.playbook.support.QueryHandler;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementPanel;
 import com.mindalliance.channels.playbook.pages.FormPanel;
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.ifm.Tab;
-import com.mindalliance.channels.playbook.ifm.resources.Person;
+import com.mindalliance.channels.playbook.ifm.project.resources.Person;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.List;

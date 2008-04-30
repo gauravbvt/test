@@ -1,9 +1,11 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
 
-import com.mindalliance.channels.playbook.ifm.resources.Relationship;
-import com.mindalliance.channels.playbook.ifm.resources.Resource;
-import com.mindalliance.channels.playbook.ifm.project.Agreement;
+import com.mindalliance.channels.playbook.ifm.project.resources.Relationship;
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
+import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -15,7 +17,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
@@ -26,6 +27,8 @@ import org.apache.wicket.model.Model;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,14 +39,15 @@ import java.util.List;
  */
 public class ResourceNetworkTab extends AbstractFormTab {
 
+    protected DynamicFilterTree resourcesTree;
     protected WebMarkupContainer relationshipsDiv;
     protected RefreshingView relationshipsView;
-    protected ListChoice resourcesForRelationshipsList;
     protected Button addRelationshipButton;
     protected WebMarkupContainer agreementsDiv;
     protected RefreshingView agreementsView;
-    protected ListChoice resourcesForAgreementsList;
     protected Button addAgreementButton;
+
+    protected Ref selectedResource;
 
     public ResourceNetworkTab(String id, Ref element) {
         super(id, element);
@@ -51,9 +55,60 @@ public class ResourceNetworkTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        loadResources();
+        loadButtons();
         loadRelationships();
         loadAgreements();
     }
+
+    private void loadResources() {
+        List<Ref> allResources = project.allResourcesExcept(element);
+        resourcesTree = new DynamicFilterTree("resources", new Model(new ArrayList<Ref>()), new Model((Serializable)allResources), true) {
+            public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
+                List<Ref> newSelections = resourcesTree.getNewSelections();
+                if (newSelections.size() > 0) {
+                    selectedResource = newSelections.get(0);
+                }
+                else {
+                    selectedResource = null;
+                }
+                addAgreementButton.setEnabled(selectedResource != null);
+                addRelationshipButton.setEnabled(selectedResource != null);
+                target.addComponent(addAgreementButton);
+                target.addComponent(addRelationshipButton);
+              }
+        };
+        addReplaceable(resourcesTree);
+    }
+
+    private void loadButtons() {
+        // Add relationship button
+        addRelationshipButton = new Button("addRelationship");
+        addRelationshipButton.setEnabled(false);
+        addRelationshipButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
+                Relationship newRelationship = new Relationship();
+                newRelationship.setWithResource(selectedResource);
+                RefUtils.add(element, "relationships", newRelationship);
+                target.addComponent(relationshipsDiv);
+            }
+        });
+        addReplaceable(addRelationshipButton);
+        // Add agreement button
+       addAgreementButton = new Button("addAgreement");
+       addAgreementButton.setEnabled(false);
+       addAgreementButton.add(new AjaxEventBehavior("onclick") {
+           protected void onEvent(AjaxRequestTarget target) {
+               Ref newAgreement = new Agreement().persist();
+               RefUtils.set(newAgreement, "fromResource", element);
+               RefUtils.set(newAgreement, "toResource", selectedResource);
+               RefUtils.add(project, "agreements", newAgreement);
+               target.addComponent(agreementsDiv);
+           }
+       });
+       addReplaceable(addAgreementButton);
+    }
+
      private void loadRelationships() {
         // Relationships
         relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
@@ -101,32 +156,8 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 item.add(removeRelationshipLink);
             }
         };
-        // All resources
-        List<Ref> allResources = project.allResourcesExcept(element);  // TODO - replace with filter tree
-        resourcesForRelationshipsList = new ListChoice("resourcesForRelationships", new Model(), allResources, new RefChoiceRenderer("name", "id"));
-        resourcesForRelationshipsList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-            protected void onUpdate(AjaxRequestTarget target) {
-                Ref selectedResource = (Ref)resourcesForRelationshipsList.getModelObject();
-                addRelationshipButton.setEnabled(selectedResource != null);
-                target.addComponent(addRelationshipButton);
-            }
-        });
-        // Add relationship button
-        addRelationshipButton = new Button("addRelationship");
-        addRelationshipButton.setEnabled(false);
-        addRelationshipButton.add(new AjaxEventBehavior("onclick") {
-            protected void onEvent(AjaxRequestTarget target) {
-                Relationship newRelationship = new Relationship();
-                Ref selectedResource = (Ref)resourcesForRelationshipsList.getModelObject();
-                newRelationship.setWithResource(selectedResource);
-                RefUtils.add(element, "relationships", newRelationship);
-                target.addComponent(relationshipsDiv);
-            }
-        });
         relationshipsDiv.add(relationshipsView);
         addReplaceable(relationshipsDiv);
-        addReplaceable(addRelationshipButton);
-        addReplaceable(resourcesForRelationshipsList);
     }
 
     private void loadAgreements() {
@@ -164,32 +195,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 item.add(removeAgreementLink);
             }
         };
-        // All resources
-        List<Ref> allResources = project.allResourcesExcept(element);  // TODO - replace with filter tree
-        resourcesForAgreementsList = new ListChoice("resourcesForAgreements", new Model(), allResources, new RefChoiceRenderer("name", "id"));
-        resourcesForAgreementsList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-            protected void onUpdate(AjaxRequestTarget target) {
-                Ref selectedResource = (Ref)resourcesForAgreementsList.getModelObject();
-                addAgreementButton.setEnabled(selectedResource != null);
-                target.addComponent(addAgreementButton);
-            }
-        });
-        // Add agreement button
-        addAgreementButton = new Button("addAgreement");
-        addAgreementButton.setEnabled(false);
-        addAgreementButton.add(new AjaxEventBehavior("onclick") {
-            protected void onEvent(AjaxRequestTarget target) {
-                Ref newAgreement = new Agreement().persist();
-                Ref selectedResource = (Ref)resourcesForAgreementsList.getModelObject();
-                RefUtils.set(newAgreement, "fromResource", element);
-                RefUtils.set(newAgreement, "toResource", selectedResource);
-                RefUtils.add(project, "agreements", newAgreement);
-                target.addComponent(agreementsDiv);
-            }
-        });
         agreementsDiv.add(agreementsView);
         addReplaceable(agreementsDiv);
-        addReplaceable(addAgreementButton);
-        addReplaceable(resourcesForAgreementsList);
     }
 }

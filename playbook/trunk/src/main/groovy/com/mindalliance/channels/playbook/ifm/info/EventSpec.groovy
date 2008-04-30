@@ -13,9 +13,9 @@ import org.joda.time.Duration
 */
 class EventSpec extends BeanImpl {
 
-    Ref eventType // the kind of event
+    List<Ref> eventTypes = []// the kinds of event (and/or)
     LocationSpec locationSpec // constraints on location of event
-    Ref relationshipType // type of relationship to an observer of the event
+    List<Ref> relationshipTypes = [] // type of relationship to an observer of the event
     Timing timing // must have occurred in the last n hours, days etc.
 
 }

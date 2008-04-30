@@ -57,7 +57,7 @@ public class TestPlaybook extends TestCase {
         assert myProject.type == 'Project'
         // Test metaproperties
         def metaProps = myProject.metaProperties()
-        assert metaProps.size() == 12
+        assert metaProps.size() == 13
         metaProps = metaProps.findAll {it.isScalar()}
         assert metaProps.size() == 5
         //
@@ -72,6 +72,7 @@ public class TestPlaybook extends TestCase {
         channels.removeProject(myProject)
         assertTrue(session.pendingChangesCount == 1)
         // Modify project in session memory
+        Thread.sleep(500);
         RefUtils.set(myProject, "name", "Your project")
         Date lastModified = myProject.lastModified
         myProject.name = "Your project"

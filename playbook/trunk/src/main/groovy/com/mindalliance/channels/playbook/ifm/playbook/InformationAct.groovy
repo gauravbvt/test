@@ -1,8 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
-import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.info.Timing
 
@@ -13,8 +11,9 @@ import com.mindalliance.channels.playbook.ifm.info.Timing
 * Date: Apr 17, 2008
 * Time: 1:27:48 PM
 */
-/* abstract*/ class InformationAct extends IfmElement  implements Describable {
+/* abstract*/ class InformationAct extends PlaybookElement  implements Describable {
 
+    Ref playbook
     String description = ''
     Ref actor // a resource
     Ref cause // another information act, if any

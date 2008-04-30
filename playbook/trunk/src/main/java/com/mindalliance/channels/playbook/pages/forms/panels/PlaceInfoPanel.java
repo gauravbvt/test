@@ -66,6 +66,7 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
                 List<String> placeTypeNameChoices = placeTypeNameChoicesFor(placeItem);
                 // Add place item placeType dropdown
                 final String placeTypeName = (String) RefUtils.get(placeItem, "placeType.name");
+                // TODO -- use RefChoiceRenderer("name","id")
                 final DropDownChoice placeTypeChoice = new DropDownChoice("placeType", new Model(placeTypeName), placeTypeNameChoices);
                 placeTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {

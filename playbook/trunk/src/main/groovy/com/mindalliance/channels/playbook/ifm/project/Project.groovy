@@ -2,20 +2,21 @@ package com.mindalliance.channels.playbook.ifm.project
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.IfmElement
-import com.mindalliance.channels.playbook.ifm.resources.Resource
-import com.mindalliance.channels.playbook.ifm.resources.Position
-import com.mindalliance.channels.playbook.ifm.resources.Organization
-import com.mindalliance.channels.playbook.ifm.resources.System
-import com.mindalliance.channels.playbook.ifm.resources.Person
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource
+import com.mindalliance.channels.playbook.ifm.project.resources.Position
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
+import com.mindalliance.channels.playbook.ifm.project.resources.System
+import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import org.apache.wicket.Session
-import com.mindalliance.channels.playbook.ifm.environment.Environment
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.Describable
+import com.mindalliance.channels.playbook.ifm.project.environment.Place
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,10 +31,11 @@ class Project extends IfmElement implements Describable {
     String description = ''
     List<Ref> participations = []
     List<Ref> resources = []
+    List<Ref> places = []
+    List<Ref> policies = []
     List<Ref> agreements = []
     List<Ref> playbooks = []
     List<Ref> models = []
-    List<Ref> environments = []
     List<Ref> analysisElements = []
 
     static Ref current() {
@@ -44,6 +46,7 @@ class Project extends IfmElement implements Describable {
     String toString() { name }
 
     Referenceable doAddToField( String field, Object object ) {
+        object.project = this.reference
         switch ( object.deref() ) {
             case Participation: super.doAddToField( "participations", object ); break;
             case Position:
@@ -52,7 +55,8 @@ class Project extends IfmElement implements Describable {
             case Organization:  super.doAddToField( "resources", object ); break;
             case Playbook:  super.doAddToField( "playbooks", object ); break;
             case Model:  super.doAddToField( "models", object ); break;
-            case Environment: super.doAddToField( "environments", object ); break;
+            case Place: super.doAddToField( "places", object ); break;
+            case Policy: super.doAddToField( "policies", object ); break;
             default: super.doAddToField( field, object );
         }
     }
@@ -66,7 +70,8 @@ class Project extends IfmElement implements Describable {
             case Organization:  super.doRemoveFromField( "resources", object ); break;
             case Playbook:  super.doRemoveFromField( "playbooks", object ); break;
             case Model:  super.doRemoveFromField( "models", object ); break;
-            case Environment: super.doRemoveFromField( "environments", object ); break;
+            case Place: super.doRemoveFromField( "places", object ); break;
+            case Policy: super.doRemoveFromField( "policies", object ); break;
             default: super.doRemoveFromField( field, object );
         }
     }
@@ -107,24 +112,11 @@ class Project extends IfmElement implements Describable {
 
 
     List<String> findAllPlaceNames() {
-        List<String> names = []
-        environments.each {env ->
-            env.places.each {place ->
-                names.add(place.name)
-            }
-        }
-        return names
+        return places.collect {it.name}
     }
 
     Ref findPlaceNamed(String placeName) {
-        Ref namedPlace
-        environments.any {env ->
-            env.places.any {place ->
-                if (place.name == placeName) { namedPlace = place }
-                namedPlace
-            }
-            namedPlace
-        }
+        Ref namedPlace = (Ref)places.find {place -> place.name == placeName }
         return namedPlace
     }
 
@@ -217,7 +209,8 @@ class Project extends IfmElement implements Describable {
      static List<Class<?>> contentClasses() {
          List<Class<?>> result = new ArrayList<Class<?>>()
          result.addAll( Resource.contentClasses() )
-         result.addAll( [ Environment.class ] )
+         result.addAll( [ Policy.class ] )
+         result.addAll( [ Place.class ] )
          result.addAll( Playbook.contentClasses() )
          return result
      }

@@ -9,7 +9,7 @@ import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.resources.Organization;
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.Iterator;

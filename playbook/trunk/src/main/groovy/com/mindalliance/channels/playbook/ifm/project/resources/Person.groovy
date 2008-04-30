@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.resources
+package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
 

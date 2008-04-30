@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.model
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,6 +21,7 @@ class Model  extends IfmElement {
     List<Ref> domains = []
     List<Ref> eventTypes = []
     List<Ref> issueTypes = []
+    List<Ref> mediumTypes = []
     List<Ref> organizationTypes = []
     List<Ref> placeTypes = []
     List<Ref> purposeTypes = []
@@ -33,6 +35,11 @@ class Model  extends IfmElement {
 
     protected List<String> transientProperties() {
         return super.transientProperties() + ['elements']
+    }
+
+    Referenceable doAddToField( String field, Object object ) {
+        object.model = this.reference
+        super.doAddToField(field, object )
     }
 
 

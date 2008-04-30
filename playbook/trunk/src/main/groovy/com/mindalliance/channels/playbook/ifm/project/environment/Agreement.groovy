@@ -1,12 +1,10 @@
-package com.mindalliance.channels.playbook.ifm.project
+package com.mindalliance.channels.playbook.ifm.project.environment
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
-import org.joda.time.Duration
-import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.info.Timing
-import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.Describable
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +13,7 @@ import com.mindalliance.channels.playbook.ifm.Describable
 * Date: Apr 17, 2008
 * Time: 10:43:29 AM
 */
-class Agreement extends IfmElement implements Describable {
+class Agreement extends ProjectElement implements Describable {
 
     static final List<String> deliveries = ['notify', 'answer']
     

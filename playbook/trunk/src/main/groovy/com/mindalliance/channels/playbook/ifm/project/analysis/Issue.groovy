@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.analysis
+package com.mindalliance.channels.playbook.ifm.project.analysis
 
 import com.mindalliance.channels.playbook.ref.Ref
 
@@ -7,11 +7,12 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Proprietary and Confidential.
 * User: jf
 * Date: Apr 17, 2008
-* Time: 2:48:22 PM
+* Time: 2:46:30 PM
 */
-class Question extends AnalysisElement {
+class Issue extends AnalysisElement {
 
     Ref element
-    String content = ''
+    Ref issueType
+    String recommendation = ''
 
 }

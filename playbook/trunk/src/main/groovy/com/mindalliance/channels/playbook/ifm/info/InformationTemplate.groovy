@@ -15,6 +15,6 @@ class InformationTemplate extends AbstractInformation {
 
     EventSpec about // about what kind of event
     // Timing timeToLive = new Timing(msecs:0) // how long before this kind of information usually expires
-    List<Ref> organizationTypes // from whom is this kind of information credible
+    List<Ref> sourceOrganizationTypes // from whom is this kind of information credible
 
 }

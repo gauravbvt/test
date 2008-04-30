@@ -15,7 +15,7 @@ import com.mindalliance.channels.playbook.ifm.Describable
 class Event extends BeanImpl implements Describable {
 
     String description = ''
-    Ref eventType
+    List<Ref> eventTypes = []
     Ref cause // an Information Act, if any
     Timing when = new Timing(amount:0) // delay from start of cause, else from "time zero" (set by playbook)
     Location where
