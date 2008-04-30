@@ -304,8 +304,10 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     public boolean selectFirstMatch( Ref ref ) {
         if ( match( ref ) ) {
             List<Filter> fs = getChildren();
-            if ( fs.size() == 0 )
-                return match( ref );
+            if ( fs.size() == 0 ) {
+                setSelected( true );
+                return true;
+            }
             else for( Filter kid : fs ) {
                 if ( kid.selectFirstMatch( ref ) )
                     return true;
