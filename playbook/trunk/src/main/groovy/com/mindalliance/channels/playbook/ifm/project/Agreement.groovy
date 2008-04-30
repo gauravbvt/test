@@ -17,7 +17,7 @@ import com.mindalliance.channels.playbook.ifm.Describable
 */
 class Agreement extends IfmElement implements Describable {
 
-    static final List<String> DELIVERIES = ['notify', 'answer']
+    static final List<String> deliveries = ['notify', 'answer']
     
     String description = ''
     Ref fromResource   // readOnly -- set on creation
@@ -26,6 +26,11 @@ class Agreement extends IfmElement implements Describable {
     String delivery = 'notify' // one of {push,pull}
     Timing maxDelay = new Timing(amount:0)
     boolean effective = false // whether the agreement is in place in real life
+
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['deliveries'])
+    }
 
     String toString() {
         return delivery

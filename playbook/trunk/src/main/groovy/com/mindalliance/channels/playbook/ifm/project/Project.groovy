@@ -44,7 +44,7 @@ class Project extends IfmElement implements Describable {
     String toString() { name }
 
     Referenceable doAddToField( String field, Object object ) {
-        switch ( object ) {
+        switch ( object.deref() ) {
             case Participation: super.doAddToField( "participations", object ); break;
             case Position:
             case Person:
@@ -58,7 +58,7 @@ class Project extends IfmElement implements Describable {
     }
 
     Referenceable doRemoveFromField( String field, Object object ) {
-        switch ( object ) {
+        switch ( object.deref() ) {
             case Participation: super.doRemoveFromField( "participations", object ); break;
             case Position:
             case Person:

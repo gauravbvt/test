@@ -2,6 +2,8 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.person;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceResponsibilitiesTab;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
@@ -14,9 +16,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,8 +31,7 @@ import java.util.List;
  */
 public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
-    RefreshingView positionsView;
-    Label positionLabel;
+    DynamicFilterTree positionTree;
 
     public PersonResponsibilitiesTab(String id, Ref element) {
         super(id, element);
@@ -36,33 +39,14 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
     protected void load() {
         super.load();
-       /* positionLabel = new Label("positionDescription", new Model(""));
-        positionsView = new RefreshingView("positions", new RefPropertyModel(element, "positions")) {
-            protected Iterator getItemModels() {
-                List<Ref> positions = (List<Ref>) getModelObject();
-                return new ModelIteratorAdapter(positions.iterator()) {
-                    protected IModel model(Object position) {
-                        return new RefModel(position);
-                    }
-                };
-            }
-
-            protected void populateItem(Item item) {
-                final Ref position = (Ref) item.getModelObject();
-                final Label positionNameLabel = new Label("positionName", new RefPropertyModel(position, "name"));
-                AjaxLink positionLink = new AjaxLink("positionLink") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        String description = (String) RefUtils.get(position, "description");
-                        positionLabel.setModelObject(description);
-                        target.addComponent(positionLabel);
-                    }
-                };
-                positionLink.add(positionNameLabel);
-                item.add(positionLink);
-            }
+        List<Ref> allPositions = project.findAllResourcesOfType("Position");
+        positionTree = new DynamicFilterTree("positions", new RefPropertyModel(element, "positions"), new Model((Serializable) allPositions)) {
+             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
+                List<Ref> newSelections = positionTree.getNewSelections();
+                RefUtils.set(element, "positions", newSelections);
+             }
         };
-        addReplaceable(positionsView);
-        addReplaceable(positionLabel);*/
-    }
+        positionTree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
+        addReplaceable(positionTree);
+     }
 }

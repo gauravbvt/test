@@ -185,6 +185,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
         p.addResource(acme)
         p.addResource(nadir)
+
         Ref pos1 = store(new Position(name: 'Position 1'))
         Ref pos2 = store(new Position(name: 'Position 2'))
         Ref pos3 = store(new Position(name: 'Position 3'))
@@ -197,9 +198,14 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         nadir.addPosition(pos4)
         nadir.addPosition(pos5)
         store(nadir)
-
         joe.addPosition(pos1)
         joe.addPosition(pos4)
+
+        p.addPosition(pos1)
+        p.addPosition(pos2)
+        p.addPosition(pos3)
+        p.addPosition(pos4)
+        p.addPosition(pos5)
 
         Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
         p.addResource(store(jane))

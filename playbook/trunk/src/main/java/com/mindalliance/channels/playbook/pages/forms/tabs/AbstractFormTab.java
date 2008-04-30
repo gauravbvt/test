@@ -26,6 +26,9 @@ import java.util.HashMap;
  */
 public class AbstractFormTab extends Panel {
 
+    protected static final boolean READONLY = true;
+    protected static final boolean EDITABLE = false;
+    
     protected Ref element;
     protected Project project;
     protected FeedbackPanel feedback;
