@@ -27,44 +27,21 @@ public class TabPanel extends Panel {
                 final Ref tabRef = getTabRef();
 
                 PlaybookSession ps = (PlaybookSession) PlaybookSession.get();
-                assert( !ps.getMemory().getChanges().contains( tabRef ));
-                assert( !ps.getMemory().getBegun().containsKey( tabRef ));
                 tabRef.begin();
-                assert( !ps.getMemory().getChanges().contains( tabRef ));
-                assert( ps.getMemory().getBegun().containsKey( tabRef ));
 
                 Tab tab = (Tab) tabRef.deref();
                 tab.setFilter( f );
                 // TODO JF: figure out why this is required, when the above should be sufficient
                 tab.changed( "filter" );
-
-                assert( ps.getMemory().getChanges().contains( tabRef ));
                 tabRef.commit();
+
                 assert( !ps.getMemory().getChanges().contains( tabRef ));
                 assert( !ps.getMemory().getBegun().containsKey( tabRef ));
                 TabPanel.this.detach();
             }
 
             public void onFilterSave( Filter filter ) {
-                  // TODO debug this
-
-//                Tab newTab = new Tab();
-//                Ref newTabRef = newTab.persist();
-//                Filter f = getFilter().copy();
-//                newTab.setBase( new FilteredContainer( getTab().getBase(), f ) );
-//                List<Class<?>> c = f.getContainer().getAllowedClasses();
-//                if ( c.size() > 0 ) {
-//                    // TODO do something smarter here...
-//                    newTab.setName( ColumnProvider.toDisplay( c.get(0).getSimpleName() ) + "s" );
-//                }
-//
-//                final PlaybookSession s = (PlaybookSession) Session.get();
-//                Ref userRef = s.getUser();
-////                userRef.begin();
-//                User u = (User) userRef.deref();
-//                u.addTab( newTabRef );
-//                newTab.commit();
-//                userRef.commit();
+                TabPanel.this.onFilterSave( getTab(), filter );
             }
         } );
 
@@ -72,6 +49,8 @@ public class TabPanel extends Panel {
         add( left );
         add( right );
     }
+
+    protected void onFilterSave( Tab tab, Filter filter ){}
 
     public Ref getTabRef() {
         return (Ref) getModelObject();

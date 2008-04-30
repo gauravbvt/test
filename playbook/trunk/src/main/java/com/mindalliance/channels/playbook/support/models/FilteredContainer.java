@@ -3,9 +3,11 @@ package com.mindalliance.channels.playbook.support.models;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
+import com.mindalliance.channels.playbook.support.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ...
@@ -17,6 +19,10 @@ public class FilteredContainer extends RefContainer {
     private boolean strict;
 
     private transient List<Class<?>> allowedClasses;
+
+    public FilteredContainer() {
+        super();
+    }
 
     public FilteredContainer( Container data, Filter filter, boolean strict ) {
          this.data = data;
@@ -88,5 +94,27 @@ public class FilteredContainer extends RefContainer {
     public void add( Referenceable ref ) {
         getData().add( ref );
         detach();
+    }
+
+    public Map<String,Object> toMap() {
+        Map<String,Object> result = super.toMap();
+
+        result.put( "strict", strict );
+        result.put( "data", (Object) Mapper.toPersistedValue( data ) );
+        result.put( "filter", (Object) Mapper.toPersistedValue( filter ) );
+
+        return result;
+    }
+
+    public void initFromMap( Map map ) {
+        super.initFromMap( map );
+
+        strict = Boolean.parseBoolean( (String) map.get( "string" ) );
+        data = (Container) Mapper.valueFromPersisted( map.get( "data" ) );
+        filter = (Filter) Mapper.valueFromPersisted( map.get( "filter" ) );
+    }
+
+    public String toString() {
+        return "filtered data";
     }
 }

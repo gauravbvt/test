@@ -2,11 +2,12 @@ package com.mindalliance.channels.playbook.support.models;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
+import com.mindalliance.channels.playbook.support.persistence.Mappable;
 import org.apache.wicket.model.IModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,9 @@ public class RefContainer implements Container, Serializable {
     public void initFromMap( Map map ) {
     }
 
-    public Map toMap() {
-        return Collections.emptyMap();
+    public Map<String,Object> toMap() {
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
+        return map;
     }
 }

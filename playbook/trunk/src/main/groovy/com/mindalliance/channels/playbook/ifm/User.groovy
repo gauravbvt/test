@@ -19,7 +19,7 @@ class User extends IfmElement {
     boolean manager
 
     List<Ref> tabs = []
-    int selectedTab = 0
+    String selectedTab = "0"
 
     // Selections
     Ref selectedProject

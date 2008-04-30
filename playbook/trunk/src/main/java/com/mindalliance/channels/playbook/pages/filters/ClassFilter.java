@@ -30,13 +30,7 @@ public class ClassFilter extends Filter {
 
     public ClassFilter( String collapsed, String expanded, Class<?> objectType ) {
         super( collapsed, expanded );
-        this.objectType = objectType;
-
-        try {
-            filtersType = Class.forName( Package + objectType.getSimpleName() + "Filters" );
-        } catch ( ClassNotFoundException e ) {
-            filtersType = null;
-        }
+        setObjectType( objectType );
     }
 
     public ClassFilter( Class<?> objectType ) {
@@ -69,6 +63,11 @@ public class ClassFilter extends Filter {
 
     public void setObjectType( Class<?> objectType ) {
         this.objectType = objectType;
+        try {
+            filtersType = Class.forName( Package + objectType.getSimpleName() + "Filters" );
+        } catch ( ClassNotFoundException e ) {
+            filtersType = null;
+        }
     }
 
     public void setFiltersType( Class<?> filtersType ) {
@@ -92,6 +91,15 @@ public class ClassFilter extends Filter {
         Set<Class<?>> subclasses = getSubclasses( getObjectType() );
         Container filtered = new FilteredContainer( getContainer(), this, true );
 
+
+        // Impersonate...
+        if ( subclasses.size() == 1 ) {
+            Class<?> c = subclasses.iterator().next();
+            setObjectType( c );
+            setExpandedText( expandedText( c ) );
+            setCollapsedText( collapsedText( c ) );
+        }
+        
         if ( subclasses.size() > 1 )
             for ( Class<?> c : subclasses ) {
                 ClassFilter cf = new ClassFilter( c );
@@ -113,13 +121,6 @@ public class ClassFilter extends Filter {
             for( Ref ref : filtered ) {
                 result.add( new RefFilter( ref ) );
             }
-        }
-
-        // Impersonate...
-        if ( subclasses.size() == 1 ) {
-            Class<?> c = subclasses.iterator().next();
-            setExpandedText( expandedText( c ) );
-            setCollapsedText( collapsedText( c ) );
         }
 
         return result;

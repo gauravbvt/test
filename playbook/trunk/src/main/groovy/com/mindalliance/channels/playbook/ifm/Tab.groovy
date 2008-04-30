@@ -42,7 +42,9 @@ class Tab extends IfmElement implements Container {
     }
 
     public void initFromMap(Map map) {
-        super.initFromMap(map);
+        super.initFromMap(map)
+        filter.container = base
+        buffer = null
     }
 
     List transientProperties() {

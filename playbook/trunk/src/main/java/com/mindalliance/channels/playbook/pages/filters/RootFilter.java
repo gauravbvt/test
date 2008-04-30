@@ -13,7 +13,7 @@ public class RootFilter extends ClassFilter {
     }
 
     public RootFilter( Container container ) {
-        this( null, true );
+        this( container, true );
     }
 
     public RootFilter( Container container, boolean selected ) {
