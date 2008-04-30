@@ -260,5 +260,10 @@ class RefImpl implements Ref {
         }
     }
 
+    boolean isModified() {
+       Store store = PlaybookApplication.locateStore()
+       return store.isModified(this)
+    }
+
 
 }

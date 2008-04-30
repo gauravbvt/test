@@ -9,4 +9,5 @@ interface Store {
     boolean save(Ref ref)
     void begin(Ref ref)
     boolean isModifiable(Ref ref)
+    boolean isModified(Ref ref)
 }

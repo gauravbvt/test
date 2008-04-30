@@ -36,5 +36,5 @@ interface Ref extends Serializable {
     List<Ref> references()
     void begin() // returns a modifiable copy with current session as change listener. Noop if referenceable already in session.
     boolean isModifiable() // is this.deref() modifiable
-    
+    boolean isModified() // is in session and has been changed
 }

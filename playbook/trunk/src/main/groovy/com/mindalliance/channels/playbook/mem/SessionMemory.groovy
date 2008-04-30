@@ -171,4 +171,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     boolean isModifiable(Ref ref) {
         return begun.containsKey(ref)
     }
+
+    public boolean isModified(Ref ref) {
+        return changes.contains(ref)
+    }
 }

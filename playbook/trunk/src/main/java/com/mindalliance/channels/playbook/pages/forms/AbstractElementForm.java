@@ -52,10 +52,23 @@ abstract public class AbstractElementForm extends Panel {
         this.setOutputMarkupId(true);
     }
 
-    protected void reset() {
+    public void reset() {
         element.begin(); // make sure element stays in session
         load();
         init();
+    }
+
+    public void terminate() { // quietly commit element if modified else kick it out of the session
+        if (element.isModified()) {
+            element.commit();
+        }
+        else {
+            element.reset();
+        }
+    }
+
+    public boolean isElementModified() {
+        return element.isModified();
     }
 
 
