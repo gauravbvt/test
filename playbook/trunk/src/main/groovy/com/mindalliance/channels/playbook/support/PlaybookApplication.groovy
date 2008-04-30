@@ -93,6 +93,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
         User admin = new User(userId: "admin", name: 'Administrator', password: "admin")
         admin.admin = true
+        admin.manager = true
+        admin.analyst = true
         channels.addUser(store(admin))
 
         User user = new User(userId: "user", name: 'Normal User', password: "user")
@@ -161,6 +163,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addRole(store(employee))
         m.addRole(store(boss))
         m.addRole(store(gopher))
+        m.addParticipation(store(
+            new ModelParticipation(user: admin.reference)
+            ))
 
         channels.addModel(store(m));
         // Environment elements
@@ -223,7 +228,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         p.addParticipation(
                 store(new Participation(
                         user: admin.getReference(),
-                        project: p.getReference())))
+                        project: p.getReference(),
+                        manager: true )))
         p.addParticipation(
                 store(new Participation(
                         user: user.getReference(),

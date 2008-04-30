@@ -67,7 +67,8 @@ public class UserScope extends BeanImpl implements Container {
                 result.addAll( Channels.adminClasses() );
             if ( u.getAnalyst() ) {
                 result.addAll( Model.analystClasses() );
-                if ( getModel() != null )
+                boolean hasModels = getApplication().findModelsForUser( u.getReference() ).size() > 0;
+                if ( hasModels )
                     result.addAll( Model.contentClasses() );
             }
             if ( u.getManager() )

@@ -50,11 +50,7 @@ class Model  extends IfmElement {
     }
 
     Boolean isAnalyst( Ref user ) {
-        participations.each {
-            if ( it.user == user )
-                return true;
-            }
-        return false
+        return participations.find { it.user.id == user.id } != null
     }
 
     /**
