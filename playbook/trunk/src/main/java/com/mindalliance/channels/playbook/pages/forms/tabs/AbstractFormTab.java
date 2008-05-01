@@ -10,6 +10,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.List;
@@ -32,12 +33,14 @@ public class AbstractFormTab extends Panel {
     protected Ref element;
     protected Project project;
     protected FeedbackPanel feedback;
+    protected AbstractElementForm elementForm;
     private List<FormComponent> inputFields = new ArrayList<FormComponent>();
     private Map<Component, List<Component>> dependencies = new HashMap<Component, List<Component>>();
 
-    public AbstractFormTab(String id, Ref element) {
+    public AbstractFormTab(String id, AbstractElementForm elementForm) {
         super(id);
-        this.element = element;
+        this.elementForm = elementForm;
+        this.element = elementForm.getElement();
         load();
         init();
     }
@@ -75,6 +78,10 @@ public class AbstractFormTab extends Panel {
         }
     }
 
+    protected void addOtherElement(Ref otherElement) {
+        elementForm.addOtherElement(otherElement);
+    }
+
     protected void addInputField(FormComponent inputField, Component dependentField) {
         addInputField(inputField);
         List<Component> dependents = getDependentsOf(inputField);
@@ -101,10 +108,11 @@ public class AbstractFormTab extends Panel {
     }
 
     protected void edit(Ref ref, AjaxRequestTarget target) {
-        System.out.println("TODO: EDIT agreement" + ref);
+        System.out.println("TODO: EDIT " + ref);
         if (ref != null) {
             // TODO - open breadcrumbed editor on agreement             
         }
     }
+
 
 }

@@ -4,10 +4,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
+import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,8 +23,9 @@ import java.util.ArrayList;
 abstract public class AbstractElementForm extends Panel {
 
     protected Ref element;
+    protected Set<Ref> otherElements = new HashSet<Ref>();
     protected Form elementForm;
-    protected List tabs = new ArrayList();
+    protected List<AbstractTab> tabs = new ArrayList<AbstractTab>();
     protected AjaxTabbedPanel tabbedPanel;
 
     public AbstractElementForm(String id, Ref element) {
@@ -52,8 +57,20 @@ abstract public class AbstractElementForm extends Panel {
         this.setOutputMarkupId(true);
     }
 
+    public Ref getElement() {
+        return element;
+    }
+
+    public void addOtherElement(Ref otherElement) {
+        otherElement.begin(); // make editable
+        otherElements.add(otherElement);
+    }
+
     public void reset() {
         element.begin(); // make sure element stays in session
+        for (Ref otherElement : otherElements) {
+            otherElement.begin();
+        }
         load();
         init();
     }
@@ -64,6 +81,14 @@ abstract public class AbstractElementForm extends Panel {
         }
         else {
             element.reset();
+        }
+        for (Ref otherElement : otherElements) {
+            if (otherElement.isModified()) {
+                otherElement.commit();
+            }
+            else {
+                otherElement.reset();
+            }
         }
     }
 

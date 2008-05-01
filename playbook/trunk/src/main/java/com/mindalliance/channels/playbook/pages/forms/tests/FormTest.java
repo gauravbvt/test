@@ -25,6 +25,7 @@ import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ifm.project.resources.Person;
 import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
 
 import java.util.List;
 import java.util.Map;
@@ -121,6 +122,7 @@ public class FormTest extends WebPage {
 
     private List getTypeChoices() {
         List choices = new ArrayList();
+        choices.add(Agreement.class);
         choices.add(Person.class);
         choices.add(Project.class);
         choices.add(Tab.class);
@@ -133,19 +135,20 @@ public class FormTest extends WebPage {
         QueryHandler qh = app.getQueryHandler();
         Map<String, Object> args = new HashMap<String, Object>();
         Ref channels = app.getChannels();
+        Project project = (Project)Project.current().deref();
         List<Ref> results = new ArrayList<Ref>();
         args.put("type", ((Referenceable)type.newInstance()).getType());
         if (type.equals(User.class)) {
             results.add( ((Channels)channels.deref()).findUser("admin") );
         }
         else if (type.equals(Project.class)) {
-            results.add(Project.current());
+            results.add(project.getReference());
         }
         else if (type.equals(Person.class)) {
             results = qh.executeQuery(channels, "findAResource", args);
-        /*} else if (type.equals("Organization")) {
-            results = qh.executeQuery(channels, "findAResource", args);
-        } else if (type.equals("System")) {
+        } else if (type.equals(Agreement.class)) {
+            results = project.getAgreements();
+       /* } else if (type.equals("System")) {
             results = qh.executeQuery(channels, "findAResource", args);
         */
         }

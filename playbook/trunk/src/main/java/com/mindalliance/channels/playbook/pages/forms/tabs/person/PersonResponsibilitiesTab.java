@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.person;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceResponsibilitiesTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -33,8 +34,8 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
     DynamicFilterTree positionTree;
 
-    public PersonResponsibilitiesTab(String id, Ref element) {
-        super(id, element);
+    public PersonResponsibilitiesTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

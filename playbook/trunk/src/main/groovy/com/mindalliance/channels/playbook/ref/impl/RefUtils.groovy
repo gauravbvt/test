@@ -56,14 +56,28 @@ class RefUtils {
     }
 
     static void add(def holder, String path, def obj) {
+        Object val
+        if (hasReference(obj)) {
+            val = obj.reference;
+        }
+        else {
+            val = obj
+        }
         List list = (List) get(holder, path)
-        list.add(obj)
+        list.add(val)
         changed(holder, path)
     }
 
     static void remove(def holder, String path, def obj) {
+        Object val
+        if (hasReference(obj)) {
+            val = obj.reference;
+        }
+        else {
+            val = obj
+        }
         List list = (List) get(holder, path)
-        list.remove(obj)
+        list.remove(val)
         changed(holder, path)
     }
 

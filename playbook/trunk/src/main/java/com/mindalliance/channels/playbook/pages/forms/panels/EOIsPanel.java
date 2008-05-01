@@ -97,6 +97,7 @@ public class EOIsPanel extends AbstractComponentPanel {
                 addNewEOI(target);
             }
         });
+        addReplaceable(addTopicButton);
         // EOIs
         eoisView = new RefreshingView("eois", new Model((Serializable) eois)) {
             protected Iterator getItemModels() {
@@ -106,7 +107,6 @@ public class EOIsPanel extends AbstractComponentPanel {
                     }
                 };
             }
-
             protected void populateItem(Item item) {
                 final ElementOfInformation eoi = (ElementOfInformation) item.getModelObject();
                 Label topicLabel = new Label("topic", new Model(eoi.getTopic()));
@@ -126,6 +126,7 @@ public class EOIsPanel extends AbstractComponentPanel {
                 };
             }
         };
+        addReplaceable(eoisView);
     }
 
     private Iterator topicIterator(String input, int max) {

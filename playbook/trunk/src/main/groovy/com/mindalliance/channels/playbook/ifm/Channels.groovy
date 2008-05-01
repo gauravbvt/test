@@ -47,21 +47,29 @@ class Channels extends IfmElement {
         return (Ref) models.find{it.id == mid}
     }
 
-    public List<Ref> findProjectsForUser(Ref user) {
+    List<Ref> findProjectsForUser(Ref user) {
         List<Ref> result = []
         projects.each {
             if (it.isParticipant(user)) result.add(it)
         }
-        return result;
+        return result
     }
 
-    public List<Ref> findModelsForUser(Ref user) {
+    List<Ref> findUsersNotInProject(Ref project) {
+        List<Ref> results
+        results = users.findAll {user ->
+            project.participations.every {it.user != user}
+        }
+        return results
+    }
+
+    List<Ref> findModelsForUser(Ref user) {
         List<Ref> result = []
         if ( user.analyst )
             models.each {
                 if (it.isAnalyst(user)) result.add(it)
             }
-        return result;
+        return result
     }
 
     // Queries

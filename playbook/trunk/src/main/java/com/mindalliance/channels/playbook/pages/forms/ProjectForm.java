@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.project.ProjectAboutTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.project.ProjectParticipationTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -24,7 +25,12 @@ public class ProjectForm extends AbstractElementForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("About")) {
             public Panel getPanel(String panelId) {
-                return new ProjectAboutTab(panelId, element);
+                return new ProjectAboutTab(panelId, ProjectForm.this);
+            }
+        });
+        tabs.add(new AbstractTab(new Model("Participations")) {
+            public Panel getPanel(String panelId) {
+                return new ProjectParticipationTab(panelId, ProjectForm.this);
             }
         });
     }

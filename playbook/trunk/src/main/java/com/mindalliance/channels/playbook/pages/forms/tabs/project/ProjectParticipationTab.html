@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <span wicket:id="users">[Users tree]</span>
+            </td>
+            <td>
+                <button wicket:id="addParticipation">Add participation</button>
+            </td>
+            <td>
+                <div wicket:id="participationsDiv">
+                    <ul>
+                        <li wicket:id="participations">
+                            <a wicket:id="participationLink" href="#">Participation</a> by user <span
+                                wicket:id="participant">[user name]</span>
+                            <a wicket:id="deleteParticipation" href="#">(delete)</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div wicket:id="participation">
+        <fieldset>
+            <legend>Participation</legend>
+            <table>
+                <tr>
+                    <td>
+                        User <a wicket:id="userLink" href="#"><span wicket:id="user">[user name]</span></a> is
+                    </td>
+                    <td>
+                        <span wicket:id="persons">[person tree]</span>
+                    </td>
+                    <td>and is <label><span>manager</span><input wicket:id="manager" type="checkbox"/></label> for
+                        this project.
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</wicket:extend>
+</body>
+</html>

@@ -33,11 +33,20 @@ public class TimingPanel extends AbstractComponentPanel {
         timing = (Timing) RefUtils.get(element, propPath);
         // amount
         final TextField amountField = new TextField("amount", new Model(timing.getAmount()));
+        amountField.setType(Integer.class);
         amountField.add(NumberValidator.minimum(0));
         amountField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-              int value = new Integer(amountField.getModelObjectAsString());
+              int value = 0;
+              try {
+                 value = new Integer(amountField.getModelObjectAsString());
+              }
+              catch(NumberFormatException e) {
+                 amountField.error("Not a number");
+                 amountField.setModelObject(0);
+                 target.addComponent(amountField);
+              }
               timing.setAmount(value);
               elementChanged();
               target.addComponent(feedback);

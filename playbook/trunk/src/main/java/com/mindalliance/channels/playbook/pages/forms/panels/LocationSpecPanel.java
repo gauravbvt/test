@@ -60,6 +60,7 @@ public class LocationSpecPanel extends AbstractComponentPanel {
                 elementChanged();
             }
         });
+        addReplaceable(areaTypeChoice);
         // relation to context location
         relationChoice = new DropDownChoice("relation", new Model((Serializable)RefUtils.get(locationSpec, "relation")), LocationSpec.getRelations());
         relationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -69,6 +70,7 @@ public class LocationSpecPanel extends AbstractComponentPanel {
                 elementChanged();
             }
         });
+        addReplaceable(relationChoice);
 
     }
 }

@@ -26,22 +26,22 @@ public class PersonForm extends AbstractResourceForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Who-what")) {
             public Panel getPanel(String panelId) {
-                return new PersonIdentityTab(panelId, element);
+                return new PersonIdentityTab(panelId, PersonForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model("Where")) {
             public Panel getPanel(String panelId) {
-                return new ResourceLocalityTab(panelId, element);
+                return new ResourceLocalityTab(panelId, PersonForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model("Responsibilities")) {
             public Panel getPanel(String panelId) {
-                return new PersonResponsibilitiesTab(panelId, element);
+                return new PersonResponsibilitiesTab(panelId, PersonForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model("Network")) {
             public Panel getPanel(String panelId) {
-                return new ResourceNetworkTab(panelId, element);
+                return new ResourceNetworkTab(panelId, PersonForm.this);
             }
         });
     }

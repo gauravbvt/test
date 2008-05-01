@@ -21,14 +21,14 @@ public class AgreementForm extends AbstractElementForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("About")) {
+        tabs.add(new AbstractTab(new Model("Conditions")) {
             public Panel getPanel(String panelId) {
-               return new AgreementAboutTab(panelId, element);
+               return new AgreementAboutTab(panelId, AgreementForm.this);
             }
         });        
-        tabs.add(new AbstractTab(new Model("About")) {
+        tabs.add(new AbstractTab(new Model("Information")) {
             public Panel getPanel(String panelId) {
-               return new AgreementInfoTab(panelId, element);
+               return new AgreementInfoTab(panelId, AgreementForm.this);
             }
         });
     }

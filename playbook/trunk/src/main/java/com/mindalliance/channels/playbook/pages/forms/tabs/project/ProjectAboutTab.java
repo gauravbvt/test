@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.project;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.form.TextField;
@@ -18,8 +19,8 @@ public class ProjectAboutTab extends AbstractFormTab {
     TextField nameField;
     TextArea descriptionField;
 
-    public ProjectAboutTab(String id, Ref element) {
-        super(id, element);
+    public ProjectAboutTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

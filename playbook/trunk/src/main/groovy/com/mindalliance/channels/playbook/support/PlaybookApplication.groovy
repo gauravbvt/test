@@ -99,6 +99,15 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         User user = new User(userId: "user", name: 'Normal User', password: "user")
         channels.addUser(store(user))
 
+        User joeUser = new User(userId: "joe", name: 'Joe S.', password: "password")
+        channels.addUser(store(joeUser))
+        User janeUser = new User(userId: "jane", name: 'Jane S.', password: "password")
+        channels.addUser(store(janeUser))
+        User bobUser = new User(userId: "Bob", name: 'Bob User', password: "password")
+        channels.addUser(store(bobUser))
+        User annUser = new User(userId: "ann", name: 'Ann User', password: "password")
+        channels.addUser(store(annUser))
+
         // Model elements
         Model m = new Model(name: 'default')
 

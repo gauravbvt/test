@@ -22,7 +22,7 @@ public class TabForm extends AbstractElementForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Login")) {
             public Panel getPanel(String panelId) {
-                return new TabAboutTab(panelId, element);
+                return new TabAboutTab(panelId, TabForm.this);
             }
         });
     }

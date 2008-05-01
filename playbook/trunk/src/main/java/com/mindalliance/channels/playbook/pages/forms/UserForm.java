@@ -24,7 +24,7 @@ public class UserForm extends AbstractElementForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("About")) {
             public Panel getPanel(String panelId) {
-                return new UserAboutTab(panelId, element);
+                return new UserAboutTab(panelId, UserForm.this);
             }
         });
     }

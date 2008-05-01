@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.tab;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.form.TextField;
@@ -20,8 +21,8 @@ public class TabAboutTab  extends AbstractFormTab {
     TextArea descriptionField;
     CheckBox sharedField;
 
-    public TabAboutTab(String id, Ref element) {
-        super(id, element);
+    public TabAboutTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

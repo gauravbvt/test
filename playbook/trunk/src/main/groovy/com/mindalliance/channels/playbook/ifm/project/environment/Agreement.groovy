@@ -27,11 +27,15 @@ class Agreement extends ProjectElement implements Describable {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['deliveries'])
+        return (List<String>)(super.transientProperties() + ['deliveries', 'name'])
     }
 
     String toString() {
-        return delivery
+        return "${fromResource.name} shall $delivery ${toResource.name}"
+    }
+
+    String getName() {
+        return toString()
     }
 
 }

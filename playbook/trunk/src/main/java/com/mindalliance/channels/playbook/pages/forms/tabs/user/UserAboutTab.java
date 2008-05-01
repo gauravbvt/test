@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.user;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.form.TextField;
@@ -22,8 +23,8 @@ public class UserAboutTab extends AbstractFormTab {
     CheckBox analystField;
     CheckBox adminField;
 
-    public UserAboutTab(String id, Ref element) {
-        super(id, element);
+    public UserAboutTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

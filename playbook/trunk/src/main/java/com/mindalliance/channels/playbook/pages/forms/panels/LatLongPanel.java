@@ -30,7 +30,7 @@ public class LatLongPanel extends AbstractComponentPanel {
     public LatLongPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, element, propPath, readOnly, feedback);
     }
-    
+
     protected void load() {
         super.load();
         latLong = (LatLong) RefUtils.get(element, propPath);
@@ -42,8 +42,7 @@ public class LatLongPanel extends AbstractComponentPanel {
         loadReadOnly();
         if (isReadOnly()) {
             editableDiv.setVisible(false);
-        }
-        else {
+        } else {
             readOnlyDiv.setVisible(false);
         }
     }
@@ -56,14 +55,23 @@ public class LatLongPanel extends AbstractComponentPanel {
         longitudeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                double value = new Double(longitudeField.getModelObjectAsString());
+                double value = 0.0;
+                try {
+                    value = new Double(longitudeField.getModelObjectAsString());
+                }
+                catch (NumberFormatException e) {
+                    longitudeField.error("Not a number");
+                    longitudeField.setModelObject(0);
+                    target.addComponent(longitudeField);
+                }
                 latLong.setLongitude(value);
                 elementChanged();
                 target.addComponent(feedback);
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, RuntimeException e) {
-                Logger.getLogger(this.getClass()).error("Error updating "+ longitudeField + ": " + e);
+                Logger.getLogger(this.getClass()).error("Error updating " + longitudeField + ": " + e);
                 longitudeField.clearInput();
                 target.addComponent(longitudeField);
                 target.addComponent(feedback);
@@ -76,14 +84,23 @@ public class LatLongPanel extends AbstractComponentPanel {
         latitudeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                double value = new Double(latitudeField.getModelObjectAsString());
+                double value = 0.0;
+                try {
+                    value = new Double(latitudeField.getModelObjectAsString());
+                }
+                catch (NumberFormatException e) {
+                    latitudeField.error("Not a number");
+                    latitudeField.setModelObject(0);
+                    target.addComponent(latitudeField);
+                }
                 latLong.setLatitude(value);
                 elementChanged();
                 target.addComponent(feedback);
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, RuntimeException e) {
-                Logger.getLogger(this.getClass()).error("Error updating "+ latitudeField + ": " + e);
+                Logger.getLogger(this.getClass()).error("Error updating " + latitudeField + ": " + e);
                 latitudeField.clearInput();
                 target.addComponent(latitudeField);
                 target.addComponent(feedback);
@@ -97,5 +114,5 @@ public class LatLongPanel extends AbstractComponentPanel {
         Label latLongLabel = new Label("latLongString", latLong.toString());
         readOnlyDiv.add(latLongLabel);
     }
-    
+
 }

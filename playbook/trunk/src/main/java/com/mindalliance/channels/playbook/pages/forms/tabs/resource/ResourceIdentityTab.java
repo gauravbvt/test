@@ -19,6 +19,7 @@ import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.ifm.project.resources.ContactInfo;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 
 import java.util.Iterator;
 import java.util.List;
@@ -39,8 +40,8 @@ public class ResourceIdentityTab extends AbstractFormTab {
     protected WebMarkupContainer contactInfosDiv;
     protected RefreshingView contactInfosView;
 
-    public ResourceIdentityTab(String id, Ref element) {
-        super(id, element);
+    public ResourceIdentityTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

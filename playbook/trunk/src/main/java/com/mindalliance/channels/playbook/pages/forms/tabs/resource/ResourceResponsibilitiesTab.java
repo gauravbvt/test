@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import org.apache.wicket.model.Model;
@@ -24,8 +25,8 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
 
     DynamicFilterTree roleTree;
 
-    public ResourceResponsibilitiesTab(String id, Ref element) {
-        super(id, element);
+    public ResourceResponsibilitiesTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

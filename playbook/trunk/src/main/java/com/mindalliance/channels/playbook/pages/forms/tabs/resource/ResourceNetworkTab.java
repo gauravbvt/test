@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Relationship;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -49,8 +50,8 @@ public class ResourceNetworkTab extends AbstractFormTab {
 
     protected Ref selectedResource;
 
-    public ResourceNetworkTab(String id, Ref element) {
-        super(id, element);
+    public ResourceNetworkTab(String id, AbstractElementForm elementForm) {
+        super(id, elementForm);
     }
 
     protected void load() {

@@ -14,7 +14,7 @@ class Timing extends BeanImpl {
 
     static final List<String> units = ['seconds', 'minutes', 'hours', 'days', 'weeks']
 
-    int amount = 0
+    Integer amount = 0
     String unit = 'seconds'
     Duration duration
 
