@@ -1,0 +1,26 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.RelationshipType
+  createdOn: !java.util.Date "1209652862764"
+  db: ~
+  description: In same extended family
+  fromKind: Person
+  id: 25a9b2dd-0d74-40eb-8ae3-3bb48b3ab728
+  inverseRelationship: ~
+  lastModified: !java.util.Date "1209652862764"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: Family
+  narrowedTypes: []
+  rESOURCE_KINDS: 
+    - Resource
+    - Organization
+    - Person
+    - Position
+    - System
+  toKind: Person
+  transitive: false
+  version: 1.0.0
+created: !java.lang.Long 1209656064056
+key: 25a9b2dd-0d74-40eb-8ae3-3bb48b3ab728
+lastUpdate: !java.lang.Long 1209656064056

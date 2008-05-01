@@ -1,0 +1,16 @@
+<project>
+    <property name="to" value="target/work/cache/application"/>
+    <property name="from" value="src/data"/>
+    <available property="dataCopied" file="${to}"/>
+
+    <target name="copyData" unless="dataCopied">
+        <mkdir dir="${to}"/>
+        <copy todir="${to}">
+           <fileset dir="${from}"/>
+        </copy>
+    </target>
+
+    <target name="patchStubs">
+        <patch patchfile="kludge.patch" backups="false" dir="target" strip="0"/>
+    </target>
+</project>

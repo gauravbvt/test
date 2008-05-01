@@ -1,0 +1,16 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.AreaType
+  createdOn: !java.util.Date "1209652861850"
+  db: ~
+  description: ""
+  id: f5bb1770-e61f-4341-9c33-43e010f592fa
+  lastModified: !java.util.Date "1209652861850"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: Globe
+  narrowedTypes: []
+  version: 1.0.0
+created: !java.lang.Long 1209656064963
+key: f5bb1770-e61f-4341-9c33-43e010f592fa
+lastUpdate: !java.lang.Long 1209656064963

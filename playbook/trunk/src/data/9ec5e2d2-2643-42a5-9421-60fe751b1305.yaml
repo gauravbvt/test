@@ -1,0 +1,191 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.Tab
+  base: !java.util.HashMap
+    data: !java.util.LinkedHashMap
+      _bean_class_: com.mindalliance.channels.playbook.pages.filters.UserScope
+    strict: &4 false
+    _bean_class_: com.mindalliance.channels.playbook.support.models.FilteredContainer
+    filter: !java.util.HashMap
+      selected: *4
+      collapsedText: Show everything
+      children: 
+        - !java.util.HashMap
+          selected: *4
+          collapsedText: Any element type
+          children: 
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Any domain
+              children: []
+              expandedText: Domains...
+              expanded: *4
+              objectType: com.mindalliance.channels.playbook.ifm.model.Domain
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Any place type
+              children: []
+              expandedText: Place types...
+              expanded: *4
+              objectType: com.mindalliance.channels.playbook.ifm.model.PlaceType
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Any relationship type
+              children: []
+              expandedText: Relationship types...
+              expanded: *4
+              objectType: com.mindalliance.channels.playbook.ifm.model.RelationshipType
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Any role
+              children: []
+              expandedText: Roles...
+              expanded: *4
+              objectType: com.mindalliance.channels.playbook.ifm.model.Role
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+          expandedText: Element types...
+          expanded: *4
+          objectType: com.mindalliance.channels.playbook.ifm.model.ElementType
+          _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+        - !java.util.HashMap
+          selected: *4
+          collapsedText: Any model
+          children: []
+          expandedText: Models...
+          expanded: *4
+          objectType: com.mindalliance.channels.playbook.ifm.model.Model
+          _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+        - !java.util.HashMap
+          selected: &20 true
+          collapsedText: Any project
+          children: []
+          expandedText: Projects...
+          expanded: *4
+          objectType: com.mindalliance.channels.playbook.ifm.project.Project
+          _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+        - !java.util.HashMap
+          selected: *20
+          collapsedText: Any project element
+          children: 
+            - !java.util.HashMap
+              selected: *20
+              collapsedText: Any playbook
+              children: []
+              expandedText: Playbooks...
+              expanded: *4
+              objectType: com.mindalliance.channels.playbook.ifm.playbook.Playbook
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+            - !java.util.HashMap
+              selected: *20
+              collapsedText: Any resource
+              children: 
+                - !java.util.HashMap
+                  selected: *20
+                  collapsedText: Any organization
+                  children: []
+                  expandedText: Organizations...
+                  expanded: *4
+                  filtersType: com.mindalliance.channels.playbook.pages.filters.OrganizationFilters
+                  objectType: com.mindalliance.channels.playbook.ifm.project.resources.Organization
+                  _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+                - !java.util.HashMap
+                  selected: *20
+                  collapsedText: Any person
+                  children: []
+                  expandedText: Persons...
+                  expanded: *4
+                  objectType: com.mindalliance.channels.playbook.ifm.project.resources.Person
+                  _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+                - !java.util.HashMap
+                  selected: *20
+                  collapsedText: Any position
+                  children: []
+                  expandedText: Positions...
+                  expanded: *4
+                  objectType: com.mindalliance.channels.playbook.ifm.project.resources.Position
+                  _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+                - !java.util.HashMap
+                  selected: *20
+                  collapsedText: Any system
+                  children: []
+                  expandedText: Systems...
+                  expanded: *4
+                  objectType: com.mindalliance.channels.playbook.ifm.project.resources.System
+                  _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+              expandedText: Resources...
+              expanded: *4
+              objectType: com.mindalliance.channels.playbook.ifm.project.resources.Resource
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+          expandedText: Project elements...
+          expanded: *4
+          objectType: com.mindalliance.channels.playbook.ifm.project.ProjectElement
+          _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+        - !java.util.HashMap
+          selected: *4
+          collapsedText: Any tab
+          children: []
+          expandedText: Tabs...
+          expanded: *4
+          objectType: com.mindalliance.channels.playbook.ifm.Tab
+          _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+        - !java.util.HashMap
+          selected: *4
+          collapsedText: Any user
+          children: 
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Administrators
+              children: []
+              expandedText: Administrators...
+              expanded: *4
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.UserFilters$AdminFilter
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Managers
+              children: []
+              expandedText: Managers...
+              expanded: *4
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.UserFilters$ManagerFilter
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Analysts
+              children: []
+              expandedText: Analysts...
+              expanded: *4
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.UserFilters$AnalystFilter
+            - !java.util.HashMap
+              selected: *4
+              collapsedText: Normal users
+              children: []
+              expandedText: Normal users...
+              expanded: *4
+              _bean_class_: com.mindalliance.channels.playbook.pages.filters.UserFilters$NormalUserFilter
+          expandedText: Users...
+          expanded: *4
+          filtersType: com.mindalliance.channels.playbook.pages.filters.UserFilters
+          objectType: com.mindalliance.channels.playbook.ifm.User
+          _bean_class_: com.mindalliance.channels.playbook.pages.filters.ClassFilter
+      expandedText: Show...
+      expanded: *20
+      objectType: com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
+      _bean_class_: com.mindalliance.channels.playbook.pages.filters.RootFilter
+  createdOn: !java.util.Date "1209656172110"
+  db: ~
+  filter: !java.util.HashMap
+    selected: *20
+    collapsedText: Show everything
+    expandedText: Show...
+    expanded: *4
+    objectType: com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
+    _bean_class_: com.mindalliance.channels.playbook.pages.filters.RootFilter
+  id: 9ec5e2d2-2643-42a5-9421-60fe751b1305
+  lastModified: !java.util.Date "1209656172110"
+  name: Organizations
+  shared: ~
+  version: 1.0.0
+created: !java.lang.Long 1209656200605
+key: 9ec5e2d2-2643-42a5-9421-60fe751b1305
+lastUpdate: !java.lang.Long 1209656200605

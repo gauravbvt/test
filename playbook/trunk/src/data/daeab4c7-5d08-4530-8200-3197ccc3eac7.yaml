@@ -1,0 +1,16 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.PlaceType
+  createdOn: !java.util.Date "1209652862184"
+  db: ~
+  description: ""
+  id: daeab4c7-5d08-4530-8200-3197ccc3eac7
+  lastModified: !java.util.Date "1209652862184"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: Airport
+  narrowedTypes: []
+  version: 1.0.0
+created: !java.lang.Long 1209656064608
+key: daeab4c7-5d08-4530-8200-3197ccc3eac7
+lastUpdate: !java.lang.Long 1209656064608

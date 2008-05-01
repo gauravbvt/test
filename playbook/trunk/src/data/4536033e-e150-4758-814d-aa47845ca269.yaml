@@ -1,0 +1,30 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.User
+  admin: true
+  analyst: true
+  createdOn: !java.util.Date "1209652861483"
+  db: ~
+  id: 4536033e-e150-4758-814d-aa47845ca269
+  lastModified: !java.util.Date "1209656462370"
+  manager: true
+  name: Administrator
+  password: admin
+  selectedModel: ~
+  selectedProject: ~
+  selectedTab: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: fa6f6520-b2d6-418d-96d9-9c59a9f03086
+  tabs: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: fa6f6520-b2d6-418d-96d9-9c59a9f03086
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: f684a062-1d01-43a2-9c0d-e688ada303e0
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: d148f214-cbb0-4249-846b-acd81e151b8c
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 873b5cc2-2955-429f-bbdc-057590e79f5d
+  userId: admin
+  version: 1.0.0
+created: !java.lang.Long 1209656462371
+key: 4536033e-e150-4758-814d-aa47845ca269
+lastUpdate: !java.lang.Long 1209656462371

@@ -1,0 +1,16 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.MediumType
+  createdOn: !java.util.Date "1209652863360"
+  db: ~
+  description: ""
+  id: 84d4f13b-cf1d-4790-87d2-2679e4ed6f48
+  lastModified: !java.util.Date "1209652863360"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: messaging
+  narrowedTypes: []
+  version: 1.0.0
+created: !java.lang.Long 1209656065207
+key: 84d4f13b-cf1d-4790-87d2-2679e4ed6f48
+lastUpdate: !java.lang.Long 1209656065207

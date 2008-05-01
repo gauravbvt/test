@@ -1,0 +1,21 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.OrganizationType
+  createdOn: !java.util.Date "1209652862718"
+  db: ~
+  description: ""
+  domain: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 7a026b9a-a03b-4f22-b231-db73f26d1fce
+  id: f11b4ce1-3b20-4371-b2aa-b3d6921858eb
+  jurisdictionType: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: db75cec8-641e-42a3-9826-e79f8355854f
+  lastModified: !java.util.Date "1209652862718"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: "County Sheriff's Office"
+  narrowedTypes: []
+  version: 1.0.0
+  within: ~
+created: !java.lang.Long 1209656065391
+key: f11b4ce1-3b20-4371-b2aa-b3d6921858eb
+lastUpdate: !java.lang.Long 1209656065391

@@ -1,0 +1,35 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.project.environment.Place
+  createdOn: !java.util.Date "1209652864194"
+  db: ~
+  description: ""
+  id: 5763893b-f9b3-4358-8459-0312d6e41bc1
+  lastModified: !java.util.Date "1209652864200"
+  locationInfo: !java.util.LinkedHashMap
+    areaInfo: !java.util.LinkedHashMap
+      county: ""
+      street: ""
+      state: ""
+      code: ""
+      city: ""
+      version: 1.0.0
+      country: ""
+      _bean_class_: com.mindalliance.channels.playbook.ifm.info.AreaInfo
+    latLong: !java.util.LinkedHashMap
+      longitude: ~
+      latitude: ~
+      version: 1.0.0
+      _bean_class_: com.mindalliance.channels.playbook.ifm.info.LatLong
+    version: 1.0.0
+    _bean_class_: com.mindalliance.channels.playbook.ifm.info.LocationInfo
+  name: JFK
+  placeTypes: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: daeab4c7-5d08-4530-8200-3197ccc3eac7
+  project: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: fd944547-aa2e-4f96-8b31-a1a67d65b94a
+  version: 1.0.0
+created: !java.lang.Long 1209656066206
+key: 5763893b-f9b3-4358-8459-0312d6e41bc1
+lastUpdate: !java.lang.Long 1209656066206

@@ -1,0 +1,61 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.project.Project
+  agreements: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 637a539a-8cc6-467f-b5c1-4904d3fef750
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 924c75e6-304c-41ca-899e-f28859c6af93
+  analysisElements: []
+  createdOn: !java.util.Date "1209652863709"
+  db: ~
+  description: ""
+  id: fd944547-aa2e-4f96-8b31-a1a67d65b94a
+  lastModified: !java.util.Date "1209652865352"
+  models: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: Generic
+  participations: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: dfdef1a7-fa3b-4d31-a80c-f1f0f7a5b4fa
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 8b16dcca-9c99-4aa9-be3c-845f5f4866ed
+  places: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: a9526302-42a2-4568-8096-56e68e009668
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 5763893b-f9b3-4358-8459-0312d6e41bc1
+  playbooks: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 8972f0b1-26f5-44bc-a668-1bd4cf19cb91
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: f53865a4-dcf9-4d5d-9c52-6992344a97ad
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 4db6a800-8dfe-4321-a652-28b8dae56ead
+  policies: []
+  resources: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: da66ebc3-60d7-49a7-b138-99f913865706
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 3ef56a87-682d-4af8-96c0-1f8b78180b9e
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 12901f64-8f30-4b14-96d5-f347cb44cf0a
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: fe7c5038-f60f-47eb-b90a-2385f7c9de74
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 8f45bfc9-051a-4fd7-a95d-60792ea1f34b
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 274fc953-269a-4c66-a04c-6b817b36dca0
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 79a1e83b-24ea-4b3e-b4f1-13b9ef551290
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: d57bb11e-9100-4c36-8c4b-4869b68414a4
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 3d94e2bf-510d-4200-931d-479d5cd0cc8f
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 427c3a97-771e-434e-908e-7fe44ba16ff9
+  version: 1.0.0
+created: !java.lang.Long 1209656061966
+key: fd944547-aa2e-4f96-8b31-a1a67d65b94a
+lastUpdate: !java.lang.Long 1209656061966

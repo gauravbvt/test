@@ -1,0 +1,35 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.project.environment.Place
+  createdOn: !java.util.Date "1209652863744"
+  db: ~
+  description: ""
+  id: a9526302-42a2-4568-8096-56e68e009668
+  lastModified: !java.util.Date "1209652863816"
+  locationInfo: !java.util.LinkedHashMap
+    areaInfo: !java.util.LinkedHashMap
+      county: ""
+      street: ""
+      state: ""
+      code: ""
+      city: ""
+      version: 1.0.0
+      country: ""
+      _bean_class_: com.mindalliance.channels.playbook.ifm.info.AreaInfo
+    latLong: !java.util.LinkedHashMap
+      longitude: ~
+      latitude: ~
+      version: 1.0.0
+      _bean_class_: com.mindalliance.channels.playbook.ifm.info.LatLong
+    version: 1.0.0
+    _bean_class_: com.mindalliance.channels.playbook.ifm.info.LocationInfo
+  name: WTC
+  placeTypes: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 548e8f30-1725-40a9-a3db-40a008879467
+  project: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: fd944547-aa2e-4f96-8b31-a1a67d65b94a
+  version: 1.0.0
+created: !java.lang.Long 1209656066239
+key: a9526302-42a2-4568-8096-56e68e009668
+lastUpdate: !java.lang.Long 1209656066239

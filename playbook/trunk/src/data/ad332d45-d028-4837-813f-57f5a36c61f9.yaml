@@ -1,0 +1,18 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.AreaType
+  createdOn: !java.util.Date "1209652861879"
+  db: ~
+  description: ""
+  id: ad332d45-d028-4837-813f-57f5a36c61f9
+  lastModified: !java.util.Date "1209652861881"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: Country
+  narrowedTypes: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: 56deb7f9-2fbd-4046-a7b5-4fc272dd7016
+  version: 1.0.0
+created: !java.lang.Long 1209656064894
+key: ad332d45-d028-4837-813f-57f5a36c61f9
+lastUpdate: !java.lang.Long 1209656064894

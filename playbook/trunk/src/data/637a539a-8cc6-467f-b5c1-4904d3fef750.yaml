@@ -1,0 +1,26 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.project.environment.Agreement
+  createdOn: !java.util.Date "1209652865241"
+  db: ~
+  delivery: notify
+  description: ""
+  effective: false
+  fromResource: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: da66ebc3-60d7-49a7-b138-99f913865706
+  id: 637a539a-8cc6-467f-b5c1-4904d3fef750
+  informationCovered: ~
+  lastModified: !java.util.Date "1209652865241"
+  maxDelay: !java.util.LinkedHashMap
+    amount: 0
+    unit: seconds
+    version: 1.0.0
+    _bean_class_: com.mindalliance.channels.playbook.ifm.info.Timing
+  project: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: fd944547-aa2e-4f96-8b31-a1a67d65b94a
+  toResource: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 3d94e2bf-510d-4200-931d-479d5cd0cc8f
+  version: 1.0.0
+created: !java.lang.Long 1209656065947
+key: 637a539a-8cc6-467f-b5c1-4904d3fef750
+lastUpdate: !java.lang.Long 1209656065947

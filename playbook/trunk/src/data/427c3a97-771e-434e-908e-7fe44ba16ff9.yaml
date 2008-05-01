@@ -1,0 +1,46 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.project.resources.System
+  access: ""
+  adminPosition: ~
+  contactInfos: []
+  createdOn: !java.util.Date "1209652865144"
+  db: ~
+  description: ""
+  effective: true
+  id: 427c3a97-771e-434e-908e-7fe44ba16ff9
+  lastModified: !java.util.Date "1209652865144"
+  location: !java.util.LinkedHashMap
+    place: ~
+    locationInfo: !java.util.LinkedHashMap
+      areaInfo: !java.util.LinkedHashMap
+        county: ""
+        street: ""
+        state: ""
+        code: ""
+        city: ""
+        version: 1.0.0
+        country: ""
+        _bean_class_: com.mindalliance.channels.playbook.ifm.info.AreaInfo
+      latLong: !java.util.LinkedHashMap
+        longitude: ~
+        latitude: ~
+        version: 1.0.0
+        _bean_class_: com.mindalliance.channels.playbook.ifm.info.LatLong
+      version: 1.0.0
+      _bean_class_: com.mindalliance.channels.playbook.ifm.info.LocationInfo
+    placeInfo: !java.util.LinkedHashMap
+      placeItems: []
+      version: 1.0.0
+      _bean_class_: com.mindalliance.channels.playbook.ifm.info.PlaceInfo
+    version: 1.0.0
+    _bean_class_: com.mindalliance.channels.playbook.ifm.info.Location
+  name: No name
+  project: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: fd944547-aa2e-4f96-8b31-a1a67d65b94a
+  relationships: []
+  roles: []
+  version: 1.0.0
+created: !java.lang.Long 1209656066399
+key: 427c3a97-771e-434e-908e-7fe44ba16ff9
+lastUpdate: !java.lang.Long 1209656066399

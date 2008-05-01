@@ -1,0 +1,18 @@
+--- !com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
+content: !java.util.TreeMap
+  _bean_class_: com.mindalliance.channels.playbook.ifm.model.PlaceType
+  createdOn: !java.util.Date "1209652862187"
+  db: ~
+  description: ""
+  id: 548e8f30-1725-40a9-a3db-40a008879467
+  lastModified: !java.util.Date "1209652862189"
+  model: !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+    id: 4cd576d7-95c3-4274-80c5-620eb127edec
+  name: Building
+  narrowedTypes: 
+    - !com.mindalliance.channels.playbook.support.persistence.PersistentRef
+      id: daeab4c7-5d08-4530-8200-3197ccc3eac7
+  version: 1.0.0
+created: !java.lang.Long 1209656064567
+key: 548e8f30-1725-40a9-a3db-40a008879467
+lastUpdate: !java.lang.Long 1209656064567
