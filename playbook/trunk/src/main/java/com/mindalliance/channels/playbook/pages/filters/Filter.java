@@ -44,14 +44,14 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         this( text, text );
     }
 
-    public Filter copy() {
+    public Filter clone() throws CloneNotSupportedException {
         try {
             final Filter shallow = (Filter) super.clone();
 
             if ( children != null ) {
                 List<Filter> cs = new ArrayList<Filter>();
                 for ( Filter c : children )
-                    cs.add( c.copy() );
+                    cs.add( c.clone() );
                 shallow.setChildren( cs );
             }
 
@@ -84,7 +84,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         this.invalid = invalid;
     }
 
-    public Map toMap() {
+    public Map<String,Object> toMap() {
         Map<String,Object> map = new HashMap<String,Object>();
         map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
         map.put("collapsedText", collapsedText);
@@ -103,6 +103,8 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         if (map.containsKey("children")) {
             List<Filter> list = (List<Filter>) Mapper.valueFromPersisted( map.get( "children" ) );
             setChildren( list );
+            for ( Filter k : children )
+                assert( equals( k.getParent() ) );
         }
     }
 

@@ -38,6 +38,7 @@ class Tab extends IfmElement implements Container {
 
     Map toMap() {
         Map map = super.toMap()
+        buffer = null
         return map
     }
 

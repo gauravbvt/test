@@ -37,8 +37,8 @@ public class ClassFilter extends Filter {
         this( collapsedText( objectType ), expandedText( objectType ), objectType );
     }
 
-    public Map toMap() {
-        Map map = super.toMap();
+    public Map<String,Object> toMap() {
+        Map<String,Object> map = super.toMap();
         map.put( "objectType", getObjectType().getName() );
         if ( getFiltersType() != null )
             map.put( "filtersType", getFiltersType().getName() );
@@ -99,7 +99,7 @@ public class ClassFilter extends Filter {
             setExpandedText( expandedText( c ) );
             setCollapsedText( collapsedText( c ) );
         }
-        
+
         if ( subclasses.size() > 1 )
             for ( Class<?> c : subclasses ) {
                 ClassFilter cf = new ClassFilter( c );
@@ -133,6 +133,7 @@ public class ClassFilter extends Filter {
 
     public static String expandedText( Class<?> clazz ) {
         String s = ColumnProvider.toDisplay( clazz.getSimpleName() );
+        s = s.substring( 0,1 ) + s.substring( 1 ).toLowerCase();
         return MessageFormat.format( "{0}s...", s );
     }
 

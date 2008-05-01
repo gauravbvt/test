@@ -35,7 +35,7 @@ public class FilterPanel extends Panel {
         // meanwhile...
         applyButton.setEnabled( false );
 
-        tree = new FilterTree( "filter-tree", (Filter) getModelObject() ){
+        tree = new FilterTree( "filter-tree", getFilter() ){
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 applyButton.setEnabled( true );
                 saveButton.setEnabled( true );
@@ -73,7 +73,7 @@ public class FilterPanel extends Panel {
     public void onFilterSave( Filter filter ){}
 
     public final Filter getFilter() {
-        return tree.getFilter();
+        return (Filter) getModelObject();
     }
 
     public final void setFilter( Filter filter ) {

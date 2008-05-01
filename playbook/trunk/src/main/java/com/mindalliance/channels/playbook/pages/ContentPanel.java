@@ -31,47 +31,54 @@ import java.util.Iterator;
 public class ContentPanel extends Panel {
 
     private static final int ITEMS_PER_PAGE = 6;
-    private Ref selected ;
 
+    private Ref selected ;
+    private DataView rows;
+    private FormPanel formPanel;
+    private WebMarkupContainer table;
+    private WebMarkupContainer pageNavigator;
+
+    //--------------------------------
     public ContentPanel( String s, final IModel container ) {
         super( s, container );
 
-        final WebMarkupContainer tableNav = new WebMarkupContainer( "content-tablenav" );
-        tableNav.setOutputMarkupId( true );
-        add( tableNav );
-
-        final WebMarkupContainer table = new WebMarkupContainer( "content-table" );
-        table.setOutputMarkupId( true );
-
-        final Tab tab = getTab();
-        if ( tab.size() > 0 ) {
-            // We have at least a row to select. Select the first one.
-            // Todo Get selection from user prefs somehow
-            setSelected( tab.get( 0 ) );
-        } else
-            table.setVisible( false );
-
-        final FormPanel formPanel = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
-        add( formPanel );
-
         final IDataProvider cp = new DeferredProvider( true );
+        rows = createRows( "content-row", cp );
+        pageNavigator = createPageNavigator( "content-tablenav" );
+        formPanel = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
+
+        table = new WebMarkupContainer( "content-table" ){
+            public boolean isVisible() {
+                return getTab().size() > 1 ;
+            }
+        };
+        table.setOutputMarkupId( true );
         table.add( new DataView( "content-col", cp ){
             protected void populateItem( Item item ) {
                 RefMetaProperty mp = (RefMetaProperty) item.getModelObject();
                 item.add( new Label( "content-col-name", mp.getDisplayName() ));
             }
         } );
+        table.add( rows );
 
+        add( table );
+        add( pageNavigator );
+        add( formPanel );
 
-        final DataView rows = new DataView( "content-row", new DeferredProvider( false ) ) {
+        // Todo Get selection from user prefs somehow
+        setSelected( 0 );
+    }
+
+    private DataView createRows( String id, final IDataProvider columnProvider ) {
+        DataView r = new DataView( id, new DeferredProvider( false ) ) {
             protected void populateItem( final Item item ) {
                 final IDataProvider dp = new IDataProvider() {
                     public Iterator iterator( int first, int count ) {
-                        return cp.iterator( first, count );
+                        return columnProvider.iterator( first, count );
                     }
 
                     public int size() {
-                        return cp.size();
+                        return columnProvider.size();
                     }
 
                     public IModel model( Object object ) {
@@ -94,9 +101,7 @@ public class ContentPanel extends Panel {
                         cellItem.add( new AjaxEventBehavior( "onClick" ) {
                             protected void onEvent( AjaxRequestTarget target ) {
                                 setSelected( (Ref) item.getModelObject() );
-                                formPanel.modelChanged();
                                 target.addComponent( formPanel );
-                                target.addComponent( tableNav );
                                 target.addComponent( table );
                             }
                         } );
@@ -121,23 +126,31 @@ public class ContentPanel extends Panel {
 
             }
         };
-        rows.setItemsPerPage( ITEMS_PER_PAGE );
-        table.add( rows );
+        r.setItemsPerPage( ITEMS_PER_PAGE );
+        return r;
+    }
 
-        add( table );
+    //--------------------------------
+    private WebMarkupContainer createPageNavigator( String id ) {
+        WebMarkupContainer tn = new WebMarkupContainer( id );
+        tn.setOutputMarkupId( true );
 
-        final PagingNavigator nav = new PagingNavigator( "content-pager", rows );
-        nav.setVisible( tab.size() > ITEMS_PER_PAGE );
-        tableNav.add( nav );
+        tn.add( new PagingNavigator( "content-pager", rows ){
+            public boolean isVisible() {
+                return getTab().size() > ITEMS_PER_PAGE;
+            }
+        } );
 
-        tableNav.add( new Link( "content-delete" ){
+        tn.add( new Link( "content-delete" ){
             public boolean isEnabled() {
                 return getSelected() != null;
             }
 
             public void onClick() {
-                int index = tab.indexOf( getSelected() );
-                tab.remove( getSelected() );
+                final Tab tab = getTab();
+                Ref ref = getSelected();
+                int index = tab.indexOf( ref );
+                tab.remove( ref );
                 if ( tab.size() == 0 )
                     setSelected( null );
                 else
@@ -145,26 +158,26 @@ public class ContentPanel extends Panel {
             }
         } );
 
-        final WebMarkupContainer popup = new WebMarkupContainer( "new-popup" );
-        popup.setOutputMarkupId( true );
-        tableNav.add( popup );
+        tn.add( new Label( "new-item", "Add a..." ) );
+        tn.add( createNewMenu( "new-popup" ) );
+        return tn;
+    }
 
-        tableNav.add( new Label( "new-item", "Add a..." ) );
+    private WebMarkupContainer createNewMenu( String id ) {
+        WebMarkupContainer menu = new WebMarkupContainer( id );
+        menu.setOutputMarkupId( true );
 
-        popup.add( new ListView( "new-items", new RefPropertyModel( this, "tab.allowedClasses" ) ){
+        menu.add( new ListView( "new-items", new RefPropertyModel( this, "tab.allowedClasses" ) ){
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final Link link = new Link( "new-item-link" ) {
                     public void onClick() {
                         try {
                             final Referenceable object = (Referenceable) c.newInstance();
-                            tab.add( object );
-                            Ref ref = object.getReference();
-                            setSelected( ref );
-                            tableNav.renderComponent();
-                            int page = tab.indexOf( ref ) / rows.getItemsPerPage();
-                            rows.setCurrentPage( page );
-                            formPanel.modelChanged();
+                            object.persist();
+                            getTab().add( object );
+                            pageNavigator.renderComponent();
+                            setSelected( object.getReference() );
 
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
@@ -178,19 +191,40 @@ public class ContentPanel extends Panel {
                 link.add( new Label( "new-item-text", displayName ) );
             }
         } );
+
+        return menu;
     }
 
+    //--------------------------------
     public Ref getSelected() {
         return selected;
     }
 
     public void setSelected( Ref selected ) {
+        if ( selected != null )
+            formPanel.terminate();
+
         this.selected = selected;
+        formPanel.modelChanged();
+    }
+
+    public void setSelected( int index ) {
+        rows.setCurrentPage( index / rows.getItemsPerPage() );
+
+        Tab tab = getTab();
+        if ( tab.size() > 0 )
+            setSelected( tab.get( index ) );
+        else
+            setSelected( null );
+    }
+
+    //--------------------------------
+    private Ref getTabRef() {
+        return (Ref) getModelObject();
     }
 
     private Tab getTab() {
-        final Ref ref = (Ref) getModelObject();
-        return (Tab) ref.deref();
+        return (Tab) getTabRef().deref();
     }
 
     //============================

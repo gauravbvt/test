@@ -1,22 +1,23 @@
 package com.mindalliance.channels.playbook.ifm.project
 
-import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.IfmElement
-import com.mindalliance.channels.playbook.ifm.project.resources.Resource
-import com.mindalliance.channels.playbook.ifm.project.resources.Position
-import com.mindalliance.channels.playbook.ifm.project.resources.Organization
-import com.mindalliance.channels.playbook.ifm.project.resources.System
-import com.mindalliance.channels.playbook.ifm.project.resources.Person
-import com.mindalliance.channels.playbook.support.PlaybookSession
-import org.apache.wicket.Session
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.model.Model
-import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.ifm.Describable
-import com.mindalliance.channels.playbook.ifm.project.environment.Place
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
+import com.mindalliance.channels.playbook.ifm.project.environment.Place
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
+import com.mindalliance.channels.playbook.ifm.project.resources.Person
+import com.mindalliance.channels.playbook.ifm.project.resources.Position
+import com.mindalliance.channels.playbook.ifm.project.resources.System
+
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.support.PlaybookSession
+import com.mindalliance.channels.playbook.support.RefUtils
+import org.apache.wicket.Session
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -188,10 +189,10 @@ class Project extends IfmElement implements Describable {
     }
 
     List<Ref> findAllAgreementsOf(Ref resource) {
-        List<Ref> agreements = agreements.findAll {agreement ->
+        List<Ref> ags = agreements.findAll {agreement ->
             agreement.fromResource == resource
         }
-        return agreements ?: []
+        return ags ?: []
     }
 
     Boolean isParticipant( Ref user ) {
@@ -218,7 +219,6 @@ class Project extends IfmElement implements Describable {
      void addContents( List<Ref> result ) {
          playbooks.each { it.addContents( result ) }
          result.addAll( resources )
-         result.addAll( environments )
          result.addAll( analysisElements )
      }
 

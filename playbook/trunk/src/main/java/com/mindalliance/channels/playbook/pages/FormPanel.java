@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.ref.Ref;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -14,10 +14,17 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class FormPanel extends Panel {
 
+    private AbstractElementForm form;
+
     public FormPanel( String id, IModel content ) {
         super( id, content );
         setOutputMarkupId( true );
         resetForm();
+    }
+
+    public void terminate() {
+        if ( form != null )
+            form.terminate();
     }
 
     public void resetForm() {
@@ -26,7 +33,7 @@ public class FormPanel extends Panel {
             Class formClass = ref.formClass();
             if ( formClass != null ) try {
                 Constructor c = formClass.getConstructor( String.class, Ref.class );
-                Component form = (Component) c.newInstance( "form-details", ref );
+                form = (AbstractElementForm) c.newInstance( "form-details", ref );
                 addOrReplace( form );
                 return;
 
