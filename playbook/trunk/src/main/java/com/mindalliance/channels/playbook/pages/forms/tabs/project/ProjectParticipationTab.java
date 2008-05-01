@@ -146,7 +146,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
             Ref person = (Ref) RefUtils.get(selectedParticipation, "person");
             if (person != null) personsSelection.add(person);
         }
-        personsTree = new DynamicFilterTree("persons", new Model((Serializable) personsSelection), new Model((Serializable) allPersons), false) {
+        personsTree = new DynamicFilterTree("persons", new Model((Serializable) personsSelection), new Model((Serializable) allPersons), true) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = personsTree.getNewSelections();
                 if (newSelections.size() > 0) {
