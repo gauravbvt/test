@@ -196,7 +196,6 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
         usersTree.detach();
         usersTree.setChoices(new Model((Serializable) allUsers));
         usersTree.setSelections(new Model(new ArrayList<Ref>()));
-        usersTree.modelChanged();
         selectedUser = null;
         addParticipationButton.setEnabled(false);
         target.addComponent(addParticipationButton);
