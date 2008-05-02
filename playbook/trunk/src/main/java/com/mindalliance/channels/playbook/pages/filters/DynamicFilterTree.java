@@ -53,13 +53,13 @@ public class DynamicFilterTree extends FilterTree {
 
     public synchronized Filter getFilter() {
         if ( computedFilter == null ) {
-            setFilter( createFilter( choices, selections ) );
+            setFilter( createFilter( selections, choices ) );
         }
 
         return computedFilter;
     }
 
-    public void setFilter( Filter filter ) {
+    public synchronized void setFilter( Filter filter ) {
         computedFilter = filter;
         super.setFilter( filter );
     }
@@ -71,6 +71,8 @@ public class DynamicFilterTree extends FilterTree {
     public void setChoices( IModel choices ) {
         detachModels();
         this.choices = choices;
+        setFilter( createFilter( selections, choices ) );
+        super.invalidateAll();
     }
 
     public IModel getSelections() {
@@ -78,8 +80,8 @@ public class DynamicFilterTree extends FilterTree {
     }
 
     public void setSelections( IModel selections ) {
-        detachModels();
         this.selections = selections;
+//        updateTree();
     }
 
     public List<Ref> getNewSelections() {
