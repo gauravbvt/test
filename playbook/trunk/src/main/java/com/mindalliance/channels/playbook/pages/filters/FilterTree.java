@@ -27,9 +27,6 @@ public class FilterTree extends Tree {
     public FilterTree( String id, Filter filter, boolean singleSelect ) {
         super( id, new DefaultTreeModel( filter ) );
         this.singleSelect = singleSelect;
-
-        if ( singleSelect )
-            filter.setUniqueSelection( filter.isSelected() );
     }
 
     public void onFilterSelect( AjaxRequestTarget target, Filter filter ){}
