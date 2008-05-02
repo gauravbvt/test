@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.query.QueryManager
 
 
 /**
@@ -50,7 +51,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 Referenceable original = retrieveFromApplicationMemory(ref)
                 if (original) {
                     referenceable = (Referenceable)original.copy() // take a copy
-                    referenceable.addPropertyChangeListener(this) // register with this session memory
+                    addChangeListeners(referenceable) // register with change listeners
                     begun.put(ref, referenceable)
                 }
             }
@@ -58,6 +59,11 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         else {
             Logger.getLogger(this.class).warn("Doing begin() on $ref already in session")
         }
+    }
+
+    private void addChangeListeners(Referenceable referenceable) {
+        referenceable.addPropertyChangeListener(this) // register with this session memory
+        referenceable.addPropertyChangeListener(QueryManager.instance()) // register with query manager
     }
 
     Ref persist(Referenceable referenceable) {

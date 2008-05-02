@@ -12,11 +12,11 @@ import com.mindalliance.channels.playbook.ref.Ref;
  * Date: Apr 29, 2008
  * Time: 2:06:38 PM
  */
-public class AgreementInfoTab extends AbstractFormTab {
+public class AgreementInfoTemplateTab extends AbstractFormTab {
 
     InformationTemplatePanel infoTemplatePanel;
 
-    public AgreementInfoTab(String id, AbstractElementForm elementForm) {
+    public AgreementInfoTemplateTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 

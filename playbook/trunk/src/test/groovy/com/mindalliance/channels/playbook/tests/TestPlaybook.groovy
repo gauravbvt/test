@@ -15,6 +15,9 @@ import com.mindalliance.channels.playbook.matching.SemanticMatcher
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo
+import com.mindalliance.channels.playbook.query.QueryManager
+import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.support.models.RefQueryModel
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -149,8 +152,33 @@ public class TestPlaybook extends TestCase {
        app.getChannels().save()
     }
 
+    void testQueryManager() {
+        QueryManager qm = QueryManager.instance()
+        Ref channels = app.channels
+        Ref project = Query.execute(channels,"findProjectNamed", 'Generic')
+        assert project.name == 'Generic'
+        assert qm.size() == 1
+        Ref again = Query.execute(channels,"findProjectNamed", 'Generic')
+        assert qm.size() == 1
+        assert again == project
+        channels.begin()
+        channels.about = "something else"
+        again = Query.execute(channels,"findProjectNamed", 'QWERTY')
+        assert again == null
+        assert qm.size() == 2
+        channels.addProject(new Project(name: 'Other').persist())
+        Ref other = Query.execute(channels,"findProjectNamed", 'Other')
+        assert other.name == 'Other'
+        assert qm.size() == 1
+        again = Query.execute(channels,"findProjectNamed", 'Other')
+        assert qm.size() == 1
+        assert other == again
+        qm.clear()
+        assert qm.size() == 0
 
-    void testAreas() {
+    }
+
+   void testAreas() {
         AreaInfo portland = new AreaInfo(country: 'United States', state: 'Maine', city: 'Portland')
         Area area = portland.getArea()
         assert area.isCityLike()
@@ -172,6 +200,9 @@ public class TestPlaybook extends TestCase {
         RefPropertyModel chained = new RefPropertyModel(project, "playbooks.name(new playbook)")
         RefPropertyModel rpm = new RefPropertyModel(chained, "name")
         assert rpm.getObject() == 'new playbook'
+        RefQueryModel rqm = new RefQueryModel(channels, new Query("findProjectNamed", 'new project'))
+        project = (Ref)rqm.getObject()
+        assert project.name == 'new project'
     }
 
    void testSemanticMatching() {

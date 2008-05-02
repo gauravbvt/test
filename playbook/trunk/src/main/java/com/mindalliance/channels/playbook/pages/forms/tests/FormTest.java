@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
-import com.mindalliance.channels.playbook.support.QueryHandler;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
@@ -26,6 +25,7 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ifm.project.resources.Person;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
+import com.mindalliance.channels.playbook.query.Query;
 
 import java.util.List;
 import java.util.Map;
@@ -132,12 +132,9 @@ public class FormTest extends WebPage {
 
     private Ref getElementOfType(Class type) throws Exception {
         PlaybookApplication app = (PlaybookApplication) Application.get();
-        QueryHandler qh = app.getQueryHandler();
-        Map<String, Object> args = new HashMap<String, Object>();
         Ref channels = app.getChannels();
         Project project = (Project)Project.current().deref();
         List<Ref> results = new ArrayList<Ref>();
-        args.put("type", ((Referenceable)type.newInstance()).getType());
         if (type.equals(User.class)) {
             results.add( ((Channels)channels.deref()).findUser("admin") );
         }
@@ -145,7 +142,7 @@ public class FormTest extends WebPage {
             results.add(project.getReference());
         }
         else if (type.equals(Person.class)) {
-            results = qh.executeQuery(channels, "findAResource", args);
+            results = (List<Ref>)Query.execute(project.getReference(), "findAResource", ((Referenceable)type.newInstance()).getType());
         } else if (type.equals(Agreement.class)) {
             results = project.getAgreements();
        /* } else if (type.equals("System")) {

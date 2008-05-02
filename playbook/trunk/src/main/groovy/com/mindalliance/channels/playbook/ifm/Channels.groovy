@@ -78,24 +78,6 @@ class Channels extends IfmElement {
         return result
     }
 
-    // Queries
-
-    List<Ref> findNamedResource(Map args) {  // args = [type:<type>, name:<name>]
-        List<Ref> results = []
-        Ref project = Project.current()
-        Ref resource = project.findResourceNamed(args.type, args.name)
-        results.add(resource)
-        return results
-    }
-
-    List<Ref> findAResource(Map args) {  // args = [type:<type>, name:<name>]
-        List<Ref> results = []
-        Ref project = Project.current()
-        Ref resource = project.findAResource(args.type)
-        results.add(resource)
-        return results
-    }
-
     static List<Class<?>> adminClasses() {
         [ User.class ]
     }

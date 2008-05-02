@@ -43,17 +43,25 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
         }
         eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".eventSpec", readOnly, feedback);
         addReplaceable(eventSpecPanel);
-        List<Ref> eventTypes = (List<Ref>)RefUtils.get(getElement(), propPath + ".eventSpec.eventTypes");
+        List<Ref> eventTypes = (List<Ref>) RefUtils.get(getElement(), propPath + ".eventSpec.eventTypes");
         eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, eventTypes);
         addReplaceable(eoisPanel);
         List<Ref> allOrganizationTypes = project.findAllTypes("OrganizationType");
-        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"), new Model((Serializable)allOrganizationTypes)) {
-             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
+        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"), new Model((Serializable) allOrganizationTypes)) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = credibleSourcesTree.getNewSelections();
                 RefUtils.set(getElement(), "organizationTypes", newSelections);
                 elementChanged(propPath, target);
-             }
+            }
         };
         addReplaceable(credibleSourcesTree);
+    }
+
+    @Override
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        super.elementChanged(propPath, target);
+        if (propPath.endsWith(".eventSpec")) {
+            target.addComponent(eoisPanel);
+        }
     }
 }
