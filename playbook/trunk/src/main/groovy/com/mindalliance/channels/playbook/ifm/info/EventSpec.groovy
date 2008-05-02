@@ -16,6 +16,6 @@ class EventSpec extends BeanImpl {
     List<Ref> eventTypes = []// the kinds of event (and/or)
     LocationSpec locationSpec // constraints on location of event
     List<Ref> relationshipTypes = [] // type of relationship to an observer of the event
-    Timing timing // must have occurred in the last n hours, days etc.
+    Timing timing = new Timing(amount:0)// must have occurred in the last n hours, days etc.
 
 }

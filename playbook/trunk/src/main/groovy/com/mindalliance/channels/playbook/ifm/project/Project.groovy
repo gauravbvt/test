@@ -162,6 +162,14 @@ class Project extends IfmElement implements Describable {
         return types
     }
 
+    List<Ref> findAlltypesNarrowingAny(List<Ref> elementTypes) {
+       Set<Ref> types = new HashSet<Ref>()
+       elementTypes.each {elementType ->
+           types.addAll(this.findAllTypesNarrowing(elementType))
+       }
+        return types as List
+    }
+
     List<Ref> findPlaceTypesNarrowing(Ref placeType) {
         List<Ref> narrowing = []
         models.each {model ->

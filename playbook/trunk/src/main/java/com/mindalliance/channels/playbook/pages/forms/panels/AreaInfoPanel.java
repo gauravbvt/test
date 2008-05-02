@@ -4,7 +4,6 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.info.Location;
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
 import com.mindalliance.channels.playbook.geo.Area;
 import com.mindalliance.channels.playbook.geo.GeoService;
@@ -22,8 +21,8 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.log4j.Logger;
 
 import java.util.Iterator;
-import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -272,7 +271,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     private Iterator countryIterator(String input, int max) {
         if (Strings.isEmpty(input)) {
-            return Collections.EMPTY_LIST.iterator();
+            return new ArrayList().iterator();
         }
         List choices = GeoService.findCandidateCountryNames(input, max);
         return choices.iterator();
@@ -280,7 +279,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     private Iterator stateIterator(String input, String countryName, int max) {
         if (Strings.isEmpty(input)) {
-            return Collections.EMPTY_LIST.iterator();
+            return  new ArrayList().iterator();
         }
         List choices = GeoService.findCandidateStateNames(input, countryName, max);
         return choices.iterator();
@@ -288,7 +287,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     private Iterator countyIterator(String input, String countryName, String stateName, int max) {
         if (Strings.isEmpty(input)) {
-            return Collections.EMPTY_LIST.iterator();
+            return  new ArrayList().iterator();
         }
         List choices = GeoService.findCandidateCountyNames(input, countryName, stateName, max);
         return choices.iterator();
@@ -296,7 +295,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     private Iterator cityIterator(String input, String countryName, String stateName, String countyName, int max) {
         if (Strings.isEmpty(input)) {
-            return Collections.EMPTY_LIST.iterator();
+            return  new ArrayList().iterator();
         }
         List choices = GeoService.findCandidateCityNames(input, countryName, stateName, countyName, max);
         return choices.iterator();

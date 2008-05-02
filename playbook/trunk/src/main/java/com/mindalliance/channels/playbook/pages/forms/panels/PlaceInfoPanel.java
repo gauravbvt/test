@@ -105,16 +105,23 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
         List<String> choices = new ArrayList<String>();
         List<PlaceItem> placeItems = placeInfo.getPlaceItems();
         int index = placeItems.indexOf(placeItem);
-        Ref priorPlaceType;
-        if (index <= 0) { // narrow resource's place's placeType, if set
-            priorPlaceType = (Ref) RefUtils.get(element, "location.place.placeType");
-        } else {
-            priorPlaceType = placeItems.get(index - 1).getPlaceType();
+        List<Ref> priorPlaceTypes = new ArrayList<Ref>();
+        if (index == 0) { // narrow resource's place's placeType, if set
+            priorPlaceTypes = (List<Ref>) RefUtils.get(element, "location.place.placeTypes");
+        } else { // narrow
+            int priorIndex;
+            if (index == -1) {
+                priorIndex = placeItems.size() - 1;
+            }
+            else {
+                priorIndex = index - 1;
+            }
+            if (priorIndex >= 0) priorPlaceTypes.add(placeItems.get(priorIndex).getPlaceType());
         }
-        if (priorPlaceType == null) {
+        if (priorPlaceTypes == null || priorPlaceTypes.isEmpty()) {
             placeTypes = project.findAllTypes("PlaceType");
         } else {
-            placeTypes = project.findAllTypesNarrowing(priorPlaceType);
+            placeTypes = project.findAlltypesNarrowingAny(priorPlaceTypes);
         }
         for (Ref placeType : placeTypes) {
             choices.add((String) RefUtils.get(placeType, "name"));

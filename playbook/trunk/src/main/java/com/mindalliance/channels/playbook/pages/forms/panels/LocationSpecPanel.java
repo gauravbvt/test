@@ -40,6 +40,10 @@ public class LocationSpecPanel extends AbstractComponentPanel {
         super.load();
         // place types
         locationSpec = (LocationSpec)RefUtils.get(element, propPath);
+        if (locationSpec == null) {
+            locationSpec = new LocationSpec();
+            RefUtils.set(element, propPath, locationSpec);
+        }
         List<Ref> allPlaceTypes = project.findAllTypes("PlaceType");
         placeTypeTree = new DynamicFilterTree("placeTypes", new RefPropertyModel(locationSpec, "placeTypes"), new Model((Serializable)allPlaceTypes)) {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
@@ -54,7 +58,7 @@ public class LocationSpecPanel extends AbstractComponentPanel {
         areaTypeChoice = new DropDownChoice("areaType", new Model((Serializable)RefUtils.get(locationSpec, "areaType.name")), allAreaTypes, new RefChoiceRenderer("name", "id"));
         areaTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
-                String id = areaTypeChoice.getModelObjectAsString();
+                String id = (String)areaTypeChoice.getModelObject();
                 Ref selectedAreaType = new RefImpl(id);
                 locationSpec.setAreaType(selectedAreaType);
                 elementChanged();

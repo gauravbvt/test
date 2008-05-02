@@ -36,16 +36,20 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         informationTemplate = (InformationTemplate) RefUtils.get(element, propPath);
+        if (informationTemplate == null) {
+            informationTemplate = new InformationTemplate();
+            RefUtils.set(element, propPath, informationTemplate);
+        }
         eventSpecPanel = new EventSpecPanel("eventSpec", element, propPath + ".eventSpec", readOnly, feedback);
         addReplaceable(eventSpecPanel);
         List<Ref> eventTypes = (List<Ref>)RefUtils.get(element, propPath + ".eventSpec.eventTypes");
         eoisPanel = new EOIsPanel("eventDetails", element, propPath + ".eventDetails", readOnly, feedback, eventTypes);
         addReplaceable(eoisPanel);
         List<Ref> allOrganizationTypes = project.findAllTypes("OrganizationType");
-        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "sourceOrganizationTypes"), new Model((Serializable)allOrganizationTypes)) {
+        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"), new Model((Serializable)allOrganizationTypes)) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = credibleSourcesTree.getNewSelections();
-                RefUtils.set(element, "sourceOrganizationTypes", newSelections);
+                RefUtils.set(element, "organizationTypes", newSelections);
                 elementChanged();
              }
         };

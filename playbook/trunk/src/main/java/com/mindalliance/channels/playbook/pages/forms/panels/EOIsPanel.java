@@ -58,6 +58,10 @@ public class EOIsPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         eois = (List<ElementOfInformation>) RefUtils.get(element, propPath);
+        if (eois == null) {
+            eois = new ArrayList<ElementOfInformation>();
+            RefUtils.set(element, propPath, eois);
+        }
         List<String> topicChoices = EventType.findAllTopicsIn(eventTypes);
 
         // Topic choices
@@ -99,6 +103,7 @@ public class EOIsPanel extends AbstractComponentPanel {
         });
         addReplaceable(addTopicButton);
         // EOIs
+        eoisDiv = new WebMarkupContainer("eoisDiv");
         eoisView = new RefreshingView("eois", new Model((Serializable) eois)) {
             protected Iterator getItemModels() {
                 return new ModelIteratorAdapter(eois.iterator()) {
@@ -126,7 +131,8 @@ public class EOIsPanel extends AbstractComponentPanel {
                 };
             }
         };
-        addReplaceable(eoisView);
+        eoisDiv.add(eoisView);
+        addReplaceable(eoisDiv);
     }
 
     private Iterator topicIterator(String input, int max) {

@@ -7,6 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -67,9 +68,14 @@ abstract public class AbstractComponentPanel extends Panel {
     }
 
     public void onDetach() {
-        Bean bean = (Bean) RefUtils.get(element, propPath);
-        if ( bean != null )
-            bean.detach();
+        try {
+            Object component = RefUtils.get(element, propPath);
+            if ( component != null && component instanceof Bean )
+                ((Bean)component).detach();
+        } catch (RuntimeException e) {
+            Logger.getLogger(this.getClass()).error("Error detaching " + element + "'s " + propPath);
+            throw e;
+        }
         super.onDetach();
     }
 

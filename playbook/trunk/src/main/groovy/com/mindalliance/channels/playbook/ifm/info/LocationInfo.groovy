@@ -15,6 +15,13 @@ class LocationInfo extends BeanImpl {
     AreaInfo areaInfo = new AreaInfo()
     LatLong latLong = new LatLong()  // takes precedence on areaInfo for latlong
 
+    String toString() {
+       String s = ""
+       if (areaInfo) s += " ${areaInfo.toString()}"
+       s += " [${latLong.toString()}]"
+       return s
+    }
+
     @Override
     List<String> transientProperties() {
         return super.transientProperties() + ['longitude', 'latitude']

@@ -13,8 +13,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class InformationTemplate extends AbstractInformation {
 
-    EventSpec about // about what kind of event
+    EventSpec eventSpec // about what kind of event
     // Timing timeToLive = new Timing(msecs:0) // how long before this kind of information usually expires
-    List<Ref> sourceOrganizationTypes // from whom is this kind of information credible
+    List<Ref> organizationTypes = [] // from whom is this kind of information credible
 
 }

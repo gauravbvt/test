@@ -3,6 +3,8 @@ package com.mindalliance.channels.playbook.ifm
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.model.Model
+import org.apache.wicket.Application
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,6 +24,10 @@ class Channels extends IfmElement {
     @Override
     protected List transientProperties() {
         return super.transientProperties() + ['allItems']
+    }
+
+    static Channels instance() {
+        return (Channels)PlaybookApplication.current().getChannels().deref()
     }
 
     Ref findEnvironmentNamed(String name) {

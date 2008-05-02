@@ -36,6 +36,10 @@ public class EventSpecPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         eventSpec = (EventSpec) RefUtils.get(element, propPath);
+        if (eventSpec == null) {
+            eventSpec = new EventSpec();
+            RefUtils.set(element, propPath, eventSpec);
+        }
         List<Ref> allEventTypes = project.findAllTypes("EventType");
         eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(eventSpec, "eventTypes"), new Model((Serializable)allEventTypes)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {

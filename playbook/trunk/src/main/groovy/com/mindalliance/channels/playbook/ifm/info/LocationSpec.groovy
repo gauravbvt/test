@@ -16,8 +16,8 @@ class LocationSpec extends BeanImpl {
 
     // String relativeTo // one of {location, jurisdiction} of context resource -- required
     Ref areaType // what kind of area -- defaults to location's area type of relative-to if set, else required
-    List<Ref> placeTypes // what kinds of places
-    String relation = 'same'// one of {same, contained, containing, sameOrAdjoining} -- defaults to "containing" -- re. jurisdiction, else location
+    List<Ref> placeTypes = [] // what kinds of places
+    String relation = 'within'// one of relations
 
     @Override
     List<String> transientProperties() {

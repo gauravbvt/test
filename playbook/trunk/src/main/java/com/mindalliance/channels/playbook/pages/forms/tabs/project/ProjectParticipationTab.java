@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -126,7 +127,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
         addReplaceable(participationsDiv);
         // Participation
         participationDiv = new WebMarkupContainer("participation");
-        loadParticipationDiv();        
+        loadParticipationDiv();
         participationDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         addReplaceable(participationDiv);
     }
@@ -162,6 +163,9 @@ public class ProjectParticipationTab extends AbstractFormTab {
                 // Do nothing more
             }
         });
+        if (selectedParticipation != null) {
+            managerField.setEnabled((Boolean) RefUtils.get(selectedParticipation, "user.manager") == true);
+        }
         participationDiv.addOrReplace(managerField);
     }
 
@@ -180,8 +184,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
     private void updateParticipationDiv(AjaxRequestTarget target) {
         if (selectedParticipation == null) {
             participationDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-        }
-        else {
+        } else {
             loadParticipationDiv();
             participationDiv.add(new AttributeModifier("style", true, new Model("display:block")));
         }
@@ -191,6 +194,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
 
     private void resetUsersTree(AjaxRequestTarget target) {
         List<Ref> allUsers = channels.findUsersNotInProject(element);
+        usersTree.detach();
         usersTree.setChoices(new Model((Serializable) allUsers));
         usersTree.setSelections(new Model(new ArrayList<Ref>()));
         usersTree.modelChanged();

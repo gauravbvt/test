@@ -2,10 +2,19 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.project;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.Channels;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+
+import java.util.List;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,6 +27,7 @@ public class ProjectAboutTab extends AbstractFormTab {
 
     TextField nameField;
     TextArea descriptionField;
+    DynamicFilterTree modelsTree;
 
     public ProjectAboutTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -31,5 +41,13 @@ public class ProjectAboutTab extends AbstractFormTab {
         // description
         descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
         addInputField(descriptionField);
+        List<Ref> allModels = Channels.instance().getModels();
+        modelsTree = new DynamicFilterTree("models", new RefPropertyModel(element, "models"), new Model((Serializable)allModels)) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                List<Ref> newSelections = modelsTree.getNewSelections();
+                RefUtils.set(element, "models", newSelections);
+            }
+        };
+        addReplaceable(modelsTree);
     }
 }

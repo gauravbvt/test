@@ -15,13 +15,21 @@ class PlaceInfo extends BeanImpl {   // any kind of real or abstract location th
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['name']
+        return super.transientProperties() + ['name', 'empty']
+    }
+
+    String toString() {
+        return getName()
+    }
+
+    boolean isEmpty() {
+        return placeItems.isEmpty()
     }
 
     String getName() {
         String name = ""
         placeItems.each {  placeItem ->
-            name += " ${placeItem.name}"
+            name += " ${placeItem.placeName}"
         }
         return name.trim()
     }

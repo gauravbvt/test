@@ -20,6 +20,20 @@ class Location extends BeanImpl {
     List<String> transientProperties() {
         return super.transientProperties() + ['longitude', 'latitude']
     }
+
+    String toString() {
+        String s
+        if (place) {
+            s = "${place.name}"
+        }
+        else if(locationInfo) {
+            s = "${locationInfo.toString()}"
+        }
+        if (!placeInfo.isEmpty()) {
+            s += " (${placeInfo.toString()})"
+        }
+        return s
+    }
     
 
     double getLongitude() {
