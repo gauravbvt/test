@@ -40,11 +40,11 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
     protected void load() {
         super.load();
-        List<Ref> allPositions = project.findAllResourcesOfType("Position");
-        positionTree = new DynamicFilterTree("positions", new RefPropertyModel(element, "positions"), new Model((Serializable) allPositions)) {
+        List<Ref> allPositions = getProject().findAllResourcesOfType("Position");
+        positionTree = new DynamicFilterTree("positions", new RefPropertyModel(getElement(), "positions"), new Model((Serializable) allPositions)) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = positionTree.getNewSelections();
-                RefUtils.set(element, "positions", newSelections);
+                RefUtils.set(getElement(), "positions", newSelections);
              }
         };
         positionTree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );

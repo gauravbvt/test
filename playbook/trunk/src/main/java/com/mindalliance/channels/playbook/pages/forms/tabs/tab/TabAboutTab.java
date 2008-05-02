@@ -28,13 +28,13 @@ public class TabAboutTab  extends AbstractFormTab {
     protected void load() {
         super.load();
         // name
-        nameField = new TextField("name", new RefPropertyModel(element, "name"));
+        nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         // description
-        descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
+        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
         // shared
-        sharedField = new CheckBox("shared", new RefPropertyModel(element, "shared"));
+        sharedField = new CheckBox("shared", new RefPropertyModel(getElement(), "shared"));
         addInputField(sharedField);
     }
 }

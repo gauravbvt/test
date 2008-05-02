@@ -24,24 +24,40 @@ import java.util.ArrayList;
  * Time: 3:15:33 PM
  */
 // Not much to abstract...
-abstract public class AbstractComponentPanel extends Panel {
+abstract public class AbstractComponentPanel extends Panel implements ElementPanel {
 
     protected boolean readOnly = false;
     protected Project project;
-    protected Ref element;     // element containing the component to be edited
+    protected ElementPanel parentPanel;     // element containing the component to be edited
     protected String propPath; // path to the element's property which value is the component to be edited
     WebMarkupContainer div;
     protected FeedbackPanel feedback;
 
-    public AbstractComponentPanel(String id, Ref element, String propPath , boolean readOnly, FeedbackPanel feedback) {
+    public AbstractComponentPanel(String id, ElementPanel parentPanel, String propPath , boolean readOnly, FeedbackPanel feedback) {
         super(id);
-        this.element = element;
+        this.parentPanel = parentPanel;
         this.propPath = propPath;
         this.readOnly = readOnly;
         this.feedback = feedback;
         load();
         init();
     }
+
+    // ElementPanel
+
+    public Ref getElement() {
+        return parentPanel.getElement();
+    }
+
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        parentPanel.elementChanged(propPath, target);
+    }
+
+    public void addOtherElement(Ref otherElement) {
+        parentPanel.addOtherElement(otherElement);
+    }
+
+    // end ElementPanel
 
     public boolean isReadOnly() {
         return readOnly;
@@ -63,17 +79,13 @@ abstract public class AbstractComponentPanel extends Panel {
       add(div);
     }
 
-    protected void elementChanged() {
-        RefUtils.changed(element, propPath);
-    }
-
     public void onDetach() {
         try {
-            Object component = RefUtils.get(element, propPath);
+            Object component = RefUtils.get(getElement(), propPath);
             if ( component != null && component instanceof Bean )
                 ((Bean)component).detach();
         } catch (RuntimeException e) {
-            Logger.getLogger(this.getClass()).error("Error detaching " + element + "'s " + propPath);
+            Logger.getLogger(this.getClass()).error("Error detaching " + getElement() + "'s " + propPath);
             throw e;
         }
         super.onDetach();

@@ -16,7 +16,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: Apr 23, 2008
  * Time: 5:07:54 PM
  */
-abstract public class AbstractResourceForm extends AbstractElementForm {
+abstract public class AbstractResourceForm extends AbstractProjectElementForm {
 
     ResourceIdentityTab identityTab;
     ResourceLocalityTab localityTab;

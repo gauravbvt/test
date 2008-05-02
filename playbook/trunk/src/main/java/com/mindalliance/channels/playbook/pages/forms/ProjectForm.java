@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.project.ProjectAboutTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.project.ProjectParticipationTab;
+import com.mindalliance.channels.playbook.ifm.project.Project;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -14,12 +15,17 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: Apr 24, 2008
  * Time: 1:08:29 PM
  */
-public class ProjectForm extends AbstractElementForm {
+public class ProjectForm extends AbstractProjectElementForm {
 
    ProjectAboutTab identityTab;
 
     public ProjectForm(String id, Ref element) {
         super(id, element);
+    }
+
+    @Override
+    public Project getProject() {
+        return (Project)element.deref();
     }
 
     void loadTabs() {

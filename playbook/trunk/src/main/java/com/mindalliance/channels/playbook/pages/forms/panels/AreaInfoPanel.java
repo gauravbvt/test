@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -33,8 +34,8 @@ import java.util.ArrayList;
  */
 public class AreaInfoPanel extends AbstractComponentPanel {
 
-    public AreaInfoPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public AreaInfoPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     AreaInfo areaInfo;
@@ -55,7 +56,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
-        areaInfo = (AreaInfo)RefUtils.get(element, propPath);
+        areaInfo = (AreaInfo)RefUtils.get(getElement(), propPath);
         editableDiv = new WebMarkupContainer("editable");
         addReplaceable(editableDiv);
         readOnlyDiv = new WebMarkupContainer("readOnly");
@@ -78,30 +79,30 @@ public class AreaInfoPanel extends AbstractComponentPanel {
     private void loadEditable() {
         feedback = new FeedbackPanel("areaInfoFeedback", IFeedbackMessageFilter.ALL);
         // Fields
-        countryField = new AutoCompleteTextField("country", new RefPropertyModel(element, propPath +".country")) {
+        countryField = new AutoCompleteTextField("country", new RefPropertyModel(getElement(), propPath +".country")) {
             protected Iterator getChoices(String input) {
                 return countryIterator(input, 10);
             }
         };
-        stateField = new AutoCompleteTextField("state", new RefPropertyModel(element, propPath +".state")) {
+        stateField = new AutoCompleteTextField("state", new RefPropertyModel(getElement(), propPath +".state")) {
             protected Iterator getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
-                String countryName = (String) RefUtils.get(element,  propPath +".country");
+                String countryName = (String) RefUtils.get(getElement(),  propPath +".country");
                 return stateIterator(input, countryName,  10);
             }
 
         };
-        countyField = new AutoCompleteTextField("county", new RefPropertyModel(element, propPath +".county")) {
+        countyField = new AutoCompleteTextField("county", new RefPropertyModel(getElement(), propPath +".county")) {
             protected Iterator getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
                 // String stateName = (String)stateField.getModel().getObject();
-                String countryName = (String)RefUtils.get(element,  propPath +".country");
-                String stateName = (String)RefUtils.get(element,  propPath +".state");
+                String countryName = (String)RefUtils.get(getElement(),  propPath +".country");
+                String stateName = (String)RefUtils.get(getElement(),  propPath +".state");
                 return countyIterator(input, countryName, stateName,  10);
             }
 
         };
-        cityField = new AutoCompleteTextField("city", new RefPropertyModel(element, propPath +".city")) {
+        cityField = new AutoCompleteTextField("city", new RefPropertyModel(getElement(), propPath +".city")) {
             protected Iterator getChoices(String input) {
                 String countryName = (String)countryField.getModel().getObject();
                 String stateName = (String)stateField.getModel().getObject();
@@ -109,9 +110,9 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 return cityIterator(input, countryName, stateName, countyName, 10);
             }
         };
-        streetField = new TextField("street", new RefPropertyModel(element, propPath +".street"));
+        streetField = new TextField("street", new RefPropertyModel(getElement(), propPath +".street"));
         streetField.setPersistent(false);
-        codeField = new TextField("code", new RefPropertyModel(element, propPath +".code"));
+        codeField = new TextField("code", new RefPropertyModel(getElement(), propPath +".code"));
         codeField.setPersistent(false);
        // Ajax
        // Country field
@@ -120,12 +121,12 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countryName = (String)countryField.getModel().getObject();
                 // System.out.println("Updating country to " + countryName);
-                RefUtils.set(element,propPath + ".state", "");
-                RefUtils.set(element,propPath + ".county", "");
-                RefUtils.set(element,propPath + ".city", "");
-                RefUtils.set(element,propPath + ".street", "");
-                RefUtils.set(element,propPath + ".code", "");
-                elementChanged();
+                RefUtils.set(getElement(),propPath + ".state", "");
+                RefUtils.set(getElement(),propPath + ".county", "");
+                RefUtils.set(getElement(),propPath + ".city", "");
+                RefUtils.set(getElement(),propPath + ".street", "");
+                RefUtils.set(getElement(),propPath + ".code", "");
+                elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(stateField);
                 target.addComponent(countyField);
@@ -145,11 +146,11 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String stateName = stateField..getModel().getObject();
                 // System.out.println("Updating state to " + stateName);
-                RefUtils.set(element,propPath + ".county", "");
-                RefUtils.set(element,propPath + ".city", "");
-                RefUtils.set(element,propPath + ".street", "");
-                RefUtils.set(element,propPath + ".code", "");
-                elementChanged();
+                RefUtils.set(getElement(),propPath + ".county", "");
+                RefUtils.set(getElement(),propPath + ".city", "");
+                RefUtils.set(getElement(),propPath + ".street", "");
+                RefUtils.set(getElement(),propPath + ".code", "");
+                elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(countyField);
                 target.addComponent(cityField);
@@ -169,10 +170,10 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countyName = countyField..getModel().getObject();
                 // System.out.println("Updating county to " + countyName);
-                RefUtils.set(element,propPath + ".city", "");
-                RefUtils.set(element,propPath + ".street", "");
-                RefUtils.set(element,propPath + ".code", "");
-                elementChanged();
+                RefUtils.set(getElement(),propPath + ".city", "");
+                RefUtils.set(getElement(),propPath + ".street", "");
+                RefUtils.set(getElement(),propPath + ".code", "");
+                elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(cityField);
                 target.addComponent(streetField);
@@ -189,9 +190,9 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String cityName = cityField.getModel().getObject();
                 // System.out.println("Updating city to " + cityName);
-                RefUtils.set(element,propPath + ".street", "");
-                RefUtils.set(element,propPath + ".code", "");
-                elementChanged();
+                RefUtils.set(getElement(),propPath + ".street", "");
+                RefUtils.set(getElement(),propPath + ".code", "");
+                elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(streetField);
                 target.addComponent(codeField);
@@ -206,7 +207,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String streetName = streetField.getModel().getObject();
                 // System.out.println("Updating street to " + streetName);
-                elementChanged();
+                elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
@@ -219,7 +220,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String streetName = streetField.getModel().getObject();
                  // System.out.println("Updating street to " + streetName);
-                elementChanged();
+                elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 feedback.setModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
@@ -229,7 +230,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         // Feedback
         feedback.setOutputMarkupId(true);
         editableDiv.add(feedback);
-        editableDiv.add(new AjaxLink("verify", new RefPropertyModel(element, propPath)) {
+        editableDiv.add(new AjaxLink("verify", new RefPropertyModel(getElement(), propPath)) {
             public void onClick(AjaxRequestTarget target) {
                 try {
                    AreaInfo areaInfo = (AreaInfo)getModelObject();

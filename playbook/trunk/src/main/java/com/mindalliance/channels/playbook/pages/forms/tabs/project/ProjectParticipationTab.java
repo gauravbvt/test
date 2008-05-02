@@ -1,13 +1,12 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.project;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.Channels;
-import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -39,7 +38,7 @@ import java.io.Serializable;
  * Date: May 1, 2008
  * Time: 6:44:49 AM
  */
-public class ProjectParticipationTab extends AbstractFormTab {
+public class ProjectParticipationTab extends AbstractProjectElementFormTab {
 
     Ref selectedParticipation;
     Ref selectedUser;
@@ -62,7 +61,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
         super.load();
         channels = (Channels) PlaybookApplication.current().getChannels().deref();
         // Users
-        List<Ref> allUsers = channels.findUsersNotInProject(element);
+        List<Ref> allUsers = channels.findUsersNotInProject(getElement());
         usersTree = new DynamicFilterTree("users", new Model(new ArrayList<Ref>()), new Model((Serializable) allUsers), true) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = usersTree.getNewSelections();
@@ -88,7 +87,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
         addReplaceable(addParticipationButton);
         // Participations
         participationsDiv = new WebMarkupContainer("participationsDiv");
-        participationsView = new RefreshingView("participations", new RefPropertyModel(element, "participations")) {
+        participationsView = new RefreshingView("participations", new RefPropertyModel(getElement(), "participations")) {
             protected Iterator getItemModels() {
                 List<Ref> participations = (List<Ref>) getModelObject();
                 return new ModelIteratorAdapter(participations.iterator()) {
@@ -112,7 +111,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
                 item.add(participantLabel);
                 AjaxLink participationDelete = new AjaxLink("deleteParticipation") {
                     public void onClick(AjaxRequestTarget target) {
-                        RefUtils.remove(element, "participations", participation);
+                        RefUtils.remove(getElement(), "participations", participation);
                         participation.begin();
                         participation.delete();
                         selectedParticipation = null;
@@ -141,7 +140,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
         participationDiv.addOrReplace(userLink);
         Label userLabel = new Label("user", new RefPropertyModel(selectedParticipation, "user.userId"));
         userLink.addOrReplace(userLabel);
-        List<Ref> allPersons = project.findAllResourcesOfType("Person");
+        List<Ref> allPersons = getProject().findAllResourcesOfType("Person");
         List<Ref> personsSelection = new ArrayList<Ref>();
         if (selectedParticipation != null) {
             Ref person = (Ref) RefUtils.get(selectedParticipation, "person");
@@ -171,11 +170,11 @@ public class ProjectParticipationTab extends AbstractFormTab {
 
     private void addParticipation(AjaxRequestTarget target) {
         Participation newParticipation = new Participation();
-        newParticipation.setProject(element);
+        newParticipation.setProject(getElement());
         newParticipation.setUser(selectedUser);
         selectedParticipation = newParticipation.persist();
-        addOtherElement(selectedParticipation); // let the owner element form about this new persisted element
-        RefUtils.add(element, "participations", selectedParticipation);
+        addOtherElement(selectedParticipation); // let the owner getElement() form about this new persisted element
+        RefUtils.add(getElement(), "participations", selectedParticipation);
         resetUsersTree(target);
         target.addComponent(participationsDiv);
         updateParticipationDiv(target);
@@ -193,7 +192,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
     }
 
     private void resetUsersTree(AjaxRequestTarget target) {
-        List<Ref> allUsers = channels.findUsersNotInProject(element);
+        List<Ref> allUsers = channels.findUsersNotInProject(getElement());
         usersTree.detach();
         usersTree.setChoices(new Model((Serializable) allUsers));
         usersTree.setSelections(new Model(new ArrayList<Ref>()));

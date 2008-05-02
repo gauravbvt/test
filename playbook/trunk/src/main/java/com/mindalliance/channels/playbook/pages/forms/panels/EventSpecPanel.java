@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -29,36 +30,36 @@ public class EventSpecPanel extends AbstractComponentPanel {
     TimingPanel timingPanel;
     DynamicFilterTree relationshipTypesTree;
 
-    public EventSpecPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public EventSpecPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
-        eventSpec = (EventSpec) RefUtils.get(element, propPath);
+        eventSpec = (EventSpec) RefUtils.get(getElement(), propPath);
         if (eventSpec == null) {
             eventSpec = new EventSpec();
-            RefUtils.set(element, propPath, eventSpec);
+            RefUtils.set(getElement(), propPath, eventSpec);
         }
         List<Ref> allEventTypes = project.findAllTypes("EventType");
         eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(eventSpec, "eventTypes"), new Model((Serializable)allEventTypes)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = eventTypesTree.getNewSelections();
                 RefUtils.set(eventSpec, "eventTypes", newSelections);
-                elementChanged();
+                elementChanged(propPath, target);
             }
         };
         addReplaceable(eventTypesTree);
-        locationSpecPanel = new LocationSpecPanel("locationSpec", element, propPath + ".locationSpec", readOnly, feedback);
+        locationSpecPanel = new LocationSpecPanel("locationSpec", this, propPath + ".locationSpec", readOnly, feedback);
         addReplaceable(locationSpecPanel);
-        timingPanel = new TimingPanel("timing", element, propPath + ".timing", readOnly, feedback);
+        timingPanel = new TimingPanel("timing", this, propPath + ".timing", readOnly, feedback);
         addReplaceable(timingPanel);
         List<Ref> allRelationshipTypes = project.findAllTypes("RelationshipType");
         relationshipTypesTree = new DynamicFilterTree("relationshipTypes", new RefPropertyModel(eventSpec, "relationshipTypes"), new Model((Serializable)allRelationshipTypes)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = relationshipTypesTree.getNewSelections();
                 RefUtils.set(eventSpec, "relationshipTypes", newSelections);
-                elementChanged();
+                elementChanged(propPath, target);
             }
         };
         addReplaceable(relationshipTypesTree);

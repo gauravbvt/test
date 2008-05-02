@@ -22,7 +22,7 @@ public class ResourceLocalityTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        locationPanel = new LocationPanel("location", element, "location", false, feedback);
+        locationPanel = new LocationPanel("location", this, "location", false, feedback);
         addReplaceable(locationPanel);
     }
 

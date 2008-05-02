@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.model.EventType;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
@@ -50,17 +51,17 @@ public class EOIsPanel extends AbstractComponentPanel {
     List<String> topicChoices;
     String topicToAdd;
 
-    public EOIsPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback, List<Ref> eventTypes) {
-        super(id, element, propPath, readOnly, feedback);
+    public EOIsPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, List<Ref> eventTypes) {
+        super(id, parentPanel, propPath, readOnly, feedback);
         this.eventTypes = eventTypes;
     }
 
     protected void load() {
         super.load();
-        eois = (List<ElementOfInformation>) RefUtils.get(element, propPath);
+        eois = (List<ElementOfInformation>) RefUtils.get(getElement(), propPath);
         if (eois == null) {
             eois = new ArrayList<ElementOfInformation>();
-            RefUtils.set(element, propPath, eois);
+            RefUtils.set(getElement(), propPath, eois);
         }
         List<String> topicChoices = EventType.findAllTopicsIn(eventTypes);
 
@@ -120,7 +121,7 @@ public class EOIsPanel extends AbstractComponentPanel {
                 contentField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {
                         eoi.setContent(contentField.getModelObjectAsString());
-                        elementChanged();
+                        elementChanged(propPath, target);
                     }
                 });
                 item.add(contentField);
@@ -170,7 +171,7 @@ public class EOIsPanel extends AbstractComponentPanel {
         ElementOfInformation eoi = new ElementOfInformation();
         eoi.setTopic(topicToAdd);
         eois.add(eoi);
-        elementChanged();
+        elementChanged(propPath, target);
         topicChoices.remove(topicToAdd);
         topicToAdd = null;
         addTopicButton.setEnabled(false);
@@ -181,7 +182,7 @@ public class EOIsPanel extends AbstractComponentPanel {
 
     private void removeEoi(ElementOfInformation eoi, AjaxRequestTarget target) {
         eois.remove(eoi);
-        elementChanged();
+        elementChanged(propPath, target);
         topicChoices.add(eoi.getTopic());
         target.addComponent(topicChoiceList);
         target.addComponent(eoisDiv);

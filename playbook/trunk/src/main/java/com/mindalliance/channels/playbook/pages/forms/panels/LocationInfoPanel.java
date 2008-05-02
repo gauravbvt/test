@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.info.LocationInfo;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,16 +20,16 @@ public class LocationInfoPanel extends AbstractComponentPanel {
     AreaInfoPanel areaInfoPanel;
     LatLongPanel latLongPanel;
 
-    public LocationInfoPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public LocationInfoPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
 
     protected void load() {
         super.load();
-        areaInfoPanel = new AreaInfoPanel("areaInfo", element, propPath + ".areaInfo", readOnly, feedback);
+        areaInfoPanel = new AreaInfoPanel("areaInfo", this, propPath + ".areaInfo", readOnly, feedback);
         addReplaceable(areaInfoPanel);
-        latLongPanel = new LatLongPanel("latLong", element, propPath + ".latLong", readOnly, feedback);
+        latLongPanel = new LatLongPanel("latLong", this, propPath + ".latLong", readOnly, feedback);
         addReplaceable(latLongPanel);
     }
 

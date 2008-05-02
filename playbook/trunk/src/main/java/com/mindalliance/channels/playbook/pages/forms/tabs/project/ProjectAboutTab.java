@@ -36,16 +36,16 @@ public class ProjectAboutTab extends AbstractFormTab {
     protected void load() {
         super.load();
         // name
-        nameField = new TextField("name", new RefPropertyModel(element, "name"));
+        nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         // description
-        descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
+        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
         List<Ref> allModels = Channels.instance().getModels();
-        modelsTree = new DynamicFilterTree("models", new RefPropertyModel(element, "models"), new Model((Serializable)allModels)) {
+        modelsTree = new DynamicFilterTree("models", new RefPropertyModel(getElement(), "models"), new Model((Serializable)allModels)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = modelsTree.getNewSelections();
-                RefUtils.set(element, "models", newSelections);
+                RefUtils.set(getElement(), "models", newSelections);
             }
         };
         addReplaceable(modelsTree);

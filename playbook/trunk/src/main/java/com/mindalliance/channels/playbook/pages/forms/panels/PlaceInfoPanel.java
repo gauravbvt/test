@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.info.PlaceInfo;
 import com.mindalliance.channels.playbook.ifm.info.PlaceItem;
@@ -36,13 +37,13 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
     WebMarkupContainer placeItemsDiv;
     RefreshingView placeItemsView;
 
-    public PlaceInfoPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public PlaceInfoPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
-        placeInfo = (PlaceInfo) RefUtils.get(element, propPath);
+        placeInfo = (PlaceInfo) RefUtils.get(getElement(), propPath);
         placeItemsDiv = new WebMarkupContainer("placeItemsDiv");
         placeItemsView = new RefreshingView("placeItems", new RefPropertyModel(placeInfo, "placeItems")) {
 
@@ -81,7 +82,7 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
                         } else {
                             placeItems.add(placeItem); // new place item at end
                         }
-                        elementChanged();
+                        elementChanged(propPath, target);
                         target.addComponent(placeItemsDiv);
                     }
                 });
@@ -90,7 +91,7 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
                 TextField placeName = new TextField("placeName", new RefPropertyModel(placeItem, "placeName"));
                 placeName.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {
-                        elementChanged();
+                        elementChanged(propPath, target);
                     }
                 });
                 item.add(placeName);
@@ -107,7 +108,7 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
         int index = placeItems.indexOf(placeItem);
         List<Ref> priorPlaceTypes = new ArrayList<Ref>();
         if (index == 0) { // narrow resource's place's placeType, if set
-            priorPlaceTypes = (List<Ref>) RefUtils.get(element, "location.place.placeTypes");
+            priorPlaceTypes = (List<Ref>) RefUtils.get(getElement(), "location.place.placeTypes");
         } else { // narrow
             int priorIndex;
             if (index == -1) {

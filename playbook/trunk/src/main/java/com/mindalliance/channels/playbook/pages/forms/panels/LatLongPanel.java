@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.LatLong;
@@ -27,13 +28,13 @@ public class LatLongPanel extends AbstractComponentPanel {
     WebMarkupContainer readOnlyDiv;
     LatLong latLong;
 
-    public LatLongPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public LatLongPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
-        latLong = (LatLong) RefUtils.get(element, propPath);
+        latLong = (LatLong) RefUtils.get(getElement(), propPath);
         editableDiv = new WebMarkupContainer("editable");
         addReplaceable(editableDiv);
         readOnlyDiv = new WebMarkupContainer("readOnly");
@@ -65,7 +66,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                     target.addComponent(longitudeField);
                 }
                 latLong.setLongitude(value);
-                elementChanged();
+                elementChanged(propPath, target);
                 target.addComponent(feedback);
             }
 
@@ -94,7 +95,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                     target.addComponent(latitudeField);
                 }
                 latLong.setLatitude(value);
-                elementChanged();
+                elementChanged(propPath, target);
                 target.addComponent(feedback);
             }
 

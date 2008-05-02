@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: Apr 29, 2008
  * Time: 1:58:59 PM
  */
-public class AgreementForm extends AbstractElementForm {
+public class AgreementForm extends AbstractProjectElementForm {
 
     public AgreementForm(String id, Ref element) {
         super(id, element);

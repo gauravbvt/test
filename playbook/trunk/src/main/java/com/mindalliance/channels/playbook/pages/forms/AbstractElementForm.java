@@ -5,8 +5,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.support.RefUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.HashSet;
  * Date: Apr 23, 2008
  * Time: 4:43:09 PM
  */
-abstract public class AbstractElementForm extends Panel {
+abstract public class AbstractElementForm extends Panel implements ElementPanel {
 
     protected Ref element;
     protected Set<Ref> otherElements = new HashSet<Ref>();
@@ -57,14 +59,22 @@ abstract public class AbstractElementForm extends Panel {
         this.setOutputMarkupId(true);
     }
 
+    // ElementPanel
+
     public Ref getElement() {
         return element;
+    }
+
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        RefUtils.changed(element, propPath);
     }
 
     public void addOtherElement(Ref otherElement) {
         otherElement.begin(); // make editable
         otherElements.add(otherElement);
     }
+
+    // end ElementPanel
 
     public void reset() {
         element.begin(); // make sure element stays in session

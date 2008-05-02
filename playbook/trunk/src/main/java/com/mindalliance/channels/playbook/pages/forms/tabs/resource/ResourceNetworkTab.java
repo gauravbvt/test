@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
 import com.mindalliance.channels.playbook.ifm.project.resources.Relationship;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -38,7 +38,7 @@ import java.io.Serializable;
  * Date: Apr 24, 2008
  * Time: 9:45:02 AM
  */
-public class ResourceNetworkTab extends AbstractFormTab {
+public class ResourceNetworkTab extends AbstractProjectElementFormTab {
 
     protected DynamicFilterTree resourcesTree;
     protected WebMarkupContainer relationshipsDiv;
@@ -63,7 +63,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
     }
 
     private void loadResources() {
-        List<Ref> allResources = project.allResourcesExcept(element);
+        List<Ref> allResources = getProject().allResourcesExcept(getElement());
         resourcesTree = new DynamicFilterTree("resources", new Model(new ArrayList<Ref>()), new Model((Serializable)allResources), true) {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = resourcesTree.getNewSelections();
@@ -90,7 +90,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
             protected void onEvent(AjaxRequestTarget target) {
                 Relationship newRelationship = new Relationship();
                 newRelationship.setWithResource(selectedResource);
-                RefUtils.add(element, "relationships", newRelationship);
+                RefUtils.add(getElement(), "relationships", newRelationship);
                 target.addComponent(relationshipsDiv);
             }
         });
@@ -101,9 +101,9 @@ public class ResourceNetworkTab extends AbstractFormTab {
        addAgreementButton.add(new AjaxEventBehavior("onclick") {
            protected void onEvent(AjaxRequestTarget target) {
                Ref newAgreement = new Agreement().persist();
-               RefUtils.set(newAgreement, "fromResource", element);
+               RefUtils.set(newAgreement, "fromResource", getElement());
                RefUtils.set(newAgreement, "toResource", selectedResource);
-               RefUtils.add(project, "agreements", newAgreement);
+               RefUtils.add(getProject(), "agreements", newAgreement);
                target.addComponent(agreementsDiv);
            }
        });
@@ -113,7 +113,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
      private void loadRelationships() {
         // Relationships
         relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
-        relationshipsView = new RefreshingView("relationships", new RefPropertyModel(element, "relationships")) {
+        relationshipsView = new RefreshingView("relationships", new RefPropertyModel(getElement(), "relationships")) {
             protected Iterator getItemModels() {
                 List<Relationship> relationships = (List<Relationship>) getModelObject();
                 return new ModelIteratorAdapter(relationships.iterator()) {
@@ -135,7 +135,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 Label relationshipResourceNameLabel = new Label("relationshipResourceName", new RefPropertyModel(relationship, "withResource.name"));
                 relationshipResourceLink.add(relationshipResourceNameLabel);
                 Ref relationshipType = relationship.getRelationshipType();
-                List<Ref> relationshipTypes = project.findAllApplicableRelationshipTypes(element, withResource);
+                List<Ref> relationshipTypes = getProject().findAllApplicableRelationshipTypes(getElement(), withResource);
                 final DropDownChoice relationshipTypesChoice = new DropDownChoice("relationshipType");  // DojoHtmlSuggestionList buggy: no event after Ajax redisplay
                 relationshipTypesChoice.setModel(new Model(relationshipType));
                 relationshipTypesChoice.setChoices(relationshipTypes);
@@ -148,7 +148,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 });
                 AjaxLink removeRelationshipLink = new AjaxLink("removeRelationship") {
                     public void onClick(AjaxRequestTarget target) {
-                        RefUtils.remove(element, "relationships", relationship);
+                        RefUtils.remove(getElement(), "relationships", relationship);
                         target.addComponent(relationshipsDiv);
                     }
                 };
@@ -166,7 +166,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
         agreementsDiv = new WebMarkupContainer("agreementsDiv");
         agreementsView = new RefreshingView("agreements", new Model()) {
             protected Iterator getItemModels() {
-                List<Ref> list = ((Resource)element.deref()).allAgreements();
+                List<Ref> list = ((Resource)getElement().deref()).allAgreements();
                 return new ModelIteratorAdapter(list.iterator()) {
                     protected IModel model(Object agreement) {
                         return new RefModel(agreement);
@@ -188,7 +188,7 @@ public class ResourceNetworkTab extends AbstractFormTab {
                 agreementLink.add(agreementLabel);
                 AjaxLink removeAgreementLink = new AjaxLink("removeAgreement") {
                     public void onClick(AjaxRequestTarget target) {
-                        RefUtils.remove(project, "agreements", agreement);
+                        RefUtils.remove(getProject(), "agreements", agreement);
                         target.addComponent(agreementsDiv);
                     }
                 };

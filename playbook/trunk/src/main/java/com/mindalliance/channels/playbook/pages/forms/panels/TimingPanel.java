@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.info.Timing;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -24,13 +25,13 @@ public class TimingPanel extends AbstractComponentPanel {
 
     Timing timing;
 
-    public TimingPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public TimingPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
-        timing = (Timing) RefUtils.get(element, propPath);
+        timing = (Timing) RefUtils.get(getElement(), propPath);
         // amount
         final TextField amountField = new TextField("amount", new Model(timing.getAmount()));
         amountField.setType(Integer.class);
@@ -48,7 +49,7 @@ public class TimingPanel extends AbstractComponentPanel {
                  target.addComponent(amountField);
               }
               timing.setAmount(value);
-              elementChanged();
+              elementChanged(propPath, target);
               target.addComponent(feedback);
             }
 
@@ -67,7 +68,7 @@ public class TimingPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                String newUnit = unitChoice.getModelObjectAsString();
                timing.setUnit(newUnit);
-               elementChanged();
+               elementChanged(propPath, target);
             }
         });
         addReplaceable(unitChoice);

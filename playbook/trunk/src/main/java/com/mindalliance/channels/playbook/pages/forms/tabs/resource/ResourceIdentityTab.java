@@ -18,7 +18,7 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.ifm.project.resources.ContactInfo;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 
 import java.util.Iterator;
@@ -33,7 +33,7 @@ import java.io.Serializable;
  * Date: Apr 23, 2008
  * Time: 5:19:20 PM
  */
-public class ResourceIdentityTab extends AbstractFormTab {
+public class ResourceIdentityTab extends AbstractProjectElementFormTab {
 
     protected TextField nameField;
     protected TextArea descriptionField;
@@ -47,15 +47,15 @@ public class ResourceIdentityTab extends AbstractFormTab {
     protected void load() {
         super.load();
         // name
-        nameField = new TextField("name", new RefPropertyModel(element, "name"));
+        nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         // description
-        descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
+        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
         // contact infos
         contactInfosDiv = new WebMarkupContainer("contactInfosDiv");
         addReplaceable(contactInfosDiv);
-        contactInfosView = new RefreshingView("contactInfos", new RefPropertyModel(element, "contactInfos")) {
+        contactInfosView = new RefreshingView("contactInfos", new RefPropertyModel(getElement(), "contactInfos")) {
             protected Iterator getItemModels() {
                 List items = new ArrayList();
                 items.addAll((List) getModel().getObject());
@@ -69,7 +69,7 @@ public class ResourceIdentityTab extends AbstractFormTab {
             protected void populateItem(Item item) {
                 final ContactInfo contactInfo = (ContactInfo) item.getModel().getObject();
                 // Add medium dropdown
-                List<Ref> allMedia = project.findAllTypes("MediumType");
+                List<Ref> allMedia = getProject().findAllTypes("MediumType");
                 final DropDownChoice mediumChoice = new DropDownChoice("mediumType",new Model((Ref)RefUtils.get(contactInfo, "mediumType")),
                                                                                     new Model((Serializable)allMedia),
                                                                                     new RefChoiceRenderer("name", "id"));
@@ -77,12 +77,12 @@ public class ResourceIdentityTab extends AbstractFormTab {
                     protected void onUpdate(AjaxRequestTarget target) {
                         Ref selectedMediumType = new RefImpl(mediumChoice.getModelObjectAsString());
                         contactInfo.setMediumType(selectedMediumType);
-                        List<ContactInfo> contactInfos = ((Resource) element.deref()).getContactInfos();
+                        List<ContactInfo> contactInfos = ((Resource) getElement().deref()).getContactInfos();
                         int index = contactInfos.indexOf(contactInfo);
                         if (index == -1) {   // new contact info
                             contactInfos.add(contactInfo);
                         }
-                        element.changed("contactInfos");
+                        getElement().changed("contactInfos");
                         target.addComponent(contactInfosDiv);
                     }
                 });
@@ -91,7 +91,7 @@ public class ResourceIdentityTab extends AbstractFormTab {
                 TextField endPointField = new TextField("endPoint", new RefPropertyModel(contactInfo, "endPoint"));
                 endPointField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {
-                        element.changed("contactInfos");
+                        getElement().changed("contactInfos");
                     }
                 });
                 item.add(endPointField);

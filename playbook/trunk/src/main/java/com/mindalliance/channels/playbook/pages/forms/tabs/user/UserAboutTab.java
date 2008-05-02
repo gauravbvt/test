@@ -30,20 +30,20 @@ public class UserAboutTab extends AbstractFormTab {
     protected void load() {
         super.load();
         // id
-        idField = new TextField("id", new RefPropertyModel(element, "userId"));
+        idField = new TextField("id", new RefPropertyModel(getElement(), "userId"));
         addInputField(idField);
         // name
-        nameField = new TextField("name", new RefPropertyModel(element, "name"));
+        nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         // password
-        passwordField = new TextField("password", new RefPropertyModel(element, "password"));
+        passwordField = new TextField("password", new RefPropertyModel(getElement(), "password"));
         addInputField(passwordField);
         // privileges
-        managerField = new CheckBox("manager", new RefPropertyModel(element, "manager"));
+        managerField = new CheckBox("manager", new RefPropertyModel(getElement(), "manager"));
         addInputField(managerField);
-        analystField = new CheckBox("analyst", new RefPropertyModel(element, "analyst"));
+        analystField = new CheckBox("analyst", new RefPropertyModel(getElement(), "analyst"));
         addInputField(analystField);
-        adminField = new CheckBox("admin", new RefPropertyModel(element, "admin"));
+        adminField = new CheckBox("admin", new RefPropertyModel(getElement(), "admin"));
         addInputField(adminField);
     }
 }

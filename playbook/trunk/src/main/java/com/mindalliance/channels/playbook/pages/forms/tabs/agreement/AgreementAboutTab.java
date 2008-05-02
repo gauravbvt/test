@@ -43,30 +43,30 @@ public class AgreementAboutTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        agreement = (Agreement)element.deref();
-        inEffectField = new CheckBox("effective", new RefPropertyModel(element, "effective"));
+        agreement = (Agreement)getElement().deref();
+        inEffectField = new CheckBox("effective", new RefPropertyModel(getElement(), "effective"));
         addInputField(inEffectField);
-        descriptionField = new TextArea("description", new RefPropertyModel(element, "description"));
+        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
         AjaxLink fromResourceLink = new AjaxLink("fromResourceLink") {
             public void onClick(AjaxRequestTarget target) {
-                edit((Ref)RefUtils.get(element, "fromResource"), target);
+                edit((Ref)RefUtils.get(getElement(), "fromResource"), target);
             }
         };
         add(fromResourceLink);
-        Label fromResourceLabel = new Label("fromResource", new RefPropertyModel(element, "fromResource.name"));
+        Label fromResourceLabel = new Label("fromResource", new RefPropertyModel(getElement(), "fromResource.name"));
         fromResourceLink.add(fromResourceLabel);
         deliveryField = new DropDownChoice("delivery", new RefPropertyModel(agreement, "delivery"), Agreement.getDeliveries());
         addInputField(deliveryField);
         AjaxLink toResourceLink = new AjaxLink("toResourceLink") {
             public void onClick(AjaxRequestTarget target) {
-                edit((Ref)RefUtils.get(element, "toResource"), target);
+                edit((Ref)RefUtils.get(getElement(), "toResource"), target);
             }
         };
         add(toResourceLink);
-        Label toResourceLabel = new Label("toResource", new RefPropertyModel(element, "toResource.name"));
+        Label toResourceLabel = new Label("toResource", new RefPropertyModel(getElement(), "toResource.name"));
         toResourceLink.add(toResourceLabel);
-        timingPanel = new TimingPanel("timing", element, "maxDelay", EDITABLE, feedback);
+        timingPanel = new TimingPanel("timing", this, "maxDelay", EDITABLE, feedback);
         addReplaceable(timingPanel);
     }
 }

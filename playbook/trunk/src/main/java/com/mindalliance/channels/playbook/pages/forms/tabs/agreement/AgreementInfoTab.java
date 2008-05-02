@@ -22,7 +22,7 @@ public class AgreementInfoTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        infoTemplatePanel = new InformationTemplatePanel("informationTemplate", element, "informationCovered", EDITABLE, feedback);
+        infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this, "informationCovered", EDITABLE, feedback);
         addReplaceable(infoTemplatePanel);
     }
 }

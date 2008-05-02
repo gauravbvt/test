@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -32,24 +33,24 @@ public class LocationSpecPanel extends AbstractComponentPanel {
     DropDownChoice areaTypeChoice;
     DropDownChoice relationChoice;
 
-    public LocationSpecPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public LocationSpecPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
         // place types
-        locationSpec = (LocationSpec)RefUtils.get(element, propPath);
+        locationSpec = (LocationSpec)RefUtils.get(getElement(), propPath);
         if (locationSpec == null) {
             locationSpec = new LocationSpec();
-            RefUtils.set(element, propPath, locationSpec);
+            RefUtils.set(getElement(), propPath, locationSpec);
         }
         List<Ref> allPlaceTypes = project.findAllTypes("PlaceType");
         placeTypeTree = new DynamicFilterTree("placeTypes", new RefPropertyModel(locationSpec, "placeTypes"), new Model((Serializable)allPlaceTypes)) {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = placeTypeTree.getNewSelections();
                 RefUtils.set(locationSpec, "placeTypes", newSelections);
-                elementChanged();
+                elementChanged(propPath, target);
              }
         };
         addReplaceable(placeTypeTree);
@@ -61,7 +62,7 @@ public class LocationSpecPanel extends AbstractComponentPanel {
                 String id = (String)areaTypeChoice.getModelObject();
                 Ref selectedAreaType = new RefImpl(id);
                 locationSpec.setAreaType(selectedAreaType);
-                elementChanged();
+                elementChanged(propPath, target);
             }
         });
         addReplaceable(areaTypeChoice);
@@ -71,7 +72,7 @@ public class LocationSpecPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 String selectedRelation = relationChoice.getModelObjectAsString();
                 locationSpec.setRelation(selectedRelation);
-                elementChanged();
+                elementChanged(propPath, target);
             }
         });
         addReplaceable(relationChoice);

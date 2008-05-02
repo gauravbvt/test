@@ -26,13 +26,13 @@ public class PersonIdentityTab extends ResourceIdentityTab {
     protected void load() {
         super.load();
         // first name
-        firstNameField = new TextField("firstName", new RefPropertyModel(element, "firstName"));
+        firstNameField = new TextField("firstName", new RefPropertyModel(getElement(), "firstName"));
         addInputField(firstNameField, nameField);
         // middle name
-        middleNameField = new TextField("middleName", new RefPropertyModel(element, "middleName"));
+        middleNameField = new TextField("middleName", new RefPropertyModel(getElement(), "middleName"));
         addInputField(middleNameField, nameField);
         // last name
-        lastNameField = new TextField("lastName", new RefPropertyModel(element, "lastName"));
+        lastNameField = new TextField("lastName", new RefPropertyModel(getElement(), "lastName"));
         addInputField(lastNameField, nameField);
     }
 

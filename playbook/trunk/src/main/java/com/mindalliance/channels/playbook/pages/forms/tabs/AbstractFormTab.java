@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 
 import java.util.List;
@@ -25,13 +26,11 @@ import java.util.HashMap;
  * Date: Apr 23, 2008
  * Time: 7:43:46 PM
  */
-public class AbstractFormTab extends Panel {
+public class AbstractFormTab extends Panel implements ElementPanel {
 
     protected static final boolean READONLY = true;
     protected static final boolean EDITABLE = false;
-    
-    protected Ref element;
-    protected Project project;
+
     protected FeedbackPanel feedback;
     protected AbstractElementForm elementForm;
     private List<FormComponent> inputFields = new ArrayList<FormComponent>();
@@ -40,13 +39,11 @@ public class AbstractFormTab extends Panel {
     public AbstractFormTab(String id, AbstractElementForm elementForm) {
         super(id);
         this.elementForm = elementForm;
-        this.element = elementForm.getElement();
         load();
         init();
     }
 
     protected void load() {       
-        project = (Project)Project.current().deref();
         // feedback panel
         feedback = new FeedbackPanel("feedback");
         feedback.setOutputMarkupId(true);
@@ -78,9 +75,21 @@ public class AbstractFormTab extends Panel {
         }
     }
 
-    protected void addOtherElement(Ref otherElement) {
+    // ElementPanel
+
+    public Ref getElement() {
+        return elementForm.getElement();
+    }
+
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        elementForm.elementChanged(propPath, target);
+    }
+
+    public void addOtherElement(Ref otherElement) {
         elementForm.addOtherElement(otherElement);
     }
+
+    // end ElementPanel
 
     protected void addInputField(FormComponent inputField, Component dependentField) {
         addInputField(inputField);

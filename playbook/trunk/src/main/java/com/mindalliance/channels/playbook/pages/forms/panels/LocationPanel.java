@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.Location;
@@ -27,16 +28,16 @@ public class LocationPanel extends AbstractComponentPanel {
     PlaceInfoPanel placeInfoPanel;
     LocationInfoPanel locationInfoPanel;
 
-    public LocationPanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public LocationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     @Override
     protected void load() {
         super.load();
-        location = (Location) RefUtils.get(element, propPath);
+        location = (Location) RefUtils.get(getElement(), propPath);
         loadPlaceField();
-        placeInfoPanel = new PlaceInfoPanel("placeInfo", element, propPath + ".placeInfo", readOnly, feedback);
+        placeInfoPanel = new PlaceInfoPanel("placeInfo", this, propPath + ".placeInfo", readOnly, feedback);
         addReplaceable(placeInfoPanel);
         locationInfoPanel = makeLocationInfoPanel();
         addReplaceable(locationInfoPanel);
@@ -45,15 +46,15 @@ public class LocationPanel extends AbstractComponentPanel {
     // placeField
     private void loadPlaceField() {
         List<String> placeNames = project.findAllPlaceNames();
-        String placeName = (String) RefUtils.get(element, "place.name");
+        String placeName = (String) RefUtils.get(getElement(), "place.name");
         placeField = new DropDownChoice("place", new Model(placeName), placeNames);
         placeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 String newPlaceName = placeField.getModelObjectAsString();
                 Ref newPlace = project.findPlaceNamed(newPlaceName);
-                elementChanged();
                 location.setPlace(newPlace);
+                elementChanged(propPath, target);
                 locationInfoPanel = makeLocationInfoPanel();  // recreate locationInfoPanel
                 addReplaceable(locationInfoPanel);
                 target.addComponent(locationInfoPanel);
@@ -68,9 +69,9 @@ public class LocationPanel extends AbstractComponentPanel {
         // else edit this locationInfo
         LocationInfoPanel lip;
         if (location.getPlace() != null) {
-            lip = new LocationInfoPanel("locationInfo", location.getPlace(), "locationInfo", true, feedback); // readOnly
+            lip = new LocationInfoPanel("locationInfo", this, propPath + ".place.locationInfo", true, feedback); // readOnly
         } else {
-            lip = new LocationInfoPanel("locationInfo", element, "location.locationInfo", false, feedback);
+            lip = new LocationInfoPanel("locationInfo", this, propPath + ".locationInfo", false, feedback);
         }
         return lip;
     }

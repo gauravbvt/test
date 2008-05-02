@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -21,7 +21,7 @@ import java.io.Serializable;
  * Date: Apr 24, 2008
  * Time: 9:21:40 AM
  */
-public class ResourceResponsibilitiesTab extends AbstractFormTab {
+public class ResourceResponsibilitiesTab extends AbstractProjectElementFormTab {
 
     DynamicFilterTree roleTree;
 
@@ -31,11 +31,11 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        List<Ref> allRoles = project.findAllTypes("Role");
-        roleTree = new DynamicFilterTree("roles", new RefPropertyModel(element, "roles"), new Model((Serializable) allRoles)) {
+        List<Ref> allRoles = getProject().findAllTypes("Role");
+        roleTree = new DynamicFilterTree("roles", new RefPropertyModel(getElement(), "roles"), new Model((Serializable) allRoles)) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = roleTree.getNewSelections();
-                RefUtils.set(element, "roles", newSelections);
+                RefUtils.set(getElement(), "roles", newSelections);
              }
         };
         roleTree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );

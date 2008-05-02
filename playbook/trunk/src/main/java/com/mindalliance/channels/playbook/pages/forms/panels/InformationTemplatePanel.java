@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -29,28 +30,28 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
     EOIsPanel eoisPanel;
     DynamicFilterTree credibleSourcesTree;
 
-    public InformationTemplatePanel(String id, Ref element, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, element, propPath, readOnly, feedback);
+    public InformationTemplatePanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
-        informationTemplate = (InformationTemplate) RefUtils.get(element, propPath);
+        informationTemplate = (InformationTemplate) RefUtils.get(getElement(), propPath);
         if (informationTemplate == null) {
             informationTemplate = new InformationTemplate();
-            RefUtils.set(element, propPath, informationTemplate);
+            RefUtils.set(getElement(), propPath, informationTemplate);
         }
-        eventSpecPanel = new EventSpecPanel("eventSpec", element, propPath + ".eventSpec", readOnly, feedback);
+        eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".eventSpec", readOnly, feedback);
         addReplaceable(eventSpecPanel);
-        List<Ref> eventTypes = (List<Ref>)RefUtils.get(element, propPath + ".eventSpec.eventTypes");
-        eoisPanel = new EOIsPanel("eventDetails", element, propPath + ".eventDetails", readOnly, feedback, eventTypes);
+        List<Ref> eventTypes = (List<Ref>)RefUtils.get(getElement(), propPath + ".eventSpec.eventTypes");
+        eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, eventTypes);
         addReplaceable(eoisPanel);
         List<Ref> allOrganizationTypes = project.findAllTypes("OrganizationType");
         credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"), new Model((Serializable)allOrganizationTypes)) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = credibleSourcesTree.getNewSelections();
-                RefUtils.set(element, "organizationTypes", newSelections);
-                elementChanged();
+                RefUtils.set(getElement(), "organizationTypes", newSelections);
+                elementChanged(propPath, target);
              }
         };
         addReplaceable(credibleSourcesTree);
