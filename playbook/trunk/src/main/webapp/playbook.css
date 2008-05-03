@@ -119,8 +119,8 @@ div.content-form > div form {
     padding: 5px 5px 0px;
 }
 
-input[type='text'], input[type=''], input[type='password'] {
-    border: none;
+input, textarea {
+    border: 1px dotted  #d4d8bc;
 }
 
 label {

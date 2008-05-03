@@ -1,11 +1,11 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.user;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.TextField;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,7 +18,7 @@ public class UserAboutTab extends AbstractFormTab {
 
     TextField idField;
     TextField nameField;
-    TextField passwordField;
+    PasswordTextField passwordField;
     CheckBox managerField;
     CheckBox analystField;
     CheckBox adminField;
@@ -36,7 +36,7 @@ public class UserAboutTab extends AbstractFormTab {
         nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         // password
-        passwordField = new TextField("password", new RefPropertyModel(getElement(), "password"));
+        passwordField = new PasswordTextField("password", new RefPropertyModel(getElement(), "password"));
         addInputField(passwordField);
         // privileges
         managerField = new CheckBox("manager", new RefPropertyModel(getElement(), "manager"));
