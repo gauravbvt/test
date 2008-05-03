@@ -2,8 +2,6 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.model.EventType;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
@@ -38,7 +36,7 @@ import java.io.Serializable;
  */
 public class EOIsPanel extends AbstractComponentPanel {
 
-    RefQueryModel topicChoicesModel;
+    RefQueryModel availableTopicChoicesModel;
 
     List<ElementOfInformation> eois;
 
@@ -53,11 +51,11 @@ public class EOIsPanel extends AbstractComponentPanel {
 
     public EOIsPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, IModel topicChoicesModel) {
         super(id, parentPanel, propPath, readOnly, feedback);
-        this.topicChoicesModel = new RefQueryModel(this, new Query("availableTopics", topicChoicesModel));
+        this.availableTopicChoicesModel = new RefQueryModel(this, new Query("availableTopics", topicChoicesModel));
+        doLoad();
     }
 
-    protected void load() {
-        super.load();
+    protected void doLoad() {  // load after setting availableTopicChoicesModel
         eois = (List<ElementOfInformation>) RefUtils.get(getElement(), propPath);
         if (eois == null) {
             eois = new ArrayList<ElementOfInformation>();
@@ -81,7 +79,7 @@ public class EOIsPanel extends AbstractComponentPanel {
         addReplaceable(adHocTopicField);
         // Topic choices
         topicChoiceDiv = new WebMarkupContainer("topicChoiceDiv");
-        topicChoiceList = new ListChoice("topicChoices", new Model(), topicChoicesModel);
+        topicChoiceList = new ListChoice("topicChoices", new Model(), availableTopicChoicesModel);
         topicChoiceList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 topicToAdd = topicChoiceList.getModelObjectAsString();
@@ -129,6 +127,7 @@ public class EOIsPanel extends AbstractComponentPanel {
                         removeEoi(eoi, target);
                     }
                 };
+                item.add(deleteLink);
             }
         };
         eoisDiv.add(eoisView);
@@ -137,7 +136,7 @@ public class EOIsPanel extends AbstractComponentPanel {
 
     private Iterator topicIterator(String input, int max) {
         List<String> matches = new ArrayList<String>();
-        for (String topic : (List<String>)topicChoicesModel.getObject()) {
+        for (String topic : (List<String>) availableTopicChoicesModel.getObject()) {
             if (topic.toLowerCase().startsWith(input.toLowerCase())) {
                 matches.add(topic);
                 if (matches.size() >= max) break;
@@ -157,7 +156,7 @@ public class EOIsPanel extends AbstractComponentPanel {
     }
 
     private void updateTopicChoicesSelection() {
-        for (String topic : (List<String>)topicChoicesModel.getObject()) {
+        for (String topic : (List<String>) availableTopicChoicesModel.getObject()) {
             if (topic.equalsIgnoreCase(topicToAdd)) {
                 topicChoiceList.setModelObject(topic);
                 topicChoiceList.modelChanged();

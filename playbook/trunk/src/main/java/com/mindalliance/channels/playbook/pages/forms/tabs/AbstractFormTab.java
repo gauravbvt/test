@@ -39,8 +39,13 @@ public class AbstractFormTab extends Panel implements ElementPanel {
     public AbstractFormTab(String id, AbstractElementForm elementForm) {
         super(id);
         this.elementForm = elementForm;
+        beforeLoad();
         load();
         init();
+    }
+
+    protected void beforeLoad() {
+        // do nothing
     }
 
     protected void load() {       

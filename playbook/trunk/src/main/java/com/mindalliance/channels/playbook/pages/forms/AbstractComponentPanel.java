@@ -39,6 +39,7 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
         this.propPath = propPath;
         this.readOnly = readOnly;
         this.feedback = feedback;
+        beforeLoad();
         load();
         init();
     }
@@ -70,6 +71,10 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
     protected void init() {
         this.setOutputMarkupId(true);
         this.add(new SimpleAttributeModifier("class", "component"));
+    }
+
+    protected void beforeLoad() {
+        // do nothing
     }
 
     protected void load() {

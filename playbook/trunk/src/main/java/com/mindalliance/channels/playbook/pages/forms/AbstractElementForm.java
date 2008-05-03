@@ -34,8 +34,13 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         super(id);
         this.element = element;
         element.begin();
+        beforeLoad();
         load();
         init();
+    }
+
+    protected void beforeLoad() {
+        // do nothing
     }
 
     protected void load() {

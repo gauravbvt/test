@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.query.Query
 import org.apache.wicket.model.IChainingModel
 import org.apache.wicket.model.IModel
+import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,7 +13,7 @@ import org.apache.wicket.model.IModel
  * Date: May 2, 2008
  * Time: 2:40:03 PM
  */
-class RefQueryModel  implements IChainingModel {
+class RefQueryModel implements IChainingModel {
 
     def target
     Query query
@@ -24,7 +25,7 @@ class RefQueryModel  implements IChainingModel {
 
     @Override
     Object getObject() {
-        def holder = (Ref)getHolder()
+        def holder = getHolder()
         try {
             return query.execute(holder)
         }

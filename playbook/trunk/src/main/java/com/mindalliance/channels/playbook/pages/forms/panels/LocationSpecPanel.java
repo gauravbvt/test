@@ -59,8 +59,7 @@ public class LocationSpecPanel extends AbstractComponentPanel {
         areaTypeChoice = new DropDownChoice("areaType", new Model((Serializable)RefUtils.get(locationSpec, "areaType.name")), allAreaTypes, new RefChoiceRenderer("name", "id"));
         areaTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
-                String id = (String)areaTypeChoice.getModelObject();
-                Ref selectedAreaType = new RefImpl(id);
+                Ref selectedAreaType = (Ref)areaTypeChoice.getModelObject();;
                 locationSpec.setAreaType(selectedAreaType);
                 elementChanged(propPath, target);
             }

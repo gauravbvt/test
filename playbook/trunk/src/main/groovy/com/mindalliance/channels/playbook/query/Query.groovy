@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: May 2, 2008
  * Time: 9:57:45 AM
  */
-class Query {
+class Query implements Serializable {
 
     String name
     List arguments
@@ -24,42 +24,42 @@ class Query {
         arguments = []
     }
 
-    Query(String s, def arg) {
+    Query(String s, Object arg) {
         name = s
         arguments = [arg]
     }
 
-    Query(String s, def arg1, def arg2) {
+    Query(String s, Object arg1, Object arg2) {
         name = s
         arguments = [arg1, arg2]
      }
 
-    Query(String s, def arg1, def arg2, def arg3) {
+    Query(String s, Object arg1, Object arg2, Object arg3) {
         name = s
         arguments = [arg1, arg2, arg3]
     }
 
-    static def execute(Ref element, String s) {
+    static Object execute(Ref element, String s) {
         return QueryManager.instance().execute(element, new Query(s))
     }
 
-    static def execute(Ref element, String s, List args) {
+    static Object execute(Ref element, String s, List args) {
         return QueryManager.instance().execute(element, new Query(s, args))
     }
 
-    static def execute(Ref element, String s, def arg) {
+    static Object execute(Ref element, String s, Object arg) {
         return QueryManager.instance().execute(element, new Query(s, arg))
     }
 
-    static def execute(Ref element, String s, def arg1, def arg2) {
+    static Object execute(Ref element, String s, Object arg1, Object arg2) {
         return QueryManager.instance().execute(element, new Query(s, arg1, arg2))
     }
 
-    static def execute(Ref element, String s, def arg1, def arg2, def arg3) {
+    static Object execute(Ref element, String s, Object arg1, Object arg2, Object arg3) {
         return QueryManager.instance().execute(element, new Query(s, arg1, arg2, arg3))
     }
 
-    def execute(def element) {
+    def execute(Object element) {
        return QueryManager.instance().execute(element, this)
     }
 

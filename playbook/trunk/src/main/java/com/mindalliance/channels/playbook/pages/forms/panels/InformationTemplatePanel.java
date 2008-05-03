@@ -56,7 +56,7 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
         credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"), new Model((Serializable) allOrganizationTypes)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = credibleSourcesTree.getNewSelections();
-                RefUtils.set(getElement(), "organizationTypes", newSelections);
+                RefUtils.set(informationTemplate, "organizationTypes", newSelections);
                 elementChanged(propPath, target);
             }
         };

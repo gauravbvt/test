@@ -142,7 +142,7 @@ public class FormTest extends WebPage {
             results.add(project.getReference());
         }
         else if (type.equals(Person.class)) {
-            results = (List<Ref>)Query.execute(project.getReference(), "findAResource", ((Referenceable)type.newInstance()).getType());
+            results.add((Ref)Query.execute(project.getReference(), "findAResource", ((Referenceable)type.newInstance()).getType()));
         } else if (type.equals(Agreement.class)) {
             results = project.getAgreements();
        /* } else if (type.equals("System")) {
