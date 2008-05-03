@@ -75,10 +75,9 @@ class Tab extends IfmElement implements Container {
     }
 
     public synchronized void detach() {
-        super.detach()
+        super.detach();
         getFilter().invalidate();
-        if ( buffer != null )
-            buffer.detach()
+        buffer = null
     }
 
     //---------------------------------
@@ -124,17 +123,17 @@ class Tab extends IfmElement implements Container {
 
     public void add( Referenceable ref ) {
         base.add( ref );
-        detach()
+        detach();
     }
 
     public void remove(Ref ref) {
         base.remove( ref )
-        detach()
+        detach();
     }
 
     public void remove(Referenceable ref) {
         base.remove( ref )
-        detach()
+        detach();
     }
 
     public int size() {

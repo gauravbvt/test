@@ -21,7 +21,11 @@ class Playbook extends ProjectElement implements Describable {
 
     Referenceable doAddToField( String field, Object object ) {
         object.playbook = this.reference
-        super.doAddToField(field, object )
+        super.doAddToField("informationActs", object )
+    }
+
+    public Referenceable doRemoveFromField(String name, Object val) {
+        return super.doRemoveFromField("informationActs", val);
     }
 
 

@@ -118,7 +118,8 @@ public class ContentPanel extends Panel {
                 item.add( new AttributeModifier( "class", true, new AbstractReadOnlyModel() {
                     public Object getObject() {
                         String style = ( item.getIndex() % 2 == 1 ) ? "even" : "odd";
-                        if ( item.getModelObject().equals( getSelected() ) )
+                        Ref ref = getSelected();
+                        if ( ref != null && item.getModelObject().equals( ref ) )
                             style += " selected";
                         return style;
                     }
@@ -174,10 +175,13 @@ public class ContentPanel extends Panel {
                     public void onClick() {
                         try {
                             final Referenceable object = (Referenceable) c.newInstance();
-                            object.persist();
-                            getTab().add( object );
+                            Ref ref = object.persist();
+                            Tab tab = getTab();
+                            int size = tab.size();
+                            tab.add( object );
+                            assert( tab.size() == size + 1 );
                             pageNavigator.renderComponent();
-                            setSelected( object.getReference() );
+                            setSelected( getTab().indexOf( ref ) );
 
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
@@ -209,13 +213,15 @@ public class ContentPanel extends Panel {
     }
 
     public void setSelected( int index ) {
-        rows.setCurrentPage( index / rows.getItemsPerPage() );
 
         Tab tab = getTab();
-        if ( tab.size() > 0 )
+        if ( index >= 0 && tab.size() > 0 ) {
+            rows.setCurrentPage( index / rows.getItemsPerPage() );
             setSelected( tab.get( index ) );
-        else
+        } else {
+            rows.setCurrentPage( 0 );
             setSelected( null );
+        }
     }
 
     //--------------------------------

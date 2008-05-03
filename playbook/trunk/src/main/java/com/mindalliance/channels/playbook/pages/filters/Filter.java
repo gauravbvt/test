@@ -70,6 +70,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
     public void invalidate() {
         setInvalid( true );
+        getContainer().detach();
         if ( children != null )
             for( Filter f : children )
                 f.invalidate();
@@ -106,6 +107,9 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             for ( Filter k : children )
                 assert( equals( k.getParent() ) );
         }
+
+        // Force a reevaluation on next display
+        setInvalid( true );
     }
 
     public final synchronized Container getContainer() {
@@ -283,8 +287,28 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             setChildren( list );
             setInvalid( false );
         } else if ( isInvalid() ) {
-            // TODO recompute while restoring selections
+            // Recompute while preserving order and selections
+            List<Filter> newChildren = createChildren();
 
+            for ( Filter old : children ) {
+                int i = newChildren.indexOf( old );
+                if ( i >= 0 ) {
+                    // set expansion and selection
+                    Filter nk = newChildren.get( i );
+                    nk.setSelected( old.isSelected() );
+                    nk.setExpanded( old.isExpanded() );
+                }
+            }
+
+            for ( Filter nk : newChildren ) {
+                int i = children.indexOf( nk );
+                if ( i < 0 ) {
+                    nk.setForceSelected( isSelected() );
+                    nk.setExpanded( false );
+                }
+            }
+
+            setChildren( newChildren );
             setInvalid( false );
         }
 
@@ -435,6 +459,29 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
                 return true;
 
         return false;
+    }
+
+    public boolean equals( Object o ) {
+        if ( this == o )
+            return true;
+        if ( !( o instanceof Filter ) )
+            return false;
+
+        Filter filter = (Filter) o;
+
+        if ( !collapsedText.equals( filter.collapsedText ) )
+            return false;
+        if ( !expandedText.equals( filter.expandedText ) )
+            return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = collapsedText.hashCode();
+        result = 31 * result + expandedText.hashCode();
+        return result;
     }
 
     //===================================================

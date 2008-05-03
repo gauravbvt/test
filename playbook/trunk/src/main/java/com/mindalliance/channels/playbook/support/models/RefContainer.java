@@ -98,7 +98,6 @@ public class RefContainer implements Container, Serializable {
     }
 
     public void setObject( Object object ) {
-        detach();
         setContents( (List<Ref>) object );
     }
 

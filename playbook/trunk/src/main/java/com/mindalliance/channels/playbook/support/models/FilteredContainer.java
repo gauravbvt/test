@@ -88,12 +88,12 @@ public class FilteredContainer extends RefContainer {
 
     public void remove( Ref ref ) {
         getData().remove( ref );
-        detach();
+        setContents( null );
     }
 
     public void add( Referenceable ref ) {
         getData().add( ref );
-        detach();
+        setContents( null );
     }
 
     public Map<String,Object> toMap() {

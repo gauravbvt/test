@@ -216,10 +216,12 @@ class Project extends IfmElement implements Describable {
       * Return project contents that a participant can add.
       */
      static List<Class<?>> contentClasses() {
+         // When changing this method, don't forget to update the next one...
          List<Class<?>> result = new ArrayList<Class<?>>()
          result.addAll( Resource.contentClasses() )
          result.addAll( [ Policy.class ] )
          result.addAll( [ Place.class ] )
+         result.addAll( [ Playbook.class ] )
          result.addAll( Playbook.contentClasses() )
          return result
      }
@@ -227,19 +229,22 @@ class Project extends IfmElement implements Describable {
      void addContents( List<Ref> result ) {
          playbooks.each { it.addContents( result ) }
          result.addAll( resources )
-         result.addAll( analysisElements )
-     }
-
-     void addManagerContents( List<Ref> result ) {
+         result.addAll( policies )
+         result.addAll( places )
          result.addAll( playbooks )
+         result.addAll( analysisElements )
+         playbooks.each { it.addContents( result ) }
      }
 
      /**
       * Return system objects that a project manager can add.
       */
      static List<Class<?>> managerClasses() {
-         [ Project.class, Playbook.class ]
+         [ Project.class ]
      }
 
+     void addManagerContents( List<Ref> result ) {
+        // Projects are added in UserScope.getContents()
+     }
 
 }
