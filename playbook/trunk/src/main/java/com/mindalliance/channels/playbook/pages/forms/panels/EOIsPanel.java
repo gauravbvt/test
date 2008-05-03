@@ -6,6 +6,8 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.model.EventType;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -22,10 +24,9 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.commons.collections.CollectionUtils;
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.Serializable;
 
 /**
@@ -37,7 +38,7 @@ import java.io.Serializable;
  */
 public class EOIsPanel extends AbstractComponentPanel {
 
-    List<Ref> eventTypes;
+    RefQueryModel topicChoicesModel;
 
     List<ElementOfInformation> eois;
 
@@ -48,12 +49,11 @@ public class EOIsPanel extends AbstractComponentPanel {
     WebMarkupContainer eoisDiv;
     RefreshingView eoisView;
 
-    List<String> topicChoices;
     String topicToAdd;
 
-    public EOIsPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, List<Ref> eventTypes) {
+    public EOIsPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, IModel topicChoicesModel) {
         super(id, parentPanel, propPath, readOnly, feedback);
-        this.eventTypes = eventTypes;
+        this.topicChoicesModel = new RefQueryModel(this, new Query("availableTopics", topicChoicesModel));
     }
 
     protected void load() {
@@ -63,7 +63,6 @@ public class EOIsPanel extends AbstractComponentPanel {
             eois = new ArrayList<ElementOfInformation>();
             RefUtils.set(getElement(), propPath, eois);
         }
-        List<String> topicChoices = EventType.findAllTopicsIn(eventTypes);
 
         // Topic choices
         // add hoc topic
@@ -82,12 +81,12 @@ public class EOIsPanel extends AbstractComponentPanel {
         addReplaceable(adHocTopicField);
         // Topic choices
         topicChoiceDiv = new WebMarkupContainer("topicChoiceDiv");
-        topicChoiceList = new ListChoice("topicChoices", new Model(), new Model((Serializable) topicChoices));
+        topicChoiceList = new ListChoice("topicChoices", new Model(), topicChoicesModel);
         topicChoiceList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 topicToAdd = topicChoiceList.getModelObjectAsString();
                 adHocTopicField.clearInput();
-                addTopicButton.setEnabled(true);
+                addTopicButton.setEnabled(topicToAdd != null);
                 target.addComponent(adHocTopicField);
                 target.addComponent(addTopicButton);
             }
@@ -138,7 +137,7 @@ public class EOIsPanel extends AbstractComponentPanel {
 
     private Iterator topicIterator(String input, int max) {
         List<String> matches = new ArrayList<String>();
-        for (String topic : topicChoices) {
+        for (String topic : (List<String>)topicChoicesModel.getObject()) {
             if (topic.toLowerCase().startsWith(input.toLowerCase())) {
                 matches.add(topic);
                 if (matches.size() >= max) break;
@@ -158,7 +157,7 @@ public class EOIsPanel extends AbstractComponentPanel {
     }
 
     private void updateTopicChoicesSelection() {
-        for (String topic : topicChoices) {
+        for (String topic : (List<String>)topicChoicesModel.getObject()) {
             if (topic.equalsIgnoreCase(topicToAdd)) {
                 topicChoiceList.setModelObject(topic);
                 topicChoiceList.modelChanged();
@@ -172,7 +171,6 @@ public class EOIsPanel extends AbstractComponentPanel {
         eoi.setTopic(topicToAdd);
         eois.add(eoi);
         elementChanged(propPath, target);
-        topicChoices.remove(topicToAdd);
         topicToAdd = null;
         addTopicButton.setEnabled(false);
         target.addComponent(addTopicButton);
@@ -183,10 +181,20 @@ public class EOIsPanel extends AbstractComponentPanel {
     private void removeEoi(ElementOfInformation eoi, AjaxRequestTarget target) {
         eois.remove(eoi);
         elementChanged(propPath, target);
-        topicChoices.add(eoi.getTopic());
         target.addComponent(topicChoiceList);
         target.addComponent(eoisDiv);
     }
 
+    private List<String> availableTopics(List<String>choices) {
+        List<String> chosenTopics = new ArrayList<String>();
+        for (ElementOfInformation eoi : eois) {
+            chosenTopics.add(eoi.getTopic());
+        }
+        Collection availableTopics = CollectionUtils.subtract(choices, chosenTopics);
+        List<String> results = new ArrayList<String>();
+        results.addAll(availableTopics);
+        Collections.sort(results);
+        return results;
+    }
 
 }

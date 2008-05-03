@@ -16,7 +16,7 @@ import com.mindalliance.channels.playbook.ifm.info.Timing
     Ref playbook
     String description = ''
     Ref actor // a resource
-    Ref cause // another information act, if any
+    Ref causeInformationAct // another information act, if any 
     Timing delay = new Timing(amount:0) // from start of the information act it follows, else from T0 in playbook
     Timing duration = new Timing(amount:0)
     boolean suggested = false  // true if in NeedToAct (will be deleted when NeedToAct retracted)

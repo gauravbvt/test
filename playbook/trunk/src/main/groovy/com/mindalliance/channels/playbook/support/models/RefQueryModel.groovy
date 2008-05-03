@@ -24,7 +24,7 @@ class RefQueryModel  implements IChainingModel {
 
     @Override
     Object getObject() {
-        Ref holder = (Ref)getHolder()
+        def holder = (Ref)getHolder()
         try {
             return query.execute(holder)
         }

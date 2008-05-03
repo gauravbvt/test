@@ -48,7 +48,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     static final String FORM_SUFFIX = 'Form'
 
     ApplicationMemory appMemory
-    QueryHandler queryHandler = new QueryHandler()
     String message
 
     PlaybookApplication() {
@@ -64,15 +63,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         return appMemory
     }
 
-    QueryHandler getQueryHandler() {
-        return queryHandler
-    }
-
     //----------------------
     @Override
     public Class getHomePage() {
-        return PlaybookPage.class
-        // return FormTest.class
+        // return PlaybookPage.class
+        return FormTest.class
     }
 
     @Override

@@ -12,31 +12,31 @@ import com.mindalliance.channels.playbook.ref.Ref
 class Query {
 
     String name
-    Object[] arguments
+    List arguments
 
     Query(String s, List args) {
         name = s
-        arguments = args as Object[]
+        arguments = args
     }
 
     Query(String s) {
         name = s
-        arguments = [] as Object[]
+        arguments = []
     }
 
     Query(String s, def arg) {
         name = s
-        arguments = [arg] as Object[]
+        arguments = [arg]
     }
 
     Query(String s, def arg1, def arg2) {
         name = s
-        arguments = [arg1, arg2] as Object[]
+        arguments = [arg1, arg2]
      }
 
     Query(String s, def arg1, def arg2, def arg3) {
         name = s
-        arguments = [arg1, arg2, arg3] as Object[]
+        arguments = [arg1, arg2, arg3]
     }
 
     static def execute(Ref element, String s) {
@@ -59,7 +59,7 @@ class Query {
         return QueryManager.instance().execute(element, new Query(s, arg1, arg2, arg3))
     }
 
-    def execute(Ref element) {
+    def execute(def element) {
        return QueryManager.instance().execute(element, this)
     }
 

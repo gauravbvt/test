@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.Channels
 import org.apache.log4j.Logger
+import org.apache.wicket.model.IModel
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,7 +40,7 @@ class QueryManager implements PropertyChangeListener {
         ]
     }
 
-    def execute(Ref element, Query query) {
+    def execute(def element, Query query) {
         QueryExecution execution = new QueryExecution(target: element, query: query)
         def results = fromCache(execution)
         if (!results) {
@@ -72,12 +73,28 @@ class QueryManager implements PropertyChangeListener {
        return dependencies.containsKey(execution.query.name)
     }
 
-    def executeQuery(Ref element, Query query) {
-        Referenceable referenceable = element.deref()
+    def executeQuery(def element, Query query) {
+        def target = element
+        if (Ref.class.isAssignableFrom(element.class)) {
+            target = element.deref()
+        }
         String name = query.name
-        def args = query.arguments
-        def results = referenceable.metaClass.invokeMethod(referenceable, name, args)
+        def args = processArguments(query.arguments)
+        def results = target.metaClass.invokeMethod(target, name, args)
         return results
+    }
+
+    Object[] processArguments(List arguments) {
+        List args = []
+        arguments.each {arg ->
+            if (arg instanceof IModel) {
+                args.add(arg.getObject())
+            }
+            else {
+                args.add(arg)
+            }
+        }
+        return args as Object[]
     }
 
     void propertyChange(PropertyChangeEvent evt) {

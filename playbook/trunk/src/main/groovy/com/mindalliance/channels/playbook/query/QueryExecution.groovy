@@ -11,13 +11,8 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class QueryExecution {
 
-    Ref target
+    def target
     Query query
-
-    def execute() {
-        def results = target.invokeMethod(query.name, query.arguments)
-        return results
-    }
 
     boolean equals(Object obj) {
         if (!obj instanceof QueryExecution) return false
