@@ -24,7 +24,7 @@ class EventType extends ElementType {
         impliedEventTypes.each {eventType ->
             topics.addAll(eventType.topics)
         }
-        List<Ref> sortedTopics = topics as List
-        return sortedTopics.sort {x, y -> x.name < y.name}
+        List<String> sortedTopics = topics as List
+        return sortedTopics.sort()
     }
 }

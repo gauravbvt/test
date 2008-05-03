@@ -57,6 +57,11 @@ class Model  extends IfmElement {
         return elements
     }
 
+    List<Ref> findAllTypes(String typeType) {
+        String propName = RefUtils.decapitalize("${typeType}s")
+        return this."$propName"
+    }
+
     Ref findType(String typeType, String name) {
         String typeName = RefUtils.decapitalize(typeType)
         Ref namedType = this."${typeName}s".find {type -> type.name == name}

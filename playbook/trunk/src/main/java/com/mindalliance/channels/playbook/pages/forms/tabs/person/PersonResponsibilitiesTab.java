@@ -8,7 +8,9 @@ import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -40,8 +42,9 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
 
     protected void load() {
         super.load();
-        List<Ref> allPositions = getProject().findAllResourcesOfType("Position");
-        positionTree = new DynamicFilterTree("positions", new RefPropertyModel(getElement(), "positions"), new Model((Serializable) allPositions)) {
+        // List<Ref> allPositions = getProject().findAllResourcesOfType("Position");
+        positionTree = new DynamicFilterTree("positions", new RefPropertyModel(getElement(), "positions"),
+                                             new RefQueryModel(getProject(), new Query("findAllResourcesOfType", "Position"))) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = positionTree.getNewSelections();
                 RefUtils.set(getElement(), "positions", newSelections);

@@ -11,6 +11,8 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -59,23 +61,8 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
 
     protected void load() {
         super.load();
-        channels = (Channels) PlaybookApplication.current().getChannels().deref();
         // Users
-        List<Ref> allUsers = channels.findUsersNotInProject(getElement());
-        usersTree = new DynamicFilterTree("users", new Model(new ArrayList<Ref>()), new Model((Serializable) allUsers), true) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> newSelections = usersTree.getNewSelections();
-                if (newSelections.size() > 0) {
-                    selectedUser = newSelections.get(0);
-                } else {
-                    selectedUser = null;
-                }
-                addParticipationButton.setEnabled(selectedUser != null);
-                target.addComponent(addParticipationButton);
-            }
-
-        };
-        addReplaceable(usersTree);
+        loadUsersTree();
         // Add participation
         addParticipationButton = new Button("addParticipation");
         addParticipationButton.setEnabled(false);
@@ -117,6 +104,7 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
                         selectedParticipation = null;
                         target.addComponent(participationsDiv);
                         updateParticipationDiv(target);
+                        resetUsers(target);
                     }
                 };
                 item.add(participationDelete);
@@ -130,6 +118,24 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
         participationDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         addReplaceable(participationDiv);
     }
+    private void loadUsersTree() {
+        usersTree = new DynamicFilterTree("users", new Model(new ArrayList<Ref>()),
+                                         new RefQueryModel(Channels.instance(), new Query("findUsersNotInProject", getElement())),
+                                         true) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                List<Ref> newSelections = usersTree.getNewSelections();
+                if (newSelections.size() > 0) {
+                    selectedUser = newSelections.get(0);
+                } else {
+                    selectedUser = null;
+                }
+                addParticipationButton.setEnabled(selectedUser != null);
+                target.addComponent(addParticipationButton);
+            }
+
+        };
+        addReplaceable(usersTree);
+    }
 
     private void loadParticipationDiv() {
         AjaxLink userLink = new AjaxLink("userLink") {
@@ -140,13 +146,15 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
         participationDiv.addOrReplace(userLink);
         Label userLabel = new Label("user", new RefPropertyModel(selectedParticipation, "user.userId"));
         userLink.addOrReplace(userLabel);
-        List<Ref> allPersons = getProject().findAllResourcesOfType("Person");
         List<Ref> personsSelection = new ArrayList<Ref>();
         if (selectedParticipation != null) {
             Ref person = (Ref) RefUtils.get(selectedParticipation, "person");
             if (person != null) personsSelection.add(person);
         }
-        personsTree = new DynamicFilterTree("persons", new Model((Serializable) personsSelection), new Model((Serializable) allPersons), true) {
+        // List<Ref> allPersons = getProject().findAllResourcesOfType("Person");
+        personsTree = new DynamicFilterTree("persons", new Model((Serializable) personsSelection),
+                                             new RefQueryModel(getProject(), new Query("findAllResourcesOfType", "Person")),
+                                             true) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = personsTree.getNewSelections();
                 if (newSelections.size() > 0) {
@@ -175,7 +183,7 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
         selectedParticipation = newParticipation.persist();
         addOtherElement(selectedParticipation); // let the owner getElement() form about this new persisted element
         RefUtils.add(getElement(), "participations", selectedParticipation);
-        resetUsersTree(target);
+        resetUsers(target);
         target.addComponent(participationsDiv);
         updateParticipationDiv(target);
     }
@@ -191,12 +199,10 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
 
     }
 
-    private void resetUsersTree(AjaxRequestTarget target) {
-        List<Ref> allUsers = channels.findUsersNotInProject(getElement());
-        usersTree.detach();
-        usersTree.setChoices(new Model((Serializable) allUsers));
-        usersTree.setSelections(new Model(new ArrayList<Ref>()));
+    private void resetUsers(AjaxRequestTarget target) {
         selectedUser = null;
+        // usersTree.setSelections(new Model(new ArrayList<Ref>()));
+        loadUsersTree(); // replace current users tree since it won't reset itself -- TODO -- fix this
         addParticipationButton.setEnabled(false);
         target.addComponent(addParticipationButton);
         target.addComponent(usersTree);

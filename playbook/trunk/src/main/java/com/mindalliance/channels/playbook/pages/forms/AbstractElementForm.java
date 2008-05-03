@@ -7,8 +7,11 @@ import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
+import com.mindalliance.channels.playbook.ifm.Channels;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -78,6 +81,42 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         otherElement.begin(); // make editable
         otherElements.add(otherElement);
     }
+
+    public AbstractElementForm getTopElementPanel() {
+        return this;
+    }
+
+    public boolean isProjectPanel() {
+        return false;
+    }
+
+    public boolean isModelPanel() {
+        return false;
+    }
+
+    public boolean isPlaybookPanel() {
+        return false;
+    }
+
+    public Project getProject() {
+        throw new RuntimeException("No project identified to this panel");
+    }
+
+    public Model getIfmModel() {
+        throw new RuntimeException("No IFM model identified to this panel");
+    }
+
+    public Playbook getPlaybook() {
+        throw new RuntimeException("No playbook identified to this panel");
+    }
+
+    public Ref getScope() {
+        if (isProjectPanel()) return getProject().getReference();
+        if (isModelPanel()) return getIfmModel().getReference();
+        if (isPlaybookPanel()) return getPlaybook().getReference();
+        return Channels.instance().getReference();
+    }
+
 
     // end ElementPanel
 

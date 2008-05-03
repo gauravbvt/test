@@ -17,7 +17,5 @@ abstract public class AbstractProjectElementFormTab extends AbstractFormTab {
         super(id, elementForm);
     }
 
-    protected Project getProject() {
-        return ((AbstractProjectElementForm)elementForm).getProject();
-    }
+   // Nothing for now
 }

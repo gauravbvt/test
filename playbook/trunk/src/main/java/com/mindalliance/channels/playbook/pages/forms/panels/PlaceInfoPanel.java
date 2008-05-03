@@ -1,13 +1,14 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.info.PlaceInfo;
 import com.mindalliance.channels.playbook.ifm.info.PlaceItem;
-import com.mindalliance.channels.playbook.ifm.model.PlaceType;
 import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -64,15 +65,16 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
 
             protected void populateItem(Item item) {
                 final PlaceItem placeItem = (PlaceItem) item.getModelObject();
-                List<String> placeTypeNameChoices = placeTypeNameChoicesFor(placeItem);
                 // Add place item placeType dropdown
-                final String placeTypeName = (String) RefUtils.get(placeItem, "placeType.name");
-                // TODO -- use RefChoiceRenderer("name","id")
-                final DropDownChoice placeTypeChoice = new DropDownChoice("placeType", new Model(placeTypeName), placeTypeNameChoices);
+                final Ref placeType = (Ref) RefUtils.get(placeItem, "placeType");
+                List<Ref> placeTypeChoices = placeTypeChoicesFor(placeItem);
+                final DropDownChoice placeTypeChoice = new DropDownChoice("placeType",
+                                                                           new Model(placeType),
+                                                                           placeTypeChoices,
+                                                                           new RefChoiceRenderer("name", "id"));
                 placeTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {
-                        String newPlaceTypeName = placeTypeChoice.getModelObjectAsString();
-                        Ref placeType = project.findElementTypeNamed("PlaceType", newPlaceTypeName);
+                        Ref placeType = (Ref)placeTypeChoice.getModelObject();
                         placeItem.setPlaceType(placeType);
                         // remove all place items downstream, if any
                         List<PlaceItem> placeItems = placeInfo.getPlaceItems();
@@ -101,9 +103,8 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
         addReplaceable(placeItemsDiv);
     }
 
-    private List<String> placeTypeNameChoicesFor(PlaceItem placeItem) {
+    private List<Ref> placeTypeChoicesFor(PlaceItem placeItem) {
         List<Ref> placeTypes;
-        List<String> choices = new ArrayList<String>();
         List<PlaceItem> placeItems = placeInfo.getPlaceItems();
         int index = placeItems.indexOf(placeItem);
         List<Ref> priorPlaceTypes = new ArrayList<Ref>();
@@ -120,14 +121,11 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
             if (priorIndex >= 0) priorPlaceTypes.add(placeItems.get(priorIndex).getPlaceType());
         }
         if (priorPlaceTypes == null || priorPlaceTypes.isEmpty()) {
-            placeTypes = project.findAllTypes("PlaceType");
+            placeTypes = (List<Ref>)Query.execute(getProject(), "findAllTypes", "PlaceType");
         } else {
-            placeTypes = project.findAlltypesNarrowingAny(priorPlaceTypes);
+            placeTypes = (List<Ref>)Query.execute(getProject(),"findAllTypesNarrowingAny", priorPlaceTypes);
         }
-        for (Ref placeType : placeTypes) {
-            choices.add((String) RefUtils.get(placeType, "name"));
-        }
-        return choices;
+        return placeTypes;
     }
 
     // case 1 - no place items set and there is at least one defined PlaceType in a model
@@ -135,10 +133,10 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
     private boolean moreNarrowingPossible() {
         List<PlaceItem> placeItems = placeInfo.getPlaceItems();
         if (placeItems.size() == 0) {
-            return project.atleastOnePlaceTypeDefined();
+            return (Boolean)Query.execute(getProject(),"atleastOnePlaceTypeDefined");
         } else {
             PlaceItem lastPlaceItem = placeItems.get(placeItems.size() - 1);
-            return !placeTypeNameChoicesFor(lastPlaceItem).isEmpty();
+            return !placeTypeChoicesFor(lastPlaceItem).isEmpty();
         }
     }
 

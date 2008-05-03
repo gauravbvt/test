@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -16,7 +16,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.io.Serializable;
 
 /**
@@ -52,8 +51,9 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
                                                                        new RefPropertyModel(getElement(), propPath + ".eventSpec.eventTypes")));
         eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, topicChoicesModel);
         addReplaceable(eoisPanel);
-        List<Ref> allOrganizationTypes = project.findAllTypes("OrganizationType");
-        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"), new Model((Serializable) allOrganizationTypes)) {
+        // List<Ref> allOrganizationTypes = project.findAllTypes("OrganizationType");
+        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"),
+                                                     new RefQueryModel(getScope(), new Query("findAllTypes", "OrganizationType"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = credibleSourcesTree.getNewSelections();
                 RefUtils.set(informationTemplate, "organizationTypes", newSelections);
@@ -71,7 +71,7 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
         }
     }
 
-    public List<String> findAllTopicChoices(List<Ref> eventTypes) {  // TODO -- make cacheable
-        return EventType.findAllTopicsIn( eventTypes);
+    public List<String> findAllTopicChoices(List<Ref> eventTypes) {
+        return (List<String>)Query.execute(EventType.class, "findAllTopicsIn", eventTypes);
     }
 }

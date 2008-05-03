@@ -1,10 +1,8 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.info.LocationInfo;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 /**

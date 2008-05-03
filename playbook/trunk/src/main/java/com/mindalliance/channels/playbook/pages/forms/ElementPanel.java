@@ -1,6 +1,9 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
@@ -15,4 +18,12 @@ public interface ElementPanel {
     Ref getElement();
     void elementChanged(String propPath, AjaxRequestTarget target);
     void addOtherElement(Ref otherElement);
+    AbstractElementForm getTopElementPanel();
+    boolean isProjectPanel();
+    boolean isModelPanel();
+    boolean isPlaybookPanel();
+    Project getProject();
+    Model getIfmModel();
+    Playbook getPlaybook();
+    Ref getScope(); // either Channels.instance(), a Project, an IFM Model or a Playbook
 }

@@ -19,6 +19,8 @@ import org.apache.wicket.model.IModel
  */
 class QueryManager implements PropertyChangeListener {
 
+    static private final boolean WARN_NO_CACHING = true
+
     static private QueryManager instance
     private Map cache = [:] // {queryExecution -> results}*        // TODO -- use OSCache
     private Set dirty = new HashSet() // names of "dirty" queries
@@ -34,9 +36,16 @@ class QueryManager implements PropertyChangeListener {
 
     static void initializeDependencies() {
         dependencies = [
-                findAllTypes: [[Model.class]],
+                findAllTypes: [[Model.class],[Project.class, 'models'], [Channels.class, 'models']],
+                findAllTypesNarrowingAny: [[Model.class],[Project.class, 'models'], [Channels.class, 'models']],
+                findAllPlaceNames: [[Project.class, 'places']],
+                atleastOnePlaceTypeDefined: [[Project.class, 'places']],
                 findAResource: [[Project.class]],
-                findProjectNamed: [[Channels.class, 'projects']]
+                allResourcesExcept: [[Project.class]],
+                findAllResourcesOfType: [[Project.class]],
+                findProjectNamed: [[Channels.class, 'projects']],
+                findAllApplicableRelationshipTypes: [[Model.class, 'relationshipTypes']],
+                findUsersNotInProject: [[Channels.class, 'users'], [Project.class, 'participations']]
         ]
     }
 
@@ -57,7 +66,7 @@ class QueryManager implements PropertyChangeListener {
             results = cache[execution]
         }
         else {
-            Logger.getLogger(this.class).warn("Query ${execution.query.name} is not yet cacheable (add it to dependencies)")
+            if (WARN_NO_CACHING) Logger.getLogger(this.class).warn("Query ${execution.query.name} is not yet cacheable (add it to dependencies)")
         }
         return results
     }

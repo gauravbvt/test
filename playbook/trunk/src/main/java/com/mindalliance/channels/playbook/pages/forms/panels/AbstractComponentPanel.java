@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms;
+package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -12,6 +12,10 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -27,7 +31,6 @@ import java.util.ArrayList;
 abstract public class AbstractComponentPanel extends Panel implements ElementPanel {
 
     protected boolean readOnly = false;
-    protected Project project;
     protected ElementPanel parentPanel;     // element containing the component to be edited
     protected String propPath; // path to the element's property which value is the component to be edited
     WebMarkupContainer div;
@@ -58,6 +61,38 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
         parentPanel.addOtherElement(otherElement);
     }
 
+    public AbstractElementForm getTopElementPanel() {
+        return parentPanel.getTopElementPanel();
+    }
+
+    public boolean isProjectPanel() {
+        return parentPanel.isProjectPanel();
+    }
+
+    public boolean isModelPanel() {
+        return parentPanel.isModelPanel();
+    }
+
+    public boolean isPlaybookPanel() {
+        return parentPanel.isModelPanel();
+    }
+
+    public Project getProject() {
+        return parentPanel.getProject();
+    }
+
+    public Model getIfmModel() {
+        return parentPanel.getIfmModel();
+    }
+
+    public Playbook getPlaybook() {
+        return parentPanel.getPlaybook();
+    }
+
+    public Ref getScope() {
+        return parentPanel.getScope();
+    }
+
     // end ElementPanel
 
     public boolean isReadOnly() {
@@ -78,7 +113,6 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
     }
 
     protected void load() {
-      project = (Project)Project.current().deref();
       div = new WebMarkupContainer("component");
       div.setOutputMarkupId(true);
       add(div);

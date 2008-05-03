@@ -14,11 +14,6 @@ class Query implements Serializable {
     String name
     List arguments
 
-    Query(String s, List args) {
-        name = s
-        arguments = args
-    }
-
     Query(String s) {
         name = s
         arguments = []
@@ -39,28 +34,28 @@ class Query implements Serializable {
         arguments = [arg1, arg2, arg3]
     }
 
-    static Object execute(Ref element, String s) {
-        return QueryManager.instance().execute(element, new Query(s))
+    static Object execute(Object object, String s) {
+        return QueryManager.instance().execute(object, new Query(s))
     }
 
-    static Object execute(Ref element, String s, List args) {
-        return QueryManager.instance().execute(element, new Query(s, args))
+    static Object execute(Object object, String s, List args) {
+        return QueryManager.instance().execute(object, new Query(s, args))
     }
 
-    static Object execute(Ref element, String s, Object arg) {
-        return QueryManager.instance().execute(element, new Query(s, arg))
+    static Object execute(Object object, String s, Object arg) {
+        return QueryManager.instance().execute(object, new Query(s, arg))
     }
 
-    static Object execute(Ref element, String s, Object arg1, Object arg2) {
-        return QueryManager.instance().execute(element, new Query(s, arg1, arg2))
+    static Object execute(Object object, String s, Object arg1, Object arg2) {
+        return QueryManager.instance().execute(object, new Query(s, arg1, arg2))
     }
 
-    static Object execute(Ref element, String s, Object arg1, Object arg2, Object arg3) {
-        return QueryManager.instance().execute(element, new Query(s, arg1, arg2, arg3))
+    static Object execute(Object object, String s, Object arg1, Object arg2, Object arg3) {
+        return QueryManager.instance().execute(object, new Query(s, arg1, arg2, arg3))
     }
 
-    def execute(Object element) {
-       return QueryManager.instance().execute(element, this)
+    def execute(Object object) {
+       return QueryManager.instance().execute(object, this)
     }
 
     String toString() {

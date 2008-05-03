@@ -6,13 +6,13 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -92,6 +92,39 @@ public class AbstractFormTab extends Panel implements ElementPanel {
 
     public void addOtherElement(Ref otherElement) {
         elementForm.addOtherElement(otherElement);
+    }
+
+    public AbstractElementForm getTopElementPanel() {
+        return elementForm;
+    }
+
+    public boolean isProjectPanel() {
+        return elementForm.isProjectPanel();
+    }
+
+    public boolean isModelPanel() {
+        return elementForm.isModelPanel();
+    }
+
+    public boolean isPlaybookPanel() {
+        return elementForm.isPlaybookPanel();
+    }
+
+    public Project getProject() {
+        return elementForm.getProject();
+    }
+
+    public Model getIfmModel() {
+        return elementForm.getIfmModel();
+    }
+
+    public Playbook getPlaybook() {
+        return elementForm.getPlaybook();
+    }
+
+    public Ref getScope() // either Channels.instance(), a Project, an IFM Model or a Playbook
+    {
+        return elementForm.getScope();
     }
 
     // end ElementPanel

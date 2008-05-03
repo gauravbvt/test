@@ -1,15 +1,16 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.AbstractComponentPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.ifm.info.LocationSpec;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.Model;
@@ -45,8 +46,9 @@ public class LocationSpecPanel extends AbstractComponentPanel {
             locationSpec = new LocationSpec();
             RefUtils.set(getElement(), propPath, locationSpec);
         }
-        List<Ref> allPlaceTypes = project.findAllTypes("PlaceType");
-        placeTypeTree = new DynamicFilterTree("placeTypes", new RefPropertyModel(locationSpec, "placeTypes"), new Model((Serializable)allPlaceTypes)) {
+        // List<Ref> allPlaceTypes = project.findAllTypes("PlaceType");
+        placeTypeTree = new DynamicFilterTree("placeTypes", new RefPropertyModel(locationSpec, "placeTypes"),
+                        new RefQueryModel(getScope(), new Query("findAllTypes", "PlaceType"))) {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = placeTypeTree.getNewSelections();
                 RefUtils.set(locationSpec, "placeTypes", newSelections);
@@ -55,11 +57,13 @@ public class LocationSpecPanel extends AbstractComponentPanel {
         };
         addReplaceable(placeTypeTree);
         // area type
-        List<Ref> allAreaTypes = project.findAllTypes("AreaType");
-        areaTypeChoice = new DropDownChoice("areaType", new Model((Serializable)RefUtils.get(locationSpec, "areaType.name")), allAreaTypes, new RefChoiceRenderer("name", "id"));
+        // List<Ref> allAreaTypes = project.findAllTypes("AreaType");
+        areaTypeChoice = new DropDownChoice("areaType", new Model((Serializable)RefUtils.get(locationSpec, "areaType")),
+                                             new RefQueryModel(getScope(), new Query("findAllTypes","AreaType")),
+                                             new RefChoiceRenderer("name", "id"));
         areaTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
-                Ref selectedAreaType = (Ref)areaTypeChoice.getModelObject();;
+                Ref selectedAreaType = (Ref)areaTypeChoice.getModelObject();
                 locationSpec.setAreaType(selectedAreaType);
                 elementChanged(propPath, target);
             }

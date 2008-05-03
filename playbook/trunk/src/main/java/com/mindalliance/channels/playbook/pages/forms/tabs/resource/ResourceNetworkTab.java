@@ -11,7 +11,9 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
+import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -63,8 +65,9 @@ public class ResourceNetworkTab extends AbstractProjectElementFormTab {
     }
 
     private void loadResources() {
-        List<Ref> allResources = getProject().allResourcesExcept(getElement());
-        resourcesTree = new DynamicFilterTree("resources", new Model(new ArrayList<Ref>()), new Model((Serializable)allResources), true) {
+       // List<Ref> allResources = getProject().allResourcesExcept(getElement());
+        resourcesTree = new DynamicFilterTree("resources", new Model(new ArrayList<Ref>()),
+                                                           new RefQueryModel(getProject(), new Query("allResourcesExcept", getElement())), true) {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = resourcesTree.getNewSelections();
                 if (newSelections.size() > 0) {
@@ -135,10 +138,10 @@ public class ResourceNetworkTab extends AbstractProjectElementFormTab {
                 Label relationshipResourceNameLabel = new Label("relationshipResourceName", new RefPropertyModel(relationship, "withResource.name"));
                 relationshipResourceLink.add(relationshipResourceNameLabel);
                 Ref relationshipType = relationship.getRelationshipType();
-                List<Ref> relationshipTypes = getProject().findAllApplicableRelationshipTypes(getElement(), withResource);
+                // List<Ref> relationshipTypes = getProject().findAllApplicableRelationshipTypes(getElement(), withResource);
                 final DropDownChoice relationshipTypesChoice = new DropDownChoice("relationshipType");  // DojoHtmlSuggestionList buggy: no event after Ajax redisplay
                 relationshipTypesChoice.setModel(new Model(relationshipType));
-                relationshipTypesChoice.setChoices(relationshipTypes);
+                relationshipTypesChoice.setChoices(new RefQueryModel(getProject(), new Query("findAllApplicableRelationshipTypes", getElement(), withResource)));
                 relationshipTypesChoice.setChoiceRenderer(new RefChoiceRenderer("name", "id"));
                 relationshipTypesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate(AjaxRequestTarget target) {

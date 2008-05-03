@@ -19,7 +19,6 @@ class Channels extends IfmElement {
     List<Ref> projects = []
     List<Ref> users = []
     List<Ref> models = []
-    List<Ref> environments = []
 
     @Override
     protected List transientProperties() {
@@ -76,6 +75,14 @@ class Channels extends IfmElement {
                 if (it.isAnalyst(user)) result.add(it)
             }
         return result
+    }
+
+    List<Ref> findAllTypes(String typeType) {
+        List<Ref> types = []
+        models.each {model ->
+            types.addAll(model.findAllTypes(typeType))
+        }
+        return types
     }
 
     static List<Class<?>> adminClasses() {

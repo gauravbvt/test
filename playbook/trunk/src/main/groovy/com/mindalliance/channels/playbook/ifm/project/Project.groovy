@@ -130,9 +130,8 @@ class Project extends IfmElement implements Describable {
 
     List<Ref> findAllTypes(String typeType) {
         List<Ref> types = []
-        String propName = RefUtils.decapitalize("${typeType}s")
         models.each {model ->
-            types.addAll(model."$propName")
+            types.addAll(model.findAllTypes(typeType))
         }
         return types
     }
@@ -162,7 +161,7 @@ class Project extends IfmElement implements Describable {
         return types
     }
 
-    List<Ref> findAlltypesNarrowingAny(List<Ref> elementTypes) {
+    List<Ref> findAllTypesNarrowingAny(List<Ref> elementTypes) {
        Set<Ref> types = new HashSet<Ref>()
        elementTypes.each {elementType ->
            types.addAll(this.findAllTypesNarrowing(elementType))
