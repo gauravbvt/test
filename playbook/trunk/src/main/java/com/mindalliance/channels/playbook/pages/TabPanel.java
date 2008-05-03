@@ -37,6 +37,9 @@ public class TabPanel extends Panel {
 
                 assert( !ps.getMemory().getChanges().contains( tabRef ));
                 assert( !ps.getMemory().getBegun().containsKey( tabRef ));
+                assert( getTab().getFilter() == f );
+                assert( getFilter() == f );
+                assert( f.getChildAt( 0 ).getParent() == f );
                 TabPanel.this.detach();
             }
 

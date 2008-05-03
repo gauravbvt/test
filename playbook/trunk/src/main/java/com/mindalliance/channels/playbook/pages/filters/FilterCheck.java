@@ -16,7 +16,7 @@ public class FilterCheck extends Panel {
 
         final AjaxCheckBox checkBox = new AjaxCheckBox( "filter-check", model ){
             protected void onUpdate( AjaxRequestTarget target ) {
-                onFilterSelect( target, (Filter) FilterCheck.this.getModelObject() );
+                onFilterSelect( target );
             }
         };
         checkBox.setOutputMarkupId( true );
@@ -24,6 +24,6 @@ public class FilterCheck extends Panel {
         add( checkBox );
     }
 
-    public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {        
+    public void onFilterSelect( AjaxRequestTarget target ) {        
     }
 }

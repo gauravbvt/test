@@ -18,6 +18,7 @@ public class FilterTree extends Tree {
 
     protected FilterTree( String id ) {
         super( id );
+        setOutputMarkupId( true );
     }
 
     public FilterTree( String id, Filter filter ) {
@@ -27,19 +28,18 @@ public class FilterTree extends Tree {
     public FilterTree( String id, Filter filter, boolean singleSelect ) {
         super( id, new DefaultTreeModel( filter ) );
         this.singleSelect = singleSelect;
+        setOutputMarkupId( true );
     }
 
     public void onFilterSelect( AjaxRequestTarget target, Filter filter ){}
     public void onExpandCollapse( AjaxRequestTarget target, Filter filter ){}
 
     public Filter getFilter() {
-        DefaultTreeModel tm = (DefaultTreeModel) getModelObject();
-        return (Filter) tm.getRoot();
+        return (Filter) getTreeModel().getRoot();
     }
 
     public void setFilter( Filter filter ) {
-        DefaultTreeModel tm = (DefaultTreeModel) getModelObject();
-        tm.setRoot( filter );
+        getTreeModel().setRoot( filter );
     }
 
     @Override
@@ -51,13 +51,22 @@ public class FilterTree extends Tree {
     @Override
     protected void populateTreeItem( final WebMarkupContainer item, int level ) {
         super.populateTreeItem( item, level );
-        Filter f = (Filter) item.getModelObject();
+        final Filter f = (Filter) item.getModelObject();
+        assert( f.getChildCount() == 0 || f.getChildAt( 0 ).getParent() == f );
         String selector = isSingleSelect()? "uniqueSelection" : "forceSelected" ;
         if ( !isSingleSelect() || f.getChildCount() == 0 )
             item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ){
-                public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
-                    target.addComponent( FilterTree.this );
-                    FilterTree.this.onFilterSelect( target, filter );
+                public void onFilterSelect( AjaxRequestTarget target ) {
+                    DefaultTreeModel tm = getTreeModel();
+                    tm.nodeStructureChanged( f );
+
+                    Filter parent = f.getParent();
+                    while ( parent != null ) {
+                        tm.nodeChanged( parent );
+                        parent = parent.getParent();
+                    }
+                    updateTree( target );
+                    FilterTree.this.onFilterSelect( target, f );
                 }
             } );
         else
@@ -78,10 +87,13 @@ public class FilterTree extends Tree {
         super.onJunctionLinkClicked( target, node );
         Filter f = (Filter) node;
         f.setExpanded( getTreeState().isNodeExpanded( node ) );
-        DefaultTreeModel model = (DefaultTreeModel) getModelObject();
-        model.nodeStructureChanged( node );
+        getTreeModel().nodeStructureChanged( node );
         updateTree( target );
         onExpandCollapse( target, f );
+    }
+
+    private DefaultTreeModel getTreeModel() {
+        return (DefaultTreeModel) getModelObject();
     }
 
     public boolean isSingleSelect() {

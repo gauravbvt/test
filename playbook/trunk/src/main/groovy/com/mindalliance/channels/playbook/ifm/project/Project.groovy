@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.project.environment.Agreement
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 import com.mindalliance.channels.playbook.ifm.project.environment.Place
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource
@@ -49,6 +50,7 @@ class Project extends IfmElement implements Describable {
     Referenceable doAddToField( String field, Object object ) {
         object.project = this.reference
         switch ( object.deref() ) {
+            case Agreement: super.doAddToField( "agreements", object ); break;
             case Participation: super.doAddToField( "participations", object ); break;
             case Position:
             case Person:
@@ -64,6 +66,7 @@ class Project extends IfmElement implements Describable {
 
     Referenceable doRemoveFromField( String field, Object object ) {
         switch ( object.deref() ) {
+            case Agreement: super.doRemoveFromField( "agreements", object ); break;
             case Participation: super.doRemoveFromField( "participations", object ); break;
             case Position:
             case Person:
@@ -218,6 +221,7 @@ class Project extends IfmElement implements Describable {
          // When changing this method, don't forget to update the next one...
          List<Class<?>> result = new ArrayList<Class<?>>()
          result.addAll( Resource.contentClasses() )
+         result.addAll( [ Agreement.class ] )
          result.addAll( [ Policy.class ] )
          result.addAll( [ Place.class ] )
          result.addAll( [ Playbook.class ] )
@@ -228,6 +232,7 @@ class Project extends IfmElement implements Describable {
      void addContents( List<Ref> result ) {
          playbooks.each { it.addContents( result ) }
          result.addAll( resources )
+         result.addAll( agreements )
          result.addAll( policies )
          result.addAll( places )
          result.addAll( playbooks )

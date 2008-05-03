@@ -40,6 +40,7 @@ public class FilterPanel extends Panel {
                 applyButton.setEnabled( true );
                 saveButton.setEnabled( true );
                 target.addComponent( applyButton );
+                assert( FilterPanel.this.getFilter() == getFilter() );
             }
 
             public void onExpandCollapse( AjaxRequestTarget target, Filter filter ) {
