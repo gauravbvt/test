@@ -17,5 +17,4 @@ abstract public class AbstractProjectElementFormTab extends AbstractFormTab {
         super(id, elementForm);
     }
 
-   // Nothing for now
 }

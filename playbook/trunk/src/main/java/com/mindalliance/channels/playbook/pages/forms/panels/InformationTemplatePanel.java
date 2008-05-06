@@ -46,8 +46,8 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
         }
         eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".eventSpec", readOnly, feedback);
         addReplaceable(eventSpecPanel);
-        RefQueryModel topicChoicesModel = new RefQueryModel(this,
-                                                            new Query("findAllTopicChoices",
+        RefQueryModel topicChoicesModel = new RefQueryModel(EventType.class,
+                                                            new Query("findAllTopicsIn",
                                                                        new RefPropertyModel(getElement(), propPath + ".eventSpec.eventTypes")));
         eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, topicChoicesModel);
         addReplaceable(eoisPanel);
@@ -71,7 +71,4 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
         }
     }
 
-    public List<String> findAllTopicChoices(List<Ref> eventTypes) {
-        return (List<String>)Query.execute(EventType.class, "findAllTopicsIn", eventTypes);
-    }
 }

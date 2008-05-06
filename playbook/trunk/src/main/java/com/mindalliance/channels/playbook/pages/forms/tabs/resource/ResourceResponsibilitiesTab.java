@@ -41,7 +41,6 @@ public class ResourceResponsibilitiesTab extends AbstractProjectElementFormTab {
                 RefUtils.set(getElement(), "roles", newSelections);
              }
         };
-        roleTree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
         addReplaceable(roleTree);
     }
 }

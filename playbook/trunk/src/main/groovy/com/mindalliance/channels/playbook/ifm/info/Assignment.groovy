@@ -15,7 +15,7 @@ import org.joda.time.Duration
 // and possiblylimited to some location
 class Assignment extends BeanImpl {
 
-    List<InformationTemplate> n2kInformation // what must be known if knowable -- required
-    List<Ref> mustDoTaskTypes // what to do, if anything, when all the above is known (any of)
-    Timing maxReactionTime = new Timing(amount:0) // maximum reaction time -- defaults to "zero"
+    List<InformationTemplate> informationTemplates // what must be known if knowable -- required
+    List<Ref> taskTypes // what to do, if anything, when all the above is known (any of)
+    Timing timing = new Timing(amount:0) // maximum reaction time -- defaults to "zero"
 }

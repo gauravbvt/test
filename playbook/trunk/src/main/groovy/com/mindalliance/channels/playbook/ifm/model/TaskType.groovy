@@ -13,10 +13,8 @@ import com.mindalliance.channels.playbook.ifm.info.Assignment
 */
 class TaskType extends ElementType {
 
-    List<Ref> purposeTypes = [] // categorizing the purpose(s) of the task
-    List<InformationTemplate> newInformations = [] // kinds of information usually needed
-    List<InformationTemplate> neededInformations = [] // kinds of information usually produced
-    List<EventType> causedEventTypes = [] // types of events that is expected to be caused by this type of task and thus become observable
-    List<Assignment> newAssignments = []// kinds of assignments usually produced
+    List<Ref> purposeTypes = [] // purposes of the task
+    List<InformationTemplate> informationTemplates = [] // information needs
+    List<EventType> eventTypes = [] // types of events that can be caused (and thus become observable)
 
 }

@@ -30,6 +30,7 @@ public class AbstractFormTab extends Panel implements ElementPanel {
 
     protected static final boolean READONLY = true;
     protected static final boolean EDITABLE = false;
+    protected static final boolean SINGLE_SELECTION = true;
 
     protected FeedbackPanel feedback;
     protected AbstractElementForm elementForm;

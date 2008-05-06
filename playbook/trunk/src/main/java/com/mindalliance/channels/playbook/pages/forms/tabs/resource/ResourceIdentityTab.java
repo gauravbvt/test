@@ -53,7 +53,7 @@ public class ResourceIdentityTab extends AbstractProjectElementFormTab {
         addInputField(nameField);
         // description
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
-        addInputField(descriptionField);
+        addInputField(descriptionField); 
         // contact infos
         contactInfosDiv = new WebMarkupContainer("contactInfosDiv");
         addReplaceable(contactInfosDiv);

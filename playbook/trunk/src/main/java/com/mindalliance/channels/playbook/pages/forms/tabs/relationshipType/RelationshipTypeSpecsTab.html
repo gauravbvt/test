@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <fieldset>
+        <legend>Resources</legend>
+        <table>
+            <tr>
+                <td>
+                    <select wicket:id="fromKind"><option>[Resource kind]</option></select>
+                </td>
+                <td>
+                    <span wicket:id="name">[Relationship type name]</span>
+                </td>
+                <td>
+                     <select wicket:id="toKind"><option>[Resource kind]</option></select>
+                 </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>Properties</legend>
+        <ul>
+            <li>
+                <label><span>Inverse:</span><span wicket:id="inverse">[Inverse relationship type tree]</span></label>
+            </li>
+            <li><label><span>Transitive:</span><input wicket:id="transitive" type = "checkbox"/></label></li>
+        </ul>
+    </fieldset>
+</wicket:extend>
+</body>
+</html>

@@ -12,11 +12,11 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
  * Date: Apr 24, 2008
  * Time: 8:41:45 AM
  */
-public class ResourceLocalityTab extends AbstractFormTab {
+public class ResourceLocationTab extends AbstractFormTab {
 
     protected LocationPanel locationPanel;
 
-    public ResourceLocalityTab(String id, AbstractElementForm elementForm) {
+    public ResourceLocationTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 

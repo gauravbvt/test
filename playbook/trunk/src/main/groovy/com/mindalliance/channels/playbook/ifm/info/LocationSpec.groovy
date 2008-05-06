@@ -12,12 +12,12 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class LocationSpec extends BeanImpl {
 
-    static final List<String> relations = ['within', 'encompassing', 'adjoining']
+    static final List<String> relations = ['contained', 'encompassing', 'adjoining']
 
     // String relativeTo // one of {location, jurisdiction} of context resource -- required
     Ref areaType // what kind of area -- defaults to location's area type of relative-to if set, else required
     List<Ref> placeTypes = [] // what kinds of places
-    String relation = 'within'// one of relations
+    String relation = 'contained'// one of relations
 
     @Override
     List<String> transientProperties() {

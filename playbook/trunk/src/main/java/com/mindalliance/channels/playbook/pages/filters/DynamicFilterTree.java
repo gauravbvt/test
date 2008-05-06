@@ -93,4 +93,18 @@ public class DynamicFilterTree extends FilterTree {
         return results;
     }
 
+    public Ref getNewSelection() {
+        Ref result = null;
+        if (this.isSingleSelect()) {
+           List<Ref> results = getNewSelections();
+           if (results.size() > 0) {
+               result = results.get(0) ;
+           }
+        }
+        else {
+            throw new RuntimeException("Not in single selection mode");
+        }
+        return result;
+    }
+
 }

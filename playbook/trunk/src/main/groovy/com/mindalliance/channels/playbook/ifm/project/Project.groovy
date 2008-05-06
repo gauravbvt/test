@@ -80,6 +80,8 @@ class Project extends IfmElement implements Describable {
         }
     }
 
+    // Queries
+
     Ref findResourceNamed(String type, String name) {
         Ref res = (Ref) resources.find {res ->
             res.type == type && res.name.equalsIgnoreCase(name)
@@ -205,6 +207,22 @@ class Project extends IfmElement implements Describable {
         return ags ?: []
     }
 
+    // Find all organizations that are not
+    // - the organization
+    // -  a sub organization of some organization
+    // - a parent organization (transitively) of the organization
+    List<Ref> findCandidateSubOrganizationsFor(Ref organization) {
+        List<Ref> organizations = Query.execute(this, 'findAllResourcesOfType', 'Organization')
+        List<Ref> candidates = organizations.findAll {org ->
+            org != organization &&
+            !org.parent &&
+            !organization.allParents().contains(org)
+        }
+        return candidates
+    }
+
+    // End queries
+
     Boolean isParticipant( Ref user ) {
          return findParticipation( user ) != null ;
      }
@@ -213,6 +231,7 @@ class Project extends IfmElement implements Describable {
          Ref ref = findParticipation(user)
          return ref != null && ref.manager ;
      }
+
 
      /**
       * Return project contents that a participant can add.

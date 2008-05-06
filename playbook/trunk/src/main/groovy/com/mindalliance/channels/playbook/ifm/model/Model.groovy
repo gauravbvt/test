@@ -40,7 +40,12 @@ class Model  extends IfmElement {
 
     Referenceable doAddToField( String field, Object object ) {
         object.model = this.reference
-        super.doAddToField(field, object )
+        super.doAddToField(field, object)
+    }
+
+    Referenceable doRemoveFromField( String field, Object object ) {
+       object.model = null
+       super.doRemoveFromField(field, object)
     }
 
 

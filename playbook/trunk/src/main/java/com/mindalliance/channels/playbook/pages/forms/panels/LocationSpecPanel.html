@@ -7,17 +7,23 @@
         lang="en">
 <body>
 <wicket:extend>
-    <ul>
-        <li>
-            <label><span>at a</span><span wicket:id="placeTypes">[place types]</span></label>
-        </li>
-        <li>
-            <label><span>in some </span><select wicket:id="areaType"><option>[area type]</option></select></label>
-        </li>
-        <li>
-            <label><span>that is </span><select wicket:id="relation"><option>[relation]</option></select><span> the context location</span></label>
-        </li>
-    </ul>
+    <table>
+        <tr>
+            <td>
+                <span>at some</span><span wicket:id="placeTypes">[place types]</span>
+            </td>
+            <td>
+                <span>in some </span><select wicket:id="relation">
+                    <option>[relation]</option>
+                </select>
+            </td>
+            <td>
+                <select wicket:id="areaType">
+                    <option>[area type]</option>
+                </select>
+            </td>
+        </tr>
+    </table>
 </wicket:extend>
 </body>
 </html>

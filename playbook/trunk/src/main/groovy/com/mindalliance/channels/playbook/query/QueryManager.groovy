@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.Channels
 import org.apache.log4j.Logger
 import org.apache.wicket.model.IModel
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,16 +37,25 @@ class QueryManager implements PropertyChangeListener {
 
     static void initializeDependencies() {
         dependencies = [
+                // Channels, Project, Model
                 findAllTypes: [[Model.class],[Project.class, 'models'], [Channels.class, 'models']],
                 findAllTypesNarrowingAny: [[Model.class],[Project.class, 'models'], [Channels.class, 'models']],
                 findAllPlaceNames: [[Project.class, 'places']],
+                // Project
                 atleastOnePlaceTypeDefined: [[Project.class, 'places']],
                 findAResource: [[Project.class]],
                 allResourcesExcept: [[Project.class]],
                 findAllResourcesOfType: [[Project.class]],
-                findProjectNamed: [[Channels.class, 'projects']],
                 findAllApplicableRelationshipTypes: [[Model.class, 'relationshipTypes']],
-                findUsersNotInProject: [[Channels.class, 'users'], [Project.class, 'participations']]
+                findCandidateSubOrganizationsFor: [[Project.class, 'organizations'], [Organization.class, 'subOrganizations', 'parent']],
+                // Channels
+                findProjectNamed: [[Channels.class, 'projects']],
+                findUsersNotInProject: [[Channels.class, 'users'], [Project.class, 'participations']],
+                // Organization
+                findAllPositions: [[Organization.class, 'positions', 'parent']],
+                findAllSubOrganizations: [[Organization.class, 'subOrganizations','parent']],
+                // Position
+                findOtherPositionsInOrganization: [[Organization.class, 'positions']]
         ]
     }
 

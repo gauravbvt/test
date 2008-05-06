@@ -42,4 +42,8 @@ class Timing extends BeanImpl {
             default: throw new IllegalArgumentException("Unknown time unit $s")
         }
     }
+
+    String toString() {
+        return "$amount $unit"
+    }
 }
