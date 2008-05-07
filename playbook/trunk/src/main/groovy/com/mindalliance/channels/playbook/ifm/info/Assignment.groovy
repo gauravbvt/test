@@ -18,4 +18,28 @@ class Assignment extends BeanImpl {
     List<InformationTemplate> informationTemplates // what must be known if knowable -- required
     List<Ref> taskTypes // what to do, if anything, when all the above is known (any of)
     Timing timing = new Timing(amount:0) // maximum reaction time -- defaults to "zero"
+
+    String toString() {
+        "${this.informationTemplatesSummary()} ${this.taskTypesSummary()}"
+    }
+
+    private String informationTemplatesSummary() {
+        String summary = ""
+        if (informationTemplates) {
+            summary += "Must know of "
+            informationTemplates.each {info ->
+                info.eventSpec.eventTypes.each {et -> summary += "${et.name} " }
+            }
+        }
+        return "${summary}. "
+    }
+
+    private String taskTypesSummary() {
+        String summary = ""
+        if (taskTypes) {
+            summary += " Must do "
+            taskTypes.each {tt -> summary += "${tt.name} " }
+        }
+        return "${summary}. "
+    }
 }

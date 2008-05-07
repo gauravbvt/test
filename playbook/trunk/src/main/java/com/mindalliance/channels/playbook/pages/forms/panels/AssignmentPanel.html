@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Must know</legend>
+                    <div wicket:id="informationTemplatesDiv">
+                        <ul>
+                            <li wicket:id="informationTemplates">
+                                <a wicket:id="infoTemplateLink" href="#"><span
+                                        wicket:id="infoTemplateString">[infoTemplate string]</span></a>
+                                <a wicket:id="infoTemplateDelete" href="#"><span>(delete)</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button wicket:id="newInformationTemplate">Add new</button>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Must do</legend>
+                    <span wicket:id="taskTypes">[task types tree]</span>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span wicket:id="timing">[timing template]</span>
+            </td>
+        </tr>
+    </table>
+    <div wicket:id="infoTemplateDiv">
+        <fieldset>
+            <legend>Information template</legend>
+            <span wicket:id="informationTemplate">[Information template]</span>
+        </fieldset>
+    </div>
+</wicket:extend>
+</body>
+</html>

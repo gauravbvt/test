@@ -11,12 +11,17 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class RelationshipType extends ElementType {
 
-    static final List<String> RESOURCE_KINDS = ["Resource","Organization", "Person", "Position", "System"]
+    static final List<String> resourceKinds = ["Resource","Organization", "Person", "Position", "System"]
     
     String fromKind = "Resource"  // one of: Resource, Person, Organization, System, Position
     String toKind = "Resource"
-    Ref inverseRelationship
     boolean transitive = false
+
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['resourceKinds'])
+    }
+
 
     boolean matchesTo(Ref resource) {
         return toKind == "Resource" || resource.type == toKind

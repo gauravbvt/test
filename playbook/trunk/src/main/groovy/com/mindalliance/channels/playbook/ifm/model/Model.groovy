@@ -62,6 +62,8 @@ class Model  extends IfmElement {
         return elements
     }
 
+    // Queries
+
     List<Ref> findAllTypes(String typeType) {
         String propName = RefUtils.decapitalize("${typeType}s")
         return this."$propName"
@@ -72,6 +74,17 @@ class Model  extends IfmElement {
         Ref namedType = this."${typeName}s".find {type -> type.name == name}
         return namedType
     }
+
+    List<String> findInheritedTopics(Ref eventType) {
+        List<String> inheritedTopics = []
+        eventType.narrowdTypes.each {nt ->
+            inheritedTopics.addAll(nt.topics)
+            inheritedTopics.addAll(findInheritedTopics(nt))
+        }
+        return inheritedTopics
+    }
+
+    // End queries
 
     Boolean isAnalyst( Ref user ) {
         return participations.find { it.user.id == user.id } != null

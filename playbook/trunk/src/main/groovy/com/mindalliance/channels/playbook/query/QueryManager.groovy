@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
 import org.apache.log4j.Logger
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
+import com.mindalliance.channels.playbook.ifm.model.EventType
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -51,6 +52,9 @@ class QueryManager implements PropertyChangeListener {
                 // Channels
                 findProjectNamed: [[Channels.class, 'projects']],
                 findUsersNotInProject: [[Channels.class, 'users'], [Project.class, 'participations']],
+                // Model
+                findInheritedTopics: [[Model.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
+                findNarrowedEventTypeWithTopic: [[Model.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
                 // Organization
                 findAllPositions: [[Organization.class, 'positions', 'parent']],
                 findAllSubOrganizations: [[Organization.class, 'subOrganizations','parent']],

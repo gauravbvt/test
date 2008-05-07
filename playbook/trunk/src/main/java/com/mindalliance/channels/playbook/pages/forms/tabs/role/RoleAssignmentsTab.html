@@ -5,53 +5,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>Assignments</legend>
-                    <span wicket:id="assignments">[Assignments]</span>
-                </fieldset>
-            </td>
-            <td>
-                <button wicket:id="showAssignment">&gt;&gt;</button>
-            </td>
-            <td>
-                <fieldset>
-                    <legend>Assignment</legend>
-                    <table>
-                        <tr>
-                            <td>
-                                <fieldset>
-                                    <legend>Must know</legend>
-                                    <ul>
-                                        <li wicket:id="informationTemplates">
-                                            <a wicket:id="infoTemplateLink" href="#"><span
-                                                    wicket:id="infoTemplateString">[infoTemplate string]</span></a>
-                                            <a wicket:id="infoTemplateDelete" href="#"><span>(delete)</span></a>
-                                        </li>
-                                    </ul>
-                                </fieldset>
-                                <fieldset>
-                                    <legend>Must do</legend>
-                                    <span wicket:id="taskTypes">[task types tree]</span>
-                                </fieldset>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <span wicket:id="timing">[timing template]</span>
-                            </td>
-                        </tr>
-                    </table>
-                </fieldset>
-            </td>
-        </tr>
-    </table>
-    <fieldset>
-        <legend>Information template</legend>
-        <span wicket:id="informationTemplate">[Information template]</span>
-    </fieldset>
+    <div wicket:id="assignmentsDiv">
+        <ul wicket:id="assignments">
+            <li>
+                <a wicket:id="assignmentLink" href="#"><span wicket:id="assignmentString">[assignment string]</span></a>
+                <a wicket:id="deleteAssignment" href="#">(delete)</a>
+            </li>
+        </ul>
+    </div>
+    <button wicket:id="newAssignment">New responsibility</button>
+    <div wicket:id="assignmentDiv">
+        <fieldset>
+            <legend>Responsibility</legend>
+            <span wicket:id="assignment">[assignment panel]</span>
+        </fieldset>
+    </div>
 </wicket:extend>
 </body>
 </html>

@@ -14,6 +14,8 @@ class EventType extends ElementType {
 
     List<String> topics = [] // what can usually be known about elements of this type
 
+    // Queries
+
     static List<String> findAllTopicsIn(List<Ref> eventTypes) {
         Set<String> topics = new HashSet<String>()
         Set<Ref> impliedEventTypes = new HashSet<Ref>()
@@ -26,5 +28,18 @@ class EventType extends ElementType {
         }
         List<String> sortedTopics = topics as List
         return sortedTopics.sort()
+    }
+
+    Ref findNarrowedEventTypeWithTopic(String topic) {
+        Ref narrowedEventType = null
+        narrowedTypes.any {nt ->
+            if (nt.topics.contains(topic)) {
+                narrowedEventType = nt
+            }
+            else {
+                narrowedEventType = nt.findNarrowedEventTypeWithTopic(topic)
+            }
+        }
+        return narrowedEventType
     }
 }
