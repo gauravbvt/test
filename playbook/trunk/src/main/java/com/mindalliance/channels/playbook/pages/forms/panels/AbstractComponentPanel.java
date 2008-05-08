@@ -6,19 +6,15 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -81,7 +77,7 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
         return parentPanel.getProject();
     }
 
-    public Model getIfmModel() {
+    public PlaybookModel getIfmModel() {
         return parentPanel.getIfmModel();
     }
 

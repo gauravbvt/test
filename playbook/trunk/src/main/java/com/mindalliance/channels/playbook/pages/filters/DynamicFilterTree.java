@@ -17,12 +17,12 @@ public class DynamicFilterTree extends FilterTree {
     private IModel selections;
     private transient Filter computedFilter;
 
-    public DynamicFilterTree( String id, IModel selections, IModel choices ) {
-        this( id, selections, choices, false );
+    public DynamicFilterTree(String id, IModel selections, IModel choices) {
+        this(id, selections, choices, false);
     }
 
-    public DynamicFilterTree( String id, IModel selections, IModel choices, boolean singleSelect ) {
-        super( id, createFilter( selections, choices ), singleSelect );
+    public DynamicFilterTree(String id, IModel selections, IModel choices, boolean singleSelect) {
+        super(id, createFilter(selections, choices), singleSelect);
         this.computedFilter = super.getFilter();
         this.selections = selections;
         this.choices = choices;
@@ -34,44 +34,57 @@ public class DynamicFilterTree extends FilterTree {
         selections.detach();
     }
 
-    static public Filter createFilter( IModel selections, IModel choices ) {
+    static public Filter createFilter(IModel selections, IModel choices) {
         List<Ref> choiceList = (List<Ref>) choices.getObject();
-        List<Ref> selectionList = (List<Ref>) selections.getObject();
-
-        Filter filter = new RootFilter( new RefContainer( choiceList ), false );
-        filter.setShowingLeaves( true );
+        // Modified by JF
+        List<Ref> selectionList;
+        Object selectionObject = selections.getObject();
+        if (selectionObject == null) {
+            selectionList = new ArrayList<Ref>(); 
+        }
+        else if (selectionObject instanceof Ref) {
+            selectionList = new ArrayList<Ref>();
+            selectionList.add((Ref)selectionObject);
+        }
+        else {
+            selectionList = (List<Ref>)selectionObject;
+        }
+        selections.setObject(selectionList);
+        // end modified
+        Filter filter = new RootFilter(new RefContainer(choiceList), false);
+        filter.setShowingLeaves(true);
 
         // Set selections
-        for ( Ref sel : selectionList ) {
-            if ( choiceList.contains( sel ) )
-                filter.selectFirstMatch( sel );
+        for (Ref sel : selectionList) {
+            if (choiceList.contains(sel))
+                filter.selectFirstMatch(sel);
         }
         filter.simplify();
-        filter.setExpanded( true );
+        filter.setExpanded(true);
         return filter;
     }
 
     public synchronized Filter getFilter() {
-        if ( computedFilter == null ) {
-            setFilter( createFilter( selections, choices ) );
+        if (computedFilter == null) {
+            setFilter(createFilter(selections, choices));
         }
 
         return computedFilter;
     }
 
-    public synchronized void setFilter( Filter filter ) {
+    public synchronized void setFilter(Filter filter) {
         computedFilter = filter;
-        super.setFilter( filter );
+        super.setFilter(filter);
     }
 
     public IModel getChoices() {
         return choices;
     }
 
-    public void setChoices( IModel choices ) {
+    public void setChoices(IModel choices) {
         detachModels();
         this.choices = choices;
-        setFilter( createFilter( selections, choices ) );
+        setFilter(createFilter(selections, choices));
         super.invalidateAll();
     }
 
@@ -79,16 +92,16 @@ public class DynamicFilterTree extends FilterTree {
         return selections;
     }
 
-    public void setSelections( IModel selections ) {
+    public void setSelections(IModel selections) {
         this.selections = selections;
 //        updateTree();
     }
 
     public List<Ref> getNewSelections() {
         List<Ref> results = new ArrayList<Ref>();
-        RefContainer data = new RefContainer( (List<Ref>) choices.getObject() );
-        for ( Ref ref : new FilteredContainer( data, getFilter(), false ) )
-            results.add( ref );
+        RefContainer data = new RefContainer((List<Ref>) choices.getObject());
+        for (Ref ref : new FilteredContainer(data, getFilter(), false))
+            results.add(ref);
 
         return results;
     }
@@ -96,12 +109,11 @@ public class DynamicFilterTree extends FilterTree {
     public Ref getNewSelection() {
         Ref result = null;
         if (this.isSingleSelect()) {
-           List<Ref> results = getNewSelections();
-           if (results.size() > 0) {
-               result = results.get(0) ;
-           }
-        }
-        else {
+            List<Ref> results = getNewSelections();
+            if (results.size() > 0) {
+                result = results.get(0);
+            }
+        } else {
             throw new RuntimeException("Not in single selection mode");
         }
         return result;

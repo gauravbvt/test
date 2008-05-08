@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 
 import java.util.List;
@@ -115,7 +115,7 @@ public class AbstractFormTab extends Panel implements ElementPanel {
         return elementForm.getProject();
     }
 
-    public Model getIfmModel() {
+    public PlaybookModel getIfmModel() {
         return elementForm.getIfmModel();
     }
 
@@ -123,7 +123,7 @@ public class AbstractFormTab extends Panel implements ElementPanel {
         return elementForm.getPlaybook();
     }
 
-    public Ref getScope() // either Channels.instance(), a Project, an IFM Model or a Playbook
+    public Ref getScope() // either Channels.instance(), a Project, an IFM PlaybookModel or a Playbook
     {
         return elementForm.getScope();
     }

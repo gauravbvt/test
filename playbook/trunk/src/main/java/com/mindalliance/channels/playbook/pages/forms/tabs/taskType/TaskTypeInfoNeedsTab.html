@@ -5,7 +5,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <!-- TODO-->
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>About</legend>
+                    <span wicket:id="eventTypes">[Event types]</span>
+                </fieldset>
+            </td>
+            <td>
+                <button wicket:id="addInfoTemplate">Add information need</button>
+            </td>
+            <td>
+               <fieldset>
+                   <legend>Information needs</legend>
+                   <div wicket:id="infoTemplatesDiv">
+                       <ul wicket:id="informationTemplates">
+                           <li>
+                               <a wicket:id="infoTemplateLink" href = "#"><span wicket:id="infoTemplateString">[Info template string]</span></a>
+                               <a wicket:id="deleteInfoTemplateLink">(delete)</a>
+                           </li>
+                       </ul>
+                   </div>
+               </fieldset>
+            </td>
+        </tr>
+    </table>
+    <div wicket:id="infoTemplateDiv">
+        <fieldset>
+            <legend>Information need</legend>
+            <span wicket:id="informationTemplate">[Information template panel]</span>
+        </fieldset>
+    </div>
 </wicket:extend>
 </body>
 </html>

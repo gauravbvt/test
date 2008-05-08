@@ -7,7 +7,6 @@ import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.Channels;
-import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
@@ -151,9 +150,8 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
             Ref person = (Ref) RefUtils.get(selectedParticipation, "person");
             if (person != null) personsSelection.add(person);
         }
-        // List<Ref> allPersons = getProject().findAllResourcesOfType("Person");
         personsTree = new DynamicFilterTree("persons", new Model((Serializable) personsSelection),
-                                             new RefQueryModel(getProject(), new Query("findAllResourcesOfType", "Person")),
+                                             new RefPropertyModel(getProject(), "persons"),
                                              true) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = personsTree.getNewSelections();
@@ -201,7 +199,7 @@ public class ProjectParticipationTab extends AbstractProjectElementFormTab {
 
     private void resetUsers(AjaxRequestTarget target) {
         selectedUser = null;
-        // usersTree.setSelections(new Model(new ArrayList<Ref>()));
+        // usersTree.setSelections(new PlaybookModel(new ArrayList<Ref>()));
         loadUsersTree(); // replace current users tree since it won't reset itself -- TODO -- fix this
         addParticipationButton.setEnabled(false);
         target.addComponent(addParticipationButton);

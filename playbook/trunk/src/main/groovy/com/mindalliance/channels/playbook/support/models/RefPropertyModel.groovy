@@ -16,17 +16,25 @@ class RefPropertyModel implements IChainingModel {
 
     def target
     String expression
+    def defaultObject
 
     RefPropertyModel(def obj, String expression) {
         target = obj
         this.expression = expression
     }
 
+    RefPropertyModel(def obj, String expression, def defaultObject) {
+        this(obj, expression)
+        this.defaultObject = defaultObject
+    }
+
     @Override
     Object getObject() {
         def holder = getPropertyHolder()
         try {
-            return RefUtils.get(holder, expression)
+            def object =  RefUtils.get(holder, expression)
+            if (object == null && defaultObject) object = defaultObject
+            return object
         }
         catch (Exception e) {
             Logger.getLogger(this.class.name).warn("Failed to eval expression $expression on $target", e)

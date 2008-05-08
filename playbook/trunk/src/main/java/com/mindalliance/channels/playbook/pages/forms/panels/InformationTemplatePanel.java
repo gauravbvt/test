@@ -66,7 +66,7 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
     @Override
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         super.elementChanged(propPath, target);
-        if (propPath.endsWith(".eventSpec")) {
+        if (propPath.endsWith(".eventSpec.eventTypes")) {
             target.addComponent(eoisPanel);
         }
     }

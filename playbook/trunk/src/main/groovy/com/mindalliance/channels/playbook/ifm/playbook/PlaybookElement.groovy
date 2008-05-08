@@ -14,4 +14,8 @@ class PlaybookElement extends IfmElement {
 
     Ref playbook
 
+    boolean isPlaybookElement() {
+        return true
+    }
+
 }

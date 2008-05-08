@@ -14,4 +14,12 @@ class ProjectElement extends IfmElement {
 
     Ref project
 
+    boolean isProjectElement() {
+        return true
+    }
+
+    boolean isResource() {
+        return false
+    }
+
 }

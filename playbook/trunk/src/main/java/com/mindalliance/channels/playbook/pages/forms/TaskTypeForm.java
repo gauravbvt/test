@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.modelElement.ModelElementBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeIntentTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeInfoNeedsTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;

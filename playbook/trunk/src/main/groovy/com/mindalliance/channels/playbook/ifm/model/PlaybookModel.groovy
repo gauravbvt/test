@@ -6,13 +6,13 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Apr 17, 2008
-* Time: 1:09:50 PM
-*/
-class Model  extends IfmElement {
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Apr 17, 2008
+ * Time: 1:09:50 PM
+ */
+class PlaybookModel extends IfmElement {
 
     String name
     Boolean shared
@@ -38,14 +38,15 @@ class Model  extends IfmElement {
         return super.transientProperties() + ['elements']
     }
 
-    Referenceable doAddToField( String field, Object object ) {
+
+    Referenceable doAddToField(String field, Object object) {
         object.model = this.reference
         super.doAddToField(field, object)
     }
 
-    Referenceable doRemoveFromField( String field, Object object ) {
-       object.model = null
-       super.doRemoveFromField(field, object)
+    Referenceable doRemoveFromField(String field, Object object) {
+        object.model = null
+        super.doRemoveFromField(field, object)
     }
 
 
@@ -86,7 +87,7 @@ class Model  extends IfmElement {
 
     // End queries
 
-    Boolean isAnalyst( Ref user ) {
+    Boolean isAnalyst(Ref user) {
         return participations.find { it.user.id == user.id } != null
     }
 
@@ -95,21 +96,21 @@ class Model  extends IfmElement {
      */
     static List<Class<?>> contentClasses() {
         [
-          Domain.class, EventType.class, IssueType.class,
-          PlaceType.class, AreaType.class, OrganizationType.class,
-          PurposeType.class, RelationshipType.class,
-          Role.class, TaskType.class
+                Domain.class, EventType.class, IssueType.class,
+                PlaceType.class, AreaType.class, OrganizationType.class,
+                PurposeType.class, RelationshipType.class,
+                Role.class, TaskType.class
         ]
     }
 
-    void addContents( List<Ref> results ) {
-        results.addAll( elements );
+    void addContents(List<Ref> results) {
+        results.addAll(elements);
     }
 
     /**
      * Return what system objects an analyst can create.
      */
     static List<Class<?>> analystClasses() {
-        [ Model.class ]
+        [PlaybookModel.class]
     }
 }

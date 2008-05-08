@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.filters;
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.Participation;
 import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
@@ -66,10 +66,10 @@ public class UserScope extends BeanImpl implements Container {
             if ( u.getAdmin() )
                 result.addAll( Channels.adminClasses() );
             if ( u.getAnalyst() ) {
-                result.addAll( Model.analystClasses() );
+                result.addAll( PlaybookModel.analystClasses() );
                 boolean hasModels = getApplication().findModelsForUser( u.getReference() ).size() > 0;
                 if ( hasModels )
-                    result.addAll( Model.contentClasses() );
+                    result.addAll( PlaybookModel.contentClasses() );
             }
             if ( u.getManager() )
                 result.addAll( Project.managerClasses() );
@@ -97,7 +97,7 @@ public class UserScope extends BeanImpl implements Container {
 
             if ( u.getAnalyst() ) {
                 for ( Ref mRef: (List<Ref>) getChannels().getModels() ) {
-                    Model m = (Model) mRef.deref();
+                    PlaybookModel m = (PlaybookModel) mRef.deref();
                     if ( m.isAnalyst( uRef ) ) {
                         result.add( mRef );
                         m.addContents( result );
@@ -173,10 +173,10 @@ public class UserScope extends BeanImpl implements Container {
                 && Project.contentClasses().contains( objectClass ) )
             return project.getReference();
 
-        final Model model = getModel();
+        final PlaybookModel model = getModel();
         if ( model != null
                 && model.isAnalyst( uRef )
-                && Model.contentClasses().contains( objectClass ) )
+                && PlaybookModel.contentClasses().contains( objectClass ) )
             return model.getReference();
 
         throw new RuntimeException(
@@ -245,9 +245,9 @@ public class UserScope extends BeanImpl implements Container {
         return project == null ? null : (Project) project.deref();
     }
 
-    private Model getModel() {
+    private PlaybookModel getModel() {
         final Ref model = getSession().getModel();
-        return model == null ? null : (Model) model.deref();
+        return model == null ? null : (PlaybookModel) model.deref();
     }
 
     private Participation getParticipation() {

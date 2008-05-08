@@ -49,7 +49,7 @@ public class EventSpecPanel extends AbstractComponentPanel {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = eventTypesTree.getNewSelections();
                 RefUtils.set(eventSpec, "eventTypes", newSelections);
-                elementChanged(propPath, target);
+                elementChanged(propPath+".eventTypes", target);
             }
         };
         addReplaceable(eventTypesTree);
@@ -63,7 +63,7 @@ public class EventSpecPanel extends AbstractComponentPanel {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = relationshipTypesTree.getNewSelections();
                 RefUtils.set(eventSpec, "relationshipTypes", newSelections);
-                elementChanged(propPath, target);
+                elementChanged(propPath+".relationshipTypes", target);
             }
         };
         addReplaceable(relationshipTypesTree);

@@ -41,7 +41,7 @@ public class OrganizationIdentityTab extends ResourceIdentityTab {
             }
         };
         addReplaceable(organizationTypesTree);
-        subOrganizationsTree = new DynamicFilterTree("organizationTypes",
+        subOrganizationsTree = new DynamicFilterTree("subOrganizations",
                                                       new RefPropertyModel(getElement(), "subOrganizations"),
                                                       new RefQueryModel(getProject(),
                                                                         new Query("findCandidateSubOrganizationsFor", getElement())
@@ -49,9 +49,10 @@ public class OrganizationIdentityTab extends ResourceIdentityTab {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selectedOrganizations = subOrganizationsTree.getNewSelections();
                 for (Ref sub : selectedOrganizations) {
-                    RefUtils.add(getElement(), "organizationTypes", sub);
+                    RefUtils.add(getElement(), "subOrganizations", sub);
                 }
             }
         };
+        addReplaceable(subOrganizationsTree);
     }
 }

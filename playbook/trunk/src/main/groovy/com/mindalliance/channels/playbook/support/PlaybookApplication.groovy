@@ -20,7 +20,7 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Position
 import com.mindalliance.channels.playbook.ifm.project.resources.System
 import com.mindalliance.channels.playbook.ifm.model.Domain
 import com.mindalliance.channels.playbook.ifm.model.OrganizationType
-import com.mindalliance.channels.playbook.ifm.model.Model
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.model.AreaType
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
@@ -34,6 +34,7 @@ import com.mindalliance.channels.playbook.ifm.model.Role
 import com.mindalliance.channels.playbook.ifm.model.MediumType
 import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -85,7 +86,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     void initializeContents() {
         Channels channels = new Channels(about: "About Channels")
         channels.makeRoot()
-        Model m = initializeDefaultModel(channels)
+        PlaybookModel m = initializeDefaultModel(channels)
 
         User admin = new User(userId: "admin", name: 'Administrator', password: "admin")
         admin.admin = true
@@ -121,12 +122,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         p.addPlaybook(store(new Playbook(name: "Playbook C", description: "This is Playbook C")))
 
         Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
-        p.addResource(joe)
+        p.addPerson(joe)
 
         Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
         Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
-        p.addResource(acme)
-        p.addResource(nadir)
+        p.addOrganization(acme)
+        p.addOrganization(nadir)
 
         Ref pos1 = store(new Position(name: 'Position 1'))
         Ref pos2 = store(new Position(name: 'Position 2'))
@@ -134,6 +135,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         acme.addPosition(pos1)
         acme.addPosition(pos2)
         acme.addPosition(pos3)
+        acme.addSystem(store(new System(name:'Hal 9000')))
         store(acme)
         Ref pos4 = store(new Position(name: 'Position 4'))
         Ref pos5 = store(new Position(name: 'Position 5'))
@@ -143,19 +145,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         joe.addPosition(pos1)
         joe.addPosition(pos4)
 
-        p.addPosition(pos1)
-        p.addPosition(pos2)
-        p.addPosition(pos3)
-        p.addPosition(pos4)
-        p.addPosition(pos5)
-
         Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
-        p.addResource(store(jane))
+        p.addPerson(store(jane))
 
         joe.addRelationship(new Relationship(withResource: jane.reference , relationshipType: m.findType("RelationshipType", "Immediate family")))
         store(joe)
-
-        p.addResource(store(new System()))
 
         Ref ag1 = store(new Agreement(fromResource: joe.reference, toResource: jane.reference))
         Ref ag2 = store(new Agreement(fromResource: joe.reference, toResource: acme.reference))
@@ -172,14 +166,17 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
                         user: user.getReference(),
                         project: p.getReference())))
 
+        Playbook pb = new Playbook(name:'default')
+        p.addPlaybook(store(pb))
+        
         channels.addProject(store(p))
         channels.addModel(store(m));
         store(channels)
     }
 
-    Model initializeDefaultModel(Channels channels) {
-        Model m = new Model(name: 'default')
-        // Model elements
+    PlaybookModel initializeDefaultModel(Channels channels) {
+        PlaybookModel m = new PlaybookModel(name: 'default')
+        // PlaybookModel elements
         AreaType globe = new AreaType(name: 'Globe')
         AreaType continent = new AreaType(name: 'Continent')
         continent.narrow(globe.reference)

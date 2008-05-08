@@ -17,7 +17,7 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 */
 class Resource extends ProjectElement implements Locatable, Describable {
 
-    String name = 'No name'
+    String name = ''
     String description = ''
     List<ContactInfo> contactInfos = []
     List<Ref> roles = []
@@ -30,6 +30,15 @@ class Resource extends ProjectElement implements Locatable, Describable {
         return (List<String>)(super.transientProperties() + ['agreements'])
     }
 
+    boolean isResource() {
+        return true
+    }
+
+    boolean isOrganizationResource() {
+        return false
+    }
+
+    
 
     String toString() { name }
 

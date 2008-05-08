@@ -20,6 +20,12 @@ class Person extends Resource {
         super.beforeStore()
     }
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['name']
+    }
+
+
 
     String getName() {
         return toString()

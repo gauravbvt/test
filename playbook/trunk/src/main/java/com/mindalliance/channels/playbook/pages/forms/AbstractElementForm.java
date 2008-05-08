@@ -9,7 +9,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.ifm.Channels;
 
@@ -102,7 +102,7 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         throw new RuntimeException("No project identified to this panel");
     }
 
-    public Model getIfmModel() {
+    public PlaybookModel getIfmModel() {
         throw new RuntimeException("No IFM model identified to this panel");
     }
 

@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ifm
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,9 +23,27 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
         this.db = root.db
     }
 
+    void addElement(IfmElement element) {
+        String type = element.type
+        String field = "${RefUtils.decapitalize(type)}s"
+        doAddToField(field, element)
+    }
+
     void changed() {
        super.changed()
        lastModified = new Date()
+    }
+
+    boolean isProjectElement() {
+        return false
+    }
+
+    boolean isModelElement() {
+        return false
+    }
+
+    boolean isPlaybookElement() {
+        return false
     }
 
 }

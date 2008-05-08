@@ -12,6 +12,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
+import java.util.ArrayList;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -41,7 +43,7 @@ public class SystemIdentityTab extends ResourceIdentityTab {
         accessField = new TextArea("access", new RefPropertyModel(getElement(), "access"));
         addInputField(accessField);
         adminPositionTree = new DynamicFilterTree("adminPosition", new RefPropertyModel(getElement(), "adminPosition"),
-                                                   new RefPropertyModel(getElement(), "organization.positions"), SINGLE_SELECTION) {
+                                                   new RefPropertyModel(getElement(), "organization.positions", new ArrayList<Ref>()), SINGLE_SELECTION) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                  Ref position = adminPositionTree.getNewSelection();
                  RefUtils.set(getElement(), "adminPosition", position);

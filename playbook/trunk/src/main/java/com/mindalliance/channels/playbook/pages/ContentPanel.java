@@ -277,7 +277,7 @@ public class ContentPanel extends Panel {
 //
 //		component.setOutputMarkupId(true);
 //
-//		cmBehavior.applyAttributes( component, menu, new Model(id) );
+//		cmBehavior.applyAttributes( component, menu, new PlaybookModel(id) );
 // 		component.add( cmBehavior );
 //    }
 

@@ -13,4 +13,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 class ModelElement extends IfmElement {
 
     Ref model
+
+    boolean isModelElement() {
+        return true
+    }
 }

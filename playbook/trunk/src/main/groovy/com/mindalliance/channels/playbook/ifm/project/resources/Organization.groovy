@@ -2,9 +2,9 @@ package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
-import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,6 +25,12 @@ class Organization extends Resource {
     void beforeStore() {
         super.beforeStore()
         if (jurisdiction) jurisdiction.detach()
+    }
+
+    void addElement(IfmElement element) {
+        String type = element.type
+        String field = "${RefUtils.decapitalize(type)}s"
+        doAddToField(field, element)
     }
 
     Referenceable doAddToField(String field, Object object) {
@@ -67,8 +73,8 @@ class Organization extends Resource {
         List<Ref> allPositions = []
         List<Ref> allSubs = findAllSubOrganizations()
         allSubs.each {sub -> allPositions.addAll(sub.positions)}
-        allSubs.addAll(positions)
-        return allSubs
+        allPositions.addAll(positions)
+        return allPositions
     }
 
 

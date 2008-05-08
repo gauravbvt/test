@@ -65,7 +65,6 @@ public class ResourceNetworkTab extends AbstractProjectElementFormTab {
     }
 
     private void loadResources() {
-       // List<Ref> allResources = getProject().allResourcesExcept(getElement());
         resourcesTree = new DynamicFilterTree("resources", new Model(new ArrayList<Ref>()),
                                                            new RefQueryModel(getProject(), new Query("allResourcesExcept", getElement())), true) {
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
@@ -185,9 +184,8 @@ public class ResourceNetworkTab extends AbstractProjectElementFormTab {
                         edit(agreement, target);
                     }
                 };
-                String s = agreement.deref().toString();
-                String resourceName = (String)RefUtils.get(agreement, "toResource.name");
-                Label agreementLabel = new Label("agreement", new Model("Will " + s + " " + resourceName));
+                String agreementString = agreement.deref().toString();
+                Label agreementLabel = new Label("agreement", new Model(agreementString));
                 agreementLink.add(agreementLabel);
                 AjaxLink removeAgreementLink = new AjaxLink("removeAgreement") {
                     public void onClick(AjaxRequestTarget target) {

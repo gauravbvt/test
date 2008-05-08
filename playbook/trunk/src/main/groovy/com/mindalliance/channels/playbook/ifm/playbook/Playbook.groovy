@@ -19,6 +19,11 @@ class Playbook extends ProjectElement implements Describable {
     String description = ''
     List<Ref> informationActs = []
 
+    void addElement(PlaybookElement element) {
+         doAddToField("informationActs", element)
+     }
+
+
     Referenceable doAddToField( String field, Object object ) {
         object.playbook = this.reference
         super.doAddToField("informationActs", object )

@@ -15,7 +15,7 @@ import org.apache.commons.collections.CollectionUtils
 class Position extends OrganizationResource {
 
     Location jurisdiction
-    List<Ref> managedPositions
+    List<Ref> managedPositions = []
 
     void beforeStore() {
         super.beforeStore()

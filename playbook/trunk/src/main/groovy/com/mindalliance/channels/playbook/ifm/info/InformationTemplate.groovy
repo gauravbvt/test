@@ -17,4 +17,14 @@ class InformationTemplate extends AbstractInformation {
     // Timing timeToLive = new Timing(msecs:0) // how long before this kind of information usually expires
     List<Ref> organizationTypes = [] // from whom is this kind of information credible
 
+    String toString() {
+        String s = "Information about "
+        if (eventSpec) {
+            eventSpec.eventTypes.each {et ->
+                s += "et.name,"
+            }
+        }
+        return s.substring(0, s.size()-2)
+    }
+
 }

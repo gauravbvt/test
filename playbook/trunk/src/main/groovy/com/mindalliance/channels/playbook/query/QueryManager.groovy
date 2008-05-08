@@ -4,13 +4,14 @@ import com.mindalliance.channels.playbook.ref.Ref
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ifm.model.Model
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.Channels
 import org.apache.log4j.Logger
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,23 +39,22 @@ class QueryManager implements PropertyChangeListener {
 
     static void initializeDependencies() {
         dependencies = [
-                // Channels, Project, Model
-                findAllTypes: [[Model.class],[Project.class, 'models'], [Channels.class, 'models']],
-                findAllTypesNarrowingAny: [[Model.class],[Project.class, 'models'], [Channels.class, 'models']],
+                // Channels, Project, PlaybookModel
+                findAllTypes: [[PlaybookModel.class],[Project.class, 'models'], [Channels.class, 'models']],
+                findAllTypesNarrowingAny: [[PlaybookModel.class],[Project.class, 'models'], [Channels.class, 'models']],
                 findAllPlaceNames: [[Project.class, 'places']],
                 // Project
                 atleastOnePlaceTypeDefined: [[Project.class, 'places']],
-                findAResource: [[Project.class]],
                 allResourcesExcept: [[Project.class]],
-                findAllResourcesOfType: [[Project.class]],
-                findAllApplicableRelationshipTypes: [[Model.class, 'relationshipTypes']],
+                findAllApplicableRelationshipTypes: [[PlaybookModel.class, 'relationshipTypes']],
                 findCandidateSubOrganizationsFor: [[Project.class, 'organizations'], [Organization.class, 'subOrganizations', 'parent']],
+                findAllPositionsAnywhere: [[Project.class, 'organizations'], [Organization.class, 'positions']],
                 // Channels
                 findProjectNamed: [[Channels.class, 'projects']],
                 findUsersNotInProject: [[Channels.class, 'users'], [Project.class, 'participations']],
-                // Model
-                findInheritedTopics: [[Model.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
-                findNarrowedEventTypeWithTopic: [[Model.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
+                // PlaybookModel
+                findInheritedTopics: [[PlaybookModel.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
+                findNarrowedEventTypeWithTopic: [[PlaybookModel.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
                 // Organization
                 findAllPositions: [[Organization.class, 'positions', 'parent']],
                 findAllSubOrganizations: [[Organization.class, 'subOrganizations','parent']],

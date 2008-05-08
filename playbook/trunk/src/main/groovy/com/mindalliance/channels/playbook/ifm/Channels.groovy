@@ -2,9 +2,10 @@ package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.model.Model
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -90,6 +91,6 @@ class Channels extends IfmElement {
     }
 
     static List<Class<?>> contentClasses() {
-        [ User.class, Project.class, Model.class ]
+        [ User.class, Project.class, PlaybookModel.class ]
     }
 }

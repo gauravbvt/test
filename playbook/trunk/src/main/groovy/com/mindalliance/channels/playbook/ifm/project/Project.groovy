@@ -2,23 +2,18 @@ package com.mindalliance.channels.playbook.ifm.project
 
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.IfmElement
-import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.model.Model
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.project.environment.Agreement
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 import com.mindalliance.channels.playbook.ifm.project.environment.Place
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource
-import com.mindalliance.channels.playbook.ifm.project.resources.Organization
-import com.mindalliance.channels.playbook.ifm.project.resources.Person
-import com.mindalliance.channels.playbook.ifm.project.resources.Position
-import com.mindalliance.channels.playbook.ifm.project.resources.System
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.Session
+import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -32,7 +27,8 @@ class Project extends IfmElement implements Describable {
     String name = 'Unnamed'
     String description = ''
     List<Ref> participations = []
-    List<Ref> resources = []
+    List<Ref> persons =[]
+    List<Ref> organizations = []
     List<Ref> places = []
     List<Ref> policies = []
     List<Ref> agreements = []
@@ -50,54 +46,47 @@ class Project extends IfmElement implements Describable {
     Referenceable doAddToField( String field, Object object ) {
         object.project = this.reference
         switch ( object.deref() ) {
-            case Agreement: super.doAddToField( "agreements", object ); break;
+            case Policy: super.doAddToField( "policies", object ); break;
+           /* case Agreement: super.doAddToField( "agreements", object ); break;
             case Participation: super.doAddToField( "participations", object ); break;
-            case Position:
+            // case Position:
             case Person:
-            case System:
+            // case System:
             case Organization:  super.doAddToField( "resources", object ); break;
             case Playbook:  super.doAddToField( "playbooks", object ); break;
-            case Model:  super.doAddToField( "models", object ); break;
-            case Place: super.doAddToField( "places", object ); break;
-            case Policy: super.doAddToField( "policies", object ); break;
+            case PlaybookModel:  super.doAddToField( "models", object ); break;
+            case Place: super.doAddToField( "places", object ); break;*/
             default: super.doAddToField( field, object );
         }
     }
 
     Referenceable doRemoveFromField( String field, Object object ) {
         switch ( object.deref() ) {
-            case Agreement: super.doRemoveFromField( "agreements", object ); break;
+            case Policy: super.doRemoveFromField( "policies", object ); break;
+            /*case Agreement: super.doRemoveFromField( "agreements", object ); break;
             case Participation: super.doRemoveFromField( "participations", object ); break;
-            case Position:
+            // case Position:
             case Person:
-            case System:
+            // case System:
             case Organization:  super.doRemoveFromField( "resources", object ); break;
             case Playbook:  super.doRemoveFromField( "playbooks", object ); break;
-            case Model:  super.doRemoveFromField( "models", object ); break;
-            case Place: super.doRemoveFromField( "places", object ); break;
-            case Policy: super.doRemoveFromField( "policies", object ); break;
+            case PlaybookModel:  super.doRemoveFromField( "models", object ); break;
+            case Place: super.doRemoveFromField( "places", object ); break;*/
             default: super.doRemoveFromField( field, object );
         }
     }
 
     // Queries
 
-    Ref findResourceNamed(String type, String name) {
-        Ref res = (Ref) resources.find {res ->
-            res.type == type && res.name.equalsIgnoreCase(name)
-        }
-        return res
-    }
-
-    Ref findAResource(String type) {
-        Ref res = (Ref)resources.find {res ->
-            res.type == type
-        }
-        return res
-    }
-
     List<Ref> allResourcesExcept(Ref resource) {
-        return resources.findAll {res -> res != resource }
+        List<Ref> resources = []
+        resources.addAll(persons.findAll {res -> res != resource })
+        resources.addAll(organizations.findAll {res -> res != resource })
+        organizations.each {org ->
+            resources.addAll(org.systems.findAll {res -> res != resource })
+            resources.addAll(org.positions.findAll {res -> res != resource })
+        }
+        return resources
     }
 
     Ref findPlaybookNamed(String type, String name) {
@@ -105,10 +94,6 @@ class Project extends IfmElement implements Describable {
             sc.type == type && sc.name.equalsIgnoreCase(name)
         }
         return res
-    }
-
-    List<Ref> findAllResourcesOfType(String type) {
-        return (List<Ref>) resources.findAll {res -> res.type == type}
     }
 
     Ref findParticipation(Ref user) {
@@ -212,13 +197,18 @@ class Project extends IfmElement implements Describable {
     // -  a sub organization of some organization
     // - a parent organization (transitively) of the organization
     List<Ref> findCandidateSubOrganizationsFor(Ref organization) {
-        List<Ref> organizations = Query.execute(this, 'findAllResourcesOfType', 'Organization')
         List<Ref> candidates = organizations.findAll {org ->
             org != organization &&
             !org.parent &&
             !organization.allParents().contains(org)
         }
         return candidates
+    }
+
+    List<Ref> findAllPositionsAnywhere() {
+        List<Ref> allPosition = []
+        organizations.each {org -> allPositions.addAll(org.positions) }
+        return allPositions
     }
 
     // End queries

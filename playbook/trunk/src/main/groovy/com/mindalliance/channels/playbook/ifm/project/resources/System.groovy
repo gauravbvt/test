@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 11:28:47 AM
 */
-class System extends Resource {
+class System extends OrganizationResource {
 
     Ref adminPosition
     String access = '' // access instructions

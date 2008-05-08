@@ -1,9 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.project.ProjectElement;
-import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.model.ModelElement;
 
 /**
@@ -21,8 +19,8 @@ abstract public class AbstractModelElementForm extends AbstractElementForm {
 
     // ElementPanel
 
-    public Model getIfmModel() {
-        return (Model)((ModelElement)element.deref()).getModel().deref();
+    public PlaybookModel getIfmModel() {
+        return (PlaybookModel)((ModelElement)element.deref()).getModel().deref();
     }
 
     // End ElementPanel

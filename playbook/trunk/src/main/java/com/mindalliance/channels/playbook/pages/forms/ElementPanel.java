@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.Model;
+import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -23,7 +23,7 @@ public interface ElementPanel {
     boolean isModelPanel();
     boolean isPlaybookPanel();
     Project getProject();
-    Model getIfmModel();
+    PlaybookModel getIfmModel();
     Playbook getPlaybook();
-    Ref getScope(); // either Channels.instance(), a Project, an IFM Model or a Playbook
+    Ref getScope(); // either Channels.instance(), a Project, an IFM PlaybookModel or a Playbook
 }

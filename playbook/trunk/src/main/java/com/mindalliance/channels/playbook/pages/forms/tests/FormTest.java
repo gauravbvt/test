@@ -12,24 +12,27 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.pages.FormPanel;
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.ifm.Tab;
-import com.mindalliance.channels.playbook.ifm.project.resources.Person;
+import com.mindalliance.channels.playbook.ifm.IfmElement;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
+import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement;
+import com.mindalliance.channels.playbook.ifm.model.*;
+import com.mindalliance.channels.playbook.ifm.project.resources.*;
+import com.mindalliance.channels.playbook.ifm.project.resources.System;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
-import com.mindalliance.channels.playbook.query.Query;
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement;
+import com.mindalliance.channels.playbook.ifm.project.environment.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 
 /**
@@ -66,7 +69,7 @@ public class FormTest extends WebPage {
     private void load() throws Exception {
         session = (PlaybookSession) Session.get();
         if (!session.authenticate("admin", "admin")) {
-            throw new Exception ("User not authenticated");
+            throw new Exception("User not authenticated");
         }
         final FormPanel formPanel = new FormPanel("content-form", new PropertyModel(this, "selected"));
         add(formPanel);
@@ -102,8 +105,8 @@ public class FormTest extends WebPage {
                 PlaybookSession session = (PlaybookSession) Session.get();
                 session.commit();
                 formPanel.resetForm();
-                target.addComponent( formPanel );
-                System.out.print("COMMIT: " + RefUtils.get(selected, "name") + "\n");
+                target.addComponent(formPanel);
+                Logger.getLogger(this.getClass()).info("COMMIT: " + (String)RefUtils.get(selected, "name"));
                 target.addComponent(elementLabel);
             }
         };
@@ -112,8 +115,8 @@ public class FormTest extends WebPage {
                 PlaybookSession session = (PlaybookSession) Session.get();
                 session.abort();
                 formPanel.resetForm();
-                target.addComponent( formPanel );
-                System.out.print("ABORT: " + RefUtils.get(selected, "name") + "\n");
+                target.addComponent(formPanel);
+                Logger.getLogger(this.getClass()).info("ABORT: " + RefUtils.get(selected, "name") + "\n");
             }
         };
         add(saveLink);
@@ -122,9 +125,29 @@ public class FormTest extends WebPage {
 
     private List getTypeChoices() {
         List choices = new ArrayList();
+        // Environment
         choices.add(Agreement.class);
+        // Resources
+        choices.add(Organization.class);
         choices.add(Person.class);
+        choices.add(Position.class);
         choices.add(Project.class);
+        choices.add(System.class);
+        // PlaybookModel
+        choices.add(AreaType.class);
+        choices.add(Domain.class);
+        choices.add(EventType.class);
+        choices.add(IssueType.class);
+        choices.add(MediumType.class);
+        choices.add(OrganizationType.class);
+        choices.add(PlaceType.class);
+        choices.add(PurposeType.class);
+        choices.add(RelationshipType.class);
+        choices.add(Role.class);
+        choices.add(TaskType.class);
+        // Playbook
+        // TODO
+        // application
         choices.add(Tab.class);
         choices.add(User.class);
         return choices;
@@ -133,26 +156,48 @@ public class FormTest extends WebPage {
     private Ref getElementOfType(Class type) throws Exception {
         PlaybookApplication app = (PlaybookApplication) Application.get();
         Ref channels = app.getChannels();
-        Project project = (Project)Project.current().deref();
+        Project project = (Project) Project.current().deref();
         List<Ref> results = new ArrayList<Ref>();
         if (type.equals(User.class)) {
-            results.add( ((Channels)channels.deref()).findUser("admin") );
-        }
-        else if (type.equals(Project.class)) {
+            results.add(((Channels) channels.deref()).findUser("admin"));
+        } else if (type.equals(Project.class)) {
             results.add(project.getReference());
-        }
-        else if (type.equals(Person.class)) {
-            results.add((Ref)Query.execute(project.getReference(), "findAResource", ((Referenceable)type.newInstance()).getType()));
         } else if (type.equals(Agreement.class)) {
-            results = project.getAgreements();
-       /* } else if (type.equals("System")) {
-            results = qh.executeQuery(channels, "findAResource", args);
-        */
+            results.add((Ref)project.getAgreements().get(0));
         }
         if (results.size() > 0) {
             return results.get(0);
-        } else {
-            Ref ref = ((Referenceable)type.newInstance()).persist();  // Resetting the form will cause a null pointer exception
+        } else {   // Project, model and playbook elements (assumes at least one pre-defined project, model and playbook
+            IfmElement element = (IfmElement) type.newInstance();
+            element.persist();
+            Ref ref = element.getReference();
+            if (element.isProjectElement()) {
+                ProjectElement projectElement = (ProjectElement)element;
+                project.getReference().begin();
+                if (projectElement.isResource()) {
+                    Resource resource = (Resource)projectElement;
+                    if (resource.isOrganizationResource()) {
+                        Ref org = (Ref)project.getOrganizations().get(0); // assumes at least one organization pre-defined
+                        org.begin();
+                        ((Organization)org.deref()).addElement(element);
+                    }
+                    else {
+                        project.addElement(element);
+                    }
+                }
+                else {
+                    project.addElement(element);
+                }
+            } else if (element.isModelElement()) {
+                PlaybookModel model = (PlaybookModel)((Ref)project.getModels().get(0)).deref();
+                model.getReference().begin();
+                model.addElement((ModelElement)element);
+
+            } else if (element.isPlaybookElement()) {
+                Playbook playbook = (Playbook)((Ref)project.getPlaybooks().get(0)).deref();
+                playbook.getReference().begin();
+                playbook.addElement(element);
+            }
             return ref;
         }
     }
