@@ -21,10 +21,10 @@ class InformationTemplate extends AbstractInformation {
         String s = "Information about "
         if (eventSpec) {
             eventSpec.eventTypes.each {et ->
-                s += "et.name,"
+                s += "${et.name},"
             }
         }
-        return s.substring(0, s.size()-2)
+        return s.substring(0, s.size()-1)
     }
 
 }

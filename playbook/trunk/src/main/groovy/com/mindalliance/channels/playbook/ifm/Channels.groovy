@@ -86,6 +86,15 @@ class Channels extends IfmElement {
         return types
     }
 
+    List<String> findAllOtherTypeNames(Ref elementType) {
+        List<Ref> allTypes = findAllTypes(elementType.type)
+        List<String> otherNames = []
+        allTypes.each {type ->
+            if (type != elementType) otherNames.add(type.name)
+        }
+        return otherNames
+    }
+
     static List<Class<?>> adminClasses() {
         [ User.class ]
     }

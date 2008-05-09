@@ -40,10 +40,10 @@ class QueryManager implements PropertyChangeListener {
     static void initializeDependencies() {
         dependencies = [
                 // Channels, Project, PlaybookModel
-                findAllTypes: [[PlaybookModel.class],[Project.class, 'models'], [Channels.class, 'models']],
+                findAllTypes: [[PlaybookModel.class], [Project.class, 'models'], [Channels.class, 'models']],
                 findAllTypesNarrowingAny: [[PlaybookModel.class],[Project.class, 'models'], [Channels.class, 'models']],
-                findAllPlaceNames: [[Project.class, 'places']],
                 // Project
+                findAllPlaceNames: [[Project.class, 'places']],
                 atleastOnePlaceTypeDefined: [[Project.class, 'places']],
                 allResourcesExcept: [[Project.class]],
                 findAllApplicableRelationshipTypes: [[PlaybookModel.class, 'relationshipTypes']],

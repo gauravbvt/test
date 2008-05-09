@@ -9,7 +9,7 @@
         <tr>
             <td>
                 <fieldset>
-                    <legend>Must know</legend>
+                    <legend>Must know any of</legend>
                     <div wicket:id="informationTemplatesDiv">
                         <ul>
                             <li wicket:id="informationTemplates">
@@ -24,20 +24,16 @@
             </td>
             <td>
                 <fieldset>
-                    <legend>Must do</legend>
+                    <legend>And then must do all</legend>
                     <span wicket:id="taskTypes">[task types tree]</span>
+                     <div>within <span wicket:id="timing">[timing template]</span></div>
                 </fieldset>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <span wicket:id="timing">[timing template]</span>
             </td>
         </tr>
     </table>
     <div wicket:id="infoTemplateDiv">
         <fieldset>
-            <legend>Information template</legend>
+            <legend>Must know</legend>
             <span wicket:id="informationTemplate">[Information template]</span>
         </fieldset>
     </div>

@@ -70,6 +70,15 @@ class PlaybookModel extends IfmElement {
         return this."$propName"
     }
 
+    List<String> findAllOtherTypeNames(Ref elementType) {
+        List<Ref> allTypes = findAllTypes(elementType.type)
+        List<String> otherNames = []
+        allTypes.each {type ->
+            if (type != elementType) otherNames.add(type.name)
+        }
+        return otherNames
+    }
+
     Ref findType(String typeType, String name) {
         String typeName = RefUtils.decapitalize(typeType)
         Ref namedType = this."${typeName}s".find {type -> type.name == name}
@@ -78,11 +87,11 @@ class PlaybookModel extends IfmElement {
 
     List<String> findInheritedTopics(Ref eventType) {
         List<String> inheritedTopics = []
-        eventType.narrowdTypes.each {nt ->
+        eventType.narrowedTypes.each {nt ->
             inheritedTopics.addAll(nt.topics)
             inheritedTopics.addAll(findInheritedTopics(nt))
         }
-        return inheritedTopics
+        return inheritedTopics.sort()
     }
 
     // End queries

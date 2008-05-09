@@ -63,6 +63,7 @@ public class AssignmentPanel extends AbstractComponentPanel {
                 target.addComponent(informationTemplatesDiv) ;
             }
         };
+        addReplaceable(newTemplateButton);
         taskTypesTree = new DynamicFilterTree("taskTypes", new RefPropertyModel(assignment, "taskTypes"),
                                                            new RefQueryModel(getScope(), new Query("findAllTypes", "TaskType"))) {
             @Override
@@ -76,8 +77,8 @@ public class AssignmentPanel extends AbstractComponentPanel {
         timingPanel = new TimingPanel("timing", this, propPath + ".timing", isReadOnly(), feedback);
         addReplaceable(timingPanel);
         infoTemplateDiv = new WebMarkupContainer("infoTemplateDiv");
-        addReplaceable(infoTemplateDiv);
         loadInfoTemplatePanel();
+        addReplaceable(infoTemplateDiv);
         infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
     }
 
@@ -97,6 +98,7 @@ public class AssignmentPanel extends AbstractComponentPanel {
                 AjaxLink infoTemplateLink = new AjaxLink("infoTemplateLink") {
                     public void onClick(AjaxRequestTarget target) {
                        selectedInfoTemplate = infoTemplate;
+                       loadInfoTemplatePanel();
                        resetInfoTemplatePanel(target);
                     }
                 };
@@ -121,21 +123,32 @@ public class AssignmentPanel extends AbstractComponentPanel {
     protected void loadInfoTemplatePanel() {
         if (selectedInfoTemplate != null) {
             int index = assignment.getInformationTemplates().indexOf(selectedInfoTemplate);
-            InformationTemplatePanel infoTemplatePanel = new InformationTemplatePanel("infoTemplate", this,
-                                                                                      propPath + "informationTemplates[" + index + "]",
+            InformationTemplatePanel infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this,
+                                                                                      propPath + ".informationTemplates[" + index + "]",
                                                                                       isReadOnly(), feedback);
             infoTemplateDiv.addOrReplace(infoTemplatePanel);
+        }
+        else {
+            Label infoTemplateLabel = new Label("informationTemplate", "dummy");
+            infoTemplateDiv.addOrReplace(infoTemplateLabel);
         }
     }
 
     private void resetInfoTemplatePanel(AjaxRequestTarget target) {
         if (selectedInfoTemplate != null) {
             infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:block")));
-            loadInfoTemplatePanel();
         }
         else {
             infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         }
         target.addComponent(infoTemplateDiv);
+    }
+
+    @Override
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        super.elementChanged(propPath, target);
+        if (propPath.matches(".*informationTemplates.*")) {
+            target.addComponent(informationTemplatesDiv);
+        }
     }
 }

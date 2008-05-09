@@ -14,6 +14,8 @@ import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
+import com.mindalliance.channels.playbook.ifm.project.resources.Person
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -126,6 +128,15 @@ class Project extends IfmElement implements Describable {
         return types
     }
 
+    List<String> findAllOtherTypeNames(Ref elementType) {
+        List<Ref> allTypes = findAllTypes(elementType.type)
+        List<String> otherNames = []
+        allTypes.each {type ->
+            if (type != elementType) otherNames.add(type.name)
+        }
+        return otherNames
+    }
+
     Ref findElementTypeNamed(String typeType, String elementTypeName) {
         String propName = RefUtils.decapitalize("${typeType}s")
         Ref namedType = null
@@ -229,7 +240,8 @@ class Project extends IfmElement implements Describable {
      static List<Class<?>> contentClasses() {
          // When changing this method, don't forget to update the next one...
          List<Class<?>> result = new ArrayList<Class<?>>()
-         result.addAll( Resource.contentClasses() )
+         result.addAll( [ Organization.class] )
+         result.addAll( [ Person.class] )
          result.addAll( [ Agreement.class ] )
          result.addAll( [ Policy.class ] )
          result.addAll( [ Place.class ] )
@@ -240,7 +252,8 @@ class Project extends IfmElement implements Describable {
 
      void addContents( List<Ref> result ) {
          playbooks.each { it.addContents( result ) }
-         result.addAll( resources )
+         result.addAll( persons )
+         result.addAll( organizations )
          result.addAll( agreements )
          result.addAll( policies )
          result.addAll( places )

@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.Assignment;
 import com.mindalliance.channels.playbook.ifm.model.Role;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
@@ -45,7 +46,8 @@ public class RoleAssignmentsTab extends AbstractModelElementFormTab {
         super.load();
         assignmentsDiv = new WebMarkupContainer("assignmentsDiv");
         assignmentsView = new RefreshingView("assignments", new RefPropertyModel(getElement(), "assignments")) {
-            List<Assignment> assignments = (List<Assignment>)RefUtils.get(getElement(), "assignments");
+            List<Assignment> assignments = (List<Assignment>) RefUtils.get(getElement(), "assignments");
+
             protected Iterator getItemModels() {
                 return new ModelIteratorAdapter(assignments.iterator()) {
                     protected IModel model(Object assignment) {
@@ -53,13 +55,14 @@ public class RoleAssignmentsTab extends AbstractModelElementFormTab {
                     }
                 };
             }
+
             protected void populateItem(final Item item) {
-                final Assignment assignment = (Assignment)item.getModelObject();
+                final Assignment assignment = (Assignment) item.getModelObject();
                 AjaxLink assignmentLink = new AjaxLink("assignmentLink") {
                     public void onClick(AjaxRequestTarget target) {
                         selectedAssignment = assignment;
                         loadAssignmentPanel();
-                        resetAssignmentPanel(target);
+                        updateAssignmentPanel(target);
                     }
                 };
                 Label assignmentLabel = new Label("assignmentString", new Model(assignment.toString()));
@@ -69,7 +72,8 @@ public class RoleAssignmentsTab extends AbstractModelElementFormTab {
                     public void onClick(AjaxRequestTarget target) {
                         RefUtils.remove(getElement(), "assignments", assignment);
                         selectedAssignment = null;
-                        resetAssignmentPanel(target);
+                        loadAssignmentPanel();
+                        updateAssignmentPanel(target);
                         target.addComponent(assignmentsDiv);
                     }
                 };
@@ -78,6 +82,14 @@ public class RoleAssignmentsTab extends AbstractModelElementFormTab {
         };
         assignmentsDiv.add(assignmentsView);
         addReplaceable(assignmentsDiv);
+        newAssignmentButton = new AjaxButton("newAssignment") {
+            protected void onSubmit(AjaxRequestTarget target, Form form) {
+                Assignment assignment = new Assignment();
+                RefUtils.add(getElement(), "assignments", assignment);
+                target.addComponent(assignmentsDiv);
+            }
+        };
+        addReplaceable(newAssignmentButton);
         assignmentDiv = new WebMarkupContainer("assignmentDiv");
         addReplaceable(assignmentDiv);
         loadAssignmentPanel();
@@ -86,20 +98,30 @@ public class RoleAssignmentsTab extends AbstractModelElementFormTab {
 
     private void loadAssignmentPanel() {
         if (selectedAssignment != null) {
-            int index = ((Role)getElement()).getAssignments().indexOf(selectedAssignment);
+            Role role = (Role)getElement().deref();
+            int index = role.getAssignments().indexOf(selectedAssignment);
             AssignmentPanel assignmentPanel = new AssignmentPanel("assignment", this, "assignments[" + index + "]", EDITABLE, feedback);
-            assignmentDiv.addOrReplace(assignmentPanel);           
+            assignmentDiv.addOrReplace(assignmentPanel);
+        } else {
+            Label assignmentLabel = new Label("assignment", "dummy");
+            assignmentDiv.addOrReplace(assignmentLabel);
         }
     }
 
-    private void resetAssignmentPanel(AjaxRequestTarget target) {
-        if (selectedAssignment != null) {
-            assignmentDiv.add(new AttributeModifier("style", true, new Model("display:block")));
-            loadAssignmentPanel();
-        }
-        else {
+    private void updateAssignmentPanel(AjaxRequestTarget target) {
+        if (selectedAssignment == null) {
             assignmentDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        } else {
+            assignmentDiv.add(new AttributeModifier("style", true, new Model("display:block")));
         }
         target.addComponent(assignmentDiv);
+    }
+
+    @Override
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        super.elementChanged(propPath, target);
+        if (propPath.matches(".*assignments.*")) {
+            target.addComponent(assignmentsDiv);
+        }
     }
 }

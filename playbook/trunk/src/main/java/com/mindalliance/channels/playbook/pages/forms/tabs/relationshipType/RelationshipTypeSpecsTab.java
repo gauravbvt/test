@@ -2,15 +2,18 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.relationshipType;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractModelElementFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.model.RelationshipType;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.Model;
+
+import java.util.List;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,8 +24,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public class RelationshipTypeSpecsTab extends AbstractModelElementFormTab {
 
-    protected DropDownChoice fromKindChoice;
-    protected DropDownChoice toKindChoice;
+    protected ListMultipleChoice fromKindChoice;
+    protected ListMultipleChoice toKindChoice;
     protected Label nameLabel;
     protected CheckBox transitiveField;
 
@@ -32,21 +35,24 @@ public class RelationshipTypeSpecsTab extends AbstractModelElementFormTab {
 
     protected void load() {
         super.load();
-        fromKindChoice = new DropDownChoice("fromKind", new RefPropertyModel(getElement(), "fromKind"), RelationshipType.getResourceKinds());
+        // TODO -- use CheckBoxMultipleChoice when it works with Ajax
+        fromKindChoice = new ListMultipleChoice("fromKinds", new Model((Serializable)RefUtils.get(getElement(), "fromKinds")), RelationshipType.getResourceKinds());
         fromKindChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                String kind = fromKindChoice.getModelObjectAsString();
-                if (kind != null) RefUtils.set(getElement(), "fromKind", kind);
+                List<String> kinds = (List<String>)fromKindChoice.getModelObject();
+                RefUtils.set(getElement(), "fromKinds", kinds);
             }
         });
+        nameLabel = new Label("name", new RefPropertyModel(getElement(), "name"));
+        addReplaceable(nameLabel);
         addReplaceable(fromKindChoice);
-        toKindChoice = new DropDownChoice("fromKind", new RefPropertyModel(getElement(), "toKind"), RelationshipType.getResourceKinds());
+        toKindChoice = new ListMultipleChoice("toKinds", new Model((Serializable)RefUtils.get(getElement(), "toKinds")), RelationshipType.getResourceKinds());
         toKindChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                String kind = toKindChoice.getModelObjectAsString();
-                if (kind != null) RefUtils.set(getElement(), "toKind", kind);
+                List<String> kinds = (List<String>)fromKindChoice.getModelObject();
+                RefUtils.set(getElement(), "toKinds", kinds);
             }
         });
         addReplaceable(toKindChoice);

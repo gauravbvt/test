@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
 * Date: Apr 17, 2008
 * Time: 1:43:24 PM
 */
-class Query extends FlowAct  {
+class InformationRequest extends FlowAct  {
 
     InformationTemplate informationNeed
 

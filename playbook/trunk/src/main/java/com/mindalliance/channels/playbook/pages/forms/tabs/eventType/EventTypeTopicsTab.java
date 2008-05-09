@@ -20,10 +20,11 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.commons.collections.CollectionUtils;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,7 +35,7 @@ import java.util.ArrayList;
  */
 public class EventTypeTopicsTab extends AbstractModelElementFormTab {
 
-    protected TextField newTopicField;
+    protected AutoCompleteTextField newTopicField;
     protected AjaxButton addTopicButton;
     protected WebMarkupContainer topicsDiv;
     protected RefreshingView topicsView;
@@ -49,7 +50,11 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
 
     protected void load() {
         super.load();
-        newTopicField = new TextField("newTopic", new Model());
+        newTopicField = new AutoCompleteTextField("newTopic", new Model()) {
+            protected Iterator getChoices(String input) {
+                return matchingTopics(input);
+            }
+        };
         newTopicField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -57,8 +62,9 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
                 topicToAddInputed(topic, target);
             }
         });
+        addReplaceable(newTopicField);
         inheritedTopicsDiv = new WebMarkupContainer("inheritedTopicsDiv");
-        inheritedTopicsView = new RefreshingView("inheritedTopics", new RefQueryModel(this, new Query("matchingInheritedTopics"))) {
+        inheritedTopicsView = new RefreshingView("inheritedTopics", new Model((Serializable)getInheritedTopics())) {
             protected Iterator getItemModels() {
                 return new ModelIteratorAdapter(getInheritedTopics().iterator()) {
                     protected IModel model(Object topic) {
@@ -76,16 +82,17 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
                         edit(narrowedEventType, target);
                     }
                 };
-                narrowedEventTypeLink.add(inheritedTopicLabel);
+                Label narrowedEventTypeLabel = new Label("narrowedEventTypeName", new RefPropertyModel(narrowedEventType, "name"));
+                narrowedEventTypeLink.add(narrowedEventTypeLabel);
                 item.add(narrowedEventTypeLink);
             }
         };
+        inheritedTopicsDiv.add(inheritedTopicsView);
         addReplaceable(inheritedTopicsDiv);
-        addReplaceable(newTopicField);
         addTopicButton = new AjaxButton("addTopic") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
                 RefUtils.add(getElement(), "topics", newTopic);
-                newTopicField.clearInput();
+                newTopicField.setModelObject("");
                 newTopic = null;
                 addTopicButton.setEnabled(false);
                 target.addComponent(addTopicButton);
@@ -93,8 +100,10 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
                 target.addComponent(topicsDiv);
             }
         };
+        addTopicButton.setEnabled(false);
+        addReplaceable(addTopicButton);
         topicsDiv = new WebMarkupContainer("topicsDiv");
-        topicsView = new RefreshingView("topic", new RefPropertyModel(getElement(), "topics")) {
+        topicsView = new RefreshingView("topics", new RefPropertyModel(getElement(), "topics")) {
             protected Iterator getItemModels() {
                 List<String> topics = (List<String>) RefUtils.get(getElement(), "topics");
                 return new ModelIteratorAdapter(topics.iterator()) {
@@ -113,8 +122,10 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
                         target.addComponent(topicsDiv);
                     }
                 };
+                item.add(deleteTopicLink);
             }
         };
+        topicsDiv.add(topicsView);
         addReplaceable(topicsDiv);
     }
 
@@ -122,7 +133,6 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
         newTopic = topic.trim();
         addTopicButton.setEnabled(isNewTopic(topic));
         target.addComponent(addTopicButton);
-        target.addComponent(inheritedTopicsDiv);
     }
 
     private boolean isNewTopic(String topic) {
@@ -132,18 +142,20 @@ public class EventTypeTopicsTab extends AbstractModelElementFormTab {
                  ((List<Ref>)RefUtils.get(getElement(), "topics")).contains(topic));
     }
 
-    private List<String> getInheritedTopics() {
-        List<String> inheritedTopics = (List<String>)Query.execute(getIfmModel(), "findInheritedTopics", getElement());
-        return inheritedTopics;
+    private List<String>getInheritedTopics() {
+        return (List<String>)Query.execute(getIfmModel(), "findInheritedTopics", getElement());
     }
 
-    private List<String> matchingInheritedTopics() {
+    private Iterator matchingTopics(String input) {
         List<String> matches = new ArrayList<String>();
-        for (String topic : getInheritedTopics()) {
-            if (topic.toLowerCase().startsWith(newTopic)) {
+        List<String> allTopics = new ArrayList<String>();
+        allTopics.addAll((List<String>)RefUtils.get(getElement(), "topics"));
+        allTopics.addAll(getInheritedTopics());
+        for (String topic : allTopics) {
+            if (topic.toLowerCase().startsWith(input.toLowerCase())) {
                 matches.add(topic);
             }
         }
-        return matches;
+        return matches.iterator();
     }
 }

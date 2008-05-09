@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.modelElement.ModelElementBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.purposeType.PurposeTypeBasicTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;

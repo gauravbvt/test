@@ -15,31 +15,35 @@ import org.joda.time.Duration
 // and possiblylimited to some location
 class Assignment extends BeanImpl {
 
-    List<InformationTemplate> informationTemplates // what must be known if knowable -- required
-    List<Ref> taskTypes // what to do, if anything, when all the above is known (any of)
+    List<InformationTemplate> informationTemplates = [] // what must be known if knowable -- required
+    List<Ref> taskTypes = [] // what to do, if anything, when all the above is known (any of)
     Timing timing = new Timing(amount:0) // maximum reaction time -- defaults to "zero"
 
     String toString() {
-        "${this.informationTemplatesSummary()} ${this.taskTypesSummary()}"
+        "${this.informationTemplatesSummary()}. ${this.taskTypesSummary()}"
     }
 
     private String informationTemplatesSummary() {
-        String summary = ""
+        String summary = "Must know of "
         if (informationTemplates) {
-            summary += "Must know of "
             informationTemplates.each {info ->
-                info.eventSpec.eventTypes.each {et -> summary += "${et.name} " }
+                info.eventSpec.eventTypes.each {et -> summary += "${et.name}," }
             }
         }
-        return "${summary}. "
+        else {
+            summary += 'nothing '
+        }
+        return summary.substring(0, summary.size()-1)
     }
 
     private String taskTypesSummary() {
-        String summary = ""
+        String summary = "Must do "
         if (taskTypes) {
-            summary += " Must do "
-            taskTypes.each {tt -> summary += "${tt.name} " }
+            taskTypes.each {tt -> summary += "${tt.name}," }
         }
-        return "${summary}. "
+        else {
+            summary += 'nothing '
+        }
+        return summary.substring(0, summary.size()-1)
     }
 }

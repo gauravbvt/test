@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.purposeType;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.modelElement.ModelElementBasicTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.elementType.ElementTypeBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -18,7 +18,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  * Date: May 5, 2008
  * Time: 4:20:41 PM
  */
-public class PurposeTypeBasicTab extends ModelElementBasicTab {
+public class PurposeTypeBasicTab extends ElementTypeBasicTab {
 
     protected DynamicFilterTree domainTree;
 

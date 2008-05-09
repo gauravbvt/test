@@ -33,6 +33,7 @@ class Playbook extends ProjectElement implements Describable {
         return super.doRemoveFromField("informationActs", val);
     }
 
+    // Queries
 
     List<Ref> findInformationActsOfResource(Ref resource) {
         List<Ref> ias = informationActs.findall {ia ->
@@ -40,12 +41,22 @@ class Playbook extends ProjectElement implements Describable {
         }
     }
 
+    List<Ref> findAllTypes(String typeType) {
+        return this.project.findAllTypes(typeType)
+    }
+
+    List<String> findAllOtherTypeNames(Ref elementType) {
+         return this.project.findAllOtherTypeNames(elementType)
+    }
+
+    // end queries
+
     /**
      * Return classes a project participant can add.
      */
     static List<Class<?>> contentClasses() {
         [ Assignation.class, Confirmation.class, Denial.class,
-          InformationTransfer.class, Observation.class, Query.class,
+          InformationTransfer.class, Observation.class, InformationRequest.class,
           Task.class, Verification.class
         ]
     }

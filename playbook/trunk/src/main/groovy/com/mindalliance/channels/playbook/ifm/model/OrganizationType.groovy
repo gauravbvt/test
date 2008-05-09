@@ -1,8 +1,8 @@
 package com.mindalliance.channels.playbook.ifm.model
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.project.Project
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 class OrganizationType extends ElementType {
 
     Ref domain // domain for this type of organization
-    Location within // containing area of the jurisdiction e.g. New Jersey -- required
+    AreaInfo within // containing area of the jurisdiction e.g. New Jersey -- required
     Ref jurisdictionType  // a AreaType -- jurisdiction over what types of locations
 
     // Find all domain names of known Organization Types

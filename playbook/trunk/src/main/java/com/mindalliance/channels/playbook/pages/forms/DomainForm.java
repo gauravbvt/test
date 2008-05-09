@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.modelElement.ModelElementBasicTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.elementType.ElementTypeBasicTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -22,7 +22,7 @@ public class DomainForm  extends AbstractModelElementForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Basic")) {
              public Panel getPanel(String panelId) {
-                 return new ModelElementBasicTab(panelId, DomainForm.this);
+                 return new ElementTypeBasicTab(panelId, DomainForm.this);
              }
          });
     }

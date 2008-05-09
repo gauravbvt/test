@@ -35,6 +35,8 @@ import com.mindalliance.channels.playbook.ifm.model.MediumType
 import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
+import com.mindalliance.channels.playbook.ifm.model.PurposeType
+import com.mindalliance.channels.playbook.ifm.model.TaskType
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -221,9 +223,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addOrganizationType(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe.reference)))
         m.addOrganizationType(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county.reference)))
 
-        RelationshipType family = new RelationshipType(name: 'Family', description: 'In same extended family', fromKind: 'Person', toKind: 'Person')
-        RelationshipType immediateFamily = new RelationshipType(name: 'Immediate family', description: 'In same immediate family', fromKind: 'Person', toKind: 'Person')
-        RelationshipType client = new RelationshipType(name: 'Client', description: 'A business client')
+        RelationshipType family = new RelationshipType(name: 'Family', description: 'In same extended family', fromKinds: ['Person'], toKinds: ['Person'])
+        RelationshipType immediateFamily = new RelationshipType(name: 'Immediate family', description: 'In same immediate family', fromKinds: ['Person'], toKinds: ['Person'])
+        RelationshipType client = new RelationshipType(name: 'Client', description: 'A business client', fromKinds: ['Person', 'Organization', 'Position'], toKinds: ['Organization'])
         immediateFamily.narrow(family.reference)
         m.addRelationshipType(store(family))
         m.addRelationshipType(store(immediateFamily))
@@ -246,6 +248,16 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addMediumType(store(new MediumType(name: 'cell')))
         m.addMediumType(store(new MediumType(name: 'pager')))
         m.addMediumType(store(new MediumType(name: 'radio')))
+
+        m.addPurposeType(store(new PurposeType(name: 'prepare')));
+        m.addPurposeType(store(new PurposeType(name: 'prevent')));
+        m.addPurposeType(store(new PurposeType(name: 'respond')));
+        m.addPurposeType(store(new PurposeType(name: 'recover')));
+
+        m.addTaskType(store(new TaskType(name: 'surveillance')));
+        m.addTaskType(store(new TaskType(name: 'autopsy')));
+        m.addTaskType(store(new TaskType(name: 'arrest')));
+        m.addTaskType(store(new TaskType(name: 'traffic stop')));
 
         EventType event = new EventType(name: 'event')
         event.addTopic('circumstance')

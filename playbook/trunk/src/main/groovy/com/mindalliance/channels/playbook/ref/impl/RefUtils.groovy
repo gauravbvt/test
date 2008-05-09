@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.support
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
+import java.util.regex.Matcher
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -103,9 +104,20 @@ class RefUtils {
         return Referenceable.isAssignableFrom(obj.class) || Ref.isAssignableFrom(obj.class)
     }
 
-    static void changed(def element, String propPath) {
+    static void changed(def element, String propPath) {  // get first property in path and strip away index if any
         if (hasReference(element)) {
-            int index = propPath.indexOf('.');
+            Matcher matcher = propPath =~ /^([\w\d_]*)(\[\d+\])?(\..*)?$/
+            String propName
+            if (matcher.count) {
+                propName = matcher[0][1]
+            }
+            if (propName) {
+                element.changed(propName)
+            }
+            else {
+                Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Failed to raise change event on $element $propPath")
+            }
+            /*int index = propPath.indexOf('.');
             String propName;
             if (index < 0) {
                 propName = propPath;
@@ -113,7 +125,7 @@ class RefUtils {
             else {
                 propName = propPath.substring(0, index);
             }
-            element.changed(propName);
+            element.changed(propName);*/
         }
     }
 

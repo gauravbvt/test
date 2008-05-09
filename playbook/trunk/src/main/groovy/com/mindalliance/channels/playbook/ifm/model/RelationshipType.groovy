@@ -11,10 +11,10 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class RelationshipType extends ElementType {
 
-    static final List<String> resourceKinds = ["Resource","Organization", "Person", "Position", "System"]
+    static final List<String> resourceKinds = ["Person", "Organization", "Position", "System"]
     
-    String fromKind = "Resource"  // one of: Resource, Person, Organization, System, Position
-    String toKind = "Resource"
+    List<String> fromKinds = []  // in: Person, Organization, System, Position -- none = any
+    List<String> toKinds = []
     boolean transitive = false
 
     @Override
@@ -24,11 +24,11 @@ class RelationshipType extends ElementType {
 
 
     boolean matchesTo(Ref resource) {
-        return toKind == "Resource" || resource.type == toKind
+        return toKinds.contains(resource.type)
     }
 
     boolean matchesFrom(Ref resource) {
-        return fromKind == "Resource" || resource.type == fromKind
+        return fromKinds.contains(resource.type)
     }
 
 }
