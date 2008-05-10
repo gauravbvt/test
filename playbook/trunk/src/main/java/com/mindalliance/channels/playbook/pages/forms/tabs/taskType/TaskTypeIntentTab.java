@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.taskType;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractModelElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -20,7 +20,7 @@ import java.util.List;
  * Date: May 5, 2008
  * Time: 8:23:13 PM
  */
-public class TaskTypeIntentTab  extends AbstractModelElementFormTab {
+public class TaskTypeIntentTab  extends AbstractFormTab {
 
     DynamicFilterTree purposeTypesTree;
     DynamicFilterTree eventTypesTree;
@@ -40,7 +40,7 @@ public class TaskTypeIntentTab  extends AbstractModelElementFormTab {
             }
         };
         addReplaceable(purposeTypesTree);
-        eventTypesTree = new DynamicFilterTree("purposeTypes", new RefPropertyModel(getElement(), "eventTypes"),
+        eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(getElement(), "eventTypes"),
                                                  new RefQueryModel(getScope(), new Query("findAllTypes", "EventType"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selectedTypes = eventTypesTree.getNewSelections();

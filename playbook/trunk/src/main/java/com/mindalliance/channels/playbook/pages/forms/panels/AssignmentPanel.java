@@ -13,6 +13,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
@@ -22,6 +23,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.AttributeModifier;
 
 import java.util.Iterator;
@@ -37,9 +39,9 @@ import java.util.List;
 public class AssignmentPanel extends AbstractComponentPanel {
 
     Assignment assignment;
-    protected WebMarkupContainer informationTemplatesDiv;
-    protected RefreshingView informationTemplatesView;
-    protected AjaxButton newTemplateButton;
+    protected ListChoice infoTemplatesChoice;
+    protected AjaxButton deleteInfoTemplateButton;
+    protected AjaxButton addInfoTemplateButton;
     protected DynamicFilterTree taskTypesTree;
     protected InformationTemplate selectedInfoTemplate;
     protected WebMarkupContainer infoTemplateDiv;
@@ -52,18 +54,42 @@ public class AssignmentPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         assignment = (Assignment) RefUtils.get(getElement(), propPath);
-        loadInformationTemplatesDiv();
-        newTemplateButton = new AjaxButton("newInformationTemplate") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
-                selectedInfoTemplate = new InformationTemplate();
-                assignment.getInformationTemplates().add(selectedInfoTemplate);
+        infoTemplatesChoice = new ListChoice("informationTemplates", new Model(),
+                                              new RefPropertyModel(assignment, "informationTemplates"));
+        infoTemplatesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                selectedInfoTemplate = (InformationTemplate)infoTemplatesChoice.getModelObject();
                 loadInfoTemplatePanel();
-                resetInfoTemplatePanel(target);
+                setInfoTemplatePanelVisibility(target);
+                deleteInfoTemplateButton.setEnabled(selectedInfoTemplate != null);
+                target.addComponent(deleteInfoTemplateButton);
+            }
+        });
+        addReplaceable(infoTemplatesChoice);
+        addInfoTemplateButton = new AjaxButton("addInfoTemplate") {
+            protected void onSubmit(AjaxRequestTarget target, Form form) {
+                InformationTemplate infoTemplate = new InformationTemplate();
+                RefUtils.add(assignment, "informationTemplates", infoTemplate);
+                target.addComponent(infoTemplatesChoice);
                 elementChanged(propPath, target);
-                target.addComponent(informationTemplatesDiv) ;
             }
         };
-        addReplaceable(newTemplateButton);
+        addReplaceable(addInfoTemplateButton);
+        deleteInfoTemplateButton = new AjaxButton("deleteInfoTemplate") {
+            protected void onSubmit(AjaxRequestTarget target, Form form) {
+                RefUtils.remove(assignment, "informationTemplates", selectedInfoTemplate);
+                selectedInfoTemplate = null;
+                deleteInfoTemplateButton.setEnabled(false);
+                loadInfoTemplatePanel();
+                setInfoTemplatePanelVisibility(target);
+                target.addComponent(deleteInfoTemplateButton);
+                target.addComponent(infoTemplatesChoice);
+                elementChanged(propPath, target);
+            }
+        };
+        deleteInfoTemplateButton.setEnabled(false);
+        addReplaceable(deleteInfoTemplateButton);
         taskTypesTree = new DynamicFilterTree("taskTypes", new RefPropertyModel(assignment, "taskTypes"),
                                                            new RefQueryModel(getScope(), new Query("findAllTypes", "TaskType"))) {
             @Override
@@ -82,42 +108,13 @@ public class AssignmentPanel extends AbstractComponentPanel {
         infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
     }
 
-    private void loadInformationTemplatesDiv() {
-        informationTemplatesDiv = new WebMarkupContainer("informationTemplatesDiv");
-        informationTemplatesView = new RefreshingView("informationTemplates", new RefPropertyModel(assignment, "informationTemplates")) {
-            protected Iterator getItemModels() {
-                List<InformationTemplate> templates = (List<InformationTemplate>)RefUtils.get(assignment, "informationTemplates");
-                return new ModelIteratorAdapter(templates.iterator()) {
-                    protected IModel model(Object template) {
-                        return new Model((InformationTemplate) template);
-                    }
-                };
-            }
-            protected void populateItem(final Item item) {
-                final InformationTemplate infoTemplate = (InformationTemplate)item.getModelObject();
-                AjaxLink infoTemplateLink = new AjaxLink("infoTemplateLink") {
-                    public void onClick(AjaxRequestTarget target) {
-                       selectedInfoTemplate = infoTemplate;
-                       loadInfoTemplatePanel();
-                       resetInfoTemplatePanel(target);
-                    }
-                };
-                Label infoTemplateLabel = new Label("infoTemplateString", new Model(infoTemplate.toString()));
-                infoTemplateLink.add(infoTemplateLabel);
-                item.add(infoTemplateLink);
-                AjaxLink infoTemplateDeleteLink = new AjaxLink("infoTemplateDelete") {
-                    public void onClick(AjaxRequestTarget target) {
-                        assignment.getInformationTemplates().remove(infoTemplate);
-                        selectedInfoTemplate = null;
-                        resetInfoTemplatePanel(target);
-                        target.addComponent(informationTemplatesDiv);
-                    }
-                };
-                item.add(infoTemplateDeleteLink);
-            }
-        };
-        informationTemplatesDiv.add(informationTemplatesView);
-        addReplaceable(informationTemplatesDiv);
+    private void setInfoTemplatePanelVisibility(AjaxRequestTarget target) {
+        if (selectedInfoTemplate != null) {
+            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+        } else {
+            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        }
+        target.addComponent(infoTemplateDiv);
     }
 
     protected void loadInfoTemplatePanel() {
@@ -134,21 +131,12 @@ public class AssignmentPanel extends AbstractComponentPanel {
         }
     }
 
-    private void resetInfoTemplatePanel(AjaxRequestTarget target) {
-        if (selectedInfoTemplate != null) {
-            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:block")));
-        }
-        else {
-            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-        }
-        target.addComponent(infoTemplateDiv);
-    }
-
     @Override
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         super.elementChanged(propPath, target);
         if (propPath.matches(".*informationTemplates.*")) {
-            target.addComponent(informationTemplatesDiv);
+            target.addComponent(infoTemplatesChoice);
         }
     }
+
 }

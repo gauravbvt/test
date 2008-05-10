@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ifm.info.Assignment
 */
 class Assignation extends FlowAct {
 
-    Assignment assignment
+    Assignment assignment = new Assignment()
 
 }

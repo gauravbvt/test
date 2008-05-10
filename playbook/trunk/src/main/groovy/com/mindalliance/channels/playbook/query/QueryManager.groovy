@@ -12,6 +12,8 @@ import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -59,7 +61,9 @@ class QueryManager implements PropertyChangeListener {
                 findAllPositions: [[Organization.class, 'positions', 'parent']],
                 findAllSubOrganizations: [[Organization.class, 'subOrganizations','parent']],
                 // Position
-                findOtherPositionsInOrganization: [[Organization.class, 'positions']]
+                findOtherPositionsInOrganization: [[Organization.class, 'positions']],
+                // Playbook
+                findCandidateCauses: [[Playbook.class, 'informationActs'], [InformationAct.class]]
         ]
     }
 

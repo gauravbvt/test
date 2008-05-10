@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.relationshipType;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractModelElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -22,7 +22,7 @@ import java.io.Serializable;
  * Date: May 5, 2008
  * Time: 4:42:40 PM
  */
-public class RelationshipTypeSpecsTab extends AbstractModelElementFormTab {
+public class RelationshipTypeSpecsTab extends AbstractFormTab {
 
     protected ListMultipleChoice fromKindChoice;
     protected ListMultipleChoice toKindChoice;

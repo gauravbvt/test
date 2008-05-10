@@ -12,14 +12,13 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.ifm.project.resources.ContactInfo;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.query.Query;
 
@@ -35,7 +34,7 @@ import java.io.Serializable;
  * Date: Apr 23, 2008
  * Time: 5:19:20 PM
  */
-public class ResourceIdentityTab extends AbstractProjectElementFormTab {
+public class ResourceIdentityTab extends AbstractFormTab {
 
     protected TextField nameField;
     protected TextArea descriptionField;

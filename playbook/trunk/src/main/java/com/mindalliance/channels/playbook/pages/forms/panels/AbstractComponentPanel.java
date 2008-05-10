@@ -3,7 +3,9 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.log4j.Logger;
@@ -15,6 +17,12 @@ import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -24,12 +32,12 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
  * Time: 3:15:33 PM
  */
 // Not much to abstract...
-abstract public class AbstractComponentPanel extends Panel implements ElementPanel {
+abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
 
     protected boolean readOnly = false;
-    protected ElementPanel parentPanel;     // element containing the component to be edited
+    protected ElementPanel parentPanel;
     protected String propPath; // path to the element's property which value is the component to be edited
-    WebMarkupContainer div;
+    protected WebMarkupContainer div;
     protected FeedbackPanel feedback;
 
     public AbstractComponentPanel(String id, ElementPanel parentPanel, String propPath , boolean readOnly, FeedbackPanel feedback) {
@@ -41,6 +49,10 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
         beforeLoad();
         load();
         init();
+    }
+
+    protected FeedbackPanel getFeedback() {
+        return feedback;
     }
 
     // ElementPanel
@@ -89,6 +101,11 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
         return parentPanel.getScope();
     }
 
+    public  void edit(Ref ref, AjaxRequestTarget target) {
+        parentPanel.edit(ref, target);
+    }
+    
+
     // end ElementPanel
 
     public boolean isReadOnly() {
@@ -97,11 +114,6 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
 
     public void setFeedbackPanel(FeedbackPanel feedback) {
         this.feedback = feedback;
-    }
-
-    protected void init() {
-        this.setOutputMarkupId(true);
-        this.add(new SimpleAttributeModifier("class", "component"));
     }
 
     protected void beforeLoad() {
@@ -113,6 +125,7 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
       div.setOutputMarkupId(true);
       add(div);
     }
+
 
     public void onDetach() {
         try {
@@ -126,10 +139,11 @@ abstract public class AbstractComponentPanel extends Panel implements ElementPan
         super.onDetach();
     }
 
-    public void addReplaceable(Component component) {
+    protected void addReplaceable(Component component) {
         component.setOutputMarkupId(true);
         div.addOrReplace(component);
         component.setEnabled(!this.isReadOnly());
     }
+
 
 }

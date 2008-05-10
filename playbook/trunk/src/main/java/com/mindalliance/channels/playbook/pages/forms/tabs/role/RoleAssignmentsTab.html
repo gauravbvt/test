@@ -5,21 +5,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <div wicket:id="assignmentsDiv">
-        <ul wicket:id="assignments">
-            <li>
-                <a wicket:id="assignmentLink" href="#"><span wicket:id="assignmentString">[assignment string]</span></a>
-                <a wicket:id="deleteAssignment" href="#">(delete)</a>
-            </li>
-        </ul>
-    </div>
-    <button wicket:id="newAssignment">New responsibility</button>
-    <div wicket:id="assignmentDiv">
-        <fieldset>
-            <legend>Responsibility</legend>
-            <span wicket:id="assignment">[assignment panel]</span>
-        </fieldset>
-    </div>
+    <table>
+        <tr>
+            <td valign="top">
+                <fieldset>
+                    <legend>Assignments</legend>
+                    <select wicket:id="assignments">
+                        <option>[assignment string]</option>
+                    </select>
+                    <br/>
+                    <button wicket:id="addAssignment">Add</button>
+                    <button wicket:id="deleteAssignment">Delete</button>
+                </fieldset>
+            </td>
+            <td>
+                <div wicket:id="assignmentDiv">
+                    <fieldset>
+                        <legend>Assignment</legend>
+                        <span wicket:id="assignment">[assignment panel]</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
 </wicket:extend>
 </body>
 </html>

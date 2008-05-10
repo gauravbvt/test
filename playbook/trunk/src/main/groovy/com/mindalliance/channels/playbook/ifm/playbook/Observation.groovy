@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ifm.info.Information
 */
 class Observation extends InformationAct {
 
-    Information information    
+    Information information = new Information()
 
 }

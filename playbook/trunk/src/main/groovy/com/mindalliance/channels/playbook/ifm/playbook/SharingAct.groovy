@@ -12,7 +12,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 /* abstract */ class SharingAct extends FlowAct {
 
-    Information information
+    Information information = new Information()
 
     @Override
     boolean isSharingAct() {

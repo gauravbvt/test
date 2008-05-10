@@ -13,9 +13,19 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class InformationTemplate extends AbstractInformation {
 
-    EventSpec eventSpec // about what kind of event
+    EventSpec eventSpec = new EventSpec() // about what kind of event
     // Timing timeToLive = new Timing(msecs:0) // how long before this kind of information usually expires
     List<Ref> organizationTypes = [] // from whom is this kind of information credible
+
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['name']
+    }
+
+
+    String getName() {
+        return toString()
+    }
 
     String toString() {
         String s = "Information about "

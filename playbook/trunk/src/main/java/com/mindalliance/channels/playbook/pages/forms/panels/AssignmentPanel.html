@@ -10,23 +10,20 @@
             <td>
                 <fieldset>
                     <legend>Must know any of</legend>
-                    <div wicket:id="informationTemplatesDiv">
-                        <ul>
-                            <li wicket:id="informationTemplates">
-                                <a wicket:id="infoTemplateLink" href="#"><span
-                                        wicket:id="infoTemplateString">[infoTemplate string]</span></a>
-                                <a wicket:id="infoTemplateDelete" href="#"><span>(delete)</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <button wicket:id="newInformationTemplate">Add new</button>
+                    <select wicket:id="informationTemplates">
+                        <option>[information template string]</option>
+                    </select>
+                    <br/>
+                    <button wicket:id="addInfoTemplate">Add</button>
+                    <button wicket:id="deleteInfoTemplate">Delete</button>
                 </fieldset>
             </td>
             <td>
                 <fieldset>
                     <legend>And then must do all</legend>
                     <span wicket:id="taskTypes">[task types tree]</span>
-                     <div>within <span wicket:id="timing">[timing template]</span></div>
+
+                    <div>within <span wicket:id="timing">[timing template]</span></div>
                 </fieldset>
             </td>
         </tr>

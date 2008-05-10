@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.elementType;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractModelElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Date: May 5, 2008
  * Time: 3:21:20 PM
  */
-public class ElementTypeBasicTab extends AbstractModelElementFormTab {
+public class ElementTypeBasicTab extends AbstractFormTab {
 
     protected AutoCompleteTextField nameField;
     protected TextArea descriptionField;

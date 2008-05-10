@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.project;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -39,7 +39,7 @@ import java.io.Serializable;
  * Date: May 1, 2008
  * Time: 6:44:49 AM
  */
-public class ProjectParticipationTab extends AbstractProjectElementFormTab {
+public class ProjectParticipationTab extends AbstractFormTab {
 
     Ref selectedParticipation;
     Ref selectedUser;

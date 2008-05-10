@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
 */
 class InformationRequest extends FlowAct  {
 
-    InformationTemplate informationNeed
+    InformationTemplate informationNeed = new InformationTemplate()
 
 }

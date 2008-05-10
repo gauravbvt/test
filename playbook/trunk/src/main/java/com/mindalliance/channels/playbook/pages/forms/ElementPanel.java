@@ -26,4 +26,5 @@ public interface ElementPanel {
     PlaybookModel getIfmModel();
     Playbook getPlaybook();
     Ref getScope(); // either Channels.instance(), a Project, an IFM PlaybookModel or a Playbook
+    void edit(Ref ref, AjaxRequestTarget target);
 }

@@ -35,18 +35,18 @@ class Playbook extends ProjectElement implements Describable {
 
     // Queries
 
-    List<Ref> findInformationActsOfResource(Ref resource) {
-        List<Ref> ias = informationActs.findall {ia ->
-            (ia.actor == resource) || (ia.isFlowAct() && ia.targetResource == resource)
-        }
-    }
-
     List<Ref> findAllTypes(String typeType) {
         return this.project.findAllTypes(typeType)
     }
 
     List<String> findAllOtherTypeNames(Ref elementType) {
          return this.project.findAllOtherTypeNames(elementType)
+    }
+
+    List<Ref> findCandidateCauses(Ref infoAct) {
+         List<Ref> candidates = informationActs.findAll { act ->
+              !act.isAfter(infoAct)
+         }
     }
 
     // end queries

@@ -1,16 +1,14 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.eventType;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractModelElementFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -21,7 +19,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
 import java.io.Serializable;
@@ -33,7 +30,7 @@ import java.io.Serializable;
  * Date: May 5, 2008
  * Time: 3:58:40 PM
  */
-public class EventTypeTopicsTab extends AbstractModelElementFormTab {
+public class EventTypeTopicsTab extends AbstractFormTab {
 
     protected AutoCompleteTextField newTopicField;
     protected AjaxButton addTopicButton;

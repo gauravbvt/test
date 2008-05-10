@@ -1,13 +1,10 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.ifm.info.Location;
-import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;

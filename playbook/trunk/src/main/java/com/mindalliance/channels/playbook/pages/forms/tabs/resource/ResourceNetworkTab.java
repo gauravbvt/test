@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
 import com.mindalliance.channels.playbook.ifm.project.resources.Relationship;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.ifm.project.environment.Agreement;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -40,7 +40,7 @@ import java.io.Serializable;
  * Date: Apr 24, 2008
  * Time: 9:45:02 AM
  */
-public class ResourceNetworkTab extends AbstractProjectElementFormTab {
+public class ResourceNetworkTab extends AbstractFormTab {
 
     protected DynamicFilterTree resourcesTree;
     protected WebMarkupContainer relationshipsDiv;

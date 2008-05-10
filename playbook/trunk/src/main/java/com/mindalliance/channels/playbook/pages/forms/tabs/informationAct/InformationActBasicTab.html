@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Description</legend>
+                    <textarea wicket:id="description" rows = "3" cols = "40">[description]</textarea>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Duration</legend>
+                    <span wicket:id="duration">[timing panel]</span>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Actor</legend>
+                    <span wicket:id="resource">[actor resource]</span>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Cause</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <span wicket:id="causeInformationAct">[information act]</span>
+                            </td>
+                            <td>
+                                <span wicket:id="delay">[timing panel]</span>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+     <wicket:child/>
+</wicket:extend>
+</body>
+</html>

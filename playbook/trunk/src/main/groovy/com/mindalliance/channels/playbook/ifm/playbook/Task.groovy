@@ -13,8 +13,7 @@ import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
 */
 class Task extends InformationAct {
 
-    Ref TaskType
-    // List<Information> newInformations = []   // -- redundant: replaceable by caused Observations
-    List<InformationTemplate> neededInformations = []
+    Ref taskType
+    List<InformationTemplate> informationNeeds = []
 
 }

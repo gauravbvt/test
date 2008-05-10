@@ -4,14 +4,12 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractProjectElementFormTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.query.Query;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 
 import java.util.List;
 import java.io.Serializable;
@@ -23,7 +21,7 @@ import java.io.Serializable;
  * Date: Apr 24, 2008
  * Time: 9:21:40 AM
  */
-public class ResourceResponsibilitiesTab extends AbstractProjectElementFormTab {
+public class ResourceResponsibilitiesTab extends AbstractFormTab {
 
     DynamicFilterTree roleTree;
 
@@ -33,7 +31,6 @@ public class ResourceResponsibilitiesTab extends AbstractProjectElementFormTab {
 
     protected void load() {
         super.load();
-        // List<Ref> allRoles = getProject().findAllTypes("Role");
         roleTree = new DynamicFilterTree("roles", new RefPropertyModel(getElement(), "roles"), 
                                                   new RefQueryModel(getProject(), new Query("findAllTypes", "Role"))) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {

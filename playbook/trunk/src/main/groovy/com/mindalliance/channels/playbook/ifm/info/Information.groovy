@@ -13,6 +13,6 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 */
 class Information extends AbstractInformation {
 
-    Ref aboutEvent // an event description     -- required
+    Ref event // about an event description     -- required
 
 }

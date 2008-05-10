@@ -44,7 +44,7 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
             informationTemplate = new InformationTemplate();
             RefUtils.set(getElement(), propPath, informationTemplate);
         }
-        eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".eventSpec", readOnly, feedback);
+        eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".eventSpec", isReadOnly(), feedback);
         addReplaceable(eventSpecPanel);
         RefQueryModel topicChoicesModel = new RefQueryModel(EventType.class,
                                                             new Query("findAllTopicsIn",

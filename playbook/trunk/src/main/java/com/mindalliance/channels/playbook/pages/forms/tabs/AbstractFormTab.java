@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
@@ -26,7 +27,7 @@ import java.util.HashMap;
  * Date: Apr 23, 2008
  * Time: 7:43:46 PM
  */
-public class AbstractFormTab extends Panel implements ElementPanel {
+public class AbstractFormTab extends AbstractPlaybookPanel {
 
     protected static final boolean READONLY = true;
     protected static final boolean EDITABLE = false;
@@ -45,6 +46,10 @@ public class AbstractFormTab extends Panel implements ElementPanel {
         init();
     }
 
+    protected FeedbackPanel getFeedback() {
+        return feedback;
+    }
+
     protected void beforeLoad() {
         // do nothing
     }
@@ -54,31 +59,6 @@ public class AbstractFormTab extends Panel implements ElementPanel {
         feedback = new FeedbackPanel("feedback");
         feedback.setOutputMarkupId(true);
         add(feedback);
-    }
-
-    protected void init() {
-        this.setOutputMarkupId(true);
-        for (final FormComponent inputField : inputFields) {
-            inputField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-                @Override
-                protected void onUpdate(AjaxRequestTarget target) {
-                    List<Component> dependents = dependencies.get(inputField);
-                    if (dependents != null) {
-                        for (Component dependent : dependents) {
-                            target.addComponent(dependent);
-                        }
-                    }
-                    target.addComponent(feedback);
-                }
-
-                protected void onError(AjaxRequestTarget target, RuntimeException e) {
-                    Logger.getLogger(this.getClass()).error("Error updating " + inputField + ": " + e);
-                    inputField.clearInput();
-                    target.addComponent(inputField);
-                    target.addComponent(feedback);
-                }
-            });
-        }
     }
 
     // ElementPanel
@@ -128,38 +108,16 @@ public class AbstractFormTab extends Panel implements ElementPanel {
         return elementForm.getScope();
     }
 
+    public void edit(Ref ref, AjaxRequestTarget target) {
+        elementForm.edit(ref, target);
+    }
+
     // end ElementPanel
 
-    protected void addInputField(FormComponent inputField, Component dependentField) {
-        addInputField(inputField);
-        List<Component> dependents = getDependentsOf(inputField);
-        dependents.add(dependentField);
-    }
-
-    List<Component> getDependentsOf(Component component) {
-        List<Component> dependents = dependencies.get(component);
-        if (dependents == null) {
-            dependents = new ArrayList<Component>();
-            dependencies.put(component, dependents);
-        }
-        return dependents;
-    }
-
-    protected void addInputField(FormComponent inputField) {
-        inputFields.add(inputField);
-        addReplaceable(inputField);
-    }
 
     protected void addReplaceable(Component component) {
         component.setOutputMarkupId(true);
         addOrReplace(component);
-    }
-
-    protected void edit(Ref ref, AjaxRequestTarget target) {
-        System.out.println("TODO: EDIT " + ref);
-        if (ref != null) {
-            // TODO - open breadcrumbed editor on agreement             
-        }
     }
 
 

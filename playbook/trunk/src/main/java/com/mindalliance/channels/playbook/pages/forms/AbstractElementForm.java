@@ -117,7 +117,13 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         return Channels.instance().getReference();
     }
 
-
+    public void edit(Ref ref, AjaxRequestTarget target) {
+        System.out.println("TODO: EDIT " + ref);
+        if (ref != null) {
+            // TODO - open breadcrumbed editor on agreement
+        }
+    }
+    
     // end ElementPanel
 
     public void reset() {

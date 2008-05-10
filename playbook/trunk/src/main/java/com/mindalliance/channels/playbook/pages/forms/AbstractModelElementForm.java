@@ -23,6 +23,11 @@ abstract public class AbstractModelElementForm extends AbstractElementForm {
         return (PlaybookModel)((ModelElement)element.deref()).getModel().deref();
     }
 
+    public boolean isModelPanel() {
+        return true;
+    }
+
+
     // End ElementPanel
 
 }

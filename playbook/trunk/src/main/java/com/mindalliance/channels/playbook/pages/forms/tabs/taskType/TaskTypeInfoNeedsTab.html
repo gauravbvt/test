@@ -7,36 +7,27 @@
 <wicket:extend>
     <table>
         <tr>
-            <td>
+            <td valign="top">
                 <fieldset>
-                    <legend>About</legend>
-                    <span wicket:id="eventTypes">[Event types]</span>
+                    <legend>Information needs</legend>
+                    <select wicket:id="informationTemplates">
+                        <option>[information template string]</option>
+                    </select>
+                    <br/>
+                    <button wicket:id="addInfoTemplate">Add</button>
+                    <button wicket:id="deleteInfoTemplate">Delete</button>
                 </fieldset>
             </td>
             <td>
-                <button wicket:id="addInfoTemplate">Add information need</button>
-            </td>
-            <td>
-               <fieldset>
-                   <legend>Information needs</legend>
-                   <div wicket:id="infoTemplatesDiv">
-                       <ul wicket:id="informationTemplates">
-                           <li>
-                               <a wicket:id="infoTemplateLink" href = "#"><span wicket:id="infoTemplateString">[Info template string]</span></a>
-                               <a wicket:id="deleteInfoTemplateLink">(delete)</a>
-                           </li>
-                       </ul>
-                   </div>
-               </fieldset>
+                <div wicket:id="infoTemplateDiv">
+                    <fieldset>
+                        <legend>Information need</legend>
+                        <span wicket:id="informationTemplate">[Information template panel]</span>
+                    </fieldset>
+                </div>
             </td>
         </tr>
     </table>
-    <div wicket:id="infoTemplateDiv">
-        <fieldset>
-            <legend>Information need</legend>
-            <span wicket:id="informationTemplate">[Information template panel]</span>
-        </fieldset>
-    </div>
 </wicket:extend>
 </body>
 </html>
