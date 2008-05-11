@@ -140,7 +140,7 @@ public class EventTypeTopicsTab extends AbstractFormTab {
     }
 
     private List<String>getInheritedTopics() {
-        return (List<String>)Query.execute(getIfmModel(), "findInheritedTopics", getElement());
+        return (List<String>)Query.execute(getPlaybookModel(), "findInheritedTopics", getElement());
     }
 
     private Iterator matchingTopics(String input) {

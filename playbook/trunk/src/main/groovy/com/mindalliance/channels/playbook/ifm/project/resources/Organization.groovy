@@ -19,7 +19,7 @@ class Organization extends Resource {
     List<Ref> subOrganizations = []
     List<Ref> positions = []
     List<Ref> systems = []
-    Location jurisdiction
+    Location jurisdiction = new Location()
     List<Ref> organizationTypes = []
 
     void beforeStore() {

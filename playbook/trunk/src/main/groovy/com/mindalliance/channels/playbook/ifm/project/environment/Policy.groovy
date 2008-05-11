@@ -15,15 +15,21 @@ import com.mindalliance.channels.playbook.ifm.Describable
 */
 class Policy extends ProjectElement implements Describable {
 
+    static final public List<String> edictKinds = ['interdiction', 'obligation']
+
     String name = ''
     String description = ''
-    List<Ref> sourceOrganizationTypes = [] // -- required
-    List<Ref> recipientOrganizationTypes = [] // -- required
-    List<Ref> relationshipTypes // relationships from source to recipient
-    String edict = 'interdiction' // one of {interdiction, obligation}
+    boolean effective = false // whether the policy is in place in the real world
+    String edict =  'interdiction' // either interdicts or obligates
+    List<Ref> sourceOrganizationTypes = [] // -- required   (ORed)
+    List<Ref> recipientOrganizationTypes = [] // -- required (ORed)
+    List<Ref> relationshipTypes // relationships from source to recipient (ORed)
     InformationTemplate informationShared // specification of information (not) to be shared -- required
     List<Ref> purposeTypes = [] // what the shared information would be used for
-    String conditions // details re. applicability -- requires human interpretation to validate applicability
-    boolean effective = false // whether the policy is in place in the real world
+
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['edictKinds'])
+    }
 
 }

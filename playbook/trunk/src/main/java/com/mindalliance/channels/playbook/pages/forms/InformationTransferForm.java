@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActInfoTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationTransfer.InformationTransferMediaTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -15,7 +16,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 9, 2008
  * Time: 9:52:16 PM
  */
-public class InformationTransferForm  extends AbstractInformationActForm {
+public class InformationTransferForm extends AbstractInformationActForm {
 
     public InformationTransferForm(String id, Ref element) {
         super(id, element);
@@ -24,7 +25,7 @@ public class InformationTransferForm  extends AbstractInformationActForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Basic")) {
             public Panel getPanel(String panelId) {
-                return new InformationActBasicTab(panelId, InformationTransferForm.this);
+                return new FlowActBasicTab(panelId, InformationTransferForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model("Information")) {

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.playbook.ifm.project.environment
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.info.LocationInfo
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Describable

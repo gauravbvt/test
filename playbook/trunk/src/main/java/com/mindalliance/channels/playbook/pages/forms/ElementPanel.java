@@ -23,7 +23,7 @@ public interface ElementPanel {
     boolean isModelPanel();
     boolean isPlaybookPanel();
     Project getProject();
-    PlaybookModel getIfmModel();
+    PlaybookModel getPlaybookModel();
     Playbook getPlaybook();
     Ref getScope(); // either Channels.instance(), a Project, an IFM PlaybookModel or a Playbook
     void edit(Ref ref, AjaxRequestTarget target);

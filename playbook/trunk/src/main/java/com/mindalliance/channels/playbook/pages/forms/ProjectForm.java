@@ -17,8 +17,6 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class ProjectForm extends AbstractProjectElementForm {
 
-   ProjectAboutTab identityTab;
-
     public ProjectForm(String id, Ref element) {
         super(id, element);
     }

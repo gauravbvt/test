@@ -1,15 +1,11 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs;
 
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Component;
-import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
@@ -95,8 +91,8 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
         return elementForm.getProject();
     }
 
-    public PlaybookModel getIfmModel() {
-        return elementForm.getIfmModel();
+    public PlaybookModel getPlaybookModel() {
+        return elementForm.getPlaybookModel();
     }
 
     public Playbook getPlaybook() {

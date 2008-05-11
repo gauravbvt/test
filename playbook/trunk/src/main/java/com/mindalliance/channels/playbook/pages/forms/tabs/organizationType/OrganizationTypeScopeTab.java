@@ -34,7 +34,7 @@ public class OrganizationTypeScopeTab extends AbstractFormTab {
     protected void load() {
         super.load();
         domainTree = new DynamicFilterTree("domain", new RefPropertyModel(getElement(), "domain"),
-                new RefQueryModel(getIfmModel(), new Query("findAllTypes", "Domain")), SINGLE_SELECTION) {
+                new RefQueryModel(getPlaybookModel(), new Query("findAllTypes", "Domain")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedDomain = domainTree.getNewSelection();
                 RefUtils.set(getElement(), "domain", selectedDomain);
@@ -42,7 +42,7 @@ public class OrganizationTypeScopeTab extends AbstractFormTab {
         };
         addReplaceable(domainTree);
         jurisdictionTypeTree = new DynamicFilterTree("jurisdictionType", new RefPropertyModel(getElement(), "jurisdictionType"),
-                new RefQueryModel(getIfmModel(), new Query("findAllTypes", "AreaType")), SINGLE_SELECTION) {
+                new RefQueryModel(getPlaybookModel(), new Query("findAllTypes", "AreaType")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedType = jurisdictionTypeTree.getNewSelection();
                 RefUtils.set(getElement(), "jurisdictionType", selectedType);

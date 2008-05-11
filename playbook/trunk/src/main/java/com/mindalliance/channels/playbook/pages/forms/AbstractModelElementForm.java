@@ -19,7 +19,7 @@ abstract public class AbstractModelElementForm extends AbstractElementForm {
 
     // ElementPanel
 
-    public PlaybookModel getIfmModel() {
+    public PlaybookModel getPlaybookModel() {
         return (PlaybookModel)((ModelElement)element.deref()).getModel().deref();
     }
 

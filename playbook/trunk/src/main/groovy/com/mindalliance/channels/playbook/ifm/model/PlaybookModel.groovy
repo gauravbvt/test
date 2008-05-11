@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.model
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
@@ -12,9 +13,10 @@ import com.mindalliance.channels.playbook.support.RefUtils
  * Date: Apr 17, 2008
  * Time: 1:09:50 PM
  */
-class PlaybookModel extends IfmElement {
+class PlaybookModel extends IfmElement implements Describable {
 
     String name
+    String description
     Boolean shared
 
     List<Ref> participations = []
@@ -35,7 +37,7 @@ class PlaybookModel extends IfmElement {
     }
 
     protected List<String> transientProperties() {
-        return super.transientProperties() + ['elements']
+        return super.transientProperties() + ['elements', 'participatingUsers']
     }
 
 
@@ -61,6 +63,10 @@ class PlaybookModel extends IfmElement {
         elements.addAll(roles)
         elements.addAll(taskTypes)
         return elements
+    }
+
+    List<Ref> getParticipatingUsers() {
+        return participations.collect {participation -> participation.user}
     }
 
     // Queries
