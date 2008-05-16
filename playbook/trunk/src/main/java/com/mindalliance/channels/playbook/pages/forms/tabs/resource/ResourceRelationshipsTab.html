@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <fieldset>
+        <legend>Existing relationships</legend>
+        <div wicket:id="relationshipsDiv">
+            <ul wicket:id="relationships">
+                <li>
+                    <a wicket:id="fromResourceLink" href = "#"><span wicket:id="fromResourceName">[from resource name]</span></a>
+                    <span wicket:id="relationshipName">[relationship name]</span>
+                    <a wicket:id="toResourceLink" href = "#"><span wicket:id="toResourceName">[to resource name]</span></a>
+                    <a wicket:id="deleteRelationship" href = "#">(delete)</a>
+                </li>
+            </ul>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>New relationship</legend>
+        <table>
+            <tr>
+                <td>
+                    <span wicket:id="newFromResourceName">[resource's name]</span>
+                </td>
+                <td>
+                    <input wicket:id="newRelationshipName" type = "text"/>
+                </td>
+                <td>
+                    <span wicket:id="resources">[resources tree]</span>
+                </td>
+            </tr>
+        </table>
+        <div wicket:id="reverseRelationshipDiv">
+            <fieldset>
+                <legend>Also means that</legend>
+                <table>
+                    <tr>
+                        <td>
+                            <span wicket:id="reverseFromResourceName">[resource name]</span>
+                        </td>
+                        <td>
+                            <input wicket:id="reverseRelationshipName" type = "text"/>
+                        </td>
+                        <td>
+                            <span wicket:id="reverseToResourceName">[resource name]</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><button wicket:id="addRelationships">Add</button></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+    </fieldset>
+</wicket:extend>
+</body>
+</html>

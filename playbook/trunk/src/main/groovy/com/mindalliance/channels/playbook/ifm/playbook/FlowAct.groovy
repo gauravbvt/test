@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class FlowAct extends InformationAct {
 
-    Ref targetResource
+    Ref targetAgent
 
     @Override
     boolean isFlowAct() {

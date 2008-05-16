@@ -31,10 +31,10 @@ interface Ref extends Serializable {
     void remove(Ref ref) // ditto on ref.deref()
     void remove(Referenceable referenceable, String type)  // use type parameter to compose add<Type>(referenceable)
     void remove(Ref ref, String type)  // ditto on ref.deref()
-    List<Ref> executeQuery(String query, Map<String,Object> args)
     boolean save() // commit self and all references (transitively) then export self and references to file named = id
     List<Ref> references()
     void begin() // returns a modifiable copy with current session as change listener. Noop if referenceable already in session.
     boolean isModifiable() // is this.deref() modifiable
     boolean isModified() // is in session and has been changed
+    boolean exists() // can it be dereferenced to not null?
 }

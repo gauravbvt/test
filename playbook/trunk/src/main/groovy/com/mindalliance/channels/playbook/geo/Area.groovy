@@ -4,12 +4,12 @@ import org.geonames.Toponym
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Mar 22, 2008
-* Time: 12:24:25 PM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Mar 22, 2008
+ * Time: 12:24:25 PM
+ */
 class Area implements Comparable, Serializable {
 
     static final Area UNKNOWN = new UnknownArea()
@@ -21,7 +21,7 @@ class Area implements Comparable, Serializable {
     static final String CITY = 'City'
 
     private Toponym topo
-    private List<Area>nearby
+    private List<Area> nearby
     private List<Area> hierarchy
 
     Area() {}
@@ -47,9 +47,9 @@ class Area implements Comparable, Serializable {
     }
 
     static Area locate(AreaInfo areaInfo) {
-         if (!areaInfo.country) throw new AreaException("Country not named")
-         Area area = GeoService.locate(areaInfo)    // return null if the location is unknown or ambiguous
-         return area
+        if (!areaInfo.country) throw new AreaException("Country not named")
+        Area area = GeoService.locate(areaInfo)    // return null if the location is unknown or ambiguous
+        return area
     }
 
     // Find nearby places of the same area type
@@ -69,10 +69,13 @@ class Area implements Comparable, Serializable {
     }
 
     // Whether this place is within a given location
-    boolean isWithin(Area area)  {
-        List<Area> hier = findHierarchy()
-        boolean within =  hier.any {
-            it.geonameId && it.geonameId == area.geonameId
+    boolean isWithin(Area area) {
+        boolean within = false;
+        if (area.isDefined()) {
+            List<Area> hier = findHierarchy()
+            within = hier.any {
+                it.geonameId && it.geonameId == area.geonameId
+            }
         }
         return within
     }
@@ -85,11 +88,11 @@ class Area implements Comparable, Serializable {
     }
 
     boolean isGlobe() {
-       return topo.name=="Globe" && topo.featureCode == null
+        return topo.name == "Globe" && topo.featureCode == null
     }
 
     boolean isContinent() {
-            return topo.featureCode =="CONT"
+        return topo.featureCode == "CONT"
     }
 
     boolean isCountry() {
@@ -97,19 +100,19 @@ class Area implements Comparable, Serializable {
     }
 
     boolean isStateLike() {
-       return topo.featureCode == 'ADM1'
+        return topo.featureCode == 'ADM1'
     }
 
     boolean isCountyLike() {
-      return topo.featureCode == 'ADM2'
+        return topo.featureCode == 'ADM2'
     }
 
     boolean isCityLike() {
-      return GeoService.CITY.contains(topo.featureCode) 
+        return GeoService.CITY.contains(topo.featureCode)
     }
 
     // forward all the gets to toponym    
-    def get(String prop)  {
+    def get(String prop) {
         return topo."$prop"
     }
 
@@ -138,7 +141,7 @@ class Area implements Comparable, Serializable {
     }
 
     String featureCodeFromTypeName(String typeName) {
-        switch(typeName) {
+        switch (typeName) {
             case 'Globe': return null; break
             case 'Continent': return 'CONT'; break
             case 'Country': return 'PCLI'; break

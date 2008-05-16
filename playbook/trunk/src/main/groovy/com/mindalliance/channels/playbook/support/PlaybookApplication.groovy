@@ -27,15 +27,12 @@ import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.ifm.model.PlaceType
 import com.mindalliance.channels.playbook.ifm.project.environment.Place
-import com.mindalliance.channels.playbook.ifm.model.RelationshipType
-import com.mindalliance.channels.playbook.ifm.project.resources.Relationship
-import com.mindalliance.channels.playbook.ifm.project.environment.Agreement
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
 import com.mindalliance.channels.playbook.ifm.model.Role
 import com.mindalliance.channels.playbook.ifm.model.MediumType
 import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.EventType
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
-import com.mindalliance.channels.playbook.ifm.model.PurposeType
 import com.mindalliance.channels.playbook.ifm.model.TaskType
 
 /**
@@ -138,6 +135,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         acme.addPosition(pos2)
         acme.addPosition(pos3)
         acme.addSystem(store(new System(name:'Hal 9000')))
+        p.addRelationship(store(new Relationship(fromAgent: acme.reference, toAgent: nadir.reference , name: "client")))
         store(acme)
         Ref pos4 = store(new Position(name: 'Position 4'))
         Ref pos5 = store(new Position(name: 'Position 5'))
@@ -150,11 +148,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
         p.addPerson(store(jane))
 
-        joe.addRelationship(new Relationship(withResource: jane.reference , relationshipType: m.findType("RelationshipType", "Immediate family")))
+
+        p.addRelationship(store(new Relationship(fromAgent: joe.reference, toAgent: jane.reference , name: "family")))
         store(joe)
 
-        Ref ag1 = store(new Agreement(fromResource: joe.reference, toResource: jane.reference))
-        Ref ag2 = store(new Agreement(fromResource: joe.reference, toResource: acme.reference))
+        Ref ag1 = store(new SharingAgreement(fromResource: joe.reference, toResource: jane.reference))
+        Ref ag2 = store(new SharingAgreement(fromResource: joe.reference, toResource: acme.reference))
         p.addAgreement(ag1)
         p.addAgreement(ag2)
 
@@ -219,17 +218,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addDomain(biz)
         m.addDomain(gov)
 
-        m.addOrganizationType(store(new OrganizationType(name: 'State Public Health Office', domain: health, jurisdictionType: state.reference)))
-        m.addOrganizationType(store(new OrganizationType(name: 'Multinational Corporation', domain: biz, jurisdictionType: globe.reference)))
-        m.addOrganizationType(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law, jurisdictionType: county.reference)))
-
-        RelationshipType family = new RelationshipType(name: 'Family', description: 'In same extended family', fromKinds: ['Person'], toKinds: ['Person'])
-        RelationshipType immediateFamily = new RelationshipType(name: 'Immediate family', description: 'In same immediate family', fromKinds: ['Person'], toKinds: ['Person'])
-        RelationshipType client = new RelationshipType(name: 'Client', description: 'A business client', fromKinds: ['Person', 'Organization', 'Position'], toKinds: ['Organization'])
-        immediateFamily.narrow(family.reference)
-        m.addRelationshipType(store(family))
-        m.addRelationshipType(store(immediateFamily))
-        m.addRelationshipType(store(client))
+        m.addOrganizationType(store(new OrganizationType(name: 'State Public Health Office', domain: health)))
+        m.addOrganizationType(store(new OrganizationType(name: 'Multinational Corporation', domain: biz)))
+        m.addOrganizationType(store(new OrganizationType(name: 'County Sheriff\'s Office', domain: law)))
 
         Role boss = new Role(name: 'Boss', description: 'The big kahuna')
         Role employee = new Role(name: 'Employee', description: 'A salaryman')
@@ -248,11 +239,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addMediumType(store(new MediumType(name: 'cell')))
         m.addMediumType(store(new MediumType(name: 'pager')))
         m.addMediumType(store(new MediumType(name: 'radio')))
-
-        m.addPurposeType(store(new PurposeType(name: 'prepare')));
-        m.addPurposeType(store(new PurposeType(name: 'prevent')));
-        m.addPurposeType(store(new PurposeType(name: 'respond')));
-        m.addPurposeType(store(new PurposeType(name: 'recover')));
 
         m.addTaskType(store(new TaskType(name: 'surveillance')));
         m.addTaskType(store(new TaskType(name: 'autopsy')));

@@ -139,8 +139,10 @@ class RefImpl implements Ref {
     }
 
     void delete() {
+        Referenceable referenceable = this.deref()
         Store store = PlaybookApplication.locateStore()
         store.delete(this)
+        referenceable.afterDelete()
     }
 
     Ref persist() {
@@ -239,10 +241,6 @@ class RefImpl implements Ref {
         this."remove$suffix"(referenceable.reference)
     }
 
-    List<Ref> executeQuery(String query, Map<String, Object> args) {
-        return PlaybookApplication.getQueryHandler().executeQuery(this, query, args)
-    }
-
     List<Ref> references() {
         return this.deref().references()
     }
@@ -263,6 +261,10 @@ class RefImpl implements Ref {
     boolean isModified() {
        Store store = PlaybookApplication.locateStore()
        return store.isModified(this)
+    }
+
+    public boolean exists() {
+        return deref() != null
     }
 
 

@@ -14,6 +14,7 @@ import org.ho.yaml.YamlDecoder
 import java.text.SimpleDateFormat
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.Mapper
+import com.mindalliance.channels.playbook.query.QueryManager
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -66,6 +67,7 @@ class ApplicationMemory implements Serializable {
         cache.putInCache(referenceable.getId(), referenceable)
         if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
+        QueryManager.modified(referenceable)
         return referenceable.reference
     }
 
@@ -75,6 +77,7 @@ class ApplicationMemory implements Serializable {
 
     void delete(Ref ref) {
         cache.flushEntry(ref.id)
+        QueryManager.modified(referenceable)        
     }
 
     Referenceable retrieve(Ref ref) {

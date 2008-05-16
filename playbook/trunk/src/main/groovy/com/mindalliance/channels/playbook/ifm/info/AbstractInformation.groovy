@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 */
 class AbstractInformation extends BeanImpl {
 
-    List<ElementOfInformation> eventDetails
+    List<ElementOfInformation> eventDetails = []
 
 }

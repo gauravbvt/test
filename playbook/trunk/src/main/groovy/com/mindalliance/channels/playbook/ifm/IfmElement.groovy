@@ -29,6 +29,10 @@ import com.mindalliance.channels.playbook.support.RefUtils
         doAddToField(field, element)
     }
 
+    void initializeFromContext(IfmElement context) {
+        // Do nothing  -- override this
+    }
+
     void changed() {
        super.changed()
        lastModified = new Date()

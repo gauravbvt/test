@@ -23,13 +23,47 @@ class Policy extends ProjectElement implements Describable {
     String edict =  'interdiction' // either interdicts or obligates
     List<Ref> sourceOrganizationTypes = [] // -- required   (ORed)
     List<Ref> recipientOrganizationTypes = [] // -- required (ORed)
-    List<Ref> relationshipTypes // relationships from source to recipient (ORed)
+    List<String> relationshipNames // relationships from source to recipient (ORed)
     InformationTemplate informationShared // specification of information (not) to be shared -- required
-    List<Ref> purposeTypes = [] // what the shared information would be used for
+    List<String> purposes = [] // constrained (interdicted|obligation-causing) usages of the information
+    List<Ref> mediumTypes = [] // what types of communication media must (or must not) be used
 
     @Override
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['edictKinds'])
+    }
+
+    String partiesMeaning() {
+        String meaning = "The policy applies to any source from organizations ${orgTypesSummary(sourceOrganizationTypes)} "
+        meaning += " that ${relationshipsSummary()} with any recipient from organizations ${orgTypesSummary(sourceOrganizationTypes)}."
+        return meaning
+    }
+
+
+    private String orgTypesSummary(List<Ref> orgTypes) {
+        String summary
+        if (orgTypes.isEmpty()) {
+            summary = "of any type"
+        }
+        else {
+            summary = "classified as "
+            orgTypes.each {type -> summary += "${type.name} or "}
+            summary = summary.substring(0, summary.size()- 4)
+        }
+        return summary
+    }
+
+    private String relationshipsSummary() {
+        String summary
+        if (orgTypes.isEmpty()) {
+            summary = "has any kind of relationship"
+        }
+        else {
+            summary = "is "
+            relationshipNames.each {name -> summary += "$name or "}
+            summary = summary.substring(0, summary.size()- 4)
+        }
+        return summary
     }
 
 }

@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public class FlowActBasicTab extends InformationActBasicTab {
 
-    protected DynamicFilterTree targetResourceTree;
+    protected DynamicFilterTree targetAgentTree;
 
     public FlowActBasicTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -28,16 +28,16 @@ public class FlowActBasicTab extends InformationActBasicTab {
 
     protected void load() {
         super.load();
-        targetResourceTree = new DynamicFilterTree("targetResource", new RefPropertyModel(getElement(), "targetResource"),
+        targetAgentTree = new DynamicFilterTree("targetAgent", new RefPropertyModel(getElement(), "targetAgent"),
                                                     new RefQueryModel(getProject(),
-                                                        new Query("findAllResourcesExcept", RefUtils.get(getElement(), "actorResource"))),
+                                                        new Query("findAllAgentsExcept", RefUtils.get(getElement(), "actorAgent"))),
                                                     SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selectedResource = targetResourceTree.getNewSelection();
-                RefUtils.set(getElement(), "targetResource", selectedResource);
+                Ref selectedResource = targetAgentTree.getNewSelection();
+                RefUtils.set(getElement(), "targetAgent", selectedResource);
             }
         };
-        addReplaceable(targetResourceTree);
+        addReplaceable(targetAgentTree);
     }
 
 }

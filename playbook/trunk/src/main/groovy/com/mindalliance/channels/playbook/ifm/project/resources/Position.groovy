@@ -15,11 +15,14 @@ import org.apache.commons.collections.CollectionUtils
 class Position extends OrganizationResource {
 
     Location jurisdiction
-    List<Ref> managedPositions = []
 
     void beforeStore() {
         super.beforeStore()
         if (jurisdiction) jurisdiction.detach()
+    }
+
+    boolean isLocatedWithin(Location loc) {
+        return super.isLocatedWithin(loc) || jurisdiction.isWithin(loc)
     }
 
     // Queries

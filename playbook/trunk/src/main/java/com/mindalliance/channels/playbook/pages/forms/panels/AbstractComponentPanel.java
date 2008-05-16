@@ -25,6 +25,10 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 // Not much to abstract...
 abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
 
+    public final static boolean SINGLE_SELECTION = true;
+    protected static final boolean READONLY = true;
+    protected static final boolean EDITABLE = false;
+
     protected boolean readOnly = false;
     protected ElementPanel parentPanel;
     protected String propPath; // path to the element's property which value is the component to be edited
@@ -37,7 +41,6 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         this.propPath = propPath;
         this.readOnly = readOnly;
         this.feedback = feedback;
-        beforeLoad();
         load();
         init();
     }
@@ -120,7 +123,7 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
 
     public void onDetach() {
         try {
-            Object component = RefUtils.get(getElement(), propPath);
+            Object component = (Object)RefUtils.get(getElement(), propPath);
             if ( component != null && component instanceof Bean )
                 ((Bean)component).detach();
         } catch (RuntimeException e) {

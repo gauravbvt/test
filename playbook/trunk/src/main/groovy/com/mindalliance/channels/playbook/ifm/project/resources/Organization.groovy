@@ -22,9 +22,29 @@ class Organization extends Resource {
     Location jurisdiction = new Location()
     List<Ref> organizationTypes = []
 
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['resources'])
+    }
+
     void beforeStore() {
         super.beforeStore()
         if (jurisdiction) jurisdiction.detach()
+    }
+
+    boolean isOrganization() {
+        return true
+    }
+
+    boolean isLocatedWithin(Location loc) {
+        return super.isLocatedWithin(loc) || jurisdiction.isWithin(loc)
+    }        
+
+    List<Ref> getResources() {
+        List<Ref> resources = []
+        resources.addAll(positions)
+        resources.addAll(systems)
+        return resources
     }
 
     void addElement(IfmElement element) {
@@ -77,7 +97,14 @@ class Organization extends Resource {
         return allPositions
     }
 
+    boolean hasRole(Ref role) {
+        if (super.hasRole(role)) return true
+        if (this.positions.any {position -> position.hasRole(role) }) return true
+        if (this.systems.any {system -> system.hasRole(role) }) return true
+        return false
+    }
 
+    // end queries
 
 
 }

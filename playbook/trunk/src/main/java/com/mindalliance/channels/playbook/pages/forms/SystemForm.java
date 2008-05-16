@@ -2,8 +2,9 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceLocationTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceNetworkTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceResponsibilitiesTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceRelationshipsTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceAgreementsTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.system.SystemIdentityTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
@@ -38,9 +39,14 @@ public class SystemForm extends AbstractResourceForm {
                 return new ResourceResponsibilitiesTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Network")) {
+        tabs.add(new AbstractTab(new Model("Relationships")) {
             public Panel getPanel(String panelId) {
-                return new ResourceNetworkTab(panelId, SystemForm.this);
+                return new ResourceRelationshipsTab(panelId, SystemForm.this);
+            }
+        });
+        tabs.add(new AbstractTab(new Model("Agreements")) {
+            public Panel getPanel(String panelId) {
+                return new ResourceAgreementsTab(panelId, SystemForm.this);
             }
         });
     }

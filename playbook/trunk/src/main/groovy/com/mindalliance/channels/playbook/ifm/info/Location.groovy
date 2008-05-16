@@ -18,7 +18,7 @@ class Location extends BeanImpl {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['longitude', 'latitude']
+        return super.transientProperties() + ['longitude', 'latitude', 'effectiveLocationInfo']
     }
 
     String toString() {
@@ -26,7 +26,7 @@ class Location extends BeanImpl {
         if (place) {
             s = "${place.name}"
         }
-        else if(locationInfo) {
+        else {
             s = "${locationInfo.toString()}"
         }
         if (!placeInfo.isEmpty()) {
@@ -67,5 +67,14 @@ class Location extends BeanImpl {
             known = locationInfo.hasLatLong()
         }
         return known
+    }
+
+    boolean isWithin(Location other) {
+        return this.effectiveLocationInfo.isWithin(other.effectiveLocationInfo)
+    }
+
+    LocationInfo getEffectiveLocationInfo() {
+        if (place) return place.locationInfo
+        else return locationInfo
     }
 }

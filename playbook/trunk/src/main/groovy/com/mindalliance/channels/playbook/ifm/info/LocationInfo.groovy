@@ -55,4 +55,8 @@ class LocationInfo extends BeanImpl {
         return this.latitude >= 0 && this.longitude >= 0
     }
 
+    boolean isWithin(LocationInfo other) {
+        return this.areaInfo.isWithin(other.areaInfo)
+    }
+
 }

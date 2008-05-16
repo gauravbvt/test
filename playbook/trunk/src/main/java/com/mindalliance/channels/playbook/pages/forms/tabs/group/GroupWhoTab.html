@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <ul>
+        <li>
+            <label><span>Name: </span><input wicket:id="name" type = "text"/></label>
+        </li>
+        <li>
+            <label><span>Description: </span><textarea wicket:id="description" rows="3" cols = "60">[description]</textarea></label>
+        </li>
+    </ul>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Members are</legend>
+                    <select wicket:id="kinds">
+                        <option>[a kind]</option>
+                    </select>
+                </fieldset>
+            </td>
+            <td>
+                <span>that play</span>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>any such roles</legend>
+                    <div wicket:id="roles">[roles]</div>
+                    <span>(any role if none selected)</span>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <wicket:child/>
+</wicket:extend>
+</body>
+</html>

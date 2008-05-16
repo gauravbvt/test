@@ -2,8 +2,6 @@ package com.mindalliance.channels.playbook.ref.impl
 
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.support.persistence.PersistentRef
-import com.mindalliance.channels.playbook.support.persistence.CacheEntryBean
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.support.persistence.Mappable
 import com.mindalliance.channels.playbook.support.Mapper

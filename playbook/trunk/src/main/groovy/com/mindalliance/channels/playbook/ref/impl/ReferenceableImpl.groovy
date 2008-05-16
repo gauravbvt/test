@@ -235,4 +235,8 @@ import org.apache.log4j.Logger
     public boolean save() {
         this.reference.save()
     }
+
+    public void afterDelete() {
+        // Do nothing
+    }
 }

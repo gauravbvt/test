@@ -27,8 +27,6 @@ class PlaybookModel extends IfmElement implements Describable {
     List<Ref> mediumTypes = []
     List<Ref> organizationTypes = []
     List<Ref> placeTypes = []
-    List<Ref> purposeTypes = []
-    List<Ref> relationshipTypes = []
     List<Ref> roles = []
     List<Ref> taskTypes = []
 
@@ -58,8 +56,6 @@ class PlaybookModel extends IfmElement implements Describable {
         elements.addAll(eventTypes)
         elements.addAll(issueTypes)
         elements.addAll(placeTypes)
-        elements.addAll(purposeTypes)
-        elements.addAll(relationshipTypes)
         elements.addAll(roles)
         elements.addAll(taskTypes)
         return elements
@@ -113,7 +109,7 @@ class PlaybookModel extends IfmElement implements Describable {
         [
                 Domain.class, EventType.class, IssueType.class,
                 PlaceType.class, AreaType.class, OrganizationType.class,
-                PurposeType.class, RelationshipType.class,
+                MediumType.class,
                 Role.class, TaskType.class
         ]
     }

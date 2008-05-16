@@ -1,8 +1,6 @@
 package com.mindalliance.channels.playbook.query
 
 import com.mindalliance.channels.playbook.ref.Ref
-import java.beans.PropertyChangeListener
-import java.beans.PropertyChangeEvent
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.project.Project
@@ -11,9 +9,19 @@ import org.apache.log4j.Logger
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.model.EventType
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy
+import com.mindalliance.channels.playbook.ifm.model.TaskType
+import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
+import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.ifm.playbook.SharingAct
+import com.mindalliance.channels.playbook.ifm.playbook.Detection
+import com.mindalliance.channels.playbook.ifm.playbook.Causable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,7 +30,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
  * Date: May 2, 2008
  * Time: 9:57:33 AM
  */
-class QueryManager implements PropertyChangeListener {
+class QueryManager {
 
     static private final boolean WARN_NO_CACHING = true
 
@@ -40,39 +48,53 @@ class QueryManager implements PropertyChangeListener {
     }
 
     static void initializeDependencies() {
-        dependencies = [
-                // Channels, Project, PlaybookModel
-                findAllTypes: [[PlaybookModel.class], [Project.class, 'models'], [Channels.class, 'models']],
-                findAllTypesNarrowingAny: [[PlaybookModel.class],[Project.class, 'models'], [Channels.class, 'models']],
-                // Project
-                findAllPlaceNames: [[Project.class, 'places']],
-                atleastOnePlaceTypeDefined: [[Project.class, 'places']],
-                allResourcesExcept: [[Project.class]],
-                findAllApplicableRelationshipTypes: [[PlaybookModel.class, 'relationshipTypes']],
-                findCandidateSubOrganizationsFor: [[Project.class, 'organizations'], [Organization.class, 'subOrganizations', 'parent']],
-                findAllPositionsAnywhere: [[Project.class, 'organizations'], [Organization.class, 'positions']],
+        dependencies = [     // large-grain dependencies but better than none
                 // Channels
-                findProjectNamed: [[Channels.class, 'projects']],
-                findUsersNotInProject: [[Channels.class, 'users'], [Project.class, 'participations']],
+                findAllRelationshipNames: [Project.class, Agent.class, FlowAct.class, Policy.class],
+                findAllPurposes: [Policy.class, Project.class, PlaybookModel.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
+                // Channels, Project, PlaybookModel
+                findAllTypes: [PlaybookModel.class, Project.class, Channels.class],
+                findAllTypesNarrowingAny: [PlaybookModel.class, Project.class, Channels.class],
+                // Project
+                findAllPlaceNames: [Project.class],
+                atleastOnePlaceTypeDefined: [Project.class],
+                findAllResourcesExcept: [Project.class],
+                findAllResources: [Project.class],
+                findAllResourcesOfKinds: [Project.class],
+                findAllRelationshipsOf: [Project.class],
+                findCandidateSubOrganizationsFor: [Project.class, Organization.class],
+                findAllPositionsAnywhere: [Project.class, Organization.class],
+                findAgreementsWhereSource: [Project.class, SharingAgreement.class],
+                // Channels
+                findProjectNamed: [Channels.class],
+                findUsersNotInProject: [Channels.class, Project.class],
                 // PlaybookModel
-                findInheritedTopics: [[PlaybookModel.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
-                findNarrowedEventTypeWithTopic: [[PlaybookModel.class, 'eventTypes'], [EventType.class, 'topics', 'narrowedTypes']],
+                findInheritedTopics: [PlaybookModel.class, EventType.class],
+                findNarrowedEventTypeWithTopic: [PlaybookModel.class, EventType.class],
                 // Organization
-                findAllPositions: [[Organization.class, 'positions', 'parent']],
-                findAllSubOrganizations: [[Organization.class, 'subOrganizations','parent']],
+                findAllPositions: [Organization.class],
+                findAllSubOrganizations: [Organization.class],
                 // Position
-                findOtherPositionsInOrganization: [[Organization.class, 'positions']],
+                findOtherPositionsInOrganization: [Organization.class],
                 // Playbook
-                findCandidateCauses: [[Playbook.class, 'informationActs'], [InformationAct.class]]
+                findCandidateCauses: [Playbook.class, Causable.class],
+                findAllEventNames: [Playbook.class],
+                // Playbook, Project
+                findAllAgentsExcept: [Agent.class, Project.class, Playbook.class],
+                // Resource
+                hasRelationship: [Project.class, Playbook.class, Agent.class, Relationship.class]
         ]
     }
 
     def execute(def element, Query query) {
-        QueryExecution execution = new QueryExecution(target: element, query: query)
-        def results = fromCache(execution)
-        if (!results) {
-            results = executeQuery(element, query)
-            toCache(execution, results)
+        def results
+        synchronized (this) {
+            QueryExecution execution = new QueryExecution(target: element, query: query)
+            results = fromCache(execution)
+            if (!results) {
+                results = doExecuteQuery(element, query)
+                toCache(execution, results)
+            }
         }
         return results
     }
@@ -97,17 +119,21 @@ class QueryManager implements PropertyChangeListener {
     }
 
     private boolean isCacheable(QueryExecution execution) {
-       return dependencies.containsKey(execution.query.name)
+        return dependencies.containsKey(execution.query.name)
     }
 
-    def executeQuery(def element, Query query) {
-        def target = element
-        if (Ref.class.isAssignableFrom(element.class)) {
-            target = element.deref()
+    // Query is executed in ApplicationMemory, *not* in SessionMemory
+    private def doExecuteQuery(def element, Query query) {
+        def results = null
+        use(NoSessionCategory) {
+            def target = element
+            if (Ref.class.isAssignableFrom(element.class)) {
+                target = element.deref()
+            }
+            String name = query.name
+            def args = processArguments(query.arguments)
+            results = target.metaClass.invokeMethod(target, name, args)
         }
-        String name = query.name
-        def args = processArguments(query.arguments)
-        def results = target.metaClass.invokeMethod(target, name, args)
         return results
     }
 
@@ -124,33 +150,22 @@ class QueryManager implements PropertyChangeListener {
         return args as Object[]
     }
 
-    void propertyChange(PropertyChangeEvent evt) {
-        Referenceable referenceable = (Referenceable) evt.source
-        String propertyName = evt.getPropertyName()
-        hasChanged(referenceable, propertyName)
+    static void modified(Referenceable element) {
+         instance().hasChanged(element)
     }
 
-    private void hasChanged(Referenceable element, String propName) {
+    private void hasChanged(Referenceable element) {
         if (cache) {
             dependencies.each {name, deps ->
-                if (deps.any{dep -> dependencyMatch(dep, element, propName)}) {
+                if (deps.any {dep -> dependencyMatch(dep, element)}) {
                     dirty.add(name) // postpone cache cleanup to speed change event handling
                 }
             }
         }
     }
 
-    private boolean dependencyMatch(List dep, Referenceable element, String propName) {
-        boolean dependent = false
-        if (dep[0].isAssignableFrom(element.class)) {
-            if (dep.size() > 1) {
-                dependent = dep[1..dep.size()-1].any {propName == it}
-            }
-            else {
-                dependent = true
-            }
-        }
-        return dependent
+    private boolean dependencyMatch(Class dep, Referenceable element) {
+        return dep.isAssignableFrom(element.class)
     }
 
     int size() {
@@ -159,9 +174,9 @@ class QueryManager implements PropertyChangeListener {
 
     void clear(String queryName) {
         if (dirty && dirty.contains(queryName)) {
-           List dirtyExecs = cache.keySet().findAll {qe-> qe.query.name == queryName}
-           dirtyExecs.each {qe -> cache.remove(qe)}
-           dirty.remove(queryName)
+            List dirtyExecs = cache.keySet().findAll {qe -> qe.query.name == queryName}
+            dirtyExecs.each {qe -> cache.remove(qe)}
+            dirty.remove(queryName)
         }
     }
 

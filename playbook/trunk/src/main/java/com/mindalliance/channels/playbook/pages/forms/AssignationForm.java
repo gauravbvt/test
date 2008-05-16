@@ -1,9 +1,9 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.assignation.AssignationAssignmentTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActCauseTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -27,7 +27,12 @@ public class AssignationForm  extends AbstractInformationActForm {
                 return new FlowActBasicTab(panelId, AssignationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Information")) {
+        tabs.add(new AbstractTab(new Model("Cause")) {
+             public Panel getPanel(String panelId) {
+                 return new InformationActCauseTab(panelId, AssignationForm.this);
+             }
+         });
+        tabs.add(new AbstractTab(new Model("Assignment")) {
             public Panel getPanel(String panelId) {
                 return new AssignationAssignmentTab(panelId, AssignationForm.this);
             }

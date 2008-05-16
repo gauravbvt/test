@@ -63,7 +63,6 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     private void addChangeListeners(Referenceable referenceable) {
         referenceable.addPropertyChangeListener(this) // register with this session memory
-        referenceable.addPropertyChangeListener(QueryManager.instance()) // register with query manager
     }
 
     Ref persist(Referenceable referenceable) {
@@ -140,7 +139,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         begun = new HashMap<Ref, Referenceable>()
     }
 
-    private Referenceable retrieveFromApplicationMemory(Ref reference) {
+    Referenceable retrieveFromApplicationMemory(Ref reference) {
         Referenceable referenceable = getApplicationMemory().retrieve(reference)
         return referenceable
     }

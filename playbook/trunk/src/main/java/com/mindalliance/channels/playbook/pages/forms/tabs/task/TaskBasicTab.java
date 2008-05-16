@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.task;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.panels.TimingPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -23,22 +24,25 @@ import java.util.List;
 public class TaskBasicTab extends InformationActBasicTab {
 
     protected DynamicFilterTree taskTypesTree;
+    protected TimingPanel durationPanel;
 
     public TaskBasicTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
     protected void load() {
-         super.load();
-         taskTypesTree = new DynamicFilterTree("taskTypes", new RefPropertyModel(getElement(), "taskTypes"),
-                                                     new RefQueryModel(getProject(),
-                                                         new Query("findAllTypes","TaskType"))) {
-             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                 List<Ref> selectedTypes = taskTypesTree.getNewSelections();
-                 RefUtils.set(getElement(), "taskTypes", selectedTypes);
-             }
-         };
-         addReplaceable(taskTypesTree);
-     }
+        super.load();
+        durationPanel = new TimingPanel("duration", this, "duration", EDITABLE, feedback);
+        addReplaceable(durationPanel);
+        taskTypesTree = new DynamicFilterTree("taskTypes", new RefPropertyModel(getElement(), "taskTypes"),
+                new RefQueryModel(getProject(),
+                        new Query("findAllTypes", "TaskType"))) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                List<Ref> selectedTypes = taskTypesTree.getNewSelections();
+                RefUtils.set(getElement(), "taskTypes", selectedTypes);
+            }
+        };
+        addReplaceable(taskTypesTree);
+    }
 
 }

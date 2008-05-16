@@ -23,7 +23,7 @@ class UnknownArea extends Area{
         throw new Exception("Area is unknown")
     }
 
-    boolean isWithinLocation(AreaInfo areaInfo) {
+    boolean isWithin(Area area) {
         throw new Exception("Area is unknown")
     }
 

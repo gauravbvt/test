@@ -51,6 +51,10 @@ class AreaInfo extends BeanImpl  implements Comparable {
         return getArea().isDefined()
     }
 
+    boolean isWithin(AreaInfo other) {
+        return this.area.isWithin(other.area)
+    }
+
     Area findArea() {// null if Location is unknown
         Area a
         try {

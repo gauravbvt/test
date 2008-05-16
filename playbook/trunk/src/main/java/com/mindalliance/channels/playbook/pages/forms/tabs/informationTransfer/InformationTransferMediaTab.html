@@ -5,36 +5,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-               <fieldset>
-                   <legend>Media</legend>
-                   <select wicket:id="mediumTypes">
-                       <li>[medium type]</li>
-                   </select>
-               </fieldset>
-            </td>
-            <td>
-                <button wicket:id="addPreferred">&gt;&gt;</button>
-
-            </td>
-            <td>
-                <fieldset>
-                    <legend>Preferred media</legend>
-                    <select wicket:id="preferredMedia">
-                         <li>[medium type]</li>
-                     </select>
-                    <button wicket:id="removePreferred">Remove</button>
-                </fieldset>
-            </td>
-            <td>
-                <button wicket:id="upPreferred">Up</button><br/>
-                <button wicket:id="downPreferred">Down</button>
-            </td>
-        </tr>
-    </table>
-     <wicket:child/>
+    <fieldset>
+        <legend>Medium</legend>
+        <span wicket:id="mediumType">[medium types panel]</span>
+    </fieldset>
+    <wicket:child/>
 </wicket:extend>
 </body>
 </html>

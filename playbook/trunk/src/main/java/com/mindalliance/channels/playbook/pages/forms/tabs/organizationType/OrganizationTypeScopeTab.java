@@ -24,8 +24,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 public class OrganizationTypeScopeTab extends AbstractFormTab {
 
     protected DynamicFilterTree domainTree;
-    protected DynamicFilterTree jurisdictionTypeTree;
-    protected AreaInfoPanel withinPanel;
 
     public OrganizationTypeScopeTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -41,20 +39,5 @@ public class OrganizationTypeScopeTab extends AbstractFormTab {
             }
         };
         addReplaceable(domainTree);
-        jurisdictionTypeTree = new DynamicFilterTree("jurisdictionType", new RefPropertyModel(getElement(), "jurisdictionType"),
-                new RefQueryModel(getPlaybookModel(), new Query("findAllTypes", "AreaType")), SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selectedType = jurisdictionTypeTree.getNewSelection();
-                RefUtils.set(getElement(), "jurisdictionType", selectedType);
-            }
-        };
-        addReplaceable(jurisdictionTypeTree);
-        OrganizationType orgType = (OrganizationType)getElement().deref();
-        if (orgType.getWithin() == null) {
-            orgType.setWithin(new AreaInfo());
-        }
-        // TODO -- restrict editable area types based on jurisdiction type
-        withinPanel = new AreaInfoPanel("within", this, "within", false, feedback);
-        addReplaceable(withinPanel);
     }
 }

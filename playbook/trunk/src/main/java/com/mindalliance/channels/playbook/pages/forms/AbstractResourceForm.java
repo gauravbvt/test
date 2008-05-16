@@ -1,10 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceLocationTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceResponsibilitiesTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceNetworkTab;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class InformationTransfer extends SharingAct {
 
-    List<Ref> preferredMedia = []
+    Ref mediumType
 
 }

@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -9,6 +10,8 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
+import com.mindalliance.channels.playbook.ifm.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -23,10 +26,10 @@ import java.util.List;
  */
 public class PolicyPartiesTab extends AbstractFormTab {
 
-    DynamicFilterTree sourceOrganizationTypesTree;
-    DynamicFilterTree recipientOrganizationTypesTree;
-    DynamicFilterTree relationshipTypesTree;
-    Label meaningLabel;
+    protected DynamicFilterTree sourceOrganizationTypesTree;
+    MultipleStringChooser relationshipNamesChooser;
+    protected DynamicFilterTree recipientOrganizationTypesTree;
+    protected Label meaningLabel;
 
     public PolicyPartiesTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -44,16 +47,9 @@ public class PolicyPartiesTab extends AbstractFormTab {
             }
         };
         addReplaceable(sourceOrganizationTypesTree);
-        relationshipTypesTree = new DynamicFilterTree("relationshipTypes",
-                                          new RefPropertyModel(getElement(), "relationshipTypes"),
-                                          new RefQueryModel(getScope(), new Query("findAllTypes", "RelationshipType"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = relationshipTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "relationshipTypes", selectedTypes);
-                target.addComponent(meaningLabel);
-            }
-        };
-        addReplaceable(sourceOrganizationTypesTree);
+        relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames", EDITABLE, feedback,
+                                                              new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
+        addReplaceable(relationshipNamesChooser);
         recipientOrganizationTypesTree = new DynamicFilterTree("recipientOrganizationTypes",
                                           new RefPropertyModel(getElement(), "recipientOrganizationTypes"),
                                           new RefQueryModel(getScope(), new Query("findAllTypes", "OrganizationType"))) {
@@ -69,6 +65,6 @@ public class PolicyPartiesTab extends AbstractFormTab {
     }
 
     private String meaning() {
-        return null;  //TODO
+        return ((Policy)getElement().deref()).partiesMeaning();
     }
 }

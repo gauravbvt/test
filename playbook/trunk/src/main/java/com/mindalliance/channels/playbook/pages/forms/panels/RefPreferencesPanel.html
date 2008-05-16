@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Choices</legend>
+                    <span wicket:id="choices"/>
+                </fieldset>
+            </td>
+            <td>
+                <button wicket:id="addPreferred">&gt;&gt;</button>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Preferred</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <select wicket:id="preferredElements">
+                                    <li>[element]</li>
+                                </select>
+
+                            </td>
+                            <td>
+                                <button wicket:id="upPreferred">Up</button>
+                                <br/>
+                                <button wicket:id="downPreferred">Down</button>
+
+                            </td>
+                        </tr>
+                    </table>
+                    <button wicket:id="removePreferred">Remove</button>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

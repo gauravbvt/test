@@ -23,8 +23,7 @@ import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ifm.IfmElement;
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
-import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement;
+import com.mindalliance.channels.playbook.ifm.playbook.*;
 import com.mindalliance.channels.playbook.ifm.model.*;
 import com.mindalliance.channels.playbook.ifm.project.resources.*;
 import com.mindalliance.channels.playbook.ifm.project.resources.System;
@@ -126,12 +125,13 @@ public class FormTest extends WebPage {
     private List getTypeChoices() {
         List choices = new ArrayList();
         // Environment
-        choices.add(Agreement.class);
+        choices.add(SharingAgreement.class);
+        choices.add(Place.class);
+        choices.add(Policy.class);
         // Resources
         choices.add(Organization.class);
         choices.add(Person.class);
         choices.add(Position.class);
-        choices.add(Project.class);
         choices.add(System.class);
         // PlaybookModel
         choices.add(AreaType.class);
@@ -141,13 +141,22 @@ public class FormTest extends WebPage {
         choices.add(MediumType.class);
         choices.add(OrganizationType.class);
         choices.add(PlaceType.class);
-        choices.add(PurposeType.class);
-        choices.add(RelationshipType.class);
         choices.add(Role.class);
         choices.add(TaskType.class);
         // Playbook
-        // TODO
+        choices.add(Assignation.class);
+        choices.add(Confirmation.class);
+        choices.add(Denial.class);
+        choices.add(InformationRequest.class);
+        choices.add(InformationTransfer.class);
+        choices.add(Detection.class);
+        choices.add(Task.class);
+        choices.add(Verification.class);
+        // Project elements
+        choices.add(PlaybookModel.class);
+        choices.add(Playbook.class);
         // application
+        choices.add(Project.class);
         choices.add(Tab.class);
         choices.add(User.class);
         return choices;
@@ -162,8 +171,14 @@ public class FormTest extends WebPage {
             results.add(((Channels) channels.deref()).findUser("admin"));
         } else if (type.equals(Project.class)) {
             results.add(project.getReference());
-        } else if (type.equals(Agreement.class)) {
-            results.add((Ref)project.getAgreements().get(0));
+        } else if (type.equals(SharingAgreement.class)) {
+            results.add(project.getSharingAgreements().get(0));
+        }
+        else if (type.equals(PlaybookModel.class)) {
+            results.add(project.getModels().get(0));
+        }
+        else if (type.equals(Playbook.class)) {
+            results.add(project.getPlaybooks().get(0));
         }
         if (results.size() > 0) {
             return results.get(0);
@@ -191,7 +206,7 @@ public class FormTest extends WebPage {
             } else if (element.isModelElement()) {
                 PlaybookModel model = (PlaybookModel)((Ref)project.getModels().get(0)).deref();
                 model.getReference().begin();
-                model.addElement((ModelElement)element);
+                model.addElement(element);
 
             } else if (element.isPlaybookElement()) {
                 Playbook playbook = (Playbook)((Ref)project.getPlaybooks().get(0)).deref();

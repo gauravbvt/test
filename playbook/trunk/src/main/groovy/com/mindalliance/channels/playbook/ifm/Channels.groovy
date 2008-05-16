@@ -6,6 +6,10 @@ import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
+import org.apache.commons.collections.bag.TreeBag
+import com.mindalliance.channels.playbook.support.util.CountedSet
+import com.mindalliance.channels.playbook.support.util.CountedSet
+import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,10 +34,7 @@ class Channels extends IfmElement {
         return (Channels)PlaybookApplication.current().getChannels().deref()
     }
 
-    Ref findEnvironmentNamed(String name) {
-        Ref ref = (Ref) environments.find {it.name == name}
-        return ref
-    }
+    // Queries
 
     Ref findProjectNamed(String name) {
         Ref ref = (Ref) projects.find {it.name == name}
@@ -94,6 +95,49 @@ class Channels extends IfmElement {
         }
         return otherNames
     }
+
+    List<String> findAllRelationshipNames() {  // TODO write a VocabularyManager to keep vocabulary usage count from everywhere
+        CountedSet countedSet = new CountedSet();
+        projects.each { p ->
+            p.relationships.each {rel -> if (rel.name) countedSet.add(rel.name)}
+            // In playbooks
+            p.playbooks.each {playbook ->
+                playbook.agents.each {agent -> countedSet.addAll(agent.relationshipNames)}
+                playbook.informationActs.each {act ->
+                    if (act.type == "Association") {
+                        countedSet.add(act.relationshipName)
+                    }
+                }
+            }
+            // In policies
+            p.policies.each {pol ->
+               countedSet.addAll(pol.relationshipNames)
+            }
+        }
+        // TODO -- Missing all usages of relationship names in InformationTemplate.eventSpec.relationshipNames
+        return countedSet.toList()
+    }
+
+    List<String> findAllPurposes() {
+        CountedSet countedSet = new CountedSet();
+        projects.each {p ->
+            p.policies.each {pol -> countedSet.addAll(pol.purposes)}
+            p.sharingAgreements.each {agr -> countedSet.addAll(agr.sharingConstraints.allowedPurposes)}
+            p.playbooks.each {playbook ->
+                playbook.informationActs.each {act ->
+                    if (act instanceof SharingCommitment) {
+                        countedSet.addAll(act.sharingConstraints.allowedPurposes)
+                    }
+                }
+            }
+        }
+        models.each {m ->
+            m.taskTypes.each {tt -> if (tt.purpose) countedSet.add(tt.purpose)}
+        }
+        return countedSet.toList()
+      }
+
+    // end queries
 
     static List<Class<?>> adminClasses() {
         [ User.class ]

@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActInfoTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActCauseTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,6 +27,11 @@ public class DenialForm extends AbstractInformationActForm {
                 return new FlowActBasicTab(panelId, DenialForm.this);
             }
         });
+        tabs.add(new AbstractTab(new Model("Cause")) {
+             public Panel getPanel(String panelId) {
+                 return new InformationActCauseTab(panelId, DenialForm.this);
+             }
+         });
         tabs.add(new AbstractTab(new Model("Information")) {
             public Panel getPanel(String panelId) {
                 return new InformationActInfoTab(panelId, DenialForm.this);

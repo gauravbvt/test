@@ -7,27 +7,28 @@ import com.mindalliance.channels.playbook.ifm.Locatable
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
+import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Apr 17, 2008
-* Time: 11:16:29 AM
-*/
-class Resource extends ProjectElement implements Locatable, Describable {
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Apr 17, 2008
+ * Time: 11:16:29 AM
+ */
+class Resource extends ProjectElement implements Agent, Locatable {
 
     String name = ''
     String description = ''
     List<ContactInfo> contactInfos = []
     List<Ref> roles = []
     Location location = new Location()
-    List<Relationship> relationships  = []
     boolean effective = true // whether the resource is operational in real life
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['agreements'])
+        return (List<String>) (super.transientProperties() + ['agreements'])
     }
 
     boolean isResource() {
@@ -38,7 +39,11 @@ class Resource extends ProjectElement implements Locatable, Describable {
         return false
     }
 
-    
+    boolean isOrganization() {
+        return false
+    }
+
+
 
     String toString() { name }
 
@@ -47,8 +52,8 @@ class Resource extends ProjectElement implements Locatable, Describable {
      */
     static List<Class<?>> contentClasses() {
         [
-            Organization.class, Person.class, System.class,
-            Position.class
+                Organization.class, Person.class, System.class,
+                Position.class
         ]
     }
 
@@ -66,6 +71,10 @@ class Resource extends ProjectElement implements Locatable, Describable {
         super.changed(propName)
     }
 
+    public List<Ref> getResourcesAt(InformationAct act) {
+        return [this.reference]
+    }
+
     Location getLocation() {
         return location
     }
@@ -73,4 +82,33 @@ class Resource extends ProjectElement implements Locatable, Describable {
     List<Ref> allAgreements() {
         return Project.current().findAllAgreementsOf(this.reference)
     }
+
+    boolean hasRole(Ref role) {
+        return (this.roles.any {resRole -> resRole.implies(role) })
+    }
+
+    boolean isLocatedWithin(Location loc) {
+        return this.location.isWithin(loc)
+    }
+
+    // Queries
+
+    boolean hasRelationship(String relName, Ref otherResource, InformationAct act) {
+        boolean related = false
+        // Look in project
+        related = related || getProject().relationships.any {rel ->
+            rel.fromAgent == this && (!otherResource || rel.toAgent == otherResource) && rel.name == relName
+        }
+        // Look at associations before act
+        related = related || act.getPlaybook().findAllInformationActs("Association").any {association ->
+            act.isAfter(association) &&
+            association.relationships.any {rel ->
+                rel.fromAgent == this && (!otherResource || rel.toAgent == otherResource) && rel.name == relName
+            }
+        }
+        return related
+    }
+    // end queries
+
+
 }

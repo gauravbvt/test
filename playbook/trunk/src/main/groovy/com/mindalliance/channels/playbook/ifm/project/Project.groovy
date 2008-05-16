@@ -3,17 +3,15 @@ package com.mindalliance.channels.playbook.ifm.project
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
-import com.mindalliance.channels.playbook.ifm.project.environment.Agreement
+import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 import com.mindalliance.channels.playbook.ifm.project.environment.Place
-import com.mindalliance.channels.playbook.ifm.project.resources.Resource
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.Session
-import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 
@@ -32,8 +30,9 @@ class Project extends IfmElement implements Describable {
     List<Ref> persons =[]
     List<Ref> organizations = []
     List<Ref> places = []
+    List<Ref> relationships = []
     List<Ref> policies = []
-    List<Ref> agreements = []
+    List<Ref> sharingAgreements = []    // TODO gc sharingAgreements with null source or recipient (i.e. invalid)
     List<Ref> playbooks = []
     List<Ref> models = []
     List<Ref> analysisElements = []
@@ -49,7 +48,7 @@ class Project extends IfmElement implements Describable {
         object.project = this.reference
         switch ( object.deref() ) {
             case Policy: super.doAddToField( "policies", object ); break;
-           /* case Agreement: super.doAddToField( "agreements", object ); break;
+           /* case SharingAgreement: super.doAddToField( "agreements", object ); break;
             case Participation: super.doAddToField( "participations", object ); break;
             // case Position:
             case Person:
@@ -65,7 +64,7 @@ class Project extends IfmElement implements Describable {
     Referenceable doRemoveFromField( String field, Object object ) {
         switch ( object.deref() ) {
             case Policy: super.doRemoveFromField( "policies", object ); break;
-            /*case Agreement: super.doRemoveFromField( "agreements", object ); break;
+            /*case SharingAgreement: super.doRemoveFromField( "agreements", object ); break;
             case Participation: super.doRemoveFromField( "participations", object ); break;
             // case Position:
             case Person:
@@ -80,7 +79,11 @@ class Project extends IfmElement implements Describable {
 
     // Queries
 
-    List<Ref> allResourcesExcept(Ref resource) {
+    List<Ref> findAllResources() {
+        return findAllResourcesExcept(null)
+    }
+
+    List<Ref> findAllResourcesExcept(Ref resource) {
         List<Ref> resources = []
         resources.addAll(persons.findAll {res -> res != resource })
         resources.addAll(organizations.findAll {res -> res != resource })
@@ -89,6 +92,19 @@ class Project extends IfmElement implements Describable {
             resources.addAll(org.positions.findAll {res -> res != resource })
         }
         return resources
+    }
+
+    List<Ref> findAllResourcesOfKinds(List<String> types) {
+        List<Ref> resources = findAllResources()
+        if (types) {
+           resources = resources.findAll {res -> types.contains(res.type)} 
+        }
+        return resources
+    }
+
+    List<Ref> findAllAgentsExcept(def holder, String propPath) {
+        Ref party = RefUtils.get(holder, propPath)
+        return findAllResourcesExcept(party)
     }
 
     Ref findPlaybookNamed(String type, String name) {
@@ -185,6 +201,7 @@ class Project extends IfmElement implements Describable {
         return narrowing
     }
 
+/*
     List<Ref> findAllApplicableRelationshipTypes(Ref fromResource, Ref toResource) {
         List<Ref> relTypes = []
         models.each { model ->
@@ -195,9 +212,10 @@ class Project extends IfmElement implements Describable {
         }
         return relTypes
     }
+*/
 
     List<Ref> findAllAgreementsOf(Ref resource) {
-        List<Ref> ags = agreements.findAll {agreement ->
+        List<Ref> ags = sharingAgreements.findAll {agreement ->
             agreement.fromResource == resource
         }
         return ags ?: []
@@ -222,7 +240,19 @@ class Project extends IfmElement implements Describable {
         return allPositions
     }
 
-    // End queries
+    List<Ref> findAllRelationshipsOf(Ref resource) {
+        return relationships.findAll{rel -> rel.fromAgent == resource || rel.toAgent == resource}
+    }
+
+    List<Ref> findAgreementsWhereSource(Ref resource) {
+        return sharingAgreements.findAll {agr -> agr.source == resource}
+    }
+
+    List<Ref> findAgreementsWhereRecipient(Ref resource) {
+        return sharingAgreements.findAll {agr -> agr.recipient == resource}
+    }
+
+     // End queries
 
     Boolean isParticipant( Ref user ) {
          return findParticipation( user ) != null ;
@@ -233,7 +263,6 @@ class Project extends IfmElement implements Describable {
          return ref != null && ref.manager ;
      }
 
-
      /**
       * Return project contents that a participant can add.
       */
@@ -242,7 +271,7 @@ class Project extends IfmElement implements Describable {
          List<Class<?>> result = new ArrayList<Class<?>>()
          result.addAll( [ Organization.class] )
          result.addAll( [ Person.class] )
-         result.addAll( [ Agreement.class ] )
+         result.addAll( [ SharingAgreement.class ] )
          result.addAll( [ Policy.class ] )
          result.addAll( [ Place.class ] )
          result.addAll( [ Playbook.class ] )
@@ -254,7 +283,7 @@ class Project extends IfmElement implements Describable {
          playbooks.each { it.addContents( result ) }
          result.addAll( persons )
          result.addAll( organizations )
-         result.addAll( agreements )
+         result.addAll( sharingAgreements )
          result.addAll( policies )
          result.addAll( places )
          result.addAll( playbooks )

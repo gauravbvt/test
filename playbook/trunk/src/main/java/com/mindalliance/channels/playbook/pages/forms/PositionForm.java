@@ -1,11 +1,8 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceNetworkTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceLocationTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.resource.*;
 import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionJurisdictionTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionResponsibilitiesTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -42,12 +39,17 @@ public class PositionForm extends AbstractResourceForm {
          });
         tabs.add(new AbstractTab(new Model("Responsibilities")) {
             public Panel getPanel(String panelId) {
-                return new PositionResponsibilitiesTab(panelId, PositionForm.this);
+                return new ResourceResponsibilitiesTab(panelId, PositionForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Network")) {
+        tabs.add(new AbstractTab(new Model("Relationships")) {
             public Panel getPanel(String panelId) {
-                return new ResourceNetworkTab(panelId, PositionForm.this);
+                return new ResourceRelationshipsTab(panelId, PositionForm.this);
+            }
+        });
+        tabs.add(new AbstractTab(new Model("Agreements")) {
+            public Panel getPanel(String panelId) {
+                return new ResourceAgreementsTab(panelId, PositionForm.this);
             }
         });
     }

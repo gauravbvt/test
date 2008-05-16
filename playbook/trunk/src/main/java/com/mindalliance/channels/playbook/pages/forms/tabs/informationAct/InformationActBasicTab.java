@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.informationAct;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.panels.TimingPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.CausePanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -23,10 +24,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 public class InformationActBasicTab extends AbstractFormTab {
 
     protected TextArea descriptionField;
-    protected TimingPanel durationPanel;
-    protected DynamicFilterTree resourceTree;
-    protected DynamicFilterTree causeTree;
-    protected TimingPanel delayPanel;
+    protected DynamicFilterTree actorAgentTree;
 
     public InformationActBasicTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -36,27 +34,14 @@ public class InformationActBasicTab extends AbstractFormTab {
         super.load();
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        durationPanel = new TimingPanel("duration", this, "duration", EDITABLE, feedback);
-        addReplaceable(durationPanel);
-        resourceTree = new DynamicFilterTree("resource", new RefPropertyModel(getElement(), "resource"),
-                                             new RefQueryModel(getScope(), new Query("findAllTypes", "Resource")),
-                                             SINGLE_SELECTION) {
+        actorAgentTree = new DynamicFilterTree("actorAgent", new RefPropertyModel(getElement(), "actorAgent"),
+                new RefQueryModel(getPlaybook(), new Query("findAllAgents")),
+                SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selectedResource = resourceTree.getNewSelection();
+                Ref selectedResource = actorAgentTree.getNewSelection();
                 RefUtils.set(getElement(), "resource", selectedResource);
             }
         };
-        addReplaceable(resourceTree);
-        causeTree = new DynamicFilterTree("causeInformationAct", new RefPropertyModel(getElement(), "causeInformationAct"),
-                                           new RefQueryModel(getScope(), new Query("findCandidateCauses", getElement())),
-                                           SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                 Ref selectedAct = causeTree.getNewSelection();
-                 RefUtils.set(getElement(), "causeInformationAct", selectedAct);
-             }
-        };
-        addReplaceable(causeTree);
-        delayPanel = new TimingPanel("delay", this, "delay", EDITABLE, feedback);
-        addReplaceable(delayPanel);
+        addReplaceable(actorAgentTree);
     }
 }
