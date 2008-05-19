@@ -152,10 +152,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         p.addRelationship(store(new Relationship(fromAgent: joe.reference, toAgent: jane.reference , name: "family")))
         store(joe)
 
-        Ref ag1 = store(new SharingAgreement(fromResource: joe.reference, toResource: jane.reference))
-        Ref ag2 = store(new SharingAgreement(fromResource: joe.reference, toResource: acme.reference))
-        p.addAgreement(ag1)
-        p.addAgreement(ag2)
+        Ref ag1 = store(new SharingAgreement(source: joe.reference, recipient: jane.reference))
+        Ref ag2 = store(new SharingAgreement(source: joe.reference, recipient: acme.reference))
+        p.addSharingAgreement(ag1)
+        p.addSharingAgreement(ag2)
 
         p.addParticipation(
                 store(new Participation(

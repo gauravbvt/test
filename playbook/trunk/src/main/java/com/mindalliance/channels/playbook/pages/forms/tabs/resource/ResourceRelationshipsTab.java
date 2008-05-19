@@ -145,7 +145,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
                 Relationship newRelationship = new Relationship();
                 newRelationship.setFromAgent(getElement());
-                newRelationship.setRelationshipName(newRelationshipName.trim().toLowerCase());
+                newRelationship.setName(newRelationshipName.trim().toLowerCase());
                 newRelationship.setToAgent(newToResource);
                 RefUtils.add(getProject(), "relationships", newRelationship.persist());
                 newRelationshipName = "";
@@ -155,7 +155,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
                 if (newReverseRelationshipName != null && !newReverseRelationshipName.trim().isEmpty()) {
                     Relationship newReverseRelationship = new Relationship();
                     newReverseRelationship.setFromAgent(newToResource);
-                    newReverseRelationship.setRelationshipName(newReverseRelationshipName.trim().toLowerCase());
+                    newReverseRelationship.setName(newReverseRelationshipName.trim().toLowerCase());
                     newReverseRelationship.setToAgent(getElement());
                     newReverseRelationship.setReverseRelationship(newRelationship.getReference());
                     newRelationship.setReverseRelationship(newReverseRelationship.getReference());                    

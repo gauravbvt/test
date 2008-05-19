@@ -67,7 +67,7 @@ class ApplicationMemory implements Serializable {
         cache.putInCache(referenceable.getId(), referenceable)
         if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
-        QueryManager.modified(referenceable)
+        QueryManager.modified(referenceable)     // update query cache
         return referenceable.reference
     }
 
@@ -76,8 +76,10 @@ class ApplicationMemory implements Serializable {
     }
 
     void delete(Ref ref) {
+        use (NoSessionCategory) {
+            QueryManager.modified(ref.deref())    // retrieve referenceable from application memory
+        }
         cache.flushEntry(ref.id)
-        QueryManager.modified(referenceable)        
     }
 
     Referenceable retrieve(Ref ref) {

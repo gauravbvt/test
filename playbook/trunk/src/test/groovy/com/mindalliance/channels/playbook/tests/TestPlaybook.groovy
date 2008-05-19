@@ -18,7 +18,6 @@ import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 import com.mindalliance.channels.playbook.query.QueryManager
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.support.models.RefQueryModel
-import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -44,7 +43,7 @@ public class TestPlaybook extends TestCase {
         session.application = app
     }
 
-    void testSerialization() {
+   void testSerialization() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream()
         ObjectOutputStream os = new ObjectOutputStream(bos)
         os.writeObject(app)
@@ -152,7 +151,7 @@ public class TestPlaybook extends TestCase {
         assert importCount == exportCount
         app.getChannels().save()
     }
-
+    
     void testQueryManager() {
         QueryManager qm = QueryManager.instance()
         Ref channels = app.channels
@@ -165,9 +164,10 @@ public class TestPlaybook extends TestCase {
         channels.begin()
         channels.about = "something else"
         session.commit()
+        assert qm.size() == 0
         again = (Ref) Query.execute(channels, "findProjectNamed", 'QWERTY')
         assert again == null
-        assert qm.size() == 2
+        assert qm.size() == 1
         channels.begin()
         channels.addProject(new Project(name: 'Other').persist())
         session.commit()
@@ -205,6 +205,7 @@ public class TestPlaybook extends TestCase {
         RefPropertyModel chained = new RefPropertyModel(project, "playbooks.name(new playbook)")
         RefPropertyModel rpm = new RefPropertyModel(chained, "name")
         assert rpm.getObject() == 'new playbook'
+        session.commit()
         RefQueryModel rqm = new RefQueryModel(channels, new Query("findProjectNamed", 'new project'))
         project = (Ref) rqm.getObject()
         assert project.name == 'new project'

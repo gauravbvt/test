@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.mem
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.query.QueryManager
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,7 +24,6 @@ class NoSessionCategory {
     static void doSetProperty(ReferenceableImpl self, String name, def value) {
         String setterName = "set${name[0].toUpperCase()}${name.substring(1)}"
         self."$setterName"(value)
-        QueryManager.modified(self)
     }
 
     // Can't persist new elements

@@ -52,6 +52,8 @@ class QueryManager {
                 // Channels
                 findAllRelationshipNames: [Project.class, Agent.class, FlowAct.class, Policy.class],
                 findAllPurposes: [Policy.class, Project.class, PlaybookModel.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
+                findProjectNamed: [Channels.class],
+                findUsersNotInProject: [Channels.class, Project.class],
                 // Channels, Project, PlaybookModel
                 findAllTypes: [PlaybookModel.class, Project.class, Channels.class],
                 findAllTypesNarrowingAny: [PlaybookModel.class, Project.class, Channels.class],
@@ -65,9 +67,6 @@ class QueryManager {
                 findCandidateSubOrganizationsFor: [Project.class, Organization.class],
                 findAllPositionsAnywhere: [Project.class, Organization.class],
                 findAgreementsWhereSource: [Project.class, SharingAgreement.class],
-                // Channels
-                findProjectNamed: [Channels.class],
-                findUsersNotInProject: [Channels.class, Project.class],
                 // PlaybookModel
                 findInheritedTopics: [PlaybookModel.class, EventType.class],
                 findNarrowedEventTypeWithTopic: [PlaybookModel.class, EventType.class],
@@ -102,7 +101,7 @@ class QueryManager {
     def fromCache(QueryExecution execution) {
         def results = null
         if (isCacheable(execution)) {
-            clear(execution.query.name)
+            cleanup(execution.query.name)
             results = cache[execution]
         }
         else {
@@ -113,7 +112,7 @@ class QueryManager {
 
     void toCache(QueryExecution execution, def results) {
         if (isCacheable(execution)) {
-            clear(execution.query.name)
+            cleanup(execution.query.name)
             cache.put(execution, results)
         }
     }
@@ -154,14 +153,21 @@ class QueryManager {
          instance().hasChanged(element)
     }
 
-    private void hasChanged(Referenceable element) {
-        if (cache) {
+    private void hasChanged(Referenceable element) {     
+        cache.each {qe, res ->
+            List deps = dependencies[qe.query.name]
+            if (deps && deps.any{dep -> dependencyMatch(dep, element)}) {
+                    dirty.add(qe.query.name) // postpone cache cleanup to speed change event handling
+                }
+        }
+
+ /*       if (cache) {
             dependencies.each {name, deps ->
                 if (deps.any {dep -> dependencyMatch(dep, element)}) {
                     dirty.add(name) // postpone cache cleanup to speed change event handling
                 }
             }
-        }
+        }*/
     }
 
     private boolean dependencyMatch(Class dep, Referenceable element) {
@@ -169,10 +175,17 @@ class QueryManager {
     }
 
     int size() {
+        cleanupAll()
         return cache.size()
     }
 
-    void clear(String queryName) {
+    void cleanupAll() {
+        List<String> all = []
+        all.addAll(dirty)
+        all.each {queryName -> cleanup(queryName)}
+    }
+
+    void cleanup(String queryName) {
         if (dirty && dirty.contains(queryName)) {
             List dirtyExecs = cache.keySet().findAll {qe -> qe.query.name == queryName}
             dirtyExecs.each {qe -> cache.remove(qe)}

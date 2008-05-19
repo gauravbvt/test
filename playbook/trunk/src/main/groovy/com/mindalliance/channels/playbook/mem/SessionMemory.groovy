@@ -9,8 +9,6 @@ import java.beans.PropertyChangeEvent
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
-import com.mindalliance.channels.playbook.query.QueryManager
-
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

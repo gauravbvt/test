@@ -14,7 +14,7 @@ class Relationship extends ProjectElement {
 
     Ref fromAgent
     Ref toAgent
-    String relationshipName = ''
+    String name = ''
     Ref reverseRelationship // if any
 
     void afterDelete() {
