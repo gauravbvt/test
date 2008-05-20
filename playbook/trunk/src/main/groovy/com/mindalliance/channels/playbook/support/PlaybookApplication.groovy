@@ -34,6 +34,7 @@ import com.mindalliance.channels.playbook.ifm.model.MediumType
 import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.model.TaskType
+import com.mindalliance.channels.playbook.query.QueryCache
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -66,8 +67,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-        return PlaybookPage.class
-        // return FormTest.class
+       return PlaybookPage.class
+       // return FormTest.class
     }
 
     @Override
@@ -78,6 +79,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     @Override
     protected Class getSignInPageClass() {
         return LoginPage.class;
+    }
+
+    public QueryCache getQueryCache() {
+        return appMemory.queryCache
     }
 
     // ------------- Initialization

@@ -38,7 +38,7 @@ public class PolicyAboutTab extends AbstractFormTab {
         addInputField(descriptionField);
         effectiveField = new CheckBox("effective", new RefPropertyModel(getElement(), "effective"));
         addInputField(effectiveField);
-        edictChoice = new DropDownChoice("edict", new RefPropertyModel(getElement(), "edict"), Policy.edictKinds);
+        edictChoice = new DropDownChoice("edict", new RefPropertyModel(getElement(), "edict"), Policy.getEdictKinds());
         edictChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {

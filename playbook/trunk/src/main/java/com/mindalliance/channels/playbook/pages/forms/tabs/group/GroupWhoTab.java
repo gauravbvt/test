@@ -42,7 +42,7 @@ public class GroupWhoTab extends AbstractFormTab {
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        kindsChoice = new ListMultipleChoice("kinds", new RefPropertyModel(getElement(), "kinds"), Group.resourceKinds);
+        kindsChoice = new ListMultipleChoice("kinds", new RefPropertyModel(getElement(), "kinds"), Group.getResourceKinds());
         kindsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {

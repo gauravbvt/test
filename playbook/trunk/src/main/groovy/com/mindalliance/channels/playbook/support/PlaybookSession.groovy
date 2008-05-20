@@ -5,6 +5,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.wicket.Request
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.authorization.strategies.role.Roles
+import org.apache.wicket.Session
+import com.mindalliance.channels.playbook.query.QueryCache
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,6 +33,10 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         super( application, request );
         this.application = (PlaybookApplication) application;
 
+    }
+
+    static PlaybookSession current() {
+        return (PlaybookSession)Session.get()
     }
 
     // For testing only
@@ -101,6 +107,10 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     public SessionMemory getMemory() {
         return memory;
+    }
+
+    public QueryCache getQueryCache() {
+        return memory.queryCache
     }
 
     public void commit() {

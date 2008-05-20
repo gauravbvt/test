@@ -9,6 +9,8 @@ import java.beans.PropertyChangeEvent
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.query.QueryCache
+import com.mindalliance.channels.playbook.query.QueryManager
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,6 +24,18 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Map<Ref, Referenceable> begun =  new HashMap<Ref, Referenceable>()
     Set<Ref> changes = new HashSet<Ref>()
     Set<Ref> deletes = new HashSet<Ref>()
+    private QueryCache queryCache = new QueryCache()
+    // any query execution dependent on elements belonging to any of these classes will be cached in session memory
+    private Set<Class> inSessionClasses = new HashSet<Class>()
+
+    QueryCache getQueryCache() {
+        return queryCache
+    }
+
+    // return list of classes of elements in sessions
+    Set<Class> inSessionClasses() {
+       return inSessionClasses
+    }
 
     Referenceable retrieve(Ref reference) {
         Referenceable referenceable = null
@@ -51,16 +65,18 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                     referenceable = (Referenceable)original.copy() // take a copy
                     addChangeListeners(referenceable) // register with change listeners
                     begun.put(ref, referenceable)
+                    inSessionClasses.add(referenceable.class)
                 }
             }
         }
         else {
-            Logger.getLogger(this.class).warn("Doing begin() on $ref already in session")
+            Logger.getLogger(this.class).debug("Doing begin() on $ref already in session")
         }
     }
 
     private void addChangeListeners(Referenceable referenceable) {
         referenceable.addPropertyChangeListener(this) // register with this session memory
+        referenceable.addPropertyChangeListener(QueryManager.instance())
     }
 
     Ref persist(Referenceable referenceable) {
@@ -117,6 +133,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
             deletes.remove(ref)
             getApplicationMemory().delete(ref)
         }
+        // does not update the query cache or inSessionClasses
     }
 
     public void reset(Ref ref) {
@@ -135,6 +152,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         changes = new HashSet<Ref>()
         deletes = new HashSet<Ref>()
         begun = new HashMap<Ref, Referenceable>()
+        queryCache.clear()
+        inSessionClasses = new HashSet<Class>()
     }
 
     Referenceable retrieveFromApplicationMemory(Ref reference) {

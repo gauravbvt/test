@@ -30,6 +30,10 @@ class Group extends PlaybookElement implements Agent {
         return (List<String>) (super.transientProperties() + ['resourceKinds'])
     }
 
+    static List<String> getResourceKinds() {
+        return resourceKinds;
+    }
+
     // queries
 
 

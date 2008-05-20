@@ -39,7 +39,7 @@ public class SharingAgreementPartiesTab extends AbstractFormTab {
         });
         addReplaceable(formalizedCheckBox);
         sourceTree = new DynamicFilterTree("source", new RefPropertyModel(getElement(), "source"),
-                                            new RefQueryModel(getScope(), new Query("findAllAgentsExcept", getElement(), "recipient")), SINGLE_SELECTION) {
+                                            new RefQueryModel(getProject(), new Query("findAllAgentsExcept", getElement(), "recipient")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedSource = sourceTree.getNewSelection();
                 if (selectedSource != null) RefUtils.set(getElement(), "source", selectedSource);
@@ -47,7 +47,7 @@ public class SharingAgreementPartiesTab extends AbstractFormTab {
         };
         addReplaceable(sourceTree);
         recipientTree = new DynamicFilterTree("recipient", new RefPropertyModel(getElement(), "recipient"),
-                                            new RefQueryModel(getScope(), new Query("findAllAgentsExcept", getElement(), "source")),
+                                            new RefQueryModel(getProject(), new Query("findAllAgentsExcept", getElement(), "source")),
                                             SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedRecipient = recipientTree.getNewSelection();

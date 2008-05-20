@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: May 2, 2008
  * Time: 9:58:34 AM
  */
-class QueryExecution {
+class QueryExecution implements Serializable {
 
     def target
     Query query

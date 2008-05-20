@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.query.QueryManager
+import com.mindalliance.channels.playbook.query.QueryCache
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,6 +36,8 @@ class ApplicationMemory implements Serializable {
     static DEBUG = false
     static Cache cache
     private PlaybookApplication application
+
+    private QueryCache queryCache = new QueryCache()
 
     ApplicationMemory(PlaybookApplication app) {
         application = app
@@ -58,6 +61,10 @@ class ApplicationMemory implements Serializable {
         }
     }
 
+    QueryCache getQueryCache() {
+        return queryCache
+    }
+
     void storeAll(Collection<Referenceable> referenceables) {
         referenceables.each {store(it)}
     }
@@ -67,7 +74,7 @@ class ApplicationMemory implements Serializable {
         cache.putInCache(referenceable.getId(), referenceable)
         if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
-        QueryManager.modified(referenceable)     // update query cache
+        QueryManager.modifiedInApplication(referenceable)     // update query cache
         return referenceable.reference
     }
 
@@ -77,7 +84,7 @@ class ApplicationMemory implements Serializable {
 
     void delete(Ref ref) {
         use (NoSessionCategory) {
-            QueryManager.modified(ref.deref())    // retrieve referenceable from application memory
+            QueryManager.modifiedInApplication(ref.deref())    // retrieve referenceable from application memory
         }
         cache.flushEntry(ref.id)
     }

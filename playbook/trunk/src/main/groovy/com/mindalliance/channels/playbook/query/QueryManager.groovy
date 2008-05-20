@@ -2,26 +2,31 @@ package com.mindalliance.channels.playbook.query
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.Channels
 import org.apache.log4j.Logger
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.model.EventType
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
-import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 import com.mindalliance.channels.playbook.ifm.model.TaskType
 import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
 import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
-import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
-import com.mindalliance.channels.playbook.ifm.playbook.SharingAct
-import com.mindalliance.channels.playbook.ifm.playbook.Detection
 import com.mindalliance.channels.playbook.ifm.playbook.Causable
+import com.mindalliance.channels.playbook.mem.SessionMemory
+import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.support.PlaybookSession
+import java.beans.PropertyChangeListener
+import java.beans.PropertyChangeEvent
+import com.mindalliance.channels.playbook.ifm.User
+import com.mindalliance.channels.playbook.ifm.model.ElementType
+import com.mindalliance.channels.playbook.ifm.project.environment.Place
+import com.mindalliance.channels.playbook.ifm.model.PlaceType
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource
+import com.mindalliance.channels.playbook.ifm.project.resources.Position
+import com.mindalliance.channels.playbook.ifm.playbook.Event
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,13 +35,13 @@ import com.mindalliance.channels.playbook.ifm.playbook.Causable
  * Date: May 2, 2008
  * Time: 9:57:33 AM
  */
-class QueryManager {
+class QueryManager implements PropertyChangeListener {
 
     static private final boolean WARN_NO_CACHING = true
 
+    static private final boolean NO_CACHING = false
+
     static private QueryManager instance
-    private Map cache = [:] // {queryExecution -> results}*        // TODO -- use OSCache
-    private Set dirty = new HashSet() // names of "dirty" queries
     static private Map dependencies
 
     static QueryManager instance() {  // Singleton
@@ -50,59 +55,78 @@ class QueryManager {
     static void initializeDependencies() {
         dependencies = [     // large-grain dependencies but better than none
                 // Channels
-                findAllRelationshipNames: [Project.class, Agent.class, FlowAct.class, Policy.class],
-                findAllPurposes: [Policy.class, Project.class, PlaybookModel.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
-                findProjectNamed: [Channels.class],
-                findUsersNotInProject: [Channels.class, Project.class],
+                findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
+                findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
+                findProjectNamed: [Project.class],
+                findUsersNotInProject: [Project.class, User.class],
                 // Channels, Project, PlaybookModel
-                findAllTypes: [PlaybookModel.class, Project.class, Channels.class],
-                findAllTypesNarrowingAny: [PlaybookModel.class, Project.class, Channels.class],
+                findAllTypes: [ElementType.class],
+                findAllTypesNarrowingAny: [ElementType.class],
                 // Project
-                findAllPlaceNames: [Project.class],
-                atleastOnePlaceTypeDefined: [Project.class],
-                findAllResourcesExcept: [Project.class],
-                findAllResources: [Project.class],
-                findAllResourcesOfKinds: [Project.class],
-                findAllRelationshipsOf: [Project.class],
-                findCandidateSubOrganizationsFor: [Project.class, Organization.class],
-                findAllPositionsAnywhere: [Project.class, Organization.class],
-                findAgreementsWhereSource: [Project.class, SharingAgreement.class],
+                findAllPlaceNames: [Place.class],
+                atleastOnePlaceTypeDefined: [PlaceType.class],
+                findAllResourcesExcept: [Resource.class],
+                findAllResources: [Resource.class],
+                findAllResourcesOfKinds: [Resource.class],
+                findAllRelationshipsOf: [Relationship.class],
+                findCandidateSubOrganizationsFor: [Organization.class],
+                findAllPositionsAnywhere: [Position.class],
+                findAgreementsWhereSource: [SharingAgreement.class],
                 // PlaybookModel
-                findInheritedTopics: [PlaybookModel.class, EventType.class],
-                findNarrowedEventTypeWithTopic: [PlaybookModel.class, EventType.class],
+                findInheritedTopics: [EventType.class],
+                findNarrowedEventTypeWithTopic: [EventType.class],
                 // Organization
-                findAllPositions: [Organization.class],
+                findAllPositions: [Position.class],
                 findAllSubOrganizations: [Organization.class],
                 // Position
-                findOtherPositionsInOrganization: [Organization.class],
+                findOtherPositionsInOrganization: [Position.class, Organization.class],
                 // Playbook
-                findCandidateCauses: [Playbook.class, Causable.class],
-                findAllEventNames: [Playbook.class],
+                findCandidateCauses: [Causable.class],
+                findAllEventNames: [Event.class],
                 // Playbook, Project
-                findAllAgentsExcept: [Agent.class, Project.class, Playbook.class],
-                // Resource
-                hasRelationship: [Project.class, Playbook.class, Agent.class, Relationship.class]
+                findAllAgentsExcept: [Agent.class],
+                // Resource, Group
+                hasRelationship: [Resource.class, Agent.class, Relationship.class]
         ]
+    }
+
+    QueryCache selectQueryCache(QueryExecution queryExecution) {
+        QueryCache queryCache
+        SessionMemory sessionMemory = PlaybookSession.current().memory
+        List deps = (List) dependencies[queryExecution.query.name]
+        Set<Class> deltas = sessionMemory.inSessionClasses()
+        if (deps.any {clazz -> deltas.contains(clazz)}) {
+            queryCache = getSessionQueryCache() // results of the query may be affected by in-session elements
+        }
+        else {
+            queryCache = getApplicationQueryCache() // results of the query independent of elements in session
+        }
+        return queryCache
+    }
+
+    private QueryCache getSessionQueryCache() {
+        return PlaybookSession.current().queryCache
+    }
+
+    private QueryCache getApplicationQueryCache() {
+        return PlaybookApplication.current().queryCache
     }
 
     def execute(def element, Query query) {
         def results
-        synchronized (this) {
-            QueryExecution execution = new QueryExecution(target: element, query: query)
-            results = fromCache(execution)
-            if (!results) {
-                results = doExecuteQuery(element, query)
-                toCache(execution, results)
-            }
+        QueryExecution execution = new QueryExecution(target: element, query: query)
+        results = fromCache(execution)
+        if (!results) {
+            results = doExecuteQuery(element, query)
+            toCache(execution, results)
         }
         return results
     }
 
     def fromCache(QueryExecution execution) {
-        def results = null
+        Object results = null
         if (isCacheable(execution)) {
-            cleanup(execution.query.name)
-            results = cache[execution]
+            results = selectQueryCache(execution).fromCache(execution)
         }
         else {
             if (WARN_NO_CACHING) Logger.getLogger(this.class).warn("Query ${execution.query.name} is not yet cacheable (add it to dependencies)")
@@ -112,27 +136,24 @@ class QueryManager {
 
     void toCache(QueryExecution execution, def results) {
         if (isCacheable(execution)) {
-            cleanup(execution.query.name)
-            cache.put(execution, results)
+            selectQueryCache(execution).toCache(execution, results)
         }
     }
 
     private boolean isCacheable(QueryExecution execution) {
-        return dependencies.containsKey(execution.query.name)
+        return !NO_CACHING && dependencies.containsKey(execution.query.name)
     }
 
-    // Query is executed in ApplicationMemory, *not* in SessionMemory
+    // Query is executed in SessionMemory, results will be cached in ApplicationMemory if not dependent on elements currently in session
     private def doExecuteQuery(def element, Query query) {
-        def results = null
-        use(NoSessionCategory) {
-            def target = element
-            if (Ref.class.isAssignableFrom(element.class)) {
-                target = element.deref()
-            }
-            String name = query.name
-            def args = processArguments(query.arguments)
-            results = target.metaClass.invokeMethod(target, name, args)
+        def results
+        def target = element
+        if (Ref.class.isAssignableFrom(element.class)) {
+            target = element.deref()
         }
+        String name = query.name
+        def args = processArguments(query.arguments)
+        results = target.metaClass.invokeMethod(target, name, args)
         return results
     }
 
@@ -149,52 +170,38 @@ class QueryManager {
         return args as Object[]
     }
 
-    static void modified(Referenceable element) {
-         instance().hasChanged(element)
+    static void modifiedInApplication(Referenceable element) {
+        QueryCache queryCache = instance().getApplicationQueryCache()
+        instance().hasChanged(element, queryCache)
     }
 
-    private void hasChanged(Referenceable element) {     
-        cache.each {qe, res ->
-            List deps = dependencies[qe.query.name]
-            if (deps && deps.any{dep -> dependencyMatch(dep, element)}) {
-                    dirty.add(qe.query.name) // postpone cache cleanup to speed change event handling
-                }
-        }
+    public void propertyChange(PropertyChangeEvent evt) { // only elements in session can be modified and thus raise change events
+        Referenceable element = (Referenceable) evt.source
+        QueryCache queryCache = getSessionQueryCache()
+        hasChanged(element, queryCache)
+    }
 
- /*       if (cache) {
-            dependencies.each {name, deps ->
-                if (deps.any {dep -> dependencyMatch(dep, element)}) {
-                    dirty.add(name) // postpone cache cleanup to speed change event handling
-                }
+    private void hasChanged(Referenceable element, QueryCache cache) {
+        cache.cachedExecutions.each {qe ->
+            String queryName = qe.query.name
+            List deps = (List) dependencies[queryName]
+            if (deps && deps.any {dep -> dependencyMatch(dep, element)}) {
+                cache.cleanup(queryName)
             }
-        }*/
+        }
     }
 
     private boolean dependencyMatch(Class dep, Referenceable element) {
         return dep.isAssignableFrom(element.class)
     }
 
-    int size() {
-        cleanupAll()
-        return cache.size()
+    // For testing
+    int sessionCacheSize() {
+        return getSessionQueryCache().size()
     }
 
-    void cleanupAll() {
-        List<String> all = []
-        all.addAll(dirty)
-        all.each {queryName -> cleanup(queryName)}
+    int applicationCacheSize() {
+        return getApplicationQueryCache().size()
     }
 
-    void cleanup(String queryName) {
-        if (dirty && dirty.contains(queryName)) {
-            List dirtyExecs = cache.keySet().findAll {qe -> qe.query.name == queryName}
-            dirtyExecs.each {qe -> cache.remove(qe)}
-            dirty.remove(queryName)
-        }
-    }
-
-    void clear() {
-        cache = [:]
-        dirty = new HashSet()
-    }
 }

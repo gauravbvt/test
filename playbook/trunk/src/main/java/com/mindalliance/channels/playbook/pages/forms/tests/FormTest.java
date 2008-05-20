@@ -145,12 +145,19 @@ public class FormTest extends WebPage {
         choices.add(TaskType.class);
         // Playbook
         choices.add(Assignation.class);
+        choices.add(Association.class);
         choices.add(Confirmation.class);
         choices.add(Denial.class);
+        choices.add(Detection.class);
+        choices.add(Event.class);
+        choices.add(Group.class);
         choices.add(InformationRequest.class);
         choices.add(InformationTransfer.class);
-        choices.add(Detection.class);
-        choices.add(Task.class);
+        choices.add(Monitoring.class);
+        choices.add(SharingCommitment.class);
+        choices.add(SharingRequest.class);
+        choices.add(Team.class);
+        choices.add(Event.class);
         choices.add(Verification.class);
         // Project elements
         choices.add(PlaybookModel.class);
@@ -172,13 +179,13 @@ public class FormTest extends WebPage {
         } else if (type.equals(Project.class)) {
             results.add(project.getReference());
         } else if (type.equals(SharingAgreement.class)) {
-            results.add(project.getSharingAgreements().get(0));
+            results.add((Ref)project.getSharingAgreements().get(0));
         }
         else if (type.equals(PlaybookModel.class)) {
-            results.add(project.getModels().get(0));
+            results.add((Ref)project.getModels().get(0));
         }
         else if (type.equals(Playbook.class)) {
-            results.add(project.getPlaybooks().get(0));
+            results.add((Ref)project.getPlaybooks().get(0));
         }
         if (results.size() > 0) {
             return results.get(0);

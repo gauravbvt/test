@@ -37,7 +37,7 @@ public class TestPlaybook extends TestCase {
         app = new PlaybookApplication()
         tester = new WicketTester(app, "./src/main/webapp")
         app.clearAll()
-        session = (PlaybookSession) Session.get()
+        session = PlaybookSession.current()
         sessionMem = session.memory
         sessionMem.reset()
         session.application = app
@@ -157,30 +157,37 @@ public class TestPlaybook extends TestCase {
         Ref channels = app.channels
         Ref project = (Ref) Query.execute(channels, "findProjectNamed", 'Generic')
         assert project.name == 'Generic'
-        assert qm.size() == 1
+        assert qm.sessionCacheSize() == 0
+        assert qm.applicationCacheSize() == 1
         Ref again = (Ref) Query.execute(channels, "findProjectNamed", 'Generic')
-        assert qm.size() == 1
+        assert qm.sessionCacheSize() == 0
+        assert qm.applicationCacheSize() == 1
         assert again == project
         channels.begin()
         channels.about = "something else"
         session.commit()
-        assert qm.size() == 0
+        assert qm.applicationCacheSize() == 1 // cached query execution unaffected
         again = (Ref) Query.execute(channels, "findProjectNamed", 'QWERTY')
         assert again == null
-        assert qm.size() == 1
+        assert qm.applicationCacheSize() == 1 // null does not count as cached value -- will be re-executed
         channels.begin()
         channels.addProject(new Project(name: 'Other').persist())
         session.commit()
+        assert qm.applicationCacheSize() == 0 // cached query execution cleared
         Ref other = (Ref) Query.execute(channels, "findProjectNamed", 'Other')
+        assert qm.applicationCacheSize() == 1
         other.begin()
         assert other.name == 'Other'
-        session.commit()
-        assert qm.size() == 1
         again = (Ref) Query.execute(channels, "findProjectNamed", 'Other')
-        assert qm.size() == 1
+        assert qm.sessionCacheSize() == 1
+        other.name ="Glafbrgz"
+        assert qm.sessionCacheSize() == 0
+        session.abort()
+        assert qm.sessionCacheSize() == 0
+        assert qm.applicationCacheSize() == 1 // no session changes so no cached results affected in application
+        again = (Ref) Query.execute(channels, "findProjectNamed", 'Other')
+        assert qm.applicationCacheSize() == 1
         assert other == again
-        qm.clear()
-        assert qm.size() == 0
     }
 
     void testAreas() {

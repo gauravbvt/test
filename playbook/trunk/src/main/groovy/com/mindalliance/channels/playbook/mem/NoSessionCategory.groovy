@@ -26,7 +26,7 @@ class NoSessionCategory {
         self."$setterName"(value)
     }
 
-    // Can't persist new elements
+    // Can't persist new elements out of session
     static void persist(ReferenceableImpl self) {
         throw new Exception("Must be within session to persist")
     }
@@ -36,18 +36,6 @@ class NoSessionCategory {
         Referenceable referenceable = self.retrieveFromApplicationMemory(reference)
         return referenceable
     }
-
-    // REFERENCE
-
-/*
-    void doSetProperty(String name, def value) {
-        this.@"$name" = value
-    }
-
-    static Referenceable dereference(RefImpl ref) {
-        throw new Exception("Must be executed within a session")
-    }
-*/
 
 
 }

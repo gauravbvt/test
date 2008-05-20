@@ -33,6 +33,10 @@ class Policy extends ProjectElement implements Describable {
         return (List<String>)(super.transientProperties() + ['edictKinds'])
     }
 
+    static List<String> getEdictKinds() {
+        return  edictKinds
+    }
+
     String partiesMeaning() {
         String meaning = "The policy applies to any source from organizations ${orgTypesSummary(sourceOrganizationTypes)} "
         meaning += " that ${relationshipsSummary()} with any recipient from organizations ${orgTypesSummary(sourceOrganizationTypes)}."
