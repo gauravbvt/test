@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.tests
 import org.apache.wicket.util.tester.WicketTester
 import com.mindalliance.channels.playbook.mem.SessionMemory
 import junit.framework.TestCase
-import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
@@ -18,6 +17,8 @@ import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 import com.mindalliance.channels.playbook.query.QueryManager
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.support.models.RefQueryModel
+import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.support.persistence.PersistentRef
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -32,6 +33,7 @@ public class TestPlaybook extends TestCase {
     WicketTester tester
     PlaybookSession session
     SessionMemory sessionMem
+    Ref channels
 
     protected void setUp() {
         app = new PlaybookApplication()
@@ -41,6 +43,7 @@ public class TestPlaybook extends TestCase {
         sessionMem = session.memory
         sessionMem.reset()
         session.application = app
+        channels = app.channels
     }
 
    void testSerialization() {
@@ -51,9 +54,9 @@ public class TestPlaybook extends TestCase {
     }
 
     // Tests session-based persistency, dereferencing and operatons on fields
-    void testMemory() {
+
+   void testMemory() {
         assertTrue(sessionMem.isEmpty())
-        Ref channels = app.channels
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
         myProject.begin()
@@ -142,19 +145,35 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
     }
 
-
-    void testExportImport() {
-        Ref channels = app.getChannels()
+   void testExportImport() {
         int exportCount = app.memory.exportRef(channels, 'channels')
         assert exportCount > 0
         int importCount = app.memory.importRef('channels')
         assert importCount == exportCount
-        app.getChannels().save()
+        channels.save()
     }
-    
-    void testQueryManager() {
+
+    void testComputedRef() {
+        List<Ref> impliedEventTypes = Event.impliedEventTypes()
+        Ref eventType = (Ref)impliedEventTypes[0]
+        assert eventType.isComputed()
+        assert !eventType.isModifiable()
+        assert eventType.name == 'event'
+        try {
+            eventType.name = 'new name'
+            fail("Not allowed")
+        }
+        catch (Exception e) {}
+        assert eventType.name == 'event'
+        PersistentRef pref = PersistentRef.fromRef(eventType)
+        eventType = pref.toRef()
+        assert eventType.isComputed()
+        assert !eventType.isModifiable()
+        assert eventType.name == 'event'
+    }
+
+    public void testQueryManager() {
         QueryManager qm = QueryManager.instance()
-        Ref channels = app.channels
         Ref project = (Ref) Query.execute(channels, "findProjectNamed", 'Generic')
         assert project.name == 'Generic'
         assert qm.sessionCacheSize() == 0
@@ -203,7 +222,6 @@ public class TestPlaybook extends TestCase {
     }
 
     void testModels() {
-        Ref channels = app.channels
         Ref project = new Project(name: "new project").persist()
         channels.begin()
         channels.addProject(project)
@@ -217,8 +235,7 @@ public class TestPlaybook extends TestCase {
         project = (Ref) rqm.getObject()
         assert project.name == 'new project'
     }
-
-    void testSemanticMatching() {
+   void testSemanticMatching() {
         SemanticMatcher matcher = SemanticMatcher.getInstance()
         Logger logger = Logger.getLogger(matcher.class)
         int score

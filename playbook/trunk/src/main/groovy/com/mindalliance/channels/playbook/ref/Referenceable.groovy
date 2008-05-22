@@ -21,4 +21,6 @@ interface Referenceable extends Bean {
     List<Ref> references() // find all references in this
     boolean save() // commit self and all references(tranisitively) then export self and references to file
     void afterDelete()
+    void makeConstant()
+    boolean isConstant()
 }

@@ -42,15 +42,6 @@ public class GroupWhoTab extends AbstractFormTab {
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        kindsChoice = new ListMultipleChoice("kinds", new RefPropertyModel(getElement(), "kinds"), Group.getResourceKinds());
-        kindsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                List<String> selected = (List<String>)kindsChoice.getModelObject();
-                RefUtils.set(getElement(), "kinds", selected);
-            }
-        });
-        addReplaceable(kindsChoice);
         rolesTree = new DynamicFilterTree("roles", new RefPropertyModel(getElement(), "roles"),
                                            new RefQueryModel(getProject(), new Query("findAllTypes", "Role"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {

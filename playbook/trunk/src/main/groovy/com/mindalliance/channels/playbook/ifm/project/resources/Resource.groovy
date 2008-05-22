@@ -5,10 +5,10 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.project.resources.System
 import com.mindalliance.channels.playbook.ifm.Locatable
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,6 +33,14 @@ class Resource extends ProjectElement implements Agent, Locatable {
 
     boolean isResource() {
         return true
+    }
+
+    public boolean isTeam() {
+        return false;
+    }
+
+    public boolean isGroup() {
+        return false;
     }
 
     boolean isOrganizationResource() {
@@ -71,7 +79,7 @@ class Resource extends ProjectElement implements Agent, Locatable {
         super.changed(propName)
     }
 
-    public List<Ref> getResourcesAt(InformationAct act) {
+    public List<Ref> getResourcesAt(Event event) {
         return [this.reference]
     }
 
@@ -93,19 +101,14 @@ class Resource extends ProjectElement implements Agent, Locatable {
 
     // Queries
 
-    boolean hasRelationship(String relName, Ref otherResource, InformationAct act) {
+    boolean hasRelationship(String relName, Ref otherResource, Event event) {
         boolean related = false
         // Look in project
         related = related || getProject().relationships.any {rel ->
             rel.fromAgent == this && (!otherResource || rel.toAgent == otherResource) && rel.name == relName
         }
         // Look at associations before act
-        related = related || act.getPlaybook().findAllInformationActs("Association").any {association ->
-            act.isAfter(association) &&
-            association.relationships.any {rel ->
-                rel.fromAgent == this && (!otherResource || rel.toAgent == otherResource) && rel.name == relName
-            }
-        }
+        related = related || event.playbook.createsRelationshipBefore(new Relationship(fromAgent:this.reference, name:relName, toAgent:otherResource), event)
         return related
     }
     // end queries

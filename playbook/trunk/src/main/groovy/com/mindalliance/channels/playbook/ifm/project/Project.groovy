@@ -94,14 +94,6 @@ class Project extends IfmElement implements Describable {
         return resources
     }
 
-    List<Ref> findAllResourcesOfKinds(List<String> types) {
-        List<Ref> resources = findAllResources()
-        if (types) {
-           resources = resources.findAll {res -> types.contains(res.type)} 
-        }
-        return resources
-    }
-
     List<Ref> findAllAgentsExcept(def holder, String propPath) {
         Ref party = RefUtils.get(holder, propPath)
         return findAllResourcesExcept(party)

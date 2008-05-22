@@ -8,8 +8,9 @@ package com.mindalliance.channels.playbook.ref
  */
 interface Ref extends Serializable {
     String getId()
+    void setId(String id)
     String getDb()
-    Referenceable getReferenced(Store store)
+    void setDb(String db)
     Ref getReference()
     Referenceable deref()  // get Referenceable from session or from application (don't copy it nor register it to session)
     Object deref(String path)
@@ -37,4 +38,5 @@ interface Ref extends Serializable {
     boolean isModifiable() // is this.deref() modifiable
     boolean isModified() // is in session and has been changed
     boolean exists() // can it be dereferenced to not null?
+    boolean isComputed()
 }

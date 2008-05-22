@@ -14,7 +14,6 @@ import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreeme
 import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
-import com.mindalliance.channels.playbook.ifm.playbook.Causable
 import com.mindalliance.channels.playbook.mem.SessionMemory
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
@@ -27,6 +26,8 @@ import com.mindalliance.channels.playbook.ifm.model.PlaceType
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource
 import com.mindalliance.channels.playbook.ifm.project.resources.Position
 import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ifm.playbook.Association
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -67,7 +68,6 @@ class QueryManager implements PropertyChangeListener {
                 atleastOnePlaceTypeDefined: [PlaceType.class],
                 findAllResourcesExcept: [Resource.class],
                 findAllResources: [Resource.class],
-                findAllResourcesOfKinds: [Resource.class],
                 findAllRelationshipsOf: [Relationship.class],
                 findCandidateSubOrganizationsFor: [Organization.class],
                 findAllPositionsAnywhere: [Position.class],
@@ -81,12 +81,18 @@ class QueryManager implements PropertyChangeListener {
                 // Position
                 findOtherPositionsInOrganization: [Position.class, Organization.class],
                 // Playbook
-                findCandidateCauses: [Causable.class],
-                findAllEventNames: [Event.class],
+                findCandidateCauses: [Event.class],
+                findPriorInformationActs: [Event.class],
+                findInformationActsOfType: [InformationAct.class],
+                findPriorInformationActsOfType: [Event.class],
+                createsRelationshipBefore: [Event.class],
+                agentImplied: [Agent.class, Association.class],
                 // Playbook, Project
                 findAllAgentsExcept: [Agent.class],
                 // Resource, Group
-                hasRelationship: [Resource.class, Agent.class, Relationship.class]
+                hasRelationship: [Resource.class, Agent.class, Relationship.class],
+                // Association
+                createsMatchingRelationship: [Association.class]
         ]
     }
 

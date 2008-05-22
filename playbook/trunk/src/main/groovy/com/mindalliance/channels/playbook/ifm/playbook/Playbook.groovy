@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.support.util.CountedSet
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,8 +35,8 @@ class Playbook extends ProjectElement implements Describable {
         super.doAddToField("informationActs", object )
     }
 
-    public Referenceable doRemoveFromField(String name, Object val) {
-        return super.doRemoveFromField("informationActs", val);
+    Referenceable doRemoveFromField(String name, Object val) {
+        return super.doRemoveFromField("informationActs", val)
     }
 
     // Queries
@@ -48,14 +49,28 @@ class Playbook extends ProjectElement implements Describable {
          return this.project.findAllOtherTypeNames(elementType)
     }
 
-    List<Ref> findCandidateCauses(Ref causable) {
+    List<Ref> findCandidateCauses(Ref event) {
          List<Ref> candidates = informationActs.findAll { act ->
-              !act.isAfter(causable)
+              !act.isAfter(event)
          }
-        candidates.addAll(events.findAll {event ->
-            !event.isAfter(causable)
+        candidates.addAll(events.findAll {other ->
+            !other.isAfter(event)
         })
         return candidates
+    }
+
+    List<Ref> findPriorInformationActs(Ref event, String type) {
+        return informationActs.findAll {act ->
+            act.type == type && event.isAfter(act)
+        }
+    }
+
+    List<Ref> findInformationActsOfType(String type) {
+        return informationActs.findAll {act -> act.type == type}
+    }
+
+    List<Ref> findPriorInformationActsOfType(String type, Ref event) {
+        return informationActs.findAll {act -> act.type == type && !act.isAfter(event)}
     }
 
     List<Ref> findAllAgents() {
@@ -72,14 +87,21 @@ class Playbook extends ProjectElement implements Describable {
         return agents
     }
 
-    List<Ref> findAllInformationActs(String type) {
-        return informationActs.findAll {act -> act.type == type}
+    // Playbook shows transient relationship by start of event
+    boolean createsRelationshipBefore(Relationship relationship, Event event) {
+       return findAllPriorInformationActsOfType("Association", event).any {association ->
+           association.createsMatchingRelationship(relationship)
+       }
     }
 
-    List<String> findAllEventNames() {
-        return events.collect {event -> event.name}
+    // Whether an agent is the same as or implied by another agent at start of an event
+    boolean agentImplied(Ref agent, Ref otherAgent, Event event) {
+        if (agent == otherAgent) return true
+        List<Ref> otherResources = otherAgent.getResourcesAt(event)
+        // implied if it is not true that at least one resource defined by the agent is not also defined by the other agent
+        boolean implied = !agent.getResourcesAt(event).any {res -> !otherResources.contains(res)}
+        return implied
     }
-
 
     // end queries
 

@@ -31,20 +31,22 @@ public class SharingProtocolPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
-        deliveryChoice = new DropDownChoice("delivery", new RefPropertyModel(getElement(), propPath + "delivery", SharingAgreement.getDeliveries()));
+        deliveryChoice = new DropDownChoice("delivery", new RefPropertyModel(getElement(), propPath + ".delivery"), SharingAgreement.getDeliveries());
         deliveryChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 String chosenDelivery = deliveryChoice.getModelObjectAsString();
-                RefUtils.set(getElement(), propPath + "delivery", chosenDelivery);
+                RefUtils.set(getElement(), propPath + ".delivery", chosenDelivery);
             }
         });
         addReplaceable(deliveryChoice);
-        mediaPreferrences = new RefPreferencesPanel("preferredMedia", this, propPath + "preferredMedia", isReadOnly(), feedback,
+        mediaPreferrences = new RefPreferencesPanel("preferredMedia", this, propPath + ".preferredMediumTypes", isReadOnly(), feedback,
                                                    new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType")));
         addReplaceable(mediaPreferrences);
-        infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this, propPath+"informationTemplate",
+        infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this, propPath+".informationTemplate",
                                                           isReadOnly(), feedback);
         addReplaceable(infoTemplatePanel);
+        maxDelayPanel = new TimingPanel("maxDelay", this, propPath+".maxDelay", isReadOnly(), feedback);
+        addReplaceable(maxDelayPanel);
     }
 }

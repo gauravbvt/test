@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.mem
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,7 +18,7 @@ class NoSessionCategory {
 
     // Changes on out-of-session element allowed
     static void checkModifyingAllowed(ReferenceableImpl self) {
-        // Do nothing       
+       // OK to modify       
     }
 
     // Don't raise change event

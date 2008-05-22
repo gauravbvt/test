@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ifm.info.Timing
 * Date: Apr 17, 2008
 * Time: 1:27:48 PM
 */
-/* abstract*/ class InformationAct extends Occurrence {
+/* abstract*/ class InformationAct extends Event {
 
     Ref actorAgent // an agent, i.e. group or team within the scope of the Playbook, or a resource in the scope of the Playbook's Project
 

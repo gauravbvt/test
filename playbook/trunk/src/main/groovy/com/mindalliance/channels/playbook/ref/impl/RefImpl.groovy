@@ -25,6 +25,10 @@ class RefImpl implements Ref {
         this.id = id
     }
 
+    boolean isComputed() {
+        return false
+    }
+
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
     boolean equals(Object obj) {
         if (!obj instanceof Ref) return false
@@ -55,17 +59,11 @@ class RefImpl implements Ref {
     // Support for Java code that needs to dereference a Ref
     // Only supports dot-separated paths such as 'a.b.c'
     def deref(String path) {
-/*
-        def result = this
-        path.tokenize('.').each() {
-            result = result."$it"
-        }
-*/
         def result = RefUtils.get(this, path)
         return result
     }
 
-    public Referenceable getReferenced(Store store) {
+    private Referenceable getReferenced(Store store) {
         return store.retrieve(this)
     }
 
@@ -193,10 +191,6 @@ class RefImpl implements Ref {
 
     Class formClass() {
         return deref().formClass() //To change body of implemented meth, ods use File | Settings | File Templates.
-    }
-
-    List drillDown(String listPropName, List drillDownPropNames, Map<String, Object> ddValues) {
-        return deref().drillDown(listPropName, drillDownPropNames, ddValues)
     }
 
     Ref find(String listPropName, Map<String, Object> args) {

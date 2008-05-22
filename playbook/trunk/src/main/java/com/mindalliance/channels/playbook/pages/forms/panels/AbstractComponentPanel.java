@@ -32,7 +32,7 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     protected boolean readOnly = false;
     protected ElementPanel parentPanel;
     protected String propPath; // path to the element's property which value is the component to be edited
-    protected WebMarkupContainer div;
+    // protected WebMarkupContainer div;
     protected FeedbackPanel feedback;
 
     public AbstractComponentPanel(String id, ElementPanel parentPanel, String propPath , boolean readOnly, FeedbackPanel feedback) {
@@ -115,9 +115,9 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     }
 
     protected void load() {
-      div = new WebMarkupContainer("component");
+    /*  div = new WebMarkupContainer("component");
       div.setOutputMarkupId(true);
-      add(div);
+      add(div);*/
     }
 
 
@@ -135,8 +135,8 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
 
     protected void addReplaceable(Component component) {
         component.setOutputMarkupId(true);
-        div.addOrReplace(component);
-        component.setEnabled(!this.isReadOnly());
+        /*div.*/addOrReplace(component);
+        if (isReadOnly()) component.setEnabled(false);
     }
 
 

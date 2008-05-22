@@ -22,6 +22,7 @@ import org.apache.log4j.Logger
 
     String id
     String db
+    private boolean constant = false    // if constant then can't be modified or persisted
 
     PropertyChangeSupport pcs = new PropertyChangeSupport(this)
 
@@ -33,13 +34,26 @@ import org.apache.log4j.Logger
         this.pcs.removePropertyChangeListener(listener)
     }
 
+    void makeConstant() {
+        constant = true
+    }
+
+    boolean isConstant() {
+        return constant
+    }
+
     @Override
     Bean copy() {
-        Referenceable copy = (Referenceable) super.copy()
-        copy.id = this.@id
-        copy.db = this.@db
-        copy.pcs = new PropertyChangeSupport(copy)
-        return copy
+        if (isConstant()) {
+            return this
+        }
+        else {
+            Referenceable copy = (Referenceable) super.copy()
+            copy.id = this.@id
+            copy.db = this.@db
+            copy.pcs = new PropertyChangeSupport(copy)
+            return copy
+        }
     }
 
     protected List<String> transientProperties() {
@@ -72,8 +86,9 @@ import org.apache.log4j.Logger
     }
 
     void checkModifyingAllowed() {
+        if (isConstant()) throw new NotModifiableException("Modifying ${this.toString()} not allowed (value is contant)")
         if (!this.reference.isModifiable()) {
-            throw new NotModifiableException("Modifying ${this.toString()} not allowed (do ref.begin() first)")
+            throw new NotModifiableException("Modifying ${this.toString()} not allowed (do ref.begin() first if not constant)")
         }
     }
 

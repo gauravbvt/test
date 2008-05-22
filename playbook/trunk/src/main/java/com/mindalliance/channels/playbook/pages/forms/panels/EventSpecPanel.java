@@ -29,7 +29,6 @@ public class EventSpecPanel extends AbstractComponentPanel {
     protected DynamicFilterTree eventTypesTree;
     protected LocationSpecPanel locationSpecPanel;
     protected TimingPanel timingPanel;
-    protected AutoCompleteTextFieldWithChoices relationshipNameField;
 
     public EventSpecPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -55,10 +54,5 @@ public class EventSpecPanel extends AbstractComponentPanel {
         addReplaceable(locationSpecPanel);
         timingPanel = new TimingPanel("timing", this, propPath + ".timing", readOnly, feedback);
         addReplaceable(timingPanel);
-        relationshipNameField = new AutoCompleteTextFieldWithChoices("relationshipName",
-                                                                 new RefPropertyModel(eventSpec, "relationshipName"),
-                                                                 new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
-        addInputField(relationshipNameField);
     }
-
 }

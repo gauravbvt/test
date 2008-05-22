@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.support.persistence;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefImpl;
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,6 +15,7 @@ public class PersistentRef {
 
     String id;
     String db;
+    boolean computed = false;
 
     public PersistentRef() {}
 
@@ -21,6 +23,7 @@ public class PersistentRef {
         PersistentRef pRef = new PersistentRef();
         pRef.id = ref.getId();
         pRef.db = ref.getDb();
+        pRef.computed = ref.isComputed();
         return pRef;
     }
 
@@ -33,9 +36,15 @@ public class PersistentRef {
     }
 
     public Ref toRef() {
-        RefImpl ref = new RefImpl();
+        Ref ref;
+        if (computed) {
+            ref = new ComputedRef();
+        }
+        else {
+            ref = new RefImpl();
+        }
         ref.setId(id);
         ref.setDb(db);
-        return (Ref)ref;
+        return ref;
     }
 }

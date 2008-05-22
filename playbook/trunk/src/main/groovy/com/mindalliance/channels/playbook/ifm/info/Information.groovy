@@ -11,10 +11,11 @@ import com.mindalliance.channels.playbook.ifm.IfmElement
 * Date: Mar 29, 2008
 * Time: 9:04:20 AM
 */
-class Information extends AbstractInformation {  // the classification and (partial) account of an event
+class Information extends AbstractInformation {  // the communicated (partial) account of an event (classified and attributed)
 
     Ref event // about an event description     -- required
     List<Ref> eventTypes = [] // classification of the event
     // EOIs are inherited
+    List<Ref> sourceAgents = [] // sources of the information
 
 }

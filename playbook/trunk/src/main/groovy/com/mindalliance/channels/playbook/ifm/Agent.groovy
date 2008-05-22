@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
-import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.playbook.Event
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +13,10 @@ import com.mindalliance.channels.playbook.ref.Ref
 interface Agent extends Describable, Serializable {
 
     String getName()    
-    List<Ref> getResourcesAt(InformationAct act)
+    List<Ref> getResourcesAt(Event event)
+    boolean isResource()
+    boolean isTeam()
+    boolean isGroup()
 
    /*
     // PROFILES     -- TODO implement in a ProfileManager

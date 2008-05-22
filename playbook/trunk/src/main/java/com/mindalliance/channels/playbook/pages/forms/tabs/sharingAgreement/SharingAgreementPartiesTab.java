@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextArea;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
  */
 public class SharingAgreementPartiesTab extends AbstractFormTab {
 
+    protected TextArea descriptionField;
     protected DynamicFilterTree sourceTree;
     protected DynamicFilterTree recipientTree;
 
@@ -31,6 +33,8 @@ public class SharingAgreementPartiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
+        addInputField(descriptionField);
         CheckBox formalizedCheckBox = new CheckBox("formalized", new RefPropertyModel(getElement(), "formalized"));
         formalizedCheckBox.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
