@@ -10,6 +10,7 @@ import org.apache.commons.collections.bag.TreeBag
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
+import com.mindalliance.channels.playbook.ifm.playbook.Event
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,6 +36,14 @@ class Channels extends IfmElement {
     }
 
     // Queries
+
+    List<Ref> findAllImpliedTypes(String typeType) {
+        List<Ref> types = []
+        switch(typeType) {
+            case 'EventType': types.add(Event.impliedEventType()); break
+        }
+        return types
+    }
 
     Ref findProjectNamed(String name) {
         Ref ref = (Ref) projects.find {it.name == name}
@@ -81,6 +90,7 @@ class Channels extends IfmElement {
 
     List<Ref> findAllTypes(String typeType) {
         List<Ref> types = []
+        types.addAll(findAllImpliedTypes(typeType))
         models.each {model ->
             types.addAll(model.findAllTypes(typeType))
         }

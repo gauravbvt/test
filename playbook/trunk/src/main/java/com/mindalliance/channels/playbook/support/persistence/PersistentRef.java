@@ -17,9 +17,10 @@ public class PersistentRef {
     String db;
     boolean computed = false;
 
-    public PersistentRef() {}
+    public PersistentRef() {
+    }
 
-    static public PersistentRef fromRef (Ref ref) {
+    static public PersistentRef fromRef(Ref ref) {
         PersistentRef pRef = new PersistentRef();
         pRef.id = ref.getId();
         pRef.db = ref.getDb();
@@ -29,18 +30,33 @@ public class PersistentRef {
 
     public String getId() {
         return id;
-}
+    }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDb() {
+        return db;
+    }
+
+    public void setDb(String db) {
+        this.db = db;
+    }
+
+    public boolean isComputed() {
+        return computed;
+    }
+
+    public void setComputed(boolean computed) {
+        this.computed = computed;
     }
 
     public Ref toRef() {
         Ref ref;
         if (computed) {
             ref = new ComputedRef();
-        }
-        else {
+        } else {
             ref = new RefImpl();
         }
         ref.setId(id);

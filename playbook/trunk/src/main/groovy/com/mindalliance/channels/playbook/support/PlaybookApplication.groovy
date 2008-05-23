@@ -35,6 +35,7 @@ import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.model.TaskType
 import com.mindalliance.channels.playbook.query.QueryCache
+import com.mindalliance.channels.playbook.ifm.playbook.Event
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -67,8 +68,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-       return PlaybookPage.class
-       // return FormTest.class
+       // return PlaybookPage.class
+       return FormTest.class
     }
 
     @Override
@@ -249,16 +250,14 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addTaskType(store(new TaskType(name: 'autopsy')));
         m.addTaskType(store(new TaskType(name: 'arrest')));
         m.addTaskType(store(new TaskType(name: 'traffic stop')));
-
-        EventType event = new EventType(name: 'event')
-        event.addTopic('circumstance')
+        Ref event = Event.impliedEventType()
         EventType accident = new EventType(name: 'accident')
-        accident.narrow(event.reference)
+        accident.narrow(event)
         accident.addTopic('casualties')
         accident.addTopic('nature')
         accident.addTopic('damage')
         EventType crime = new EventType(name: 'crime')
-        crime.narrow(event.reference)
+        crime.narrow(event)
         crime.addTopic('victim')
         crime.addTopic('perpetrator')
         EventType terrorism = new EventType(name: 'terrorism')
@@ -266,7 +265,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         terrorism.addTopic('objective')
         terrorism.narrow(crime.reference)
         EventType taskEvent = new EventType(name: 'task event')
-        taskEvent.narrow(event.reference)
+        taskEvent.narrow(event)
         taskEvent.addTopic('resource')
         taskEvent.addTopic('outcome')
         EventType taskSucceeded = new EventType(name: 'task succeeded')
@@ -274,7 +273,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         taskFailed.addTopic('cause of failure')
         taskSucceeded.narrow(taskEvent.reference)
         taskFailed.narrow(taskEvent.reference)
-        m.addEventType(store(event))
         m.addEventType(store(accident))
         m.addEventType(store(crime))
         m.addEventType(store(terrorism))

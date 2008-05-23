@@ -83,7 +83,7 @@ class ApplicationMemory implements Serializable {
     }
 
     void delete(Ref ref) {
-        use (NoSessionCategory) {
+        use(NoSessionCategory) {
             QueryManager.modifiedInApplication(ref.deref())    // retrieve referenceable from application memory
         }
         cache.flushEntry(ref.id)
@@ -91,16 +91,21 @@ class ApplicationMemory implements Serializable {
 
     Referenceable retrieve(Ref ref) {
         Referenceable referenceable = null
-        try {
-            use (NoSessionCategory) {
-                referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
-                if (DEBUG) Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
-                referenceable.afterRetrieve()
-            }
+        if (ref.isComputed()) {
+            referenceable = ref.deref()
         }
-        catch (Exception e) {
-            // Do nothing
-            Logger.getLogger(this.class.name).warn("Failed to retrieve $ref")
+        else {
+            try {
+                use(NoSessionCategory) {
+                    referenceable = (Referenceable) cache.getFromCache(ref.id, CacheEntry.INDEFINITE_EXPIRY)
+                    if (DEBUG) Logger.getLogger(this.class.name).debug("<== from application: ${referenceable.type} $referenceable")
+                    referenceable.afterRetrieve()
+                }
+            }
+            catch (Exception e) {
+                // Do nothing
+                Logger.getLogger(this.class.name).warn("Failed to retrieve $ref")
+            }
         }
         return (Referenceable) referenceable // will be cloned by SessionMemory
     }

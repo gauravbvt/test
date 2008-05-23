@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ref.impl
 
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -49,7 +50,7 @@ class ComputedRef extends RefImpl {
     }
 
     void commit() {
-        throw new Exception("Can't commit a constant ref")
+        // do nothing
     }
 
     boolean isModifiable() {
@@ -60,8 +61,8 @@ class ComputedRef extends RefImpl {
         throw new Exception("Can't change a constant ref")
     }
 
-    boolean save() {
-        // do nothing
+    List<Ref> referefences() {
+        return []
     }
 
     boolean isModified() {

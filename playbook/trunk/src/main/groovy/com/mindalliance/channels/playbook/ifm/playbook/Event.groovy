@@ -49,8 +49,8 @@ class Event extends PlaybookElement implements Describable {
     }
 
     // Return event types implied by the event (provides for reflexion on events, including information acts)
-    static List<Ref> impliedEventTypes() {
-        return (List<Ref>)[ComputedRef.from(Event.class, 'makeEventTypeEvent')]
+    static Ref impliedEventType() {
+        return ComputedRef.from(Event.class, 'makeEventTypeEvent')
     }
 
     static EventType makeEventTypeEvent() {
