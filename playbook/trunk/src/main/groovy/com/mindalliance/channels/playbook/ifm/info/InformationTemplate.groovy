@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 class InformationTemplate extends AbstractInformation {
 
     EventSpec eventSpec = new EventSpec() // about what kind of event
-    List<AgentSpec> provenanceAgentSpecs = [] // from whom is this kind of information credible
+    AgentSpec sourceAgentSpec = new AgentSpec() // from whom is this kind of information credible
 
     @Override
     List<String> transientProperties() {

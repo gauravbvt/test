@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 10, 2008
  * Time: 7:35:44 PM
  */
-public class PlaceForm extends AbstractResourceForm {
+public class PlaceForm extends AbstractProjectElementForm {
 
     public PlaceForm(String id, Ref element) {
         super(id, element);

@@ -55,6 +55,10 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.getElement();
     }
 
+    public Object getComponent() {
+        return (Object)RefUtils.get(getElement(), propPath);
+    }
+
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         parentPanel.elementChanged(propPath, target);
     }

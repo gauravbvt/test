@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
 import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.ifm.info.RelationshipSpec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -108,23 +109,32 @@ class Channels extends IfmElement {
 
     List<String> findAllRelationshipNames() {  // TODO write a VocabularyManager to keep vocabulary usage count from everywhere
         CountedSet countedSet = new CountedSet();
+        // Permanent relationships
         projects.each { p ->
             p.relationships.each {rel -> if (rel.name) countedSet.add(rel.name)}
-            // In playbooks
             p.playbooks.each {playbook ->
-                playbook.agents.each {agent -> countedSet.addAll(agent.relationshipNames)}
+                // transient relationships created by Associations
                 playbook.informationActs.each {act ->
                     if (act.type == "Association") {
                         countedSet.add(act.relationshipName)
                     }
                 }
+                // agent specs in groups
+                playbook.groups.each {group ->
+                    RelationshipSpec rspec = group.agentSpec.relationshipSpec
+                    if (rspec.isDefined()) countedSet.add(rspec.relationshipName)
+                }
             }
             // In policies
             p.policies.each {pol ->
-               countedSet.addAll(pol.relationshipNames)
+               RelationshipSpec rspec
+               rspec = pol.sourceAgentSpec.relationshipSpec
+               if (rspec.isDefined()) countedSet.add(rspec.relationshipName)
+                rspec = pol.recipientAgentSpec.relationshipSpec
+                if (rspec.isDefined()) countedSet.add(rspec.relationshipName)
             }
         }
-        // TODO -- Missing all usages of relationship names in InformationTemplate.eventSpec.relationshipNames
+        // TODO -- Missing all usages of relationship names in InformationTemplate.sourceAgentSpecs*.relationshipName
         return countedSet.toList()
     }
 
@@ -132,17 +142,17 @@ class Channels extends IfmElement {
         CountedSet countedSet = new CountedSet();
         projects.each {p ->
             p.policies.each {pol -> countedSet.addAll(pol.purposes)}
-            p.sharingAgreements.each {agr -> countedSet.addAll(agr.sharingConstraints.allowedPurposes)}
+            p.sharingAgreements.each {agr -> countedSet.addAll(agr.constraints.allowedPurposes)}
             p.playbooks.each {playbook ->
                 playbook.informationActs.each {act ->
                     if (act instanceof SharingCommitment) {
-                        countedSet.addAll(act.sharingConstraints.allowedPurposes)
+                        countedSet.addAll(act.constraints.allowedPurposes)
                     }
                 }
             }
         }
         models.each {m ->
-            m.taskTypes.each {tt -> if (tt.purpose) countedSet.add(tt.purpose)}
+            m.taskTypes.each {tt -> countedSet.addAll(tt.purposes)}
         }
         return countedSet.toList()
       }

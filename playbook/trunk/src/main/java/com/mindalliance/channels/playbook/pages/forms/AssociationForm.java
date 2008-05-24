@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 15, 2008
  * Time: 9:16:17 PM
  */
-public class AssociationForm extends AbstractPlaybookElementForm {
+public class AssociationForm extends AbstractInformationActForm {
 
     public AssociationForm(String id, Ref element) {
         super(id, element);

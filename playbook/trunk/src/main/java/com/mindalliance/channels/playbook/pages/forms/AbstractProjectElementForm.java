@@ -19,6 +19,11 @@ abstract public class AbstractProjectElementForm extends AbstractElementForm {
 
     // ElementPanel
 
+    public boolean isProjectPanel() {
+        return true;
+    }
+
+
     public Project getProject() {
         return (Project)((ProjectElement)element.deref()).getProject().deref();
     }

@@ -2,7 +2,6 @@ package com.mindalliance.channels.playbook.ifm.project.environment
 
 import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.info.AgentSpec
@@ -25,7 +24,7 @@ class Policy extends ProjectElement implements Describable {
     AgentSpec sourceAgentSpec = new AgentSpec()
     AgentSpec recipientAgentSpec = new AgentSpec()
     List<String> relationshipNames // relationships from source to recipient (ORed)
-    InformationTemplate informationShared // specification of information (not) to be shared -- required
+    InformationTemplate informationTemplate // specification of information (not) to be shared -- required
     List<String> purposes = [] // constrained (interdicted|obligation-causing) usages of the information
     List<Ref> mediumTypes = [] // what types of communication media must (or must not) be used
 
@@ -38,6 +37,7 @@ class Policy extends ProjectElement implements Describable {
         return  edictKinds
     }
 
+/*
     String partiesMeaning() {
         String meaning = "The policy applies to any source such that  ${sourceAgentSpec.toString()} "
         meaning += " that ${relationshipsSummary()} with any recipient such that ${recipientAgentSpec.toString()}."
@@ -57,5 +57,6 @@ class Policy extends ProjectElement implements Describable {
         }
         return summary
     }
+*/
 
 }

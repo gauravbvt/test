@@ -55,7 +55,7 @@ public class MultipleStringChooser extends AbstractComponentPanel {
         add(newStringField);
         addStringButton = new AjaxButton("addString") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                RefUtils.add(getElement(), "propPath", newString);
+                RefUtils.add(getElement(), propPath, newString);
                 newStringField.clearInput();
                 newString = null;
                 updateAddButton(target);
@@ -65,7 +65,7 @@ public class MultipleStringChooser extends AbstractComponentPanel {
         };
         addStringButton.setEnabled(false);
         add(addStringButton);
-        stringsChoice = new ListChoice("strings", new RefPropertyModel(getElement(), "propPath"));
+        stringsChoice = new ListChoice("strings", new Model(), new RefPropertyModel(getElement(), propPath));
         stringsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget
@@ -77,7 +77,7 @@ public class MultipleStringChooser extends AbstractComponentPanel {
         add(stringsChoice);
         deleteStringButton = new AjaxButton("deleteString") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                RefUtils.remove(getElement(), "propPath", selectedString);
+                RefUtils.remove(getElement(), propPath, selectedString);
                 selectedString = null;
                 updateDeleteButton(target);
                 target.addComponent(stringsChoice);

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Relationship</legend>
+                    <input wicket:id="relationshipName" type="text" width="50"/>
+                </fieldset>
+            </td>
+            <td>with</td>
+            <td rowspan="2">
+                <fieldset>
+                    <legend>agent</legend>
+                    <span wicket:id="agent">[agent tree]</span>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div wicket:id="fromTo">
+                    <table>
+                        <tr>
+                            <td>
+                                <input wicket:id="fromSpecified" type="checkbox"/>
+                            </td>
+                            <td>
+                                <span wicket:id="fromRelationshipString">[relationship name]</span>
+                            </td>
+                            <td>
+                                <span wicket:id="toAgentString">[agent name]</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input wicket:id="toSpecified" type="checkbox"/>
+                            </td>
+                            <td>
+                                <span wicket:id="toRelationshipString">[relationship name]</span>
+                            </td>
+                            <td>
+                                <span wicket:id="fromAgentString">[agent name]</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

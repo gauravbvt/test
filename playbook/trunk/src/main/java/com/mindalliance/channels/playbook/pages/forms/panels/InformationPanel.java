@@ -26,6 +26,7 @@ public class InformationPanel extends AbstractComponentPanel {
     DynamicFilterTree eventTree; // what the info is about
     DynamicFilterTree eventTypesTree;
     EOIsPanel eoisPanel;  // content
+    DynamicFilterTree sourceAgentsTree;
 
     public InformationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -34,7 +35,7 @@ public class InformationPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         eventTree = new DynamicFilterTree("event", new RefPropertyModel(getElement(), propPath+".event"),
-                                           new RefPropertyModel(getPlaybook(), "events"), SINGLE_SELECTION) {
+                                           new RefQueryModel(getScope(), new Query("findAllEvents")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  Ref selected = eventTree.getNewSelection();
                 RefUtils.set(getElement(), "event", selected);
@@ -43,7 +44,7 @@ public class InformationPanel extends AbstractComponentPanel {
         };
         addReplaceable(eventTree);
         eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(getElement(), propPath+".eventTypes"),
-                                            new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))) {
+                                            new RefQueryModel(getScope(), new Query("findAllTypes", "EventType"))) {
              public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  List<Ref> selected = eventTypesTree.getNewSelections();
                  RefUtils.set(getElement(), "eventTypes", selected);
@@ -57,6 +58,14 @@ public class InformationPanel extends AbstractComponentPanel {
                         new RefPropertyModel(getElement(), propPath + ".eventTypes")));
         eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", isReadOnly(), feedback, topicChoicesModel);
         addReplaceable(eoisPanel);
+        sourceAgentsTree = new DynamicFilterTree("sourceAgents", new RefPropertyModel(getComponent(), "sourceAgents"),
+                                                 new RefQueryModel(getScope(), new Query("findAllAgents"))) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                List<Ref> selected = sourceAgentsTree.getNewSelections();
+                RefUtils.set(getElement(), propPath+".sourceAgents", selected);
+            }
+        };
+        addReplaceable(sourceAgentsTree);
     }
 
     @Override

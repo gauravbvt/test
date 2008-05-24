@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
+import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -26,10 +27,9 @@ import java.util.List;
  */
 public class PolicyPartiesTab extends AbstractFormTab {
 
-    protected DynamicFilterTree sourceOrganizationTypesTree;
+    protected AgentSpecPanel sourceAgentSpecPanel;
     MultipleStringChooser relationshipNamesChooser;
-    protected DynamicFilterTree recipientOrganizationTypesTree;
-    protected Label meaningLabel;
+    protected AgentSpecPanel recipientAgentSpecPanel;
 
     public PolicyPartiesTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -37,34 +37,13 @@ public class PolicyPartiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        sourceOrganizationTypesTree = new DynamicFilterTree("sourceOrganizationTypes",
-                                          new RefPropertyModel(getElement(), "sourceOrganizationTypes"),
-                                          new RefQueryModel(getScope(), new Query("findAllTypes", "OrganizationType"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = sourceOrganizationTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "sourceOrganizationTypes", selectedTypes);
-                target.addComponent(meaningLabel);
-            }
-        };
-        addReplaceable(sourceOrganizationTypesTree);
+        sourceAgentSpecPanel = new AgentSpecPanel("sourceAgentSpec", this, "sourceAgentSpec", EDITABLE, feedback);
+        addReplaceable(sourceAgentSpecPanel);
         relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames", EDITABLE, feedback,
                                                               new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
         addReplaceable(relationshipNamesChooser);
-        recipientOrganizationTypesTree = new DynamicFilterTree("recipientOrganizationTypes",
-                                          new RefPropertyModel(getElement(), "recipientOrganizationTypes"),
-                                          new RefQueryModel(getScope(), new Query("findAllTypes", "OrganizationType"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = recipientOrganizationTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "recipientOrganizationTypes", selectedTypes);
-                target.addComponent(meaningLabel);
-            }
-        };
-        addReplaceable(recipientOrganizationTypesTree);
-        meaningLabel = new Label("meaning", new RefQueryModel(this, new Query("meaning")));
-        addReplaceable(meaningLabel);
+        recipientAgentSpecPanel = new AgentSpecPanel("recipientAgentSpec", this, "recipientAgentSpec", EDITABLE, feedback);
+        addReplaceable(recipientAgentSpecPanel);
     }
 
-    private String meaning() {
-        return ((Policy)getElement().deref()).partiesMeaning();
-    }
 }

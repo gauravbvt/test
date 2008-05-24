@@ -18,6 +18,11 @@ class RelationshipSpec extends BeanImpl {
     Ref agent // an agent defined within scope, or with any agent if null
     boolean relationshipFromSpecified = true // else to agent specified by this relationshipSpec
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['defined']
+    }
+
     boolean isDefined() {
         return !relationshipName.isEmpty()
     }

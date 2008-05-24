@@ -1,12 +1,10 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 
 /**
@@ -26,17 +24,25 @@ class Playbook extends ProjectElement implements Describable {
     List<Ref> informationActs = []
 
     void addElement(PlaybookElement element) {
-         doAddToField("informationActs", element)
+        String field;
+         switch (element.type) {
+             case "Event": field = "events"; break
+             case "Group": field = "groups"; break
+             case "Team": field = "teams"; break
+             default: field = "informationActs"
+         }
+         doAddToField(field, element)
      }
 
 
-    Referenceable doAddToField( String field, Object object ) {
-        object.playbook = this.reference
-        super.doAddToField("informationActs", object )
+    Referenceable doAddToField( String field, Object val ) {
+        val.playbook = this.reference
+        super.doAddToField(field, val )
     }
 
-    Referenceable doRemoveFromField(String name, Object val) {
-        return super.doRemoveFromField("informationActs", val)
+    Referenceable doRemoveFromField(String field, Object val) {
+        val.playbook = null
+        return super.doRemoveFromField(field, val)
     }
 
     // Queries

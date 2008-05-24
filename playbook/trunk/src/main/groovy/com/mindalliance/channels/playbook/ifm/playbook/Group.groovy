@@ -34,13 +34,11 @@ class Group extends PlaybookElement implements Agent {
          return true
      }
 
-    List<Ref> getResourcesAt(Event event) {
-        return agentSpec.getResourcesAt(event)
-    }
     // queries
-
-
-    // end queries
+    List<Ref> getResourcesAt(Event event) {
+         return agentSpec.getResourcesAt(event)
+     }
+     // end queries
 
 
  }

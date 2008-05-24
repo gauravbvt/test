@@ -31,7 +31,7 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
 
     EventSpecPanel eventSpecPanel;
     EOIsPanel eoisPanel;
-    DynamicFilterTree credibleSourcesTree;
+    AgentSpecPanel agentSpecPanel;
 
     public InformationTemplatePanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -51,16 +51,8 @@ public class InformationTemplatePanel extends AbstractComponentPanel {
                                                                        new RefPropertyModel(getElement(), propPath + ".eventSpec.eventTypes")));
         eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, topicChoicesModel);
         addReplaceable(eoisPanel);
-        // List<Ref> allOrganizationTypes = project.findAllTypes("OrganizationType");
-        credibleSourcesTree = new DynamicFilterTree("credibleSources", new RefPropertyModel(informationTemplate, "organizationTypes"),
-                                                     new RefQueryModel(getScope(), new Query("findAllTypes", "OrganizationType"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> newSelections = credibleSourcesTree.getNewSelections();
-                RefUtils.set(informationTemplate, "organizationTypes", newSelections);
-                elementChanged(propPath, target);
-            }
-        };
-        addReplaceable(credibleSourcesTree);
+        agentSpecPanel = new AgentSpecPanel("sourceAgentSpec", this, propPath+".sourceAgentSpec", isReadOnly(), feedback);
+        addReplaceable(agentSpecPanel);
     }
 
     @Override

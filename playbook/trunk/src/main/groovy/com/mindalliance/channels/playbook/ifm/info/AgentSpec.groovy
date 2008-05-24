@@ -15,7 +15,7 @@ class AgentSpec extends BeanImpl {
 
     List<Ref> roles = [] // agent plays any of these roles, or any role at all if empty list
     List<Ref> organizationTypes = [] // agent is or is on any of these organization types, or any at all if empty list
-    List<RelationshipSpec> relationshipSpecs = [] // agent has any such specified relationships, or any at all if empty
+    RelationshipSpec relationshipSpec  = new RelationshipSpec() // agent has such specified relationships, or any at all if empty
     Location location = new Location() // if defined, agent has location or jurisdiction within
 
     String toString() {
@@ -43,11 +43,9 @@ class AgentSpec extends BeanImpl {
                 roles.any {spec -> res.hasRole(spec)}
            }
         }
-        if (relationshipSpecs) {
+        if (relationshipSpec.isDefined()) {
             resources = resources.findAll {res ->
-                relationshipSpecs.any {relSpec ->
-                    relSpec.matchedBy(res, event)
-                }
+                relationshipSpec.matchedBy(res, event)
             }
         }
         if (location) {

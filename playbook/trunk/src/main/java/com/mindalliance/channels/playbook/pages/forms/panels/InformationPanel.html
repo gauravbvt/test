@@ -7,18 +7,36 @@
         lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>About event</legend>
-        <span wicket:id="event">[Event tree]</span>
-    </fieldset>
-    <fieldset>
-        <legend>Classification</legend>
-        <span wicket:id="eventTypes">[Event types tree]</span>
-    </fieldset>
-    <fieldset>
-        <legend>with elements of information</legend>
-        <span wicket:id="eventDetails">[EOIs panel]</span>
-    </fieldset>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>About event</legend>
+                    <span wicket:id="event">[Event tree]</span>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>classified as</legend>
+                    <span wicket:id="eventTypes">[Event types tree]</span>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>with elements of information</legend>
+                    <span wicket:id="eventDetails">[EOIs panel]</span>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>and sources</legend>
+                    <span wicket:id="sourceAgents">[agents panel]</span>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
 </wicket:extend>
 </body>
 </html>

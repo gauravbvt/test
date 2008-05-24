@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 10, 2008
  * Time: 8:23:41 PM
  */
-public class PolicyForm extends AbstractResourceForm {
+public class PolicyForm extends AbstractProjectElementForm {
 
     public PolicyForm(String id, Ref element) {
         super(id, element);

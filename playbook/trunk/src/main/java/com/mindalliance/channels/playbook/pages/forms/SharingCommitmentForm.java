@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 16, 2008
  * Time: 2:20:03 PM
  */
-public class SharingCommitmentForm extends AbstractPlaybookElementForm {
+public class SharingCommitmentForm extends AbstractInformationActForm {
 
     public SharingCommitmentForm(String id, Ref element) {
         super(id, element);

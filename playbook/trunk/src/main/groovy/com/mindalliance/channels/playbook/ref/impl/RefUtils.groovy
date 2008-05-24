@@ -117,15 +117,6 @@ class RefUtils {
             else {
                 Logger.getLogger('com.mindalliance.channels.playbook.support.RefUtils').warn("Failed to raise change event on $element $propPath")
             }
-            /*int index = propPath.indexOf('.');
-            String propName;
-            if (index < 0) {
-                propName = propPath;
-            }
-            else {
-                propName = propPath.substring(0, index);
-            }
-            element.changed(propName);*/
         }
     }
 

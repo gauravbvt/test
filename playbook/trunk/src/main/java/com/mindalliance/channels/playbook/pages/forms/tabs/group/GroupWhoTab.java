@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.group;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -29,8 +30,7 @@ public class GroupWhoTab extends AbstractFormTab {
 
     protected TextField nameField;
     protected TextArea descriptionField;
-    protected ListMultipleChoice kindsChoice;
-    protected DynamicFilterTree rolesTree;
+    protected AgentSpecPanel agentSpecPanel;
 
     public GroupWhoTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -42,13 +42,7 @@ public class GroupWhoTab extends AbstractFormTab {
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        rolesTree = new DynamicFilterTree("roles", new RefPropertyModel(getElement(), "roles"),
-                                           new RefQueryModel(getProject(), new Query("findAllTypes", "Role"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selected = rolesTree.getNewSelections();
-                RefUtils.set(getElement(), "roles", selected);
-            }
-        };
-        addReplaceable(rolesTree);
+        agentSpecPanel = new AgentSpecPanel("agentSpec", this, "agentSpec", EDITABLE, feedback);
+        addReplaceable(agentSpecPanel);
     }
 }
