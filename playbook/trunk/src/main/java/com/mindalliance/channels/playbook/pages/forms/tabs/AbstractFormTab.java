@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -59,6 +60,10 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
 
     // ElementPanel
 
+    public Object getObject() {
+        return elementForm.getObject();
+    }
+
     public Ref getElement() {
         return elementForm.getElement();
     }
@@ -112,9 +117,12 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
 
 
     protected void addReplaceable(Component component) {
-        component.setOutputMarkupId(true);
-        addOrReplace(component);
+        addReplaceableTo(component, this);
     }
 
+    protected void addReplaceableTo(Component component, WebMarkupContainer container) {
+        component.setOutputMarkupId(true);
+        container.addOrReplace(component);
+    }
 
 }

@@ -4,13 +4,13 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
-<wicket:panel>
+<wicket:extend>
     <table>
         <tr>
             <td>
                 <fieldset>
-                    <legend>Relationship</legend>
-                    <input wicket:id="relationshipName" type="text" width="50"/>
+                    <legend>relationship</legend>
+                    <input wicket:id="relationshipName" type="text" size="30"/>
                 </fieldset>
             </td>
             <td>with</td>
@@ -26,11 +26,16 @@
                 <div wicket:id="fromTo">
                     <table>
                         <tr>
+                            <td colspan="3">
+                                <span>such that</span>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <input wicket:id="fromSpecified" type="checkbox"/>
                             </td>
                             <td>
-                                <span wicket:id="fromRelationshipString">[relationship name]</span>
+                                the agent <span wicket:id="fromRelationshipString">[relationship name]</span>
                             </td>
                             <td>
                                 <span wicket:id="toAgentString">[agent name]</span>
@@ -41,17 +46,17 @@
                                 <input wicket:id="toSpecified" type="checkbox"/>
                             </td>
                             <td>
-                                <span wicket:id="toRelationshipString">[relationship name]</span>
-                            </td>
+                                 <span wicket:id="fromAgentString">[agent name]</span>
+                             </td>
                             <td>
-                                <span wicket:id="fromAgentString">[agent name]</span>
+                                <span wicket:id="toRelationshipString">[relationship name]</span> the agent
                             </td>
-                        </tr>
+                         </tr>
                     </table>
                 </div>
             </td>
         </tr>
     </table>
-</wicket:panel>
+</wicket:extend>
 </body>
 </html>

@@ -55,8 +55,16 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.getElement();
     }
 
+    public Object getObject() {
+        return getComponent();
+    }
+
     public Object getComponent() {
         return (Object)RefUtils.get(getElement(), propPath);
+    }
+
+    public Object getParentObject() {
+        return parentPanel.getObject();
     }
 
     public void elementChanged(String propPath, AjaxRequestTarget target) {
@@ -138,8 +146,12 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     }
 
     protected void addReplaceable(Component component) {
+        addReplaceableTo(component, this);
+    }
+
+    protected void addReplaceableTo(Component component, WebMarkupContainer container) {
         component.setOutputMarkupId(true);
-        /*div.*/addOrReplace(component);
+        container.addOrReplace(component);
         if (isReadOnly()) component.setEnabled(false);
     }
 

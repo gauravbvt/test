@@ -7,9 +7,11 @@ import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.ifm.info.Location;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.AttributeModifier;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class LocationPanel extends AbstractComponentPanel {
 
     Location location;
     DropDownChoice placeField;
+    WebMarkupContainer placeInfoDiv;
     PlaceInfoPanel placeInfoPanel;
     LocationInfoPanel locationInfoPanel;
 
@@ -36,8 +39,11 @@ public class LocationPanel extends AbstractComponentPanel {
         super.load();
         location = (Location) RefUtils.get(getElement(), propPath);
         loadPlaceField();
+        placeInfoDiv = new WebMarkupContainer("placeInfoDiv");
+        placeInfoDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        addReplaceable(placeInfoDiv);
         placeInfoPanel = new PlaceInfoPanel("placeInfo", this, propPath + ".placeInfo", readOnly, feedback);
-        addReplaceable(placeInfoPanel);
+        placeInfoDiv.add(placeInfoPanel);
         locationInfoPanel = makeLocationInfoPanel();
         addReplaceable(locationInfoPanel);
     }
@@ -57,10 +63,21 @@ public class LocationPanel extends AbstractComponentPanel {
                 elementChanged(propPath, target);
                 locationInfoPanel = makeLocationInfoPanel();  // recreate locationInfoPanel
                 addReplaceable(locationInfoPanel);
+                updatePlaceInfoPanel(target);
                 target.addComponent(locationInfoPanel);
             }
         });
         addReplaceable(placeField);
+    }
+
+    private void updatePlaceInfoPanel(AjaxRequestTarget target) {
+        if (location.getPlace() != null) {
+            placeInfoDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+        }
+        else {
+            placeInfoDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        }
+        target.addComponent(placeInfoDiv);
     }
 
     // locationInfoPanel

@@ -6,17 +6,20 @@
 <body>
 <wicket:extend>
     <fieldset>
-        <legend>About sources</legend>
+        <legend>Applies to sources</legend>
         <span wicket:id="sourceAgentSpec">[agentSpec panel]</span>
     </fieldset>
     <fieldset>
-        <legend>About relationships</legend>
-        <span wicket:id="relationshipNames">[chooser for relationship names]</span>
+        <legend>with relationships</legend>
+        <input wicket:id="anyRelationship" type="checkbox"/><span>any</span>
+        <div wicket:id="relationshipsDiv">
+            <span wicket:id="relationshipNames">[chooser for relationship names]</span>
+        </div>
     </fieldset>
-     <fieldset>
-         <legend>About recipients</legend>
-         <span wicket:id="recipientAgentSpec">[agentSpec panel]</span>
-     </fieldset>
+    <fieldset>
+        <legend>to recipients</legend>
+        <span wicket:id="recipientAgentSpec">[agentSpec panel]</span>
+    </fieldset>
 </wicket:extend>
 </body>
 </html>

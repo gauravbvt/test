@@ -16,6 +16,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 public interface ElementPanel {
 
     Ref getElement();
+    Object getObject();
     void elementChanged(String propPath, AjaxRequestTarget target);
     void addOtherElement(Ref otherElement);
     AbstractElementForm getTopElementPanel();

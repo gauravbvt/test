@@ -104,15 +104,14 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
     }
 
     private List<Ref> placeTypeChoicesFor(PlaceItem placeItem) {
-        List<Ref> placeTypes;
         List<PlaceItem> placeItems = placeInfo.getPlaceItems();
         int index = placeItems.indexOf(placeItem);
         List<Ref> priorPlaceTypes = new ArrayList<Ref>();
-        if (index == 0) { // narrow resource's place's placeType, if set
-            priorPlaceTypes = (List<Ref>) RefUtils.get(getElement(), "location.place.placeTypes");
+        if (placeItems.isEmpty() || index == 0) { // narrow parent's place's placeType, if set
+            priorPlaceTypes = (List<Ref>) RefUtils.get(parentPanel.getObject(), "place.placeTypes");
         } else { // narrow
             int priorIndex;
-            if (index == -1) {
+            if (index == -1) { // new place item
                 priorIndex = placeItems.size() - 1;
             }
             else {
@@ -120,6 +119,11 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
             }
             if (priorIndex >= 0) priorPlaceTypes.add(placeItems.get(priorIndex).getPlaceType());
         }
+        return narrowingPlaceTypes(priorPlaceTypes);
+    }
+
+    private List<Ref> narrowingPlaceTypes(List<Ref> priorPlaceTypes) {
+        List<Ref> placeTypes;
         if (priorPlaceTypes == null || priorPlaceTypes.isEmpty()) {
             placeTypes = (List<Ref>)Query.execute(getProject(), "findAllTypes", "PlaceType");
         } else {
@@ -136,7 +140,9 @@ public class PlaceInfoPanel extends AbstractComponentPanel {
             return (Boolean)Query.execute(getProject(),"atleastOnePlaceTypeDefined");
         } else {
             PlaceItem lastPlaceItem = placeItems.get(placeItems.size() - 1);
-            return !placeTypeChoicesFor(lastPlaceItem).isEmpty();
+            List<Ref> placeTypes = new ArrayList<Ref>();
+            placeTypes.add(lastPlaceItem.getPlaceType());
+            return !narrowingPlaceTypes(placeTypes).isEmpty();
         }
     }
 

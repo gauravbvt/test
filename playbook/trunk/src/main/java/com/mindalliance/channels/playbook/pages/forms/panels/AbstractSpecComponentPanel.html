@@ -7,18 +7,10 @@
         lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <input wicket:id="amount" type="text" size="5"/>
-            </td>
-            <td>
-                <select wicket:id="units">
-                    <option>[unit]</option>
-                </select>
-            </td>
-        </tr>
-    </table>
+    <input wicket:id="defined" type="checkbox"/> <span wicket:id="anyString">[Any]</span>
+    <div wicket:id="specDiv">
+        <wicket:child/>
+    </div>
 </wicket:extend>
 </body>
 </html>

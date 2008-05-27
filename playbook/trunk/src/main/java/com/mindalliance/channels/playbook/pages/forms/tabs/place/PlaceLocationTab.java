@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.place;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.panels.LocationPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.LocationInfoPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 
 /**
@@ -13,7 +14,7 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
  */
 public class PlaceLocationTab extends AbstractFormTab {
 
-    protected LocationPanel locationPanel;
+    protected LocationInfoPanel locationInfoPanel;
 
     public PlaceLocationTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -21,7 +22,7 @@ public class PlaceLocationTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        locationPanel = new LocationPanel("location", this, "location", false, feedback);
-        addReplaceable(locationPanel);
+        locationInfoPanel = new LocationInfoPanel("locationInfo", this, "locationInfo", false, feedback);
+        addReplaceable(locationInfoPanel);
     }
 }

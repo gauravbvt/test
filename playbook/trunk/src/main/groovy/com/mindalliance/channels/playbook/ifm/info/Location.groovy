@@ -18,7 +18,11 @@ class Location extends BeanImpl {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['longitude', 'latitude', 'effectiveLocationInfo']
+        return super.transientProperties() + ['longitude', 'latitude', 'effectiveLocationInfo', 'defined']
+    }
+
+    boolean isDefined() {
+        return place || locationInfo.isDefined()
     }
 
     String toString() {
@@ -33,6 +37,11 @@ class Location extends BeanImpl {
             s += " (${placeInfo.toString()})"
         }
         return s
+    }
+
+    void setPlace(Ref place) {
+        this.place = place
+        placeInfo = new PlaceInfo() // reset place info
     }
     
 

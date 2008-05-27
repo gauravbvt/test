@@ -15,27 +15,39 @@ import com.mindalliance.channels.playbook.ifm.info.AgentSpec
 */
 class Policy extends ProjectElement implements Describable {
 
-    static final public List<String> edictKinds = ['interdiction', 'obligation']
+    static final public List<String> edictKinds = ['forbidden', 'required', 'restricted']
 
     String name = ''
     String description = ''
     boolean effective = false // whether the policy is in place in the real world
-    String edict =  'interdiction' // either interdicts or obligates
+    String edict =  'forbidden' // either interdicts or obligates
     AgentSpec sourceAgentSpec = new AgentSpec()
     AgentSpec recipientAgentSpec = new AgentSpec()
-    List<String> relationshipNames // relationships from source to recipient (ORed)
-    InformationTemplate informationTemplate // specification of information (not) to be shared -- required
+    List<String> relationshipNames = [] // relationships from source to recipient (ORed)
+    InformationTemplate informationTemplate = new InformationTemplate() // specification of information (not) to be shared -- required
     List<String> purposes = [] // constrained (interdicted|obligation-causing) usages of the information
     List<Ref> mediumTypes = [] // what types of communication media must (or must not) be used
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['edictKinds'])
+        return (List<String>)(super.transientProperties() + ['edictKinds','forbidden','restricted','required'])
     }
 
     static List<String> getEdictKinds() {
         return  edictKinds
     }
+
+    boolean isForbidden() {
+        return edict == 'forbidden'
+    }
+
+    boolean isRestricted() {
+         return edict == 'restricted'
+     }
+
+    boolean isRequired() {
+         return edict == 'required'
+     }
 
 /*
     String partiesMeaning() {

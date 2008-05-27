@@ -7,18 +7,32 @@
         lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>of type</legend>
-        <span wicket:id="eventTypes">[event types]</span>
-    </fieldset>
-    <fieldset>
-        <legend>occurring</legend>
-        <span wicket:id="locationSpec">[location spec panel</span>
-    </fieldset>
-    <fieldset>
-        <legend>in the last</legend>
-        <span wicket:id="timing">[timing panel</span>
-    </fieldset>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>classified as</legend>
+                    <span wicket:id="eventTypes">[event types]</span>
+                </fieldset>
+            </td>
+            <td>
+                <div wicket:id="locationSpecDiv">
+                    <fieldset>
+                        <legend>that occurred</legend>
+                        <span wicket:id="locationSpec">[location spec panel</span>
+                    </fieldset>
+                </div>
+            </td>
+            <td>
+                <div wicket:id="timingDiv">
+                    <fieldset>
+                        <legend>in the last</legend>
+                        <span wicket:id="timing">[timing panel</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
 </wicket:extend>
 </body>
 </html>

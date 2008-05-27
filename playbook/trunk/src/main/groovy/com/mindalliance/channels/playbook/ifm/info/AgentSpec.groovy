@@ -11,15 +11,16 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
  * Date: May 20, 2008
  * Time: 2:43:18 PM
  */
-class AgentSpec extends BeanImpl {
+class AgentSpec extends BeanImpl implements Spec {
 
     List<Ref> roles = [] // agent plays any of these roles, or any role at all if empty list
     List<Ref> organizationTypes = [] // agent is or is on any of these organization types, or any at all if empty list
     RelationshipSpec relationshipSpec  = new RelationshipSpec() // agent has such specified relationships, or any at all if empty
     Location location = new Location() // if defined, agent has location or jurisdiction within
 
-    String toString() {
-        //TODO
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['defined'])
     }
 
     List<Ref> getResourcesAt(Event event) {
@@ -69,4 +70,15 @@ class AgentSpec extends BeanImpl {
         return summary
     }
 
+    public boolean isDefined() {
+        return !roles.isEmpty() || !organizationTypes.isEmpty() || relationshipSpec.isDefined()
+    }
+
+    public boolean matches(Ref element) {
+        return false;  // TODO
+    }
+
+    public boolean narrows(Spec spec) {
+        return false;  // TODO
+    }
 }

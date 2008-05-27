@@ -7,20 +7,34 @@
         lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>Place</legend>
-        <select wicket:id="place"> <!-- TODO replace with FilterTree -->
-            <option>[Place selector]</option>
-        </select>
-    </fieldset>
-    <fieldset>
-        <legend>Place details</legend>
-        <div wicket:id="placeInfo">[PlaceInfo panel]</div>
-    </fieldset>
-    <fieldset>
-        <legend>Location info</legend>
-        <div wicket:id="locationInfo">[LocationInfo panel]</div>
-    </fieldset>
- </wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Place</legend>
+                    <select wicket:id="place"> <!-- TODO replace with FilterTree -->
+                        <option>[Place selector]</option>
+                    </select>
+                </fieldset>
+            </td>
+            <td rowspan="2">
+                <fieldset>
+                    <legend>Location info</legend>
+                    <div wicket:id="locationInfo">[LocationInfo panel]</div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div wicket:id="placeInfoDiv">
+                    <fieldset>
+                        <legend>Place details</legend>
+                        <div wicket:id="placeInfo">[PlaceInfo panel]</div>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
+</wicket:extend>
 </body>
 </html>

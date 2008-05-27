@@ -41,15 +41,15 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
 
     WebMarkupContainer relationshipsDiv;
     RefreshingView relationshipsView;
-    Label newFromResourceNameLabel;
+    Label newFromAgentNameLabel;
     AutoCompleteTextFieldWithChoices newRelationshipNameField;
-    DynamicFilterTree resourcesTree;
+    DynamicFilterTree agentsTree;
     WebMarkupContainer reverseRelationshipDiv;
-    Label reverseFromResourceNameLabel;
+    Label reverseFromAgentNameLabel;
     AutoCompleteTextFieldWithChoices reverseRelationshipNameField;
     AjaxButton addRelationshipsButton;
     String newRelationshipName;
-    Ref newToResource;
+    Ref newToAgent;
     String newReverseRelationshipName;
 
     public ResourceRelationshipsTab(String id, AbstractElementForm elementForm) {
@@ -60,9 +60,9 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         super.load();
         // existing relationships
         relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
-        relationshipsView = new RefreshingView("relationships", new RefQueryModel(getProject(), new Query("findAllRelationshipsOf", getElement()))) {
+        relationshipsView = new RefreshingView("relationships") {
             protected Iterator getItemModels() {
-                List<Ref> allRelationships = (List<Ref>) relationshipsView.getModelObject();
+                List<Ref> allRelationships = (List<Ref>) Query.execute(getProject(), "findAllRelationshipsOf", getElement());
                 return new ModelIteratorAdapter(allRelationships.iterator()) {
                      protected IModel model(Object relationship) {
                          return new RefModel((Ref) relationship);
@@ -71,27 +71,28 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
             }
             protected void populateItem(Item item) {
                 final Ref relationship = (Ref)item.getModelObject();
-                AjaxLink fromResourceLink = new AjaxLink("fromResourceLink") {
+                AjaxLink fromAgentLink = new AjaxLink("fromAgentLink") {
                     public void onClick(AjaxRequestTarget target) {
-                        edit((Ref)RefUtils.get(relationship,"fromrAgent"), target);
+                        edit((Ref)RefUtils.get(relationship,"fromAgent"), target);
                     }
                 };
-                Label fromResourceNameLabel = new Label("fromResourceName", new RefPropertyModel(relationship, "fromAgent.name"));
-                fromResourceLink.add(fromResourceNameLabel);
-                item.add(fromResourceLink);
+                Label fromAgentNameLabel = new Label("fromAgentName", new RefPropertyModel(relationship, "fromAgent.name"));
+                fromAgentLink.add(fromAgentNameLabel);
+                item.add(fromAgentLink);
                 Label relationshipNameLabel = new Label("relationshipName", new RefPropertyModel(relationship, "name"));
                 item.add(relationshipNameLabel);
-                AjaxLink toResourceLink = new AjaxLink("toResourceLink") {
+                AjaxLink toAgentLink = new AjaxLink("toAgentLink") {
                      public void onClick(AjaxRequestTarget target) {
                          edit((Ref)RefUtils.get(relationship,"toAgent"), target);
                      }
                  };
-                 Label toResourceNameLabel = new Label("toResourceName", new RefPropertyModel(relationship, "toAgent.name"));
-                 toResourceLink.add(toResourceNameLabel);
-                 item.add(toResourceLink);
+                 Label toAgentNameLabel = new Label("toAgentName", new RefPropertyModel(relationship, "toAgent.name"));
+                 toAgentLink.add(toAgentNameLabel);
+                 item.add(toAgentLink);
                  AjaxLink deleteRelationshipLink = new AjaxLink("deleteRelationship") {
                     public void onClick(AjaxRequestTarget target) {
                         RefUtils.remove(getProject(), "relationships", relationship);
+                        relationship.delete();
                         target.addComponent(relationshipsDiv);
                     }
                 };
@@ -101,10 +102,10 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         relationshipsDiv.add(relationshipsView);
         addReplaceable(relationshipsDiv);
         // new relationship
-        newFromResourceNameLabel = new Label("newFromResourceName", (String)RefUtils.get(getElement(), "name"));
-        addReplaceable(newFromResourceNameLabel);
+        newFromAgentNameLabel = new Label("newFromAgentName", (String)RefUtils.get(getElement(), "name"));
+        addReplaceable(newFromAgentNameLabel);
         newRelationshipNameField = new AutoCompleteTextFieldWithChoices("newRelationshipName",
-                                                                 new RefPropertyModel(getElement(), "relationshipName"),
+                                                                 new Model(),
                                                                  new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
         newRelationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -114,20 +115,23 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
             }
         });
         addReplaceable(newRelationshipNameField);
-        resourcesTree = new DynamicFilterTree("resources", new Model(),
+        agentsTree = new DynamicFilterTree("agents", new Model(),
                                                new RefQueryModel(getProject(), new Query("findAllResourcesExcept", RefUtils.get(getElement(), "fromAgent"))),
                                                SINGLE_SELECTION) {
-            public void onFilterSelec(AjaxRequestTarget target, Filter filter) {
-                newToResource = resourcesTree.getNewSelection();
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                newToAgent = agentsTree.getNewSelection();
                 updateVisibility(target);
+                reverseFromAgentNameLabel.setModelObject((String)RefUtils.get(newToAgent, "name"));
+                target.addComponent(reverseFromAgentNameLabel);
             }
         };
-        addReplaceable(resourcesTree);
+        addReplaceable(agentsTree);
         reverseRelationshipDiv = new WebMarkupContainer("reverseRelationshipDiv");
-        reverseFromResourceNameLabel = new Label("reverseFromResourceName", (String)RefUtils.get(newToResource, "name"));
-        reverseRelationshipDiv.add(reverseFromResourceNameLabel);
+        addReplaceable(reverseRelationshipDiv);
+        reverseFromAgentNameLabel = new Label("reverseFromAgentName", "");
+        addReplaceableTo(reverseFromAgentNameLabel,reverseRelationshipDiv);
         reverseRelationshipNameField = new AutoCompleteTextFieldWithChoices("reverseRelationshipName",
-                                                                 new RefPropertyModel(getElement(), "relationshipName"),
+                                                                 new Model(),
                                                                  new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
         reverseRelationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -136,34 +140,40 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
                 updateVisibility(target);
             }
         });
-        reverseRelationshipDiv.add(reverseRelationshipNameField);
-        Label reverseToResourceNameLabel = new Label("reverseToResourceName", (String)RefUtils.get(getElement(), "name"));
-        reverseRelationshipDiv.add(reverseToResourceNameLabel);
-        addReplaceable(reverseRelationshipDiv);
-        reverseRelationshipDiv.add(new AttributeModifier("style", new Model("display:none")));
+        addReplaceableTo(reverseRelationshipNameField,reverseRelationshipDiv);
+        Label reverseToAgentNameLabel = new Label("reverseToAgentName", (String)RefUtils.get(getElement(), "name"));
+        addReplaceableTo(reverseToAgentNameLabel,reverseRelationshipDiv);
+        reverseRelationshipDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         addRelationshipsButton = new AjaxButton("addRelationships") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
                 Relationship newRelationship = new Relationship();
                 newRelationship.setFromAgent(getElement());
                 newRelationship.setName(newRelationshipName.trim().toLowerCase());
-                newRelationship.setToAgent(newToResource);
+                newRelationship.setToAgent(newToAgent);
                 RefUtils.add(getProject(), "relationships", newRelationship.persist());
-                newRelationshipName = "";
-                newToResource = null;
-                newRelationshipNameField.clearInput();
-                target.addComponent(newRelationshipNameField);
                 if (newReverseRelationshipName != null && !newReverseRelationshipName.trim().isEmpty()) {
                     Relationship newReverseRelationship = new Relationship();
-                    newReverseRelationship.setFromAgent(newToResource);
+                    newReverseRelationship.setFromAgent(newToAgent);
                     newReverseRelationship.setName(newReverseRelationshipName.trim().toLowerCase());
                     newReverseRelationship.setToAgent(getElement());
                     newReverseRelationship.setReverseRelationship(newRelationship.getReference());
                     newRelationship.setReverseRelationship(newReverseRelationship.getReference());                    
                     RefUtils.add(getProject(), "relationships", newReverseRelationship.persist());
-                    newReverseRelationshipName = "";
-                    reverseRelationshipNameField.clearInput();
-                    target.addComponent(reverseRelationshipNameField);
                 }
+                newRelationshipName = "";
+                newRelationshipNameField.clearInput();
+                newRelationshipNameField.setModelObject("");
+                newRelationshipNameField.updateModel();
+                target.addComponent(newRelationshipNameField);
+                newToAgent = null;
+                agentsTree.setSelections(new Model());
+                agentsTree.modelChanged();
+                target.addComponent(agentsTree);
+                newReverseRelationshipName = "";
+                reverseRelationshipNameField.clearInput();
+                reverseRelationshipNameField.setModelObject("");
+                reverseRelationshipNameField.updateModel();
+                target.addComponent(reverseRelationshipNameField);
                 updateVisibility(target);
                 target.addComponent(relationshipsDiv);
             }
@@ -175,14 +185,16 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
     private void updateVisibility(AjaxRequestTarget target) {
        if (newRelationshipName != null &&
            !newRelationshipName.trim().isEmpty() &&
-            newToResource != null) {
-          reverseRelationshipDiv.add(new AttributeModifier("style", new Model("display:block")));
+            newToAgent != null) {
+          reverseRelationshipDiv.add(new AttributeModifier("style", true, new Model("display:block")));
           addRelationshipsButton.setEnabled(true);
        }
         else {
-          reverseRelationshipDiv.add(new AttributeModifier("style", new Model("display:none")));
+          reverseRelationshipDiv.add(new AttributeModifier("style", true, new Model("display:none")));
           addRelationshipsButton.setEnabled(false);
        }
+        target.addComponent(reverseRelationshipDiv);
+        target.addComponent(addRelationshipsButton);
     }
 
  }

@@ -63,9 +63,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 Referenceable original = retrieveFromApplicationMemory(ref)
                 if (original) {
                     referenceable = (Referenceable)original.copy() // take a copy
-                    addChangeListeners(referenceable) // register with change listeners
-                    begun.put(ref, referenceable)
-                    inSessionClasses.add(referenceable.class)
+                    doBegin(referenceable)
                 }
             }
         }
@@ -74,16 +72,23 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         }
     }
 
+    Ref persist(Referenceable referenceable) {
+        Ref ref = referenceable.reference
+        doBegin(referenceable)
+        referenceable.changed("id") // was created, thus has a new id
+        // hasChanged(referenceable)
+        return ref
+    }
+
+    private void doBegin(Referenceable referenceable) {
+        addChangeListeners(referenceable) // register with change listeners
+        begun.put(referenceable.reference, referenceable)
+        inSessionClasses.add(referenceable.class)
+    }
+
     private void addChangeListeners(Referenceable referenceable) {
         referenceable.addPropertyChangeListener(this) // register with this session memory
         referenceable.addPropertyChangeListener(QueryManager.instance())
-    }
-
-    Ref persist(Referenceable referenceable) {
-        Ref ref = referenceable.reference
-        begun.put(ref, referenceable)
-        hasChanged(referenceable)
-        return ref
     }
 
     Ref hasChanged(Referenceable referenceable) {// Persist the change in session and, on save, in application
@@ -96,6 +101,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     void delete(Ref ref) {
         if (begun.containsKey(ref)) {
+            ref.deref().changed("id") // raise change event on id
             begun.remove(ref)
             changes.remove(ref)
             deletes.add(ref)

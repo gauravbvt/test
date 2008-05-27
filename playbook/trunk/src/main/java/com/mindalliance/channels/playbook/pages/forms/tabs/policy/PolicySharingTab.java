@@ -25,9 +25,7 @@ import java.util.List;
  */
 public class PolicySharingTab extends AbstractFormTab {
 
-    protected MultipleStringChooser purposesChooser;
     protected InformationTemplatePanel infoTemplatePanel;
-    protected DynamicFilterTree mediumTypesTree;
 
     public PolicySharingTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -35,18 +33,8 @@ public class PolicySharingTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
-                                                    new RefQueryModel(Channels.instance(), new Query("findAllPurposes")));
-        addReplaceable(purposesChooser);
         infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this, "informationTemplate", EDITABLE, feedback);
         addReplaceable(infoTemplatePanel);
-        mediumTypesTree = new DynamicFilterTree("mediumTypes", new RefPropertyModel(getElement(), "mediumTypes"),
-                                                 new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = mediumTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "mediumTypes", selectedTypes);
-            }
-        };
     }
 
 

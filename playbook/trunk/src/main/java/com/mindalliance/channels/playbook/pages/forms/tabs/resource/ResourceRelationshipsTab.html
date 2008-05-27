@@ -12,9 +12,9 @@
         <div wicket:id="relationshipsDiv">
             <ul wicket:id="relationships">
                 <li>
-                    <a wicket:id="fromResourceLink" href = "#"><span wicket:id="fromResourceName">[from resource name]</span></a>
+                    <a wicket:id="fromAgentLink" href = "#"><span wicket:id="fromAgentName">[from agent name]</span></a>
                     <span wicket:id="relationshipName">[relationship name]</span>
-                    <a wicket:id="toResourceLink" href = "#"><span wicket:id="toResourceName">[to resource name]</span></a>
+                    <a wicket:id="toAgentLink" href = "#"><span wicket:id="toAgentName">[to agent name]</span></a>
                     <a wicket:id="deleteRelationship" href = "#">(delete)</a>
                 </li>
             </ul>
@@ -25,13 +25,13 @@
         <table>
             <tr>
                 <td>
-                    <span wicket:id="newFromResourceName">[resource's name]</span>
+                    <span wicket:id="newFromAgentName">[agent's name]</span>
                 </td>
                 <td>
                     <input wicket:id="newRelationshipName" type = "text"/>
                 </td>
                 <td>
-                    <span wicket:id="resources">[resources tree]</span>
+                    <span wicket:id="agents">[agents tree]</span>
                 </td>
             </tr>
         </table>
@@ -41,21 +41,19 @@
                 <table>
                     <tr>
                         <td>
-                            <span wicket:id="reverseFromResourceName">[resource name]</span>
+                            <span wicket:id="reverseFromAgentName">[agent name]</span>
                         </td>
                         <td>
                             <input wicket:id="reverseRelationshipName" type = "text"/>
                         </td>
                         <td>
-                            <span wicket:id="reverseToResourceName">[resource name]</span>
+                            <span wicket:id="reverseToAgentName">[agent name]</span>
                         </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><button wicket:id="addRelationships">Add</button></td>
                     </tr>
                 </table>
             </fieldset>
         </div>
+        <button wicket:id="addRelationships">Add</button>
     </fieldset>
 </wicket:extend>
 </body>

@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 9:21:45 AM
 */
-class LocationSpec extends BeanImpl {
+class LocationSpec extends BeanImpl implements Spec {
 
     static final List<String> relations = ['contained', 'encompassing', 'adjoining']
 
@@ -21,8 +21,19 @@ class LocationSpec extends BeanImpl {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['relations'])
+        return (List<String>)(super.transientProperties() + ['relations', 'defined'])
+    }
+    
+    boolean isDefined() {
+        return areaType != null
     }
 
 
+    public boolean matches(Ref element) {
+        return false;  //Todo
+    }
+
+    public boolean narrows(Spec spec) {
+        return false;  //Todo
+    }
 }

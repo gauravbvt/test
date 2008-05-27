@@ -9,14 +9,18 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
  * Date: Apr 21, 2008
  * Time: 3:19:40 PM
  */
-class LatLong extends BeanImpl {
+class LatLong extends BeanImpl implements Defineable {
 
     Double latitude
     Double longitude
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['set']
+        return super.transientProperties() + ['set', 'defined']
+    }
+
+    boolean isDefined() {
+        return latitude && longitude
     }
 
     String toString() {

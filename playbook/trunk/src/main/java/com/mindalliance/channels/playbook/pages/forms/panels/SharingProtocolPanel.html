@@ -4,7 +4,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
-<wicket:panel>
+<wicket:extend>
     <table>
         <tr>
             <td>
@@ -12,23 +12,21 @@
                     <option>[delivery method]</option>
                 </select>
             </td>
-            <td rowspan="2">
-                <fieldset>
-                    <legend>using media</legend>
-                    <span wicket:id="preferredMedia">[media preferences panel]</span>
-                </fieldset>
-            </td>
-        </tr>
-        <tr>
             <td>
                 <fieldset>
                     <legend>within</legend>
                     <span wicket:id="maxDelay">[timing panel]</span>
                 </fieldset>
             </td>
+            <td>
+                <fieldset>
+                    <legend>using media</legend>
+                    <span wicket:id="preferredMedia">[media preferences panel]</span>
+                </fieldset>
+            </td>
         </tr>
     </table>
     <span wicket:id="informationTemplate">[Information template panel]</span>
-</wicket:panel>
+</wicket:extend>
 </body>
 </html>

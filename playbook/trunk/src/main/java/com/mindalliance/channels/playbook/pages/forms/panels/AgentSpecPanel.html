@@ -4,22 +4,20 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
-<wicket:panel>
+<wicket:extend>
     <table>
         <tr>
             <td>
                 <fieldset>
-                    <legend>Any agent with roles</legend>
+                    <legend>Some agent with roles</legend>
                     <span wicket:id="roles">[roles tree]</span>
-                </fieldset><br/>
-                <span class="explanation">(Any role if none selected)</span>
+                </fieldset>
             </td>
             <td>
                 <fieldset>
-                     <legend>with relationship</legend>
+                     <legend>with</legend>
                      <span wicket:id="relationshipSpec">[relationshipSpec panel]</span>
-                 </fieldset><br/>
-                 <span class="explanation">(Any kind of relationship if not specified)</span>
+                 </fieldset>
             </td>
         </tr>
         <tr>
@@ -31,6 +29,6 @@
             </td>
         </tr>
     </table>
-</wicket:panel>
+</wicket:extend>
 </body>
 </html>

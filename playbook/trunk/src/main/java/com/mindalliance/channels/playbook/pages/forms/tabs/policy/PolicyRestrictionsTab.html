@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <span wicket:id="notApplicable">[Not applicable]</span>
+    <div wicket:id="restrictedDiv">
+        <table>
+            <tr>
+                <td>
+                    <fieldset>
+                        <legend>Information must be transmitted using</legend>
+                        <input wicket:id="anyMedium" type="checkbox"><span>any medium</span>
+                        <div wicket:id="mediumTypesDiv">
+                            <span wicket:id="mediumTypes">[Restricted media types]</span>
+                        </div>
+                    </fieldset>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <fieldset>
+                        <legend>and used only for</legend>
+                        <input wicket:id="anyPurpose" type="checkbox"><span>any purpose</span>
+                        <div wicket:id="purposesDiv">
+                            <span wicket:id="purposes">[restricted purposes]</span>
+                        </div>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+    </div>
+</wicket:extend>
+</body>
+</html>

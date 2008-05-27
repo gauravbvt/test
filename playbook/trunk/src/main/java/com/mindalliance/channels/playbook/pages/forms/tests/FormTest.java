@@ -77,19 +77,21 @@ public class FormTest extends WebPage {
         typesDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 Class type = (Class) typesDropDown.getModel().getObject();
-                try {
-                    setSelected(getElementOfType(type));
-                    formPanel.modelChanged();
-                    target.addComponent(formPanel);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (selected != null) {
-                    elementLabel = new Label("elementString", new RefPropertyModel(selected, "name"));
-                    elementLabel.setOutputMarkupId(true);
-                    debugDiv.addOrReplace(elementLabel);
-                    debugDiv.setOutputMarkupId(true);
-                    target.addComponent(debugDiv);
+                if (type != null) {
+                    try {
+                        setSelected(getElementOfType(type));
+                        formPanel.modelChanged();
+                        target.addComponent(formPanel);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (selected != null) {
+                        elementLabel = new Label("elementString", new RefPropertyModel(selected, "name"));
+                        elementLabel.setOutputMarkupId(true);
+                        debugDiv.addOrReplace(elementLabel);
+                        debugDiv.setOutputMarkupId(true);
+                        target.addComponent(debugDiv);
+                    }
                 }
             }
         });
@@ -105,7 +107,7 @@ public class FormTest extends WebPage {
                 session.commit();
                 formPanel.resetForm();
                 target.addComponent(formPanel);
-                Logger.getLogger(this.getClass()).info("COMMIT: " + (String)RefUtils.get(selected, "name"));
+                Logger.getLogger(this.getClass()).info("COMMIT: " + (String) RefUtils.get(selected, "name"));
                 target.addComponent(elementLabel);
             }
         };
@@ -178,13 +180,11 @@ public class FormTest extends WebPage {
         } else if (type.equals(Project.class)) {
             results.add(project.getReference());
         } else if (type.equals(SharingAgreement.class)) {
-            results.add((Ref)project.getSharingAgreements().get(0));
-        }
-        else if (type.equals(PlaybookModel.class)) {
-            results.add((Ref)project.getModels().get(0));
-        }
-        else if (type.equals(Playbook.class)) {
-            results.add((Ref)project.getPlaybooks().get(0));
+            results.add((Ref) project.getSharingAgreements().get(0));
+        } else if (type.equals(PlaybookModel.class)) {
+            results.add((Ref) project.getModels().get(0));
+        } else if (type.equals(Playbook.class)) {
+            results.add((Ref) project.getPlaybooks().get(0));
         }
         if (results.size() > 0) {
             return results.get(0);
@@ -193,29 +193,27 @@ public class FormTest extends WebPage {
             element.persist();
             Ref ref = element.getReference();
             if (element.isProjectElement()) {
-                ProjectElement projectElement = (ProjectElement)element;
+                ProjectElement projectElement = (ProjectElement) element;
                 project.getReference().begin();
                 if (projectElement.isResource()) {
-                    Resource resource = (Resource)projectElement;
+                    Resource resource = (Resource) projectElement;
                     if (resource.isOrganizationResource()) {
-                        Ref org = (Ref)project.getOrganizations().get(0); // assumes at least one organization pre-defined
+                        Ref org = (Ref) project.getOrganizations().get(0); // assumes at least one organization pre-defined
                         org.begin();
-                        ((Organization)org.deref()).addElement(element);
-                    }
-                    else {
+                        ((Organization) org.deref()).addElement(element);
+                    } else {
                         project.addElement(element);
                     }
-                }
-                else {
+                } else {
                     project.addElement(element);
                 }
             } else if (element.isModelElement()) {
-                PlaybookModel model = (PlaybookModel)((Ref)project.getModels().get(0)).deref();
+                PlaybookModel model = (PlaybookModel) ((Ref) project.getModels().get(0)).deref();
                 model.getReference().begin();
                 model.addElement(element);
 
             } else if (element.isPlaybookElement()) {
-                Playbook playbook = (Playbook)((Ref)project.getPlaybooks().get(0)).deref();
+                Playbook playbook = (Playbook) ((Ref) project.getPlaybooks().get(0)).deref();
                 playbook.getReference().begin();
                 playbook.addElement(element);
             }

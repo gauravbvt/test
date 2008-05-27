@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
  * Date: Apr 21, 2008
  * Time: 3:23:23 PM
  */
-class AreaInfo extends BeanImpl  implements Comparable {
+class AreaInfo extends BeanImpl  implements Comparable, Defineable {
 
     String street = ''
     String city = '' // required if street set
@@ -24,10 +24,13 @@ class AreaInfo extends BeanImpl  implements Comparable {
     String code = ''
     Area area // force recalculate on change and don't persist
 
+    boolean isDefined() {
+        return country && country.trim().size() > 0
+    }
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['area', 'name', 'areaDefined']
+        return super.transientProperties() + ['area', 'name', 'areaDefined', 'defined']
     }
 
     String getName() {

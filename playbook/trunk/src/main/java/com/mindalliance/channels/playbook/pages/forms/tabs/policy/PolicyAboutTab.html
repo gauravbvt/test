@@ -5,19 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>Name</legend>
-        <input wicket:id="name" type = "text"/>
-    </fieldset>
-    <fieldset>
-        <legend>Description</legend>
-        <textarea wicket:id="description" rows = "3" cols = "60">[description]</textarea>
-    </fieldset>
-     <fieldset>
-         <legend>Properties</legend>
-         <label><span>Effective </span><checkbox wicket:id="effective"/></label>
-         <label><span>Edict </span><select wicket:id="edict"><option>Interdiction</option></select></label>
-     </fieldset>
+    <ul>
+        <li><label><span>Name:</span><input wicket:id="name" type = "text" size="50"/></label></li>
+        <li><label><span>Description:</span><textarea wicket:id="description" rows = "3" cols = "60">[description]</textarea></label></li>
+        <li><label><span>Effective:</span><input wicket:id="effective" type = "checkbox"/></label></li>
+        <li><label><span>Edict:</span><select wicket:id="edict"><option>Interdiction</option></select></label></li>
+    </ul>
 </wicket:extend>
 </body>
 </html>

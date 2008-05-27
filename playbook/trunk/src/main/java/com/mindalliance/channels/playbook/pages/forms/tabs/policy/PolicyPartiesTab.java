@@ -14,9 +14,14 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
 import com.mindalliance.channels.playbook.ifm.Channels;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,8 +32,11 @@ import java.util.List;
  */
 public class PolicyPartiesTab extends AbstractFormTab {
 
+    protected Policy policy;
+    protected AjaxCheckBox anyRelationshipField;
+    protected WebMarkupContainer relationshipsDiv;
     protected AgentSpecPanel sourceAgentSpecPanel;
-    MultipleStringChooser relationshipNamesChooser;
+    protected MultipleStringChooser relationshipNamesChooser;
     protected AgentSpecPanel recipientAgentSpecPanel;
 
     public PolicyPartiesTab(String id, AbstractElementForm elementForm) {
@@ -37,13 +45,41 @@ public class PolicyPartiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        policy = (Policy)getElement().deref();
         sourceAgentSpecPanel = new AgentSpecPanel("sourceAgentSpec", this, "sourceAgentSpec", EDITABLE, feedback);
         addReplaceable(sourceAgentSpecPanel);
+        relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
+        addReplaceable(relationshipsDiv);
+        setRelationshipsVisibility();
+        anyRelationshipField = new AjaxCheckBox("anyRelationship", new Model(policy.getRelationshipNames().isEmpty())) {
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean any = (Boolean)anyRelationshipField.getModelObject();
+                if (any) {
+                    policy.setRelationshipNames(new ArrayList<String>());
+                    relationshipsDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+                }
+                else {
+                    relationshipsDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+                }
+                target.addComponent(relationshipsDiv);
+            }
+        };
+        addReplaceable(anyRelationshipField);
         relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames", EDITABLE, feedback,
                                                               new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
-        addReplaceable(relationshipNamesChooser);
+        addReplaceableTo(relationshipNamesChooser, relationshipsDiv);
         recipientAgentSpecPanel = new AgentSpecPanel("recipientAgentSpec", this, "recipientAgentSpec", EDITABLE, feedback);
         addReplaceable(recipientAgentSpecPanel);
     }
+
+    private void setRelationshipsVisibility() {
+        if (policy.getMediumTypes().isEmpty()) {
+            relationshipsDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        } else {
+            relationshipsDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+        }
+    }
+
+
 
 }

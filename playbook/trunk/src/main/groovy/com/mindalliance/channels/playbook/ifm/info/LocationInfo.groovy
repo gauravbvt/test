@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.geo.Area
  * Date: Apr 21, 2008
  * Time: 3:15:16 PM
  */
-class LocationInfo extends BeanImpl {
+class LocationInfo extends BeanImpl implements Defineable {
 
     AreaInfo areaInfo = new AreaInfo()
     LatLong latLong = new LatLong()  // takes precedence on areaInfo for latlong
@@ -22,9 +22,13 @@ class LocationInfo extends BeanImpl {
        return s
     }
 
+    boolean isDefined() {
+        return areaInfo.isDefined() || latLong.isDefined()
+    }
+
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['longitude', 'latitude']
+        return super.transientProperties() + ['longitude', 'latitude', 'defined']
     }
 
     double getLongitude() {

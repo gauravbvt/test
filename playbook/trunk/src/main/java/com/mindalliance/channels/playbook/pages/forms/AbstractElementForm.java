@@ -3,10 +3,12 @@ package com.mindalliance.channels.playbook.pages.forms;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.Project;
@@ -72,6 +74,10 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
     }
 
     // ElementPanel
+
+    public Object getObject() {
+        return element;
+    }
 
     public Ref getElement() {
         return element;
@@ -159,7 +165,6 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
     public boolean isElementModified() {
         return element.isModified();
     }
-
 
     abstract void loadTabs();
 

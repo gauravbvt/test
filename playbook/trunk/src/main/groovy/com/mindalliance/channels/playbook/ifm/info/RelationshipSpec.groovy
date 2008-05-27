@@ -12,7 +12,7 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
  * Date: May 20, 2008
  * Time: 5:07:44 PM
  */
-class RelationshipSpec extends BeanImpl {
+class RelationshipSpec extends BeanImpl implements Spec {
 
     String relationshipName = ''
     Ref agent // an agent defined within scope, or with any agent if null
@@ -24,7 +24,7 @@ class RelationshipSpec extends BeanImpl {
     }
 
     boolean isDefined() {
-        return !relationshipName.isEmpty()
+        return relationshipName != null && !relationshipName.isEmpty()
     }
 
     // Queries
@@ -56,5 +56,13 @@ class RelationshipSpec extends BeanImpl {
 
     boolean matchesRelationship(Relationship relationship) {
 
+    }
+
+    public boolean matches(Ref element) {
+        return false;  //Todo
+    }
+
+    public boolean narrows(Spec spec) {
+        return false;  //Todo
     }
 }

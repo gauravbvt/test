@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.place;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
@@ -22,7 +22,7 @@ import java.util.List;
  * Date: May 10, 2008
  * Time: 7:41:42 PM
  */
-public class PlaceAboutTab extends ResourceIdentityTab {
+public class PlaceAboutTab extends AbstractFormTab {
 
     protected TextField nameField;
     protected TextArea descriptionField;

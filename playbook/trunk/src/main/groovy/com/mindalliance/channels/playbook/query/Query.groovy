@@ -77,7 +77,9 @@ class Query implements Serializable {
     int hashCode() {
         int hash = 1
         hash = hash * 31 + this.name.hashCode()
-        arguments.each {hash = hash * 31 + it.hashCode() }
+        arguments.each {arg ->
+            if (arg) hash = hash * 31 + arg.hashCode()
+        }
         return hash
     }
 

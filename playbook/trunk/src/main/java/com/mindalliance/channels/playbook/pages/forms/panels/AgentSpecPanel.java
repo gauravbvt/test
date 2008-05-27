@@ -8,6 +8,8 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ifm.info.Spec;
+import com.mindalliance.channels.playbook.ifm.info.AgentSpec;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -20,7 +22,7 @@ import java.util.List;
  * Date: May 23, 2008
  * Time: 2:11:06 PM
  */
-public class AgentSpecPanel extends AbstractComponentPanel {
+public class AgentSpecPanel extends AbstractSpecComponentPanel {
 
     protected DynamicFilterTree rolesTree;
     protected RelationshipSpecPanel relationshipSpecPanel;
@@ -46,4 +48,14 @@ public class AgentSpecPanel extends AbstractComponentPanel {
         locationPanel = new LocationPanel("location", this, propPath+".location", isReadOnly(), feedback);
         addReplaceable(locationPanel);
     }
+
+    protected Spec makeNewSpec() {
+        return new AgentSpec();
+    }
+
+    @Override
+    protected String getAnyLabelString() {
+        return "any agent";
+    }
+    
 }

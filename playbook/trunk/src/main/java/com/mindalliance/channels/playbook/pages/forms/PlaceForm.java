@@ -21,7 +21,7 @@ public class PlaceForm extends AbstractProjectElementForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who-what")) {
+        tabs.add(new AbstractTab(new Model("About")) {
              public Panel getPanel(String panelId) {
                  return new PlaceAboutTab(panelId, PlaceForm.this);
              }

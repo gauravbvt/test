@@ -27,7 +27,7 @@ class Project extends IfmElement implements Describable {
     String name = 'Unnamed'
     String description = ''
     List<Ref> participations = []
-    List<Ref> persons =[]
+    List<Ref> persons = []
     List<Ref> organizations = []
     List<Ref> places = []
     List<Ref> relationships = []
@@ -44,36 +44,36 @@ class Project extends IfmElement implements Describable {
 
     String toString() { name }
 
-    Referenceable doAddToField( String field, Object object ) {
+    Referenceable doAddToField(String field, Object object) {
         object.project = this.reference
-        switch ( object.deref() ) {
-            case Policy: super.doAddToField( "policies", object ); break;
-           /* case SharingAgreement: super.doAddToField( "agreements", object ); break;
-            case Participation: super.doAddToField( "participations", object ); break;
-            // case Position:
-            case Person:
-            // case System:
-            case Organization:  super.doAddToField( "resources", object ); break;
-            case Playbook:  super.doAddToField( "playbooks", object ); break;
-            case PlaybookModel:  super.doAddToField( "models", object ); break;
-            case Place: super.doAddToField( "places", object ); break;*/
-            default: super.doAddToField( field, object );
+        switch (object.deref()) {
+            case Policy: super.doAddToField("policies", object); break;
+        /* case SharingAgreement: super.doAddToField( "agreements", object ); break;
+  case Participation: super.doAddToField( "participations", object ); break;
+  // case Position:
+  case Person:
+  // case System:
+  case Organization:  super.doAddToField( "resources", object ); break;
+  case Playbook:  super.doAddToField( "playbooks", object ); break;
+  case PlaybookModel:  super.doAddToField( "models", object ); break;
+  case Place: super.doAddToField( "places", object ); break;*/
+            default: super.doAddToField(field, object);
         }
     }
 
-    Referenceable doRemoveFromField( String field, Object object ) {
-        switch ( object.deref() ) {
-            case Policy: super.doRemoveFromField( "policies", object ); break;
-            /*case SharingAgreement: super.doRemoveFromField( "agreements", object ); break;
-            case Participation: super.doRemoveFromField( "participations", object ); break;
-            // case Position:
-            case Person:
-            // case System:
-            case Organization:  super.doRemoveFromField( "resources", object ); break;
-            case Playbook:  super.doRemoveFromField( "playbooks", object ); break;
-            case PlaybookModel:  super.doRemoveFromField( "models", object ); break;
-            case Place: super.doRemoveFromField( "places", object ); break;*/
-            default: super.doRemoveFromField( field, object );
+    Referenceable doRemoveFromField(String field, Object object) {
+        switch (object.deref()) {
+            case Policy: super.doRemoveFromField("policies", object); break;
+        /*case SharingAgreement: super.doRemoveFromField( "agreements", object ); break;
+  case Participation: super.doRemoveFromField( "participations", object ); break;
+  // case Position:
+  case Person:
+  // case System:
+  case Organization:  super.doRemoveFromField( "resources", object ); break;
+  case Playbook:  super.doRemoveFromField( "playbooks", object ); break;
+  case PlaybookModel:  super.doRemoveFromField( "models", object ); break;
+  case Place: super.doRemoveFromField( "places", object ); break;*/
+            default: super.doRemoveFromField(field, object);
         }
     }
 
@@ -121,7 +121,7 @@ class Project extends IfmElement implements Describable {
     }
 
     Ref findPlaceNamed(String placeName) {
-        Ref namedPlace = (Ref)places.find {place -> place.name == placeName }
+        Ref namedPlace = (Ref) places.find {place -> place.name == placeName }
         return namedPlace
     }
 
@@ -175,10 +175,10 @@ class Project extends IfmElement implements Describable {
     }
 
     List<Ref> findAllTypesNarrowingAny(List<Ref> elementTypes) {
-       Set<Ref> types = new HashSet<Ref>()
-       elementTypes.each {elementType ->
-           types.addAll(this.findAllTypesNarrowing(elementType))
-       }
+        Set<Ref> types = new HashSet<Ref>()
+        elementTypes.each {elementType ->
+            types.addAll(this.findAllTypesNarrowing(elementType))
+        }
         return types as List
     }
 
@@ -224,8 +224,8 @@ class Project extends IfmElement implements Describable {
     List<Ref> findCandidateSubOrganizationsFor(Ref organization) {
         List<Ref> candidates = organizations.findAll {org ->
             org != organization &&
-            !org.parent &&
-            !organization.allParents().contains(org)
+                    !org.parent &&
+                    !organization.allParents().contains(org)
         }
         return candidates
     }
@@ -237,7 +237,8 @@ class Project extends IfmElement implements Describable {
     }
 
     List<Ref> findAllRelationshipsOf(Ref resource) {
-        return relationships.findAll{rel -> rel.fromAgent == resource || rel.toAgent == resource}
+        return relationships.findAll {rel ->
+            rel.fromAgent == resource || rel.toAgent == resource}
     }
 
     List<Ref> findAgreementsWhereSource(Ref resource) {
@@ -248,54 +249,54 @@ class Project extends IfmElement implements Describable {
         return sharingAgreements.findAll {agr -> agr.recipient == resource}
     }
 
-     // End queries
+    // End queries
 
-    Boolean isParticipant( Ref user ) {
-         return findParticipation( user ) != null ;
-     }
+    Boolean isParticipant(Ref user) {
+        return findParticipation(user) != null;
+    }
 
-     Boolean isManager( Ref user ) {
-         Ref ref = findParticipation(user)
-         return ref != null && ref.manager ;
-     }
+    Boolean isManager(Ref user) {
+        Ref ref = findParticipation(user)
+        return ref != null && ref.manager;
+    }
 
-     /**
-      * Return project contents that a participant can add.
-      */
-     static List<Class<?>> contentClasses() {
-         // When changing this method, don't forget to update the next one...
-         List<Class<?>> result = new ArrayList<Class<?>>()
-         result.addAll( [ Organization.class] )
-         result.addAll( [ Person.class] )
-         result.addAll( [ SharingAgreement.class ] )
-         result.addAll( [ Policy.class ] )
-         result.addAll( [ Place.class ] )
-         result.addAll( [ Playbook.class ] )
-         result.addAll( Playbook.contentClasses() )
-         return result
-     }
+    /**
+     * Return project contents that a participant can add.
+     */
+    static List<Class<?>> contentClasses() {
+        // When changing this method, don't forget to update the next one...
+        List<Class<?>> result = new ArrayList<Class<?>>()
+        result.addAll([Organization.class])
+        result.addAll([Person.class])
+        result.addAll([SharingAgreement.class])
+        result.addAll([Policy.class])
+        result.addAll([Place.class])
+        result.addAll([Playbook.class])
+        result.addAll(Playbook.contentClasses())
+        return result
+    }
 
-     void addContents( List<Ref> result ) {
-         playbooks.each { it.addContents( result ) }
-         result.addAll( persons )
-         result.addAll( organizations )
-         result.addAll( sharingAgreements )
-         result.addAll( policies )
-         result.addAll( places )
-         result.addAll( playbooks )
-         result.addAll( analysisElements )
-         playbooks.each { it.addContents( result ) }
-     }
+    void addContents(List<Ref> result) {
+        playbooks.each { it.addContents(result) }
+        result.addAll(persons)
+        result.addAll(organizations)
+        result.addAll(sharingAgreements)
+        result.addAll(policies)
+        result.addAll(places)
+        result.addAll(playbooks)
+        result.addAll(analysisElements)
+        playbooks.each { it.addContents(result) }
+    }
 
-     /**
-      * Return system objects that a project manager can add.
-      */
-     static List<Class<?>> managerClasses() {
-         [ Project.class ]
-     }
+    /**
+     * Return system objects that a project manager can add.
+     */
+    static List<Class<?>> managerClasses() {
+        [Project.class]
+    }
 
-     void addManagerContents( List<Ref> result ) {
+    void addManagerContents(List<Ref> result) {
         // Projects are added in UserScope.getContents()
-     }
+    }
 
 }

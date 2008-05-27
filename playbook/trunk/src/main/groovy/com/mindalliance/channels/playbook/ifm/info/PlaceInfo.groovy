@@ -9,13 +9,17 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 * Date: Apr 17, 2008
 * Time: 9:54:38 AM
 */
-class PlaceInfo extends BeanImpl {   // any kind of real or abstract location that is not geographical
+class PlaceInfo extends BeanImpl implements Defineable {   // any kind of real or abstract location that is not geographical
 
     List<PlaceItem> placeItems = []   // ordered outer to inner (e.g. building, floor, room)
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['name', 'empty']
+        return super.transientProperties() + ['name', 'empty', 'defined']
+    }
+
+    boolean isDefined() {
+        return !placeItem.isEmpty()
     }
 
     String toString() {
