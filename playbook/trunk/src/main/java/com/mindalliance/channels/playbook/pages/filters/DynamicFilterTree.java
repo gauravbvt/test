@@ -34,23 +34,24 @@ public class DynamicFilterTree extends FilterTree {
         selections.detach();
     }
 
-    static public Filter createFilter(IModel selections, IModel choices) {
-        List<Ref> choiceList = (List<Ref>) choices.getObject();
-        // Modified by JF
-        List<Ref> selectionList;
-        Object selectionObject = selections.getObject();
-        if (selectionObject == null) {
-            selectionList = new ArrayList<Ref>(); 
-        }
-        else if (selectionObject instanceof Ref) {
-            selectionList = new ArrayList<Ref>();
-            selectionList.add((Ref)selectionObject);
-        }
+    static public List<Ref> refs( IModel model ) {
+        Object object = model.getObject();
+        if ( object instanceof List )
+            return (List<Ref>) object;
         else {
-            selectionList = (List<Ref>)selectionObject;
+            List<Ref> result = new ArrayList<Ref>();
+            if ( object != null )
+                result.add( (Ref) object );
+            return result;
         }
+    }
+
+    static public Filter createFilter(IModel selections, IModel choices) {
+        List<Ref> choiceList = refs( choices );
+        List<Ref> selectionList = refs( selections );
+
         selections.setObject(selectionList);
-        // end modified
+
         Filter filter = new RootFilter(new RefContainer(choiceList), false);
         filter.setShowingLeaves(true);
 
@@ -99,7 +100,7 @@ public class DynamicFilterTree extends FilterTree {
 
     public List<Ref> getNewSelections() {
         List<Ref> results = new ArrayList<Ref>();
-        RefContainer data = new RefContainer((List<Ref>) choices.getObject());
+        RefContainer data = new RefContainer( refs( choices ) );
         for (Ref ref : new FilteredContainer(data, getFilter(), false))
             results.add(ref);
 
