@@ -29,8 +29,8 @@ public class FlowActBasicTab extends InformationActBasicTab {
     protected void load() {
         super.load();
         targetAgentTree = new DynamicFilterTree("targetAgent", new RefPropertyModel(getElement(), "targetAgent"),
-                                                    new RefQueryModel(getProject(),
-                                                        new Query("findAllAgentsExcept", RefUtils.get(getElement(), "actorAgent"))),
+                                                    new RefQueryModel(getPlaybook(),
+                                                        new Query("findAllAgentsExcept", getElement(), "actorAgent")),
                                                     SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = targetAgentTree.getNewSelection();

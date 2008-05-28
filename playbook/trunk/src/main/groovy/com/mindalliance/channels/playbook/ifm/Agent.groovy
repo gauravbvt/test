@@ -14,7 +14,7 @@ interface Agent extends Describable, Serializable {
 
     String getName()    
     List<Ref> getResourcesAt(Event event)
-    boolean isResource()
+    boolean isResourceElement()
     boolean isTeam()
     boolean isGroup()
 

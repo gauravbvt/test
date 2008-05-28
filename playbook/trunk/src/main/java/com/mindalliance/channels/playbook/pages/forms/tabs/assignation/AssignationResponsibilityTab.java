@@ -31,8 +31,8 @@ public class AssignationResponsibilityTab extends AbstractFormTab {
     protected void load() {
         super.load();
         assigneeAgentTree = new DynamicFilterTree("assigneeAgent", new RefPropertyModel(getElement(), "assigneeAgent"),
-                                                    new RefQueryModel(getProject(),
-                                                        new Query("findAllAgentsExcept", (Ref)RefUtils.get(getElement(), "actorAgent"))),
+                                                    new RefQueryModel(getPlaybook(),
+                                                        new Query("findAllAgentsExcept", getElement(), "actorAgent")),
                                                     SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = assigneeAgentTree.getNewSelection();

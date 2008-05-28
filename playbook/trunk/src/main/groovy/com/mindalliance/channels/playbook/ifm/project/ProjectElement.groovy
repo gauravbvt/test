@@ -16,7 +16,7 @@ class ProjectElement extends IfmElement {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['resourceElement'])
+        return (List<String>)(super.transientProperties() + ['resourceElement', 'projectElement'])
     }
 
 

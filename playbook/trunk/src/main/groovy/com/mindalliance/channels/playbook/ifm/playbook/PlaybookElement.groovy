@@ -20,7 +20,8 @@ class PlaybookElement extends IfmElement {
         return true
     }
 
-    Project getProject() {
+    Ref getProject() {
+       assert playbook
        return playbook.project
     }
 

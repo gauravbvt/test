@@ -69,7 +69,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     @Override
     public Class getHomePage() {
         return PlaybookPage.class
-      // return FormTest.class
+        // return FormTest.class
     }
 
     @Override
@@ -118,21 +118,27 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         Place wtc = new Place(name: "WTC")
         wtc.addPlaceType(m.findType("PlaceType", "Building"))
         p.addPlace(store(wtc))
-        Place jfk = new Place (name: "JFK")
+        store(wtc)
+        Place jfk = new Place(name: "JFK")
         jfk.addPlaceType(m.findType("PlaceType", "Airport"))
         p.addPlace(store(jfk))
+        store(jfk)
         p.addModel(m);
-        p.addPlaybook(store(new Playbook(name: "Playbook A", description: "This is Playbook A")))
-        p.addPlaybook(store(new Playbook(name: "Playbook B", description: "This is Playbook B")))
-        p.addPlaybook(store(new Playbook(name: "Playbook C", description: "This is Playbook C")))
-
+        Playbook pb = new Playbook(name: "Playbook A", description: "This is Playbook A")
+        p.addPlaybook(store(pb))
+        store(pb)
+        pb = new Playbook(name: "Playbook B", description: "This is Playbook B")
+        p.addPlaybook(store(pb))
+        store(pb)
+        pb = new Playbook(name: "Playbook C", description: "This is Playbook C")
+        p.addPlaybook(store(pb))
+        store(pb)
         Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
         p.addPerson(store(joe))
-
         Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
         Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
-        p.addOrganization(acme)
-        p.addOrganization(nadir)
+        p.addOrganization(store(acme))
+        p.addOrganization(store(nadir))
 
         Ref pos1 = store(new Position(name: 'Position 1'))
         Ref pos2 = store(new Position(name: 'Position 2'))
@@ -140,47 +146,49 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         acme.addPosition(pos1)
         acme.addPosition(pos2)
         acme.addPosition(pos3)
-        acme.addSystem(store(new System(name:'Hal 9000')))
-        p.addRelationship(store(new Relationship(fromAgent: acme.reference, toAgent: nadir.reference , name: "client")))
+        acme.addSystem(store(new System(name: 'Hal 9000')))
+        p.addRelationship(store(new Relationship(fromAgent: acme.reference, toAgent: nadir.reference, name: "client")))
         store(acme)
         Ref pos4 = store(new Position(name: 'Position 4'))
         Ref pos5 = store(new Position(name: 'Position 5'))
         nadir.addPosition(pos4)
         nadir.addPosition(pos5)
         store(nadir)
+
         joe.addPosition(pos1)
         joe.addPosition(pos4)
-
+        store(joe)
         Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
         p.addPerson(store(jane))
-
-
-        p.addRelationship(store(new Relationship(fromAgent: joe.reference, toAgent: jane.reference , name: "family")))
-
-        Ref ag1 = store(new SharingAgreement(source: joe.reference, recipient: jane.reference))
-        Ref ag2 = store(new SharingAgreement(source: joe.reference, recipient: acme.reference))
-        p.addSharingAgreement(ag1)
-        p.addSharingAgreement(ag2)
-
+        store(jane)
+        Relationship rel = new Relationship(fromAgent: joe.reference, toAgent: jane.reference, name: "family")
+        p.addRelationship(store(rel))
+        store(rel)
+        SharingAgreement ag1 = new SharingAgreement(source: joe.reference, recipient: jane.reference)
+        SharingAgreement ag2 = new SharingAgreement(source: joe.reference, recipient: acme.reference)
+        p.addSharingAgreement(store(ag1))
+        p.addSharingAgreement(store(ag2))
+        store(ag1)
+        store(ag2)
         p.addParticipation(
                 store(new Participation(
                         user: admin.getReference(),
                         project: p.getReference(),
-                        manager: true )))
+                        manager: true)))
         p.addParticipation(
                 store(new Participation(
                         user: user.getReference(),
                         project: p.getReference())))
 
-        Playbook pb = new Playbook(name:'default')
+        pb = new Playbook(name: 'default')
         p.addPlaybook(store(pb))
-        
+        store(pb)
         channels.addProject(store(p))
-        channels.addModel(store(m));
+       channels.addModel(store(m));
         store(channels)
     }
 
-    PlaybookModel initializeDefaultModel(Channels channels) {
+    PlaybookModel initializeDefaultModel(Channels channels) {  // TODO - re-store model element to persist backpointers to model
         PlaybookModel m = new PlaybookModel(name: 'default')
         // PlaybookModel elements
         AreaType globe = new AreaType(name: 'Globe')
@@ -200,8 +208,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         m.addAreaType(store(state))
         m.addAreaType(store(county))
         m.addAreaType(store(city))
-        PlaceType airport = new PlaceType(name:'Airport')
-        PlaceType runway = new PlaceType(name:'Runway')
+        PlaceType airport = new PlaceType(name: 'Airport')
+        PlaceType runway = new PlaceType(name: 'Runway')
         runway.narrow(airport.reference)
         m.addPlaceType(store(airport))
         m.addPlaceType(store(runway))

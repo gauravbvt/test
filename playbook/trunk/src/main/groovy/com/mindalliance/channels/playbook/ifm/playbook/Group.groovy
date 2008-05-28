@@ -22,7 +22,7 @@ class Group extends PlaybookElement implements Agent {
         return (List<String>) (super.transientProperties() + ['resourceKinds'])
     }
 
-    boolean isResource() {
+    boolean isResourceElement() {
          return false
      }
 

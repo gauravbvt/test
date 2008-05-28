@@ -23,6 +23,14 @@ class Playbook extends ProjectElement implements Describable {
     List<Ref> events = []
     List<Ref> informationActs = []
 
+    Map toMap() {
+        super.toMap()
+    }
+
+    void initFromMap(Map map) {
+        super.initFromMap(map)
+    }
+
     void addElement(PlaybookElement element) {
         String field;
          switch (element.type) {
@@ -37,12 +45,16 @@ class Playbook extends ProjectElement implements Describable {
 
     Referenceable doAddToField( String field, Object val ) {
         val.playbook = this.reference
-        super.doAddToField(field, val )
+        String actualField = field
+        if (!['events', 'groups', 'teams'].contains(field)) actualField = 'informationActs'
+        super.doAddToField(actualField, val)
     }
 
     Referenceable doRemoveFromField(String field, Object val) {
         val.playbook = null
-        return super.doRemoveFromField(field, val)
+        String actualField = field
+        if (!['events', 'groups', 'teams'].contains(field)) actualField = 'informationActs'
+        return super.doRemoveFromField(actualField, val)
     }
 
     // Queries
@@ -115,13 +127,17 @@ class Playbook extends ProjectElement implements Describable {
      * Return classes a project participant can add.
      */
     static List<Class<?>> contentClasses() {
-        [ Assignation.class, Confirmation.class, Denial.class,
+        [ Assignation.class, Association.class, Confirmation.class, Denial.class,
           InformationTransfer.class, Detection.class, InformationRequest.class,
-          Task.class, Verification.class
+          SharingRequest.class, SharingCommitment.class,
+          Task.class, Verification.class, Group.class, Team.class, Event.class
         ]
     }
 
     void addContents( List<Ref> results ) {
         results.addAll( informationActs )
+        results.addAll (groups)
+        results.addAll (teams)
+        results.addAll (events)
     }
 }

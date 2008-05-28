@@ -20,7 +20,7 @@ class Team extends PlaybookElement implements Agent {
         return resources;
     }
 
-    public boolean isResource() {
+    public boolean isResourceElement() {
         return false;
     }
 

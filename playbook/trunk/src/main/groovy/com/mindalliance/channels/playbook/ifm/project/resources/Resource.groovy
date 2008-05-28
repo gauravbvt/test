@@ -31,7 +31,7 @@ class Resource extends ProjectElement implements Agent, Locatable {
         return (List<String>) (super.transientProperties() + ['agreements', 'organizationResource', 'organizationElement'])
     }
 
-    boolean isResource() {
+    boolean isResourceElement() {
         return true
     }
 

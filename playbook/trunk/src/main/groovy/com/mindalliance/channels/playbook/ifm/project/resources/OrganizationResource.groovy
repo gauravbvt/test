@@ -24,7 +24,7 @@ class OrganizationResource extends Resource {
     }
 
     Ref getProject() {
-        return organization.project
+        return (organization) ? organization.project : null
     }
 
 

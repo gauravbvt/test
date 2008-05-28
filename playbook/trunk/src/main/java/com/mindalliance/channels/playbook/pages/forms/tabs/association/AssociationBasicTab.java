@@ -37,7 +37,7 @@ public class AssociationBasicTab extends InformationActBasicTab {
                         new Query("findAllRelationshipNames")));
         addInputField(relationshipNameField);
         toAgentTree = new DynamicFilterTree("toAgent", new RefPropertyModel(getElement(), "toAgent"),
-                new RefQueryModel(getProject(),
+                new RefQueryModel(getPlaybook(),
                         new Query("findAllAgentsExcept", RefUtils.get(getElement(), "actorAgent"))),
                 SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {

@@ -55,6 +55,8 @@ class PlaybookModel extends IfmElement implements Describable {
         elements.addAll(domains)
         elements.addAll(eventTypes)
         elements.addAll(issueTypes)
+        elements.addAll(mediumTypes)
+        elements.addAll(organizationTypes)
         elements.addAll(placeTypes)
         elements.addAll(roles)
         elements.addAll(taskTypes)
