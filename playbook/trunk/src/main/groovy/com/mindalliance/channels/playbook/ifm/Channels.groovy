@@ -11,7 +11,8 @@ import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
 import com.mindalliance.channels.playbook.ifm.playbook.Event
-import com.mindalliance.channels.playbook.ifm.info.RelationshipSpec
+import com.mindalliance.channels.playbook.ifm.spec.RelationshipSpec
+import com.mindalliance.channels.playbook.ifm.spec.RelationshipSpec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -128,13 +129,13 @@ class Channels extends IfmElement {
             // In policies
             p.policies.each {pol ->
                RelationshipSpec rspec
-               rspec = pol.sourceAgentSpec.relationshipSpec
+               rspec = pol.sourceSpec.relationshipSpec
                if (rspec.isDefined()) countedSet.add(rspec.relationshipName)
-                rspec = pol.recipientAgentSpec.relationshipSpec
+                rspec = pol.recipientSpec.relationshipSpec
                 if (rspec.isDefined()) countedSet.add(rspec.relationshipName)
             }
         }
-        // TODO -- Missing all usages of relationship names in InformationTemplate.sourceAgentSpecs*.relationshipName
+        // TODO -- Missing all usages of relationship names in *.relationshipSpec
         return countedSet.toList()
     }
 

@@ -15,10 +15,23 @@ import com.mindalliance.channels.playbook.support.Mapper
  */
 class BeanImpl implements Bean {
 
+    static Map<Class,List<MetaBeanProperty>> WritableProperties = [:]
+
     String version         // TODO -- belongs in IfmElement
 
     String getVersion() {
         return '1.0.0' // default
+    }
+
+   /* synchronized */ static List<MetaBeanProperty> writablePropertiesOf(BeanImpl beanImpl) {
+        List metaBeanProperties = (List<MetaBeanProperty>)WritableProperties[beanImpl.class]
+        if (!metaBeanProperties) {
+            metaBeanProperties = beanImpl.metaClass.getProperties().findAll {mp ->
+               !beanImpl.transientProperties().contains(mp.name)
+            }
+            WritableProperties[beanImpl.class] = metaBeanProperties
+        }
+        return metaBeanProperties
     }
 
     Bean copy() {
@@ -42,11 +55,21 @@ class BeanImpl implements Bean {
     }
 
     protected List<String> transientProperties() {
-        return ['class', 'metaClass']
+        return ['class', 'metaClass', 'from', 'writableProperties']
     }
 
     Map beanProperties() {
-        return getProperties().findAll {name, val -> !transientProperties().contains(name)}
+        Map<String,Object> properties = [:]
+        BeanImpl.writablePropertiesOf(this).each {mbp ->
+            properties[mbp.name] = mbp.getProperty(this)
+        }
+        return properties
+        // return getProperties().findAll {name, val -> !transientProperties().contains(name)} // horrendously inefficient
+    }
+
+    boolean isWritableProperty(String name) {
+        boolean writable = BeanImpl.writablePropertiesOf(this).any {mbp -> mbp.name == name}
+        return writable
     }
 
     void setFrom(Bean bean) {
@@ -70,9 +93,8 @@ class BeanImpl implements Bean {
 
     void initFromMap(Map map) {
         // TODO -- manage versioning here
-        Set propNames = beanProperties().keySet();
         map.each {key, val ->
-            if (propNames.contains(key)) {
+            if (isWritableProperty(key)) {
                 def value = Mapper.valueFromPersisted(val)
                 this."$key" = value
             }

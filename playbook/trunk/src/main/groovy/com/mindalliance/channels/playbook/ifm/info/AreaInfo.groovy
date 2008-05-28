@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.geo.AmbiguousAreaException
 import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 import com.mindalliance.channels.playbook.geo.AreaException
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+import com.mindalliance.channels.playbook.ifm.Defineable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

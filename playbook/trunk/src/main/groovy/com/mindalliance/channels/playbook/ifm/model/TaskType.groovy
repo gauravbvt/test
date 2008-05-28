@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.model
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
+import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +14,7 @@ class TaskType extends ElementType {
 
     List<String> purposes = [] // purposes of the task
     List<Ref> domains = []
-    List<InformationTemplate> informationTemplates = [] // information needs
+    List<InformationSpec> informationSpecs = [] // information needs
     List<EventType> eventTypes = [] // types of events that can be caused (and thus become observable)
 
 }

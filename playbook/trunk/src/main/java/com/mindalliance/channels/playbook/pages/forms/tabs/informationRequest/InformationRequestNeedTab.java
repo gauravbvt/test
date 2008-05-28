@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.informationRequest;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.InformationTemplatePanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.InformationNeedPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.pages.forms.panels.InformationTemplate
  */
 public class InformationRequestNeedTab extends AbstractFormTab {
 
-    protected InformationTemplatePanel infoTemplatePanel;
+    protected InformationNeedPanel infoNeedPanel;
 
     public InformationRequestNeedTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -21,8 +21,8 @@ public class InformationRequestNeedTab extends AbstractFormTab {
 
     protected void load() {
          super.load();
-        infoTemplatePanel = new InformationTemplatePanel("informationNeed", this, "informationNeed", EDITABLE, feedback);
-        addReplaceable(infoTemplatePanel);
+        infoNeedPanel = new InformationNeedPanel("informationNeed", this, "informationNeed", EDITABLE, feedback);
+        addReplaceable(infoNeedPanel);
     }
 
 }

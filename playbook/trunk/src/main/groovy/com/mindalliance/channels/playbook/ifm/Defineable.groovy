@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.info
+package com.mindalliance.channels.playbook.ifm
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.

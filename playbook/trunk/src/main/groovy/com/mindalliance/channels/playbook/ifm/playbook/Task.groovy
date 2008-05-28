@@ -1,9 +1,9 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.info.Information
-import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
-import com.mindalliance.channels.playbook.ifm.info.Timing
+import com.mindalliance.channels.playbook.ifm.info.InformationNeed
+import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ifm.info.InformationNeed
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +16,6 @@ class Task extends InformationAct {
 
     Timing duration = new Timing(amount:0)
     Ref taskType
-    List<InformationTemplate> informationNeeds = []
+    List<InformationNeed> informationNeeds = []
 
 }

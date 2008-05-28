@@ -2,10 +2,10 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.taskType;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.InformationTemplatePanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.InformationSpecPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.info.InformationTemplate;
+import com.mindalliance.channels.playbook.ifm.spec.InformationSpec;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -27,12 +27,12 @@ import java.util.List;
  */
 public class TaskTypeInfoNeedsTab extends AbstractFormTab {
 
-    protected ListChoice infoTemplatesChoice;
-    protected AjaxButton deleteInfoTemplateButton;
-    protected AjaxButton addInfoTemplateButton;
+    protected ListChoice infoSpecsChoice;
+    protected AjaxButton deleteInfoSpecButton;
+    protected AjaxButton addInfoSpecButton;
 
-    protected WebMarkupContainer infoTemplateDiv;
-    protected InformationTemplate selectedInfoTemplate;
+    protected WebMarkupContainer infoSpecDiv;
+    protected InformationSpec selectedInfoSpec;
 
     public TaskTypeInfoNeedsTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -40,73 +40,73 @@ public class TaskTypeInfoNeedsTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        infoTemplatesChoice = new ListChoice("informationTemplates", new Model(),
-                                              new RefPropertyModel(getElement(), "informationTemplates"));
-        infoTemplatesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        infoSpecsChoice = new ListChoice("informationSpecs", new Model(),
+                                              new RefPropertyModel(getElement(), "informationSpecs"));
+        infoSpecsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                selectedInfoTemplate = (InformationTemplate)infoTemplatesChoice.getModelObject();
-                loadInfoTemplatePanel();
-                setInfoTemplatePanelVisibility(target);
-                deleteInfoTemplateButton.setEnabled(selectedInfoTemplate != null);
-                target.addComponent(deleteInfoTemplateButton);
+                selectedInfoSpec = (InformationSpec)infoSpecsChoice.getModelObject();
+                loadInfoSpecPanel();
+                setInfoSpecPanelVisibility(target);
+                deleteInfoSpecButton.setEnabled(selectedInfoSpec != null);
+                target.addComponent(deleteInfoSpecButton);
             }
         });
-        addReplaceable(infoTemplatesChoice);
-        addInfoTemplateButton = new AjaxButton("addInfoTemplate") {
+        addReplaceable(infoSpecsChoice);
+        addInfoSpecButton = new AjaxButton("addInfoSpec") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                InformationTemplate infoTemplate = new InformationTemplate();
-                RefUtils.add(getElement(), "informationTemplates", infoTemplate);
-                target.addComponent(infoTemplatesChoice);
+                InformationSpec infoSpec = new InformationSpec();
+                RefUtils.add(getElement(), "informationSpecs", infoSpec);
+                target.addComponent(infoSpecsChoice);
             }
         };
-        addReplaceable(addInfoTemplateButton);
-        deleteInfoTemplateButton = new AjaxButton("deleteInfoTemplate") {
+        addReplaceable(addInfoSpecButton);
+        deleteInfoSpecButton = new AjaxButton("deleteInfoSpec") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                RefUtils.remove(getElement(), "informationTemplates", selectedInfoTemplate);
-                selectedInfoTemplate = null;
-                deleteInfoTemplateButton.setEnabled(false);
-                loadInfoTemplatePanel();
-                setInfoTemplatePanelVisibility(target);
-                target.addComponent(deleteInfoTemplateButton);
-                target.addComponent(infoTemplatesChoice);
+                RefUtils.remove(getElement(), "informationSpecs", selectedInfoSpec);
+                selectedInfoSpec = null;
+                deleteInfoSpecButton.setEnabled(false);
+                loadInfoSpecPanel();
+                setInfoSpecPanelVisibility(target);
+                target.addComponent(deleteInfoSpecButton);
+                target.addComponent(infoSpecsChoice);
             }
         };
-        deleteInfoTemplateButton.setEnabled(false);
-        addReplaceable(deleteInfoTemplateButton);
+        deleteInfoSpecButton.setEnabled(false);
+        addReplaceable(deleteInfoSpecButton);
 
-        infoTemplateDiv = new WebMarkupContainer("infoTemplateDiv");
-        loadInfoTemplatePanel();
-        addReplaceable(infoTemplateDiv);
-        infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        infoSpecDiv = new WebMarkupContainer("infoSpecDiv");
+        loadInfoSpecPanel();
+        addReplaceable(infoSpecDiv);
+        infoSpecDiv.add(new AttributeModifier("style", true, new Model("display:none")));
     }
 
-    private void setInfoTemplatePanelVisibility(AjaxRequestTarget target) {
-        if (selectedInfoTemplate != null) {
-            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+    private void setInfoSpecPanelVisibility(AjaxRequestTarget target) {
+        if (selectedInfoSpec != null) {
+            infoSpecDiv.add(new AttributeModifier("style", true, new Model("display:block")));
         } else {
-            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+            infoSpecDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         }
-        target.addComponent(infoTemplateDiv);
+        target.addComponent(infoSpecDiv);
     }
 
-    private void loadInfoTemplatePanel() {
-        if (selectedInfoTemplate == null) {
-            Label dummyInfoTemplatePanel = new Label("informationTemplate", "dummy");
-            infoTemplateDiv.addOrReplace(dummyInfoTemplatePanel);
+    private void loadInfoSpecPanel() {
+        if (selectedInfoSpec == null) {
+            Label dummyInfoSpecPanel = new Label("informationSpec", "dummy");
+            infoSpecDiv.addOrReplace(dummyInfoSpecPanel);
         } else {
-            int index = ((List<InformationTemplate>) RefUtils.get(getElement(), "informationTemplates")).indexOf(selectedInfoTemplate);
-            InformationTemplatePanel infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this,
-                    "informationTemplates[" + index + "]",
+            int index = ((List<InformationSpec>) RefUtils.get(getElement(), "informationSpecs")).indexOf(selectedInfoSpec);
+            InformationSpecPanel infoSpecPanel = new InformationSpecPanel("informationSpec", this,
+                    "informationSpecs[" + index + "]",
                     EDITABLE, feedback);
-            infoTemplateDiv.addOrReplace(infoTemplatePanel);
+            infoSpecDiv.addOrReplace(infoSpecPanel);
         }
     }
 
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         super.elementChanged(propPath, target);
-        if (propPath.matches(".*informationTemplates.*")) {
-            target.addComponent(infoTemplatesChoice);
+        if (propPath.matches(".*informationSpecs.*")) {
+            target.addComponent(infoSpecsChoice);
         }
     }
 }

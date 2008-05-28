@@ -1,8 +1,10 @@
 package com.mindalliance.channels.playbook.ifm.info
 
-import com.mindalliance.channels.playbook.ref.impl.BeanImpl
-import org.joda.time.Duration
+
+import com.mindalliance.channels.playbook.ifm.spec.EventSpec
+import com.mindalliance.channels.playbook.ifm.info.AbstractInformation
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.spec.Spec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,10 +13,9 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 9:18:11 AM
 */
-class InformationTemplate extends AbstractInformation {
+/* abstract*/ class InformationTemplate extends AbstractInformation {
 
     EventSpec eventSpec = new EventSpec() // about what kind of event
-    AgentSpec sourceAgentSpec = new AgentSpec() // from whom is this kind of information credible
 
     @Override
     List<String> transientProperties() {

@@ -2,9 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.Channels;
-import com.mindalliance.channels.playbook.ifm.info.SharingConstraints;
 import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 

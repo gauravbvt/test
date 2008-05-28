@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.assignation;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.AssignmentPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.ResponsibilityPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -19,12 +19,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  * Date: May 9, 2008
  * Time: 8:58:39 PM
  */
-public class AssignationAssignmentTab extends AbstractFormTab {
+public class AssignationResponsibilityTab extends AbstractFormTab {
 
     protected DynamicFilterTree assigneeAgentTree;
-    protected AssignmentPanel assignmentPanel;
+    protected ResponsibilityPanel responsibilityPanel;
 
-    public AssignationAssignmentTab(String id, AbstractElementForm elementForm) {
+    public AssignationResponsibilityTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
@@ -40,8 +40,8 @@ public class AssignationAssignmentTab extends AbstractFormTab {
             }
         };
         addReplaceable(assigneeAgentTree);
-        assignmentPanel = new AssignmentPanel("assignment", this, "assignment", EDITABLE, feedback);
-        addReplaceable(assignmentPanel);
+        responsibilityPanel = new ResponsibilityPanel("responsibility", this, "responsibility", EDITABLE, feedback);
+        addReplaceable(responsibilityPanel);
     }
 
 }

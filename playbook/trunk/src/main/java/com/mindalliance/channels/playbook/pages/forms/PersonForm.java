@@ -40,12 +40,12 @@ public class PersonForm extends AbstractResourceForm {
                 return new PersonResponsibilitiesTab(panelId, PersonForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Realationships")) {
+        tabs.add(new AbstractTab(new Model("Relationships")) {
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, PersonForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Realationships")) {
+        tabs.add(new AbstractTab(new Model("Agreements")) {
             public Panel getPanel(String panelId) {
                 return new ResourceAgreementsTab(panelId, PersonForm.this);
             }

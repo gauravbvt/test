@@ -33,7 +33,9 @@ class RefPropertyModel implements IChainingModel {
         def holder = getPropertyHolder()
         try {
             def object =  RefUtils.get(holder, expression)
-            if (object == null && defaultObject) object = defaultObject
+            if (object == null) {
+                object = defaultObject
+            }
             return object
         }
         catch (Exception e) {

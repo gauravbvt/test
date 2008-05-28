@@ -26,7 +26,7 @@ public class OrganizationForm extends AbstractResourceForm {
 
     @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who-what")) {
+        tabs.add(new AbstractTab(new Model("Identity")) {
             public Panel getPanel(String panelId) {
                 return new OrganizationIdentityTab(panelId, OrganizationForm.this);
             }

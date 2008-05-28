@@ -31,7 +31,7 @@ public class PersonResponsibilitiesTab  extends ResourceResponsibilitiesTab {
     protected void load() {
         super.load();
         positionTree = new DynamicFilterTree("positions", new RefPropertyModel(getElement(), "positions"),
-                                             new RefQueryModel(getProject(), new Query("findAlPositions"))) {   // TODO
+                                             new RefQueryModel(getProject(), new Query("findAllPositionsAnywhere"))) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = positionTree.getNewSelections();
                 RefUtils.set(getElement(), "positions", newSelections);

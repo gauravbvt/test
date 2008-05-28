@@ -2,8 +2,8 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.task;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.InformationTemplatePanel;
-import com.mindalliance.channels.playbook.ifm.info.InformationTemplate;
+import com.mindalliance.channels.playbook.pages.forms.panels.InformationNeedPanel;
+import com.mindalliance.channels.playbook.ifm.info.InformationNeed;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import org.apache.wicket.markup.html.form.ListChoice;
@@ -27,12 +27,12 @@ import java.util.List;
  */
 public class TaskInfoNeedsTab  extends AbstractFormTab {
 
-    protected ListChoice infoTemplatesChoice;
+    protected ListChoice infoNeedsChoice;
     protected AjaxButton deleteInformationNeedButton;
     protected AjaxButton addInformationNeedButton;
 
-    protected WebMarkupContainer infoTemplateDiv;
-    protected InformationTemplate selectedInfoTemplate;
+    protected WebMarkupContainer infoNeedDiv;
+    protected InformationNeed selectedInfoNeed;
 
     public TaskInfoNeedsTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -40,73 +40,73 @@ public class TaskInfoNeedsTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        infoTemplatesChoice = new ListChoice("informationNeeds", new Model(),
+        infoNeedsChoice = new ListChoice("informationNeeds", new Model(),
                                               new RefPropertyModel(getElement(), "informationNeeds"));
-        infoTemplatesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        infoNeedsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                selectedInfoTemplate = (InformationTemplate)infoTemplatesChoice.getModelObject();
+                selectedInfoNeed = (InformationNeed) infoNeedsChoice.getModelObject();
                 loadInfoTemplatePanel();
-                setInfoTemplatePanelVisibility(target);
-                deleteInformationNeedButton.setEnabled(selectedInfoTemplate != null);
+                setInfoNeedPanelVisibility(target);
+                deleteInformationNeedButton.setEnabled(selectedInfoNeed != null);
                 target.addComponent(deleteInformationNeedButton);
             }
         });
-        addReplaceable(infoTemplatesChoice);
+        addReplaceable(infoNeedsChoice);
         addInformationNeedButton = new AjaxButton("addInformationNeed") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                InformationTemplate infoTemplate = new InformationTemplate();
-                RefUtils.add(getElement(), "informationNeeds", infoTemplate);
-                target.addComponent(infoTemplatesChoice);
+                InformationNeed infoNeed = new InformationNeed();
+                RefUtils.add(getElement(), "informationNeeds", infoNeed);
+                target.addComponent(infoNeedsChoice);
             }
         };
         addReplaceable(addInformationNeedButton);
         deleteInformationNeedButton = new AjaxButton("deleteInformationNeed") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                RefUtils.remove(getElement(), "informationNeeds", selectedInfoTemplate);
-                selectedInfoTemplate = null;
+                RefUtils.remove(getElement(), "informationNeeds", selectedInfoNeed);
+                selectedInfoNeed = null;
                 deleteInformationNeedButton.setEnabled(false);
                 loadInfoTemplatePanel();
-                setInfoTemplatePanelVisibility(target);
+                setInfoNeedPanelVisibility(target);
                 target.addComponent(deleteInformationNeedButton);
-                target.addComponent(infoTemplatesChoice);
+                target.addComponent(infoNeedsChoice);
             }
         };
         deleteInformationNeedButton.setEnabled(false);
         addReplaceable(deleteInformationNeedButton);
 
-        infoTemplateDiv = new WebMarkupContainer("infoTemplateDiv");
+        infoNeedDiv = new WebMarkupContainer("infoNeedDiv");
         loadInfoTemplatePanel();
-        addReplaceable(infoTemplateDiv);
-        infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        addReplaceable(infoNeedDiv);
+        infoNeedDiv.add(new AttributeModifier("style", true, new Model("display:none")));
     }
 
-    private void setInfoTemplatePanelVisibility(AjaxRequestTarget target) {
-        if (selectedInfoTemplate != null) {
-            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+    private void setInfoNeedPanelVisibility(AjaxRequestTarget target) {
+        if (selectedInfoNeed != null) {
+            infoNeedDiv.add(new AttributeModifier("style", true, new Model("display:block")));
         } else {
-            infoTemplateDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+            infoNeedDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         }
-        target.addComponent(infoTemplateDiv);
+        target.addComponent(infoNeedDiv);
     }
 
     private void loadInfoTemplatePanel() {
-        if (selectedInfoTemplate == null) {
-            Label dummyInfoTemplatePanel = new Label("informationTemplate", "dummy");
-            infoTemplateDiv.addOrReplace(dummyInfoTemplatePanel);
+        if (selectedInfoNeed == null) {
+            Label dummyInfoTemplatePanel = new Label("informationNeed", "dummy");
+            infoNeedDiv.addOrReplace(dummyInfoTemplatePanel);
         } else {
-            int index = ((List<InformationTemplate>) RefUtils.get(getElement(), "informationNeeds")).indexOf(selectedInfoTemplate);
-            InformationTemplatePanel infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this,
+            int index = ((List<InformationNeed>) RefUtils.get(getElement(), "informationNeeds")).indexOf(selectedInfoNeed);
+            InformationNeedPanel infoNeedPanel = new InformationNeedPanel("informationNeed", this,
                     "informationNeeds[" + index + "]",
                     EDITABLE, feedback);
-            infoTemplateDiv.addOrReplace(infoTemplatePanel);
+            infoNeedDiv.addOrReplace(infoNeedPanel);
         }
     }
 
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         super.elementChanged(propPath, target);
         if (propPath.matches(".*informationNeeds.*")) {
-            target.addComponent(infoTemplatesChoice);
+            target.addComponent(infoNeedsChoice);
         }
     }
 

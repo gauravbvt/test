@@ -3,24 +3,17 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
-import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecPanel;
-import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.pages.forms.panels.ResourceSpecPanel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
-import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
 import com.mindalliance.channels.playbook.ifm.Channels;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.AttributeModifier;
 
-import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -35,9 +28,9 @@ public class PolicyPartiesTab extends AbstractFormTab {
     protected Policy policy;
     protected AjaxCheckBox anyRelationshipField;
     protected WebMarkupContainer relationshipsDiv;
-    protected AgentSpecPanel sourceAgentSpecPanel;
+    protected ResourceSpecPanel sourceSpecPanel;
     protected MultipleStringChooser relationshipNamesChooser;
-    protected AgentSpecPanel recipientAgentSpecPanel;
+    protected ResourceSpecPanel recipientSpecPanel;
 
     public PolicyPartiesTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -46,8 +39,8 @@ public class PolicyPartiesTab extends AbstractFormTab {
     protected void load() {
         super.load();
         policy = (Policy)getElement().deref();
-        sourceAgentSpecPanel = new AgentSpecPanel("sourceAgentSpec", this, "sourceAgentSpec", EDITABLE, feedback);
-        addReplaceable(sourceAgentSpecPanel);
+        sourceSpecPanel = new ResourceSpecPanel("sourceSpec", this, "sourceSpec", EDITABLE, feedback);
+        addReplaceable(sourceSpecPanel);
         relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
         addReplaceable(relationshipsDiv);
         setRelationshipsVisibility();
@@ -68,8 +61,8 @@ public class PolicyPartiesTab extends AbstractFormTab {
         relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames", EDITABLE, feedback,
                                                               new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
         addReplaceableTo(relationshipNamesChooser, relationshipsDiv);
-        recipientAgentSpecPanel = new AgentSpecPanel("recipientAgentSpec", this, "recipientAgentSpec", EDITABLE, feedback);
-        addReplaceable(recipientAgentSpecPanel);
+        recipientSpecPanel = new ResourceSpecPanel("recipientSpec", this, "recipientSpec", EDITABLE, feedback);
+        addReplaceable(recipientSpecPanel);
     }
 
     private void setRelationshipsVisibility() {

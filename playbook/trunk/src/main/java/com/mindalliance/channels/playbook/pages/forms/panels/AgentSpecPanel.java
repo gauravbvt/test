@@ -8,9 +8,10 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.info.Spec;
-import com.mindalliance.channels.playbook.ifm.info.AgentSpec;
+import com.mindalliance.channels.playbook.ifm.spec.Spec;
+import com.mindalliance.channels.playbook.ifm.spec.AgentSpec;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class AgentSpecPanel extends AbstractSpecComponentPanel {
 
-    protected DynamicFilterTree rolesTree;
+    protected ResourceSpecPanel resourceSpecPanel;
     protected RelationshipSpecPanel relationshipSpecPanel;
     protected LocationPanel locationPanel;
 
@@ -34,18 +35,11 @@ public class AgentSpecPanel extends AbstractSpecComponentPanel {
 
     protected void load() {
         super.load();
-        rolesTree = new DynamicFilterTree("roles", new RefPropertyModel(getComponent(), "roles"),
-                                           new RefQueryModel(getScope(), new Query("findAllTypes", "Role"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selected = rolesTree.getNewSelections();
-                RefUtils.set(getComponent(), "roles", selected);
-                elementChanged(propPath+".roles", target);
-            }
-        };
-        addReplaceable(rolesTree);
-        relationshipSpecPanel = new RelationshipSpecPanel("relationshipSpec", this, propPath+".relationshipSpec", isReadOnly(), feedback);
+        resourceSpecPanel = new ResourceSpecPanel("resourceSpec", this, propPath+".resourceSpec", isReadOnly(), feedback);
+        addReplaceable(resourceSpecPanel);
+        relationshipSpecPanel = new RelationshipSpecPanel("relationshipSpec", this, propPath + ".relationshipSpec", isReadOnly(), feedback);
         addReplaceable(relationshipSpecPanel);
-        locationPanel = new LocationPanel("location", this, propPath+".location", isReadOnly(), feedback);
+        locationPanel = new LocationPanel("location", this, propPath + ".location", isReadOnly(), feedback);
         addReplaceable(locationPanel);
     }
 
@@ -57,5 +51,5 @@ public class AgentSpecPanel extends AbstractSpecComponentPanel {
     protected String getAnyLabelString() {
         return "any agent";
     }
-    
+
 }

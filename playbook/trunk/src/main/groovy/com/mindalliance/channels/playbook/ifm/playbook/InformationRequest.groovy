@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
+import com.mindalliance.channels.playbook.ifm.info.InformationNeed
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,6 +11,6 @@ import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
 */
 class InformationRequest extends FlowAct  {
 
-    InformationTemplate informationNeed = new InformationTemplate()
+    InformationNeed informationNeed = new InformationNeed()
 
 }

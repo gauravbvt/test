@@ -2,19 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.InformationTemplatePanel;
-import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
-import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.query.Query;
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.Channels;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-
-import java.util.List;
+import com.mindalliance.channels.playbook.pages.forms.panels.InformationSpecPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,7 +13,7 @@ import java.util.List;
  */
 public class PolicySharingTab extends AbstractFormTab {
 
-    protected InformationTemplatePanel infoTemplatePanel;
+    protected InformationSpecPanel infoSpecPanel;
 
     public PolicySharingTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -33,8 +21,8 @@ public class PolicySharingTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this, "informationTemplate", EDITABLE, feedback);
-        addReplaceable(infoTemplatePanel);
+        infoSpecPanel = new InformationSpecPanel("informationSpec", this, "informationSpec", EDITABLE, feedback);
+        addReplaceable(infoSpecPanel);
     }
 
 

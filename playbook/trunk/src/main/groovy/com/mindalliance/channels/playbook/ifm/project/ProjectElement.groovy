@@ -14,11 +14,17 @@ class ProjectElement extends IfmElement {
 
     Ref project
 
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['resourceElement'])
+    }
+
+
     boolean isProjectElement() {
         return true
     }
 
-    boolean isResource() {
+    boolean isResourceElement() {
         return false
     }
 

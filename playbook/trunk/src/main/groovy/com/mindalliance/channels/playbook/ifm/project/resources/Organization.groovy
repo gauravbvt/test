@@ -32,7 +32,7 @@ class Organization extends Resource {
         if (jurisdiction) jurisdiction.detach()
     }
 
-    boolean isOrganization() {
+    boolean isOrganizationElement() {
         return true
     }
 
@@ -57,7 +57,9 @@ class Organization extends Resource {
         switch (object.deref()) {
             case Organization.class: object.parent = this.reference;  super.doAddToField(field, object); break
             case Position.class:
-            case System.class: object.organization = this.reference; super.doAddToField(field, object); break
+            case System.class:
+                object.organization = this.reference 
+                super.doAddToField(field, object); break
             default: super.doAddToField(field, object);
         }
     }

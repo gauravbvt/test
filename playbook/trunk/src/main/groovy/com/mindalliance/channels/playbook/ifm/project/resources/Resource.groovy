@@ -28,7 +28,7 @@ class Resource extends ProjectElement implements Agent, Locatable {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['agreements'])
+        return (List<String>) (super.transientProperties() + ['agreements', 'organizationResource', 'organizationElement'])
     }
 
     boolean isResource() {
@@ -47,7 +47,7 @@ class Resource extends ProjectElement implements Agent, Locatable {
         return false
     }
 
-    boolean isOrganization() {
+    boolean isOrganizationElement() {
         return false
     }
 

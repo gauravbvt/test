@@ -1,7 +1,8 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.info.Timing
+import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

@@ -17,6 +17,11 @@ import com.mindalliance.channels.playbook.support.RefUtils
     Date createdOn = new Date()
     Date lastModified = new Date()
 
+    @Override
+    protected List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['projectElement', 'modelElement', 'playbookElement'])
+    }
+
     void makeRoot() {
         Ref root = ApplicationMemory.ROOT
         this.id = root.id

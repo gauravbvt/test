@@ -231,7 +231,7 @@ class Project extends IfmElement implements Describable {
     }
 
     List<Ref> findAllPositionsAnywhere() {
-        List<Ref> allPosition = []
+        List<Ref> allPositions = []
         organizations.each {org -> allPositions.addAll(org.positions) }
         return allPositions
     }

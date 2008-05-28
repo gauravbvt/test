@@ -1,7 +1,8 @@
-package com.mindalliance.channels.playbook.ifm.info
+package com.mindalliance.channels.playbook.ifm.spec
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.spec.Spec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

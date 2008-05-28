@@ -23,7 +23,7 @@ public class SharingProtocolPanel extends AbstractComponentPanel {
     protected DropDownChoice deliveryChoice;
     protected RefPreferencesPanel mediaPreferrences;
     protected TimingPanel maxDelayPanel;
-    protected InformationTemplatePanel infoTemplatePanel;
+    protected InformationSpecPanel infoSpecPanel;
 
     public SharingProtocolPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -43,9 +43,9 @@ public class SharingProtocolPanel extends AbstractComponentPanel {
         mediaPreferrences = new RefPreferencesPanel("preferredMedia", this, propPath + ".preferredMediumTypes", isReadOnly(), feedback,
                                                    new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType")));
         addReplaceable(mediaPreferrences);
-        infoTemplatePanel = new InformationTemplatePanel("informationTemplate", this, propPath+".informationTemplate",
+        infoSpecPanel = new InformationSpecPanel("informationSpec", this, propPath+".informationSpec",
                                                           isReadOnly(), feedback);
-        addReplaceable(infoTemplatePanel);
+        addReplaceable(infoSpecPanel);
         maxDelayPanel = new TimingPanel("maxDelay", this, propPath+".maxDelay", isReadOnly(), feedback);
         addReplaceable(maxDelayPanel);
     }

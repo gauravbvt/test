@@ -28,10 +28,10 @@ interface Agent extends Describable, Serializable {
     List<Information> getKnowledgeAwareness(InformationAct act, Agent otherAgent)
 
     // What an agent needs to know at the start of a given information act
-    List<InformationTemplate> getInformationNeeds(InformationAct act)
+    List<InformationNeed> getInformationNeeds(InformationAct act)
 
     // Agent's awareness of another agent's information needs at the start of an information act
-    List<InformationTemplate> getInformationNeedsAwareness(InformationAct act, Agent otherAgent)
+    List<InformationNeed> getInformationNeedsAwareness(InformationAct act, Agent otherAgent)
 
     // Agent's relationships at the start of an information act
     List<Ref> getRelationships(InformationAct act)
@@ -39,11 +39,11 @@ interface Agent extends Describable, Serializable {
     // Agent's sharing agreements at the start of an information act
     List<Ref> getSharingAgreements(InformationAct act)
 
-    // Agent's assignments at the start of an information act
-    List<Assignment> getAssignments(InformationAct act)
+    // Agent's responsibilities at the start of an information act
+    List<Responsibility> getResponsibilities(InformationAct act)
 
-    // Agent's awareneness of another agent's assignments at the start of an information act
-    List<Assignment> getAssignmentsAwareness(InformationAct act, Agent otherAgent)
+    // Agent's awareneness of another agent's responsibilities at the start of an information act
+    List<Responsibility> getResponsibilitiesAwareness(InformationAct act, Agent otherAgent)
 
     // Get list of other agents this agent is demonstrably aware of at the start of an information act
     List<Ref> getAgentsAwareOf(InformationAct act)

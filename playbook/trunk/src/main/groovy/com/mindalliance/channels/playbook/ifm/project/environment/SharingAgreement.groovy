@@ -2,10 +2,11 @@ package com.mindalliance.channels.playbook.ifm.project.environment
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
-import com.mindalliance.channels.playbook.ifm.info.SharingProtocol
-import com.mindalliance.channels.playbook.ifm.info.SharingConstraints
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.ifm.sharing.SharingConstraints
 import com.mindalliance.channels.playbook.ifm.Describable
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -32,7 +33,11 @@ class SharingAgreement extends ProjectElement implements Describable {
     }
 
     String toString() {
-        return "${source.name} shall ${protocol.delivery} ${recipient.name}"
+        Referenceable source = source.deref()
+        String sourceName = (source) ? source.name : "Undefined source"
+        Referenceable recipient = recipient.deref()
+        String recipientName = (recipient) ? recipient.name : "undefined recipient"
+        return "${sourceName} shall ${protocol.delivery} ${recipientName}"
     }
 
     String getName() {
@@ -42,7 +47,7 @@ class SharingAgreement extends ProjectElement implements Describable {
     // queries
 
     List<String> findAllTopics() {
-        List<ElementOfInformation> eois = protocol.informationTemplate.eventDetails
+        List<ElementOfInformation> eois = protocol.informationSpec.eventDetails
         return eois.collect {eoi -> eoi.topic}
     }
     // end queries

@@ -24,7 +24,7 @@ public class SystemForm extends AbstractResourceForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who-what")) {
+        tabs.add(new AbstractTab(new Model("Identity")) {
             public Panel getPanel(String panelId) {
                 return new SystemIdentityTab(panelId, SystemForm.this);
             }

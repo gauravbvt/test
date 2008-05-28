@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.ifm.info.Timing;
+import com.mindalliance.channels.playbook.ifm.Timing;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextField;

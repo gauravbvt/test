@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ifm.info.SharingProtocol
-import com.mindalliance.channels.playbook.ifm.info.SharingConstraints
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.ifm.sharing.SharingConstraints
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 
@@ -21,7 +21,7 @@ class SharingCommitment extends FlowAct {
     // Queries
 
     List<String> findAllTopics() {
-        List<ElementOfInformation> eois = protocol.informationTemplate.eventDetails
+        List<ElementOfInformation> eois = protocol.informationSpec.eventDetails
         return eois.collect {eoi -> eoi.topic}
     }
     

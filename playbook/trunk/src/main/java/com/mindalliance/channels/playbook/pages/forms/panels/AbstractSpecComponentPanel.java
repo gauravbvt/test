@@ -1,16 +1,13 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.ifm.info.LocationSpec;
-import com.mindalliance.channels.playbook.ifm.info.Spec;
+import com.mindalliance.channels.playbook.ifm.spec.LocationSpec;
+import com.mindalliance.channels.playbook.ifm.spec.Spec;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.AttributeModifier;

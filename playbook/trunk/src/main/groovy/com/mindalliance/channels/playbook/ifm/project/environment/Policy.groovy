@@ -1,10 +1,11 @@
 package com.mindalliance.channels.playbook.ifm.project.environment
 
-import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
+import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Describable
-import com.mindalliance.channels.playbook.ifm.info.AgentSpec
+import com.mindalliance.channels.playbook.ifm.spec.AgentSpec
+import com.mindalliance.channels.playbook.ifm.spec.ResourceSpec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,10 +22,10 @@ class Policy extends ProjectElement implements Describable {
     String description = ''
     boolean effective = false // whether the policy is in place in the real world
     String edict =  'forbidden' // either interdicts or obligates
-    AgentSpec sourceAgentSpec = new AgentSpec()
-    AgentSpec recipientAgentSpec = new AgentSpec()
+    ResourceSpec sourceSpec = new ResourceSpec()
+    ResourceSpec recipientSpec = new ResourceSpec()
     List<String> relationshipNames = [] // relationships from source to recipient (ORed)
-    InformationTemplate informationTemplate = new InformationTemplate() // specification of information (not) to be shared -- required
+    InformationSpec informationSpec = new InformationSpec() // specification of information (not) to be shared -- required
     List<String> purposes = [] // constrained (interdicted|obligation-causing) usages of the information
     List<Ref> mediumTypes = [] // what types of communication media must (or must not) be used
 
@@ -51,8 +52,8 @@ class Policy extends ProjectElement implements Describable {
 
 /*
     String partiesMeaning() {
-        String meaning = "The policy applies to any source such that  ${sourceAgentSpec.toString()} "
-        meaning += " that ${relationshipsSummary()} with any recipient such that ${recipientAgentSpec.toString()}."
+        String meaning = "The policy applies to any source such that  ${sourceSpec.toString()} "
+        meaning += " that ${relationshipsSummary()} with any recipient such that ${recipientSpec.toString()}."
         return meaning
     }
 

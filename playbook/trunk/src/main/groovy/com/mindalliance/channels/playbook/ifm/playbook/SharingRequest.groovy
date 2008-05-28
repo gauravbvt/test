@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ifm.info.SharingProtocol
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

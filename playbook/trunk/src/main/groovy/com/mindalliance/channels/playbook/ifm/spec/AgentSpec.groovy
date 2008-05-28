@@ -1,8 +1,11 @@
-package com.mindalliance.channels.playbook.ifm.info
+package com.mindalliance.channels.playbook.ifm.spec
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.ifm.spec.Spec
+import com.mindalliance.channels.playbook.ifm.spec.RelationshipSpec
+import com.mindalliance.channels.playbook.ifm.info.Location
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,15 +16,9 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
  */
 class AgentSpec extends BeanImpl implements Spec {
 
-    List<Ref> roles = [] // agent plays any of these roles, or any role at all if empty list
-    List<Ref> organizationTypes = [] // agent is or is on any of these organization types, or any at all if empty list
+    ResourceSpec resourceSpec = new ResourceSpec()
     RelationshipSpec relationshipSpec  = new RelationshipSpec() // agent has such specified relationships, or any at all if empty
     Location location = new Location() // if defined, agent has location or jurisdiction within
-
-    @Override
-    List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['defined'])
-    }
 
     List<Ref> getResourcesAt(Event event) {
         List<Ref> resources = []
@@ -30,10 +27,10 @@ class AgentSpec extends BeanImpl implements Spec {
             resources = resources.findAll {res ->
                 (res.isOrganizationResource() &&
                         res.organization.organizationTypes.any {ot ->
-                            organizationTypes.any {spec -> ot.implies(spec)}
+                            resourceSpec.organizationTypes.any {spec -> ot.implies(spec)}
                         }
                 ) ||
-                (res.isOrganization() &&
+                (res.isOrganizationElement() &&
                         res.organizationTypes.any {ot ->
                             organizationTypes.any {spec -> ot.implies(spec)}
                         })
@@ -41,7 +38,7 @@ class AgentSpec extends BeanImpl implements Spec {
         }
         if(roles) { // Filter on roles
            resources = resources.findAll {res ->
-                roles.any {spec -> res.hasRole(spec)}
+                resourceSpec.roles.any {spec -> res.hasRole(spec)}
            }
         }
         if (relationshipSpec.isDefined()) {
@@ -57,28 +54,15 @@ class AgentSpec extends BeanImpl implements Spec {
         return resources
     }
 
-    private String orgTypesSummary() {
-        String summary
-        if (organizationTypes.isEmpty()) {
-            summary = "of any type"
-        }
-        else {
-            summary = "classified as "
-            organizationTypes.each {type -> summary += "${type.name} or "}
-            summary = summary.substring(0, summary.size()- 4)
-        }
-        return summary
-    }
-
-    public boolean isDefined() {
-        return !roles.isEmpty() || !organizationTypes.isEmpty() || relationshipSpec.isDefined()
+   public boolean isDefined() {
+        return resourceSpec.isDefined() || relationshipSpec.isDefined()
     }
 
     public boolean matches(Ref element) {
-        return false;  // TODO
+        return resourceSpec.matches(element) && false // TODO
     }
 
     public boolean narrows(Spec spec) {
-        return false;  // TODO
+        return resourceSpec.narrows(spec) && false;  // TODO
     }
 }

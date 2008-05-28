@@ -331,56 +331,6 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
     }
 
     /**
-     * Stores an object using the supplied file object
-     *
-     * @param file The file to use for storing the object
-     * @param obj  the object to store
-     * @throws CachePersistenceException
-     */
-    protected void store(File file, Object obj) throws CachePersistenceException {
-        // check if file exists before testing if parent exists
-        if (!file.exists()) {
-            // check if the directory structure required exists and create it if it doesn't
-            File filepath = new File(file.getParent());
-
-            try {
-                if (!filepath.exists()) {
-                    filepath.mkdirs();
-                }
-            } catch (Exception e) {
-                throw new CachePersistenceException("Unable to create the directory " + filepath);
-            }
-        }
-
-        // Write the object to disk
-        Object object = obj;
-        try {
-            if (object instanceof CacheEntry) {
-                CacheEntry ce = (CacheEntry) object;
-                object = new CacheEntryBean(ce);
-                Object content = ce.getContent();
-                if (content instanceof Mappable) {
-                    Mappable mappable = (Mappable) content;
-                    Map propMap = mappable.toMap();
-                    ((CacheEntryBean) object).setContent(propMap); // Includes key _bean_class_ with value the name of class implementing Bean
-                }
-            }
-            Yaml.dump(object, file);
-        } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).error("Unable to write '" + file + "' in the cache", e);
-            int count = DELETE_COUNT;
-            while (file.exists() && !file.delete() && count != 0) {
-                count--;
-                try {
-                    Thread.sleep(DELETE_THREAD_SLEEP);
-                } catch (InterruptedException ignore) {
-                }
-            }
-            throw new CachePersistenceException("Unable to write '" + file + "' in the cache. Exception: " + e.getClass().getName() + ", Message: " + e.getMessage());
-        }
-    }
-
-    /**
      * Build fully qualified cache file for the specified cache entry key.
      *
      * @param key Cache Entry Key.
@@ -496,6 +446,57 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
     }
 
     /**
+     * Stores an object using the supplied file object
+     *
+     * @param file The file to use for storing the object
+     * @param obj  the object to store
+     * @throws CachePersistenceException
+     */
+    protected void store(File file, Object obj) throws CachePersistenceException {
+        // Logger.getLogger(this.getClass().getName()).info("Storing " + obj + " in " + file.getAbsolutePath());
+        // check if file exists before testing if parent exists
+        if (!file.exists()) {
+            // check if the directory structure required exists and create it if it doesn't
+            File filepath = new File(file.getParent());
+
+            try {
+                if (!filepath.exists()) {
+                    filepath.mkdirs();
+                }
+            } catch (Exception e) {
+                throw new CachePersistenceException("Unable to create the directory " + filepath);
+            }
+        }
+
+        // Write the object to disk
+        Object object = obj;
+        try {
+            if (object instanceof CacheEntry) {
+                CacheEntry ce = (CacheEntry) object;
+                object = new CacheEntryBean(ce);
+                Object content = ce.getContent();
+                if (content instanceof Mappable) {
+                    Mappable mappable = (Mappable) content;
+                    Map propMap = mappable.toMap();
+                    ((CacheEntryBean) object).setContent(propMap); // Includes key _bean_class_ with value the name of class implementing Bean
+                }
+            }
+            Yaml.dump(object, file);
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).error("Unable to write '" + file + "' in the cache", e);
+            int count = DELETE_COUNT;
+            while (file.exists() && !file.delete() && count != 0) {
+                count--;
+                try {
+                    Thread.sleep(DELETE_THREAD_SLEEP);
+                } catch (InterruptedException ignore) {
+                }
+            }
+            throw new CachePersistenceException("Unable to write '" + file + "' in the cache. Exception: " + e.getClass().getName() + ", Message: " + e.getMessage());
+        }
+    }
+
+    /**
      * Retrives a serialized object from the supplied file, or returns
      * <code>null</code> if the file does not exist.
      *
@@ -504,6 +505,7 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
      * @throws CachePersistenceException
      */
     private Object retrieve(File file) throws CachePersistenceException {
+        // Logger.getLogger(this.getClass().getName()).info("Retrieving from " + file.getAbsolutePath());
         Object readContent = null;
         boolean fileExist;
 

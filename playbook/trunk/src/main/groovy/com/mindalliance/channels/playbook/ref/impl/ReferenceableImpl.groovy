@@ -189,8 +189,11 @@ import org.apache.log4j.Logger
 
     List<RefMetaProperty> metaProperties() {
         List<RefMetaProperty> list = []
-        beanProperties().each {name, val ->
+        /*beanProperties().each {name, val ->
             MetaProperty mp = this.getMetaClass().getMetaProperty(name)
+            list.add(new RefMetaProperty(mp.name, mp.type))
+        }*/
+        BeanImpl.writablePropertiesOf(this).each {mp ->
             list.add(new RefMetaProperty(mp.name, mp.type))
         }
         list.sort()

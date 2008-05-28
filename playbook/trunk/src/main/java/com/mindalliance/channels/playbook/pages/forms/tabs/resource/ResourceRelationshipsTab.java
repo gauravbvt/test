@@ -41,6 +41,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
 
     WebMarkupContainer relationshipsDiv;
     RefreshingView relationshipsView;
+    WebMarkupContainer newRelationshipDiv;
     Label newFromAgentNameLabel;
     AutoCompleteTextFieldWithChoices newRelationshipNameField;
     DynamicFilterTree agentsTree;
@@ -102,8 +103,10 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         relationshipsDiv.add(relationshipsView);
         addReplaceable(relationshipsDiv);
         // new relationship
+        newRelationshipDiv = new WebMarkupContainer("newRelationshipDiv");
+        addReplaceable(newRelationshipDiv);
         newFromAgentNameLabel = new Label("newFromAgentName", (String)RefUtils.get(getElement(), "name"));
-        addReplaceable(newFromAgentNameLabel);
+        addReplaceableTo(newFromAgentNameLabel, newRelationshipDiv);
         newRelationshipNameField = new AutoCompleteTextFieldWithChoices("newRelationshipName",
                                                                  new Model(),
                                                                  new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
@@ -114,7 +117,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
                 updateVisibility(target);
             }
         });
-        addReplaceable(newRelationshipNameField);
+        addReplaceableTo(newRelationshipNameField, newRelationshipDiv);
         agentsTree = new DynamicFilterTree("agents", new Model(),
                                                new RefQueryModel(getProject(), new Query("findAllResourcesExcept", RefUtils.get(getElement(), "fromAgent"))),
                                                SINGLE_SELECTION) {
@@ -125,9 +128,9 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
                 target.addComponent(reverseFromAgentNameLabel);
             }
         };
-        addReplaceable(agentsTree);
+        addReplaceableTo(agentsTree, newRelationshipDiv);
         reverseRelationshipDiv = new WebMarkupContainer("reverseRelationshipDiv");
-        addReplaceable(reverseRelationshipDiv);
+        addReplaceableTo(reverseRelationshipDiv, newRelationshipDiv);
         reverseFromAgentNameLabel = new Label("reverseFromAgentName", "");
         addReplaceableTo(reverseFromAgentNameLabel,reverseRelationshipDiv);
         reverseRelationshipNameField = new AutoCompleteTextFieldWithChoices("reverseRelationshipName",
@@ -161,25 +164,19 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
                     RefUtils.add(getProject(), "relationships", newReverseRelationship.persist());
                 }
                 newRelationshipName = "";
-                newRelationshipNameField.clearInput();
                 newRelationshipNameField.setModelObject("");
-                newRelationshipNameField.updateModel();
-                target.addComponent(newRelationshipNameField);
                 newToAgent = null;
                 agentsTree.setSelections(new Model());
                 agentsTree.modelChanged();
-                target.addComponent(agentsTree);
                 newReverseRelationshipName = "";
-                reverseRelationshipNameField.clearInput();
                 reverseRelationshipNameField.setModelObject("");
-                reverseRelationshipNameField.updateModel();
-                target.addComponent(reverseRelationshipNameField);
                 updateVisibility(target);
+                target.addComponent(newRelationshipDiv);
                 target.addComponent(relationshipsDiv);
             }
         };
         addRelationshipsButton.setEnabled(false);
-        addReplaceable(addRelationshipsButton);
+        addReplaceableTo(addRelationshipsButton, newRelationshipDiv);
     }
 
     private void updateVisibility(AjaxRequestTarget target) {

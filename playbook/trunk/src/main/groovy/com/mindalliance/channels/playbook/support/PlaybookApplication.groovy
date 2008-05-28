@@ -68,8 +68,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-       return PlaybookPage.class
-       // return FormTest.class
+        return PlaybookPage.class
+      // return FormTest.class
     }
 
     @Override
@@ -127,7 +127,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         p.addPlaybook(store(new Playbook(name: "Playbook C", description: "This is Playbook C")))
 
         Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
-        p.addPerson(joe)
+        p.addPerson(store(joe))
 
         Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
         Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
@@ -156,7 +156,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
 
         p.addRelationship(store(new Relationship(fromAgent: joe.reference, toAgent: jane.reference , name: "family")))
-        store(joe)
 
         Ref ag1 = store(new SharingAgreement(source: joe.reference, recipient: jane.reference))
         Ref ag2 = store(new SharingAgreement(source: joe.reference, recipient: acme.reference))

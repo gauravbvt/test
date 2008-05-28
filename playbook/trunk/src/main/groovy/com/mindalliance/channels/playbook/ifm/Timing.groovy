@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.info
+package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import org.joda.time.Duration
