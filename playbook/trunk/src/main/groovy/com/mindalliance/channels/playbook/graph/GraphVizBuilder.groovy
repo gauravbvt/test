@@ -33,7 +33,7 @@ class GraphVizBuilder extends BuilderSupport {
     }
 
     public GraphVizBuilder(Writer writer) {
-        this(writer, []);
+        this(writer, new HashMap());
     }
 
 
