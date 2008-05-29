@@ -25,7 +25,7 @@ class GraphVizRenderer {
         dotWriter = new StringWriter();
     }
 
-    public GraphVizBuilder getBuilder(styles = []) {
+    public GraphVizBuilder getBuilder(Map styles = [:]) {
         dotWriter = new StringWriter();
         return new GraphVizBuilder(dotWriter, styles)
     }
@@ -45,7 +45,7 @@ class GraphVizRenderer {
     private renderProcess(output,format) {
         if (dotWriter != null) {
             def command="dot -T${format}"
-            def proc = command.execute()
+            Process  proc = command.execute()
             proc.withWriter({Writer wr ->
                 wr.print dotWriter.toString()
             })

@@ -19,6 +19,7 @@ import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.support.models.RefQueryModel
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.support.persistence.PersistentRef
+import com.mindalliance.channels.playbook.graph.GraphVizRenderer
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,7 +47,7 @@ public class TestPlaybook extends TestCase {
         channels = app.channels
     }
 
-   void testSerialization() {
+    void testSerialization() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream()
         ObjectOutputStream os = new ObjectOutputStream(bos)
         os.writeObject(app)
@@ -55,7 +56,7 @@ public class TestPlaybook extends TestCase {
 
     // Tests session-based persistency, dereferencing and operatons on fields
 
-   void testMemory() {
+    void testMemory() {
         assertTrue(sessionMem.isEmpty())
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
@@ -145,7 +146,7 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
     }
 
-   void testExportImport() {
+    void testExportImport() {
         int exportCount = app.memory.exportRef(channels, 'channels')
         assert exportCount > 0
         int importCount = app.memory.importRef('channels')
@@ -198,7 +199,7 @@ public class TestPlaybook extends TestCase {
         assert other.name == 'Other'
         again = (Ref) Query.execute(channels, "findProjectNamed", 'Other')
         assert qm.sessionCacheSize() == 1
-        other.name ="Glafbrgz"
+        other.name = "Glafbrgz"
         assert qm.sessionCacheSize() == 0
         session.abort()
         assert qm.sessionCacheSize() == 0
@@ -234,7 +235,8 @@ public class TestPlaybook extends TestCase {
         project = (Ref) rqm.getObject()
         assert project.name == 'new project'
     }
-   void testSemanticMatching() {
+
+    void testSemanticMatching() {
         SemanticMatcher matcher = SemanticMatcher.getInstance()
         Logger logger = Logger.getLogger(matcher.class)
         int score
@@ -273,4 +275,100 @@ public class TestPlaybook extends TestCase {
         assert score == SemanticMatcher.VERY_HIGH
     }
 
+    void testGraphVizBuilder() {
+        Map styleTemplate = [graph: [rankdir: 'LR', fontname: 'Helvetica'],
+                agent: [color: 'lightgray', fillcolor: 'ghostwhite', style: 'filled', fontname: 'Helvetica-Bold'],
+                node: [fontname: 'Helvetica', fillcolor: 'white', style: 'filled'],
+                need: [shape: 'record', fillcolor: 'cornsilk2', style: 'filled, rounded'],
+                info: [shape: 'record', fillcolor: 'cornsilk1', style: 'filled, rounded'],
+                infoEdge: [dir: 'none', style: 'dotted'],
+                filter: [shape: 'trapezium', orientation: '270', fillcolor: 'honeydew2'],
+                request: [shape: 'diamond', fillcolor: 'lavender'],
+                inform: [shape: 'diamond', fillcolor: 'lavenderblush2'],
+                activity: [shape: 'ellipse', fillcolor: 'azure2'],
+                observe: [shape: 'egg', fillcolor: 'azure2'],
+                confim: [shape: 'diamond', fillcolor: 'lavender', style: 'filled, bold'],
+                event: [shape: 'octagon', fillcolor: 'mistyrose'],
+                invisible: [style: 'invisible']
+        ]
+
+        def renderer = new GraphVizRenderer()
+        def builder = renderer.getBuilder(styleTemplate)
+        println "Building Cause and Effect graph"
+        builder.digraph(name: 'needResolution', template: 'graph') {
+            nodeDefaults(template: 'node')
+
+            subgraph(name: 'T1', label: 'Terrorist 1', template: 'agent') {
+
+                activity1(label: "Activity\n(Steal explosives)", template: 'activity')
+                event0(label: "Explosives\nstolen", template: 'event')
+                informing(label: "Informing\n(Calling\naccomplices)", template: 'inform')
+                edge(source: 'activity1', target: 'event0')
+                edge(source: 'activity1', target: 'informing');
+            }
+            subgraph(name: 'T2', label: 'Terrorists 2', template: 'agent') {
+
+                activity1(label: "Activity\n(Searching Web)", template: 'activity')
+            }
+            subgraph(name: 'ATT', label: 'ATT', template: 'agent') {
+                observing(label: "Observing\n(Recording call)", template: 'observe')
+                informing(label: "Informing", template: 'inform')
+            }
+            subgraph(name: 'Google', label: "Google", template: 'agent') {
+                observing(label: "Observing\n(Recording searches)", template: 'observe')
+                informing(label: "Informing", template: 'inform')
+            }
+            subgraph(name: 'DHS', label: 'DHS', template: 'agent') {
+                informing(label: "Informing\n(Threat)", template: 'inform')
+            }
+            subgraph(name: 'HM', label: 'Hagerstown Maryland Agency', template: 'agent') {
+                activity1(label: "Activity\n(Traffic stop)", template: 'activity')
+                event1(label: "Stolen\nexplosives\nfound", template: 'event')
+                edge(source: 'activity1', target: 'event1')
+            }
+            subgraph(name: 'MSP_FBI', label: 'Maryland State Police and FBI', template: 'agent') {
+                activity1(label: "Activity\n(Investigation)", template: 'activity')
+                event2(label: "Suspects\ncalled Baltimore", template: 'event')
+            }
+            subgraph(name: 'BALT', label: 'Baltimore Agency', template: 'agent') {
+                activity1(label: "Activity\\(Phone records\nsearch)", template: 'activity')
+                activity2(label: "Activity\\(Web access\nsearch)", template: 'activity')
+                requesting1(label: "Requesting\n(Phone records)", template: 'request')
+                requesting2(label: "Requesting\n(Web records)", template: 'request')
+                informing(label: "Informing\n(Threat\nterrorist act)", template: 'inform')
+                edge(source: 'activity1', target: 'requesting1')
+                edge(source: 'activity2', target: 'requesting2')
+                nothing()
+            }
+            subgraph(name: 'NJ_PA', label: 'NJ and PA agencies', template: 'agent') {
+                ;
+                activity1(label: "Activity\n(Surveillance)", template: 'activity')
+                informing(label: "Informing\n(Increased\nthreat level)", template: 'inform')
+                nothing()
+            }
+            subgraph(name: 'NJ_PA_Tran', label: 'NJ and PA transit systems', template: 'agent') {
+                nothing()
+            }
+            edge(source: 'T1_informing', target: 'T2_activity1')
+            edge(source: 'DHS_informing', target: 'HM_activity1')
+            edge(source: 'T1_informing', target: 'ATT_observing', dir: 'none')
+            edge(source: 'T2_activity1', target: 'Google_observing', dir: 'none')
+            edge(source: 'HM_event1', target: 'MSP_FBI_activity1')
+            edge(source: 'MSP_FBI_activity1', target: 'MSP_FBI_event2')
+            edge(source: 'MSP_FBI_event2', target: 'BALT_activity1')
+            edge(source: 'MSP_FBI_event2', target: 'BALT_activity2')
+            edge(source: 'BALT_requesting1', target: 'ATT_informing')
+            edge(source: 'BALT_requesting2', target: 'Google_informing')
+            edge(source: 'ATT_informing', target: 'BALT_informing')
+            edge(source: 'Google_informing', target: 'BALT_informing')
+            edge(source: 'BALT_informing', target: 'NJ_PA_activity1')
+            edge(source: 'BALT_informing', target: 'NJ_PA_informing')
+            edge(source: 'NJ_PA_informing', target: 'NJ_PA_Tran_nothing')
+        }
+        println "Rendering Cause and Effect SVG to src/test/output/causes.svg"
+        def out = new FileOutputStream(new File('src/test/output/causes.svg'))
+        println renderer.dot
+        renderer.render(out, "svg")
+        out.close()
+    }
 }

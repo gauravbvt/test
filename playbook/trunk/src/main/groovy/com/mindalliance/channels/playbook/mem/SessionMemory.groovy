@@ -154,7 +154,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         }
     }
 
-    private void reset() {
+    void reset() {
         changes = new HashSet<Ref>()
         deletes = new HashSet<Ref>()
         begun = new HashMap<Ref, Referenceable>()
