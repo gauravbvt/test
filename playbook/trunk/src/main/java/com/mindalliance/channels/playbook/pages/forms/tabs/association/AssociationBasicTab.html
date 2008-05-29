@@ -5,19 +5,53 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
+    <fieldset>
+        <legend>Description</legend>
+        <textarea wicket:id="description" rows="3" cols="40">[description]</textarea>
+    </fieldset>
     <table>
-       <tr>
-           <td>
-               <span wicket:id="actorName">[actor name]</span>
-           </td>
-           <td>
-               <input wicket:id="relationshipName" type = "text" size = "60"/>
-           </td>
-           <td>
-               <span wicket:id="toAgent">[agent tree]</span>
-           </td>
-       </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Agent</legend>
+                    <span wicket:id="actorAgent">[actor agent]</span>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>enters into relationship</legend>
+                    <input wicket:id="relationshipName" type="text" size="40"/>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>with</legend>
+                    <span wicket:id="toAgent">[agent tree]</span>
+                </fieldset>
+            </td>
+        </tr>
     </table>
+    <div wicket:id="reverseRelationship">
+        <fieldset>
+            <legend>and reciprocally</legend>
+            <table>
+                <tr>
+                    <td>
+                        <span wicket:id="toAgentName">[to agent name]</span>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <legend>enters into relationship</legend>
+                            <input wicket:id="reverseRelationshipName" type="text" size="40">
+                        </fieldset>
+                    </td>
+                    <td>
+                        with <span wicket:id="actorAgentName">[actor agent name]</span>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
     <wicket:child/>
 </wicket:extend>
 </body>

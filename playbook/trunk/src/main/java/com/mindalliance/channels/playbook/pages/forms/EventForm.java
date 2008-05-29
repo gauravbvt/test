@@ -26,7 +26,7 @@ public class EventForm extends AbstractPlaybookElementForm {
                  return new EventBasicTab(panelId, EventForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model("Location")) {
              public Panel getPanel(String panelId) {
                  return new EventLocationTab(panelId, EventForm.this);
              }

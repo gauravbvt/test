@@ -117,7 +117,8 @@ class Channels extends IfmElement {
                 // transient relationships created by Associations
                 playbook.informationActs.each {act ->
                     if (act.type == "Association") {
-                        countedSet.add(act.relationshipName)
+                        if (act.relationshipName) countedSet.add(act.relationshipName)
+                        if (act.reverseRelationshipName) countedSet.add(act.reverseRelationshipName)
                     }
                 }
                 // agent specs in groups

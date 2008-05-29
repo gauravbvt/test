@@ -114,11 +114,23 @@ class Playbook extends ProjectElement implements Describable {
 
     // Whether an agent is the same as or implied by another agent at start of an event
     boolean agentImplied(Ref agent, Ref otherAgent, Event event) {
+        if (agent == null || otherAgent == null) return false
         if (agent == otherAgent) return true
         List<Ref> otherResources = otherAgent.getResourcesAt(event)
         // implied if it is not true that at least one resource defined by the agent is not also defined by the other agent
         boolean implied = !agent.getResourcesAt(event).any {res -> !otherResources.contains(res)}
         return implied
+    }
+
+    List<Ref> findAllOccurrences() {
+        return findAllOccurrencesExcept(null)
+    }
+
+    List<Ref> findAllOccurrencesExcept(Ref occurrence) {
+        List<Ref> occurrences = []
+        occurrences.addAll(events.findAll{it != occurrence})
+        occurrences.addAll(informationActs.findAll{it != occurrence})
+        return occurrences
     }
 
     // end queries

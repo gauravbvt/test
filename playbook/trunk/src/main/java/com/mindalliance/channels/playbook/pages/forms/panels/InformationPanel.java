@@ -35,7 +35,7 @@ public class InformationPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         eventTree = new DynamicFilterTree("event", new RefPropertyModel(getElement(), propPath+".event"),
-                                           new RefQueryModel(getScope(), new Query("findAllEvents")), SINGLE_SELECTION) {
+                                           new RefQueryModel(getPlaybook(), new Query("findAllOccurrences")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  Ref selected = eventTree.getNewSelection();
                 RefUtils.set(getElement(), "event", selected);
@@ -44,7 +44,7 @@ public class InformationPanel extends AbstractComponentPanel {
         };
         addReplaceable(eventTree);
         eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(getElement(), propPath+".eventTypes"),
-                                            new RefQueryModel(getScope(), new Query("findAllTypes", "EventType"))) {
+                                            new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))) {
              public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  List<Ref> selected = eventTypesTree.getNewSelections();
                  RefUtils.set(getElement(), "eventTypes", selected);
@@ -52,7 +52,7 @@ public class InformationPanel extends AbstractComponentPanel {
                  target.addComponent(eoisPanel);
              }
          };
-         addReplaceable(eventTree);
+         addReplaceable(eventTypesTree);
         RefQueryModel topicChoicesModel = new RefQueryModel(EventType.class,
                 new Query("findAllTopicsIn",
                         new RefPropertyModel(getElement(), propPath + ".eventTypes")));

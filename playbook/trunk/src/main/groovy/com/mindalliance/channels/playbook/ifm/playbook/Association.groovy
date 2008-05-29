@@ -14,13 +14,18 @@ class Association extends InformationAct {   // Creation of a relationship
 
     String relationshipName = ''
     Ref toAgent
+    String reverseRelationshipName = ''
 
     // Queries
 
     boolean createsMatchingRelationship(Relationship relationship) {
-        if (relationship.name != relationshipName) return false
-        if (relationship.agent && !this.playbook.agentImplied(relationship.agent, toAgent, this)) return false
-        return true
+        if (relationship.name == relationshipName &&
+                this.playbook.agentImplied(relationship.fromAgent, actorAgent, this
+                        && this.playbook.agentImplied(relationship.toAgent, toAgent))) return true
+        if (relationship.name == reverseRelationshipName &&
+                this.playbook.agentImplied(relationship.fromAgent, toAgent, this
+                        && this.playbook.agentImplied(relationship.toAgent, actorAgent))) return true
+        return false
     }
 
     // End queries
