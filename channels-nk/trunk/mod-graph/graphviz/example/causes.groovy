@@ -17,7 +17,7 @@ styleTemplate = [graph: [rankdir: 'LR', fontname: 'Helvetica'],
                      observe: [shape: 'egg', fillcolor: 'azure2'],
                      confim: [shape: 'diamond', fillcolor: 'lavender', style: 'filled, bold'],
                      event: [shape: 'octagon', fillcolor: 'mistyrose'],
-                     invisible: [style: 'invisible']
+                     invisible: [style: 'invisible'] 
 ];
 
 def drawGraph(builder) {
