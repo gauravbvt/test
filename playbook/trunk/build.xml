@@ -9,8 +9,4 @@
            <fileset dir="${from}"/>
         </copy>
     </target>
-
-    <target name="patchStubs">
-        <patch patchfile="kludge.patch" backups="false" dir="target" strip="0"/>
-    </target>
 </project>
