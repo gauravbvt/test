@@ -8,7 +8,7 @@ package com.mindalliance.channels.playbook.query
  */
 class QueryCache implements Serializable {
 
-    private Map cache = [:]
+    private Map cache = new HashMap()
 
     Set getCachedExecutions() {
         return cache.keySet()
@@ -28,12 +28,12 @@ class QueryCache implements Serializable {
 
 
     void cleanup(String queryName) {
-        List dirtyExecs = cache.keySet().findAll {qe -> qe.query.name == queryName}
+        Collection dirtyExecs = cache.keySet().findAll {qe -> qe.query.name == queryName}
         dirtyExecs.each {qe -> cache.put(qe, null)}
     }
 
     void clear() {
-        cache = [:]
+        cache = new HashMap()
     }
 
 }
