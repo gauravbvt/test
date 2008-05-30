@@ -10,11 +10,17 @@ import org.apache.wicket.model.IModel;
  */
 public class FilterCheck extends Panel {
 
+    private AjaxCheckBox checkBox;
+
+    public AjaxCheckBox getCheckBox() {
+        return checkBox;
+    }
+
     public FilterCheck( String id, IModel model ) {
         super( id );
         setRenderBodyOnly( true );
 
-        final AjaxCheckBox checkBox = new AjaxCheckBox( "filter-check", model ){
+        checkBox = new AjaxCheckBox( "filter-check", model ){
             protected void onUpdate( AjaxRequestTarget target ) {
                 onFilterSelect( target );
             }
@@ -24,6 +30,6 @@ public class FilterCheck extends Panel {
         add( checkBox );
     }
 
-    public void onFilterSelect( AjaxRequestTarget target ) {        
+    public void onFilterSelect( AjaxRequestTarget target ) {
     }
 }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.Tree;
@@ -15,6 +16,7 @@ import javax.swing.tree.TreeNode;
 public class FilterTree extends Tree {
 
     private boolean singleSelect;
+    private Component oldTarget;
 
     protected FilterTree( String id ) {
         super( id );
@@ -54,8 +56,8 @@ public class FilterTree extends Tree {
         final Filter f = (Filter) item.getModelObject();
         assert( f.getChildCount() == 0 || f.getChildAt( 0 ).getParent() == f );
         String selector = isSingleSelect()? "uniqueSelection" : "forceSelected" ;
-        if ( !isSingleSelect() || f.getChildCount() == 0 )
-            item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ){
+        if ( !isSingleSelect() || f.getChildCount() == 0 ) {
+            item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ) {
                 public void onFilterSelect( AjaxRequestTarget target ) {
                     DefaultTreeModel tm = getTreeModel();
                     tm.nodeStructureChanged( f );
@@ -65,10 +67,19 @@ public class FilterTree extends Tree {
                         tm.nodeChanged( parent );
                         parent = parent.getParent();
                     }
+
+                    // Make sure old selection (now unchecked) is refreshed in browser
+                    if ( isSingleSelect() && oldTarget != null ) {
+                        target.addComponent( oldTarget );
+                    }
+                    oldTarget = this.getCheckBox();
+
                     updateTree( target );
+
                     FilterTree.this.onFilterSelect( target, f );
                 }
             } );
+        }
         else
             item.add( new WebMarkupContainer( "filter-selector" ) );
         if ( f.isExpanded() )

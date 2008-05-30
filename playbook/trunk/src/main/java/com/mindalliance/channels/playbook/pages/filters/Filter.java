@@ -359,7 +359,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
             for ( Filter kid : children ) {
                 kid.simplify();
-                if ( kid.isSelected() )
+                if ( kid.isSelected() || kid.isExpanded() )
                     allDeselected = false;
                 else
                     allSelected = false;
