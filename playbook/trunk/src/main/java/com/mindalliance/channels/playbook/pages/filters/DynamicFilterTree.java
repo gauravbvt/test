@@ -50,6 +50,11 @@ public class DynamicFilterTree extends FilterTree {
         List<Ref> choiceList = refs( choices );
         List<Ref> selectionList = refs( selections );
 
+        // Set selection model list to new list (otherwise interface won't sync)
+        Object o = selections.getObject();
+        if ( o != null && o instanceof List )
+            selections.setObject( selectionList );
+
         Filter filter = new RootFilter(new RefContainer(choiceList), false);
         filter.setShowingLeaves(true);
 
