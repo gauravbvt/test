@@ -10,9 +10,8 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
  * Date: May 14, 2008
  * Time: 8:11:48 PM
  */
-interface Agent extends Describable, Serializable {
+interface Agent extends Named, Described, Serializable {
 
-    String getName()    
     List<Ref> getResourcesAt(Event event)
     boolean isResourceElement()
     boolean isTeam()

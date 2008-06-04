@@ -2,8 +2,9 @@ package com.mindalliance.channels.playbook.ifm.project.environment
 
 import com.mindalliance.channels.playbook.ifm.info.LocationInfo
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.Describable
+import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,7 +13,7 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
  * Date: Apr 21, 2008
  * Time: 3:30:47 PM
  */
-class Place extends ProjectElement implements Describable {
+class Place extends ProjectElement implements Named, Described {
 
     String name = ''
     String description = ''

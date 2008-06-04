@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.project
 
-import com.mindalliance.channels.playbook.ifm.Describable
+import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,7 +23,7 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Person
  * Date: Mar 19, 2008
  * Time: 2:10:46 PM
  */
-class Project extends IfmElement implements Describable {
+class Project extends IfmElement implements Named, Described {
 
     String name = 'Unnamed'
     String description = ''

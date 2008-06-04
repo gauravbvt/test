@@ -1,12 +1,14 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.Describable
+import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import org.joda.time.Duration
+import com.mindalliance.channels.playbook.graph.Timeline
+import com.mindalliance.channels.playbook.ifm.Described
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +17,7 @@ import org.joda.time.Duration
 * Date: Apr 17, 2008
 * Time: 1:26:15 PM
 */
-class Playbook extends ProjectElement implements Describable {
+class Playbook extends ProjectElement implements Described {
 
     String name = ''
     String description = ''
@@ -63,15 +65,9 @@ class Playbook extends ProjectElement implements Describable {
     // Generate causal diagram as SVG
     // urls must be "javascript:svg_wicket_call('__CALLBACK__','some ref id')"
     String causalDiagram(String[] dimensions) { // TODO
-        int width = Integer.valueOf(dimensions[0]) // in inches
-        int height = Integer.valueOf(dimensions[1]) // in inches
-        TreeMap timePoints = new TreeMap()
-        findAllOccurrences().each {occ ->
-            Duration start = occ.startTime()
-            timePoints[start] = occ
-        }
-        // Build SVG of requested dimensions
-        String svg = "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='600px' height='400px' style='display:block;'><g id='node2' class='node'><title>T1_activity1</title><a xlink:href='javascript:svg_wicket_call(&#39;__CALLBACK__&#39;,&#39;some_ref_id&#39;)' xlink:title='Activity\\n(Steal explosives)'><ellipse style='fill:#e0eeee;stroke:black;' cx='2' cy='21' rx='71.8428' ry='29.4156'/><text text-anchor='middle' x='2' y='24' style='font-family:Nimbus Sans L;font-weight:regular;font-size:11.34pt;'>Activity</text><text text-anchor='middle' x='2' y='7' style='font-family:Nimbus Sans L;font-weight:regular;font-size:11.34pt;'>(Steal explosives)</text></a></g></svg>";
+        Timeline timeline = new Timeline(this, dimensions)
+        String svg = timeline.svg
+        // String svg = "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='600px' height='400px' style='display:block;'><g id='node2' class='node'><title>T1_activity1</title><a xlink:href='javascript:svg_wicket_call(&#39;__CALLBACK__&#39;,&#39;some_ref_id&#39;)' xlink:title='Activity\\n(Steal explosives)'><ellipse style='fill:#e0eeee;stroke:black;' cx='2' cy='21' rx='71.8428' ry='29.4156'/><text text-anchor='middle' x='2' y='24' style='font-family:Nimbus Sans L;font-weight:regular;font-size:11.34pt;'>Activity</text><text text-anchor='middle' x='2' y='7' style='font-family:Nimbus Sans L;font-weight:regular;font-size:11.34pt;'>(Steal explosives)</text></a></g></svg>";
         return svg
     }
 

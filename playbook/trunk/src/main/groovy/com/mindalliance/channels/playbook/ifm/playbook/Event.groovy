@@ -1,12 +1,13 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ifm.info.Location
-import com.mindalliance.channels.playbook.ifm.Describable
+import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ref.Ref
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,7 +19,7 @@ import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 // Something of consequence becomes true somewhere at some point in time
 // How it is classified and accounted is the point of views of individual agents
 // that they may share with others fully or partially, dispute and confirm
-class Event extends PlaybookElement implements Describable {
+class Event extends PlaybookElement implements Named, Described {
 
     String name = ''
     String description = ''

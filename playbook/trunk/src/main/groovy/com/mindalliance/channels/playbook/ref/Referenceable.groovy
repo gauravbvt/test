@@ -3,6 +3,9 @@ package com.mindalliance.channels.playbook.ref
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
 
 interface Referenceable extends Bean {
+
+    String getId()
+    String getDb()
     Ref getReference()
     void changed() // give the object a chance to clean up computed data
     void changed(String propName) // signals that the value of propName has changed

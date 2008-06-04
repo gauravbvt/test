@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ifm.Timing
  */
 class Cause extends BeanImpl {
 
-    Ref trigger // another Causable
+    Ref trigger // another Event
     Timing delay = new Timing(amount:0)
 
     @Override

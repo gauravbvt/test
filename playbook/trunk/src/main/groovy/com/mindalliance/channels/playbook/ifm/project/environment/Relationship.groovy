@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.project.environment
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 * Date: Apr 17, 2008
 * Time: 10:45:25 AM
 */
-class Relationship extends ProjectElement {
+class Relationship extends ProjectElement implements Named {
 
     Ref fromAgent
     Ref toAgent
