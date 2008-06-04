@@ -25,7 +25,7 @@ class GraphVizBuilder extends BuilderSupport {
 
     public GraphVizBuilder(Writer writer, Map styleMap) {
         if (writer == null)
-            throw NullPointerException("No writer provided")
+            throw new NullPointerException("No writer provided")
 
         _bw = new BufferedWriter(writer)
         this.styleMap = styleMap
@@ -55,10 +55,13 @@ class GraphVizBuilder extends BuilderSupport {
             _bw.newLine()
             _bw.close()
             prefixStack.pop();
-        } else if ((node as String) == "subgraph") {
+        } else if ((node as String) == "cluster") {
             _bw.write("}")
             _bw.newLine()
             prefixStack.pop();
+        } else if ((node as String) == "subgraph") {
+            _bw.write("}")
+            _bw.newLine()
         } else {
             _bw.write(";\n")
         }
@@ -88,7 +91,6 @@ class GraphVizBuilder extends BuilderSupport {
         case "nodeDefaults":
             if (_nodeDefaultsDefined)
                 throw new Exception("Node defaults must be defined only once.")
-
             _bw.write("node ")
             _nodeDefaultsDefined = true
             _bw.write(constructAttributeString(attributes, []))
@@ -100,15 +102,20 @@ class GraphVizBuilder extends BuilderSupport {
             _bw.write("${prefixStack.peek()}${attributes.source} -> ${prefixStack.peek()}${attributes.target}")
             _bw.write(constructAttributeString(attributes, ["source", "target"]))
             break ;
-        case "subgraph":
+        case "cluster":
             String graphName = attributes.name as String
             _bw.write("subgraph cluster_$graphName {")
             _bw.newLine();
-
             if (attributes.size() < 1) break
             _bw.write(constructDigraphAttributeString(attributes, ["name"]))
             _bw.newLine()
             prefixStack.push("${graphName}_");
+            break;
+        case "subgraph":
+            _bw.write("{")
+            if (attributes.size() < 1) break
+            _bw.write(constructDigraphAttributeString(attributes, []))
+            _bw.newLine()
             break;
         case "nothing":
             attributes = [style: 'invisible']

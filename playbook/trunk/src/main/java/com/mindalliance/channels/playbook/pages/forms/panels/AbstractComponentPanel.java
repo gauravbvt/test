@@ -35,6 +35,8 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     // protected WebMarkupContainer div;
     protected FeedbackPanel feedback;
 
+    private Object editedComponent;
+
     public AbstractComponentPanel(String id, ElementPanel parentPanel, String propPath , boolean readOnly, FeedbackPanel feedback) {
         super(id);
         this.parentPanel = parentPanel;
@@ -60,7 +62,10 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     }
 
     public Object getComponent() {
-        return (Object)RefUtils.get(getElement(), propPath);
+        if (editedComponent == null) {
+         editedComponent = RefUtils.get(getElement(), propPath);
+        }
+        return editedComponent;
     }
 
     public Object getParentObject() {
@@ -135,7 +140,7 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
 
     public void onDetach() {
         try {
-            Object component = (Object)RefUtils.get(getElement(), propPath);
+            Object component = getComponent();
             if ( component != null && component instanceof Bean )
                 ((Bean)component).detach();
         } catch (RuntimeException e) {

@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -56,6 +57,16 @@ public class FormTest extends WebPage {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @see org.apache.wicket.Page#configureResponse()
+     */
+    protected void configureResponse() {
+        super.configureResponse();
+        WebResponse response = getWebRequestCycle().getWebResponse();
+        response.setContentType("application/xhtml+xml");
+    }
+
 
     public Ref getSelected() {
         return selected;

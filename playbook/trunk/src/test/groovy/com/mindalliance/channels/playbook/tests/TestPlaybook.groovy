@@ -295,10 +295,16 @@ public class TestPlaybook extends TestCase {
         def renderer = new GraphVizRenderer()
         def builder = renderer.getBuilder(styleTemplate)
         println "Building Cause and Effect graph"
-        builder.digraph(name: 'needResolution', template: 'graph') {
+        builder.digraph(name: 'needResolution', size:'6,4', template: 'graph') {
             nodeDefaults(template: 'node')
 
-            subgraph(name: 'T1', label: 'Terrorist 1', template: 'agent') {
+            subgraph(rank: 'same') {
+                one(label:'One', template:'node')
+                two(label:'Two', template:'node')
+                three(label:'Three', template:'node')
+            }
+
+            cluster(name: 'T1', label: 'Terrorist 1', template: 'agent') {
 
                 activity1(label: "Activity\n(Steal explosives)", template: 'activity')
                 event0(label: "Explosives\nstolen", template: 'event')
@@ -306,31 +312,31 @@ public class TestPlaybook extends TestCase {
                 edge(source: 'activity1', target: 'event0')
                 edge(source: 'activity1', target: 'informing');
             }
-            subgraph(name: 'T2', label: 'Terrorists 2', template: 'agent') {
+            cluster(name: 'T2', label: 'Terrorists 2', template: 'agent') {
 
                 activity1(label: "Activity\n(Searching Web)", template: 'activity')
             }
-            subgraph(name: 'ATT', label: 'ATT', template: 'agent') {
+            cluster(name: 'ATT', label: 'ATT', template: 'agent') {
                 observing(label: "Observing\n(Recording call)", template: 'observe')
                 informing(label: "Informing", template: 'inform')
             }
-            subgraph(name: 'Google', label: "Google", template: 'agent') {
+            cluster(name: 'Google', label: "Google", template: 'agent') {
                 observing(label: "Observing\n(Recording searches)", template: 'observe')
                 informing(label: "Informing", template: 'inform')
             }
-            subgraph(name: 'DHS', label: 'DHS', template: 'agent') {
+            cluster(name: 'DHS', label: 'DHS', template: 'agent') {
                 informing(label: "Informing\n(Threat)", template: 'inform')
             }
-            subgraph(name: 'HM', label: 'Hagerstown Maryland Agency', template: 'agent') {
+            cluster(name: 'HM', label: 'Hagerstown Maryland Agency', template: 'agent') {
                 activity1(label: "Activity\n(Traffic stop)", template: 'activity')
                 event1(label: "Stolen\nexplosives\nfound", template: 'event')
                 edge(source: 'activity1', target: 'event1')
             }
-            subgraph(name: 'MSP_FBI', label: 'Maryland State Police and FBI', template: 'agent') {
+            cluster(name: 'MSP_FBI', label: 'Maryland State Police and FBI', template: 'agent') {
                 activity1(label: "Activity\n(Investigation)", template: 'activity')
                 event2(label: "Suspects\ncalled Baltimore", template: 'event')
             }
-            subgraph(name: 'BALT', label: 'Baltimore Agency', template: 'agent') {
+            cluster(name: 'BALT', label: 'Baltimore Agency', template: 'agent') {
                 activity1(label: "Activity\\(Phone records\nsearch)", template: 'activity')
                 activity2(label: "Activity\\(Web access\nsearch)", template: 'activity')
                 requesting1(label: "Requesting\n(Phone records)", template: 'request')
@@ -340,13 +346,13 @@ public class TestPlaybook extends TestCase {
                 edge(source: 'activity2', target: 'requesting2')
                 nothing()
             }
-            subgraph(name: 'NJ_PA', label: 'NJ and PA agencies', template: 'agent') {
+            cluster(name: 'NJ_PA', label: 'NJ and PA agencies', template: 'agent') {
                 ;
                 activity1(label: "Activity\n(Surveillance)", template: 'activity')
                 informing(label: "Informing\n(Increased\nthreat level)", template: 'inform')
                 nothing()
             }
-            subgraph(name: 'NJ_PA_Tran', label: 'NJ and PA transit systems', template: 'agent') {
+            cluster(name: 'NJ_PA_Tran', label: 'NJ and PA transit systems', template: 'agent') {
                 nothing()
             }
             edge(source: 'T1_informing', target: 'T2_activity1')

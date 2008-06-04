@@ -1,6 +1,8 @@
 package com.mindalliance.channels.playbook.support
 
 import org.apache.commons.beanutils.PropertyUtilsBean
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,6 +29,14 @@ class RefPropertyUtilsBean extends PropertyUtilsBean {
         def result
         switch (obj) {
             case Collection.class: result = obj.find {it."$name" == key}; break
+            case Ref.class:
+            case Referenceable.class:
+                    if (key.startsWith('[') && key.endsWith(']')) {
+                        String argString = key[1..key.size()-2]
+                        String[] args = argString.split(',')
+                        result = obj."$name"(args)
+                        break
+                    }
             default: result = super.getMappedProperty(obj, name, key)
         }
         return result
