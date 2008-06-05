@@ -16,6 +16,13 @@ class PlaybookElement extends IfmElement {
 
     Ref playbook
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['playbookElement', 'project']
+    }
+
+
+
     boolean isPlaybookElement() {
         return true
     }

@@ -84,6 +84,14 @@ class Project extends IfmElement implements Named, Described {
         return findAllResourcesExcept(null)
     }
 
+    Ref findPersonNamed(String name) {
+       return (Ref)persons.find {it.name == name}
+    }
+
+    Ref findOrganizationNamed(String name) {
+       return (Ref)organizations.find {it.name == name}
+    }
+
     List<Ref> findAllResourcesExcept(Ref resource) {
         List<Ref> resources = []
         resources.addAll(persons.findAll {res -> res != resource })
@@ -104,11 +112,10 @@ class Project extends IfmElement implements Named, Described {
         return findAllResourcesExcept(party)
     }
 
-    Ref findPlaybookNamed(String type, String name) {
-        Ref sc = (Ref) playbooks.find {sc ->
-            sc.type == type && sc.name.equalsIgnoreCase(name)
+    Ref findPlaybookNamed(String name) {
+       return (Ref)playbooks.find {pb ->
+            pb.name == name
         }
-        return res
     }
 
     Ref findParticipation(Ref user) {

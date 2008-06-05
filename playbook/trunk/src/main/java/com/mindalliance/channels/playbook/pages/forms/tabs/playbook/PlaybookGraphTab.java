@@ -24,7 +24,7 @@ public class PlaybookGraphTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        svgPanel = new SVGPanel("graph", this, "causalDiagram([6,4])", EDITABLE, feedback); 
+        svgPanel = new SVGPanel("graph", this, "timeline", EDITABLE, feedback);
         addReplaceable(svgPanel);
     }
 }

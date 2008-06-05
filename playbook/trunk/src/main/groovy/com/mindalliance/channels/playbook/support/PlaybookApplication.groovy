@@ -8,34 +8,18 @@ import com.mindalliance.channels.playbook.support.Memorable
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
-import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.project.resources.Person
-import com.mindalliance.channels.playbook.ifm.project.resources.Organization
-import com.mindalliance.channels.playbook.ifm.User
+import com.mindalliance.channels.playbook.ifm.project.*
+import com.mindalliance.channels.playbook.ifm.*
 import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
-import com.mindalliance.channels.playbook.ifm.Participation
-import com.mindalliance.channels.playbook.ifm.project.resources.Position
-import com.mindalliance.channels.playbook.ifm.project.resources.System
-import com.mindalliance.channels.playbook.ifm.model.Domain
-import com.mindalliance.channels.playbook.ifm.model.OrganizationType
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
-import com.mindalliance.channels.playbook.ifm.model.AreaType
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import org.apache.wicket.Application
-import com.mindalliance.channels.playbook.ifm.model.PlaceType
-import com.mindalliance.channels.playbook.ifm.project.environment.Place
-import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
-import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
-import com.mindalliance.channels.playbook.ifm.model.Role
-import com.mindalliance.channels.playbook.ifm.model.MediumType
-import com.mindalliance.channels.playbook.ifm.model.ModelParticipation
-import com.mindalliance.channels.playbook.ifm.model.EventType
-import com.mindalliance.channels.playbook.ifm.model.TaskType
+import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.query.QueryCache
-import com.mindalliance.channels.playbook.ifm.playbook.Event
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -54,7 +38,13 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
     PlaybookApplication() {
         super()
-        appMemory = new ApplicationMemory(this)
+         appMemory = new ApplicationMemory(this)
+    }
+
+    void init() {
+        println "INITING"
+        getMarkupSettings().setStripXmlDeclarationFromOutput(false);
+        getMarkupSettings().setStripWicketTags(false);
     }
 
     static PlaybookApplication current() {
@@ -64,12 +54,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     ApplicationMemory getMemory() {
         return appMemory
     }
-
+                                  
     //----------------------
     @Override
     public Class getHomePage() {
        return PlaybookPage.class
-        // return FormTest.class
+       // return FormTest.class
     }
 
     @Override
@@ -180,12 +170,48 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
                         user: user.getReference(),
                         project: p.getReference())))
 
-        pb = new Playbook(name: 'default')
-        p.addPlaybook(store(pb))
-        store(pb)
+        initializeDefaultPlaybook(p)
         channels.addProject(store(p))
-       channels.addModel(store(m));
+        channels.addModel(store(m));
         store(channels)
+    }
+
+    void initializeDefaultPlaybook(Project p) {
+        Playbook pb = new Playbook(name: 'default')
+        p.addPlaybook(store(pb))
+        Event event1 = new Event(name: 'event1')
+        addToPlaybook(event1, pb)
+        Detection detection1 = new Detection(name: 'detection1', actorAgent: p.findPersonNamed('Joe Shmoe'))
+        detection1.cause.trigger = event1.reference
+        detection1.cause.delay = new Timing(amount:3, unit:'hours')
+        addToPlaybook(detection1, pb)
+        InformationTransfer transfer1 = new InformationTransfer(name:'transfer1', actorAgent:detection1.actorAgent, targetAgent:p.findOrganizationNamed('ACME Inc.'))
+        transfer1.cause.trigger = detection1.reference
+        transfer1.cause.delay = new Timing(amount:2, unit:'minutes')
+        addToPlaybook(transfer1, pb)
+        InformationTransfer transfer2 = new InformationTransfer(name:'transfer2', actorAgent:detection1.actorAgent, targetAgent:p.findOrganizationNamed('NADIR Inc.'))
+        transfer2.cause.trigger = detection1.reference
+        transfer2.cause.delay = new Timing(amount:2, unit:'minutes')
+        addToPlaybook(transfer2, pb)
+        Task task1 = new Task(name:'task1', actorAgent: p.findOrganizationNamed('ACME Inc.'))
+        task1.cause.trigger = transfer1.reference
+        task1.cause.delay = new Timing(amount:3, unit:'days')
+        addToPlaybook(task1, pb)
+        Task task2 = new Task(name:'task2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
+        task2.cause.trigger = transfer2.reference
+        task2.cause.delay = new Timing(amount:1, unit:'days')
+        addToPlaybook(task2, pb) 
+        Event event2 = new Event(name:'event2')
+        event2.cause.trigger = task1.reference
+        event2.cause.delay = new Timing(amount:1, unit:'weeks')
+        addToPlaybook(event2, pb)
+        store(pb)
+    }
+
+    private void addToPlaybook(PlaybookElement element, Playbook holder) {
+        store(element)
+        holder.addElement(element)
+        store(element)
     }
 
     PlaybookModel initializeDefaultModel(Channels channels) {  

@@ -1,12 +1,9 @@
 package com.mindalliance.channels.playbook.graph
 
 import org.joda.time.Duration
-import org.joda.time.Period
 import com.mindalliance.channels.playbook.ifm.playbook.*
-import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,10 +12,14 @@ import com.mindalliance.channels.playbook.ifm.Named
  * Date: Jun 4, 2008
  * Time: 9:20:15 AM
  */
-class Timeline extends DirectedGraph {
+class Timeline extends PlaybookGraph {
 
     TreeMap<Duration, List<Event>> timed = new TreeMap<Duration, List<Event>>()
-    
+
+    Timeline(Playbook playbook) {
+        super(playbook)
+    }
+
     Timeline(Playbook playbook, String[] dimensions) {
         super(playbook, dimensions)
     }
@@ -29,7 +30,7 @@ class Timeline extends DirectedGraph {
 
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-           time: [shape: 'plaintext', fontsize:'16'],
+           time: [shape: 'plaintext', fontsize:'9'],
            time_edge: [dir: 'none']
         ]
     }
@@ -41,7 +42,8 @@ class Timeline extends DirectedGraph {
             timed[start].add((Event)occ.deref())
         }
         buildTimePoints()
-        buildTimedOccurrences()
+        buildOccurrences()
+        buildTimings()
         buildCausality()
     }
 
@@ -55,20 +57,29 @@ class Timeline extends DirectedGraph {
         }
     }
 
-    void buildTimedOccurrences() {
+    void buildOccurrences() {
         timed.each {dur, occList ->
-            this.builder.subGraph(rank:'same') {
+            occList.each {occ ->
+                if (occ instanceof InformationAct) {
+                    Agent agent = (Agent)occ.actorAgent.deref()
+                    this.builder.cluster(name:nameFor(occ) + nameFor(agent), label:labelFor(agent), URL:urlFor(agent), template:'agent') {
+                        this.builder.node(name:nameFor(occ), label:labelFor(occ), URL:urlFor(occ), template:templateFor(occ))
+                    }
+                }
+                else {
+                    this.builder.node(name:nameFor(occ), label:labelFor(occ), URL:urlFor(occ), template:templateFor(occ))
+                }
+
+            }
+        }
+    }
+
+    void buildTimings() {
+        timed.each {dur, occList ->
+            this.builder.subgraph(rank:'same') {
                 this.builder.node(name: durationToText(dur))
                 occList.each {occ ->
-                    if (occ instanceof InformationAct) {
-                        Agent agent = (Agent)occ.actorAgent.deref()
-                        this.builder.cluster(name:nameFor(agent), label:labelFor(agent), template:'agent') {
-                            this.builder.node(name:nameFor(occ), label:labelFor(occ), template:templateFor(occ))
-                        }
-                    }
-                    else {
-                        this.builder.node(name:nameFor(occ), label:labelFor(occ), template:templateFor(occ))
-                    }
+                    this.builder.node(name:nameFor(occ))
                 }
             }
         }
@@ -85,52 +96,5 @@ class Timeline extends DirectedGraph {
             }
         }
     }
-
-    private String templateFor(Referenceable referenceable) {
-        switch (referenceable) {
-            case Detection.class: return 'detection'
-            case Task.class: return 'task'
-            case InformationAct.class: return 'infoAct'
-            case Agent.class: return 'agent'
-            default: return 'event'
-        }
-    }
-
-    private String nameFor(Referenceable referenceable) {
-        return referenceable.id
-    }
-
-    private String labelFor(Named named) {
-        String label = named.type
-        String name = named.name ?: '?'
-        if (name.size() > MAX_LABEL_SIZE) name = name.substring(0,MAX_LABEL_SIZE-1)
-        label += "\n$name"
-        return label
-    }
-
-    private String durationToText(Duration duration) {
-        Period period = duration.toPeriod()
-        String text = ""
-        int weeks = period.toStandardWeeks().weeks
-        if (weeks) text += "${weeks}W"
-        if (period.days) {
-            if (text) text += ","
-            text += "${period.days}D"
-        }
-        if (period.hours) {
-            if (text) text += ","
-            text += "${period.hours}H"
-        }
-        if (period.minutes) {
-            if (text) text += ","
-            text += "${period.minutes}M"
-        }
-        if (period.seconds) {
-            if (text) text += ","
-            text += "${period.seconds}S"
-        }
-        return text
-    }
-
 
 }

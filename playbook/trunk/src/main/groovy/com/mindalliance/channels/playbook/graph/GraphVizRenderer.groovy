@@ -1,4 +1,7 @@
 package com.mindalliance.channels.playbook.graph
+
+import org.apache.log4j.Logger
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -44,13 +47,17 @@ class GraphVizRenderer {
 
     private renderProcess(output,format) {
         if (dotWriter != null) {
+            System.out.println(dotWriter.toString())
             def command="dot -T${format}"
             Process  proc = command.execute()
             proc.withWriter({Writer wr ->
                 wr.print dotWriter.toString()
             })
             proc.consumeProcessOutputStream(output)
+            StringWriter errorWriter = new StringWriter()
+            proc.consumeProcessErrorStream(errorWriter)
             proc.waitFor()
+            if (errorWriter.toString()) Logger.getLogger(this.class).error(errorWriter.toString())
         } else {
             throw new Exception("Dot input not defined")
         }

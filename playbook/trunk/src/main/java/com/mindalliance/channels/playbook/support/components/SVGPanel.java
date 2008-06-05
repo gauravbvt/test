@@ -100,6 +100,7 @@ public class SVGPanel extends AbstractComponentPanel {
 
     protected void onBeforeRender() { // panel must be connected to page to get callback url
         String processed = processSVG(svgElementId, behave.getCallbackUrl());
+        System.out.println(processed);
         svgContent.setModelObject(processed);
         super.onBeforeRender();
     }

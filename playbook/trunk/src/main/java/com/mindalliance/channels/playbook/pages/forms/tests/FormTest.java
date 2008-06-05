@@ -195,7 +195,7 @@ public class FormTest extends WebPage {
         } else if (type.equals(PlaybookModel.class)) {
             results.add((Ref) project.getModels().get(0));
         } else if (type.equals(Playbook.class)) {
-            results.add((Ref) project.getPlaybooks().get(0));
+            results.add((Ref) project.findPlaybookNamed("default"));
         }
         if (results.size() > 0) {
             return results.get(0);

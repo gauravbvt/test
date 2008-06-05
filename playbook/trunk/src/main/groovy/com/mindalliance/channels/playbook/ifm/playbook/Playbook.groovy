@@ -26,6 +26,11 @@ class Playbook extends ProjectElement implements Described {
     List<Ref> events = []
     List<Ref> informationActs = []
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['timeline']
+    }    
+
     Map toMap() {
         super.toMap()
     }
@@ -64,10 +69,9 @@ class Playbook extends ProjectElement implements Described {
 
     // Generate causal diagram as SVG
     // urls must be "javascript:svg_wicket_call('__CALLBACK__','some ref id')"
-    String causalDiagram(String[] dimensions) { // TODO
-        Timeline timeline = new Timeline(this, dimensions)
+    String getTimeline() {
+        Timeline timeline = new Timeline(this)
         String svg = timeline.svg
-        // String svg = "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='600px' height='400px' style='display:block;'><g id='node2' class='node'><title>T1_activity1</title><a xlink:href='javascript:svg_wicket_call(&#39;__CALLBACK__&#39;,&#39;some_ref_id&#39;)' xlink:title='Activity\\n(Steal explosives)'><ellipse style='fill:#e0eeee;stroke:black;' cx='2' cy='21' rx='71.8428' ry='29.4156'/><text text-anchor='middle' x='2' y='24' style='font-family:Nimbus Sans L;font-weight:regular;font-size:11.34pt;'>Activity</text><text text-anchor='middle' x='2' y='7' style='font-family:Nimbus Sans L;font-weight:regular;font-size:11.34pt;'>(Steal explosives)</text></a></g></svg>";
         return svg
     }
 

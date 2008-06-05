@@ -21,7 +21,6 @@ class GraphVizBuilder extends BuilderSupport {
 
     private Writer _bw ;
     private Map styleMap;
-    private Stack<String> prefixStack = new Stack<String>();
 
     public GraphVizBuilder(Writer writer, Map styleMap) {
         if (writer == null)
@@ -29,7 +28,6 @@ class GraphVizBuilder extends BuilderSupport {
 
         _bw = new BufferedWriter(writer)
         this.styleMap = styleMap
-        prefixStack.push("");
     }
 
     public GraphVizBuilder(Writer writer) {
@@ -54,11 +52,9 @@ class GraphVizBuilder extends BuilderSupport {
             _bw.write("}")
             _bw.newLine()
             _bw.close()
-            prefixStack.pop();
         } else if ((node as String) == "cluster") {
             _bw.write("}")
             _bw.newLine()
-            prefixStack.pop();
         } else if ((node as String) == "subgraph") {
             _bw.write("}")
             _bw.newLine()
@@ -75,7 +71,7 @@ class GraphVizBuilder extends BuilderSupport {
 
         case "digraph":
             String graphName = attributes.name as String
-            _bw.write("digraph $graphName {")
+            _bw.write("digraph \"$graphName\" {")
             _bw.newLine();
 
             if (attributes.size() < 1) break
@@ -99,17 +95,16 @@ class GraphVizBuilder extends BuilderSupport {
             writeNode(attributes.name, attributes);
             break;
         case "edge":
-            _bw.write("${prefixStack.peek()}${attributes.source} -> ${prefixStack.peek()}${attributes.target}")
+            _bw.write("\"${attributes.source}\" -> \"${attributes.target}\"")
             _bw.write(constructAttributeString(attributes, ["source", "target"]))
             break ;
         case "cluster":
             String graphName = attributes.name as String
-            _bw.write("subgraph cluster_$graphName {")
+            _bw.write("subgraph \"cluster_$graphName\" {")
             _bw.newLine();
             if (attributes.size() < 1) break
             _bw.write(constructDigraphAttributeString(attributes, ["name"]))
             _bw.newLine()
-            prefixStack.push("${graphName}_");
             break;
         case "subgraph":
             _bw.write("{")
@@ -129,7 +124,7 @@ class GraphVizBuilder extends BuilderSupport {
     }
 
     protected void writeNode(name, attributes) {
-            _bw.write("${prefixStack.peek()}${name}")
+            _bw.write("\"${name}\"")
             _bw.write(constructAttributeString(attributes, ["name"]))
     }
 
