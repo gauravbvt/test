@@ -42,6 +42,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     }
 
     void init() {
+        super.init();
         println "INITING"
         getMarkupSettings().setStripXmlDeclarationFromOutput(false);
         getMarkupSettings().setStripWicketTags(false);
@@ -54,7 +55,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     ApplicationMemory getMemory() {
         return appMemory
     }
-                                  
+
     //----------------------
     @Override
     public Class getHomePage() {
@@ -200,7 +201,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         Task task2 = new Task(name:'task2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
         task2.cause.trigger = transfer2.reference
         task2.cause.delay = new Timing(amount:1, unit:'days')
-        addToPlaybook(task2, pb) 
+        addToPlaybook(task2, pb)
         Event event2 = new Event(name:'event2')
         event2.cause.trigger = task1.reference
         event2.cause.delay = new Timing(amount:1, unit:'weeks')
@@ -214,7 +215,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         store(element)
     }
 
-    PlaybookModel initializeDefaultModel(Channels channels) {  
+    PlaybookModel initializeDefaultModel(Channels channels) {
         PlaybookModel m = new PlaybookModel(name: 'default')
         // PlaybookModel elements
         AreaType globe = new AreaType(name: 'Globe')
