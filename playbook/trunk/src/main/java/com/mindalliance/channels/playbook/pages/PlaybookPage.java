@@ -122,6 +122,13 @@ public class PlaybookPage extends WebPage {
         tabPanel.setSelectedTab( index );
     }
 
+// TODO figure out javascript + xml
+//    protected void configureResponse() {
+//        super.configureResponse();
+//        WebResponse response = getWebRequestCycle().getWebResponse();
+//        response.setContentType("application/xhtml+xml");
+//    }
+
     //-----------------------
     private TabbedPanel createTabPanel( String id ) {
         return new TabbedPanel( id, createUserTabs() ) {

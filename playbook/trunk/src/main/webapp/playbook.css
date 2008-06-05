@@ -7,38 +7,38 @@
 html {
     margin: 5px;
 }
- 
- body {
+
+body {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     bottom: 10px;
-    left: 0px;
+    left: 0;
 }
 div#everything {
-    margin: 0px auto;
+    position: relative;
+    margin: 0 auto;
     min-height: 30em;
     min-width: 50em;
-    max-width: 80em;
-}
- 
-div.p-table, div#everything {
-    display: table;
-    table-layout: auto;
+    max-width: 102em;
 }
 
-div.p-row, div#tab-content, div.tab-row {
-     display: table-row;
-}
-
-div.tab-left {
-    padding-right: 5px;
-}
-
-div.p-cell, div.tab-row ul {
-    vertical-align: top;
-    display: table-cell;
+div.title {
     position: relative;
+    width: 100%;
+}
+
+div#tab-content {
+    display: table;
+}
+
+div#tab-content > div {
+    display: table-row;
+}
+
+div.tab-left, div.tab-right {
+    display: table-cell;
+    vertical-align: top;
 }
 
 .tall {
@@ -49,13 +49,16 @@ div.p-cell, div.tab-row ul {
     width: 100%;
 }
 
-div.content-filter {
-    padding-bottom: 5px;
+div.tab-left {
+    padding: 0 5px 5px 0;
 }
-div.content-filter input[ type='submit' ], div.content-filter input[ type='button' ] {
-    margin: 5px 0px 0px 5px;
-    float: right;
-    
+
+div.tab-left p {
+    margin-top: 5px;
+    text-align: right;
+}
+
+div.tab-right {
 }
 
 /* ----------------- Fonts */
@@ -81,7 +84,7 @@ a, #todos input[ type='submit'], #todos input[ type='button' ] {
     color: green !important;
 }
 
-div.content-buttons,#todos input[ type='submit'], #todos input[ type='button' ], 
+div.content-buttons,#todos input[ type='submit'], #todos input[ type='button' ],
 div#signout, div.content-pager {
     text-align: right;
     font-size: small;
@@ -102,7 +105,7 @@ tr.selected, div.row-selected, div.tab-row li.selected, div.list-type li.selecte
 }
 
 /* ----------------- Colors/Textures */
-th, h1, div.content-footer, div.content-filter h3, td.todo-new, div.tab-row li, div.list-type li { 
+th, h1, div.content-footer, div.tab-left h3, div.tab-row li, div.list-type li {
    background: #c3c7ac url("back.png") repeat;
    border: 1px outset gray;
    color: black;
@@ -115,30 +118,26 @@ body, div.content-list {
 }
 
 /* ----------------- Forms */
-div.content-form > div form {
-    padding: 5px 5px 0px;
-}
-
 input, textarea {
     border: 1px dotted  #d4d8bc;
 }
 
 label {
-     margin: 0px 0px 0px 5px;
+     margin: 0 0 0 5px;
 }
 label span {
     display: block;
     float: left;
     font-weight: bold;
-    margin: 0px 5px 0px 0px;
+    margin: 0 5px 0 0;
     text-align: right;
     width: 10em;
-    
+
 }
 legend {
 }
 fieldset {
-    padding: 0px 5px 5px;
+    padding: 0 5px 5px;
 }
 
 fieldset ul  {
@@ -164,7 +163,10 @@ h1 > span {
 }
 
 div#tab-title h2 {
-    padding: 5px 0px 0px 0px;
+    padding: 5px 0;
+}
+div#tab-title div.tab-row {
+    text-align: right;
 }
 
 div.tab-panel h2 {
@@ -176,29 +178,41 @@ div.content-footer {
 }
 
 /* ----------------- Tabs */
-div.tab-row ul {
-    padding-top: 1px;
+div.tab-row {
+   display: block;
 }
+
 div.tab-row ul, div.list-type ul {
-   list-style: none;
+    display: block;
+    list-style: none;
 }
-div.tab-row li {
-    margin-right: 5px;
+div#everything > div.tab-row ul {
+    margin-top: 1px;
+}
+div.content-form div.tab-row ul {
+    margin: -1px 0 5px 0;
+}
+div#tab-title div.tab-row ul {
+    margin-bottom: 1px;
+}
+div#everything > div.tab-row li, div.content-form div.tab-row li {
+    margin-left: 5px;
+}
+div.tab-row li.tab0 {
+    margin-left: 0 !important;
 }
 div.tab-row li.selected, div.list-type li.selected {
     font-weight: bold;
 }
 div.tab-row li, div.list-type li {
     display: inline;
-    padding: 0px 5px;
+    padding: 0 5px;
 }
 div.tab-row a, div.list-type a {
     color: black;
 }
 
 div.list-type {
-    text-align: right;
-    margin-bottom: 1px;
 }
 
 /* ----------------- Contents */
@@ -207,25 +221,25 @@ hr, div.content-list h3, div.content-form h3 {
 }
 
 div.wicket-tree {
-    margin: 2px 0px 0px 1px !important;
+    margin: 2px 0 0 1px !important;
     width: 18em !important;
     border: none !important;
 }
 
 div.wicket-tree div.a_ {
     width: auto !important;
-    padding: 0px !important;
+    padding: 0 !important;
 }
 
 div.wicket-tree div.a_ > div {
 }
- 
+
  div.wicket-tree div.a_ input {
      float: right;
-     margin: 3px 5px 0px;
+     margin: 3px 5px 0;
 }
- 
-#todos input[type='text'] { 
+
+#todos input[type='text'] {
 }
 #todos input[ type='submit' ], #todos input[ type='button' ] {
     border: none;
@@ -233,7 +247,7 @@ div.wicket-tree div.a_ > div {
     text-align: right;
 }
 td.todo-new {
-    padding: 0px 2px;
+    padding: 0 2px;
     text-align: right;
 }
 
@@ -248,8 +262,8 @@ table {
     border-spacing: 0;
 }
 
-th, td, div.content-filter h3 {
-    padding: 0px 5px;
+th, td, div.tab-left h3 {
+    padding: 0 5px;
     font-size: medium;
 }
 tbody, div.content-form li {
@@ -280,14 +294,27 @@ div.content-buttons ul {
 div.content-buttons li {
     display: inline;
 }
-
-.new-item-choices li:before {
-     content: " \2013  "; 
-}
-
-div.content-buttons li.new-header {
+ul.new-item-choices {
     display: none;
- }
+    border: 1px outset gray;
+    position: absolute;
+    right: 0;
+    background: white;
+    text-align: left;
+    padding: 0 5px;
+    max-height: 40%;
+    overflow: auto;
+}
+ul.new-item-choices li {
+    display: inline;
+}
+ul.new-item-choices li a {
+    display: block;
+    width: 10em;
+}
+li.new-header:before {
+     content: " \2013  ";
+}
 
 /* ----------------- Scenarios */
 div.sc-picker {

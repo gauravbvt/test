@@ -26,4 +26,9 @@ class SharingProtocol extends BeanImpl {
         return (List<String>)(super.transientProperties() + ['deliveries'])
     }
 
+    String toString() {
+        // TODO verify this
+        return delivery;
+    }
+
 }

@@ -18,6 +18,7 @@ public class FilterPanel extends Panel {
 
     public FilterPanel( String id, IModel filterModel ) {
         super( id, filterModel );
+        setRenderBodyOnly( true );
 
         final Button saveButton = new Button( "filter-save" ) {
             public void onSubmit() {

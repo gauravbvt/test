@@ -15,4 +15,19 @@ class SharingConstraints extends BeanImpl {
     List<String> allowedPurposes = []
     List<String> privateTopics = []
 
+    String toString() {
+        // TODO verify this
+        switch( allowedPurposes.size() ) {
+            case 0 : return "";
+            case 1 : return allowedPurposes.get(0);
+            default:
+                StringBuffer b = new StringBuffer();
+                b.print( allowedPurposes.get(0) );
+                for ( int i=1; i < allowedPurposes.size(); i++ ) {
+                    b.print( ", " );
+                    b.print( allowedPurposes.get(i) );
+                }
+                return b.toString();
+        }
+    }
 }

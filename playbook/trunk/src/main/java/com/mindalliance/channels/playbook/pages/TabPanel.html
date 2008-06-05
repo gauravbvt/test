@@ -7,35 +7,27 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div id="tab-title" class="p-row">
-        <div class="p-cell">
-            <hr/>
-            <h2 wicket:id="content-title">Resources</h2>
-            <wicket:child/>
-            <div class="list-type">
-                <ul>
-                    <li class="selected">Table</li>
-                    <li>Map</li>
-                    <li>Flow</li>
-                    <li>Timeline</li>
-                    <li>Causality</li>
-                </ul>
-            </div>
+    <div id="tab-title">
+        <hr/>
+        <h2 wicket:id="content-title">Resources</h2>
+        <wicket:child/>
+        <div class="tab-row">
+            <ul>
+                <li class="selected"><a href=""><span>Table</span></a></li>
+                <li><a href=""><span>Map</span></a></li>
+                <li><a href=""><span>Flow</span></a></li>
+                <li><a href=""><span>Timeline</span></a></li>
+                <li><a href=""><span>Causality</span></a></li>
+            </ul>
         </div>
     </div>
-    <div id="tab-content" class="p-row">
-        <div class="p-cell tall">
-            <div class="p-table tall wide">
-                <div class="p-row">
-                    <div wicket:id="tab-left" class="tab-left tall p-cell">
-                        <div class="content-filter" wicket:id="filter"/>
-                    </div>
-                    <div class="p-cell wide">
-                        <div wicket:id="tab-right" class="tab-right p-table wide">
-                               [Contents]
-                        </div>
-                    </div>
-                </div>
+    <div id="tab-content">
+        <div>
+            <div wicket:id="tab-left" class="tab-left tall">
+                <div class="content-filter" wicket:id="filter"/>
+            </div>
+            <div wicket:id="tab-right" class="tab-right wide">
+                   [Contents]
             </div>
         </div>
     </div>

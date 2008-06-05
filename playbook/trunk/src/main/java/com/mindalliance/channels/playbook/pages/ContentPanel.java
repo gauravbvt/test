@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -21,6 +22,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.Iterator;
@@ -37,6 +39,8 @@ public class ContentPanel extends Panel {
     private FormPanel formPanel;
     private WebMarkupContainer table;
     private WebMarkupContainer pageNavigator;
+
+    private boolean menuVisible;
 
     //--------------------------------
     public ContentPanel( String s, final IModel container ) {
@@ -67,6 +71,10 @@ public class ContentPanel extends Panel {
 
         // Todo Get selection from user prefs somehow
         setSelected( 0 );
+    }
+
+    public boolean isMenuVisible() {
+        return menuVisible;
     }
 
     private DataView createRows( String id, final IDataProvider columnProvider ) {
@@ -159,16 +167,19 @@ public class ContentPanel extends Panel {
             }
         } );
 
-        tn.add( new Label( "new-item", "Add a..." ) );
-        tn.add( createNewMenu( "new-popup" ) );
+        final WebMarkupContainer menu = createNewMenu();
+        tn.add( new AjaxLink( "new-item", new Model("New...") ){
+            public void onClick( AjaxRequestTarget target ) {
+                menuVisible = !menuVisible;
+                target.addComponent( menu );
+            }
+        } );
+        tn.add( menu );
         return tn;
     }
 
-    private WebMarkupContainer createNewMenu( String id ) {
-        WebMarkupContainer menu = new WebMarkupContainer( id );
-        menu.setOutputMarkupId( true );
-
-        menu.add( new ListView( "new-items", new RefPropertyModel( this, "tab.allowedClasses" ) ){
+    private WebMarkupContainer createNewMenu() {
+        final ListView items = new ListView( "new-popup-item", new RefPropertyModel( this, "tab.allowedClasses" ) ) {
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final Link link = new Link( "new-item-link" ) {
@@ -179,10 +190,9 @@ public class ContentPanel extends Panel {
                             Tab tab = getTab();
                             int size = tab.size();
                             tab.add( object );
-                            assert( tab.size() == size + 1 );
+                            assert ( tab.size() == size + 1 );
                             pageNavigator.renderComponent();
                             setSelected( getTab().indexOf( ref ) );
-
                         } catch ( InstantiationException e ) {
                             e.printStackTrace();
                         } catch ( IllegalAccessException e ) {
@@ -191,12 +201,21 @@ public class ContentPanel extends Panel {
                     }
                 };
                 item.add( link );
-                String displayName = "New " + ColumnProvider.toDisplay( c.getSimpleName() );
+                String displayName = ColumnProvider.toDisplay( c.getSimpleName() );
                 link.add( new Label( "new-item-text", displayName ) );
             }
-        } );
+        };
+//        items.setOutputMarkupId( true );
 
-        return menu;
+
+        WebMarkupContainer list = new WebMarkupContainer( "new-popup" );
+        list.add( new AttributeModifier( "style", true, new AbstractReadOnlyModel(){
+            public Object getObject() {
+                return isMenuVisible()? "display: block !important;" : "display: none !important;";
+            } } ) );
+        list.setOutputMarkupId( true );
+        list.add( items );
+        return list;
     }
 
     //--------------------------------
