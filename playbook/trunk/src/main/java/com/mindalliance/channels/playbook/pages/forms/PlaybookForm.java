@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.playbook.PlaybookAboutTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.playbook.PlaybookGraphTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.playbook.PlaybookTimelineTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,9 +26,9 @@ public class PlaybookForm extends AbstractProjectElementForm {
                  return new PlaybookAboutTab(panelId, PlaybookForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Graph")) {
+        tabs.add(new AbstractTab(new Model("Timeline")) {
              public Panel getPanel(String panelId) {
-                 return new PlaybookGraphTab(panelId, PlaybookForm.this);
+                 return new PlaybookTimelineTab(panelId, PlaybookForm.this);
              }
          });
     }

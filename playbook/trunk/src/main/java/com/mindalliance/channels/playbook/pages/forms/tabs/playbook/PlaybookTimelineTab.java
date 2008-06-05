@@ -14,17 +14,17 @@ import java.util.UUID;
  * Date: May 29, 2008
  * Time: 10:06:23 PM
  */
-public class PlaybookGraphTab extends AbstractFormTab {
+public class PlaybookTimelineTab extends AbstractFormTab {
 
     protected SVGPanel svgPanel;
 
-    public PlaybookGraphTab(String id, AbstractElementForm elementForm) {
+    public PlaybookTimelineTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
     protected void load() {
         super.load();
-        svgPanel = new SVGPanel("graph", this, "timeline", EDITABLE, feedback);
+        svgPanel = new SVGPanel("timeline", this, "timeline", EDITABLE, feedback);
         addReplaceable(svgPanel);
     }
 }
