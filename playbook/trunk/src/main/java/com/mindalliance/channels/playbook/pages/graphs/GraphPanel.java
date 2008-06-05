@@ -1,32 +1,33 @@
-package com.mindalliance.channels.playbook.support.components;
+package com.mindalliance.channels.playbook.pages.graphs;
 
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.ref.impl.RefImpl;
+import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.log4j.Logger;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.impl.RefImpl;
+import com.mindalliance.channels.playbook.support.models.Container;
 
-import java.util.UUID;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: May 29, 2008
- * Time: 9:49:28 PM
+ * Date: Jun 5, 2008
+ * Time: 12:46:28 PM
  */
-public class SVGPanel extends AbstractComponentPanel {
+abstract public class GraphPanel extends Panel {
 
     public static final String CALLBACK_VAR = "__CALLBACK__";
 
@@ -44,23 +45,23 @@ public class SVGPanel extends AbstractComponentPanel {
     String svgElementId;
     String svg;
 
-    public SVGPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public GraphPanel(String id, IModel model) {
+        super(id, model);
+        load();
     }
 
     protected void load() {
-        super.load();
-        svg = (String)getComponent();
+        svg = getGraph((Container)getModelObject());
         behave = new AbstractDefaultAjaxBehavior() {
             protected void respond(final AjaxRequestTarget target) {
                 Map map = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
                 String id = ((String[])map.get("refId"))[0];
                 Ref ref = new RefImpl(id);
-                SVGPanel.this.edit(ref, target);
+                System.out.println("Selected " + ref);
             }
         };
         add(behave);
-        svgContent = new Label("svg", new Model());
+        svgContent = new Label("graph", new Model());
         svgContent.setEscapeModelStrings(false);
         add(svgContent);
         // String args = "'" + url + "','" + svgElementId + "'";
@@ -95,12 +96,12 @@ public class SVGPanel extends AbstractComponentPanel {
         resetButton.add(new AttributeModifier("onclick", true, new Model("svg_reset(" + args + ")")));
         controlsDiv.add(resetButton);
         add(controlsDiv);
-        this.add(HeaderContributor.forJavaScript(SVGPanel.class, "SVGPanel.js"));
+        this.add(HeaderContributor.forJavaScript(GraphPanel.class, "GraphPanel.js"));
     }
 
     protected void onBeforeRender() { // panel must be connected to page to get callback url
         String processed = processSVG(svgElementId, behave.getCallbackUrl());
-        System.out.println(processed);
+        Logger.getLogger(this.getClass()).info(processed);
         svgContent.setModelObject(processed);
         super.onBeforeRender();
     }
@@ -113,5 +114,6 @@ public class SVGPanel extends AbstractComponentPanel {
         return processed.replaceAll(CALLBACK_VAR, url.toString());
     }
 
+    abstract protected String getGraph(Container container);
 
 }

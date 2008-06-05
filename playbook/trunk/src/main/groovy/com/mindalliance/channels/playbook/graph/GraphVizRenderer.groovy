@@ -47,7 +47,7 @@ class GraphVizRenderer {
 
     private renderProcess(output,format) {
         if (dotWriter != null) {
-            System.out.println(dotWriter.toString())
+            Logger.getLogger(this.class).info(dotWriter.toString())
             def command="dot -T${format}"
             Process  proc = command.execute()
             proc.withWriter({Writer wr ->

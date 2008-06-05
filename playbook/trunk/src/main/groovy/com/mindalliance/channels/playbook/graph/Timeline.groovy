@@ -4,6 +4,7 @@ import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.support.models.Container
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,16 +17,16 @@ class Timeline extends PlaybookGraph {
 
     TreeMap<Duration, List<Event>> timed = new TreeMap<Duration, List<Event>>()
 
-    Timeline(Playbook playbook) {
-        super(playbook)
+    Timeline(Container container) {
+        super(container)
     }
 
-    Timeline(Playbook playbook, String[] dimensions) {
-        super(playbook, dimensions)
+    Timeline(Container container, String[] dimensions) {
+        super(container, dimensions)
     }
 
-    Timeline(Playbook playbook, int width, int height) {
-        super(playbook, width, height)
+    Timeline(Container container, int width, int height) {
+        super(container, width, height)
     }
 
     Map getStyleTemplate() {
@@ -36,7 +37,7 @@ class Timeline extends PlaybookGraph {
     }
 
     void buildContent() {
-        playbook.findAllOccurrences().each {occ ->
+        container.iterator().each {occ ->
             Duration start = occ.startTime()
             if (timed[start] == null) timed[start] = []
             timed[start].add((Event)occ.deref())

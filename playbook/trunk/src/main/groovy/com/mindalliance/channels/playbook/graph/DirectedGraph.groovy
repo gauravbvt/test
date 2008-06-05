@@ -1,6 +1,8 @@
 package com.mindalliance.channels.playbook.graph
 
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.Named
+import com.mindalliance.channels.playbook.support.models.Container
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,20 +15,26 @@ class DirectedGraph {
 
     static public final int MAX_LABEL_SIZE = 16
 
+    Container container // the data for the graph
+
     GraphVizBuilder builder
     GraphVizRenderer renderer
     String name = "No name"
     int width = 0
     int height = 0
 
-    DirectedGraph() {}
+    DirectedGraph(Container container) {
+        this.container = container
+    }
 
-    DirectedGraph(String[] dimensions) {
+    DirectedGraph(Container container, String[] dimensions) {
+        this(container)
         width = Integer.valueOf(dimensions[0]) // in inches
         height = Integer.valueOf(dimensions[1]) // in inches
     }
 
-    DirectedGraph(int width, int height) {
+    DirectedGraph(Container container, int width, int height) {
+        this(container)
         this.width = width // in inches
         this.height = height // in inches
     }
@@ -43,6 +51,18 @@ class DirectedGraph {
                 invisible: [style: 'invisible']
         ]
         return styleTemplate
+    }
+
+    protected String nameFor(Referenceable referenceable) {
+        return referenceable.id.replaceAll("-","")
+    }
+
+    protected String labelFor(Named named) {
+        String label = named.type
+        String name = named.name ?: '?'
+        if (name.size() > MAX_LABEL_SIZE) name = name.substring(0, MAX_LABEL_SIZE - 1)
+        label += "\n$name"
+        return label
     }
 
     String getSvg() {

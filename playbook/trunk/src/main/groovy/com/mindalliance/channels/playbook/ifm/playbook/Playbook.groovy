@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.graph.Timeline
 import com.mindalliance.channels.playbook.ifm.Described
+import com.mindalliance.channels.playbook.support.models.RefContainer
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -64,18 +65,6 @@ class Playbook extends ProjectElement implements Described {
         if (!['events', 'groups', 'teams'].contains(field)) actualField = 'informationActs'
         return super.doRemoveFromField(actualField, val)
     }
-
-    // DIAGRAMS
-
-    // Generate causal diagram as SVG
-    // urls must be "javascript:svg_wicket_call('__CALLBACK__','some ref id')"
-    String getTimeline() {
-        Timeline timeline = new Timeline(this)
-        String svg = timeline.svg
-        return svg
-    }
-
-    // end diagrams
 
     // QUERIES
 

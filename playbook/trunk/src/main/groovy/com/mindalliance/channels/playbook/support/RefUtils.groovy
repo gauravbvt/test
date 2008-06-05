@@ -35,6 +35,7 @@ class RefUtils {
 
     static def get(def holder, String path) {
         def result
+        if (!path) return holder
         RefPropertyUtilsBean utils = new RefPropertyUtilsBean()
         try {
             result = utils.getNestedProperty(holder, path)

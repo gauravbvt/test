@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ifm.Named
 import org.joda.time.Duration
 import org.joda.time.Period
 import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.support.models.Container
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,21 +17,16 @@ import com.mindalliance.channels.playbook.ifm.Agent
  */
 class PlaybookGraph extends DirectedGraph {
 
-    Playbook playbook
-
-    PlaybookGraph(Playbook playbook) {
-        super()
-        this.playbook = playbook
+    PlaybookGraph(Container container) {
+        super(container)
     }
 
-    PlaybookGraph(Playbook playbook, String[] dimensions) {
-        super(dimensions)
-        this.playbook = playbook
+    PlaybookGraph(Container container, String[] dimensions) {
+        super(container, dimensions)
     }
 
-    PlaybookGraph(Playbook playbook, int width, int height) {
-        super(width, height)
-        this.playbook = playbook
+    PlaybookGraph(Container container, int width, int height) {
+        super(container, width, height)
     }
 
     protected Map getStyleTemplate() {
@@ -55,18 +51,6 @@ class PlaybookGraph extends DirectedGraph {
             case Agent.class: return 'agent'
             default: return 'event'
         }
-    }
-
-    protected String nameFor(Referenceable referenceable) {
-        return referenceable.id.replaceAll("-","")
-    }
-
-    protected String labelFor(Named named) {
-        String label = named.type
-        String name = named.name ?: '?'
-        if (name.size() > MAX_LABEL_SIZE) name = name.substring(0, MAX_LABEL_SIZE - 1)
-        label += "\n$name"
-        return label
     }
 
     protected String durationToText(Duration duration) {

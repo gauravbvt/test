@@ -106,7 +106,7 @@ public class ContentPanel extends Panel {
                                    : mo instanceof Ref ? ((Ref) mo).deref().toString()
                                    : cellItem.getModelObjectAsString();
                         cellItem.add( new Label( "content-cell-value", mos ) );
-                        cellItem.add( new AjaxEventBehavior( "onClick" ) {
+                        cellItem.add( new AjaxEventBehavior( "onclick" ) {
                             protected void onEvent( AjaxRequestTarget target ) {
                                 setSelected( (Ref) item.getModelObject() );
                                 target.addComponent( formPanel );
