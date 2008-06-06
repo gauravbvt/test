@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.graphs;
 
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.graph.Timeline;
+import com.mindalliance.channels.playbook.graph.DirectedGraph;
 import org.apache.wicket.model.IModel;
 import org.apache.log4j.Logger;
 
@@ -18,8 +19,8 @@ public class TimelinePanel extends GraphPanel {
         super(id, model);
     }
 
-    protected String getGraph(Container container) {
-        Timeline timeline = new Timeline(container);
-        return timeline.getSvg();
+    protected DirectedGraph makeDirectedGraph(Container container) {
+        return new Timeline(container);
     }
+
 }

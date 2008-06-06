@@ -16,17 +16,9 @@ import com.mindalliance.channels.playbook.support.models.Container
 class Timeline extends PlaybookGraph {
 
     TreeMap<Duration, List<Event>> timed = new TreeMap<Duration, List<Event>>()
-
+    
     Timeline(Container container) {
         super(container)
-    }
-
-    Timeline(Container container, String[] dimensions) {
-        super(container, dimensions)
-    }
-
-    Timeline(Container container, int width, int height) {
-        super(container, width, height)
     }
 
     Map getStyleTemplate() {

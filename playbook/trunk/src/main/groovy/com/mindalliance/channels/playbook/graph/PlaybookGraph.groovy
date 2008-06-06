@@ -21,25 +21,17 @@ class PlaybookGraph extends DirectedGraph {
         super(container)
     }
 
-    PlaybookGraph(Container container, String[] dimensions) {
-        super(container, dimensions)
-    }
-
-    PlaybookGraph(Container container, int width, int height) {
-        super(container, width, height)
-    }
-
     protected Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-                agent: [color: 'lightgray', fillcolor: 'ghostwhite', style: 'filled', fontname: 'Helvetica-Bold', fontsize:'10'],
-                info: [shape: 'record', fillcolor: 'cornsilk1', style: 'filled, rounded', fontsize:'10'],
-                need: [shape: 'record', fillcolor: 'cornsilk2', style: 'filled, rounded', fontsize:'10'],
+                agent: [color: 'lightgray', fillcolor: 'ghostwhite', style: 'filled', fontname: 'Helvetica-Bold', fontsize:'9'],
+                info: [shape: 'record', fillcolor: 'cornsilk1', style: 'filled, rounded', fontsize:'9'],
+                need: [shape: 'record', fillcolor: 'cornsilk2', style: 'filled, rounded', fontsize:'9'],
                 infoEdge: [dir: 'none', style: 'dotted'],
-                transform: [shape: 'trapezium', orientation: '270', fillcolor: 'honeydew2', fontsize:'10'],
-                infoAct: [shape: 'diamond', fillcolor: 'lavender', fontsize:'10'],
-                task: [shape: 'ellipse', fillcolor: 'azure2', fontsize:'10'],
-                detection: [shape: 'egg', fillcolor: 'azure2', fontsize:'10'],
-                event: [shape: 'octagon', fillcolor: 'mistyrose', fontsize:'10'],
+                transform: [shape: 'trapezium', orientation: '270', fillcolor: 'honeydew2', fontsize:'9'],
+                infoAct: [shape: 'diamond', fillcolor: 'lavender', fontsize:'9'],
+                task: [shape: 'ellipse', fillcolor: 'azure2', fontsize:'9'],
+                detection: [shape: 'egg', fillcolor: 'azure2', fontsize:'9'],
+                event: [shape: 'octagon', fillcolor: 'mistyrose', fontsize:'9'],
         ]
     }
 
