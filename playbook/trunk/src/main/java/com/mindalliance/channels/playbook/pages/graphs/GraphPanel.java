@@ -140,7 +140,7 @@ abstract public class GraphPanel extends Panel {
         }
         if (svg == null) { // regenerate svg only if needed
             svg = directedGraph.makeSvg(svgElementId, behave.getCallbackUrl().toString(), getSelected(), transformation);
-            Logger.getLogger(this.getClass()).info(svg);
+            // Logger.getLogger(this.getClass()).info(svg);
         }
         svgContent.setModelObject(svg);
         priorSelection = getSelected();

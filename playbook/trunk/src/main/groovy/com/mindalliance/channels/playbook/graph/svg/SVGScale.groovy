@@ -31,4 +31,8 @@ class SVGScale extends SVGTransform {
         return "scale($x $y)"
     }
 
+    boolean isIdentity() {
+        return x == 1.0 && y == 1.0
+    }
+
 }

@@ -11,25 +11,28 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransform
  */
 class SVGTransformation implements Serializable {
 
-    SVGScale scale = new SVGScale()
-    SVGTranslate translate = new SVGTranslate()
+    List<SVGTransform> transforms = []
 
     void appendTransform(SVGTransform transform) {
-        switch (transform) {
-            case {it.isScale()}: scale = scale.combineWith(transform); break
-            case {it.isTranslate()}: translate = translate.combineWith(transform); break
-            case {it.isClear()}: clear(); break;
-            default: throw new IllegalArgumentException("Invalid transform $transform")
+        if (transform.isClear()) {
+            clear()
+        }
+        else {
+            transforms.add(transform)
         }
     }
 
     void clear() {
-        scale = new SVGScale()
-        translate = new SVGTranslate()
+        transforms = []
     }
 
     String toString() {
-        return "$scale $translate"
+        StringBuilder sb = new StringBuilder()
+        transforms.each {xform ->
+            sb.append(xform.toString())
+            sb.append(' ')
+        }
+        return sb.toString()
     }
 
 }

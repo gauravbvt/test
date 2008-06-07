@@ -45,4 +45,8 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
         throw new Exception("Not allowed")
     }
 
+    boolean isIdentity() { // identity transform - does not cause change
+        return false
+    }
+
 }

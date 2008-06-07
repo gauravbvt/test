@@ -31,4 +31,8 @@ class SVGTranslate extends SVGTransform {
         return "translate($x $y)"
     }
 
+    boolean isIdentity() {
+        return x == 0 && y == 0
+    }
+
 }
