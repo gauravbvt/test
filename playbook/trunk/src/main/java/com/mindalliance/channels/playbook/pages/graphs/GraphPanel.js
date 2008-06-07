@@ -71,6 +71,6 @@ function getSVGElement(svgElement) {
 }
 
 function svg_wicket_call(callbackUrl, arg, val) {
-    alert("Calling back to " + callbackUrl + " with " + arg + "=" + val)
+    // alert("Calling back to " + callbackUrl + " with " + arg + "=" + val)
     wicketAjaxGet(callbackUrl + '&' + arg + '=' + val, function() { }, function() { });
 }

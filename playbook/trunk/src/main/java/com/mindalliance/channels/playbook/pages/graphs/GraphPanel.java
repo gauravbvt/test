@@ -65,6 +65,7 @@ abstract public class GraphPanel extends Panel {
         add(behave);
         svgContent = new Label("graph", new Model());
         svgContent.setEscapeModelStrings(false);
+        svgContent.setOutputMarkupId(true);
         add(svgContent);
         // String args = "'" + url + "','" + svgElementId + "'";
         svgElementId = UUID.randomUUID().toString();
@@ -128,15 +129,14 @@ abstract public class GraphPanel extends Panel {
 
     protected void addGraphSvg() {
         Container container = (Container) getModelObject();
-        if (svg != null) { // regenerate only if needed
-            if (directedGraph == null || !container.equals(priorContainer)) { // make new directed graph only if needed
-                directedGraph = makeDirectedGraph(container);
-                priorContainer = container;
-                svg = null; // force regeneration
-            }
-            if (priorSelection != getSelected()) {
-                svg = null; // force regeneration
-            }
+
+        if (directedGraph == null || !container.equals(priorContainer)) { // make new directed graph only if needed
+            directedGraph = makeDirectedGraph(container);
+            priorContainer = container;
+            svg = null; // force regeneration
+        }
+        if (priorSelection != getSelected()) {
+            svg = null; // force regeneration
         }
         if (svg == null) { // regenerate svg only if needed
             svg = directedGraph.makeSvg(svgElementId, behave.getCallbackUrl().toString(), getSelected(), transformation);

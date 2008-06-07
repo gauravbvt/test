@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
  * Date: Jun 6, 2008
  * Time: 1:12:15 PM
  */
-/*abstract*/ class SVGTransform {
+/*abstract*/ class SVGTransform implements Serializable {
 
     static SVGTransform fromString(String s) {
         if (s == 'clear') return new SVGClear()
@@ -19,9 +19,9 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
         String[] args = s.substring(s.indexOf('(')+1,s.indexOf(')')).split(',')
         switch (name) {
             case 'scale':
-                return new SVGScale(x:args[0],y:args[1])
+                return new SVGScale(x:Double.parseDouble(args[0]),y:Double.parseDouble(args[1]))
             case 'translate':
-                return new SVGTranslate(x:args[0],y:args[1])
+                return new SVGTranslate(x:Integer.parseInt(args[0]),y:Integer.parseInt(args[1]))
         }
     }
 

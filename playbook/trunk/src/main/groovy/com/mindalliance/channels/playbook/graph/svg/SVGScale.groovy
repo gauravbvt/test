@@ -11,8 +11,8 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransform
  */
 class SVGScale extends SVGTransform {
 
-    double x = 0.0
-    double y = 0.0
+    double x = 1.0
+    double y = 1.0
 
     boolean isScale() {
         return true

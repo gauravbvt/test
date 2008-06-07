@@ -15,18 +15,15 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransformation
  * Date: Jun 4, 2008
  * Time: 9:19:46 AM
  */
-class DirectedGraph {      
+class DirectedGraph implements Serializable {
 
     static public final int MAX_LABEL_SIZE = 16
     public static final String CALLBACK_VAR = "__CALLBACK__"
     public static final String CSS_SELECTED = "svg_selected"
-    public static final String SELECTED_STYLE = "{stroke-width:2mm;}"
-    public static final String STYLE = " <style>." + CSS_SELECTED + " " + SELECTED_STYLE + "</style>"
+    public static final String SELECTED_STYLE = "stroke-width:1mm;"
+    public static final String STYLE = " <style>." + CSS_SELECTED + " {" + SELECTED_STYLE + "}</style>"
 
-    Container container // the data for the graph
-
-    GraphVizBuilder builder
-    GraphVizRenderer renderer
+    Container container // the data for the graph 
     String name
     String canonicalSvg
 
@@ -48,7 +45,9 @@ class DirectedGraph {
     }
 
     String makeCanonicalSvg() {
-        build()
+        GraphVizRenderer renderer =  new GraphVizRenderer()
+        GraphVizBuilder builder = renderer.getBuilder(getStyleTemplate())
+        build(builder)
         StringWriter writer = new StringWriter()
         renderer.render(writer, "svg")
         String svg = writer.toString()
@@ -57,12 +56,11 @@ class DirectedGraph {
         return svg.substring(index)
     }
 
-    void build() {
-        initBuilder()
+    void build(GraphVizBuilder builder) {
         Map attributes = [name: name, template: this.graphTemplate]
         builder.digraph(attributes) {
             nodeDefaults(template: 'node')
-            buildContent()
+            buildContent(builder)
         }
     }
 
@@ -70,15 +68,10 @@ class DirectedGraph {
         return 'graph'
     }
 
-    void buildContent() {}
+    void buildContent(GraphVizBuilder builder) {}
 
     String urlFor(Referenceable referenceable) {
-        return "javascript:svg_wicket_call('__CALLBACK__',selected,'${referenceable.id}')"
-    }
-
-    void initBuilder() {
-        renderer = new GraphVizRenderer()
-        builder = renderer.getBuilder(getStyleTemplate())
+        return "javascript:svg_wicket_call('__CALLBACK__','selected','${referenceable.id}')"
     }
 
     protected Map getStyleTemplate() {
@@ -109,7 +102,7 @@ class DirectedGraph {
     String processSvg(String svg, String id, String url, Ref selection, SVGTransformation transformation) {
         StringBuffer sb = new StringBuffer(svg)
         addId(sb, id)
-        addStyle(sb)
+        // addStyle(sb)
         setCallbacks(sb, url)
         sb = updateSelection(sb, selection)
         setTransformation(sb, transformation)
@@ -118,13 +111,13 @@ class DirectedGraph {
 
     void addId(StringBuffer sb, String id) {
         int index = sb.toString().indexOf("<svg")
-        assert index > 0;
-        sb.insert(index+3, " id='" + id + "'");
+        assert index == 0;
+        sb.insert(index+4, " id='" + id + "'");
     }
 
     void addStyle(StringBuffer sb) {
-        index = sb.toString().indexOf('>');
-        sb.insert(index, STYLE);        
+        int index = sb.toString().indexOf('>');
+        sb.insert(index+1, STYLE);        
     }
 
     void setCallbacks(StringBuffer sb, String url) {
@@ -135,24 +128,26 @@ class DirectedGraph {
     }
 
     StringBuffer updateSelection(StringBuffer sb, Ref selection) {
-        String cssClassAttribute = " class='" + CSS_SELECTED + "' ";
          // Remove any current selection(s)
-         Pattern pattern = Pattern.compile(cssClassAttribute);
+         // Pattern pattern = Pattern.compile('(class=".*?)' + CSS_SELECTED + '(.*?")');
+         Pattern pattern = Pattern.compile("(style=\".*?)" + SELECTED_STYLE + "(.*?\")");
          Matcher matcher = pattern.matcher(sb.toString());
          StringBuffer buf = new StringBuffer();
          while(matcher.find()) {
-             matcher.appendReplacement(buf, "");
+             matcher.appendReplacement(buf, '$1' + '$2');
          }
          matcher.appendTail(buf);
         // Add new selection(s)
         // Set current selection(s)
         if (selection != null) {
             String title = DirectedGraph.nameFor(selection);
-            pattern = Pattern.compile("(<g.*?)(><title>\\w*?"+title+"</title>)");
+            pattern = Pattern.compile("(<title>\\w*?" + title + "</title>\\s*?<a .*?>\\s*?<\\w+ style=\".*?)(\")",
+                                      Pattern.MULTILINE);
             matcher = pattern.matcher(buf.toString());
             buf = new StringBuffer();
             while(matcher.find()) {
-                matcher.appendReplacement(buf, '$0' + cssClassAttribute + '$1');
+                // matcher.appendReplacement(buf, '$1' + " " + CSS_SELECTED + '$2');
+                matcher.appendReplacement(buf, '$1' + SELECTED_STYLE + '$2');
             }
             matcher.appendTail(buf);
         }
@@ -162,8 +157,8 @@ class DirectedGraph {
     void setTransformation(StringBuffer sb, SVGTransformation transformation) {
         String svg = sb.toString()
         int index = svg.indexOf("<g")
-        index = svg.indexOf(">", index)
-        sb.insert(index, transformation.toString())
+        index = svg.indexOf("\">", index)
+        sb.insert(index, " "+transformation.toString())
     }
 
 

@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransform
  * Date: Jun 6, 2008
  * Time: 9:51:00 AM
  */
-class SVGTransformation {
+class SVGTransformation implements Serializable {
 
     SVGScale scale = new SVGScale()
     SVGTranslate translate = new SVGTranslate()
