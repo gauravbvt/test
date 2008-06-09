@@ -26,6 +26,10 @@ class Event extends PlaybookElement implements Named, Described {
     Cause cause = new Cause()
     Location location = new Location()
 
+    String toString() {
+        return name
+    }
+
     boolean isAfter(Ref event) {
         if (hasTransitiveCause(event)) return true
         return (event.startTime() > this.startTime())

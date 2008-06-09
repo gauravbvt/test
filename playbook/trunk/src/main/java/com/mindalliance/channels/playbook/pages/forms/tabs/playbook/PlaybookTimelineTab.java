@@ -24,9 +24,9 @@ public class PlaybookTimelineTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        Playbook playbook = (Playbook)getElement().deref();
+/*        Playbook playbook = (Playbook)getElement().deref();
         RefContainer refContainer = new RefContainer(playbook.findAllOccurrences());
         timelinePanel = new TimelinePanel("timeline", new Model(refContainer));
-        addReplaceable(timelinePanel);
+        addReplaceable(timelinePanel);*/
     }
 }

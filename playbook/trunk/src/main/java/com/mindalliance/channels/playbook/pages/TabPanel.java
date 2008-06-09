@@ -89,7 +89,6 @@ public class TabPanel extends Panel implements SelectionManager {
                 public Panel getPanel( String panelId ) {
                     Tab t = getTab();
                     Container filtered = new FilteredContainer( t, new ClassFilter( Event.class ) );
-                    // TODO hook this up
                     final ContentView cv = new TimelinePanel( panelId, filtered, TabPanel.this );
                     views.add( cv );
                     return cv;

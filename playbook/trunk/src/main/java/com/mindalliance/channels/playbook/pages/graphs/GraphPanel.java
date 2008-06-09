@@ -130,7 +130,7 @@ abstract public class GraphPanel extends ContentView {
     }
 
     protected void addGraphSvg() {
-        Container container = (Container) getModelObject();
+        Container container = (Container) getModel();
 
         if (directedGraph == null || !container.equals(priorContainer)) { // make new directed graph only if needed
             directedGraph = makeDirectedGraph(container);

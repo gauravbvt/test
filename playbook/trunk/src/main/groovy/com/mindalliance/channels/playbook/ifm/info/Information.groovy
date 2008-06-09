@@ -18,4 +18,8 @@ class Information extends AbstractInformation {  // the communicated (partial) a
     // EOIs are inherited
     List<Ref> sourceAgents = [] // sources of the information
 
+    String toString() {
+        return "About ${event.toString()}" // TODO - do better than this
+    }
+
 }

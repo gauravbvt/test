@@ -32,4 +32,8 @@ import com.mindalliance.channels.playbook.ifm.Timing
         return new Timing(amount:0)
     }
 
+    String toString() {
+        return "${this.type}"    // TODO - do better than this
+    }
+
 }
