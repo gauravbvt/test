@@ -87,12 +87,15 @@ class QueryManager implements PropertyChangeListener {
                 findPriorInformationActsOfType: [Event.class],
                 createsRelationshipBefore: [Event.class],
                 agentImplied: [Agent.class, Association.class],
+                findAllInformationActsForAgent: [InformationAct.class, Agent.class],
                 // Playbook, Project
                 findAllAgentsExcept: [Agent.class],
                 // Resource, Group
                 hasRelationship: [Resource.class, Agent.class, Relationship.class],
                 // Association
-                createsMatchingRelationship: [Association.class]
+                createsMatchingRelationship: [Association.class],
+                // Resource
+                findAllInformationActsForResource: [InformationAct.class, Resource.class]
         ]
     }
 

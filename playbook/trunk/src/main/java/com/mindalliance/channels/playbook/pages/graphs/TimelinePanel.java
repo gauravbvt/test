@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.graphs;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.graph.Timeline;
 import com.mindalliance.channels.playbook.graph.DirectedGraph;
+import com.mindalliance.channels.playbook.pages.SelectionManager;
 import org.apache.wicket.model.IModel;
 import org.apache.log4j.Logger;
 
@@ -15,8 +16,8 @@ import org.apache.log4j.Logger;
  */
 public class TimelinePanel extends GraphPanel {
     
-    public TimelinePanel(String id, IModel model) {
-        super(id, model);
+    public TimelinePanel(String id, Container container, SelectionManager masterSelection) {
+        super(id, container, masterSelection);
     }
 
     protected DirectedGraph makeDirectedGraph(Container container) {

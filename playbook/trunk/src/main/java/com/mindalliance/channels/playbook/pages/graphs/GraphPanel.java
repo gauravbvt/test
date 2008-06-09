@@ -19,6 +19,8 @@ import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.graph.DirectedGraph;
 import com.mindalliance.channels.playbook.graph.svg.SVGTransformation;
 import com.mindalliance.channels.playbook.graph.svg.SVGTransform;
+import com.mindalliance.channels.playbook.pages.ContentView;
+import com.mindalliance.channels.playbook.pages.SelectionManager;
 
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +32,7 @@ import java.util.UUID;
  * Date: Jun 5, 2008
  * Time: 12:46:28 PM
  */
-abstract public class GraphPanel extends Panel {
+abstract public class GraphPanel extends ContentView {
 
     protected Label svgContent;
     protected WebMarkupContainer controlsDiv;
@@ -48,10 +50,10 @@ abstract public class GraphPanel extends Panel {
     protected DirectedGraph directedGraph;
     protected String svg;
     String svgElementId;
-    protected Ref currentSelection; // TODO remove when extends ContentView
+    // protected Ref currentSelection; // TODO remove when extends ContentView
 
-    public GraphPanel(String id, IModel model) {
-        super(id, model);
+    public GraphPanel(String id, Container container, SelectionManager masterSelection) {
+        super(id, container, masterSelection);
         load();
     }
 
@@ -146,21 +148,24 @@ abstract public class GraphPanel extends Panel {
         priorSelection = getSelected();
     }
 
-    protected void setSelected(Ref ref) {  // overrides ContentView
-        currentSelection = ref;
+    public void setSelected(Ref ref) {  // overrides ContentView
+        super.setSelected(ref);
+        // currentSelection = ref;
         // update svgContent if needed
         addGraphSvg();
     }
 
-    protected Ref getSelected() {  // TODO - remove when extends ContentView
+   /* protected Ref getSelected() {  // TODO - remove when extends ContentView
         return currentSelection;
-    }
+    }*/
 
+/*
     protected void doAjaxSelection(Ref ref, AjaxRequestTarget target) {   // TODO - remove when extends ContentView
         System.out.println("Selected " + ref);
         currentSelection = ref;
         setSelected(ref);
         target.addComponent(svgContent);
     }
+*/
 
 }

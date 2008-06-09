@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransform
 class SVGTransformation implements Serializable {
 
     List<SVGTransform> transforms = []
+    SVGTransform preTransform
 
     void appendTransform(SVGTransform transform) {
         if (transform.isClear()) {
@@ -22,12 +23,25 @@ class SVGTransformation implements Serializable {
         }
     }
 
+    void prependTransform(SVGTransform transform) {
+        if (transform.isClear()) {
+            throw new IllegalArgumentException("Can't prepend " + transform)
+        }
+        else {
+            preTransform = transform
+        }
+    }
+
     void clear() {
         transforms = []
     }
 
     String toString() {
         StringBuilder sb = new StringBuilder()
+        if (preTransform) {
+            sb.append(preTransform.toString())
+            sb.append(' ')
+        }
         transforms.each {xform ->
             sb.append(xform.toString())
             sb.append(' ')

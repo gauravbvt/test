@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import java.util.regex.Pattern
 import java.util.regex.Matcher
 import com.mindalliance.channels.playbook.graph.svg.SVGTransformation
+import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -105,6 +106,7 @@ class DirectedGraph implements Serializable {
         // addStyle(sb)
         setCallbacks(sb, url)
         sb = updateSelection(sb, selection)
+        // centerSelection(sb, selection, transformation)
         setTransformation(sb, transformation)
         return sb.toString()
     }
@@ -130,11 +132,11 @@ class DirectedGraph implements Serializable {
     StringBuffer updateSelection(StringBuffer sb, Ref selection) {
          // Remove any current selection(s)
          // Pattern pattern = Pattern.compile('(class=".*?)' + CSS_SELECTED + '(.*?")');
-         Pattern pattern = Pattern.compile("(style=\".*?)" + SELECTED_STYLE + "(.*?\")");
-         Matcher matcher = pattern.matcher(sb.toString());
-         StringBuffer buf = new StringBuffer();
+         Pattern pattern = Pattern.compile("(style=\".*?)" + SELECTED_STYLE + "(.*?\")")
+         Matcher matcher = pattern.matcher(sb.toString())
+         StringBuffer buf = new StringBuffer()
          while(matcher.find()) {
-             matcher.appendReplacement(buf, '$1' + '$2');
+             matcher.appendReplacement(buf, '$1' + '$2')
          }
          matcher.appendTail(buf);
         // Add new selection(s)
@@ -142,16 +144,29 @@ class DirectedGraph implements Serializable {
         if (selection != null) {
             String title = DirectedGraph.nameFor(selection);
             pattern = Pattern.compile("(<title>\\w*?" + title + "</title>\\s*?<a .*?>\\s*?<\\w+ style=\".*?)(\")",
-                                      Pattern.MULTILINE);
+                                      Pattern.MULTILINE)
             matcher = pattern.matcher(buf.toString());
-            buf = new StringBuffer();
+            buf = new StringBuffer()
             while(matcher.find()) {
                 // matcher.appendReplacement(buf, '$1' + " " + CSS_SELECTED + '$2');
-                matcher.appendReplacement(buf, '$1' + SELECTED_STYLE + '$2');
+                matcher.appendReplacement(buf, '$1' + SELECTED_STYLE + '$2')
             }
             matcher.appendTail(buf);
         }
         return buf;
+    }
+
+    // TODO -- needs to take into account display size and generated transforms
+    void centerSelection(StringBuffer sb, Ref Selection, SVGTransformation transformation) {
+        Pattern pattern = Pattern.compile("style=\"[^\"]*" + SELECTED_STYLE + "[^\"]*\"\\s*points=\"([-\\d\\.]+),([-\\d\\.]+)",
+                                          Pattern.MULTILINE)
+        Matcher matcher = pattern.matcher(sb.toString())
+        if (matcher.find()) {
+            String pointX = matcher.group(1)
+            String pointY = matcher.group(2)
+            SVGTranslate translate = new SVGTranslate(x:-1*Double.parseDouble(pointX), y:-1*Double.parseDouble(pointY))
+            transformation.prependTransform(translate)
+        }
     }
 
     void setTransformation(StringBuffer sb, SVGTransformation transformation) {

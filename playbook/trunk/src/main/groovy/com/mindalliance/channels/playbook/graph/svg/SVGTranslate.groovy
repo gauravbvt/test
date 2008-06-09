@@ -11,8 +11,8 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransform
  */
 class SVGTranslate extends SVGTransform {
 
-    int x = 0
-    int y = 0
+    double x = 0.0
+    double y = 0.0
 
     boolean isTranslate() {
         return true
@@ -32,7 +32,7 @@ class SVGTranslate extends SVGTransform {
     }
 
     boolean isIdentity() {
-        return x == 0 && y == 0
+        return x == 0.0 && y == 0.0
     }
 
 }

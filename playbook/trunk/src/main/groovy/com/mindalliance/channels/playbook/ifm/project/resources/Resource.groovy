@@ -17,7 +17,7 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
  * Date: Apr 17, 2008
  * Time: 11:16:29 AM
  */
-class Resource extends ProjectElement implements Agent, Locatable {
+/* abstract */class Resource extends ProjectElement implements Agent, Locatable {
 
     String name = ''
     String description = ''
@@ -28,7 +28,7 @@ class Resource extends ProjectElement implements Agent, Locatable {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['agreements', 'organizationResource', 'organizationElement'])
+        return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement'])
     }
 
     boolean isResourceElement() {
@@ -110,6 +110,19 @@ class Resource extends ProjectElement implements Agent, Locatable {
         // Look at associations before act
         related = related || event.playbook.createsRelationshipBefore(new Relationship(fromAgent:this.reference, name:relName, toAgent:otherResource), event)
         return related
+    }
+
+    List<Ref> findAllInformationActsForResource() {
+        List<Ref> acts = []
+        assert this.project
+        this.project.playbooks.each {pb ->
+            pb.informationActs.each {act ->
+                if (act.actorAgent == this.reference) { acts.add(act) }
+                if (act.isFlowAct() && act.targetAgent == this.reference) { acts.add(act) }
+                // Don't include acts where resource is implied by act's agent
+            }
+        }
+        return acts
     }
     // end queries
 

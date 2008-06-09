@@ -1,10 +1,15 @@
 package com.mindalliance.channels.playbook.pages;
 
 import com.mindalliance.channels.playbook.ifm.Tab;
+import com.mindalliance.channels.playbook.ifm.playbook.Event;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.filters.ClassFilter;
+import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.FilteredContainer;
+import com.mindalliance.channels.playbook.support.models.Container;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
@@ -82,8 +87,10 @@ public class TabPanel extends Panel implements SelectionManager {
         if ( summary.isTimelineable() ) {
             result.add( new AbstractTab( new Model("Timeline") ){
                 public Panel getPanel( String panelId ) {
+                    Tab t = getTab();
+                    Container filtered = new FilteredContainer( t, new ClassFilter( Event.class ) );
                     // TODO hook this up
-                    final ContentView cv = new ContentView( panelId, getTab(), TabPanel.this );
+                    final ContentView cv = new TimelinePanel( panelId, filtered, TabPanel.this );
                     views.add( cv );
                     return cv;
                 }

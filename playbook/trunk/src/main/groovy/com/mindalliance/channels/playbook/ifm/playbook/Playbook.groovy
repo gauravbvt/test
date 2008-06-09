@@ -6,10 +6,6 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
-import org.joda.time.Duration
-import com.mindalliance.channels.playbook.graph.Timeline
-import com.mindalliance.channels.playbook.ifm.Described
-import com.mindalliance.channels.playbook.support.models.RefContainer
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -77,7 +73,7 @@ class Playbook extends ProjectElement implements Described {
     }
 
     List<Ref> findCandidateCauses(Ref event) {
-         List<Ref> candidates = informationActs.findAll { act ->
+         List<Ref> candidates = (List<Ref>)informationActs.findAll { act ->
               !act.isAfter(event)
          }
         candidates.addAll(events.findAll {other ->
@@ -87,17 +83,17 @@ class Playbook extends ProjectElement implements Described {
     }
 
     List<Ref> findPriorInformationActs(Ref event, String type) {
-        return informationActs.findAll {act ->
+        return (List<Ref>)informationActs.findAll {act ->
             act.type == type && event.isAfter(act)
         }
     }
 
     List<Ref> findInformationActsOfType(String type) {
-        return informationActs.findAll {act -> act.type == type}
+        return (List<Ref>)informationActs.findAll {act -> act.type == type}
     }
 
     List<Ref> findPriorInformationActsOfType(String type, Ref event) {
-        return informationActs.findAll {act -> act.type == type && !act.isAfter(event)}
+        return (List<Ref>)informationActs.findAll {act -> act.type == type && !act.isAfter(event)}
     }
 
     List<Ref> findAllAgents() {
@@ -140,6 +136,12 @@ class Playbook extends ProjectElement implements Described {
         occurrences.addAll(events.findAll{it != occurrence})
         occurrences.addAll(informationActs.findAll{it != occurrence})
         return occurrences
+    }
+
+    List<Ref> findAllInformationActsForAgent(Ref agent) {
+        return (List<Ref>)informationActs.findAll {act ->
+            (act.actorAgent = agent) || (act.isFlowAct() && act.targetAgent == agent)
+        }
     }
 
     // end queries

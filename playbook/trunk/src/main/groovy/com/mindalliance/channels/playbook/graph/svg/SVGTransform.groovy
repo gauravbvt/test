@@ -21,7 +21,7 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
             case 'scale':
                 return new SVGScale(x:Double.parseDouble(args[0]),y:Double.parseDouble(args[1]))
             case 'translate':
-                return new SVGTranslate(x:Integer.parseInt(args[0]),y:Integer.parseInt(args[1]))
+                return new SVGTranslate(x:Double.parseDouble(args[0]),y:Double.parseDouble(args[1]))
         }
     }
 
@@ -34,6 +34,10 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
     }
 
     boolean isTranslate() {
+        return false
+    }
+
+    boolean isRotate() {
         return false
     }
 
