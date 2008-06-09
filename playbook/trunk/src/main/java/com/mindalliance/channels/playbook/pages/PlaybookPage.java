@@ -6,7 +6,7 @@ import com.mindalliance.channels.playbook.mem.SessionMemory;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
-import com.mindalliance.channels.playbook.support.models.ColumnProvider;
+import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class PlaybookPage extends WebPage {
         addOrReplace( new Label("project", new RefPropertyModel(getModel(), "project.name")));
         addOrReplace( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
-        tabPanel = createTabPanel( "tabs" );
+        tabPanel = createTabPanel( "user-tabs" );
         tabPanel.setRenderBodyOnly( true );
         addOrReplace( tabPanel );
 
@@ -123,15 +124,15 @@ public class PlaybookPage extends WebPage {
     }
 
 // TODO figure out javascript + xml
-//    protected void configureResponse() {
-//        super.configureResponse();
-//        WebResponse response = getWebRequestCycle().getWebResponse();
-//        response.setContentType("application/xhtml+xml");
-//    }
+    protected void configureResponse() {
+        super.configureResponse();
+        WebResponse response = getWebRequestCycle().getWebResponse();
+        response.setContentType("application/xhtml+xml");
+    }
 
     //-----------------------
     private TabbedPanel createTabPanel( String id ) {
-        return new TabbedPanel( id, createUserTabs() ) {
+        final TabbedPanel result = new TabbedPanel( id, createUserTabs() ) {
             protected WebMarkupContainer newLink( String linkId, final int index ) {
                 return new Link( linkId ) {
                     public void onClick() {
@@ -148,6 +149,8 @@ public class PlaybookPage extends WebPage {
                 };
             }
         };
+//        result.setRenderBodyOnly( true );
+        return result;
     }
 
     private List<AbstractTab> createUserTabs() {
@@ -198,7 +201,7 @@ public class PlaybookPage extends WebPage {
                             List<Class<?>> c = newTab.getAllowedClasses();
                             if ( c.size() > 0 ) {
                               // TODO do something smarter here...
-                              newTab.setName( ColumnProvider.toDisplay( c.get(0).getSimpleName() ) + "s" );
+                              newTab.setName( ContainerSummary.toDisplay( c.get(0).getSimpleName() ) + "s" );
                             }
 
                             Ref userRef = getUserRef();

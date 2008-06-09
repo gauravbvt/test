@@ -3,30 +3,40 @@ package com.mindalliance.channels.playbook.pages;
 import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ...
  */
-public class TabPanel extends Panel {
+public class TabPanel extends Panel implements SelectionManager {
+
+    private Ref selected;
+    private List<ContentView> views= new ArrayList<ContentView>();
+    private FormPanel form;
 
     public TabPanel( String id, IModel tabModel ) {
         super( id, tabModel );
         setRenderBodyOnly( true );
 
-        final ContentPanel right = new ContentPanel( "tab-right", tabModel );
+        form = new FormPanel( "content-form", new PropertyModel( this, "selected" ) );
 
-        final WebMarkupContainer left = new WebMarkupContainer( "tab-left" );
-        left.add( new FilterPanel( "filter", new RefPropertyModel( tabModel, "filter" ) ) {
+        add( new Label( "content-title", new RefPropertyModel( tabModel, "name" ) ) );
+        add( new FilterPanel( "filter", new RefPropertyModel( tabModel, "filter" ) ) {
             public void onFilterApplied( Filter f ) {
                 final Ref tabRef = getTabRef();
 
-                PlaybookSession ps = (PlaybookSession) PlaybookSession.get();
                 tabRef.begin();
 
                 Tab tab = (Tab) tabRef.deref();
@@ -34,23 +44,75 @@ public class TabPanel extends Panel {
                 // TODO JF: figure out why this is required, when the above should be sufficient
                 tab.changed( "filter" );
                 tabRef.commit();
-
-                assert( !ps.getMemory().getChanges().contains( tabRef ));
-                assert( !ps.getMemory().getBegun().containsKey( tabRef ));
-                assert( getTab().getFilter() == f );
-                assert( getFilter() == f );
-                assert( f.getChildAt( 0 ).getParent() == f );
                 TabPanel.this.detach();
             }
 
             public void onFilterSave( Filter filter ) {
                 TabPanel.this.onFilterSave( getTab(), filter );
+            } } );
+
+        final TabbedPanel views = new TabbedPanel( "content-views", createViewTabs() ) {
+//            protected WebMarkupContainer newLink( String linkId, final int index ) {
+//                return new Link( linkId ) {
+//                    public void onClick() {
+//                        // Todo remember setting in user's preference
+//                    }
+//                };
+//            }
+        };
+        views.setRenderBodyOnly( true );
+        add( views );
+
+        add( form );
+    }
+
+    private List<AbstractTab> createViewTabs() {
+        List<AbstractTab> result = new ArrayList<AbstractTab>();
+        final Tab tab = getTab();
+        ContainerSummary summary = tab.getSummary();
+
+        result.add( new AbstractTab( new Model("Table") ){
+            public Panel getPanel( String panelId ) {
+                final TableView tv = new TableView( panelId, getTab(), TabPanel.this );
+                views.add( tv );
+                return tv;
             }
         } );
 
-        add( new Label( "content-title", new RefPropertyModel( tabModel, "name" ) ) );
-        add( left );
-        add( right );
+        if ( summary.isTimelineable() ) {
+            result.add( new AbstractTab( new Model("Timeline") ){
+                public Panel getPanel( String panelId ) {
+                    // TODO hook this up
+                    final ContentView cv = new ContentView( panelId, getTab(), TabPanel.this );
+                    views.add( cv );
+                    return cv;
+                }
+            } );
+        }
+
+        if ( summary.isMappable() ) {
+            result.add( new AbstractTab( new Model("Map") ){
+                public Panel getPanel( String panelId ) {
+                    // TODO hook this up
+                    final ContentView cv = new ContentView( panelId, getTab(), TabPanel.this );
+                    views.add( cv );
+                    return cv;
+                }
+            } );
+        }
+
+        if ( summary.isFlowable() ) {
+            result.add( new AbstractTab( new Model("Flow") ){
+                public Panel getPanel( String panelId ) {
+                    // TODO hook this up
+                    final ContentView cv = new ContentView( panelId, getTab(), TabPanel.this );
+                    views.add( cv );
+                    return cv;
+                }
+            } );
+        }
+
+        return result;
     }
 
     protected void onFilterSave( Tab tab, Filter filter ){}
@@ -65,5 +127,33 @@ public class TabPanel extends Panel {
 
     public void setTabRef( Ref ref ) {
         setModelObject( ref );
+    }
+
+    public void doAjaxSelection( Ref ref, AjaxRequestTarget target ) {
+        if ( this.selected != ref
+             && ( this.selected == null || !this.selected.equals( ref ) ) ) {
+
+            setSelected( ref );
+            for ( ContentView view: views ) {
+                if ( view.isVisible() )
+                    target.addComponent( view );
+            }
+            target.addComponent( form );
+        }
+    }
+
+    public Ref getSelected() {
+        return selected;
+    }
+
+    public void setSelected( Ref selected ) {
+        if ( this.selected != selected
+             && ( this.selected == null || !this.selected.equals( selected ) ) ) {
+
+            this.selected = selected;
+            for ( ContentView view: views )
+                view.setSelected( selected );
+            form.modelChanged();
+        }
     }
 }

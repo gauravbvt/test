@@ -12,7 +12,7 @@ import java.util.*;
 public class ContainerModel extends RefPropertyModel implements Container {
 
     private List<Class<?>> allowedClasses;
-    private ColumnProvider columnProvider;
+    private transient ContainerSummary summary;
     private List<Ref> contents;
 
     public ContainerModel( Object modelObject, String expression, List<Class<?>> allowedClasses ) {
@@ -56,8 +56,8 @@ public class ContainerModel extends RefPropertyModel implements Container {
     //==================================
     public void detach() {
         super.detach();
-        if ( columnProvider != null )
-            columnProvider.detach();
+        if ( summary != null )
+            summary.detach();
         contents = null;
     }
 
@@ -65,11 +65,11 @@ public class ContainerModel extends RefPropertyModel implements Container {
         return allowedClasses;
     }
 
-    public ColumnProvider getColumnProvider() {
-        if ( columnProvider == null )
-            columnProvider = new ColumnProvider( this );
+    public ContainerSummary getSummary() {
+        if ( summary == null )
+            summary = new ContainerSummary( this );
 
-        return columnProvider;
+        return summary;
     }
 
     private List<Ref> getContents() {

@@ -1,5 +1,8 @@
 package com.mindalliance.channels.playbook.support.models;
 
+import com.mindalliance.channels.playbook.ifm.Agent;
+import com.mindalliance.channels.playbook.ifm.Locatable;
+import com.mindalliance.channels.playbook.ifm.playbook.Event;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
@@ -36,7 +39,7 @@ import java.util.TreeSet;
 /**
  * ...
  */
-public class ColumnProvider extends BeanImpl implements IDataProvider {
+public class ContainerSummary extends BeanImpl implements IDataProvider {
 
     private Container data;
 
@@ -46,13 +49,21 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
     private transient Map<String,RefMetaProperty> columnIndex;
     private transient List<RefMetaProperty> columns ;
 
-    public ColumnProvider( Container data ) {
+    private transient boolean timelineable;
+    private transient boolean mappable;
+    private transient boolean flowable;
+
+    public ContainerSummary( Container data ) {
+        if ( data == null )
+            throw new NullPointerException();
         this.data = data;
     }
 
     public List<String> transientProperties() {
         final List<String> list = super.transientProperties();
-        list.addAll( Arrays.asList( "usage", "classes", "columnIndex", "columns" ) );
+        list.addAll( Arrays.asList(
+                "timelineable", "mappable", "flowable",
+                "usage", "classes", "columnIndex", "columns" ) );
         return list;
     }
 
@@ -98,11 +109,24 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
                 }
             );
 
+            mappable = false;
+            timelineable = false;
+            flowable = false;
+
             for ( Ref ref : data ){
                 Referenceable object = ref.deref();
                 Class<?> objectClass = object.getClass();
                 ClassUse use = result.get( objectClass );
                 if ( use == null ) {
+                    if ( !mappable && Locatable.class.isAssignableFrom( objectClass ) )
+                        mappable = true;
+                    if ( !timelineable && Event.class.isAssignableFrom( objectClass ) )
+                        timelineable = true;
+                    if ( !flowable
+                            && ( Event.class.isAssignableFrom( objectClass )
+                                    || Agent.class.isAssignableFrom( objectClass ) )
+                            )
+                        flowable = true;
                     use = new ClassUse( objectClass );
                     result.put( objectClass, use);
                 }
@@ -171,6 +195,21 @@ public class ColumnProvider extends BeanImpl implements IDataProvider {
 
     public RefMetaProperty get( String name ) {
         return getColumnIndex().get( name );
+    }
+
+    public boolean isTimelineable() {
+        getUsage();
+        return timelineable;
+    }
+
+    public boolean isMappable() {
+        getUsage();
+        return mappable;
+    }
+
+    public boolean isFlowable() {
+        getUsage();
+        return flowable;
     }
 
     //====================================

@@ -18,7 +18,7 @@ import java.util.Map;
 public class RefContainer implements Container, Serializable {
 
     private List<Ref> contents;
-    private transient ColumnProvider columnProvider;
+    private transient ContainerSummary summary;
 
     public RefContainer() {}
 
@@ -55,18 +55,18 @@ public class RefContainer implements Container, Serializable {
     }
 
     public void detach() {
-        if ( columnProvider != null )
-            columnProvider = null;
+        if ( summary != null )
+            summary = null;
     }
 
     public List<Class<?>> getAllowedClasses() {
         return new ArrayList<Class<?>>();
     }
 
-    public ColumnProvider getColumnProvider() {
-        if ( columnProvider == null )
-            columnProvider = new ColumnProvider( this );
-        return columnProvider;
+    public ContainerSummary getSummary() {
+        if ( summary == null )
+            summary = new ContainerSummary( this );
+        return summary;
     }
 
     public int indexOf( Ref ref ) {

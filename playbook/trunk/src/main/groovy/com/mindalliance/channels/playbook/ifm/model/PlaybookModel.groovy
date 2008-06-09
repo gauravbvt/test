@@ -50,20 +50,6 @@ class PlaybookModel extends IfmElement implements Described {
         super.doRemoveFromField(field, object)
     }
 
-
-    List<Ref> getElements() {
-        List<Ref> elements = []
-        elements.addAll(domains)
-        elements.addAll(eventTypes)
-        elements.addAll(issueTypes)
-        elements.addAll(mediumTypes)
-        elements.addAll(organizationTypes)
-        elements.addAll(placeTypes)
-        elements.addAll(roles)
-        elements.addAll(taskTypes)
-        return elements
-    }
-
     List<Ref> getParticipatingUsers() {
         return participations.collect {participation -> participation.user}
     }
@@ -105,14 +91,28 @@ class PlaybookModel extends IfmElement implements Described {
         return participations.find { it.user.id == user.id } != null
     }
 
+    List<Ref> getElements() {
+        List<Ref> elements = []
+        elements.addAll(areaTypes)
+        elements.addAll(domains)
+        elements.addAll(eventTypes)
+        elements.addAll(issueTypes)
+        elements.addAll(mediumTypes)
+        elements.addAll(organizationTypes)
+        elements.addAll(placeTypes)
+        elements.addAll(roles)
+        elements.addAll(taskTypes)
+        return elements
+    }
+
     /**
      * Return what model content an analyst can create.
      */
     static List<Class<?>> contentClasses() {
         [
-                Domain.class, EventType.class, IssueType.class,
-                PlaceType.class, AreaType.class, OrganizationType.class,
-                MediumType.class,
+                AreaType.class, Domain.class, EventType.class,
+                IssueType.class, MediumType.class,
+                PlaceType.class, OrganizationType.class,
                 Role.class, TaskType.class
         ]
     }

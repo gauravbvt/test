@@ -9,25 +9,21 @@
 <wicket:panel>
     <div id="tab-title">
         <hr/>
-        <h2 wicket:id="content-title">Resources</h2>
-        <wicket:child/>
-        <div class="tab-row">
-            <ul>
-                <li class="selected"><a href=""><span>Table</span></a></li>
-                <li><a href=""><span>Map</span></a></li>
-                <li><a href=""><span>Flow</span></a></li>
-                <li><a href=""><span>Timeline</span></a></li>
-                <li><a href=""><span>Causality</span></a></li>
-            </ul>
-        </div>
+        <h2 wicket:id="content-title">Contents</h2>
     </div>
     <div id="tab-content">
         <div>
-            <div wicket:id="tab-left" class="tab-left tall">
-                <div class="content-filter" wicket:id="filter"/>
+            <div wicket:id="filter" class="tab-left tall">
+                [Filter]
             </div>
-            <div wicket:id="tab-right" class="tab-right wide">
-                   [Contents]
+            <div class="tab-right wide">
+                <div wicket:id="content-views">
+                    [Views]
+                </div>
+                <div class="content-form">
+                    <h3>Details</h3>
+                    <div wicket:id="content-form" class="tall">[ Contents form ]</div>
+                </div>
             </div>
         </div>
     </div>

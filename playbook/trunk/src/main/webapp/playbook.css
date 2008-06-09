@@ -165,9 +165,6 @@ h1 > span {
 div#tab-title h2 {
     padding: 5px 0;
 }
-div#tab-title div.tab-row {
-    text-align: right;
-}
 
 div.tab-panel h2 {
     margin-bottom: 5px;
@@ -186,8 +183,8 @@ div.tab-row ul, div.list-type ul {
     display: block;
     list-style: none;
 }
-div#everything > div.tab-row ul {
-    margin-top: 1px;
+div#everything > div.tab-row ul, div.tab-right div.tab-row ul {
+    margin: 1px 0;
 }
 div.content-form div.tab-row ul {
     margin: -1px 0 5px 0;
@@ -195,6 +192,7 @@ div.content-form div.tab-row ul {
 div#tab-title div.tab-row ul {
     margin-bottom: 1px;
 }
+
 div#everything > div.tab-row li, div.content-form div.tab-row li {
     margin-left: 5px;
 }

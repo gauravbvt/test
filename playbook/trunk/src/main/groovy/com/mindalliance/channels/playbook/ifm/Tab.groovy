@@ -4,11 +4,12 @@ import com.mindalliance.channels.playbook.support.models.Container
 import com.mindalliance.channels.playbook.pages.filters.UserScope
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.support.models.ColumnProvider
+import com.mindalliance.channels.playbook.support.models.ContainerSummary
 import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.pages.filters.RootFilter
 import com.mindalliance.channels.playbook.support.models.FilteredContainer
 import com.mindalliance.channels.playbook.pages.filters.Filter
+import com.mindalliance.channels.playbook.support.models.ContainerSummary
 
 /**
 * ...
@@ -19,7 +20,7 @@ class Tab extends IfmElement implements Container {
     Filter filter
     String name = 'Everything'
     Container base
-    ColumnProvider columnProvider
+    ContainerSummary summary
     Container buffer
 
     //---------------------------------
@@ -49,15 +50,15 @@ class Tab extends IfmElement implements Container {
     }
 
     List transientProperties() {
-        super.transientProperties() + [ "columnProvider", "buffer", "allowedClasses", "object" ]
+        super.transientProperties() + [ "summary", "buffer", "allowedClasses", "object" ]
     }
 
     //---------------------------------
-    public synchronized ColumnProvider getColumnProvider() {
-        if ( columnProvider == null )
-            columnProvider = new ColumnProvider( this );
+    public synchronized ContainerSummary getSummary() {
+        if ( summary == null )
+            summary = new ContainerSummary( this );
 
-        return columnProvider
+        return summary
     }
 
     public synchronized Filter getFilter() {

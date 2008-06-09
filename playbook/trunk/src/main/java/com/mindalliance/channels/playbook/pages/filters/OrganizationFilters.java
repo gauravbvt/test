@@ -26,7 +26,7 @@ public class OrganizationFilters extends AbstractFilters {
     }
 
     private void addParentFilters( List<Filter> result, Container data ) {
-        if ( data.getColumnProvider().includes( "parent" ) ) {
+        if ( data.getSummary().includes( "parent" ) ) {
             // We have some parent orgs. Check if we can differentiate
 
             boolean nullParents = false;

@@ -30,7 +30,7 @@ public interface Container extends IDataProvider, IModel, Iterable<Ref>, Mappabl
 
     List<Class<?>> getAllowedClasses();
 
-    ColumnProvider getColumnProvider();
+    ContainerSummary getSummary();
 
     Iterator<Ref> iterator( int first, int count );
 

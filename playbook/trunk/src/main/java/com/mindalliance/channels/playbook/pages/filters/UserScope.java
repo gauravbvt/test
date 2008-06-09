@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
-import com.mindalliance.channels.playbook.support.models.ColumnProvider;
+import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import groovy.lang.MissingPropertyException;
@@ -36,7 +36,7 @@ public class UserScope extends BeanImpl implements Container {
 
     private transient User user;
     private transient List<Ref> contents;
-    private transient ColumnProvider columnProvider;
+    private transient ContainerSummary summary;
     private transient List<Class<?>> allowedClasses;
 
     public UserScope() {
@@ -57,8 +57,8 @@ public class UserScope extends BeanImpl implements Container {
             Set<Class<?>> result = new TreeSet<Class<?>>(
                 new Comparator<Class<?>>(){
                     public int compare( Class<?> o1, Class<?> o2 ) {
-                        return ColumnProvider.toDisplay( o1.getSimpleName() )
-                                .compareTo( ColumnProvider.toDisplay( o2.getSimpleName() ));
+                        return ContainerSummary.toDisplay( o1.getSimpleName() )
+                                .compareTo( ContainerSummary.toDisplay( o2.getSimpleName() ));
                     }
                 }
             );
@@ -224,15 +224,15 @@ public class UserScope extends BeanImpl implements Container {
         user = null;
         contents = null;
         allowedClasses = null;
-        if ( columnProvider != null )
-            columnProvider.detach();
+        if ( summary != null )
+            summary.detach();
     }
 
-    public synchronized ColumnProvider getColumnProvider() {
-        if ( columnProvider == null )
-            columnProvider = new ColumnProvider( this );
+    public synchronized ContainerSummary getSummary() {
+        if ( summary == null )
+            summary = new ContainerSummary( this );
 
-        return columnProvider;
+        return summary;
     }
 
     //================================

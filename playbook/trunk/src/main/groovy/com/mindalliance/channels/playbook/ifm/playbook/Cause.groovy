@@ -26,4 +26,8 @@ class Cause extends BeanImpl {
         return trigger != null
     }
 
+    String toString() {
+        return trigger == null ? "" : trigger.deref().toString();
+    }
+
 }

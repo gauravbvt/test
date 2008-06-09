@@ -41,12 +41,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
          appMemory = new ApplicationMemory(this)
     }
 
-    void init() {
-        super.init();
-        println "INITING"
-        getMarkupSettings().setStripXmlDeclarationFromOutput(false);
-        getMarkupSettings().setStripWicketTags(false);
-    }
+//    void init() {
+//        super.init();
+//        println "INITING"
+//        getMarkupSettings().setStripXmlDeclarationFromOutput(false);
+//        getMarkupSettings().setStripWicketTags(true);
+//    }
 
     static PlaybookApplication current() {
         return (PlaybookApplication) Application.get()

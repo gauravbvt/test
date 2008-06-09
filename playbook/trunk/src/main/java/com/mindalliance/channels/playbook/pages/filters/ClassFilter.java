@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.models.ColumnProvider;
+import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 
@@ -128,17 +128,17 @@ public class ClassFilter extends Filter {
 
     public static String collapsedText( Class<?> clazz ) {
         return MessageFormat.format( "Any {0}",
-            ColumnProvider.toDisplay( clazz.getSimpleName() ).toLowerCase() );
+            ContainerSummary.toDisplay( clazz.getSimpleName() ).toLowerCase() );
     }
 
     public static String expandedText( Class<?> clazz ) {
-        String s = ColumnProvider.toDisplay( clazz.getSimpleName() );
+        String s = ContainerSummary.toDisplay( clazz.getSimpleName() );
         s = s.substring( 0,1 ) + s.substring( 1 ).toLowerCase();
         return MessageFormat.format( "{0}s...", s );
     }
 
     private Set<Class<?>> getSubclasses( Class<?> stopClass ) {
-        Set<Class<?>> classes = getContainer().getColumnProvider().getClasses();
+        Set<Class<?>> classes = getContainer().getSummary().getClasses();
         Map<Class<?>,Set<Class<?>>> map = new HashMap<Class<?>,Set<Class<?>>>();
 
         // Build subclass map
