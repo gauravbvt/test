@@ -58,7 +58,7 @@ public class FilterTree extends Tree {
         String selector = isSingleSelect()? "uniqueSelection" : "forceSelected" ;
         if ( !isSingleSelect() || f.getChildCount() == 0 ) {
             item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ) {
-                public void onFilterSelect( AjaxRequestTarget target ) {
+                synchronized public void onFilterSelect( AjaxRequestTarget target ) {
                     DefaultTreeModel tm = getTreeModel();
                     tm.nodeStructureChanged( f );
 

@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 import com.mindalliance.channels.playbook.ifm.project.environment.Place
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
@@ -275,25 +276,26 @@ class Project extends IfmElement implements Named, Described {
         // When changing this method, don't forget to update the next one...
         List<Class<?>> result = new ArrayList<Class<?>>()
         result.addAll([Organization.class])
-        result.addAll([Person.class])
-        result.addAll([SharingAgreement.class])
-        result.addAll([Policy.class])
         result.addAll([Place.class])
         result.addAll([Playbook.class])
+        result.addAll([Person.class])
+        result.addAll([Policy.class])
+        result.addAll([Relationship.class])
+        result.addAll([SharingAgreement.class])
         result.addAll(Playbook.contentClasses())
         return result
     }
 
     void addContents(List<Ref> result) {
         playbooks.each { it.addContents(result) }
-        result.addAll(persons)
+        result.addAll(analysisElements)
         result.addAll(organizations)
-        result.addAll(sharingAgreements)
-        result.addAll(policies)
+        result.addAll(persons)
         result.addAll(places)
         result.addAll(playbooks)
-        result.addAll(analysisElements)
-        playbooks.each { it.addContents(result) }
+        result.addAll(policies)
+        result.addAll(relationships)
+        result.addAll(sharingAgreements)
     }
 
     /**

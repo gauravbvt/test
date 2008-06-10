@@ -72,7 +72,7 @@ public class ContentView extends Panel implements SelectionManager {
     }
 
     private WebMarkupContainer createNewMenu() {
-        final ListView items = new ListView( "new-popup-item", new RefPropertyModel( this, "tab.allowedClasses" ) ) {
+        final ListView items = new ListView( "new-popup-item", new RefPropertyModel( this, "container.allowedClasses" ) ) {
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final AjaxLink link = new AjaxLink( "new-item-link" ) {

@@ -88,19 +88,20 @@ public class ClassFilter extends Filter {
 
     protected List<Filter> createChildren() {
         List<Filter> result = new ArrayList<Filter>();
-        Set<Class<?>> subclasses = getSubclasses( getObjectType() );
+        Set<Class<?>> subclasses = getSubclasses();
         Container filtered = new FilteredContainer( getContainer(), this, true );
 
-
         // Impersonate...
-        if ( subclasses.size() == 1 ) {
-            Class<?> c = subclasses.iterator().next();
-            setObjectType( c );
-            setExpandedText( expandedText( c ) );
-            setCollapsedText( collapsedText( c ) );
-        }
+//        if ( subclasses.size() == 1 ) {
+//            Class<?> c = subclasses.iterator().next();
+////            if ( card( getObjectType() ) == card( c ) ) {
+//                setObjectType( c );
+//                setExpandedText( expandedText( c ) );
+//                setCollapsedText( collapsedText( c ) );
+////            }
+//        }
 
-        if ( subclasses.size() > 1 )
+        if ( subclasses.size() >= 1 )
             for ( Class<?> c : subclasses ) {
                 ClassFilter cf = new ClassFilter( c );
                 cf.setShowingLeaves( isShowingLeaves() );
@@ -110,7 +111,7 @@ public class ClassFilter extends Filter {
         else if ( getFiltersType() != null ) try {
             // Apply specialized filters
             AbstractFilters fs = (AbstractFilters) getFiltersType().newInstance();
-            return fs.getFilters( filtered, isShowingLeaves() );
+            result.addAll( fs.getFilters( filtered, isShowingLeaves() ) );
 
             } catch ( InstantiationException e ) {
                 e.printStackTrace();
@@ -126,6 +127,20 @@ public class ClassFilter extends Filter {
         return result;
     }
 
+    private boolean isConcrete( Class<?> sup ) {
+        return getContainer().getSummary().instancesOf( sup ) != 0 ;
+    }
+
+    private int card( Class<?> c, Map<Class<?>, Set<Class<?>>> map ) {
+        int count = getContainer().getSummary().instancesOf( c );
+        Set<Class<?>> classSet = map.get( c );
+        if ( classSet != null )
+            for ( Class<?> sc : classSet )
+                    count +=  card( sc, map );
+
+        return count;
+    }
+
     public static String collapsedText( Class<?> clazz ) {
         return MessageFormat.format( "Any {0}",
             ContainerSummary.toDisplay( clazz.getSimpleName() ).toLowerCase() );
@@ -137,35 +152,44 @@ public class ClassFilter extends Filter {
         return MessageFormat.format( "{0}s...", s );
     }
 
-    private Set<Class<?>> getSubclasses( Class<?> stopClass ) {
-        Set<Class<?>> classes = getContainer().getSummary().getClasses();
-        Map<Class<?>,Set<Class<?>>> map = new HashMap<Class<?>,Set<Class<?>>>();
+    private Set<Class<?>> getSubclasses() {
+        TreeSet<Class<?>> result = new TreeSet<Class<?>>( new Comparator<Class<?>>() {
+            public int compare( Class<?> o1, Class<?> o2 ) {
+                return collapsedText( o1 ).compareTo( collapsedText( o2 ) );
+            }
+        } );
 
-        // Build subclass map
+        Map<Class<?>, Set<Class<?>>> map = getRawSubclasses();
+        Set<Class<?>> classes = map.get( getObjectType() );
+        if ( classes != null )
+            for ( Class<?> c : classes ) {
+                simplifySet( result, c, map, true );
+        }
+
+        return result;
+    }
+
+    private Map<Class<?>, Set<Class<?>>> getRawSubclasses() {
+        Map<Class<?>,Set<Class<?>>> result = new HashMap<Class<?>,Set<Class<?>>>();
+        ContainerSummary summary = getContainer().getSummary();
+        Set<Class<?>> classes = summary.getClasses();
+
         for ( Class<?> c : classes ) {
             Class<?> sc = c;
-            while( sc != stopClass && stopClass.isAssignableFrom( sc ) ) {
+            while( sc != getObjectType() && getObjectType().isAssignableFrom( sc ) ) {
                 Class<?> ssc = sc.getSuperclass();
-                Set<Class<?>> value = map.get( ssc );
+                Set<Class<?>> value = result.get( ssc );
                 if ( value == null )
                     value = new HashSet<Class<?>>();
                 value.add( sc );
-                map.put( ssc, value );
+                result.put( ssc, value );
                 sc = ssc ;
             }
         }
-
-        return simplifiedSet(
-            new TreeSet<Class<?>>( new Comparator<Class<?>>(){
-                public int compare( Class<?> o1, Class<?> o2 ) {
-                    return collapsedText( o1 ).compareTo( collapsedText( o2 ) );
-                } } ),
-            stopClass,
-            map,
-            true );
+        return result;
     }
 
-    private Set<Class<?>> simplifiedSet(
+    private Set<Class<?>> simplifySet(
             Set<Class<?>> classes, Class<?> objectClass,
             Map<Class<?>, Set<Class<?>>> map,
             boolean dig ) {
@@ -174,18 +198,25 @@ public class ClassFilter extends Filter {
         if ( subs == null )
             classes.add( objectClass );
 
-        else if ( subs.size() == 1 )
-            simplifiedSet( classes, subs.iterator().next(), map, dig );
+        else {
+            Class<?> first = subs.iterator().next();
+            if ( subs.size() == 1 ) {
+                if ( isConcrete( objectClass ) ) {
+                    // Superclass is not abstract and has instances
+                    classes.add( objectClass );
+                } else {
+                    simplifySet( classes, first, map, dig );
+                }
+            } else if ( !dig )
+                classes.add( objectClass );
 
-        else if ( !dig )
-            classes.add( objectClass );
-
-        else for ( Class<?> c : subs ) {
-            Set<Class<?>> ssubs = map.get( c );
-            if ( ssubs == null || ssubs.size() > 1 )
-                classes.add( c );
-            else
-                simplifiedSet( classes, c, map, false );
+            else for ( Class<?> c : subs ) {
+                Set<Class<?>> ssubs = map.get( c );
+                if ( ssubs == null || ssubs.size() > 1 )
+                    classes.add( c );
+                else
+                    simplifySet( classes, c, map, false );
+            }
         }
 
         return classes;

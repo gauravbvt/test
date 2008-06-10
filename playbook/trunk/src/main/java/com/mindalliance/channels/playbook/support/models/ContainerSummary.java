@@ -130,6 +130,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                     use = new ClassUse( objectClass );
                     result.put( objectClass, use);
                 }
+                use.tally();
                 use.grok( object );
             }
 
@@ -178,6 +179,11 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         return b.toString();
     }
 
+    public int instancesOf( Class<?> clazz ) {
+        ClassUse classUse = getUsage().get( clazz );
+        return classUse == null ? 0 : classUse.getCount();
+    }
+
     public static String valueToDisplay( Object object ) {
         if ( object == null )
             return "" ;
@@ -221,6 +227,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         private List<PropertyDescriptor> properties;
         private boolean hasTransients;
         private Set<String> transients;
+        private int count;
 
         public ClassUse( Class<?> c ) {
             properties = new ArrayList<PropertyDescriptor>();
@@ -300,6 +307,9 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
             }
         }
 
+        public void tally() {
+            count++;
+        }
         private RefMetaProperty newRMP( PropertyDescriptor p ) {
             String name = p.getName();
             return new RefMetaProperty( name, p.getPropertyType(), toDisplay( name ) );
@@ -321,6 +331,10 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                         result.add( newRMP( p ) );
             }
             return result;
+        }
+
+        public int getCount() {
+            return count;
         }
     }
 }

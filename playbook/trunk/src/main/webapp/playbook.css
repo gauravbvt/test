@@ -192,10 +192,6 @@ div.content-form div.tab-row ul {
 div#tab-title div.tab-row ul {
     margin-bottom: 1px;
 }
-
-div#everything > div.tab-row li, div.content-form div.tab-row li {
-    margin-left: 5px;
-}
 div.tab-row li.tab0 {
     margin-left: 0 !important;
 }
@@ -204,6 +200,7 @@ div.tab-row li.selected, div.list-type li.selected {
 }
 div.tab-row li, div.list-type li {
     display: inline;
+    margin-left: 5px;
     padding: 0 5px;
 }
 div.tab-row a, div.list-type a {
@@ -302,6 +299,7 @@ ul.new-item-choices {
     padding: 0 5px;
     max-height: 40%;
     overflow: auto;
+    margin-top: 2px;
 }
 ul.new-item-choices li {
     display: inline;
