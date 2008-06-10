@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event;
 import com.mindalliance.channels.playbook.pages.filters.ClassFilter;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
+import com.mindalliance.channels.playbook.pages.graphs.InfoFlowPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
@@ -112,7 +113,7 @@ public class TabPanel extends Panel implements SelectionManager {
             result.add( new AbstractTab( new Model("Flow") ){
                 public Panel getPanel( String panelId ) {
                     // TODO hook this up
-                    final ContentView cv = new ContentView( panelId, getTab(), TabPanel.this );
+                    final ContentView cv = new InfoFlowPanel( panelId, getTab(), TabPanel.this );
                     views.add( cv );
                     return cv;
                 }

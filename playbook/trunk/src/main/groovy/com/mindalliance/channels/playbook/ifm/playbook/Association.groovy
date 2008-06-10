@@ -16,6 +16,10 @@ class Association extends InformationAct {   // Creation of a relationship
     Ref toAgent
     String reverseRelationshipName = ''
 
+    String toString() {
+        return "Association: ${actorAgent} $relationshipName ${toAgent} "
+    }
+
     // Queries
 
     boolean createsMatchingRelationship(Relationship relationship) {

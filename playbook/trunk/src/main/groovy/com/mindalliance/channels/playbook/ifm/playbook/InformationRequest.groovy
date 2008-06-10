@@ -13,4 +13,8 @@ class InformationRequest extends FlowAct  {
 
     InformationNeed informationNeed = new InformationNeed()
 
+    String toString() {
+        return "Request for $informationNeed"
+    }
+
 }

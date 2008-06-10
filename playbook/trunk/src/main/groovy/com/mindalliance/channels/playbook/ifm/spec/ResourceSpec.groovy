@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: May 27, 2008
  * Time: 9:41:28 PM
  */
-class ResourceSpec extends BeanImpl implements Spec {
+class ResourceSpec extends SpecImpl {
 
     protected List<Ref> roles = [] // agent plays any of these roles, or any role at all if empty list
     protected List<Ref> organizationTypes = [] // agent is or is on any of these organization types, or any at all if empty list

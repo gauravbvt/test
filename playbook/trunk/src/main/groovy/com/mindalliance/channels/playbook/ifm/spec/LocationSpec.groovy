@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.spec.Spec
 * Date: Apr 17, 2008
 * Time: 9:21:45 AM
 */
-class LocationSpec extends BeanImpl implements Spec {
+class LocationSpec extends SpecImpl {
 
     static final List<String> relations = ['contained', 'encompassing', 'adjoining']
 

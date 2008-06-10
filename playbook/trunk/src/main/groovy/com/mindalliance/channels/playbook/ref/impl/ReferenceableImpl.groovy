@@ -210,9 +210,7 @@ import org.apache.log4j.Logger
     }
 
     String getType() {// Default
-        String cn = this.class.name
-        String type = "${cn.substring(cn.lastIndexOf('.') + 1)}"
-        return type
+        return super.shortClassName()
     }
 
     Class formClass() {

@@ -16,6 +16,10 @@ class Team extends PlaybookElement implements Agent {
     String description = ''
     List<Ref> resources = []  // Identified and invariant
 
+    String toString() {
+        return name
+    }
+
     public List<Ref> getResourcesAt(Event event) {
         return resources;
     }

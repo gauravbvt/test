@@ -15,4 +15,6 @@ interface Bean extends Serializable, Mappable {
    void detach()  // detach any field value that should or can not be serialized
    void setFrom(Bean bean)
    Map beanProperties()
+   String shortClassName()
+   String makeLabel(int maxWidth)
 }

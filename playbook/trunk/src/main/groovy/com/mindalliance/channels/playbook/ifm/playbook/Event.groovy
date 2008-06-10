@@ -26,8 +26,17 @@ class Event extends PlaybookElement implements Named, Described {
     Cause cause = new Cause()
     Location location = new Location()
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['informationAct']
+    }
+
     String toString() {
         return name
+    }
+
+    boolean isInformationAct() {
+        return false
     }
 
     boolean isAfter(Ref event) {
@@ -63,5 +72,33 @@ class Event extends PlaybookElement implements Named, Described {
                              description:'An event of some kind',
                              topics: ['description', 'location', 'cause'])
     }
+
+    // QUERIES
+
+    List<Ref> findAllInformationActsCausedByEvent() {
+        assert playbook
+        Playbook playbook = (Playbook)this.playbook.deref()
+        return (List<Ref>)playbook.informationActs.findAll {act ->
+            act.cause.trigger == this.reference
+        }
+    }
+
+    List<Ref> findAllEventsCausedByEvent() {
+        assert playbook
+        Playbook playbook = (Playbook)this.playbook.deref()
+        return (List<Ref>)playbook.events.findAll {event ->
+            event.cause.trigger == this.reference
+        }
+    }
+
+    List<Ref> findAllInformationActsAboutEvent() {
+        assert playbook
+        return (List<Ref>)this.playbook.informationActs.findAll {act ->
+            act.hasInformation() && act.information.event == this.reference
+        }
+    }
+
+
+       // END QUERIES
 
 }

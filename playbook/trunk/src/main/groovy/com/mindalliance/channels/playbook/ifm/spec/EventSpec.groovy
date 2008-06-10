@@ -5,7 +5,6 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.spec.Spec
 import com.mindalliance.channels.playbook.ifm.spec.LocationSpec
 import com.mindalliance.channels.playbook.ifm.Timing
-import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +13,7 @@ import com.mindalliance.channels.playbook.ifm.Timing
 * Date: Apr 17, 2008
 * Time: 9:19:42 AM
 */
-class EventSpec extends BeanImpl implements Spec {
+class EventSpec extends SpecImpl {
 
     List<Ref> eventTypes = []// the kinds of event (AND-ed)
     LocationSpec locationSpec = new LocationSpec() // constraints on location of event

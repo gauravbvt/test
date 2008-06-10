@@ -17,4 +17,8 @@ class Assignation extends FlowAct {  // communication of a responsibility (the t
     Responsibility responsibility = new Responsibility()
     Ref assigneeAgent
 
+    String toString() {
+        return "Assignation of ${responsibility.toString()}"
+    }
+
 }

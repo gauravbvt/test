@@ -20,6 +20,10 @@ import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.query.QueryCache
+import com.mindalliance.channels.playbook.ifm.info.Information
+import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
+import com.mindalliance.channels.playbook.ifm.info.InformationNeed
+import com.mindalliance.channels.playbook.ifm.spec.EventSpec
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -171,41 +175,84 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
                         user: user.getReference(),
                         project: p.getReference())))
 
-        initializeDefaultPlaybook(p)
+        initializeDefaultPlaybook(p, m)
         channels.addProject(store(p))
         channels.addModel(store(m));
         store(channels)
     }
 
-    void initializeDefaultPlaybook(Project p) {
+    void initializeDefaultPlaybook(Project p, PlaybookModel m) {
         Playbook pb = new Playbook(name: 'default')
         p.addPlaybook(store(pb))
+
         Event event1 = new Event(name: 'event1')
         addToPlaybook(event1, pb)
+
         Detection detection1 = new Detection(name: 'detection1', actorAgent: p.findPersonNamed('Joe Shmoe'))
         detection1.cause.trigger = event1.reference
         detection1.cause.delay = new Timing(amount:3, unit:'hours')
+        Information info1 = new Information(event: event1.reference)
+        info1.eventDetails.add(new ElementOfInformation(topic:'topic1'))
+        info1.eventDetails.add(new ElementOfInformation(topic:'topic2'))
+        info1.eventDetails.add(new ElementOfInformation(topic:'topic3'))
+        detection1.information = info1
         addToPlaybook(detection1, pb)
+
         InformationTransfer transfer1 = new InformationTransfer(name:'transfer1', actorAgent:detection1.actorAgent, targetAgent:p.findOrganizationNamed('ACME Inc.'))
         transfer1.cause.trigger = detection1.reference
         transfer1.cause.delay = new Timing(amount:2, unit:'minutes')
+        Information info2 = new Information(event: event1.reference)
+        info2.eventDetails.add(new ElementOfInformation(topic:'topic1'))
+        info2.eventDetails.add(new ElementOfInformation(topic:'topic2'))
+        transfer1.information = info2
         addToPlaybook(transfer1, pb)
+
         InformationTransfer transfer2 = new InformationTransfer(name:'transfer2', actorAgent:detection1.actorAgent, targetAgent:p.findOrganizationNamed('NADIR Inc.'))
         transfer2.cause.trigger = detection1.reference
         transfer2.cause.delay = new Timing(amount:2, unit:'minutes')
+        Information info3 = new Information(event: event1.reference)
+        info3.eventDetails.add(new ElementOfInformation(topic:'topic1'))
+        transfer2.information = info3
         addToPlaybook(transfer2, pb)
+
         Task task1 = new Task(name:'task1', actorAgent: p.findOrganizationNamed('ACME Inc.'))
         task1.cause.trigger = transfer1.reference
         task1.cause.delay = new Timing(amount:3, unit:'days')
+        EventSpec eventSpec1 = new EventSpec(eventTypes:[m.findType('EventType', 'accident')])
+        InformationNeed need1 = new InformationNeed(eventSpec: eventSpec1)
+        task1.informationNeeds.add(need1)
+        EventSpec eventSpec2 = new EventSpec(eventTypes:[m.findType('EventType', 'terrorism')])
+        InformationNeed need2 = new InformationNeed(eventSpec: eventSpec2)
+        task1.informationNeeds.add(need2)
         addToPlaybook(task1, pb)
-        Task task2 = new Task(name:'task2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
-        task2.cause.trigger = transfer2.reference
-        task2.cause.delay = new Timing(amount:1, unit:'days')
-        addToPlaybook(task2, pb)
+
         Event event2 = new Event(name:'event2')
         event2.cause.trigger = task1.reference
         event2.cause.delay = new Timing(amount:1, unit:'weeks')
         addToPlaybook(event2, pb)
+
+        Detection detection2 = new Detection(name: 'detection2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
+        detection2.cause.trigger = event2.reference
+        Information info4 = new Information(event: event2.reference)
+        info4.eventDetails.add(new ElementOfInformation(topic:'topicA'))
+        info4.eventDetails.add(new ElementOfInformation(topic:'topicB'))
+        info4.eventDetails.add(new ElementOfInformation(topic:'topicC'))
+        detection2.information = info4
+        addToPlaybook(detection2, pb)
+
+        Task task2 = new Task(name:'task2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
+        task2.cause.trigger = transfer2.reference
+        task2.cause.delay = new Timing(amount:1, unit:'days')
+        addToPlaybook(task2, pb)
+
+        InformationRequest request1 = new InformationRequest(name:'request1', actorAgent:task2.actorAgent, targetAgent:task1.actorAgent)
+        request1.cause.trigger = task2.reference
+        request1.cause.delay = new Timing(amount:2, unit:'hours')
+        EventSpec eventSpec3 = new EventSpec(eventTypes:[m.findType('EventType', 'task failed')])
+        InformationNeed need3 = new InformationNeed(eventSpec: eventSpec3)
+        request1.informationNeed = need3
+        addToPlaybook(request1, pb)
+
         store(pb)
     }
 

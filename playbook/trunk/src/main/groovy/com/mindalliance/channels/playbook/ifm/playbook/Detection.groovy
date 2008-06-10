@@ -13,4 +13,9 @@ class Detection extends InformationAct {
 
     Information information = new Information()
 
+    boolean hasInformation() {
+        return true
+    }
+
+
 }

@@ -8,6 +8,8 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 import com.mindalliance.channels.playbook.graph.svg.SVGTransformation
 import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
+import com.mindalliance.channels.playbook.ref.Bean
+import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -92,12 +94,8 @@ class DirectedGraph implements Serializable {
         return ref.id.replaceAll("-", "")
     }
 
-    static String labelFor(Named named) {
-        String label = named.type
-        String name = named.name ?: '?'
-        if (name.size() > MAX_LABEL_SIZE) name = name.substring(0, MAX_LABEL_SIZE - 1)
-        label += "\n$name"
-        return label
+    static String labelFor(Bean bean) {
+        return bean.makeLabel(MAX_LABEL_SIZE)
     }
 
     String processSvg(String svg, String id, String url, Ref selection, SVGTransformation transformation) {
@@ -108,6 +106,7 @@ class DirectedGraph implements Serializable {
         sb = updateSelection(sb, selection)
         // centerSelection(sb, selection, transformation)
         setTransformation(sb, transformation)
+        // Logger.getLogger(this.class).info(sb.toString())
         return sb.toString()
     }
 

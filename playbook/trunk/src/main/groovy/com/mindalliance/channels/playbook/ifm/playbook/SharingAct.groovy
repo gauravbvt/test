@@ -14,9 +14,18 @@ import com.mindalliance.channels.playbook.ref.Ref
 
     Information information = new Information()
 
+    String toString() {
+        return "${this.type} of $information"
+    }
+
     @Override
     boolean isSharingAct() {
         return true
     }
+
+    boolean hasInformation() {
+        return true
+    }
+
 
 }

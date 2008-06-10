@@ -1,8 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ref.Ref
-import groovy.time.Duration
-import com.mindalliance.channels.playbook.ifm.IfmElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,7 +17,16 @@ class Information extends AbstractInformation {  // the communicated (partial) a
     List<Ref> sourceAgents = [] // sources of the information
 
     String toString() {
-        return "About ${event.toString()}" // TODO - do better than this
+        return "About ${event.deref().toString()}" // TODO - do better than this?
+    }
+
+    String makeLabel(int maxWidth) {
+        String eventString = event.deref().toString()
+        String label = "About\n ${eventString[0..Math.min(eventString.size()-1, maxWidth-1)]}"
+        eventDetails.each {eoi ->
+            label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"
+        }
+        return label
     }
 
 }

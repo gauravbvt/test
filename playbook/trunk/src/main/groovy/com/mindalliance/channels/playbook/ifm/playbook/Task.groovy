@@ -18,4 +18,8 @@ class Task extends InformationAct {
     Ref taskType
     List<InformationNeed> informationNeeds = []
 
+    String toString() {
+        return "Task of type $taskType"
+    }
+
 }

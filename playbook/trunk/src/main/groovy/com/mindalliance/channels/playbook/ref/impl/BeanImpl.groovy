@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.support.persistence.Mappable
 import com.mindalliance.channels.playbook.support.Mapper
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -132,5 +133,28 @@ class BeanImpl implements Bean {
         map.put(Mappable.CLASS_NAME_KEY, this.class.name)
         return map
     }
+
+    String shortClassName() {// Default
+        String cn = this.class.name
+        String name = "${cn.substring(cn.lastIndexOf('.') + 1)}"
+        return name
+    }
+
+    String makeLabel(int maxWidth) {
+        String label = shortClassName()
+        String name
+        if (this instanceof Named) {
+            name = ((Named)this).name ?: '?'
+        }
+        else {
+            name = toString()
+        }
+        if (name.size() > maxWidth) name = name[0, maxWidth - 1]
+        label += "\n$name"
+        return label
+
+
+    }
+
 
 }

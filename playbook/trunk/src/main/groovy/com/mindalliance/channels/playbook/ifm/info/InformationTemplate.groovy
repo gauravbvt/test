@@ -3,8 +3,6 @@ package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ifm.spec.EventSpec
 import com.mindalliance.channels.playbook.ifm.info.AbstractInformation
-import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.spec.Spec
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,7 +26,20 @@ import com.mindalliance.channels.playbook.ifm.spec.Spec
     }
 
     String toString() {
-        String s = "Information about "
+        return "N2K about ${eventTypesString()}"
+    }
+
+    String makeLabel(int maxWidth) {
+        String eventTypes = eventTypesString()
+        String label = "Need info about\n ${eventTypes[0..Math.min(eventTypes.size()-1, maxWidth-1)]}"
+        eventDetails.each {eoi ->
+            label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"
+        }
+        return label
+    }
+
+    private String eventTypesString() {
+        String s = ""
         if (eventSpec) {
             eventSpec.eventTypes.each {et ->
                 s += "${et.name},"
@@ -36,5 +47,4 @@ import com.mindalliance.channels.playbook.ifm.spec.Spec
         }
         return s.substring(0, s.size()-1)
     }
-
 }

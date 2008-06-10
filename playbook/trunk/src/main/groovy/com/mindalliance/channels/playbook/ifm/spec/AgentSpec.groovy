@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
  * Date: May 20, 2008
  * Time: 2:43:18 PM
  */
-class AgentSpec extends BeanImpl implements Spec {
+class AgentSpec extends SpecImpl {
 
     ResourceSpec resourceSpec = new ResourceSpec()
     RelationshipSpec relationshipSpec  = new RelationshipSpec() // agent has such specified relationships, or any at all if empty

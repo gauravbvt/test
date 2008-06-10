@@ -17,7 +17,11 @@ import com.mindalliance.channels.playbook.ifm.Timing
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['duration']
+        return super.transientProperties() + ['duration', 'flowAct', 'sharingAct']
+    }
+
+    boolean isInformationAct() {
+        return true
     }
 
     boolean isFlowAct() {
@@ -34,6 +38,10 @@ import com.mindalliance.channels.playbook.ifm.Timing
 
     String toString() {
         return "${this.type}"    // TODO - do better than this
+    }
+
+    boolean hasInformation() {
+        return false
     }
 
 }

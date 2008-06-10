@@ -95,7 +95,11 @@ class QueryManager implements PropertyChangeListener {
                 // Association
                 createsMatchingRelationship: [Association.class],
                 // Resource
-                findAllInformationActsForResource: [InformationAct.class, Resource.class]
+                findAllInformationActsForResource: [InformationAct.class, Resource.class],
+                // Event
+                findAllInformationActsCausedByEvent: [InformationAct.class, Event.class],
+                findAllEventsCausedByEvent: [InformationAct.class, Event.class],
+                findAllInformationActsAboutEvent: [InformationAct.class, Event.class]
         ]
     }
 

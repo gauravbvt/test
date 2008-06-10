@@ -18,6 +18,10 @@ class SharingCommitment extends FlowAct {
     SharingConstraints constraints = new SharingConstraints()
     Ref approvedBy // a position, if any
 
+    String toString() {
+        return "Commitment to share ${protocol.informationSpec}"
+    }
+
     // Queries
 
     List<String> findAllTopics() {

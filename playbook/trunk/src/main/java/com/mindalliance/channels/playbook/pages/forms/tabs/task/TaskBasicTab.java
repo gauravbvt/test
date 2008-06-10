@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class TaskBasicTab extends InformationActBasicTab {
 
-    protected DynamicFilterTree taskTypesTree;
+    protected DynamicFilterTree taskTypeTree;
     protected TimingPanel durationPanel;
 
     public TaskBasicTab(String id, AbstractElementForm elementForm) {
@@ -34,15 +34,15 @@ public class TaskBasicTab extends InformationActBasicTab {
         super.load();
         durationPanel = new TimingPanel("duration", this, "duration", EDITABLE, feedback);
         addReplaceable(durationPanel);
-        taskTypesTree = new DynamicFilterTree("taskTypes", new RefPropertyModel(getElement(), "taskTypes"),
+        taskTypeTree = new DynamicFilterTree("taskType", new RefPropertyModel(getElement(), "taskType"),
                 new RefQueryModel(getProject(),
-                        new Query("findAllTypes", "TaskType"))) {
+                        new Query("findAllTypes", "TaskType")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = taskTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "taskTypes", selectedTypes);
+                Ref selectedType = taskTypeTree.getNewSelection();
+                RefUtils.set(getElement(), "taskType", selectedType);
             }
         };
-        addReplaceable(taskTypesTree);
+        addReplaceable(taskTypeTree);
     }
 
 }

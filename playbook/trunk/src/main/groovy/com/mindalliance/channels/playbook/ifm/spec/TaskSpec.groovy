@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.Timing
  * Date: May 27, 2008
  * Time: 9:49:14 PM
  */
-class TaskSpec extends BeanImpl implements Spec {
+class TaskSpec extends SpecImpl {
 
     List<Ref> taskTypes = []
     Timing timing = new Timing(amount:0) // maximum response time -- defaults to "zero"
