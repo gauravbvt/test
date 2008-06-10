@@ -160,7 +160,8 @@ public class TabPanel extends Panel implements SelectionManager {
 
             this.selected = selected;
             for ( ContentView view: views )
-                view.setSelected( selected );
+                if ( view.isVisible() )
+                    view.setSelected( selected );
             form.modelChanged();
         }
     }
