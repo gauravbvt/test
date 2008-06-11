@@ -17,7 +17,12 @@ class Information extends AbstractInformation {  // the communicated (partial) a
     List<Ref> sourceAgents = [] // sources of the information
 
     String toString() {
-        return "About ${event.deref().toString()}" // TODO - do better than this?
+        if (!event) {
+            return "About nothing"
+        }
+        else {
+            return "About ${event.deref().toString()}" // TODO - do better than this?
+        }
     }
 
     String makeLabel(int maxWidth) {

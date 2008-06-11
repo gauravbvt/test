@@ -112,7 +112,7 @@ public class TabPanel extends Panel implements SelectionManager {
         if ( summary.isFlowable() ) {
             result.add( new AbstractTab( new Model("Flow") ){
                 public Panel getPanel( String panelId ) {
-                    // TODO hook this up
+                    // TODO filter to Agent.class or Event.class
                     final ContentView cv = new InfoFlowPanel( panelId, getTab(), TabPanel.this );
                     views.add( cv );
                     return cv;

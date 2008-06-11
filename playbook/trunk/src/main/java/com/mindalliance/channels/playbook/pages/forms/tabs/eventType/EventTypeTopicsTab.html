@@ -5,45 +5,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <input wicket:id="newTopic" type="text" size = "60"/>
-            </td>
-            <td>
-                <button wicket:id="addTopic">Add new topic</button>
-            </td>
-            <td rowspan="2">
-                <fieldset>
-                    <legend>Topics</legend>
-                    <div wicket:id="topicsDiv">
-                        <ul wicket:id="topics">
-                            <li>
-                                <span wicket:id="topic">[topic]</span><a wicket:id="deleteTopic" href="#">(delete)</a>
-                            </li>
-                        </ul>
-                    </div>
-                </fieldset>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>Inherited topics</legend>
-                    <div wicket:id="inheritedTopicsDiv">
-                        <ul wicket:id="inheritedTopics">
-                            <li>
-                                <span wicket:id="inheritedTopic">[Inherited topic]</span>
-                                [in <a wicket:id="narrowedEventTypeLink" href="#"><span
-                                    wicket:id="narrowedEventTypeName"></span></a>]
-                            </li>
-                        </ul>
-                    </div>
-                </fieldset>
-            </td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
+    <fieldset>
+        <legend>New Topic</legend>
+         <input wicket:id="newTopic" type="text" size = "60"/>
+         <button wicket:id="addTopic">Add</button>
+    </fieldset>
+    <fieldset>
+        <legend>Topics</legend>
+        <div wicket:id="topicsDiv">
+            <ul wicket:id="topics">
+                <li>
+                    <span wicket:id="topic">[topic]</span><a wicket:id="deleteTopic" href="#">(delete)</a>
+                </li>
+            </ul>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Inherited topics</legend>
+        <div wicket:id="inheritedTopicsDiv">
+            <ul wicket:id="inheritedTopics">
+                <li>
+                    <span wicket:id="inheritedTopic">[Inherited topic]</span>
+                    [in <a wicket:id="narrowedEventTypeLink" href="#"><span wicket:id="narrowedEventTypeName">[narrowed]</span></a>]
+                </li>
+            </ul>
+        </div>
+    </fieldset>
     <wicket:child/>
 </wicket:extend>
 </body>

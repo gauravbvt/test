@@ -45,6 +45,11 @@ import com.mindalliance.channels.playbook.ifm.info.AbstractInformation
                 s += "${et.name},"
             }
         }
-        return s.substring(0, s.size()-1)
+        if (s.endsWith(',')) {
+            return s[0..s.size()-1]
+        }
+        else {
+            return s
+        }
     }
 }
