@@ -37,15 +37,15 @@ class GraphVizRenderer {
         renderProcess(output, format)
     }
 
-    public render(OutputStream output, String format="svg") {
+  /*  public render(OutputStream output, String format="svg") {
         renderProcess(output, format)
     }
 
     public render(StringBuffer output, String format="svg") {
         renderProcess(output, format)
-    }
+    }*/
 
-    private renderProcess(output,format) {
+    private renderProcess(Writer output, String format) {
         if (dotWriter != null) {
             // Logger.getLogger(this.class).info(dotWriter.toString())
             def command="dot -T${format}"

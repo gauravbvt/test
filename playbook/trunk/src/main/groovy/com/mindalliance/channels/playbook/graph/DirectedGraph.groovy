@@ -41,22 +41,29 @@ class DirectedGraph implements Serializable {
     }
 
     String getCanonicalSvg() {
-        if (!canonicalSvg) {
+        int tries = 0
+        while (!canonicalSvg && tries < 10) {
             canonicalSvg = makeCanonicalSvg()
+            tries++
         }
         return canonicalSvg
     }
 
     String makeCanonicalSvg() {
-        GraphVizRenderer renderer =  new GraphVizRenderer()
+        GraphVizRenderer renderer = new GraphVizRenderer()
         GraphVizBuilder builder = renderer.getBuilder(getStyleTemplate())
         build(builder)
         StringWriter writer = new StringWriter()
         renderer.render(writer, "svg")
         String svg = writer.toString()
         int index = svg.indexOf("<svg")
-        assert index >= 0
-        return svg.substring(index)
+        if (index >= 0 && svg.indexOf("</svg>") > 0) {
+            return svg.substring(index)
+        }
+        else {
+            Logger.getLogger(this.class).warn("Failed to produce valid SVG. Got\n$svg")
+            return ""
+        }
     }
 
     void build(GraphVizBuilder builder) {
@@ -113,40 +120,40 @@ class DirectedGraph implements Serializable {
     void addId(StringBuffer sb, String id) {
         int index = sb.toString().indexOf("<svg")
         assert index == 0;
-        sb.insert(index+4, " id='" + id + "'");
+        sb.insert(index + 4, " id='" + id + "'");
     }
 
     void addStyle(StringBuffer sb) {
         int index = sb.toString().indexOf('>');
-        sb.insert(index+1, STYLE);        
+        sb.insert(index + 1, STYLE);
     }
 
     void setCallbacks(StringBuffer sb, String url) {
         int index
-        while((index = sb.toString().indexOf(CALLBACK_VAR)) > 0) {
-           sb.replace(index, index+CALLBACK_VAR.size()-1, url)
+        while ((index = sb.toString().indexOf(CALLBACK_VAR)) > 0) {
+            sb.replace(index, index + CALLBACK_VAR.size() - 1, url)
         }
     }
 
     StringBuffer updateSelection(StringBuffer sb, Ref selection) {
-         // Remove any current selection(s)
-         // Pattern pattern = Pattern.compile('(class=".*?)' + CSS_SELECTED + '(.*?")');
-         Pattern pattern = Pattern.compile("(style=\".*?)" + SELECTED_STYLE + "(.*?\")")
-         Matcher matcher = pattern.matcher(sb.toString())
-         StringBuffer buf = new StringBuffer()
-         while(matcher.find()) {
-             matcher.appendReplacement(buf, '$1' + '$2')
-         }
-         matcher.appendTail(buf);
+        // Remove any current selection(s)
+        // Pattern pattern = Pattern.compile('(class=".*?)' + CSS_SELECTED + '(.*?")');
+        Pattern pattern = Pattern.compile("(style=\".*?)" + SELECTED_STYLE + "(.*?\")")
+        Matcher matcher = pattern.matcher(sb.toString())
+        StringBuffer buf = new StringBuffer()
+        while (matcher.find()) {
+            matcher.appendReplacement(buf, '$1' + '$2')
+        }
+        matcher.appendTail(buf);
         // Add new selection(s)
         // Set current selection(s)
         if (selection != null) {
             String title = DirectedGraph.nameFor(selection);
             pattern = Pattern.compile("(<title>\\w*?" + title + "</title>\\s*?<a .*?>\\s*?<\\w+ style=\".*?)(\")",
-                                      Pattern.MULTILINE)
+                    Pattern.MULTILINE)
             matcher = pattern.matcher(buf.toString());
             buf = new StringBuffer()
-            while(matcher.find()) {
+            while (matcher.find()) {
                 // matcher.appendReplacement(buf, '$1' + " " + CSS_SELECTED + '$2');
                 matcher.appendReplacement(buf, '$1' + SELECTED_STYLE + '$2')
             }
@@ -158,12 +165,12 @@ class DirectedGraph implements Serializable {
     // TODO -- needs to take into account display size and generated transforms
     void centerSelection(StringBuffer sb, Ref Selection, SVGTransformation transformation) {
         Pattern pattern = Pattern.compile("style=\"[^\"]*" + SELECTED_STYLE + "[^\"]*\"\\s*points=\"([-\\d\\.]+),([-\\d\\.]+)",
-                                          Pattern.MULTILINE)
+                Pattern.MULTILINE)
         Matcher matcher = pattern.matcher(sb.toString())
         if (matcher.find()) {
             String pointX = matcher.group(1)
             String pointY = matcher.group(2)
-            SVGTranslate translate = new SVGTranslate(x:-1*Double.parseDouble(pointX), y:-1*Double.parseDouble(pointY))
+            SVGTranslate translate = new SVGTranslate(x: -1 * Double.parseDouble(pointX), y: -1 * Double.parseDouble(pointY))
             transformation.prependTransform(translate)
         }
     }
@@ -172,7 +179,7 @@ class DirectedGraph implements Serializable {
         String svg = sb.toString()
         int index = svg.indexOf("<g")
         index = svg.indexOf("\">", index)
-        sb.insert(index, " "+transformation.toString())
+        sb.insert(index, " " + transformation.toString())
     }
 
 

@@ -5,6 +5,8 @@ import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.models.Container
+import com.mindalliance.channels.playbook.ref.Referenceable
+import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +17,7 @@ import com.mindalliance.channels.playbook.support.models.Container
  */
 class Timeline extends PlaybookGraph {
 
-    TreeMap<Duration, List<Event>> timed = new TreeMap<Duration, List<Event>>()
+    TreeMap<Duration, Set<Event>> timed = new TreeMap<Duration, Set<Event>>()
     
     Timeline(Container container) {
         super(container)
@@ -29,15 +31,37 @@ class Timeline extends PlaybookGraph {
     }
 
     void buildContent(GraphVizBuilder builder) {
-        container.iterator().each {occ ->
-            Duration start = occ.startTime()
-            if (timed[start] == null) timed[start] = []
-            timed[start].add((Event)occ.deref())
-        }
-        buildTimePoints(builder)
+        processData()
+         buildTimePoints(builder)
         buildOccurrences(builder)
         buildTimings(builder)
         buildCausality(builder)
+    }
+
+    void processData() {
+        container.iterator().each {ref ->
+            Referenceable el = ref.deref()
+            switch(el) {
+                case Event.class: processEvent((Event)el); break
+                case Playbook.class: processPlaybook((Playbook)el); break
+                default: Logger.getLogger(this.class).warn("Can't display $el")
+            }
+        }
+    }
+
+    void processEvent(Event event) {
+        Duration start = event.startTime()
+        if (timed[start] == null) timed[start] = new HashSet<Event>()
+        timed[start].add(event)
+    }
+
+    void processPlaybook(Playbook pb) {
+        pb.events.each {ref ->
+            processEvent((Event)ref.deref())
+        }
+        pb.informationActs.each {ref ->
+            processEvent((Event)ref.deref())
+        }
     }
 
     void buildTimePoints(GraphVizBuilder builder) {
@@ -51,8 +75,8 @@ class Timeline extends PlaybookGraph {
     }
 
     void buildOccurrences(GraphVizBuilder builder) {
-        timed.each {dur, occList ->
-            occList.each {occ ->
+        timed.each {dur, occSet ->
+            occSet.each {occ ->
                 if (occ instanceof InformationAct) {
                     Agent agent = (Agent)occ.actorAgent.deref()
                     builder.cluster(name:nameFor(occ) + nameFor(agent), label:labelFor(agent), URL:urlFor(agent), template:'agent') {
@@ -68,10 +92,10 @@ class Timeline extends PlaybookGraph {
     }
 
     void buildTimings(GraphVizBuilder builder) {
-        timed.each {dur, occList ->
+        timed.each {dur, occSet ->
             builder.subgraph(rank:'same') {
                 builder.node(name: durationToText(dur))
-                occList.each {occ ->
+                occSet.each {occ ->
                     builder.node(name:nameFor(occ))
                 }
             }
@@ -79,8 +103,8 @@ class Timeline extends PlaybookGraph {
     }
 
     void buildCausality(GraphVizBuilder builder) {
-        timed.each {dur, occList ->
-            occList.each {occ ->
+        timed.each {dur, occSet ->
+            occSet.each {occ ->
                 Ref eventRef = occ.cause.trigger
                 if (eventRef) {
                     Event cause = (Event)eventRef.deref()

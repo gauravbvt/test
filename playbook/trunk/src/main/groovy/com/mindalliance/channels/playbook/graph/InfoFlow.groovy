@@ -35,7 +35,8 @@ class InfoFlow extends PlaybookGraph {
 
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-                aboutEdge: [dir: 'none', style: 'dashed']
+                aboutEdge: [dir: 'none', style: 'dashed'],
+                flowEdge: [fontsize:'8']
         ]
     }
 
@@ -53,10 +54,17 @@ class InfoFlow extends PlaybookGraph {
                 case Agent.class: processAgent((Agent) el); break
                 case InformationAct.class: processAct((InformationAct) el); break
                 case Event.class: processEvent((Event) el); break
+                case Playbook.class: processPlaybook((Playbook)el); break
                 default: Logger.getLogger(this.class).warn("Can't display $el in info flow")
             }
         }
-        // processLinks()
+    }
+
+    void processPlaybook(Playbook pb) {
+        pb.events.each {ref -> processEvent((Event)ref.deref())}
+        pb.informationActs.each {ref -> processAct((InformationAct)ref.deref())}
+        pb.teams.each {ref -> processAgent((Agent)ref.deref())}
+        pb.groups.each {ref -> processAgent((Agent)ref.deref())}
     }
 
     void processAgent(Agent agent) {
@@ -89,37 +97,8 @@ class InfoFlow extends PlaybookGraph {
     // Add all acts with information/need about the event
     void processEvent(Event event) {
         events.add(event.reference)
-        /*events.addAll((List<Ref>)Query.execute(event, "findAllEventsCausedByEvent"))
-        acts.addAll((List<Ref>)Query.execute(event, "findAllInformationActsCausedByEvent"))
-        Ref ref = event.cause.trigger
-        if (ref) {
-            Event trigger = (Event) ref.deref()
-            if (trigger.isInformationAct()) {
-                acts.add(trigger)
-            }
-            else {
-                events.add(trigger)
-            }
-        }*/
         acts.addAll(Query.execute(event, "findAllInformationActsAboutEvent"))
     }
-
-/*
-    void processLinks() {
-        // act|event -> act|event
-        (acts + events).each {occ ->
-            (acts + events).each {otherOcc ->
-                if (occ.cause.trigger == otherOcc.reference) {
-                    links.add([nameFor(otherOcc), nameFor(occ)])
-                }
-                if (otherOcc.cause.trigger == occ.reference) {
-                    links.add[nameFor(occ), nameFor(otherOcc)]
-                }
-            }
-        }
-        // act -> info added in buildAgent
-    }
-*/
 
     // Add agent nodes, containing its acts and info/needs/responsibilities/agreements from any acts where actor or target (based on akind of ct). Setup links.
     void buildAgents(GraphVizBuilder builder) {
@@ -138,24 +117,24 @@ class InfoFlow extends PlaybookGraph {
                         Information info = act.information
                         String name = "${new Random().nextLong()}"
                         builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
-                        links.add([nameFor(act), name])
+                        links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
                         Event subject = (Event)info.event.deref()
                         events.add(info.event)
-                        links.add([name, nameFor(subject), 'aboutEdge'])
+                        links.add([name, nameFor(subject), '', 'aboutEdge'])
                     }
                     // Actor's task-acquired information needs
                     if (act instanceof Task && act.actorAgent == agentRef) {
                         act.informationNeeds.each {need ->
                             String name = "${new Random().nextLong()}"
                             builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
-                            links.add([nameFor(act), name, 'aboutEdge'])
+                            links.add([nameFor(act), name, '', 'aboutEdge'])
                         }
                     }
                     if (act instanceof InformationRequest && act.targetAgent == agentRef) {
                         InformationNeed need = act.informationNeed
                         String name = "${new Random().nextLong()}"
                         builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
-                        links.add([nameFor(act), name])
+                        links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
                     }
                     // TODO - add dynamic relationships, assignments, agreements
                 }
@@ -171,9 +150,8 @@ class InfoFlow extends PlaybookGraph {
     }
 
     void buildLinks(GraphVizBuilder builder) {
-        links.each {link ->
-            if (link.size() == 2) builder.edge(source:link[0], target:link[1])
-            else builder.edge(source:link[0], target:link[1], template:link[2])
+       links.each {link ->
+           builder.edge(source:link[0], target:link[1], label:link[2], template:link[3])
         }
     }
 
