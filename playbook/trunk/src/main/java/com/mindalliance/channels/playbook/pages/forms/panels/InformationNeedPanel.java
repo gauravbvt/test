@@ -40,6 +40,7 @@ public class InformationNeedPanel extends AbstractComponentPanel {
     protected InformationNeed informationNeed;
     protected Ref priorEvent;
     protected EventSpec priorEventSpec;
+    protected TimingPanel deadlinePanel;
 
     public InformationNeedPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -82,6 +83,8 @@ public class InformationNeedPanel extends AbstractComponentPanel {
         };
         addReplaceableTo(eventTree, eventDiv);
         setAboutVisibility();
+        deadlinePanel = new TimingPanel("deadline", this, propPath+".deadline", isReadOnly(), feedback);
+        addReplaceable(deadlinePanel);
         RefQueryModel topicChoicesModel = new RefQueryModel(this, new Query("findAllKnownTopics"));
         eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, topicChoicesModel);
         addReplaceable(eoisPanel);

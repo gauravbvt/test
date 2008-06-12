@@ -149,10 +149,10 @@ class InfoFlow extends PlaybookGraph {
              Event subject = (Event)need.event.deref()
              if (!subject instanceof InformationAct) {
                  events.add(subject.reference)
-                 links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+                 links.add([name, nameFor(subject), '', 'aboutEdge'])
              }
             else {
-                 if (acts.contains(need.event)) links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+                 if (acts.contains(need.event)) links.add([name, nameFor(subject), '', 'aboutEdge'])
              }
          }
          else {

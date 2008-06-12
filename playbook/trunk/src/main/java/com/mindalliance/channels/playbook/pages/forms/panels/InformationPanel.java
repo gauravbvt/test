@@ -27,6 +27,7 @@ public class InformationPanel extends AbstractComponentPanel {
     DynamicFilterTree eventTypesTree;
     EOIsPanel eoisPanel;  // content
     DynamicFilterTree sourceAgentsTree;
+    TimingPanel timeToLivePanel;
 
     public InformationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -66,6 +67,8 @@ public class InformationPanel extends AbstractComponentPanel {
             }
         };
         addReplaceable(sourceAgentsTree);
+        timeToLivePanel = new TimingPanel("timeToLive", this, propPath+".timeToLive", isReadOnly(), feedback);
+        addReplaceable(timeToLivePanel);
     }
 
     @Override

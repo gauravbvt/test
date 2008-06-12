@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.info.InformationTemplate
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.spec.AgentSpec
 import com.mindalliance.channels.playbook.ifm.spec.EventSpec
+import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +17,7 @@ class InformationNeed extends InformationTemplate {
 
     AgentSpec sourceSpec = new AgentSpec()
     Ref event // XOR with InformationTemplate.eventSpec -- need is about a specific (vs specified) event
+    Timing deadline = new Timing(amount: 0) // deadline of 0 means indefinite. Information need nullifed after deadline.
 
     @Override
     List<String> transientProperties() {
