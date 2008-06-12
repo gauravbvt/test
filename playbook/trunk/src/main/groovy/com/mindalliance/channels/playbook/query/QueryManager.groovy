@@ -5,29 +5,16 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.Project
 import org.apache.log4j.Logger
 import org.apache.wicket.model.IModel
-import com.mindalliance.channels.playbook.ifm.project.resources.Organization
-import com.mindalliance.channels.playbook.ifm.model.EventType
-import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
-import com.mindalliance.channels.playbook.ifm.project.environment.Policy
-import com.mindalliance.channels.playbook.ifm.model.TaskType
-import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
-import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
-import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.mem.SessionMemory
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
-import com.mindalliance.channels.playbook.ifm.User
-import com.mindalliance.channels.playbook.ifm.model.ElementType
-import com.mindalliance.channels.playbook.ifm.project.environment.Place
-import com.mindalliance.channels.playbook.ifm.model.PlaceType
-import com.mindalliance.channels.playbook.ifm.project.resources.Resource
-import com.mindalliance.channels.playbook.ifm.project.resources.Position
-import com.mindalliance.channels.playbook.ifm.playbook.Event
-import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
-import com.mindalliance.channels.playbook.ifm.playbook.Association
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -88,6 +75,8 @@ class QueryManager implements PropertyChangeListener {
                 createsRelationshipBefore: [Event.class],
                 agentImplied: [Agent.class, Association.class],
                 findAllInformationActsForAgent: [InformationAct.class, Agent.class],
+                findAllTopicsAboutEvent: [Event.class, EventType.class],
+                findAllPriorOccurrencesOf: [Event.class, InformationAct.class],
                 // Playbook, Project
                 findAllAgentsExcept: [Agent.class],
                 // Resource, Group
@@ -99,7 +88,9 @@ class QueryManager implements PropertyChangeListener {
                 // Event
                 findAllInformationActsCausedByEvent: [InformationAct.class, Event.class],
                 findAllEventsCausedByEvent: [InformationAct.class, Event.class],
-                findAllInformationActsAboutEvent: [InformationAct.class, Event.class]
+                findAllInformationActsAboutEvent: [InformationAct.class, Event.class],
+                findAllPriorEvents: [Event.class],
+                findAllPriorOccurrences: [Event.class, InformationAct.class]                
         ]
     }
 

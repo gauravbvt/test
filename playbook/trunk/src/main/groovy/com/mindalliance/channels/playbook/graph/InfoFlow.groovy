@@ -35,7 +35,7 @@ class InfoFlow extends PlaybookGraph {
 
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-                aboutEdge: [dir: 'none', style: 'dashed'],
+                aboutEdge: [dir: 'none', style: 'dashed', fontsize:'8'],
                 flowEdge: [fontsize:'8']
         ]
     }
@@ -60,7 +60,7 @@ class InfoFlow extends PlaybookGraph {
         }
     }
 
-    void processPlaybook(Playbook pb) {
+    void processPlaybook(Playbook pb) {   // TODO -- not needed
         pb.events.each {ref -> processEvent((Event)ref.deref())}
         pb.informationActs.each {ref -> processAct((InformationAct)ref.deref())}
         pb.teams.each {ref -> processAgent((Agent)ref.deref())}
@@ -120,14 +120,15 @@ class InfoFlow extends PlaybookGraph {
                         links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
                         Event subject = (Event)info.event.deref()
                         events.add(info.event)
-                        links.add([name, nameFor(subject), '', 'aboutEdge'])
+                        links.add([name, nameFor(subject), 'about', 'aboutEdge'])
                     }
                     // Actor's task-acquired information needs
                     if (act instanceof Task && act.actorAgent == agentRef) {
                         act.informationNeeds.each {need ->
                             String name = "${new Random().nextLong()}"
                             builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
-                            links.add([nameFor(act), name, '', 'aboutEdge'])
+                            links.add([nameFor(act), name, "at ${durationToText(act.startTime())} needs", 'aboutEdge'])
+                            buildInformationNeed(need, name)
                         }
                     }
                     if (act instanceof InformationRequest && act.targetAgent == agentRef) {
@@ -135,11 +136,38 @@ class InfoFlow extends PlaybookGraph {
                         String name = "${new Random().nextLong()}"
                         builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
                         links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
+                        buildInformationNeed(need, name)
                     }
                     // TODO - add dynamic relationships, assignments, agreements
                 }
             }
         }
+    }
+
+    void buildInformationNeed(InformationNeed need, String name) {
+        if (need.isAboutSpecificEvent()) {
+             Event subject = (Event)need.event.deref()
+             if (!subject instanceof InformationAct) {
+                 events.add(subject.reference)
+                 links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+             }
+            else {
+                 if (acts.contains(need.event)) links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+             }
+         }
+         else {
+             Ref ref = need.eventSpec.causeEvent
+             if (ref) {
+                 Event causeOfSubject = (Event)ref.deref()
+                 if (!causeOfSubject instanceof InformationAct) {
+                     events.add(ref)
+                     links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+                 }
+                 else {
+                      if (acts.contains(ref)) links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+                  }
+             }
+         }
     }
 
     void buildEvents(GraphVizBuilder builder) {

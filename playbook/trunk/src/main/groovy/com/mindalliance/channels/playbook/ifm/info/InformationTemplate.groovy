@@ -30,15 +30,16 @@ import com.mindalliance.channels.playbook.ifm.info.AbstractInformation
     }
 
     String makeLabel(int maxWidth) {
-        String eventTypes = eventTypesString()
-        String label = "Need info about\n ${eventTypes[0..Math.min(eventTypes.size()-1, maxWidth-1)]}"
+        String eventTypesString = eventTypesString()
+        String label = "Need info about\n"
+        if (eventTypesString) label += "${eventTypesString[0..Math.min(eventTypesString.size()-1, maxWidth-1)]}"
         eventDetails.each {eoi ->
             label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"
         }
         return label
     }
 
-    private String eventTypesString() {
+    String eventTypesString() {
         String s = ""
         if (eventSpec) {
             eventSpec.eventTypes.each {et ->
@@ -46,7 +47,7 @@ import com.mindalliance.channels.playbook.ifm.info.AbstractInformation
             }
         }
         if (s.endsWith(',')) {
-            return s[0..s.size()-1]
+            return s[0..s.size()-2]
         }
         else {
             return s

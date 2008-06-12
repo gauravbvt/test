@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.Defineable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: Apr 17, 2008
  * Time: 9:50:16 AM
  */
-class Location extends BeanImpl {
+class Location extends BeanImpl implements Defineable {
 
     Ref place       // a place is a named locationInfo is given
     LocationInfo locationInfo = new LocationInfo()  // or else an unnamed locationInfo is given (not both)

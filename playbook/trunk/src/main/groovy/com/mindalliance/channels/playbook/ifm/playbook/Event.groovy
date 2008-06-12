@@ -98,7 +98,14 @@ class Event extends PlaybookElement implements Named, Described {
         }
     }
 
+    List<Ref> findAllPriorEvents() {
+        assert playbook
+        return (List<Ref>)this.playbook.events.findAll {event -> this.isAfter(event) }
+    }
 
+    List<Ref> findAllPriorOccurrences() {
+        return (List<Ref>)this.playbook.findAllPriorOccurrencesOf(this.reference)
+    }
        // END QUERIES
 
 }

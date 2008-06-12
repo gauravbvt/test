@@ -25,7 +25,7 @@ class Playbook extends ProjectElement implements Described {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['timeline']
+        return super.transientProperties() + ['occurrences']
     }    
 
     Map toMap() {
@@ -47,6 +47,9 @@ class Playbook extends ProjectElement implements Described {
          doAddToField(field, element)
      }
 
+    List<Ref> getOccurrences() {
+        return (List<Ref>)(events + informationActs)
+    }
 
     Referenceable doAddToField( String field, Object val ) {
         val.playbook = this.reference
@@ -141,6 +144,29 @@ class Playbook extends ProjectElement implements Described {
     List<Ref> findAllInformationActsForAgent(Ref agent) {
         return (List<Ref>)informationActs.findAll {act ->
             (act.actorAgent = agent) || (act.isFlowAct() && act.targetAgent == agent)
+        }
+    }
+
+    // Find all topics that are used or apply to an event based on information acts with information about it
+    List<String> findAllTopicsAboutEvent(Ref event) {
+        TreeSet<String> topics = new TreeSet<String>()
+        informationActs.each {ref ->
+            InformationAct act = (InformationAct)ref.deref()
+            if (act.hasInformation() && act.information.event == event) { // act has information about the event
+                act.information.eventDetails.each {eoi ->
+                    topics.add(eoi.topic)                     // topics used
+                }
+                act.information.eventTypes.each {et ->
+                    topics.addAll(et.topics)                 // topics from assigned eventTypes
+                }
+            }
+        }
+        return topics as List
+    }
+
+    List<Ref> findAllPriorOccurrencesOf(Ref occurrence) {
+        return (List<Ref>)this.occurrences.findAll {occ ->
+            occurrence.isAfter(occ)
         }
     }
 

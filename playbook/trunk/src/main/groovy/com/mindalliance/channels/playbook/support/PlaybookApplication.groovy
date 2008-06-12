@@ -63,8 +63,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
     //----------------------
     @Override
     public Class getHomePage() {
-       return PlaybookPage.class
-       // return FormTest.class
+       // return PlaybookPage.class
+       return FormTest.class
     }
 
     @Override
@@ -243,14 +243,20 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
         Task task2 = new Task(name:'task2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
         task2.cause.trigger = transfer2.reference
         task2.cause.delay = new Timing(amount:1, unit:'days')
+        EventSpec eventSpec3 = new EventSpec(eventTypes:[m.findType('EventType', 'task failed')], causeEvent: task1.reference)
+        InformationNeed need3 = new InformationNeed(eventSpec: eventSpec3)
+        need3.eventDetails.add(new ElementOfInformation(topic:'extent'))
+        need3.eventDetails.add(new ElementOfInformation(topic:'cause'))
+        task2.informationNeeds.add(need3)
         addToPlaybook(task2, pb)
 
         InformationRequest request1 = new InformationRequest(name:'request1', actorAgent:task2.actorAgent, targetAgent:task1.actorAgent)
         request1.cause.trigger = task2.reference
         request1.cause.delay = new Timing(amount:2, unit:'hours')
-        EventSpec eventSpec3 = new EventSpec(eventTypes:[m.findType('EventType', 'task failed')])
-        InformationNeed need3 = new InformationNeed(eventSpec: eventSpec3)
-        request1.informationNeed = need3
+        InformationNeed need4 = new InformationNeed(event: task1.reference)
+        need4.eventDetails.add(new ElementOfInformation(topic:'cost'))
+        need4.eventDetails.add(new ElementOfInformation(topic:'duration'))
+        request1.informationNeed = need4
         addToPlaybook(request1, pb)
 
         store(pb)

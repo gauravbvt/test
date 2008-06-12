@@ -55,7 +55,7 @@ class Timeline extends PlaybookGraph {
         timed[start].add(event)
     }
 
-    void processPlaybook(Playbook pb) {
+    void processPlaybook(Playbook pb) {   // TODO - not needed
         pb.events.each {ref ->
             processEvent((Event)ref.deref())
         }

@@ -7,32 +7,36 @@
         lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>classified as</legend>
-                    <span wicket:id="eventTypes">[event types]</span>
-                </fieldset>
-            </td>
-            <td>
-                <div wicket:id="locationSpecDiv">
-                    <fieldset>
-                        <legend>that occurred</legend>
-                        <span wicket:id="locationSpec">[location spec panel</span>
-                    </fieldset>
-                </div>
-            </td>
-            <td>
-                <div wicket:id="timingDiv">
-                    <fieldset>
-                        <legend>in the last</legend>
-                        <span wicket:id="timing">[timing panel</span>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <fieldset>
+        <legend>classified as</legend>
+        <span wicket:id="eventTypes">[event types]</span>
+    </fieldset>
+    <div wicket:id="causeDiv">
+        <fieldset>
+            <legend>caused by</legend>
+            <input wicket:id="anyCause" type = "checkbox"/>any event
+                <span wicket:id="cause">[occurrence tree]</span>
+        </fieldset>
+    </div>
+    <fieldset>
+        <legend>that occurred</legend>
+        <table>
+            <tr>
+                <td valign="top">
+                    <input wicket:id="inSpecifiedLocation" type = "checkbox"/>in any location <br/>
+                    <input wicket:id="inSpecificLocation" type = "checkbox"/>in this location
+                </td>
+                <td>
+                    <span wicket:id="locationSpec">[location spec panel</span>
+                    <span wicket:id="location">[location panel</span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>in the last</legend>
+        <span wicket:id="timing">[timing panel</span>
+    </fieldset>
 </wicket:extend>
 </body>
 </html>

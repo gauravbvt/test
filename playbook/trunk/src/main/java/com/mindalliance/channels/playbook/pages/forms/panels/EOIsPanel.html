@@ -10,8 +10,9 @@
     <table>
         <tr>
             <td>
-                <input wicket:id="adHocTopic" type="text"/><br/>
-
+                <label>Enter new:<input wicket:id="adHocTopic" type="text" size = "40"/></label> or
+            </td>
+            <td>
                 <div wicket:id="topicChoiceDiv">
                     <select wicket:id="topicChoices">
                         <option >[topic]</option>
@@ -23,14 +24,30 @@
             </td>
             <td>
                 <div wicket:id="eoisDiv">
-                    <ul>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Content</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr wicket:id="eois">
+                                <td><span wicket:id="topic">[topic]</span></td>
+                                <td><textarea wicket:id="content" cols="40" rows="3">[content]</textarea></td>
+                                <td><a wicket:id="deleteEoi" href="#">(delete)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+ <!--                   <ul>
                         <li wicket:id="eois">
                             <span wicket:id="topic">[topic]</span>
                             <textarea wicket:id="content" cols="40" rows="3">[content]</textarea>
                             <a wicket:id="deleteEoi" href="#">(delete)</a>
                         </li>
                     </ul>
-                </div>
+-->                </div>
             </td>
         </tr>
     </table>

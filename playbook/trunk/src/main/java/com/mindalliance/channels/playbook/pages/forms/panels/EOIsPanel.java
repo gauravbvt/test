@@ -80,6 +80,7 @@ public class EOIsPanel extends AbstractComponentPanel {
         // Topic choices
         topicChoiceDiv = new WebMarkupContainer("topicChoiceDiv");
         topicChoiceList = new ListChoice("topicChoices", new Model(), availableTopicChoicesModel);
+        topicChoiceList.setMaxRows(4);
         topicChoiceList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 topicToAdd = topicChoiceList.getModelObjectAsString();
