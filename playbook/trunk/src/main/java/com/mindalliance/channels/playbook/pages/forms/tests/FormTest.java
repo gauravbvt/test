@@ -159,8 +159,7 @@ public class FormTest extends WebPage {
         // Playbook
         choices.add(Assignation.class);
         choices.add(Association.class);
-        choices.add(Confirmation.class);
-        choices.add(Denial.class);
+        choices.add(ConfirmationRequest.class);
         choices.add(Detection.class);
         choices.add(Event.class);
         choices.add(Group.class);
@@ -170,7 +169,6 @@ public class FormTest extends WebPage {
         choices.add(SharingRequest.class);
         choices.add(Task.class);
         choices.add(Team.class);
-        choices.add(Verification.class);
         // Project elements
         choices.add(PlaybookModel.class);
         choices.add(Playbook.class);

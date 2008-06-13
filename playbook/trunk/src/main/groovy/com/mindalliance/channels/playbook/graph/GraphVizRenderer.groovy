@@ -37,7 +37,7 @@ class GraphVizRenderer {
         renderProcess(output, format)
     }
 
-  /*  public render(OutputStream output, String format="svg") {
+ /*   public render(OutputStream output, String format="svg") {
         renderProcess(output, format)
     }
 

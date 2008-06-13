@@ -12,10 +12,11 @@ import com.mindalliance.channels.playbook.ifm.Timing
 */
 class Information extends AbstractInformation {  // the communicated (partial) account of an event (classified and attributed)
 
+    boolean affirmed = true // else negated
     Ref event // about an event description     -- required
     List<Ref> eventTypes = [] // classification of the event
     // EOIs are inherited
-    List<Ref> sourceAgents = [] // divulged sources of the information
+    List<Ref> sourceAgents = [] // divulged sources of the information 
     Timing timeToLive = new Timing(amount: 0) // ttl of 0 means indefinite. Once expired, the info is no longer supported by its source(s)
 
     String toString() {

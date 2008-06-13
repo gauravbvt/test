@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ifm.info.Information
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,6 +16,11 @@ class Detection extends InformationAct {
 
     boolean hasInformation() {
         return true
+    }
+
+    void setActorAgent(Ref agent) {  // the source of detected information is always the actor
+        super.setActorAgent(agent)
+        information.setSourceAgents([agent])
     }
 
 

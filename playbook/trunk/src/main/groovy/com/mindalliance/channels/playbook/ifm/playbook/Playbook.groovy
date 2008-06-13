@@ -176,10 +176,10 @@ class Playbook extends ProjectElement implements Described {
      * Return classes a project participant can add.
      */
     static List<Class<?>> contentClasses() {
-        [ Assignation.class, Association.class, Confirmation.class, Denial.class,
+        [ Assignation.class, Association.class,
           InformationTransfer.class, Detection.class, InformationRequest.class,
           SharingRequest.class, SharingCommitment.class,
-          Task.class, Verification.class, Group.class, Team.class, Event.class
+          Task.class, ConfirmationRequest.class, Group.class, Team.class, Event.class
         ]
     }
 

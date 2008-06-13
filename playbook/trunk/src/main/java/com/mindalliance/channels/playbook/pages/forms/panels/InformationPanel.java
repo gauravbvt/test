@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ifm.model.EventType;
+import com.mindalliance.channels.playbook.ifm.info.Information;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -11,6 +12,8 @@ import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.model.Model;
 
 import java.util.List;
 
@@ -23,6 +26,9 @@ import java.util.List;
  */
 public class InformationPanel extends AbstractComponentPanel {
 
+    Information information;
+    AjaxCheckBox affirmedCheckBox;
+    AjaxCheckBox negatedCheckBox;
     DynamicFilterTree eventTree; // what the info is about
     DynamicFilterTree eventTypesTree;
     EOIsPanel eoisPanel;  // content
@@ -35,6 +41,27 @@ public class InformationPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
+        information = (Information)getComponent();
+        affirmedCheckBox = new AjaxCheckBox("affirmed", new Model(information.getAffirmed())) {
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean isAffirmed = (Boolean)affirmedCheckBox.getModelObject();
+                RefUtils.set(information, "affirmed", isAffirmed);
+                elementChanged(propPath+".affirmed", target);
+                negatedCheckBox.setModelObject(!isAffirmed);
+                target.addComponent(negatedCheckBox);
+            }
+        };
+        addReplaceable(affirmedCheckBox);
+        negatedCheckBox = new AjaxCheckBox("negated", new Model(!information.getAffirmed())) {
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean isNegated = (Boolean)negatedCheckBox.getModelObject();
+                RefUtils.set(information, "affirmed", !isNegated);
+                elementChanged(propPath+".affirmed", target);
+                affirmedCheckBox.setModelObject(!isNegated);
+                target.addComponent(affirmedCheckBox);
+            }
+        };
+        addReplaceable(negatedCheckBox);
         eventTree = new DynamicFilterTree("event", new RefPropertyModel(getElement(), propPath+".event"),
                                            new RefQueryModel(getPlaybook(), new Query("findAllOccurrences")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {

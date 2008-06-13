@@ -372,7 +372,7 @@ public class TestPlaybook extends TestCase {
             edge(source: 'NJ_PA_informing', target: 'NJ_PA_Tran_nothing')
         }
         println "Rendering Cause and Effect SVG to src/test/output/causes.svg"
-        def out = new FileOutputStream(new File('src/test/output/causes.svg'))
+        def out = new FileWriter(new File('src/test/output/causes.svg'))
         println renderer.dot
         renderer.render(out, "svg")
         out.close()
