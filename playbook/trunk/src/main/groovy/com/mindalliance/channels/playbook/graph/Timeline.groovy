@@ -18,7 +18,7 @@ import org.apache.log4j.Logger
 class Timeline extends PlaybookGraph {
 
     TreeMap<Duration, Set<Event>> timed = new TreeMap<Duration, Set<Event>>()
-    
+
     Timeline(Container container) {
         super(container)
     }
@@ -44,7 +44,7 @@ class Timeline extends PlaybookGraph {
             switch(el) {
                 case Event.class: processEvent((Event)el); break
                 case Playbook.class: processPlaybook((Playbook)el); break
-                default: Logger.getLogger(this.class).warn("Can't display $el")
+                //default: Logger.getLogger(this.class).warn("Can't display $el")
             }
         }
     }

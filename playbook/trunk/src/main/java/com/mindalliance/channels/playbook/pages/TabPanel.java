@@ -28,7 +28,7 @@ import java.util.List;
 public class TabPanel extends Panel implements SelectionManager {
 
     private Ref selected;
-    private List<ContentView> views= new ArrayList<ContentView>();
+    private List<ContentView> views;
     private FormPanel form;
 
     public TabPanel( String id, IModel tabModel ) {
@@ -46,52 +46,55 @@ public class TabPanel extends Panel implements SelectionManager {
 
                 Tab tab = (Tab) tabRef.deref();
                 tab.setFilter( f );
-                // TODO JF: figure out why this is required, when the above should be sufficient
                 tab.changed( "filter" );
                 tabRef.commit();
-                TabPanel.this.detach();
+
+                // Force a recompute of the contents on
+                // the subsequent refresh
+//                TabPanel.this.detach();
+                TabPanel.this.addOrReplace( createTabPanel() );
             }
 
             public void onFilterSave( Filter filter ) {
                 TabPanel.this.onFilterSave( getTab(), filter );
             } } );
 
-        final TabbedPanel views = new TabbedPanel( "content-views", createViewTabs() ) {
-//            protected WebMarkupContainer newLink( String linkId, final int index ) {
-//                return new Link( linkId ) {
-//                    public void onClick() {
-//                        // Todo remember setting in user's preference
-//                    }
-//                };
-//            }
-        };
-        views.setRenderBodyOnly( true );
-        add( views );
-
+        add( createTabPanel() );
         add( form );
+    }
+
+    private TabbedPanel createTabPanel() {
+        views = new ArrayList<ContentView>();
+        TabbedPanel viewTabs = new TabbedPanel( "content-views", createViewTabs() ) {
+            //            protected WebMarkupContainer newLink( String linkId, final int index ) {
+            //                return new Link( linkId ) {
+            //                    public void onClick() {
+            //                        // Todo remember setting in user's preference
+            //                    }
+            //                };
+            //            }
+        };
+        viewTabs.setRenderBodyOnly( true );
+        return viewTabs;
     }
 
     private List<AbstractTab> createViewTabs() {
         List<AbstractTab> result = new ArrayList<AbstractTab>();
-        final Tab tab = getTab();
-        ContainerSummary summary = tab.getSummary();
+        final IModel tabModel = new PropertyModel( this, "tab" );
 
         result.add( new AbstractTab( new Model("Table") ){
             public Panel getPanel( String panelId ) {
-                final TableView tv = new TableView( panelId, getTab(), TabPanel.this );
+                final TableView tv = new TableView( panelId, tabModel, TabPanel.this );
                 views.add( tv );
                 return tv;
             }
         } );
 
+        ContainerSummary summary = getTab().getSummary();
         if ( summary.isTimelineable() ) {
             result.add( new AbstractTab( new Model("Timeline") ){
                 public Panel getPanel( String panelId ) {
-                    Tab t = getTab();
-                    ClassFilter classFilter = new ClassFilter( Event.class );
-                    FilteredContainer filtered = new FilteredContainer( t, classFilter );
-                    filtered.setStrict( true );
-                    ContentView cv = new TimelinePanel( panelId, filtered, TabPanel.this );
+                    ContentView cv = new TimelinePanel( panelId, tabModel, TabPanel.this );
                     views.add( cv );
                     return cv;
                 }
@@ -102,7 +105,7 @@ public class TabPanel extends Panel implements SelectionManager {
             result.add( new AbstractTab( new Model("Map") ){
                 public Panel getPanel( String panelId ) {
                     // TODO hook this up
-                    final ContentView cv = new ContentView( panelId, getTab(), TabPanel.this );
+                    final ContentView cv = new ContentView( panelId, tabModel, TabPanel.this );
                     views.add( cv );
                     return cv;
                 }
@@ -113,7 +116,7 @@ public class TabPanel extends Panel implements SelectionManager {
             result.add( new AbstractTab( new Model("Flow") ){
                 public Panel getPanel( String panelId ) {
                     // TODO filter to Agent.class or Event.class
-                    final ContentView cv = new InfoFlowPanel( panelId, getTab(), TabPanel.this );
+                    final ContentView cv = new InfoFlowPanel( panelId, tabModel, TabPanel.this );
                     views.add( cv );
                     return cv;
                 }
@@ -129,7 +132,7 @@ public class TabPanel extends Panel implements SelectionManager {
         return (Ref) getModelObject();
     }
 
-    private Tab getTab() {
+    public Tab getTab() {
         return (Tab) getTabRef().deref();
     }
 
@@ -164,5 +167,11 @@ public class TabPanel extends Panel implements SelectionManager {
                     view.setSelected( selected );
             form.modelChanged();
         }
+    }
+
+    public void detachModels() {
+        super.detachModels();
+        for( ContentView v : views )
+            v.detach();
     }
 }

@@ -26,11 +26,11 @@ public class RefContainer implements Container, Serializable {
         setContents( contents );
     }
 
-    protected List<Ref> getContents() {
+    protected synchronized List<Ref> getContents() {
         return contents;
     }
 
-    protected void setContents( List<Ref> contents ) {
+    protected synchronized void setContents( List<Ref> contents ) {
         this.contents = contents;
     }
 
@@ -54,16 +54,15 @@ public class RefContainer implements Container, Serializable {
         return getContents().contains( ref );
     }
 
-    public void detach() {
-        if ( summary != null )
-            summary = null;
+    public synchronized void detach() {
+        summary = null;
     }
 
     public List<Class<?>> getAllowedClasses() {
         return new ArrayList<Class<?>>();
     }
 
-    public ContainerSummary getSummary() {
+    public synchronized ContainerSummary getSummary() {
         if ( summary == null )
             summary = new ContainerSummary( this );
         return summary;

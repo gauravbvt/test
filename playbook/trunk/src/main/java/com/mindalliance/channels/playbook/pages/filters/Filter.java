@@ -29,6 +29,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     private boolean showingLeaves;
     private Filter parent;
     private boolean invalid;
+    private boolean orable = true;
 
     private List<Filter> children;
 
@@ -45,20 +46,16 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     }
 
     public Filter clone() throws CloneNotSupportedException {
-        try {
-            final Filter shallow = (Filter) super.clone();
+        final Filter shallow = (Filter) super.clone();
 
-            if ( children != null ) {
-                List<Filter> cs = new ArrayList<Filter>();
-                for ( Filter c : children )
-                    cs.add( c.clone() );
-                shallow.setChildren( cs );
-            }
-
-            return shallow;
-        } catch ( CloneNotSupportedException e ) {
-           throw new RuntimeException( e );
+        if ( children != null ) {
+            List<Filter> cs = new ArrayList<Filter>();
+            for ( Filter c : children )
+                cs.add( c.clone() );
+            shallow.setChildren( cs );
         }
+
+        return shallow;
     }
 
     public Filter getRoot() {
@@ -69,12 +66,13 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     }
 
     public void invalidate() {
-        setInvalid( true );
-        getContainer().detach();
-        if ( children != null )
-            for( Filter f : children )
-                f.invalidate();
-
+        if ( !invalid ) {
+            setInvalid( true );
+            getContainer().detach();
+            if ( children != null )
+                for( Filter f : children )
+                    f.invalidate();
+        }
     }
 
     public boolean isInvalid() {
@@ -408,13 +406,28 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
      */
     public boolean filter( Ref object ) {
 
-        if ( !isSelected() && ( !isExpanded() || getChildCount() == 0 ) )
+        if ( isSelected() )
             return match( object );
 
-        else if ( !isSelected() )
+        // Do the equivalent of
+        //  ( orable1 || ... || orableN )
+        //   && andable1 && ... && andableM
+
+        if ( children != null ) {
+            boolean hasOrable = false;
             for ( Filter f : getChildren() )
-                if ( f.filter( object ) )
-                    return true;
+                if ( f.isOrable() && f.filter( object ) ) {
+                    hasOrable = true;
+                    break;
+                }
+            if ( hasOrable ) {
+                for ( Filter f : getChildren() )
+                    if ( !f.isOrable() && !f.filter( object ) ) {
+                        return false;
+                    }
+                return true;
+            }
+        }
 
         return false;
     }
@@ -461,27 +474,12 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         return false;
     }
 
-    public boolean equals( Object o ) {
-        if ( this == o )
-            return true;
-        if ( !( o instanceof Filter ) )
-            return false;
-
-        Filter filter = (Filter) o;
-
-        if ( !collapsedText.equals( filter.collapsedText ) )
-            return false;
-        if ( !expandedText.equals( filter.expandedText ) )
-            return false;
-
-        return true;
+    public boolean isOrable() {
+        return orable;
     }
 
-    public int hashCode() {
-        int result;
-        result = collapsedText.hashCode();
-        result = 31 * result + expandedText.hashCode();
-        return result;
+    public void setOrable( boolean orable ) {
+        this.orable = orable;
     }
 
     //===================================================

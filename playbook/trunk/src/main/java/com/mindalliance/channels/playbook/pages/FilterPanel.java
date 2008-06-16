@@ -35,12 +35,11 @@ public class FilterPanel extends Panel {
         // meanwhile...
         applyButton.setEnabled( false );
 
-        tree = new FilterTree( "filter-tree", getFilter() ){
+        tree = new FilterTree( "filter-tree", copyFilter() ){
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 applyButton.setEnabled( true );
                 saveButton.setEnabled( true );
                 target.addComponent( applyButton );
-                assert( FilterPanel.this.getFilter() == filter );
             }
 
             public void onExpandCollapse( AjaxRequestTarget target, Filter filter ) {
@@ -54,6 +53,7 @@ public class FilterPanel extends Panel {
                 Filter filter = tree.getFilter();
                 setFilter( filter );
                 onFilterApplied( filter );
+                tree.setFilter( copyFilter() );
             }
         };
 
@@ -61,6 +61,14 @@ public class FilterPanel extends Panel {
         form.add( applyButton );
         form.add( saveButton );
         add( form );
+    }
+
+    private Filter copyFilter() {
+        try {
+            return getFilter().clone();
+        } catch ( CloneNotSupportedException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     /**
@@ -80,7 +88,6 @@ public class FilterPanel extends Panel {
     }
 
     public final void setFilter( Filter filter ) {
-        tree.setFilter( filter );
         setModelObject( filter );
     }
 }

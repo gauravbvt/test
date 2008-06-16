@@ -31,16 +31,20 @@ public class ContentView extends Panel implements SelectionManager {
     private boolean menuVisible;
     private Ref selected;
 
-    protected ContentView( String id, Container model, SelectionManager masterSelection ) {
+    protected ContentView( String id, IModel model, SelectionManager masterSelection ) {
         super( id, model );
         if ( masterSelection == null || model == null )
             throw new NullPointerException();
         this.selectionManager = masterSelection;
         setOutputMarkupId( true );
 
-        add( getPager( "content-pager" ) );
+        load();
+    }
 
-        add( new Link( "content-delete" ){
+    protected void load() {
+        addOrReplace( getPager( "content-pager" ) );
+
+        addOrReplace( new Link( "content-delete" ){
             public boolean isEnabled() {
                 return getSelected() != null;
             }
@@ -58,13 +62,13 @@ public class ContentView extends Panel implements SelectionManager {
         } );
 
         final WebMarkupContainer menu = createNewMenu();
-        add( new AjaxLink( "new-item", new Model("New...") ){
+        addOrReplace( new AjaxLink( "new-item", new Model("New...") ){
             public void onClick( AjaxRequestTarget target ) {
                 menuVisible = !menuVisible;
                 target.addComponent( menu );
             }
         } );
-        add( menu );
+        addOrReplace( menu );
     }
 
     protected Panel getPager( String id ) {
@@ -107,7 +111,7 @@ public class ContentView extends Panel implements SelectionManager {
     }
 
     public Container getContainer() {
-        return (Container) getModel();
+        return (Container) getModelObject();
     }
 
     public final SelectionManager getSelectionManager() {
@@ -156,8 +160,6 @@ public class ContentView extends Panel implements SelectionManager {
         }
 
         public synchronized void detach() {
-            if ( actual != null )
-                getActual().detach();
             actual = null;
         }
 

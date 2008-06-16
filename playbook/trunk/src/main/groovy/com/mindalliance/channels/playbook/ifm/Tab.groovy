@@ -54,18 +54,17 @@ class Tab extends IfmElement implements Container {
     }
 
     //---------------------------------
-    public synchronized ContainerSummary getSummary() {
-        if ( summary == null )
-            summary = new ContainerSummary( this );
-
-        return summary
-    }
-
     public synchronized Filter getFilter() {
         if ( filter == null )
-            filter = new RootFilter( base );
+            setFilter( new RootFilter( base ) );
 
         return filter
+    }
+
+    public synchronized void setFilter( Filter filter ) {
+        this.filter = filter;
+        filter.setContainer( base );
+        buffer = null;
     }
 
     public synchronized Container getBuffer() {
@@ -82,6 +81,10 @@ class Tab extends IfmElement implements Container {
     }
 
     //---------------------------------
+    public ContainerSummary getSummary() {
+        return getBuffer().getSummary();
+    }
+
     public boolean contains(Ref ref) {
         return getBuffer().contains( ref );
     }

@@ -52,7 +52,7 @@ public class FilteredContainer extends RefContainer {
 
     public synchronized void detach() {
         super.detach();
-        getData().detach();
+//        getData().detach();
         setContents( null );
         allowedClasses = null;
     }
@@ -62,13 +62,8 @@ public class FilteredContainer extends RefContainer {
         if ( buffer == null ) {
             buffer = new ArrayList<Ref>();
             for ( Ref ref : getData() ) {
-                if ( isStrict() ) {
-                    if ( getFilter().match( ref ) )
-                        buffer.add( ref );
-                } else {
-                    if ( !getFilter().filter( ref ) )
-                        buffer.add( ref );
-                }
+                if ( getFilter().filter( ref ) )
+                    buffer.add( ref );
             }
             setContents( buffer );
         }

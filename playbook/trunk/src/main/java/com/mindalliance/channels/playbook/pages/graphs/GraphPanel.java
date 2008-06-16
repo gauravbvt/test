@@ -1,26 +1,24 @@
 package com.mindalliance.channels.playbook.pages.graphs;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.log4j.Logger;
+import com.mindalliance.channels.playbook.graph.DirectedGraph;
+import com.mindalliance.channels.playbook.graph.svg.SVGTransform;
+import com.mindalliance.channels.playbook.graph.svg.SVGTransformation;
+import com.mindalliance.channels.playbook.pages.ContentView;
+import com.mindalliance.channels.playbook.pages.SelectionManager;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.support.models.Container;
-import com.mindalliance.channels.playbook.graph.DirectedGraph;
-import com.mindalliance.channels.playbook.graph.svg.SVGTransformation;
-import com.mindalliance.channels.playbook.graph.svg.SVGTransform;
-import com.mindalliance.channels.playbook.pages.ContentView;
-import com.mindalliance.channels.playbook.pages.SelectionManager;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 
 import java.util.Map;
 import java.util.UUID;
@@ -52,7 +50,7 @@ abstract public class GraphPanel extends ContentView {
     String svgElementId;
     // protected Ref currentSelection; // TODO remove when extends ContentView
 
-    public GraphPanel(String id, Container container, SelectionManager masterSelection) {
+    public GraphPanel(String id, IModel container, SelectionManager masterSelection) {
         super(id, container, masterSelection);
         load();
     }
@@ -68,7 +66,7 @@ abstract public class GraphPanel extends ContentView {
         svgContent = new Label("graph", new Model());
         svgContent.setEscapeModelStrings(false);
         svgContent.setOutputMarkupId(true);
-        add(svgContent);
+        addOrReplace(svgContent);
         // String args = "'" + url + "','" + svgElementId + "'";
         svgElementId = UUID.randomUUID().toString();
         controlsDiv = new WebMarkupContainer("controls");
@@ -86,7 +84,7 @@ abstract public class GraphPanel extends ContentView {
         controlsDiv.add(downButton);
         resetButton = new Button("reset");
         controlsDiv.add(resetButton);
-        add(controlsDiv);
+        addOrReplace(controlsDiv);
         this.add(HeaderContributor.forJavaScript(GraphPanel.class, "GraphPanel.js"));
     }
 
@@ -130,7 +128,7 @@ abstract public class GraphPanel extends ContentView {
     }
 
     protected void addGraphSvg() {
-        Container container = (Container) getModel();
+        Container container = getContainer();
 
         if (directedGraph == null || !container.equals(priorContainer)) { // make new directed graph only if needed
             directedGraph = makeDirectedGraph(container);

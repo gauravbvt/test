@@ -1,11 +1,10 @@
 package com.mindalliance.channels.playbook.pages.graphs;
 
-import com.mindalliance.channels.playbook.support.models.Container;
-import com.mindalliance.channels.playbook.graph.Timeline;
 import com.mindalliance.channels.playbook.graph.DirectedGraph;
+import com.mindalliance.channels.playbook.graph.Timeline;
 import com.mindalliance.channels.playbook.pages.SelectionManager;
+import com.mindalliance.channels.playbook.support.models.Container;
 import org.apache.wicket.model.IModel;
-import org.apache.log4j.Logger;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,8 +14,8 @@ import org.apache.log4j.Logger;
  * Time: 1:00:07 PM
  */
 public class TimelinePanel extends GraphPanel {
-    
-    public TimelinePanel(String id, Container container, SelectionManager masterSelection) {
+
+    public TimelinePanel(String id, IModel container, SelectionManager masterSelection) {
         super(id, container, masterSelection);
     }
 

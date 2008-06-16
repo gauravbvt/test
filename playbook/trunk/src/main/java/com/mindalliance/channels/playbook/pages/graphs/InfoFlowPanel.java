@@ -2,8 +2,9 @@ package com.mindalliance.channels.playbook.pages.graphs;
 
 import com.mindalliance.channels.playbook.graph.DirectedGraph;
 import com.mindalliance.channels.playbook.graph.InfoFlow;
-import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.pages.SelectionManager;
+import com.mindalliance.channels.playbook.support.models.Container;
+import org.apache.wicket.model.IModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +15,7 @@ import com.mindalliance.channels.playbook.pages.SelectionManager;
  */
 public class InfoFlowPanel  extends GraphPanel {
 
-    public InfoFlowPanel(String id, Container container, SelectionManager masterSelection) {
+    public InfoFlowPanel(String id, IModel container, SelectionManager masterSelection) {
         super(id, container, masterSelection);
     }
 

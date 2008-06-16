@@ -1,8 +1,8 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.Container;
+import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 
 import java.text.MessageFormat;
@@ -81,6 +81,12 @@ public class ClassFilter extends Filter {
     public boolean match( Ref object ) {
         return getObjectType().isAssignableFrom( object.deref().getClass() );
     }
+
+//    public boolean filter( Ref object ) {
+//        return super.filter( object )
+//            || ( Event.class.equals( getObjectType() ) && !isSelected()
+//                    && Event.class.equals( object.deref().getClass() ) );
+//    }
 
     protected boolean strictlyAllowsClass( Class<?> c ) {
         return getObjectType().isAssignableFrom( c );
