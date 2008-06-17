@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class InformationNeedPanel extends AbstractComponentPanel {
 
+    protected DynamicFilterTree agentTree;
     protected AjaxCheckBox eventSpecCheckBox;
     protected AjaxCheckBox eventCheckBox;
     protected WebMarkupContainer eventSpecDiv;
@@ -49,6 +50,16 @@ public class InformationNeedPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         informationNeed = (InformationNeed)getComponent();
+        agentTree = new DynamicFilterTree("agent", new RefPropertyModel(informationNeed, "agent"),
+                                          new RefQueryModel(getPlaybook(), new Query("findAllAgents")),
+                                          SINGLE_SELECTION) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                Ref selected = agentTree.getNewSelection();
+                informationNeed.setAgent(selected);
+                elementChanged(propPath+".agent", target);
+            }
+        };
+        addReplaceable(agentTree);
         eventSpecCheckBox = new AjaxCheckBox("aboutEventSpec", new Model(!informationNeed.isAboutSpecificEvent())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean isAboutEventSpec = (Boolean)eventSpecCheckBox.getModelObject();

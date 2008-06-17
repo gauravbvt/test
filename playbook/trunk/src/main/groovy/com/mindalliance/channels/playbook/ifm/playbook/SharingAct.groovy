@@ -27,5 +27,15 @@ import com.mindalliance.channels.playbook.ref.Ref
         return true
     }
 
+    static List<String> impliedEventTypeTopics() {
+        return FlowAct.class.impliedEventTypeTopics() + ['information']
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'information': return [information.about()]
+            default: return super.contentsAboutTopic(topic)
+        }
+    }
 
 }

@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.ref.impl.ComputedRef
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.Named
+import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,7 +29,7 @@ class Event extends PlaybookElement implements Named, Described {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['informationAct']
+        return super.transientProperties() + ['informationAct', 'impliedEventType']
     }
 
     String toString() {
@@ -62,16 +63,32 @@ class Event extends PlaybookElement implements Named, Described {
         return startTime;
     }
 
-    // Return event types implied by the event (provides for reflexion on events, including information acts)
+    // Return event type implied by the event (provides for reflexion on events, including information acts)
     static Ref impliedEventType() {
-        return ComputedRef.from(Event.class, 'makeEventTypeEvent')
+        return ComputedRef.from(Event.class, 'makeImpliedEventType')
     }
 
-    static EventType makeEventTypeEvent() {
-        return new EventType(name:'event',              // note: model is null
-                             description:'An event of some kind',
-                             topics: ['description', 'location', 'cause'])
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'event',              // note: model is null
+                                             description:'An event of some kind',
+                                             topics: ['start time', 'description', 'location', 'cause'])
+        return eventType
     }
+
+    Ref getImpliedEventType() {
+        return this.class.impliedEventType()
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'start time': return [Timing.asString(startTime())]
+            case 'description': return [description]
+            case 'location': return [location.about()]
+            case 'cause': return [cause.about()]
+            default: return []
+        }
+    }
+
 
     // QUERIES
 

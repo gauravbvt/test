@@ -2,14 +2,17 @@ package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Apr 17, 2008
-* Time: 1:36:56 PM
-*/
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Apr 17, 2008
+ * Time: 1:36:56 PM
+ */
 class Detection extends InformationAct {
 
     Information information = new Information()
@@ -18,9 +21,28 @@ class Detection extends InformationAct {
         return true
     }
 
-    void setActorAgent(Ref agent) {  // the source of detected information is always the actor
-        super.setActorAgent(agent)
-        information.setSourceAgents([agent])
+    // Return implied event type
+    static Ref impliedEventType() {
+        return ComputedRef.from(Detection.class, 'makeImpliedEventType')
+    }
+
+    static EventType makeImpliedEventType() {
+        EventType eventType = new EventType(name: 'detection',              // note: model is null
+                description: 'A detection',
+                topics: impliedEventTypeTopics())
+        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+        return eventType
+    }
+
+    static List<String> impliedEventTypeTopics() {
+        return InformationAct.class.impliedEventTypeTopics() + ['information']
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'information': return [information.about()]
+            default: return super.contentsAboutTopic(topic)
+        }
     }
 
 

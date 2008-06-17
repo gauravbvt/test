@@ -20,6 +20,7 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.support.persistence.PersistentRef
 import com.mindalliance.channels.playbook.graph.GraphVizRenderer
+import com.mindalliance.channels.playbook.ifm.info.Information
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -170,6 +171,15 @@ public class TestPlaybook extends TestCase {
         assert eventType.isComputed()
         assert !eventType.isModifiable()
         assert eventType.name == 'event'
+    }
+
+    void testReflection() {
+        Ref p = channels.findProjectNamed('Generic')
+        Ref pb = p.findPlaybookNamed('default')
+        Ref act = pb.findInformationActsOfType('Detection')[0]
+        Information info = act.makeInformation()
+        assert info.eventTypes.size() == 1
+        assert info.eventTypes[0].allTopics().size() == 6
     }
 
     public void testQueryManager() {

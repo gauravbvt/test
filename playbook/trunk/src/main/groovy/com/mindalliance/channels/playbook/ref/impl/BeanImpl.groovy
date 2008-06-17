@@ -152,8 +152,10 @@ class BeanImpl implements Bean {
         if (name.size() > maxWidth) name = name[0, maxWidth - 1]
         label += "\n$name"
         return label
+    }
 
-
+    String about() {   // DEFAULT
+        return toString()
     }
 
 

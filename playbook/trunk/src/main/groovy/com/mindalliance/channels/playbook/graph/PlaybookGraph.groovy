@@ -7,6 +7,7 @@ import org.joda.time.Duration
 import org.joda.time.Period
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.support.models.Container
+import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,36 +47,7 @@ class PlaybookGraph extends DirectedGraph {
     }
 
     protected String durationToText(Duration duration) {
-        long seconds = duration.millis / 1000 as long
-        long minutes = seconds / 60 as long
-        long hours = minutes / 60 as long
-        long days = hours / 24 as long
-        long weeks = days / 7 as long
-        String text = ""
-        if (weeks) text += "${weeks}w"
-        if (days % 7) {
-            if (text) text += " "
-            text += "${days % 7}d"
-        }
-        if (hours % 24) {
-            if (text) text += " "
-            text += "${hours % 24}h"
-        }
-        if (minutes % 60) {
-            if (text) text += " "
-            text += "${minutes % 60}m"
-        }
-        if (seconds % 60) {
-            if (text) text += " "
-            text += "${seconds % 60}s"
-        }
-        if (!text) {
-            text = "Start"
-        }
-        else {
-            text = "+$text"
-        }
-        return text
+        return Timing.asString(duration)
     }
 
 

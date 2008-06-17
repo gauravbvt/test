@@ -15,7 +15,8 @@ import com.mindalliance.channels.playbook.ifm.Timing
  */
 class InformationNeed extends InformationTemplate {
 
-    AgentSpec sourceSpec = new AgentSpec()
+    Ref agent // agent who needs the information
+    AgentSpec sourceSpec = new AgentSpec() // specification fo acceptable source of needed information
     Ref event // XOR with InformationTemplate.eventSpec -- need is about a specific (vs specified) event
     Timing deadline = new Timing(amount: 0) // deadline of 0 means indefinite. Information need nullifed after deadline.
 

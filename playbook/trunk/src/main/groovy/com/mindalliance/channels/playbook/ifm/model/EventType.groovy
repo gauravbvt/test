@@ -14,6 +14,15 @@ class EventType extends ElementType {
 
     List<String> topics = [] // what can usually be known about elements of this type
 
+    List<String> allTopics() {
+        List<String> all = []
+        all.addAll(topics)
+        narrowedTypes.each {nt ->
+            all.addAll(nt.allTopics())
+        }
+        return all
+    }
+
     // Queries
 
     static List<String> findAllTopicsIn(List<Ref> eventTypes) {

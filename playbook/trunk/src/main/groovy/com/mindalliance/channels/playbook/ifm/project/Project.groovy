@@ -50,15 +50,6 @@ class Project extends IfmElement implements Named, Described {
         object.project = this.reference
         switch (object.deref()) {
             case Policy: super.doAddToField("policies", object); break;
-        /* case SharingAgreement: super.doAddToField( "agreements", object ); break;
-  case Participation: super.doAddToField( "participations", object ); break;
-  // case Position:
-  case Person:
-  // case System:
-  case Organization:  super.doAddToField( "resources", object ); break;
-  case Playbook:  super.doAddToField( "playbooks", object ); break;
-  case PlaybookModel:  super.doAddToField( "models", object ); break;
-  case Place: super.doAddToField( "places", object ); break;*/
             default: super.doAddToField(field, object);
         }
     }
@@ -66,15 +57,6 @@ class Project extends IfmElement implements Named, Described {
     Referenceable doRemoveFromField(String field, Object object) {
         switch (object.deref()) {
             case Policy: super.doRemoveFromField("policies", object); break;
-        /*case SharingAgreement: super.doRemoveFromField( "agreements", object ); break;
-  case Participation: super.doRemoveFromField( "participations", object ); break;
-  // case Position:
-  case Person:
-  // case System:
-  case Organization:  super.doRemoveFromField( "resources", object ); break;
-  case Playbook:  super.doRemoveFromField( "playbooks", object ); break;
-  case PlaybookModel:  super.doRemoveFromField( "models", object ); break;
-  case Place: super.doRemoveFromField( "places", object ); break;*/
             default: super.doRemoveFromField(field, object);
         }
     }

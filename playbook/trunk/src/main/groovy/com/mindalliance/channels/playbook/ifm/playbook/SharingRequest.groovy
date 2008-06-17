@@ -1,7 +1,10 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
-import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,4 +21,28 @@ class SharingRequest extends FlowAct {
         return "Request to commit to sharing ${protocol.informationSpec}"
     }
 
+    // Return implied event type
+    static Ref impliedEventType() {
+        ComputedRef a
+        return ComputedRef.from(SharingRequest.class, 'makeImpliedEventType')
+    }
+
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'sharing request',              // note: model is null
+                                             description:'A sharing request',
+                                             topics: impliedEventTypeTopics())
+        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+        return eventType
+    }
+
+    static List<String> impliedEventTypeTopics() {
+        return FlowAct.class.impliedEventTypeTopics() + ['protocol']
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'protocol': return [protocol.about()]
+            default: return super.contentsAboutTopic(topic)
+        }
+    }
 }

@@ -18,6 +18,17 @@ class FlowAct extends InformationAct {
         return true
     }
 
+    static List<String> impliedEventTypeTopics() {
+        return InformationAct.class.impliedEventTypeTopics() + ['target']
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'target': return [targetAgent.about()]
+            default: return super.contentsAboutTopic(topic)
+        }
+    }
+
 
 
 }

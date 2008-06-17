@@ -4,6 +4,9 @@ import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 import com.mindalliance.channels.playbook.ifm.sharing.SharingConstraints
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,6 +23,33 @@ class SharingCommitment extends FlowAct {
 
     String toString() {
         return "Commitment to share ${protocol.informationSpec}"
+    }
+
+    // Return implied event type
+    static Ref impliedEventType() {
+        ComputedRef a
+        return ComputedRef.from(SharingCommitment.class, 'makeImpliedEventType')
+    }
+
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'sharing commitment',              // note: model is null
+                                             description:'A sharing commitment',
+                                             topics: impliedEventTypeTopics())
+        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+        return eventType
+    }
+
+    static List<String> impliedEventTypeTopics() {
+        return FlowAct.class.impliedEventTypeTopics() + ['protocol', 'constraints', 'approved by']
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'protocol': return [protocol.about()]
+            case 'constraints': return [constraints.about()]
+            case 'approved by': return [approvedBy.about()]
+            default: return super.contentsAboutTopic(topic)
+        }
     }
 
     // Queries

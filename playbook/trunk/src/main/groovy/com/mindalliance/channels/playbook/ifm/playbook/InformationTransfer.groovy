@@ -1,6 +1,9 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,6 +18,30 @@ class InformationTransfer extends SharingAct {
 
     String toString() {
         return "Transfer of $information"
+    }
+
+    // Return implied event type
+    static Ref impliedEventType() {
+        return ComputedRef.from(InformationTransfer.class, 'makeImpliedEventType')
+    }
+
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'information transfer',              // note: model is null
+                                             description:'An information transfer',
+                                             topics: impliedEventTypeTopics())
+        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+        return eventType
+    }
+
+    static List<String> impliedEventTypeTopics() {
+        return SharingAct.class.impliedEventTypeTopics() + ['medium']
+    }
+
+    List<String> contentsAboutTopic(String topic) {
+        switch (topic) {
+            case 'medium': return [mediumType.about()]
+            default: return super.contentsAboutTopic(topic)
+        }
     }
 
 }
