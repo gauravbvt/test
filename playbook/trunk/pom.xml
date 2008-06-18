@@ -153,6 +153,11 @@
             <artifactId>jyaml</artifactId>
             <version>1.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-core</artifactId>
+            <version>4.0.7</version>
+        </dependency>
 
         <!-- For geonames -->
         <dependency>
@@ -214,7 +219,10 @@
             </testResource>
         </testResources>
         <plugins>
-
+            <plugin>
+                <groupId>org.drools.maven.plugins</groupId>
+                <artifactId>maven-drools-compiler-plugin</artifactId>
+            </plugin>
             <plugin>
                  <groupId>org.codehaus.groovy.maven</groupId>
                  <artifactId>gmaven-plugin</artifactId>
@@ -228,7 +236,7 @@
                          </goals>
                      </execution>
                  </executions>
-             </plugin>
+            </plugin>
 
             <plugin>
               <artifactId>maven-antrun-plugin</artifactId>
@@ -306,6 +314,12 @@
         <repository>
             <id>JYAML</id>
             <url>http://jyaml.sourceforge.net/m2-repo/</url>
+            <snapshots><enabled>false</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
+        </repository>
+        <repository>
+            <id>Drools</id>
+            <url>http://repository.jboss.com/maven2/</url>
             <snapshots><enabled>false</enabled></snapshots>
             <releases><enabled>true</enabled></releases>
         </repository>
