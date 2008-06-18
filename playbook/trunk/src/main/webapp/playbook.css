@@ -61,9 +61,18 @@ div.tab-left p {
 div.tab-right {
 }
 
+div.tab-right > div.tab-panel {
+    overflow: auto;
+    max-height: 25em;
+}
+
 /* ----------------- Fonts */
 body, input {
     font-size: 1em;
+    font-family: "Times New Roman", times, serif;
+}
+
+h1, h2, h3, h4, .tab-row {
     font-family: arial, helvetica, sans-serif;
 }
 
@@ -75,13 +84,13 @@ input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
 
 /* ----------------- Links */
 a, #todos input[ type='submit'], #todos input[ type='button' ] {
-    color: green;
+    color: #000BAD;
     background-color: transparent;
     text-decoration: none !important;
     cursor: pointer;
 }
 #todos input[ type='submit'], #todos input[ type='button' ] {
-    color: green !important;
+    color: #000BAD !important;
 }
 
 div.content-buttons,#todos input[ type='submit'], #todos input[ type='button' ],
@@ -94,19 +103,19 @@ div#signout, div.content-pager {
 
 /* ----------------- Hovers */
 input:hover, a:hover, #todos input[ type='submit']:hover, #todos input[ type='button' ]:hover {
-    background-color: #dee4d9 !important;
+    background-color: #D8DDE8 !important;
     color: black;
 }
 
 /* ----------------- Selections */
 tr.selected, div.row-selected, div.tab-row li.selected, div.list-type li.selected {
-    background: #dee4d9 !important;
+    background: #D8DDE8 !important;
     color: black;
 }
 
 /* ----------------- Colors/Textures */
 th, h1, div.content-footer, div.tab-left h3, div.tab-row li, div.list-type li {
-   background: #c3c7ac url("back.png") repeat;
+   background: #7A7E87 url(back.png) no-repeat scroll 0% 50%;
    border: 1px outset gray;
    color: black;
    text-align: left;
@@ -262,7 +271,7 @@ th, td, div.tab-left h3 {
     font-size: medium;
 }
 tbody, div.content-form li {
-    line-height: 1.5em;
+    line-height: 1.4em;
  }
 
 div.content-list td {
