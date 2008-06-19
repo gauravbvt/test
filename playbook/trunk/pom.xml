@@ -219,6 +219,7 @@
             </testResource>
         </testResources>
         <plugins>
+            <!-- get from http://jira.jboss.org/jira/secure/attachment/12316588/maven-drools-plugins.zip -->
             <plugin>
                 <groupId>org.drools.maven.plugins</groupId>
                 <artifactId>maven-drools-compiler-plugin</artifactId>

@@ -27,6 +27,7 @@ public class FilteredContainer extends RefContainer {
     public FilteredContainer( Container data, Filter filter, boolean strict ) {
          this.data = data;
          this.filter = filter;
+         filter.setContainer( data );
          this.strict = strict;
      }
 
@@ -46,15 +47,21 @@ public class FilteredContainer extends RefContainer {
         return strict;
     }
 
+    /**
+     * If true, the filter will be applied without consulting its
+     * subfilters.
+     * @param strict the strictness of the filter...
+     */
     public void setStrict( boolean strict ) {
         this.strict = strict;
     }
 
     public synchronized void detach() {
-        super.detach();
-//        getData().detach();
-        setContents( null );
-        allowedClasses = null;
+        if ( getContents() != null ) {
+            super.detach();
+            setContents( null );
+            allowedClasses = null;
+        }
     }
 
     protected synchronized List<Ref> getContents() {
@@ -62,7 +69,10 @@ public class FilteredContainer extends RefContainer {
         if ( buffer == null ) {
             buffer = new ArrayList<Ref>();
             for ( Ref ref : getData() ) {
-                if ( getFilter().filter( ref ) )
+                if ( isStrict() ) {
+                    if ( getFilter().match( ref ) )
+                        buffer.add( ref );
+                } if ( getFilter().filter( ref ) )
                     buffer.add( ref );
             }
             setContents( buffer );

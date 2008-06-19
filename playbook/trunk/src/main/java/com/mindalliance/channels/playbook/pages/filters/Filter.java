@@ -68,7 +68,8 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     public void invalidate() {
         if ( !invalid ) {
             setInvalid( true );
-            getContainer().detach();
+            if ( ! ( getContainer() instanceof UserScope ) )
+                getContainer().detach();
             if ( children != null )
                 for( Filter f : children )
                     f.invalidate();
@@ -359,7 +360,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
                 kid.simplify();
                 if ( kid.isSelected() || kid.isExpanded() )
                     allDeselected = false;
-                else
+                if ( !kid.isSelected() )
                     allSelected = false;
             }
 

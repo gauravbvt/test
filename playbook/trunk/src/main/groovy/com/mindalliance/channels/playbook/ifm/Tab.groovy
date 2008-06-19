@@ -20,7 +20,6 @@ class Tab extends IfmElement implements Container {
     Filter filter
     String name = 'Everything'
     Container base
-    ContainerSummary summary
     Container buffer
 
     //---------------------------------
@@ -75,9 +74,11 @@ class Tab extends IfmElement implements Container {
     }
 
     public synchronized void detach() {
-        super.detach();
-        getFilter().invalidate();
-        buffer = null
+        if ( buffer != null ) {
+            super.detach();
+            getFilter().invalidate();
+            buffer = null
+        }
     }
 
     //---------------------------------

@@ -51,7 +51,6 @@ public class FilterPanel extends Panel {
             protected void onSubmit() {
                 applyButton.setEnabled( false );
                 Filter filter = tree.getFilter();
-                setFilter( filter );
                 onFilterApplied( filter );
                 tree.setFilter( copyFilter() );
             }

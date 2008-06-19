@@ -1,14 +1,11 @@
 package com.mindalliance.channels.playbook.pages;
 
 import com.mindalliance.channels.playbook.ifm.Tab;
-import com.mindalliance.channels.playbook.ifm.playbook.Event;
-import com.mindalliance.channels.playbook.pages.filters.ClassFilter;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
 import com.mindalliance.channels.playbook.pages.graphs.InfoFlowPanel;
+import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
-import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -45,6 +42,7 @@ public class TabPanel extends Panel implements SelectionManager {
                 tabRef.begin();
 
                 Tab tab = (Tab) tabRef.deref();
+                f.setContainer( tab.getBase() );
                 tab.setFilter( f );
                 tab.changed( "filter" );
                 tabRef.commit();

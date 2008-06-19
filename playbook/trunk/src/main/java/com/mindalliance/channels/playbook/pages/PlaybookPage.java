@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.mem.SessionMemory;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.filters.UserScope;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
@@ -37,10 +38,12 @@ public class PlaybookPage extends WebPage {
 
     private Ref selectedTab;
     private TabbedPanel tabPanel;
+    private UserScope scope;
 
     //-----------------------
     public PlaybookPage( PageParameters parms ){
         super( parms );
+        scope = new UserScope();
         load();
     }
 
@@ -49,7 +52,6 @@ public class PlaybookPage extends WebPage {
 
         addOrReplace( new Label("title", "Playbook" ));
         addOrReplace( new Label("name", new RefPropertyModel(getModel(), "user.name")));
-        addOrReplace( new Label("project", new RefPropertyModel(getModel(), "project.name")));
         addOrReplace( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         tabPanel = createTabPanel( "user-tabs" );
@@ -65,7 +67,7 @@ public class PlaybookPage extends WebPage {
 //
             public void onSubmit() {
                 getSessionMemory().commit();
-                PlaybookPage.this.detach();
+                scope.detach();
                 load();
                 setResponsePage( PlaybookPage.this );
             }
@@ -76,7 +78,7 @@ public class PlaybookPage extends WebPage {
 //            }
             public void onSubmit() {
                 getSessionMemory().abort();
-                PlaybookPage.this.detach();
+                scope.detach();
                 load();
                 setResponsePage( PlaybookPage.this );
             }
@@ -110,20 +112,29 @@ public class PlaybookPage extends WebPage {
     }
 
     public void setSelectedTab( Ref selectedTab ) {
-        if ( this.selectedTab != null && !this.selectedTab.equals( selectedTab ) ) {
-            Tab old = (Tab) this.selectedTab.deref();
-            old.detach();
+
+        if ( this.selectedTab == null || !this.selectedTab.equals( selectedTab ) ) {
+            if ( this.selectedTab != null ) {
+                Tab old = (Tab) this.selectedTab.deref();
+                old.detach();
+            }
+
+            final Ref ref = getUserRef();
+            ref.begin();
+            final User user = (User) ref.deref();
+            List<Ref> refList = user.getTabs();
+
+            this.selectedTab = selectedTab == null ?
+                               refList.get( 0 ) : selectedTab;
+
+            user.setSelectedTab( this.selectedTab );
+            user.changed( "selectedTab" );
+            ref.commit();
+
+            tabPanel.setSelectedTab( refList.indexOf( this.selectedTab ) );
         }
-
-        this.selectedTab = selectedTab;
-
-        final User user = getUser();
-        int index = selectedTab == null ? 0
-                    : user.getTabs().indexOf( selectedTab );
-        tabPanel.setSelectedTab( index );
     }
 
-// TODO figure out javascript + xml
     protected void configureResponse() {
         super.configureResponse();
         WebResponse response = getWebRequestCycle().getWebResponse();
@@ -132,25 +143,15 @@ public class PlaybookPage extends WebPage {
 
     //-----------------------
     private TabbedPanel createTabPanel( String id ) {
-        final TabbedPanel result = new TabbedPanel( id, createUserTabs() ) {
+        return new TabbedPanel( id, createUserTabs() ) {
             protected WebMarkupContainer newLink( String linkId, final int index ) {
                 return new Link( linkId ) {
                     public void onClick() {
-                        final Ref ref = getUserRef();
-                        ref.begin();
-                        final User user = getUser();
-                        Ref newTabRef = (Ref) user.getTabs().get( index );
-                        user.setSelectedTab( newTabRef );
-                        user.changed( "selectedTab" );
-                        ref.commit();
-
-                        PlaybookPage.this.setSelectedTab( newTabRef );
+                        PlaybookPage.this.setSelectedTab( (Ref) getUser().getTabs().get( index ) );
                     }
                 };
             }
         };
-//        result.setRenderBodyOnly( true );
-        return result;
     }
 
     private List<AbstractTab> createUserTabs() {
@@ -160,12 +161,16 @@ public class PlaybookPage extends WebPage {
         User user = (User) userRef.deref();
         List<Ref> tabs = user.getTabs();
         if ( tabs.size() > 0 )
-            for ( Ref t : tabs )
-                result.add( createTab( t ) );
+            for ( Ref ref : tabs ) {
+                Tab t = (Tab) ref.deref();
+                if ( t.getBase() instanceof UserScope )
+                    scope = (UserScope) t.getBase();
+                result.add( createTab( ref ) );
+            }
         else {
             // TODO initialize from shared tabs
 
-            final Tab tab = new Tab();
+            final Tab tab = new Tab( scope );
             final Ref tabRef = tab.persist();
             userRef.begin();
             // The following is required, as the begin sometimes produces a copy
@@ -178,6 +183,7 @@ public class PlaybookPage extends WebPage {
             assert( !getSessionMemory().getChanges().contains( userRef ));
 
             result.add( createTab( tabRef ) );
+            scope.detach();
         }
 
         return result;
@@ -190,11 +196,12 @@ public class PlaybookPage extends WebPage {
                 if ( panel == null )
                     panel = new TabPanel( panelId, new RefModel(tab) ) {
                         protected void onFilterSave( Tab tab, Filter filter ) {
-                            Tab newTab = new Tab();
+                            Tab newTab = new Tab( scope );
                             Ref newTabRef = newTab.persist();
 
                             try {
-                                newTab.setBase( new FilteredContainer( tab.getBase(), filter.clone() ) );
+                                Filter f = filter.clone();
+                                newTab.setBase( new FilteredContainer( tab.getBase(), f ) );
                             } catch ( CloneNotSupportedException e ) {
                                 throw new RuntimeException( e );
                             }
@@ -216,12 +223,21 @@ public class PlaybookPage extends WebPage {
                             assert( !getSessionMemory().getBegun().containsKey( userRef ));
                             assert( !getSessionMemory().getChanges().contains( newTabRef ));
                             assert( !getSessionMemory().getBegun().containsKey( newTabRef ));
-
+                            PlaybookPage.this.detach();
                             load();
                         }
                     };
                 return panel;
             }
         };
+    }
+
+    public UserScope getScope() {
+        return scope;
+    }
+
+    public void detachModels() {
+        super.detachModels();
+        scope.detach();
     }
 }

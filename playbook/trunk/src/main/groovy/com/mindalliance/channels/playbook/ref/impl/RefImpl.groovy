@@ -20,7 +20,7 @@ class RefImpl implements Ref {
     String db
 
     RefImpl() {}
-    
+
     RefImpl(String id) {
         this.id = id
     }
@@ -31,7 +31,7 @@ class RefImpl implements Ref {
 
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
     boolean equals(Object obj) {
-        if (!obj instanceof Ref) return false
+        if (obj == null || !obj instanceof Ref) return false
         Ref ref = (Ref) obj
         if (ref.id == null || this.id == null || this.id != ref.id) return false // both ids must be set for equality
         if (ref.db != this.db) return false  // both dbs must be the same and can both be null
