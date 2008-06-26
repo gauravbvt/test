@@ -30,7 +30,6 @@ class ApplicationMemory implements Serializable {
 
     static final String ROOT_ID = 'CHANNELS'
     static final String ROOT_DB = 'channels'
-    static final Ref ROOT = new RefImpl(id: ROOT_ID, db: ROOT_DB)
 
     static final String EXPORT_DIRECTORY = 'data/yaml'
     static final String BACKUP_DIRECTORY = 'data/yaml/backup'
@@ -137,8 +136,8 @@ class ApplicationMemory implements Serializable {
         }
     }
 
-    Ref getRoot() {
-        return ROOT
+    static Ref getRoot() {
+        return new RefImpl(id: ROOT_ID, db: ROOT_DB)
     }
 
     // Creates a single YAML file named "<name>.yml" with ref and all that it references transitively

@@ -22,6 +22,7 @@ import com.mindalliance.channels.playbook.support.persistence.PersistentRef
 import com.mindalliance.channels.playbook.graph.GraphVizRenderer
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.support.Level
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -63,7 +64,10 @@ public class TestPlaybook extends TestCase {
         assertTrue(sessionMem.isEmpty())
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
+        Referenceable appLevel = myProject.deref()                                          
+        assert appLevel == myProject.deref()   // cached in Ref
         myProject.begin()
+        assert appLevel != myProject.deref()
         assert myProject.type == 'Project'
         assert myProject as Boolean// is Fresh in session?
         // Test metaproperties

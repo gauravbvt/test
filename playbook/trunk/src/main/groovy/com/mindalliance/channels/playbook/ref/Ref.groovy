@@ -39,4 +39,5 @@ interface Ref extends Serializable {
     boolean isModified() // is in session and has been changed
     boolean isComputed()
     boolean isFresh() // is it not stale?
+    void detach() // remove cached copy of referenceable
 }

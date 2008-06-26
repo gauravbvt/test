@@ -23,7 +23,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
     }
 
     void makeRoot() {
-        Ref root = ApplicationMemory.ROOT
+        Ref root = ApplicationMemory.getRoot()
         this.id = root.id
         this.db = root.db
     }

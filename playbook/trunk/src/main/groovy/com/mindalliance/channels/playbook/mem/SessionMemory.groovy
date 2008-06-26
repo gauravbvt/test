@@ -38,16 +38,20 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     Referenceable retrieve(Ref reference) {
+        return retrieve(reference, null)
+    }
+
+    Referenceable retrieve(Ref reference, def dirtyRead) {
         Referenceable referenceable = null
         if (!deletes.contains(reference)) {  // deleted in session
             referenceable = begun.get(reference)
             if (!referenceable) {
-                Referenceable appLevelReferenceable = retrieveFromApplicationMemory(reference)
-        /*        if (appLevelReferenceable) {
-                    referenceable = (Referenceable) appLevelReferenceable.copy() // take a copy
-                    referenceable.addPropertyChangeListener(this) // register with this session memory
-                }*/
-                referenceable =  appLevelReferenceable
+                if (dirtyRead) {
+                    return dirtyRead
+                }
+                else {
+                    referenceable = retrieveFromApplicationMemory(reference)
+                }
             }
             else {
                 if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
@@ -59,6 +63,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     void begin(Ref ref) {
         synchronized(this.getApplicationMemory()) {
             if (!begun.containsKey(ref)) {
+                ref.detach()
                 Referenceable referenceable
                 use (NoSessionCategory) {
                     Referenceable original = retrieveFromApplicationMemory(ref)
@@ -123,6 +128,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     void delete(Ref ref) {
         if (begun.containsKey(ref)) {
+            ref.detach()
             ref.deref().changed("id") // raise change event on id
             begun.remove(ref)
             changes.remove(ref)
@@ -155,6 +161,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     public void commit(Ref ref) {
+        ref.detach()
         synchronized(getApplicationMemory()) {
             if (changes.contains(ref)) {
                 Referenceable referenceable = begun.get(ref)
@@ -173,6 +180,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void reset(Ref ref) {
+        ref.detach()
         synchronized(getApplicationMemory()) {
             if (begun.containsKey(ref)) {
                 begun.remove(ref)
@@ -202,6 +210,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     private void unlockAll(Set<Ref> refs) {
         for (Ref ref : refs) {
+            ref.detach()
             unlock(ref)
         }
     }

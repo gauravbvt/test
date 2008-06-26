@@ -18,11 +18,16 @@ class RefImpl implements Ref {
 
     String id
     String db
+    Referenceable value // set once on deref() by store. Transient and detachable
 
     RefImpl() {}
 
     RefImpl(String id) {
         this.id = id
+    }
+
+    void detach() {
+        value = null
     }
 
     boolean isComputed() {
@@ -64,7 +69,9 @@ class RefImpl implements Ref {
     }
 
     private Referenceable getReferenced(Store store) {
-        return store.retrieve(this)
+        Referenceable referenceable = store.retrieve(this, value)
+        value = referenceable
+        return referenceable
     }
 
     String getDb() {
@@ -103,7 +110,7 @@ class RefImpl implements Ref {
 
     void doSetProperty(String name, def value) {
         if (['id', 'db'].contains(name)) {
-            ref.@"$name" = value
+            this.@"$name" = value
         }
         else {
             Referenceable referenceable = deref()
@@ -113,7 +120,7 @@ class RefImpl implements Ref {
 
     def get(String name) {
         if (['id', 'db'].contains(name)) {
-            return ref.@"$name"
+            return this.@"$name"
         }
         else {
             def value

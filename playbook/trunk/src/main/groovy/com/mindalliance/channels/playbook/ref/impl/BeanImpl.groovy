@@ -58,7 +58,7 @@ abstract class BeanImpl implements Bean {
            case ComputedRef.class: value = val; break
            case Ref.class:
                 if (PlaybookApplication.current().getMemory().isFresh((Ref)val)) {
-                    value = val
+                    value = new RefImpl(id:val.id, db:val.db)
                  }
                  else {
                     Logger.getLogger(Bean.class).warn("Stale reference $val replaced by null")
