@@ -41,21 +41,7 @@ abstract class BeanImpl implements Bean {
         Bean copy = (Bean) this.class.newInstance()
         beanProperties().each {name, val ->
             try {
-                def value
-                switch (val) {
-                    case {it instanceof Class}: value = val; break
-                    case Ref.class:
-                         if (PlaybookApplication.current().getMemory().isFresh(ref)) {
-                            value = val
-                         }
-                         else {
-                            value = null
-                         }
-                         break
-                    case Bean.class: value = val.copy(); break
-                    case Cloneable.class: value = val.clone(); break
-                    default: value = val
-                }
+                def value = BeanImpl.makeClone(val)
                 copy."$name" = value
             }
             catch (Exception e) {// Read-only/computed field
@@ -63,6 +49,34 @@ abstract class BeanImpl implements Bean {
             }
         }
         return copy
+    }
+
+    static Object makeClone(Object val) {
+        def value
+        switch(val) {
+           case {it instanceof Class}: value = val; break
+           case ComputedRef.class: value = val; break
+           case Ref.class:
+                if (PlaybookApplication.current().getMemory().isFresh((Ref)val)) {
+                    value = val
+                 }
+                 else {
+                    Logger.getLogger(Bean.class).warn("Stale reference $val replaced by null")
+                    value = null
+                 }
+                 break
+            case Bean.class: value = val.copy(); break
+            case Collection.class:   // filter out nulls, (dangling Refs are cloned to null)
+                value = val.class.newInstance()
+                val.each {item ->
+                    def clone = BeanImpl.makeClone(item)
+                    if (clone != null) value.add(clone)
+                }
+                break
+            case Cloneable.class: value = val.clone(); break
+            default: value = val
+        }
+        return value
     }
 
     protected List<String> transientProperties() {
