@@ -58,6 +58,29 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         return shallow;
     }
 
+    public boolean equals( Object o ) {
+        if ( this == o )
+            return true;
+        if ( o == null || getClass() != o.getClass() )
+            return false;
+
+        Filter filter = (Filter) o;
+
+        if ( !collapsedText.equals( filter.collapsedText ) )
+            return false;
+        if ( !expandedText.equals( filter.expandedText ) )
+            return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = collapsedText.hashCode();
+        result = 31 * result + expandedText.hashCode();
+        return result;
+    }
+
     public Filter getRoot() {
         if ( getParent() == null )
             return this;
@@ -412,21 +435,24 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
         // Do the equivalent of
         //  ( orable1 || ... || orableN )
-        //   && andable1 && ... && andableM
+        //   && ( andable1 || ... || andableM )
 
         if ( children != null ) {
-            boolean hasOrable = false;
+            boolean orClauses = false;
             for ( Filter f : getChildren() )
                 if ( f.isOrable() && f.filter( object ) ) {
-                    hasOrable = true;
+                    orClauses = true;
                     break;
                 }
-            if ( hasOrable ) {
+            if ( orClauses ) {
+                boolean andClauses = true;
                 for ( Filter f : getChildren() )
-                    if ( !f.isOrable() && !f.filter( object ) ) {
-                        return false;
+                    if ( !f.isOrable() ) {
+                        if ( f.filter( object ) )
+                            return true;
+                        andClauses = false;
                     }
-                return true;
+                return andClauses;
             }
         }
 

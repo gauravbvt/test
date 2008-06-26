@@ -20,7 +20,10 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A visualization of the contents of a tab panel.
@@ -30,6 +33,7 @@ public class ContentView extends Panel implements SelectionManager {
     private SelectionManager selectionManager;
     private boolean menuVisible;
     private Ref selected;
+    private WebMarkupContainer menu;
 
     protected ContentView( String id, IModel model, SelectionManager masterSelection ) {
         super( id, model );
@@ -61,7 +65,7 @@ public class ContentView extends Panel implements SelectionManager {
             }
         } );
 
-        final WebMarkupContainer menu = createNewMenu();
+        menu = createNewMenu();
         addOrReplace( new AjaxLink( "new-item", new Model("New...") ){
             public void onClick( AjaxRequestTarget target ) {
                 menuVisible = !menuVisible;
@@ -75,23 +79,47 @@ public class ContentView extends Panel implements SelectionManager {
         return new EmptyPanel( id );
     }
 
+    /**
+     * Create a new referenceable with all the trimmings
+     * and add it to the container.
+     * @param c the class of the new instance
+     * @return the new object
+     */
+    private Ref createInstance( Class c ) {
+
+        try {
+            Referenceable object = (Referenceable) c.newInstance();
+            Container container = getContainer();
+            Map<Method,Object> defaults = container.getSummary().getCommonValues( c );
+            for ( Method setter : defaults.keySet() ) {
+                Object value = defaults.get( setter );
+                setter.invoke( object, value );
+            }
+
+            Ref ref = object.persist();
+            container.add( object );
+
+            return ref;
+
+        } catch ( InstantiationException e ) {
+            throw new RuntimeException( e );
+        } catch ( IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        } catch ( InvocationTargetException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
     private WebMarkupContainer createNewMenu() {
         final ListView items = new ListView( "new-popup-item", new RefPropertyModel( this, "container.allowedClasses" ) ) {
             protected void populateItem( final ListItem item ) {
                 final Class c = (Class) item.getModelObject();
                 final AjaxLink link = new AjaxLink( "new-item-link" ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        try {
-                            final Referenceable object = (Referenceable) c.newInstance();
-                            Ref ref = object.persist();
-                            Container container = getContainer();
-                            container.add( object );
-                            doAjaxSelection( ref, target );
-                        } catch ( InstantiationException e ) {
-                            e.printStackTrace();
-                        } catch ( IllegalAccessException e ) {
-                            e.printStackTrace();
-                        }
+                        Ref newObject = createInstance( c );
+                        menuVisible = false;
+                        target.addComponent( menu );
+                        doAjaxSelection( newObject, target );
                     }
                 };
                 item.add( link );

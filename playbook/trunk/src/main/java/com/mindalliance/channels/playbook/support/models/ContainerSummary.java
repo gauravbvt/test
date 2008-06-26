@@ -80,6 +80,17 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
     }
 
     /**
+     * Get common property values for instances of given class.
+     * @param c the class
+     * @return values, indexed by setter
+     */
+    public Map<Method,Object> getCommonValues( Class<?> c ) {
+        ClassUse use = getUsage().get( c );
+        return use == null ? new HashMap<Method, Object>()
+                           : use.getCommonValues();
+    }
+
+    /**
      * Compute the column index for combined classes in the data.
      * @return property descriptors, indexed by display name
      */
@@ -297,7 +308,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                             propValues = new HashSet<Object>();
                             values.put( pd, propValues );
                         }
-                        propValues.add( valueToDisplay( value ) );
+                        propValues.add( value == null ? "" : value );
                     }
                 }
             } catch ( InvocationTargetException e ) {
@@ -329,6 +340,18 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                 if ( !hasTransients || !getTransients().contains( p.getName() ) )
                     if ( values.get( p ).size() > 1 )
                         result.add( newRMP( p ) );
+            }
+            return result;
+        }
+
+        public Map<Method,Object> getCommonValues() {
+            Map<Method,Object> result = new HashMap<Method,Object>();
+            for ( PropertyDescriptor p : properties ) {
+                if ( !hasTransients || !getTransients().contains( p.getName() ) ) {
+                    Set<Object> objects = values.get( p );
+                    if ( objects.size() == 1 )
+                        result.put( p.getWriteMethod(), objects.iterator().next() );
+                }
             }
             return result;
         }

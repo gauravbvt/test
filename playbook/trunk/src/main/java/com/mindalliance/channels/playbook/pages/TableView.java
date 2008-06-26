@@ -26,6 +26,7 @@ public class TableView extends ContentView {
     private DataView rows;
     private DeferredProvider summary;
     private DeferredProvider rowProvider;
+    private CustomPagingNavigator pager;
 
     protected TableView( String id, final IModel model, SelectionManager masterSelection ) {
         super( id, model, masterSelection );
@@ -53,6 +54,11 @@ public class TableView extends ContentView {
         // TODO reset selection from user prefs
         if ( getContainer().size() > 0 )
             setSelected( 0 );
+    }
+
+    public void doAjaxSelection( Ref newSelection, AjaxRequestTarget target ) {
+        super.doAjaxSelection( newSelection, target );
+        target.addComponent( pager );
     }
 
     private DataView createRows() {
@@ -112,16 +118,19 @@ public class TableView extends ContentView {
     }
 
     protected Panel getPager( String id ) {
-        return new CustomPagingNavigator( id, createRows() ) {
+        pager = new CustomPagingNavigator( id, createRows() ) {
             public boolean isVisible() {
                 return getContainer().size() > ITEMS_PER_PAGE;
             }
         };
+        pager.setOutputMarkupId( true );
+        return pager;
     }
 
-    public void setSelected( int index ) {
-        super.setSelected( index );
+    public void setSelected( Ref ref ) {
+        super.setSelected( ref );
         Container container = getContainer();
+        int index = ref == null ? -1 : container.indexOf( ref );
         if ( index >= 0 && index < container.size() )
             rows.setCurrentPage( index / rows.getItemsPerPage() );
         else

@@ -57,11 +57,9 @@ public class FilteredContainer extends RefContainer {
     }
 
     public synchronized void detach() {
-        if ( getContents() != null ) {
-            super.detach();
-            setContents( null );
-            allowedClasses = null;
-        }
+        super.detach();
+        setContents( null );
+        allowedClasses = null;
     }
 
     protected synchronized List<Ref> getContents() {

@@ -9,7 +9,6 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
-import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.authentication.pages.SignOutPage;
@@ -61,10 +60,10 @@ public class PlaybookPage extends WebPage {
         //--------------
         Form pageControls = new Form( "page_controls" );
         pageControls.add( new Button("save_button") {
-//            public boolean isEnabled() {
-//                return !getSessionMemory().isEmpty();
-//            }
-//
+            public boolean isEnabled() {
+                return !getSessionMemory().isEmpty();
+            }
+
             public void onSubmit() {
                 getSessionMemory().commit();
                 scope.detach();
@@ -73,9 +72,9 @@ public class PlaybookPage extends WebPage {
             }
         });
         pageControls.add( new Button("revert_button") {
-//            public boolean isEnabled() {
-//                return !getSessionMemory().isEmpty();
-//            }
+            public boolean isEnabled() {
+                return !getSessionMemory().isEmpty();
+            }
             public void onSubmit() {
                 getSessionMemory().abort();
                 scope.detach();
@@ -86,7 +85,9 @@ public class PlaybookPage extends WebPage {
 //        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         addOrReplace( pageControls );
 
-        setSelectedTab( getUser().getSelectedTab() );
+        User user = getUser();
+        setSelectedTab( user.getSelectedTab() );
+        tabPanel.setSelectedTab( user.getTabs().indexOf( this.selectedTab ) );
     }
 
     //-----------------------
@@ -130,7 +131,7 @@ public class PlaybookPage extends WebPage {
             user.setSelectedTab( this.selectedTab );
             user.changed( "selectedTab" );
             ref.commit();
-
+            assert( this.selectedTab.equals( getUser().getSelectedTab() ) );
             tabPanel.setSelectedTab( refList.indexOf( this.selectedTab ) );
         }
     }
@@ -194,7 +195,7 @@ public class PlaybookPage extends WebPage {
             private Panel panel;
             public Panel getPanel( String panelId ) {
                 if ( panel == null )
-                    panel = new TabPanel( panelId, new RefModel(tab) ) {
+                    panel = new TabPanel( panelId, new RefPropertyModel(PlaybookPage.this, "selectedTab") ) {
                         protected void onFilterSave( Tab tab, Filter filter ) {
                             Tab newTab = new Tab( scope );
                             Ref newTabRef = newTab.persist();

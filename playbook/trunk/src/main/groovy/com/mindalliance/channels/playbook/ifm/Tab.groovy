@@ -77,6 +77,7 @@ class Tab extends IfmElement implements Container {
         if ( buffer != null ) {
             super.detach();
             getFilter().invalidate();
+            base.detach();
             buffer = null
         }
     }

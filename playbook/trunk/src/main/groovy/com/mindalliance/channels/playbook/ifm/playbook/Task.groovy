@@ -22,7 +22,7 @@ class Task extends InformationAct {
     List<String> specificPurposes = [] // specific purposes (vs thoses stated in TaskTypes)
 
     String toString() {
-        return "Task of type $taskType"
+        return "a task"
     }
 
     // Return implied event type
