@@ -12,7 +12,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project
  * Date: Apr 30, 2008
  * Time: 3:09:17 PM
  */
-abstract class PlaybookElement extends IfmElement {
+abstract class PlaybookElement extends ProjectElement {
 
     Ref playbook
 
