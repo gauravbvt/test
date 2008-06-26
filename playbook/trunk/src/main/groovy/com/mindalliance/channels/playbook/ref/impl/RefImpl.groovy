@@ -275,4 +275,5 @@ class RefImpl implements Ref {
        }
        return fresh
     }
+
 }

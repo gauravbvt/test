@@ -6,6 +6,7 @@ import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.support.persistence.Mappable
 import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.ifm.Named
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,6 +36,7 @@ abstract class BeanImpl implements Bean {
         return metaBeanProperties
     }
 
+    // WARNING: Copy sets to null Refs that are dangling in APPLICATION scope
     Bean copy() {
         Bean copy = (Bean) this.class.newInstance()
         beanProperties().each {name, val ->
@@ -42,6 +44,14 @@ abstract class BeanImpl implements Bean {
                 def value
                 switch (val) {
                     case {it instanceof Class}: value = val; break
+                    case Ref.class:
+                         if (PlaybookApplication.current().getMemory().isFresh(ref)) {
+                            value = val
+                         }
+                         else {
+                            value = null
+                         }
+                         break
                     case Bean.class: value = val.copy(); break
                     case Cloneable.class: value = val.clone(); break
                     default: value = val
