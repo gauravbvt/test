@@ -4,7 +4,6 @@ import org.apache.wicket.authentication.AuthenticatedWebApplication
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.pages.PlaybookPage
 import com.mindalliance.channels.playbook.pages.LoginPage
-import com.mindalliance.channels.playbook.support.Memorable
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
@@ -32,7 +31,7 @@ import com.mindalliance.channels.playbook.ifm.spec.EventSpec
  * Date: Mar 21, 2008
  * Time: 11:01:36 AM
  */
-class PlaybookApplication extends AuthenticatedWebApplication implements Memorable, Serializable {
+class PlaybookApplication extends AuthenticatedWebApplication implements Serializable {
 
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
     static final String FORM_SUFFIX = 'Form'
@@ -448,10 +447,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Memorab
 
     Referenceable retrieve(Ref ref) {
         return appMemory.retrieve(ref)
-    }
-
-    void clear(Ref ref) {
-        appMemory.clear(ref)
     }
 
     void clearAll() {

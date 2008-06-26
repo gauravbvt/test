@@ -57,27 +57,40 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void begin(Ref ref) {
-        if (!begun.containsKey(ref)) {
-            Referenceable referenceable
-            use (NoSessionCategory) {
-                Referenceable original = retrieveFromApplicationMemory(ref)
-                if (original) {
-                    referenceable = (Referenceable)original.copy() // take a copy
-                    doBegin(referenceable)
+        synchronized(this.getApplicationMemory()) {
+            if (!begun.containsKey(ref)) {
+                Referenceable referenceable
+                use (NoSessionCategory) {
+                    Referenceable original = retrieveFromApplicationMemory(ref)
+                    if (original) {
+                        if (isLocked(ref)) {
+                            Logger.getLogger(this.class).warn("$ref is locked")
+                            throw new RefLockException("Can't begin: $ref is locked")
+                        }
+                        else {
+                            lock(original.reference)
+                            referenceable = (Referenceable)original.copy() // take a copy
+                            doBegin(referenceable)
+                        }
+                    }
                 }
             }
-        }
-        else {
-            Logger.getLogger(this.class).debug("Doing begin() on $ref already in session")
+            else {
+                Logger.getLogger(this.class).debug("Doing begin() on $ref already in session")
+            }
         }
     }
 
-    Ref persist(Referenceable referenceable) {
-        Ref ref = referenceable.reference
-        doBegin(referenceable)
-        referenceable.changed("id") // was created, thus has a new id
-        // hasChanged(referenceable)
-        return ref
+    private boolean isLocked(Ref ref) {
+        return getApplicationMemory().isLocked(ref)
+    }
+
+    private void lock(Ref ref) {
+        getApplicationMemory().lock(ref)
+    }
+
+    private void unlock(Ref ref) {
+        getApplicationMemory().unlock(ref)
     }
 
     private void doBegin(Referenceable referenceable) {
@@ -89,6 +102,15 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     private void addChangeListeners(Referenceable referenceable) {
         referenceable.addPropertyChangeListener(this) // register with this session memory
         referenceable.addPropertyChangeListener(QueryManager.instance())
+    }
+
+    Ref persist(Referenceable referenceable) {  // must be newly created referenceable!
+        // assert !referenceable.reference.isFresh()
+        Ref ref = referenceable.reference
+        doBegin(referenceable)
+        referenceable.changed("id") // was created, thus has a new id
+        // hasChanged(referenceable)
+        return ref
     }
 
     Ref hasChanged(Referenceable referenceable) {// Persist the change in session and, on save, in application
@@ -117,49 +139,71 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void commit() {
-        List<Referenceable> toCommit = []
-        changes.each { toCommit.add(begun.get((Ref)it)) }
-        getApplicationMemory().storeAll(toCommit)
-        getApplicationMemory().deleteAll(deletes)
-        reset()
+        synchronized(getApplicationMemory()) {
+            List<Referenceable> toCommit = []
+            changes.each { toCommit.add(begun.get((Ref)it)) }
+            getApplicationMemory().storeAll(toCommit)
+            getApplicationMemory().deleteAll(deletes)
+            reset()
+        }
     }
 
     void abort() {
-        reset()
+        synchronized(getApplicationMemory()) {
+            reset()
+        }
     }
 
     public void commit(Ref ref) {
-        if (changes.contains(ref)) {
-            Referenceable referenceable = begun.get(ref)
-            changes.remove(ref)
-            begun.remove(ref)
-            getApplicationMemory().store(referenceable)
-        }
-        else if (deletes.contains(ref)) {
-            deletes.remove(ref)
-            getApplicationMemory().delete(ref)
+        synchronized(getApplicationMemory()) {
+            if (changes.contains(ref)) {
+                Referenceable referenceable = begun.get(ref)
+                changes.remove(ref)
+                begun.remove(ref)
+                getApplicationMemory().store(referenceable)
+                unlock(ref)
+            }
+            else if (deletes.contains(ref)) {
+                deletes.remove(ref)
+                getApplicationMemory().delete(ref)
+                unlock(ref)
+            }
         }
         // does not update the query cache or inSessionClasses
     }
 
-    public void reset(Ref ref) {
-        if (begun.containsKey(ref)) {
-            begun.remove(ref)
-        }
-        if (changes.contains(ref)) {
-            changes.remove(ref)
-        }
-        else if (deletes.contains(ref)) {
-            deletes.remove(ref)
+    void reset(Ref ref) {
+        synchronized(getApplicationMemory()) {
+            if (begun.containsKey(ref)) {
+                begun.remove(ref)
+                unlock(ref)
+            }
+            if (changes.contains(ref)) {
+                changes.remove(ref)   // no need to unlock again; was in begun
+            }
+            else if (deletes.contains(ref)) {
+                deletes.remove(ref)
+                unlock(ref)
+            }
         }
     }
 
     void reset() {
-        changes = new HashSet<Ref>()
-        deletes = new HashSet<Ref>()
-        begun = new HashMap<Ref, Referenceable>()
-        queryCache.clear()
-        inSessionClasses = new HashSet<Class>()
+        synchronized(getApplicationMemory()) {
+            changes = new HashSet<Ref>()
+            unlockAll(deletes)
+            deletes = new HashSet<Ref>()
+            unlockAll(begun.keySet())
+            begun = new HashMap<Ref, Referenceable>()
+            queryCache.clear()
+            inSessionClasses = new HashSet<Class>()
+        }
+    }
+
+    private void unlockAll(Set<Ref> refs) {
+        for (Ref ref : refs) {
+            unlock(ref)
+        }
     }
 
     Referenceable retrieveFromApplicationMemory(Ref reference) {

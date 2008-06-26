@@ -17,6 +17,7 @@ import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.query.QueryManager
 import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
+import com.mindalliance.channels.playbook.support.PlaybookSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -70,6 +71,21 @@ class ApplicationMemory implements Serializable {
         referenceables.each {store(it)}
     }
 
+    // always called within synchronized(this) block
+    void lock(Ref ref) {
+        cache.lock(ref, PlaybookSession.current())
+    }
+
+    // always called within synchronized(this) block
+    boolean isLocked(Ref ref) {
+        return cache.isLocked(ref, PlaybookSession.current())
+    }
+
+    // always called within synchronized(this) block
+    void unlock(Ref ref) {
+       cache.unlock(ref, PlaybookSession.current())
+    }
+
     Ref store(Referenceable referenceable) {
         referenceable.beforeStore()
         cache.putInCache(referenceable.getId(), referenceable)
@@ -115,14 +131,10 @@ class ApplicationMemory implements Serializable {
         return cache.isFresh(ref)
     }
 
-    void clear(Ref ref) {
-        if (ref != root) {
-            cache.flushEntry(ref.id)
-        }
-    }
-
     void clearAll() {
-        cache.clear()
+        synchronized(this) {
+            cache.clear()
+        }
     }
 
     Ref getRoot() {
