@@ -18,7 +18,7 @@ import org.apache.log4j.Logger
  * Date: Mar 19, 2008
  * Time: 8:49:28 AM
  */
-/*abstract*/ class ReferenceableImpl extends BeanImpl implements Referenceable {
+abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
 
     String id
     String db

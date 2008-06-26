@@ -10,4 +10,5 @@ interface Store {
     void begin(Ref ref)
     boolean isModifiable(Ref ref)
     boolean isModified(Ref ref)
+    boolean isFresh(Ref ref)  // i.e. not stale -- calling deref() will return a Referenceable
 }

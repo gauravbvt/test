@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.spec
 
-import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Bean
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -24,8 +24,8 @@ class ResourceSpec extends SpecImpl {
         return !roles.isEmpty() || !organizationTypes.isEmpty()
     }
 
-    public boolean matches(Ref element) {
-        return false;  // TODO
+    public boolean doesMatch(Bean bean) {
+         // TODO
     }
 
     public boolean narrows(Spec spec) {

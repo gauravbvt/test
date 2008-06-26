@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 * Date: Apr 17, 2008
 * Time: 9:17:11 AM
 */
-class AbstractInformation extends BeanImpl {
+abstract class AbstractInformation extends BeanImpl {
 
     List<ElementOfInformation> eventDetails = []
 

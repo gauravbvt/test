@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ref.impl
 
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -41,7 +42,10 @@ class ComputedRef extends RefImpl {
         List<String> list = id.tokenize(',')
         Class clazz = Class.forName((String)list[0])
         String methodName = (String)list[1]
-        Referenceable result = (Referenceable)this.metaClass.invokeStaticMethod(clazz, methodName, null)
+        Referenceable result = null
+        use (NoSessionCategory) {
+            result = (Referenceable)this.metaClass.invokeStaticMethod(clazz, methodName, null)
+        }
         return result
     }
 

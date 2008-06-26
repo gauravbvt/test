@@ -2,7 +2,6 @@ package com.mindalliance.channels.playbook.ifm.model
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Described
-import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.Named
 
 /**
@@ -12,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.Named
 * Date: Apr 17, 2008
 * Time: 12:48:16 PM
 */
-class ElementType extends ModelElement implements Named, Described {
+abstract class ElementType extends ModelElement implements Named, Described {
 
     String name = ''           // -- required
     String description = ''

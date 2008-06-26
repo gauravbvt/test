@@ -17,8 +17,9 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 class Task extends InformationAct {
 
     Timing duration = new Timing(amount:0)
-    Ref taskType
+    List<Ref> taskTypes = []
     List<InformationNeed> informationNeeds = []
+    List<String> specificPurposes = [] // specific purposes (vs thoses stated in TaskTypes)
 
     String toString() {
         return "Task of type $taskType"

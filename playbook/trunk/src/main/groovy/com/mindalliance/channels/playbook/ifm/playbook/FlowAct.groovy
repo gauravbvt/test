@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 1:41:27 PM
 */
-class FlowAct extends InformationAct {
+abstract class FlowAct extends InformationAct {
 
     Ref targetAgent
 

@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.place.PlaceAboutTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.place.PlaceLocationTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.place.PlaceGeoLocationTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,9 +26,9 @@ public class PlaceForm extends AbstractProjectElementForm {
                  return new PlaceAboutTab(panelId, PlaceForm.this);
              }
          });
-         tabs.add(new AbstractTab(new Model("Location")) {
+         tabs.add(new AbstractTab(new Model("Geographical location")) {
              public Panel getPanel(String panelId) {
-                 return new PlaceLocationTab(panelId, PlaceForm.this);
+                 return new PlaceGeoLocationTab(panelId, PlaceForm.this);
              }
          });
     }

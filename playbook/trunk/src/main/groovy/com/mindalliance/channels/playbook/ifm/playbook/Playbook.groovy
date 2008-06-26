@@ -18,7 +18,6 @@ class Playbook extends ProjectElement implements Described {
 
     String name = ''
     String description = ''
-    List<Ref> teams = []
     List<Ref> groups = []
     List<Ref> events = []
     List<Ref> informationActs = []
@@ -41,7 +40,6 @@ class Playbook extends ProjectElement implements Described {
          switch (element.type) {
              case "Event": field = "events"; break
              case "Group": field = "groups"; break
-             case "Team": field = "teams"; break
              default: field = "informationActs"
          }
          doAddToField(field, element)
@@ -54,14 +52,14 @@ class Playbook extends ProjectElement implements Described {
     Referenceable doAddToField( String field, Object val ) {
         val.playbook = this.reference
         String actualField = field
-        if (!['events', 'groups', 'teams'].contains(field)) actualField = 'informationActs'
+        if (!['events', 'groups'].contains(field)) actualField = 'informationActs'
         super.doAddToField(actualField, val)
     }
 
     Referenceable doRemoveFromField(String field, Object val) {
         val.playbook = null
         String actualField = field
-        if (!['events', 'groups', 'teams'].contains(field)) actualField = 'informationActs'
+        if (!['events', 'groups'].contains(field)) actualField = 'informationActs'
         return super.doRemoveFromField(actualField, val)
     }
 
@@ -101,7 +99,6 @@ class Playbook extends ProjectElement implements Described {
 
     List<Ref> findAllAgents() {
         List<Ref> agents = getProject().findAllResources()
-        agents.addAll(teams)
         agents.addAll(groups)
         return agents
     }
@@ -111,6 +108,10 @@ class Playbook extends ProjectElement implements Described {
         Ref agent = RefUtils.get(holder, propPath)
         agents.remove(agent)
         return agents
+    }
+
+    Ref findEventNamed(String name) {
+        return (Ref)events.find {event -> event.name == name}
     }
 
     // Playbook shows transient relationship by start of event
@@ -176,17 +177,16 @@ class Playbook extends ProjectElement implements Described {
      * Return classes a project participant can add.
      */
     static List<Class<?>> contentClasses() {
-        [ Assignation.class, Association.class,
-          InformationTransfer.class, Detection.class, InformationRequest.class,
-          SharingRequest.class, SharingCommitment.class,
-          Task.class, ConfirmationRequest.class, Group.class, Team.class, Event.class
+        [ Assignation.class, Association.class, ConfirmationRequest.class,
+          Detection.class, InformationRequest.class, InformationTransfer.class,
+          Relocation.class, SharingCommitment.class, SharingRequest.class, Task.class,  
+          Group.class, Event.class
         ]
     }
 
     void addContents( List<Ref> results ) {
         results.addAll( informationActs )
         results.addAll (groups)
-        results.addAll (teams)
         results.addAll (events)
     }
 }

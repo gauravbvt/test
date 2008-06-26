@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.ifm.spec.Spec
+import com.mindalliance.channels.playbook.ref.Bean
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +14,7 @@ import com.mindalliance.channels.playbook.ifm.spec.Spec
  * Date: May 20, 2008
  * Time: 5:07:44 PM
  */
-class RelationshipSpec extends BeanImpl implements Spec {
+class RelationshipSpec extends SpecImpl {
 
     String relationshipName = ''
     Ref agent // an agent defined within scope, or with any agent if null
@@ -59,8 +60,8 @@ class RelationshipSpec extends BeanImpl implements Spec {
 
     }
 
-    public boolean matches(Ref element) {
-        return false;  //Todo
+    public boolean doesMatch(Bean bean) {
+         // TODO
     }
 
     public boolean narrows(Spec spec) {

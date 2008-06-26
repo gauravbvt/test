@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ifm.Named
  * Date: Mar 26, 2008
  * Time: 6:56:49 AM
  */
-class BeanImpl implements Bean {
+abstract class BeanImpl implements Bean {
 
     static Map<Class,List<MetaBeanProperty>> WritableProperties = [:]
 
@@ -125,8 +125,10 @@ class BeanImpl implements Bean {
     }
 
     Map toMap() {
+        // System.out.println(this.class.name + ' to map')
         Map map = [:]
         beanProperties().each {key, val ->
+            assert this != val
             def value = Mapper.toPersistedValue(val)
             map.put(key, value)
         }

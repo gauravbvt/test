@@ -21,6 +21,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.support.persistence.PersistentRef
 import com.mindalliance.channels.playbook.graph.GraphVizRenderer
 import com.mindalliance.channels.playbook.ifm.info.Information
+import com.mindalliance.channels.playbook.support.Level
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -58,11 +59,13 @@ public class TestPlaybook extends TestCase {
     // Tests session-based persistency, dereferencing and operatons on fields
 
     void testMemory() {
+        assert channels as boolean // implicit cast to boolean = is fresh in application?
         assertTrue(sessionMem.isEmpty())
         assertTrue(channels.about == channels.reference.about)
         Ref myProject = channels.findProjectNamed('Generic')
         myProject.begin()
         assert myProject.type == 'Project'
+        assert myProject as Boolean// is Fresh in session?
         // Test metaproperties
         def metaProps = myProject.metaProperties()
         int size = metaProps.size()
@@ -135,6 +138,7 @@ public class TestPlaybook extends TestCase {
         assertTrue(session.pendingDeletesCount == 1)
         Ref anotherProject = new Project(name: "another new project").persist()
         session.commit()
+        assert ! (newProject as Boolean)     // is stale
         assertTrue(session.pendingChangesCount == 0)
         assertTrue(session.pendingDeletesCount == 0)
         Project p = (Project) anotherProject.deref()
@@ -207,7 +211,7 @@ public class TestPlaybook extends TestCase {
         assert qm.applicationCacheSize() == 1
         other.begin()
         assert other.name == 'Other'
-        again = (Ref) Query.execute(channels, "findProjectNamed", 'Other')
+        Query.execute(channels, "findProjectNamed", 'Other')
         assert qm.sessionCacheSize() == 1
         other.name = "Glafbrgz"
         assert qm.sessionCacheSize() == 0
@@ -249,40 +253,40 @@ public class TestPlaybook extends TestCase {
     void testSemanticMatching() {
         SemanticMatcher matcher = SemanticMatcher.getInstance()
         Logger logger = Logger.getLogger(matcher.class)
-        int score
+        Level score
         long msecs
         score = matcher.semanticProximity("", "")
-        assert score == SemanticMatcher.NONE
+        assert score == Level.NONE
         score = matcher.semanticProximity("", "hello world")
-        assert score == SemanticMatcher.NONE
+        assert score == Level.NONE
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("I flew to Europe on Delta Airlines", "an American Airlines plane crashed on take off")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.LOW
+        assert score == Level.LOW
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("the quick fox jumped over the lazy dog", "tea for two at the Ritz")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.LOW
+        assert score == Level.LOW
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("terrorism, John Doe", "John Doe committed a violent crime")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.MEDIUM
+        assert score == Level.MEDIUM
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("pandemic flu, epidemic, quarantine", "disease, public health")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.MEDIUM
+        assert score == Level.MEDIUM
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("IED set off in a train station", "explosive detonated on public transportation")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.MEDIUM
+        assert score == Level.MEDIUM
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("autopsy report of plague", "account of death by contagious disease")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.HIGH
+        assert score == Level.HIGH
         msecs = System.currentTimeMillis()
         score = matcher.semanticProximity("avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.", "avian influenza, sometimes avian flu, and commonly bird flu refers to influenza caused by viruses adapted to birds.")
         logger.info("Elapsed: ${System.currentTimeMillis() - msecs} msecs")
-        assert score == SemanticMatcher.VERY_HIGH
+        assert score == Level.VERY_HIGH
     }
 
     void testGraphVizBuilder() {
@@ -387,4 +391,6 @@ public class TestPlaybook extends TestCase {
         renderer.render(out, "svg")
         out.close()
     }
+
+
 }

@@ -2,7 +2,8 @@ package com.mindalliance.channels.playbook.ifm.spec
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Defineable
-import com.mindalliance.channels.playbook.ifm.Defineable
+import com.mindalliance.channels.playbook.ref.Bean
+import org.joda.time.Duration
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +14,10 @@ import com.mindalliance.channels.playbook.ifm.Defineable
  */
 interface Spec extends Defineable {
 
-    boolean matches(Ref element)
+    // Context-independent matching
+    boolean matches(Bean bean)
+    // Context-dependent matching
+    boolean matchesAsOf(Ref element, Ref informationAct)  // first set to profile
     boolean narrows(Spec spec)
 
 }

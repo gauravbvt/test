@@ -5,6 +5,8 @@ import com.mindalliance.channels.playbook.ifm.spec.Spec
 import com.mindalliance.channels.playbook.ifm.spec.LocationSpec
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.info.Location
+import com.mindalliance.channels.playbook.ifm.info.Information
+import com.mindalliance.channels.playbook.ref.Bean
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -45,8 +47,21 @@ class EventSpec extends SpecImpl {
         if (spec.isDefined()) location = new Location()
     }
 
-    public boolean matches(Ref element) {
-        return false;  // TODO
+    // Matches against information about an event (an agent's perception of the event)
+    public boolean doesMatch(Bean bean) {
+        Information info = (Information)bean
+        // matches if every spec-ed event types is implied by at least one event type in the info
+        if (!eventTypes.every {set-> info.eventTypes.any {iet -> iet.implies(set)}}) return false
+        // matches if given or spec-ed location matched by event's location
+        if (isLocationSpecific()) {
+            if (!info.event.location.isWithin(location)) return false
+        }
+        else {
+            if (!locationSpec.matches(info.event.location)) return false
+        }
+        // same cause (if set)
+        if (causeEvent && info.event.cause != causeEvent ) return false
+        return true
     }
 
     public boolean narrows(Spec spec) {

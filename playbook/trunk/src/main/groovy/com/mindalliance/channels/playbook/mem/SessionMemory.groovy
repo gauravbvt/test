@@ -189,7 +189,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return deletes.size()
     }
 
-    public boolean save(Ref ref) {
+    boolean save(Ref ref) {
         ref.references().each {it.commit()}
         this.commit()
         int count = getApplicationMemory().exportRef(ref, ref.toString())
@@ -200,7 +200,11 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return begun.containsKey(ref)
     }
 
-    public boolean isModified(Ref ref) {
+    boolean isModified(Ref ref) {
         return changes.contains(ref)
+    }
+
+    boolean isFresh(Ref ref) {
+        return isModifiable(ref) || getApplicationMemory().isFresh(ref)
     }
 }

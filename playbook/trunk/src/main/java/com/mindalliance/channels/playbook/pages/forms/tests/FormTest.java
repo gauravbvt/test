@@ -165,6 +165,7 @@ public class FormTest extends WebPage {
         choices.add(Group.class);
         choices.add(InformationRequest.class);
         choices.add(InformationTransfer.class);
+        choices.add(Relocation.class);
         choices.add(SharingCommitment.class);
         choices.add(SharingRequest.class);
         choices.add(Task.class);

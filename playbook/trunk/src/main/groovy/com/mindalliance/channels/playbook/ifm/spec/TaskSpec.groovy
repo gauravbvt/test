@@ -1,8 +1,8 @@
 package com.mindalliance.channels.playbook.ifm.spec
 
-import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ref.Bean
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,8 +33,8 @@ class TaskSpec extends SpecImpl {
     }
 
 
-    public boolean matches(Ref element) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    public boolean doesMatch(Bean bean) {
+         // TODO
     }
 
     public boolean narrows(Spec spec) {

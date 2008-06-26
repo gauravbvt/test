@@ -16,6 +16,7 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.query.QueryManager
 import com.mindalliance.channels.playbook.query.QueryCache
+import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,7 +35,7 @@ class ApplicationMemory implements Serializable {
     static final String BACKUP_DIRECTORY = 'data/yaml/backup'
 
     static DEBUG = false
-    static Cache cache
+    static PlaybookCache cache
     private PlaybookApplication application
 
     private QueryCache queryCache = new QueryCache()
@@ -52,7 +53,7 @@ class ApplicationMemory implements Serializable {
             boolean blocking = true
             String algorithmClass = 'com.opensymphony.oscache.base.algorithm.UnlimitedCache'
             int capacity = -1
-            cache = new Cache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
+            cache = new PlaybookCache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
             YamlPersistenceListener listener = new YamlPersistenceListener()
             Config config = new Config()
             config.set('cache.path', "./target/work/cache")
@@ -108,6 +109,10 @@ class ApplicationMemory implements Serializable {
             }
         }
         return (Referenceable) referenceable // will be cloned by SessionMemory
+    }
+
+    boolean isFresh(Ref ref) {
+        return cache.isFresh(ref)
     }
 
     void clear(Ref ref) {

@@ -12,6 +12,7 @@ import net.didion.jwnl.data.POS
 import shef.nlp.wordnet.similarity.SimilarityMeasure
 import edu.stanford.nlp.ling.TaggedWord
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.support.Level
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,12 +29,6 @@ class SemanticMatcher {
     static final String TAGGER_TRAINED_DATA = './data/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
     static final String JWNL_PROPERTIES = '/config/semantic/jwnl_properties.xml'
     static final String SIMILARITY_DATA = '/config/semantic/ic-bnc-resnik-add1.dat'
-
-    static int NONE = 0
-    static int LOW = 1
-    static int MEDIUM = 2
-    static int HIGH = 3
-    static int VERY_HIGH = 4
 
     static SemanticMatcher instance  // singleton
 
@@ -68,8 +63,8 @@ class SemanticMatcher {
        return sm
     }
 
-    int semanticProximity(String text, String otherText) {
-        if (text.trim().size() == 0 || otherText.trim().size() == 0) return NONE
+    Level semanticProximity(String text, String otherText) {
+        if (text.trim().size() == 0 || otherText.trim().size() == 0) return Level.NONE
         logger.info("==== Matching: [$text] and [$otherText]")
         // Do POS analysis on each text
         List words = posAnalyze(text)
@@ -90,29 +85,18 @@ class SemanticMatcher {
             score = minimum(1.0, score + boost)
         }
         score = Math.pow(score, POWER) // to lift the curve
-        int matchingLevel = matchingLevel(score)
-        logger.info("---- Match is ${matchingLevelString(matchingLevel)}")
+        Level matchingLevel = matchingLevel(score)
+        logger.info("---- Match is ${matchingLevel}")
         return matchingLevel
     }
 
-    private int matchingLevel(double score) {
+    private Level matchingLevel(double score) {
         if (score > 1.0) throw new Exception("Illegal matching score")
-        if (score > 0.75) return VERY_HIGH
-        if (score > 0.5) return HIGH
-        if (score > 0.25) return MEDIUM
-        if (score > 0) return LOW
-        else return NONE
-    }
-
-    String matchingLevelString(int level) {
-        switch (level) {
-            case NONE: return 'none'
-            case LOW: return 'low'
-            case MEDIUM: return 'medium'
-            case HIGH: return 'high'
-            case VERY_HIGH: return 'very high'
-            default: throw new IllegalArgumentException("Unknown matching level $level")
-        }
+        if (score > 0.75) return Level.VERY_HIGH
+        if (score > 0.5) return Level.HIGH
+        if (score > 0.25) return Level.MEDIUM
+        if (score > 0) return Level.LOW
+        else return Level.NONE
     }
 
     private List<HasWord> posAnalyze(String text) {

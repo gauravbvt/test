@@ -9,11 +9,10 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ifm.project.environment.Place;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-
-import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,7 +25,8 @@ public class PlaceAboutTab extends AbstractFormTab {
 
     protected TextField nameField;
     protected TextArea descriptionField;
-    protected DynamicFilterTree placeTypesTree;
+    protected DynamicFilterTree placeTypeTree;
+    protected DynamicFilterTree enclosingPlaceTree;
 
     public PlaceAboutTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -34,17 +34,27 @@ public class PlaceAboutTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        final Place place = (Place)getElement();
         nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        placeTypesTree = new DynamicFilterTree("placeTypes", new RefPropertyModel(getElement(), "placeTypes"),
-                                               new RefQueryModel(getScope(), new Query("findAllTypes", "PlaceType"))) {
+        placeTypeTree = new DynamicFilterTree("placeType", new RefPropertyModel(getElement(), "placeType"),
+                                               new RefQueryModel(getProject(), new Query("findAllTypes", "PlaceType")),
+                SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = placeTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "placeTypes", selectedTypes);
+                Ref selectedType = placeTypeTree.getNewSelection();
+                RefUtils.set(getElement(), "placeType", selectedType);
             }
         };
-        addReplaceable(placeTypesTree);
+        addReplaceable(placeTypeTree);
+        enclosingPlaceTree = new DynamicFilterTree("enclosingPlace", new RefPropertyModel(getElement(), "enclosingPlace"),
+                                                   new RefQueryModel(place, new Query("findAllCandidateEnclosingPlaces")),
+                                                   SINGLE_SELECTION) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+               Ref selectedPlace = enclosingPlaceTree.getNewSelection();
+                RefUtils.set(getElement(), "enclosingPlace", selectedPlace);
+            }
+        };
     }
 }

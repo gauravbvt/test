@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.info.AbstractInformation
 * Date: Apr 17, 2008
 * Time: 9:18:11 AM
 */
-/* abstract*/ class InformationTemplate extends AbstractInformation {
+class InformationTemplate extends AbstractInformation {
 
     EventSpec eventSpec = new EventSpec() // about what kind of event
 

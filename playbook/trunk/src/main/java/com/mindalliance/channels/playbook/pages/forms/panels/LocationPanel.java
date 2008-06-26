@@ -1,19 +1,18 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ifm.info.Location;
-import org.apache.wicket.markup.html.form.DropDownChoice;
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.AttributeModifier;
-
-import java.util.List;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,10 +24,14 @@ import java.util.List;
 public class LocationPanel extends AbstractComponentPanel {
 
     Location location;
-    DropDownChoice placeField;
-    WebMarkupContainer placeInfoDiv;
-    PlaceInfoPanel placeInfoPanel;
-    LocationInfoPanel locationInfoPanel;
+    AjaxCheckBox isAPlaceCheckBox;
+    AjaxCheckBox isAGeoLocationCheckBox;
+    WebMarkupContainer placeDiv;
+    DynamicFilterTree placeTree;
+    WebMarkupContainer geoLocationDiv;
+    GeoLocationPanel geoLocationPanel;
+    Ref priorPlace;
+    GeoLocation priorGeoLocation;
 
     public LocationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -37,60 +40,77 @@ public class LocationPanel extends AbstractComponentPanel {
     @Override
     protected void load() {
         super.load();
-        location = (Location) RefUtils.get(getElement(), propPath);
-        loadPlaceField();
-        placeInfoDiv = new WebMarkupContainer("placeInfoDiv");
-        placeInfoDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-        addReplaceable(placeInfoDiv);
-        placeInfoPanel = new PlaceInfoPanel("placeInfo", this, propPath + ".placeInfo", readOnly, feedback);
-        placeInfoDiv.add(placeInfoPanel);
-        locationInfoPanel = makeLocationInfoPanel();
-        addReplaceable(locationInfoPanel);
-    }
-
-    // placeField
-    private void loadPlaceField() {
-        String placeName = (String) RefUtils.get(getElement(), "place.name");
-        // List<String> placeNames = project.findAllPlaceNames();
-        placeField = new DropDownChoice("place", new Model(placeName),  // TODO -- replace with DynamicFilterTree if too many places
-                         getProject().getPlaces(),
-                         new RefChoiceRenderer("name", "id"));
-        placeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-            @Override
+        location = (Location)getComponent();
+        priorPlace = location.getPlace();
+        priorGeoLocation = location.getGeoLocation();
+        isAPlaceCheckBox = new AjaxCheckBox("isAPlace", new Model((Boolean)location.isAPlace())){
             protected void onUpdate(AjaxRequestTarget target) {
-                Ref newPlace = (Ref)placeField.getModelObject();
-                location.setPlace(newPlace);
-                elementChanged(propPath, target);
-                locationInfoPanel = makeLocationInfoPanel();  // recreate locationInfoPanel
-                addReplaceable(locationInfoPanel);
-                updatePlaceInfoPanel(target);
-                target.addComponent(locationInfoPanel);
+                boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
+                isAGeoLocationCheckBox.setModel(new Model((Boolean)!isAPlace));
+                updateLocationFlavor();
+                target.addComponent(geoLocationDiv);
+                target.addComponent(placeDiv);
             }
-        });
-        addReplaceable(placeField);
+        };
+        addReplaceable(isAPlaceCheckBox);
+        isAGeoLocationCheckBox = new AjaxCheckBox("isAGeoLocation", new Model((Boolean)location.isAGeoLocation())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean isAGeoLocation = (Boolean)isAGeoLocationCheckBox.getModelObject();
+                isAPlaceCheckBox.setModel(new Model((Boolean)!isAGeoLocation));
+                updateLocationFlavor();
+                target.addComponent(geoLocationDiv);
+                target.addComponent(placeDiv);
+            }
+        };
+        addReplaceable(isAGeoLocationCheckBox);
+        placeDiv = new WebMarkupContainer("placeDiv");
+        addReplaceable(placeDiv);
+        placeTree = new DynamicFilterTree("place", new RefPropertyModel(getElement(), propPath+".location"),
+                                          new RefPropertyModel(getProject(), "places"), SINGLE_SELECTION) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                Ref place = placeTree.getNewSelection();
+                RefUtils.set(getElement(), propPath+".place", place);
+            }
+        };
+        addReplaceableTo(placeTree, placeDiv);
+        geoLocationDiv = new WebMarkupContainer("geoLocationDiv");
+        addReplaceable(geoLocationDiv);
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, "geoLocation", isReadOnly(), feedback);
+        addReplaceableTo(geoLocationPanel, geoLocationDiv);
+        setVisibility();
     }
 
-    private void updatePlaceInfoPanel(AjaxRequestTarget target) {
-        if (location.getPlace() != null) {
-            placeInfoDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+    private void updateLocationFlavor() {
+        boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
+        if (isAPlace) {
+            priorGeoLocation = location.getGeoLocation();
+            RefUtils.set(getElement(), propPath+".geoLocation", new GeoLocation());
+            RefUtils.set(getElement(), propPath+".place", priorPlace);
+            placeTree.modelChanged();
+            geoLocationPanel.modelChanged();
         }
         else {
-            placeInfoDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+            priorPlace = location.getPlace();
+            RefUtils.set(getElement(), propPath+".place", null);
+            RefUtils.set(getElement(), propPath+".geoLocation", priorGeoLocation);
+            geoLocationPanel = new GeoLocationPanel("geoLocation", this, "geoLocation", isReadOnly(), feedback);
+            geoLocationDiv.addOrReplace(geoLocationPanel);
+            placeTree.modelChanged();
         }
-        target.addComponent(placeInfoDiv);
+        setVisibility();
     }
 
-    // locationInfoPanel
-    private LocationInfoPanel makeLocationInfoPanel() {
-        // If place is set, show the place's locationInfo (readOnly)
-        // else edit this locationInfo
-        LocationInfoPanel lip;
-        if (location.getPlace() != null) {
-            lip = new LocationInfoPanel("locationInfo", this, propPath + ".place.locationInfo", true, feedback); // readOnly
-        } else {
-            lip = new LocationInfoPanel("locationInfo", this, propPath + ".locationInfo", false, feedback);
+    private void setVisibility() {
+       boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
+        if (isAPlace) {
+            display(placeDiv);
+            hide(geoLocationDiv);
         }
-        return lip;
+        else {
+            display(geoLocationDiv);
+            hide(placeDiv);
+        }
     }
+
 
 }

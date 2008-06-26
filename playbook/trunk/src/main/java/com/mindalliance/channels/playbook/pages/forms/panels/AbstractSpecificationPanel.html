@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Description</legend>
+                    <textarea wicket:id="description" rows="1" cols="50">[description]</textarea>
+                </fieldset>
+            </td>
+            <td nowrap="nowrap">
+                <input wicket:id="affirmed" type = "checkbox"/>Any&#160;<br/>
+                <input wicket:id="negated" type = "checkbox"/>No&#160;
+            </td>
+            <td align="left" valign="middle">
+                <strong><span wicket:id="matchingDomainClass">[domain class]</span></strong><input wicket:id="specified" type = "checkbox"/>&#160;such that...
+            </td>
+        </tr>
+    </table>
+    <div wicket:id="specifiedDiv">
+        <table>
+            <tr>
+                <td>
+                    <fieldset>
+                        <legend>it is one of these</legend>
+                        <span wicket:id="enumeration">[enumeration tree]</span>
+                    </fieldset>
+                </td>
+                <td>
+                    <fieldset>
+                        <legend>or it fits any of these descriptions</legend>
+                        <table>
+                            <tr>
+                                <td>
+                                   <select>
+                                        <option wicket:id="definitions">[a definition's summary]</option>
+                                    </select>
+                                </td>
+                                <td>
+                                   <button wicket:id="addDefinition">Add new</button> <br/>
+                                   <button wicket:id="deleteDefinition">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+        <div wicket:id="definitionDiv">
+            <fieldset>
+                <legend>Description</legend>
+                <span wicket:id="definition">[definition editor]</span>
+            </fieldset>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

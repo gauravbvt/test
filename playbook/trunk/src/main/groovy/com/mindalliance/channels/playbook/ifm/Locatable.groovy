@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ifm.info.Location
+import com.mindalliance.channels.playbook.ref.Bean
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -9,7 +10,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 * Date: Apr 17, 2008
 * Time: 11:09:00 AM
 */
-interface Locatable {
+interface Locatable extends Bean {
 
     Location getLocation()
 

@@ -19,7 +19,7 @@ class Relationship extends ProjectElement implements Named {
     Ref reverseRelationship // if any
 
     void afterDelete() {
-        if (reverseRelationship.exists()) {
+        if (reverseRelationship as boolean) {
             reverseRelationship.begin()
             reverseRelationship.delete()
         }

@@ -24,9 +24,6 @@ public class PositionJurisdictionTab extends AbstractFormTab {
     protected void load() {
         super.load();
         Position position = (Position)getElement().deref();
-        if (position.getJurisdiction() == null) {
-            position.setJurisdiction(new Location());
-        }
         jurisdictionPanel = new LocationPanel("jurisdiction", this, "jurisdiction", false, feedback);
         addReplaceable(jurisdictionPanel);
     }

@@ -7,6 +7,8 @@ import com.mindalliance.channels.playbook.geo.ServiceFailureAreaException
 import com.mindalliance.channels.playbook.geo.AreaException
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ifm.Defineable
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.model.AreaType
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,7 +33,7 @@ class AreaInfo extends BeanImpl  implements Comparable, Defineable {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['area', 'name', 'areaDefined', 'defined']
+        return super.transientProperties() + ['area', 'name', 'areaDefined', 'defined', 'areaType']
     }
 
     String getName() {
@@ -55,8 +57,41 @@ class AreaInfo extends BeanImpl  implements Comparable, Defineable {
         return getArea().isDefined()
     }
 
+    Ref getAreaType() {
+        if (city) return AreaType.city()
+        if (county) return AreaType.county()
+        if (state) return AreaType.state()
+        if (country) return AreaType.country()
+        return AreaType.globe()
+    }
+
+    boolean isSameAs(AreaInfo other) {
+        return this.area.equals(other.area)
+    }
+
     boolean isWithin(AreaInfo other) {
         return this.area.isWithin(other.area)
+    }
+
+    boolean isNearby(AreaInfo other) {
+        return this.area.isNearby(other.area)
+    }
+
+    AreaInfo broadenedTo(AreaType otherAreaType) {
+        if (areaType == otherAreaType) {
+            return this
+        }
+        else {
+            AreaInfo broaderAreaInfo = (AreaInfo)this.copy()
+            switch(otherAreaType) {
+                case AreaType.country(): broaderAreaInfo.state = ''
+                case AreaType.state(): broaderAreaInfo.county = ''
+                case AreaType.county(): broaderAreaInfo.city = ''
+                case AreaType.city(): broaderAreaInfo.street = ''
+                default: broaderAreaInfo.code = ''
+            }
+            return broaderAreaInfo
+        }
     }
 
     Area findArea() {// null if Location is unknown
@@ -124,7 +159,7 @@ class AreaInfo extends BeanImpl  implements Comparable, Defineable {
         area = null
     }
 
-    public int compareTo(Object other) {
+    int compareTo(Object other) {
         if (!other instanceof AreaInfo) throw new IllegalArgumentException("Can't compare an AreaInfo to $other")
         return this.getArea().compareTo(other.getArea())
     }

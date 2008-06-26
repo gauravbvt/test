@@ -29,12 +29,12 @@ public class InformationSpecPanel extends AbstractSpecComponentPanel {
 
     protected void load() {
         super.load();
-        eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".eventSpec", isReadOnly(), feedback);
+        eventSpecPanel = new EventSpecPanel("eventSpec", this, propPath + ".informationTemplate.eventSpec", isReadOnly(), feedback);
         addReplaceable(eventSpecPanel);
         RefQueryModel topicChoicesModel = new RefQueryModel(EventType.class,
                                                             new Query("findAllTopicsIn",
-                                                                       new RefPropertyModel(getElement(), propPath + ".eventSpec.eventTypes")));
-        eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, topicChoicesModel);
+                                                                       new RefPropertyModel(getElement(), propPath + ".informationTemplate.eventSpec.eventTypes")));
+        eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".informationTemplate.eventDetails", readOnly, feedback, topicChoicesModel);
         addReplaceable(eoisPanel);
         resourceSpecPanel = new ResourceSpecPanel("resourceSpec", this, propPath+".sourceSpec", isReadOnly(), feedback);
         addReplaceable(resourceSpecPanel);

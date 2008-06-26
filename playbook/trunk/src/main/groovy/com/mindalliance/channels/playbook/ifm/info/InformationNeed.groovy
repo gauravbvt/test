@@ -19,6 +19,7 @@ class InformationNeed extends InformationTemplate {
     AgentSpec sourceSpec = new AgentSpec() // specification fo acceptable source of needed information
     Ref event // XOR with InformationTemplate.eventSpec -- need is about a specific (vs specified) event
     Timing deadline = new Timing(amount: 0) // deadline of 0 means indefinite. Information need nullifed after deadline.
+    // eventSpec.locationSpec =:= <profile>.location    // context is the profile with element holding the information being matched
 
     @Override
     List<String> transientProperties() {

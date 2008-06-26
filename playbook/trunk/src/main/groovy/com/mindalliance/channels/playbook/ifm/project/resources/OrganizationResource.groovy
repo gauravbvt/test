@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: May 5, 2008
  * Time: 10:15:50 AM
  */
-class OrganizationResource extends Resource {
+abstract class OrganizationResource extends Resource {
 
     Ref organization     // set only via organization.add|remove<Resource>()
 

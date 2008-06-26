@@ -3,6 +3,8 @@ package com.mindalliance.channels.playbook.ifm.playbook
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.spec.AgentSpec
+import com.mindalliance.channels.playbook.ifm.Responsibility
+import com.mindalliance.channels.playbook.ifm.info.Location
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,7 +21,7 @@ class Group extends PlaybookElement implements Agent {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['resourceKinds'])
+        return (List<String>) (super.transientProperties() + ['resourceKinds', 'responsibilities'])
     }
 
     String toString() {
@@ -37,6 +39,14 @@ class Group extends PlaybookElement implements Agent {
     boolean isGroup() {
          return true
      }
+
+    List<Responsibility> getResponsibilities() {    // a group as a whole has no responsibility? -- TODO
+        return []
+    }
+
+    Location getLocation() {   // a group has no defined location? TODO --
+        return new Location()
+    }
 
     // queries
     List<Ref> getResourcesAt(Event event) {

@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: Apr 30, 2008
  * Time: 2:43:50 PM
  */
-class ModelElement extends IfmElement {
+abstract class ModelElement extends IfmElement {
 
     Ref model
 

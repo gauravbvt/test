@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.ifm.Responsibility
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,7 +18,7 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
  * Date: Apr 17, 2008
  * Time: 11:16:29 AM
  */
-/* abstract */class Resource extends ProjectElement implements Agent, Locatable {
+abstract class Resource extends ProjectElement implements Agent, Locatable {
 
     String name = ''
     String description = ''
@@ -28,7 +29,7 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement'])
+        return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement', 'responsibilities'])
     }
 
     boolean isResourceElement() {
@@ -51,7 +52,9 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
         return false
     }
 
-
+    List<Responsibility> getResponsibilities() {
+        // TODO
+    }
 
     String toString() { name }
 

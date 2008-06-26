@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.query.Query
 import org.apache.commons.collections.CollectionUtils
+import com.mindalliance.channels.playbook.ifm.Jurisdictionable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,13 +13,13 @@ import org.apache.commons.collections.CollectionUtils
 * Date: Apr 17, 2008
 * Time: 11:21:56 AM
 */
-class Position extends OrganizationResource {
+class Position extends OrganizationResource implements Jurisdictionable {
 
-    Location jurisdiction
+    Location jurisdiction = new Location()
 
     void beforeStore() {
         super.beforeStore()
-        if (jurisdiction) jurisdiction.detach()
+        if (jurisdiction.isDefined()) jurisdiction.detach()
     }
 
     boolean isLocatedWithin(Location loc) {

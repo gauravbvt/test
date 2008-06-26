@@ -16,6 +16,7 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
+import com.mindalliance.channels.playbook.ifm.project.resources.Team
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,6 +32,7 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> participations = []
     List<Ref> persons = []
     List<Ref> organizations = []
+    List<Ref> teams = []
     List<Ref> places = []
     List<Ref> relationships = []
     List<Ref> policies = []
@@ -63,6 +65,10 @@ class Project extends IfmElement implements Named, Described {
 
     // Queries
 
+    Ref findModelNamed(String name) {
+        return (Ref)models.find {it.name == name}
+    }
+
     List<Ref> findAllResources() {
         return findAllResourcesExcept(null)
     }
@@ -79,6 +85,7 @@ class Project extends IfmElement implements Named, Described {
         List<Ref> resources = []
         resources.addAll(persons.findAll {res -> res != resource })
         resources.addAll(organizations.findAll {res -> res != resource })
+        resources.addAll(teams.findAll {res -> res != resource })
         organizations.each {org ->
             resources.addAll(org.systems.findAll {res -> res != resource })
             resources.addAll(org.positions.findAll {res -> res != resource })
@@ -258,6 +265,7 @@ class Project extends IfmElement implements Named, Described {
         // When changing this method, don't forget to update the next one...
         List<Class<?>> result = new ArrayList<Class<?>>()
         result.addAll([Organization.class])
+        result.addAll([Team.class])
         result.addAll([Place.class])
         result.addAll([Playbook.class])
         result.addAll([Person.class])
@@ -272,6 +280,7 @@ class Project extends IfmElement implements Named, Described {
         playbooks.each { it.addContents(result) }
         result.addAll(analysisElements)
         result.addAll(organizations)
+        result.addAll(teams)
         result.addAll(persons)
         result.addAll(places)
         result.addAll(playbooks)

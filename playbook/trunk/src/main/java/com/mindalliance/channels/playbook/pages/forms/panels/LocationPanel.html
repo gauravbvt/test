@@ -9,27 +9,24 @@
 <wicket:extend>
     <table>
         <tr>
-            <td>
+            <td nowrap="nowrap">
                 <fieldset>
-                    <legend>Place</legend>
-                    <select wicket:id="place"> <!-- TODO replace with FilterTree -->
-                        <option>[Place selector]</option>
-                    </select>
+                    <legend>The location is</legend>
+                    <input wicket:id="isAPlace" type ="checkbox"/>a named place<br/>
+                    <input wicket:id="isAGeoLocation" type ="checkbox"/>a geographical location
                 </fieldset>
             </td>
-            <td rowspan="2">
-                <fieldset>
-                    <legend>Location info</legend>
-                    <div wicket:id="locationInfo">[LocationInfo panel]</div>
-                </fieldset>
-            </td>
-        </tr>
-        <tr>
             <td>
-                <div wicket:id="placeInfoDiv">
+                <div wicket:id="placeDiv">
                     <fieldset>
-                        <legend>Place details</legend>
-                        <div wicket:id="placeInfo">[PlaceInfo panel]</div>
+                        <legend>Named place</legend>
+                        <span wicket:id="place">[Place tree]</span>
+                    </fieldset>
+                </div>
+                <div wicket:id="geoLocationDiv">
+                    <fieldset>
+                        <legend>Geographical location</legend>
+                        <span wicket:id="geoLocation">[GeoLocation panel]</span>
                     </fieldset>
                 </div>
             </td>

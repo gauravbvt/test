@@ -257,9 +257,22 @@ class RefImpl implements Ref {
        return store.isModified(this)
     }
 
-    public boolean exists() {
-        return deref() != null
+    Object asType(Class type) {
+        if (type == Boolean.class || type == boolean) {
+            return isFresh()
+        }
+        else {
+            return super.asType(type)
+        }
     }
 
-
+    boolean isFresh() {
+       if (this.@id == null) return false
+       Store store = PlaybookApplication.locateStore()
+       boolean fresh = store.isFresh(this)
+       if (!fresh) {
+           this.@id = null // nullify the id
+       }
+       return fresh
+    }
 }

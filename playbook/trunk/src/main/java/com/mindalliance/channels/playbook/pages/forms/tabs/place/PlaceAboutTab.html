@@ -5,18 +5,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>Name</legend>
-        <input wicket:id="name" type = "text" size = "40"/>
-    </fieldset>
-    <fieldset>
-        <legend>Description</legend>
-        <textarea wicket:id="description" rows = "3" cols = "40">[description]</textarea>
-    </fieldset>
-     <fieldset>
-         <legend>Classification</legend>
-         <span wicket:id="placeTypes">[Place types tree]</span>
-     </fieldset>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Name</legend>
+                    <input wicket:id="name" type = "text" size = "40"/>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Description</legend>
+                    <textarea wicket:id="description" rows = "3" cols = "40">[description]</textarea>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Classification</legend>
+                    <span wicket:id="placeType">[Place type tree]</span>
+                </fieldset>
+            </td>
+            <td>
+               <fieldset>
+                   <legend>Part of</legend>
+                   <span wicket:id="enclosingPlace">[Place tree]</span>
+               </fieldset>
+            </td>
+        </tr>
+    </table>
 </wicket:extend>
 </body>
 </html>

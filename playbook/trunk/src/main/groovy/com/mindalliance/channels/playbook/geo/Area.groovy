@@ -34,6 +34,17 @@ class Area implements Comparable, Serializable {
         return new AmbiguousArea(topos)
     }
 
+    boolean equals(Object area) {
+        assert topo.geonameId
+        if (!area instanceof Area) return false
+        else return topo.geonameId == (((Area)area).topo.geonameId)
+    }
+
+    int hashCode() {
+        assert topo.geonameId
+        return topo.geonameId
+    }
+
     boolean isDefined() {
         return !(isUnknown() || isAmbiguous())
     }
@@ -68,16 +79,29 @@ class Area implements Comparable, Serializable {
         return area
     }
 
-    // Whether this place is within a given location
+    // Whether this area is the same or within another
     boolean isWithin(Area area) {
         boolean within = false;
         if (area.isDefined()) {
+            if (this.equals(area)) return true
             List<Area> hier = findHierarchy()
             within = hier.any {
-                it.geonameId && it.geonameId == area.geonameId
+                ((Area)it).equals(area) // same geonameId
             }
         }
         return within
+    }
+
+    // Whether this area is the same or nearby another
+    boolean isNearby(Area area) {
+        if (area.isDefined()) {
+            if (this.equals(area)) return true
+            List<Area> areas = GeoService.findNearbyAreas(this)
+            return areas.contains(area)
+        }
+        else {
+            return false
+        }
     }
 
     List<Area> findHierarchy() {

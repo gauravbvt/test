@@ -22,7 +22,7 @@ public class PositionForm extends AbstractResourceForm {
 
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who-what")) {
+        tabs.add(new AbstractTab(new Model("Basic")) {
             public Panel getPanel(String panelId) {
                 return new ResourceIdentityTab(panelId, PositionForm.this);
             }

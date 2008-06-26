@@ -4,7 +4,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.log4j.Logger;
@@ -85,7 +87,16 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
         addReplaceable(inputField);
     }
 
+    protected void hide(Component component) {
+        component.add(new AttributeModifier("style", true, new Model("display:none")));
+    }
 
+    protected void display(Component component) {
+        component.add(new AttributeModifier("style", true, new Model("display:block")));
+    }
 
+    protected void display(Component component, String style) {
+        component.add(new AttributeModifier("style", true, new Model("display:" + style)));
+    }
 
 }

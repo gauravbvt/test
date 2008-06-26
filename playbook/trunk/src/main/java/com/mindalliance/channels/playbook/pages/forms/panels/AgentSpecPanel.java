@@ -28,6 +28,7 @@ public class AgentSpecPanel extends AbstractSpecComponentPanel {
     protected ResourceSpecPanel resourceSpecPanel;
     protected RelationshipSpecPanel relationshipSpecPanel;
     protected LocationPanel locationPanel;
+    protected LocationPanel jurisdictionPanel;
 
     public AgentSpecPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -41,6 +42,8 @@ public class AgentSpecPanel extends AbstractSpecComponentPanel {
         addReplaceable(relationshipSpecPanel);
         locationPanel = new LocationPanel("location", this, propPath + ".location", isReadOnly(), feedback);
         addReplaceable(locationPanel);
+        jurisdictionPanel = new LocationPanel("jurisdiction", this, propPath + ".jurisdiction", isReadOnly(), feedback);
+        addReplaceable(jurisdictionPanel);
     }
 
     protected Spec makeNewSpec() {

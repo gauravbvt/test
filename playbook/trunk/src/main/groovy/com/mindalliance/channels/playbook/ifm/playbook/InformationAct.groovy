@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.ifm.playbook
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.info.Information
-import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 
 /**
@@ -13,7 +12,7 @@ import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
  * Date: Apr 17, 2008
  * Time: 1:27:48 PM
  */
-/* abstract*/ class InformationAct extends Event {
+abstract class InformationAct extends Event {
 
     Ref actorAgent // an agent, i.e. group or team within the scope of the Playbook, or a resource in the scope of the Playbook's Project
 

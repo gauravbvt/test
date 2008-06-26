@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 1:37:38 PM
 */
-/* abstract */ class SharingAct extends FlowAct {
+abstract class SharingAct extends FlowAct {
 
     Information information = new Information()
 

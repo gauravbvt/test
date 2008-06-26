@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.ifm.info
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.geo.Area
 import com.mindalliance.channels.playbook.ifm.Defineable
-import com.mindalliance.channels.playbook.ifm.Defineable
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,10 +12,10 @@ import com.mindalliance.channels.playbook.ifm.Defineable
  * Date: Apr 21, 2008
  * Time: 3:15:16 PM
  */
-class LocationInfo extends BeanImpl implements Defineable {
+class GeoLocation extends BeanImpl implements Defineable {
 
     AreaInfo areaInfo = new AreaInfo()
-    LatLong latLong = new LatLong()  // takes precedence on areaInfo for latlong
+    LatLong latLong = new LatLong()  // takes precedence on areaInfo for latlong -- TODO constraint = must be within defined area
 
     String toString() {
        String s = ""
@@ -28,9 +28,13 @@ class LocationInfo extends BeanImpl implements Defineable {
         return areaInfo.isDefined() || latLong.isDefined()
     }
 
+    Ref getAreaType() {
+        return areaInfo.areaType
+    }
+
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['longitude', 'latitude', 'defined']
+        return super.transientProperties() + ['longitude', 'latitude', 'defined', 'areaType']
     }
 
     double getLongitude() {
@@ -61,8 +65,23 @@ class LocationInfo extends BeanImpl implements Defineable {
         return this.latitude >= 0 && this.longitude >= 0
     }
 
-    boolean isWithin(LocationInfo other) {
+    boolean isWithin(GeoLocation other) {
+        if (!isDefined() || !other.isDefined()) return false
         return this.areaInfo.isWithin(other.areaInfo)
+    }
+
+    boolean isSameAs(GeoLocation other) {
+        if (!isDefined() || !other.isDefined()) return false
+        return this.areaInfo.isSameAs(other.areaInfo)
+    }
+
+    boolean isNearby(GeoLocation other) {
+        if (!isDefined() || !other.isDefined()) return false
+        return this.areaInfo.isNearby(other.areaInfo)
+    }
+
+    GeoLocation broadenedTo(Ref areaType) {
+        return new GeoLocation(areaInfo: areaInfo.broadenedTo(areaType))
     }
 
 }

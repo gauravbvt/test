@@ -90,7 +90,9 @@ class QueryManager implements PropertyChangeListener {
                 findAllEventsCausedByEvent: [InformationAct.class, Event.class],
                 findAllInformationActsAboutEvent: [InformationAct.class, Event.class],
                 findAllPriorEvents: [Event.class],
-                findAllPriorOccurrences: [Event.class, InformationAct.class]                
+                findAllPriorOccurrences: [Event.class, InformationAct.class],
+                // Place
+                findAllCandidateEnclosingPlaces: [Place.class, PlaceType.class]
         ]
     }
 
