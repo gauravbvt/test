@@ -37,7 +37,7 @@ class EventDefinition extends Definition {
         }
         if (causeEventSpecifications) {
             Ref trigger = info.event.cause.trigger
-            if (trigger && !causeEventSpecifications.any {ces -> ces.matches((Event)trigger.deref(), informationAct)}) {
+            if (trigger as boolean && !causeEventSpecifications.any {ces -> ces.matches((Event)trigger.deref(), informationAct)}) {
                 return new MatchResult(matched:false, failures: ["The cause of the event in $info does not match"])
             }
         }

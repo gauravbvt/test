@@ -7,7 +7,65 @@
         lang="en">
 <body>
 <wicket:extend>
-<!--TODO -->
- </wicket:extend>
+    <table>
+        <tr>
+           <td>
+              <fieldset>
+                  <legend>Description</legend>
+                  <textarea wicket:id="description" rows="3" cols="30">[description]</textarea>
+              </fieldset>
+           </td>
+            <td nowrap="nowrap">
+               <input wicket:id="isPlace" type = "checkbox"/>A named place<br/>
+               <input wicket:id="isGeoLocation" type = "checkbox"/>Some location<br/>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>of type</legend>
+                    <span wicket:id="placeType">[place tree]</span>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <fieldset>
+        <legend>that is in</legend>
+        <table>
+            <tr>
+                <td nowrap="nowrap">
+                    <input wicket:id="isInGeoLocation" type="checkbox"/>this geographical area <br/>
+                    <input wicket:id="isRelative" type="checkbox"/>
+                    <select wicket:id="relation">
+                        <option>the same</option>
+                        <option>a nearby</option>
+                    </select>
+                </td>
+                <td>
+                    <span wicket:id="geoLocation">[geolocation panel]</span>
+                    <div wicket:id="relativeDiv>">
+                        <table>
+                            <tr>
+                                <td nowrap="nowrap">
+                                       <input wicket:id="isInAreaType" type="checkbox"/>area<select wicket:id="areaTypes"><option>[area type]</option></select><br/>
+                                       <input wicket:id="isInPlaceType" type="checkbox"/>kind of place<select wicket:id="placeTypes"><option>[place type]</option></select><br/>
+                                   </td>
+                                   <td nowrap="nowrap">
+                                       <span wicket:id="as-of">as/to</span>
+                                       <select wicket:id="kindOfLocatable">
+                                           <option>this place</option>
+                                           <option>the location of...</option>
+                                           <option>the jurisdiction of...</option>
+                                       </select>
+                                   </td>
+                                   <td>
+                                       <span wicket:id="locatableTree">[locatable tree]</span>
+                                   </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+               </tr>
+        </table>
+    </fieldset>
+</wicket:extend>
 </body>
 </html>

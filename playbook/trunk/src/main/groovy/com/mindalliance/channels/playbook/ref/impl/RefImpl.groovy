@@ -275,8 +275,9 @@ class RefImpl implements Ref {
 
     boolean isFresh() {
        if (this.@id == null) return false
-       Store store = PlaybookApplication.locateStore()
-       boolean fresh = store.isFresh(this)
+       // Store store = PlaybookApplication.locateStore()
+       // boolean fresh = store.isFresh(this)
+       boolean fresh = (deref() != null)   // by testing with deref, the Ref caches any referenceable, and freshness is sticky
        if (!fresh) {
            this.@id = null // nullify the id
        }

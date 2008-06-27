@@ -33,14 +33,15 @@ class ConfirmationRequest extends SharingAct {
 
     void setSourceAgent(Ref agent) {
         Ref old = sourceAgent
-        if (agent != null) {
+        if (agent as boolean) {
+            sourceAgent = agent
             sourceSpec = new AgentSpec()
         }
         propertyChanged("sourceAgent", old, agent)
     }
 
     boolean isSourceSpecified() {
-        return sourceAgent == null
+        return !sourceAgent as boolean
     }
 
     // Return implied event type

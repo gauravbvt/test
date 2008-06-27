@@ -75,26 +75,26 @@ class Playbook extends ProjectElement implements Described {
 
     List<Ref> findCandidateCauses(Ref event) {
          List<Ref> candidates = (List<Ref>)informationActs.findAll { act ->
-              !act.isAfter(event)
+              act as boolean && !act.isAfter(event)
          }
         candidates.addAll(events.findAll {other ->
-            !other.isAfter(event)
+            other as boolean && !other.isAfter(event)
         })
         return candidates
     }
 
     List<Ref> findPriorInformationActs(Ref event, String type) {
         return (List<Ref>)informationActs.findAll {act ->
-            act.type == type && event.isAfter(act)
+            act as boolean && act.type == type && event.isAfter(act)
         }
     }
 
     List<Ref> findInformationActsOfType(String type) {
-        return (List<Ref>)informationActs.findAll {act -> act.type == type}
+        return (List<Ref>)informationActs.findAll {act -> act as boolean && act.type == type}
     }
 
     List<Ref> findPriorInformationActsOfType(String type, Ref event) {
-        return (List<Ref>)informationActs.findAll {act -> act.type == type && !act.isAfter(event)}
+        return (List<Ref>)informationActs.findAll {act -> act as boolean && act.type == type && !act.isAfter(event)}
     }
 
     List<Ref> findAllAgents() {
@@ -111,23 +111,23 @@ class Playbook extends ProjectElement implements Described {
     }
 
     Ref findEventNamed(String name) {
-        return (Ref)events.find {event -> event.name == name}
+        return (Ref)events.find {event -> event as boolean && event.name == name}
     }
 
     // Playbook shows transient relationship by start of event
     boolean createsRelationshipBefore(Relationship relationship, Event event) {
        return findAllPriorInformationActsOfType("Association", event).any {association ->
-           association.createsMatchingRelationship(relationship)
+           association as boolean && association.createsMatchingRelationship(relationship)
        }
     }
 
     // Whether an agent is the same as or implied by another agent at start of an event
     boolean agentImplied(Ref agent, Ref otherAgent, Event event) {
-        if (agent == null || otherAgent == null) return false
+        if (! agent as boolean || ! otherAgent as boolean) return false
         if (agent == otherAgent) return true
         List<Ref> otherResources = otherAgent.getResourcesAt(event)
         // implied if it is not true that at least one resource defined by the agent is not also defined by the other agent
-        boolean implied = !agent.getResourcesAt(event).any {res -> !otherResources.contains(res)}
+        boolean implied = !agent.getResourcesAt(event).any {res -> res.as boolean && !otherResources.contains(res)}
         return implied
     }
 
@@ -137,14 +137,14 @@ class Playbook extends ProjectElement implements Described {
 
     List<Ref> findAllOccurrencesExcept(Ref occurrence) {
         List<Ref> occurrences = []
-        occurrences.addAll(events.findAll{it != occurrence})
-        occurrences.addAll(informationActs.findAll{it != occurrence})
+        occurrences.addAll(events.findAll{event -> event as boolean && event != occurrence})
+        occurrences.addAll(informationActs.findAll{act -> act as boolean && act != occurrence})
         return occurrences
     }
 
     List<Ref> findAllInformationActsForAgent(Ref agent) {
-        return (List<Ref>)informationActs.findAll {act ->
-            (act.actorAgent = agent) || (act.isFlowAct() && act.targetAgent == agent)
+        return (List<Ref>)informationActs.findAll {act -> act as boolean &&
+            ((act.actorAgent = agent) || (act.isFlowAct() && act.targetAgent == agent))
         }
     }
 
@@ -152,13 +152,15 @@ class Playbook extends ProjectElement implements Described {
     List<String> findAllTopicsAboutEvent(Ref event) {
         TreeSet<String> topics = new TreeSet<String>()
         informationActs.each {ref ->
-            InformationAct act = (InformationAct)ref.deref()
-            if (act.hasInformation() && act.information.event == event) { // act has information about the event
-                act.information.eventDetails.each {eoi ->
-                    topics.add(eoi.topic)                     // topics used
-                }
-                act.information.eventTypes.each {et ->
-                    topics.addAll(et.topics)                 // topics from assigned eventTypes
+            if (ref as boolean) {
+                InformationAct act = (InformationAct)ref.deref()
+                if (act.hasInformation() && act.information.event == event) { // act has information about the event
+                    act.information.eventDetails.each {eoi ->
+                        topics.add(eoi.topic)                     // topics used
+                    }
+                    act.information.eventTypes.each {et ->
+                        topics.addAll(et.topics)                 // topics from assigned eventTypes
+                    }
                 }
             }
         }
@@ -167,7 +169,7 @@ class Playbook extends ProjectElement implements Described {
 
     List<Ref> findAllPriorOccurrencesOf(Ref occurrence) {
         return (List<Ref>)this.occurrences.findAll {occ ->
-            occurrence.isAfter(occ)
+            occ as boolean && occurrence.isAfter(occ)
         }
     }
 

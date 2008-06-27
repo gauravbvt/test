@@ -22,7 +22,6 @@ class PlaybookModel extends IfmElement implements Described {
 
     List<Ref> participations = []
     List<Ref> areaTypes = []
-    List<Ref> domains = []
     List<Ref> eventTypes = []
     List<Ref> issueTypes = []
     List<Ref> mediumTypes = []
@@ -94,7 +93,6 @@ class PlaybookModel extends IfmElement implements Described {
     List<Ref> getElements() {
         List<Ref> elements = []
         elements.addAll(areaTypes)
-        elements.addAll(domains)
         elements.addAll(eventTypes)
         elements.addAll(issueTypes)
         elements.addAll(mediumTypes)
@@ -110,7 +108,7 @@ class PlaybookModel extends IfmElement implements Described {
      */
     static List<Class<?>> contentClasses() {
         [
-                AreaType.class, Domain.class, EventType.class,
+                AreaType.class, EventType.class,
                 IssueType.class, MediumType.class,
                 PlaceType.class, OrganizationType.class,
                 Role.class, TaskType.class

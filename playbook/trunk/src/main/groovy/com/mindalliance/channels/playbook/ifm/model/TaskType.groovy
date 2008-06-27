@@ -13,7 +13,6 @@ import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
 class TaskType extends ElementType {
 
     List<String> purposes = [] // purposes of the task
-    List<Ref> domains = []
     List<InformationSpec> informationSpecs = [] // information needs
     List<EventType> eventTypes = [] // types of events that can be caused (and thus become observable)
 

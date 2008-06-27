@@ -25,7 +25,6 @@ import java.util.List;
 public class TaskTypeIntentTab  extends AbstractFormTab {
 
     MultipleStringChooser purposesChooser;
-    DynamicFilterTree domainsTree;
     DynamicFilterTree eventTypesTree;
 
 
@@ -35,14 +34,6 @@ public class TaskTypeIntentTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        domainsTree = new DynamicFilterTree("domains", new RefPropertyModel(getElement(), "domains"),
-                                                 new RefQueryModel(getScope(), new Query("findAllTypes", "Domain"))) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = domainsTree.getNewSelections();
-                RefUtils.set(getElement(), "domains", selectedTypes);
-            }
-        };
-        addReplaceable(domainsTree);
         purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
                                                     new RefQueryModel(Channels.instance(), new Query("findAllPurposes")));
         addReplaceable(purposesChooser);

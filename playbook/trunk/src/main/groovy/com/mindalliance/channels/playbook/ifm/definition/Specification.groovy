@@ -54,6 +54,7 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     }
 
     MatchResult match(Bean bean, InformationAct informationAct) {
+        if (!bean) throw new IllegalArgumentException("Can't match null")
         if (!this.matchingDomainClass.isAssignableFrom(bean.class))
             throw new IllegalArgumentException("Can't match bean: expecting a ${this.matchingDomainClass.name}")
         if (negated)
@@ -63,6 +64,7 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     }
 
     MatchResult fullMatch(Bean bean, InformationAct informationAct) { // keep matching after failure (gather all failures)
+        if (!bean) throw new IllegalArgumentException("Can't match null")
         if (!this.matchingDomainClass.isAssignableFrom(bean.class))
             throw new IllegalArgumentException("Can't match bean: expecting a ${this.matchingDomainClass.name}")
         if (negated)

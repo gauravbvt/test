@@ -52,6 +52,7 @@ abstract class BeanImpl implements Bean {
     }
 
     static Object makeClone(Object val) {
+        if (val == null) return null
         def value
         switch(val) {
            case {it instanceof Class}: value = val; break

@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.ref
 
 interface Store {
 
-    Referenceable retrieve(Ref reference, Object dirtyRead)
+    Referenceable retrieve(Ref reference, Referenceable dirtyRead)
     Ref persist(Referenceable referenceable)  // marks referenceable's ref as both begun and changed
     void delete(Ref reference) // remove from session and from application if commit
     String getDefaultDb()

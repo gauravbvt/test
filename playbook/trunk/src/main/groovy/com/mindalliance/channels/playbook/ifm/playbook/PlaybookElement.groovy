@@ -28,7 +28,7 @@ abstract class PlaybookElement extends ProjectElement {
     }
 
     Ref getProject() {
-       assert playbook
+       assert playbook as boolean
        return playbook.project
     }
 

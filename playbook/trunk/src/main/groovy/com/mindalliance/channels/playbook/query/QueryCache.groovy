@@ -1,4 +1,7 @@
 package com.mindalliance.channels.playbook.query
+
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -15,7 +18,9 @@ class QueryCache implements Serializable {
     }
 
     def fromCache(QueryExecution execution) {
-        return cache[execution]
+        def cached = cache[execution]
+        if (cached != null) cached == BeanImpl.makeClone(cached)
+        return cached
     }
 
     void toCache(QueryExecution execution, def results) {

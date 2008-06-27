@@ -46,7 +46,7 @@ class InformationNeed extends InformationTemplate {
 
     String makeLabel(int maxWidth) {
         String label = "Need info about\n"
-        if (event) {
+        if (event as boolean) {
             String eventName = event.name
             label += "${eventName[0..Math.min(eventName.size()-1, maxWidth-1)]}"
         }

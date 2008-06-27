@@ -41,7 +41,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return retrieve(reference, null)
     }
 
-    Referenceable retrieve(Ref reference, def dirtyRead) {
+    Referenceable retrieve(Ref reference, Referenceable dirtyRead) {
         Referenceable referenceable = null
         if (!deletes.contains(reference)) {  // deleted in session
             referenceable = begun.get(reference)

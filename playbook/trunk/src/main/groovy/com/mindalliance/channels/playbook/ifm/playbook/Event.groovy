@@ -6,7 +6,6 @@ import com.mindalliance.channels.playbook.ref.Ref
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
 import com.mindalliance.channels.playbook.ifm.model.EventType
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.Timing
 
@@ -93,7 +92,7 @@ class Event extends PlaybookElement implements Named, Described {
     // QUERIES
 
     List<Ref> findAllInformationActsCausedByEvent() {
-        assert playbook
+        assert playbook as boolean
         Playbook playbook = (Playbook)this.playbook.deref()
         return (List<Ref>)playbook.informationActs.findAll {act ->
             act.cause.trigger == this.reference
@@ -101,7 +100,7 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     List<Ref> findAllEventsCausedByEvent() {
-        assert playbook
+        assert playbook as boolean
         Playbook playbook = (Playbook)this.playbook.deref()
         return (List<Ref>)playbook.events.findAll {event ->
             event.cause.trigger == this.reference
@@ -109,15 +108,15 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     List<Ref> findAllInformationActsAboutEvent() {
-        assert playbook
+        assert playbook as boolean
         return (List<Ref>)this.playbook.informationActs.findAll {act ->
-            act.hasInformation() && act.information.event == this.reference
+            act as boolean && act.hasInformation() && act.information.event == this.reference
         }
     }
 
     List<Ref> findAllPriorEvents() {
-        assert playbook
-        return (List<Ref>)this.playbook.events.findAll {event -> this.isAfter(event) }
+        assert playbook as boolean
+        return (List<Ref>)this.playbook.events.findAll {event -> event as boolean && this.isAfter(event) }
     }
 
     List<Ref> findAllPriorOccurrences() {

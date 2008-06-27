@@ -2,7 +2,9 @@ package com.mindalliance.channels.playbook.support.persistence;
 
 import com.opensymphony.oscache.base.Cache;
 import com.opensymphony.oscache.base.CacheEntry;
+import com.opensymphony.oscache.base.NeedsRefreshException;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.mem.RefLockException;
 
@@ -32,7 +34,12 @@ public class PlaybookCache extends Cache {
         super(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity);
     }
 
-    public boolean isFresh(Ref ref) {
+    public Object getFromCache(String key, int refreshPeriod) throws NeedsRefreshException {
+        Object obj = super.getFromCache(key, refreshPeriod);
+        return BeanImpl.makeClone(obj);
+    }
+
+    public boolean isFresh(Ref ref) {   // NOT USED
         if (ref.isComputed())
             return true;
         else {

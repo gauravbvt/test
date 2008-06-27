@@ -12,19 +12,8 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 */
 class OrganizationType extends ElementType {
 
-    Ref domain // domain for this type of organization
 
     // Queries
-
-    // Find all domain names of known Organization Types
-    static List<String> findDomainNames() {
-        Ref project = Project.current()
-        Set<String> domainNames = new HashSet<String>()
-        project.organizationTypes.each{ me ->
-                if (me.domain && me.domain.name) domainNames.add(me.domain.name)
-        }
-        return (domainNames as List<String>).sort()
-    }
 
     static Ref findOrganizationTypeNamed(String name) {
         Ref project = Project.current()

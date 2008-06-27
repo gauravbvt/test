@@ -35,7 +35,7 @@ class RelationshipDefinition extends Definition {
                 return new MatchResult(matched:false, failures:["$relationship does not match specified kind $relationshipName ($level)"])
             }
         }
-        if (relationship.toAgent && !withAgentSpecification.matches(relationship.toAgent.deref(), informationAct)) {
+        if (relationship.toAgent as boolean && !withAgentSpecification.matches(relationship.toAgent.deref(), informationAct)) {
             return new MatchResult(matched:false, failures:["$relationship does not match specified target agent"])
         }
         return new MatchResult(matched:true)

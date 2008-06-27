@@ -148,7 +148,6 @@ public class FormTest extends WebPage {
         choices.add(System.class);
         // PlaybookModel
         choices.add(AreaType.class);
-        choices.add(Domain.class);
         choices.add(EventType.class);
         choices.add(IssueType.class);
         choices.add(MediumType.class);
