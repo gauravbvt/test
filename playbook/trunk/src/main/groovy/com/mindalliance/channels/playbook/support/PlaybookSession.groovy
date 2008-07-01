@@ -17,10 +17,7 @@ import com.mindalliance.channels.playbook.query.QueryCache
 */
 class PlaybookSession extends KludgeWebSession implements Transactionable, Serializable {
 
-    private Ref participation;
-    private Ref user;
-    private Ref project;
-    private Ref model;
+    private String userId;
 
     private PlaybookApplication application;     // TODO
 
@@ -45,23 +42,10 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     }
 
     public boolean authenticate( String id, String password ) {
-        participation = null;
-        user = application.findUser( id );
-        if ( user != null && user.password == password ) {
-            project = user.selectedProject
-            if ( project == null )
-                project = application.findProjectsForUser( user )[0]
-            if ( project != null )
-                participation = application.findParticipation( project, user )
+        this.userId = id
 
-            model = user.selectedModel
-            if ( user.analyst && model == null )
-                model = application.findModelsForUser( user )[0]
-
-            return true;
-        }
-        else
-            return false;
+        Ref user = user
+        return user && user.password == password;
     }
 
     public Roles getRoles() {
@@ -77,32 +61,57 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
             return new Roles( roles.toArray( new String[ roles.size() ] ) )
         } else
             return null
-        return isSignedIn()?
-               new Roles( isAdmin()? Roles.ADMIN : Roles.USER ) : null;
     }
 
     public boolean isAdmin() {
-        return user.admin;
+        Ref ref = user
+        ref == null ? false : ref.admin
     }
 
     public boolean isManager() {
-        return user.manager;
+        Ref ref = user
+        ref == null ? false : ref.manager
     }
 
     public boolean isAnalyst() {
-        return user.analyst;
+        Ref ref = user
+        ref == null ? false : ref.analyst
+    }
+
+    public Ref getUser() {
+        application.findUser( userId )
     }
 
     public Ref getParticipation() {
-        return participation;
+        Ref user = user
+        Ref project = project
+        return project && user ? application.findParticipation( project, user ) : null
     }
 
     public Ref getProject() {
-        return project;
+        Ref user = user
+        Ref project = user?.selectedProject
+        if ( !project && user ) {
+            List refs = application.findProjectsForUser(user)
+            if ( refs?.size() > 0 )
+                project = (Ref) refs[0]
+        }
+
+        return project
     }
 
     public Ref getModel() {
-        return model;
+        if ( !isAnalyst() )
+            return null;
+
+        Ref user = user
+        Ref model = user?.selectedModel
+        if ( !model && user ) {
+            List<Ref> refs = application.findModelsForUser(user)
+            if ( refs.size() > 0 )
+                model = (Ref) refs[0]
+        }
+        return model
     }
 
     public SessionMemory getMemory() {
@@ -136,12 +145,4 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     int getPendingDeletesCount() {
         return memory.getPendingDeletesCount()
     }
-
-    // Java support
-
-    Ref getUser() {
-        return user
-    }
-
-
 }

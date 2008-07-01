@@ -2,8 +2,11 @@ package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.ifm.model.ModelElement;
 import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
+import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement;
 import com.mindalliance.channels.playbook.ifm.project.Project;
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
@@ -67,7 +70,7 @@ public class UserScope implements Container {
             if ( u.getManager() )
                 result.addAll( Project.managerClasses() );
 
-            if ( getProject() != null ) {
+            if ( getDefaultProject() != null ) {
                 // Project contents
                 result.addAll( Project.contentClasses() );
             }
@@ -148,29 +151,55 @@ public class UserScope implements Container {
     }
 
     //================================
+    /**
+     * Figure out what container to use to add/delete a given object.
+     * @param object the object
+     * @return the likely container
+     */
     private Ref getTarget( Referenceable object ) {
         final Class<? extends Referenceable> objectClass = object.getClass();
 
         if ( Channels.contentClasses().contains( objectClass ) )
             return getChannels().getReference();
 
-        final User user = getUser();
-        if ( user != null
-                && User.contentClasses().contains( objectClass ) )
-            return user.getReference();
+        final Ref uRef = getSession().getUser();
+        if ( uRef != null && User.contentClasses().contains( objectClass ) )
+            return uRef;
 
-        final Ref uRef = getUser().getReference();
-        final Project project = getProject();
-        if ( project != null
-                && project.isParticipant( uRef )
-                && Project.contentClasses().contains( objectClass ) )
-            return project.getReference();
+        if ( object instanceof PlaybookElement ) {
+            PlaybookElement element = (PlaybookElement) object;
+            Ref pbRef = element.getPlaybook();
+            Ref pRef  = element.getProject();
+            if ( pRef == null )
+                pRef = getDefaultProject();
 
-        final PlaybookModel model = getModel();
-        if ( model != null
-                && model.isAnalyst( uRef )
-                && PlaybookModel.contentClasses().contains( objectClass ) )
-            return model.getReference();
+            Project p = (Project) pRef.deref();
+            if ( p.findParticipation( uRef ) != null ) {
+                if ( pbRef == null )
+                    pbRef = getDefaultPlaybook( pRef  );
+
+                return pbRef;
+            }
+
+        } else if ( object instanceof ProjectElement ) {
+            ProjectElement element = (ProjectElement) object;
+            Ref pRef = element.getProject();
+            if ( pRef == null )
+                pRef = getDefaultProject();
+            return pRef;
+        }
+
+        if ( object instanceof ModelElement ) {
+            ModelElement element = (ModelElement) object;
+            Ref mRef = element.getModel();
+            if ( mRef == null )
+                mRef = getDefaultModel();
+            if ( mRef != null ) {
+                PlaybookModel model = (PlaybookModel) mRef.deref();
+                if ( model.isAnalyst( uRef ) )
+                    return mRef;
+            }
+        }
 
         throw new RuntimeException(
             MessageFormat.format(
@@ -233,14 +262,23 @@ public class UserScope implements Container {
         return (PlaybookSession) Session.get();
     }
 
-    private Project getProject() {
-        final Ref project = getSession().getProject();
-        return project == null ? null : (Project) project.deref();
+    private Ref getDefaultProject() {
+        return getSession().getProject();
     }
 
-    private PlaybookModel getModel() {
-        final Ref model = getSession().getModel();
-        return model == null ? null : (PlaybookModel) model.deref();
+    private Ref getDefaultModel() {
+        return getSession().getModel();
+    }
+
+    private Ref getDefaultPlaybook( Ref projectRef ) {
+        if ( projectRef != null ) {
+            Project project = (Project) projectRef.deref();
+            List<Ref> pbRefs = project.getPlaybooks();
+            if ( pbRefs.size() > 0 )
+                return pbRefs.get(0);
+        }
+
+        return null;
     }
 
     private PlaybookApplication getApplication() {
