@@ -247,6 +247,38 @@ class Project extends IfmElement implements Named, Described {
         return sharingAgreements.findAll {agr -> agr.recipient == resource}
     }
 
+    List<Ref> findAllJurisdictionables() {
+        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasJurisdiction()}
+    }
+
+    List<Ref> findAllPlacesOfTypeImplying(Ref placeType) {
+        return (List<Ref>)places.findAll {place -> place.placeType as boolean && place.placeType.implies(placeType)}
+    }
+
+    List<Ref> findAllAgentsLocatedInPlacesOfTypeImplying(Ref placeType) {
+        return (List<Ref>)findAllAgents().findAll {agent ->
+            agent.hasLocation() && agent.location.isAPlace() && agent.location.place.placeType as boolean && agent.location.place.placeType.implies(placeType)
+        }
+    }
+
+    List<Ref> findAllAgentsWithJurisdictionsInPlacesOfTypeImplying(Ref placeType) {
+        return (List<Ref>)findAllAgents().findAll {agent ->
+            agent.hasJurisdiction() && agent.jurisdiction.isAPlace() && agent.jurisdiction.place.placeType as boolean && agent.jurisdiction.place.placeType.implies(placeType)
+        }
+    }
+
+    List<Ref> findAllPlacesInAreasOfTypeImplying(Ref areaType) {
+        return (List<Ref>)places.findAll {place -> (geoLoc = place.findGeoLocation()) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType) }
+    }
+
+    List<Ref> findAllAgentsLocatedInAreasOfTypeImplying(Ref areaType) {
+        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasLocation() && (geoLoc = agent.location.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+    }
+
+    List<Ref> findAllAgentsWithJurisdictionsInAreasOfTypeImplying(Ref areaType) {
+        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasJurisdiction() && (geoLoc = agent.jurisdiction.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+    }
+
     // End queries
 
     Boolean isParticipant(Ref user) {

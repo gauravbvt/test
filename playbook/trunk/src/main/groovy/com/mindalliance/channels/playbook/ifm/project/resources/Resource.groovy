@@ -52,6 +52,14 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return false
     }
 
+    boolean hasJurisdiction() {
+        return false
+    }
+
+    boolean hasLocation() {
+        return location.isDefined()
+    }
+
     List<Responsibility> getResponsibilities() {
         // TODO
     }

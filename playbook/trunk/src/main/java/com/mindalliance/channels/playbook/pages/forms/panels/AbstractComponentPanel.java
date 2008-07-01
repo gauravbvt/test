@@ -160,5 +160,11 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         if (isReadOnly()) component.setEnabled(false);
     }
 
+    protected void setProperty(String property, Object value) {
+        RefUtils.set(getElement(), propPath+"."+property, value);
+    }
 
+    protected Object getProperty(String property) {
+        return RefUtils.get(getElement(), propPath+"."+property);
+    }
 }

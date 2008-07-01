@@ -82,6 +82,10 @@ class Organization extends Resource {
         return parents
     }
 
+    boolean hasJurisdiction() {
+        return jurisdiction.isDefined()
+    }
+
     // Queries
 
     List<Ref> findAllSubOrganizations() {

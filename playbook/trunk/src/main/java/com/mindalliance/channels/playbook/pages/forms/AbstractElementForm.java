@@ -166,6 +166,14 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         return element.isModified();
     }
 
+    protected void setProperty(String property, Object value) {
+        RefUtils.set(getElement(), property, value);
+    }
+
+    protected Object getProperty(String property) {
+        return RefUtils.get(getElement(), property);
+    }
+
     abstract void loadTabs();
 
 }

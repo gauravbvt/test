@@ -25,4 +25,11 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
         return result.matched;
     }
 
+    String getSummary() {
+      if (description)
+        return description.replaceAll('\n', ' ')[0..Math.min(16, description.size())];
+      else
+        return 'No description'
+    }
+
 }

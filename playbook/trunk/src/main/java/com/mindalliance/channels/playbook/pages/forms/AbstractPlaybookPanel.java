@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
@@ -87,6 +88,20 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
         addReplaceable(inputField);
     }
 
+    protected void setVisibility(Component component, boolean visible) {
+        if (visible) {
+            display(component);
+        }
+        else {
+            hide(component);
+        }
+    }
+
+    protected void setVisibility(Component component, boolean visible, AjaxRequestTarget target) {
+        setVisibility(component, visible);
+        target.addComponent(component);
+    }
+
     protected void hide(Component component) {
         component.add(new AttributeModifier("style", true, new Model("display:none")));
     }
@@ -99,4 +114,18 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
         component.add(new AttributeModifier("style", true, new Model("display:" + style)));
     }
 
+    protected void toggle(CheckBox setCheckBox, CheckBox toggledCheckBox, AjaxRequestTarget target) {
+        toggledCheckBox.setModelObject(!(Boolean)setCheckBox.getModelObject());
+        target.addComponent(toggledCheckBox);
+    }
+
+    protected void enable(Component component, boolean enabled, AjaxRequestTarget target) {
+        component.setEnabled(enabled);
+        target.addComponent(component);
+    }
+
+    protected boolean isFresh(Ref ref) {
+        return ref != null && ref.isFresh();
+    }
+   
 }

@@ -69,4 +69,18 @@ class AreaType extends ElementType {
         city.narrow(AreaType.county())
         return city
     }
+
+    static List<String> allAreaTypeNames() {
+        return [country().name, state().name, county().name, city().name]
+    }
+
+    static Ref areaTypeNamed(String name) {
+        switch(name) {
+            case 'Country': return country()
+            case 'State': return state()
+            case 'County': return county()
+            case 'City': return city()
+            default: throw new IllegalArgumentException("No known area type named $name")
+        }
+    }
  }

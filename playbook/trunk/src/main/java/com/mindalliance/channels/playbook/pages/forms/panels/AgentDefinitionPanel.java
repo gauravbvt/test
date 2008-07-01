@@ -1,0 +1,204 @@
+package com.mindalliance.channels.playbook.pages.forms.panels;
+
+import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.definition.AgentDefinition;
+import com.mindalliance.channels.playbook.ifm.definition.OrganizationSpecification;
+import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
+import com.mindalliance.channels.playbook.ifm.definition.RelationshipDefinition;
+import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.query.Query;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.ListChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Jun 30, 2008
+ * Time: 3:46:21 PM
+ */
+public class AgentDefinitionPanel extends AbstractComponentPanel {
+
+    protected AgentDefinition agentDefinition;
+    protected TextArea descriptionField;
+    protected AjaxCheckBox anyRoleCheckBox;
+    protected WebMarkupContainer rolesDiv;
+    protected DynamicFilterTree rolesTree;
+    protected AjaxCheckBox anyOrganizationCheckBox;
+    protected WebMarkupContainer organizationSpecificationDiv;
+    protected OrganizationSpecificationPanel organizationSpecificationPanel;
+    protected AjaxCheckBox anyLocationCheckBox;
+    protected WebMarkupContainer locationDefinitionDiv;
+    protected LocationDefinitionPanel locationDefinitionPanel;
+    protected AjaxCheckBox anyJurisdictionCheckBox;
+    protected WebMarkupContainer jurisdictionDefinitionDiv;
+    protected LocationDefinitionPanel jurisdictionDefinitionPanel;
+    protected AjaxCheckBox anyRelationshipCheckBox;
+    protected WebMarkupContainer relationshipDefinitionsDiv;
+    protected ListChoice relationshipDefinitionsChoice;
+    protected AjaxButton addRelationshipDefinitionButton;
+    protected AjaxButton removeRelationshipDefinitionButton;
+    protected WebMarkupContainer relationshipDefinitionDiv;
+    protected Component relationshipDefinition;
+    protected RelationshipDefinition selectedRelationshipDefinition;
+
+    public AgentDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+        super(id, parentPanel, propPath, readOnly, feedback);
+    }
+
+    protected void load() {
+        super.load();
+        agentDefinition = (AgentDefinition)getComponent();
+        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), propPath+".description"));
+        addInputField(descriptionField);
+        anyRoleCheckBox = new AjaxCheckBox("anyRole", new Model((Boolean)agentDefinition.getRoles().isEmpty())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyRole = (Boolean)anyRoleCheckBox.getModelObject();
+                if (anyRole) {
+                    setProperty("roles", new ArrayList<Ref>());
+                }
+                setVisibility(rolesDiv, !anyRole, target);
+            }
+        };
+        addReplaceable(anyRoleCheckBox);
+        rolesDiv = new WebMarkupContainer("rolesDiv");
+        setVisibility(rolesDiv, !agentDefinition.getRoles().isEmpty());
+        addReplaceable(rolesDiv);
+        rolesTree = new DynamicFilterTree("roles",
+                                          new RefPropertyModel(getElement(), propPath+".roles"),
+                                          new RefQueryModel(getProject(), new Query("findAllTypes", "Role"))){
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                List<Ref> selected = rolesTree.getNewSelections();
+                setProperty("roles", selected);
+            }
+        };
+        addReplaceableTo(rolesTree, rolesDiv);
+        anyOrganizationCheckBox = new AjaxCheckBox("anyOrganization", new Model((Boolean)agentDefinition.getOrganizationSpecification().matchesAll())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyOrganization = (Boolean)anyOrganizationCheckBox.getModelObject();
+                if (anyOrganization) {
+                    setProperty("organizationSpecification", new OrganizationSpecification());
+                }
+                setVisibility(organizationSpecificationDiv, !anyOrganization, target);
+            }
+        };
+        addReplaceable(anyOrganizationCheckBox);
+        organizationSpecificationDiv = new WebMarkupContainer("organizationSpecificationDiv");
+        setVisibility(organizationSpecificationDiv, agentDefinition.getOrganizationSpecification().matchesAll());
+        addReplaceable(organizationSpecificationDiv);
+        organizationSpecificationPanel = new OrganizationSpecificationPanel("organizationSpecification", this, propPath+".organizationSpecification", isReadOnly(), feedback);
+        addReplaceableTo(organizationSpecificationPanel, organizationSpecificationDiv);
+        anyLocationCheckBox = new AjaxCheckBox("anyLocation", new Model((Boolean)agentDefinition.getLocationDefinition().matchesAll())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyLocation = (Boolean)anyLocationCheckBox.getModelObject();
+                if (anyLocation) {
+                    setProperty("locationDefinition", new LocationDefinition());
+                }
+                setVisibility(locationDefinitionDiv, !anyLocation, target);
+            }
+        };
+        addReplaceable(anyLocationCheckBox);
+        locationDefinitionDiv = new WebMarkupContainer("locationDefinitionDiv");
+        setVisibility(locationDefinitionDiv, agentDefinition.getLocationDefinition().matchesAll());
+        addReplaceable(locationDefinitionDiv);
+        locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition", isReadOnly(), feedback);
+        addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
+        anyJurisdictionCheckBox = new AjaxCheckBox("anyJurisdiction", new Model((Boolean)agentDefinition.getJurisdictionDefinition().matchesAll())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyLocation = (Boolean)anyJurisdictionCheckBox.getModelObject();
+                if (anyLocation) {
+                    setProperty("jurisdictionDefinition", new LocationDefinition());
+                }
+                setVisibility(jurisdictionDefinitionDiv, !anyLocation, target);
+            }
+        };
+        addReplaceable(anyJurisdictionCheckBox);
+        jurisdictionDefinitionDiv = new WebMarkupContainer("jurisdictionDefinitionDiv");
+        setVisibility(jurisdictionDefinitionDiv, agentDefinition.getJurisdictionDefinition().matchesAll());
+        addReplaceable(jurisdictionDefinitionDiv);
+        jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
+        addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);
+        anyRelationshipCheckBox = new AjaxCheckBox("anyRelationship", new Model((Boolean)agentDefinition.getRelationshipDefinitions().isEmpty())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyRelationships = (Boolean)anyRelationshipCheckBox.getModelObject();
+                if (anyRelationships) {
+                    setProperty("relationshipDefinitions", new ArrayList<RelationshipDefinition>());
+                }
+                setVisibility(relationshipDefinitionsDiv, !anyRelationships, target);
+            }
+        };
+        addReplaceable(anyRelationshipCheckBox);
+        relationshipDefinitionsDiv = new WebMarkupContainer("relationshipDefinitionsDiv");
+        setVisibility(relationshipDefinitionsDiv, agentDefinition.getRelationshipDefinitions().isEmpty());
+        addReplaceable(relationshipDefinitionsDiv);
+        relationshipDefinitionsChoice = new ListChoice("relationshipDefinitions",
+                                                        new Model(selectedRelationshipDefinition),
+                                                        new RefPropertyModel(getComponent(), "relationshipDefinitions"),
+                                                        new RefChoiceRenderer("summary", "id"));
+        relationshipDefinitionsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate(AjaxRequestTarget target) {
+                selectedRelationshipDefinition = (RelationshipDefinition)relationshipDefinitionsChoice.getModelObject();
+                setVisibility(removeRelationshipDefinitionButton, selectedRelationshipDefinition != null, target);
+                if(selectedRelationshipDefinition != null) updateRelationshipDefinitionPanel();
+                setVisibility(relationshipDefinitionDiv, selectedRelationshipDefinition != null, target);
+            }
+        });
+        addReplaceableTo(relationshipDefinitionsChoice, relationshipDefinitionsDiv);
+        addRelationshipDefinitionButton = new AjaxButton("addRelationshipDefinition"){
+            protected void onSubmit(AjaxRequestTarget target, Form form) {
+                selectedRelationshipDefinition = new RelationshipDefinition();
+                RefUtils.add(getElement(), propPath+".relationshipDefinitions", selectedRelationshipDefinition);
+                setVisibility(removeRelationshipDefinitionButton, true, target);
+                updateRelationshipDefinitionPanel();
+                setVisibility(relationshipDefinitionDiv, true, target);
+            }
+        };
+        addReplaceableTo(addRelationshipDefinitionButton, relationshipDefinitionsDiv);
+        removeRelationshipDefinitionButton = new AjaxButton("deleteRelationshipDefinition"){
+            protected void onSubmit(AjaxRequestTarget target, Form form) {
+                RefUtils.remove(getElement(), propPath+".relationshipDefinitions", selectedRelationshipDefinition);
+                selectedRelationshipDefinition = null;
+                target.addComponent(relationshipDefinitionsChoice);
+                setVisibility(removeRelationshipDefinitionButton, false, target);
+                setVisibility(relationshipDefinitionDiv, false, target);
+            }
+        };
+        addReplaceableTo(removeRelationshipDefinitionButton, relationshipDefinitionsDiv);
+        relationshipDefinitionDiv = new WebMarkupContainer("relationshipDefinitionDiv");
+        hide(relationshipDefinitionDiv);
+        addReplaceableTo(relationshipDefinitionDiv, relationshipDefinitionsDiv);
+        relationshipDefinition = new Label("relationshipDefinition", new Model("dummy"));
+        addReplaceableTo(relationshipDefinition, relationshipDefinitionDiv);
+    }
+
+    private void updateRelationshipDefinitionPanel() {
+        if (selectedRelationshipDefinition != null) {
+            int index = agentDefinition.getRelationshipDefinitions().indexOf(selectedRelationshipDefinition);
+            relationshipDefinition = new RelationshipDefinitionPanel("relationshipDefinition", this, propPath+".relationshipDefinitions["+index+"]", isReadOnly(), feedback);
+        }
+        else {
+           relationshipDefinition = new Label("relationshipDefinition", new Model("dummy"));
+        }
+        addReplaceableTo(relationshipDefinition, relationshipDefinitionDiv);
+    }
+
+}

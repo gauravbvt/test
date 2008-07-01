@@ -18,5 +18,6 @@ interface Agent extends Named, Described, Locatable {
     boolean isResourceElement()
     boolean isTeam()
     boolean isGroup()
-
+    boolean hasJurisdiction()
+    boolean hasLocation()
 }

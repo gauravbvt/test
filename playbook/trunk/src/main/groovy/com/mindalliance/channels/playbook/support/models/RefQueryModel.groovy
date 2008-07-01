@@ -39,8 +39,8 @@ class RefQueryModel implements IChainingModel {
         return (target instanceof IModel) ? ((IModel)target).getObject() : target
     }
 
-    public void setObject(def obj) {  // this model is ReadOnly
-        Logger.getLogger(this.class.name).warn("Attempting to set queried $target to $obj")
+    public void setObject(def obj) {  // this model is ReadOnly, setObject is ignored
+        Logger.getLogger(this.class.name).info("Attempting to set queried $target to $obj")
     }
 
     public void detach() {

@@ -59,6 +59,8 @@ class QueryManager implements PropertyChangeListener {
                 findCandidateSubOrganizationsFor: [Organization.class],
                 findAllPositionsAnywhere: [Position.class],
                 findAgreementsWhereSource: [SharingAgreement.class],
+                findAllPlacesOfTypeImplying: [Place.class, PlaceType.class],
+                findAllPlacesInAreasOfTypeImplying: [Place.class, AreaType.class],
                 // PlaybookModel
                 findInheritedTopics: [EventType.class],
                 findNarrowedEventTypeWithTopic: [EventType.class],
@@ -79,6 +81,11 @@ class QueryManager implements PropertyChangeListener {
                 findAllPriorOccurrencesOf: [Event.class, InformationAct.class],
                 // Playbook, Project
                 findAllAgentsExcept: [Agent.class],
+                findAllJurisdictionables: [Agent.class],
+                findAllAgentsLocatedInPlacesOfTypeImplying: [Agent.class, Place.class, PlaceType.class],
+                findAllAgentsWithJurisdictionsInPlacesOfTypeImplying: [Agent.class, Place.class, PlaceType.class],
+                findAllAgentsLocatedInAreasOfTypeImplying: [Agent.class, AreaType.class],
+                findAllAgentsWithJurisdictionsInAreasOfTypeImplying: [Agent.class, AreaType.class],
                 // Resource, Group
                 hasRelationship: [Resource.class, Agent.class, Relationship.class],
                 // Association

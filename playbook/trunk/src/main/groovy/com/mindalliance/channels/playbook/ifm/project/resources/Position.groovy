@@ -26,6 +26,10 @@ class Position extends OrganizationResource implements Jurisdictionable {
         return super.isLocatedWithin(loc) || jurisdiction.isWithin(loc)
     }
 
+    boolean hasJurisdiction() {
+        return jurisdiction.isDefined()
+    }    
+
     // Queries
 
     List<Ref> findOtherPositionsInOrganization(List<Ref> positions) {

@@ -40,6 +40,14 @@ class Group extends PlaybookElement implements Agent {
          return true
      }
 
+    boolean hasJurisdiction() {
+        return false
+    }
+
+    boolean hasLocation() {
+        return false
+    }
+
     List<Responsibility> getResponsibilities() {    // a group as a whole has no responsibility? -- TODO
         return []
     }

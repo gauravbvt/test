@@ -16,7 +16,7 @@ import com.mindalliance.channels.playbook.support.Level
 class RelationshipDefinition extends Definition {
 
     String relationshipName = '' // if empty, means any kind of relationship
-    AgentSpecification withAgentSpecification = new AgentSpecification()
+    AgentSpecification withAgentSpecification = new AgentSpecification()    
 
     Class<? extends Bean> getMatchingDomainClass() {
         return Relationship.class

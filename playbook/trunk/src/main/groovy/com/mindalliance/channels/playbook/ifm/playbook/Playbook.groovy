@@ -173,6 +173,31 @@ class Playbook extends ProjectElement implements Described {
         }
     }
 
+    List<Ref> findAllJurisdictionables() {
+        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasJurisdiction()}
+    }
+
+    List<Ref> findAllAgentsLocatedInPlacesOfTypeImplying(Ref placeType) {
+        return (List<Ref>)findAllAgents().findAll {agent ->
+            agent.hasLocation() && agent.location.isAPlace() && agent.location.place.placeType as boolean && agent.location.place.placeType.implies(placeType)
+        }
+    }
+
+    List<Ref> findAllAgentsWithJurisdictionsInPlacesOfTypeImplying(Ref placeType) {
+        return (List<Ref>)findAllAgents().findAll {agent ->
+            agent.hasJurisdiction() && agent.jurisdiction.isAPlace() && agent.jurisdiction.place.placeType as boolean && agent.jurisdiction.place.placeType.implies(placeType)
+        }
+    }
+
+    List<Ref> findAllAgentsLocatedInAreasOfTypeImplying(Ref areaType) {
+        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasLocation() && (geoLoc = agent.location.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+    }
+
+    List<Ref> findAllAgentsWithJurisdictionsInAreasOfTypeImplying(Ref areaType) {
+        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasJurisdiction() && (geoLoc = agent.jurisdiction.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+    }
+
+
     // end queries
 
     /**

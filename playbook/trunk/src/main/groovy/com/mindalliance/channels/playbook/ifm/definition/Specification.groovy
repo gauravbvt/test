@@ -42,7 +42,7 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     @Override
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() +
-                                ['enumerable', 'enumerated', 'defined', 'matchingDomainClass'])
+                                ['enumerable', 'enumerated', 'defined', 'matchingDomainClass', 'summary'])
     }
 
     // end BEANIMPL
@@ -208,5 +208,12 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
         if (!enumeration.minus(specification.enumeration).isEmpty()) return false // if narrowing specification's enumeration is not a subset, then it is not narrowing
         if (!definitions.every {d -> specification.definitions.any {other -> d.narrows(other)}}) return false
         return true
+    }
+
+    String getSummary() {
+      if (description)
+        return description.replaceAll('\n', ' ')[0..Math.min(16, description.size())];
+      else
+        return 'No description'
     }
 }

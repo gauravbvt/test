@@ -37,5 +37,8 @@ class Team extends Resource implements Jurisdictionable {
         return false;
     }
 
-
+    boolean hasJurisdiction() {
+        return jurisdiction.isDefined()
+    }
+   
 }
