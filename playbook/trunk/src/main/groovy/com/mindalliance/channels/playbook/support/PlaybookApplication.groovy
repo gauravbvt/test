@@ -111,28 +111,30 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Project p = new Project(name: 'Generic')
         Place wtc = new Place(name: "WTC")
         wtc.setPlaceType(m.findType("PlaceType", "Building"))
-        p.addPlace(store(wtc))
+        p.addPlace(wtc)
         store(wtc)
+        assert wtc.project
         Place jfk = new Place(name: "JFK")
         jfk.setPlaceType(m.findType("PlaceType", "Airport"))
-        p.addPlace(store(jfk))
+        p.addPlace(jfk)
         store(jfk)
         p.addModel(m);
         Playbook pb = new Playbook(name: "Playbook A", description: "This is Playbook A")
-        p.addPlaybook(store(pb))
+        p.addPlaybook(pb)
+        assert pb.project
         store(pb)
         pb = new Playbook(name: "Playbook B", description: "This is Playbook B")
-        p.addPlaybook(store(pb))
+        p.addPlaybook(pb)
         store(pb)
         pb = new Playbook(name: "Playbook C", description: "This is Playbook C")
-        p.addPlaybook(store(pb))
+        p.addPlaybook(pb)
         store(pb)
         Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
-        p.addPerson(store(joe))
+        p.addPerson(joe)
         Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
         Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
-        p.addOrganization(store(acme))
-        p.addOrganization(store(nadir))
+        p.addOrganization(acme)
+        p.addOrganization(nadir)
 
         Ref pos1 = store(new Position(name: 'Position 1'))
         Ref pos2 = store(new Position(name: 'Position 2'))
@@ -153,15 +155,15 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         joe.addPosition(pos4)
         store(joe)
         Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
-        p.addPerson(store(jane))
+        p.addPerson(jane)
         store(jane)
         Relationship rel = new Relationship(fromAgent: joe.reference, toAgent: jane.reference, name: "family")
-        p.addRelationship(store(rel))
+        p.addRelationship(rel)
         store(rel)
         SharingAgreement ag1 = new SharingAgreement(source: joe.reference, recipient: jane.reference)
         SharingAgreement ag2 = new SharingAgreement(source: joe.reference, recipient: acme.reference)
-        p.addSharingAgreement(store(ag1))
-        p.addSharingAgreement(store(ag2))
+        p.addSharingAgreement(ag1)
+        p.addSharingAgreement(ag2)
         store(ag1)
         store(ag2)
         p.addParticipation(
@@ -182,7 +184,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     void initializeDefaultPlaybook(Project p, PlaybookModel m) {
         Playbook pb = new Playbook(name: 'default')
-        p.addPlaybook(store(pb))
+        p.addPlaybook(pb)
 
         Event event1 = new Event(name: 'event1')
         addToPlaybook(event1, pb)
@@ -262,7 +264,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     }
 
     private void addToPlaybook(PlaybookElement element, Playbook holder) {
-        store(element)
         holder.addElement(element)
         store(element)
     }

@@ -77,7 +77,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     }
 
     Ref getReference() {
-        return new RefImpl(id: getId(), db: getDb())
+       return new RefImpl(id: getId(), db: getDb(), value: this)  // cache self in reference
     }
 
     String makeGuid() {
