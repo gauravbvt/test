@@ -112,9 +112,10 @@ public class FilteredContainer extends RefContainer {
     public void initFromMap( Map map ) {
         super.initFromMap( map );
 
-        strict = Boolean.parseBoolean( (String) map.get( "string" ) );
+        strict = (Boolean) map.get( "strict" );
         data = (Container) Mapper.valueFromPersisted( map.get( "data" ) );
         filter = (Filter) Mapper.valueFromPersisted( map.get( "filter" ) );
+        filter.setContainer( data );
     }
 
     public String toString() {

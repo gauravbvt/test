@@ -41,8 +41,11 @@ class RefMetaProperty implements Serializable, Comparable {
         return propertyName.compareTo(obj.propertyName)
     }
 
-     boolean isScalar() {
+    boolean isScalar() {
         return !Collection.class.isAssignableFrom(type)
     }
 
+    String toString() {
+        propertyName
+    }
 }

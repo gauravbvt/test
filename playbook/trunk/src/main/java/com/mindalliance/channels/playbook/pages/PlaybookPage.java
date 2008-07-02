@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authentication.pages.SignOutPage;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -38,6 +39,8 @@ public class PlaybookPage extends WebPage {
     private Ref selectedTab;
     private TabbedPanel tabPanel;
     private UserScope scope;
+    private Button saveButton;
+    private Button revertButton;
 
     //-----------------------
     public PlaybookPage( PageParameters parms ){
@@ -59,7 +62,7 @@ public class PlaybookPage extends WebPage {
 
         //--------------
         Form pageControls = new Form( "page_controls" );
-        pageControls.add( new Button("save_button") {
+        saveButton = new Button( "save_button" ) {
             public boolean isEnabled() {
                 return !getSessionMemory().isEmpty();
             }
@@ -70,18 +73,23 @@ public class PlaybookPage extends WebPage {
                 load();
                 setResponsePage( PlaybookPage.this );
             }
-        });
-        pageControls.add( new Button("revert_button") {
+        };
+        saveButton.setOutputMarkupId( true );
+        revertButton = new Button( "revert_button" ) {
             public boolean isEnabled() {
                 return !getSessionMemory().isEmpty();
             }
+
             public void onSubmit() {
                 getSessionMemory().abort();
                 scope.detach();
                 load();
                 setResponsePage( PlaybookPage.this );
             }
-        });
+        };
+        revertButton.setOutputMarkupId( true );
+        pageControls.add( saveButton );
+        pageControls.add( revertButton );
 //        pageControls.add( new AjaxSelfUpdatingTimerBehavior( Duration.seconds(2) ) );
         addOrReplace( pageControls );
 
@@ -131,6 +139,7 @@ public class PlaybookPage extends WebPage {
             user.setSelectedTab( this.selectedTab );
             user.changed( "selectedTab" );
             ref.commit();
+            ref.detach();
             assert( this.selectedTab.equals( getUser().getSelectedTab() ) );
             tabPanel.setSelectedTab( refList.indexOf( this.selectedTab ) );
         }
@@ -196,6 +205,12 @@ public class PlaybookPage extends WebPage {
             public Panel getPanel( String panelId ) {
                 if ( panel == null )
                     panel = new TabPanel( panelId, new RefPropertyModel(PlaybookPage.this, "selectedTab") ) {
+                        public void doAjaxSelection( Ref ref, AjaxRequestTarget target ) {
+                            super.doAjaxSelection( ref, target );
+                            target.addComponent( saveButton );
+                            target.addComponent( revertButton );
+                        }
+
                         protected void onFilterSave( Tab tab, Filter filter ) {
                             Tab newTab = new Tab( scope );
                             Ref newTabRef = newTab.persist();
@@ -218,7 +233,7 @@ public class PlaybookPage extends WebPage {
                             u.addTab( newTabRef );
                             assert( getSessionMemory().getChanges().contains( userRef ));
                             newTab.detach();
-                            newTab.commit();
+                            newTabRef.commit();
                             userRef.commit();
                             assert( !getSessionMemory().getChanges().contains( userRef ));
                             assert( !getSessionMemory().getBegun().containsKey( userRef ));

@@ -63,10 +63,12 @@ public class ClassFilter extends Filter {
 
     public void setObjectType( Class<?> objectType ) {
         this.objectType = objectType;
+        filtersType = null;
+        while ( objectType != Object.class && filtersType == null )
         try {
             filtersType = Class.forName( Package + objectType.getSimpleName() + "Filters" );
         } catch ( ClassNotFoundException e ) {
-            filtersType = null;
+            objectType = objectType.getSuperclass();
         }
     }
 
@@ -114,7 +116,7 @@ public class ClassFilter extends Filter {
                 cf.setContainer( filtered );
                 result.add( cf );
             }
-        else if ( getFiltersType() != null ) try {
+        if ( getFiltersType() != null ) try {
             // Apply specialized filters
             AbstractFilters fs = (AbstractFilters) getFiltersType().newInstance();
             result.addAll( fs.getFilters( filtered, isShowingLeaves() ) );

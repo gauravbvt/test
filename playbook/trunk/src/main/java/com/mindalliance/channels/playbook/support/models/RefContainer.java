@@ -56,6 +56,9 @@ public class RefContainer implements Container, Serializable {
 
     public synchronized void detach() {
         summary = null;
+        if ( contents != null )
+            for ( Ref ref: contents )
+                ref.detach();
     }
 
     public List<Class<?>> getAllowedClasses() {

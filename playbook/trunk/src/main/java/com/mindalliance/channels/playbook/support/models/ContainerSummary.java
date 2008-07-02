@@ -97,11 +97,12 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
     private synchronized Map<String, RefMetaProperty> getColumnIndex() {
         if ( columnIndex == null ) {
             Map<String, RefMetaProperty> result = new TreeMap<String,RefMetaProperty>();
-            int size = data.size();
+            boolean oneClassShown = data.size() == 1;
             for( ClassUse use : getUsage().values() ) {
-                Set<RefMetaProperty> l = size == 1 ? use.getAllColumns()
-                                                   : use.getDistinctColumns();
-                for ( RefMetaProperty p : l )
+                Set<RefMetaProperty> cols = use.getDistinctColumns();
+                if ( oneClassShown && cols.size() == 0 )
+                    cols = use.getAllColumns();
+                for ( RefMetaProperty p : cols )
                     result.put( p.getDisplayName(), p );
             }
 
@@ -235,6 +236,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
      */
     static class ClassUse {
         private Map<PropertyDescriptor,Set<Object>> values = new HashMap<PropertyDescriptor,Set<Object>>();
+        private Map<PropertyDescriptor,Set<String>> printValues = new HashMap<PropertyDescriptor,Set<String>>();
         private List<PropertyDescriptor> properties;
         private boolean hasTransients;
         private Set<String> transients;
@@ -248,12 +250,10 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
 
                     final boolean readable = pd.getReadMethod() != null
                                              && Modifier.isPublic( pd.getReadMethod().getModifiers() );
-                    final boolean writeable = pd.getWriteMethod() != null
-                                              && Modifier.isPublic( pd.getWriteMethod().getModifiers() );
                     final Class<?> type = pd.getPropertyType();
                     final boolean isCollection = type.isArray() || Collection.class.isAssignableFrom( type );
 
-                    if ( readable && writeable && !isCollection )
+                    if ( readable && !isCollection )
                         properties.add( pd );
                 }
 
@@ -267,6 +267,11 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
             } catch ( IntrospectionException e ) {
                 e.printStackTrace();
             }
+        }
+
+        private boolean isWritable( PropertyDescriptor pd ) {
+            return pd.getWriteMethod() != null
+                && Modifier.isPublic( pd.getWriteMethod().getModifiers() );
         }
 
         private Set<String> getTransients() {
@@ -303,12 +308,20 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                     if ( !hasTransients || !getTransients( item ).contains( pd.getName() ) ) {
                         final Method getter = pd.getReadMethod();
                         final Object value = getter.invoke( item );
+                        Set<String> propStrings = printValues.get( pd );
+                        if ( propStrings == null ) {
+                            propStrings = new HashSet<String>();
+                            printValues.put( pd, propStrings );
+                        }
+
                         Set<Object> propValues = values.get( pd );
                         if ( propValues == null ) {
                             propValues = new HashSet<Object>();
                             values.put( pd, propValues );
                         }
-                        propValues.add( value == null ? "" : value );
+                        if ( value != null )
+                            propValues.add( value );
+                        propStrings.add( valueToDisplay( value ) );
                     }
                 }
             } catch ( InvocationTargetException e ) {
@@ -338,7 +351,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
             Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
             for ( PropertyDescriptor p : properties ) {
                 if ( !hasTransients || !getTransients().contains( p.getName() ) )
-                    if ( values.get( p ).size() > 1 )
+                    if ( printValues.get( p ).size() > 1 )
                         result.add( newRMP( p ) );
             }
             return result;
@@ -347,7 +360,8 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         public Map<Method,Object> getCommonValues() {
             Map<Method,Object> result = new HashMap<Method,Object>();
             for ( PropertyDescriptor p : properties ) {
-                if ( !hasTransients || !getTransients().contains( p.getName() ) ) {
+                if ( isWritable( p ) && (
+                        !hasTransients || !getTransients().contains( p.getName() ) ) ) {
                     Set<Object> objects = values.get( p );
                     if ( objects.size() == 1 )
                         result.put( p.getWriteMethod(), objects.iterator().next() );

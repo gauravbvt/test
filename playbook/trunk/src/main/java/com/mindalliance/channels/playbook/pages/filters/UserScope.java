@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
 import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
+import com.mindalliance.channels.playbook.support.persistence.Mappable;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefModel;
@@ -85,8 +86,8 @@ public class UserScope implements Container {
     private synchronized List<Ref> getContents() {
         if ( contents == null ) {
             List<Ref> result = new ArrayList<Ref>();
-            final User u = getUser();
-            final Ref uRef = u.getReference();
+            final Ref uRef = getSession().getUser();
+            final User u = (User) uRef.deref();
 
             if ( u.getAdmin() )
                 result.addAll( getChannels().getUsers() );
@@ -98,6 +99,7 @@ public class UserScope implements Container {
                         result.add( mRef );
                         m.addContents( result );
                     }
+                    mRef.detach();
                 }
             }
 
@@ -108,6 +110,7 @@ public class UserScope implements Container {
                         result.add( pRef );
                         p.addManagerContents( result );
                     }
+                    pRef.detach();
                 }
             }
 
@@ -115,11 +118,12 @@ public class UserScope implements Container {
             for ( Ref pRef: (List<Ref>) getApplication().findProjectsForUser( uRef ) ) {
                 Project project = (Project) pRef.deref();
                 project.addContents( result );
+                pRef.detach();
             }
 
             // Add user tabs
             result.addAll( u.getTabs() );
-
+            uRef.detach();
             contents = result;
         }
 
@@ -177,9 +181,10 @@ public class UserScope implements Container {
             if ( p.findParticipation( uRef ) != null ) {
                 if ( pbRef == null )
                     pbRef = getDefaultPlaybook( pRef  );
-
+                pRef.detach();
                 return pbRef;
             }
+            pRef.detach();
 
         } else if ( object instanceof ProjectElement ) {
             ProjectElement element = (ProjectElement) object;
@@ -310,7 +315,9 @@ public class UserScope implements Container {
     }
 
     public Map toMap() {
-        return new HashMap();
+        HashMap<String,String> map = new HashMap<String,String>();
+        map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
+        return map;
     }
 
     public void initFromMap( Map map ) {
