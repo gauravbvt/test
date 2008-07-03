@@ -96,7 +96,7 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
         setPurposesVisibility();
         addReplaceableTo(anyPurposeField, restrictedDiv);
         purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
-                new RefQueryModel(Channels.instance(), new Query("findAllPurposes")));
+                new RefQueryModel(getProject(), new Query("findAllPurposes")));       // TODO getProject(), not Channels.instance()
         addReplaceableTo(purposesChooser, purposesDiv);
     }
 

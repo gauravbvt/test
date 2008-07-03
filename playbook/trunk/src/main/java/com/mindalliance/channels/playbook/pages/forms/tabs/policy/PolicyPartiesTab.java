@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
-import com.mindalliance.channels.playbook.pages.forms.panels.ResourceSpecPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecificationPanel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
@@ -28,9 +28,9 @@ public class PolicyPartiesTab extends AbstractFormTab {
     protected Policy policy;
     protected AjaxCheckBox anyRelationshipField;
     protected WebMarkupContainer relationshipsDiv;
-    protected ResourceSpecPanel sourceSpecPanel;
+    protected AgentSpecificationPanel sourceSpecPanel;
     protected MultipleStringChooser relationshipNamesChooser;
-    protected ResourceSpecPanel recipientSpecPanel;
+    protected AgentSpecificationPanel recipientSpecPanel;
 
     public PolicyPartiesTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -39,7 +39,7 @@ public class PolicyPartiesTab extends AbstractFormTab {
     protected void load() {
         super.load();
         policy = (Policy)getElement().deref();
-        sourceSpecPanel = new ResourceSpecPanel("sourceSpec", this, "sourceSpec", EDITABLE, feedback);
+        sourceSpecPanel = new AgentSpecificationPanel("sourceSpec", this, "sourceSpec", EDITABLE, feedback);
         addReplaceable(sourceSpecPanel);
         relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
         addReplaceable(relationshipsDiv);
@@ -59,9 +59,9 @@ public class PolicyPartiesTab extends AbstractFormTab {
         };
         addReplaceable(anyRelationshipField);
         relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames", EDITABLE, feedback,
-                                                              new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
+                                                              new RefQueryModel(getProject(),new Query("findAllRelationshipNames")));
         addReplaceableTo(relationshipNamesChooser, relationshipsDiv);
-        recipientSpecPanel = new ResourceSpecPanel("recipientSpec", this, "recipientSpec", EDITABLE, feedback);
+        recipientSpecPanel = new AgentSpecificationPanel("recipientSpec", this, "recipientSpec", EDITABLE, feedback);
         addReplaceable(recipientSpecPanel);
     }
 

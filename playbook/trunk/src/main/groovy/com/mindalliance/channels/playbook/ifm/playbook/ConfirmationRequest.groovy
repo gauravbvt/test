@@ -1,10 +1,10 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ifm.spec.AgentSpec
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,33 +15,11 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
  */
 class ConfirmationRequest extends SharingAct {
 
-    AgentSpec sourceSpec = new AgentSpec() // source is specified...
-    Ref sourceAgent // xor is identified
+    AgentSpecification sourceSpec = new AgentSpecification() // source is specified...
 
     @Override
     List<String> transientProperties() {
         return (List<String>) (super.transientProperties() + ['sourceSpecified'])
-    }
-
-    void setSourceSpec(AgentSpec agentSpec) {
-        AgentSpec old = sourceSpec
-        if (agentSpec.isDefined()) {
-            sourceAgent = null
-        }
-        propertyChanged("sourceSpec", old, agentSpec)
-    }
-
-    void setSourceAgent(Ref agent) {
-        Ref old = sourceAgent
-        if (agent as boolean) {
-            sourceAgent = agent
-            sourceSpec = new AgentSpec()
-        }
-        propertyChanged("sourceAgent", old, agent)
-    }
-
-    boolean isSourceSpecified() {
-        return !sourceAgent as boolean
     }
 
     // Return implied event type
@@ -52,24 +30,15 @@ class ConfirmationRequest extends SharingAct {
     static EventType makeImpliedEventType() {
         EventType eventType = new EventType(name: 'confirmation request',              // note: model is null
                 description: 'A confirmation request',
-                topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                topics: ['source'])
+        use(NoSessionCategory) {eventType.narrow(SharingAct.impliedEventType())}; // setting state of a computed ref
         return eventType
     }
 
 
-    static List<String> impliedEventTypeTopics() {
-        return SharingAct.class.impliedEventTypeTopics() + ['source']
-    }
-
-    List<String> contentsAboutTopic(String topic) {
+   List<String> contentsAboutTopic(String topic) {
         switch (topic) {
-            case 'source': if (isSourceSpecified()) {
-                                return [sourceSpec.about()]
-                            }
-                            else {
-                                return [sourceAgent.about()]
-                            }
+            case 'source': return [sourceSpec.about()]
             default: return super.contentsAboutTopic(topic)
         }
     }

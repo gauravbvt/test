@@ -12,10 +12,6 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class ContactInfo extends BeanImpl {
 
-    public static List<String> getMedia() {
-        return ['email', 'phone', 'fax', 'web', 'messaging', 'cell', 'pager', 'radio']
-    }
-    
     Ref mediumType // one of MEDIA
     String endPoint = ''
 

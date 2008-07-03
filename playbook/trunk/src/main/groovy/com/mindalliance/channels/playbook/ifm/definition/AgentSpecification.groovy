@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.definition
 
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,5 +15,12 @@ class AgentSpecification extends Specification {
 
     public Class<? extends Bean> getMatchingDomainClass() {
         return Agent.class
+    }
+
+    List<Ref> getResourcesAt(Ref event) {
+        if (!event as boolean) return []
+        // Find all project-level resources that match this agent specification
+        List<Ref> matchingResources = Query.execute(event.project, "findAllAgentsMatchingSpec", this, event)
+        return matchingResources
     }
 }

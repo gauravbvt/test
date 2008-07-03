@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.model
 
-import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
+import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,8 +11,8 @@ import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
 */
 class TaskType extends ElementType {
 
-    List<String> purposes = [] // purposes of the task
-    List<InformationSpec> informationSpecs = [] // information needs
-    List<EventType> eventTypes = [] // types of events that can be caused (and thus become observable)
+    List<String> purposes = [] // usual purposes of tasks of this type
+    List<InformationDefinition> inputs = [] // kind of information typically needed by tasks of this type
+    List<EventType> eventTypes = [] // types of events that can be caused by tasks of this type (and thus become detectable)
 
 }

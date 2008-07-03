@@ -33,14 +33,10 @@ class SharingCommitment extends FlowAct {
 
     static EventType makeImpliedEventType() {
         EventType eventType =  new EventType(name:'sharing commitment',              // note: model is null
-                                             description:'A sharing commitment',
-                                             topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                                             description:'Committing to share',
+                                             topics: ['protocol', 'constraints', 'approved by'])
+        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
         return eventType
-    }
-
-    static List<String> impliedEventTypeTopics() {
-        return FlowAct.class.impliedEventTypeTopics() + ['protocol', 'constraints', 'approved by']
     }
 
     List<String> contentsAboutTopic(String topic) {

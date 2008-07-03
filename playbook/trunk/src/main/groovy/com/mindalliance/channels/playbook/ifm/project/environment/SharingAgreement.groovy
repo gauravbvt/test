@@ -7,7 +7,6 @@ import com.mindalliance.channels.playbook.ifm.sharing.SharingConstraints
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ifm.Described
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -48,7 +47,7 @@ class SharingAgreement extends ProjectElement implements Described {
     // queries
 
     List<String> findAllTopics() {
-        List<ElementOfInformation> eois = protocol.informationSpec.eventDetails
+        List<ElementOfInformation> eois = protocol.informationSpec.elementsOfInformation
         return eois.collect {eoi -> eoi.topic}
     }
     // end queries

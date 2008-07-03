@@ -4,6 +4,9 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -45,23 +48,17 @@ abstract class InformationAct extends Event {
         return false
     }
 
-    static List<String> impliedEventTypeTopics() {
-        return ['actor']
+    // Return implied event type
+    static Ref impliedEventType() {
+        return ComputedRef.from(InformationAct.class, 'makeImpliedEventType')
     }
 
-    // Create information about this information act
-    Information makeInformation() {
-        Information info = new Information(event: this.reference)
-        Ref eventType = this.class.impliedEventType()
-        info.eventTypes.add(eventType)
-        eventType.allTopics().each {topic ->
-            List<String> contents = contentsAboutTopic(topic)
-            contents.each {content ->
-                ElementOfInformation eoi = new ElementOfInformation(topic:topic, content: content)
-                info.eventDetails.add(eoi)
-            }
-        }
-        return info
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'information act',              // note: model is null
+                                             description:'An information act',
+                                             topics: ['actor'])
+        use(NoSessionCategory) {eventType.narrow(Event.impliedEventType())}; // setting state of a computed ref
+        return eventType
     }
 
     List<String> contentsAboutTopic(String topic) {

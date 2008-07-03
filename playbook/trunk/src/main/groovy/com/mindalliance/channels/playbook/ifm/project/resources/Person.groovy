@@ -16,16 +16,10 @@ class Person extends Resource {
     String lastName = ''
     List<Ref> positions = []
 
-    void beforeStore() {
-        super.beforeStore()
-    }
-
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['name']
+        return (List<String>)(super.transientProperties() + ['name'])
     }
-
-
 
     String getName() {
         return toString()

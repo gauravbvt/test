@@ -29,13 +29,9 @@ class InformationRequest extends FlowAct  {
     static EventType makeImpliedEventType() {
         EventType eventType =  new EventType(name:'information request',              // note: model is null
                                              description:'An information request',
-                                             topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                                             topics: ['information need'])
+        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
         return eventType
-    }
-
-    static List<String> impliedEventTypeTopics() {
-        return FlowAct.class.impliedEventTypeTopics() + ['information need']
     }
 
     List<String> contentsAboutTopic(String topic) {

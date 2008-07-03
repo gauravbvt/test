@@ -29,7 +29,8 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement', 'responsibilities'])
+        return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement', 'responsibilities',
+                                  'resourceElement', 'team', 'group'])
     }
 
     boolean isResourceElement() {
@@ -61,7 +62,9 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     }
 
     List<Responsibility> getResponsibilities() {
-        // TODO
+        List<Responsibility> allResponsibilities = []
+        roles.each {role -> if (role as boolean) allResponsibilities.addAll(role.responsibilities)}
+        return allResponsibilities
     }
 
     String toString() { name }
@@ -90,7 +93,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         super.changed(propName)
     }
 
-    public List<Ref> getResourcesAt(Event event) {
+    public List<Ref> getResourcesAt(Ref event) {
         return [this.reference]
     }
 
@@ -112,10 +115,10 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
 
     // Queries
 
-    boolean hasRelationship(String relName, Ref otherResource, Event event) {
+    boolean hasRelationship(String relName, Ref otherResource, Ref event) {
         boolean related = false
         // Look in project
-        related = related || getProject().relationships.any {rel ->
+        related = getProject().relationships.any {rel ->
             rel.fromAgent == this && (!otherResource || rel.toAgent == otherResource) && rel.name == relName
         }
         // Look at associations before act
@@ -130,7 +133,6 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
             pb.informationActs.each {act ->
                 if (act.actorAgent == this.reference) { acts.add(act) }
                 if (act.isFlowAct() && act.targetAgent == this.reference) { acts.add(act) }
-                // Don't include acts where resource is implied by act's agent
             }
         }
         return acts

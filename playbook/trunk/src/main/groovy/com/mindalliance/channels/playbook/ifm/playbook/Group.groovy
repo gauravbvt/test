@@ -2,9 +2,9 @@ package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.spec.AgentSpec
 import com.mindalliance.channels.playbook.ifm.Responsibility
 import com.mindalliance.channels.playbook.ifm.info.Location
+import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,11 +17,12 @@ class Group extends PlaybookElement implements Agent {
 
     String name = ''
     String description = ''
-    AgentSpec agentSpec = new AgentSpec()
+    AgentSpecification agentSpec = new AgentSpecification()
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['resourceKinds', 'responsibilities'])
+        return (List<String>) (super.transientProperties() + ['resourceKinds', 'responsibilities', 'location', 'group',
+                                                              'team', 'resourceElement'])
     }
 
     String toString() {
@@ -57,7 +58,7 @@ class Group extends PlaybookElement implements Agent {
     }
 
     // queries
-    List<Ref> getResourcesAt(Event event) {
+    List<Ref> getResourcesAt(Ref event) {
          return agentSpec.getResourcesAt(event)
      }
      // end queries

@@ -28,13 +28,9 @@ class InformationTransfer extends SharingAct {
     static EventType makeImpliedEventType() {
         EventType eventType =  new EventType(name:'information transfer',              // note: model is null
                                              description:'An information transfer',
-                                             topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                                             topics: ['medium'])
+        use(NoSessionCategory) {eventType.narrow(SharingAct.impliedEventType())}; // setting state of a computed ref
         return eventType
-    }
-
-    static List<String> impliedEventTypeTopics() {
-        return SharingAct.class.impliedEventTypeTopics() + ['medium']
     }
 
     List<String> contentsAboutTopic(String topic) {

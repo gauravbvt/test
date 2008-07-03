@@ -7,129 +7,119 @@
         lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            Any agent assigned:
+        </td>
+        <td>
+            <input wicket:id="anyRole" type="checkbox"/>any role
+        </td>
+        <td>
+            <div wicket:id="rolesDiv">
                 <fieldset>
-                    <legend>Description</legend>
-                    <textarea wicket:id="description" rows="3" cols="40">[description]</textarea>
+                    <legend>all these roles</legend>
+                    <span wicket:id="roles">[roles tree]</span>
                 </fieldset>
-            </td>
-            </tr>
-        </table>
-        <table>
-            <tr>
-            <td nowrap="nowrap">
-                Any agent assigned:
-            </td>
-            <td>
-                <input wicket:id="anyRole" type="checkbox"/>any role
-            </td>
-            <td>
-                <div wicket:id="rolesDiv">
-                    <fieldset>
-                        <legend>all these roles</legend>
-                        <span wicket:id="roles">[roles tree]</span>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td nowrap="nowrap">
-                <label>in organizations:</label>
-            </td>
-            <td>
-                <input wicket:id="anyOrganization" type="checkbox"/> of any kind
-            </td>
-        </tr>
-        <tr>
-            <td>&#160;</td>
-            <td>
-                <div wicket:id="organizationSpecificationDiv">
-                    <fieldset>
-                        <legend>such as</legend>
-                        <span wicket:id="organizationSpecification">[organization specification]</span>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td nowrap="nowrap">
-                <label>agent is located:</label>
-            </td>
-            <td>
-                <input wicket:id="anyLocation" type="checkbox"/> anywhere
-            </td>
-        </tr>
-        <tr>
-            <td>&#160;</td>
-            <td>
-                <div wicket:id="locationDefinitionDiv">
-                    <fieldset>
-                        <legend>in</legend>
-                        <span wicket:id="locationDefinition">[location definition]</span>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td nowrap="nowrap">
-                <label>has jurisdiction:</label>
-            </td>
-            <td>
-                <input wicket:id="anyJurisdiction" type="checkbox"/> any
-            </td>
-        </tr>
-        <tr>
-            <td>&#160;</td>
-            <td>
-                <div wicket:id="jurisdictionDefinitionDiv">
-                    <fieldset>
-                        <legend>over</legend>
-                        <span wicket:id="jurisdictionDefinition">[jurisdiction definition]</span>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td nowrap="nowrap">
-                has relationships:
-            </td>
-            <td>
-                 <input wicket:id="anyRelationship" type="checkbox"/>any
-            </td>
-        <tr>
-            <td>&#160;</td>
-            <td>
-                <div wicket:id="relationshipDefinitionsDiv">
-                    <fieldset>
-                        <legend>such as</legend>
-                        <table>
-                            <tr>
-                                <td nowrap="nowrap">
-                                    <select wicket:id="relationshipDefinitions">
-                                        <option>[relationship definition label]</option>
-                                    </select><br/>
-                                    <button wicket:id="addRelationshipDefinition">Add</button>
-                                    <button wicket:id="deleteRelationshipDefinition">Remove</button>
-                                </td>
-                                <td>
-                                    <div wicket:id="relationshipDefinitionDiv">
-                                        <fieldset>
-                                            <legend>this relationship</legend>
-                                            <span wicket:id="relationshipDefinition">[relationship definition]</span>
-                                        </fieldset>
-                                    </div>
-                                 </td>
-                            </tr>
-                        </table>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            <label>in organizations:</label>
+        </td>
+        <td>
+            <input wicket:id="anyOrganization" type="checkbox"/> of any kind
+        </td>
+    </tr>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="organizationSpecificationDiv">
+                <fieldset>
+                    <legend>such as</legend>
+                    <span wicket:id="organizationSpecification">[organization specification]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            <label>agent is located:</label>
+        </td>
+        <td>
+            <input wicket:id="anyLocation" type="checkbox"/> anywhere
+        </td>
+    </tr>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="locationDefinitionDiv">
+                <fieldset>
+                    <legend>in</legend>
+                    <span wicket:id="locationDefinition">[location definition]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            <label>has jurisdiction:</label>
+        </td>
+        <td>
+            <input wicket:id="anyJurisdiction" type="checkbox"/> any
+        </td>
+    </tr>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="jurisdictionDefinitionDiv">
+                <fieldset>
+                    <legend>over</legend>
+                    <span wicket:id="jurisdictionDefinition">[jurisdiction definition]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            has relationships:
+        </td>
+        <td>
+            <input wicket:id="anyRelationship" type="checkbox"/>any
+        </td>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="relationshipDefinitionsDiv">
+                <fieldset>
+                    <legend>such as</legend>
+                    <table>
+                        <tr>
+                            <td nowrap="nowrap">
+                                <select wicket:id="relationshipDefinitions">
+                                    <option>[relationship definition label]</option>
+                                </select><br/>
+                                <button wicket:id="addRelationshipDefinition">Add</button>
+                                <button wicket:id="deleteRelationshipDefinition">Remove</button>
+                            </td>
+                            <td>
+                                <div wicket:id="relationshipDefinitionDiv">
+                                    <fieldset>
+                                        <legend>this relationship</legend>
+                                        <span wicket:id="relationshipDefinition">[relationship definition]</span>
+                                    </fieldset>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+</table>
 </wicket:extend>
 </body>
 </html>

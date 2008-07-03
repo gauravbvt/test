@@ -8,6 +8,8 @@ import com.mindalliance.channels.playbook.ref.impl.ComputedRef
 import com.mindalliance.channels.playbook.ifm.model.EventType
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ifm.info.Information
+import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -75,7 +77,7 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     Ref getImpliedEventType() {
-        return this.class.impliedEventType()
+        return Event.impliedEventType()
     }
 
     List<String> contentsAboutTopic(String topic) {
@@ -88,6 +90,20 @@ class Event extends PlaybookElement implements Named, Described {
         }
     }
 
+    // Create information about this event
+    Information makeInformation() {
+        Information info = new Information(event: this.reference)
+        Ref eventType = this.class.impliedEventType()
+        info.eventTypes.add(eventType)
+        eventType.allTopics().each {topic ->
+            List<String> contents = contentsAboutTopic(topic)
+            contents.each {content ->
+                ElementOfInformation eoi = new ElementOfInformation(topic:topic, content: content)
+                info.eventDetails.add(eoi)
+            }
+        }
+        return info
+    }
 
     // QUERIES
 
@@ -95,7 +111,7 @@ class Event extends PlaybookElement implements Named, Described {
         assert playbook as boolean
         Playbook playbook = (Playbook)this.playbook.deref()
         return (List<Ref>)playbook.informationActs.findAll {act ->
-            act.cause.trigger == this.reference
+            act as boolean && act.cause.trigger == this.reference
         }
     }
 
@@ -103,7 +119,7 @@ class Event extends PlaybookElement implements Named, Described {
         assert playbook as boolean
         Playbook playbook = (Playbook)this.playbook.deref()
         return (List<Ref>)playbook.events.findAll {event ->
-            event.cause.trigger == this.reference
+            event as boolean && event.cause.trigger == this.reference
         }
     }
 

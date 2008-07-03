@@ -2,6 +2,9 @@ package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,8 +30,17 @@ abstract class SharingAct extends FlowAct {
         return true
     }
 
-    static List<String> impliedEventTypeTopics() {
-        return FlowAct.class.impliedEventTypeTopics() + ['information']
+    // Return implied event type
+    static Ref impliedEventType() {
+        return ComputedRef.from(SharingAct.class, 'makeImpliedEventType')
+    }
+
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'information sharing act',              // note: model is null
+                                             description:'An information sharing act',
+                                             topics: ['information'])
+        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
+        return eventType
     }
 
     List<String> contentsAboutTopic(String topic) {

@@ -20,7 +20,7 @@ class Information extends AbstractInformation {  // the communicated (partial) a
     Timing timeToLive = new Timing(amount: 0) // ttl of 0 means indefinite. Once expired, the info is no longer supported by its source(s)
 
     String toString() {
-        if (!event) {
+        if (!event as boolean) {
             return "About nothing"
         }
         else {
@@ -29,7 +29,7 @@ class Information extends AbstractInformation {  // the communicated (partial) a
     }
 
     String makeLabel(int maxWidth) {
-        String eventString = event.deref().toString()
+        String eventString = event as boolean ? event.deref().toString() : 'UNDEFINED'
         String label = "About\n ${eventString[0..Math.min(eventString.size()-1, maxWidth-1)]}"
         eventDetails.each {eoi ->
             label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"

@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.InformationSpecPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.InformationDefinitionPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.pages.forms.panels.InformationSpecPane
  */
 public class PolicySharingTab extends AbstractFormTab {
 
-    protected InformationSpecPanel infoSpecPanel;
+    protected InformationDefinitionPanel infoSpecPanel;
 
     public PolicySharingTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -21,7 +21,7 @@ public class PolicySharingTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        infoSpecPanel = new InformationSpecPanel("informationSpec", this, "informationSpec", EDITABLE, feedback);
+        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, "informationSpec", EDITABLE, feedback);
         addReplaceable(infoSpecPanel);
     }
 

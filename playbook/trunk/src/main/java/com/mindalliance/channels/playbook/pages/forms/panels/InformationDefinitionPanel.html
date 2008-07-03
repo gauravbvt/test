@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            Any information about:
+        </td>
+        <td>
+            <input wicket:id="anyEvent" type="checkbox"/>anything
+        </td>
+        <td>
+            <div wicket:id="eventSpecificationDiv">
+                <fieldset>
+                    <legend>events such as</legend>
+                    <span wicket:id="eventSpecification">[event specification]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            <label>from:</label>
+        </td>
+        <td>
+            <input wicket:id="anySource" type="checkbox"/> any source
+        </td>
+    </tr>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="sourceSpecificationsDiv">
+                <fieldset>
+                    <legend>sources such as</legend>
+                    <table>
+                        <tr>
+                            <td nowrap="nowrap">
+                                <select wicket:id="sourceSpecifications">
+                                    <option>[agent specification label]</option>
+                                </select><br/>
+                                <button wicket:id="addSourceSpecification">Add</button>
+                                <button wicket:id="deleteSourceSpecification">Remove</button>
+                            </td>
+                            <td>
+                                <div wicket:id="sourceSpecificationDiv">
+                                    <fieldset>
+                                        <legend>this kind of source</legend>
+                                        <span wicket:id="sourceSpecification">[agent specification]</span>
+                                    </fieldset>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            <label>containing:</label>
+        </td>
+        <td>
+            <input wicket:id="anyEoi" type="checkbox"/> anything
+        </td>
+    </tr>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="eoisDiv">
+                <fieldset>
+                    <legend>elements of information such as</legend>
+                    <span wicket:id="eois">[EOIs panel]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+</table>
+</wicket:extend>
+</body>
+</html>

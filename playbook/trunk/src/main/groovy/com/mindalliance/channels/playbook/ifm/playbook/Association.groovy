@@ -26,14 +26,10 @@ class Association extends InformationAct {   // Creation of a relationship
 
     static EventType makeImpliedEventType() {
         EventType eventType =  new EventType(name:'association',              // note: model is null
-                                             description:'An association',
-                                             topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                                             description:'A new relationship',
+                                             topics: ['relationship', 'to', 'reverse' ])
+        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
         return eventType
-    }
-
-    static List<String> impliedEventTypeTopics() {
-        return InformationAct.class.impliedEventTypeTopics() + ['relationship', 'to', 'reverse' ]
     }
 
     List<String> contentsAboutTopic(String topic) {
@@ -52,12 +48,12 @@ class Association extends InformationAct {   // Creation of a relationship
     // Queries
 
     boolean createsMatchingRelationship(Relationship relationship) {
-        if (relationship.name == relationshipName &&
-                this.playbook.agentImplied(relationship.fromAgent, actorAgent, this
-                        && this.playbook.agentImplied(relationship.toAgent, toAgent))) return true
+        if (relationship.name == relationshipName &&  // TODO -- apply semantic matching
+                this.playbook.agentImplied(relationship.fromAgent, actorAgent, this.reference)
+                        && this.playbook.agentImplied(relationship.toAgent, toAgent, this.reference)) return true
         if (relationship.name == reverseRelationshipName &&
-                this.playbook.agentImplied(relationship.fromAgent, toAgent, this
-                        && this.playbook.agentImplied(relationship.toAgent, actorAgent))) return true
+                this.playbook.agentImplied(relationship.fromAgent, toAgent, this.reference)
+                        && this.playbook.agentImplied(relationship.toAgent, actorAgent, this.reference)) return true
         return false
     }
 

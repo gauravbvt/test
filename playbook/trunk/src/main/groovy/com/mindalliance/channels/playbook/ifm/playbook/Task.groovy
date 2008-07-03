@@ -33,21 +33,16 @@ class Task extends InformationAct {
     static EventType makeImpliedEventType() {
         EventType eventType =  new EventType(name:'task',              // note: model is null
                                              description:'A task',
-                                             topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                                             topics: ['duration', 'task type', 'information need'])
+        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
         return eventType
     }
-
-    static List<String> impliedEventTypeTopics() {
-        return InformationAct.class.impliedEventTypeTopics() + ['duration', 'task type', 'information need']
-    }
-
 
     List<String> contentsAboutTopic(String topic) {
         switch (topic) {
             case 'duration': return [duration.about()]
-            case 'task type': return [taskType.about()]
-            case 'information need': return informationNeeds.collect {need -> need.about()}
+            case 'task type': return taskTypes.collect{it.about()}
+            case 'information need': return informationNeeds.collect {it.about()}
             default: return super.contentsAboutTopic(topic)
         }
     }

@@ -22,7 +22,8 @@ import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ifm.info.InformationNeed
-import com.mindalliance.channels.playbook.ifm.spec.EventSpec
+import com.mindalliance.channels.playbook.ifm.definition.EventSpecification
+import com.mindalliance.channels.playbook.ifm.definition.EventDefinition
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -219,10 +220,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Task task1 = new Task(name:'task1', actorAgent: p.findOrganizationNamed('ACME Inc.'))
         task1.cause.trigger = transfer1.reference
         task1.cause.delay = new Timing(amount:3, unit:'days')
-        EventSpec eventSpec1 = new EventSpec(eventTypes:[m.findType('EventType', 'accident')])
+        EventSpecification eventSpec1 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'accident')])],
+                                                               description:'any accident')
         InformationNeed need1 = new InformationNeed(eventSpec: eventSpec1)
         task1.informationNeeds.add(need1)
-        EventSpec eventSpec2 = new EventSpec(eventTypes:[m.findType('EventType', 'terrorism')])
+        EventSpecification eventSpec2 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'terrorism')])],
+                                                                description: 'any act of terrorism')
         InformationNeed need2 = new InformationNeed(eventSpec: eventSpec2)
         task1.informationNeeds.add(need2)
         addToPlaybook(task1, pb)
@@ -244,7 +247,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Task task2 = new Task(name:'task2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
         task2.cause.trigger = transfer2.reference
         task2.cause.delay = new Timing(amount:1, unit:'days')
-        EventSpec eventSpec3 = new EventSpec(eventTypes:[m.findType('EventType', 'task failed')], causeEvent: task1.reference)
+        EventSpecification causeEventSpec = new EventSpecification(enumeration:[task1.reference])
+        EventSpecification eventSpec3 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'task failed')],
+                                                                                                causeEventSpecs: [causeEventSpec])],
+                                                               description:'Any failure of task1')
         InformationNeed need3 = new InformationNeed(eventSpec: eventSpec3)
         need3.eventDetails.add(new ElementOfInformation(topic:'extent'))
         need3.eventDetails.add(new ElementOfInformation(topic:'cause'))

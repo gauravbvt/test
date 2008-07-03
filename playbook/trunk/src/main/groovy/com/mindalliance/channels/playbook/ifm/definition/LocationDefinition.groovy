@@ -35,14 +35,14 @@ class LocationDefinition extends Definition {
     Ref proximalLocatable           // xor
     Ref proximalJurisdictionable    // xor
 
-    void setProximalAreaType (Ref areaType) {
-        proximalAreaType = areaType
-        proximalPlaceType = null
+    void setProximityAreaType (Ref areaType) {
+        proximityAreaType = areaType
+        proximityPlaceType = null
     }
 
-    void setProximalPlaceType (Ref placeType) {
-        proximalPlaceType = placeType
-        proximalAreaType = null
+    void setProximityPlaceType (Ref placeType) {
+        proximityPlaceType = placeType
+        proximityAreaType = null
     }
 
     void setProximalLocatable(Ref locatable) {

@@ -33,7 +33,7 @@ import java.io.Serializable;
  * Date: Jun 24, 2008
  * Time: 1:10:46 PM
  */
-public class LocationDefinitionPanel extends AbstractComponentPanel {
+public class LocationDefinitionPanel extends AbstractDefinitionPanel {
 
     protected static final String WITHIN = "within";
     protected static final String NEAR = "near";
@@ -45,7 +45,6 @@ public class LocationDefinitionPanel extends AbstractComponentPanel {
 
 
     protected LocationDefinition locationDefinition;
-    protected TextArea descriptionField;
     protected AjaxCheckBox isPlaceCheckBox;
     protected AjaxCheckBox isGeoLocationCheckBox;
     protected WebMarkupContainer placeTypeDiv;
@@ -73,8 +72,6 @@ public class LocationDefinitionPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         locationDefinition = (LocationDefinition)getComponent();
-        descriptionField = new TextArea("description", new RefPropertyModel(getComponent(),"description"));
-        addInputField(descriptionField);
         isPlaceCheckBox = new AjaxCheckBox("isPlace", new Model((Boolean)locationDefinition.getLocationIsAPlace())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean isPlace = (Boolean)isPlaceCheckBox.getModelObject();

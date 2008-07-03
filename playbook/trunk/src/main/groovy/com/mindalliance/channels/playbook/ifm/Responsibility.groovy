@@ -1,8 +1,9 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
-import com.mindalliance.channels.playbook.ifm.spec.TaskSpec
-import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
+import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
+import com.mindalliance.channels.playbook.ifm.definition.TaskDefinition
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,22 +16,17 @@ import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
 // and possiblylimited to some location
 class Responsibility extends BeanImpl {
 
-    InformationSpec informationSpec = new InformationSpec() // what must be known if knowable -- required
-    TaskSpec taskSpec = new TaskSpec()
+    InformationDefinition informationSpec = new InformationDefinition() // what must be known if knowable -- required
+    TaskDefinition taskSpec = new TaskDefinition()
 
     String toString() {
-        "${this.informationSpecSummary()}. ${taskSpec.taskTypesSummary()}"
+        "${this.informationSpecSummary()}. ${taskSpec.description}"
     }
 
     private String informationSpecSummary() {
-        String summary = "Must know of "
-        if (informationSpec.isDefined()) {
-            informationSpec.eventSpec.eventTypes.each {et -> summary += "${et.name}," }
-        }
-        else {
-            summary += 'nothing '
-        }
-        return summary.substring(0, summary.size()-1)
+        String mustKnow = RefUtils.summarize(informationSpec.description,20) ?: 'N/A'
+        String mustDo = RefUtils.summarize(taskSpec.description, 20) ?: 'N/A'
+        return "Must know: $mustKnow; must do: $mustDo"
     }
 
 }

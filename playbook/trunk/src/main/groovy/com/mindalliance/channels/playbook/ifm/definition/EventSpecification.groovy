@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.definition
 
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ref.Bean
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,8 +13,19 @@ import com.mindalliance.channels.playbook.ref.Bean
  */
 class EventSpecification extends Specification {
 
-    public Class<? extends Bean> getMatchingDomainClass() {
+    Class<? extends Bean> getMatchingDomainClass() {
         return Event.class
+    }
+
+    List<Ref> allEventTypes() {
+        List<Ref> eventTypes = []
+        enumeration.each {event ->
+            eventTypes.addAll((List<String>)Query.execute(event.playbook, "findAllEventTypesFor", event));
+        }
+        definitions.each {eventDefinition ->
+            eventTypes.addAll(eventDefinition.eventTypes)
+        }
+        return eventTypes
     }
 
 }

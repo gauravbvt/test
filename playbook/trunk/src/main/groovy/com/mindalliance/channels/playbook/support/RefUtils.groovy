@@ -101,6 +101,12 @@ class RefUtils {
         }
     }
 
+    static String summarize(String s, int maxSize) {
+        if (!s) return ''
+        String line = s.replaceAll('\\n', ' ').replaceAll('\\t', ' ').replaceAll('  ', ' '). trim()
+        return line[0..(Math.min(maxSize, line.size())-1)]
+    }
+
     static boolean hasReference(def obj) {
         return Referenceable.isAssignableFrom(obj.class) || Ref.isAssignableFrom(obj.class)
     }

@@ -65,8 +65,7 @@ public class AssociationBasicTab extends AbstractFormTab {
         addReplaceable(actorAgentTree);
         relationshipNameField = new AutoCompleteTextFieldWithChoices("relationshipName",
                 new RefPropertyModel(getElement(), "relationshipName"),
-                new RefQueryModel(Channels.instance(),
-                        new Query("findAllRelationshipNames")));
+                new RefQueryModel(getProject(), new Query("findAllRelationshipNames")));
         relationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -93,8 +92,7 @@ public class AssociationBasicTab extends AbstractFormTab {
         addReplaceableTo(toAgentNameLabel, reverseRelationshipDiv);
         reverseRelationshipNameField = new AutoCompleteTextFieldWithChoices("reverseRelationshipName",
                 new RefPropertyModel(getElement(), "reverseRelationshipName"),
-                new RefQueryModel(Channels.instance(),
-                        new Query("findAllRelationshipNames")));
+                new RefQueryModel(getProject(), new Query("findAllRelationshipNames")));
         addReplaceableTo(reverseRelationshipNameField,reverseRelationshipDiv);
         actorAgentNameLabel = new Label("actorAgentName", new RefPropertyModel(getElement(), "actorAgent.name"));
         addReplaceableTo(actorAgentNameLabel, reverseRelationshipDiv);

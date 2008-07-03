@@ -26,7 +26,7 @@ public class SharingConstraintsPanel extends AbstractComponentPanel {
         super.load();
         allowedPurposesChooser = new MultipleStringChooser("allowedPurposes", this, propPath+".allowedPurposes", isReadOnly(),
                                                            feedback,
-                                                            new RefQueryModel(Channels.instance(), new Query("findAllPurposes")));
+                                                            new RefQueryModel(getProject(), new Query("findAllPurposes")));
         addReplaceable(allowedPurposesChooser);
         privateTopicsChooser = new MultipleStringChooser("privateTopics", this, propPath+".privateTopics", isReadOnly(),
                                                            feedback,

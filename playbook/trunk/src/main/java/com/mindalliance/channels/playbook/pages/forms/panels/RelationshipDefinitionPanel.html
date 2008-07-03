@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            Any <input wicket:id="relationshipName" type="text" size="50"/> relationship
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            <label>with:</label>
+        </td>
+        <td>
+            <input wicket:id="anyAgent" type="checkbox"/> anyone
+        </td>
+    </tr>
+    <tr>
+        <td>&#160;</td>
+        <td>
+            <div wicket:id="agentSpecificationDiv">
+                <fieldset>
+                    <legend>any agent such as</legend>
+                    <span wicket:id="agentSpecification">[agent specification]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+</table>
+</wicket:extend>
+</body>
+</html>

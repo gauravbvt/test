@@ -35,7 +35,7 @@ public class TaskTypeIntentTab  extends AbstractFormTab {
     protected void load() {
         super.load();
         purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
-                                                    new RefQueryModel(Channels.instance(), new Query("findAllPurposes")));
+                                                    new RefQueryModel(getProject(), new Query("findAllPurposes")));
         addReplaceable(purposesChooser);
         eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(getElement(), "eventTypes"),
                                                  new RefQueryModel(getScope(), new Query("findAllTypes", "EventType"))) {

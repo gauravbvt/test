@@ -37,6 +37,10 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
 
     abstract Class<? extends Bean> getMatchingDomainClass()
 
+    String toString() {
+        return "${this.class.name}: $description"
+    }
+
     // BEANIMPL
 
     @Override

@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ifm.Described
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,16 +21,19 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
 
     abstract Class<? extends Bean> getMatchingDomainClass()
 
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['matchingDomainClass', 'summary'])
+    }
+    
+
     boolean matches(Bean bean, InformationAct informationAct) {
         MatchResult result = match(bean, informationAct)
         return result.matched;
     }
 
     String getSummary() {
-      if (description)
-        return description.replaceAll('\n', ' ')[0..Math.min(16, description.size())];
-      else
-        return 'No description'
+      return RefUtils.summarize(description ?: 'No description', 16);
     }
 
 }

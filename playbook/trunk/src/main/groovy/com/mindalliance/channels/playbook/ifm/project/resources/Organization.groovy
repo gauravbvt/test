@@ -29,8 +29,17 @@ class Organization extends Resource {
 
     void beforeStore() {
         super.beforeStore()
-        if (jurisdiction) jurisdiction.detach()
+        jurisdiction.detach()
     }
+
+    @Override
+    void changed(String propName) {
+        if (propName == 'jurisdiction') {
+            jurisdiction.detach()
+        }
+        super.changed(propName)
+    }
+
 
     boolean isOrganizationElement() {
         return true
@@ -75,7 +84,7 @@ class Organization extends Resource {
 
     List<Ref> allParents() {
         List<Ref> parents = []
-        if (parent) {
+        if (parent as boolean) {
             parents.addAll(parent.allParents())
             parents.add(parent)
         }
@@ -90,7 +99,7 @@ class Organization extends Resource {
 
     List<Ref> findAllSubOrganizations() {
         List<Ref> allSubs = []
-        subOrganizations.each {sub -> sub.addAll(sub.findAllSubOrganizations())}
+        subOrganizations.each {sub -> if (sub as boolean) allSubs.addAll(sub.findAllSubOrganizations())}
         allSubs.addAll(subOrganizations)
         return allSubs
     }
@@ -98,15 +107,15 @@ class Organization extends Resource {
     List<Ref> findAllPositions() {
         List<Ref> allPositions = []
         List<Ref> allSubs = findAllSubOrganizations()
-        allSubs.each {sub -> allPositions.addAll(sub.positions)}
+        allSubs.each {sub -> if (sub as boolean) allPositions.addAll(sub.positions)}
         allPositions.addAll(positions)
         return allPositions
     }
 
     boolean hasRole(Ref role) {
         if (super.hasRole(role)) return true
-        if (this.positions.any {position -> position.hasRole(role) }) return true
-        if (this.systems.any {system -> system.hasRole(role) }) return true
+        if (this.positions.any {position -> position as boolean && position.hasRole(role) }) return true
+        if (this.systems.any {system -> system as boolean && system.hasRole(role) }) return true
         return false
     }
 

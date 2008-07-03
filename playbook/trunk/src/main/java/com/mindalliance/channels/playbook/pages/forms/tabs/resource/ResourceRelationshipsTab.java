@@ -109,7 +109,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         addReplaceableTo(newFromAgentNameLabel, newRelationshipDiv);
         newRelationshipNameField = new AutoCompleteTextFieldWithChoices("newRelationshipName",
                                                                  new Model(),
-                                                                 new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
+                                                                 new RefQueryModel(getProject(),new Query("findAllRelationshipNames")));
         newRelationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -135,7 +135,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         addReplaceableTo(reverseFromAgentNameLabel,reverseRelationshipDiv);
         reverseRelationshipNameField = new AutoCompleteTextFieldWithChoices("reverseRelationshipName",
                                                                  new Model(),
-                                                                 new RefQueryModel(Channels.instance(),new Query("findAllRelationshipNames")));
+                                                                 new RefQueryModel(getProject(),new Query("findAllRelationshipNames")));
         reverseRelationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {

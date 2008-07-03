@@ -1,6 +1,9 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,8 +21,17 @@ abstract class FlowAct extends InformationAct {
         return true
     }
 
-    static List<String> impliedEventTypeTopics() {
-        return InformationAct.class.impliedEventTypeTopics() + ['target']
+    // Return implied event type
+    static Ref impliedEventType() {
+        return ComputedRef.from(InformationAct.class, 'makeImpliedEventType')
+    }
+
+    static EventType makeImpliedEventType() {
+        EventType eventType =  new EventType(name:'flow information act',              // note: model is null
+                                             description:'A flow information act',
+                                             topics: ['target'])
+        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
+        return eventType
     }
 
     List<String> contentsAboutTopic(String topic) {

@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class ResponsibilityPanel extends AbstractComponentPanel {
 
-    InformationSpecPanel infoSpecPanel;
-    TaskSpecPanel taskSpecPanel;
+    InformationDefinitionPanel infoSpecPanel;
+    TaskDefinitionPanel taskSpecPanel;
 
     public ResponsibilityPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -23,9 +23,9 @@ public class ResponsibilityPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
-        infoSpecPanel = new InformationSpecPanel("informationSpec", this, propPath+".informationSpec", isReadOnly(), feedback);
+        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath+".informationSpec", isReadOnly(), feedback);
         addReplaceable(infoSpecPanel);
-        taskSpecPanel = new TaskSpecPanel("taskSpec", this, propPath+".taskSpec", isReadOnly(), feedback);
+        taskSpecPanel = new TaskDefinitionPanel("taskSpec", this, propPath+".taskSpec", isReadOnly(), feedback);
         addReplaceable(taskSpecPanel);
     }
 }

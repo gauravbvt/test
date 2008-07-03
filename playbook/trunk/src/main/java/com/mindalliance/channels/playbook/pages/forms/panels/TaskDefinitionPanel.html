@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                Any task:
+            </td>
+            <td>
+                <input wicket:id="anyTaskType" type="checkbox"/>of any type
+            </td>
+            <td>
+                <div wicket:id="taskTypesDiv">
+                    <fieldset>
+                        <legend>classified as</legend>
+                        <span wicket:id="taskTypes">[task types tree]</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <label>with:</label>
+            </td>
+            <td>
+                <input wicket:id="anyPurpose" type="checkbox"/> any purpose at all
+            </td>
+        </tr>
+        <tr>
+            <td>&#160;</td>
+            <td>
+                <div wicket:id="purposesDiv">
+                    <fieldset>
+                        <legend>any of these specific purposes</legend>
+                        <span wicket:id="purposes">[purposes]</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                with:
+            </td>
+            <td>
+                <input wicket:id="anyResponseTiming" type="checkbox"/>any response time
+            </td>
+        <tr>
+            <td>&#160;</td>
+            <td>
+                <div wicket:id="responseTimingDiv">
+                    <fieldset>
+                        <legend>a response time under</legend>
+                        <span wicket:id="responseTiming">[timing panel]</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
+</wicket:extend>
+</body>
+</html>

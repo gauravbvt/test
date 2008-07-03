@@ -27,9 +27,9 @@ class Place extends ProjectElement implements Named, Described {
             return geoLocation
         }
         else {
-            if (enclosingPlace) {
+            if (enclosingPlace as boolean) {
                 GeoLocation geoLoc = enclosingPlace.findGeoLocation() // TODO deal with risk of cycle and infinite loop
-                if (geoLocation) {
+                if (geoLoc.isDefined()) {
                     return geoLoc
                 }
                 else {
@@ -43,20 +43,20 @@ class Place extends ProjectElement implements Named, Described {
     }
 
     boolean isWithin(Ref place) {
-        if (!enclosingPlace) return false
+        if (!enclosingPlace as boolean) return false
         if (place == enclosingPlace) return true
         return enclosingPlace.isWithin(place)
     }
 
-    boolean isNearby(Ref place) { // both places share common enclosing place... TODO -- improve on this
-        if (!enclosingPlace || !place.enclosingPlace) return false
+    boolean isNearby(Ref place) { // both places share common enclosing place... TODO -- improve on this?
+        if (!enclosingPlace as boolean || !place.enclosingPlace as boolean) return false
         if (place.enclosingPlace == enclosingPlace) return true
         return false
     }
 
     Ref broadenedTo(Ref otherPlaceType) {
         if (placeType == otherPlaceType ) return this.reference
-        if (enclosingPlace) {
+        if (enclosingPlace as boolean && otherPlaceType as boolean) {
             return enclosingPlace.broadenedTo(otherPlaceType)
         }
         else {
@@ -67,9 +67,9 @@ class Place extends ProjectElement implements Named, Described {
     // QUERIES
 
     List<Ref> findAllCandidateEnclosingPlaces() {
-        if (placeType) {
+        if (placeType as boolean) {
             return project.places.findAll{place ->
-                place != this && place.placeType && placeType.implies(place.placeType)
+                place as boolean && place != this && place.placeType as boolean && placeType.implies(place.placeType)
             }
         }
         else {

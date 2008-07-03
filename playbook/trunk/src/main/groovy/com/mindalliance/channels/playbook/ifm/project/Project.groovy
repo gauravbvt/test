@@ -17,6 +17,11 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.project.resources.Team
+import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
+import com.mindalliance.channels.playbook.ref.Bean
+import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.support.util.CountedSet
+import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -66,7 +71,7 @@ class Project extends IfmElement implements Named, Described {
     // Queries
 
     Ref findModelNamed(String name) {
-        return (Ref)models.find {it.name == name}
+        return (Ref) models.find {it as boolean && it.name == name}
     }
 
     List<Ref> findAllResources() {
@@ -74,21 +79,21 @@ class Project extends IfmElement implements Named, Described {
     }
 
     Ref findPersonNamed(String name) {
-       return (Ref)persons.find {it.name == name}
+        return (Ref) persons.find {it as boolean && it.name == name}
     }
 
     Ref findOrganizationNamed(String name) {
-       return (Ref)organizations.find {it.name == name}
+        return (Ref) organizations.find {it as boolean && it.name == name}
     }
 
     List<Ref> findAllResourcesExcept(Ref resource) {
         List<Ref> resources = []
-        resources.addAll(persons.findAll {res -> res != resource })
-        resources.addAll(organizations.findAll {res -> res != resource })
-        resources.addAll(teams.findAll {res -> res != resource })
+        resources.addAll(persons.findAll {res -> res as boolean && res != resource })
+        resources.addAll(organizations.findAll {res -> res as boolean && res != resource })
+        resources.addAll(teams.findAll {res -> res as boolean && res != resource })
         organizations.each {org ->
-            resources.addAll(org.systems.findAll {res -> res != resource })
-            resources.addAll(org.positions.findAll {res -> res != resource })
+            resources.addAll(org.systems.findAll {res -> res as boolean && res != resource })
+            resources.addAll(org.positions.findAll {res -> res as boolean && res != resource })
         }
         return resources
     }
@@ -103,29 +108,31 @@ class Project extends IfmElement implements Named, Described {
     }
 
     Ref findPlaybookNamed(String name) {
-       return (Ref)playbooks.find {pb ->
-            pb.name == name
+        return (Ref) playbooks.find {pb ->
+            pb as boolean && pb.name == name
         }
     }
 
     Ref findParticipation(Ref user) {
-        Ref p = (Ref) participations.find {p -> p.user == user }
+        Ref p = (Ref) participations.find {p -> p as boolean && p.user == user }
         return p
     }
 
 
     List<String> findAllPlaceNames() {
-        return places.collect {it.name}
+        List<String> names = []
+        places.each {place -> if (place as boolean) names.add(place.name)}
+        return names
     }
 
     Ref findPlaceNamed(String placeName) {
-        Ref namedPlace = (Ref) places.find {place -> place.name == placeName }
+        Ref namedPlace = (Ref) places.find {place -> place as boolean && place.name == placeName }
         return namedPlace
     }
 
     boolean atleastOnePlaceTypeDefined() {
         Ref model = (Ref) models.find {model ->
-            model.placeTypes.size() > 0
+            model as boolean && model.placeTypes.size() > 0
         }
         return model != null
     }
@@ -153,8 +160,7 @@ class Project extends IfmElement implements Named, Described {
         models.any {model ->
             List list = model."$propName"
             list.any {type ->
-                String typeName = type.name
-                if (typeName.equalsIgnoreCase(elementTypeName)) {
+                if (type as boolean && type.name.equalsIgnoreCase(elementTypeName)) {
                     namedType = type
                 }
                 namedType
@@ -167,7 +173,7 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> findAllTypesNarrowing(Ref elementType) {
         List<Ref> types = []
         findAllTypes(elementType.type).each {type ->
-            if (type.narrows(elementType)) types.add(type)
+            if (type as boolean && type.narrows(elementType)) types.add(type)
         }
         return types
     }
@@ -175,7 +181,7 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> findAllTypesNarrowingAny(List<Ref> elementTypes) {
         Set<Ref> types = new HashSet<Ref>()
         elementTypes.each {elementType ->
-            types.addAll(this.findAllTypesNarrowing(elementType))
+            if (elementType as boolean) types.addAll(this.findAllTypesNarrowing(elementType))
         }
         return types as List
     }
@@ -183,34 +189,29 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> findPlaceTypesNarrowing(Ref placeType) {
         List<Ref> narrowing = []
         models.each {model ->
-            model.placeTypes.each {pt ->
-                if (placeType == null && pt.parent == null) { // top level place types narrow undefined place type
-                    narrowing.add(pt)
-                }
-                else if (pt.parent == placeType) {
-                    narrowing.add(pt)
+            if (model as boolean) {
+                model.placeTypes.each {pt ->
+                    if (placeType == null && pt as boolean && pt.parent == null) { // top level place types narrow undefined place type
+                        narrowing.add(pt)
+                    }
+                    else if (pt as boolean && pt.parent == placeType) {
+                        narrowing.add(pt)
+                    }
                 }
             }
         }
         return narrowing
     }
 
-/*
-    List<Ref> findAllApplicableRelationshipTypes(Ref fromResource, Ref toResource) {
-        List<Ref> relTypes = []
-        models.each { model ->
-            relTypes.addAll(
-                    model.relationshipTypes.findAll {rt ->
-                        rt.matchesFrom(fromResource) && rt.matchesTo(toResource)
-            })
+    List<Ref> findAllAgentsMatchingSpec(AgentSpecification spec, Ref event) {
+        return (List<Ref>) findAllAgents().findAll {agent ->
+            agent as boolean && event as boolean && spec.matches(agent.deref(), event.deref())
         }
-        return relTypes
     }
-*/
 
     List<Ref> findAllAgreementsOf(Ref resource) {
         List<Ref> ags = sharingAgreements.findAll {agreement ->
-            agreement.fromResource == resource
+            agreement as boolean && agreement.source == resource
         }
         return ags ?: []
     }
@@ -221,8 +222,9 @@ class Project extends IfmElement implements Named, Described {
     // - a parent organization (transitively) of the organization
     List<Ref> findCandidateSubOrganizationsFor(Ref organization) {
         List<Ref> candidates = organizations.findAll {org ->
-            org != organization &&
-                    !org.parent &&
+            org as boolean &&
+                    org != organization &&
+                    !org.parent as boolean &&
                     !organization.allParents().contains(org)
         }
         return candidates
@@ -230,64 +232,121 @@ class Project extends IfmElement implements Named, Described {
 
     List<Ref> findAllPositionsAnywhere() {
         List<Ref> allPositions = []
-        organizations.each {org -> allPositions.addAll(org.positions) }
+        organizations.each {org -> if (org as boolean) allPositions.addAll(org.positions) }
         return allPositions
     }
 
     List<Ref> findAllRelationshipsOf(Ref resource) {
         return relationships.findAll {rel ->
-            rel.fromAgent == resource || rel.toAgent == resource}
+            rel as boolean && rel.fromAgent == resource || rel.toAgent == resource
+        }
     }
 
     List<Ref> findAgreementsWhereSource(Ref resource) {
-        return sharingAgreements.findAll {agr -> agr.source == resource}
+        return sharingAgreements.findAll {agr -> agr as boolean && agr.source == resource}
     }
 
     List<Ref> findAgreementsWhereRecipient(Ref resource) {
-        return sharingAgreements.findAll {agr -> agr.recipient == resource}
+        return sharingAgreements.findAll {agr -> agr as boolean && agr.recipient == resource}
     }
 
     List<Ref> findAllJurisdictionables() {
-        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasJurisdiction()}
+        return (List<Ref>) findAllAgents().findAll {agent -> agent as boolean && agent.hasJurisdiction()}
     }
 
     List<Ref> findAllPlacesOfTypeImplying(Ref placeType) {
-        return (List<Ref>)places.findAll {place -> place.placeType as boolean && place.placeType.implies(placeType)}
+        return (List<Ref>) places.findAll {place -> place as boolean && place.placeType as boolean && place.placeType.implies(placeType)}
     }
 
     List<Ref> findAllAgentsLocatedInPlacesOfTypeImplying(Ref placeType) {
-        return (List<Ref>)findAllAgents().findAll {agent ->
+        return (List<Ref>) findAllAgents().findAll {agent ->
             agent.hasLocation() && agent.location.isAPlace() && agent.location.place.placeType as boolean && agent.location.place.placeType.implies(placeType)
         }
     }
 
     List<Ref> findAllAgentsWithJurisdictionsInPlacesOfTypeImplying(Ref placeType) {
-        return (List<Ref>)findAllAgents().findAll {agent ->
+        return (List<Ref>) findAllAgents().findAll {agent ->
             agent.hasJurisdiction() && agent.jurisdiction.isAPlace() && agent.jurisdiction.place.placeType as boolean && agent.jurisdiction.place.placeType.implies(placeType)
         }
     }
 
     List<Ref> findAllPlacesInAreasOfTypeImplying(Ref areaType) {
-        return (List<Ref>)places.findAll {place -> (geoLoc = place.findGeoLocation()) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType) }
+        return (List<Ref>) places.findAll {place -> (geoLoc = place.findGeoLocation()) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType) }
     }
 
     List<Ref> findAllAgentsLocatedInAreasOfTypeImplying(Ref areaType) {
-        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasLocation() && (geoLoc = agent.location.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+        return (List<Ref>) findAllAgents().findAll {agent -> agent.hasLocation() && (geoLoc = agent.location.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
     }
 
     List<Ref> findAllAgentsWithJurisdictionsInAreasOfTypeImplying(Ref areaType) {
-        return (List<Ref>)findAllAgents().findAll {agent -> agent.hasJurisdiction() && (geoLoc = agent.jurisdiction.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+        return (List<Ref>) findAllAgents().findAll {agent -> agent.hasJurisdiction() && (geoLoc = agent.jurisdiction.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
+    }
+
+    List<String> findAllRelationshipNames() {  // TODO write a VocabularyManager to keep vocabulary usage count from everywhere
+        CountedSet countedSet = new CountedSet();
+        // Permanent relationships
+        relationships.each {rel -> if (rel as boolean && rel.name) countedSet.add(rel.name)}
+        playbooks.each {playbook ->
+            if (playbook as boolean) {
+                // transient relationships created by Associations
+                playbook.informationActs.each {act ->
+                    if (act as boolean && act.type == "Association") {
+                        if (act.relationshipName) countedSet.add(act.relationshipName)
+                        if (act.reverseRelationshipName) countedSet.add(act.reverseRelationshipName)
+                    }
+                }
+                // agent specs in groups
+                playbook.groups.each {group ->
+                    if (group as boolean) {
+                        List names = group.agentSpec.definitions.relationshipDefinitions.relationshipName
+                        names.each {name -> if (name) countedSet.add(name)
+                        }
+                    }
+                }
+            }
+        }
+        // In policies
+        policies.each {pol ->
+            if (pol as boolean) {
+                List names = pol.sourceSpec.definitions.relationshipDefinitions.relationshipName
+                names.each {name -> if (name) countedSet.add(name)}
+                names = pol.recipientSpec.definitions.relationshipDefinitions.relationshipName
+                names.each {name -> if (name) countedSet.add(name)}
+            }
+        }
+        // TODO -- Missing other usages of relationship names?
+        return countedSet.toList()
+    }
+
+
+    List<String> findAllPurposes() {
+        CountedSet countedSet = new CountedSet();
+        policies.each {pol -> if (pol as boolean) countedSet.addAll(pol.purposes)}
+        sharingAgreements.each {agr -> if (agr as boolean) countedSet.addAll(agr.constraints.allowedPurposes)}
+        playbooks.each {playbook ->
+            if (playbook as boolean) {
+                playbook.informationActs.each {act ->
+                    if (act as boolean && act.type == "SharingCommitment") {
+                        countedSet.addAll(act.constraints.allowedPurposes)
+                    }
+                }
+            }
+        }
+        models.each {m ->
+            m.taskTypes.each {tt -> if (tt as boolean) countedSet.addAll(tt.purposes)}
+        }
+        return countedSet.toList()
     }
 
     // End queries
 
     Boolean isParticipant(Ref user) {
-        return findParticipation(user) != null;
+        return findParticipation(user) as boolean;
     }
 
     Boolean isManager(Ref user) {
         Ref ref = findParticipation(user)
-        return ref != null && ref.manager;
+        return ref as boolean && ref.manager;
     }
 
     /**

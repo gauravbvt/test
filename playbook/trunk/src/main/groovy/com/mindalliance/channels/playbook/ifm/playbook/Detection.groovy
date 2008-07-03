@@ -28,14 +28,10 @@ class Detection extends InformationAct {
 
     static EventType makeImpliedEventType() {
         EventType eventType = new EventType(name: 'detection',              // note: model is null
-                description: 'A detection',
-                topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                description: 'A detection of an event',
+                topics: ['information'])
+        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
         return eventType
-    }
-
-    static List<String> impliedEventTypeTopics() {
-        return InformationAct.class.impliedEventTypeTopics() + ['information']
     }
 
     List<String> contentsAboutTopic(String topic) {

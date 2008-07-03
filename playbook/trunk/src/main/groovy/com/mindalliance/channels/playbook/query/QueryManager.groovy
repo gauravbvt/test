@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.support.PlaybookSession
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
 import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
 import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.ifm.model.*
 import com.mindalliance.channels.playbook.ifm.project.resources.*
@@ -43,8 +44,6 @@ class QueryManager implements PropertyChangeListener {
     static void initializeDependencies() {
         dependencies = [     // large-grain dependencies but better than none
                 // Channels
-                findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
-                findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
                 findProjectNamed: [Project.class],
                 findUsersNotInProject: [Project.class, User.class],
                 // Channels, Project, PlaybookModel
@@ -61,6 +60,9 @@ class QueryManager implements PropertyChangeListener {
                 findAgreementsWhereSource: [SharingAgreement.class],
                 findAllPlacesOfTypeImplying: [Place.class, PlaceType.class],
                 findAllPlacesInAreasOfTypeImplying: [Place.class, AreaType.class],
+                findAllAgentsMatchingSpec: [Agent.class, AgentSpecification.class, Event.class],
+                findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
+                findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
                 // PlaybookModel
                 findInheritedTopics: [EventType.class],
                 findNarrowedEventTypeWithTopic: [EventType.class],
@@ -77,7 +79,8 @@ class QueryManager implements PropertyChangeListener {
                 createsRelationshipBefore: [Event.class],
                 agentImplied: [Agent.class, Association.class],
                 findAllInformationActsForAgent: [InformationAct.class, Agent.class],
-                findAllTopicsAboutEvent: [Event.class, EventType.class],
+                findAllTopicsAboutEvent: [InformationAct.class, Event.class, EventType.class],
+                findAllEventTypesFor:[InformationAct.class, Event.class, EventType.class],
                 findAllPriorOccurrencesOf: [Event.class, InformationAct.class],
                 // Playbook, Project
                 findAllAgentsExcept: [Agent.class],

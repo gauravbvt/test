@@ -9,12 +9,6 @@
 <wicket:extend>
 <table>
     <tr>
-        <td>
-            <fieldset>
-                <legend>Description</legend>
-                <textarea wicket:id="description" rows="3" cols="30">[description]</textarea>
-            </fieldset>
-        </td>
         <td nowrap="nowrap">
             <input wicket:id="isPlace" type="checkbox"/>A named place<br/>
             <input wicket:id="isGeoLocation" type="checkbox"/>Some location<br/>
@@ -103,10 +97,10 @@
                         <td nowrap="nowrap">
                             <select wicket:id="areaTypes">
                                 <option>[area type]</option>
-                            </select>(area)
+                            </select>(area)<br/>
                             <select wicket:id="placeTypes">
                                 <option>[place type]</option>
-                            </select>(kind of place)
+                            </select>(type of place)
                         </td>
                         <td nowrap="nowrap">
                             <span wicket:id="as-to">as/to</span>

@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.ifm.sharing
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
-import com.mindalliance.channels.playbook.ifm.spec.InformationSpec
+import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,7 +16,7 @@ class SharingProtocol extends BeanImpl {
 
     static final List<String> deliveries = ['notify', 'answer']
 
-    InformationSpec informationSpec = new InformationSpec()   // what kind of information
+    InformationDefinition informationSpec = new InformationDefinition()   // what kind of information
     String delivery = 'notify'  // push or pull
     List<Ref> preferredMediumTypes = []  // using what communication media  (in order of preferrence)
     Timing maxDelay = new Timing(amount:0)
@@ -27,8 +27,8 @@ class SharingProtocol extends BeanImpl {
     }
 
     String toString() {
-        // TODO verify this
-        return delivery;
+        // TODO
+        return "$delivery:${informationSpec.description}" ;
     }
 
 }

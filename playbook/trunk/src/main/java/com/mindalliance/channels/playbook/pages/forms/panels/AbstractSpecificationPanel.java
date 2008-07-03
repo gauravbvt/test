@@ -221,7 +221,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
 
     abstract protected IModel getEnumerationChoicesModel();
 
-    abstract protected AbstractComponentPanel makeDefinitionEditor(String id, String propPath);
+    abstract protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath);
 
     abstract protected Definition makeNewDefinition();
 }

@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ifm.Defineable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.model.AreaType
+import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,7 +34,7 @@ class AreaInfo extends BeanImpl  implements Comparable, Defineable {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['area', 'name', 'areaDefined', 'defined', 'areaType']
+        return (List<String>)(super.transientProperties() + ['area', 'name', 'areaDefined', 'defined', 'areaType'])
     }
 
     String getName() {

@@ -29,15 +29,10 @@ class Assignation extends FlowAct {  // communication of a responsibility (the t
 
     static EventType makeImpliedEventType() {
         EventType eventType =  new EventType(name:'assignation',              // note: model is null
-                                             description:'An assignation',
-                                             topics: impliedEventTypeTopics())
-        use(NoSessionCategory) {eventType.narrow(Event.class.impliedEventType())}; // setting state of a computed ref
+                                             description:'An assignation of responsibility',
+                                             topics: ['responsibility', 'assignee'])
+        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
         return eventType
-    }
-
-
-    static List<String> impliedEventTypeTopics() {
-        return FlowAct.class.impliedEventTypeTopics() + ['responsibility', 'assignee']
     }
 
     List<String> contentsAboutTopic(String topic) {

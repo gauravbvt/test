@@ -29,7 +29,7 @@ public class AgentSpecificationPanel extends AbstractSpecificationPanel {
         return new RefQueryModel(getScope(), new Query("findAllAgents"));
     }
 
-    protected AbstractComponentPanel makeDefinitionEditor(String id, String propPath) {
+    protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath) {
         return new AgentDefinitionPanel(id, this, propPath, isReadOnly(), feedback);
     }
 

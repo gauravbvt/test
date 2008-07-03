@@ -57,10 +57,10 @@ class Timeline extends PlaybookGraph {
 
     void processPlaybook(Playbook pb) {   // TODO - not needed
         pb.events.each {ref ->
-            processEvent((Event)ref.deref())
+            if(ref as boolean) processEvent((Event)ref.deref())
         }
         pb.informationActs.each {ref ->
-            processEvent((Event)ref.deref())
+            if(ref as boolean) processEvent((Event)ref.deref())
         }
     }
 

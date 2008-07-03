@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td nowrap="nowrap">
+                Any event:
+            </td>
+            <td>
+                <input wicket:id="anyEventType" type="checkbox"/>of any type
+            </td>
+            <td>
+                <div wicket:id="eventTypesDiv">
+                    <fieldset>
+                        <legend>classified as</legend>
+                        <span wicket:id="eventTypes">[event types tree]</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td nowrap="nowrap">
+                <label>from:</label>
+            </td>
+            <td>
+                <input wicket:id="anyLocation" type="checkbox"/> anywhere
+            </td>
+        </tr>
+        <tr>
+            <td>&#160;</td>
+            <td>
+                <div wicket:id="locationDefinitionDiv">
+                    <fieldset>
+                        <legend>in</legend>
+                        <span wicket:id="locationDefinition">[location definition]</span>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap">
+                caused by:
+            </td>
+            <td>
+                <input wicket:id="anyCause" type="checkbox"/>anything
+            </td>
+        <tr>
+            <td>&#160;</td>
+            <td>
+                <div wicket:id="causeSpecificationsDiv">
+                    <fieldset>
+                        <legend>any event such as</legend>
+                        <table>
+                            <tr>
+                                <td nowrap="nowrap">
+                                    <select wicket:id="causeSpecifications">
+                                        <option>[event specification label]</option>
+                                    </select><br/>
+                                    <button wicket:id="addCauseSpecification">Add</button>
+                                    <button wicket:id="deleteCauseSpecification">Remove</button>
+                                </td>
+                                <td>
+                                    <div wicket:id="causeSpecificationDiv">
+                                        <fieldset>
+                                            <legend>this kind of event</legend>
+                                            <span wicket:id="causeSpecification">[cause event specification]</span>
+                                        </fieldset>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
+</wicket:extend>
+</body>
+</html>

@@ -7,10 +7,17 @@
         lang="en">
 <body>
 <wicket:extend>
-    <input wicket:id="defined" type="checkbox"/> <span wicket:id="anyString">[Any]</span>
-    <div wicket:id="specDiv">
-        <wicket:child/>
-    </div>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Description</legend>
+                    <textarea wicket:id="description" rows="2" cols="60">[description]</textarea>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <wicket:child/>
 </wicket:extend>
 </body>
 </html>

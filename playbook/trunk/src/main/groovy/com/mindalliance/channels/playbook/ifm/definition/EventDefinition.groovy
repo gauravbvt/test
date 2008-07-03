@@ -17,14 +17,14 @@ class EventDefinition extends Definition {
 
     List<Ref> eventTypes = []  // ANDed -- classification
     LocationDefinition locationDefinition = new LocationDefinition()
-    List<EventSpecification> causeEventSpecifications = []  // ORed
+    List<EventSpecification> causeEventSpecs = []  // ORed
 
     Class<? extends Bean> getMatchingDomainClass() {
         return Information.class
     }
 
     boolean matchesAll() {
-        return !eventTypes && locationDefinition.matchesAll() && !causeEventSpecifications
+        return !eventTypes && locationDefinition.matchesAll() && !causeEventSpecs
     }
 
     MatchResult match(Bean bean, InformationAct informationAct) {
@@ -35,9 +35,9 @@ class EventDefinition extends Definition {
         if (!locationDefinition.matches(info.event.deref(), informationAct)) {
             return new MatchResult(matched:false, failures: ["The location of the event in $info does not match"])
         }
-        if (causeEventSpecifications) {
+        if (causeEventSpecs) {
             Ref trigger = info.event.cause.trigger
-            if (trigger as boolean && !causeEventSpecifications.any {ces -> ces.matches((Event)trigger.deref(), informationAct)}) {
+            if (trigger as boolean && !causeEventSpecs.any {ces -> ces.matches((Event)trigger.deref(), informationAct)}) {
                 return new MatchResult(matched:false, failures: ["The cause of the event in $info does not match"])
             }
         }

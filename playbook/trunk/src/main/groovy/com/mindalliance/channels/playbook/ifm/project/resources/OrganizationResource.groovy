@@ -15,7 +15,7 @@ abstract class OrganizationResource extends Resource {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['project']
+        return (List<String>)(super.transientProperties() + ['project'])
     }
     
 
@@ -24,7 +24,7 @@ abstract class OrganizationResource extends Resource {
     }
 
     Ref getProject() {
-        return (organization) ? organization.project : null
+        return (organization as boolean) ? organization.project : null
     }
 
 

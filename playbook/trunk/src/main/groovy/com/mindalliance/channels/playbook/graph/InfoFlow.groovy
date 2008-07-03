@@ -61,10 +61,9 @@ class InfoFlow extends PlaybookGraph {
     }
 
     void processPlaybook(Playbook pb) {   // TODO -- not needed
-        pb.events.each {ref -> processEvent((Event)ref.deref())}
-        pb.informationActs.each {ref -> processAct((InformationAct)ref.deref())}
-        pb.teams.each {ref -> processAgent((Agent)ref.deref())}
-        pb.groups.each {ref -> processAgent((Agent)ref.deref())}
+        pb.events.each {ref -> if(ref as boolean) processEvent((Event)ref.deref())}
+        pb.informationActs.each {ref -> if(ref as boolean) processAct((InformationAct)ref.deref())}
+        pb.groups.each {ref -> if(ref as boolean) processAgent((Agent)ref.deref())}
     }
 
     void processAgent(Agent agent) {

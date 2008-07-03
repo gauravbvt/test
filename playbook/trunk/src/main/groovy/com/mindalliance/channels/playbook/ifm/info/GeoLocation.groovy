@@ -17,6 +17,11 @@ class GeoLocation extends BeanImpl implements Defineable {
     AreaInfo areaInfo = new AreaInfo()
     LatLong latLong = new LatLong()  // takes precedence on areaInfo for latlong -- TODO constraint = must be within defined area
 
+    @Override
+    List<String> transientProperties() {
+        return super.transientProperties() + ['longitude', 'latitude', 'defined', 'areaType']
+    }
+
     String toString() {
        String s = ""
        if (areaInfo) s += " ${areaInfo.toString()}"
@@ -30,11 +35,6 @@ class GeoLocation extends BeanImpl implements Defineable {
 
     Ref getAreaType() {
         return areaInfo.areaType
-    }
-
-    @Override
-    List<String> transientProperties() {
-        return super.transientProperties() + ['longitude', 'latitude', 'defined', 'areaType']
     }
 
     double getLongitude() {

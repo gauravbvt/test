@@ -64,14 +64,14 @@ class PlaybookModel extends IfmElement implements Described {
         List<Ref> allTypes = findAllTypes(elementType.type)
         List<String> otherNames = []
         allTypes.each {type ->
-            if (type != elementType) otherNames.add(type.name)
+            if (type as boolean && type != elementType) otherNames.add(type.name)
         }
         return otherNames
     }
 
     Ref findType(String typeType, String name) {
         String typeName = RefUtils.decapitalize(typeType)
-        Ref namedType = this."${typeName}s".find {type -> type.name == name}
+        Ref namedType = this."${typeName}s".find {type -> type as boolean && type.name == name}
         return namedType
     }
 
@@ -87,7 +87,7 @@ class PlaybookModel extends IfmElement implements Described {
     // End queries
 
     Boolean isAnalyst(Ref user) {
-        return participations.find { it.user.id == user.id } != null
+        return participations.find { it as boolean && it.user.id == user.id } != null
     }
 
     List<Ref> getElements() {

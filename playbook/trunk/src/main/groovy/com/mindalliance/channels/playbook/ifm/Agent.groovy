@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 interface Agent extends Named, Described, Locatable {
 
     List<Responsibility> getResponsibilities()
-    List<Ref> getResourcesAt(Event event)
+    List<Ref> getResourcesAt(Ref event)
     boolean isResourceElement()
     boolean isTeam()
     boolean isGroup()

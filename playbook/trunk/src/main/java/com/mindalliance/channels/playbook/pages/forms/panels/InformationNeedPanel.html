@@ -13,22 +13,7 @@
     </fieldset>
     <fieldset>
         <legend>needs information about</legend>
-        <table>
-            <tr>
-                <td valign="top">
-                    <input wicket:id="aboutEventSpec" type = "checkbox"/>all events<br/>
-                    <input wicket:id="aboutEvent" type = "checkbox"/>this event<br/>
-                </td>
-                <td>
-                    <div wicket:id="eventSpecDiv">
-                        <span wicket:id="eventSpec">[Event specification]</span>
-                    </div>
-                    <div wicket:id="eventDiv">
-                        <span wicket:id="event">[Event tree]</span>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <span wicket:id="eventSpec">[Event specification]</span>
     </fieldset>
     <fieldset>
         <legend>within the next</legend>
@@ -40,7 +25,7 @@
     </fieldset>
     <fieldset>
         <legend>from trusted sources</legend>
-        <span wicket:id="sourceSpec">[AgentSpec panel]</span>
+        <span wicket:id="sourceSpec">[Agent specification panel]</span>
     </fieldset>
 </wicket:extend>
 </body>
