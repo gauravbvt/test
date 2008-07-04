@@ -104,7 +104,12 @@ class RefUtils {
     static String summarize(String s, int maxSize) {
         if (!s) return ''
         String line = s.replaceAll('\\n', ' ').replaceAll('\\t', ' ').replaceAll('  ', ' '). trim()
-        return line[0..(Math.min(maxSize, line.size())-1)]
+        if (line.size() <= maxSize) {
+            return line
+        }
+        else {
+            return "${line[0..Math.max(0,maxSize -3)]}..."
+        }
     }
 
     static boolean hasReference(def obj) {

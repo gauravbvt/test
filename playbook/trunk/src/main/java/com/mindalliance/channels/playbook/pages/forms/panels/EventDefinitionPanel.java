@@ -12,15 +12,13 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.ListChoice;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.Model;
@@ -47,8 +45,8 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
     protected AjaxCheckBox anyCauseCheckBox;
     protected WebMarkupContainer causeSpecificationsDiv;
     protected ListChoice causeSpecificationsChoice;
-    protected AjaxButton addCauseSpecificationButton;
-    protected AjaxButton removeCauseSpecificationButton;
+    protected Button addCauseSpecificationButton;
+    protected Button removeCauseSpecificationButton;
     protected WebMarkupContainer causeSpecificationDiv;
     protected Component causeSpecificationPanel;
     protected EventSpecification selectedCauseSpecification;
@@ -96,7 +94,7 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyLocationCheckBox);
         locationDefinitionDiv = new WebMarkupContainer("locationDefinitionDiv");
-        setVisibility(locationDefinitionDiv, eventDefinition.getLocationDefinition().matchesAll());
+        setVisibility(locationDefinitionDiv, !eventDefinition.getLocationDefinition().matchesAll());
         addReplaceable(locationDefinitionDiv);
         locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition", isReadOnly(), feedback);
         addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
@@ -104,18 +102,18 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyCause = (Boolean)anyCauseCheckBox.getModelObject();
                 if (anyCause) {
-                    setProperty("causeEventSpecifications", new ArrayList<EventSpecification>());
+                    setProperty("causeEventSpecs", new ArrayList<EventSpecification>());
                 }
                 setVisibility(causeSpecificationsDiv, !anyCause, target);
             }
         };
         addReplaceable(anyCauseCheckBox);
         causeSpecificationsDiv = new WebMarkupContainer("causeSpecificationsDiv");
-        setVisibility(causeSpecificationsDiv, eventDefinition.getCauseEventSpecs().isEmpty());
+        setVisibility(causeSpecificationsDiv, !eventDefinition.getCauseEventSpecs().isEmpty());
         addReplaceable(causeSpecificationsDiv);
         causeSpecificationsChoice = new ListChoice("causeSpecifications",
                                                         new Model(selectedCauseSpecification),
-                                                        new RefPropertyModel(getComponent(), "causeEventSpecifications"),
+                                                        new RefPropertyModel(getComponent(), "causeEventSpecs"),
                                                         new ChoiceRenderer("summary"));
         causeSpecificationsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
@@ -126,25 +124,27 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
             }
         });
         addReplaceableTo(causeSpecificationsChoice, causeSpecificationsDiv);
-        addCauseSpecificationButton = new AjaxButton("addCauseSpecification"){
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        addCauseSpecificationButton = new Button("addCauseSpecification");
+        addCauseSpecificationButton.add(new AjaxEventBehavior("onclick"){
+            protected void onEvent(AjaxRequestTarget target) {
                 selectedCauseSpecification = new EventSpecification();
                 RefUtils.add(getElement(), propPath+".causeEventSpecs", selectedCauseSpecification);
                 setVisibility(removeCauseSpecificationButton, true, target);
                 updateEventSpecificationPanel();
                 setVisibility(causeSpecificationDiv, true, target);
             }
-        };
+        });
         addReplaceableTo(addCauseSpecificationButton, causeSpecificationsDiv);
-        removeCauseSpecificationButton = new AjaxButton("deleteCauseSpecification"){
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        removeCauseSpecificationButton = new Button("deleteCauseSpecification");
+        removeCauseSpecificationButton.add(new AjaxEventBehavior("onclick"){
+            protected void onEvent(AjaxRequestTarget target) {
                 RefUtils.remove(getElement(), propPath+".causeEventSpecs", selectedCauseSpecification);
                 selectedCauseSpecification = null;
                 target.addComponent(causeSpecificationsChoice);
                 setVisibility(removeCauseSpecificationButton, false, target);
                 setVisibility(causeSpecificationDiv, false, target);
             }
-        };
+        });
         addReplaceableTo(removeCauseSpecificationButton, causeSpecificationsDiv);
         causeSpecificationDiv = new WebMarkupContainer("causeSpecificationDiv");
         hide(causeSpecificationDiv);

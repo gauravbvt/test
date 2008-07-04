@@ -36,4 +36,8 @@ public class AgentSpecificationPanel extends AbstractSpecificationPanel {
     protected Definition makeNewDefinition() {
         return new AgentDefinition();
     }
+
+    protected boolean isEnumerable() {
+        return true;
+    }
 }

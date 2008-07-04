@@ -1,11 +1,15 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import com.mindalliance.channels.playbook.ifm.definition.Definition;
 import com.mindalliance.channels.playbook.ifm.definition.EventDefinition;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.ref.Ref;
+
+import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,7 +29,12 @@ public class EventSpecificationPanel extends AbstractSpecificationPanel {
     }
 
     protected IModel getEnumerationChoicesModel() {
-        return new RefPropertyModel(getPlaybook(), "events");
+        if (isPlaybookPanel()) {
+            return new RefPropertyModel(getPlaybook(), "events");
+        }
+        else {
+            return new Model(new ArrayList<Ref>());
+        }
     }
 
     protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath) {
@@ -34,5 +43,9 @@ public class EventSpecificationPanel extends AbstractSpecificationPanel {
 
     protected Definition makeNewDefinition() {
         return new EventDefinition();
+    }
+
+    protected boolean isEnumerable() {
+        return isPlaybookPanel();
     }
 }

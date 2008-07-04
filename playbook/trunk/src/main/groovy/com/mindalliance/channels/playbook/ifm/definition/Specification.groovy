@@ -29,7 +29,7 @@ When negated:
 */
 abstract class Specification extends BeanImpl implements MatchingDomain, Described {
 
-    String description  // a brief description of the specification
+    String description  = '' // a brief description of the specification
     boolean negated = false  // if negated, the matching domain is the complement of the specification
     List<Ref> enumeration = []   // specification by enumeration
     List<Definition> definitions = [] // OR by definitions (ORed)

@@ -36,4 +36,8 @@ public class TaskSpecificationPanel extends AbstractSpecificationPanel {
     protected Definition makeNewDefinition() {
         return new TaskDefinition();
     }
+
+    protected boolean isEnumerable() {
+        return isPlaybookPanel();
+    }
 }

@@ -14,11 +14,13 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.IModel;
@@ -46,11 +48,12 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
     protected AjaxCheckBox specifiedCheckBox;
     protected Label matchingDomainClassLabel;
     protected WebMarkupContainer specifiedDiv;
+    protected WebMarkupContainer enumerationDiv;
     protected DynamicFilterTree enumerationTree;
     protected ListChoice definitionsList;
     protected Definition selectedDefinition;
-    protected AjaxButton addDefinitionButton;
-    protected AjaxButton deleteDefinitionButton;
+    protected Button addDefinitionButton;
+    protected Button deleteDefinitionButton;
     protected WebMarkupContainer definitionDiv;
     Component definitionPanel;
     protected List<Ref> priorEnumeration;
@@ -114,18 +117,22 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         addReplaceable(specifiedCheckBox);
         specifiedDiv = new WebMarkupContainer("specifiedDiv");
         addReplaceable(specifiedDiv);
+        enumerationDiv = new WebMarkupContainer("enumerationDiv");
+        setVisibility(enumerationDiv, isEnumerable());
+        addReplaceableTo(enumerationDiv, specifiedDiv);
         enumerationTree = new DynamicFilterTree("enumeration", new RefPropertyModel(getComponent(), "enumeration"), getEnumerationChoicesModel()) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selections = enumerationTree.getNewSelections();
                 RefUtils.set(getElement(), propPath+".enumeration", selections);
             }
         };
-        addReplaceableTo(enumerationTree, specifiedDiv);
+        addReplaceableTo(enumerationTree, enumerationDiv);
         definitionsList = new ListChoice("definitions", new Model(), new RefQueryModel(this, new Query("getDefinitionSummaries")));
         definitionsList.setMaxRows(4);
         definitionsList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 String definitionSummary = definitionsList.getModelObjectAsString();
+                unselectDefinition(target);
                 selectedDefinition = findDefinitionFromSummary(definitionSummary);
                 deleteDefinitionButton.setEnabled(selectedDefinition != null);
                 if (selectedDefinition != null) {
@@ -145,32 +152,45 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
             }
         });
         addReplaceableTo(definitionsList, specifiedDiv);
-        addDefinitionButton = new AjaxButton("addDefinition") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        addDefinitionButton = new Button("addDefinition");
+        addDefinitionButton.add(new AjaxEventBehavior("onclick"){
+            protected void onEvent(AjaxRequestTarget target) {
                 List<Definition> definitions = specification.getDefinitions();
                 definitions.add(makeNewDefinition());
                 RefUtils.set(getElement(), propPath+".definitions", definitions);
                 definitionsList.setModel(new Model());
                 target.addComponent(definitionsList);
             }
-        };
+        });
         addReplaceableTo(addDefinitionButton, specifiedDiv);
-        deleteDefinitionButton = new AjaxButton("deleteDefinition") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        deleteDefinitionButton = new Button("deleteDefinition");
+        deleteDefinitionButton.add(new AjaxEventBehavior("onclick"){
+            protected void onEvent(AjaxRequestTarget target) {
                 List<Definition> definitions = specification.getDefinitions();
                 definitions.remove(selectedDefinition);
+                unselectDefinition(target);
                 RefUtils.set(getElement(), propPath+".definitions", definitions);
                 definitionsList.setModel(new Model());
                 target.addComponent(definitionsList);
             }
-        };
+        });
         deleteDefinitionButton.setEnabled(false);
         addReplaceableTo(deleteDefinitionButton, specifiedDiv);
         definitionDiv = new WebMarkupContainer("definitionDiv");
         addReplaceableTo(definitionDiv, specifiedDiv);
-        definitionPanel = new Label("definition", "dummy");
+        definitionPanel = new Label("definition", "");
+        setVisibility(definitionDiv, selectedDefinition != null);
         addReplaceableTo(definitionPanel, definitionDiv);
         setSpecifiedVisibility();
+    }
+
+    private void unselectDefinition(AjaxRequestTarget target) {
+        selectedDefinition = null;
+        if (definitionPanel != null) {
+            definitionDiv.remove(definitionPanel);
+            addReplaceableTo(new Label("definition", new Model("")), definitionDiv);
+        }
+        target.addComponent(definitionDiv);
     }
 
     public List<String> getDefinitionSummaries() {
@@ -179,15 +199,14 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         for (int i=0; i<definitions.size(); i++) {
             Definition definition = definitions.get(i);
             StringBuilder sb = new StringBuilder();
-            sb.append(i);
+            sb.append(i+1);
             sb.append("- ");
-            String description = definition.getDescription().trim().replaceAll("\\n", " ");
-            if (description.length() > MAX_SUMMARY_LENGTH) {
-                sb.append(description.substring(0, MAX_SUMMARY_LENGTH));
-                sb.append("...");
+            String desc = definition.getDescription();
+            if (desc.trim().isEmpty()) {
+                sb.append("NO SUMMARY");
             }
             else {
-                sb.append(description);
+                sb.append(RefUtils.summarize(desc, MAX_SUMMARY_LENGTH));
             }
             summaries.add(sb.toString());
         }
@@ -200,10 +219,15 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         }
         else {
             List<Definition> definitions = ((Specification)getComponent()).getDefinitions();
-            Pattern pattern = Pattern.compile("([\\d]+)-.*");
+            Pattern pattern = Pattern.compile("(\\d+)-");
             Matcher matcher = pattern.matcher(definitionSummary);
-            String index = matcher.group(1);
-            return definitions.get(Integer.parseInt(index));
+            if (matcher.find()) {
+                String index = matcher.group(1);
+                return definitions.get(Integer.parseInt(index)-1);
+            }
+            else {
+                return null;
+            }
         }
     }
 
@@ -224,4 +248,6 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
     abstract protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath);
 
     abstract protected Definition makeNewDefinition();
+
+    abstract protected boolean isEnumerable();
 }

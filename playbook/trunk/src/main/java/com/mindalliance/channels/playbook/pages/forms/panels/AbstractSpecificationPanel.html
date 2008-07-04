@@ -9,43 +9,40 @@
 <wicket:extend>
     <table>
         <tr>
-            <td>
-                <fieldset>
-                    <legend>Description</legend>
-                    <textarea wicket:id="description" rows="1" cols="50">[description]</textarea>
-                </fieldset>
-            </td>
             <td nowrap="nowrap">
-                <input wicket:id="affirmed" type = "checkbox"/>Any&#160;<br/>
-                <input wicket:id="negated" type = "checkbox"/>No&#160;
+                <input wicket:id="affirmed" type="checkbox"/>any&#160;<br/>
+                <input wicket:id="negated" type="checkbox"/>anything but some&#160;
             </td>
-            <td align="left" valign="middle">
-                <strong><span wicket:id="matchingDomainClass">[domain class]</span></strong><input wicket:id="specified" type = "checkbox"/>&#160;such that...
+            <td nowrap="nowrap" valign="middle" width="99%">
+                <span wicket:id="matchingDomainClass">[domain class]</span>&#160;<input
+                    wicket:id="specified" type="checkbox"/>&#160;such that...
             </td>
         </tr>
     </table>
     <div wicket:id="specifiedDiv">
         <table>
             <tr>
-                <td>
-                    <fieldset>
-                        <legend>it is one of these</legend>
-                        <span wicket:id="enumeration">[enumeration tree]</span>
-                    </fieldset>
+                <td nowrap="nowrap">
+                    <div wicket:id="enumerationDiv">
+                        <fieldset>
+                            <legend>it is one of these</legend>
+                            <span wicket:id="enumeration">[enumeration tree]</span> or
+                        </fieldset>
+                    </div>
                 </td>
-                <td>
+                <td width="99%">
                     <fieldset>
-                        <legend>or it fits any of these descriptions</legend>
+                        <legend>it fits any of these descriptions</legend>
                         <table>
                             <tr>
                                 <td>
-                                   <select>
-                                        <option wicket:id="definitions">[a definition's summary]</option>
+                                    <select wicket:id="definitions">
+                                        <option>[a definition's summary]</option>
                                     </select>
                                 </td>
-                                <td>
-                                   <button wicket:id="addDefinition">Add new</button> <br/>
-                                   <button wicket:id="deleteDefinition">Delete</button>
+                                <td width="99%">
+                                    <button wicket:id="addDefinition">Add new</button><br/>
+                                    <button wicket:id="deleteDefinition">Delete</button>
                                 </td>
                             </tr>
                         </table>
@@ -55,11 +52,15 @@
         </table>
         <div wicket:id="definitionDiv">
             <fieldset>
-                <legend>Description</legend>
+                <legend>(selected description)</legend>
                 <span wicket:id="definition">[definition editor]</span>
             </fieldset>
         </div>
     </div>
+    <fieldset>
+        <legend>(or in plain english...)</legend>
+        <textarea wicket:id="description" rows="1" cols="50">[description]</textarea>
+    </fieldset>
 </wicket:extend>
 </body>
 </html>

@@ -21,13 +21,8 @@ import org.apache.wicket.model.Model;
  */
 public class GeoLocationPanel extends AbstractComponentPanel {
 
-    GeoLocation geoLocation;
-    AjaxCheckBox undefinedCheckBox;
-    WebMarkupContainer definedDiv;
     AreaInfoPanel areaInfoPanel;
     LatLongPanel latLongPanel;
-    AreaInfo priorAreaInfo;
-    LatLong priorLatLong;
 
     public GeoLocationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -36,46 +31,10 @@ public class GeoLocationPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
-        geoLocation = (GeoLocation)getComponent();
-        priorAreaInfo = geoLocation.getAreaInfo();
-        priorLatLong = geoLocation.getLatLong();
-        undefinedCheckBox = new AjaxCheckBox("undefined", new Model((Boolean)geoLocation.isDefined())) {
-            protected void onUpdate(AjaxRequestTarget target) {
-                boolean undefined = (Boolean)undefinedCheckBox.getModelObject();
-                if (undefined) {
-                    priorAreaInfo = geoLocation.getAreaInfo();
-                    priorLatLong = geoLocation.getLatLong();
-                    RefUtils.set(getElement(), propPath+".latLong", new LatLong());
-                    RefUtils.set(getElement(), propPath+".areaInfo", new AreaInfo());
-                    latLongPanel.modelChanged();
-                    areaInfoPanel.modelChanged();
-                    hide(definedDiv);
-                }
-                else {
-                    RefUtils.set(getElement(), propPath+".latLong", priorLatLong);
-                    RefUtils.set(getElement(), propPath+".areaInfo", priorAreaInfo);
-                    latLongPanel = new LatLongPanel("latLong", GeoLocationPanel.this, propPath + ".latLong", readOnly, feedback);
-                    definedDiv.addOrReplace(latLongPanel);
-                    areaInfoPanel = new AreaInfoPanel("areaInfo", GeoLocationPanel.this, propPath + ".areaInfo", readOnly, feedback);
-                    definedDiv.addOrReplace(areaInfoPanel);
-                    display(definedDiv);
-                }
-                target.addComponent(definedDiv);
-            }
-        };
-        addReplaceable(undefinedCheckBox);
-        definedDiv = new WebMarkupContainer("definedDiv");
-        addReplaceable(definedDiv);
         areaInfoPanel = new AreaInfoPanel("areaInfo", this, propPath + ".areaInfo", readOnly, feedback);
-        addReplaceableTo(areaInfoPanel, definedDiv);
+        addReplaceable(areaInfoPanel);
         latLongPanel = new LatLongPanel("latLong", this, propPath + ".latLong", readOnly, feedback);
-        addReplaceableTo(latLongPanel, definedDiv);
-        if (geoLocation.isDefined()) {
-            display(definedDiv);
-        }
-        else {
-            hide(definedDiv);
-        }
+        addReplaceable(latLongPanel);
     }
 
 }

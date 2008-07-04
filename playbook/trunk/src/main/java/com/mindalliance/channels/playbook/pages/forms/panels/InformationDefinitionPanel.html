@@ -9,37 +9,38 @@
 <wicket:extend>
 <table>
     <tr>
-        <td nowrap="nowrap">
-            Any information about:
-        </td>
         <td>
+            <label>about:</label>
+        </td>
+        <td nowrap="nowrap" width="99%">
             <input wicket:id="anyEvent" type="checkbox"/>anything
         </td>
+    </tr>
+    <tr>
+        <td></td>
         <td>
             <div wicket:id="eventSpecificationDiv">
                 <fieldset>
-                    <legend>events such as</legend>
+                    <legend></legend>
                     <span wicket:id="eventSpecification">[event specification]</span>
                 </fieldset>
             </div>
         </td>
     </tr>
-</table>
-<table>
     <tr>
-        <td nowrap="nowrap">
+        <td>
             <label>from:</label>
         </td>
-        <td>
+        <td nowrap="nowrap" width="99%">
             <input wicket:id="anySource" type="checkbox"/> any source
         </td>
     </tr>
     <tr>
-        <td>&#160;</td>
+        <td></td>
         <td>
             <div wicket:id="sourceSpecificationsDiv">
                 <fieldset>
-                    <legend>sources such as</legend>
+                    <legend>sources that fit any of these descriptions</legend>
                     <table>
                         <tr>
                             <td nowrap="nowrap">
@@ -49,7 +50,8 @@
                                 <button wicket:id="addSourceSpecification">Add</button>
                                 <button wicket:id="deleteSourceSpecification">Remove</button>
                             </td>
-                            <td>
+                            <td width="99%">
+                                &#160;
                                 <div wicket:id="sourceSpecificationDiv">
                                     <fieldset>
                                         <legend>this kind of source</legend>
@@ -64,15 +66,15 @@
         </td>
     </tr>
     <tr>
-        <td nowrap="nowrap">
+        <td >
             <label>containing:</label>
         </td>
-        <td>
-            <input wicket:id="anyEoi" type="checkbox"/> anything
+        <td width="99%" nowrap="nowrap">
+            <input wicket:id="anyEoi" type="checkbox"/> any element of information
         </td>
     </tr>
     <tr>
-        <td>&#160;</td>
+        <td></td>
         <td>
             <div wicket:id="eoisDiv">
                 <fieldset>

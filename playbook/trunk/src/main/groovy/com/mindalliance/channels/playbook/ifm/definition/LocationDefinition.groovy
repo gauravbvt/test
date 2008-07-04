@@ -35,6 +35,21 @@ class LocationDefinition extends Definition {
     Ref proximalLocatable           // xor
     Ref proximalJurisdictionable    // xor
 
+    void setByProximity(boolean byProximity) {
+        this.byProximity = byProximity
+        if (!byProximity) setProximalLocatable(null) // puts other to null as well
+    }
+
+    void setByGeoLocation(boolean byGeoLocation) {
+        this.byGeoLocation = byGeoLocation
+        if (!byGeoLocation) geoLocation = new GeoLocation()
+    }
+
+    void setByJurisdiction(boolean byJurisdiction) {
+        this.byJurisdiction = byJurisdiction
+        if (!byJurisdiction) jurisdictionable = null
+    }
+
     void setProximityAreaType (Ref areaType) {
         proximityAreaType = areaType
         proximityPlaceType = null

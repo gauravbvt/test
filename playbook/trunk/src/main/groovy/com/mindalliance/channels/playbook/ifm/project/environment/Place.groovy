@@ -22,6 +22,10 @@ class Place extends ProjectElement implements Named, Described {
     Ref enclosingPlace
     GeoLocation geoLocation = new GeoLocation()   // Left undefined unless the place itself is geolocated
 
+    String toString() {
+        return name ?: 'no name'
+    }
+
     GeoLocation findGeoLocation() { // defaults to undefined geolocation
         if (geoLocation.isDefined()) {
             return geoLocation

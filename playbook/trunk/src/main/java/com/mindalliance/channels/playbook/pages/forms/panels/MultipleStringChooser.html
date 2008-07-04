@@ -11,13 +11,18 @@
                 <input wicket:id="string" type="text" size = "40"/>
             </td>
             <td>
-                <button wicket:id="addString">&gt;&gt;</button>
+                <button wicket:id="addString">&gt;&gt;</button><br/>
+                <button wicket:id="deleteString">&lt;&lt;</button>
             </td>
-            <td>
+            <td width="99%">
                 <select wicket:id="strings">
                     <option>[string]</option>
-                </select> <br/>
-                <button wicket:id="deleteString">Delete</button>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <i><span wicket:id="fullString">[full string]</span></i>
             </td>
         </tr>
     </table>

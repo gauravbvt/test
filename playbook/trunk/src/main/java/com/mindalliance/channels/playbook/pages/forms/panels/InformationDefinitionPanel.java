@@ -61,6 +61,7 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
 
     protected void load() {
         super.load();
+        informationDefinition = (InformationDefinition)getComponent();
         anyEventCheckBox = new AjaxCheckBox("anyEvent", new Model((Boolean)informationDefinition.getEventSpec().matchesAll())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyEvent = (Boolean)anyEventCheckBox.getModelObject();
@@ -74,7 +75,7 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyEventCheckBox);
         eventSpecificationDiv = new WebMarkupContainer("eventSpecificationDiv");
-        setVisibility(eventSpecificationDiv, informationDefinition.getEventSpec().matchesAll());
+        setVisibility(eventSpecificationDiv, !informationDefinition.getEventSpec().matchesAll());
         addReplaceable(eventSpecificationDiv);
         eventSpecificationPanel = new EventSpecificationPanel("eventSpecification", this, propPath+".eventSpec", isReadOnly(), feedback);
         addReplaceableTo(eventSpecificationPanel, eventSpecificationDiv);
@@ -83,18 +84,18 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
              protected void onUpdate(AjaxRequestTarget target) {
                  boolean anySource = (Boolean)anySourceCheckBox.getModelObject();
                  if (anySource) {
-                     setProperty("sourceAgentSpecifications", new ArrayList<AgentSpecification>());
+                     setProperty("sourceAgentSpecs", new ArrayList<AgentSpecification>());
                  }
                  setVisibility(sourceSpecificationsDiv, !anySource, target);
              }
          };
          addReplaceable(anySourceCheckBox);
          sourceSpecificationsDiv = new WebMarkupContainer("sourceSpecificationsDiv");
-         setVisibility(sourceSpecificationsDiv, informationDefinition.getSourceAgentSpecs().isEmpty());
+         setVisibility(sourceSpecificationsDiv, !informationDefinition.getSourceAgentSpecs().isEmpty());
          addReplaceable(sourceSpecificationsDiv);
          sourceSpecificationsChoice = new ListChoice("sourceSpecifications",
                                                          new Model(selectedSourceSpecification),
-                                                         new RefPropertyModel(getComponent(), "sourceAgentSpecifications"),
+                                                         new RefPropertyModel(getComponent(), "sourceAgentSpecs"),
                                                          new ChoiceRenderer("summary"));
          sourceSpecificationsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
              protected void onUpdate(AjaxRequestTarget target) {
@@ -144,7 +145,7 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyEoiCheckBox);
         eoisDiv = new WebMarkupContainer("eoisDiv");
-        setVisibility(eoisDiv, informationDefinition.getElementsOfInformation().isEmpty());
+        setVisibility(eoisDiv, !informationDefinition.getElementsOfInformation().isEmpty());
         addReplaceable(eoisDiv);
         eoisPanel = new EOIsPanel("eois", this, propPath+".elementsOfInformation", isReadOnly(), feedback, getTopicChoicesModel());
         addReplaceableTo(eoisPanel, eoisDiv);

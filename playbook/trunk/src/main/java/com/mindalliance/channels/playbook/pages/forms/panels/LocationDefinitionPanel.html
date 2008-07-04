@@ -7,118 +7,95 @@
         lang="en">
 <body>
 <wicket:extend>
-<table>
-    <tr>
-        <td nowrap="nowrap">
-            <input wicket:id="isPlace" type="checkbox"/>A named place<br/>
-            <input wicket:id="isGeoLocation" type="checkbox"/>Some location<br/>
-        </td>
-        <td>
-            <div wicket:id="placeTypeDiv">
-                <fieldset>
-                    <legend>of type</legend>
-                    <span wicket:id="placeType">[place tree]</span>
-                </fieldset>
-            </div>
-        </td>
-        <td nowrap="nowrap">
-            <input wicket:id="isAffirmed" type="checkbox"/>that must be...<br/>
-            <input wicket:id="isNegated" type="checkbox"/>that must <strong>not</strong> be...<br/>
-        </td>
-    </tr>
-</table>
-<fieldset>
-    <legend>(by geographical location)</legend>
     <table>
         <tr>
             <td nowrap="nowrap">
-                <input wicket:id="isByGeoLocation" type="checkbox"/>
+                <input wicket:id="isPlace" type="checkbox"/>a named place<br/>
+                <input wicket:id="isGeoLocation" type="checkbox"/>some location<br/>
             </td>
             <td>
-                <table>
-                    <tr>
-                        <td nowrap="nowrap">
-                            <select wicket:id="byGeoLocationRelation">
-                                <option>within</option>
-                                <option>near</option>
-                            </select>
-                            this area:
-                        </td>
-                        <td>
-                            <span wicket:id="geoLocation">[geolocation panel]</span>
-                        </td>
-                    </tr>
-                </table>
+                <div wicket:id="placeTypeDiv">
+                    <fieldset>
+                        <legend>of type</legend>
+                        <span wicket:id="placeType">[place tree]</span>
+                    </fieldset>
+                </div>
+            </td>
+            <td nowrap="nowrap" width="99%">
+                <input wicket:id="isAffirmed" type="checkbox"/>that must be...<br/>
+                <input wicket:id="isNegated" type="checkbox"/>that must <strong>not</strong> be...<br/>
             </td>
         </tr>
     </table>
-</fieldset>
-<fieldset>
-    <legend>(by jurisdiction)</legend>
-    <table>
-        <tr>
-            <td>
-                <input wicket:id="isByJurisdiction" type="checkbox"/>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td nowrap="nowrap">
-                            <select wicket:id="byJurisdictionRelation">
-                                <option>within</option>
-                                <option>near</option>
-                            </select>&#160;the jurisdiction of:
-                        </td>
-                        <td>
-                            <span wicket:id="jurisdictionable">[jurisdictionable tree]</span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</fieldset>
-<fieldset>
-    <legend>(by relative proximity)</legend>
-    <table>
-        <tr>
-            <td>
-                <input wicket:id="isByProximity" type="checkbox"/>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td>
-                            <select wicket:id="byProximityRelation">
-                                <option>in the same</option>
-                                <option>in a nearby</option>
-                            </select>
-                        </td>
-                        <td nowrap="nowrap">
-                            <select wicket:id="areaTypes">
-                                <option>[area type]</option>
-                            </select>(area)<br/>
-                            <select wicket:id="placeTypes">
-                                <option>[place type]</option>
-                            </select>(type of place)
-                        </td>
-                        <td nowrap="nowrap">
-                            <span wicket:id="as-to">as/to</span>
-                            <select wicket:id="kindOfTarget">
-                                <option>this place</option>
-                                <option>the location of</option>
-                                <option>the jurisdiction of</option>
-                            </select>&#160;:
-                        </td>
-                        <td>
-                            <span wicket:id="targetTree">[place|locatable|jurisdictionable tree]</span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</fieldset>
+    <fieldset>
+        <legend>(by geographical location)</legend>
+        <table>
+            <tr>
+                <td nowrap="nowrap">
+                    <input wicket:id="isByGeoLocation" type="checkbox"/>
+                    <select wicket:id="byGeoLocationRelation">
+                        <option>within</option>
+                        <option>near</option>
+                    </select>
+                    this area:
+                </td>
+                <td width="99%">
+                    <span wicket:id="geoLocation">[geolocation panel]</span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>(by jurisdiction)</legend>
+        <table>
+            <tr>
+                <td nowrap="nowrap">
+                    <input wicket:id="isByJurisdiction" type="checkbox"/>
+                    <select wicket:id="byJurisdictionRelation">
+                        <option>within</option>
+                        <option>near</option>
+                    </select>&#160;the jurisdiction of:
+                </td>
+                <td width="99%">
+                    <span wicket:id="jurisdictionable">[jurisdictionable tree]</span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>(by relative proximity)</legend>
+        <table>
+            <tr>
+                <td nowrap="nowrap">
+                    <input wicket:id="isByProximity" type="checkbox"/>
+                    <select wicket:id="byProximityRelation">
+                        <option>in the same</option>
+                        <option>in a neighboring</option>
+                    </select>
+                </td>
+                <td nowrap="nowrap">
+                    <select wicket:id="areaTypes">
+                        <option>[area type]</option>
+                    </select><br/>
+                    <select wicket:id="placeTypes">
+                        <option>[place type]</option>
+                    </select>
+                </td>
+                <td nowrap="nowrap">
+                    <span wicket:id="as-of">as</span>
+                    <select wicket:id="kindOfTarget">
+                        <option>this place</option>
+                        <option>the location of</option>
+                        <option>the jurisdiction of</option>
+                    </select>
+                </td>
+                <td width="99%">
+                    &#160;
+                    <span wicket:id="targetTree">[place|locatable|jurisdictionable tree]</span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
 </wicket:extend>
 </body>
 </html>

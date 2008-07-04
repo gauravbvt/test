@@ -35,4 +35,8 @@ public class OrganizationSpecificationPanel extends AbstractSpecificationPanel {
     protected Definition makeNewDefinition() {
         return new OrganizationDefinition();
     }
+
+    protected boolean isEnumerable() {
+        return true;
+    }
 }

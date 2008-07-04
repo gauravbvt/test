@@ -4,6 +4,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -24,18 +26,22 @@ import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
  */
 public class MultipleStringChooser extends AbstractComponentPanel {
 
+    private static final int MAX_SIZE = 30;
+    private static final int MAX_ROWS = 4;
+
     protected IModel choices;
 
     protected AutoCompleteTextFieldWithChoices newStringField;
     protected AjaxButton addStringButton;
     protected ListChoice stringsChoice;
     protected String selectedString;
-    protected String newString;
+    protected String newString = "";
     protected AjaxButton deleteStringButton;
+    protected Label fullStringLabel;
 
 
     public MultipleStringChooser(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, IModel choices) {
-        super(id, parentPanel, propPath , readOnly, feedback);
+        super(id, parentPanel, propPath, readOnly, feedback);
         this.choices = choices;
         doLoad();
     }
@@ -48,52 +54,68 @@ public class MultipleStringChooser extends AbstractComponentPanel {
             @Override
             protected void onUpdate(AjaxRequestTarget
                     target) {
-                newString = newStringField.getModelObjectAsString().trim().toLowerCase();
-                updateAddButton(target);
+                newString = RefUtils.summarize(newStringField.getModelObjectAsString(), Integer.MAX_VALUE);
             }
         });
-        add(newStringField);
+        addReplaceable(newStringField);
         addStringButton = new AjaxButton("addString") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                RefUtils.add(getElement(), propPath, newString);
-                newStringField.clearInput();
-                newString = null;
-                updateAddButton(target);
-                target.addComponent(newStringField);
-                target.addComponent(stringsChoice);
+                if (!newString.isEmpty()) {
+                    RefUtils.add(getElement(), propPath, newString);
+                    newStringField.setModelObject("");
+                    newString = "";
+                    target.addComponent(newStringField);
+                    target.addComponent(stringsChoice);
+                }
             }
         };
-        addStringButton.setEnabled(false);
-        add(addStringButton);
-        stringsChoice = new ListChoice("strings", new Model(), new RefPropertyModel(getElement(), propPath));
+        addReplaceable(addStringButton);
+        stringsChoice = new ListChoice("strings", new Model(), new RefPropertyModel(getElement(), propPath),
+                        new ChoiceRenderer() {
+                            public String getDisplayValue(Object item) {
+                                return RefUtils.summarize((String)item, MAX_SIZE);
+                            }
+                        });
+        stringsChoice.setMaxRows(MAX_ROWS);
         stringsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget
                     target) {
                 selectedString = stringsChoice.getModelObjectAsString();
+                updateFullStringLabel(target);
                 updateDeleteButton(target);
             }
         });
-        add(stringsChoice);
+        addReplaceable(stringsChoice);
         deleteStringButton = new AjaxButton("deleteString") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                RefUtils.remove(getElement(), propPath, selectedString);
-                selectedString = null;
-                updateDeleteButton(target);
-                target.addComponent(stringsChoice);
+                if (selectedString != null) {
+                    RefUtils.remove(getElement(), propPath, selectedString);
+                    newString = selectedString;
+                    newStringField.setModelObject(selectedString);
+                    selectedString = null;
+                    updateFullStringLabel(target);
+                    updateDeleteButton(target);
+                    target.addComponent(newStringField);
+                    target.addComponent(stringsChoice);
+                }
             }
         };
-        add(deleteStringButton);
+        deleteStringButton.setEnabled(false);
+        addReplaceable(deleteStringButton);
+        fullStringLabel = new Label("fullString", new Model());
+        hide(fullStringLabel);
+        addReplaceable(fullStringLabel);
+    }
+
+    private void updateFullStringLabel(AjaxRequestTarget target) {
+        fullStringLabel.setModelObject(selectedString);
+        setVisibility(fullStringLabel, selectedString != null, target);
     }
 
     private void updateDeleteButton(AjaxRequestTarget target) {
         deleteStringButton.setEnabled(selectedString != null);
         target.addComponent(deleteStringButton);
-    }
-
-    private void updateAddButton(AjaxRequestTarget target) {
-        addStringButton.setEnabled(newString != null);
-        target.addComponent(addStringButton);
     }
 
 }

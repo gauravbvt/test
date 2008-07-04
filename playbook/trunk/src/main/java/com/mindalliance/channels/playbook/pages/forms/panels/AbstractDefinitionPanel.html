@@ -7,17 +7,11 @@
         lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>Description</legend>
-                    <textarea wicket:id="description" rows="2" cols="60">[description]</textarea>
-                </fieldset>
-            </td>
-        </tr>
-    </table>
     <wicket:child/>
+    <fieldset>
+       <legend>(or in plain english...)</legend>
+        <textarea wicket:id="description" rows="2" cols="60">[description]</textarea>
+    </fieldset>
 </wicket:extend>
 </body>
 </html>

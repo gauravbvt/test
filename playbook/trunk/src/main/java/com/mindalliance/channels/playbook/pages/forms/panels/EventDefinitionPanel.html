@@ -10,12 +10,12 @@
     <table>
         <tr>
             <td nowrap="nowrap">
-                Any event:
+                <label>An event:</label>
             </td>
-            <td>
+            <td nowrap="nowrap">
                 <input wicket:id="anyEventType" type="checkbox"/>of any type
             </td>
-            <td>
+            <td width="99%">
                 <div wicket:id="eventTypesDiv">
                     <fieldset>
                         <legend>classified as</legend>
@@ -24,22 +24,20 @@
                 </div>
             </td>
         </tr>
-    </table>
-    <table>
         <tr>
-            <td nowrap="nowrap">
+            <td>
                 <label>from:</label>
             </td>
-            <td>
+            <td nowrap="nowrap" width="99%" colspan="2">
                 <input wicket:id="anyLocation" type="checkbox"/> anywhere
             </td>
         </tr>
         <tr>
-            <td>&#160;</td>
+            <td></td>
             <td>
                 <div wicket:id="locationDefinitionDiv">
                     <fieldset>
-                        <legend>in</legend>
+                        <legend></legend>
                         <span wicket:id="locationDefinition">[location definition]</span>
                     </fieldset>
                 </div>
@@ -47,14 +45,15 @@
         </tr>
         <tr>
             <td nowrap="nowrap">
-                caused by:
+                <label>caused by:</label>
             </td>
-            <td>
+            <td nowrap="nowrap" width="99%" colspan="2">
                 <input wicket:id="anyCause" type="checkbox"/>anything
             </td>
+        </tr>
         <tr>
-            <td>&#160;</td>
-            <td>
+            <td></td>
+            <td colspan="2">
                 <div wicket:id="causeSpecificationsDiv">
                     <fieldset>
                         <legend>any event such as</legend>
@@ -67,7 +66,7 @@
                                     <button wicket:id="addCauseSpecification">Add</button>
                                     <button wicket:id="deleteCauseSpecification">Remove</button>
                                 </td>
-                                <td>
+                                <td width="99%">
                                     <div wicket:id="causeSpecificationDiv">
                                         <fieldset>
                                             <legend>this kind of event</legend>

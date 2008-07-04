@@ -80,7 +80,7 @@ class AreaType extends ElementType {
             case 'State': return state()
             case 'County': return county()
             case 'City': return city()
-            default: throw new IllegalArgumentException("No known area type named $name")
+            default: null
         }
     }
  }

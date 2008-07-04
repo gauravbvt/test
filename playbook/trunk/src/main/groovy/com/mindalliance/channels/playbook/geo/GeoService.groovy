@@ -19,7 +19,7 @@ import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 * Date: Mar 22, 2008
 * Time: 11:15:38 AM
 */
-class GeoService {
+class GeoService {    // TODO - fails with accented characters
 
     static final String COUNTRY = 'PCLI'
     static final List<String> CITY = ['PPL', 'PPLA', 'PPLC']

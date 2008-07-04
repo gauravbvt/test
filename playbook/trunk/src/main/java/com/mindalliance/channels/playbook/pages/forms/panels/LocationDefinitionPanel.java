@@ -12,8 +12,7 @@ import com.mindalliance.channels.playbook.ifm.model.AreaType;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.ListChoice;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -38,7 +37,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     protected static final String WITHIN = "within";
     protected static final String NEAR = "near";
     protected static final String IN_THE_SAME = "in the same";
-    protected static final String IN_A_NEARBY = "in a nearby";
+    protected static final String IN_A_NEARBY = "in a neighboring";
     protected static final String THE_JURISDICTION_OF = "the jurisdiction of";
     protected static final String THE_LOCATION_OF = "the location of";
     protected static final String THIS_PLACE = "this place";
@@ -52,17 +51,17 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     protected AjaxCheckBox isAffirmedCheckBox;
     protected AjaxCheckBox isNegatedCheckBox;
     protected AjaxCheckBox isByGeoLocationCheckBox;
-    protected ListChoice byGeoLocationRelationChoice;
+    protected DropDownChoice byGeoLocationRelationChoice;
     protected GeoLocationPanel geoLocationPanel;
     protected AjaxCheckBox isByJurisdictionCheckBox;
-    protected ListChoice byJurisdictionRelationChoice;
+    protected DropDownChoice byJurisdictionRelationChoice;
     protected DynamicFilterTree jurisdictionableTree;
     protected AjaxCheckBox isByProximityCheckBox;
-    protected ListChoice byProximityRelationChoice;
-    protected ListChoice placeTypesChoice;
-    protected ListChoice areaTypesChoice;
+    protected DropDownChoice byProximityRelationChoice;
+    protected DropDownChoice placeTypesChoice;
+    protected DropDownChoice areaTypesChoice;
     protected Label asToLabel;
-    protected ListChoice kindOfTargetChoice;
+    protected DropDownChoice kindOfTargetChoice;
     protected DynamicFilterTree targetTree;
 
     public LocationDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
@@ -92,6 +91,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         addReplaceable(isGeoLocationCheckBox);
         placeTypeDiv = new WebMarkupContainer("placeTypeDiv");
         setVisibility(placeTypeDiv, locationDefinition.getLocationIsAPlace());
+        addReplaceable(placeTypeDiv);
         placeTypeTree = new DynamicFilterTree("placeType", new RefPropertyModel(getComponent(), "placeType"),
                                                new RefPropertyModel(getProject(), "places"),
                                                SINGLE_SELECTION) {
@@ -101,7 +101,6 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                 setVisibility(placeTypesChoice, isFresh(placeType), target);
             }
         };
-        setVisibility(placeTypesChoice, isFresh(locationDefinition.getPlaceType()));
         addReplaceableTo(placeTypeTree, placeTypeDiv);
         isAffirmedCheckBox = new AjaxCheckBox("isAffirmed", new Model((Boolean)!locationDefinition.isNegated())) {
             protected void onUpdate(AjaxRequestTarget target) {
@@ -122,11 +121,13 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                 boolean isByGeoLocation = (Boolean)isByGeoLocationCheckBox.getModelObject();
                 setProperty("byGeoLocation", isByGeoLocation);
                 enable(byGeoLocationRelationChoice,isByGeoLocation, target);
+                geoLocationPanel = new GeoLocationPanel("geoLocation", LocationDefinitionPanel.this, propPath+".geoLocation", isReadOnly(), feedback);
+                addReplaceable(geoLocationPanel);
                 setVisibility(geoLocationPanel,isByGeoLocation, target);
             }
         };
         addReplaceable(isByGeoLocationCheckBox);
-        byGeoLocationRelationChoice = new ListChoice("byGeoLocationRelation",
+        byGeoLocationRelationChoice = new DropDownChoice("byGeoLocationRelation",
                                                       new RefQueryModel(this, new Query("getGeoLocationRelation")),
                                                       new Model((Serializable)getRelationChoices()));
         byGeoLocationRelationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -144,11 +145,13 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean isByJurisdiction = (Boolean)isByJurisdictionCheckBox.getModelObject();
                 enable(byJurisdictionRelationChoice,isByJurisdiction, target);
+                if (!isByJurisdiction) setProperty("jurisdictionable", null);
+                jurisdictionableTree.modelChanged();
                 setVisibility(jurisdictionableTree,isByJurisdiction, target);
             }
         };
         addReplaceable(isByJurisdictionCheckBox);
-        byJurisdictionRelationChoice = new ListChoice("byJurisdictionRelation",
+        byJurisdictionRelationChoice = new DropDownChoice("byJurisdictionRelation",
                                                       new RefQueryModel(this, new Query("getJurisdictionRelation")),
                                                       new Model((Serializable)getRelationChoices()));
         byJurisdictionRelationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -176,11 +179,12 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                 enable(placeTypesChoice,isByProximity, target);
                 enable(areaTypesChoice,isByProximity, target);
                 enable(kindOfTargetChoice,isByProximity, target);
+                targetTree.modelChanged();
                 setVisibility(targetTree,isByProximity, target);
             }
         };
         addReplaceable(isByProximityCheckBox);
-        byProximityRelationChoice = new ListChoice("byProximityRelation",
+        byProximityRelationChoice = new DropDownChoice("byProximityRelation",
                                                       new RefQueryModel(this, new Query("getProximityRelation")),
                                                       new Model((Serializable)getProximityRelationChoices()));
         byProximityRelationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
@@ -191,7 +195,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                     asToLabel.setModelObject("as");
                 }
                 else {
-                    asToLabel.setModelObject("to");
+                    asToLabel.setModelObject("of");
                 }
                 target.addComponent(asToLabel);
                 target.addComponent(targetTree);
@@ -199,37 +203,44 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         });
         byProximityRelationChoice.setEnabled(locationDefinition.isByProximity());
         addReplaceable(byProximityRelationChoice);
-        areaTypesChoice = new ListChoice("areaTypes",
-                                            new RefQueryModel(this, new Query("getProximityAreaTypeName")),
+        areaTypesChoice = new DropDownChoice("areaTypes",
+                                            new Model(getProximityAreaTypeName()),
                                             new Model((Serializable) AreaType.allAreaTypeNames()));
         areaTypesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 Ref areaType = AreaType.areaTypeNamed(areaTypesChoice.getModelObjectAsString());
                 setProperty("proximityAreaType", areaType);
+                placeTypesChoice.setModelObject(null);
                 target.addComponent(placeTypesChoice); // should show no selection in proximity place types
+                targetTree.modelChanged();
                 target.addComponent(targetTree);
             }
         });
         areaTypesChoice.setEnabled(locationDefinition.isByProximity() && isFresh(locationDefinition.getProximityAreaType()));
         addReplaceable(areaTypesChoice);
-        placeTypesChoice = new ListChoice("placeTypes",
+        placeTypesChoice = new DropDownChoice("placeTypes",
                                            new RefPropertyModel(getElement(), propPath+".proximityPlaceType"),
-                                           new RefQueryModel(this, new Query("getProximityPlaceTypeChoices")),
+                                           new Model((Serializable)getProximityPlaceTypeChoices()),
                                            new RefChoiceRenderer("name", "id"));
         placeTypesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
+                areaTypesChoice.setEnabled(locationDefinition.isByProximity() && isFresh(locationDefinition.getProximityAreaType()));
+                areaTypesChoice.setModelObject(null);
                 target.addComponent(areaTypesChoice); // should show no selection in proximity area types
+                targetTree.modelChanged();
                 target.addComponent(targetTree);
             }
         });
         placeTypesChoice.setEnabled(locationDefinition.isByProximity() && isFresh(locationDefinition.getProximityPlaceType()));
+        setVisibility(placeTypesChoice, isFresh(locationDefinition.getPlaceType()));
         addReplaceable(placeTypesChoice);
-        asToLabel = new Label("as-to", new Model("as|to"));
+        asToLabel = new Label("as-of", new Model("as"));
         addReplaceable(asToLabel);
-        kindOfTargetChoice = new ListChoice("kindOfTarget", new RefQueryModel(this, new Query("getProximityTargetKind")),
+        kindOfTargetChoice = new DropDownChoice("kindOfTarget", new Model(getProximityTargetKind()),
                                                             new Model((Serializable)getProximityTargetKindChoices()));
         kindOfTargetChoice.add(new AjaxFormComponentUpdatingBehavior("onchange"){
             protected void onUpdate(AjaxRequestTarget target) {
+                targetTree.modelChanged();
                 target.addComponent(targetTree);
             }
         });
@@ -256,7 +267,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     }
 
     public String getProximityRelation() {
-        return locationDefinition.isWithinProximity() ? IN_THE_SAME : "in a nearby";
+        return locationDefinition.isWithinProximity() ? IN_THE_SAME : IN_A_NEARBY;
     }
 
     private List<String> getRelationChoices() {
@@ -264,7 +275,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     }
 
     private List<String> getProximityRelationChoices() {
-        return Arrays.asList(IN_THE_SAME, "in a nearby");
+        return Arrays.asList(IN_THE_SAME, IN_A_NEARBY);
     }
 
     private boolean meansIsWithin(String value) {
@@ -273,7 +284,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
 
     public String getProximityAreaTypeName() {
         Ref areaType = locationDefinition.getProximityAreaType();
-        if (areaType.isFresh()) {
+        if (isFresh(areaType)) {
             return (String)RefUtils.get(areaType, "name");
         }
         else {
@@ -285,7 +296,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         List<Ref> placeTypeChoices;
         Ref locationPlaceType = locationDefinition.getPlaceType();
         boolean targetIsWithin = locationDefinition.getWithinProximity();
-        if (locationPlaceType.isFresh()) {
+        if (isFresh(locationPlaceType)) {
             placeTypeChoices= (List<Ref>)Query.execute(getProject(), "findAllCompatiblePlaceTypes", locationPlaceType, targetIsWithin); // TODO
         }
         else {
@@ -307,8 +318,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
 
     public List<Ref> getProximityTargetChoices() {
         Ref proximityPlaceType = locationDefinition.getProximityPlaceType();
-        Ref proximityAreaType = locationDefinition.getProximityAreaType();
-        if (proximityPlaceType.isFresh()) {
+        if (isFresh(proximityPlaceType)) {
             if (targetIsPlace()) {
                 return (List<Ref>)Query.execute(getProject(), "findAllPlacesOfTypeImplying", proximityPlaceType);
             }
@@ -318,7 +328,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
             else if (targetIsJurisdictionable()) {
                 return (List<Ref>)Query.execute(getScope(), "findAllAgentsWithJurisdictionsInPlacesOfTypeImplying", proximityPlaceType);
             }
-            else throw new RuntimeException("Can't get proximity target choices"); // should not get here
+            else return new ArrayList<Ref>();
         }
         else {
             if (targetIsPlace()) {
@@ -330,7 +340,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
             else if (targetIsJurisdictionable()) {
                 return (List<Ref>)Query.execute(getScope(), "findAllAgentsWithJurisdictionsInAreasOfTypeImplying", proximityPlaceType);
             }
-            else throw new RuntimeException("Can't get proximity target choices"); // should not get here
+            else return new ArrayList<Ref>();
         }
     }
 
