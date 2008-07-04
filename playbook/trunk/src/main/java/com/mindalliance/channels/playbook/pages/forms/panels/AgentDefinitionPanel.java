@@ -17,8 +17,8 @@ import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
@@ -51,8 +51,8 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
     protected AjaxCheckBox anyRelationshipCheckBox;
     protected WebMarkupContainer relationshipDefinitionsDiv;
     protected ListChoice relationshipDefinitionsChoice;
-    protected AjaxButton addRelationshipDefinitionButton;
-    protected AjaxButton removeRelationshipDefinitionButton;
+    protected Button addRelationshipDefinitionButton;
+    protected Button removeRelationshipDefinitionButton;
     protected WebMarkupContainer relationshipDefinitionDiv;
     protected Component relationshipDefinitionPanel;
     protected RelationshipDefinition selectedRelationshipDefinition;
@@ -163,25 +163,27 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
             }
         });
         addReplaceableTo(relationshipDefinitionsChoice, relationshipDefinitionsDiv);
-        addRelationshipDefinitionButton = new AjaxButton("addRelationshipDefinition"){
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        addRelationshipDefinitionButton = new Button("addRelationshipDefinition");
+        addRelationshipDefinitionButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 selectedRelationshipDefinition = new RelationshipDefinition();
                 RefUtils.add(getElement(), propPath+".relationshipDefinitions", selectedRelationshipDefinition);
                 setVisibility(removeRelationshipDefinitionButton, true, target);
                 updateRelationshipDefinitionPanel();
                 setVisibility(relationshipDefinitionDiv, true, target);
             }
-        };
+        });
         addReplaceableTo(addRelationshipDefinitionButton, relationshipDefinitionsDiv);
-        removeRelationshipDefinitionButton = new AjaxButton("deleteRelationshipDefinition"){
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        removeRelationshipDefinitionButton = new Button("deleteRelationshipDefinition");
+        removeRelationshipDefinitionButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 RefUtils.remove(getElement(), propPath+".relationshipDefinitions", selectedRelationshipDefinition);
                 selectedRelationshipDefinition = null;
                 target.addComponent(relationshipDefinitionsChoice);
                 setVisibility(removeRelationshipDefinitionButton, false, target);
                 setVisibility(relationshipDefinitionDiv, false, target);
             }
-        };
+        });
         addReplaceableTo(removeRelationshipDefinitionButton, relationshipDefinitionsDiv);
         relationshipDefinitionDiv = new WebMarkupContainer("relationshipDefinitionDiv");
         hide(relationshipDefinitionDiv);

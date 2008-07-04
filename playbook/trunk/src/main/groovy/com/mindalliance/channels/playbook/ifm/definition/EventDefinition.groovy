@@ -19,6 +19,13 @@ class EventDefinition extends Definition {
     LocationDefinition locationDefinition = new LocationDefinition()
     List<EventSpecification> causeEventSpecs = []  // ORed
 
+    void setDescription(String s) {
+        if (s == null) {
+            System.out.println("NULL")
+        }
+        super.setDescription(s);
+    }
+
     Class<? extends Bean> getMatchingDomainClass() {
         return Information.class
     }

@@ -16,10 +16,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.IModel;
@@ -45,8 +45,8 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
     protected AjaxCheckBox anySourceCheckBox;
     protected WebMarkupContainer sourceSpecificationsDiv;
     protected ListChoice sourceSpecificationsChoice;
-    protected AjaxButton addSourceSpecificationButton;
-    protected AjaxButton removeSourceSpecificationButton;
+    protected Button addSourceSpecificationButton;
+    protected Button removeSourceSpecificationButton;
     protected WebMarkupContainer sourceSpecificationDiv;
     protected Component sourceSpecificationPanel;
     protected AgentSpecification selectedSourceSpecification;
@@ -106,25 +106,27 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
              }
          });
          addReplaceableTo(sourceSpecificationsChoice, sourceSpecificationsDiv);
-         addSourceSpecificationButton = new AjaxButton("addSourceSpecification"){
-             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                 selectedSourceSpecification = new AgentSpecification();
-                 RefUtils.add(getElement(), propPath+".sourceAgentSpecs", selectedSourceSpecification);
-                 setVisibility(removeSourceSpecificationButton, true, target);
-                 updateSourceSpecificationPanel();
-                 setVisibility(sourceSpecificationDiv, true, target);
-             }
-         };
+         addSourceSpecificationButton = new Button("addSourceSpecification");
+        addSourceSpecificationButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
+                selectedSourceSpecification = new AgentSpecification();
+                RefUtils.add(getElement(), propPath+".sourceAgentSpecs", selectedSourceSpecification);
+                setVisibility(removeSourceSpecificationButton, true, target);
+                updateSourceSpecificationPanel();
+                setVisibility(sourceSpecificationDiv, true, target);
+            }
+        });
          addReplaceableTo(addSourceSpecificationButton, sourceSpecificationsDiv);
-         removeSourceSpecificationButton = new AjaxButton("deleteSourceSpecification"){
-             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                 RefUtils.remove(getElement(), propPath+".sourceAgentSpecs", selectedSourceSpecification);
-                 selectedSourceSpecification = null;
-                 target.addComponent(sourceSpecificationsChoice);
-                 setVisibility(removeSourceSpecificationButton, false, target);
-                 setVisibility(sourceSpecificationDiv, false, target);
-             }
-         };
+         removeSourceSpecificationButton = new Button("deleteSourceSpecification");
+         removeSourceSpecificationButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
+                RefUtils.remove(getElement(), propPath+".sourceAgentSpecs", selectedSourceSpecification);
+                selectedSourceSpecification = null;
+                target.addComponent(sourceSpecificationsChoice);
+                setVisibility(removeSourceSpecificationButton, false, target);
+                setVisibility(sourceSpecificationDiv, false, target);
+            }
+        });
          addReplaceableTo(removeSourceSpecificationButton, sourceSpecificationsDiv);
          sourceSpecificationDiv = new WebMarkupContainer("sourceSpecificationDiv");
          hide(sourceSpecificationDiv);
@@ -169,5 +171,15 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
     private List<String> findAllKnownTopics() {
          return (List<String>)Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventSpec().allEventTypes());
     }
+
+    @Override
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        super.elementChanged(propPath, target);
+        if (propPath.endsWith(".eventTypes")) {
+            target.addComponent(eoisPanel);
+        }
+    }
+
+
 
 }

@@ -8,10 +8,24 @@
 <body>
 <wicket:extend>
     <div wicket:id="editable">
-        <ul>
-            <li><label><span>Longitude:</span><input type="text" wicket:id="longitude" size = "7"/></label></li>
-            <li><label><span>Latitude:</span><input type="text" wicket:id="latitude" size = "7"/></label></li>
-        </ul>
+        <table>
+            <tr>
+                <td>
+                    Longitude:
+                </td>
+                <td>
+                    <input type="text" wicket:id="longitude" size="7"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Latitude:
+                </td>
+                <td>
+                    <input type="text" wicket:id="latitude" size="7"/>
+                </td>
+            </tr>
+        </table>
     </div>
     <div wicket:id="readOnly">
         <span wicket:id="latLongString">[lat long string]</span>

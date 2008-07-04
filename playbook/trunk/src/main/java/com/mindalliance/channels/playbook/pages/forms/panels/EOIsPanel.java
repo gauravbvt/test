@@ -84,17 +84,14 @@ public class EOIsPanel extends AbstractComponentPanel {
         topicChoiceList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 topicToAdd = topicChoiceList.getModelObjectAsString();
-                adHocTopicField.clearInput();
-                addTopicButton.setEnabled(topicToAdd != null);
+                adHocTopicField.setModelObject("");
                 target.addComponent(adHocTopicField);
-                target.addComponent(addTopicButton);
             }
         });
         topicChoiceDiv.add(topicChoiceList);
         addReplaceable(topicChoiceDiv);
         // Add button
         addTopicButton = new Button("addTopic");
-        addTopicButton.setEnabled(false);
         addTopicButton.add(new AjaxEventBehavior("onclick") {
             protected void onEvent(AjaxRequestTarget target) {
                 addNewEOI(target);
@@ -150,8 +147,6 @@ public class EOIsPanel extends AbstractComponentPanel {
         String toAdd = topic.trim();
         if (toAdd.length() == 0) toAdd = null;
         topicToAdd = toAdd;
-        addTopicButton.setEnabled(topicToAdd != null);
-        target.addComponent(addTopicButton);
         updateTopicChoicesSelection();
         target.addComponent(topicChoiceList);
     }
@@ -167,15 +162,17 @@ public class EOIsPanel extends AbstractComponentPanel {
     }
 
     private void addNewEOI(AjaxRequestTarget target) {
-        ElementOfInformation eoi = new ElementOfInformation();
-        eoi.setTopic(topicToAdd);
-        eois.add(eoi);
-        elementChanged(propPath, target);
-        topicToAdd = null;
-        addTopicButton.setEnabled(false);
-        target.addComponent(addTopicButton);
-        target.addComponent(topicChoiceList);
-        target.addComponent(eoisDiv);
+        if (topicToAdd != null && !topicToAdd.isEmpty()) {
+            adHocTopicField.setModelObject("");
+            ElementOfInformation eoi = new ElementOfInformation();
+            eoi.setTopic(topicToAdd);
+            eois.add(eoi);
+            elementChanged(propPath, target);
+            topicToAdd = null;
+            target.addComponent(adHocTopicField);
+            target.addComponent(topicChoiceList);
+            target.addComponent(eoisDiv);
+        }
     }
 
     private void removeEoi(ElementOfInformation eoi, AjaxRequestTarget target) {

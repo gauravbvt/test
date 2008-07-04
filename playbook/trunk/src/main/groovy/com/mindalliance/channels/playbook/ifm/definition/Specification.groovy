@@ -54,7 +54,7 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     // DEFINITION
 
     boolean matchesAll() {  // undefined matches any instance of instance class
-        return !isEnumerated() && !isDefined()
+        return !isEnumerated() && !isDefined() && !negated
     }
 
     MatchResult match(Bean bean, InformationAct informationAct) {

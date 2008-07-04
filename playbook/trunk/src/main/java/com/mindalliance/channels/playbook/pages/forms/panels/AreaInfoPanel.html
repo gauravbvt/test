@@ -8,14 +8,56 @@
 <body>
 <wicket:extend>
     <div wicket:id="editable">
-        <ul>
-            <li><label><span>Country:</span><input type="text" wicket:id="country"/></label></li>
-            <li><label><span>State:</span><input type="text" wicket:id="state"/></label></li>
-            <li><label><span>County:</span><input type="text" wicket:id="county"/></label></li>
-            <li><label><span>City:</span><input type="text" wicket:id="city"/></label></li>
-            <li><label><span>Street:</span><input type="text" wicket:id="street"/></label></li>
-            <li><label><span>Zip code:</span><input type="text" wicket:id="code"/></label></li>
-        </ul>
+        <table>
+            <tr>
+                <td>
+                    Country:
+                </td>
+                <td>
+                    <input type="text" wicket:id="country"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                     State:
+                </td>
+                <td>
+                     <input type="text" wicket:id="state"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                     County:
+                </td>
+                <td>
+                    <input type="text" wicket:id="county"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    City:
+                </td>
+                <td>
+                    <input type="text" wicket:id="city"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Street:
+                </td>
+                <td>
+                    <input type="text" wicket:id="street"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Zip code:
+                </td>
+                <td>
+                    <input type="text" wicket:id="code"/>
+                </td>
+            </tr>
+        </table>
         <div wicket:id="areaInfoFeedback">[feedback]</div>
         <a href="#" wicket:id="verify">Verify area info</a>
     </div>

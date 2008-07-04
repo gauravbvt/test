@@ -13,12 +13,10 @@ import com.mindalliance.channels.playbook.query.Query;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.ListChoice;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -67,20 +65,26 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         super.load();
         final Specification specification = (Specification)getComponent();
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), propPath+".description"));
-        addInputField(descriptionField);
+        descriptionField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+                @Override
+                protected void onUpdate(AjaxRequestTarget target) {
+                    elementChanged(propPath+".description", target);
+                }
+        });
+        addReplaceable(descriptionField);
         affirmedCheckBox= new AjaxCheckBox("affirmed", new Model(!specification.isNegated())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean affirmed = (Boolean)affirmedCheckBox.getModelObject();
-                RefUtils.set(getElement(), propPath+".negated", !affirmed);
+                setProperty("negated", !affirmed, target);
                 negatedCheckBox.setModelObject(!affirmed);
                 target.addComponent(negatedCheckBox);
             }
         };
         addReplaceable(affirmedCheckBox);
-        negatedCheckBox= new AjaxCheckBox("negated", new Model((Boolean)RefUtils.get(getElement(), "negated"))) {
+        negatedCheckBox= new AjaxCheckBox("negated", new Model(specification.isNegated())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean negated = (Boolean)negatedCheckBox.getModelObject();
-                RefUtils.set(getElement(), propPath+".negated", negated);
+                setProperty("negated", negated, target);
                 affirmedCheckBox.setModelObject(!negated);
                 target.addComponent(affirmedCheckBox);
             }
@@ -88,27 +92,27 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         addReplaceable(negatedCheckBox);
         matchingDomainClassLabel = new Label("matchingDomainClass", getMatchingDomainName());
         addReplaceable(matchingDomainClassLabel);
-        specifiedCheckBox = new AjaxCheckBox("specified", new Model((Boolean)!specification.matchesAll())) {
+        specifiedCheckBox = new AjaxCheckBox("specified", new Model((Boolean)specification.isDefined())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean specified = (Boolean)specifiedCheckBox.getModelObject();    // selected means does NOT match all
                 if (specified) {
                     // reset enumeration and definitions models
                     if (priorEnumeration != null) {
-                        RefUtils.set(getElement(), propPath+".enumeration", priorEnumeration);
+                        setProperty("enumeration", priorEnumeration, target);
                         enumerationTree.modelChanged();
                         target.addComponent(enumerationTree);
                     }
                     if (priorDefinitions != null) {
-                        RefUtils.set(getElement(), propPath+".definitions", priorDefinitions);
+                        setProperty("definitions", priorDefinitions, target);
                         definitionsList.setModel(new Model());
                         target.addComponent(definitionsList);
                     }
                 }
                 else {
                     priorEnumeration = specification.getEnumeration();
-                    RefUtils.set(getElement(), propPath+".enumeration", new ArrayList<Ref>());
+                    setProperty("enumeration", new ArrayList<Ref>(), target);
                     priorDefinitions = specification.getDefinitions();
-                    RefUtils.set(getElement(), propPath+".definitions", new ArrayList<Definition>());
+                    setProperty("definitions", new ArrayList<Definition>(), target);
                 }
                 setSpecifiedVisibility();
                 target.addComponent(specifiedDiv);
@@ -123,11 +127,11 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         enumerationTree = new DynamicFilterTree("enumeration", new RefPropertyModel(getComponent(), "enumeration"), getEnumerationChoicesModel()) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selections = enumerationTree.getNewSelections();
-                RefUtils.set(getElement(), propPath+".enumeration", selections);
+                setProperty("enumeration", selections, target);
             }
         };
         addReplaceableTo(enumerationTree, enumerationDiv);
-        definitionsList = new ListChoice("definitions", new Model(), new RefQueryModel(this, new Query("getDefinitionSummaries")));
+        definitionsList = new ListChoice("definitions", new Model(selectedDefinition), new RefQueryModel(this, new Query("getDefinitionSummaries")));
         definitionsList.setMaxRows(4);
         definitionsList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
@@ -157,7 +161,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
             protected void onEvent(AjaxRequestTarget target) {
                 List<Definition> definitions = specification.getDefinitions();
                 definitions.add(makeNewDefinition());
-                RefUtils.set(getElement(), propPath+".definitions", definitions);
+                setProperty("definitions", definitions, target);
                 definitionsList.setModel(new Model());
                 target.addComponent(definitionsList);
             }
@@ -169,7 +173,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
                 List<Definition> definitions = specification.getDefinitions();
                 definitions.remove(selectedDefinition);
                 unselectDefinition(target);
-                RefUtils.set(getElement(), propPath+".definitions", definitions);
+                setProperty("definitions", definitions, target);
                 definitionsList.setModel(new Model());
                 target.addComponent(definitionsList);
             }
@@ -212,6 +216,15 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         }
         return summaries;
     }
+
+    @Override
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        super.elementChanged(propPath, target);
+        if (propPath.endsWith(".description")) {
+            target.addComponent(definitionsList);
+        }
+    }
+
 
     private Definition findDefinitionFromSummary(String definitionSummary) {
         if (definitionSummary == null) {

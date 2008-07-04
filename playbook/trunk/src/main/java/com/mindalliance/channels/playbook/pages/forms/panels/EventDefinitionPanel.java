@@ -16,7 +16,6 @@ import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -77,7 +76,7 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
                                           new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))){
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selected = eventTypesTree.getNewSelections();
-                setProperty("eventTypes", selected);
+                setProperty("eventTypes", selected, target);
             }
         };
         addReplaceableTo(eventTypesTree, eventTypesDiv);

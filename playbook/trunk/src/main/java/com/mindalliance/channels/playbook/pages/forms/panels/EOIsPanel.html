@@ -16,7 +16,7 @@
                             <label>Enter new:</label>
                         </td>
                         <td>
-                            <input wicket:id="adHocTopic" type="text" size = "20"/>
+                            <input wicket:id="adHocTopic" type="text" size="20"/>
                         </td>
                     </tr>
                     <tr>
@@ -24,42 +24,35 @@
                         <td nowrap="nowrap" valign="top">
                             or&#160;<span wicket:id="topicChoiceDiv">
                                 <select wicket:id="topicChoices">
-                                    <option >[topic]</option>
+                                    <option>[topic]</option>
                                 </select>
                             </span>
-                         </td>
+                        </td>
                     </tr>
                 </table>
-             </td>
-            <td>
-                <button wicket:id="addTopic">&gt;&gt;</button><br/>
+            </td>
+            <td width="99%">
+                <input wicket:id="addTopic" type="button" value="&gt;&gt;"/><br/>
             </td>
             <td>
                 <div wicket:id="eoisDiv">
                     <table>
                         <thead>
                             <tr>
-                                <th>Topic</th>
+                                <th width="99%">Topic</th>
                                 <th>Content</th>
-                                <th> </th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr wicket:id="eois">
-                                <td><span wicket:id="topic">[topic]</span></td>
-                                <td><textarea wicket:id="content" cols="20" rows="2">[content]</textarea></td>
+                                <td><span wicket:id="topic" width="99%">[topic]</span></td>
+                                <td><textarea wicket:id="content" cols="30" rows="2">[content]</textarea></td>
                                 <td><a wicket:id="deleteEoi" href="#">(delete)</a></td>
                             </tr>
                         </tbody>
                     </table>
- <!--                   <ul>
-                        <li wicket:id="eois">
-                            <span wicket:id="topic">[topic]</span>
-                            <textarea wicket:id="content" cols="40" rows="3">[content]</textarea>
-                            <a wicket:id="deleteEoi" href="#">(delete)</a>
-                        </li>
-                    </ul>
--->                </div>
+                </div>
             </td>
         </tr>
     </table>

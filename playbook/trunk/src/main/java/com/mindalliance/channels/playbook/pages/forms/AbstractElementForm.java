@@ -170,6 +170,11 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         RefUtils.set(getElement(), property, value);
     }
 
+    protected void setProperty(String property, Object value, AjaxRequestTarget target) {
+        setProperty(property, value);
+        elementChanged(property, target);
+    }
+
     protected Object getProperty(String property) {
         return RefUtils.get(getElement(), property);
     }

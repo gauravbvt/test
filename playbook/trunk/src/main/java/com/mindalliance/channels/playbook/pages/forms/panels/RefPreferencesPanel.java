@@ -8,10 +8,10 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import org.apache.wicket.markup.html.form.ListChoice;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.IModel;
@@ -32,11 +32,11 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
 
     DynamicFilterTree choicesTree;
     ListChoice preferredList;
-    AjaxButton addPreferredButton;
-    AjaxButton removePreferred;
-    AjaxButton upPreferredButton;
-    AjaxButton downPreferredButton;
-    AjaxButton removePreferredButton;
+    Button addPreferredButton;
+    Button removePreferred;
+    Button upPreferredButton;
+    Button downPreferredButton;
+    Button removePreferredButton;
     List<Ref> selectedElements = new ArrayList<Ref>();
     Ref selectedPreferred;
 
@@ -60,8 +60,9 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
             }
         };
         addReplaceable(choicesTree);
-        addPreferredButton = new AjaxButton("addPreferred") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        addPreferredButton = new Button("addPreferred");
+        addPreferredButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 for (Ref selected : selectedElements) {
                     RefUtils.add(getElement(), propPath, selected);
                 }
@@ -70,7 +71,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
                 updateAddButtonVisibility(target);
                 updateUpDownRemoveButtonsVisibility(target);
             }
-        };
+        });
         addPreferredButton.setEnabled(false);
         addReplaceable(addPreferredButton);
         preferredList = new ListChoice("preferredElements", new Model(), new RefPropertyModel(getElement(), propPath),
@@ -83,8 +84,9 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
             }
         });
         addReplaceable(preferredList);
-        upPreferredButton = new AjaxButton("upPreferred") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        upPreferredButton = new Button("upPreferred");
+        upPreferredButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 List<Ref> preferred = (List<Ref>)RefUtils.get(getElement(), propPath);
                 int index = preferred.indexOf(selectedPreferred);
                 if (index > 0) {
@@ -95,10 +97,11 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
                 target.addComponent(preferredList);
                 updateUpDownRemoveButtonsVisibility(target);
             }
-        };
+        });
         addReplaceable(upPreferredButton);
-        downPreferredButton = new AjaxButton("downPreferred") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        downPreferredButton = new Button("downPreferred");
+        downPreferredButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 List<Ref> preferred = (List<Ref>)RefUtils.get(getElement(), propPath);
                 int index = preferred.indexOf(selectedPreferred);
                 if (index != preferred.size()-1) {
@@ -109,18 +112,19 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
                 target.addComponent(preferredList);
                 updateUpDownRemoveButtonsVisibility(target);
             }
-        };
+        });
         downPreferredButton.setEnabled(false);
         addReplaceable(downPreferredButton);
-        removePreferredButton = new AjaxButton("removePreferred") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        removePreferredButton = new Button("removePreferred");
+        removePreferredButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 RefUtils.remove(getElement(), propPath, selectedPreferred);
                 elementChanged(propPath, target);
                 selectedPreferred = null;
                 target.addComponent(preferredList);
                 updateUpDownRemoveButtonsVisibility(target);
-            }
-        };
+             }
+        });
         removePreferredButton.setEnabled(false);
         addReplaceable(removePreferredButton);
     }

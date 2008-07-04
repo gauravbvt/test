@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,6 +25,12 @@ abstract public class AbstractDefinitionPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), propPath+".description"));
-        addInputField(descriptionField);
+        descriptionField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+                @Override
+                protected void onUpdate(AjaxRequestTarget target) {
+                    elementChanged(propPath+".description", target);
+                }
+        });
+        addReplaceable(descriptionField);
     }
 }

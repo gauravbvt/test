@@ -1,13 +1,12 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.ListChoice;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.IModel;
@@ -32,11 +31,11 @@ public class MultipleStringChooser extends AbstractComponentPanel {
     protected IModel choices;
 
     protected AutoCompleteTextFieldWithChoices newStringField;
-    protected AjaxButton addStringButton;
+    protected Button addStringButton;
     protected ListChoice stringsChoice;
     protected String selectedString;
     protected String newString = "";
-    protected AjaxButton deleteStringButton;
+    protected Button deleteStringButton;
     protected Label fullStringLabel;
 
 
@@ -58,8 +57,9 @@ public class MultipleStringChooser extends AbstractComponentPanel {
             }
         });
         addReplaceable(newStringField);
-        addStringButton = new AjaxButton("addString") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        addStringButton = new Button("addString");
+        addStringButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 if (!newString.isEmpty()) {
                     RefUtils.add(getElement(), propPath, newString);
                     newStringField.setModelObject("");
@@ -68,7 +68,7 @@ public class MultipleStringChooser extends AbstractComponentPanel {
                     target.addComponent(stringsChoice);
                 }
             }
-        };
+        });
         addReplaceable(addStringButton);
         stringsChoice = new ListChoice("strings", new Model(), new RefPropertyModel(getElement(), propPath),
                         new ChoiceRenderer() {
@@ -87,8 +87,9 @@ public class MultipleStringChooser extends AbstractComponentPanel {
             }
         });
         addReplaceable(stringsChoice);
-        deleteStringButton = new AjaxButton("deleteString") {
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+        deleteStringButton = new Button("deleteString");
+        deleteStringButton.add(new AjaxEventBehavior("onclick") {
+            protected void onEvent(AjaxRequestTarget target) {
                 if (selectedString != null) {
                     RefUtils.remove(getElement(), propPath, selectedString);
                     newString = selectedString;
@@ -100,7 +101,7 @@ public class MultipleStringChooser extends AbstractComponentPanel {
                     target.addComponent(stringsChoice);
                 }
             }
-        };
+        });
         deleteStringButton.setEnabled(false);
         addReplaceable(deleteStringButton);
         fullStringLabel = new Label("fullString", new Model());

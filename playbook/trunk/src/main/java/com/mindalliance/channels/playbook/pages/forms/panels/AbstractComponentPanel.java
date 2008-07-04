@@ -164,6 +164,11 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         RefUtils.set(getElement(), propPath+"."+property, value);
     }
 
+    protected void setProperty(String property, Object value, AjaxRequestTarget target) {
+        setProperty(property, value);
+        elementChanged(propPath+"."+property, target);
+    }
+
     protected Object getProperty(String property) {
         return RefUtils.get(getElement(), propPath+"."+property);
     }
