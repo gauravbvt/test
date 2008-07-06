@@ -12,6 +12,8 @@ import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
  */
 interface MatchingDomain {
 
+    static public final int MAX_SUMMARY_SIZE = 30;
+
     Class<? extends Bean> getMatchingDomainClass()
     boolean matchesAll() // matching any instance of matched class
     // Context-dependent matching

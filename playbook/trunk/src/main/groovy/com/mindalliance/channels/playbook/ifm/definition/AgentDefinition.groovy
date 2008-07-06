@@ -6,6 +6,8 @@ import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.profile.AgentProfile
 import com.mindalliance.channels.playbook.ifm.Jurisdictionable
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
+import com.mindalliance.channels.playbook.ifm.project.resources.OrganizationResource
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,7 +19,7 @@ import com.mindalliance.channels.playbook.ifm.Jurisdictionable
 class AgentDefinition extends Definition { // Definition of a kind of agent
 
     List<Ref> roles = [] // ANDed  -- classification by roles
-    OrganizationSpecification organizationSpecification = new OrganizationSpecification()
+    OrganizationSpecification organizationSpec = new OrganizationSpecification()
     LocationDefinition locationDefinition = new LocationDefinition()
     LocationDefinition jurisdictionDefinition = new LocationDefinition() // applies only if agent has a jurisdiction
     List<RelationshipDefinition> relationshipDefinitions = []  // ORed
@@ -27,13 +29,28 @@ class AgentDefinition extends Definition { // Definition of a kind of agent
     }
 
     public boolean matchesAll() {
-        return roles.isEmpty() && organizationSpecification.matchesAll() && locationDefinition.matchesAll() && jurisdictionSpecification.matchesAll() && relationshipDefinitions.isEmpty()
+        return roles.isEmpty() && organizationSpec.matchesAll() && locationDefinition.matchesAll() && jurisdictionSpecification.matchesAll() && relationshipDefinitions.isEmpty()
     }
 
     public MatchResult match(Bean bean, InformationAct informationAct) {
         Agent agent = (Agent)bean
         if (!roles.every {srole -> agent.roles.any {role -> role.implies(srole)}}) {  // if not all of the prescribed roles is matched at least one of the agent's roles, then fail
             return new MatchResult(matched:false, failures:["$agent does not match all specified roles"])
+        }
+        if (!organizationSpec.matchesAll()) {
+            Organization organization
+            if (agent instanceof Organization) {
+                organization = (Organization)agent
+                if (!organization as boolean || !organizationSpec.matches(organization, informationAct)) {
+                    return new MatchResult(matched:false, failures:["$agent does not match specified organization"])
+                }
+            }
+            else if (agent instanceof OrganizationResource) {
+                organization = ((OrganizationResource)agent).organization
+                if (!organization as boolean || !organizationSpec.matches(organization, informationAct)) {
+                    return new MatchResult(matched:false, failures:["$agent does not match specified organization"])
+                }
+            }
         }
         if (agent instanceof Jurisdictionable) {
             if (!jurisdictionDefinition.matches(((Jurisdictionable)agent).jurisdiction, informationAct)) {

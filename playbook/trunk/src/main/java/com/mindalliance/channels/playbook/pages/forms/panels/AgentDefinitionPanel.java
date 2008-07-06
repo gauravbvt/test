@@ -68,7 +68,7 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyRole = (Boolean)anyRoleCheckBox.getModelObject();
                 if (anyRole) {
-                    setProperty("roles", new ArrayList<Ref>());
+                    setProperty("roles", new ArrayList<Ref>(), target);
                 }
                 setVisibility(rolesDiv, !anyRole, target);
             }
@@ -82,16 +82,16 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
                                           new RefQueryModel(getProject(), new Query("findAllTypes", "Role"))){
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selected = rolesTree.getNewSelections();
-                setProperty("roles", selected);
+                setProperty("roles", selected, target);
             }
         };
         addReplaceableTo(rolesTree, rolesDiv);
-        anyOrganizationCheckBox = new AjaxCheckBox("anyOrganization", new Model((Boolean)agentDefinition.getOrganizationSpecification().matchesAll())){
+        anyOrganizationCheckBox = new AjaxCheckBox("anyOrganization", new Model((Boolean)agentDefinition.getOrganizationSpec().matchesAll())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyOrganization = (Boolean)anyOrganizationCheckBox.getModelObject();
                 if (anyOrganization) {
-                    setProperty("organizationSpecification", new OrganizationSpecification());
-                    organizationSpecificationPanel = new OrganizationSpecificationPanel("organizationSpecification", AgentDefinitionPanel.this, propPath+".organizationSpecification", isReadOnly(), feedback);
+                    setProperty("organizationSpec", new OrganizationSpecification(), target);
+                    organizationSpecificationPanel = new OrganizationSpecificationPanel("organizationSpecification", AgentDefinitionPanel.this, propPath+".organizationSpec", isReadOnly(), feedback);
                     addReplaceableTo(organizationSpecificationPanel, organizationSpecificationDiv);
                 }
                 setVisibility(organizationSpecificationDiv, !anyOrganization, target);
@@ -99,15 +99,15 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyOrganizationCheckBox);
         organizationSpecificationDiv = new WebMarkupContainer("organizationSpecificationDiv");
-        setVisibility(organizationSpecificationDiv, agentDefinition.getOrganizationSpecification().matchesAll());
+        setVisibility(organizationSpecificationDiv, !agentDefinition.getOrganizationSpec().matchesAll());
         addReplaceable(organizationSpecificationDiv);
-        organizationSpecificationPanel = new OrganizationSpecificationPanel("organizationSpecification", this, propPath+".organizationSpecification", isReadOnly(), feedback);
+        organizationSpecificationPanel = new OrganizationSpecificationPanel("organizationSpecification", this, propPath+".organizationSpec", isReadOnly(), feedback);
         addReplaceableTo(organizationSpecificationPanel, organizationSpecificationDiv);
         anyLocationCheckBox = new AjaxCheckBox("anyLocation", new Model((Boolean)agentDefinition.getLocationDefinition().matchesAll())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyLocation = (Boolean)anyLocationCheckBox.getModelObject();
                 if (anyLocation) {
-                    setProperty("locationDefinition", new LocationDefinition());
+                    setProperty("locationDefinition", new LocationDefinition(), target);
                     locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", AgentDefinitionPanel.this, propPath+".locationDefinition", isReadOnly(), feedback);
                     addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
                 }
@@ -116,7 +116,7 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyLocationCheckBox);
         locationDefinitionDiv = new WebMarkupContainer("locationDefinitionDiv");
-        setVisibility(locationDefinitionDiv, agentDefinition.getLocationDefinition().matchesAll());
+        setVisibility(locationDefinitionDiv, !agentDefinition.getLocationDefinition().matchesAll());
         addReplaceable(locationDefinitionDiv);
         locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition", isReadOnly(), feedback);
         addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
@@ -124,7 +124,7 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyLocation = (Boolean)anyJurisdictionCheckBox.getModelObject();
                 if (anyLocation) {
-                    setProperty("jurisdictionDefinition", new LocationDefinition());
+                    setProperty("jurisdictionDefinition", new LocationDefinition(), target);
                     jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", AgentDefinitionPanel.this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
                     addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);
                 }
@@ -133,7 +133,7 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyJurisdictionCheckBox);
         jurisdictionDefinitionDiv = new WebMarkupContainer("jurisdictionDefinitionDiv");
-        setVisibility(jurisdictionDefinitionDiv, agentDefinition.getJurisdictionDefinition().matchesAll());
+        setVisibility(jurisdictionDefinitionDiv, !agentDefinition.getJurisdictionDefinition().matchesAll());
         addReplaceable(jurisdictionDefinitionDiv);
         jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
         addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);
@@ -141,23 +141,24 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyRelationships = (Boolean)anyRelationshipCheckBox.getModelObject();
                 if (anyRelationships) {
-                    setProperty("relationshipDefinitions", new ArrayList<RelationshipDefinition>());
+                    setProperty("relationshipDefinitions", new ArrayList<RelationshipDefinition>(), target);
                 }
                 setVisibility(relationshipDefinitionsDiv, !anyRelationships, target);
             }
         };
         addReplaceable(anyRelationshipCheckBox);
         relationshipDefinitionsDiv = new WebMarkupContainer("relationshipDefinitionsDiv");
-        setVisibility(relationshipDefinitionsDiv, agentDefinition.getRelationshipDefinitions().isEmpty());
+        setVisibility(relationshipDefinitionsDiv, !agentDefinition.getRelationshipDefinitions().isEmpty());
         addReplaceable(relationshipDefinitionsDiv);
         relationshipDefinitionsChoice = new ListChoice("relationshipDefinitions",
                                                         new Model(selectedRelationshipDefinition),
                                                         new RefPropertyModel(getComponent(), "relationshipDefinitions"),
                                                         new ChoiceRenderer("summary"));
+        relationshipDefinitionsChoice.setMaxRows(MAX_CHOICE_ROWS);
         relationshipDefinitionsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 selectedRelationshipDefinition = (RelationshipDefinition)relationshipDefinitionsChoice.getModelObject();
-                setVisibility(removeRelationshipDefinitionButton, selectedRelationshipDefinition != null, target);
+                enable(removeRelationshipDefinitionButton, selectedRelationshipDefinition != null, target);
                 updateRelationshipDefinitionPanel();
                 setVisibility(relationshipDefinitionDiv, selectedRelationshipDefinition != null, target);
             }
@@ -168,7 +169,7 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
             protected void onEvent(AjaxRequestTarget target) {
                 selectedRelationshipDefinition = new RelationshipDefinition();
                 RefUtils.add(getElement(), propPath+".relationshipDefinitions", selectedRelationshipDefinition);
-                setVisibility(removeRelationshipDefinitionButton, true, target);
+                enable(removeRelationshipDefinitionButton, true, target);
                 updateRelationshipDefinitionPanel();
                 setVisibility(relationshipDefinitionDiv, true, target);
             }
@@ -180,10 +181,11 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
                 RefUtils.remove(getElement(), propPath+".relationshipDefinitions", selectedRelationshipDefinition);
                 selectedRelationshipDefinition = null;
                 target.addComponent(relationshipDefinitionsChoice);
-                setVisibility(removeRelationshipDefinitionButton, false, target);
+                enable(removeRelationshipDefinitionButton, false, target);
                 setVisibility(relationshipDefinitionDiv, false, target);
             }
         });
+        removeRelationshipDefinitionButton.setEnabled(false);
         addReplaceableTo(removeRelationshipDefinitionButton, relationshipDefinitionsDiv);
         relationshipDefinitionDiv = new WebMarkupContainer("relationshipDefinitionDiv");
         hide(relationshipDefinitionDiv);
@@ -193,6 +195,7 @@ public class AgentDefinitionPanel extends AbstractDefinitionPanel {
     }
 
     private void updateRelationshipDefinitionPanel() {
+        relationshipDefinitionDiv.remove(relationshipDefinitionPanel);
         if (selectedRelationshipDefinition != null) {
             int index = agentDefinition.getRelationshipDefinitions().indexOf(selectedRelationshipDefinition);
             relationshipDefinitionPanel = new RelationshipDefinitionPanel("relationshipDefinition", this, propPath+".relationshipDefinitions["+index+"]", isReadOnly(), feedback);

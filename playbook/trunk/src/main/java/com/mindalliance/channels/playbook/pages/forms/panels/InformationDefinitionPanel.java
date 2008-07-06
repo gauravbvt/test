@@ -2,7 +2,6 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition;
-import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification;
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
@@ -61,13 +60,13 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
 
     protected void load() {
         super.load();
-        informationDefinition = (InformationDefinition)getComponent();
-        anyEventCheckBox = new AjaxCheckBox("anyEvent", new Model((Boolean)informationDefinition.getEventSpec().matchesAll())){
+        informationDefinition = (InformationDefinition) getComponent();
+        anyEventCheckBox = new AjaxCheckBox("anyEvent", new Model((Boolean) informationDefinition.getEventSpec().matchesAll())) {
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean anyEvent = (Boolean)anyEventCheckBox.getModelObject();
+                boolean anyEvent = (Boolean) anyEventCheckBox.getModelObject();
                 if (anyEvent) {
                     setProperty("eventSpecification", new EventSpecification());
-                    eventSpecificationPanel = new EventSpecificationPanel("eventSpecification", InformationDefinitionPanel.this, propPath+".eventSpec", isReadOnly(), feedback);
+                    eventSpecificationPanel = new EventSpecificationPanel("eventSpecification", InformationDefinitionPanel.this, propPath + ".eventSpec", isReadOnly(), feedback);
                     addReplaceableTo(eventSpecificationPanel, eventSpecificationDiv);
                 }
                 setVisibility(eventSpecificationDiv, !anyEvent, target);
@@ -77,69 +76,71 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
         eventSpecificationDiv = new WebMarkupContainer("eventSpecificationDiv");
         setVisibility(eventSpecificationDiv, !informationDefinition.getEventSpec().matchesAll());
         addReplaceable(eventSpecificationDiv);
-        eventSpecificationPanel = new EventSpecificationPanel("eventSpecification", this, propPath+".eventSpec", isReadOnly(), feedback);
+        eventSpecificationPanel = new EventSpecificationPanel("eventSpecification", this, propPath + ".eventSpec", isReadOnly(), feedback);
         addReplaceableTo(eventSpecificationPanel, eventSpecificationDiv);
 
-        anySourceCheckBox = new AjaxCheckBox("anySource", new Model((Boolean)informationDefinition.getSourceAgentSpecs().isEmpty())){
-             protected void onUpdate(AjaxRequestTarget target) {
-                 boolean anySource = (Boolean)anySourceCheckBox.getModelObject();
-                 if (anySource) {
-                     setProperty("sourceAgentSpecs", new ArrayList<AgentSpecification>());
-                 }
-                 setVisibility(sourceSpecificationsDiv, !anySource, target);
-             }
-         };
-         addReplaceable(anySourceCheckBox);
-         sourceSpecificationsDiv = new WebMarkupContainer("sourceSpecificationsDiv");
-         setVisibility(sourceSpecificationsDiv, !informationDefinition.getSourceAgentSpecs().isEmpty());
-         addReplaceable(sourceSpecificationsDiv);
-         sourceSpecificationsChoice = new ListChoice("sourceSpecifications",
-                                                         new Model(selectedSourceSpecification),
-                                                         new RefPropertyModel(getComponent(), "sourceAgentSpecs"),
-                                                         new ChoiceRenderer("summary"));
-         sourceSpecificationsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-             protected void onUpdate(AjaxRequestTarget target) {
-                 selectedSourceSpecification = (AgentSpecification)sourceSpecificationsChoice.getModelObject();
-                 setVisibility(removeSourceSpecificationButton, selectedSourceSpecification != null, target);
-                 updateSourceSpecificationPanel();
-                 setVisibility(sourceSpecificationDiv, selectedSourceSpecification != null, target);
-             }
-         });
-         addReplaceableTo(sourceSpecificationsChoice, sourceSpecificationsDiv);
-         addSourceSpecificationButton = new Button("addSourceSpecification");
+        anySourceCheckBox = new AjaxCheckBox("anySource", new Model((Boolean) informationDefinition.getSourceAgentSpecs().isEmpty())) {
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anySource = (Boolean) anySourceCheckBox.getModelObject();
+                if (anySource) {
+                    setProperty("sourceAgentSpecs", new ArrayList<AgentSpecification>());
+                }
+                setVisibility(sourceSpecificationsDiv, !anySource, target);
+            }
+        };
+        addReplaceable(anySourceCheckBox);
+        sourceSpecificationsDiv = new WebMarkupContainer("sourceSpecificationsDiv");
+        setVisibility(sourceSpecificationsDiv, !informationDefinition.getSourceAgentSpecs().isEmpty());
+        addReplaceable(sourceSpecificationsDiv);
+        sourceSpecificationsChoice = new ListChoice("sourceSpecifications",
+                new Model(selectedSourceSpecification),
+                new RefPropertyModel(getComponent(), "sourceAgentSpecs"),
+                new ChoiceRenderer("summary"));
+        sourceSpecificationsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate(AjaxRequestTarget target) {
+                selectedSourceSpecification = (AgentSpecification) sourceSpecificationsChoice.getModelObject();
+                enable(removeSourceSpecificationButton, selectedSourceSpecification != null, target);
+                updateSourceSpecificationPanel(target);
+            }
+        });
+        sourceSpecificationsChoice.setMaxRows(MAX_CHOICE_ROWS);
+        addReplaceableTo(sourceSpecificationsChoice, sourceSpecificationsDiv);
+        addSourceSpecificationButton = new Button("addSourceSpecification");
         addSourceSpecificationButton.add(new AjaxEventBehavior("onclick") {
             protected void onEvent(AjaxRequestTarget target) {
                 selectedSourceSpecification = new AgentSpecification();
-                RefUtils.add(getElement(), propPath+".sourceAgentSpecs", selectedSourceSpecification);
-                setVisibility(removeSourceSpecificationButton, true, target);
-                updateSourceSpecificationPanel();
-                setVisibility(sourceSpecificationDiv, true, target);
+                RefUtils.add(getElement(), propPath + ".sourceAgentSpecs", selectedSourceSpecification);
+                enable(removeSourceSpecificationButton, true, target);
+                updateSourceSpecificationPanel(target);
+                sourceSpecificationsChoice.setModelObject(selectedSourceSpecification);
+                target.addComponent(sourceSpecificationsChoice);
             }
         });
-         addReplaceableTo(addSourceSpecificationButton, sourceSpecificationsDiv);
-         removeSourceSpecificationButton = new Button("deleteSourceSpecification");
-         removeSourceSpecificationButton.add(new AjaxEventBehavior("onclick") {
+        addReplaceableTo(addSourceSpecificationButton, sourceSpecificationsDiv);
+        removeSourceSpecificationButton = new Button("deleteSourceSpecification");
+        removeSourceSpecificationButton.add(new AjaxEventBehavior("onclick") {
             protected void onEvent(AjaxRequestTarget target) {
-                RefUtils.remove(getElement(), propPath+".sourceAgentSpecs", selectedSourceSpecification);
+                RefUtils.remove(getElement(), propPath + ".sourceAgentSpecs", selectedSourceSpecification);
                 selectedSourceSpecification = null;
                 target.addComponent(sourceSpecificationsChoice);
-                setVisibility(removeSourceSpecificationButton, false, target);
-                setVisibility(sourceSpecificationDiv, false, target);
+                enable(removeSourceSpecificationButton, false, target);
+                updateSourceSpecificationPanel(target);
             }
         });
-         addReplaceableTo(removeSourceSpecificationButton, sourceSpecificationsDiv);
-         sourceSpecificationDiv = new WebMarkupContainer("sourceSpecificationDiv");
-         hide(sourceSpecificationDiv);
-         addReplaceableTo(sourceSpecificationDiv, sourceSpecificationsDiv);
-         sourceSpecificationPanel = new Label("sourceSpecification", new Model("dummy"));
-         addReplaceableTo(sourceSpecificationPanel, sourceSpecificationDiv);
+        removeSourceSpecificationButton.setEnabled(false);
+        addReplaceableTo(removeSourceSpecificationButton, sourceSpecificationsDiv);
+        sourceSpecificationDiv = new WebMarkupContainer("sourceSpecificationDiv");
+        hide(sourceSpecificationDiv);
+        addReplaceableTo(sourceSpecificationDiv, sourceSpecificationsDiv);
+        sourceSpecificationPanel = new Label("sourceSpecification", new Model("dummy"));
+        addReplaceableTo(sourceSpecificationPanel, sourceSpecificationDiv);
 
-        anyEoiCheckBox = new AjaxCheckBox("anyEoi", new Model((Boolean)informationDefinition.getElementsOfInformation().isEmpty())){
+        anyEoiCheckBox = new AjaxCheckBox("anyEoi", new Model((Boolean) informationDefinition.getElementsOfInformation().isEmpty())) {
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean anyEoi = (Boolean)anyEoiCheckBox.getModelObject();
+                boolean anyEoi = (Boolean) anyEoiCheckBox.getModelObject();
                 if (anyEoi) {
                     setProperty("elementsOfInformation", new ArrayList<ElementOfInformation>());
-                    eoisPanel = new EOIsPanel("eois", InformationDefinitionPanel.this, propPath+".elementsOfInformation", isReadOnly(), feedback, getTopicChoicesModel());
+                    eoisPanel = new EOIsPanel("eois", InformationDefinitionPanel.this, propPath + ".elementsOfInformation", isReadOnly(), feedback, getTopicChoicesModel());
                     addReplaceableTo(eoisPanel, eoisDiv);
                 }
                 setVisibility(eoisDiv, !anyEoi, target);
@@ -149,37 +150,40 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
         eoisDiv = new WebMarkupContainer("eoisDiv");
         setVisibility(eoisDiv, !informationDefinition.getElementsOfInformation().isEmpty());
         addReplaceable(eoisDiv);
-        eoisPanel = new EOIsPanel("eois", this, propPath+".elementsOfInformation", isReadOnly(), feedback, getTopicChoicesModel());
+        eoisPanel = new EOIsPanel("eois", this, propPath + ".elementsOfInformation", isReadOnly(), feedback, getTopicChoicesModel());
         addReplaceableTo(eoisPanel, eoisDiv);
     }
 
-    private void updateSourceSpecificationPanel() {
+    private void updateSourceSpecificationPanel(AjaxRequestTarget target) {
+        sourceSpecificationDiv.remove(sourceSpecificationPanel);
         if (selectedSourceSpecification != null) {
             int index = informationDefinition.getSourceAgentSpecs().indexOf(selectedSourceSpecification);
-            sourceSpecificationPanel = new EventSpecificationPanel("sourceSpecification", this, propPath+".sourceAgentSpecifications["+index+"]", isReadOnly(), feedback);
+            sourceSpecificationPanel = new AgentSpecificationPanel("sourceSpecification", this, propPath + ".sourceAgentSpecs[" + index + "]", isReadOnly(), feedback);
+        } else {
+            sourceSpecificationPanel = new Label("sourceSpecification", new Model("dummy"));
         }
-        else {
-           sourceSpecificationPanel = new Label("sourceSpecification", new Model("dummy"));
-        }
+        setVisibility(sourceSpecificationDiv, selectedSourceSpecification != null, target);
         addReplaceableTo(sourceSpecificationPanel, sourceSpecificationDiv);
     }
 
     private IModel getTopicChoicesModel() {
-      return new RefQueryModel(this, new Query("findAllKnownTopics"));
+        return new RefQueryModel(this, new Query("findAllKnownTopics"));
     }
 
     private List<String> findAllKnownTopics() {
-         return (List<String>)Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventSpec().allEventTypes());
+        return (List<String>) Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventSpec().allEventTypes());
     }
 
     @Override
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         super.elementChanged(propPath, target);
-        if (propPath.endsWith(".eventTypes")) {
+        if (propPath.matches(".*\\.informationSpec\\.eventSpec\\.definitions\\[\\d+\\]\\.description")) {
             target.addComponent(eoisPanel);
         }
+        if (propPath.matches(".*sourceAgentSpecs\\[\\d+\\]\\.description")) {
+            target.addComponent(sourceSpecificationsChoice);
+        }
     }
-
 
 
 }

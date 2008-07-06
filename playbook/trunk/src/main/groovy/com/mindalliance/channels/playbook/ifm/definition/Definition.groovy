@@ -33,7 +33,7 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
     }
 
     String getSummary() {
-      return RefUtils.summarize(description ?: 'No description', 16);
+      return RefUtils.summarize(description ?: 'No description', MAX_SUMMARY_SIZE);
     }
 
 }

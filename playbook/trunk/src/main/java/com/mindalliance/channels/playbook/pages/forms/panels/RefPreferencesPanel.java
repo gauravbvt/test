@@ -83,6 +83,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
                 updateUpDownRemoveButtonsVisibility(target);
             }
         });
+        preferredList.setMaxRows(4);
         addReplaceable(preferredList);
         upPreferredButton = new Button("upPreferred");
         upPreferredButton.add(new AjaxEventBehavior("onclick") {

@@ -15,6 +15,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.Component;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -29,7 +30,7 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
     protected AutoCompleteTextFieldWithChoices relationshipNameField;
     protected AjaxCheckBox anyAgentCheckBox;
     protected WebMarkupContainer agentSpecificationDiv;
-    protected AgentSpecificationPanel agentSpecificationPanel;
+    protected Component agentSpecificationPanel;
 
     public RelationshipDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -62,7 +63,7 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyAgentCheckBox);
         agentSpecificationDiv = new WebMarkupContainer("agentSpecificationDiv");
-        setVisibility(agentSpecificationDiv, relationshipDefinition.getWithAgentSpecification().matchesAll());
+        setVisibility(agentSpecificationDiv, !relationshipDefinition.getWithAgentSpecification().matchesAll());
         addReplaceable(agentSpecificationDiv);
         agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", this, propPath+".withAgentSpecification", isReadOnly(), feedback);
         addReplaceableTo(agentSpecificationPanel, agentSpecificationDiv);

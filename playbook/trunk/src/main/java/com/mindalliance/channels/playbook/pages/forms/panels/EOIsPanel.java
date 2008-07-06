@@ -88,6 +88,7 @@ public class EOIsPanel extends AbstractComponentPanel {
                 target.addComponent(adHocTopicField);
             }
         });
+        topicChoiceList.setMaxRows(4);
         topicChoiceDiv.add(topicChoiceList);
         addReplaceable(topicChoiceDiv);
         // Add button

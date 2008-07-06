@@ -72,7 +72,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
                 if (anyPurpose) {
                     setProperty("specificPurposes", new ArrayList<String>());
                     purposesChooser = new MultipleStringChooser("purposes", TaskDefinitionPanel.this, propPath+".specificPurposes", EDITABLE, feedback,
-                            new RefQueryModel(getProject(), new Query("findAllPurposes")));   // TODO getProject(), not Channels.instance()
+                            new RefQueryModel(getProject(), new Query("findAllPurposes")));
                     addReplaceableTo(purposesChooser, purposesDiv);
                 }
                 setVisibility(purposesDiv, !anyPurpose, target);
@@ -80,10 +80,10 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyPurposeCheckBox);
         purposesDiv = new WebMarkupContainer("purposesDiv");
-        setVisibility(purposesDiv, taskDefinition.getSpecificPurposes().isEmpty());
+        setVisibility(purposesDiv, !taskDefinition.getSpecificPurposes().isEmpty());
         addReplaceable(purposesDiv);
         purposesChooser = new MultipleStringChooser("purposes", this, propPath+".specificPurposes", EDITABLE, feedback,
-                new RefQueryModel(getProject(), new Query("findAllPurposes")));   // TODO getProject(), not Channels.instance()
+                new RefQueryModel(getProject(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
     }
 }

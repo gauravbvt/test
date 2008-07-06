@@ -50,7 +50,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyOrganizationType = (Boolean)anyOrganizationTypeCheckBox.getModelObject();
                 if (anyOrganizationType) {
-                    setProperty("organizationTypes", new ArrayList<Ref>());
+                    setProperty("organizationTypes", new ArrayList<Ref>(), target);
                 }
                 setVisibility(organizationTypesDiv, !anyOrganizationType, target);
             }
@@ -64,7 +64,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
                                           new RefQueryModel(getProject(), new Query("findAllTypes", "OrganizationType"))){
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selected = organizationTypesTree.getNewSelections();
-                setProperty("organizationTypes", selected);
+                setProperty("organizationTypes", selected, target);
             }
         };
         addReplaceableTo(organizationTypesTree, organizationTypesDiv);
@@ -73,7 +73,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyLocation = (Boolean)anyLocationCheckBox.getModelObject();
                 if (anyLocation) {
-                    setProperty("locationDefinition", new LocationDefinition());
+                    setProperty("locationDefinition", new LocationDefinition(), target);
                     locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", OrganizationDefinitionPanel.this, propPath+".locationDefinition", isReadOnly(), feedback);
                     addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
                 }
@@ -82,7 +82,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyLocationCheckBox);
         locationDefinitionDiv = new WebMarkupContainer("locationDefinitionDiv");
-        setVisibility(locationDefinitionDiv, organizationDefinition.getLocationDefinition().matchesAll());
+        setVisibility(locationDefinitionDiv, !organizationDefinition.getLocationDefinition().matchesAll());
         addReplaceable(locationDefinitionDiv);
         locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition", isReadOnly(), feedback);
         addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
@@ -91,7 +91,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyLocation = (Boolean)anyJurisdictionCheckBox.getModelObject();
                 if (anyLocation) {
-                    setProperty("jurisdictionDefinition", new LocationDefinition());
+                    setProperty("jurisdictionDefinition", new LocationDefinition(), target);
                     jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", OrganizationDefinitionPanel.this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
                     addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);
                 }
@@ -100,7 +100,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
         };
         addReplaceable(anyJurisdictionCheckBox);
         jurisdictionDefinitionDiv = new WebMarkupContainer("jurisdictionDefinitionDiv");
-        setVisibility(jurisdictionDefinitionDiv, organizationDefinition.getJurisdictionDefinition().matchesAll());
+        setVisibility(jurisdictionDefinitionDiv, !organizationDefinition.getJurisdictionDefinition().matchesAll());
         addReplaceable(jurisdictionDefinitionDiv);
         jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
         addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);

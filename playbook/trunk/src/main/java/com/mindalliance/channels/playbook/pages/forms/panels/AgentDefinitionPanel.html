@@ -12,10 +12,10 @@
         <td nowrap="nowrap">
             Any agent assigned:
         </td>
-        <td>
+        <td nowrap="nowrap">
             <input wicket:id="anyRole" type="checkbox"/>any role
         </td>
-        <td>
+        <td width="99%">
             <div wicket:id="rolesDiv">
                 <fieldset>
                     <legend>all these roles</legend>
@@ -24,18 +24,16 @@
             </div>
         </td>
     </tr>
-</table>
-<table>
     <tr>
         <td nowrap="nowrap">
             <label>in organizations:</label>
         </td>
-        <td>
+        <td colspan="2" width="99%" >
             <input wicket:id="anyOrganization" type="checkbox"/> of any kind
         </td>
     </tr>
     <tr>
-        <td>&#160;</td>
+        <td></td>
         <td>
             <div wicket:id="organizationSpecificationDiv">
                 <fieldset>
@@ -49,13 +47,13 @@
         <td nowrap="nowrap">
             <label>agent is located:</label>
         </td>
-        <td>
+        <td nowrap="nowrap" colspan="2" width="99%" >
             <input wicket:id="anyLocation" type="checkbox"/> anywhere
         </td>
     </tr>
     <tr>
-        <td>&#160;</td>
-        <td>
+        <td></td>
+        <td colspan="2">
             <div wicket:id="locationDefinitionDiv">
                 <fieldset>
                     <legend>in</legend>
@@ -68,13 +66,13 @@
         <td nowrap="nowrap">
             <label>has jurisdiction:</label>
         </td>
-        <td>
+        <td nowrap="nowrap" width="99%" colspan="2">
             <input wicket:id="anyJurisdiction" type="checkbox"/> any
         </td>
     </tr>
     <tr>
-        <td>&#160;</td>
-        <td>
+        <td></td>
+        <td colspan="2">
             <div wicket:id="jurisdictionDefinitionDiv">
                 <fieldset>
                     <legend>over</legend>
@@ -87,12 +85,13 @@
         <td nowrap="nowrap">
             has relationships:
         </td>
-        <td>
+        <td nowrap="nowrap" width="99%" colspan="2">
             <input wicket:id="anyRelationship" type="checkbox"/>any
         </td>
+    </tr>
     <tr>
-        <td>&#160;</td>
-        <td>
+        <td></td>
+        <td colspan="2">
             <div wicket:id="relationshipDefinitionsDiv">
                 <fieldset>
                     <legend>such as</legend>
@@ -102,10 +101,10 @@
                                 <select wicket:id="relationshipDefinitions">
                                     <option>[relationship definition label]</option>
                                 </select><br/>
-                                <input wicket:id="addRelationshipDefinition" type = "button" value = "Add"/>
-                                <input wicket:id="deleteRelationshipDefinition" type = "button" value = "Remove"/>
+                                <input wicket:id="addRelationshipDefinition" type = "button" value = "Add new"/>
+                                <input wicket:id="deleteRelationshipDefinition" type = "button" value = "Delete"/>
                             </td>
-                            <td>
+                            <td width="99%">
                                 <div wicket:id="relationshipDefinitionDiv">
                                     <fieldset>
                                         <legend>this relationship</legend>

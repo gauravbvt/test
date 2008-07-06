@@ -18,10 +18,7 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.project.resources.Team
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
-import com.mindalliance.channels.playbook.ref.Bean
-import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.support.util.CountedSet
-import com.mindalliance.channels.playbook.ifm.playbook.SharingCommitment
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -210,7 +207,7 @@ class Project extends IfmElement implements Named, Described {
     }
 
     List<Ref> findAllAgreementsOf(Ref resource) {
-        List<Ref> ags = sharingAgreements.findAll {agreement ->
+        List<Ref> ags = (List<Ref>) sharingAgreements.findAll {agreement ->
             agreement as boolean && agreement.source == resource
         }
         return ags ?: []
@@ -221,7 +218,7 @@ class Project extends IfmElement implements Named, Described {
     // -  a sub organization of some organization
     // - a parent organization (transitively) of the organization
     List<Ref> findCandidateSubOrganizationsFor(Ref organization) {
-        List<Ref> candidates = organizations.findAll {org ->
+        List<Ref> candidates = (List<Ref>) organizations.findAll {org ->
             org as boolean &&
                     org != organization &&
                     !org.parent as boolean &&
@@ -237,17 +234,17 @@ class Project extends IfmElement implements Named, Described {
     }
 
     List<Ref> findAllRelationshipsOf(Ref resource) {
-        return relationships.findAll {rel ->
+        return (List<Ref>) relationships.findAll {rel ->
             rel as boolean && rel.fromAgent == resource || rel.toAgent == resource
         }
     }
 
     List<Ref> findAgreementsWhereSource(Ref resource) {
-        return sharingAgreements.findAll {agr -> agr as boolean && agr.source == resource}
+        return (List<Ref>) sharingAgreements.findAll {agr -> agr as boolean && agr.source == resource}
     }
 
     List<Ref> findAgreementsWhereRecipient(Ref resource) {
-        return sharingAgreements.findAll {agr -> agr as boolean && agr.recipient == resource}
+        return (List<Ref>) sharingAgreements.findAll {agr -> agr as boolean && agr.recipient == resource}
     }
 
     List<Ref> findAllJurisdictionables() {

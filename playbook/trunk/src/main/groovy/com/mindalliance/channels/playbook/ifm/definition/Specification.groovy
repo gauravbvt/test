@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.Described
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -215,9 +216,6 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     }
 
     String getSummary() {
-      if (description)
-        return description.replaceAll('\n', ' ')[0..Math.min(16, description.size())];
-      else
-        return 'No description'
+      return RefUtils.summarize(description ?: 'No description', MAX_SUMMARY_SIZE);
     }
 }

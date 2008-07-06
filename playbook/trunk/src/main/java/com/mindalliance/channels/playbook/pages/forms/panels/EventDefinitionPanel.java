@@ -57,7 +57,7 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
 
     protected void load() {
         super.load();
-        EventDefinition eventDefinition = (EventDefinition)getComponent();
+        eventDefinition = (EventDefinition)getComponent();
         anyEventTypeCheckBox = new AjaxCheckBox("anyEventType", new Model((Boolean)eventDefinition.getEventTypes().isEmpty())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyEventType = (Boolean)anyEventTypeCheckBox.getModelObject();
@@ -114,12 +114,12 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
                                                         new Model(selectedCauseSpecification),
                                                         new RefPropertyModel(getComponent(), "causeEventSpecs"),
                                                         new ChoiceRenderer("summary"));
+        causeSpecificationsChoice.setMaxRows(MAX_CHOICE_ROWS);
         causeSpecificationsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             protected void onUpdate(AjaxRequestTarget target) {
                 selectedCauseSpecification = (EventSpecification)causeSpecificationsChoice.getModelObject();
-                setVisibility(removeCauseSpecificationButton, selectedCauseSpecification != null, target);
-                updateEventSpecificationPanel();
-                setVisibility(causeSpecificationDiv, selectedCauseSpecification != null, target);
+                enable(removeCauseSpecificationButton, selectedCauseSpecification != null, target);
+                updateCauseEventSpecificationPanel(target);
             }
         });
         addReplaceableTo(causeSpecificationsChoice, causeSpecificationsDiv);
@@ -128,9 +128,10 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
             protected void onEvent(AjaxRequestTarget target) {
                 selectedCauseSpecification = new EventSpecification();
                 RefUtils.add(getElement(), propPath+".causeEventSpecs", selectedCauseSpecification);
-                setVisibility(removeCauseSpecificationButton, true, target);
-                updateEventSpecificationPanel();
-                setVisibility(causeSpecificationDiv, true, target);
+                enable(removeCauseSpecificationButton, true, target);
+                updateCauseEventSpecificationPanel(target);
+                causeSpecificationsChoice.setModelObject(selectedCauseSpecification);
+                target.addComponent(causeSpecificationsChoice);
             }
         });
         addReplaceableTo(addCauseSpecificationButton, causeSpecificationsDiv);
@@ -140,10 +141,11 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
                 RefUtils.remove(getElement(), propPath+".causeEventSpecs", selectedCauseSpecification);
                 selectedCauseSpecification = null;
                 target.addComponent(causeSpecificationsChoice);
-                setVisibility(removeCauseSpecificationButton, false, target);
-                setVisibility(causeSpecificationDiv, false, target);
+                enable(removeCauseSpecificationButton,false, target);
+                updateCauseEventSpecificationPanel(target);
             }
         });
+        removeCauseSpecificationButton.setEnabled(false);
         addReplaceableTo(removeCauseSpecificationButton, causeSpecificationsDiv);
         causeSpecificationDiv = new WebMarkupContainer("causeSpecificationDiv");
         hide(causeSpecificationDiv);
@@ -152,7 +154,8 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
         addReplaceableTo(causeSpecificationPanel, causeSpecificationDiv);
     }
 
-    private void updateEventSpecificationPanel() {
+    private void updateCauseEventSpecificationPanel(AjaxRequestTarget target) {
+        causeSpecificationDiv.remove(causeSpecificationPanel);
         if (selectedCauseSpecification != null) {
             int index = eventDefinition.getCauseEventSpecs().indexOf(selectedCauseSpecification);
             causeSpecificationPanel = new EventSpecificationPanel("causeSpecification", this, propPath+".causeEventSpecs["+index+"]", isReadOnly(), feedback);
@@ -160,6 +163,15 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
         else {
            causeSpecificationPanel = new Label("causeSpecification", new Model("dummy"));
         }
+        setVisibility(causeSpecificationDiv, selectedCauseSpecification != null, target);
         addReplaceableTo(causeSpecificationPanel, causeSpecificationDiv);
+    }
+
+    @Override
+    public void elementChanged(String propPath, AjaxRequestTarget target) {
+        super.elementChanged(propPath, target);
+        if (propPath.matches(".*causeEventSpecs\\[\\d+\\]\\.description")) {
+            target.addComponent(causeSpecificationsChoice);
+        }
     }
 }

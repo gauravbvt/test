@@ -16,6 +16,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 abstract public class AbstractDefinitionPanel extends AbstractComponentPanel {
 
+    static protected int MAX_CHOICE_ROWS = 3;
+
     protected TextArea descriptionField;
 
     public AbstractDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
