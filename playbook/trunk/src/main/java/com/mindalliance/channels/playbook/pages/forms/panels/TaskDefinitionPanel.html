@@ -9,13 +9,13 @@
 <wicket:extend>
     <table>
         <tr>
-            <td>
+            <td nowrap="nowrap">
                 Any task:
             </td>
-            <td>
+            <td nowrap="nowrap">
                 <input wicket:id="anyTaskType" type="checkbox"/>of any type
             </td>
-            <td>
+            <td width="99%">
                 <div wicket:id="taskTypesDiv">
                     <fieldset>
                         <legend>classified as</legend>
@@ -24,19 +24,17 @@
                 </div>
             </td>
         </tr>
-    </table>
-    <table>
         <tr>
             <td>
                 <label>with:</label>
             </td>
-            <td>
+            <td colspan="2" width="99%">
                 <input wicket:id="anyPurpose" type="checkbox"/> any purpose at all
             </td>
         </tr>
         <tr>
-            <td>&#160;</td>
-            <td>
+            <td></td>
+            <td colspan="2">
                 <div wicket:id="purposesDiv">
                     <fieldset>
                         <legend>any of these specific purposes</legend>
@@ -47,14 +45,15 @@
         </tr>
         <tr>
             <td>
-                with:
+                <label>with:</label>
             </td>
-            <td>
+            <td colspan="2">
                 <input wicket:id="anyResponseTiming" type="checkbox"/>any response time
             </td>
+        </tr>
         <tr>
-            <td>&#160;</td>
-            <td>
+            <td></td>
+            <td colspan="2">
                 <div wicket:id="responseTimingDiv">
                     <fieldset>
                         <legend>a response time under</legend>

@@ -34,7 +34,7 @@ public class PlaceAboutTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        final Place place = (Place)getElement();
+        final Place place = (Place)getElement().deref();
         nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
@@ -56,5 +56,6 @@ public class PlaceAboutTab extends AbstractFormTab {
                 RefUtils.set(getElement(), "enclosingPlace", selectedPlace);
             }
         };
+        addReplaceable(enclosingPlaceTree);
     }
 }

@@ -10,7 +10,7 @@ import org.joda.time.Duration
  * Date: Apr 28, 2008
  * Time: 7:33:29 PM
  */
-class Timing extends BeanImpl {
+class Timing extends BeanImpl implements Defineable {
 
     static final List<String> units = ['seconds', 'minutes', 'hours', 'days', 'weeks']
 
@@ -21,6 +21,10 @@ class Timing extends BeanImpl {
     @Override
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['duration', 'units'])
+    }
+
+    boolean isDefined() {
+        return amount != 0
     }
 
     void detach() {
@@ -44,7 +48,7 @@ class Timing extends BeanImpl {
     }
 
     String toString() {
-        return Timing.asString(duration)
+        return Timing.asString(getDuration())
     }
 
     static String asString(Duration duration) {

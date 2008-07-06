@@ -93,7 +93,7 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     }
 
     public boolean isPlaybookPanel() {
-        return parentPanel.isModelPanel();
+        return parentPanel.isPlaybookPanel();
     }
 
     public Project getProject() {

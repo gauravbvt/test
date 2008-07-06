@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListChoice;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -24,7 +25,7 @@ import java.util.List;
  * Date: May 5, 2008
  * Time: 8:23:43 PM
  */
-public class TaskTypeInfoNeedsTab extends AbstractFormTab {
+public class TaskTypeInputsTab extends AbstractFormTab {
 
     protected ListChoice infoSpecsChoice;
     protected AjaxButton deleteInfoSpecButton;
@@ -33,30 +34,32 @@ public class TaskTypeInfoNeedsTab extends AbstractFormTab {
     protected WebMarkupContainer infoSpecDiv;
     protected InformationDefinition selectedInfoSpec;
 
-    public TaskTypeInfoNeedsTab(String id, AbstractElementForm elementForm) {
+    public TaskTypeInputsTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
     protected void load() {
         super.load();
-        infoSpecsChoice = new ListChoice("inputs", new Model(),
-                                              new RefPropertyModel(getElement(), "inputs"));
+        infoSpecsChoice = new ListChoice("inputs", new Model(selectedInfoSpec),
+                                          new RefPropertyModel(getElement(), "inputs"),
+                                          new ChoiceRenderer("summary"));
         infoSpecsChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 selectedInfoSpec = (InformationDefinition)infoSpecsChoice.getModelObject();
-                loadInfoSpecPanel();
                 setVisibility(infoSpecDiv, selectedInfoSpec != null, target);
-                deleteInfoSpecButton.setEnabled(selectedInfoSpec != null);
-                target.addComponent(deleteInfoSpecButton);
+                enable(deleteInfoSpecButton, selectedInfoSpec != null, target);
             }
         });
         addReplaceable(infoSpecsChoice);
         addInfoSpecButton = new AjaxButton("addInfoSpec") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                InformationDefinition infoSpec = new InformationDefinition();
-                RefUtils.add(getElement(), "inputs", infoSpec);
+                selectedInfoSpec = new InformationDefinition();
+                RefUtils.add(getElement(), "inputs", selectedInfoSpec);
+                infoSpecsChoice.setModelObject(selectedInfoSpec);
                 target.addComponent(infoSpecsChoice);
+                loadInfoSpecPanel();
+                setVisibility(infoSpecDiv, true, target);
             }
         };
         addReplaceable(addInfoSpecButton);
@@ -64,10 +67,9 @@ public class TaskTypeInfoNeedsTab extends AbstractFormTab {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
                 RefUtils.remove(getElement(), "inputs", selectedInfoSpec);
                 selectedInfoSpec = null;
-                deleteInfoSpecButton.setEnabled(false);
+                enable(deleteInfoSpecButton, false, target);
                 loadInfoSpecPanel();
                 setVisibility(infoSpecDiv, selectedInfoSpec != null, target);
-                target.addComponent(deleteInfoSpecButton);
                 target.addComponent(infoSpecsChoice);
             }
         };

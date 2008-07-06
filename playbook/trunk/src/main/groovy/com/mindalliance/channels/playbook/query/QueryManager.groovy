@@ -49,6 +49,7 @@ class QueryManager implements PropertyChangeListener {
                 // Channels, Project, PlaybookModel
                 findAllTypes: [ElementType.class],
                 findAllTypesNarrowingAny: [ElementType.class],
+                findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],                
                 // Project
                 findAllPlaceNames: [Place.class],
                 atleastOnePlaceTypeDefined: [PlaceType.class],
@@ -62,7 +63,6 @@ class QueryManager implements PropertyChangeListener {
                 findAllPlacesInAreasOfTypeImplying: [Place.class, AreaType.class],
                 findAllAgentsMatchingSpec: [Agent.class, AgentSpecification.class, Event.class],
                 findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
-                findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],
                 // PlaybookModel
                 findInheritedTopics: [EventType.class],
                 findNarrowedEventTypeWithTopic: [EventType.class],

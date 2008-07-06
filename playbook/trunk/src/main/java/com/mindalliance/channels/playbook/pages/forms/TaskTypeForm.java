@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.elementType.ElementTypeBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeIntentTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeInfoNeedsTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeInputsTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -32,9 +32,9 @@ public class TaskTypeForm extends AbstractModelElementForm {
                  return new TaskTypeIntentTab(panelId, TaskTypeForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Information needs")) {
+        tabs.add(new AbstractTab(new Model("Inputs")) {
              public Panel getPanel(String panelId) {
-                 return new TaskTypeInfoNeedsTab(panelId, TaskTypeForm.this);
+                 return new TaskTypeInputsTab(panelId, TaskTypeForm.this);
              }
          });
     }

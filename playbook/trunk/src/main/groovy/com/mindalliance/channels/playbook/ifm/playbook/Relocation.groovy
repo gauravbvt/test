@@ -15,7 +15,7 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
  */
 class Relocation extends InformationAct {     // a change of location
 
-    Location location
+    Location location = new Location()
 
     // Return implied event type
     static Ref impliedEventType() {

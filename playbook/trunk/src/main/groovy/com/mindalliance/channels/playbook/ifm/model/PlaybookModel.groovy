@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.Described
+import com.mindalliance.channels.playbook.support.util.CountedSet
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -82,6 +83,12 @@ class PlaybookModel extends IfmElement implements Described {
             inheritedTopics.addAll(findInheritedTopics(nt))
         }
         return inheritedTopics.sort()
+    }
+
+    List<String> findAllPurposes() {
+        CountedSet countedSet = new CountedSet();
+        m.taskTypes.each {tt -> if (tt as boolean) countedSet.addAll(tt.purposes)}
+        return countedSet.toList()
     }
 
     // End queries

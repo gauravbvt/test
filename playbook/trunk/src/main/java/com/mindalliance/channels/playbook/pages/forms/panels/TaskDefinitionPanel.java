@@ -4,7 +4,7 @@ import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ifm.definition.TaskDefinition;
-import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ifm.Timing;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
@@ -34,6 +34,10 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
     protected AjaxCheckBox anyPurposeCheckBox;
     protected WebMarkupContainer purposesDiv;
     protected MultipleStringChooser purposesChooser;
+    protected AjaxCheckBox anyResponseTimingCheckBox;
+    protected WebMarkupContainer responseTimingDiv;
+
+    protected TimingPanel responseTimingPanel;
 
 
     public TaskDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
@@ -58,7 +62,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
          addReplaceable(taskTypesDiv);
          taskTypesTree = new DynamicFilterTree("taskTypes",
                                            new RefPropertyModel(getElement(), propPath+".taskTypes"),
-                                           new RefQueryModel(getProject(), new Query("findAllTypes", "TaskType"))){
+                                           new RefQueryModel(getScope(), new Query("findAllTypes", "TaskType"))){
              public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  List<Ref> selected = taskTypesTree.getNewSelections();
                  setProperty("taskTypes", selected);
@@ -72,7 +76,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
                 if (anyPurpose) {
                     setProperty("specificPurposes", new ArrayList<String>());
                     purposesChooser = new MultipleStringChooser("purposes", TaskDefinitionPanel.this, propPath+".specificPurposes", EDITABLE, feedback,
-                            new RefQueryModel(getProject(), new Query("findAllPurposes")));
+                            new RefQueryModel(getScope(), new Query("findAllPurposes")));
                     addReplaceableTo(purposesChooser, purposesDiv);
                 }
                 setVisibility(purposesDiv, !anyPurpose, target);
@@ -83,7 +87,25 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
         setVisibility(purposesDiv, !taskDefinition.getSpecificPurposes().isEmpty());
         addReplaceable(purposesDiv);
         purposesChooser = new MultipleStringChooser("purposes", this, propPath+".specificPurposes", EDITABLE, feedback,
-                new RefQueryModel(getProject(), new Query("findAllPurposes")));
+                new RefQueryModel(getScope(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
+        // anyReponseTiming checkbox
+        anyResponseTimingCheckBox = new AjaxCheckBox("anyResponseTiming", new Model(!(Boolean)taskDefinition.getResponseTiming().isDefined())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyResponseTiming = (Boolean)anyResponseTimingCheckBox.getModelObject();
+                if (anyResponseTiming) {
+                    setProperty("reponseTiming", new Timing());
+                    responseTimingPanel = new TimingPanel("responseTiming", TaskDefinitionPanel.this, propPath+".responseTiming", isReadOnly(), feedback);
+                    addReplaceableTo(responseTimingPanel, responseTimingDiv);
+                }
+                setVisibility(responseTimingDiv, !anyResponseTiming, target);
+            }
+        };
+        addReplaceable(anyResponseTimingCheckBox);
+        responseTimingDiv = new WebMarkupContainer("responseTimingDiv");
+        setVisibility(responseTimingDiv, taskDefinition.getResponseTiming().isDefined());
+        addReplaceable(responseTimingDiv);
+        responseTimingPanel = new TimingPanel("responseTiming", this, propPath+".responseTiming", isReadOnly(), feedback);
+        addReplaceableTo(responseTimingPanel, responseTimingDiv);
     }
 }

@@ -55,19 +55,14 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     protected void load() {
         super.load();
-        areaInfo = (AreaInfo)RefUtils.get(getElement(), propPath);
+        areaInfo = (AreaInfo)getComponent();
         editableDiv = new WebMarkupContainer("editable");
         addReplaceable(editableDiv);
         readOnlyDiv = new WebMarkupContainer("readOnly");
         addReplaceable(readOnlyDiv);
         loadReadOnly();
         loadEditable();
-        if (isReadOnly()) {
-            editableDiv.setVisible(false);
-        }
-        else {
-            readOnlyDiv.setVisible(false);
-        }
+        setVisibility(editableDiv, !isReadOnly());
     }
 
     private void loadReadOnly() {

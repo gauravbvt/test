@@ -20,10 +20,10 @@ class Responsibility extends BeanImpl {
     TaskDefinition taskSpec = new TaskDefinition()
 
     String toString() {
-        "${this.informationSpecSummary()}. ${taskSpec.description}"
+        "${this.summary()}"
     }
 
-    private String informationSpecSummary() {
+    public String summary() {
         String mustKnow = RefUtils.summarize(informationSpec.description,20) ?: 'N/A'
         String mustDo = RefUtils.summarize(taskSpec.description, 20) ?: 'N/A'
         return "Must know: $mustKnow; must do: $mustDo"

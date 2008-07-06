@@ -17,7 +17,6 @@ class InformationNeed extends AbstractInformation {
     EventSpecification eventSpec = new EventSpecification() // about what (kind of) events
     Ref agent // agent who needs the information
     AgentSpecification sourceSpec = new AgentSpecification() // specification fo acceptable source of needed information
-    Ref event // XOR with InformationTemplate.eventSpec -- need is about a specific (vs specified) event
     Timing deadline = new Timing(amount: 0) // deadline of 0 means indefinite. Information need nullifed after deadline.
 
     String getName() {
@@ -29,7 +28,7 @@ class InformationNeed extends AbstractInformation {
     }
 
     String toString() {
-        return "N2K about: ${eventSpec.description.replaceAll('\\n', ' ')}"
+        return "N2K about: ${eventSpec.summary}"
     }
 
     String makeLabel(int maxWidth) {

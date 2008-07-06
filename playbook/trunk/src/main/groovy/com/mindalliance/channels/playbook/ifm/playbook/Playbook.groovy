@@ -24,7 +24,15 @@ class Playbook extends ProjectElement implements Described {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['occurrences']
+        return (List<String>)(super.transientProperties() + ['occurrences'])
+    }
+
+    Ref persist() {
+        if (!events) {
+            Ref initialEvent = new Event(name:'Initiating event', description:'(automatically created)').persist()
+            events.add(initialEvent)
+        }
+        return super.persist()
     }
 
     Map toMap() {
@@ -219,7 +227,7 @@ class Playbook extends ProjectElement implements Described {
      * Return classes a project participant can add.
      */
     static List<Class<?>> contentClasses() {
-        [Assignation.class, Association.class, ConfirmationRequest.class,
+        (List<Class<?>>)[Assignation.class, Association.class, ConfirmationRequest.class,
                 Detection.class, InformationRequest.class, InformationTransfer.class,
                 Relocation.class, SharingCommitment.class, SharingRequest.class, Task.class,
                 Group.class, Event.class

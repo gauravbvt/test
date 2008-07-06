@@ -201,7 +201,17 @@ public class FormTest extends WebPage {
             IfmElement element = (IfmElement) type.newInstance();
             element.persist();
             Ref ref = element.getReference();
-            if (element.isProjectElement()) {
+            if (element.isPlaybookElement()) {
+                Playbook playbook = (Playbook) ((Ref) project.getPlaybooks().get(0)).deref();
+                playbook.getReference().begin();
+                playbook.addElement(element);
+            }
+            else if (element.isModelElement()) {
+            PlaybookModel model = (PlaybookModel) ((Ref) project.getModels().get(0)).deref();
+            model.getReference().begin();
+            model.addElement(element);
+            }
+            else if (element.isProjectElement()) {
                 ProjectElement projectElement = (ProjectElement) element;
                 project.getReference().begin();
                 if (projectElement.isResourceElement()) {
@@ -216,15 +226,6 @@ public class FormTest extends WebPage {
                 } else {
                     project.addElement(element);
                 }
-            } else if (element.isModelElement()) {
-                PlaybookModel model = (PlaybookModel) ((Ref) project.getModels().get(0)).deref();
-                model.getReference().begin();
-                model.addElement(element);
-
-            } else if (element.isPlaybookElement()) {
-                Playbook playbook = (Playbook) ((Ref) project.getPlaybooks().get(0)).deref();
-                playbook.getReference().begin();
-                playbook.addElement(element);
             }
             return ref;
         }

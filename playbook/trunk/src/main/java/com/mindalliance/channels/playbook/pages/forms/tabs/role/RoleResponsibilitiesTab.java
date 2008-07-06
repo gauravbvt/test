@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListChoice;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.model.Model;
 
 import java.util.List;
@@ -40,23 +41,27 @@ public class RoleResponsibilitiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        responsibilitiesChoice = new ListChoice("responsibilities", new Model(),
-                                              new RefPropertyModel(getElement(), "responsibilities"));
+        responsibilitiesChoice = new ListChoice("responsibilities", new Model(selectedResponsibility),
+                                              new RefPropertyModel(getElement(), "responsibilities"),
+                                              new ChoiceRenderer("summary"));
         responsibilitiesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 selectedResponsibility = (Responsibility)responsibilitiesChoice.getModelObject();
                 loadResponsibilityPanel();
                 setResponsibilityPanelVisibility(target);
-                deleteResponsibilityButton.setEnabled(selectedResponsibility != null);
-                target.addComponent(deleteResponsibilityButton);
+                enable(deleteResponsibilityButton, selectedResponsibility != null, target);
             }
         });
         addReplaceable(responsibilitiesChoice);
         addResponsibilityButton = new AjaxButton("addResponsibility") {
             protected void onSubmit(AjaxRequestTarget target, Form form) {
-                Responsibility responsibility = new Responsibility();
-                RefUtils.add(getElement(), "responsibilities", responsibility);
+                selectedResponsibility = new Responsibility();
+                RefUtils.add(getElement(), "responsibilities", selectedResponsibility);
+                responsibilitiesChoice.setModelObject(selectedResponsibility);
+                enable(deleteResponsibilityButton, true, target);
+                loadResponsibilityPanel();
+                setResponsibilityPanelVisibility(target);
                 target.addComponent(responsibilitiesChoice);
             }
         };

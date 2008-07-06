@@ -101,6 +101,10 @@ class Channels extends IfmElement {
         return otherNames
     }
 
+    List<String> findAllPurposes() {
+        return [] // TODO - return empty, else inter-project privacy breach
+    }
+
     // end queries
 
     static List<Class<?>> adminClasses() {

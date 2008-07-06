@@ -46,8 +46,8 @@ public class LocationPanel extends AbstractComponentPanel {
         isAPlaceCheckBox = new AjaxCheckBox("isAPlace", new Model((Boolean)location.isAPlace())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
-                isAGeoLocationCheckBox.setModel(new Model((Boolean)!isAPlace));
-                updateLocationFlavor();
+                toggle(isAPlaceCheckBox, isAGeoLocationCheckBox, target);
+                updateLocationFlavor(target);
                 target.addComponent(geoLocationDiv);
                 target.addComponent(placeDiv);
             }
@@ -56,8 +56,8 @@ public class LocationPanel extends AbstractComponentPanel {
         isAGeoLocationCheckBox = new AjaxCheckBox("isAGeoLocation", new Model((Boolean)location.isAGeoLocation())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean isAGeoLocation = (Boolean)isAGeoLocationCheckBox.getModelObject();
-                isAPlaceCheckBox.setModel(new Model((Boolean)!isAGeoLocation));
-                updateLocationFlavor();
+                toggle(isAGeoLocationCheckBox,isAPlaceCheckBox,  target);
+                updateLocationFlavor(target);
                 target.addComponent(geoLocationDiv);
                 target.addComponent(placeDiv);
             }
@@ -65,7 +65,7 @@ public class LocationPanel extends AbstractComponentPanel {
         addReplaceable(isAGeoLocationCheckBox);
         placeDiv = new WebMarkupContainer("placeDiv");
         addReplaceable(placeDiv);
-        placeTree = new DynamicFilterTree("place", new RefPropertyModel(getElement(), propPath+".location"),
+        placeTree = new DynamicFilterTree("place", new RefPropertyModel(getElement(), propPath+".place"),
                                           new RefPropertyModel(getProject(), "places"), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref place = placeTree.getNewSelection();
@@ -75,27 +75,29 @@ public class LocationPanel extends AbstractComponentPanel {
         addReplaceableTo(placeTree, placeDiv);
         geoLocationDiv = new WebMarkupContainer("geoLocationDiv");
         addReplaceable(geoLocationDiv);
-        geoLocationPanel = new GeoLocationPanel("geoLocation", this, "geoLocation", isReadOnly(), feedback);
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
         addReplaceableTo(geoLocationPanel, geoLocationDiv);
         setVisibility();
     }
 
-    private void updateLocationFlavor() {
+    private void updateLocationFlavor(AjaxRequestTarget target) {
         boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
         if (isAPlace) {
             priorGeoLocation = location.getGeoLocation();
-            RefUtils.set(getElement(), propPath+".geoLocation", new GeoLocation());
-            RefUtils.set(getElement(), propPath+".place", priorPlace);
-            placeTree.modelChanged();
+            setProperty("geoLocation", new GeoLocation(), target);
+            setProperty("place", priorPlace, target);
+            placeTree.detach();
             geoLocationPanel.modelChanged();
+            target.addComponent(placeTree);
         }
         else {
             priorPlace = location.getPlace();
-            RefUtils.set(getElement(), propPath+".place", null);
-            RefUtils.set(getElement(), propPath+".geoLocation", priorGeoLocation);
-            geoLocationPanel = new GeoLocationPanel("geoLocation", this, "geoLocation", isReadOnly(), feedback);
+            setProperty("place", null, target);
+            setProperty("geoLocation", priorGeoLocation, target);
+            geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
             geoLocationDiv.addOrReplace(geoLocationPanel);
-            placeTree.modelChanged();
+            placeTree.detach();
+            target.addComponent(placeTree);
         }
         setVisibility();
     }

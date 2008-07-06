@@ -32,7 +32,7 @@ public class RelocationForm  extends AbstractInformationActForm {
                  return new InformationActCauseTab(panelId, RelocationForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Information")) {
+        tabs.add(new AbstractTab(new Model("Location")) {
             public Panel getPanel(String panelId) {
                 return new RelocationLocationTab(panelId, RelocationForm.this);
             }
