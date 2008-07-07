@@ -20,7 +20,7 @@ class Timing extends BeanImpl implements Defineable {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['duration', 'units'])
+        return (List<String>)(super.transientProperties() + ['duration', 'units', 'defined'])
     }
 
     boolean isDefined() {

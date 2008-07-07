@@ -24,6 +24,9 @@ import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ifm.info.InformationNeed
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification
 import com.mindalliance.channels.playbook.ifm.definition.EventDefinition
+import com.mindalliance.channels.playbook.ifm.info.Location
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,11 +41,13 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     static final String FORM_SUFFIX = 'Form'
 
     ApplicationMemory appMemory
+    RuleBaseSession ruleBaseSession
     String message
 
     PlaybookApplication() {
         super()
-         appMemory = new ApplicationMemory(this)
+        appMemory = new ApplicationMemory(this)
+        ruleBaseSession = new RuleBaseSession(this)
     }
 
 //    void init() {
@@ -58,6 +63,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     ApplicationMemory getMemory() {
         return appMemory
+    }
+
+    RuleBaseSession getRuleBaseSession() {
+        return ruleBaseSession
     }
 
     //----------------------
@@ -133,7 +142,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Person joe = new Person(firstName: "Joe", lastName: "Shmoe")
         p.addPerson(joe)
         Organization acme = new Organization(name: "ACME Inc.", description: 'A big company')
+        acme.setJurisdiction(new Location(geoLocation: new GeoLocation(areaInfo: new AreaInfo(country: 'United States'))))
         Organization nadir = new Organization(name: "NADIR Inc.", description: 'A two-bit company')
+        nadir.setJurisdiction(new Location(geoLocation: new GeoLocation(areaInfo: new AreaInfo(country: 'United States', state:'New Jersey'))))
         p.addOrganization(acme)
         p.addOrganization(nadir)
 
@@ -260,7 +271,8 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         InformationRequest request1 = new InformationRequest(name:'request1', actorAgent:task2.actorAgent, targetAgent:task1.actorAgent)
         request1.cause.trigger = task2.reference
         request1.cause.delay = new Timing(amount:2, unit:'hours')
-        InformationNeed need4 = new InformationNeed(event: task1.reference)
+        EventSpecification eventSpec4 = new EventSpecification(enumeration:[task1.reference], description:'Need to know about task1')
+        InformationNeed need4 = new InformationNeed(eventSpec: eventSpec4)
         need4.eventDetails.add(new ElementOfInformation(topic:'cost'))
         need4.eventDetails.add(new ElementOfInformation(topic:'duration'))
         request1.informationNeed = need4
