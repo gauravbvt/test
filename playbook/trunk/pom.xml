@@ -158,7 +158,12 @@
             <groupId>org.drools</groupId>
             <artifactId>drools-core</artifactId>
             <version>4.0.7</version>
-        </dependency>     
+        </dependency>
+        <dependency>
+          <groupId>com.thoughtworks.xstream</groupId>
+          <artifactId>xstream</artifactId>
+          <version>1.2.2</version>
+        </dependency>        
         <!-- For geonames -->
         <dependency>
             <groupId>jdom</groupId>
@@ -243,7 +248,7 @@
                 <artifactId>maven-drools-compiler-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Hello World Example</id>
+                        <id>Channels rules</id>
                         <goals>
                             <goal>compile</goal>
                         </goals>
@@ -251,7 +256,7 @@
                             <includes>
                                 <include>**/*.drl </include>
                             </includes>
-                            <outputFileName>HelloWorld.rules</outputFileName>
+                            <outputFileName>channels.rules</outputFileName>
                         </configuration>
                     </execution>
                 </executions>

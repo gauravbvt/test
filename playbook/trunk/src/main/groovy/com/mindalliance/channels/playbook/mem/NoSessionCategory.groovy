@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
+import com.mindalliance.channels.playbook.support.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,5 +39,7 @@ class NoSessionCategory {
         return referenceable
     }
 
-
+    static void fireAllRules(RuleBaseSession ruleBaseSession) {
+        // do nothing
+    }
 }

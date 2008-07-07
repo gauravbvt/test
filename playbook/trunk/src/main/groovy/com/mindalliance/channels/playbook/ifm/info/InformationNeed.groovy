@@ -24,11 +24,15 @@ class InformationNeed extends AbstractInformation {
     }
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['name', 'aboutSpecificEvent'])
+        return (List<String>)(super.transientProperties() + ['name', 'aboutSpecificEvents'])
     }
 
     String toString() {
         return "N2K about: ${eventSpec.summary}"
+    }
+
+    boolean isAboutSpecificEvents() {
+        return !eventSpec.enumeration.isEmpty()
     }
 
     String makeLabel(int maxWidth) {

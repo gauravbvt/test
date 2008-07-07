@@ -41,13 +41,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     static final String FORM_SUFFIX = 'Form'
 
     ApplicationMemory appMemory
-    RuleBaseSession ruleBaseSession
     String message
 
     PlaybookApplication() {
         super()
         appMemory = new ApplicationMemory(this)
-        ruleBaseSession = new RuleBaseSession(this)
     }
 
 //    void init() {
@@ -420,6 +418,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
                     channels.save()
                 }
             }
+            appMemory.fireAllRules()
+        }
+        else {
+            appMemory.insertFact(channels)  // with references if not already done
         }
         return channels
     }

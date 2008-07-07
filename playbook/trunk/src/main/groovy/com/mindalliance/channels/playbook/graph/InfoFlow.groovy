@@ -144,27 +144,32 @@ class InfoFlow extends PlaybookGraph {
     }
 
     void buildInformationNeed(InformationNeed need, String name) {
-        if (need.isAboutSpecificEvent()) {
-             Event subject = (Event)need.event.deref()
-             if (!subject instanceof InformationAct) {
-                 events.add(subject.reference)
-                 links.add([name, nameFor(subject), '', 'aboutEdge'])
-             }
-            else {
-                 if (acts.contains(need.event)) links.add([name, nameFor(subject), '', 'aboutEdge'])
-             }
+        if (need.isAboutSpecificEvents()) {
+             List<Ref> subjects = need.eventSpec.enumeration
+             subjects.each {ref ->
+                 Event subject = (Event)ref.deref()
+                 if (!subject instanceof InformationAct) {
+                     events.add(subject.reference)
+                     links.add([name, nameFor(subject), '', 'aboutEdge'])
+                 }
+                else {
+                     if (acts.contains(ref)) links.add([name, nameFor(subject), '', 'aboutEdge'])
+                 }
+            }
          }
          else {
-             Ref ref = need.eventSpec.causeEvent
-             if (ref) {
-                 Event causeOfSubject = (Event)ref.deref()
-                 if (!causeOfSubject instanceof InformationAct) {
-                     events.add(ref)
-                     links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+             List<Ref> refs = need.eventSpec.definitions.causeEventSpecs.enumeration
+             refs.flatten().each {ref ->
+                 if (ref) {
+                     Event causeOfSubject = (Event)ref.deref()
+                     if (!causeOfSubject instanceof InformationAct) {
+                         events.add(ref)
+                         links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+                     }
+                     else {
+                          if (acts.contains(ref)) links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+                      }
                  }
-                 else {
-                      if (acts.contains(ref)) links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
-                  }
              }
          }
     }

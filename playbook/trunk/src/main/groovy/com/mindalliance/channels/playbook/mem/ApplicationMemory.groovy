@@ -18,6 +18,7 @@ import com.mindalliance.channels.playbook.query.QueryManager
 import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
 import com.mindalliance.channels.playbook.support.PlaybookSession
+import com.mindalliance.channels.playbook.support.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,8 +35,11 @@ class ApplicationMemory implements Serializable {
     static final String EXPORT_DIRECTORY = 'data/yaml'
     static final String BACKUP_DIRECTORY = 'data/yaml/backup'
 
+    static final String RULES_PACKAGE = '/com/mindalliance/channels/playbook/rules/channels.rules'
+
     static DEBUG = false
     static PlaybookCache cache
+    static RuleBaseSession ruleBaseSession
     private PlaybookApplication application
 
     private QueryCache queryCache = new QueryCache()
@@ -43,6 +47,7 @@ class ApplicationMemory implements Serializable {
     ApplicationMemory(PlaybookApplication app) {
         application = app
         if (!cache) ApplicationMemory.initializeCache()
+        if (!ruleBaseSession) ApplicationMemory.initializeRuleBaseSession()
     }
 
     static synchronized void initializeCache() {
@@ -62,12 +67,19 @@ class ApplicationMemory implements Serializable {
         }
     }
 
+    static synchronized void initializeRuleBaseSession() {
+        if (!ruleBaseSession) {
+            ruleBaseSession = new RuleBaseSession(RULES_PACKAGE)
+        }
+    }
+
     QueryCache getQueryCache() {
         return queryCache
     }
 
     void storeAll(Collection<Referenceable> referenceables) {
-        referenceables.each {store(it)}
+        referenceables.each {doStore(it)}
+        ruleBaseSession.fireAllRules()
     }
 
     // always called within synchronized(this) block
@@ -82,27 +94,40 @@ class ApplicationMemory implements Serializable {
 
     // always called within synchronized(this) block
     void unlock(Ref ref) {
-       cache.unlock(ref, PlaybookSession.current())
+        cache.unlock(ref, PlaybookSession.current())
     }
 
     Ref store(Referenceable referenceable) {
+        doStore(referenceable)
+        ruleBaseSession.fireAllRules()
+        return referenceable.reference
+    }
+
+    private void doStore(Referenceable referenceable) {
         referenceable.beforeStore()
         cache.putInCache(referenceable.getId(), referenceable)
         if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
         QueryManager.modifiedInApplication(referenceable)     // update query cache
-        return referenceable.reference
+        ruleBaseSession.insert(referenceable)
     }
 
     void deleteAll(Set<Ref> deletes) {
-        deletes.each {delete(it) }
+        deletes.each {doDelete(it) }
+        ruleBaseSession.fireAllRules()
     }
 
     void delete(Ref ref) {
+        doDelete(ref)
+        ruleBaseSession.fireAllRules()
+    }
+
+    private void doDelete(Ref ref) {
         use(NoSessionCategory) {
             QueryManager.modifiedInApplication(ref.deref())    // retrieve referenceable from application memory
         }
         cache.flushEntry(ref.id)
+        ruleBaseSession.retract(ref)
     }
 
     Referenceable retrieve(Ref ref) {
@@ -131,7 +156,7 @@ class ApplicationMemory implements Serializable {
     }
 
     void clearAll() {
-        synchronized(this) {
+        synchronized (this) {
             cache.clear()
         }
     }
@@ -238,6 +263,29 @@ class ApplicationMemory implements Serializable {
             Logger.getLogger(this.class.name).info("Cache is empty")
         }
         return empty
+    }
+
+    void fireAllRules() { // fire rules if needed
+        ruleBaseSession.fireAllRules()
+    }
+
+    boolean isFact(Ref ref) {
+        return ruleBaseSession.isFact(ref)
+    }
+
+    void insertFact(Ref ref) {
+        if (!isFact(ref)) {
+            List<Ref> queue = [ref]
+            while (queue) {
+                Ref next = (Ref) queue.pop()
+                Referenceable referenceable = retrieve(next)
+                referenceable.references().each {aRef ->
+                    if (!isFact(aRef)) queue.add(aRef)
+                }
+                ruleBaseSession.insert(referenceable)
+            }
+            fireAllRules()
+        }
     }
 
 }
