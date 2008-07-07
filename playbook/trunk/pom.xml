@@ -153,11 +153,17 @@
             <artifactId>jyaml</artifactId>
             <version>1.3</version>
         </dependency>
+        <!-- DROOLS dependencies -->
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-core</artifactId>
             <version>4.0.7</version>
         </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-compiler</artifactId>
+            <version>4.0.7</version>
+        </dependency>        
 
         <!-- For geonames -->
         <dependency>
@@ -221,10 +227,6 @@
         <plugins>
             <!-- get from http://jira.jboss.org/jira/secure/attachment/12316588/maven-drools-plugins.zip -->
             <plugin>
-                <groupId>org.drools.maven.plugins</groupId>
-                <artifactId>maven-drools-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
                  <groupId>org.codehaus.groovy.maven</groupId>
                  <artifactId>gmaven-plugin</artifactId>
                  <executions>
@@ -238,6 +240,26 @@
                      </execution>
                  </executions>
             </plugin>
+            <!-- DROOLS compile -->
+            <plugin>
+                <groupId>org.drools.maven.plugins</groupId>
+                <artifactId>maven-drools-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Hello World Example</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>src/main/rules/HelloWorld.drl </include>
+                            </includes>
+                            <outputFileName>HelloWorld.rules</outputFileName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
 
             <plugin>
               <artifactId>maven-antrun-plugin</artifactId>
