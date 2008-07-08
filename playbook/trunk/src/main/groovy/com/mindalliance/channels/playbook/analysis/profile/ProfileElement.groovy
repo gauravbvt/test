@@ -38,4 +38,13 @@ class ProfileElement extends AnalysisElement {
         this.start = act.startTime()
     }
 
+    String shortClassName() {// Default
+        String cn = this.class.name
+        String name = "${cn.substring(cn.lastIndexOf('.') + 1)}"
+        return name
+    }
+
+    String toString() {
+        return "${shortClassName()} by $agent" 
+    }
 }

@@ -4,7 +4,6 @@ import com.mindalliance.channels.playbook.ref.impl.RefImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.opensymphony.oscache.base.CacheEntry
-import com.opensymphony.oscache.base.Cache
 import com.opensymphony.oscache.base.Config
 import com.opensymphony.oscache.base.NeedsRefreshException
 import com.mindalliance.channels.playbook.support.persistence.YamlPersistenceListener
@@ -20,7 +19,6 @@ import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.RuleBaseSession
 import com.mindalliance.channels.playbook.support.persistence.Mappable
-import com.mindalliance.channels.playbook.ifm.playbook.Detection
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

@@ -42,6 +42,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     ApplicationMemory appMemory
     String message
+    boolean initial = true
 
     PlaybookApplication() {
         super()
@@ -419,9 +420,13 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
                 }
             }
             appMemory.fireAllRules()
+            initial = false
         }
         else {
-            appMemory.insertFact(channels)  // with references if not already done
+            if (initial) {
+                appMemory.insertFact(channels)  // with references if not already done
+                initial = false
+            }
         }
         return channels
     }

@@ -15,7 +15,6 @@ import org.drools.StatefulSession
 import org.drools.event.DebugAgendaEventListener
 import org.drools.event.DebugWorkingMemoryEventListener
 import org.drools.audit.WorkingMemoryFileLogger
-import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.ref.Ref
 import org.drools.FactHandle
 import com.mindalliance.channels.playbook.ref.Referenceable
@@ -30,13 +29,17 @@ class RuleBaseSession implements Serializable {
     private String rulesPackageName
     private StatefulSession session
     private WorkingMemoryFileLogger logger
-    private Map<Ref, FactHandle> factHandles = new HashMap<Ref, FactHandle>()
-    private Set<Referenceable> inserts = new HashSet<Referenceable>()
-    private Set<Ref> retracts = new HashSet<Ref>()
+    private Map<Ref, FactHandle> factHandles
+    private Set<Referenceable> inserts
+    private Set<Ref> retracts
 
     RuleBaseSession(String rulesPackageName) {
         this.rulesPackageName = rulesPackageName
         initialize()
+    }
+    private void reset() {
+       factHandles = Collections.synchronizedMap(new HashMap<Ref, FactHandle>())
+       inserts = Collections.synchronizedSet(new HashSet<Referenceable>())
     }
 
     private void initialize() {
@@ -46,6 +49,7 @@ class RuleBaseSession implements Serializable {
         RuleBase ruleBase = RuleBaseFactory.newRuleBase( conf )
         ruleBase.addPackage(pkg)
         session = ruleBase.newStatefulSession()
+        reset()
         // session.addEventListener( new DebugAgendaEventListener() );
         // session.addEventListener( new DebugWorkingMemoryEventListener() );
         // logger = new WorkingMemoryFileLogger( session );
@@ -84,9 +88,8 @@ class RuleBaseSession implements Serializable {
         synchronized (this) {
             if (inserts || retracts) {
                 inserts.each {doInsert(it)}
-                inserts = new HashSet<Referenceable>()
                 retracts.each {doRetract(it)}
-                retracts = new HashSet<Ref>()
+                reset()
                 session.fireAllRules()
                 // logger.writeToDisk()
             }
@@ -94,7 +97,11 @@ class RuleBaseSession implements Serializable {
     }
 
     boolean isFact(Ref ref) {
-        return factHandles.get(ref) != null || inserts.any {it.reference == ref}
+        boolean isFact
+        synchronized (this) {
+            isFact = factHandles.get(ref) != null || inserts.any {it.reference == ref}
+        }
+        return isFact
     }
     
 

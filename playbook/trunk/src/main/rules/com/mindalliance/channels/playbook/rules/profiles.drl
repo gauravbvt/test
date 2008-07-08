@@ -5,13 +5,34 @@ import com.mindalliance.channels.playbook.ifm.info.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
+import org.apache.log4j.Logger
 
 rule "detection"
 	when
-		$act: Detection($actor:actorAgent,  $information: information, eval(information.isDefined()))
-
+		$act: Detection($actor:actorAgent,  $information: information)
+		eval($information.isDefined())
+	//	eval(Channels.isSet($actor))
 	then
 	    Know know = new Know($act, $actor, $information);
 	    insertLogical(know);  // adds knowledge of information to actor from start of act in act's playbook
-	    System.out.println("Inferred Know from" + $act);
+	    Logger.getLogger("rules").info("Inferred from " + $act + "(" + $act.getReference() + "): " + know);
     end
+
+
+rule "sharing act"
+    when
+        $act: SharingAct($actor:actorAgent, $target:targetAgent, $information: information)
+        eval($information.isDefined())
+	//	eval(Channels.isSet($actor))
+	//	eval(Channels.isSet($target))
+    then
+        Know know1 = new Know($act, $target, $information);
+        insertLogical(know1);
+        Know know2 = new Know($act, $actor, $information);
+        insertLogical(know2);
+        Insight insight1 = new Insight($act, $actor, know1);
+        insertLogical(insight1);
+        Insight insight2 = new Insight($act, $target, know2);
+        Logger.getLogger("rules").info("Inferred from " + $act + "(" + $act.getReference() + "): " + know1 + ", " + know2 + ", " + insight1 + ", " + insight2); 
+    end
+
