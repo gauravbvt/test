@@ -58,13 +58,18 @@ abstract class BeanImpl implements Bean {
            case {it instanceof Class}: value = val; break
            case ComputedRef.class: value = val; break
            case Ref.class:
-                if (PlaybookApplication.current().getMemory().isFresh((Ref)val)) {
-                    value = new RefImpl(id:val.id, db:val.db)
-                 }
-                 else {
-                    Logger.getLogger(Bean.class).warn("Stale reference $val replaced by null")
+                if (val == null) {
                     value = null
-                 }
+                }
+                else {
+                    if (PlaybookApplication.current().getMemory().isFresh((Ref)val)) {
+                        value = new RefImpl(id:val.id, db:val.db)
+                     }
+                     else {
+                        Logger.getLogger(Bean.class).warn("Stale reference $val replaced by null")
+                        value = null
+                     }
+                }
                  break
             case Bean.class: value = val.copy(); break
             case Collection.class:   // filter out nulls, (dangling Refs are cloned to null)

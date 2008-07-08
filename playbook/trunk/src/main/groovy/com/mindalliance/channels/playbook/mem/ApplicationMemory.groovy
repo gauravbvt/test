@@ -19,6 +19,8 @@ import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.RuleBaseSession
+import com.mindalliance.channels.playbook.support.persistence.Mappable
+import com.mindalliance.channels.playbook.ifm.playbook.Detection
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -145,7 +147,7 @@ class ApplicationMemory implements Serializable {
             }
             catch (Exception e) {
                 // Do nothing
-                Logger.getLogger(this.class.name).warn("Failed to retrieve $ref")
+                Logger.getLogger(this.class.name).warn("Failed to retrieve $ref : $e")
             }
         }
         return (Referenceable) referenceable // will be cloned by SessionMemory
@@ -236,6 +238,7 @@ class ApplicationMemory implements Serializable {
             try {
                 use(NoSessionCategory) {
                     while (true) {
+                        Mappable a
                         Map map = (Map) dec.readObject()
                         Referenceable referenceable = (Referenceable) Mapper.fromMap(map)
                         store(referenceable)

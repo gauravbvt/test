@@ -31,7 +31,8 @@ class RuleBaseSession implements Serializable {
     private StatefulSession session
     private WorkingMemoryFileLogger logger
     private Map<Ref, FactHandle> factHandles = new HashMap<Ref, FactHandle>()
-    private boolean needsFiring = false
+    private Set<Referenceable> inserts = new HashSet<Referenceable>()
+    private Set<Ref> retracts = new HashSet<Ref>()
 
     RuleBaseSession(String rulesPackageName) {
         this.rulesPackageName = rulesPackageName
@@ -52,43 +53,48 @@ class RuleBaseSession implements Serializable {
     }
 
     void insert(Referenceable referenceable) {
-        synchronized (this) {
+        inserts.add(referenceable)
+    }
+
+    void retract(Ref ref) {
+        retracts.add(ref)
+    }
+
+    void doInsert(Referenceable referenceable) {
             FactHandle factHandle = factHandles.get(referenceable.reference)
             if (factHandle) {
                 session.retract(factHandle)
             }
             factHandle = session.insert(referenceable)
             factHandles.put(referenceable.reference, factHandle)
-            needsFiring = true
-        }
     }
 
-    void retract(Ref ref) {
-        synchronized (this) {
+    void doRetract(Ref ref) {
             FactHandle factHandle = factHandles.get(ref)
             if (factHandle) {
                 session.retract(factHandle)
                 factHandles.remove(ref)
-                needsFiring = true
             }
             else {
                 Logger.getLogger(this.class).warn("Attempted to retract not-inserted $ref")
             }
-        }
     }
 
     void fireAllRules() {
         synchronized (this) {
-            if (needsFiring) {
+            if (inserts || retracts) {
+                inserts.each {doInsert(it)}
+                inserts = new HashSet<Referenceable>()
+                retracts.each {doRetract(it)}
+                retracts = new HashSet<Ref>()
                 session.fireAllRules()
                 // logger.writeToDisk()
-                needsFiring = false
             }
         }
     }
 
     boolean isFact(Ref ref) {
-        return factHandles.get(ref) != null
+        return factHandles.get(ref) != null || inserts.any {it.reference == ref}
     }
     
 

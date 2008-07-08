@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.support.persistence;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef;
+import org.apache.log4j.Logger;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,6 +24,9 @@ public class PersistentRef {
     static public PersistentRef fromRef(Ref ref) {
         PersistentRef pRef = new PersistentRef();
         pRef.id = ref.getId();
+        if (pRef.id == null) {
+            Logger.getLogger(PersistentRef.class).warn("Persisting a ref with null id");
+        }
         pRef.db = ref.getDb();
         pRef.computed = ref.isComputed();
         return pRef;
@@ -34,6 +38,10 @@ public class PersistentRef {
 
     public void setId(String id) {
         this.id = id;
+        if (this.id == null) {
+            Logger.getLogger(PersistentRef.class).warn("Recovering a ref with null id");
+        }
+
     }
 
     public String getDb() {

@@ -24,6 +24,9 @@ class RefImpl implements Ref {
 
     RefImpl(String id) {
         this.id = id
+        if (id == null) {
+            Logger.getLogger(this.class).warn("Instantiating with null id")
+        }
     }
 
     void detach() {
@@ -91,6 +94,9 @@ class RefImpl implements Ref {
             throw new Exception("Not allowed to change the id of a Ref once set")
         }
         else {
+            if (val == null) {
+                Logger.getLogger(this.class).warn("Setting a ref with null id");
+            }
             id = val
         }
     }
