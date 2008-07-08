@@ -1,6 +1,7 @@
-package com.mindalliance.channels.playbook.ifm.project.analysis
+package com.mindalliance.channels.playbook.analysis.casing
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.analysis.AnalysisElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

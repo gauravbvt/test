@@ -34,6 +34,10 @@ class RefImpl implements Ref {
         return false
     }
 
+    boolean isAttached() {
+        return value != null
+    }
+
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
     boolean equals(Object obj) {
         if (obj == null || !obj instanceof Ref) return false

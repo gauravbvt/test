@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.profile
+package com.mindalliance.channels.playbook.analysis
 
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct

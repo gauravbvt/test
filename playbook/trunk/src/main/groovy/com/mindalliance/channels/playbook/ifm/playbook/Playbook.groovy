@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -24,16 +25,31 @@ class Playbook extends ProjectElement implements Described {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['occurrences'])
+        return (List<String>) (super.transientProperties() + ['occurrences'])
+    }
+
+    String toString() {
+        return name
+    }
+
+    void beforeStore(ApplicationMemory memory) {
+        super.beforeStore(memory)
+        if (!events) {
+            Event initialEvent = new Event(name: 'Initiating event', description: '(automatically created)')
+            this.addElement(initialEvent)
+            memory.store(initialEvent)
+        }
     }
 
     Ref persist() {
         if (!events) {
-            Ref initialEvent = new Event(name:'Initiating event', description:'(automatically created)').persist()
-            events.add(initialEvent)
+            Event initialEvent = new Event(name: 'Initiating event', description: '(automatically created)')
+            this.addElement(initialEvent)
+            initialEvent.persist()
         }
         return super.persist()
     }
+
 
     Map toMap() {
         super.toMap()
@@ -227,7 +243,7 @@ class Playbook extends ProjectElement implements Described {
      * Return classes a project participant can add.
      */
     static List<Class<?>> contentClasses() {
-        (List<Class<?>>)[Assignation.class, Association.class, ConfirmationRequest.class,
+        (List<Class<?>>) [Assignation.class, Association.class, ConfirmationRequest.class,
                 Detection.class, InformationRequest.class, InformationTransfer.class,
                 Relocation.class, SharingCommitment.class, SharingRequest.class, Task.class,
                 Group.class, Event.class

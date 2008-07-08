@@ -1,0 +1,17 @@
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.analysis.profile.*
+
+rule "detection"
+	when
+		$act: Detection($actor:actorAgent,  $information: information, eval(information.isDefined()))
+
+	then
+	    Know know = new Know($act, $actor, $information);
+	    insertLogical(know);  // adds knowledge of information to actor from start of act in act's playbook
+	    System.out.println("Inferred Know from" + $act);
+    end

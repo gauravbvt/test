@@ -1,15 +1,16 @@
 package com.mindalliance.channels.playbook.ref
 
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
+import com.mindalliance.channels.playbook.Identified
+import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
-interface Referenceable extends Bean {
+interface Referenceable extends Bean, Identified {
 
-    String getId()
     String getDb()
     Ref getReference()
     void changed() // give the object a chance to clean up computed data
     void changed(String propName) // signals that the value of propName has changed
-    void beforeStore()
+    void beforeStore(ApplicationMemory memory)
     void afterStore()
     void afterRetrieve()
     Ref persist()

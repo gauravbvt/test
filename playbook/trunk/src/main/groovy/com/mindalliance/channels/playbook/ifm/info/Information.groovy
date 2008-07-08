@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.ifm.info
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ifm.Defineable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +11,7 @@ import com.mindalliance.channels.playbook.ifm.Timing
 * Date: Mar 29, 2008
 * Time: 9:04:20 AM
 */
-class Information extends AbstractInformation {  // the communicated (partial) account of an event (classified and attributed)
+class Information extends AbstractInformation implements Defineable {  // the communicated (partial) account of an event (classified and attributed)
 
     boolean affirmed = true // else negated
     Ref event // about an event description     -- required
@@ -19,6 +20,11 @@ class Information extends AbstractInformation {  // the communicated (partial) a
     List<Ref> sourceAgents = [] // divulged sources of the information 
     Timing timeToLive = new Timing(amount: 0) // ttl of 0 means indefinite. Once expired, the info is no longer supported by its source(s)
 
+    @Override
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['defined'])
+    }
+
     String toString() {
         if (!event as boolean) {
             return "About nothing"
@@ -26,6 +32,10 @@ class Information extends AbstractInformation {  // the communicated (partial) a
         else {
             return "About ${event.deref().toString()}" // TODO - do better than this?
         }
+    }
+
+    boolean isDefined() {
+        return event as boolean
     }
 
     String makeLabel(int maxWidth) {

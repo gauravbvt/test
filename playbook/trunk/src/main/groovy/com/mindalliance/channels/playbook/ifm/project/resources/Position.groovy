@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.query.Query
 import org.apache.commons.collections.CollectionUtils
 import com.mindalliance.channels.playbook.ifm.Jurisdictionable
+import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,8 +18,8 @@ class Position extends OrganizationResource implements Jurisdictionable {
 
     Location jurisdiction = new Location()
 
-    void beforeStore() {
-        super.beforeStore()
+    void beforeStore(ApplicationMemory memory) {
+        super.beforeStore(memory)
         if (jurisdiction.isDefined()) jurisdiction.detach()
     }
 

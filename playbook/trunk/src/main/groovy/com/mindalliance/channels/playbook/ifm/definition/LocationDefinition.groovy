@@ -6,8 +6,9 @@ import com.mindalliance.channels.playbook.ifm.Locatable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.profile.AgentProfile
+import com.mindalliance.channels.playbook.analysis.AgentProfile
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
+import com.mindalliance.channels.playbook.analysis.AgentProfile
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

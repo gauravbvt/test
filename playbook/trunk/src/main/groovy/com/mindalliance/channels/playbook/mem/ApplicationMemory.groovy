@@ -104,7 +104,7 @@ class ApplicationMemory implements Serializable {
     }
 
     private void doStore(Referenceable referenceable) {
-        referenceable.beforeStore()
+        referenceable.beforeStore(this)
         cache.putInCache(referenceable.getId(), referenceable)
         if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()

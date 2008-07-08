@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 public class PlaybookCache extends Cache {
 
-    Map<Ref,PlaybookSession> locks = new HashMap<Ref,PlaybookSession>();
+    Map<Ref, PlaybookSession> locks = new HashMap<Ref, PlaybookSession>();
 
     public PlaybookCache(boolean useMemoryCaching, boolean unlimitedDiskCache, boolean overflowPersistence) {
         super(useMemoryCaching, unlimitedDiskCache, overflowPersistence);
@@ -39,20 +39,21 @@ public class PlaybookCache extends Cache {
         return BeanImpl.makeClone(obj);
     }
 
-    public boolean isFresh(Ref ref) {   // NOT USED
-        if (ref.isComputed())
-            return true;
-        else {
-            CacheEntry cacheEntry = this.getCacheEntry(ref.getId(), null, null);
-            boolean stale = isStale(cacheEntry, CacheEntry.INDEFINITE_EXPIRY, "");
-            return !stale;
+    public boolean isFresh(Ref ref) {
+        if (ref.isComputed()) return true;
+        if (ref.getId() == null) {
+            Logger.getLogger(this.getClass()).warn("Ref with null id");
+            return false;
         }
+        CacheEntry cacheEntry = this.getCacheEntry(ref.getId(), null, null);
+        boolean stale = isStale(cacheEntry, CacheEntry.INDEFINITE_EXPIRY, "");
+        return !stale;
     }
 
     // always called within a synchroized(ApplicationMemory) block
     public void clear() {
         super.clear();
-        locks = new HashMap<Ref,PlaybookSession>();
+        locks = new HashMap<Ref, PlaybookSession>();
     }
 
     // always called within a synchroized(ApplicationMemory) block
@@ -71,20 +72,17 @@ public class PlaybookCache extends Cache {
     public boolean isLocked(Ref ref, PlaybookSession session) {
         PlaybookSession owner = locks.get(ref);
         if (owner != null) {
-           if (owner == session) {
-               return false;
-           }
-           else {
-               if (owner.isSessionInvalidated()) {
-                   cleanupLocks(owner); // lazily triggered locks cleanup
-                   return false;
-               }
-               else {
-                   return true;
-               }
-           }
-        }
-        else {
+            if (owner == session) {
+                return false;
+            } else {
+                if (owner.isSessionInvalidated()) {
+                    cleanupLocks(owner); // lazily triggered locks cleanup
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } else {
             return false;
         }
     }
@@ -92,7 +90,7 @@ public class PlaybookCache extends Cache {
     private void cleanupLocks(PlaybookSession invalidatedSession) {     // TODO - how about cleaning up ALL invlidated locks?
         Logger.getLogger(this.getClass()).info("Releasing all locks from invalidated session " + invalidatedSession);
         List<Ref> expiredLocks = new ArrayList<Ref>();
-        for (Map.Entry<Ref,PlaybookSession> entry : locks.entrySet()) {
+        for (Map.Entry<Ref, PlaybookSession> entry : locks.entrySet()) {
             if (entry.getValue() == invalidatedSession) {
                 expiredLocks.add(entry.getKey());
             }

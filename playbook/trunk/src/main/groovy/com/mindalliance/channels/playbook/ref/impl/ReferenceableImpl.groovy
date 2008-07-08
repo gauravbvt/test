@@ -157,7 +157,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
         return b
     }
 
-    public void beforeStore() {
+    public void beforeStore(ApplicationMemory memory) {
         // default is do nothing
     }
 

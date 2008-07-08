@@ -246,7 +246,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
         Detection detection2 = new Detection(name: 'detection2', actorAgent: p.findOrganizationNamed('NADIR Inc.'))
         detection2.cause.trigger = event2.reference
-        Information info4 = new Information(event: event2.reference)
+        Information info4 = new Information(event: event2.reference)   // TODO event2.reference.id becomes null when importing Channels from yaml. WHY?
         info4.eventDetails.add(new ElementOfInformation(topic:'topicA'))
         info4.eventDetails.add(new ElementOfInformation(topic:'topicB'))
         info4.eventDetails.add(new ElementOfInformation(topic:'topicC'))

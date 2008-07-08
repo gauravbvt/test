@@ -4,10 +4,11 @@ import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.profile.AgentProfile
+import com.mindalliance.channels.playbook.analysis.AgentProfile
 import com.mindalliance.channels.playbook.ifm.Jurisdictionable
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.OrganizationResource
+import com.mindalliance.channels.playbook.analysis.AgentProfile
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

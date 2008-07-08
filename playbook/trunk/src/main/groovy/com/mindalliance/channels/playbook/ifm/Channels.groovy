@@ -114,4 +114,8 @@ class Channels extends IfmElement {
     static List<Class<?>> contentClasses() {
         [User.class, Project.class, PlaybookModel.class]
     }
+
+    static boolean isSet(Ref ref) {
+        return ref != null && (ref.isComputed() || ref.isAttached() || PlaybookApplication.current().appMemory.isFresh(ref))
+    }
 }

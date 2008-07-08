@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,8 +28,8 @@ class Organization extends Resource {
         return (List<String>)(super.transientProperties() + ['resources'])
     }
 
-    void beforeStore() {
-        super.beforeStore()
+    void beforeStore(ApplicationMemory memory) {
+        super.beforeStore(memory)
         jurisdiction.detach()
     }
 

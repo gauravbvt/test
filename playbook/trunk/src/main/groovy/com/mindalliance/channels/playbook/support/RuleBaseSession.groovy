@@ -19,7 +19,8 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.ref.Ref
 import org.drools.FactHandle
 import com.mindalliance.channels.playbook.ref.Referenceable
-import org.apache.log4j.Logger;
+import org.apache.log4j.Logger
+import org.drools.RuleBaseConfiguration;
 
 
 class RuleBaseSession implements Serializable {
@@ -39,7 +40,9 @@ class RuleBaseSession implements Serializable {
 
     private void initialize() {
         Package pkg = PackageLoader.loadPackage(this.class, rulesPackageName)
-        RuleBase ruleBase = RuleBaseFactory.newRuleBase()
+        RuleBaseConfiguration conf = new RuleBaseConfiguration();
+        conf.setShadowProxy( false );
+        RuleBase ruleBase = RuleBaseFactory.newRuleBase( conf )
         ruleBase.addPackage(pkg)
         session = ruleBase.newStatefulSession()
         // session.addEventListener( new DebugAgendaEventListener() );

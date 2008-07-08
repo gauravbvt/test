@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.ifm.Responsibility
+import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -80,8 +81,8 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     }
 
     @Override
-    void beforeStore() {
-        super.beforeStore()
+    void beforeStore(ApplicationMemory memory) {
+        super.beforeStore(memory)
         if (location) location.detach()
     }
 
