@@ -67,10 +67,10 @@ public class FilteredContainer extends RefContainer {
         if ( buffer == null ) {
             buffer = new ArrayList<Ref>();
             for ( Ref ref : getData() ) {
-                if ( isStrict() ) {
+                  if ( isStrict() ) {
                     if ( getFilter().match( ref ) )
                         buffer.add( ref );
-                } if ( getFilter().filter( ref ) )
+                } else if ( getFilter().filter( ref ) )
                     buffer.add( ref );
             }
             setContents( buffer );

@@ -31,6 +31,8 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     private boolean invalid;
     private boolean orable = true;
 
+    private boolean singleSelect;
+
     private List<Filter> children;
 
     //-------------------------
@@ -66,12 +68,8 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
         Filter filter = (Filter) o;
 
-        if ( !collapsedText.equals( filter.collapsedText ) )
-            return false;
-        if ( !expandedText.equals( filter.expandedText ) )
-            return false;
-
-        return true;
+        return collapsedText.equals( filter.collapsedText )
+            && expandedText.equals( filter.expandedText );
     }
 
     public int hashCode() {
@@ -388,8 +386,12 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             }
 
             if ( allDeselected || allSelected ) {
-                resetChildren();
-                setExpanded( false );
+                if ( !isSingleSelect() ) {
+                    resetChildren();
+                    setExpanded( false );
+                } else
+                    setExpanded( !allDeselected );
+
                 setSelected( allSelected );
 
             } else {
@@ -508,6 +510,15 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     public void setOrable( boolean orable ) {
         this.orable = orable;
     }
+
+    public boolean isSingleSelect() {
+        return parent == null ? singleSelect : parent.isSingleSelect();
+    }
+
+    public void setSingleSelect( boolean singleSelect ) {
+        this.singleSelect = singleSelect;
+    }
+
 
     //===================================================
     static class EnumerationAdaptor<T> implements Serializable, Enumeration<T> {

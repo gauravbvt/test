@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
@@ -100,53 +101,59 @@ public class ClassFilter extends Filter {
         Container filtered = new FilteredContainer( getContainer(), this, true );
 
         // Impersonate...
-//        if ( subclasses.size() == 1 ) {
-//            Class<?> c = subclasses.iterator().next();
-////            if ( card( getObjectType() ) == card( c ) ) {
-//                setObjectType( c );
-//                setExpandedText( expandedText( c ) );
-//                setCollapsedText( collapsedText( c ) );
-////            }
-//        }
+        if ( subclasses.size() == 1 && getFiltersType() == null ) {
+            Class<?> c = subclasses.iterator().next();
+//            if ( card( getObjectType() ) == card( c ) ) {
+                setObjectType( c );
+                setExpandedText( expandedText( c ) );
+                setCollapsedText( collapsedText( c ) );
+                subclasses = getSubclasses();
+//            }
+        }
 
-        if ( subclasses.size() >= 1 )
-            for ( Class<?> c : subclasses ) {
-                ClassFilter cf = new ClassFilter( c );
-                cf.setShowingLeaves( isShowingLeaves() );
-                cf.setContainer( filtered );
-                result.add( cf );
+        addSubclassFilters( result, subclasses, filtered );
+        addOtherFilters( result, filtered );
+        addLeaves( result, filtered );
+
+        return result;
+    }
+
+    private void addLeaves( List<Filter> result, Container filtered ) {
+        if ( isShowingLeaves() ) {
+            for( Ref ref : filtered ) {
+                Referenceable object = ref.deref();
+                if ( object.getClass() == objectType )
+                    result.add( new RefFilter( ref ) );
+                object.detach();
             }
+        }
+    }
+
+    private void addOtherFilters( List<Filter> result, Container filtered ) {
         if ( getFiltersType() != null ) try {
             // Apply specialized filters
             AbstractFilters fs = (AbstractFilters) getFiltersType().newInstance();
-            result.addAll( fs.getFilters( filtered, isShowingLeaves() ) );
+            result.addAll( fs.getFilters( filtered, false ) );
 
             } catch ( InstantiationException e ) {
                 e.printStackTrace();
             } catch ( IllegalAccessException e ) {
                 e.printStackTrace();
             }
-        else if ( isShowingLeaves() ) {
-            for( Ref ref : filtered ) {
-                result.add( new RefFilter( ref ) );
-            }
-        }
+    }
 
-        return result;
+    private void addSubclassFilters( List<Filter> result, Set<Class<?>> subclasses, Container filtered ) {
+        if ( subclasses.size() >= 0 )
+            for ( Class<?> c : subclasses ) {
+                ClassFilter cf = new ClassFilter( c );
+                cf.setShowingLeaves( isShowingLeaves() );
+                cf.setContainer( filtered );
+                result.add( cf );
+            }
     }
 
     private boolean isConcrete( Class<?> sup ) {
         return getContainer().getSummary().instancesOf( sup ) != 0 ;
-    }
-
-    private int card( Class<?> c, Map<Class<?>, Set<Class<?>>> map ) {
-        int count = getContainer().getSummary().instancesOf( c );
-        Set<Class<?>> classSet = map.get( c );
-        if ( classSet != null )
-            for ( Class<?> sc : classSet )
-                    count +=  card( sc, map );
-
-        return count;
     }
 
     public static String collapsedText( Class<?> clazz ) {

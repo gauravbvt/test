@@ -42,6 +42,7 @@ public class FilterTree extends Tree {
 
     public void setFilter( Filter filter ) {
         getTreeModel().setRoot( filter );
+        filter.setSingleSelect( isSingleSelect() );
     }
 
     @Override

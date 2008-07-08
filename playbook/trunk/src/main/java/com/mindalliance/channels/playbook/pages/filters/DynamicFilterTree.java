@@ -22,7 +22,7 @@ public class DynamicFilterTree extends FilterTree {
     }
 
     public DynamicFilterTree(String id, IModel selections, IModel choices, boolean singleSelect) {
-        super(id, createFilter(selections, choices), singleSelect);
+        super(id, createFilter(selections, choices, singleSelect), singleSelect);
         this.computedFilter = super.getFilter();
         this.selections = selections;
         this.choices = choices;
@@ -46,7 +46,7 @@ public class DynamicFilterTree extends FilterTree {
         }
     }
 
-    static public Filter createFilter(IModel selections, IModel choices) {
+    static public Filter createFilter(IModel selections, IModel choices, boolean singleSelect ) {
         List<Ref> choiceList = refs( choices );
         List<Ref> selectionList = refs( selections );
 
@@ -63,14 +63,15 @@ public class DynamicFilterTree extends FilterTree {
             if (choiceList.contains(sel))
                 filter.selectFirstMatch(sel);
         }
-        filter.simplify();
         filter.setExpanded(true);
+        filter.setSingleSelect( singleSelect );
+        filter.simplify();
         return filter;
     }
 
     public synchronized Filter getFilter() {
         if (computedFilter == null) {
-            setFilter(createFilter(selections, choices));
+            setFilter(createFilter(selections, choices, isSingleSelect() ) );
         }
 
         return computedFilter;
@@ -78,6 +79,7 @@ public class DynamicFilterTree extends FilterTree {
 
     public synchronized void setFilter(Filter filter) {
         computedFilter = filter;
+        filter.setSingleSelect( isSingleSelect() );
         super.setFilter(filter);
     }
 
@@ -88,7 +90,7 @@ public class DynamicFilterTree extends FilterTree {
     public void setChoices(IModel choices) {
         detachModels();
         this.choices = choices;
-        setFilter(createFilter(selections, choices));
+        setFilter(createFilter(selections, choices, isSingleSelect() ));
         super.invalidateAll();
     }
 
