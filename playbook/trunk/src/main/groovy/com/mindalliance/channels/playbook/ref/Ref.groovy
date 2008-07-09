@@ -38,6 +38,7 @@ interface Ref extends Serializable {
     boolean isModifiable() // is this.deref() modifiable
     boolean isModified() // is in session and has been changed
     boolean isComputed()
+    boolean isInferred()
     boolean isFresh() // is it not stale?
     void detach() // remove cached copy of referenceable
     boolean isAttached() // has a cached copy of referenceable

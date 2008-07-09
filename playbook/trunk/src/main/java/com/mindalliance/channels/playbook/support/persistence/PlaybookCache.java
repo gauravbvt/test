@@ -34,13 +34,17 @@ public class PlaybookCache extends Cache {
         super(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity);
     }
 
+    public void sessionTimedOut(PlaybookSession session) {
+        cleanupLocks(session);
+    }
+
     public Object getFromCache(String key, int refreshPeriod) throws NeedsRefreshException {
         Object obj = super.getFromCache(key, refreshPeriod);
         return BeanImpl.makeClone(obj);
     }
 
     public boolean isFresh(Ref ref) {
-        if (ref.isComputed()) return true;
+        if (ref.isComputed()) return true;   // TODO remove -- should be redundant
         if (ref.getId() == null) {
             Logger.getLogger(this.getClass()).warn("Ref with null id");
             return false;

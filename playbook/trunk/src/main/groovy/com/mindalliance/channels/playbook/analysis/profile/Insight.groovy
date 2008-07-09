@@ -12,11 +12,12 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class Insight extends ProfileElement {   // an agent knows a profile element of another agent
 
-    ProfileElement profileElement
+    Ref profileElement
 
     Insight(InformationAct act, Ref agent, ProfileElement profileElement) {
        super(act, agent)
-       this.profileElement = profileElement
+       this.profileElement = profileElement.getReference()
     }
+
 
 }

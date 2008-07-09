@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.support.persistence;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef;
+import com.mindalliance.channels.playbook.ref.impl.InferredRef;
 import org.apache.log4j.Logger;
 
 /**
@@ -17,6 +18,7 @@ public class PersistentRef {
     String id;
     String db;
     boolean computed = false;
+    boolean inferred = false;
 
     public PersistentRef() {
     }
@@ -29,6 +31,7 @@ public class PersistentRef {
         }
         pRef.db = ref.getDb();
         pRef.computed = ref.isComputed();
+        pRef.inferred = ref.isInferred();
         return pRef;
     }
 
@@ -60,11 +63,23 @@ public class PersistentRef {
         this.computed = computed;
     }
 
+    public boolean isInferred() {
+        return inferred;
+    }
+
+    public void setInferred(boolean inferred) {
+        this.inferred = inferred;
+    }
+
     public Ref toRef() {
         Ref ref;
         if (computed) {
             ref = new ComputedRef();
-        } else {
+        }
+        else if (inferred) {
+            ref = new InferredRef();
+        }
+        else {
             ref = new RefImpl();
         }
         ref.setId(id);

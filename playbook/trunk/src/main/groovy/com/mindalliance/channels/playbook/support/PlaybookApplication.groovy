@@ -27,6 +27,7 @@ import com.mindalliance.channels.playbook.ifm.definition.EventDefinition
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo
+import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -65,7 +66,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     }
 
     RuleBaseSession getRuleBaseSession() {
-        return ruleBaseSession
+        return appMemory.ruleBaseSession
     }
 
     //----------------------
@@ -452,7 +453,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         return project.findParticipation(user)
     }
 
-// ----------------------- Memorable
     void storeAll(Collection<Referenceable> referenceables) {
         appMemory.storeAll(referenceable)
     }
@@ -480,6 +480,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     void save() {
         this.channels.save()
+    }
+
+    void sessionTimedOut(PlaybookSession session) {
+        Logger.getLogger(this.class).info("Session $session timed out")
+        appMemory.sessionTimedOut(session)
     }
 
     // Util

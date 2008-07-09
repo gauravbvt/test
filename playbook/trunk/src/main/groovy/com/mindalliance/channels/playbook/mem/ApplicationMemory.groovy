@@ -47,7 +47,7 @@ class ApplicationMemory implements Serializable {
     ApplicationMemory(PlaybookApplication app) {
         application = app
         if (!cache) ApplicationMemory.initializeCache()
-        if (!ruleBaseSession) ApplicationMemory.initializeRuleBaseSession()
+       // if (!ruleBaseSession) ApplicationMemory.initializeRuleBaseSession()
     }
 
     static synchronized void initializeCache() {
@@ -67,10 +67,19 @@ class ApplicationMemory implements Serializable {
         }
     }
 
-    static synchronized void initializeRuleBaseSession() {
+/*    static synchronized void initializeRuleBaseSession() {
         if (!ruleBaseSession) {
             ruleBaseSession = new RuleBaseSession(RULES_PACKAGE)
         }
+    }*/
+
+    RuleBaseSession getRuleBaseSession() {
+        synchronized (this) {
+            if (ruleBaseSession == null) {
+                ruleBaseSession = new RuleBaseSession(RULES_PACKAGE)
+            }
+        }
+        return ruleBaseSession
     }
 
     QueryCache getQueryCache() {
@@ -79,7 +88,7 @@ class ApplicationMemory implements Serializable {
 
     void storeAll(Collection<Referenceable> referenceables) {
         referenceables.each {doStore(it)}
-        ruleBaseSession.fireAllRules()
+        getRuleBaseSession().fireAllRules()
     }
 
     // always called within synchronized(this) block
@@ -99,7 +108,7 @@ class ApplicationMemory implements Serializable {
 
     Ref store(Referenceable referenceable) {
         doStore(referenceable)
-        ruleBaseSession.fireAllRules()
+        getRuleBaseSession().fireAllRules()
         return referenceable.reference
     }
 
@@ -109,17 +118,17 @@ class ApplicationMemory implements Serializable {
         if (DEBUG) Logger.getLogger(this.class.name).debug("==> to application: ${referenceable.type} $referenceable")
         referenceable.afterStore()
         QueryManager.modifiedInApplication(referenceable)     // update query cache
-        ruleBaseSession.insert(referenceable)
+        getRuleBaseSession().insert(referenceable)
     }
 
     void deleteAll(Set<Ref> deletes) {
         deletes.each {doDelete(it) }
-        ruleBaseSession.fireAllRules()
+        getRuleBaseSession().fireAllRules()
     }
 
     void delete(Ref ref) {
         doDelete(ref)
-        ruleBaseSession.fireAllRules()
+        getRuleBaseSession().fireAllRules()
     }
 
     private void doDelete(Ref ref) {
@@ -127,12 +136,12 @@ class ApplicationMemory implements Serializable {
             QueryManager.modifiedInApplication(ref.deref())    // retrieve referenceable from application memory
         }
         cache.flushEntry(ref.id)
-        ruleBaseSession.retract(ref)
+        getRuleBaseSession().retract(ref)
     }
 
     Referenceable retrieve(Ref ref) {
         Referenceable referenceable = null
-        if (ref.isComputed()) {
+        if (ref.isComputed() || ref.isInferred()) {
             referenceable = ref.deref()
         }
         else {
@@ -158,6 +167,7 @@ class ApplicationMemory implements Serializable {
     void clearAll() {
         synchronized (this) {
             cache.clear()
+            ruleBaseSession = null
         }
     }
 
@@ -267,11 +277,11 @@ class ApplicationMemory implements Serializable {
     }
 
     void fireAllRules() { // fire rules if needed
-        ruleBaseSession.fireAllRules()
+        getRuleBaseSession().fireAllRules()
     }
 
     boolean isFact(Ref ref) {
-        return ruleBaseSession.isFact(ref)
+        return getRuleBaseSession().isFact(ref)
     }
 
     void insertFact(Ref ref) {
@@ -283,10 +293,14 @@ class ApplicationMemory implements Serializable {
                 referenceable.references().each {aRef ->
                     if (!isFact(aRef)) queue.add(aRef)
                 }
-                ruleBaseSession.insert(referenceable)
+                getRuleBaseSession().insert(referenceable)
             }
             fireAllRules()
         }
+    }
+
+    void sessionTimedOut(PlaybookSession session) {
+        cache.sessionTimedOut(session)
     }
 
 }

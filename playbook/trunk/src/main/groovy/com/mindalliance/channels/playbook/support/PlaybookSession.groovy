@@ -19,11 +19,15 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     private String userId;
 
-    private PlaybookApplication application;     // TODO
+    private PlaybookApplication application;
 
     private SessionMemory memory = new SessionMemory();
 
     public PlaybookSession(){
+    }
+
+    public String toString() {
+        return "Session for $userId"
     }
 
     public PlaybookSession( AuthenticatedWebApplication application, Request request ) {
@@ -34,6 +38,11 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     static PlaybookSession current() {
         return (PlaybookSession)Session.get()
+    }
+
+    void invalidate() {
+        PlaybookApplication.current().sessionTimedOut(this)
+        super.invalidate()
     }
 
     // For testing only

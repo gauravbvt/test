@@ -1,0 +1,9 @@
+## support for InferredRef::deref()
+query "deref" (String identifier)
+    element : AnalysisElement( id == identifier )
+end
+
+## Find all Invalid
+query "allInvalids"
+    invalid : Invalid()
+end

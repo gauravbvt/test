@@ -23,6 +23,7 @@ import com.mindalliance.channels.playbook.graph.GraphVizRenderer
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.support.Level
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.support.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -87,9 +88,9 @@ public class TestPlaybook extends TestCase {
         channels.removeProject(myProject)
         assertTrue(session.pendingChangesCount == 1)
         // Modify project in session memory
-        Thread.sleep(500);
         RefUtils.set(myProject, "name", "Your project")
         Date lastModified = myProject.lastModified
+        Thread.sleep(500);
         myProject.name = "Your project"
         assertTrue(lastModified.before(myProject.lastModified))
         assertNotNull(myProject.createdOn)
@@ -394,6 +395,13 @@ public class TestPlaybook extends TestCase {
         println renderer.dot
         renderer.render(out, "svg")
         out.close()
+    }
+
+    void testRuleBase() {
+        RuleBaseSession ruleBase = app.current().ruleBaseSession
+        List<Ref> invalids = ruleBase.executeQuery("allInvalids", [], "invalid")
+        List<Referenceable> referenceables = invalids.collect {it.deref()}
+        assert referenceables
     }
 
 

@@ -12,9 +12,9 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
  * Time: 2:24:35 PM
  */
 // Holds a constant, non-persistent referenceable
-class ComputedRef extends RefImpl {
+class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and subclass
 
-    private Referenceable referenceable
+    Referenceable computed
 
     static ComputedRef from(Class clazz, String method) {
         ComputedRef cref = new ComputedRef()
@@ -23,7 +23,7 @@ class ComputedRef extends RefImpl {
     }
 
     String toString() {
-        return "ConstantRef<$id,$db>"
+        return "ComputedRef<$id,$db>"
     }
 
     boolean isComputed() {
@@ -31,11 +31,15 @@ class ComputedRef extends RefImpl {
     }
 
     Referenceable deref() {   // returns Referenceable from session change set or UNCOPIED referenceable from application
-        if (!referenceable) {
-            referenceable = computeReferenceable()
-            referenceable.makeConstant()
+        if (!computed) {
+            computed = computeReferenceable()
+            computed.makeConstant()
         }
-        return referenceable
+        return computed
+    }
+
+    void detach() {
+        computed = null
     }
 
     Referenceable computeReferenceable() {
@@ -50,11 +54,23 @@ class ComputedRef extends RefImpl {
     }
 
     void delete() {
-        throw new Exception("Can't delete a constant ref")
+        throw new Exception("Can't delete a computed ref")
     }
 
     void commit() {
         // do nothing
+    }
+
+    void reset() {
+        // do nothing
+    }
+
+    boolean save() {
+        return true
+    }
+
+    Ref persist() {
+        return this
     }
 
     boolean isModifiable() {
@@ -62,14 +78,18 @@ class ComputedRef extends RefImpl {
     }
 
     void changed(String propName) {
-        throw new Exception("Can't change a constant ref")
+        throw new RuntimeException("Can't change a constant ref")
     }
 
-    List<Ref> referefences() {
+    List<Ref> references() {
         return []
     }
 
     boolean isModified() {
         return false
+    }
+
+    boolean isFresh() {
+        return true
     }
 }

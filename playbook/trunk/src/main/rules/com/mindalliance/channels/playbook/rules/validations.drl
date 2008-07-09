@@ -154,3 +154,9 @@ rule "invalid sharing request information spec"
         insertLogical(invalid);
         log($el, invalid);
     end
+
+### Validate project elements
+
+### Validate model elements
+
+### Validate other playbook elements

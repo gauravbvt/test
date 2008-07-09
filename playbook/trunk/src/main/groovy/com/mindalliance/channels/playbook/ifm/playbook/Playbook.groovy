@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,19 +36,23 @@ class Playbook extends ProjectElement implements Described {
     void beforeStore(ApplicationMemory memory) {
         super.beforeStore(memory)
         if (!events) {
-            Event initialEvent = new Event(name: 'Initiating event', description: '(automatically created)')
-            this.addElement(initialEvent)
-            memory.store(initialEvent)
+            use(NoSessionCategory) {
+                Event initialEvent = new Event(name: 'Initiating event', description: '(automatically created)')
+                this.addElement(initialEvent)
+                memory.store(initialEvent)
+            }
         }
     }
 
     Ref persist() {
+        super.persist()
         if (!events) {
             Event initialEvent = new Event(name: 'Initiating event', description: '(automatically created)')
+            initialEvent.persist()
             this.addElement(initialEvent)
             initialEvent.persist()
         }
-        return super.persist()
+        return this.reference
     }
 
 

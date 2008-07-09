@@ -37,6 +37,10 @@ class RefImpl implements Ref {
         return false
     }
 
+    boolean isInferred() {
+        return false
+    }
+
     boolean isAttached() {
         return value != null
     }
@@ -256,6 +260,7 @@ class RefImpl implements Ref {
         return this.deref().references()
     }
 
+    // commit and export to file this and its graph of references. Return whether successful.
     boolean save() {
         Store store = PlaybookApplication.locateStore()
         return store.save(this)

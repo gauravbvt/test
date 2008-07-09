@@ -22,7 +22,7 @@ class Commitment extends ProfileElement {
     Commitment(InformationAct act, Ref agent, Ref towardAgent, SharingProtocol protocol, SharingConstraints constraints) {
         super(act, agent)
         this.protocol = protocol
-        this.towardAgent = (Agent)towardAgent.deref()
+        this.towardAgent = towardAgent ? (Agent)towardAgent.deref() : null
         this.constraints = constraints
     }
 

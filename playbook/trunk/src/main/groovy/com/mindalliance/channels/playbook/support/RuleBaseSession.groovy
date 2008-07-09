@@ -19,7 +19,11 @@ import com.mindalliance.channels.playbook.ref.Ref
 import org.drools.FactHandle
 import com.mindalliance.channels.playbook.ref.Referenceable
 import org.apache.log4j.Logger
-import org.drools.RuleBaseConfiguration;
+import org.drools.RuleBaseConfiguration
+import com.mindalliance.channels.playbook.ref.impl.InferredRef
+import com.mindalliance.channels.playbook.analysis.AnalysisElement
+import org.drools.QueryResults
+import org.drools.QueryResult;
 
 
 class RuleBaseSession implements Serializable {
@@ -44,6 +48,7 @@ class RuleBaseSession implements Serializable {
     private void reset() {
         factHandles = Collections.synchronizedMap(new HashMap<Ref, FactHandle>())
         inserts = Collections.synchronizedSet(new HashSet<Referenceable>())
+        retracts = Collections.synchronizedSet(new HashSet<Ref>())
     }
 
     private void initialize() {
@@ -62,11 +67,17 @@ class RuleBaseSession implements Serializable {
         }
     }
 
+    void clear() {
+        session = null
+    }
+
     void insert(Referenceable referenceable) {
+        assert !referenceable.reference.isInferred()
         inserts.add(referenceable)
     }
 
     void retract(Ref ref) {
+        assert !ref.isInferred()
         retracts.add(ref)
     }
 
@@ -113,6 +124,35 @@ class RuleBaseSession implements Serializable {
             isFact = factHandles.get(ref) != null || inserts.any {it.reference == ref}
         }
         return isFact
+    }
+
+    Referenceable deref(String id) {
+        List<Referenceable> results = doExecuteQuery("deref", [id], "element")
+        if (results) {
+            assert results.size() == 1
+            Referenceable element = (AnalysisElement)results[0]
+            return element
+        }
+        else {
+            return null
+        }
+    }
+
+    List<Ref> executeQuery(String name, List arguments, String binding) {
+        List<Referenceable> answers = doExecuteQuery(name, arguments, binding)
+        return answers.collect {it.reference}
+    }
+
+    private List<Referenceable> doExecuteQuery(String name, List arguments, String binding) {
+        List<Referenceable> answers = []
+        Object[] args = arguments as Object[]
+        QueryResults results = session.getQueryResults(name, args)
+        for (Iterator iter = results.iterator();  iter.hasNext();) {
+            QueryResult result = (QueryResult)iter.next()
+            AnalysisElement analysisElement = (AnalysisElement) result.get(binding)
+            answers.add(analysisElement)
+        }
+        return answers
     }
 
 
