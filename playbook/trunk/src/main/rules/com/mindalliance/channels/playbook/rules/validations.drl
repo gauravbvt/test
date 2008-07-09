@@ -1,0 +1,156 @@
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.ref.*
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
+import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.analysis.profile.*
+import java.util.*
+
+#### Validate information acts ####
+
+rule "invalid information act"
+    agenda-group "validations"
+    when
+        $el:  InformationAct($actor:actorAgent)
+        eval(!Channels.isSet($actor))
+    then
+        Invalid invalid = new Invalid($el, "The actor is missing");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid flow act target"
+    agenda-group "validations"
+    when
+        $el: FlowAct($target:targetAgent)
+        eval(!Channels.isSet($target))
+    then
+        Invalid invalid = new Invalid($el, "The target agent is missing");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid flow act information"
+    agenda-group "validations"
+    when
+        $el: SharingAct($info:information)
+        eval(!$info.isDefined())
+    then
+        Invalid invalid = new Invalid($el, "The shared information is not defined");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid assignation assignee"
+    agenda-group "validations"
+    when
+        $el: Assignation($assignee:assigneeAgent)
+        eval(!Channels.isSet($assignee))
+    then
+        Invalid invalid = new Invalid($el, "The assignee is missing");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid assignation responsibility"
+    agenda-group "validations"
+    when
+        $el: Assignation($responsibility:responsibility)
+        eval(!$responsibility.isDefined())
+    then
+        Invalid invalid = new Invalid($el, "The responsibility is undefined");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid association associate"
+    agenda-group "validations"
+    when
+        $el: Association($associate:toAgent)
+        eval(!Channels.isSet($associate))
+    then
+        Invalid invalid = new Invalid($el, "The associate is missing");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid association relationship"
+    agenda-group "validations"
+    when
+        $el: Association($name:relationshipName)
+        eval($name.trim().isEmpty())
+    then
+        Invalid invalid = new Invalid($el, "No relationship name");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid information request need"
+    agenda-group "validations"
+    when
+        $el: InformationRequest($need:informationNeed)
+        eval(!$need.isDefined())
+    then
+        Invalid invalid = new Invalid($el, "The information need is unspecified");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid information request needy"
+    agenda-group "validations"
+    when
+        $el: InformationRequest($needy:informationNeed.agent)
+        eval(!Channels.isSet((Ref)$needy))
+    then
+        Invalid invalid = new Invalid($el, "The agent with the information need is missing");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid relocation"
+    agenda-group "validations"
+    when
+        $el: InformationRequest($location:location)
+        eval(!$location.isDefined())
+    then
+        Invalid invalid = new Invalid($el, "The location not defined");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid sharing commitment"
+    agenda-group "validations"
+    when
+        $el: SharingCommitment($protocol:protocol)
+        eval(!$protocol.isDefined())
+    then
+        Invalid invalid = new Invalid($el, "The sharing protocol is not defined");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid sharing request protocol"
+    agenda-group "validations"
+    when
+        $el: SharingRequest($protocol:protocol)
+        eval(!$protocol.isDefined())
+    then
+        Invalid invalid = new Invalid($el, "The sharing protocol is not defined");
+        insertLogical(invalid);
+        log($el, invalid);
+    end
+
+rule "invalid sharing request information spec"
+    agenda-group "validations"
+    when
+        $el: SharingRequest($infoSpec:protocol.informationSpec)
+        eval(!((InformationDefinition)$infoSpec).matchesAll())
+    then
+        Invalid invalid = new Invalid($el, "The sharing protocol is not defined");
+        insertLogical(invalid);
+        log($el, invalid);
+    end

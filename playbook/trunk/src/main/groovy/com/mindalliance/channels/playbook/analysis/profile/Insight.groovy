@@ -1,8 +1,5 @@
 package com.mindalliance.channels.playbook.analysis.profile
 
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
-import com.mindalliance.channels.playbook.ifm.Agent
-import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.Ref
 

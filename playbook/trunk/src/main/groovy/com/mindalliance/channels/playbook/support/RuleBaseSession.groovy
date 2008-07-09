@@ -25,6 +25,9 @@ import org.drools.RuleBaseConfiguration;
 class RuleBaseSession implements Serializable {
 
     static final String LOG_PATH = "rules_log/firing"
+    static final boolean LOG_FIRING = false
+
+    static final List<String> FLOW = ['validations', 'profiles', 'beliefs', 'cases', 'issues', 'actions']
 
     private String rulesPackageName
     private StatefulSession session
@@ -37,23 +40,26 @@ class RuleBaseSession implements Serializable {
         this.rulesPackageName = rulesPackageName
         initialize()
     }
+
     private void reset() {
-       factHandles = Collections.synchronizedMap(new HashMap<Ref, FactHandle>())
-       inserts = Collections.synchronizedSet(new HashSet<Referenceable>())
+        factHandles = Collections.synchronizedMap(new HashMap<Ref, FactHandle>())
+        inserts = Collections.synchronizedSet(new HashSet<Referenceable>())
     }
 
     private void initialize() {
         Package pkg = PackageLoader.loadPackage(this.class, rulesPackageName)
         RuleBaseConfiguration conf = new RuleBaseConfiguration();
-        conf.setShadowProxy( false );
-        RuleBase ruleBase = RuleBaseFactory.newRuleBase( conf )
+        conf.setShadowProxy(false);
+        RuleBase ruleBase = RuleBaseFactory.newRuleBase(conf)
         ruleBase.addPackage(pkg)
         session = ruleBase.newStatefulSession()
         reset()
-        // session.addEventListener( new DebugAgendaEventListener() );
-        // session.addEventListener( new DebugWorkingMemoryEventListener() );
-        // logger = new WorkingMemoryFileLogger( session );
-        // logger.setFileName( LOG_PATH );
+        if (LOG_FIRING) {
+            session.addEventListener(new DebugAgendaEventListener());
+            session.addEventListener(new DebugWorkingMemoryEventListener());
+            logger = new WorkingMemoryFileLogger(session);
+            logger.setFileName(LOG_PATH);
+        }
     }
 
     void insert(Referenceable referenceable) {
@@ -65,23 +71,23 @@ class RuleBaseSession implements Serializable {
     }
 
     void doInsert(Referenceable referenceable) {
-            FactHandle factHandle = factHandles.get(referenceable.reference)
-            if (factHandle) {
-                session.retract(factHandle)
-            }
-            factHandle = session.insert(referenceable)
-            factHandles.put(referenceable.reference, factHandle)
+        FactHandle factHandle = factHandles.get(referenceable.reference)
+        if (factHandle) {
+            session.retract(factHandle)
+        }
+        factHandle = session.insert(referenceable)
+        factHandles.put(referenceable.reference, factHandle)
     }
 
     void doRetract(Ref ref) {
-            FactHandle factHandle = factHandles.get(ref)
-            if (factHandle) {
-                session.retract(factHandle)
-                factHandles.remove(ref)
-            }
-            else {
-                Logger.getLogger(this.class).warn("Attempted to retract not-inserted $ref")
-            }
+        FactHandle factHandle = factHandles.get(ref)
+        if (factHandle) {
+            session.retract(factHandle)
+            factHandles.remove(ref)
+        }
+        else {
+            Logger.getLogger(this.class).warn("Attempted to retract not-inserted $ref")
+        }
     }
 
     void fireAllRules() {
@@ -90,10 +96,15 @@ class RuleBaseSession implements Serializable {
                 inserts.each {doInsert(it)}
                 retracts.each {doRetract(it)}
                 reset()
+                setFlow(FLOW)
                 session.fireAllRules()
-                // logger.writeToDisk()
+                if (LOG_FIRING) logger.writeToDisk()
             }
         }
+    }
+
+    private void setFlow(List<String> flow) {
+        flow.reverse().each {session.setFocus((String)it)}
     }
 
     boolean isFact(Ref ref) {
@@ -103,6 +114,6 @@ class RuleBaseSession implements Serializable {
         }
         return isFact
     }
-    
+
 
 }

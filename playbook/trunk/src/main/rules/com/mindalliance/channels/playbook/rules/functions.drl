@@ -1,0 +1,9 @@
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.ifm.*
+import org.apache.log4j.Logger
+
+function void log(IfmElement cause, AnalysisElement analysis) {
+    Logger.getLogger("rules").info("Inferred " + analysis + " from " + cause + "(" + cause.getReference() + ")" );
+}

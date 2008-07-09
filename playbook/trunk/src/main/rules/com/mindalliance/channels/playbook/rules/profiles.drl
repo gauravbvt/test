@@ -9,21 +9,18 @@ import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
 import java.util.*
-import org.apache.log4j.Logger
 
-function void log(InformationAct cause, ProfileElement profileElement) {
-    Logger.getLogger("rules").info("Inferred from " + cause + "(" + cause.getReference() + "): " + profileElement);
-}
+
 
 ##### Direct profile element generation by Information Acts ###########
 
 // TODO set end durations where applicable
 
 rule "detection"
+    agenda-group "profiles"
 	when
 		$act: Detection($actor:actorAgent,  $information: information)
-		eval($information.isDefined())
-		eval(Channels.isSet($actor))
+		not (exists Invalid(element == $act))
 	then
 	    Know know = new Know($act, $actor, $information);
 	    insertLogical(know);  // adds knowledge of information to actor from start of act in act's playbook
@@ -32,11 +29,10 @@ rule "detection"
 
 
 rule "sharing act"
+    agenda-group "profiles"
     when
         $act: SharingAct($actor:actorAgent, $target:targetAgent, $information: information)
-        eval($information.isDefined())
-		eval(Channels.isSet($actor))
-		eval(Channels.isSet($target))
+		not (exists Invalid(element == $act))
     then
         Know know1 = new Know($act, $target, $information);
         insertLogical(know1);
@@ -52,25 +48,25 @@ rule "sharing act"
     end
 
 rule "task"
+    agenda-group "profiles"
     when
         $act: Task($actor:actorAgent, $needs:informationNeeds)
-        eval(!$needs.isEmpty())
-        eval(Channels.isSet($actor))
+		not (exists Invalid(element == $act))
     then
         for (InformationNeed need : (List<InformationNeed>)$needs) {
-            NeedToKnow n2k = new NeedToKnow($act, $actor, need);
-            insertLogical(n2k);
-            log($act, n2k);
+            if (need.isDefined()) {
+                NeedToKnow n2k = new NeedToKnow($act, $actor, need);
+                insertLogical(n2k);
+                log($act, n2k);
+            }
         }
     end
 
 rule "information request"
+    agenda-group "profiles"
     when
         $act: InformationRequest($actor:actorAgent, $target:targetAgent, $needy:informationNeed.agent , $need:informationNeed)
-        eval($need.isDefined())
-		eval(Channels.isSet($actor))
-		eval(Channels.isSet($target))
-		eval(Channels.isSet((Ref)$needy))
+		not (exists Invalid(element == $act))
     then
         NeedToKnow n2k = new NeedToKnow($act, (Ref)$needy, $need);
         insertLogical(n2k);
@@ -84,12 +80,10 @@ rule "information request"
     end
 
 rule "assignation"
+    agenda-group "profiles"
     when
         $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility:responsibility, $assignee:assigneeAgent)
-        eval($responsibility.isDefined())
-		eval(Channels.isSet($actor))
-		eval(Channels.isSet($target))
-		eval(Channels.isSet($assignee))
+		not (exists Invalid(element == $act))
     then
         Assignment assignment = new Assignment($act, $assignee, $responsibility);
         Insight insight1 = new Insight($act, $actor, assignment);
@@ -101,11 +95,11 @@ rule "assignation"
     end
 
 rule "assignation received"
+    agenda-group "profiles"
     when
         $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent,
                           (assigneeAgent == targetAgent || assigneeAgent == actorAgent))
-        eval($responsibility.isDefined())
-		eval(Channels.isSet($assignee))
+		not (exists Invalid(element == $act))
     then
         Assignment assignment = new Assignment($act, $assignee, $responsibility);
         insertLogical(assignment);
@@ -113,11 +107,10 @@ rule "assignation received"
     end
 
 rule "association"
+    agenda-group "profiles"
     when
         $act: Association($actor:actorAgent, $associate:toAgent, $name:relationshipName)
-        eval(!$name.isEmpty())
-        eval(Channels.isSet($actor))
-        eval(Channels.isSet($associate))
+		not (exists Invalid(element == $act))
     then
         Relationship relationship = Relationship.create($actor, $name, $associate);
         Link link = new Link($act, $actor, relationship);
@@ -126,11 +119,11 @@ rule "association"
     end
 
 rule "reverse association"
+    agenda-group "profiles"
     when
         $act: Association($actor:actorAgent, $associate:toAgent, $name:reverseRelationshipName)
         eval(!$name.isEmpty())
-        eval(Channels.isSet($actor))
-        eval(Channels.isSet($associate))
+		not (exists Invalid(element == $act))
     then
         Relationship relationship = Relationship.create($associate, $name, $actor);
         Link link = new Link($act, $associate, relationship);
@@ -139,12 +132,10 @@ rule "reverse association"
     end
 
 rule "confirmation request"
+    agenda-group "profiles"
     when
         $act: ConfirmationRequest($actor:actorAgent, $target:targetAgent, $information:information, $sourceSpec:sourceSpec)
-        eval(!$sourceSpec.matchesAll())
-		eval(Channels.isSet($actor))
-		eval(Channels.isSet($target))
-        eval($information.isDefined())
+		not (exists Invalid(element == $act))
     then
         SourceNeed sourceNeed = new SourceNeed($act, $actor, $sourceSpec, $information);
         insertLogical(sourceNeed);
@@ -154,10 +145,10 @@ rule "confirmation request"
     end
 
 rule "relocation"
+    agenda-group "profiles"
     when
         $act: Relocation($actor:actorAgent, $location:location)
-        eval(Channels.isSet($actor))
-        eval($location.isDefined())
+		not (exists Invalid(element == $act))
     then
         Locality locality = new Locality($act, $actor, $location);
         insertLogical(locality);
@@ -165,11 +156,10 @@ rule "relocation"
     end
 
 rule "sharing request"
+    agenda-group "profiles"
     when
         $act: SharingRequest($actor:actorAgent, $target:targetAgent, $protocol:protocol, $infoSpec:protocol.informationSpec)
-        eval(Channels.isSet($actor))
-        eval(Channels.isSet($target))
-        eval(!((InformationDefinition)$infoSpec).matchesAll())
+		not (exists Invalid(element == $act))
     then
         InformationNeed need = InformationNeed.fromSharingProtocol($actor, $target, $protocol);
         NeedToKnow n2k = new NeedToKnow($act, $actor, need);
@@ -181,11 +171,10 @@ rule "sharing request"
     end
 
 rule "sharing commitment"
+    agenda-group "profiles"
     when
         $act: SharingCommitment($actor:actorAgent, $target:targetAgent, $protocol:protocol, $constraints:constraints)
-        eval(Channels.isSet($actor))
-        eval(Channels.isSet($target))
-        eval($protocol.isDefined())
+		not (exists Invalid(element == $act))
     then
         Commitment commitment = new Commitment($act, $actor, $target, $protocol, $constraints);
         insertLogical(commitment);
