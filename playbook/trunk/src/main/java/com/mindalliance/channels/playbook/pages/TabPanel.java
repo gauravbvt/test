@@ -81,42 +81,63 @@ public class TabPanel extends Panel implements SelectionManager {
         final IModel tabModel = new PropertyModel( this, "tab" );
 
         result.add( new AbstractTab( new Model("Table") ){
+            private TableView panel;
             public Panel getPanel( String panelId ) {
-                final TableView tv = new TableView( panelId, tabModel, TabPanel.this );
-                views.add( tv );
-                return tv;
+                if ( panel == null ) {
+                    panel = new TableView( panelId, tabModel, TabPanel.this );
+                    panel.setSelected( getSelected() );
+                    add(panel);
+                    views.add( panel );
+                }
+                return panel;
             }
         } );
 
         ContainerSummary summary = getTab().getSummary();
         if ( summary.isTimelineable() ) {
             result.add( new AbstractTab( new Model("Timeline") ){
+                private TimelinePanel panel;
                 public Panel getPanel( String panelId ) {
-                    ContentView cv = new TimelinePanel( panelId, tabModel, TabPanel.this );
-                    views.add( cv );
-                    return cv;
+                    if ( panel == null ) {
+                        panel = new TimelinePanel( panelId, tabModel, TabPanel.this );
+                        views.add( panel );
+                        add(panel);
+                        assert( panel.getPage() != null );
+                        panel.setSelected( getSelected() );
+                    }
+                    return panel;
                 }
             } );
         }
 
         if ( summary.isMappable() ) {
             result.add( new AbstractTab( new Model("Map") ){
+                private ContentView panel;
                 public Panel getPanel( String panelId ) {
                     // TODO hook this up
-                    final ContentView cv = new ContentView( panelId, tabModel, TabPanel.this );
-                    views.add( cv );
-                    return cv;
+                    if ( panel == null ) {
+                        panel = new ContentView( panelId, tabModel, TabPanel.this );
+                        views.add( panel );
+                        add(panel);
+                        panel.setSelected( getSelected() );
+                    }
+                    return panel;
                 }
             } );
         }
 
         if ( summary.isFlowable() ) {
             result.add( new AbstractTab( new Model("Flow") ){
+                private InfoFlowPanel panel;
                 public Panel getPanel( String panelId ) {
                     // TODO filter to Agent.class or Event.class
-                    final ContentView cv = new InfoFlowPanel( panelId, tabModel, TabPanel.this );
-                    views.add( cv );
-                    return cv;
+                    if ( panel == null ) {
+                        panel = new InfoFlowPanel( panelId, tabModel, TabPanel.this );
+                        views.add( panel );
+                        add(panel);
+                        panel.setSelected( getSelected() );
+                    }
+                    return panel;
                 }
             } );
         }
@@ -161,7 +182,7 @@ public class TabPanel extends Panel implements SelectionManager {
 
             this.selected = selected;
             for ( ContentView view: views )
-                if ( view.isVisible() )
+//                if ( view.isVisible() )
                     view.setSelected( selected );
             form.modelChanged();
         }

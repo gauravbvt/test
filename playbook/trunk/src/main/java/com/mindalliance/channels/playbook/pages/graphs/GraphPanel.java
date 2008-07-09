@@ -150,7 +150,8 @@ abstract public class GraphPanel extends ContentView {
         super.setSelected(ref);
         // currentSelection = ref;
         // update svgContent if needed
-        addGraphSvg();
+        if ( isVisible() )
+            addGraphSvg();
     }
 
    /* protected Ref getSelected() {  // TODO - remove when extends ContentView
