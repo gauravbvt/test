@@ -4,6 +4,10 @@ import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreeme
 import com.mindalliance.channels.playbook.ifm.Agent
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.ifm.sharing.SharingConstraints
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,11 +18,15 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook
  */
 class Commitment extends ProfileElement {
 
-    SharingAgreement sharingAgreement
+    SharingProtocol protocol = new SharingProtocol()
+    SharingConstraints constraints = new SharingConstraints()
+    Agent towardAgent
 
-    Commitment(Playbook playbook, Agent agent, Duration start, Duration end, SharingAgreement sharingAgreement) {
-        super(playbook, agent, start, end)
-        this.sharingAgreement = sharingAgreement
+    Commitment(InformationAct act, Ref agent, Ref towardAgent, SharingProtocol protocol, SharingConstraints constraints) {
+        super(act, agent)
+        this.protocol = protocol
+        this.towardAgent = (Agent)towardAgent.deref()
+        this.constraints = constraints
     }
 
 }

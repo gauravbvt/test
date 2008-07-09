@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.Agent
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,8 +18,9 @@ class Locality extends ProfileElement {
 
     Location location
 
-    Locality(Playbook playbook, Agent agent, Duration start, Duration end, Location location) {
-        super(playbook, agent, start, end)
+
+    Locality(InformationAct act, Ref agent, Location location) {
+        super(act, agent)
         this.location = location
     }
 

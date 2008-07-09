@@ -17,11 +17,6 @@ class Insight extends ProfileElement {   // an agent knows a profile element of 
 
     ProfileElement profileElement
 
-    Insight(Playbook playbook, Agent agent, Duration start, Duration end, ProfileElement profileElement) {
-        super(playbook, agent, start, end)
-        this.profileElement = profileElement
-    }
-
     Insight(InformationAct act, Ref agent, ProfileElement profileElement) {
        super(act, agent)
        this.profileElement = profileElement

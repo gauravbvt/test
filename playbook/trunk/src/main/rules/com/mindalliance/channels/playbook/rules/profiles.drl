@@ -1,21 +1,33 @@
 package com.mindalliance.channels.playbook.rules
 
+import com.mindalliance.channels.playbook.ref.*
 import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
 import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
+import java.util.*
 import org.apache.log4j.Logger
+
+function void log(InformationAct cause, ProfileElement profileElement) {
+    Logger.getLogger("rules").info("Inferred from " + cause + "(" + cause.getReference() + "): " + profileElement);
+}
+
+##### Direct profile element generation by Information Acts ###########
+
+// TODO set end durations where applicable
 
 rule "detection"
 	when
 		$act: Detection($actor:actorAgent,  $information: information)
 		eval($information.isDefined())
-	//	eval(Channels.isSet($actor))
+		eval(Channels.isSet($actor))
 	then
 	    Know know = new Know($act, $actor, $information);
 	    insertLogical(know);  // adds knowledge of information to actor from start of act in act's playbook
-	    Logger.getLogger("rules").info("Inferred from " + $act + "(" + $act.getReference() + "): " + know);
+	    log($act, know);
     end
 
 
@@ -23,8 +35,8 @@ rule "sharing act"
     when
         $act: SharingAct($actor:actorAgent, $target:targetAgent, $information: information)
         eval($information.isDefined())
-	//	eval(Channels.isSet($actor))
-	//	eval(Channels.isSet($target))
+		eval(Channels.isSet($actor))
+		eval(Channels.isSet($target))
     then
         Know know1 = new Know($act, $target, $information);
         insertLogical(know1);
@@ -33,6 +45,157 @@ rule "sharing act"
         Insight insight1 = new Insight($act, $actor, know1);
         insertLogical(insight1);
         Insight insight2 = new Insight($act, $target, know2);
-        Logger.getLogger("rules").info("Inferred from " + $act + "(" + $act.getReference() + "): " + know1 + ", " + know2 + ", " + insight1 + ", " + insight2); 
+        log($act, know1);
+        log($act, know2);
+        log($act, insight1);
+        log($act, insight2);
     end
 
+rule "task"
+    when
+        $act: Task($actor:actorAgent, $needs:informationNeeds)
+        eval(!$needs.isEmpty())
+        eval(Channels.isSet($actor))
+    then
+        for (InformationNeed need : (List<InformationNeed>)$needs) {
+            NeedToKnow n2k = new NeedToKnow($act, $actor, need);
+            insertLogical(n2k);
+            log($act, n2k);
+        }
+    end
+
+rule "information request"
+    when
+        $act: InformationRequest($actor:actorAgent, $target:targetAgent, $needy:informationNeed.agent , $need:informationNeed)
+        eval($need.isDefined())
+		eval(Channels.isSet($actor))
+		eval(Channels.isSet($target))
+		eval(Channels.isSet((Ref)$needy))
+    then
+        NeedToKnow n2k = new NeedToKnow($act, (Ref)$needy, $need);
+        insertLogical(n2k);
+        Insight insight1 = new Insight($act, $actor, n2k);
+        insertLogical(insight1);
+        Insight insight2 = new Insight($act, $target, n2k);
+        insertLogical(insight2);
+        log($act, n2k);
+        log($act, insight1);
+        log($act, insight2);
+    end
+
+rule "assignation"
+    when
+        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility:responsibility, $assignee:assigneeAgent)
+        eval($responsibility.isDefined())
+		eval(Channels.isSet($actor))
+		eval(Channels.isSet($target))
+		eval(Channels.isSet($assignee))
+    then
+        Assignment assignment = new Assignment($act, $assignee, $responsibility);
+        Insight insight1 = new Insight($act, $actor, assignment);
+        insertLogical(insight1);
+        Insight insight2 = new Insight($act, $target, assignment);
+        insertLogical(insight2);
+        log($act, insight1);
+        log($act, insight2);
+    end
+
+rule "assignation received"
+    when
+        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent,
+                          (assigneeAgent == targetAgent || assigneeAgent == actorAgent))
+        eval($responsibility.isDefined())
+		eval(Channels.isSet($assignee))
+    then
+        Assignment assignment = new Assignment($act, $assignee, $responsibility);
+        insertLogical(assignment);
+        log($act, assignment);
+    end
+
+rule "association"
+    when
+        $act: Association($actor:actorAgent, $associate:toAgent, $name:relationshipName)
+        eval(!$name.isEmpty())
+        eval(Channels.isSet($actor))
+        eval(Channels.isSet($associate))
+    then
+        Relationship relationship = Relationship.create($actor, $name, $associate);
+        Link link = new Link($act, $actor, relationship);
+        insertLogical(link);
+        log($act, link);
+    end
+
+rule "reverse association"
+    when
+        $act: Association($actor:actorAgent, $associate:toAgent, $name:reverseRelationshipName)
+        eval(!$name.isEmpty())
+        eval(Channels.isSet($actor))
+        eval(Channels.isSet($associate))
+    then
+        Relationship relationship = Relationship.create($associate, $name, $actor);
+        Link link = new Link($act, $associate, relationship);
+        insertLogical(link);
+        log($act, link);
+    end
+
+rule "confirmation request"
+    when
+        $act: ConfirmationRequest($actor:actorAgent, $target:targetAgent, $information:information, $sourceSpec:sourceSpec)
+        eval(!$sourceSpec.matchesAll())
+		eval(Channels.isSet($actor))
+		eval(Channels.isSet($target))
+        eval($information.isDefined())
+    then
+        SourceNeed sourceNeed = new SourceNeed($act, $actor, $sourceSpec, $information);
+        insertLogical(sourceNeed);
+        log($act, sourceNeed);
+        Insight insight = new Insight($act, $target, sourceNeed);
+        log($act, insight);
+    end
+
+rule "relocation"
+    when
+        $act: Relocation($actor:actorAgent, $location:location)
+        eval(Channels.isSet($actor))
+        eval($location.isDefined())
+    then
+        Locality locality = new Locality($act, $actor, $location);
+        insertLogical(locality);
+        log($act, locality);
+    end
+
+rule "sharing request"
+    when
+        $act: SharingRequest($actor:actorAgent, $target:targetAgent, $protocol:protocol, $infoSpec:protocol.informationSpec)
+        eval(Channels.isSet($actor))
+        eval(Channels.isSet($target))
+        eval(!((InformationDefinition)$infoSpec).matchesAll())
+    then
+        InformationNeed need = InformationNeed.fromSharingProtocol($actor, $target, $protocol);
+        NeedToKnow n2k = new NeedToKnow($act, $actor, need);
+        insertLogical(n2k);
+        log($act, n2k);
+        Insight insight = new Insight($act, $target, n2k);
+        insertLogical(insight);
+        log($act, insight);
+    end
+
+rule "sharing commitment"
+    when
+        $act: SharingCommitment($actor:actorAgent, $target:targetAgent, $protocol:protocol, $constraints:constraints)
+        eval(Channels.isSet($actor))
+        eval(Channels.isSet($target))
+        eval($protocol.isDefined())
+    then
+        Commitment commitment = new Commitment($act, $actor, $target, $protocol, $constraints);
+        insertLogical(commitment);
+        log($act, commitment);
+        Insight insight = new Insight($act, $target, commitment);
+        insertLogical(insight);
+        log($act, insight);
+    end
+
+### Insight gained by detection of Information Acts
+
+
+### Termination of profile elements by Information Acts 

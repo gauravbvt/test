@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.ifm.info.InformationNeed
 import com.mindalliance.channels.playbook.ifm.Agent
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,8 +18,8 @@ class NeedToKnow extends ProfileElement {
 
     InformationNeed informationNeed
 
-    NeedToKnow(Playbook playbook, Agent agent, Duration start, Duration end, InformationNeed informationNeed) {
-        super(playbook, agent, start, end)
+    NeedToKnow(InformationAct act, Ref agent, InformationNeed informationNeed) {
+        super(act, agent)
         this.informationNeed = informationNeed
     }
 

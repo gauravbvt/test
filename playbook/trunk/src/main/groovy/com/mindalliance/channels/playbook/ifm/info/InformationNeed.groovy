@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification
+import com.mindalliance.channels.playbook.ifm.Defineable
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,23 +14,33 @@ import com.mindalliance.channels.playbook.ifm.definition.EventSpecification
  * Date: May 27, 2008
  * Time: 9:56:23 PM
  */
-class InformationNeed extends AbstractInformation {
+class InformationNeed extends AbstractInformation implements Defineable {
 
     EventSpecification eventSpec = new EventSpecification() // about what (kind of) events
     Ref agent // agent who needs the information
     AgentSpecification sourceSpec = new AgentSpecification() // specification fo acceptable source of needed information
-    Timing deadline = new Timing(amount: 0) // deadline of 0 means indefinite. Information need nullifed after deadline.
+    Timing deadline = new Timing(amount: 0) // relative deadline of 0 means indefinite. Information need nullifed after deadline.
+
+    static InformationNeed fromSharingProtocol(Ref actorAgent, Ref targetAgent, SharingProtocol protocol) {
+        AgentSpecification source = new AgentSpecification(enumeration: [targetAgent])
+        InformationNeed need = new InformationNeed(agent: actorAgent, eventSpec: protocol.informationSpec.eventSpec, sourceSpec: source)
+        return need
+    }
 
     String getName() {
         return toString()
     }
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['name', 'aboutSpecificEvents'])
+        return (List<String>)(super.transientProperties() + ['name', 'aboutSpecificEvents', 'defined'])
     }
 
     String toString() {
         return "N2K about: ${eventSpec.summary}"
+    }
+
+    boolean isDefined() {
+        return agent as boolean && !eventSpec.matchesAll()
     }
 
     boolean isAboutSpecificEvents() {

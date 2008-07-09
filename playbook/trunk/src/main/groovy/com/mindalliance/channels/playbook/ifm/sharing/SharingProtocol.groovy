@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
+import com.mindalliance.channels.playbook.ifm.Defineable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,7 +13,7 @@ import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
  * Date: May 13, 2008
  * Time: 9:12:36 AM
  */
-class SharingProtocol extends BeanImpl {
+class SharingProtocol extends BeanImpl implements Defineable {
 
     static final List<String> deliveries = ['notify', 'answer']
 
@@ -23,12 +24,15 @@ class SharingProtocol extends BeanImpl {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['deliveries'])
+        return (List<String>)(super.transientProperties() + ['deliveries', 'defined'])
     }
 
     String toString() {
-        // TODO
         return "$delivery:${informationSpec.description}" ;
+    }
+
+    boolean isDefined() {
+        return !informationSpec.matchesAll()
     }
 
 }

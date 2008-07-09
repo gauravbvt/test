@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 */
 // Responsibility of a Responsibility to any agent with a given role, possibly within a given type of organization
 // and possiblylimited to some location
-class Responsibility extends BeanImpl {
+class Responsibility extends BeanImpl implements Defineable {
 
     InformationDefinition informationSpec = new InformationDefinition() // what must be known if knowable -- required
     TaskDefinition taskSpec = new TaskDefinition()
@@ -23,7 +23,11 @@ class Responsibility extends BeanImpl {
         "${this.summary()}"
     }
 
-    public String summary() {
+    boolean isDefined() {
+        return !informationSpec.matchesAll() // Task can be unspecified
+    }
+
+    String summary() {
         String mustKnow = RefUtils.summarize(informationSpec.description,20) ?: 'N/A'
         String mustDo = RefUtils.summarize(taskSpec.description, 20) ?: 'N/A'
         return "Must know: $mustKnow; must do: $mustDo"

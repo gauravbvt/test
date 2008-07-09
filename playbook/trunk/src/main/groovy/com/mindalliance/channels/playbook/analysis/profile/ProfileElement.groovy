@@ -23,14 +23,6 @@ class ProfileElement extends AnalysisElement {
 
     protected ProfileElement() {}
 
-    ProfileElement(Playbook playbook, Agent agent, Duration start, Duration end) {
-        super()
-        this.playbook = playbook
-        this.agent = agent
-        this.start = start
-        this.end = end
-    }
-
     ProfileElement(InformationAct act, Ref agent) {
         super()
         this.playbook = (Playbook)act.playbook.deref()

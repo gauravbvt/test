@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.ifm.Responsibility
 import com.mindalliance.channels.playbook.ifm.Agent
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,8 +18,8 @@ class Assignment extends ProfileElement {
 
     Responsibility responsibility
 
-    Assignment(Playbook playbook, Agent agent, Duration start, Duration end, Responsibility responsibility) {
-        super(playbook, agent, start, end)
+    Assignment(InformationAct act, Ref agent, Responsibility responsibility) {
+        super(act, agent)
         this.responsibility = responsibility
     }
 

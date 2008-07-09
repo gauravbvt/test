@@ -18,6 +18,10 @@ class Relationship extends ProjectElement implements Named {
     String name = ''
     Ref reverseRelationship // if any
 
+    static Relationship create(Ref fromAgent, String name, Ref toAgent) {
+        return new Relationship(fromAgent: fromAgent, name: name, toAgent: toAgent)
+    }
+
     void afterDelete() {
         if (reverseRelationship as boolean) {
             reverseRelationship.begin()
