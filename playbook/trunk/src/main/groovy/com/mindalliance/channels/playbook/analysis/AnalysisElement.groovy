@@ -25,6 +25,11 @@ class AnalysisElement implements Referenceable, Identified {
        id = "${UUID.randomUUID()}"
     }
 
+    String toString() {
+        return "${this.type} ($rationale)" 
+
+    }
+
     Ref getReference() {
        return InferredRef.from(this)
     }

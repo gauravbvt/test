@@ -24,6 +24,8 @@ import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.support.Level
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RuleBaseSession
+import com.mindalliance.channels.playbook.support.Mapper
+import com.mindalliance.channels.playbook.ref.impl.InferredRef
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -397,11 +399,15 @@ public class TestPlaybook extends TestCase {
         out.close()
     }
 
+
     void testRuleBase() {
         RuleBaseSession ruleBase = app.current().ruleBaseSession
         List<Ref> invalids = ruleBase.executeQuery("allInvalids", [], "invalid")
         List<Referenceable> referenceables = invalids.collect {it.deref()}
         assert referenceables
+        PersistentRef pr = Mapper.toPersistedValue(referenceables[0].reference)
+        InferredRef ir = Mapper.valueFromPersisted(pr)
+        assert ir == referenceables[0].reference
     }
 
 

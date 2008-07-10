@@ -14,17 +14,13 @@ import java.util.*
 
 ##### Direct profile element generation by Information Acts ###########
 
-// TODO set end durations where applicable
-
 rule "detection"
     agenda-group "profiles"
 	when
 		$act: Detection($actor:actorAgent,  $information: information)
 		not (exists Invalid(element == $act))
 	then
-	    Know know = new Know($act, $actor, $information);
-	    insertLogical(know);  // adds knowledge of information to actor from start of act in act's playbook
-	    log($act, know);
+	    inferFrom(drools, $act, new Know($act, $actor, $information), "Agent knows what it detects");
     end
 
 
@@ -34,17 +30,10 @@ rule "sharing act"
         $act: SharingAct($actor:actorAgent, $target:targetAgent, $information: information)
 		not (exists Invalid(element == $act))
     then
-        Know know1 = new Know($act, $target, $information);
-        insertLogical(know1);
-        Know know2 = new Know($act, $actor, $information);
-        insertLogical(know2);
-        Insight insight1 = new Insight($act, $actor, know1);
-        insertLogical(insight1);
-        Insight insight2 = new Insight($act, $target, know2);
-        log($act, know1);
-        log($act, know2);
-        log($act, insight1);
-        log($act, insight2);
+        inferFrom(drools, $act, new Know($act, $target, $information), "Source agent knows information it shares.");
+        inferFrom(drools, $act, new Know($act, $actor, $information), "Recipient agent learns shared information.");
+        inferFrom(drools, $act, new Insight($act, $actor, new Know($act, $target, $information)), "Source aware that the recipient knows the shared information.");
+        inferFrom(drools, $act, new Insight($act, $target, new Know($act, $actor, $information)), "Recipient aware that the source knows the shared information.");
     end
 
 rule "task"
@@ -55,55 +44,73 @@ rule "task"
     then
         for (InformationNeed need : (List<InformationNeed>)$needs) {
             if (need.isDefined()) {
-                NeedToKnow n2k = new NeedToKnow($act, $actor, need);
-                insertLogical(n2k);
-                log($act, n2k);
+                inferFrom(drools, $act, new NeedToKnow($act, $actor, need), "Agent needs to know while doing task.");
             }
         }
     end
 
-rule "information request"
+rule "information request on behalf of self"
     agenda-group "profiles"
     when
-        $act: InformationRequest($actor:actorAgent, $target:targetAgent, $needy:informationNeed.agent , $need:informationNeed)
+        $act: InformationRequest($actor:actorAgent, $target:targetAgent, informationNeed.agent == $actor , $need:informationNeed)
 		not (exists Invalid(element == $act))
     then
-        NeedToKnow n2k = new NeedToKnow($act, (Ref)$needy, $need);
-        insertLogical(n2k);
-        Insight insight1 = new Insight($act, $actor, n2k);
-        insertLogical(insight1);
-        Insight insight2 = new Insight($act, $target, n2k);
-        insertLogical(insight2);
-        log($act, n2k);
-        log($act, insight1);
-        log($act, insight2);
+        inferFrom(drools, $act, new NeedToKnow($act, $actor, $need), "An agent expressed a need to know by requesting information on its own behalf.");
+        inferFrom(drools, $act, new Insight($act, $target, new NeedToKnow($act, $actor, $need)), "The recipient of an information request knows that the sender needs information.");
     end
 
-rule "assignation"
+rule "information request on behalf of another"
     agenda-group "profiles"
     when
-        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility:responsibility, $assignee:assigneeAgent)
+        $act: InformationRequest($actor:actorAgent, $target:targetAgent, $needy:informationNeed.agent, $need:informationNeed)
+        eval($needy != $actor)
+        eval($needy != $target)
 		not (exists Invalid(element == $act))
     then
-        Assignment assignment = new Assignment($act, $assignee, $responsibility);
-        Insight insight1 = new Insight($act, $actor, assignment);
-        insertLogical(insight1);
-        Insight insight2 = new Insight($act, $target, assignment);
-        insertLogical(insight2);
-        log($act, insight1);
-        log($act, insight2);
+        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($act, (Ref)$needy, $need)), "Sender knows that another agent needs to know.");
+        inferFrom(drools, $act, new Insight($act, $target, new NeedToKnow($act, (Ref)$needy, $need)), "Recipient knows that another agent needs to know.");
     end
 
-rule "assignation received"
+rule "information request on behalf of target"  // quasi-nonsense case
     agenda-group "profiles"
     when
-        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent,
-                          (assigneeAgent == targetAgent || assigneeAgent == actorAgent))
+        $act: InformationRequest($actor:actorAgent, $target:targetAgent, informationNeed.agent == $target , $need:informationNeed)
 		not (exists Invalid(element == $act))
     then
-        Assignment assignment = new Assignment($act, $assignee, $responsibility);
-        insertLogical(assignment);
-        log($act, assignment);
+        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($act, $target, $need)), "Sender knows that recipient needs to know.");
+    end
+
+rule "assignation transmitted"
+    agenda-group "profiles"
+    when
+        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility:responsibility, $assignee:assigneeAgent,
+                          assigneeAgent != targetAgent, assigneeAgent != $actor)
+		not (exists Invalid(element == $act))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new Assignment($act, $assignee, $responsibility)), "Sender knows of another agent's assignment.");
+        inferFrom(drools, $act, new Insight($act, $target, new Assignment($act, $assignee, $responsibility)), "Recipient knows of another agent's assignment.");
+    end
+
+rule "own assignation received"
+    agenda-group "profiles"
+    when
+        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent)
+        eval($assignee == $target)
+		not (exists Invalid(element == $act))
+    then
+        inferFrom(drools, $act, new Assignment($act, $target, $responsibility), "Recipient is now aware of its responsibility");
+        inferFrom(drools, $act, new Insight($act, $actor, new Assignment($act, $target, $responsibility)), "Sender knows of recipient's responsibility.");
+    end
+
+rule "own assignation sent"
+    agenda-group "profiles"
+    when
+        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent)
+        eval($assignee == $actor)
+		not (exists Invalid(element == $act))
+    then
+        inferFrom(drools, $act, new Assignment($act, $target, $responsibility), "Recipient is now aware of its responsibility");
+        inferFrom(drools, $act, new Insight($act, $target, new Assignment($act, $actor, $responsibility)), "Recipient knows of source's responsibility.");
     end
 
 rule "association"
@@ -112,10 +119,7 @@ rule "association"
         $act: Association($actor:actorAgent, $associate:toAgent, $name:relationshipName)
 		not (exists Invalid(element == $act))
     then
-        Relationship relationship = Relationship.create($actor, $name, $associate);
-        Link link = new Link($act, $actor, relationship);
-        insertLogical(link);
-        log($act, link);
+        inferFrom(drools, $act, new Link($act, $actor, $name, $associate), "Agent now engaged in relationship.");
     end
 
 rule "reverse association"
@@ -125,10 +129,7 @@ rule "reverse association"
         eval(!$name.isEmpty())
 		not (exists Invalid(element == $act))
     then
-        Relationship relationship = Relationship.create($associate, $name, $actor);
-        Link link = new Link($act, $associate, relationship);
-        insertLogical(link);
-        log($act, link);
+        inferFrom(drools, $act, new Link($act, $associate, $name, $actor), "Agent now engaged in reverse relationship.");
     end
 
 rule "confirmation request"
@@ -137,22 +138,34 @@ rule "confirmation request"
         $act: ConfirmationRequest($actor:actorAgent, $target:targetAgent, $information:information, $sourceSpec:sourceSpec)
 		not (exists Invalid(element == $act))
     then
-        SourceNeed sourceNeed = new SourceNeed($act, $actor, $sourceSpec, $information);
-        insertLogical(sourceNeed);
-        log($act, sourceNeed);
-        Insight insight = new Insight($act, $target, sourceNeed);
-        log($act, insight);
+        inferFrom(drools, $act, new SourceNeed($act, $actor, $sourceSpec, $information), "Sender needs a source for given information.");
+        inferFrom(drools, $act, new Insight($act, $target, new SourceNeed($act, $actor, $sourceSpec, $information)), "Recipient aware that sender needs a source for given information.");
     end
 
-rule "relocation"
+rule "current relocation"
     agenda-group "profiles"
     when
         $act: Relocation($actor:actorAgent, $location:location)
 		not (exists Invalid(element == $act))
+		// there is no later locality of the agent
+		not ( exists (Locality(agent == $actor , eval(start.isLongerThan($act.startTime())))) )
     then
-        Locality locality = new Locality($act, $actor, $location);
-        insertLogical(locality);
-        log($act, locality);
+        inferFrom(drools, $act, new Locality($act, $actor, $location), "Agent now at current location.");
+    end
+
+rule "prior relocation"
+    agenda-group "profiles"
+    when
+        $act: Relocation($actor:actorAgent, $location:location)
+		not (exists Invalid(element == $act))
+		// there is a later locality of the agent
+		$later:Locality(agent == $actor , $later_start:start , eval(start.isLongerThan($act.startTime())))
+		// and none in between
+		not (exists (Locality(agent == $actor, this != $later, eval(start.isLongerThan($act.startTime())), eval(start.isShorterThan($later_start)))))
+    then
+        Locality locality = new Locality($act , $actor, $location);
+        locality.setEnd($later_start);
+        inferFrom(drools, $act, locality, "Agent's prior location.");
     end
 
 rule "sharing request"
@@ -161,13 +174,11 @@ rule "sharing request"
         $act: SharingRequest($actor:actorAgent, $target:targetAgent, $protocol:protocol, $infoSpec:protocol.informationSpec)
 		not (exists Invalid(element == $act))
     then
-        InformationNeed need = InformationNeed.fromSharingProtocol($actor, $target, $protocol);
-        NeedToKnow n2k = new NeedToKnow($act, $actor, need);
-        insertLogical(n2k);
-        log($act, n2k);
-        Insight insight = new Insight($act, $target, n2k);
-        insertLogical(insight);
-        log($act, insight);
+        inferFrom(drools, $act, new NeedToKnow($act, $actor, InformationNeed.fromSharingProtocol($actor, $target, $protocol)),
+                  "Sender communicated a need to know.");
+        inferFrom(drools, $act, new Insight($act, $target,
+                                    new NeedToKnow($act, $actor, InformationNeed.fromSharingProtocol($actor, $target, $protocol))),
+                                    "Recipient aware of sender's need to know.");
     end
 
 rule "sharing commitment"
@@ -176,15 +187,95 @@ rule "sharing commitment"
         $act: SharingCommitment($actor:actorAgent, $target:targetAgent, $protocol:protocol, $constraints:constraints)
 		not (exists Invalid(element == $act))
     then
-        Commitment commitment = new Commitment($act, $actor, $target, $protocol, $constraints);
-        insertLogical(commitment);
-        log($act, commitment);
-        Insight insight = new Insight($act, $target, commitment);
-        insertLogical(insight);
-        log($act, insight);
+        inferFrom(drools, $act,new Commitment($act, $actor, $target, $protocol, $constraints), "Agent is committed.");
+        inferFrom(drools, $act, new Insight($act, $target, new Commitment($act, $actor, $target, $protocol, $constraints)),
+                    "Recipient aware of commitment.");
     end
 
 ### Insight gained by detection of Information Acts
 
+## Detection of a detection brings no new knowledge or insight (actor does not know how the event is interpreted by the observed)
 
-### Termination of profile elements by Information Acts 
+rule "detection of sharing act"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $sharing: SharingAct(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent, $d_info:information)
+		not (exists Invalid(element == $sharing))
+    then
+        inferFrom(drools, $act, new Know($act, $actor, $d_info), "Observer learns shared information.");
+        inferFrom(drools, $act, new Insight($act, $actor, new Know($sharing, $d_actor, $d_info)), "Observer aware that sender knows the shared information");
+        inferFrom(drools, $act, new Insight($act, $actor, new Know($sharing, $d_target, $d_info)), "Observer aware that recipient knows the shared information");
+    end
+
+rule "detection of assignation"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $assignation: Assignation(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent, $d_resp:responsibility, $d_assignee:assigneeAgent)
+		not (exists Invalid(element == $assignation))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new Assignment($assignation, $d_assignee, $d_resp)), "Observer aware of assignment.");
+    end
+
+rule "detection of association"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $association: Association(id == $eventId, $d_actor:actorAgent, $d_associate:toAgent, $d_name:relationshipName)
+		not (exists Invalid(element == $association))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new Link($association, $d_actor, $d_name, $d_associate)), "Observer aware of new relationship.");
+    end
+
+rule "detection of reverse association"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $association: Association(id == $eventId, $d_actor:actorAgent, $d_associate:toAgent, $d_rname:reverseRelationshipName != "")
+		not (exists Invalid(element == $association))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new Link($association, $d_associate, $d_rname, $d_actor)), "Observer aware of new, reverse relationship.");
+    end
+
+rule "detection of confirmation request"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $confirmationRequest: ConfirmationRequest(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent,
+                                                  $d_info:information, $d_sourceSpec:sourceSpec)
+		not (exists Invalid(element == $confirmationRequest))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new SourceNeed($confirmationRequest, $d_actor, $d_sourceSpec, $d_info)), "Observer aware of sender's source need.");
+    end
+
+rule "detection of information request"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $informationRequest: InformationRequest(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent,
+                                                  $d_need:informationNeed, $d_needy:informationNeed.agent)
+		not (exists Invalid(element == $informationRequest))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($informationRequest, (Ref)$d_needy, $d_need)), "Observer aware of other's need to know.");
+    end
+
+rule "detection of relocation"
+    agenda-group "profiles"
+    when
+        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+		not (exists Invalid(element == $act))
+        $relocation: Relocation(id == $eventId, $d_actor:actorAgent, $d_location:location)
+		not (exists Invalid(element == $relocation))
+    then
+        inferFrom(drools, $act, new Insight($act, $actor, new Locality($relocation, $d_actor, $d_location)), "Observer aware of other's relocation.");
+    end
+
+# TODO Detection of sharing requests, sharing commitments, tasks?
+

@@ -18,9 +18,7 @@ rule "invalid information act"
         $el:  InformationAct($actor:actorAgent)
         eval(!Channels.isSet($actor))
     then
-        Invalid invalid = new Invalid($el, "The actor is missing");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The actor is missing");
     end
 
 rule "invalid flow act target"
@@ -29,9 +27,7 @@ rule "invalid flow act target"
         $el: FlowAct($target:targetAgent)
         eval(!Channels.isSet($target))
     then
-        Invalid invalid = new Invalid($el, "The target agent is missing");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The target agent is missing");
     end
 
 rule "invalid flow act information"
@@ -40,9 +36,15 @@ rule "invalid flow act information"
         $el: SharingAct($info:information)
         eval(!$info.isDefined())
     then
-        Invalid invalid = new Invalid($el, "The shared information is not defined");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The shared information is not defined");
+    end
+
+rule "invalid flow act - sender is receiver"
+    agenda-group "validations"
+    when
+        $el: FlowAct($actor:actorAgent, targetAgent == $actor)
+    then
+        inferFrom(drools, $el, new Invalid($el), "The sender can not also be the receiver");
     end
 
 rule "invalid assignation assignee"
@@ -51,9 +53,7 @@ rule "invalid assignation assignee"
         $el: Assignation($assignee:assigneeAgent)
         eval(!Channels.isSet($assignee))
     then
-        Invalid invalid = new Invalid($el, "The assignee is missing");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The assignee is missing");
     end
 
 rule "invalid assignation responsibility"
@@ -62,9 +62,7 @@ rule "invalid assignation responsibility"
         $el: Assignation($responsibility:responsibility)
         eval(!$responsibility.isDefined())
     then
-        Invalid invalid = new Invalid($el, "The responsibility is undefined");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The responsibility is undefined");
     end
 
 rule "invalid association associate"
@@ -73,9 +71,7 @@ rule "invalid association associate"
         $el: Association($associate:toAgent)
         eval(!Channels.isSet($associate))
     then
-        Invalid invalid = new Invalid($el, "The associate is missing");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The associate is missing");
     end
 
 rule "invalid association relationship"
@@ -84,9 +80,7 @@ rule "invalid association relationship"
         $el: Association($name:relationshipName)
         eval($name.trim().isEmpty())
     then
-        Invalid invalid = new Invalid($el, "No relationship name");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "No relationship name");
     end
 
 rule "invalid information request need"
@@ -95,9 +89,7 @@ rule "invalid information request need"
         $el: InformationRequest($need:informationNeed)
         eval(!$need.isDefined())
     then
-        Invalid invalid = new Invalid($el, "The information need is unspecified");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The information need is unspecified");
     end
 
 rule "invalid information request needy"
@@ -106,9 +98,7 @@ rule "invalid information request needy"
         $el: InformationRequest($needy:informationNeed.agent)
         eval(!Channels.isSet((Ref)$needy))
     then
-        Invalid invalid = new Invalid($el, "The agent with the information need is missing");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The agent with the information need is missing");
     end
 
 rule "invalid relocation"
@@ -117,9 +107,7 @@ rule "invalid relocation"
         $el: InformationRequest($location:location)
         eval(!$location.isDefined())
     then
-        Invalid invalid = new Invalid($el, "The location not defined");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The location not defined");
     end
 
 rule "invalid sharing commitment"
@@ -128,9 +116,7 @@ rule "invalid sharing commitment"
         $el: SharingCommitment($protocol:protocol)
         eval(!$protocol.isDefined())
     then
-        Invalid invalid = new Invalid($el, "The sharing protocol is not defined");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The sharing protocol is not defined");
     end
 
 rule "invalid sharing request protocol"
@@ -139,9 +125,7 @@ rule "invalid sharing request protocol"
         $el: SharingRequest($protocol:protocol)
         eval(!$protocol.isDefined())
     then
-        Invalid invalid = new Invalid($el, "The sharing protocol is not defined");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The sharing protocol is not defined");
     end
 
 rule "invalid sharing request information spec"
@@ -150,9 +134,7 @@ rule "invalid sharing request information spec"
         $el: SharingRequest($infoSpec:protocol.informationSpec)
         eval(!((InformationDefinition)$infoSpec).matchesAll())
     then
-        Invalid invalid = new Invalid($el, "The sharing protocol is not defined");
-        insertLogical(invalid);
-        log($el, invalid);
+        inferFrom(drools, $el, new Invalid($el), "The sharing protocol is not defined");
     end
 
 ### Validate project elements

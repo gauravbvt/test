@@ -13,15 +13,13 @@ import com.mindalliance.channels.playbook.ref.Ref
 class Invalid extends AnalysisElement {
 
     Ref element
-    String problem = ''
 
-    Invalid(IfmElement el, String problem) {
+    Invalid(IfmElement el) {
         this.element = el.reference
-        this.problem = problem
     }
 
     String toString() {
-        return "Invalid $element : $problem"
+        return "${super.toString()} : $element"
     }
 
 }

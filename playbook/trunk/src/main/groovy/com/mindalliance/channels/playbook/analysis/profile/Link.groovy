@@ -13,11 +13,13 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class Link extends ProfileElement {
 
-    Relationship relationship
+    String relationshipName
+    Ref toAgent
 
-    Link(InformationAct act, Ref agent, Relationship relationship) {
+    Link(InformationAct act, Ref agent, String relationshipName, Ref toAgent) {
         super(act, agent)
-        this.relationship = relationship
+        this.relationshipName = relationshipName
+        this.toAgent = toAgent
     }
 
 }

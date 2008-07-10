@@ -16,8 +16,11 @@ class Know extends ProfileElement {
     Information information
 
     Know(InformationAct act, Ref agent, Information information) {
-       super(act, agent)
-       this.information = information
+        super(act, agent)
+        this.information = information
+        if (information.timeToLive.isDefined()) {
+            end = start.plus(information.timeToLive.duration)
+        }
     }
 
 }

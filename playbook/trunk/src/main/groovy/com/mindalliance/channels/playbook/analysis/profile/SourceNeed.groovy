@@ -21,6 +21,9 @@ class SourceNeed extends ProfileElement {
         super(act, agent)
         this.sourceSpec = sourceSpec
         this.information = information
+        if (information.timeToLive.isDefined()) {
+            end = start.plus(information.timeToLive.duration)
+        }
     }
 
 }

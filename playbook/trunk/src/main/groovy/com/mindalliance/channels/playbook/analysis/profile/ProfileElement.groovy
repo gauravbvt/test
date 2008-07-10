@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,8 +19,8 @@ class ProfileElement extends AnalysisElement {
 
     Playbook playbook
     Agent agent           // of an agent
-    Duration start   // at t = time zero + start
-    Duration end     // at t = time zero + end
+    Duration start   // at t = time zero + start -- always set
+    Duration end     // at t = time zero + end  -- set only if self-terminating
 
     protected ProfileElement() {}
 
@@ -30,8 +31,12 @@ class ProfileElement extends AnalysisElement {
         this.start = act.startTime()
     }
 
-
     String toString() {
-        return "${shortClassName()} by $agent" 
+        return super.toString() + " of $agent [${Timing.asString(start)}, ${end ? Timing.asString(end): ''}]" 
     }
+
+    boolean isTimeLimited() {
+        return end != null
+    }
+
 }

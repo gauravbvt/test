@@ -14,9 +14,10 @@ class Insight extends ProfileElement {   // an agent knows a profile element of 
 
     Ref profileElement
 
-    Insight(InformationAct act, Ref agent, ProfileElement profileElement) {
-       super(act, agent)
-       this.profileElement = profileElement.getReference()
+    Insight(InformationAct act, Ref agent, ProfileElement pe) {
+        super(act, agent)
+        this.profileElement = pe.getReference()
+        end = pe.end
     }
 
 

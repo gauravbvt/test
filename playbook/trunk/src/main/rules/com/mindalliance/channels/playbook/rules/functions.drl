@@ -3,7 +3,15 @@ package com.mindalliance.channels.playbook.rules
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.ifm.*
 import org.apache.log4j.Logger
+import org.drools.spi.KnowledgeHelper
+
+function void inferFrom(KnowledgeHelper drools, IfmElement cause, AnalysisElement analysis, String rationale) {
+    analysis.setRationale(rationale);
+    drools.insertLogical(analysis);
+    log(cause, analysis);
+}
 
 function void log(IfmElement cause, AnalysisElement analysis) {
     Logger.getLogger("rules").info("Inferred " + analysis + " from " + cause + "(" + cause.getReference() + ")" );
 }
+
