@@ -10,7 +10,9 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -26,6 +28,7 @@ public class TabPanel extends Panel implements SelectionManager {
 
     private Ref selected;
     private List<ContentView> views;
+    private int selectedView;
     private FormPanel form;
 
     public TabPanel( String id, IModel tabModel ) {
@@ -64,13 +67,14 @@ public class TabPanel extends Panel implements SelectionManager {
     private TabbedPanel createTabPanel() {
         views = new ArrayList<ContentView>();
         TabbedPanel viewTabs = new TabbedPanel( "content-views", createViewTabs() ) {
-            //            protected WebMarkupContainer newLink( String linkId, final int index ) {
-            //                return new Link( linkId ) {
-            //                    public void onClick() {
-            //                        // Todo remember setting in user's preference
-            //                    }
-            //                };
-            //            }
+                        protected WebMarkupContainer newLink( String linkId, final int index ) {
+                            return new Link( linkId ) {
+                                public void onClick() {
+                                    setSelectedView( index );
+                                    setSelectedTab( index );
+                                }
+                            };
+                        }
         };
         viewTabs.setRenderBodyOnly( true );
         return viewTabs;
@@ -164,10 +168,7 @@ public class TabPanel extends Panel implements SelectionManager {
              && ( this.selected == null || !this.selected.equals( ref ) ) ) {
 
             setSelected( ref );
-            for ( ContentView view: views ) {
-                if ( view.isVisible() )
-                    target.addComponent( view );
-            }
+            target.addComponent( views.get( getSelectedView() ) );
             target.addComponent( form );
         }
     }
@@ -186,6 +187,14 @@ public class TabPanel extends Panel implements SelectionManager {
                     view.setSelected( selected );
             form.modelChanged();
         }
+    }
+
+    public int getSelectedView() {
+        return selectedView;
+    }
+
+    public void setSelectedView( int selectedView ) {
+        this.selectedView = selectedView;
     }
 
     public void detachModels() {

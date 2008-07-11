@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.pages.SelectionManager;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.support.models.Container;
+import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -138,9 +139,15 @@ abstract public class GraphPanel extends ContentView {
         if (priorSelection != getSelected()) {
             svg = null; // force regeneration
         }
-        if (svg == null) { // regenerate svg only if needed
-            svg = directedGraph.makeSvg(svgElementId, behave.getCallbackUrl().toString(), getSelected(), transformation);
+        if (svg == null) try { // regenerate svg only if needed
+            String callback = behave.getCallbackUrl().toString();
+            // TODO fix this
+ //           String callback = "" ;
+            svg = directedGraph.makeSvg(svgElementId, callback, getSelected(), transformation);
             // Logger.getLogger(this.getClass()).info(svg);
+        } catch ( IllegalStateException e ) {
+            Logger.getLogger(this.getClass()).warn("Graph update without a page");
+
         }
         svgContent.setModelObject(svg);
         priorSelection = getSelected();
@@ -150,8 +157,7 @@ abstract public class GraphPanel extends ContentView {
         super.setSelected(ref);
         // currentSelection = ref;
         // update svgContent if needed
-        if ( isVisible() )
-            addGraphSvg();
+        addGraphSvg();
     }
 
    /* protected Ref getSelected() {  // TODO - remove when extends ContentView
