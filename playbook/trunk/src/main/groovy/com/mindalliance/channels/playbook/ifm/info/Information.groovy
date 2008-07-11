@@ -47,4 +47,14 @@ class Information extends AbstractInformation implements Defineable {  // the co
         return label
     }
 
+    boolean redundantOf(Information information) { // true if this adds nothing new to compared-to information, irrespective of sources and time to live
+        if (!isDefined() || !information.isDefined()) return false
+        if (event != information.event) return false
+        // if not all event types are implied by an event type in the other information, then it does not repeat other information
+        if (!eventTypes.all {et -> information.eventTypes.any {iet -> iet.implies(et)}}) return false
+        // if not all eois match an eoi in other information, then does not repeat
+        if (!eventDetails.all {eoi -> information.eventDetails.any {ieoi -> eoi.matches(ieoi)}}) return false
+        return true
+    }
+
 }

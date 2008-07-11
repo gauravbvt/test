@@ -20,7 +20,6 @@ import org.drools.FactHandle
 import com.mindalliance.channels.playbook.ref.Referenceable
 import org.apache.log4j.Logger
 import org.drools.RuleBaseConfiguration
-import com.mindalliance.channels.playbook.ref.impl.InferredRef
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import org.drools.QueryResults
 import org.drools.QueryResult;

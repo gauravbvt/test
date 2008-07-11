@@ -17,15 +17,4 @@ class EventSpecification extends Specification {
         return Event.class
     }
 
-    List<Ref> allEventTypes() {
-        List<Ref> eventTypes = []
-        enumeration.each {event ->
-            eventTypes.addAll((List<String>)Query.execute(event.playbook, "findAllEventTypesFor", event));
-        }
-        definitions.each {eventDefinition ->
-            eventTypes.addAll(eventDefinition.eventTypes)
-        }
-        return eventTypes
-    }
-
 }

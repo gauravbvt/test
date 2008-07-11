@@ -232,13 +232,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Task task1 = new Task(name:'task1', actorAgent: p.findOrganizationNamed('ACME Inc.'))
         task1.cause.trigger = transfer1.reference
         task1.cause.delay = new Timing(amount:3, unit:'days')
-        EventSpecification eventSpec1 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'accident')])],
-                                                               description:'any accident')
-        InformationNeed need1 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec1))
+        InformationNeed need1 = new InformationNeed(informationSpec: new InformationDefinition(eventTypes:[m.findType('EventType', 'accident')]))
         task1.informationNeeds.add(need1)
-        EventSpecification eventSpec2 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'terrorism')])],
-                                                                description: 'any act of terrorism')
-        InformationNeed need2 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec2))
+        InformationNeed need2 = new InformationNeed(informationSpec: new InformationDefinition(eventTypes:[m.findType('EventType', 'terrorism')]))
         task1.informationNeeds.add(need2)
         addToPlaybook(task1, pb)
 
@@ -260,10 +256,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         task2.cause.trigger = transfer2.reference
         task2.cause.delay = new Timing(amount:1, unit:'days')
         EventSpecification causeEventSpec = new EventSpecification(enumeration:[task1.reference])
-        EventSpecification eventSpec3 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'task failed')],
-                                                                                                causeEventSpecs: [causeEventSpec])],
+        EventSpecification eventSpec3 = new EventSpecification(definitions:[new EventDefinition(causeEventSpecs: [causeEventSpec])],
                                                                description:'Any failure of task1')
-        InformationNeed need3 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec3))
+        InformationNeed need3 = new InformationNeed(informationSpec: new InformationDefinition(eventTypes:[m.findType('EventType', 'task failed')],
+                                                                                                eventSpec: eventSpec3))
         need3.informationSpec.elementsOfInformation.add(new ElementOfInformation(topic:'extent'))
         need3.informationSpec.elementsOfInformation.add(new ElementOfInformation(topic:'cause'))
         task2.informationNeeds.add(need3)

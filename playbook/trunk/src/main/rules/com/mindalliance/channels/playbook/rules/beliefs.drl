@@ -1,0 +1,85 @@
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.ref.*
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
+import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.analysis.profile.*
+import java.util.*
+
+### Inferring an agent's beliefs -- a qualification of what the agent knows
+
+# If agent knows information with itself as source , then agent believes it
+rule "agent believes itself"
+    agenda-group "beliefs"
+    salience 3
+    when
+        $know: Know($agent:agent, information.sourceAgents contains $agent)
+    then
+        inferFrom(drools, $know, new Belief($know), "Agent believes known information for which agent is source.");
+    end
+
+# If agent knows something and may not require a trusted source for it, then agent believes it
+rule "agent believes any source"
+    agenda-group "beliefs"
+    salience 2
+    when
+        $know: Know($agent:agent, $info:information)
+        not ( exists Belief(know == $know) )
+        exists (
+                $n2k:NeedToKnow(agent == $agent, $infoSpec:informationNeed.informationSpec, $sourceSpec:informationNeed.informationSpec.sourceAgentSpec)
+                && eval(((AgentSpecification)$sourceSpec).matchesAll())  // any source accepted
+                && eval(((InformationDefinition)$infoSpec).matches($info, $n2k.getAct())) // and matches info
+                )
+    then
+        inferFrom(drools, $know, new Belief($know), "Agent believes known information because agent needs it and would trust any source about it.");
+    end
+
+# If agent knows information from a trusted source (even if contradicted by another trusted source), then agent believes it
+# (it is possible for an agent to hold contradictory beliefs)
+rule "agent believes trusted source"
+    agenda-group "beliefs"
+    salience 1
+    when
+        $know: Know($agent:agent, $info:information, $sources:sources)
+        not ( exists Belief(know == $know) )     // belief not alreay established
+        exists ( $source:Agent() from $sources  // at least of of the sources...
+                 && $trust: Trust(agent == $agent, $sourceSpec:sourceSpec, $infoSpec:informationSpec)
+                 && ( eval($trust.isAnySourceTrusted() || $sourceSpec.matches($source, $know.getAct()) ) )    // is trusted...
+                 && eval($trust.getInformationSpec().matches($info, $know.getAct()))  // for this kind of information
+                )
+    then
+        inferFrom(drools, $know, new Belief($know), "Agent believes known information from trusted source.");
+    end
+
+
+### Inferring what kinds of sources an agent trusts for specified information
+
+# Agent trusts another about certain kind of information
+
+rule "agent trusts anyone for specified info"
+    agenda-group "beliefs"
+    salience 1
+    when
+        $n2k:NeedToKnow($agent:agent,  $infoSpec:informationNeed.informationSpec, $sourceSpec:informationNeed.informationSpec.sourceAgentSpec)
+        eval( ((AgentSpecification)$sourceSpec).matchesAll() )  // any source accepted
+    then
+        inferFrom(drools, $n2k, new Trust($n2k, $agent, (InformationDefinition)$infoSpec), "Agent accepts specified info from any source");
+    end
+
+
+rule "agent trusts requested source for matching info"
+    agenda-group "beliefs"
+    salience 0
+    when
+        $n2k:NeedToKnow($agent:agent,  $infoSpec:informationNeed.informationSpec, $sourceSpec:informationNeed.informationSpec.sourceAgentSpec)
+        eval( !((AgentSpecification)$sourceSpec).matchesAll() )  // not any source accepted
+    then
+        inferFrom(drools, $n2k, new Trust($n2k, $agent, (InformationDefinition)$infoSpec, (AgentSpecification)$sourceSpec), "Agent trusts specified sources for specified info");
+    end
+

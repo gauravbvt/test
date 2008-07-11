@@ -15,30 +15,19 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
  */
 class EventDefinition extends Definition {
 
-    List<Ref> eventTypes = []  // ANDed -- classification
     LocationDefinition locationDefinition = new LocationDefinition()
     List<EventSpecification> causeEventSpecs = []  // ORed
 
-    void setDescription(String s) {
-        if (s == null) {
-            System.out.println("NULL")
-        }
-        super.setDescription(s);
-    }
-
     Class<? extends Bean> getMatchingDomainClass() {
-        return Information.class
+        return Event.class
     }
 
     boolean matchesAll() {
-        return !eventTypes && locationDefinition.matchesAll() && !causeEventSpecs
+        return locationDefinition.matchesAll() && !causeEventSpecs
     }
 
     MatchResult match(Bean bean, InformationAct informationAct) {
         Information info = (Information)bean
-        if (!eventTypes.every {set-> info.eventTypes.any {iet -> iet.implies(set)}}) {
-            return new MatchResult(matched:false, failures:["The classification of the event in $info does not match"])
-        }
         if (!locationDefinition.matches(info.event.deref(), informationAct)) {
             return new MatchResult(matched:false, failures: ["The location of the event in $info does not match"])
         }

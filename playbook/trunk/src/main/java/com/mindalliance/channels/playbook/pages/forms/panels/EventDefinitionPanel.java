@@ -35,9 +35,6 @@ import java.util.List;
 public class EventDefinitionPanel extends AbstractDefinitionPanel {
 
     protected EventDefinition eventDefinition;
-    protected AjaxCheckBox anyEventTypeCheckBox;
-    protected WebMarkupContainer eventTypesDiv;
-    protected DynamicFilterTree eventTypesTree;
     protected AjaxCheckBox anyLocationCheckBox;
     protected WebMarkupContainer locationDefinitionDiv;
     protected LocationDefinitionPanel locationDefinitionPanel;
@@ -58,28 +55,6 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
     protected void load() {
         super.load();
         eventDefinition = (EventDefinition)getComponent();
-        anyEventTypeCheckBox = new AjaxCheckBox("anyEventType", new Model((Boolean)eventDefinition.getEventTypes().isEmpty())){
-            protected void onUpdate(AjaxRequestTarget target) {
-                boolean anyEventType = (Boolean)anyEventTypeCheckBox.getModelObject();
-                if (anyEventType) {
-                    setProperty("eventTypes", new ArrayList<Ref>());
-                }
-                setVisibility(eventTypesDiv, !anyEventType, target);
-            }
-        };
-        addReplaceable(anyEventTypeCheckBox);
-        eventTypesDiv = new WebMarkupContainer("eventTypesDiv");
-        setVisibility(eventTypesDiv, !eventDefinition.getEventTypes().isEmpty());
-        addReplaceable(eventTypesDiv);
-        eventTypesTree = new DynamicFilterTree("eventTypes",
-                                          new RefPropertyModel(getElement(), propPath+".eventTypes"),
-                                          new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))){
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selected = eventTypesTree.getNewSelections();
-                setProperty("eventTypes", selected, target);
-            }
-        };
-        addReplaceableTo(eventTypesTree, eventTypesDiv);
         anyLocationCheckBox = new AjaxCheckBox("anyLocation", new Model((Boolean)eventDefinition.getLocationDefinition().matchesAll())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyLocation = (Boolean)anyLocationCheckBox.getModelObject();

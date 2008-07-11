@@ -13,7 +13,7 @@
             <label>about:</label>
         </td>
         <td nowrap="nowrap" width="99%">
-            <input wicket:id="anyEvent" type="checkbox"/>anything
+            <input wicket:id="anyEvent" type="checkbox"/>any event
         </td>
     </tr>
     <tr>
@@ -23,6 +23,25 @@
                 <fieldset>
                     <legend></legend>
                     <span wicket:id="eventSpecification">[event specification]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            <label>classified as:</label>
+        </td>
+        <td nowrap="nowrap">
+            <input wicket:id="anyEventType" type="checkbox"/>any type
+        </td>
+        </tr>
+    <tr>
+        <td></td>
+        <td>
+            <div wicket:id="eventTypesDiv">
+                <fieldset>
+                    <legend>all these types</legend>
+                    <span wicket:id="eventTypes">[event types tree]</span>
                 </fieldset>
             </div>
         </td>

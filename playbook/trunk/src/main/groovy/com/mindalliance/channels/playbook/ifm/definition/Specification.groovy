@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.support.RefUtils
+import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -79,6 +80,10 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     }
 
     boolean matches(Bean bean, InformationAct informationAct) {
+        if (bean == null) {
+            Logger.getLogger(this.class).warn("Attempted to match null bean")
+            return false;
+        }
         MatchResult result = match(bean, informationAct)
         return result.matched;
     }

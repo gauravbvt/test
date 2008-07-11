@@ -16,6 +16,8 @@ import java.util.*
 
 ##### Direct profile element generation by Information Acts ###########
 
+## TODO - avoid duplication in profile elements (e.g. multiple information transfers of the same information by an agent)
+
 rule "detection"
     agenda-group "profiles"
 	when
@@ -180,9 +182,9 @@ rule "sharing commitment"
 rule "detection of sharing act"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, $event:information.event != null)
 		not (exists Invalid(element == $act))
-        $sharing: SharingAct(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent, $d_info:information)
+        $sharing: SharingAct(eval (id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_target:targetAgent, $d_info:information)
 		not (exists Invalid(element == $sharing))
     then
         inferFrom(drools, $act, new Know($act, $actor, $d_info), "Observer learns shared information.");
@@ -193,9 +195,9 @@ rule "detection of sharing act"
 rule "detection of assignation"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, information.event != null)
 		not (exists Invalid(element == $act))
-        $assignation: Assignation(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent, $d_resp:responsibility, $d_assignee:assigneeAgent)
+        $assignation: Assignation(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_target:targetAgent, $d_resp:responsibility, $d_assignee:assigneeAgent)
 		not (exists Invalid(element == $assignation))
     then
         inferFrom(drools, $act, new Insight($act, $actor, new Assignment($assignation, $d_assignee, $d_resp)), "Observer aware of assignment.");
@@ -204,9 +206,9 @@ rule "detection of assignation"
 rule "detection of association"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, information.event != null)
 		not (exists Invalid(element == $act))
-        $association: Association(id == $eventId, $d_actor:actorAgent, $d_associate:toAgent, $d_name:relationshipName)
+        $association: Association(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_associate:toAgent, $d_name:relationshipName)
 		not (exists Invalid(element == $association))
     then
         inferFrom(drools, $act, new Insight($act, $actor, new Link($association, $d_actor, $d_name, $d_associate)), "Observer aware of new relationship.");
@@ -215,9 +217,9 @@ rule "detection of association"
 rule "detection of reverse association"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, information.event != null)
 		not (exists Invalid(element == $act))
-        $association: Association(id == $eventId, $d_actor:actorAgent, $d_associate:toAgent, $d_rname:reverseRelationshipName != "")
+        $association: Association(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_associate:toAgent, $d_rname:reverseRelationshipName != "")
 		not (exists Invalid(element == $association))
     then
         inferFrom(drools, $act, new Insight($act, $actor, new Link($association, $d_associate, $d_rname, $d_actor)), "Observer aware of new, reverse relationship.");
@@ -226,9 +228,9 @@ rule "detection of reverse association"
 rule "detection of confirmation request"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, information.event != null)
 		not (exists Invalid(element == $act))
-        $confirmationRequest: ConfirmationRequest(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent,
+        $confirmationRequest: ConfirmationRequest(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_target:targetAgent,
                                                   $d_info:information, $d_sourceSpec:sourceSpec)
 		not (exists Invalid(element == $confirmationRequest))
     then
@@ -238,9 +240,10 @@ rule "detection of confirmation request"
 rule "detection of information request"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, information.event != null)
 		not (exists Invalid(element == $act))
-        $informationRequest: InformationRequest(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent,
+        $informationRequest: InformationRequest(eval(id == $act.getInformation().getEvent().getId()),
+                                                  $d_actor:actorAgent, $d_target:targetAgent,
                                                   $d_need:informationNeed)
 		not (exists Invalid(element == $informationRequest))
     then
@@ -250,9 +253,11 @@ rule "detection of information request"
 rule "detection of relocation"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $eventId:information.event.id)
+        $act: Detection($actor:actorAgent, information.event != null)
 		not (exists Invalid(element == $act))
-        $relocation: Relocation(id == $eventId, $d_actor:actorAgent, $d_location:location)
+        $relocation: Relocation(eval(id == $act.getInformation().getEvent().getId()), 
+                                      $d_actor:actorAgent,
+                                      $d_location:location)
 		not (exists Invalid(element == $relocation))
     then
         inferFrom(drools, $act, new Insight($act, $actor, new Locality($relocation, $d_actor, $d_location)), "Observer aware of other's relocation.");

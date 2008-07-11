@@ -21,6 +21,19 @@ class Detection extends InformationAct {
         return true
     }
 
+    void setInformation(Information information) { // make sure actorAgent is the only source
+        this.@information = information
+        if (actorAgent as boolean) information.sourceAgents = [actorAgent]
+        this.propertyChanged('information', null, information)
+    }
+
+    void setActorAgent(Ref agent) {
+        super.setActorAgent(agent)
+        information.sourceAgents = [agent]
+        this.propertyChanged('actorAgent', null, actorAgent)
+        this.propertyChanged('information', null, information)
+    }
+
     // Return implied event type
     static Ref impliedEventType() {
         return ComputedRef.from(Detection.class, 'makeImpliedEventType')

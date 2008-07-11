@@ -13,10 +13,10 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class Belief extends ProfileElement {
 
-    Information information
+    Know know
 
-    Belief(InformationAct act, Ref agent, Information information) {
-        super(act, agent)
-        this.information = information
+    Belief(Know know) {  // what an agent knows AND believes
+        super(know, know.agent)
+        this.know = know
     }
 }

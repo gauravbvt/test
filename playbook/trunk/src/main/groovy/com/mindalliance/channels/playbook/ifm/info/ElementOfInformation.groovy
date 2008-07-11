@@ -17,14 +17,21 @@ class ElementOfInformation extends BeanImpl {
     String content = ''
 
     // Semantic matching of EOIs
-    boolean matches(ElementOfInformation eoi) {
-        SemanticMatcher matcher = SemanticMatcher.getInstance()
-        // matching topic?
-        Level level = matcher.semanticProximity(topic, eoi.topic)
-        if (level < Level.HIGH) return false   // more demanding on topic match than content match
-        // matching content?
-        level = matcher.semanticProximity(content, eoi.content)
-        if (level < Level.MEDIUM) return false
+    boolean matches(ElementOfInformation eoi) {     // this matches eoi if smae as eoi or more specific than eoi
+        assert topic && eoi.topic
+        if (topic != eoi.topic) {
+            Level level = SemanticMatcher.getInstance().semanticProximity(topic, eoi.topic)
+            if (level < Level.HIGH) return false   // more demanding on topic match than content match
+        }
+        if (!eoi.content.isEmpty()) {
+            if (!content.isEmpty()) {
+                Level level = SemanticMatcher.getInstance().semanticProximity(content, eoi.content)
+                if (level < Level.MEDIUM) return false
+            }
+        }
+        else {
+            if (!content.isEmpty()) return false
+        }
         return true
     }
 }

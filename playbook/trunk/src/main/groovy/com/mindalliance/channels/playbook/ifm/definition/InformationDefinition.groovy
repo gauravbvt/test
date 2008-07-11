@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +17,7 @@ import com.mindalliance.channels.playbook.ifm.Agent
 class InformationDefinition extends Definition {
 
     EventSpecification eventSpec = new EventSpecification()   // what the information must be about
+    List<Ref> eventTypes = []  // ANDed -- classification
     List<ElementOfInformation> elementsOfInformation = []  // ORed - what element the information must contain, if any
     AgentSpecification sourceAgentSpec = new AgentSpecification() // trusted source (of any if spec matches all)
 
@@ -29,13 +31,16 @@ class InformationDefinition extends Definition {
 
     MatchResult match(Bean bean, InformationAct informationAct) {
         Information info = (Information)bean
-        if (!eventSpec.matches(info.event, informationAct)) {
+        if (eventTypes && !eventTypes.every {set-> info.eventTypes.any {iet -> iet.implies(set)}}) {
+            return new MatchResult(matched:false, failures:["The classification of the event in $info does not match"])
+        }
+        if (info.event as boolean && !eventSpec.matches(info.event.deref(), informationAct)) {
             return new MatchResult(matched:false, failures:["$info is not about a specified event"])
         }
-        if (!info.sourceAgents.any {sa -> sourceAgentSpec.matches((Agent)sa.deref(), informationAct)}) {
+        if (!sourceAgentSpec.matchesAll() && !info.sourceAgents.any {sa -> sourceAgentSpec.matches((Agent)sa.deref(), informationAct)}) {
             return new MatchResult(matched:false, failures:["Not one of $info sources matches specified source"])
         }
-        if (!elementsOfInformation.any {seoi -> info.eventDetails.any{eoi -> seoi.matches(eoi)}}) {
+        if (elementsOfInformation && !elementsOfInformation.any {seoi -> info.eventDetails.any{eoi -> seoi.matches(eoi)}}) {
             return new MatchResult(matched:false, failures:["Not one specified element of information matches one in $info"])
         }
         return new MatchResult(matched:true)

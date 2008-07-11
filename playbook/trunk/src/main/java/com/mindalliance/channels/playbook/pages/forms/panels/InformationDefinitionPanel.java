@@ -1,6 +1,8 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition;
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification;
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification;
@@ -10,6 +12,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
+import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,6 +44,9 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
     protected AjaxCheckBox anyEventCheckBox;
     protected WebMarkupContainer eventSpecificationDiv;
     protected EventSpecificationPanel eventSpecificationPanel;
+    protected AjaxCheckBox anyEventTypeCheckBox;
+    protected WebMarkupContainer eventTypesDiv;
+    protected DynamicFilterTree eventTypesTree;
     protected AjaxCheckBox anySourceCheckBox;
     protected WebMarkupContainer sourceSpecificationDiv;
     protected Component sourceSpecificationPanel;
@@ -72,6 +78,29 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
         addReplaceable(eventSpecificationDiv);
         eventSpecificationPanel = new EventSpecificationPanel("eventSpecification", this, propPath + ".eventSpec", isReadOnly(), feedback);
         addReplaceableTo(eventSpecificationPanel, eventSpecificationDiv);
+
+        anyEventTypeCheckBox = new AjaxCheckBox("anyEventType", new Model((Boolean)informationDefinition.getEventTypes().isEmpty())){
+            protected void onUpdate(AjaxRequestTarget target) {
+                boolean anyEventType = (Boolean)anyEventTypeCheckBox.getModelObject();
+                if (anyEventType) {
+                    setProperty("eventTypes", new ArrayList<Ref>());
+                }
+                setVisibility(eventTypesDiv, !anyEventType, target);
+            }
+        };
+        addReplaceable(anyEventTypeCheckBox);
+        eventTypesDiv = new WebMarkupContainer("eventTypesDiv");
+        setVisibility(eventTypesDiv, !informationDefinition.getEventTypes().isEmpty());
+        addReplaceable(eventTypesDiv);
+        eventTypesTree = new DynamicFilterTree("eventTypes",
+                                          new RefPropertyModel(getElement(), propPath+".eventTypes"),
+                                          new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))){
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                List<Ref> selected = eventTypesTree.getNewSelections();
+                setProperty("eventTypes", selected, target);
+            }
+        };
+        addReplaceableTo(eventTypesTree, eventTypesDiv);
 
         anySourceCheckBox = new AjaxCheckBox("anySource", new Model((Boolean) informationDefinition.getSourceAgentSpec().matchesAll())) {
             protected void onUpdate(AjaxRequestTarget target) {
@@ -115,7 +144,7 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
     }
 
     private List<String> findAllKnownTopics() {
-        return (List<String>) Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventSpec().allEventTypes());
+        return (List<String>) Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventTypes());
     }
 
     @Override
