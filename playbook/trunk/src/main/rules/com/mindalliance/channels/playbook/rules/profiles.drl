@@ -51,35 +51,14 @@ rule "task"
         }
     end
 
-rule "information request on behalf of self"
+rule "information request"
     agenda-group "profiles"
     when
-        $act: InformationRequest($actor:actorAgent, $target:targetAgent, informationNeed.agent == $actor , $need:informationNeed)
+        $act: InformationRequest($actor:actorAgent, $target:targetAgent, $need:informationNeed)
 		not (exists Invalid(element == $act))
     then
-        inferFrom(drools, $act, new NeedToKnow($act, $actor, $need), "An agent expressed a need to know by requesting information on its own behalf.");
+        inferFrom(drools, $act, new NeedToKnow($act, $actor, $need), "An agent expressed a need to know.");
         inferFrom(drools, $act, new Insight($act, $target, new NeedToKnow($act, $actor, $need)), "The recipient of an information request knows that the sender needs information.");
-    end
-
-rule "information request on behalf of another"
-    agenda-group "profiles"
-    when
-        $act: InformationRequest($actor:actorAgent, $target:targetAgent, $needy:informationNeed.agent, $need:informationNeed)
-        eval($needy != $actor)
-        eval($needy != $target)
-		not (exists Invalid(element == $act))
-    then
-        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($act, (Ref)$needy, $need)), "Sender knows that another agent needs to know.");
-        inferFrom(drools, $act, new Insight($act, $target, new NeedToKnow($act, (Ref)$needy, $need)), "Recipient knows that another agent needs to know.");
-    end
-
-rule "information request on behalf of target"  // quasi-nonsense case
-    agenda-group "profiles"
-    when
-        $act: InformationRequest($actor:actorAgent, $target:targetAgent, informationNeed.agent == $target , $need:informationNeed)
-		not (exists Invalid(element == $act))
-    then
-        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($act, $target, $need)), "Sender knows that recipient needs to know.");
     end
 
 rule "assignation transmitted"
@@ -176,10 +155,10 @@ rule "sharing request"
         $act: SharingRequest($actor:actorAgent, $target:targetAgent, $protocol:protocol, $infoSpec:protocol.informationSpec)
 		not (exists Invalid(element == $act))
     then
-        inferFrom(drools, $act, new NeedToKnow($act, $actor, InformationNeed.fromSharingProtocol($actor, $target, $protocol)),
+        inferFrom(drools, $act, new NeedToKnow($act, $actor, InformationNeed.fromSharingProtocol($protocol)),
                   "Sender communicated a need to know.");
         inferFrom(drools, $act, new Insight($act, $target,
-                                    new NeedToKnow($act, $actor, InformationNeed.fromSharingProtocol($actor, $target, $protocol))),
+                                    new NeedToKnow($act, $actor, InformationNeed.fromSharingProtocol($protocol))),
                                     "Recipient aware of sender's need to know.");
     end
 
@@ -262,10 +241,10 @@ rule "detection of information request"
         $act: Detection($actor:actorAgent, $eventId:information.event.id)
 		not (exists Invalid(element == $act))
         $informationRequest: InformationRequest(id == $eventId, $d_actor:actorAgent, $d_target:targetAgent,
-                                                  $d_need:informationNeed, $d_needy:informationNeed.agent)
+                                                  $d_need:informationNeed)
 		not (exists Invalid(element == $informationRequest))
     then
-        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($informationRequest, (Ref)$d_needy, $d_need)), "Observer aware of other's need to know.");
+        inferFrom(drools, $act, new Insight($act, $actor, new NeedToKnow($informationRequest, $d_actor, $d_need)), "Observer aware of sender's need to know.");
     end
 
 rule "detection of relocation"
@@ -283,7 +262,7 @@ rule "detection of relocation"
 
 # Assignments from Roles
 
-rule "assignments from role"    // add assignments in every playbook
+rule "assignments from role"    // add role-defined assignments for each resource in each playbook
     agenda-group "profiles"
     when
         $resource: Resource($roles:roles)

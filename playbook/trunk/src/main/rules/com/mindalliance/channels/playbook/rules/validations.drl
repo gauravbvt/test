@@ -92,15 +92,6 @@ rule "invalid information request need"
         inferFrom(drools, $el, new Invalid($el), "The information need is unspecified");
     end
 
-rule "invalid information request needy"
-    agenda-group "validations"
-    when
-        $el: InformationRequest($needy:informationNeed.agent)
-        eval(!Channels.isSet((Ref)$needy))
-    then
-        inferFrom(drools, $el, new Invalid($el), "The agent with the information need is missing");
-    end
-
 rule "invalid relocation"
     agenda-group "validations"
     when

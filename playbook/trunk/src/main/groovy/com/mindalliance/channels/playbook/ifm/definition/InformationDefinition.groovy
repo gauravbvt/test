@@ -16,7 +16,7 @@ class InformationDefinition extends Definition {
 
     EventSpecification eventSpec = new EventSpecification()   // what the information must be about
     List<ElementOfInformation> elementsOfInformation = []  // ORed - what element the information must contain
-    List<AgentSpecification> sourceAgentSpecs = [] // ORed -- what a source must be
+    List<AgentSpecification> sourceAgentSpecs = [] // ORed -- what a source must be -- any if empty
 
     Class<? extends Bean> getMatchingDomainClass() {
         return Information.class

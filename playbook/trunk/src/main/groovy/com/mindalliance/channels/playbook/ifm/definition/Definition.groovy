@@ -25,6 +25,10 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['matchingDomainClass', 'summary'])
     }
+
+    String toString() {
+        return getSummary()
+    }
     
 
     boolean matches(Bean bean, InformationAct informationAct) {

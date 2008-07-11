@@ -28,6 +28,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -233,11 +234,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         task1.cause.delay = new Timing(amount:3, unit:'days')
         EventSpecification eventSpec1 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'accident')])],
                                                                description:'any accident')
-        InformationNeed need1 = new InformationNeed(eventSpec: eventSpec1)
+        InformationNeed need1 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec1))
         task1.informationNeeds.add(need1)
         EventSpecification eventSpec2 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'terrorism')])],
                                                                 description: 'any act of terrorism')
-        InformationNeed need2 = new InformationNeed(eventSpec: eventSpec2)
+        InformationNeed need2 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec2))
         task1.informationNeeds.add(need2)
         addToPlaybook(task1, pb)
 
@@ -262,9 +263,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         EventSpecification eventSpec3 = new EventSpecification(definitions:[new EventDefinition(eventTypes:[m.findType('EventType', 'task failed')],
                                                                                                 causeEventSpecs: [causeEventSpec])],
                                                                description:'Any failure of task1')
-        InformationNeed need3 = new InformationNeed(eventSpec: eventSpec3)
-        need3.eventDetails.add(new ElementOfInformation(topic:'extent'))
-        need3.eventDetails.add(new ElementOfInformation(topic:'cause'))
+        InformationNeed need3 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec3))
+        need3.informationSpec.elementsOfInformation.add(new ElementOfInformation(topic:'extent'))
+        need3.informationSpec.elementsOfInformation.add(new ElementOfInformation(topic:'cause'))
         task2.informationNeeds.add(need3)
         addToPlaybook(task2, pb)
 
@@ -272,9 +273,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         request1.cause.trigger = task2.reference
         request1.cause.delay = new Timing(amount:2, unit:'hours')
         EventSpecification eventSpec4 = new EventSpecification(enumeration:[task1.reference], description:'Need to know about task1')
-        InformationNeed need4 = new InformationNeed(eventSpec: eventSpec4)
-        need4.eventDetails.add(new ElementOfInformation(topic:'cost'))
-        need4.eventDetails.add(new ElementOfInformation(topic:'duration'))
+        InformationNeed need4 = new InformationNeed(informationSpec: new InformationDefinition(eventSpec: eventSpec4))
+        need4.informationSpec.elementsOfInformation.add(new ElementOfInformation(topic:'cost'))
+        need4.informationSpec.elementsOfInformation.add(new ElementOfInformation(topic:'duration'))
         request1.informationNeed = need4
         addToPlaybook(request1, pb)
 

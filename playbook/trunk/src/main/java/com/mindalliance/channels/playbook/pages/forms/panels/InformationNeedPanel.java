@@ -10,6 +10,7 @@ import com.mindalliance.channels.playbook.ifm.info.InformationNeed;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.List;
@@ -24,11 +25,9 @@ import java.util.List;
 public class InformationNeedPanel extends AbstractComponentPanel {
 
     protected InformationNeed informationNeed;
-    protected DynamicFilterTree agentTree;
-    protected EventSpecificationPanel eventSpecPanel;
-    protected EOIsPanel eoisPanel;
-    protected AgentSpecificationPanel agentSpecPanel;
+    protected InformationDefinitionPanel informationSpecPanel;
     protected TimingPanel deadlinePanel;
+    protected CheckBox criticalField;
 
     public InformationNeedPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -37,41 +36,12 @@ public class InformationNeedPanel extends AbstractComponentPanel {
     protected void load() {
         super.load();
         informationNeed = (InformationNeed)getComponent();
-        agentTree = new DynamicFilterTree("agent", new RefPropertyModel(informationNeed, "agent"),
-                                          new RefQueryModel(getPlaybook(), new Query("findAllAgents")),
-                                          SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selected = agentTree.getNewSelection();
-                informationNeed.setAgent(selected);
-                elementChanged(propPath+".agent", target);
-            }
-        };
-        addReplaceable(agentTree);
-        eventSpecPanel = new EventSpecificationPanel("eventSpec", this, propPath + ".eventSpec", isReadOnly(), feedback);
-        this.addReplaceable(eventSpecPanel);
+        informationSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath + ".informationSpec", isReadOnly(), feedback);
+        this.addReplaceable(informationSpecPanel);
         deadlinePanel = new TimingPanel("deadline", this, propPath+".deadline", isReadOnly(), feedback);
         addReplaceable(deadlinePanel);
-        RefQueryModel topicChoicesModel = new RefQueryModel(this, new Query("findAllKnownTopics"));
-        eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", readOnly, feedback, topicChoicesModel);
-        addReplaceable(eoisPanel);
-        agentSpecPanel = new AgentSpecificationPanel("sourceSpec", this, propPath+".sourceSpec", isReadOnly(), feedback);
-        addReplaceable(agentSpecPanel);
-    }
-
-    @Override
-    public void elementChanged(String propPath, AjaxRequestTarget target) {
-        super.elementChanged(propPath, target);
-        if (propPath.endsWith(".eventTypes")) {
-            target.addComponent(eoisPanel);
-        }
-        if (propPath.endsWith(".event")) {
-            target.addComponent(eoisPanel);
-        }
-    }
-
-    private List<String> findAllKnownTopics() {
-        List<Ref> allEventTypes = informationNeed.getEventSpec().allEventTypes();
-        return (List<String>)Query.execute(EventType.class, "findAllTopicsIn", allEventTypes);
+        criticalField = new CheckBox("critical", new RefPropertyModel(getElement(), propPath+".critical"));
+        addInputField(criticalField);
     }
 
 }

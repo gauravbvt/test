@@ -6,6 +6,8 @@ import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification
 import com.mindalliance.channels.playbook.ifm.Defineable
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.ref.impl.BeanImpl
+import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,16 +16,14 @@ import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
  * Date: May 27, 2008
  * Time: 9:56:23 PM
  */
-class InformationNeed extends AbstractInformation implements Defineable {
+class InformationNeed extends BeanImpl implements Defineable {
 
-    EventSpecification eventSpec = new EventSpecification() // about what (kind of) events
-    Ref agent // agent who needs the information
-    AgentSpecification sourceSpec = new AgentSpecification() // specification fo acceptable source of needed information
+    InformationDefinition informationSpec = new InformationDefinition()
+    boolean critical = false
     Timing deadline = new Timing(amount: 0) // relative deadline of 0 means indefinite. Information need nullifed after deadline.
 
-    static InformationNeed fromSharingProtocol(Ref actorAgent, Ref targetAgent, SharingProtocol protocol) {
-        AgentSpecification source = new AgentSpecification(enumeration: [targetAgent])
-        InformationNeed need = new InformationNeed(agent: actorAgent, eventSpec: protocol.informationSpec.eventSpec, sourceSpec: source)
+    static InformationNeed fromSharingProtocol(SharingProtocol protocol) {
+        InformationNeed need = new InformationNeed(informationSpec: (InformationDefinition)protocol.informationSpec.copy())
         return need
     }
 
@@ -36,22 +36,22 @@ class InformationNeed extends AbstractInformation implements Defineable {
     }
 
     String toString() {
-        return "N2K about: ${eventSpec.summary}"
+        return "$informationSpec" + (critical ? ' (critical)' : '')
     }
 
     boolean isDefined() {
-        return agent as boolean && !eventSpec.matchesAll()
+        return !informationSpec.matchesAll()
     }
 
     boolean isAboutSpecificEvents() {
-        return !eventSpec.enumeration.isEmpty()
+        return !informationSpec.eventSpec.enumeration.isEmpty()
     }
 
     String makeLabel(int maxWidth) {
-        String eventSpecDescription = eventSpec.description
+        String eventSpecDescription = informationSpec.eventSpec.description
         String label = "Need info about\n"
         if (eventSpecDescription) label += "${eventSpecDescription[0..Math.min(eventSpecDescription.size()-1, maxWidth-1)]}"
-        eventDetails.each {eoi ->
+        informationSpec.elementsOfInformation.each {eoi ->
             label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"
         }
         return label

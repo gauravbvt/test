@@ -7,26 +7,12 @@
         lang="en">
 <body>
 <wicket:extend>
-    <fieldset>
-        <legend>Agent</legend>
-        <span wicket:id="agent">[agent tree]</span>
-    </fieldset>
-    <fieldset>
-        <legend>needs information about</legend>
-        <span wicket:id="eventSpec">[Event specification]</span>
-    </fieldset>
+    <span wicket:id="informationSpec">[information definition panel]</span>
     <fieldset>
         <legend>within the next</legend>
         <span wicket:id="deadline">[timing panel]</span><span>(0 means no time limit)</span>
     </fieldset>
-    <fieldset>
-        <legend>with elements of information</legend>
-        <span wicket:id="eventDetails">[EOIs]</span>
-    </fieldset>
-    <fieldset>
-        <legend>from trusted sources</legend>
-        <span wicket:id="sourceSpec">[Agent specification panel]</span>
-    </fieldset>
+    <input wicket:id="critical" type = "checkbox"/> Need is critical
 </wicket:extend>
 </body>
 </html>

@@ -145,7 +145,7 @@ class InfoFlow extends PlaybookGraph {
 
     void buildInformationNeed(InformationNeed need, String name) {
         if (need.isAboutSpecificEvents()) {
-             List<Ref> subjects = need.eventSpec.enumeration
+             List<Ref> subjects = need.informationSpec.eventSpec.enumeration
              subjects.each {ref ->
                  Event subject = (Event)ref.deref()
                  if (!subject instanceof InformationAct) {
@@ -158,7 +158,7 @@ class InfoFlow extends PlaybookGraph {
             }
          }
          else {
-             List<Ref> refs = need.eventSpec.definitions.causeEventSpecs.enumeration
+             List<Ref> refs = need.informationSpec.eventSpec.definitions.causeEventSpecs.enumeration
              refs.flatten().each {ref ->
                  if (ref) {
                      Event causeOfSubject = (Event)ref.deref()
