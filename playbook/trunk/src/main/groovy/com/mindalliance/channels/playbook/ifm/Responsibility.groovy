@@ -17,7 +17,25 @@ import com.mindalliance.channels.playbook.support.RefUtils
 class Responsibility extends BeanImpl implements Defineable {
 
     InformationDefinition informationSpec = new InformationDefinition() // what must be known if knowable -- required
-    TaskDefinition taskSpec = new TaskDefinition()
+    boolean affirmed = true // when matching, known information is true (or false if not affirmed) ...
+    TaskDefinition taskSpec = new TaskDefinition()  // do a matching task
+
+    @Override
+    protected List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['negated', 'defined'])
+    }
+
+    boolean isNegated() {
+        return !affirmed
+    }
+
+    boolean getNegated() {
+        return !affirmed
+    }
+
+    void setNegated(boolean negated) {
+        affirmed = !negated
+    }
 
     String toString() {
         "${this.summary()}"

@@ -1,7 +1,9 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.form.CheckBox;
 
 import java.util.List;
 
@@ -14,8 +16,9 @@ import java.util.List;
  */
 public class ResponsibilityPanel extends AbstractComponentPanel {
 
-    InformationDefinitionPanel infoSpecPanel;
-    TaskDefinitionPanel taskSpecPanel;
+    protected InformationDefinitionPanel infoSpecPanel;
+    protected CheckBox negatedField;
+    protected TaskDefinitionPanel taskSpecPanel;
 
     public ResponsibilityPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
@@ -25,6 +28,8 @@ public class ResponsibilityPanel extends AbstractComponentPanel {
         super.load();
         infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath+".informationSpec", isReadOnly(), feedback);
         addReplaceable(infoSpecPanel);
+        negatedField = new CheckBox("negated", new RefPropertyModel(getElement(), propPath+".negated"));
+        addInputField(negatedField);
         taskSpecPanel = new TaskDefinitionPanel("taskSpec", this, propPath+".taskSpec", isReadOnly(), feedback);
         addReplaceable(taskSpecPanel);
     }
