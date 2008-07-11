@@ -31,7 +31,7 @@ class RuleBaseSession implements Serializable {
     static final String LOG_PATH = "rules_log/firing"
     static final boolean LOG_FIRING = false
 
-    static final List<String> FLOW = ['validations', 'profiles', 'beliefs', 'cases', 'issues', 'actions']
+    static final List<String> FLOW = ['validations', 'profiles', 'completeness', 'beliefs', 'cases', 'issues', 'actions']
 
     private String rulesPackageName
     private StatefulSession session

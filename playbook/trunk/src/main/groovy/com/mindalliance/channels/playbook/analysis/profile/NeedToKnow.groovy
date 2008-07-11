@@ -31,4 +31,9 @@ class NeedToKnow extends ProfileElement {
         }
     }
 
+    NeedToKnow(Assignment cause, Ref agent, InformationNeed informationNeed) {
+        super(cause, agent)
+        this.informationNeed = informationNeed
+    }
+
 }

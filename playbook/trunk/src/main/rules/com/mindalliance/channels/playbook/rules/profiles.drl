@@ -4,8 +4,10 @@ import com.mindalliance.channels.playbook.ref.*
 import com.mindalliance.channels.playbook.ifm.*
 import com.mindalliance.channels.playbook.ifm.definition.*
 import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.project.resources.*
 import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.model.*
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
 import java.util.*
@@ -277,5 +279,35 @@ rule "detection of relocation"
         inferFrom(drools, $act, new Insight($act, $actor, new Locality($relocation, $d_actor, $d_location)), "Observer aware of other's relocation.");
     end
 
-# TODO Detection of sharing requests, sharing commitments, tasks?
+# TODO - Detection of sharing requests, sharing commitments, tasks -> ?
+
+# Assignments from Roles
+
+rule "assignments from role"    // add assignments in every playbook
+    agenda-group "profiles"
+    when
+        $resource: Resource($roles:roles)
+        not (exists Invalid(element == $resource))
+        $playbook: Playbook()
+        not (exists Invalid(element == $playbook))
+    then
+        // Logger.getLogger("rules").info("Inserting assignments of " + $resource + " with roles " + $roles + " in playbook " + $playbook);
+        for(Ref ref : (List<Ref>)$roles) {
+           Role role = (Role)ref.deref();
+           if (role != null) {
+               for (Responsibility responsibility : (List<Responsibility>)role.getResponsibilities()) {
+                inferFrom(drools, role, new Assignment($playbook.getReference(), $resource.getReference(), responsibility), "Permanent assignment from role.");
+               }
+           }
+        }
+    end
+
+rule "n2k from assignment"
+    agenda-group "profiles"
+    when
+        $assignment: Assignment($agent:agent, $need:responsibility.informationNeed)
+    then
+        inferFrom(drools, $assignment, new NeedToKnow($assignment, $agent, (InformationNeed)$need), "Standing information need from assignment");
+    end
+
 

@@ -17,8 +17,8 @@ import com.mindalliance.channels.playbook.ifm.Timing
  */
 class ProfileElement extends AnalysisElement {
 
-    Playbook playbook
-    Agent agent           // of an agent
+    Ref playbook
+    Ref agent           // of an agent
     Duration start   // at t = time zero + start -- always set
     Duration end     // at t = time zero + end  -- set only if self-terminating
 
@@ -26,9 +26,23 @@ class ProfileElement extends AnalysisElement {
 
     ProfileElement(InformationAct act, Ref agent) {
         super()
-        this.playbook = (Playbook)act.playbook.deref()
-        this.agent = agent ? (Agent)agent.deref() : null
+        this.playbook = act.playbook
+        this.agent = agent
         this.start = act.startTime()
+    }
+
+    ProfileElement(Ref playbook, Ref Agent) {
+        super()
+        this.playbook = playbook
+        this.agent = agent
+        this.start = new Duration(0)          // starts at T = 0, no end
+    }
+
+    ProfileElement (ProfileElement cause, Ref agent) {
+        this.playbook = cause.playbook
+        this.agent = agent
+        this.start = cause.start
+        this.end = cause.end // assumes that it won't outlast its cause
     }
 
     String toString() {
