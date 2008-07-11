@@ -38,29 +38,10 @@
     <tr>
         <td></td>
         <td>
-            <div wicket:id="sourceSpecificationsDiv">
+            <div wicket:id="sourceSpecificationDiv">
                 <fieldset>
-                    <legend>sources that fit any of these descriptions</legend>
-                    <table>
-                        <tr>
-                            <td nowrap="nowrap">
-                                <select wicket:id="sourceSpecifications">
-                                    <option>[agent specification label]</option>
-                                </select><br/>
-                                <input wicket:id="addSourceSpecification" type = "button" value = "Add new"/>
-                                <input wicket:id="deleteSourceSpecification" type = "button" value = "Delete"/>
-                            </td>
-                            <td width="99%">
-                                &#160;
-                                <div wicket:id="sourceSpecificationDiv">
-                                    <fieldset>
-                                        <legend>this kind of source</legend>
-                                        <span wicket:id="sourceSpecification">[agent specification]</span>
-                                    </fieldset>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <legend>sources that fit this description</legend>
+                    <span wicket:id="sourceSpecification">[agent specification]</span>
                 </fieldset>
             </div>
         </td>
