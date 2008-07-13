@@ -79,7 +79,7 @@ public class DynamicFilterTree extends FilterTree {
 
     public synchronized void setFilter(Filter filter) {
         computedFilter = filter;
-        filter.setSingleSelect( isSingleSelect() );
+        if (filter != null) filter.setSingleSelect( isSingleSelect() );
         super.setFilter(filter);
     }
 

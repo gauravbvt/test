@@ -12,6 +12,6 @@ import com.mindalliance.channels.playbook.ref.Ref
 class System extends OrganizationResource {
 
     Ref adminPosition
-    String access = '' // access instructions
+    String instructions = '' // access instructions
 
 }

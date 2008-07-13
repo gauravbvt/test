@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.sharingRequest;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.SharingProtocolPanel;
+import com.mindalliance.channels.playbook.pages.forms.panels.OutgoingSharingProtocolPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.pages.forms.panels.SharingProtocolPane
  */
 public class SharingRequestProtocolTab extends AbstractFormTab {
 
-    SharingProtocolPanel protocolPanel;
+    OutgoingSharingProtocolPanel protocolPanel;
 
     public SharingRequestProtocolTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -21,7 +21,7 @@ public class SharingRequestProtocolTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        protocolPanel = new SharingProtocolPanel("protocol", this, "protocol", EDITABLE, feedback);
+        protocolPanel = new OutgoingSharingProtocolPanel("protocol", this, "protocol", EDITABLE, feedback);
         addReplaceable(protocolPanel);
     }
 }

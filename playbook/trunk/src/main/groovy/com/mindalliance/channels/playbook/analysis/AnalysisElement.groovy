@@ -16,7 +16,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 * Date: Apr 17, 2008
 * Time: 2:41:33 PM
 */
-class AnalysisElement implements Referenceable, Identified {
+abstract class AnalysisElement implements Referenceable, Identified {
 
     String id
     String rationale = ''

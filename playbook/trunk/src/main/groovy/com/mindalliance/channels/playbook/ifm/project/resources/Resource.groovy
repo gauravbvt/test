@@ -7,10 +7,10 @@ import com.mindalliance.channels.playbook.ifm.Locatable
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.ifm.Responsibility
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,6 +26,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     List<ContactInfo> contactInfos = []
     List<Ref> roles = []
     Location location = new Location()
+    List<SharingProtocol> access = []
     boolean effective = true // whether the resource is operational in real life
 
     @Override

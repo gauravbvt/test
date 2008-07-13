@@ -27,6 +27,11 @@ public class PositionForm extends AbstractResourceForm {
                 return new ResourceIdentityTab(panelId, PositionForm.this);
             }
         });
+        tabs.add(new AbstractTab(new Model("Access")) {
+            public Panel getPanel(String panelId) {
+                return new ResourceAccessTab(panelId, PositionForm.this);
+            }
+        });
         tabs.add(new AbstractTab(new Model("Location")) {
             public Panel getPanel(String panelId) {
                 return new ResourceLocationTab(panelId, PositionForm.this);

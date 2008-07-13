@@ -47,7 +47,7 @@ class AgentDefinition extends Definition { // Definition of a kind of agent
                 }
             }
             else if (agent instanceof OrganizationResource) {
-                organization = ((OrganizationResource)agent).organization
+                organization = (Organization)((OrganizationResource)agent).organization.deref()
                 if (!organization as boolean || !organizationSpec.matches(organization, informationAct)) {
                     return new MatchResult(matched:false, failures:["$agent does not match specified organization"])
                 }

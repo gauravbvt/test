@@ -130,6 +130,34 @@ rule "invalid sharing request information spec"
 
 ### Validate project elements
 
+rule "invalid sharing agreement"
+    agenda-group "validations"      // TODO break into smaller rules for pointed diagnostic
+    when
+        $el: SharingAgreement($source:source, $recipient:recipient, $protocol:protocol, $constraints:constraints)
+        eval(!Channels.isSet($source) || !Channels.isSet($recipient) || !$protocol.isDefined())
+    then
+        inferFrom(drools, $el, new Invalid($el), "The sharing agreement is not sufficiently defined");
+    end
+
+rule "invalid policy"
+    agenda-group "validations"         // TODO break into smaller rules for pointed diagnostic
+    when
+        $el: Policy($sourceSpec:sourceSpec, $recipientSpec:recipientSpec, $infoSpec:informationSpec, $rels: relationshipNames)
+        eval($sourceSpec.matchesAll() || $infoSpec.matchesAll() || ($recipientSpec.matchesAll() && $rels.isEmpty()) )
+    then
+        inferFrom(drools, $el, new Invalid($el), "The policy is not sufficiently defined.");
+    end
+
+rule "invalid relationship"
+    agenda-group "validations"        // TODO break into smaller rules for pointed diagnostic
+    when
+        $el: Relationship($from: fromAgent, $to: toAgent, $name: name)
+        eval(!Channels.isSet($from) || !Channels.isSet($to) || $name.isEmpty())
+    then
+        inferFrom(drools, $el, new Invalid($el), "The relationship is not sufficiently defined.");
+    end
+
+
 ### Validate model elements
 
 ### Validate other playbook elements

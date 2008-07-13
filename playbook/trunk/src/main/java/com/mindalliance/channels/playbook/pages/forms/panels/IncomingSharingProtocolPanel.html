@@ -7,25 +7,25 @@
 <wicket:extend>
     <table>
         <tr>
-            <td>
-                <select wicket:id="delivery">
+            <td nowrap="nowrap">
+                Can be <select wicket:id="delivery">
                     <option>[delivery method]</option>
                 </select>
             </td>
             <td width="99%">
                 <fieldset>
-                    <legend>within</legend>
-                    <span wicket:id="maxDelay">[timing panel]</span>
+                    <legend>by</legend>
+                    <span wicket:id="contacts">[agent specification panel]</span>
                 </fieldset>
             </td>
         </tr>
     </table>
     <fieldset>
-        <legend>with any available information that is...</legend>
+        <legend>about any available information that is...</legend>
         <span wicket:id="informationSpec">[Information spec panel]</span>
     </fieldset>
     <fieldset>
-        <legend>communicating via</legend>
+        <legend>via</legend>
         <input wicket:id="anyMedium" type="checkbox"/>any medium
         <div wicket:id="preferredMediaDiv">
             <span wicket:id="preferredMedia">[media preferences panel]</span>

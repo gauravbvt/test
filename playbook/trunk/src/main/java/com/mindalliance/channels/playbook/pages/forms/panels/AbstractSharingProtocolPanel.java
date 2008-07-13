@@ -5,7 +5,6 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement;
-import com.mindalliance.channels.playbook.ifm.definition.EventSpecification;
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -26,24 +25,24 @@ import java.util.ArrayList;
  * Date: May 14, 2008
  * Time: 12:48:11 PM
  */
-public class SharingProtocolPanel extends AbstractComponentPanel {
+abstract public class AbstractSharingProtocolPanel extends AbstractComponentPanel {
 
     protected SharingProtocol sharingProtocol;
     protected DropDownChoice deliveryChoice;
-    protected TimingPanel maxDelayPanel;
+    protected AgentSpecificationPanel contactsPanel;
     protected InformationDefinitionPanel infoSpecPanel;
     protected AjaxCheckBox anyMediumCheckBox;
     protected WebMarkupContainer mediaPreferrencesDiv;
     protected RefPreferencesPanel mediaPreferrences;
 
-    public SharingProtocolPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
+    public AbstractSharingProtocolPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
         super(id, parentPanel, propPath, readOnly, feedback);
     }
 
     protected void load() {
         super.load();
         sharingProtocol = (SharingProtocol)getComponent();
-        deliveryChoice = new DropDownChoice("delivery", new RefPropertyModel(getElement(), propPath + ".delivery"), SharingAgreement.getDeliveries());
+        deliveryChoice = new DropDownChoice("delivery", new RefPropertyModel(getElement(), propPath + ".delivery"), sharingProtocol.getDeliveryChoices());
         deliveryChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -52,18 +51,17 @@ public class SharingProtocolPanel extends AbstractComponentPanel {
             }
         });
         addReplaceable(deliveryChoice);
-        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath+".informationSpec",
-                                                          isReadOnly(), feedback);
+        contactsPanel = new AgentSpecificationPanel("contacts", this, propPath+".contacts", isReadOnly(), feedback);
+        addReplaceable(contactsPanel);
+        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath+".informationSpec",isReadOnly(), feedback);
         addReplaceable(infoSpecPanel);
-        maxDelayPanel = new TimingPanel("maxDelay", this, propPath+".maxDelay", isReadOnly(), feedback);
-        addReplaceable(maxDelayPanel);
 
         anyMediumCheckBox = new AjaxCheckBox("anyMedium", new Model((Boolean)sharingProtocol.getPreferredMediumTypes().isEmpty())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyMedium = (Boolean)anyMediumCheckBox.getModelObject();
                 if (anyMedium) {
                     setProperty("preferredMediumTypes", new ArrayList<Ref>());
-                    mediaPreferrences = new RefPreferencesPanel("preferredMedia", SharingProtocolPanel.this, propPath + ".preferredMediumTypes", isReadOnly(), feedback,
+                    mediaPreferrences = new RefPreferencesPanel("preferredMedia", AbstractSharingProtocolPanel.this, propPath + ".preferredMediumTypes", isReadOnly(), feedback,
                                                    new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType")));
                     addReplaceableTo(mediaPreferrences, mediaPreferrencesDiv);
                 }

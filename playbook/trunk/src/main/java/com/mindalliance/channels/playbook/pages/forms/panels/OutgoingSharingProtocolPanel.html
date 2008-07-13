@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <select wicket:id="delivery">
+                    <option>[delivery method]</option>
+                </select>
+            </td>
+            <td width="99%">
+                <fieldset>
+                    <legend></legend>
+                    <span wicket:id="contacts">[agent specification panel]</span>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <fieldset>
+        <legend>with any available information that is...</legend>
+        <span wicket:id="informationSpec">[Information spec panel]</span>
+    </fieldset>
+    <fieldset>
+        <legend>communicating via</legend>
+        <input wicket:id="anyMedium" type="checkbox"/>any medium
+        <div wicket:id="preferredMediaDiv">
+            <span wicket:id="preferredMedia">[media preferences panel]</span>
+        </div>
+    </fieldset>
+</wicket:extend>
+</body>
+</html>

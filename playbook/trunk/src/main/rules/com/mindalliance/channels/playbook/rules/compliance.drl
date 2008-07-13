@@ -1,0 +1,75 @@
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.ref.*
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
+import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.analysis.profile.*
+import com.mindalliance.channels.playbook.analysis.compliance.*
+import java.util.*
+
+### Compliance by agents to Commitments and Policies
+
+# Broken commitment to share - you knew something you agreed to notify me of but you did not
+rule "broken commitment to notify"
+    agenda-group "compliance"
+    when
+        // agent has commitment to share with another agent
+        $commitment: Commitment($agent:agent, $toward:towardAgent, $infoSpec:protocol.informationSpec, protocol.delivery == "notify")
+        Belief(agent == $agent, $know_id: id) // and agent believes in information it knows
+        $know: Know(id == $know_id, $info:information)
+        eval(((InformationDefinition)$infoSpec).matches($info, $know.getAct()))  // that matches what agent committed to share
+        // and no info comprising the info believed and committed to be shared has been transferred
+        not (exists ( $transfer:InformationTransfer(actorAgent == $agent, targetAgent == $toward, $t_info:information)
+                      && eval(((InformationDefinition)$infoSpec).matches($t_info, $transfer))
+                      && eval($t_info.isComprisedIn($info))
+                    )
+            )
+    then
+        inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "failure to notify", $commitment), "Failure to notify as per commitment.");
+    end
+
+# Committed-to notification done but not in time
+rule "late notification"
+    agenda-group "compliance"
+    when
+        // agent has commitment to share with another agent
+        $commitment: Commitment($agent:agent, $toward:towardAgent, $infoSpec:protocol.informationSpec,
+                                $maxDelay:maxDelay, eval(protocol.isPush()))
+        Belief(agent == $agent, $know_id: id) // agent believes in information it knows
+        $know: Know(id == $know_id, $info:information)
+        eval(((InformationDefinition)$infoSpec).matches($info, $know.getAct()))  // that matches what agent committed to share
+        // any info comprising the info believed and committed to sharing has been transferred after max delay
+        $notifications: ArrayList(size > 0)
+                        from collect(InformationTransfer(actorAgent == $agent, targetAgent == $toward, $t_info:information, eval($t_info.isComprisedIn($info))))
+        not ( exists (
+                $notification: InformationTransfer() from $notifications
+                && eval(($notification.startTime().minus($know.getStart())).isShorterThan(((Timing)$maxDelay).getDuration()))
+                )
+            )
+    then
+        inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "late to notify", $commitment), "Failure to notify on time as per commitment.");
+    end
+
+# Notified on time
+
+# Committed response not done
+
+# Committed response done but not in time
+
+# Responded on time
+
+# Using shared information for purpose disallowed by commitment
+
+# Propagating private information
+
+# Sharing information according to policy
+
+# Sharing information in contradiction of policy
+
+# Not sharing information as obligated by policy

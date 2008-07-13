@@ -40,7 +40,7 @@ public class SystemIdentityTab extends ResourceIdentityTab {
         Label organizationNameLabel = new Label("organizationName", new RefPropertyModel(getElement(), "organization.name"));
         organizationLink.add(organizationNameLabel);
         addReplaceable(organizationLink);
-        accessField = new TextArea("access", new RefPropertyModel(getElement(), "access"));
+        accessField = new TextArea("instructions", new RefPropertyModel(getElement(), "instructions"));
         addInputField(accessField);
         adminPositionTree = new DynamicFilterTree("adminPosition", new RefPropertyModel(getElement(), "adminPosition"),
                                                    new RefPropertyModel(getElement(), "organization.positions", new ArrayList<Ref>()), SINGLE_SELECTION) {

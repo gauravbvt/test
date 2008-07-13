@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <select wicket:id="protocols">
+                                <option>[a protocol's summary]</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap">
+                            <input wicket:id="addProtocol" type="button" value="Add new"/>
+                            <input wicket:id="deleteProtocol" type="button" value="Delete"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="99%">
+                <div wicket:id="protocolDiv">
+                     <fieldset>
+                         <legend></legend>
+                         <span wicket:id="protocol">[sharing protocol panel]</span>
+                     </fieldset>
+                 </div>
+            </td>
+        </tr>
+    </table>
+    <wicket:child/>
+</wicket:extend>
+</body>
+</html>

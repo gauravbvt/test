@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ifm.sharing.SharingConstraints
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.Timing
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,19 +18,18 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 */
 class SharingAgreement extends ProjectElement implements Described {
 
-    static final List<String> deliveries = ['notify', 'answer']
-
     String description = ''
     Ref source   // readOnly -- set on creation
     Ref recipient     // readOnly -- set on creation
-    SharingProtocol protocol = new SharingProtocol()
+    SharingProtocol protocol = new SharingProtocol(incoming:false)
     SharingConstraints constraints = new SharingConstraints()
+    Timing maxDelay = new Timing(amount:0)
     boolean formalized = false // else informal
 
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['deliveries', 'name'])
+        return (List<String>)(super.transientProperties() + ['name'])
     }
 
     String toString() {

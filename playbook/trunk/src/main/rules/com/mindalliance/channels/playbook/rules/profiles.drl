@@ -294,4 +294,41 @@ rule "n2k from assignment"
         inferFrom(drools, $assignment, new NeedToKnow($assignment, $agent, (InformationNeed)$need), "Standing information need from assignment");
     end
 
+# Commitments from SharingAgreements
 
+rule "commitments from sharing agreement" // add Commitments from SharingAgreements in each playbook
+    agenda-group "profiles"
+    when
+        $agreement: SharingAgreement($source:source, $recipient:recipient, $protocol:protocol, $constraints:constraints)
+        not (exists Invalid(element == $agreement))
+        $playbook: Playbook()
+        not (exists Invalid(element == $playbook))
+    then
+        inferFrom(drools, $agreement, new Commitment($playbook, $agreement), "Permanent commitment from sharing agreement.");
+    end
+
+rule "commitments from sharing agreement via organization" // add Commitments from SharingAgreements for each resource in each playbook
+    agenda-group "profiles"
+    when
+        $agreement: SharingAgreement($sourceId:source.id, $recipient:recipient, $protocol:protocol, $constraints:constraints)
+
+        not (exists Invalid(element == $agreement))
+        $playbook: Playbook()
+        not (exists Invalid(element == $playbook))
+    then
+        inferFrom(drools, $agreement, new Commitment($playbook, $agreement), "Permanent commitment from sharing agreement via organization.");
+    end
+
+
+# Links from Relationships
+
+rule "links from relationships"
+    agenda-group "profiles"
+    when
+        $relationship: Relationship($from: fromAgent, $to: toAgent, $name: name)
+        not (exists Invalid(element == $relationship))
+        $playbook: Playbook()
+        not (exists Invalid(element == $playbook))
+    then
+        inferFrom(drools, $relationship, new Link($relationship, $playbook, $from, $name, $to), "Permanent link from relationship");
+    end

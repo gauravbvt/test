@@ -28,6 +28,11 @@ public class TeamForm extends AbstractResourceForm {
                 return new TeamDefinitionTab(panelId, TeamForm.this);
             }
         });
+        tabs.add(new AbstractTab(new Model("Access")) {
+            public Panel getPanel(String panelId) {
+                return new ResourceAccessTab(panelId, TeamForm.this);
+            }
+        });
         tabs.add(new AbstractTab(new Model("Location")) {
             public Panel getPanel(String panelId) {
                 return new ResourceLocationTab(panelId, TeamForm.this);
