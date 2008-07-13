@@ -38,28 +38,10 @@
         <tr>
             <td></td>
             <td colspan="2">
-                <div wicket:id="causeSpecificationsDiv">
+                <div wicket:id="causeSpecificationDiv">
                     <fieldset>
                         <legend>any event such as</legend>
-                        <table>
-                            <tr>
-                                <td nowrap="nowrap">
-                                    <select wicket:id="causeSpecifications">
-                                        <option>[event specification label]</option>
-                                    </select><br/>
-                                    <input wicket:id="addCauseSpecification" type = "button" value = "Add new"/>
-                                    <input wicket:id="deleteCauseSpecification" type = "button" value = "Delete"/>
-                                </td>
-                                <td width="99%">
-                                    <div wicket:id="causeSpecificationDiv">
-                                        <fieldset>
-                                            <legend>this kind of event</legend>
-                                            <span wicket:id="causeSpecification">[cause event specification]</span>
-                                        </fieldset>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                        <span wicket:id="causeSpecification">[cause event specification]</span>
                     </fieldset>
                 </div>
             </td>

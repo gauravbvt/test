@@ -38,4 +38,12 @@ class Commitment extends ProfileElement {
         this.maxDelay = sharingAgreement.maxDelay
     }
 
+    Commitment(Playbook playbook, Ref agent, Ref towardAgent, SharingAgreement sharingAgreement) {
+        super(playbook, sharingAgreement, agent)
+        this.towardAgent = towardAgent
+        this.protocol = sharingAgreement.protocol
+        this.constraints = sharingAgreement.constraints
+        this.maxDelay = sharingAgreement.maxDelay
+    }
+
 }

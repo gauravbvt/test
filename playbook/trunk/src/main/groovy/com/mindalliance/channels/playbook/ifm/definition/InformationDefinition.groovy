@@ -50,8 +50,18 @@ class InformationDefinition extends Definition {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    boolean narrows(MatchingDomain matchingDomain) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    boolean implies(MatchingDomain matchingDomain) {
+        InformationDefinition other = (InformationDefinition)matchingDomain
+        if (matchingDomain.matchesAll()) return true
+        if (this.matchesAll()) return false // this matchesAll and other does not match all
+        if (!eventSpec.implies(other.eventSpec)) return false
+        if (!sourceAgentSpec.implies(other.sourceAgentSpec)) return false
+        // all of the other's event types must be implied by one of mine
+        if (other.eventTypes && !other.eventTypes.every {oet-> eventTypes.any {et -> et.implies(oet)}}) return false
+        // all of the other's EOIs match my EOIs
+        if (other.elementsOfInformation && !other.elementsOfInformation.every {oeoi ->
+                elementsOfInformation.any {eoi -> eoi.matches(oeoi)}}) return false
+        return true 
     }
 
 }

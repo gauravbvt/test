@@ -1,0 +1,84 @@
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.ref.*
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
+import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.sharing.*
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.analysis.profile.*
+import com.mindalliance.channels.playbook.analysis.compliance.*
+import java.util.*
+
+### Information flow issues
+
+# Resource can not be contacted
+rule "no contact info"
+    agenda-group "issues"
+    when
+        $resource: Resource(eval(contactInfos.isEmpty()))
+    then
+        inferFrom(drools, $resource, new Issue($resource, $resource, "no contact"), $resource + " has no contact info.");
+    end
+
+# Resource has no access protocol to satisfy a N2K
+rule "no access protocol for need to know" // you need to know X but have no protocol for being notified of X by trusted sources
+    agenda-group "issues"
+    when
+        $n2k: NeedToKnow($agent_id:agent.id, $need_infoSpec:informationNeed.informationSpec)
+        $resource: Resource(id == $agent_id, $access:access)
+        // resource has no access protocol to cover the kind of information needed
+        not( exists (SharingProtocol($infoSpec:informationSpec) from $access
+                     && eval($infoSpec.covers((InformationDefinition)$need_infoSpec)) // infoSpec of need covered by infoSpec of protocol
+                    )
+           )
+    then
+        inferFrom(drools, $n2k, new Issue($resource, $n2k.getCause(), "missing protocol"), $resource + " has no access protocol for " + $n2k);
+    end
+
+# Resource shares without defined agreement with target organization
+rule "sharing without commitment"
+    agenda-group "issues"
+    when
+        // there is a sharing act such that...
+        $sharing: SharingAct($playbook:playbook, $agent:actorAgent, $target:targetAgent, $info:information)
+        // there is no prior commitment (from SharingAgreement or SharingCommitment) ...
+        not (exists ( Commitment(playbook == $playbook, agent == $agent, $toward:towardAgent, $infoSpec:protocol.informationSpec,
+                                 eval(start.isShorterThan($sharing.startTime())))
+                      //  to the target or its organization
+                      and (eval($target == $toward) or (OrganizationResource(eval(id == $target.getId()), $org_id:organization.id) && eval($org_id == $toward)))
+                      // for the kind of information shared
+                      and eval( ((InformationDefinition)$infoSpec).matches($info, $sharing) )
+                      // TODO -- does not deal with whether contact specs in protocol match non-org target when commitment is with an organization
+                    )
+            )
+    then
+        inferFrom(drools, $sharing, new Issue($sharing, $sharing, "sharing without commitment"), "Sharing does not relate to a commitment.");
+    end
+
+# Unsatisfied critical task information need
+rule "unsatisfied task critical need to know"
+    agenda-group "issues"
+    when
+        // when there is a critical information need of a task...
+        $n2k:NeedToKnow($playbook:playbook, $agent:agent, cause.type == "Task", $need:informationNeed, eval($need.isCritical()), $end:end)
+        // for which there is no timely, matching believable knowledge   -- TODO -- what about accumulated beliefs?
+        not ( exists ( Belief(playbook == $playbook, agent == $agent, $know:know)
+                       and Know(eval($need.getInformationSpec().matches(information, $n2k.getAct())), eval(start.isShorterThan($end)))
+                       // TODO - does not deal with info TTL
+                     )
+            )
+    then
+    end
+
+# Non-compliance to commitment
+
+# Non-compliance to policy
+
+# Missed opportunity to share even though no known restriction
+
+# Information needlessly transmitted

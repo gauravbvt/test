@@ -11,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: Jul 7, 2008
  * Time: 8:13:10 PM
  */
-class Belief extends ProfileElement {
+class Belief extends ProfileElement {    // TODO -- belief should accumulate trustworthy knows instead
 
     Know know
 

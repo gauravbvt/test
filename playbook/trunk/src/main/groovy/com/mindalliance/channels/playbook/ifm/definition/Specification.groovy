@@ -87,18 +87,18 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
         MatchResult result = match(bean, informationAct)
         return result.matched;
     }
-
+    
     // A narrows B if and only if any instance matching A also matches B (A defines an equal or smaller matching domain)
     // iow: A's matching domain is a subset of B's matching domain
-    boolean narrows(MatchingDomain matchingDomain) {
+    boolean implies(MatchingDomain matchingDomain) {
         if (matchingDomain.class != this.class) throw new IllegalArgumentException("Expecting a ${this.class.name}")
         Specification specification = (Specification)matchingDomain
         if (matchesAll() && specification.matchesAll()) return true // both define a universal matching domain
         if (negated != specification.negated) return false
         if (negated)
-            return narrowsNegated(specification)
+            return impliesNegated(specification)
         else
-            return narrowsAffirmed(specification)
+            return impliesAffirmed(specification)
     }
 
     // END DEFINITION
@@ -204,8 +204,8 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     /*
         (not A) subset of (not B) <=> B subset A
     */
-    private boolean narrowsNegated(Specification specification) {
-        return specification.narrowsAffirmed(this)
+    private boolean impliesNegated(Specification specification) {
+        return specification.impliesAffirmed(this)
     }
 
     /*
@@ -213,10 +213,10 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
             enumeration is a subset
             AND all definitions narrow a specification's description  (the described matching domain is a subset of specification's described matching domain)
      */
-    private boolean narrowsAffirmed(Specification specification) {
+    private boolean impliesAffirmed(Specification specification) {
         if (specification.matchesAll()) return true // specification "defines" a universal matching domain
         if (!enumeration.minus(specification.enumeration).isEmpty()) return false // if narrowing specification's enumeration is not a subset, then it is not narrowing
-        if (!definitions.every {d -> specification.definitions.any {other -> d.narrows(other)}}) return false
+        if (!definitions.every {d -> specification.definitions.any {other -> d.implies(other)}}) return false
         return true
     }
 

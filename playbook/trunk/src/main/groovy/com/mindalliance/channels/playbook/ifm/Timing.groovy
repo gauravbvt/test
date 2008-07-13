@@ -83,4 +83,8 @@ class Timing extends BeanImpl implements Defineable {
         }
         return text
     }
+
+    boolean isShorterOrEqualTo(Timing other) {
+        return !other.duration.isLongerThan(this.duration)
+    }
 }

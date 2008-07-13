@@ -23,7 +23,7 @@ class LocationDefinition extends Definition {
     Ref placeType               // classification -- if set the location must be a place of this type
     boolean negated = false // if affirmed, all tests must succeed. if negated, all tests must fail
     boolean byGeoLocation = false // specified by given geolocation
-    boolean withinGeoLocation = true  // else nearby
+    boolean withinGeoLocation = true  // within else nearby
     GeoLocation geoLocation = new GeoLocation()
     boolean byJurisdiction = false // specified by a jurisdiction
     boolean withinJurisdiction = true  // else nearby
@@ -259,8 +259,57 @@ class LocationDefinition extends Definition {
         return null;  // TODO
     }
 
-    boolean narrows(MatchingDomain matchingDomain) {
-        return false;  // TODO
+    boolean implies(MatchingDomain matchingDomain) {
+        LocationDefinition other = (LocationDefinition)matchingDomain
+        // Must compare apples with apples
+        if (locationIsAPlace != other.locationIsAPlace) return false
+        if (placeType && !placeType.isFresh()) return false
+        if (negated != other.negated) return false
+        if (byGeoLocation != other.byGeoLocation) return false
+        if (byJurisdiction != other.byJurisdiction) return false
+        if (byProximity != other.byProximity) return false
+        if (withinProximity != other.withinProximity) return false
+        if (negated) { // then reverse test
+            return other.doesImply(this)
+        }
+        else {
+            return this.doesImply(other)
+        }
     }
+
+    private boolean doesImply(LocationDefinition other) {
+        if (other.matchesAll()) return true
+        if (locationIsAPlace) {
+            if (other.placeType as boolean && (!placeType as boolean || !placeType.implies(other.placeType))) return false
+        }
+        if (byGeoLocation) {
+            if (!geoLocation.isWithin(other.geoLocation)) return false
+        }
+        if (byJurisdiction) {
+            if (!jurisdictionable as boolean || other.jurisdictionable as boolean) return false
+            if (!jurisdictionable.jurisdiction.effectiveGeoLocation.isWithin(other.jurisdictionable.jurisdiction.effectiveGeoLocation)) return false
+        }
+        if (byProximity) {
+            if (other.proximityAreaType as boolean) {
+                if (!proximityAreaType as boolean || !proximityAreaType.implies(other.proximityAreaType)) return false
+            }
+            if (other.proximityPlaceType as boolean) {
+                if (!proximityPlaceType as boolean || !proximityPlaceType.implies(other.proximityPlaceType)) return false
+            }
+            if (other.proximalPlace as boolean) {
+                if (!proximalPlace as boolean || !proximalPlace.isWithin(other.proximalPlace)) return false
+            }
+            if (other.proximalLocatable as boolean) {
+                if (!proximalLocatable as boolean || !proximalLocatable.location.isWithin(other.proximalLocatable.location)) return false
+            }
+            if (other.proximalJurisdictionable as boolean) {
+                 if (!proximalJurisdictionable as boolean || !proximalJurisdictionable.jurisdiction.isWithin(other.proximalJurisdictionable.jurisdiction)) return false
+             }
+        }
+        return true
+    }
+
+
+
 
 }

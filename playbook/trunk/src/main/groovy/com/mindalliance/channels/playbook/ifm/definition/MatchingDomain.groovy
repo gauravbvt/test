@@ -20,6 +20,6 @@ interface MatchingDomain {
     boolean matches(Bean bean, InformationAct informationAct)
     MatchResult match(Bean bean, InformationAct informationAct) // stop matching after first failure
     MatchResult fullMatch(Bean bean, InformationAct informationAct) // keep matching after failure (gather all failures)   
-    boolean narrows(MatchingDomain matchingDomain) // defines a matching domain that is a subset of another
+    boolean implies(MatchingDomain matchingDomain) //
     String getSummary()
 }

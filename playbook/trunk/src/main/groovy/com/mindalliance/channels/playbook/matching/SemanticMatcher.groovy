@@ -63,6 +63,11 @@ class SemanticMatcher {
        return sm
     }
 
+    static boolean matches(String text, String otherText, Level minLevel) {
+        Level level = getInstance().semanticProximity(text, otherText)
+        return level >= minLevel
+    }
+
     Level semanticProximity(String text, String otherText) {
         if (text.trim().size() == 0 || otherText.trim().size() == 0) return Level.NONE
         logger.info("==== Matching: [$text] and [$otherText]")

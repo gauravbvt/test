@@ -45,8 +45,12 @@ class RelationshipDefinition extends Definition {
         return null;  // TODO
     }
 
-    boolean narrows(MatchingDomain matchingDomain) {
-        return false;  // TODO
+    boolean implies(MatchingDomain matchingDomain) {
+        RelationshipDefinition other = (RelationshipDefinition)matchingDomain
+        if (other.matchesAll()) return true
+        if (other.relationshipName && !SemanticMatcher.matches(relationshipName, other.relationshipName, Level.HIGH)) return false
+        if (!withAgentSpecification.implies(other.withAgentSpecification)) return false
+        return true;
     }
 
 }

@@ -16,14 +16,14 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
 class EventDefinition extends Definition {
 
     LocationDefinition locationDefinition = new LocationDefinition()
-    List<EventSpecification> causeEventSpecs = []  // ORed
+    EventSpecification causeEventSpec = new EventSpecification()
 
     Class<? extends Bean> getMatchingDomainClass() {
         return Event.class
     }
 
     boolean matchesAll() {
-        return locationDefinition.matchesAll() && !causeEventSpecs
+        return locationDefinition.matchesAll() && causeEventSpec.matchesAll()
     }
 
     MatchResult match(Bean bean, InformationAct informationAct) {
@@ -31,11 +31,9 @@ class EventDefinition extends Definition {
         if (!locationDefinition.matches(info.event.deref(), informationAct)) {
             return new MatchResult(matched:false, failures: ["The location of the event in $info does not match"])
         }
-        if (causeEventSpecs) {
-            Ref trigger = info.event.cause.trigger
-            if (trigger as boolean && !causeEventSpecs.any {ces -> ces.matches((Event)trigger.deref(), informationAct)}) {
-                return new MatchResult(matched:false, failures: ["The cause of the event in $info does not match"])
-            }
+        Ref trigger = info.event.cause.trigger
+        if (trigger as boolean && !causeEventSpec.matches((Event)trigger.deref(), informationAct)) {
+             return new MatchResult(matched:false, failures: ["The cause of the event in $info does not match"])
         }
         return new MatchResult(matched:true)
     }
@@ -44,8 +42,12 @@ class EventDefinition extends Definition {
         return null;  // TODO
     }
 
-    boolean narrows(MatchingDomain matchingDomain) {
-        return false;  // TODO
+    boolean implies(MatchingDomain matchingDomain) {
+        EventDefinition other = (EventDefinition)matchingDomain
+        if (other.matchesAll()) return true
+        if (!locationDefinition.implies(other.locationDefinition)) return false
+        if (!causeEventSpec.implies(other.causeEventSpec)) return false
+        return true
     }
 
 }

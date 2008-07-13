@@ -299,7 +299,7 @@ rule "n2k from assignment"
 rule "commitments from sharing agreement" // add Commitments from SharingAgreements in each playbook
     agenda-group "profiles"
     when
-        $agreement: SharingAgreement($source:source, $recipient:recipient, $protocol:protocol, $constraints:constraints)
+        $agreement: SharingAgreement($source:source, $recipient:recipient)
         not (exists Invalid(element == $agreement))
         $playbook: Playbook()
         not (exists Invalid(element == $playbook))
@@ -307,16 +307,19 @@ rule "commitments from sharing agreement" // add Commitments from SharingAgreeme
         inferFrom(drools, $agreement, new Commitment($playbook, $agreement), "Permanent commitment from sharing agreement.");
     end
 
-rule "commitments from sharing agreement via organization" // add Commitments from SharingAgreements for each resource in each playbook
+rule "commitments from sharing agreement via organization" // add Commitments in each playbook from SharingAgreements for each resource in organization
     agenda-group "profiles"
     when
-        $agreement: SharingAgreement($sourceId:source.id, $recipient:recipient, $protocol:protocol, $constraints:constraints)
-
+        $agreement: SharingAgreement($source_id:source.id, $recipient:recipient)
         not (exists Invalid(element == $agreement))
+        $organization: Organization(id == $source_id)
+        not (exists Invalid(element == $organization))
+        $resource: OrganizationResource(organization.id == $source_id)
+        not (exists Invalid(element == $resource))
         $playbook: Playbook()
         not (exists Invalid(element == $playbook))
     then
-        inferFrom(drools, $agreement, new Commitment($playbook, $agreement), "Permanent commitment from sharing agreement via organization.");
+        inferFrom(drools, $agreement, new Commitment($playbook, $resource.getReference(), $recipient, $agreement), "Permanent commitment from sharing agreement via organization.");
     end
 
 

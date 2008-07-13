@@ -158,7 +158,7 @@ class InfoFlow extends PlaybookGraph {
             }
          }
          else {
-             List<Ref> refs = need.informationSpec.eventSpec.definitions.causeEventSpecs.enumeration
+             List<Ref> refs = need.informationSpec.eventSpec.definitions.causeEventSpec.enumeration
              refs.flatten().each {ref ->
                  if (ref) {
                      Event causeOfSubject = (Event)ref.deref()

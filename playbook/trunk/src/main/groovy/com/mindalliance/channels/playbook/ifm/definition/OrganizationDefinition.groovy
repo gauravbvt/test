@@ -44,8 +44,14 @@ class OrganizationDefinition extends Definition {
         return null;  // TODO
     }
 
-    boolean narrows(MatchingDomain matchingDomain) {
-        return false;  // TODO
+    boolean implies(MatchingDomain matchingDomain) {
+        OrganizationDefinition other = (OrganizationDefinition)matchingDomain
+        if (other.matchesAll()) return true
+        // all of the other's organization types must be implied by one of mine
+        if (other.organizationTypes && !other.organizationTypes.every {oot-> organizationTypes.any {ot -> ot.implies(oot)}}) return false
+        if (!locationDefinition.implies(other.locationDefinition)) return false
+        if (!jurisdictionDefinition.implies(other.jurisdictionDefinition)) return false
+        return true
     }
 
 }

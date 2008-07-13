@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.analysis.profile
 import com.mindalliance.channels.playbook.ifm.Responsibility
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

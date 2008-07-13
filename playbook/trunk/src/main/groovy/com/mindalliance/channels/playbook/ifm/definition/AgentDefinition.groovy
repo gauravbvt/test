@@ -25,15 +25,15 @@ class AgentDefinition extends Definition { // Definition of a kind of agent
     LocationDefinition jurisdictionDefinition = new LocationDefinition() // applies only if agent has a jurisdiction
     List<RelationshipDefinition> relationshipDefinitions = []  // ORed
 
-    public Class<? extends Bean> getMatchingDomainClass() {
+    Class<? extends Bean> getMatchingDomainClass() {
         return Agent.class; 
     }
 
-    public boolean matchesAll() {
+    boolean matchesAll() {
         return roles.isEmpty() && organizationSpec.matchesAll() && locationDefinition.matchesAll() && jurisdictionSpecification.matchesAll() && relationshipDefinitions.isEmpty()
     }
 
-    public MatchResult match(Bean bean, InformationAct informationAct) {
+    MatchResult match(Bean bean, InformationAct informationAct) {
         Agent agent = (Agent)bean
         if (!roles.every {srole -> agent.roles.any {role -> role.implies(srole)}}) {  // if not all of the prescribed roles is matched at least one of the agent's roles, then fail
             return new MatchResult(matched:false, failures:["$agent does not match all specified roles"])
@@ -70,12 +70,22 @@ class AgentDefinition extends Definition { // Definition of a kind of agent
         return new MatchResult(matched:true)
     }
 
-    public MatchResult fullMatch(Bean bean, InformationAct informationAct) {
+    boolean implies(MatchingDomain matchingDomain) {
+        AgentDefinition other = (AgentDefinition)matchingDomain
+        if (other.matchesAll()) return true
+        // all roles in others implied by a role in this
+        if (other.roles && !other.roles.every{orl -> roles.any{rl-> rl.implies(orl)}}) return false
+        if (!organizationSpec.implies(other.organizationSpec)) return false
+        if (!locationDefinition.implies (other.locationDefinition)) return false
+        if (!jurisdictionDefinition.implies (other.jurisdictionDefinition)) return false
+        if (other.relationshipDefinitions && !other.relationshipDefinitions.every{ord ->
+                relationshipDefinitions.any{rd -> rd.implies(ord)}}) return false
+        return true;  
+    }
+
+    MatchResult fullMatch(Bean bean, InformationAct informationAct) {
         return null;  // TODO
     }
 
-    public boolean narrows(MatchingDomain matchingDomain) {
-        return false;  // TODO
-    }
 
 }

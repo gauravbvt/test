@@ -47,11 +47,17 @@ class TaskDefinition extends Definition {
     }
 
     MatchResult fullMatch(Bean bean, InformationAct informationAct) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;  // TODO
     }
 
-    boolean narrows(MatchingDomain matchingDomain) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    boolean implies(MatchingDomain matchingDomain) {
+        TaskDefinition other = (TaskDefinition)matchingDomain
+        if (other.matchesAll()) return true
+        if (other.taskTypes && !other.taskTypes.every{ott -> taskTypes.any{tt-> tt.implies(ott)}}) return false
+        if (other.specificPurposes && !other.specificPurposes.every{osp ->
+                specificPurposes.any{sp -> SemanticMatcher.matches(sp, osp, Level.HIGH) }}) return false
+        if (other.responseTiming.isDefined() && !responseTiming.isShorterOrEqualTo(other.responseTiming)) return false
+        return true
     }
 
 }

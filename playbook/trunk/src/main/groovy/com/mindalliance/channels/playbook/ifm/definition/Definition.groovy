@@ -40,4 +40,8 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
       return RefUtils.summarize(description ?: 'No description', MAX_SUMMARY_SIZE);
     }
 
+    boolean covers(MatchingDomain matchingDomain) {
+        return matchesAll() || matchingDomain.implies(this)
+    }
+
 }
