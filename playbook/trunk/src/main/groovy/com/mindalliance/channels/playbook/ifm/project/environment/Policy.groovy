@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
+import com.mindalliance.channels.playbook.ifm.playbook.SharingAct
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,6 +16,12 @@ import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 * Time: 12:38:52 PM
 */
 class Policy extends ProjectElement implements Named, Described {
+
+    // restricted: specified parties *may* share specified info (source -> recipient),
+    //             but only over any of listed media (any if none given) and only for one of described purposes (any if none given)
+    // required: specified parties *must* share specified info, but only ....
+    // forbidden: specified parties are forbidden to share specified info,
+    //            except for listed purposes (if any given) and except for listed media (if any given)
 
     static final public List<String> edictKinds = ['forbidden', 'required', 'restricted']
 
@@ -31,23 +38,35 @@ class Policy extends ProjectElement implements Named, Described {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['edictKinds','forbidden','restricted','required'])
+        return (List<String>)(super.transientProperties() + ['edictKinds','forbidden','restricted','required', 'allowed'])
     }
 
     static List<String> getEdictKinds() {
         return  edictKinds
     }
 
-    boolean isForbidden() {
+    boolean isForbidding() {
         return edict == 'forbidden'
     }
 
-    boolean isRestricted() {
+    boolean isRestricting() {
          return edict == 'restricted'
      }
 
     boolean isRequired() {
          return edict == 'required'
-     }
+    }
+
+    boolean isAllowing() {
+        return isRestricting() || isRequiring()
+    }
+
+    boolean appliesTo(SharingAct sharingAct) {
+        return false // TODO
+    }
+
+    boolean allRestrictionsObeyed(SharingAct sharingAct) {
+        return false // TODO
+    }
 
 }

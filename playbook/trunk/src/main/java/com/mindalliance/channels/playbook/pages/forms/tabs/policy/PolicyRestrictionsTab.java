@@ -10,7 +10,6 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -32,10 +31,12 @@ import java.util.ArrayList;
 public class PolicyRestrictionsTab extends AbstractFormTab {
 
     protected Policy policy;
-    protected Label notApplicableLabel;
-    protected WebMarkupContainer restrictedDiv;
     protected WebMarkupContainer mediumTypesDiv;
     protected AjaxCheckBox anyMediumField;
+    protected Label mediumLegendLabel;
+    protected Label anyMediumLabel;
+    protected Label purposesLegendLabel;
+    protected Label anyPurposeLabel;
     protected DynamicFilterTree mediumTypesTree;
     protected WebMarkupContainer purposesDiv;
     protected AjaxCheckBox anyPurposeField;
@@ -48,28 +49,25 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
     protected void load() {
         super.load();
         policy = (Policy) getElement().deref();
-        notApplicableLabel = new Label("notApplicable", new Model("Not applicable"));
-        addReplaceable(notApplicableLabel);
-        restrictedDiv = new WebMarkupContainer("restrictedDiv");
-        addReplaceable(restrictedDiv);
-        setRestrictedVisibility();
-        mediumTypesDiv = new WebMarkupContainer("mediumTypesDiv");
-        addReplaceableTo(mediumTypesDiv, restrictedDiv);
+        setLabels(policy);
+        addReplaceable(mediumLegendLabel);
         anyMediumField = new AjaxCheckBox("anyMedium", new Model(policy.getMediumTypes().isEmpty())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean any = (Boolean) anyMediumField.getModelObject();
                 if (any) {
                     RefUtils.set(policy, "mediumTypes", new ArrayList<Ref>());
                     mediumTypesDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-                }
-                else {
+                } else {
                     mediumTypesDiv.add(new AttributeModifier("style", true, new Model("display:block")));
                 }
                 target.addComponent(mediumTypesDiv);
             }
         };
-        setMediumTypesVisibility();
-        addReplaceableTo(anyMediumField, restrictedDiv);
+        addReplaceable(anyMediumField);
+        addReplaceable(anyMediumLabel);
+        mediumTypesDiv = new WebMarkupContainer("mediumTypesDiv");
+        addReplaceable(mediumTypesDiv);
+        setVisibility(mediumTypesDiv, !policy.getMediumTypes().isEmpty());
         mediumTypesTree = new DynamicFilterTree("mediumTypes", new RefPropertyModel(getElement(), "mediumTypes"),
                 new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
@@ -78,50 +76,38 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
             }
         };
         addReplaceableTo(mediumTypesTree, mediumTypesDiv);
-        purposesDiv = new WebMarkupContainer("purposesDiv");
-        addReplaceableTo(purposesDiv, restrictedDiv);
-        anyPurposeField = new AjaxCheckBox("anyPurpose", new Model(true)) {
+        addReplaceable(purposesLegendLabel);
+        anyPurposeField = new AjaxCheckBox("anyPurpose", new Model(((List<Ref>) RefUtils.get(policy, "purposes")).isEmpty())) {
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean any = (Boolean) anyPurposeField.getModelObject();
                 if (any) {
                     RefUtils.set(policy, "purposes", new ArrayList<String>());
-                    purposesDiv.add(new AttributeModifier("style", true, new Model("display:none")));
                 }
-                else {
-                    purposesDiv.add(new AttributeModifier("style", true, new Model("display:block")));
-                }
-                target.addComponent(purposesDiv);
+                setVisibility(purposesDiv, !any, target);
             }
         };
-        setPurposesVisibility();
-        addReplaceableTo(anyPurposeField, restrictedDiv);
+        addReplaceable(anyPurposeLabel);
+        purposesDiv = new WebMarkupContainer("purposesDiv");
+        addReplaceable(purposesDiv);
+        setVisibility(purposesDiv, !policy.getPurposes().isEmpty());
+        addReplaceable(anyPurposeField);
         purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
-                new RefQueryModel(getProject(), new Query("findAllPurposes")));       // TODO getProject(), not Channels.instance()
+                new RefQueryModel(getProject(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
     }
 
-    private void setMediumTypesVisibility() {
-        if (policy.getMediumTypes().isEmpty()) {
-            mediumTypesDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+    private void setLabels(Policy policy) {
+        if (policy.isAllowing()) {
+            mediumLegendLabel = new Label("mediumLegend","Sharing is allowed only when using one of these media");
+            anyMediumLabel = new Label("anyMediumLabel","no restriction");
+            purposesLegendLabel = new Label("purposesLegend","and only for one of these purposes");
+            anyPurposeLabel = new Label("anyPurposeLabel","no restriction");
         } else {
-            mediumTypesDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+            mediumLegendLabel = new Label("mediumLegend","Sharing is forbidden except when using any of these media");
+            anyMediumLabel = new Label("anyMediumLabel","no exception");
+            purposesLegendLabel = new Label("purposesLegend","and except for any of these purposes");
+            anyPurposeLabel = new Label("anyPurposeLabel","no exception");
         }
     }
 
-
-    private void setPurposesVisibility() {
-        if (policy.getPurposes().isEmpty()) {
-            purposesDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-        } else {
-            purposesDiv.add(new AttributeModifier("style", true, new Model("display:block")));
-        }
-    }
-
-    private void setRestrictedVisibility() {
-        if (policy.isForbidden()) {
-            restrictedDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-        } else {
-            notApplicableLabel.add(new AttributeModifier("style", true, new Model("display:none")));
-        }
-    }
 }

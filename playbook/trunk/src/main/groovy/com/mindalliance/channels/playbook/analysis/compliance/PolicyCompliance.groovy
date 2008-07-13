@@ -13,9 +13,9 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 */
 class PolicyCompliance extends Compliance {
 
-    Ref policy
+    Policy policy
 
-        PolicyCompliance(boolean compliant, Ref agent, Referenceable complying, String tag, Ref policy) {
+        PolicyCompliance(boolean compliant, Ref agent, Referenceable complying, String tag, Policy policy) {
         super(compliant, agent, complying, tag)
         this.policy = policy
     }

@@ -15,23 +15,24 @@ import java.util.*
 
 ### Compliance by agents to Commitments and Policies
 
-# Broken commitment to share - you knew something you agreed to notify me of but you did not
+# Broken commitment to share - you knew something you agreed to notify me about but you did not
+// TODO -- take into account accumulation of believed knowledge to where it matches infoSpec of sharing agreement
+// TODO -- take into account accumulatin of insight about what other agent knows
 rule "broken commitment to notify"
     agenda-group "compliance"
     when
         // agent has commitment to share with another agent
-        $commitment: Commitment($agent:agent, $toward:towardAgent, $infoSpec:protocol.informationSpec, protocol.delivery == "notify")
+        $commitment: Commitment($agent:agent, $toward:towardAgent, $infoSpec:protocol.informationSpec, eval(protocol.isPush()))
         Belief(agent == $agent, $know_id: id) // and agent believes in information it knows
         $know: Know(id == $know_id, $info:information)
         eval(((InformationDefinition)$infoSpec).matches($info, $know.getAct()))  // that matches what agent committed to share
-        // and no info comprising the info believed and committed to be shared has been transferred
+        // and no info comprised of the info believed and committed to be shared has been transferred
         not (exists ( $transfer:InformationTransfer(actorAgent == $agent, targetAgent == $toward, $t_info:information)
-                      && eval(((InformationDefinition)$infoSpec).matches($t_info, $transfer))
                       && eval($t_info.isComprisedIn($info))
                     )
             )
     then
-        inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "failure to notify", $commitment), "Failure to notify as per commitment.");
+        inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "failure to notify", $commitment), "Complete failure to notify as per commitment.");
     end
 
 # Committed-to notification done but not in time
@@ -44,9 +45,10 @@ rule "late notification"
         Belief(agent == $agent, $know_id: id) // agent believes in information it knows
         $know: Know(id == $know_id, $info:information)
         eval(((InformationDefinition)$infoSpec).matches($info, $know.getAct()))  // that matches what agent committed to share
-        // any info comprising the info believed and committed to sharing has been transferred after max delay
+        // info comprising the info believed and committed to sharing has been transferred
         $notifications: ArrayList(size > 0)
                         from collect(InformationTransfer(actorAgent == $agent, targetAgent == $toward, $t_info:information, eval($t_info.isComprisedIn($info))))
+        // but none before max delay
         not ( exists (
                 $notification: InformationTransfer() from $notifications
                 && eval(($notification.startTime().minus($know.getStart())).isShorterThan(((Timing)$maxDelay).getDuration()))
@@ -68,7 +70,16 @@ rule "late notification"
 
 # Propagating private information
 
-# Sharing information according to policy
+# Sharing information according to policy in effect
+rule "sharing obeys policy"
+    agenda-group "compliance"
+    when
+        $sharing: SharingAct($agent:actorAgent, $target:targetAgent, $info:information)
+        $policy: Policy(effective == true, allowing == true)
+        eval($policy.appliesTo($sharing) && $policy.allRestrictionsObeyed($sharing))     // TODO - implement tests
+    then
+       inferFrom(drools, $sharing, new PolicyCompliance(true, $agent, $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
+    end
 
 # Sharing information in contradiction of policy
 
