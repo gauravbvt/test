@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
 import com.mindalliance.channels.playbook.analysis.compliance.*
 import java.util.*
+import com.mindalliance.channels.playbook.support.drools.*
 
 ### Compliance by agents to Commitments and Policies
 
@@ -32,7 +33,7 @@ rule "broken commitment to notify"
                     )
             )
     then
-        inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "failure to notify", $commitment), "Complete failure to notify as per commitment.");
+        RuleHelper.inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "failure to notify", $commitment), "Complete failure to notify as per commitment.");
     end
 
 # Committed-to notification done but not in time
@@ -55,7 +56,7 @@ rule "late notification"
                 )
             )
     then
-        inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "late to notify", $commitment), "Failure to notify on time as per commitment.");
+        RuleHelper.inferFrom(drools, $commitment, new CommitmentCompliance(false, $agent, null, "late to notify", $commitment), "Failure to notify on time as per commitment.");
     end
 
 # Notified on time
@@ -78,7 +79,7 @@ rule "sharing obeys policy"
         $policy: Policy(effective == true, allowing == true)
         eval($policy.appliesTo($sharing) && $policy.allRestrictionsObeyed($sharing))     // TODO - implement tests
     then
-       inferFrom(drools, $sharing, new PolicyCompliance(true, $agent, $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
+       RuleHelper.inferFrom(drools, $sharing, new PolicyCompliance(true, $agent, $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
     end
 
 # Sharing information in contradiction of policy

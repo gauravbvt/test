@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.ifm.model.*
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
 import java.util.*
+import com.mindalliance.channels.playbook.support.drools.*
 
 ### Inferring an agent's beliefs -- a qualification of what the agent knows
 
@@ -21,7 +22,7 @@ rule "agent believes itself"
     when
         $know: Know($agent:agent, information.sourceAgents contains $agent)
     then
-        inferFrom(drools, $know, new Belief($know), "Agent believes known information for which agent is source.");
+        RuleHelper.inferFrom(drools, $know, new Belief($know), "Agent believes known information for which agent is source.");
     end
 
 # If agent knows something and may not require a trusted source for it, then agent believes it
@@ -37,7 +38,7 @@ rule "agent believes any source"
                 && eval(((InformationDefinition)$infoSpec).matches($info, $n2k.getAct())) // and matches info
                 )
     then
-        inferFrom(drools, $know, new Belief($know), "Agent believes known information because agent needs it and would trust any source about it.");
+        RuleHelper.inferFrom(drools, $know, new Belief($know), "Agent believes known information because agent needs it and would trust any source about it.");
     end
 
 # If agent knows information from a trusted source (even if contradicted by another trusted source), then agent believes it
@@ -54,7 +55,7 @@ rule "agent believes trusted source"
                  && eval($trust.getInformationSpec().matches($info, $know.getAct()))  // for this kind of information
                 )
     then
-        inferFrom(drools, $know, new Belief($know), "Agent believes known information from trusted source.");
+        RuleHelper.inferFrom(drools, $know, new Belief($know), "Agent believes known information from trusted source.");
     end
 
 
@@ -69,7 +70,7 @@ rule "agent trusts anyone for specified info"
         $n2k:NeedToKnow($agent:agent,  $infoSpec:informationNeed.informationSpec, $sourceSpec:informationNeed.informationSpec.sourceAgentSpec)
         eval( ((AgentSpecification)$sourceSpec).matchesAll() )  // any source accepted
     then
-        inferFrom(drools, $n2k, new Trust($n2k, $agent, (InformationDefinition)$infoSpec), "Agent accepts specified info from any source");
+        RuleHelper.inferFrom(drools, $n2k, new Trust($n2k, $agent, (InformationDefinition)$infoSpec), "Agent accepts specified info from any source");
     end
 
 
@@ -80,6 +81,6 @@ rule "agent trusts requested source for matching info"
         $n2k:NeedToKnow($agent:agent,  $infoSpec:informationNeed.informationSpec, $sourceSpec:informationNeed.informationSpec.sourceAgentSpec)
         eval( !((AgentSpecification)$sourceSpec).matchesAll() )  // not any source accepted
     then
-        inferFrom(drools, $n2k, new Trust($n2k, $agent, (InformationDefinition)$infoSpec, (AgentSpecification)$sourceSpec), "Agent trusts specified sources for specified info");
+        RuleHelper.inferFrom(drools, $n2k, new Trust($n2k, $agent, (InformationDefinition)$infoSpec, (AgentSpecification)$sourceSpec), "Agent trusts specified sources for specified info");
     end
 

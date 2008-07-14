@@ -4,7 +4,7 @@ import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
-import com.mindalliance.channels.playbook.support.RuleBaseSession
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

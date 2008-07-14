@@ -23,9 +23,10 @@ import com.mindalliance.channels.playbook.graph.GraphVizRenderer
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.support.Level
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.support.RuleBaseSession
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.ref.impl.InferredRef
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.support
+package com.mindalliance.channels.playbook.support.drools
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.

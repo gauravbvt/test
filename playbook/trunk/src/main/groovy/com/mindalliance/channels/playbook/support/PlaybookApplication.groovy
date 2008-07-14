@@ -29,6 +29,7 @@ import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

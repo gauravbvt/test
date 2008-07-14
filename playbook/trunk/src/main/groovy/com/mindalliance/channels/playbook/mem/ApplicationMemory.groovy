@@ -17,8 +17,9 @@ import com.mindalliance.channels.playbook.query.QueryManager
 import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
 import com.mindalliance.channels.playbook.support.PlaybookSession
-import com.mindalliance.channels.playbook.support.RuleBaseSession
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.support.persistence.Mappable
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
