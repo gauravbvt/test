@@ -66,7 +66,7 @@ rule "unsatisfied task critical need to know"
     agenda-group "issues"
     when
         // when there is a critical information need of a task...
-        $n2k:NeedToKnow($playbook:playbook, $agent:agent, cause.type == "Task", $need:informationNeed, eval($need.isCritical()), $end:end)
+        $n2k:NeedToKnow($playbook:playbook, $agent:agent, cause.type == "Task", $task:cause, $need:informationNeed, eval($need.isCritical()), $end:end)
         // for which there is no timely, matching believable knowledge   -- TODO -- what about accumulated beliefs?
         not ( exists ( Belief(playbook == $playbook, agent == $agent, $know:know)
                        and Know(eval($need.getInformationSpec().matches(information, $n2k.getAct())), eval(start.isShorterThan($end)))
@@ -74,6 +74,7 @@ rule "unsatisfied task critical need to know"
                      )
             )
     then
+        RuleHelper.inferFrom(drools, $task, new Issue($task, $task, "task-critical need unmet"), "Critical information need unmet for task.");
     end
 
 # Non-compliance to commitment

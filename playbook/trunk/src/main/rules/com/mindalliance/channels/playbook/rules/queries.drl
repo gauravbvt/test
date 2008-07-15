@@ -1,9 +1,47 @@
-## support for InferredRef::deref()
-query "deref" (String identifier)
-    element : AnalysisElement( id == identifier )
+package com.mindalliance.channels.playbook.rules
+
+import com.mindalliance.channels.playbook.ref.*
+import com.mindalliance.channels.playbook.ifm.*
+import com.mindalliance.channels.playbook.ifm.definition.*
+import com.mindalliance.channels.playbook.ifm.info.*
+import com.mindalliance.channels.playbook.ifm.sharing.*
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.analysis.*
+import com.mindalliance.channels.playbook.analysis.profile.*
+import com.mindalliance.channels.playbook.analysis.compliance.*
+import java.util.*
+import com.mindalliance.channels.playbook.support.drools.*
+
+### support for InferredRef::deref()
+query "deref" (String _id)
+    element : AnalysisElement( id == _id )
 end
 
-## Find all Invalid
+### support for AgentProfile
+
+# Find agent location at start of information act
+query "agentLocation" (String _agent_id, String _act_id)
+    $locality:Locality(agent.id == _agent_id, _location:location)
+    // start before or on start of act and end after or not set
+    // depends on the fact that localities don't overlap for any given agent
+    $act:InformationAct(id == _act_id)
+    eval( RuleHelper.startsDuring($act, $locality) ) // act starts while locality in effect
+end
+
+# Find all links of an agent in effect at the start of an information act
+query "agentLinks" (String _agent_id, String _act_id)
+    _link: Link(agent.id == _agent_id)
+    $act:InformationAct(id == _act_id)
+    eval( RuleHelper.startsDuring($act, _link) ) // act starts while link in effect
+end
+
+
+### support for testing
+
+# Find all Invalid
 query "allInvalids"
     invalid : Invalid()
 end

@@ -71,6 +71,7 @@ class QueryManager implements PropertyChangeListener {
                 findAllSubOrganizations: [Organization.class],
                 // Position
                 findOtherPositionsInOrganization: [Position.class, Organization.class],
+                findAllPersonsInPosition: [Position.class, Person.class],
                 // Playbook
                 findCandidateCauses: [Event.class],
                 findPriorInformationActs: [Event.class],

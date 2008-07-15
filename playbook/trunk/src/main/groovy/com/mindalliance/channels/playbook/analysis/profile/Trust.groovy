@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.analysis.profile
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,13 +17,13 @@ class Trust extends ProfileElement {
     AgentSpecification sourceSpec // if null then agent trusts anyone about information that is matched by info spec
     InformationDefinition informationSpec
 
-    Trust(NeedToKnow n2k, Ref agent, InformationDefinition infoSpec, AgentSpecification sourceSpec) {
+    Trust(NeedToKnow n2k, Agent agent, InformationDefinition infoSpec, AgentSpecification sourceSpec) {
         super(n2k, agent)
         this.informationSpec = infoSpec
         this.sourceSpec = sourceSpec
     }
 
-    Trust(NeedToKnow n2k, Ref agent, InformationDefinition infoSpec) {
+    Trust(NeedToKnow n2k, Agent agent, InformationDefinition infoSpec) {
         super(n2k, agent)
         this.informationSpec = infoSpec
     }

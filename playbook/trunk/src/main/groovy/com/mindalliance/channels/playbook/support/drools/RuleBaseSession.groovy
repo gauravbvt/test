@@ -22,7 +22,8 @@ import org.apache.log4j.Logger
 import org.drools.RuleBaseConfiguration
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import org.drools.QueryResults
-import org.drools.QueryResult;
+import org.drools.QueryResult
+import com.mindalliance.channels.playbook.support.PlaybookApplication;
 
 
 class RuleBaseSession implements Serializable {
@@ -42,6 +43,14 @@ class RuleBaseSession implements Serializable {
     RuleBaseSession(String rulesPackageName) {
         this.rulesPackageName = rulesPackageName
         initialize()
+    }
+
+    static RuleBaseSession current() {
+        return PlaybookApplication.current().ruleBaseSession
+    }
+
+    static List query(String name, List arguments, String binding) {
+        return current().executeQuery(name, arguments, binding)
     }
 
     private void reset() {
@@ -126,10 +135,10 @@ class RuleBaseSession implements Serializable {
     }
 
     Referenceable deref(String id) {
-        List<Referenceable> results = doExecuteQuery("deref", [id], "element")
+        List results = doExecuteQuery("deref", [id], "element")
         if (results) {
             assert results.size() == 1
-            Referenceable element = (AnalysisElement)results[0]
+            Referenceable element = (Referenceable)results[0]
             return element
         }
         else {
@@ -137,19 +146,18 @@ class RuleBaseSession implements Serializable {
         }
     }
 
-    List<Ref> executeQuery(String name, List arguments, String binding) {
-        List<Referenceable> answers = doExecuteQuery(name, arguments, binding)
-        return answers.collect {it.reference}
+    List<Object> executeQuery(String name, List arguments, String binding) {
+        List<Object> answers = doExecuteQuery(name, arguments, binding)
+        return answers
     }
 
-    private List<Referenceable> doExecuteQuery(String name, List arguments, String binding) {
-        List<Referenceable> answers = []
+    private List<Object> doExecuteQuery(String name, List arguments, String binding) {
+        List<Object> answers = []
         Object[] args = arguments as Object[]
         QueryResults results = session.getQueryResults(name, args)
         for (Iterator iter = results.iterator();  iter.hasNext();) {
             QueryResult result = (QueryResult)iter.next()
-            AnalysisElement analysisElement = (AnalysisElement) result.get(binding)
-            answers.add(analysisElement)
+            answers.add(result.get(binding))
         }
         return answers
     }

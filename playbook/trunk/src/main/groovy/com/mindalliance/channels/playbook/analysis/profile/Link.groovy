@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,15 +17,15 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 class Link extends ProfileElement {
 
     String relationshipName
-    Ref toAgent
+    Agent toAgent
 
-    Link(InformationAct act, Ref agent, String relationshipName, Ref toAgent) {
+    Link(InformationAct act, Agent agent, String relationshipName, Agent toAgent) {
         super(act, agent)
         this.relationshipName = relationshipName
         this.toAgent = toAgent
     }
 
-    Link(Referenceable cause, Playbook playbook, Ref agent, String relationshipName, Ref toAgent) {
+    Link(Referenceable cause, Playbook playbook, Agent agent, String relationshipName, Agent toAgent) {
         super(playbook, cause, agent)
         this.relationshipName = relationshipName
         this.toAgent = toAgent

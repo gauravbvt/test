@@ -75,11 +75,11 @@ rule "late notification"
 rule "sharing obeys policy"
     agenda-group "compliance"
     when
-        $sharing: SharingAct($agent:actorAgent, $target:targetAgent, $info:information)
+        $sharing: SharingAct($agent:actorAgent)
         $policy: Policy(effective == true, allowing == true)
         eval($policy.appliesTo($sharing) && $policy.allRestrictionsObeyed($sharing))     // TODO - implement tests
     then
-       RuleHelper.inferFrom(drools, $sharing, new PolicyCompliance(true, $agent, $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
+       RuleHelper.inferFrom(drools, $sharing, new PolicyCompliance(true, (Agent)$agent.deref(), $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
     end
 
 # Sharing information in contradiction of policy

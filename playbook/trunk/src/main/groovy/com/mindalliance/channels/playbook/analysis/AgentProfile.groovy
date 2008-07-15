@@ -4,6 +4,9 @@ import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
+import com.mindalliance.channels.playbook.analysis.profile.Link
+import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,11 +25,24 @@ class AgentProfile {
     }
 
     Location getLocation() {
-        return new Location() // TODO
+        List results = RuleBaseSession.query("agentLocation", [agent.id, informationAct.id], "_location")
+        if (results) {
+            assert results.size() == 1
+            return (Location)results[0]
+        }
+        else {
+            return agent.location
+        }
     }
 
     List<Relationship> getRelationships() {
-        return [] // TODO
-    }
+        List<Relationship> relationships = (List<Relationship>)Query.execute(informationAct.getProject(), "findAllRelationshipsOf", agent.reference)
+        List<Link> results = (List<Link>)RuleBaseSession.query("agentLinks", [agent.id, informationAct.id], "_link")
+        for (Link link : results) {
+            Relationship rel = new Relationship(fromAgent: agent.reference, toAgent:link.toAgent.reference, name:link.relationshipName)
+            relationships.add(rel)
+        }
+        return relationships
+        }
 
 }

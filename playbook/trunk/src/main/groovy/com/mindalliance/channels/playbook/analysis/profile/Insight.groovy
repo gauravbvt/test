@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.analysis.profile
 
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,12 +13,12 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class Insight extends ProfileElement {   // an agent knows a profile element of another agent
 
-    Ref profileElement
+    ProfileElement profileElement
 
-    Insight(InformationAct act, Ref agent, ProfileElement pe) {
+    Insight(InformationAct act, Agent agent, ProfileElement profileElement) {
         super(act, agent)
-        this.profileElement = pe.getReference()
-        end = pe.end
+        this.profileElement = profileElement
+        end = profileElement.end
     }
 
 

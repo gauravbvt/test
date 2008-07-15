@@ -47,8 +47,7 @@ class InferredRef extends RefImpl {
         if (getId() == null) return null
         if (!analysisElement) {
             // query RuleBaseSession for AnalysisElement of same id. If none return null.
-            RuleBaseSession ruleBaseSession = PlaybookApplication.current().ruleBaseSession
-            analysisElement = (AnalysisElement)ruleBaseSession.deref(getId())
+            analysisElement = (AnalysisElement)RuleBaseSession.current().deref(getId())
         }
         return analysisElement
     }

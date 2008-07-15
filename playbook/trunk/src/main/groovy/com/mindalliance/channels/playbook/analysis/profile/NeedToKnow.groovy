@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.info.InformationNeed
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.playbook.Task
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,7 +17,7 @@ class NeedToKnow extends ProfileElement {
 
     InformationNeed informationNeed
 
-    NeedToKnow(InformationAct act, Ref agent, InformationNeed informationNeed) {
+    NeedToKnow(InformationAct act, Agent agent, InformationNeed informationNeed) {
         super(act, agent)
         this.informationNeed = informationNeed
         if (act instanceof Task) { // can not end after task
@@ -31,7 +32,7 @@ class NeedToKnow extends ProfileElement {
         }
     }
 
-    NeedToKnow(Assignment cause, Ref agent, InformationNeed informationNeed) {
+    NeedToKnow(Assignment cause, Agent agent, InformationNeed informationNeed) {
         super(cause, agent)
         this.informationNeed = informationNeed
     }

@@ -20,10 +20,10 @@ class Commitment extends ProfileElement {
 
     SharingProtocol protocol = new SharingProtocol()
     SharingConstraints constraints = new SharingConstraints()
-    Ref towardAgent
+    Agent towardAgent
     Timing maxDelay = new Timing(amount:0)
 
-    Commitment(InformationAct act, Ref agent, Ref towardAgent, SharingProtocol protocol, SharingConstraints constraints) {
+    Commitment(InformationAct act, Agent agent, Agent towardAgent, SharingProtocol protocol, SharingConstraints constraints) {
         super(act, agent)
         this.protocol = protocol
         this.towardAgent = towardAgent
@@ -32,13 +32,13 @@ class Commitment extends ProfileElement {
 
     Commitment(Playbook playbook, SharingAgreement sharingAgreement) {
         super(playbook, sharingAgreement, sharingAgreement.source)
-        this.towardAgent = sharingAgreement.recipient
+        this.towardAgent = (Agent)sharingAgreement.recipient.deref()
         this.protocol = sharingAgreement.protocol
         this.constraints = sharingAgreement.constraints
         this.maxDelay = sharingAgreement.maxDelay
     }
 
-    Commitment(Playbook playbook, Ref agent, Ref towardAgent, SharingAgreement sharingAgreement) {
+    Commitment(Playbook playbook, Agent agent, Agent towardAgent, SharingAgreement sharingAgreement) {
         super(playbook, sharingAgreement, agent)
         this.towardAgent = towardAgent
         this.protocol = sharingAgreement.protocol

@@ -240,6 +240,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                                             new Model((Serializable)getProximityTargetKindChoices()));
         kindOfTargetChoice.add(new AjaxFormComponentUpdatingBehavior("onchange"){
             protected void onUpdate(AjaxRequestTarget target) {
+                targetTree.setModel(new RefQueryModel(this, new Query("getSelectedProximityTarget")));
                 targetTree.setFilter(null);
                 target.addComponent(targetTree);
             }

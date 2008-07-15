@@ -17,7 +17,7 @@ class Know extends ProfileElement {
     Information information
     List<Agent> sources = []
 
-    Know(InformationAct act, Ref agent, Information information) {
+    Know(InformationAct act, Agent agent, Information information) {
         super(act, agent)
         this.information = information
         if (information.timeToLive.isDefined()) {

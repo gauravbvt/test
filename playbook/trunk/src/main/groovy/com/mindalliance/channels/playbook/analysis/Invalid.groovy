@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.analysis
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,10 +13,10 @@ import com.mindalliance.channels.playbook.ref.Ref
  */
 class Invalid extends AnalysisElement {
 
-    Ref element
+    Referenceable element
 
-    Invalid(IfmElement el) {
-        this.element = el.reference
+    Invalid(Referenceable element) {
+        this.element = element
     }
 
     String toString() {

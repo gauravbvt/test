@@ -2,13 +2,13 @@ package com.mindalliance.channels.playbook.analysis.profile
 
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
-import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,17 +19,17 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook
  */
 abstract class ProfileElement extends AnalysisElement {
 
-    Ref playbook
-    Ref agent           // of an agent
+    Playbook playbook
+    Agent agent           // of an agent
     Referenceable cause // cause
     Duration start = new Duration(0)   // at t = time zero + start -- always set
     Duration end     // at t = time zero + end  -- set only if self-terminating
 
     protected ProfileElement() {}
 
-    ProfileElement(PlaybookElement cause, Ref agent) {
+    ProfileElement(PlaybookElement cause, Agent agent) {
         super()
-        this.playbook = cause.playbook
+        this.playbook = (Playbook)cause.playbook.deref()
         this.cause = cause
         this.agent = agent
         if (cause instanceof Event) {
@@ -37,16 +37,16 @@ abstract class ProfileElement extends AnalysisElement {
         }
     }
 
-    ProfileElement(Playbook playbook, Referenceable cause, Ref Agent) {
+    ProfileElement(Playbook playbook, Referenceable cause, Agent Agent) {
         super()
-        this.playbook = playbook.reference
+        this.playbook = playbook
         this.cause = cause
         this.agent = agent
         this.start = new Duration(0)          // starts at T = 0, no end
     }
 
-    ProfileElement (ProfileElement cause, Ref agent) {
-        this.playbook = cause.playbook
+    ProfileElement (ProfileElement cause, Agent agent) {
+        this.playbook = (Playbook)cause.playbook.deref()
         this.agent = agent
         this.start = cause.start
         this.end = cause.end // assumes that it won't outlast its cause
@@ -66,6 +66,10 @@ abstract class ProfileElement extends AnalysisElement {
 
     boolean isTimeLimited() {
         return end != null
+    }
+
+    boolean isForever() {
+        return end == null
     }
 
 }

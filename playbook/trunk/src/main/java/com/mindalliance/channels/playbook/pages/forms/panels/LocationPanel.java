@@ -86,6 +86,7 @@ public class LocationPanel extends AbstractComponentPanel {
             priorGeoLocation = location.getGeoLocation();
             setProperty("geoLocation", new GeoLocation(), target);
             setProperty("place", priorPlace, target);
+            placeTree.setModel(new RefPropertyModel(getElement(), propPath+".place"));
             placeTree.setFilter(null);
             geoLocationPanel.modelChanged();
             target.addComponent(placeTree);
@@ -96,6 +97,7 @@ public class LocationPanel extends AbstractComponentPanel {
             setProperty("geoLocation", priorGeoLocation, target);
             geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
             geoLocationDiv.addOrReplace(geoLocationPanel);
+            placeTree.setModel(new RefPropertyModel(getElement(), propPath+".place"));
             placeTree.setFilter(null);
             target.addComponent(placeTree);
         }
