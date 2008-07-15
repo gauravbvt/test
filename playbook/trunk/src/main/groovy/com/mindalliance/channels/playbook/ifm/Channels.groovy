@@ -105,6 +105,10 @@ class Channels extends IfmElement {
         return [] // TODO - return empty, else inter-project privacy breach
     }
 
+    List<Ref> findAllProjectsOfUser(Ref user) {
+        return (List<Ref>)projects.findAll{project -> project.participations.any{part -> part.user == user}}
+    }
+
     // end queries
 
     static List<Class<?>> adminClasses() {

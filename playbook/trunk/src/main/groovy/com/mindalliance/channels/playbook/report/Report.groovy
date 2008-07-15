@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.Tab
 import groovy.xml.MarkupBuilder
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.User
+import com.mindalliance.channels.playbook.ref.Ref
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,7 +40,7 @@ abstract class Report {
     }
      */
 
-    String build() {
+    String build() { 
         StringWriter writer = new StringWriter()
         MarkupBuilder xml = new MarkupBuilder(writer)
         xml.report {
@@ -65,8 +66,8 @@ abstract class Report {
         }
     }
 
-    private User getUser() {
-        return (User) PlaybookSession.current().getUser().deref()
+    Ref getUser() {
+        return PlaybookSession.current().getUser()
     }
 
     private String getCopyrightNotice() {

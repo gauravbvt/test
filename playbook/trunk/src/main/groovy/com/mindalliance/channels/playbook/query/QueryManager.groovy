@@ -45,7 +45,8 @@ class QueryManager implements PropertyChangeListener {
         dependencies = [     // large-grain dependencies but better than none
                 // Channels
                 findProjectNamed: [Project.class],
-                findUsersNotInProject: [Project.class, User.class],
+                findUsersNotInProject: [Project.class, Participation.class, User.class],
+                findAllProjectsOfUser: [Project.class, Participation.class, User.class],
                 // Channels, Project, PlaybookModel
                 findAllTypes: [ElementType.class],
                 findAllTypesNarrowingAny: [ElementType.class],
