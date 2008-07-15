@@ -19,6 +19,7 @@ import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.project.resources.Team
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.support.util.CountedSet
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,10 +39,15 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> places = []
     List<Ref> relationships = []
     List<Ref> policies = []
-    List<Ref> sharingAgreements = []    // TODO gc sharingAgreements with null source or recipient (i.e. invalid)
+    List<Ref> sharingAgreements = []
     List<Ref> playbooks = []
     List<Ref> models = []
     List<Ref> analysisElements = []
+
+    @Override
+    protected List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations'])
+    }
 
     static Ref current() {
         PlaybookSession session = (PlaybookSession) Session.get()
@@ -64,6 +70,18 @@ class Project extends IfmElement implements Named, Described {
             default: super.doRemoveFromField(field, object);
         }
     }
+    
+    // Rulebase queries
+
+    List<Ref> getAllInvalidations() {
+        return RuleBaseSession.current().query("invalidsInProject", [this.id], "_invalid")
+    }
+
+    List<Ref> getAllIssues() {
+        return RuleBaseSession.current().query("issuesInProject", [this.id], "_issue")
+    }
+
+    // end rulebase queries
 
     // Queries
 

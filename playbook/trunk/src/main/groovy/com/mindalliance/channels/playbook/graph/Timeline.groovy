@@ -32,10 +32,17 @@ class Timeline extends PlaybookGraph {
 
     void buildContent(GraphVizBuilder builder) {
         processData()
-         buildTimePoints(builder)
+        buildTimePoints(builder)
         buildOccurrences(builder)
         buildTimings(builder)
         buildCausality(builder)
+        super.buildContent(builder)
+    }
+
+    List<Ref> allElements() {
+        List<Ref> elements = []
+        timed.values().each{set -> set.each {elements.add(it.reference)}}
+        return elements
     }
 
     void processData() {

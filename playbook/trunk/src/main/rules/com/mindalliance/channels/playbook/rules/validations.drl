@@ -99,7 +99,7 @@ rule "invalid relocation"
         $el: InformationRequest($location:location)
         eval(!$location.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el), "The location not defined");
+        RuleHelper.inferFrom(drools, $el, new Invalid($el), "The location is not defined");
     end
 
 rule "invalid sharing commitment"

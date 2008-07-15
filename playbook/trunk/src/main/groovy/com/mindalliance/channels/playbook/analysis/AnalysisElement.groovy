@@ -76,8 +76,12 @@ abstract class AnalysisElement implements Referenceable, Identified {
         return [];
     }
 
+    String shortClassName() {
+      return RefUtils.shortClassName(this)
+    }
+
     String getType() {
-        return RefUtils.capitalize(shortClassName());
+        return shortClassName()
     }
 
     Ref find(String listPropName, Map<String, Object> args) {
@@ -114,15 +118,14 @@ abstract class AnalysisElement implements Referenceable, Identified {
         return [:]
     }
 
-    String shortClassName() {// Default
-        String cn = this.class.name
-        String name = "${cn.substring(cn.lastIndexOf('.') + 1)}"
-        return name
+    String makeLabel(int maxWidth) {
+        return RefUtils.asText("${this.type}: ${this.labelText()}", maxWidth)
     }
 
-   String makeLabel(int maxWidth) {
-         return RefUtils.summarize(shortClassName(), maxWidth)
+    String labelText() { // DEFAULT
+        return rationale
     }
+
 
     Map toMap() {
         throw new RuntimeException("Analysis element $id can not be exported")

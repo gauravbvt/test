@@ -70,6 +70,8 @@ class InferredRef extends RefImpl {
         return true
     }
 
+    void begin() {}
+
     Ref persist() {
         return this
     }

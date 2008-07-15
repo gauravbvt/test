@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.project.resources.*
 import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.ifm.project.*
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.analysis.profile.*
 import com.mindalliance.channels.playbook.analysis.compliance.*
@@ -38,6 +39,29 @@ query "agentLinks" (String _agent_id, String _act_id)
     eval( RuleHelper.startsDuring($act, _link) ) // act starts while link in effect
 end
 
+# Find all invalidations of an element
+query "elementInvalids" (String _element_id)
+    _invalid : Invalid(element.id == _element_id)
+end
+
+# Find all issues about an element
+query "elementIssues" (String _element_id)
+    _issue : Issue(element.id == _element_id)
+end
+
+# Find all invalidations in a project
+query "invalidsInProject" (String _project_id)
+    _invalid : Invalid($element: element, eval(element instanceof ProjectElement))
+    $project : Project($id:id == _project_id)
+    eval (((ProjectElement)$element).getProject().getId() == $id)
+end
+
+# Find all issues in a project
+query "issuesInProject" (String _project_id)
+    _issue : Issue($element: element, eval(element instanceof ProjectElement))
+    $project : Project($id:id == _project_id)
+    eval (((ProjectElement)$element).getProject().getId() == $id)
+end
 
 ### support for testing
 

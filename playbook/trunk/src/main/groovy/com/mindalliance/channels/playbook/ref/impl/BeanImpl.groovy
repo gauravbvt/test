@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.support.persistence.Mappable
 import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -167,9 +168,7 @@ abstract class BeanImpl implements Bean {
     }
 
     String shortClassName() {// Default
-        String cn = this.class.name
-        String name = "${cn.substring(cn.lastIndexOf('.') + 1)}"
-        return name
+        return RefUtils.shortClassName(this)
     }
 
     String makeLabel(int maxWidth) {

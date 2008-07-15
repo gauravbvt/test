@@ -6,7 +6,6 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransformation;
 import com.mindalliance.channels.playbook.pages.ContentView;
 import com.mindalliance.channels.playbook.pages.SelectionManager;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.support.models.Container;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
@@ -45,18 +44,16 @@ abstract public class GraphPanel extends ContentView {
     AbstractDefaultAjaxBehavior behave;
     SVGTransformation transformation = new SVGTransformation(); // post-creation, client-caused transformations
     protected Container priorContainer;
-    protected Ref priorSelection;
     protected DirectedGraph directedGraph;
     protected String svg;
     String svgElementId;
-    // protected Ref currentSelection; // TODO remove when extends ContentView
 
     public GraphPanel(String id, IModel container, SelectionManager masterSelection) {
         super(id, container, masterSelection);
-        load();
+        initialize();
     }
 
-    protected void load() {
+    protected void initialize() {
         behave = new AbstractDefaultAjaxBehavior() {
             protected void respond(final AjaxRequestTarget target) {
                 Map map = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
@@ -91,9 +88,15 @@ abstract public class GraphPanel extends ContentView {
 
     private void processCallback(Map map, AjaxRequestTarget target) {
         if (map.containsKey("selected")) {
-            String id = ((String[]) map.get("selected"))[0];
-            Ref ref = new RefImpl(id);
-            doAjaxSelection(ref, target);
+            try {
+                String identifier = ((String[]) map.get("selected"))[0];
+                String[] pair = identifier.split(":");
+                Ref ref = (Ref)Class.forName(pair[0]).newInstance();
+                ref.setId(pair[1]);
+                doAjaxSelection(ref, target);
+            } catch (Exception e) {
+                Logger.getLogger(this.getClass()).error("Failed to process selection callback: " + e );
+            }
         }
         if (map.containsKey("transform")) {
             String transformString = ((String[]) map.get("transform"))[0];
@@ -136,41 +139,22 @@ abstract public class GraphPanel extends ContentView {
             priorContainer = container;
             svg = null; // force regeneration
         }
-        if (priorSelection != getSelected()) {
-            svg = null; // force regeneration
-        }
-        if (svg == null) try { // regenerate svg only if needed
-            String callback = behave.getCallbackUrl().toString();
-            // TODO fix this
- //           String callback = "" ;
-            svg = directedGraph.makeSvg(svgElementId, callback, getSelected(), transformation);
-            // Logger.getLogger(this.getClass()).info(svg);
-        } catch ( IllegalStateException e ) {
-            Logger.getLogger(this.getClass()).warn("Graph update without a page");
-
-        }
+        if (svg == null)
+            try { // regenerate svg only if needed
+                String callback = behave.getCallbackUrl().toString();
+                svg = directedGraph.makeSvg(svgElementId, callback, getSelected(), transformation);
+            }
+            catch (IllegalStateException e) {
+                Logger.getLogger(this.getClass()).warn("Graph update without a page");
+            }
         svgContent.setModelObject(svg);
-        priorSelection = getSelected();
     }
 
     public void setSelected(Ref ref) {  // overrides ContentView
         super.setSelected(ref);
-        // currentSelection = ref;
-        // update svgContent if needed
-        addGraphSvg();
+        // force update of svgContent
+        svg = null;
+        svgContent.setModelObject(null);
     }
-
-   /* protected Ref getSelected() {  // TODO - remove when extends ContentView
-        return currentSelection;
-    }*/
-
-/*
-    protected void doAjaxSelection(Ref ref, AjaxRequestTarget target) {   // TODO - remove when extends ContentView
-        System.out.println("Selected " + ref);
-        currentSelection = ref;
-        setSelected(ref);
-        target.addComponent(svgContent);
-    }
-*/
 
 }

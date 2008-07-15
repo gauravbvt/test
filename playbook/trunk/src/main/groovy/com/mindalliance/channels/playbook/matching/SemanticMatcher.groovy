@@ -2,14 +2,14 @@ package com.mindalliance.channels.playbook.matching
 
 import net.didion.jwnl.dictionary.Dictionary
 import net.didion.jwnl.JWNL
-import edu.stanford.nlp.tagger.maxent.MaxentTagger
+import edu.stanford.nlp.tagger.maxent.MaxentTagger   // TODO -- GPL
 import edu.stanford.nlp.ling.HasWord
 import edu.stanford.nlp.ling.HasTag
 import net.didion.jwnl.data.Synset
 import net.didion.jwnl.dictionary.MorphologicalProcessor
 import net.didion.jwnl.data.IndexWord
 import net.didion.jwnl.data.POS
-import shef.nlp.wordnet.similarity.SimilarityMeasure
+import shef.nlp.wordnet.similarity.SimilarityMeasure      // TODO -- GPL
 import edu.stanford.nlp.ling.TaggedWord
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.support.Level

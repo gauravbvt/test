@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.graph
 
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.support.models.Container
 import com.mindalliance.channels.playbook.ref.Ref
 import java.util.regex.Pattern
@@ -10,6 +9,7 @@ import com.mindalliance.channels.playbook.graph.svg.SVGTransformation
 import com.mindalliance.channels.playbook.graph.svg.SVGTranslate
 import com.mindalliance.channels.playbook.ref.Bean
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,7 +18,7 @@ import org.apache.log4j.Logger
  * Date: Jun 4, 2008
  * Time: 9:19:46 AM
  */
-class DirectedGraph implements Serializable {
+abstract class DirectedGraph implements Serializable {
 
     static public final int MAX_LABEL_SIZE = 16
     public static final String CALLBACK_VAR = "__CALLBACK__"
@@ -78,10 +78,11 @@ class DirectedGraph implements Serializable {
         return 'graph'
     }
 
-    void buildContent(GraphVizBuilder builder) {}
-
+    abstract void buildContent(GraphVizBuilder builder);
+        
     String urlFor(Referenceable referenceable) {
-        return "javascript:svg_wicket_call('__CALLBACK__','selected','${referenceable.id}')"
+        String refKind = referenceable.reference.class.name
+        return "javascript:svg_wicket_call('__CALLBACK__','selected','$refKind:${referenceable.id}')"
     }
 
     protected Map getStyleTemplate() {

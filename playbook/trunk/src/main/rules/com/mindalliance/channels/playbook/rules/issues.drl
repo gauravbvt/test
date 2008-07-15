@@ -23,7 +23,7 @@ rule "no contact info"
     when
         $resource: Resource(eval(contactInfos.isEmpty()))
     then
-        RuleHelper.inferFrom(drools, $resource, new Issue($resource, $resource, "no contact"), $resource + " has no contact info.");
+        RuleHelper.inferFrom(drools, $resource, new Issue($resource, $resource, "noContact"), $resource + " has no contact info.");
     end
 
 # Resource has no access protocol to satisfy a N2K
@@ -38,7 +38,7 @@ rule "no access protocol for need to know" // you need to know X but have no pro
                     )
            )
     then
-        RuleHelper.inferFrom(drools, $n2k, new Issue($resource, $n2k.getCause(), "missing protocol"), $resource + " has no access protocol for " + $n2k);
+        RuleHelper.inferFrom(drools, $n2k, new Issue($resource, $n2k.getCause(), "missingProtocol"), $resource + " has no access protocol for " + $n2k);
     end
 
 # Resource shares without defined agreement with target organization
@@ -58,7 +58,7 @@ rule "sharing without commitment"
                     )
             )
     then
-        RuleHelper.inferFrom(drools, $sharing, new Issue($sharing, $sharing, "sharing without commitment"), "Sharing does not relate to a commitment.");
+        RuleHelper.inferFrom(drools, $sharing, new Issue($sharing, $sharing, "sharingWithoutCommitment"), "Sharing does not relate to a commitment.");
     end
 
 # Unsatisfied critical task information need
@@ -74,7 +74,7 @@ rule "unsatisfied task critical need to know"
                      )
             )
     then
-        RuleHelper.inferFrom(drools, $task, new Issue($task, $task, "task-critical need unmet"), "Critical information need unmet for task.");
+        RuleHelper.inferFrom(drools, $task, new Issue($task, $task, "criticalNeedUnsatisfied"), "Critical information need unmet for task.");
     end
 
 # Non-compliance to commitment

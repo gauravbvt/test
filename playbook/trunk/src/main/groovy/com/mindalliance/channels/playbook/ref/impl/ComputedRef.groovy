@@ -69,6 +69,8 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
         return true
     }
 
+    void begin() {}
+
     Ref persist() {
         return this
     }

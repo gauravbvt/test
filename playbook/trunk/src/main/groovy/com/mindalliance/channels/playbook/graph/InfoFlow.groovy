@@ -33,10 +33,17 @@ class InfoFlow extends PlaybookGraph {
         super(container)
     }
 
+    List<Ref> allElements() {
+        List<Ref> elements = []
+        elements.addAll(acts)
+        elements.addAll(events)
+        return elements
+    }
+
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-                aboutEdge: [dir: 'none', style: 'dashed', fontsize:'8'],
-                flowEdge: [fontsize:'8']
+                aboutEdge: [dir: 'none', style: 'dashed', fontsize: '8'],
+                flowEdge: [fontsize: '8']
         ]
     }
 
@@ -45,6 +52,7 @@ class InfoFlow extends PlaybookGraph {
         buildAgents(builder)
         buildEvents(builder)
         buildLinks(builder)
+        super.buildContent(builder)
     }
 
     void processData() {
@@ -54,16 +62,16 @@ class InfoFlow extends PlaybookGraph {
                 case Agent.class: processAgent((Agent) el); break
                 case InformationAct.class: processAct((InformationAct) el); break
                 case Event.class: processEvent((Event) el); break
-                case Playbook.class: processPlaybook((Playbook)el); break
+                case Playbook.class: processPlaybook((Playbook) el); break
                 default: Logger.getLogger(this.class).warn("Can't display $el in info flow")
             }
         }
     }
 
     void processPlaybook(Playbook pb) {   // TODO -- not needed
-        pb.events.each {ref -> if(ref as boolean) processEvent((Event)ref.deref())}
-        pb.informationActs.each {ref -> if(ref as boolean) processAct((InformationAct)ref.deref())}
-        pb.groups.each {ref -> if(ref as boolean) processAgent((Agent)ref.deref())}
+        pb.events.each {ref -> if (ref as boolean) processEvent((Event) ref.deref())}
+        pb.informationActs.each {ref -> if (ref as boolean) processAct((InformationAct) ref.deref())}
+        pb.groups.each {ref -> if (ref as boolean) processAgent((Agent) ref.deref())}
     }
 
     void processAgent(Agent agent) {
@@ -112,12 +120,12 @@ class InfoFlow extends PlaybookGraph {
                     }
                     // Actor's acquired information
                     if (act.hasInformation() && ((act.isFlowAct() && act.targetAgent == agentRef) ||
-                                                 (!act.isFlowAct() && act.actorAgent == agentRef))) {
+                            (!act.isFlowAct() && act.actorAgent == agentRef))) {
                         Information info = act.information
                         String name = "${new Random().nextLong()}"
                         builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
                         links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
-                        Event subject = (Event)info.event.deref()
+                        Event subject = (Event) info.event.deref()
                         events.add(info.event)
                         links.add([name, nameFor(subject), 'about', 'aboutEdge'])
                     }
@@ -145,47 +153,46 @@ class InfoFlow extends PlaybookGraph {
 
     void buildInformationNeed(InformationNeed need, String name) {
         if (need.isAboutSpecificEvents()) {
-             List<Ref> subjects = need.informationSpec.eventSpec.enumeration
-             subjects.each {ref ->
-                 Event subject = (Event)ref.deref()
-                 if (!subject instanceof InformationAct) {
-                     events.add(subject.reference)
-                     links.add([name, nameFor(subject), '', 'aboutEdge'])
-                 }
+            List<Ref> subjects = need.informationSpec.eventSpec.enumeration
+            subjects.each {ref ->
+                Event subject = (Event) ref.deref()
+                if (!subject instanceof InformationAct) {
+                    events.add(subject.reference)
+                    links.add([name, nameFor(subject), '', 'aboutEdge'])
+                }
                 else {
-                     if (acts.contains(ref)) links.add([name, nameFor(subject), '', 'aboutEdge'])
-                 }
+                    if (acts.contains(ref)) links.add([name, nameFor(subject), '', 'aboutEdge'])
+                }
             }
-         }
-         else {
-             List<Ref> refs = need.informationSpec.eventSpec.definitions.causeEventSpec.enumeration
-             refs.flatten().each {ref ->
-                 if (ref) {
-                     Event causeOfSubject = (Event)ref.deref()
-                     if (!causeOfSubject instanceof InformationAct) {
-                         events.add(ref)
-                         links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
-                     }
-                     else {
-                          if (acts.contains(ref)) links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
-                      }
-                 }
-             }
-         }
+        }
+        else {
+            List<Ref> refs = need.informationSpec.eventSpec.definitions.causeEventSpec.enumeration
+            refs.flatten().each {ref ->
+                if (ref) {
+                    Event causeOfSubject = (Event) ref.deref()
+                    if (!causeOfSubject instanceof InformationAct) {
+                        events.add(ref)
+                        links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+                    }
+                    else {
+                        if (acts.contains(ref)) links.add([name, nameFor(causeOfSubject), 'about event caused by', 'aboutEdge'])
+                    }
+                }
+            }
+        }
     }
 
     void buildEvents(GraphVizBuilder builder) {
         events.each {eventRef ->
-            Event event = (Event)eventRef.deref()
-            builder.node(name:nameFor(event), label:labelFor(event), URL: urlFor(event), template:templateFor(event))
+            Event event = (Event) eventRef.deref()
+            builder.node(name: nameFor(event), label: labelFor(event), URL: urlFor(event), template: templateFor(event))
         }
     }
 
     void buildLinks(GraphVizBuilder builder) {
-       links.each {link ->
-           builder.edge(source:link[0], target:link[1], label:link[2], template:link[3])
+        links.each {link ->
+            builder.edge(source: link[0], target: link[1], label: link[2], template: link[3])
         }
     }
-
 
 }

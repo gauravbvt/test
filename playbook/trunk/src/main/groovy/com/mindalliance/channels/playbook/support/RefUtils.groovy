@@ -131,4 +131,28 @@ class RefUtils {
             }
         }
     }
+
+    static String shortClassName(Object obj) {
+        String cn = obj.class.name
+        String name = "${cn.substring(cn.lastIndexOf('.') + 1)}"
+        return name
+    }
+
+    static String asText(String s, int width) {
+        StringBuilder sb = new StringBuilder()
+        int count = 0
+        summarize(s, Integer.MAX_VALUE).each {c ->
+            if (count >= width && c == ' ') {
+                sb.append('\n')
+                count = 0
+            }
+            else {
+                sb.append(c)
+                count++
+            }
+        }
+        return sb.toString()
+
+    }
+
 }

@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,7 +20,8 @@ import com.mindalliance.channels.playbook.support.RefUtils
 
     @Override
     protected List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['projectElement', 'modelElement', 'playbookElement'])
+        return (List<String>)(super.transientProperties() + ['projectElement', 'modelElement', 'playbookElement',
+                                                             'elementIssues', 'elementInvalidations', 'problems'])
     }
 
     void makeRoot() {
@@ -53,6 +55,18 @@ import com.mindalliance.channels.playbook.support.RefUtils
 
     boolean isPlaybookElement() {
         return false
+    }
+
+    List getElementIssues() {
+         return RuleBaseSession.current().query("elementIssues", [this.id], "_issue")
+    }
+
+    List getElementInvalidations() {
+        return RuleBaseSession.current().query("elementInvalids", [this.id], "_invalid")
+    }
+
+    List getProblems() {
+        return (List)(getElementIssues() + getElementInvalidations())
     }
 
 }
