@@ -211,7 +211,7 @@ class RefImpl implements Ref {
     }
 
     Class formClass() {
-        return deref().formClass() //To change body of implemented meth, ods use File | Settings | File Templates.
+        return deref().formClass() 
     }
 
     Ref find(String listPropName, Map<String, Object> args) {

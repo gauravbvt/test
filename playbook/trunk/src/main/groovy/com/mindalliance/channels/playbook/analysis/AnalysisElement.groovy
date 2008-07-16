@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,9 +39,11 @@ abstract class AnalysisElement implements Referenceable, Identified {
          return this
     }
 
-    Class formClass() { // TODO
-        return null;
+    Class formClass() {
+        String type = getType()
+        return PlaybookApplication.current().formClassFor(type)
     }
+
 
     String getDb() {
         return null

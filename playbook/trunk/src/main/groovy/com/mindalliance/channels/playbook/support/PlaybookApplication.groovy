@@ -466,7 +466,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         return appMemory.retrieve(ref)
     }
 
-    boolean isStored(Ref ref) { //
+    boolean isStored(Ref ref) {
         return appMemory.isStored(ref)
     }
 
@@ -498,4 +498,16 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Class clazz = (Class) Eval.me("${type}.class")
         return clazz.newInstance()
     }
+    
+    Class formClassFor(String type) {
+       String className = "${FORM_PACKAGE}.${type}${FORM_SUFFIX}"
+        try {
+            return Class.forName(className)
+        }
+        catch (Exception e) {
+            Logger.getLogger(this.class.name).warn("No form class $className", e)
+            return null
+        }
+    }
+
 }

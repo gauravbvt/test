@@ -215,14 +215,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
 
     Class formClass() {
         String type = getType()
-        String className = "${PlaybookApplication.FORM_PACKAGE}.${type}${PlaybookApplication.FORM_SUFFIX}"
-        try {
-            return Class.forName(className)
-        }
-        catch (Exception e) {
-            Logger.getLogger(this.class.name).warn("No form class $className", e)
-            return null
-        }
+        return PlaybookApplication.current().formClassFor(type)
     }
 
     Ref find(String listPropName, Map<String, Object> args) {

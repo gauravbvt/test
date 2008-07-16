@@ -2,7 +2,6 @@ package com.mindalliance.channels.playbook.analysis
 
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,16 +21,16 @@ class Issue extends AnalysisElement {
 
     Referenceable element
     Referenceable cause
-    String tag   // TODO -- use issue type
+    String tag
 
     Issue(Referenceable element, Referenceable cause, String tag) {
         this.element = element
         this.cause = cause
-        this.tag = (String)TAGS[tag] ?: tag
+        this.tag = tag
     }
 
     String labelText() {
-        return tag
+        return (String)TAGS[tag] ?: tag
     }
 
 }
