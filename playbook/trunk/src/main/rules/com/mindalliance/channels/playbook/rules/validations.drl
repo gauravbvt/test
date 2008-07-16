@@ -96,7 +96,7 @@ rule "invalid information request need"
 rule "invalid relocation"
     agenda-group "validations"
     when
-        $el: InformationRequest($location:location)
+        $el: Relocation($location:location)
         eval(!$location.isDefined())
     then
         RuleHelper.inferFrom(drools, $el, new Invalid($el), "The location is not defined");
