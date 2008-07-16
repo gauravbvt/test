@@ -43,8 +43,7 @@ public class PlaybookCache extends Cache {
         return BeanImpl.makeClone(obj);
     }
 
-    public boolean isFresh(Ref ref) {
-        if (ref.isComputed()) return true;   // TODO remove -- should be redundant
+    public boolean isStored(Ref ref) {
         if (ref.getId() == null) {
             Logger.getLogger(this.getClass()).warn("Ref with null id");
             return false;

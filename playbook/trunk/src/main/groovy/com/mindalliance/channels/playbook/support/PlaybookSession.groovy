@@ -18,6 +18,7 @@ import com.mindalliance.channels.playbook.query.QueryCache
 class PlaybookSession extends KludgeWebSession implements Transactionable, Serializable {
 
     private String userId;
+    private Ref sessionUser;
 
     private PlaybookApplication application;
 
@@ -88,7 +89,10 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     }
 
     public Ref getUser() {
-        application.findUser( userId )
+        if (sessionUser == null) {
+            sessionUser = application.findUser( userId )
+        }
+        return sessionUser
     }
 
     public Ref getParticipation() {

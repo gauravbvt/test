@@ -18,6 +18,7 @@ import org.apache.log4j.Logger
 class Timeline extends PlaybookGraph {
 
     TreeMap<Duration, Set<Event>> timed = new TreeMap<Duration, Set<Event>>()
+    Set<Ref> allEvents = new HashSet<Ref>()
 
     Timeline(Container container) {
         super(container)
@@ -40,9 +41,7 @@ class Timeline extends PlaybookGraph {
     }
 
     List<Ref> allElements() {
-        List<Ref> elements = []
-        timed.values().each{set -> set.each {elements.add(it.reference)}}
-        return elements
+        return allEvents as List<Ref>
     }
 
     void processData() {
@@ -60,6 +59,7 @@ class Timeline extends PlaybookGraph {
         Duration start = event.startTime()
         if (timed[start] == null) timed[start] = new HashSet<Event>()
         timed[start].add(event)
+        allEvents.add(event.reference)
     }
 
     void processPlaybook(Playbook pb) {   // TODO - not needed
@@ -113,7 +113,7 @@ class Timeline extends PlaybookGraph {
         timed.each {dur, occSet ->
             occSet.each {occ ->
                 Ref eventRef = occ.cause.trigger
-                if (eventRef) {
+                if (eventRef as boolean && allEvents.contains(eventRef)) {
                     Event cause = (Event)eventRef.deref()
                     builder.edge(source:nameFor(cause), target:nameFor(occ))
                 }

@@ -19,7 +19,7 @@ class NoSessionCategory {
 
     // Changes on out-of-session element allowed
     static void checkModifyingAllowed(ReferenceableImpl self) {
-       // OK to modify       
+        // OK to modify
     }
 
     // Don't raise change event
@@ -34,8 +34,14 @@ class NoSessionCategory {
     }
 
     // Dereference only from application memory
-    static Referenceable retrieve(SessionMemory self, Ref reference) {
-        Referenceable referenceable = self.retrieveFromApplicationMemory(reference)
+    static Referenceable retrieve(SessionMemory self, Ref reference, Referenceable dirtyRead) {
+        Referenceable referenceable = null
+        if (dirtyRead) {
+            return dirtyRead
+        }
+        else {
+            referenceable = self.retrieveFromApplicationMemory(reference)
+        }
         return referenceable
     }
 

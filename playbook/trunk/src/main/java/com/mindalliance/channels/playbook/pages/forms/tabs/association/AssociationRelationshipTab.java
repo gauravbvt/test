@@ -31,11 +31,9 @@ import java.util.List;
  * Date: May 15, 2008
  * Time: 9:26:25 PM
  */
-public class AssociationBasicTab extends AbstractFormTab {
+public class AssociationRelationshipTab extends AbstractFormTab {
 
     protected Association association;
-    protected TextArea descriptionField;
-    protected DynamicFilterTree actorAgentTree;
     AutoCompleteTextFieldWithChoices relationshipNameField;
     DynamicFilterTree toAgentTree;
     WebMarkupContainer reverseRelationshipDiv;
@@ -43,26 +41,13 @@ public class AssociationBasicTab extends AbstractFormTab {
     AutoCompleteTextFieldWithChoices reverseRelationshipNameField;
     Label actorAgentNameLabel;
 
-    public AssociationBasicTab(String id, AbstractElementForm elementForm) {
+    public AssociationRelationshipTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
     protected void load() {
         super.load();
         association = (Association) getElement().deref();
-        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
-        addInputField(descriptionField);
-        actorAgentTree = new DynamicFilterTree("actorAgent", new RefPropertyModel(getElement(), "actorAgent"),
-                new RefQueryModel(getPlaybook(), new Query("findAllAgents")),
-                SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selectedAgent = actorAgentTree.getNewSelection();
-                RefUtils.set(getElement(), "actorAgent", selectedAgent);
-                setReverseRelationshipVisibility();
-                target.addComponent(reverseRelationshipDiv);
-            }
-        };
-        addReplaceable(actorAgentTree);
         relationshipNameField = new AutoCompleteTextFieldWithChoices("relationshipName",
                 new RefPropertyModel(getElement(), "relationshipName"),
                 new RefQueryModel(getProject(), new Query("findAllRelationshipNames")));

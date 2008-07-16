@@ -5,22 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>Description</legend>
-                    <textarea wicket:id="description" rows="3" cols="40">[description]</textarea>
-                </fieldset>
-            </td>
-            <td width="99%">
-                <fieldset>
-                    <legend>Agent</legend>
-                    <span wicket:id="actorAgent">[actor agent]</span>
-                </fieldset>
-            </td>
-        </tr>
-    </table>
+    <ul>
+        <li><label><span>Name: </span><input wicket:id="name" type = "text" size = "40"/></label></li>
+        <li><label><span>Description: </span><textarea wicket:id="description" rows="3" cols = "40">[description]</textarea></label></li>
+    </ul>
+    <fieldset>
+        <legend>Actor</legend>
+        <span wicket:id="actorAgent">[actor agent]</span>
+    </fieldset>
     <wicket:child/>
 </wicket:extend>
 </body>

@@ -65,14 +65,7 @@ public class LocationPanel extends AbstractComponentPanel {
         addReplaceable(isAGeoLocationCheckBox);
         placeDiv = new WebMarkupContainer("placeDiv");
         addReplaceable(placeDiv);
-        placeTree = new DynamicFilterTree("place", new RefPropertyModel(getElement(), propPath+".place"),
-                                          new RefPropertyModel(getProject(), "places"), SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref place = placeTree.getNewSelection();
-                RefUtils.set(getElement(), propPath+".place", place);
-            }
-        };
-        addReplaceableTo(placeTree, placeDiv);
+        replacePlaceTree(null);
         geoLocationDiv = new WebMarkupContainer("geoLocationDiv");
         addReplaceable(geoLocationDiv);
         geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
@@ -86,22 +79,35 @@ public class LocationPanel extends AbstractComponentPanel {
             priorGeoLocation = location.getGeoLocation();
             setProperty("geoLocation", new GeoLocation(), target);
             setProperty("place", priorPlace, target);
-            placeTree.setModel(new RefPropertyModel(getElement(), propPath+".place"));
-            placeTree.setFilter(null);
-            geoLocationPanel.modelChanged();
-            target.addComponent(placeTree);
+            replacePlaceTree(target);
+            replaceGeoLocationPanel(target);
         }
         else {
             priorPlace = location.getPlace();
             setProperty("place", null, target);
             setProperty("geoLocation", priorGeoLocation, target);
-            geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
-            geoLocationDiv.addOrReplace(geoLocationPanel);
-            placeTree.setModel(new RefPropertyModel(getElement(), propPath+".place"));
-            placeTree.setFilter(null);
-            target.addComponent(placeTree);
+            replaceGeoLocationPanel(target);
+            replacePlaceTree(target);
         }
         setVisibility();
+    }
+
+    private void replacePlaceTree(AjaxRequestTarget target) {
+        placeTree = new DynamicFilterTree("place", new RefPropertyModel(getElement(), propPath+".place"),
+                                          new RefPropertyModel(getProject(), "places"), SINGLE_SELECTION) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                Ref place = placeTree.getNewSelection();
+                RefUtils.set(getElement(), propPath+".place", place);
+            }
+        };
+        addReplaceableTo(placeTree, placeDiv);
+        if (target != null) target.addComponent(placeDiv);
+    }
+
+    private void replaceGeoLocationPanel(AjaxRequestTarget target) {
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
+        addReplaceableTo(geoLocationPanel, geoLocationDiv);
+        target.addComponent(geoLocationDiv);
     }
 
     private void setVisibility() {

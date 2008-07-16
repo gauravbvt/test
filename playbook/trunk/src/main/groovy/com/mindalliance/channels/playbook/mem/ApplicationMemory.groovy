@@ -48,7 +48,7 @@ class ApplicationMemory implements Serializable {
     ApplicationMemory(PlaybookApplication app) {
         application = app
         if (!cache) ApplicationMemory.initializeCache()
-       // if (!ruleBaseSession) ApplicationMemory.initializeRuleBaseSession()
+        // if (!ruleBaseSession) ApplicationMemory.initializeRuleBaseSession()
     }
 
     static synchronized void initializeCache() {
@@ -161,8 +161,8 @@ class ApplicationMemory implements Serializable {
         return (Referenceable) referenceable // will be cloned by SessionMemory
     }
 
-    boolean isFresh(Ref ref) {
-        return cache.isFresh(ref)
+    boolean isStored(Ref ref) {
+        return cache.isStored(ref)
     }
 
     void clearAll() {
@@ -286,17 +286,19 @@ class ApplicationMemory implements Serializable {
     }
 
     void insertFact(Ref ref) {
-        if (!isFact(ref)) {
-            List<Ref> queue = [ref]
-            while (queue) {
-                Ref next = (Ref) queue.pop()
-                Referenceable referenceable = retrieve(next)
-                referenceable.references().each {aRef ->
-                    if (!isFact(aRef)) queue.add(aRef)
+        use(NoSessionCategory) {
+            if (!isFact(ref)) {
+                List<Ref> queue = [ref]
+                while (queue) {
+                    Ref next = (Ref) queue.pop()
+                    Referenceable referenceable = next.deref()
+                    referenceable.references().each {aRef ->
+                        if (!isFact(aRef)) queue.add(aRef)
+                    }
+                    getRuleBaseSession().insert(referenceable)
                 }
-                getRuleBaseSession().insert(referenceable)
+                fireAllRules()
             }
-            fireAllRules()
         }
     }
 

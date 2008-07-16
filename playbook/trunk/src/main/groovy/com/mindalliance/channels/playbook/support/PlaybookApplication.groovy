@@ -30,6 +30,7 @@ import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
+import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -440,11 +441,13 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     }
 
     List<Ref> findProjectsForUser(Ref user) {
-        return this.channels.findProjectsForUser(user)
+        return (List<Ref>)Query.execute(Project.class, "findProjectsOfUser", user)
+        // return this.channels.findProjectsForUser(user)
     }
 
     List<Ref> findModelsForUser(Ref user) {
-        return this.channels.findModelsForUser(user)
+        return (List<Ref>)Query.execute(PlaybookModel.class,"findModelsOfUser", user)
+        // return this.channels.findModelsForUser(user)
     }
 
     public Ref findParticipation(Ref project, Ref user) {
@@ -461,6 +464,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     Referenceable retrieve(Ref ref) {
         return appMemory.retrieve(ref)
+    }
+
+    boolean isStored(Ref ref) {
+        return appMemory.isStored(ref)
     }
 
     void clearAll() {

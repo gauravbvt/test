@@ -1,8 +1,9 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.association.AssociationBasicTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.association.AssociationRelationshipTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActCauseTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -23,7 +24,12 @@ public class AssociationForm extends AbstractInformationActForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Basic")) {
              public Panel getPanel(String panelId) {
-                 return new AssociationBasicTab(panelId, AssociationForm.this);
+                 return new InformationActBasicTab(panelId, AssociationForm.this);
+             }
+         });
+        tabs.add(new AbstractTab(new Model("Relationship")) {
+             public Panel getPanel(String panelId) {
+                 return new AssociationRelationshipTab(panelId, AssociationForm.this);
              }
          });
          tabs.add(new AbstractTab(new Model("Cause")) {

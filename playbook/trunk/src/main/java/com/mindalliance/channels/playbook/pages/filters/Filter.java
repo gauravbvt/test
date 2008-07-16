@@ -112,7 +112,9 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         map.put("expandedText", expandedText);
         map.put("expanded", expanded);
         map.put("selected", selected);
-        if (children != null) map.put("children", (Object) Mapper.toPersistedValue( children ));
+        if (children != null) {
+            map.put("children", (Object) Mapper.toPersistedValue( children ));
+        }
         return map;
     }
 

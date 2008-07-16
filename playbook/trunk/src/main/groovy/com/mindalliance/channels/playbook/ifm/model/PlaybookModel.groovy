@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.support.util.CountedSet
+import com.mindalliance.channels.playbook.ifm.Channels
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -24,7 +25,6 @@ class PlaybookModel extends IfmElement implements Described {
     List<Ref> participations = []
     List<Ref> areaTypes = []
     List<Ref> eventTypes = []
-    List<Ref> issueTypes = []
     List<Ref> mediumTypes = []
     List<Ref> organizationTypes = []
     List<Ref> placeTypes = []
@@ -55,6 +55,11 @@ class PlaybookModel extends IfmElement implements Described {
     }
 
     // Queries
+
+    static List<Ref> findModelsOfUser(Ref user) {
+        return Channels.instance().findModelsForUser(user)
+    }
+
 
     List<Ref> findAllTypes(String typeType) {
         String propName = RefUtils.decapitalize("${typeType}s")
@@ -101,7 +106,6 @@ class PlaybookModel extends IfmElement implements Described {
         List<Ref> elements = []
         elements.addAll(areaTypes)
         elements.addAll(eventTypes)
-        elements.addAll(issueTypes)
         elements.addAll(mediumTypes)
         elements.addAll(organizationTypes)
         elements.addAll(placeTypes)
@@ -116,7 +120,7 @@ class PlaybookModel extends IfmElement implements Described {
     static List<Class<?>> contentClasses() {
         [
                 AreaType.class, EventType.class,
-                IssueType.class, MediumType.class,
+                MediumType.class,
                 PlaceType.class, OrganizationType.class,
                 Role.class, TaskType.class
         ]

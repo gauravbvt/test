@@ -29,6 +29,10 @@ class Channels extends IfmElement {
         return (Channels) PlaybookApplication.current().getChannels().deref()
     }
 
+    static Ref reference() {   // CAUTION: this will *not* force an initial load of Channels root data
+       PlaybookApplication.current().getRoot()
+    }
+
     // Queries
 
     List<Ref> findAllImpliedTypes(String typeType) {
@@ -56,7 +60,7 @@ class Channels extends IfmElement {
     Ref findModel(String mid) {
         return (Ref) models.find {model -> model as boolean && model.id == mid}
     }
-
+    
     List<Ref> findProjectsForUser(Ref user) {
         List<Ref> result = []
         projects.each {project ->
@@ -120,6 +124,6 @@ class Channels extends IfmElement {
     }
 
     static boolean isSet(Ref ref) {  // always called in application scope
-        return ref != null && (ref.isComputed() || ref.isAttached() || PlaybookApplication.current().appMemory.isFresh(ref))
+        return ref != null && (ref.isComputed() || ref.isAttached() || PlaybookApplication.current().isStored(ref))
     }
 }

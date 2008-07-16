@@ -19,6 +19,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -240,13 +241,17 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                                             new Model((Serializable)getProximityTargetKindChoices()));
         kindOfTargetChoice.add(new AjaxFormComponentUpdatingBehavior("onchange"){
             protected void onUpdate(AjaxRequestTarget target) {
-                targetTree.setModel(new RefQueryModel(this, new Query("getSelectedProximityTarget")));
-                targetTree.setFilter(null);
-                target.addComponent(targetTree);
+                replaceTargetTree(target);
             }
         });
         kindOfTargetChoice.setEnabled(locationDefinition.isByProximity());
         addReplaceable(kindOfTargetChoice);
+        replaceTargetTree(null);
+        setVisibility(targetTree, locationDefinition.isByProximity());
+        addReplaceable(targetTree);
+    }
+
+    private void replaceTargetTree(AjaxRequestTarget target) {
         targetTree = new DynamicFilterTree("targetTree", new RefQueryModel(this, new Query("getSelectedProximityTarget")),
                                                          new RefQueryModel(this, new Query("getProximityTargetChoices")),
                                             SINGLE_SELECTION){
@@ -255,8 +260,8 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                 setProximityTarget(selected);
             }
         };
-        setVisibility(targetTree, locationDefinition.isByProximity());
         addReplaceable(targetTree);
+        if (target != null) target.addComponent(targetTree);
     }
 
     public String getGeoLocationRelation() {

@@ -5,38 +5,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    <table>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>Classification</legend>
-                    <span wicket:id="taskType">[task type tree]</span>
-                </fieldset>
-            </td>
-            <td>
-                <fieldset>
-                    <legend>Purposes</legend>
-                    <div wicket:id="purposesDiv">
-                        <table>
-                            <tr wicket:id="purposes">
-                                <td>
-                                    <textarea wicket:id="purpose" rows="2" cols="40">[a purpose]</textarea>
-                                </td>
-                                <td align="left" valign="bottom">
-                                    <a wicket:id="deletePurpose" href="#">(delete)</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" align="left">
-                                    <input wicket:id="addPurpose" type="button" value="Add purpose"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </fieldset>
-            </td>
-        </tr>
-    </table>
+    <fieldset>
+        <legend>Classification</legend>
+        <span wicket:id="taskType">[task type tree]</span>
+    </fieldset>
+    <fieldset>
+        <legend>Purposes</legend>
+        <div wicket:id="purposesDiv">
+            <table>
+                <tr wicket:id="purposes">
+                    <td>
+                        <textarea wicket:id="purpose" rows="2" cols="40">[a purpose]</textarea>
+                    </td>
+                    <td align="left" valign="bottom" width ="99%">
+                        <a wicket:id="deletePurpose" href="#">(delete)</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="left">
+                        <input wicket:id="addPurpose" type="button" value="Add purpose"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
     <fieldset>
         <legend>Duration of task</legend>
         <span wicket:id="duration">[timing panel]</span>

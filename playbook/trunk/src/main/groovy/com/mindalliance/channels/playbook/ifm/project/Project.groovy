@@ -20,6 +20,8 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Team
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
+import com.mindalliance.channels.playbook.ifm.Channels
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -84,6 +86,10 @@ class Project extends IfmElement implements Named, Described {
     // end rulebase queries
 
     // Queries
+
+    static List<Ref> findProjectsOfUser(Ref user) {
+        return Channels.instance().findProjectsForUser(user)
+    }
 
     Ref findModelNamed(String name) {
         return (Ref) models.find {it as boolean && it.name == name}
@@ -286,6 +292,7 @@ class Project extends IfmElement implements Named, Described {
     }
 
     List<Ref> findAllPlacesInAreasOfTypeImplying(Ref areaType) {
+        GeoLocation geoLoc
         return (List<Ref>) places.findAll {place -> (geoLoc = place.findGeoLocation()) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType) }
     }
 

@@ -88,12 +88,12 @@ public class UserScope implements Container {
             List<Ref> result = new ArrayList<Ref>();
             final Ref uRef = getSession().getUser();
             final User u = (User) uRef.deref();
-
+            Channels channels = Channels.instance();
             if ( u.getAdmin() )
-                result.addAll( getChannels().getUsers() );
+                result.addAll( channels.getUsers() );
 
             if ( u.getAnalyst() ) {
-                for ( Ref mRef: (List<Ref>) getChannels().getModels() ) {
+                for ( Ref mRef: (List<Ref>) channels.getModels() ) {
                     PlaybookModel m = (PlaybookModel) mRef.deref();
                     if ( m.isAnalyst( uRef ) ) {
                         result.add( mRef );
@@ -164,7 +164,7 @@ public class UserScope implements Container {
         final Class<? extends Referenceable> objectClass = object.getClass();
 
         if ( Channels.contentClasses().contains( objectClass ) )
-            return getChannels().getReference();
+            return Channels.reference();
 
         final Ref uRef = getSession().getUser();
         if ( uRef != null && User.contentClasses().contains( objectClass ) )

@@ -44,6 +44,9 @@ class QueryManager implements PropertyChangeListener {
     static void initializeDependencies() {
         dependencies = [     // large-grain dependencies but better than none
                 // Channels
+                findProjectsForUser: [Project.class, User.class],
+                findModelsForUser: [PlaybookModel.class, User.class],
+                findUser: [User.class],
                 findProjectNamed: [Project.class],
                 findUsersNotInProject: [Project.class, Participation.class, User.class],
                 findAllProjectsOfUser: [Project.class, Participation.class, User.class],
@@ -52,6 +55,7 @@ class QueryManager implements PropertyChangeListener {
                 findAllTypesNarrowingAny: [ElementType.class],
                 findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],                
                 // Project
+                findProjectsOfUser: [Project.class, User.class],  // static
                 findAllPlaceNames: [Place.class],
                 atleastOnePlaceTypeDefined: [PlaceType.class],
                 findAllResourcesExcept: [Resource.class],
@@ -65,6 +69,7 @@ class QueryManager implements PropertyChangeListener {
                 findAllAgentsMatchingSpec: [Agent.class, AgentSpecification.class, Event.class],
                 findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
                 // PlaybookModel
+                findModelsOfUser: [PlaybookModel.class, User.class],  // static
                 findInheritedTopics: [EventType.class],
                 findNarrowedEventTypeWithTopic: [EventType.class],
                 // Organization

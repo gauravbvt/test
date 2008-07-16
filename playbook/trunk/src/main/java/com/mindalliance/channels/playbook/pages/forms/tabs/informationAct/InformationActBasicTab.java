@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
@@ -23,6 +24,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public class InformationActBasicTab extends AbstractFormTab {
 
+    protected TextField nameField;
     protected TextArea descriptionField;
     protected DynamicFilterTree actorAgentTree;
 
@@ -32,6 +34,8 @@ public class InformationActBasicTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
+        addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
         actorAgentTree = new DynamicFilterTree("actorAgent", new RefPropertyModel(getElement(), "actorAgent"),

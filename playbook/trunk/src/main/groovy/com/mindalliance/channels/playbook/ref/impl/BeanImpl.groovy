@@ -63,13 +63,7 @@ abstract class BeanImpl implements Bean {
                     value = null
                 }
                 else {
-                    if (PlaybookApplication.current().getMemory().isFresh((Ref)val)) {
-                        value = new RefImpl(id:val.id, db:val.db)
-                     }
-                     else {
-                        Logger.getLogger(Bean.class).warn("Stale reference $val replaced by null")
-                        value = null
-                     }
+                     value = new RefImpl(id:val.id, db:val.db)                       
                 }
                  break
             case Bean.class: value = val.copy(); break
