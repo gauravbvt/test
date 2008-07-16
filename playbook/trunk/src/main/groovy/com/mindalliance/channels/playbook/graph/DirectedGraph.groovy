@@ -50,20 +50,30 @@ abstract class DirectedGraph implements Serializable {
     }
 
     String makeCanonicalSvg() {
+        int attempts = 0
+        String svg = ''
         GraphVizRenderer renderer = new GraphVizRenderer()
         GraphVizBuilder builder = renderer.getBuilder(getStyleTemplate())
         build(builder)
-        StringWriter writer = new StringWriter()
-        renderer.render(writer, "svg")
-        String svg = writer.toString()
-        int index = svg.indexOf("<svg")
-        if (index >= 0 && svg.indexOf("</svg>") > 0) {
-            return svg.substring(index)
+        while (!svg && attempts < 5) {    // TODO -- kludge -- renderer sometimes returns with incomplete SVG
+            StringWriter writer = new StringWriter()
+            renderer.render(writer, "svg")
+            String rendered = writer.toString()
+            int index = rendered.indexOf("<svg")
+            if (index >= 0 && rendered.indexOf("</svg>") > 0) {
+                svg = rendered.substring(index)
+            }
+            else {
+                attempts++
+                Logger.getLogger(this.class).warn("Failed to render valid SVG. Trying again.")
+                Thread.sleep(100)
+            }
         }
-        else {
-            Logger.getLogger(this.class).warn("Failed to produce valid SVG. Got\n$svg")
-            return ""
+        if (!svg) {
+            Logger.getLogger(this.class).error("Failed to produce valid SVG.")
+
         }
+        return svg
     }
 
     void build(GraphVizBuilder builder) {

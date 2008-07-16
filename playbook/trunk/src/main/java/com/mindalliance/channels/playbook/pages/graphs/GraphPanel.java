@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.pages.ContentView;
 import com.mindalliance.channels.playbook.pages.SelectionManager;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.Container;
+import com.mindalliance.channels.playbook.support.components.NoFormButton;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.RequestCycle;
@@ -16,6 +17,7 @@ import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -34,19 +36,20 @@ abstract public class GraphPanel extends ContentView {
 
     protected Label svgContent;
     protected WebMarkupContainer controlsDiv;
-    protected Button zoomInButton;
-    protected Button zoomOutButton;
-    protected Button upButton;
-    protected Button downButton;
-    protected Button leftButton;
-    protected Button rightButton;
-    protected Button resetButton;
+    protected NoFormButton zoomInButton;
+    protected NoFormButton zoomOutButton;
+    protected NoFormButton upButton;
+    protected NoFormButton downButton;
+    protected NoFormButton leftButton;
+    protected NoFormButton rightButton;
+    protected NoFormButton resetButton;
     AbstractDefaultAjaxBehavior behave;
     SVGTransformation transformation = new SVGTransformation(); // post-creation, client-caused transformations
     protected Container priorContainer;
     protected DirectedGraph directedGraph;
     protected String svg;
     String svgElementId;
+    Ref priorSelection;
 
     public GraphPanel(String id, IModel container, SelectionManager masterSelection) {
         super(id, container, masterSelection);
@@ -68,19 +71,19 @@ abstract public class GraphPanel extends ContentView {
         // String args = "'" + url + "','" + svgElementId + "'";
         svgElementId = UUID.randomUUID().toString();
         controlsDiv = new WebMarkupContainer("controls");
-        zoomInButton = new Button("zoomIn");
+        zoomInButton = new NoFormButton("zoomIn");
         controlsDiv.add(zoomInButton);
-        zoomOutButton = new Button("zoomOut");
+        zoomOutButton = new NoFormButton("zoomOut");
         controlsDiv.add(zoomOutButton);
-        leftButton = new Button("left");
+        leftButton = new NoFormButton("left");
         controlsDiv.add(leftButton);
-        rightButton = new Button("right");
+        rightButton = new NoFormButton("right");
         controlsDiv.add(rightButton);
-        upButton = new Button("up");
+        upButton = new NoFormButton("up");
         controlsDiv.add(upButton);
-        downButton = new Button("down");
+        downButton = new NoFormButton("down");
         controlsDiv.add(downButton);
-        resetButton = new Button("reset");
+        resetButton = new NoFormButton("reset");
         controlsDiv.add(resetButton);
         addOrReplace(controlsDiv);
         this.add(HeaderContributor.forJavaScript(GraphPanel.class, "GraphPanel.js"));
@@ -96,6 +99,7 @@ abstract public class GraphPanel extends ContentView {
                 doAjaxSelection(ref, target);
             } catch (Exception e) {
                 Logger.getLogger(this.getClass()).error("Failed to process selection callback: " + e );
+                e.printStackTrace();
             }
         }
         if (map.containsKey("transform")) {
@@ -139,6 +143,7 @@ abstract public class GraphPanel extends ContentView {
             priorContainer = container;
             svg = null; // force regeneration
         }
+        if (getSelected() != priorSelection) svg = null;
         if (svg == null)
             try { // regenerate svg only if needed
                 String callback = behave.getCallbackUrl().toString();
@@ -148,12 +153,12 @@ abstract public class GraphPanel extends ContentView {
                 Logger.getLogger(this.getClass()).warn("Graph update without a page");
             }
         svgContent.setModelObject(svg);
+        priorSelection = getSelected();
     }
 
     public void setSelected(Ref ref) {  // overrides ContentView
         super.setSelected(ref);
         // force update of svgContent
-        svg = null;
         svgContent.setModelObject(null);
     }
 
