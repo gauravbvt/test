@@ -466,7 +466,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         return appMemory.retrieve(ref)
     }
 
-    boolean isStored(Ref ref) {
+    boolean isStored(Ref ref) { //
         return appMemory.isStored(ref)
     }
 
