@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.analysis
 
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +11,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 * Date: Apr 17, 2008
 * Time: 2:46:30 PM
 */
-class Issue extends AnalysisElement {
+class Issue extends AnalysisElement implements Named {
 
     static final Map TAGS = [
             noContact:"No contact information is given.",
@@ -33,4 +34,7 @@ class Issue extends AnalysisElement {
         return (String)TAGS[tag] ?: tag
     }
 
+    public String getName() {
+        return tag
+    }
 }

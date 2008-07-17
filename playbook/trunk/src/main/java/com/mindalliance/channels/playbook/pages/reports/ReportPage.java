@@ -30,13 +30,14 @@ abstract public class ReportPage extends WebPage {
     protected void configureResponse() {
         super.configureResponse();
         WebResponse response = getWebRequestCycle().getWebResponse();
-        response.setContentType("application/xhtml+xml");
+        response.setContentType("text/xml");
     }
 
     protected void load(Tab tab) {
         Report report = makeReport(tab);
         String reportContent = report.build();
         reportElement = new Label("report", new Model(reportContent));
+        reportElement.setEscapeModelStrings(false);
         add(reportElement);
     }
 

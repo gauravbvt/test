@@ -141,9 +141,16 @@ class ResourceDirectory extends Report {
                 xml.organization(name: res.organization.name, id: res.organization.id)
             }
             res.roles.each {role -> xml.role(name: role.name, id: role.id)}
-            res.contactInfos.each {contactInfo ->
-                xml.contactInfo(medium: contactInfo.mediumType.name) {
-                    contactInfo.endPoint
+            xml.contactInfos {
+                if (!res.contactInfos) {
+                  xml.noContactInfo()
+                }
+                else {
+                    res.contactInfos.each {contactInfo ->
+                        xml.contactInfo(medium: contactInfo.mediumType.name) {
+                            contactInfo.endPoint
+                        }
+                    }
                 }
             }
             if (res instanceof System) processSystem((System) res, xml)

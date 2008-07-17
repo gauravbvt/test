@@ -43,25 +43,21 @@ abstract class Report {
     String build() {
         StringWriter writer = new StringWriter()
         MarkupBuilder xml = new MarkupBuilder(writer)
-        buildHeader(xml)
-        buildBody(xml)
-        buildFooter(xml)
+        xml.header { buildHeader(xml) }
+        xml.body { buildBody(xml) }
+        xml.footer { buildFooter(xml) }
         return writer.toString()
     }
 
     void buildHeader(MarkupBuilder xml) {
-        xml.header {
-            xml.title(this.title)
-            xml.context(tab.getName())
-            xml.user(getUser().name)
-        }
+        xml.title(this.title)
+        xml.context(tab.getName())
+        xml.user(getUser().name)
     }
 
     void buildFooter(MarkupBuilder xml) {
-        xml.footer {
-            xml.confidential(Report.CONFIDENTIAL)
-            xml.proprietary(getCopyrightNotice())
-        }
+        xml.confidential(Report.CONFIDENTIAL)
+        xml.proprietary(getCopyrightNotice())
     }
 
     Ref getUser() {

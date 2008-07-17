@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.analysis
 
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -9,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
  * Date: Jul 9, 2008
  * Time: 7:36:21 AM
  */
-class Invalid extends AnalysisElement {
+class Invalid extends AnalysisElement implements Named {
 
     static final Map TAGS = [
             actorMissing: "The actor is missing.",
@@ -44,6 +45,11 @@ class Invalid extends AnalysisElement {
     String labelText() {
         return (String)TAGS[tag] ?: tag
     }
+
+    public String getName() {
+        return tag
+    }
+    
 
     
 }
