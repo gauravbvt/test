@@ -40,14 +40,12 @@ abstract class Report {
     }
      */
 
-    String build() { 
+    String build() {
         StringWriter writer = new StringWriter()
         MarkupBuilder xml = new MarkupBuilder(writer)
-        xml.report {
-            buildHeader(xml)
-            buildBody(xml)
-            buildFooter(xml)
-        }
+        buildHeader(xml)
+        buildBody(xml)
+        buildFooter(xml)
         return writer.toString()
     }
 
@@ -61,8 +59,8 @@ abstract class Report {
 
     void buildFooter(MarkupBuilder xml) {
         xml.footer {
-            xml.confidential(CONFIDENTIAL)
-            xml.proprietary (getCopyrightNotice())
+            xml.confidential(Report.CONFIDENTIAL)
+            xml.proprietary(getCopyrightNotice())
         }
     }
 
@@ -77,7 +75,6 @@ abstract class Report {
     abstract void buildBody(MarkupBuilder xml)
 
     abstract String getTitle()
-
 
 
 }

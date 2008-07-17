@@ -92,8 +92,8 @@ class ResourceDirectory extends Report {
 
     private void processProject(Project project, MarkupBuilder xml) {
         xml.group(type: project.type, name: "In project ${project.name}") {
-            project.resources.each {res ->
-                processResource((Resource)agent, !EXPAND, xml)
+            project.findAllResources().each {res ->
+                processResource((Resource)res.deref(), !EXPAND, xml)
             }
         }
     }
@@ -102,7 +102,7 @@ class ResourceDirectory extends Report {
         xml.group(type: playbook.type, name:"In playbook ${playbook.name}") {
             playbook.findAllAgents().each {agent ->
                 if (agent instanceof Resource) {
-                    processResource((Resource)agent, !EXPAND, xml)
+                    processResource((Resource)agent.deref(), !EXPAND, xml)
                 }
             }
         }
@@ -111,9 +111,9 @@ class ResourceDirectory extends Report {
     private void processRole(Role role, MarkupBuilder xml) {
         xml.group(type: role.type, name: "In role ${role.name}", id: role.id) {
             this.userProjects.each {project ->
-                project.resources.each {res ->
+                project.findAllResources().each {res ->
                     if (res.roles.any {it.implies(role)}) {
-                       processResource(res, !EXPAND, xml)
+                       processResource((Resource)res.deref(), !EXPAND, xml)
                     }
                 }
             }
@@ -123,10 +123,10 @@ class ResourceDirectory extends Report {
     private void processLocation(Location loc, MarkupBuilder xml) {
         xml.group(type: 'Location', name:"In location $loc") {
             this.userProjects.each {project ->
-                project.resources.each {res ->
+                project.findAllResources().each {res ->
                     if (res.hasLocation() && res.location.isWithin(loc) ||
                             res.hasJurisdiction() && res.jurisdiction.isWithin(loc)) {
-                        processResource(res, !EXPAND, xml)
+                        processResource((Resource)res.deref(), !EXPAND, xml)
                     }
                 }
             }
@@ -203,11 +203,14 @@ class ResourceDirectory extends Report {
     }
 
     private String nameOf(Ref ref) {
-        Referenceable el = ref.deref()
+        return nameOf(ref.deref())
+    }
+
+    private String nameOf(Referenceable el) {
         switch (el) {
             case Person: return el.lastName + el.firstName + el.middleName
             case Named: return el.name
-            default: return ''
+            default: return el.toString()
         }
     }
 
