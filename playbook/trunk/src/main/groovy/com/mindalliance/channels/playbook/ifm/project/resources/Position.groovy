@@ -43,7 +43,9 @@ class Position extends OrganizationResource implements Jurisdictionable {
     }
 
     List<Ref> findAllPersonsInPosition() {
-        return this.project.persons.findAll{person -> person.positions.contains(this)}
+        return this.project.persons.findAll{person ->
+            person.positions.contains(this.reference)
+        }
     }
     
 }

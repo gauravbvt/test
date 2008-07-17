@@ -139,6 +139,10 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         }
         return acts
     }
+
+    List<Ref> findAllRoles() {
+        return roles
+    }
     // end queries
 
 

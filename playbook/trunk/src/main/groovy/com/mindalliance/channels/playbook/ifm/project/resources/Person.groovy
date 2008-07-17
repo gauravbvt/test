@@ -40,5 +40,14 @@ class Person extends Resource {
         return s
     }
 
+    // Queries
+
+    List<Ref> findAllRoles() {
+        return positions.collect {it.findAllRoles()}.flatten()
+    }
+
+
+    // end queries
+
 
 }

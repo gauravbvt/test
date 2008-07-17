@@ -151,7 +151,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         p.addOrganization(acme)
         p.addOrganization(nadir)
 
-        Ref pos1 = store(new Position(name: 'Position 1'))
+        ContactInfo phone1 = new ContactInfo(mediumType: m.findType('MediumType', 'phone'), endPoint:'800-328-7448')
+        ContactInfo email1 = new ContactInfo(mediumType: m.findType('MediumType', 'email'), endPoint:'gopher@bigcorp.com')
+        Ref pos1 = store(new Position(name: 'Position 1', roles:[m.findType('Role', 'Employee')], contactInfos:[phone1, email1]))
         Ref pos2 = store(new Position(name: 'Position 2'))
         Ref pos3 = store(new Position(name: 'Position 3'))
         acme.addPosition(pos1)
@@ -160,7 +162,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         acme.addSystem(store(new System(name: 'Hal 9000')))
         p.addRelationship(store(new Relationship(fromAgent: acme.reference, toAgent: nadir.reference, name: "client")))
         store(acme)
-        Ref pos4 = store(new Position(name: 'Position 4'))
+        Ref pos4 = store(new Position(name: 'Position 4', roles:[m.findType('Role', 'Gopher')]))
         Ref pos5 = store(new Position(name: 'Position 5'))
         nadir.addPosition(pos4)
         nadir.addPosition(pos5)
@@ -234,7 +236,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         Task task1 = new Task(name:'task1', actorAgent: p.findOrganizationNamed('ACME Inc.'))
         task1.cause.trigger = transfer1.reference
         task1.cause.delay = new Timing(amount:3, unit:'days')
-        InformationNeed need1 = new InformationNeed(informationSpec: new InformationDefinition(eventTypes:[m.findType('EventType', 'accident')]))
+        InformationNeed need1 = new InformationNeed(critical: true, informationSpec: new InformationDefinition(eventTypes:[m.findType('EventType', 'accident')]))
         task1.informationNeeds.add(need1)
         InformationNeed need2 = new InformationNeed(informationSpec: new InformationDefinition(eventTypes:[m.findType('EventType', 'terrorism')]))
         task1.informationNeeds.add(need2)

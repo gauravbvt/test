@@ -17,6 +17,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.Channels
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -93,16 +94,17 @@ class ResourceDirectory extends Report {
     private void processProject(Project project, MarkupBuilder xml) {
         xml.group(type: project.type, name: "In project ${project.name}") {
             project.findAllResources().each {res ->
-                processResource((Resource)res.deref(), !EXPAND, xml)
+                processResource((Resource) res.deref(), !EXPAND, xml)
             }
         }
     }
 
     private void processPlaybook(Playbook playbook, MarkupBuilder xml) {
-        xml.group(type: playbook.type, name:"In playbook ${playbook.name}") {
-            playbook.findAllAgents().each {agent ->
+        xml.group(type: playbook.type, name: "In playbook ${playbook.name}") {
+            playbook.findAllAgents().each {ref ->
+                Referenceable agent = ref.deref()
                 if (agent instanceof Resource) {
-                    processResource((Resource)agent.deref(), !EXPAND, xml)
+                    processResource((Resource) agent, !EXPAND, xml)
                 }
             }
         }
@@ -111,9 +113,11 @@ class ResourceDirectory extends Report {
     private void processRole(Role role, MarkupBuilder xml) {
         xml.group(type: role.type, name: "In role ${role.name}", id: role.id) {
             this.userProjects.each {project ->
-                project.findAllResources().each {res ->
-                    if (res.roles.any {it.implies(role)}) {
-                       processResource((Resource)res.deref(), !EXPAND, xml)
+                project.findAllResources().each {ref ->
+                    Resource res = (Resource) ref.deref()
+                    boolean roleImplied = res.roles.any {it.implies(role.reference)}
+                    if (roleImplied) {
+                        processResource((Resource) res, !EXPAND, xml)
                     }
                 }
             }
@@ -121,12 +125,13 @@ class ResourceDirectory extends Report {
     }
 
     private void processLocation(Location loc, MarkupBuilder xml) {
-        xml.group(type: 'Location', name:"In location $loc") {
+        xml.group(type: 'Location', name: "In location $loc") {
             this.userProjects.each {project ->
-                project.findAllResources().each {res ->
+                project.findAllResources().each {ref ->
+                    Resource res = (Resource) ref.deref()
                     if (res.hasLocation() && res.location.isWithin(loc) ||
                             res.hasJurisdiction() && res.jurisdiction.isWithin(loc)) {
-                        processResource((Resource)res.deref(), !EXPAND, xml)
+                        processResource((Resource) res, !EXPAND, xml)
                     }
                 }
             }
@@ -134,7 +139,7 @@ class ResourceDirectory extends Report {
     }
 
     private void processResource(Resource res, boolean expand, MarkupBuilder xml) {
-        xml.resource(type: res.type, id:res.id) {
+        xml.resource(type: res.type, id: res.id) {
             name(res.name)
             description(res.description)
             if (res.isOrganizationResource()) {
@@ -143,23 +148,19 @@ class ResourceDirectory extends Report {
             res.roles.each {role -> xml.role(name: role.name, id: role.id)}
             xml.contactInfos {
                 if (!res.contactInfos) {
-                  xml.noContactInfo()
+                    xml.noContactInfo()
                 }
                 else {
                     res.contactInfos.each {contactInfo ->
-                        xml.contactInfo(medium: contactInfo.mediumType.name) {
-                            contactInfo.endPoint
-                        }
+                        xml.contactInfo(medium: contactInfo.mediumType.name, contactInfo.endPoint)
                     }
                 }
             }
             if (res instanceof System) processSystem((System) res, xml)
-            if (expand) {
-                switch (res) {
-                    case Organization.class: processOrganization((Organization) res, xml); break
-                    case Position.class: processPosition((Position) res, xml); break
-                    case Team.class: processTeam((Team) res, xml)
-                }
+            switch (res) {
+                case Organization.class: if (expand) processOrganization((Organization) res, xml); break
+                case Position.class: processPosition((Position) res, xml); break
+                case Team.class: if (expand) processTeam((Team) res, xml)
             }
         }
     }
@@ -189,7 +190,7 @@ class ResourceDirectory extends Report {
     private void processTeam(Team team, MarkupBuilder xml) {
         List<Ref> members = team.resources
         if (members) {
-            xml.group(type: team.type, name: 'Team members', id:team.id) {
+            xml.group(type: team.type, name: 'Team members', id: team.id) {
                 sortOnNames(members).each {member ->
                     processResource((Resource) member.deref(), !EXPAND, xml)
                 }
