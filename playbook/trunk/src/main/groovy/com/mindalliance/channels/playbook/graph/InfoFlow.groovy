@@ -42,14 +42,15 @@ class InfoFlow extends PlaybookGraph {
 
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-                aboutEdge: [dir: 'none', style: 'dashed', fontsize: '8'],
-                flowEdge: [fontsize: '8']
+                aboutEdge: [dir: 'none', style: 'dashed', fontsize: '7'],
+                flowEdge: [fontsize: '7']
         ]
     }
 
     void buildContent(GraphVizBuilder builder) {
         processData()
         buildAgents(builder)
+        buildActsAndInfoForAgent(null, builder) // for acts with null actors
         buildEvents(builder)
         buildLinks(builder)
         super.buildContent(builder)
@@ -97,8 +98,8 @@ class InfoFlow extends PlaybookGraph {
     // Add act, actor and target agents
     void processAct(InformationAct act) {
         acts.add(act.reference)
-        agents.add(act.actorAgent)
-        if (act.isFlowAct()) agents.add(act.targetAgent)
+        if (act.actorAgent as boolean) agents.add(act.actorAgent)
+        if (act.isFlowAct() && act.targetAgent as boolean) agents.add(act.targetAgent)
     }
 
     // Add all acts with information/need about the event
@@ -112,43 +113,51 @@ class InfoFlow extends PlaybookGraph {
         agents.each {agentRef ->
             Agent agent = agentRef.deref()
             builder.cluster(name: nameFor(agent), label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
-                acts.each {actRef ->
-                    InformationAct act = actRef.deref()
-                    // Actor's acts
-                    if (act.actorAgent == agentRef) {
-                        builder.node(name: nameFor(act), label: labelFor(act), URL: urlFor(act), template: templateFor(act))
-                    }
-                    // Actor's acquired information
-                    if (act.hasInformation() && ((act.isFlowAct() && act.targetAgent == agentRef) ||
-                            (!act.isFlowAct() && act.actorAgent == agentRef))) {
-                        Information info = act.information
-                        String name = "${new Random().nextLong()}"
-                        builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
-                        links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
-                        Event subject = (Event) info.event.deref()
-                        events.add(info.event)
-                        links.add([name, nameFor(subject), 'about', 'aboutEdge'])
-                    }
-                    // Actor's task-acquired information needs
-                    if (act instanceof Task && act.actorAgent == agentRef) {
-                        act.informationNeeds.each {need ->
-                            String name = "${new Random().nextLong()}"
-                            builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
-                            links.add([nameFor(act), name, "at ${durationToText(act.startTime())} needs", 'aboutEdge'])
-                            buildInformationNeed(need, name)
-                        }
-                    }
-                    if (act instanceof InformationRequest && act.targetAgent == agentRef) {
-                        InformationNeed need = act.informationNeed
-                        String name = "${new Random().nextLong()}"
-                        builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
-                        links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
-                        buildInformationNeed(need, name)
-                    }
-                    // TODO - add dynamic relationships, assignments, agreements
-                }
+                buildActsAndInfoForAgent(agentRef, builder)
             }
         }
+    }
+
+    void buildActsAndInfoForAgent(Ref agentRef, GraphVizBuilder builder) {
+        acts.each {actRef ->
+            InformationAct act = actRef.deref()
+            // Actor's acts
+            if (areSame(agentRef, act.actorAgent)) {
+                builder.node(name: nameFor(act), label: labelFor(act), URL: urlFor(act), template: templateFor(act))
+            }
+            // Actor's acquired information
+            if (act.hasInformation() && ((act.isFlowAct() && areSame(act.targetAgent, agentRef)) ||
+                    (!act.isFlowAct() && areSame(act.actorAgent, agentRef)))) {
+                Information info = act.information
+                String name = "${new Random().nextLong()}"
+                builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
+                links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
+                Event subject = (Event) info.event.deref()
+                events.add(info.event)
+                links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+            }
+            // Actor's task-acquired information needs
+            if (act instanceof Task && areSame(act.actorAgent, agentRef)) {
+                act.informationNeeds.each {need ->
+                    String name = "${new Random().nextLong()}"
+                    builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
+                    links.add([nameFor(act), name, "at ${durationToText(act.startTime())} needs", 'aboutEdge'])
+                    buildInformationNeed(need, name)
+                }
+            }
+            if (act instanceof InformationRequest && areSame(act.targetAgent, agentRef)) {
+                InformationNeed need = act.informationNeed
+                String name = "${new Random().nextLong()}"
+                builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
+                links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
+                buildInformationNeed(need, name)
+            }
+            // TODO - add dynamic relationships, assignments, agreements
+        }
+    }
+
+    private boolean areSame(Ref agent, Ref other) { // both same fresh Ref, or both are either stale or null
+        return (agent as boolean && other as boolean && agent == other) || (!agent as boolean && !other as boolean)
     }
 
     void buildInformationNeed(InformationNeed need, String name) {

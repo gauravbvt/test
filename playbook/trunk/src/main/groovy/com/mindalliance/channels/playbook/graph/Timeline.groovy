@@ -26,8 +26,8 @@ class Timeline extends PlaybookGraph {
 
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-           time: [shape: 'plaintext', fontsize:'9'],
-           time_edge: [dir: 'none']
+                time: [shape: 'plaintext', fontsize: '9'],
+                time_edge: [dir: 'none']
         ]
     }
 
@@ -47,10 +47,10 @@ class Timeline extends PlaybookGraph {
     void processData() {
         container.iterator().each {ref ->
             Referenceable el = ref.deref()
-            switch(el) {
-                case Event.class: processEvent((Event)el); break
-                case Playbook.class: processPlaybook((Playbook)el); break
-                //default: Logger.getLogger(this.class).warn("Can't display $el")
+            switch (el) {
+                case Event.class: processEvent((Event) el); break
+                case Playbook.class: processPlaybook((Playbook) el); break
+            //default: Logger.getLogger(this.class).warn("Can't display $el")
             }
         }
     }
@@ -64,10 +64,10 @@ class Timeline extends PlaybookGraph {
 
     void processPlaybook(Playbook pb) {   // TODO - not needed
         pb.events.each {ref ->
-            if(ref as boolean) processEvent((Event)ref.deref())
+            if (ref as boolean) processEvent((Event) ref.deref())
         }
         pb.informationActs.each {ref ->
-            if(ref as boolean) processEvent((Event)ref.deref())
+            if (ref as boolean) processEvent((Event) ref.deref())
         }
     }
 
@@ -75,8 +75,8 @@ class Timeline extends PlaybookGraph {
         String priorName = null
         timed.keySet().each {dur ->
             String durText = durationToText(dur)
-            builder.node(name: durText, label:durText, template:'time')
-            if (priorName) builder.edge(source:priorName, target: durText, template:'time_edge')
+            builder.node(name: durText, label: durText, template: 'time')
+            if (priorName) builder.edge(source: priorName, target: durText, template: 'time_edge')
             priorName = durText
         }
     }
@@ -84,14 +84,14 @@ class Timeline extends PlaybookGraph {
     void buildOccurrences(GraphVizBuilder builder) {
         timed.each {dur, occSet ->
             occSet.each {occ ->
-                if (occ instanceof InformationAct) {
-                    Agent agent = (Agent)occ.actorAgent.deref()
-                    builder.cluster(name:nameFor(occ) + nameFor(agent), label:labelFor(agent), URL:urlFor(agent), template:'agent') {
-                        builder.node(name:nameFor(occ), label:labelFor(occ), URL:urlFor(occ), template:templateFor(occ))
+                if (occ instanceof InformationAct && occ.actorAgent as boolean) {
+                    Agent agent = (Agent) occ.actorAgent.deref()
+                    builder.cluster(name: nameFor(occ) + nameFor(agent), label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
+                        builder.node(name: nameFor(occ), label: labelFor(occ), URL: urlFor(occ), template: templateFor(occ))
                     }
                 }
                 else {
-                    builder.node(name:nameFor(occ), label:labelFor(occ), URL:urlFor(occ), template:templateFor(occ))
+                    builder.node(name: nameFor(occ), label: labelFor(occ), URL: urlFor(occ), template: templateFor(occ))
                 }
 
             }
@@ -100,10 +100,10 @@ class Timeline extends PlaybookGraph {
 
     void buildTimings(GraphVizBuilder builder) {
         timed.each {dur, occSet ->
-            builder.subgraph(rank:'same') {
+            builder.subgraph(rank: 'same') {
                 builder.node(name: durationToText(dur))
                 occSet.each {occ ->
-                    builder.node(name:nameFor(occ))
+                    builder.node(name: nameFor(occ))
                 }
             }
         }
@@ -114,8 +114,8 @@ class Timeline extends PlaybookGraph {
             occSet.each {occ ->
                 Ref eventRef = occ.cause.trigger
                 if (eventRef as boolean && allEvents.contains(eventRef)) {
-                    Event cause = (Event)eventRef.deref()
-                    builder.edge(source:nameFor(cause), target:nameFor(occ))
+                    Event cause = (Event) eventRef.deref()
+                    builder.edge(source: nameFor(cause), target: nameFor(occ))
                 }
             }
         }
