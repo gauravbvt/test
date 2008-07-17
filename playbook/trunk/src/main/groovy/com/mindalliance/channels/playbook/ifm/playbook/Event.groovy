@@ -30,7 +30,7 @@ class Event extends PlaybookElement implements Named, Described {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['informationAct', 'impliedEventType']
+        return (List<String>)(super.transientProperties() + ['informationAct', 'impliedEventType'])
     }
 
     String toString() {
@@ -54,14 +54,14 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     Duration startTime() {
-        Duration startTime = Duration.ZERO;
+        Duration startTime
         if (cause.isKnown()) {
             startTime = cause.trigger.startTime() + cause.delay.duration
         }
         else {
             startTime = cause.delay.duration
         }
-        return startTime;
+        return startTime
     }
 
     // Return event type implied by the event (provides for reflexion on events, including information acts)

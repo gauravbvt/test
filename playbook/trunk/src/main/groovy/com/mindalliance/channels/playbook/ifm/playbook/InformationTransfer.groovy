@@ -17,7 +17,7 @@ class InformationTransfer extends SharingAct {
     Ref mediumType
 
     String toString() {
-        return "Transfer of $information"
+        return "Transfer of info: $information"
     }
 
     // Return implied event type

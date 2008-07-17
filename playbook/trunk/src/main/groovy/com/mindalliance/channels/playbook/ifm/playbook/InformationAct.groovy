@@ -19,7 +19,7 @@ abstract class InformationAct extends Event {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['duration', 'flowAct', 'sharingAct']
+        return (List<String>)(super.transientProperties() + ['duration', 'flowAct', 'sharingAct'])
     }
 
     boolean isInformationAct() {

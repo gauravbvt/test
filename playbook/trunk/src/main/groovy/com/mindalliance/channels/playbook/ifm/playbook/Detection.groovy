@@ -17,6 +17,10 @@ class Detection extends InformationAct {
 
     Information information = new Information()
 
+    String toString() {
+        return "Detection of ${information.event}"
+    }
+
     boolean hasInformation() {
         return true
     }
