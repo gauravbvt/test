@@ -100,6 +100,7 @@ public class FilterTree extends Tree {
         Filter f = (Filter) node;
         f.setExpanded( getTreeState().isNodeExpanded( node ) );
         getTreeModel().nodeStructureChanged( node );
+        invalidateAll();
         updateTree( target );
         onExpandCollapse( target, f );
     }

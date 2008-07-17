@@ -70,7 +70,7 @@ public class DynamicFilterTree extends FilterTree {
     }
 
     public synchronized Filter getFilter() {
-        if (computedFilter == null) {
+        if ( computedFilter == null ) {
             setFilter(createFilter(selections, choices, isSingleSelect() ) );
         }
 
@@ -79,7 +79,8 @@ public class DynamicFilterTree extends FilterTree {
 
     public synchronized void setFilter(Filter filter) {
         computedFilter = filter;
-        if (filter != null) filter.setSingleSelect( isSingleSelect() );
+        if ( filter != null )
+            filter.setSingleSelect( isSingleSelect() );
         super.setFilter(filter);
     }
 

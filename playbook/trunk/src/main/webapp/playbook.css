@@ -29,16 +29,54 @@ div.title {
 }
 
 div#tab-content {
-    display: table;
+    position: relative;
 }
 
-div#tab-content > div {
-    display: table-row;
-}
-
-div.tab-left, div.tab-right {
-    display: table-cell;
+div.tab-left {
     vertical-align: top;
+    padding: 0 5px 5px 0;
+    width: 20em;
+}
+
+div.tab-left p {
+    margin-top: 5px;
+    text-align: right;
+}
+
+div.tab-right {
+    left: 20.5em;
+    right: 0;
+    top: 0;
+    position: absolute;
+    vertical-align: top;
+}
+
+div.tab-right > div.tab-panel {
+    max-height: 25em;
+}
+
+div.content-list {
+    overflow: auto;
+}
+
+div#filter {
+    margin: 0 0 5px 0;
+}
+
+div#links {
+    margin: 0 0 5px 0;
+}
+
+div#links ul {
+    margin: 0 5px;
+    list-style: none;
+
+}
+
+div#links ul li {
+    display: inline;
+    margin: 5px 0 0 0;
+    line-height: 30px;
 }
 
 .tall {
@@ -49,30 +87,13 @@ div.tab-left, div.tab-right {
     width: 100%;
 }
 
-div.tab-left {
-    padding: 0 5px 5px 0;
-}
-
-div.tab-left p {
-    margin-top: 5px;
-    text-align: right;
-}
-
-div.tab-right {
-}
-
-div.tab-right > div.tab-panel {
-    overflow: auto;
-    max-height: 25em;
-}
-
 /* ----------------- Fonts */
 body, input {
     font-size: 1em;
     font-family: "Times New Roman", times, serif;
 }
 
-h1, h2, h3, h4, .tab-row {
+h1, h2, h3, h4, .tab-row, table thead {
     font-family: arial, helvetica, sans-serif;
 }
 
@@ -196,7 +217,7 @@ div#everything > div.tab-row ul, div.tab-right div.tab-row ul {
     margin: 1px 0;
 }
 div.content-form div.tab-row ul {
-    margin: -1px 0 5px 0;
+    margin: 0 0 5px 0;
 }
 div#tab-title div.tab-row ul {
     margin-bottom: 1px;
@@ -226,7 +247,7 @@ hr, div.content-list h3, div.content-form h3 {
 
 div.wicket-tree {
     margin: 2px 0 0 1px !important;
-    width: 18em !important;
+    width: auto !important;
     border: none !important;
 }
 

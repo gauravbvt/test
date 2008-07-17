@@ -7,6 +7,7 @@ import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.authorization.strategies.role.Roles
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.query.QueryCache
+import javax.servlet.http.HttpServletRequest
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,6 +40,10 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     static PlaybookSession current() {
         return (PlaybookSession)Session.get()
+    }
+
+    void takeUserFromRequest( HttpServletRequest request ) {
+        userId = request.getParameter("username");
     }
 
     void invalidate() {

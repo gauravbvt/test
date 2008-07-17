@@ -7,18 +7,24 @@ import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,8 +66,28 @@ public class TabPanel extends Panel implements SelectionManager {
                 TabPanel.this.onFilterSave( getTab(), filter );
             } } );
 
+        addLinks();
         add( createTabPanel() );
         add( form );
+    }
+
+    private void addLinks() {
+        Object[][] links = {
+                { "RSS",    "feed-icon-14x14.png", RSSTab.class, "RSS feed for changes to this tab" },
+                { "Report", "pdf.png", ReportPage.class, "Printable report for this tab" },
+            };
+        add( new DataView( "links", new ListDataProvider( Arrays.asList( links ) ) ){
+            protected void populateItem( Item item ) {
+                Object[] details = (Object[]) item.getModelObject();
+                PageLink link = new PageLink( "link", (Class<?>) details[2] );
+                WebMarkupContainer image = new WebMarkupContainer( "link-text" );
+                image.add( new AttributeModifier( "src", new Model( (String) details[1] ) ) );
+                image.add( new AttributeModifier( "alt", new Model( (String) details[0] ) ) );
+                image.add( new AttributeModifier( "title", new Model( (String) details[3] ) ) );
+                link.add( image );
+                item.add( link );
+            }
+        } );
     }
 
     private TabbedPanel createTabPanel() {
