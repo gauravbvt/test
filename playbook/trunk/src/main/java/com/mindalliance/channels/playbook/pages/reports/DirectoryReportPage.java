@@ -22,7 +22,4 @@ public class DirectoryReportPage extends ReportPage {
         return new ResourceDirectory(tab);
     }
 
-    protected void load(Tab tab) {
-        super.load(tab);
-    }
 }

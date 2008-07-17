@@ -18,6 +18,8 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
+import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -29,6 +31,7 @@ import com.mindalliance.channels.playbook.ifm.Agent
 class ResourceDirectory extends Report {
 
     static final boolean EXPAND = true
+    Set processed = new HashSet()
 
     ResourceDirectory(Tab tab) {
         super(tab)
@@ -87,19 +90,23 @@ class ResourceDirectory extends Report {
             case Playbook.class: processPlaybook((Playbook) element, xml); break
             case Role.class: processRole((Role) element, xml); break
             case Location.class: processLocation((Location) element, xml); break
-            case Resource.class: processResource((Resource) element, EXPAND, xml)
+            case Resource.class: processResource((Resource) element, EXPAND, xml); break
+            case InformationAct.class: processInformationAct((InformationAct) element, xml)
         }
     }
 
     private void processProject(Project project, MarkupBuilder xml) {
+        if (processed.contains(project.reference)) return
         xml.group(type: project.type, name: "In project ${project.name}") {
             project.findAllResources().each {res ->
                 processResource((Resource) res.deref(), !EXPAND, xml)
             }
         }
+        processed.add(project.reference)
     }
 
     private void processPlaybook(Playbook playbook, MarkupBuilder xml) {
+        if (processed.contains(playbook.reference)) return
         xml.group(type: playbook.type, name: "In playbook ${playbook.name}") {
             playbook.findAllAgents().each {ref ->
                 Referenceable agent = ref.deref()
@@ -108,9 +115,29 @@ class ResourceDirectory extends Report {
                 }
             }
         }
+        processed.add(playbook.reference)
+    }
+
+    private void processInformationAct(InformationAct act, MarkupBuilder xml) {
+        if (processed.contains(act.reference)) return
+        Ref ref = act.actorAgent
+        if (ref as boolean) {
+            Agent actor = (Agent) ref.deref()
+
+            if (!processed.contains(actor.reference) && actor instanceof Resource) processResource((Resource) actor, !EXPAND, xml)
+        }
+        if (act instanceof FlowAct) {
+            ref = ((FlowAct) act).targetAgent
+            if (ref as boolean) {
+                Agent target = (Agent) ref.deref()
+                if (!processed.contains(target.reference) && target instanceof Resource) processResource((Resource) target, !EXPAND, xml)
+            }
+        }
+        processed.add(act.reference)
     }
 
     private void processRole(Role role, MarkupBuilder xml) {
+        if (processed.contains(role.reference)) return
         xml.group(type: role.type, name: "In role ${role.name}", id: role.id) {
             this.userProjects.each {project ->
                 project.findAllResources().each {ref ->
@@ -122,9 +149,11 @@ class ResourceDirectory extends Report {
                 }
             }
         }
+        processed.add(role.reference)
     }
 
     private void processLocation(Location loc, MarkupBuilder xml) {
+        if (processed.contains(loc.reference)) return
         xml.group(type: 'Location', name: "In location $loc") {
             this.userProjects.each {project ->
                 project.findAllResources().each {ref ->
@@ -136,6 +165,7 @@ class ResourceDirectory extends Report {
                 }
             }
         }
+        processed.add(loc.reference)
     }
 
     private void processResource(Resource res, boolean expand, MarkupBuilder xml) {
@@ -163,9 +193,11 @@ class ResourceDirectory extends Report {
                 case Team.class: if (expand) processTeam((Team) res, xml)
             }
         }
+        processed.add(res.reference)
     }
 
     private void processOrganization(Organization org, MarkupBuilder xml) {
+        if (processed.contains(org.reference)) return
         List<Ref> resources = org.resources
         if (resources) {
             xml.group(type: org.type, name: 'Resources in this organization', id: org.id) {
@@ -174,6 +206,7 @@ class ResourceDirectory extends Report {
                 }
             }
         }
+        processed.add(org.reference)
     }
 
     private void processPosition(Position pos, MarkupBuilder xml) {
@@ -185,9 +218,11 @@ class ResourceDirectory extends Report {
                 }
             }
         }
+        processed.add(pos.reference)
     }
 
     private void processTeam(Team team, MarkupBuilder xml) {
+        if (processed.contains(team.reference)) return
         List<Ref> members = team.resources
         if (members) {
             xml.group(type: team.type, name: 'Team members', id: team.id) {
@@ -196,6 +231,7 @@ class ResourceDirectory extends Report {
                 }
             }
         }
+        processed.add(team.reference)
     }
 
     private void processSystem(System system, MarkupBuilder xml) {

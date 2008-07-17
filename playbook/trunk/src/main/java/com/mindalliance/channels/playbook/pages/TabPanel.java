@@ -88,7 +88,10 @@ public class TabPanel extends Panel implements SelectionManager {
         add(new DataView("links", new ListDataProvider(Arrays.asList(links))) {
             protected void populateItem(Item item) {
                 Object[] details = (Object[]) item.getModelObject();
-                BookmarkablePageLink link = new BookmarkablePageLink("link", (Class<?>) details[2], new PageParameters(ReportPage.REPORT_TAB_PARAM + "=" + getTab().getId()));
+                PageParameters params = new PageParameters();
+                params.put(ReportPage.REPORT_TAB_PARAM, getTab().getId());
+                params.put(ReportPage.REPORT_MIMETYPE_PARAM, "xhtml");
+                BookmarkablePageLink link = new BookmarkablePageLink("link", (Class<?>) details[2], new PageParameters(params));
                 WebMarkupContainer image = new WebMarkupContainer("link-text");
                 image.add(new AttributeModifier("src", new Model((String) details[1])));
                 image.add(new AttributeModifier("alt", new Model((String) details[0])));
