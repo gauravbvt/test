@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages;
+package com.mindalliance.channels.playbook.pages.reports;
 
 import org.apache.wicket.markup.html.WebPage;
 

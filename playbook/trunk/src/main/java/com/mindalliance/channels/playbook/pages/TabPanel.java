@@ -4,6 +4,9 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.graphs.InfoFlowPanel;
 import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
+import com.mindalliance.channels.playbook.pages.reports.ReportPage;
+import com.mindalliance.channels.playbook.pages.reports.DirectoryReportPage;
+import com.mindalliance.channels.playbook.pages.reports.RSSTab;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -73,8 +76,10 @@ public class TabPanel extends Panel implements SelectionManager {
 
     private void addLinks() {
         Object[][] links = {
-                { "RSS",    "feed-icon-14x14.png", RSSTab.class, "RSS feed for changes to this tab" },
-                { "Report", "pdf.png", ReportPage.class, "Printable report for this tab" },
+                { "Directory", "address_book2.png", DirectoryReportPage.class, "Resource directory for this tab" },
+                { "Playbook", "branch_element.png", ReportPage.class, "Playbook report for this tab" },
+                { "Issues", "flag_red.png", ReportPage.class, "Issues report for this tab" },
+                { "RSS",    "feed-icon-14x14.png", RSSTab.class, "RSS feed for changes to this tab" }
             };
         add( new DataView( "links", new ListDataProvider( Arrays.asList( links ) ) ){
             protected void populateItem( Item item ) {
