@@ -5,6 +5,7 @@ import groovy.xml.MarkupBuilder
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Ref
+import java.text.SimpleDateFormat
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -53,6 +54,7 @@ abstract class Report {
         xml.title(this.title)
         xml.context(tab.getName())
         xml.user(getUser().name)
+        xml.date(new SimpleDateFormat().format(new Date()))
     }
 
     void buildFooter(MarkupBuilder xml) {
