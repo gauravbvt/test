@@ -221,15 +221,17 @@ public class PlaybookPage extends WebPage {
                             } catch ( CloneNotSupportedException e ) {
                                 throw new RuntimeException( e );
                             }
-                            List<Class<?>> c = newTab.getAllowedClasses();
-                            if ( c.size() > 0 ) {
-                              // TODO do something smarter here...
-                              newTab.setName( ContainerSummary.toDisplay( c.get(0).getSimpleName() ) + "s" );
-                            }
 
                             Ref userRef = getUserRef();
                             userRef.begin();
                             User u = (User) userRef.deref();
+
+                            List<Class<?>> c = newTab.getAllowedClasses();
+                            if ( c.size() == 1 ) {
+                                newTab.setName( ContainerSummary.toDisplay( c.get(0).getSimpleName() ) + "s" );
+                            } else
+                                newTab.setName( "Tab " + (u.getTabs().size() + 1) );
+
                             u.addTab( newTabRef );
                             assert( getSessionMemory().getChanges().contains( userRef ));
                             newTab.detach();

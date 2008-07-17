@@ -89,7 +89,7 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
     public void invalidate() {
         if ( !invalid ) {
             setInvalid( true );
-            if ( ! ( getContainer() instanceof UserScope ) )
+            if ( container != null && ! ( getContainer() instanceof UserScope ) )
                 getContainer().detach();
             if ( children != null )
                 for( Filter f : children )
@@ -312,21 +312,18 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             // Recompute while preserving order and selections
             List<Filter> newChildren = createChildren();
 
-            for ( Filter old : children ) {
-                int i = newChildren.indexOf( old );
-                if ( i >= 0 ) {
-                    // set expansion and selection
-                    Filter nk = newChildren.get( i );
-                    nk.setSelected( old.isSelected() );
-                    nk.setExpanded( old.isExpanded() );
-                }
+            for ( Filter oldKid : children ) {
+                int i = newChildren.indexOf( oldKid );
+                // Keep using old child to revalidate its selection and children
+                if ( i >= 0 )
+                    newChildren.set( i, oldKid );
             }
 
-            for ( Filter nk : newChildren ) {
-                int i = children.indexOf( nk );
+            for ( Filter newKid : newChildren ) {
+                int i = children.indexOf( newKid );
                 if ( i < 0 ) {
-                    nk.setForceSelected( isSelected() );
-                    nk.setExpanded( false );
+                    newKid.setForceSelected( isSelected() );
+                    newKid.setExpanded( false );
                 }
             }
 
