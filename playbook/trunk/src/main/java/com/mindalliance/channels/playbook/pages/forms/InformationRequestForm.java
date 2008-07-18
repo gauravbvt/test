@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationRequest.InformationRequestNeedTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActCauseTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventCauseTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventRiskTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
@@ -30,7 +30,7 @@ public class InformationRequestForm extends AbstractInformationActForm {
         });
         tabs.add(new AbstractTab(new Model("Cause")) {
              public Panel getPanel(String panelId) {
-                 return new InformationActCauseTab(panelId, InformationRequestForm.this);
+                 return new EventCauseTab(panelId, InformationRequestForm.this);
              }
          });
         tabs.add(new AbstractTab(new Model("Information need")) {

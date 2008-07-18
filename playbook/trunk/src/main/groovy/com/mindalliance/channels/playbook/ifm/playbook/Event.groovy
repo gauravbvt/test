@@ -46,7 +46,7 @@ class Event extends PlaybookElement implements Named, Described {
 
     boolean isAfter(Ref event) {
         if (hasTransitiveCause(event)) return true
-        return (event.startTime() > this.startTime())
+        return this.startTime() > event.startTime()
     }
 
     boolean hasTransitiveCause(Ref event) {     // is act a direct or indirect cause of this occurrence

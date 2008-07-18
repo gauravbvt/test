@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActInfoTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActCauseTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventCauseTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationTransfer.InformationTransferMediaTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventRiskTab;
@@ -31,7 +31,7 @@ public class InformationTransferForm extends AbstractInformationActForm {
         });
         tabs.add(new AbstractTab(new Model("Cause")) {
              public Panel getPanel(String panelId) {
-                 return new InformationActCauseTab(panelId, InformationTransferForm.this);
+                 return new EventCauseTab(panelId, InformationTransferForm.this);
              }
          });
         tabs.add(new AbstractTab(new Model("Information")) {

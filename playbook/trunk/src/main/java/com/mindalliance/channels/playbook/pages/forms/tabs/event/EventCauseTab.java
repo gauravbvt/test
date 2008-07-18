@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms.tabs.informationAct;
+package com.mindalliance.channels.playbook.pages.forms.tabs.event;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
@@ -11,11 +11,11 @@ import com.mindalliance.channels.playbook.pages.forms.panels.CausePanel;
  * Date: May 16, 2008
  * Time: 1:17:13 PM
  */
-public class InformationActCauseTab extends AbstractFormTab {
+public class EventCauseTab extends AbstractFormTab {
 
     protected CausePanel causePanel;
 
-    public InformationActCauseTab(String id, AbstractElementForm elementForm) {
+    public EventCauseTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
