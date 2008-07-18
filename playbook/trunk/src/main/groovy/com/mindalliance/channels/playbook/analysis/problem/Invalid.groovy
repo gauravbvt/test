@@ -1,7 +1,6 @@
-package com.mindalliance.channels.playbook.analysis
+package com.mindalliance.channels.playbook.analysis.problem
 
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ifm.Named
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,9 +9,9 @@ import com.mindalliance.channels.playbook.ifm.Named
  * Date: Jul 9, 2008
  * Time: 7:36:21 AM
  */
-class Invalid extends AnalysisElement implements Named {
+class Invalid extends Problem {
 
-    static final Map TAGS = [
+    private static final Map INVALID_TAGS = [
             actorMissing: "The actor is missing.",
             targetMissing: "The target agent is missing.",
             noSharedInfo: "The shared information is not defined.",
@@ -30,26 +29,11 @@ class Invalid extends AnalysisElement implements Named {
             relationshipIncomplete: "The relationship is not sufficiently defined; it is missing the 'from', the 'to' and/or a name."
     ]
 
-    Referenceable element
-    String tag
-
-    Invalid(Referenceable element, String tag) {
-        this.element = element
-        this.tag = tag
+    Invalid(Referenceable referenceable, String tag) {
+        super(referenceable, tag)
     }
 
-    String toString() {
-        return "Not valid : $element"
+    public String textForTag(String tag) {
+        return (String)INVALID_TAGS[tag]
     }
-
-    String labelText() {
-        return (String)TAGS[tag] ?: tag
-    }
-
-    public String getName() {
-        return tag
-    }
-    
-
-    
 }

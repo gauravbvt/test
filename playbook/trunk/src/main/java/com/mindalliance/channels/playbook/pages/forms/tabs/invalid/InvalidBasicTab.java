@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.invalid;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.analysisElement.AnalysisElementBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.analysis.Invalid;
+import com.mindalliance.channels.playbook.analysis.problem.Invalid;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
