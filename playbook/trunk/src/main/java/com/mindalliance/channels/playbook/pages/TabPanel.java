@@ -4,9 +4,9 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.graphs.InfoFlowPanel;
 import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
-import com.mindalliance.channels.playbook.pages.reports.ReportPage;
 import com.mindalliance.channels.playbook.pages.reports.DirectoryReportPage;
 import com.mindalliance.channels.playbook.pages.reports.RSSTab;
+import com.mindalliance.channels.playbook.pages.reports.ReportPage;
 import com.mindalliance.channels.playbook.pages.reports.TBDReportPage;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
@@ -17,10 +17,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -49,7 +47,6 @@ public class TabPanel extends Panel implements SelectionManager {
 
         form = new FormPanel("content-form", new PropertyModel(this, "selected"));
 
-        add(new Label("content-title", new RefPropertyModel(tabModel, "name")));
         add(new FilterPanel("filter", new RefPropertyModel(tabModel, "filter")) {
             public void onFilterApplied(Filter f) {
                 final Ref tabRef = getTabRef();

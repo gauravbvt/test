@@ -59,24 +59,15 @@ public class FilterTree extends Tree {
         String selector = isSingleSelect()? "uniqueSelection" : "forceSelected" ;
         if ( !isSingleSelect() || f.getChildCount() == 0 ) {
             item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ) {
-                synchronized public void onFilterSelect( AjaxRequestTarget target ) {
-                    DefaultTreeModel tm = getTreeModel();
-                    tm.nodeStructureChanged( f );
-
-                    Filter parent = f.getParent();
-                    while ( parent != null ) {
-                        tm.nodeChanged( parent );
-                        parent = parent.getParent();
-                    }
+                public void onFilterSelect( AjaxRequestTarget target ) {
+                    getTreeModel().reload();
 
                     // Make sure old selection (now unchecked) is refreshed in browser
                     if ( isSingleSelect() && oldTarget != null ) {
                         target.addComponent( oldTarget );
                     }
                     oldTarget = this.getCheckBox();
-
                     updateTree( target );
-
                     FilterTree.this.onFilterSelect( target, f );
                 }
             } );

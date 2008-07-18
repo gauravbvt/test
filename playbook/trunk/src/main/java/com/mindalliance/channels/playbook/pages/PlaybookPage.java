@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebResponse;
 
@@ -52,7 +53,17 @@ public class PlaybookPage extends WebPage {
     private void load() {
         setModel( new Model( getSession() ) );
 
-        addOrReplace( new Label("title", "Playbook" ));
+        addOrReplace( new Label("title", new AbstractReadOnlyModel(){
+            public Object getObject() {
+                Ref ref = getSelectedTab();
+                if ( ref == null )
+                    return "Channels";
+                else {
+                    Tab tab = (Tab) ref.deref();
+                    return tab.getName() + " - Channels" ;
+                }
+            }
+        } ));
         addOrReplace( new Label("name", new RefPropertyModel(getModel(), "user.name")));
         addOrReplace( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
