@@ -52,18 +52,14 @@
     </xsl:template>
 
     <xsl:template match="group">
-        <div>
-            <xsl:attribute name="class">group</xsl:attribute>
+        <div class="group">
             <xsl:value-of select="@name"/>
             <xsl:apply-templates/>
         </div>
     </xsl:template>
 
     <xsl:template match="resource">
-        <div>
-            <xsl:attribute name="class">resource
-                <xsl:value-of select="@type"/>
-            </xsl:attribute>
+        <div class="resource">
             <div class="name">
                 <xsl:value-of select="name"/>
             </div>
