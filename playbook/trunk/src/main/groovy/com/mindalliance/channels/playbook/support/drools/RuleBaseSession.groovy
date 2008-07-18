@@ -54,7 +54,6 @@ class RuleBaseSession implements Serializable {
     }
 
     private void reset() {
-        factHandles = Collections.synchronizedMap(new HashMap<Ref, FactHandle>())
         inserts = Collections.synchronizedSet(new HashSet<Referenceable>())
         retracts = Collections.synchronizedSet(new HashSet<Ref>())
     }
@@ -73,6 +72,7 @@ class RuleBaseSession implements Serializable {
             logger = new WorkingMemoryFileLogger(session);
             logger.setFileName(LOG_PATH);
         }
+        factHandles = new HashMap<Ref, FactHandle>()
     }
 
     void clear() {

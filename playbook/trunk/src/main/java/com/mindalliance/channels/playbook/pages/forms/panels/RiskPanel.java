@@ -11,10 +11,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.model.Model;
-import org.wicketstuff.dojo.markup.html.form.sliders.DojoIntegerSlider;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

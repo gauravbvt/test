@@ -112,9 +112,10 @@ abstract public class GraphPanel extends ContentView {
 
     protected void onBeforeRender() { // panel must be connected to page to get callback url
         setupButtons();
-        if (svgContent.getModelObject() == null) {
+        svgContent.setModelObject(makeGraphSvg()); // no caching
+        /*if (svgContent.getModelObject() == null) {
             addGraphSvg();  // only if not already done
-        }
+        }*/
         super.onBeforeRender();
     }
 
@@ -135,7 +136,15 @@ abstract public class GraphPanel extends ContentView {
         resetButton.add(new AttributeModifier("onclick", true, new Model("svg_reset(" + args + ")")));
     }
 
-    protected void addGraphSvg() {
+    protected String makeGraphSvg() {
+        Container container = getContainer();
+        directedGraph = makeDirectedGraph(container);
+        String callback = behave.getCallbackUrl().toString();
+        svg = directedGraph.makeSvg(svgElementId, callback, getSelected(), transformation);
+        return svg;
+    }
+
+   /* protected void addGraphSvg() {
         Container container = getContainer();
 
         if (directedGraph == null || !container.equals(priorContainer)) { // make new directed graph only if needed
@@ -154,12 +163,12 @@ abstract public class GraphPanel extends ContentView {
             }
         svgContent.setModelObject(svg);
         priorSelection = getSelected();
-    }
+    }*/
 
     public void setSelected(Ref ref) {  // overrides ContentView
         super.setSelected(ref);
         // force update of svgContent
-        svgContent.setModelObject(null);
+        // svgContent.setModelObject(null);
     }
 
 }
