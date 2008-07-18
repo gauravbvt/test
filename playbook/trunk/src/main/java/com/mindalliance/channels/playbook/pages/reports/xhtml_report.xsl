@@ -60,13 +60,23 @@
 
     <xsl:template match="resource">
         <div class="resource">
-            <div class="name">
-                <xsl:value-of select="name"/>
-            </div>
+
             <div class="description">
                 <xsl:value-of select="description"/>
             </div>
             <xsl:apply-templates/>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="name">
+        <div class="name">
+            <xsl:value-of select="."/>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="description">
+        <div class="description">
+            <xsl:value-of select="."/>
         </div>
     </xsl:template>
 
