@@ -171,4 +171,17 @@ class RefUtils {
         return sb.toString()
     }
 
+    static String pluralize(String name) {
+        String field = name
+        if (!field.endsWith('s')) {
+            if (field.endsWith('y')) {
+                field = "${field[0..field.size() - 2]}ies"
+            }
+            else {
+                field = "${field}s"
+            }
+        }
+        return field
+    }
+
 }

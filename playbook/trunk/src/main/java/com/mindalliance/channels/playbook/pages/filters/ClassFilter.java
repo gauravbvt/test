@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
+import com.mindalliance.channels.playbook.support.RefUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -164,7 +165,7 @@ public class ClassFilter extends Filter {
     public static String expandedText( Class<?> clazz ) {
         String s = ContainerSummary.toDisplay( clazz.getSimpleName() );
         s = s.substring( 0,1 ) + s.substring( 1 ).toLowerCase();
-        return MessageFormat.format( "{0}s...", s );
+        return MessageFormat.format( "{0}...", RefUtils.pluralize(s) );
     }
 
     private Set<Class<?>> getSubclasses() {
