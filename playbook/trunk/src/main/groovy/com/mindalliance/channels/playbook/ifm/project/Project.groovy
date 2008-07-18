@@ -68,7 +68,7 @@ class Project extends IfmElement implements Named, Described {
         object.project = null
         super.doRemoveFromField(field, object);
     }
-    
+
     // Rulebase queries
 
     List<Ref> getAllInvalidations() {
@@ -396,6 +396,7 @@ class Project extends IfmElement implements Named, Described {
         result.addAll(policies)
         result.addAll(relationships)
         result.addAll(sharingAgreements)
+        result.addAll(allIssues)
     }
 
     /**
