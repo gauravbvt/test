@@ -72,11 +72,11 @@ class Project extends IfmElement implements Named, Described {
     // Rulebase queries
 
     List<Ref> getAllInvalidations() {
-        return RuleBaseSession.current().query("invalidsInProject", [this.id], "_invalid")
+        return RuleBaseSession.current().query("invalidsInProject", [this.id], "_invalid").collect{it.reference()}
     }
 
     List<Ref> getAllIssues() {
-        return RuleBaseSession.current().query("issuesInProject", [this.id], "_issue")
+        return RuleBaseSession.current().query("issuesInProject", [this.id], "_issue").collect{it.reference()}
     }
 
     // end rulebase queries

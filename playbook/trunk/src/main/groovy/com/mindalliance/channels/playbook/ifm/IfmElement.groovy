@@ -57,16 +57,16 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
         return false
     }
 
-    List getElementIssues() {
-         return RuleBaseSession.current().query("elementIssues", [this.id], "_issue")
+    List<Ref> getElementIssues() {
+         return RuleBaseSession.current().query("elementIssues", [this.id], "_issue").collect{it.reference()}
     }
 
-    List getElementInvalidations() {
-        return RuleBaseSession.current().query("elementInvalids", [this.id], "_invalid")
+    List<Ref> getElementInvalidations() {
+        return RuleBaseSession.current().query("elementInvalids", [this.id], "_invalid").collect{it.reference()}
     }
 
-    List getProblems() {
-        return (List)(getElementIssues() + getElementInvalidations())
+    List<Ref> getProblems() {
+        return (List<Ref>)(getElementIssues() + getElementInvalidations())
     }
 
 }
