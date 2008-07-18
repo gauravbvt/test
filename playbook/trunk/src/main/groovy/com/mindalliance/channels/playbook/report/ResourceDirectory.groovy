@@ -5,7 +5,7 @@ import com.mindalliance.channels.playbook.ifm.Tab
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
-import com.mindalliance.channels.playbook.ifm.model.Role
+import com.mindalliance.channels.playbook.ifm.taxonomy.Role
 import com.mindalliance.channels.playbook.ifm.project.resources.Team
 import com.mindalliance.channels.playbook.ifm.project.resources.Position
 import com.mindalliance.channels.playbook.ifm.info.Location

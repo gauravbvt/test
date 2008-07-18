@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventLocationTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventBasicTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventRiskTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -29,6 +30,11 @@ public class EventForm extends AbstractPlaybookElementForm {
         tabs.add(new AbstractTab(new Model("Location")) {
              public Panel getPanel(String panelId) {
                  return new EventLocationTab(panelId, EventForm.this);
+             }
+         });
+        tabs.add(new AbstractTab(new Model("Risk")) {
+             public Panel getPanel(String panelId) {
+                 return new EventRiskTab(panelId, EventForm.this);
              }
          });
     }

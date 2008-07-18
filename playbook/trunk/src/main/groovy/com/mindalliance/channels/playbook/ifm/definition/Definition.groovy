@@ -29,6 +29,10 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
     String toString() {
         return getSummary()
     }
+
+    String about() {
+        return description
+    }
     
 
     boolean matches(Bean bean, InformationAct informationAct) {

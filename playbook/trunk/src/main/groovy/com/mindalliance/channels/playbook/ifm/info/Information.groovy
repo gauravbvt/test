@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.Defineable
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,10 +29,10 @@ class Information extends AbstractInformation implements Defineable {  // the co
 
     String toString() {
         if (!event as boolean) {
-            return "About nothing"
+            return "info about ?"
         }
         else {
-            return "About ${event.deref().toString()}" // TODO - do better than this?
+            return "info about ${event.deref().toString()}" 
         }
     }
 
@@ -41,9 +42,9 @@ class Information extends AbstractInformation implements Defineable {  // the co
 
     String makeLabel(int maxWidth) {
         String eventString = event as boolean ? event.deref().toString() : 'UNDEFINED'
-        String label = "About\n ${eventString[0..Math.min(eventString.size()-1, maxWidth-1)]}"
+        String label = RefUtils.summarize("About\n $eventString", maxWidth)
         eventDetails.each {eoi ->
-            label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"
+            label += "|${RefUtils.summarize(eoi.topic, maxWidth)}"
         }
         return label
     }

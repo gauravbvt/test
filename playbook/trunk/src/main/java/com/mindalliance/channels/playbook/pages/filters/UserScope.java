@@ -2,8 +2,8 @@ package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.model.ModelElement;
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
+import com.mindalliance.channels.playbook.ifm.taxonomy.TaxonomyElement;
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
 import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement;
@@ -63,10 +63,10 @@ public class UserScope implements Container {
             if ( u.getAdmin() )
                 result.addAll( Channels.adminClasses() );
             if ( u.getAnalyst() ) {
-                result.addAll( PlaybookModel.analystClasses() );
-                boolean hasModels = getApplication().findModelsForUser( u.getReference() ).size() > 0;
-                if ( hasModels )
-                    result.addAll( PlaybookModel.contentClasses() );
+                result.addAll( Taxonomy.analystClasses() );
+                boolean hasTaxonomies = getApplication().findTaxonomiesForUser( u.getReference() ).size() > 0;
+                if ( hasTaxonomies )
+                    result.addAll( Taxonomy.contentClasses() );
             }
             if ( u.getManager() )
                 result.addAll( Project.managerClasses() );
@@ -93,8 +93,8 @@ public class UserScope implements Container {
                 result.addAll( channels.getUsers() );
 
             if ( u.getAnalyst() ) {
-                for ( Ref mRef: (List<Ref>) channels.getModels() ) {
-                    PlaybookModel m = (PlaybookModel) mRef.deref();
+                for ( Ref mRef: (List<Ref>) channels.getTaxonomies() ) {
+                    Taxonomy m = (Taxonomy) mRef.deref();
                     if ( m.isAnalyst( uRef ) ) {
                         result.add( mRef );
                         m.addContents( result );
@@ -194,13 +194,13 @@ public class UserScope implements Container {
             return pRef;
         }
 
-        if ( object instanceof ModelElement ) {
-            ModelElement element = (ModelElement) object;
-            Ref mRef = element.getModel();
+        if ( object instanceof TaxonomyElement) {
+            TaxonomyElement element = (TaxonomyElement) object;
+            Ref mRef = element.getTaxonomy();
             if ( mRef == null )
-                mRef = getDefaultModel();
+                mRef = getDefaultTaxonomy();
             if ( mRef != null ) {
-                PlaybookModel model = (PlaybookModel) mRef.deref();
+                Taxonomy model = (Taxonomy) mRef.deref();
                 if ( model.isAnalyst( uRef ) )
                     return mRef;
             }
@@ -271,8 +271,8 @@ public class UserScope implements Container {
         return getSession().getProject();
     }
 
-    private Ref getDefaultModel() {
-        return getSession().getModel();
+    private Ref getDefaultTaxonomy() {
+        return getSession().getTaxonomy();
     }
 
     private Ref getDefaultPlaybook( Ref projectRef ) {

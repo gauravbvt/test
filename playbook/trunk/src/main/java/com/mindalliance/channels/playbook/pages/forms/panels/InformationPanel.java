@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.ifm.model.EventType;
+import com.mindalliance.channels.playbook.ifm.taxonomy.EventType;
 import com.mindalliance.channels.playbook.ifm.info.Information;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;

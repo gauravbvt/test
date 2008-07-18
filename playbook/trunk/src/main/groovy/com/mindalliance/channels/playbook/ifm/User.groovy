@@ -23,7 +23,7 @@ class User extends IfmElement {
 
     // Selections
     Ref selectedProject
-    Ref selectedModel
+    Ref selectedTaxonomy
 
     String toString() { name }
 

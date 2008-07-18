@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -21,11 +21,11 @@ public interface ElementPanel {
     void addOtherElement(Ref otherElement);
     AbstractElementForm getTopElementPanel();
     boolean isProjectPanel();
-    boolean isModelPanel();
+    boolean isTaxonomyPanel();
     boolean isPlaybookPanel();
     Project getProject();
-    PlaybookModel getPlaybookModel();
+    Taxonomy getTaxonomy();
     Playbook getPlaybook();
-    Ref getScope(); // either Channels.instance(), a Project, an IFM PlaybookModel or a Playbook
+    Ref getScope(); // either Channels.instance(), a Project, an IFM Taxonomy or a Playbook
     void edit(Ref ref, AjaxRequestTarget target);
 }

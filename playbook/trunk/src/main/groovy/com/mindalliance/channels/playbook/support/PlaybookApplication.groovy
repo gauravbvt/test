@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.ref.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.project.resources.*
-import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.ifm.taxonomy.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import org.apache.wicket.Application
@@ -98,7 +98,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     void initializeContents() {
         Channels channels = new Channels(about: "About Channels")
         channels.makeRoot()
-        PlaybookModel m = initializeDefaultModel(channels)
+        Taxonomy m = initializeDefaultTaxonomy(channels)
 
         User admin = new User(userId: "admin", name: 'Administrator', password: "admin")
         admin.admin = true
@@ -118,7 +118,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         User annUser = new User(userId: "ann", name: 'Ann User', password: "password")
         channels.addUser(store(annUser))
 
-        m.addParticipation(store(new ModelParticipation(user: admin.reference)))
+        m.addParticipation(store(new TaxonomyParticipation(user: admin.reference)))
 
         // A default project for everyone, for now...
         Project p = new Project(name: 'Generic')
@@ -131,7 +131,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         jfk.setPlaceType(m.findType("PlaceType", "Airport"))
         p.addPlace(jfk)
         store(jfk)
-        p.addModel(m);
+        p.addTaxonomy(m);
         Playbook pb = new Playbook(name: "Playbook A", description: "This is Playbook A")
         p.addPlaybook(pb)
         assert pb.project
@@ -195,11 +195,11 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
         initializeDefaultPlaybook(p, m)
         channels.addProject(store(p))
-        channels.addModel(store(m));
+        channels.addTaxonomy(store(m));
         store(channels)
     }
 
-    void initializeDefaultPlaybook(Project p, PlaybookModel m) {
+    void initializeDefaultPlaybook(Project p, Taxonomy m) {
         Playbook pb = new Playbook(name: 'default')
         p.addPlaybook(pb)
 
@@ -287,9 +287,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         store(element)
     }
 
-    PlaybookModel initializeDefaultModel(Channels channels) {
-        PlaybookModel m = new PlaybookModel(name: 'default')
-        // PlaybookModel elements
+    Taxonomy initializeDefaultTaxonomy(Channels channels) {
+        Taxonomy m = new Taxonomy(name: 'default')
+        // Taxonomy categories
         PlaceType airport = new PlaceType(name: 'Airport')
         PlaceType runway = new PlaceType(name: 'Runway')
         runway.narrow(airport.reference)
@@ -447,9 +447,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         // return this.channels.findProjectsForUser(user)
     }
 
-    List<Ref> findModelsForUser(Ref user) {
-        return (List<Ref>)Query.execute(PlaybookModel.class,"findModelsOfUser", user)
-        // return this.channels.findModelsForUser(user)
+    List<Ref> findTaxonomiesForUser(Ref user) {
+        return (List<Ref>)Query.execute(Taxonomy.class,"findTaxonomiesOfUser", user)
+        // return this.channels.findTaxonomiesForUser(user)
     }
 
     public Ref findParticipation(Ref project, Ref user) {

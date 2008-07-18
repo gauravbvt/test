@@ -8,7 +8,7 @@ import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
-import com.mindalliance.channels.playbook.ifm.model.AreaType;
+import com.mindalliance.channels.playbook.ifm.taxonomy.AreaType;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -19,7 +19,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.IModel;
 
 import java.util.List;
 import java.util.ArrayList;

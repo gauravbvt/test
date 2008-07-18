@@ -19,7 +19,7 @@ abstract class PlaybookGraph extends DirectedGraph {
 
     static final String LABEL_FONT_SIZE = '7'
     static final String LABEL_FONT_NAME = 'Times-Roman'
-    static final String TITLE_FONT_SIZE = '8'
+    static final String TITLE_FONT_SIZE = '7'
     static final String TITLE_FONT_NAME = 'Helvetica-Bold'
     static final String PROBLEM_FONT_NAME = 'Times-Italic'
     static final String PROBLEM_FONT_SIZE = '7'

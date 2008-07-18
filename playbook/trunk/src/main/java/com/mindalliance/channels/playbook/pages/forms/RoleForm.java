@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 5, 2008
  * Time: 7:06:43 PM
  */
-public class RoleForm  extends AbstractModelElementForm {
+public class RoleForm  extends AbstractCategoryForm {
 
     public RoleForm(String id, Ref element) {
         super(id, element);

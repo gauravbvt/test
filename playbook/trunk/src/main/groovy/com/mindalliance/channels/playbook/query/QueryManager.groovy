@@ -13,7 +13,7 @@ import java.beans.PropertyChangeEvent
 import com.mindalliance.channels.playbook.ifm.*
 import com.mindalliance.channels.playbook.ifm.definition.*
 import com.mindalliance.channels.playbook.ifm.project.environment.*
-import com.mindalliance.channels.playbook.ifm.model.*
+import com.mindalliance.channels.playbook.ifm.taxonomy.*
 import com.mindalliance.channels.playbook.ifm.project.resources.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
 
@@ -45,14 +45,14 @@ class QueryManager implements PropertyChangeListener {
         dependencies = [     // large-grain dependencies but better than none
                 // Channels
                 findProjectsForUser: [Project.class, User.class],
-                findModelsForUser: [PlaybookModel.class, User.class],
+                findTaxonomiesForUser: [Taxonomy.class, User.class],
                 findUser: [User.class],
                 findProjectNamed: [Project.class],
                 findUsersNotInProject: [Project.class, Participation.class, User.class],
                 findAllProjectsOfUser: [Project.class, Participation.class, User.class],
-                // Channels, Project, PlaybookModel
-                findAllTypes: [ElementType.class],
-                findAllTypesNarrowingAny: [ElementType.class],
+                // Channels, Project, Taxonomy
+                findAllTypes: [Category.class],
+                findAllTypesNarrowingAny: [Category.class],
                 findAllPurposes: [Policy.class, TaskType.class, SharingAgreement.class, SharingCommitment.class],                
                 // Project
                 findProjectsOfUser: [Project.class, User.class],  // static
@@ -68,8 +68,8 @@ class QueryManager implements PropertyChangeListener {
                 findAllPlacesInAreasOfTypeImplying: [Place.class, AreaType.class],
                 findAllAgentsMatchingSpec: [Agent.class, AgentSpecification.class, Event.class],
                 findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
-                // PlaybookModel
-                findModelsOfUser: [PlaybookModel.class, User.class],  // static
+                // Taxonomy
+                findTaxonomiesOfUser: [Taxonomy.class, User.class],  // static
                 findInheritedTopics: [EventType.class],
                 findNarrowedEventTypeWithTopic: [EventType.class],
                 // Organization

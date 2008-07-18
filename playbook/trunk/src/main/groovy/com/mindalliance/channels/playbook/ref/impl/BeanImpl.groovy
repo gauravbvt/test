@@ -166,7 +166,7 @@ abstract class BeanImpl implements Bean {
     }
 
     String makeLabel(int maxWidth) {
-        String label = shortClassName()
+        String label = RefUtils.deCamelCase(shortClassName())
         String name
         if (this instanceof Named) {
             name = ((Named)this).name ?: '?'

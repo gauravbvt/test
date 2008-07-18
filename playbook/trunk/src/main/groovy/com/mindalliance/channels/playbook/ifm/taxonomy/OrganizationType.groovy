@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.Project
@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 * Date: Apr 17, 2008
 * Time: 12:49:52 PM
 */
-class OrganizationType extends ElementType {
+class OrganizationType extends Category {
 
 
     // Queries

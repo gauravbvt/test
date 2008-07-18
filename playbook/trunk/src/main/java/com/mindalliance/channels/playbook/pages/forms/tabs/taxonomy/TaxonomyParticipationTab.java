@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms.tabs.playbookModel;
+package com.mindalliance.channels.playbook.pages.forms.tabs.taxonomy;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
@@ -7,12 +7,11 @@ import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.Channels;
-import com.mindalliance.channels.playbook.ifm.model.ModelParticipation;
+import com.mindalliance.channels.playbook.ifm.taxonomy.TaxonomyParticipation;
 import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,11 +20,11 @@ import java.util.ArrayList;
  * Date: May 10, 2008
  * Time: 4:04:00 PM
  */
-public class PlaybookModelParticipationTab extends AbstractFormTab {
+public class TaxonomyParticipationTab extends AbstractFormTab {
 
     DynamicFilterTree participatingUsersTree;
 
-    public PlaybookModelParticipationTab(String id, AbstractElementForm elementForm) {
+    public TaxonomyParticipationTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
@@ -51,7 +50,7 @@ public class PlaybookModelParticipationTab extends AbstractFormTab {
                 }
                 // Create and add new participations
                 for (Ref user : selectedUsers) { // now only new participations
-                    ModelParticipation mp = new ModelParticipation();
+                    TaxonomyParticipation mp = new TaxonomyParticipation();
                     mp.persist();
                     mp.setUser(user);
                     RefUtils.add(getElement(), "participations", mp);

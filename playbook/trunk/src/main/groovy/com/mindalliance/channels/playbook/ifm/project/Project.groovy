@@ -22,6 +22,7 @@ import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.Channels
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -43,7 +44,7 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> policies = []
     List<Ref> sharingAgreements = []
     List<Ref> playbooks = []
-    List<Ref> models = []
+    List<Ref> taxonomies = []
     List<Ref> analysisElements = []
 
     @Override
@@ -60,17 +61,12 @@ class Project extends IfmElement implements Named, Described {
 
     Referenceable doAddToField(String field, Object object) {
         object.project = this.reference
-        switch (object.deref()) {
-            case Policy: super.doAddToField("policies", object); break;
-            default: super.doAddToField(field, object);
-        }
+        super.doAddToField(field, object);
     }
 
     Referenceable doRemoveFromField(String field, Object object) {
-        switch (object.deref()) {
-            case Policy: super.doRemoveFromField("policies", object); break;
-            default: super.doRemoveFromField(field, object);
-        }
+        object.project = null
+        super.doRemoveFromField(field, object);
     }
     
     // Rulebase queries
@@ -92,7 +88,7 @@ class Project extends IfmElement implements Named, Described {
     }
 
     Ref findModelNamed(String name) {
-        return (Ref) models.find {it as boolean && it.name == name}
+        return (Ref) taxonomies.find {it as boolean && it.name == name}
     }
 
     List<Ref> findAllResources() {
@@ -152,15 +148,15 @@ class Project extends IfmElement implements Named, Described {
     }
 
     boolean atleastOnePlaceTypeDefined() {
-        Ref model = (Ref) models.find {model ->
-            model as boolean && model.placeTypes.size() > 0
+        Ref taxonomy = (Ref) taxonomies.find {model ->
+            taxonomy as boolean && taxonomy.placeTypes.size() > 0
         }
         return model != null
     }
 
     List<Ref> findAllTypes(String typeType) {
         List<Ref> types = []
-        models.each {model ->
+        taxonomies.each {model ->
             types.addAll(model.findAllTypes(typeType))
         }
         return types
@@ -178,7 +174,7 @@ class Project extends IfmElement implements Named, Described {
     Ref findElementTypeNamed(String typeType, String elementTypeName) {
         String propName = RefUtils.decapitalize("${typeType}s")
         Ref namedType = null
-        models.any {model ->
+        taxonomies.any {model ->
             List list = model."$propName"
             list.any {type ->
                 if (type as boolean && type.name.equalsIgnoreCase(elementTypeName)) {
@@ -209,7 +205,7 @@ class Project extends IfmElement implements Named, Described {
 
     List<Ref> findPlaceTypesNarrowing(Ref placeType) {
         List<Ref> narrowing = []
-        models.each {model ->
+        taxonomies.each {model ->
             if (model as boolean) {
                 model.placeTypes.each {pt ->
                     if (placeType == null && pt as boolean && pt.parent == null) { // top level place types narrow undefined place type
@@ -354,7 +350,7 @@ class Project extends IfmElement implements Named, Described {
                 }
             }
         }
-        models.each {m ->
+        taxonomies.each {m ->
             m.taskTypes.each {tt -> if (tt as boolean) countedSet.addAll(tt.purposes)}
         }
         return countedSet.toList()

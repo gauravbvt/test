@@ -17,4 +17,5 @@ interface Bean extends Serializable, Mappable {
    Map beanProperties()
    String shortClassName()
    String makeLabel(int maxWidth)
+   String about() // user-friendly toString()
 }

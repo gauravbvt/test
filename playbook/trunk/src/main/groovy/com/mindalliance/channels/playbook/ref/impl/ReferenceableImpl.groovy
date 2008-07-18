@@ -111,16 +111,27 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     def invokeMethod(String name, def args) {
         // addField  --> fields.add(args[0])
         if (name =~ /^add.+/) {
-            String field = "${RefUtils.decapitalize(name.substring(3))}"
-            if (!field.endsWith('s')) field = "${field}s"
+            String field = renameListField("${RefUtils.decapitalize(name.substring(3))}")
             return doAddToField(field, args[0])
         }
         // removeField --> fields.remove(fields.indexOf(args[0]))
         if (name =~ /^remove.+/) {
-            String field = "${RefUtils.decapitalize(name.substring(6))}"
-            if (!field.endsWith('s')) field = "${field}s"
+            String field = renameListField("${RefUtils.decapitalize(name.substring(6))}")
             return doRemoveFromField(field, args[0])
         }
+    }
+
+    private String renameListField(String name) {
+        String field = name
+        if (!field.endsWith('s')) {
+            if (field.endsWith('y')) {
+                field="${field[0..field.size()-2]}ies"
+            }
+            else {
+                field = "${field}s"
+            }
+        }
+        return field
     }
 
 

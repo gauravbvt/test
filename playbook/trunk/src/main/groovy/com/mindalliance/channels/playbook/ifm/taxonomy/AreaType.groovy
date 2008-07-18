@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.impl.ComputedRef
 * Date: Apr 17, 2008
 * Time: 3:39:39 PM
 */
-class AreaType extends ElementType {
+class AreaType extends Category {
 
     static Ref globe() {
         return ComputedRef.from(AreaType.class, "makeGlobe")

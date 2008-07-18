@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Bean;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
@@ -88,8 +88,8 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.isProjectPanel();
     }
 
-    public boolean isModelPanel() {
-        return parentPanel.isModelPanel();
+    public boolean isTaxonomyPanel() {
+        return parentPanel.isTaxonomyPanel();
     }
 
     public boolean isPlaybookPanel() {
@@ -100,8 +100,8 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.getProject();
     }
 
-    public PlaybookModel getPlaybookModel() {
-        return parentPanel.getPlaybookModel();
+    public Taxonomy getTaxonomy() {
+        return parentPanel.getTaxonomy();
     }
 
     public Playbook getPlaybook() {

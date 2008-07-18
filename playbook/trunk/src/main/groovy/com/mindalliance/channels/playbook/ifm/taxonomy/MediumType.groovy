@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -6,6 +6,6 @@ package com.mindalliance.channels.playbook.ifm.model
  * Date: Apr 30, 2008
  * Time: 12:33:21 PM
  */
-class MediumType extends ElementType {
+class MediumType extends Category {
 
 }

@@ -3,7 +3,7 @@ package com.mindalliance.channels.playbook.ifm.playbook
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
-import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.ifm.taxonomy.EventType
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 
 /**

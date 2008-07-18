@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 5, 2008
  * Time: 3:51:43 PM
  */
-public class EventTypeForm  extends AbstractModelElementForm {
+public class EventTypeForm  extends AbstractCategoryForm {
 
     public EventTypeForm(String id, Ref element) {
         super(id, element);

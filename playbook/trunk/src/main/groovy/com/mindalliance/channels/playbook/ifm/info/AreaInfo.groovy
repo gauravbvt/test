@@ -8,7 +8,7 @@ import com.mindalliance.channels.playbook.geo.AreaException
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ifm.Defineable
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.model.AreaType
+import com.mindalliance.channels.playbook.ifm.taxonomy.AreaType
 import org.apache.log4j.Logger
 
 /**

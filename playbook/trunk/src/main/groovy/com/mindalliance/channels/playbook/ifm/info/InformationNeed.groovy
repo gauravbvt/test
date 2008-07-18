@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.ifm.Defineable
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,7 +37,7 @@ class InformationNeed extends BeanImpl implements Defineable {
     }
 
     String toString() {
-        return "$informationSpec" + (critical ? ' (critical)' : '')
+        return "${critical ? ' (critical)' : ''} info need about ${informationSpec.about()}"
     }
 
     boolean isDefined() {
@@ -49,10 +50,10 @@ class InformationNeed extends BeanImpl implements Defineable {
 
     String makeLabel(int maxWidth) {
         String eventSpecDescription = informationSpec.eventSpec.description
-        String label = "Need info about\n"
-        if (eventSpecDescription) label += "${eventSpecDescription[0..Math.min(eventSpecDescription.size()-1, maxWidth-1)]}"
+        String label = "Need info\n"
+        if (eventSpecDescription) label += "${RefUtils.summarize(eventSpecDescription, maxWidth)}"
         informationSpec.elementsOfInformation.each {eoi ->
-            label += "|${eoi.topic[0..Math.min(eoi.topic.size()-1, maxWidth-1)]}"
+            label += "|${RefUtils.summarize(eoi.topic, maxWidth)}"
         }
         return label
     }

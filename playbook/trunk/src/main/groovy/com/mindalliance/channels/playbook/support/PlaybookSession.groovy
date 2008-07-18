@@ -118,18 +118,18 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
         return project
     }
 
-    public Ref getModel() {
+    public Ref getTaxonomy() {
         if ( !isAnalyst() )
             return null;
 
         Ref user = user
-        Ref model = user?.selectedModel
-        if ( !model && user ) {
-            List<Ref> refs = application.findModelsForUser(user)
+        Ref taxonomy = user?.selectedTaxonomy
+        if ( !taxonomy && user ) {
+            List<Ref> refs = application.findTaxonomiesForUser(user)
             if ( refs.size() > 0 )
-                model = (Ref) refs[0]
+                taxonomy = (Ref) refs[0]
         }
-        return model
+        return taxonomy
     }
 
     public SessionMemory getMemory() {

@@ -94,7 +94,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean specified = (Boolean)specifiedCheckBox.getModelObject();    // selected means does NOT match all
                 if (specified) {
-                    // reset enumeration and definitions models
+                    // reset enumeration and definitions taxonomies
                     if (priorEnumeration != null) {
                         setProperty("enumeration", priorEnumeration, target);
                         enumerationTree.modelChanged();

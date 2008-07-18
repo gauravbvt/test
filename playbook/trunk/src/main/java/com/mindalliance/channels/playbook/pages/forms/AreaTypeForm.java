@@ -13,7 +13,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 5, 2008
  * Time: 3:36:04 PM
  */
-public class AreaTypeForm extends AbstractModelElementForm {
+public class AreaTypeForm extends AbstractCategoryForm {
 
     public AreaTypeForm(String id, Ref element) {
         super(id, element);

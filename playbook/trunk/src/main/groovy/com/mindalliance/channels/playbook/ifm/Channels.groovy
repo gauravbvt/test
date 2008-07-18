@@ -2,9 +2,10 @@ package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,7 +19,7 @@ class Channels extends IfmElement {
     String about
     List<Ref> projects = []
     List<Ref> users = []
-    List<Ref> models = []
+    List<Ref> taxonomies = []
 
     @Override
     protected List<String> transientProperties() {
@@ -48,8 +49,8 @@ class Channels extends IfmElement {
         return ref
     }
 
-    Ref findModelNamed(String name) {
-        Ref ref = (Ref) models.find {model -> model as boolean && model.name == name}
+    Ref findTaxonomyNamed(String name) {
+        Ref ref = (Ref) taxonomies.find {taxonomy -> taxonomy as boolean && taxonomy.name == name}
         return ref
     }
 
@@ -58,7 +59,7 @@ class Channels extends IfmElement {
     }
 
     Ref findModel(String mid) {
-        return (Ref) models.find {model -> model as boolean && model.id == mid}
+        return (Ref) taxonomies.find {model -> model as boolean && model.id == mid}
     }
     
     List<Ref> findProjectsForUser(Ref user) {
@@ -78,10 +79,10 @@ class Channels extends IfmElement {
         return results
     }
 
-    List<Ref> findModelsForUser(Ref user) {
+    List<Ref> findTaxonomiesForUser(Ref user) {
         List<Ref> result = []
         if (user.analyst)
-            models.each {model ->
+            taxonomies.each {model ->
                 if (model as boolean && model.isAnalyst(user)) result.add(model)
             }
         return result
@@ -90,7 +91,7 @@ class Channels extends IfmElement {
     List<Ref> findAllTypes(String typeType) {
         List<Ref> types = []
         types.addAll(findAllImpliedTypes(typeType))
-        models.each {model ->
+        taxonomies.each {model ->
             if (model as boolean) types.addAll(model.findAllTypes(typeType))
         }
         return types
@@ -120,7 +121,7 @@ class Channels extends IfmElement {
     }
 
     static List<Class<?>> contentClasses() {
-        [User.class, Project.class, PlaybookModel.class]
+        [User.class, Project.class, Taxonomy.class]
     }
 
     static boolean isSet(Ref ref) {  // always called in application scope

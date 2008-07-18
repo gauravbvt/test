@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicT
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActInfoTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActCauseTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.confirmationRequest.ConfirmationRequestInfoTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventRiskTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -38,6 +39,11 @@ public class ConfirmationRequestForm extends AbstractInformationActForm {
                 return new ConfirmationRequestInfoTab(panelId, ConfirmationRequestForm.this);
             }
         });
+        tabs.add(new AbstractTab(new Model("Risk")) {
+             public Panel getPanel(String panelId) {
+                 return new EventRiskTab(panelId, ConfirmationRequestForm.this);
+             }
+         });
     }
 }
 

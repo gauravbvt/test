@@ -13,7 +13,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 5, 2008
  * Time: 4:02:16 PM
  */
-public class MediumTypeForm  extends AbstractModelElementForm {
+public class MediumTypeForm  extends AbstractCategoryForm {
 
     public MediumTypeForm(String id, Ref element) {
         super(id, element);

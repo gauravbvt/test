@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.RefUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,6 +23,9 @@ import java.util.Iterator;
  * Table view of a tab.
  */
 public class TableView extends ContentView {
+
+    public static final int MAX_CELL_CONTENT_SIZE = 60;
+
     private static final int ITEMS_PER_PAGE = 6;
     private DataView rows;
     private DeferredProvider summary;
@@ -95,7 +99,7 @@ public class TableView extends ContentView {
                         String mos = mo == null ? ""
                                    : mo instanceof Ref ? ((Ref) mo).deref().toString()
                                    : cellItem.getModelObjectAsString();
-                        cellItem.add( new Label( "cell-value", mos ) );
+                        cellItem.add( new Label( "cell-value", RefUtils.deCamelCase(RefUtils.summarize(mos, MAX_CELL_CONTENT_SIZE)) ) );
                     }
                 } );
 

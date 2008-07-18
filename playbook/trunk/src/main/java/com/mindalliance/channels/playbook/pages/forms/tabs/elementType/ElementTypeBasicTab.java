@@ -39,7 +39,7 @@ public class ElementTypeBasicTab extends AbstractFormTab {
         super.load();
         nameField = new AutoCompleteTextField("name", new RefPropertyModel(getElement(), "name")) {
             protected Iterator getChoices(String input) {
-                return otherModelElementNames(input, 10);
+                return otherCategoryNames(input, 10);
             }
         };
         nameField.add(UniqueValidator.inQuery(getScope(), new Query("findAllOtherTypeNames", getElement())));
@@ -58,7 +58,7 @@ public class ElementTypeBasicTab extends AbstractFormTab {
         addReplaceable(narrowedTypesTree);
     }
 
-    private Iterator otherModelElementNames(String input, int max) {
+    private Iterator otherCategoryNames(String input, int max) {
         List<Ref> otherTypes = findAllOtherTypes();
         List<String> names = new ArrayList<String>();
         for (Ref type : otherTypes) {

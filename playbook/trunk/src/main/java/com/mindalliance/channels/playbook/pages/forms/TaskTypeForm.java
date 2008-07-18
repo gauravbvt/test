@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: May 5, 2008
  * Time: 8:13:22 PM
  */
-public class TaskTypeForm extends AbstractModelElementForm {
+public class TaskTypeForm extends AbstractCategoryForm {
 
     public TaskTypeForm(String id, Ref element) {
         super(id, element);

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <fieldset>
+        <legend>Description</legend>
+        <textarea wicket:id="description" cols="40" rows="3">[description]</textarea>
+    </fieldset>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Probability</legend>
+                    <input wicket:id="probability" type="text" size = "3"/>%
+                </fieldset>
+            </td>
+            <td width="99%">
+                <fieldset>
+                    <legend>Cost or benefit in US dollars</legend>
+                    $<input wicket:id="valuation" type="text" size="10"/>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <fieldset>
+        <legend>Types of possible outcomes</legend>
+        <span wicket:id="possibleOutcomes">[event types tree]</span>
+    </fieldset>
+
+</wicket:extend>
+</body>
+</html>

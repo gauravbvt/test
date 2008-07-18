@@ -5,11 +5,12 @@ import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ref.Ref
 import org.joda.time.Duration
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
-import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.ifm.taxonomy.EventType
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.info.Information
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
+import com.mindalliance.channels.playbook.ifm.info.Risk
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,6 +28,8 @@ class Event extends PlaybookElement implements Named, Described {
     String description = ''
     Cause cause = new Cause()
     Location location = new Location()
+    Risk risk = new Risk()
+
 
     @Override
     List<String> transientProperties() {
@@ -34,7 +37,7 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     String toString() {
-        return name
+        return name ?: "Unnamed event"
     }
 
     boolean isInformationAct() {

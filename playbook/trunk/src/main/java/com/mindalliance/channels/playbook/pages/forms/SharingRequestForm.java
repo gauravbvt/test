@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.sharingRequest.SharingRequestProtocolTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.event.EventRiskTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -29,6 +30,11 @@ public class SharingRequestForm extends AbstractInformationActForm {
         tabs.add(new AbstractTab(new Model("Protocol")) {
              public Panel getPanel(String panelId) {
                  return new SharingRequestProtocolTab(panelId, SharingRequestForm.this);
+             }
+         });
+        tabs.add(new AbstractTab(new Model("Risk")) {
+             public Panel getPanel(String panelId) {
+                 return new EventRiskTab(panelId, SharingRequestForm.this);
              }
          });
     }

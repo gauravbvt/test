@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 
@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 * Date: Apr 17, 2008
 * Time: 12:52:55 PM
 */
-class TaskType extends ElementType {
+class TaskType extends Category {
 
     List<String> purposes = [] // usual purposes of tasks of this type
     List<InformationDefinition> inputs = [] // kind of information typically needed by tasks of this type

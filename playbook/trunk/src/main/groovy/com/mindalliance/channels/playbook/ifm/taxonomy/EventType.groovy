@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ref.Ref
@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 * Date: Apr 17, 2008
 * Time: 12:53:22 PM
 */
-class EventType extends ElementType {
+class EventType extends Category {
 
     List<String> topics = [] // what can usually be known about elements of this type
 

@@ -1,19 +1,11 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.ifm.model.EventType;
+import com.mindalliance.channels.playbook.ifm.taxonomy.EventType;
 import com.mindalliance.channels.playbook.ifm.info.InformationNeed;
-import com.mindalliance.channels.playbook.query.Query;
-import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-
-import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

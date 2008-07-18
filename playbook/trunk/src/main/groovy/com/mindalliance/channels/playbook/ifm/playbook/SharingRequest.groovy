@@ -4,7 +4,7 @@ import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
-import com.mindalliance.channels.playbook.ifm.model.EventType
+import com.mindalliance.channels.playbook.ifm.taxonomy.EventType
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

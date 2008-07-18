@@ -20,7 +20,7 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
     @Override
     protected List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['projectElement', 'modelElement', 'playbookElement',
+        return (List<String>)(super.transientProperties() + ['projectElement', 'taxonomyElement', 'playbookElement',
                                                              'elementIssues', 'elementInvalidations', 'problems'])
     }
 
@@ -49,7 +49,7 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
         return false
     }
 
-    boolean isModelElement() {
+    boolean isTaxonomyElement() {
         return false
     }
 

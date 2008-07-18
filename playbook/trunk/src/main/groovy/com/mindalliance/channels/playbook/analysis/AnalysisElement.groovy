@@ -26,6 +26,10 @@ abstract class AnalysisElement implements Referenceable, Identified {
        id = "${UUID.randomUUID()}"
     }
 
+    String about() {
+        return toString() // DEFAULT
+    }
+
     String toString() {
         return "${this.type} ($rationale)" 
 
@@ -122,7 +126,7 @@ abstract class AnalysisElement implements Referenceable, Identified {
     }
 
     String makeLabel(int maxWidth) {
-        return RefUtils.asText("${this.type}: ${this.labelText()}", maxWidth)
+        return RefUtils.asText("${RefUtils.deCamelCase(this.type)}: ${this.labelText()}", maxWidth)
     }
 
     String labelText() { // DEFAULT

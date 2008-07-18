@@ -103,12 +103,12 @@ class RefUtils {
 
     static String summarize(String s, int maxSize) {
         if (!s) return ''
-        String line = s.replaceAll('\\n', ' ').replaceAll('\\t', ' ').replaceAll('  ', ' '). trim()
+        String line = s.replaceAll('\\n', ' ').replaceAll('\\t', ' ').replaceAll('  ', ' ').trim()
         if (line.size() <= maxSize) {
             return line
         }
         else {
-            return "${line[0..Math.max(0,maxSize -3)]}..."
+            return "${line[0..Math.max(0, maxSize - 3)]}..."
         }
     }
 
@@ -153,6 +153,22 @@ class RefUtils {
         }
         return sb.toString()
 
+    }
+
+    static String deCamelCase(String s) {
+        char prior = null
+        StringBuilder sb = new StringBuilder()
+        s.each {c ->
+            if ((prior) && c in 'A'..'Z' && prior in 'a'..'z') {
+                sb.append(' ')
+                sb.append("$c".toLowerCase())
+            }
+            else {
+                sb.append(c)
+            }
+            prior = c
+        }
+        return sb.toString()
     }
 
 }

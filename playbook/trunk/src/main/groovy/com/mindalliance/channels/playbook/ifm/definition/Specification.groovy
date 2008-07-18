@@ -53,6 +53,22 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
 
     // end BEANIMPL
 
+    String about() {
+        StringBuilder sb = new StringBuilder()
+        sb.append("any of ")
+        enumeration.each {ref ->
+            if (ref as boolean) {
+                sb.append(ref.deref().about())
+                sb.append(' ')
+            }
+        }
+        definitions.each {d ->
+            sb.append(definition.about())
+            sb.append(' ')
+        }
+        return sb.toString().trim()
+    }
+
     // DEFINITION
 
     boolean matchesAll() {  // undefined matches any instance of instance class

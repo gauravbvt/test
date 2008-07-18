@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
@@ -10,11 +10,9 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: Apr 30, 2008
  * Time: 2:43:50 PM
  */
-abstract class ModelElement extends IfmElement {
+abstract class TaxonomyElement extends IfmElement {
 
-    Ref model
+    Ref taxonomy
 
-    boolean isModelElement() {
-        return true
-    }
+
 }

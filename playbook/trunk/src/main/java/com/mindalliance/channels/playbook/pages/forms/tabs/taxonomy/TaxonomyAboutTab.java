@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms.tabs.playbookModel;
+package com.mindalliance.channels.playbook.pages.forms.tabs.taxonomy;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
@@ -14,13 +14,13 @@ import org.apache.wicket.markup.html.form.CheckBox;
  * Date: May 10, 2008
  * Time: 4:03:27 PM
  */
-public class PlaybookModelAboutTab extends AbstractFormTab {
+public class TaxonomyAboutTab extends AbstractFormTab {
 
     TextField nameField;
     TextArea descriptionField;
     CheckBox sharedField;
 
-    public PlaybookModelAboutTab(String id, AbstractElementForm elementForm) {
+    public TaxonomyAboutTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 

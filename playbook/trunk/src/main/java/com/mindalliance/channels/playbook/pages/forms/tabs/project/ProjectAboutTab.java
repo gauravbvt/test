@@ -41,11 +41,11 @@ public class ProjectAboutTab extends AbstractFormTab {
         // description
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        List<Ref> allModels = Channels.instance().getModels();
-        modelsTree = new DynamicFilterTree("models", new RefPropertyModel(getElement(), "models"), new Model((Serializable)allModels)) {
+        List<Ref> allModels = Channels.instance().getTaxonomies();
+        modelsTree = new DynamicFilterTree("taxonomies", new RefPropertyModel(getElement(), "taxonomies"), new Model((Serializable)allModels)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = modelsTree.getNewSelections();
-                RefUtils.set(getElement(), "models", newSelections);
+                RefUtils.set(getElement(), "taxonomies", newSelections);
             }
         };
         addReplaceable(modelsTree);

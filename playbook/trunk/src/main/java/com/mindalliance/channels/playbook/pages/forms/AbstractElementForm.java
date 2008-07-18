@@ -3,16 +3,14 @@ package com.mindalliance.channels.playbook.pages.forms;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.Component;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.model.PlaybookModel;
+import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.ifm.Channels;
 
@@ -100,7 +98,7 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         return false;
     }
 
-    public boolean isModelPanel() {
+    public boolean isTaxonomyPanel() {
         return false;
     }
 
@@ -112,8 +110,8 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         throw new RuntimeException("No project identified to this panel");
     }
 
-    public PlaybookModel getPlaybookModel() {
-        throw new RuntimeException("No model identified to this panel");
+    public Taxonomy getTaxonomy() {
+        throw new RuntimeException("No taxonomy identified to this panel");
     }
 
     public Playbook getPlaybook() {
@@ -122,7 +120,7 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
 
     public Ref getScope() {
         if (isProjectPanel()) return getProject().getReference();
-        if (isModelPanel()) return getPlaybookModel().getReference();
+        if (isTaxonomyPanel()) return getTaxonomy().getReference();
         if (isPlaybookPanel()) return getPlaybook().getReference();
         return Channels.instance().getReference();
     }

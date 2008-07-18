@@ -199,7 +199,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
 
     private void resetUsers(AjaxRequestTarget target) {
         selectedUser = null;
-        // usersTree.setSelections(new PlaybookModel(new ArrayList<Ref>()));
+        // usersTree.setSelections(new Taxonomy(new ArrayList<Ref>()));
         loadUsersTree(); // replace current users tree since it won't reset itself -- TODO -- fix this
         addParticipationButton.setEnabled(false);
         target.addComponent(addParticipationButton);

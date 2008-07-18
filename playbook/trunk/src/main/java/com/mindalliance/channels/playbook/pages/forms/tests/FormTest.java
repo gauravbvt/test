@@ -25,7 +25,7 @@ import com.mindalliance.channels.playbook.ifm.User;
 import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ifm.IfmElement;
 import com.mindalliance.channels.playbook.ifm.playbook.*;
-import com.mindalliance.channels.playbook.ifm.model.*;
+import com.mindalliance.channels.playbook.ifm.taxonomy.*;
 import com.mindalliance.channels.playbook.ifm.project.resources.*;
 import com.mindalliance.channels.playbook.ifm.project.resources.System;
 import com.mindalliance.channels.playbook.ifm.project.Project;
@@ -146,7 +146,7 @@ public class FormTest extends WebPage {
         choices.add(Person.class);
         choices.add(Position.class);
         choices.add(System.class);
-        // PlaybookModel
+        // Taxonomy
         choices.add(AreaType.class);
         choices.add(EventType.class);
         choices.add(MediumType.class);
@@ -169,7 +169,7 @@ public class FormTest extends WebPage {
         choices.add(Task.class);
         choices.add(Team.class);
         // Project elements
-        choices.add(PlaybookModel.class);
+        choices.add(Taxonomy.class);
         choices.add(Playbook.class);
         // application
         choices.add(Project.class);
@@ -189,8 +189,8 @@ public class FormTest extends WebPage {
             results.add(project.getReference());
         } else if (type.equals(SharingAgreement.class)) {
             results.add((Ref) project.getSharingAgreements().get(0));
-        } else if (type.equals(PlaybookModel.class)) {
-            results.add((Ref) project.getModels().get(0));
+        } else if (type.equals(Taxonomy.class)) {
+            results.add((Ref) project.getTaxonomies().get(0));
         } else if (type.equals(Playbook.class)) {
             results.add((Ref) project.findPlaybookNamed("default"));
         }
@@ -205,10 +205,10 @@ public class FormTest extends WebPage {
                 playbook.getReference().begin();
                 playbook.addElement(element);
             }
-            else if (element.isModelElement()) {
-            PlaybookModel model = (PlaybookModel) ((Ref) project.getModels().get(0)).deref();
-            model.getReference().begin();
-            model.addElement(element);
+            else if (element.isTaxonomyElement()) {
+            Taxonomy taxonomy = (Taxonomy) ((Ref) project.getTaxonomies().get(0)).deref();
+            taxonomy.getReference().begin();
+            taxonomy.addElement(element);
             }
             else if (element.isProjectElement()) {
                 ProjectElement projectElement = (ProjectElement) element;

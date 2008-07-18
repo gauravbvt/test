@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm.model
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ref.Ref
 
@@ -9,6 +9,6 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Date: Apr 21, 2008
  * Time: 4:04:08 PM
  */
-class PlaceType extends ElementType {
+class PlaceType extends Category {
 
 }
