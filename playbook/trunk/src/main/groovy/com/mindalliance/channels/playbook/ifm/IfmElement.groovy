@@ -47,7 +47,7 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
     boolean isProjectElement() {
         return false
-    }
+    }                                                                     
 
     boolean isTaxonomyElement() {
         return false
@@ -58,11 +58,11 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
     }
 
     List<Ref> getElementIssues() {
-         return RuleBaseSession.current().query("elementIssues", [this.id], "_issue").collect{it.reference()}
+         return RuleBaseSession.current().query("elementIssues", [this.id], "_issue").collect{it.reference}
     }
 
     List<Ref> getElementInvalidations() {
-        return RuleBaseSession.current().query("elementInvalids", [this.id], "_invalid").collect{it.reference()}
+        return RuleBaseSession.current().query("elementInvalids", [this.id], "_invalid").collect{it.reference}
     }
 
     List<Ref> getProblems() {
