@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.query.QueryManager
+import java.beans.PropertyChangeSupport
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,6 +28,24 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     private QueryCache queryCache = new QueryCache()
     // any query execution dependent on elements belonging to any of these classes will be cached in session memory
     private Set<Class> inSessionClasses = new HashSet<Class>()
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this)
+
+
+    void addPropertyChangeListener(PropertyChangeListener listener) {
+         this.pcs.addPropertyChangeListener(listener)
+     }
+
+    void removePropertyChangeListener(PropertyChangeListener listener) {
+         this.pcs.removePropertyChangeListener(listener)
+     }
+
+    private void propertyChanged(String name, def old, def value) {
+        pcs.firePropertyChange(name, old, value)
+    }
+
+    private void changed(String name) {
+        propertyChanged(name, null, this."$name")
+    }
 
     QueryCache getQueryCache() {
         return queryCache
@@ -84,6 +103,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 Logger.getLogger(this.class).debug("Doing begin() on $ref already in session")
             }
         }
+        changed("begun")
     }
 
     private boolean isLocked(Ref ref) {
@@ -123,6 +143,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         assert begun.containsKey(reference)
         changes.add(reference)
         if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
+        changed("changes")
         return reference
     }
 
@@ -137,6 +158,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         else {
             throw new NotModifiableException("Can't delete $ref : do begin() first")
         }
+        changed("deletes")
+        changed("begun")
+        changed("changes")
     }
 
 

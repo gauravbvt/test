@@ -25,7 +25,7 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     private SessionMemory memory = new SessionMemory();
 
-    public PlaybookSession(){
+     public PlaybookSession(){
     }
 
     public String toString() {
@@ -41,6 +41,7 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     static PlaybookSession current() {
         return (PlaybookSession)Session.get()
     }
+
 
     void takeUserFromRequest( HttpServletRequest request ) {
         userId = request.getParameter("username");
