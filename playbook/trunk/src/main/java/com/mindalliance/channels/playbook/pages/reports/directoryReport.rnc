@@ -1,0 +1,54 @@
+
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+
+
+## include "report.rnc"
+start = Report
+Report = element report { Header, Body, Footer }
+Header =
+    element header {
+        element title { text },
+        element context { text },
+        element user { text },
+        element date { text }
+    }
+Footer =
+    element footer {
+        element confidential { text },
+        element proprietary { text }
+    }
+
+
+Body = element body { Group* & Resource* }
+Resource =
+    element resource {
+        attribute type { text }
+        & attribute id { text }
+        & element name { text }
+        & element description { text }?
+        & element organization {
+              attribute name { text }
+              & attribute id { text }
+          }?
+        & element role {
+              attribute name { text },
+              attribute id { text }
+          }*
+        & element contactInfos {
+              element noContactInfo { empty }
+              | element contactInfo {
+                    attribute medium { text },
+                    text
+                }*
+          }
+        & element instructions { text }?
+        & Group?
+    }
+Group =
+    element group {
+        attribute type { text },
+        attribute name { text },
+        attribute id { text }?,
+        Group*,
+        Resource*
+    }
