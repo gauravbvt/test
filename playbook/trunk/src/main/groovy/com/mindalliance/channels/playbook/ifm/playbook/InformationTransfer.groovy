@@ -21,15 +21,15 @@ class InformationTransfer extends SharingAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(InformationTransfer.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(InformationTransfer.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'information transfer',              // note: model is null
                                              description:'An information transfer',
                                              topics: ['medium'])
-        use(NoSessionCategory) {eventType.narrow(SharingAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(SharingAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

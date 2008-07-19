@@ -168,7 +168,7 @@ public class TestPlaybook extends TestCase {
     }
 
     void testComputedRef() {
-        Ref eventType = Event.impliedEventType()
+        Ref eventType = Event.implicitEventType()
         assert eventType.isComputed()
         assert !eventType.isModifiable()
         assert eventType.name == 'event'

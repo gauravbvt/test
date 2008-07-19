@@ -31,15 +31,15 @@ abstract class SharingAct extends FlowAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(SharingAct.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(SharingAct.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'information sharing act',              // note: model is null
                                              description:'An information sharing act',
                                              topics: ['information'])
-        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(FlowAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

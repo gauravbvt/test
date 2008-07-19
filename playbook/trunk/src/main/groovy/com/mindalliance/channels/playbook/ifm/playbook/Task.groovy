@@ -26,15 +26,15 @@ class Task extends InformationAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(Task.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(Task.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'task',              // note: model is null
                                              description:'A task',
                                              topics: ['duration', 'task type', 'information need'])
-        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(InformationAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

@@ -22,15 +22,15 @@ abstract class FlowAct extends InformationAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(InformationAct.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(FlowAct.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'flow information act',              // note: model is null
                                              description:'A flow information act',
                                              topics: ['target'])
-        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(InformationAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

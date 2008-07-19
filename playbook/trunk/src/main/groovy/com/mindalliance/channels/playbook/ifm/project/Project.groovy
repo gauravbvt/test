@@ -74,6 +74,7 @@ class Project extends IfmElement implements Named, Described {
         super.doRemoveFromField(field, object);
     }
 
+
     // Rulebase queries
 
     List<Ref> getAllInvalidations() {

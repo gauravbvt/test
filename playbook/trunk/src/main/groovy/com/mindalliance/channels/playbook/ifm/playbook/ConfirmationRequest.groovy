@@ -23,15 +23,15 @@ class ConfirmationRequest extends SharingAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(Assignation.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(ConfirmationRequest.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType = new EventType(name: 'confirmation request',              // note: model is null
                 description: 'A confirmation request',
                 topics: ['source'])
-        use(NoSessionCategory) {eventType.narrow(SharingAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(SharingAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

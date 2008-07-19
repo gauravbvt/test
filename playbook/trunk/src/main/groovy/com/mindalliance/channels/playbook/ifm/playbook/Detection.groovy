@@ -39,15 +39,15 @@ class Detection extends InformationAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(Detection.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(Detection.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType = new EventType(name: 'detection',              // note: model is null
                 description: 'A detection of an event',
                 topics: ['information'])
-        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(InformationAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

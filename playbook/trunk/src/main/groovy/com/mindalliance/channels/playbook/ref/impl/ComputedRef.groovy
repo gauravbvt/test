@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 // Holds a constant, non-persistent referenceable
 class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and subclass
 
-    Referenceable computed
+    Referenceable computedValue
 
     static ComputedRef from(Class clazz, String method) {
         ComputedRef cref = new ComputedRef()
@@ -31,11 +31,11 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
     }
 
     Referenceable deref() {   // returns Referenceable from session change set or UNCOPIED referenceable from application
-        if (!computed) {
-            computed = computeReferenceable()
-            computed.makeConstant()
+        if (!computedValue) {
+            computedValue = computeReferenceable()
+            computedValue.makeConstant()
         }
-        return computed
+        return computedValue
     }
 
     void detach() {

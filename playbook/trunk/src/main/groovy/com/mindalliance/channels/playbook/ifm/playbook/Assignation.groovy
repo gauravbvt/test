@@ -23,15 +23,15 @@ class Assignation extends FlowAct {  // communication of a responsibility (the t
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(Assignation.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(Assignation.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'assignation',              // note: model is null
                                              description:'An assignation of responsibility',
                                              topics: ['responsibility', 'assignee'])
-        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(FlowAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

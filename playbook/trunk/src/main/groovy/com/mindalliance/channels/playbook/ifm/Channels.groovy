@@ -39,7 +39,7 @@ class Channels extends IfmElement {
     List<Ref> findAllImpliedTypes(String typeType) {
         List<Ref> types = []
         switch (typeType) {
-            case 'EventType': types.add(Event.impliedEventType()); break
+            case 'EventType': types.add(Event.implicitEventType()); break
         }
         return types
     }

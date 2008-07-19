@@ -22,16 +22,16 @@ class SharingRequest extends FlowAct {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
+    static Ref implicitEventType() {
         ComputedRef a
-        return ComputedRef.from(SharingRequest.class, 'makeImpliedEventType')
+        return ComputedRef.from(SharingRequest.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'sharing request',              // note: model is null
                                              description:'Requesting a commitment to share information',
                                              topics: ['protocol'])
-        use(NoSessionCategory) {eventType.narrow(FlowAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(FlowAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

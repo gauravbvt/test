@@ -18,15 +18,15 @@ class Relocation extends InformationAct {     // a change of location
     Location location = new Location()
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(Relocation.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(Relocation.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType = new EventType(name: 'relocation',              // note: model is null
                 description: 'A change of location',
                 topics: ['location'])
-        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(InformationAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

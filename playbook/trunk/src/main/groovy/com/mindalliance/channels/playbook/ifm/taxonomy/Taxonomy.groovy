@@ -7,6 +7,8 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.Channels
+import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,7 +37,7 @@ class Taxonomy extends IfmElement implements Described {
     }
 
     protected List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['elements', 'participatingUsers'])
+        return (List<String>)(super.transientProperties() + ['elements', 'participatingUsers', 'allEventTypes'])
     }
 
     Set keyProperties() {
@@ -52,6 +54,26 @@ class Taxonomy extends IfmElement implements Described {
         super.doRemoveFromField(field, object)
     }
 
+/*    Map toMap() {
+        super.toMap()
+    }
+
+    void setEventTypes(List<Ref> list) {
+        super.setEventTypes(list)
+    }
+
+    void addEventType(Ref et) {
+        eventTypes.add(et)
+    }*/
+
+
+    List<Ref> getAllEventTypes() {
+        List<Ref> all = []
+        all.addAll(eventTypes)
+        all.addAll(Event.findAllImplicitEventTypes())
+        return all
+    }
+
     List<Ref> getParticipatingUsers() {
         return participations.collect {participation -> participation.user}
     }
@@ -62,10 +84,19 @@ class Taxonomy extends IfmElement implements Described {
         return Channels.instance().findTaxonomiesForUser(user)
     }
 
+    static List<Ref> findAllImplicitTypes(String typeType) {
+        switch(typeType) {
+            case 'EventType': return (List<Ref>)Query.execute(Event.class, 'findAllImplicitEventTypes')
+            default: return []
+        }
+    }
+
 
     List<Ref> findAllTypes(String typeType) {
         String propName = RefUtils.decapitalize("${typeType}s")
-        return this."$propName"
+        List<Ref> allTypes = this."$propName"
+        allTypes.addAll(Taxonomy.findAllImplicitTypes(typeType))
+        return allTypes
     }
 
     List<String> findAllOtherTypeNames(Ref elementType) {
@@ -78,8 +109,7 @@ class Taxonomy extends IfmElement implements Described {
     }
 
     Ref findType(String typeType, String name) {
-        String typeName = RefUtils.decapitalize(typeType)
-        Ref namedType = this."${typeName}s".find {type -> type as boolean && type.name == name}
+        Ref namedType = (Ref)findAllTypes(typeType).find {type -> type as boolean && type.name == name}
         return namedType
     }
 

@@ -370,7 +370,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         m.addTaskType(store(tt))
         store(tt)
 
-        Ref event = Event.impliedEventType()
+        Ref event = Event.implicitEventType()
         EventType accident = new EventType(name: 'accident')
         accident.narrow(event)
         accident.addTopic('casualty')

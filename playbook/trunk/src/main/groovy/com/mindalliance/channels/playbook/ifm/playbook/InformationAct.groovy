@@ -47,15 +47,15 @@ abstract class InformationAct extends Event {
     }
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(InformationAct.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(InformationAct.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'information act',              // note: model is null
                                              description:'An information act',
                                              topics: ['actor'])
-        use(NoSessionCategory) {eventType.narrow(Event.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(Event.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

@@ -20,15 +20,15 @@ class Association extends InformationAct {   // Creation of a relationship
     String reverseRelationshipName = ''
 
     // Return implied event type
-    static Ref impliedEventType() {
-        return ComputedRef.from(Association.class, 'makeImpliedEventType')
+    static Ref implicitEventType() {
+        return ComputedRef.from(Association.class, 'makeImplicitEventType')
     }
 
-    static EventType makeImpliedEventType() {
+    static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'association',              // note: model is null
                                              description:'A new relationship',
                                              topics: ['relationship', 'to', 'reverse' ])
-        use(NoSessionCategory) {eventType.narrow(InformationAct.impliedEventType())}; // setting state of a computed ref
+        use(NoSessionCategory) {eventType.narrow(InformationAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
 

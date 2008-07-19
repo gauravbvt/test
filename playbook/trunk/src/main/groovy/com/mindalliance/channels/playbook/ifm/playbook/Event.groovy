@@ -24,6 +24,12 @@ import com.mindalliance.channels.playbook.ifm.info.Risk
 // that they may share with others fully or partially, dispute and confirm
 class Event extends PlaybookElement implements Named, Described {
 
+    static private List<Class<? extends Event>> EventClasses = [
+            Event.class, InformationAct.class, FlowAct.class, SharingAct.class, Assignation.class, Association.class,
+            ConfirmationRequest.class, Detection.class, InformationRequest.class, InformationTransfer.class,
+            Relocation.class, SharingCommitment.class, SharingRequest.class, Task.class
+    ]
+
     String name = ''
     String description = ''
     Cause cause = new Cause()
@@ -33,7 +39,7 @@ class Event extends PlaybookElement implements Named, Described {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['informationAct', 'impliedEventType'])
+        return (List<String>) (super.transientProperties() + ['informationAct', 'implicitEventType', 'eventClasses'])
     }
 
     Set keyProperties() {
@@ -71,20 +77,29 @@ class Event extends PlaybookElement implements Named, Described {
         return startTime
     }
 
-    // Return event type implied by the event (provides for reflexion on events, including information acts)
-    static Ref impliedEventType() {
-        return ComputedRef.from(Event.class, 'makeImpliedEventType')
+    static List<Ref> findAllImplicitEventTypes() {
+        List<Ref> implicits = []
+        EventClasses.each {clazz ->
+            Ref implicit = clazz.implicitEventType()
+            implicits.add(implicit)
+        }
+        return implicits
     }
 
-    static EventType makeImpliedEventType() {
-        EventType eventType =  new EventType(name:'event',              // note: model is null
-                                             description:'An event of some kind',
-                                             topics: ['start time', 'description', 'location', 'cause'])
+    // Return event type implied by the event (provides for reflexion on events, including information acts)
+    static Ref implicitEventType() {
+        return ComputedRef.from(Event.class, 'makeImplicitEventType')
+    }
+
+    static EventType makeImplicitEventType() {
+        EventType eventType = new EventType(name: 'event',              // note: model is null
+                description: 'An event of some kind',
+                topics: ['start time', 'description', 'location', 'cause'])
         return eventType
     }
 
-    Ref getImpliedEventType() {
-        return Event.impliedEventType()
+    Ref getImplicitEventType() {
+        return Event.implicitEventType()
     }
 
     List<String> contentsAboutTopic(String topic) {
@@ -100,12 +115,12 @@ class Event extends PlaybookElement implements Named, Described {
     // Create information about this event
     Information makeInformation() {
         Information info = new Information(event: this.reference)
-        Ref eventType = this.class.impliedEventType()
+        Ref eventType = this.class.implicitEventType()
         info.eventTypes.add(eventType)
         eventType.allTopics().each {topic ->
             List<String> contents = contentsAboutTopic(topic)
             contents.each {content ->
-                ElementOfInformation eoi = new ElementOfInformation(topic:topic, content: content)
+                ElementOfInformation eoi = new ElementOfInformation(topic: topic, content: content)
                 info.eventDetails.add(eoi)
             }
         }
@@ -116,35 +131,35 @@ class Event extends PlaybookElement implements Named, Described {
 
     List<Ref> findAllInformationActsCausedByEvent() {
         assert playbook as boolean
-        Playbook playbook = (Playbook)this.playbook.deref()
-        return (List<Ref>)playbook.informationActs.findAll {act ->
+        Playbook playbook = (Playbook) this.playbook.deref()
+        return (List<Ref>) playbook.informationActs.findAll {act ->
             act as boolean && act.cause.trigger == this.reference
         }
     }
 
     List<Ref> findAllEventsCausedByEvent() {
         assert playbook as boolean
-        Playbook playbook = (Playbook)this.playbook.deref()
-        return (List<Ref>)playbook.events.findAll {event ->
+        Playbook playbook = (Playbook) this.playbook.deref()
+        return (List<Ref>) playbook.events.findAll {event ->
             event as boolean && event.cause.trigger == this.reference
         }
     }
 
     List<Ref> findAllInformationActsAboutEvent() {
         assert playbook as boolean
-        return (List<Ref>)this.playbook.informationActs.findAll {act ->
+        return (List<Ref>) this.playbook.informationActs.findAll {act ->
             act as boolean && act.hasInformation() && act.information.event == this.reference
         }
     }
 
     List<Ref> findAllPriorEvents() {
         assert playbook as boolean
-        return (List<Ref>)this.playbook.events.findAll {event -> event as boolean && this.isAfter(event) }
+        return (List<Ref>) this.playbook.events.findAll {event -> event as boolean && this.isAfter(event) }
     }
 
     List<Ref> findAllPriorOccurrences() {
-        return (List<Ref>)this.playbook.findAllPriorOccurrencesOf(this.reference)
+        return (List<Ref>) this.playbook.findAllPriorOccurrencesOf(this.reference)
     }
-       // END QUERIES
+    // END QUERIES
 
 }
