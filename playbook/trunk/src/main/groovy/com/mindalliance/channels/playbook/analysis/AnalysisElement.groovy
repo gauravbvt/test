@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,10 +18,15 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 * Date: Apr 17, 2008
 * Time: 2:41:33 PM
 */
-abstract class AnalysisElement implements Referenceable, Identified {
+abstract class AnalysisElement extends ReferenceableImpl implements Identified {
 
     String id
     String rationale = ''
+
+    protected List<String> transientProperties() {
+        return super.transientProperties() + ['rationale']
+    }
+    
 
     AnalysisElement() {
        id = "${UUID.randomUUID()}"
@@ -53,13 +59,9 @@ abstract class AnalysisElement implements Referenceable, Identified {
         return null
     }
 
-    void changed() {
-        throw new RuntimeException("Analysis element $id not modifiable")
-    }
+    void changed() {}
 
-    void changed(String propName) {
-        throw new RuntimeException("Analysis element $id not modifiable")
-    }
+    void changed(String propName) {}
 
     void beforeStore(ApplicationMemory memory) { }
 

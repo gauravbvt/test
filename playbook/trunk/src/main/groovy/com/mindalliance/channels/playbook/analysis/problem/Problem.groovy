@@ -17,6 +17,10 @@ abstract class Problem extends AnalysisElement implements Named {
     Referenceable element
     String tag
 
+    protected List<String> transientProperties() {
+        return super.transientProperties() + ['tag']
+    }
+
     Problem(Referenceable element,String tag) {
         this.element = element
         this.tag = tag

@@ -52,16 +52,14 @@ end
 
 # Find all invalidations in a project
 query "invalidsInProject" (String _project_id)
-    _invalid : Invalid($element: element, eval(element instanceof ProjectElement))
-    $project : Project($id:id == _project_id)
-    eval (((ProjectElement)$element).getProject().getId() == $id)
+    ProjectElement($id:id, project.id == _project_id )
+    _invalid : Invalid(element.id == $id)
 end
 
 # Find all issues in a project
 query "issuesInProject" (String _project_id)
-    _issue : Issue($element: element, eval(element instanceof ProjectElement))
-    $project : Project($id:id == _project_id)
-    eval (((ProjectElement)$element).getProject().getId() == $id)
+    ProjectElement($id:id, project.id == _project_id )
+    _issue : Issue(element.id == $id)
 end
 
 ### support for testing

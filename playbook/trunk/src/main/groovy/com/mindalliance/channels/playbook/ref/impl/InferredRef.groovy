@@ -52,6 +52,10 @@ class InferredRef extends RefImpl {
         return analysisElement
     }
 
+    boolean isModifiable() {
+        return true
+    }
+
     // Do nothing Ref methods
 
     void delete() {
@@ -74,10 +78,6 @@ class InferredRef extends RefImpl {
 
     Ref persist() {
         return this
-    }
-
-    boolean isModifiable() {
-        return false
     }
 
     void changed(String propName) {

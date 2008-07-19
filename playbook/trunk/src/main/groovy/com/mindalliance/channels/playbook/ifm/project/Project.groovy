@@ -49,7 +49,7 @@ class Project extends IfmElement implements Named, Described {
 
     @Override
     protected List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations'])
+        return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations', 'allProblems'])
     }
 
     static Ref current() {
@@ -72,11 +72,17 @@ class Project extends IfmElement implements Named, Described {
     // Rulebase queries
 
     List<Ref> getAllInvalidations() {
-        return RuleBaseSession.current().query("invalidsInProject", [this.id], "_invalid").collect{it.reference}
+        List<Ref> invalids = RuleBaseSession.current().query("invalidsInProject", [this.id], "_invalid").collect{it.reference}
+        return invalids
     }
 
     List<Ref> getAllIssues() {
-        return RuleBaseSession.current().query("issuesInProject", [this.id], "_issue").collect{it.reference}
+        List<Ref> issues = RuleBaseSession.current().query("issuesInProject", [this.id], "_issue").collect{it.reference}
+        return issues
+    }
+
+    List<Ref> getAllProblems() {
+        return (List<Ref>)(getAllInvalidations() + getAllIssues())
     }
 
     // end rulebase queries
@@ -396,7 +402,7 @@ class Project extends IfmElement implements Named, Described {
         result.addAll(policies)
         result.addAll(relationships)
         result.addAll(sharingAgreements)
-        result.addAll(allIssues)
+        result.addAll(allProblems)
     }
 
     /**
