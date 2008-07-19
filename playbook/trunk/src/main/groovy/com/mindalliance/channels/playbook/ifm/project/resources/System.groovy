@@ -14,4 +14,9 @@ class System extends OrganizationResource {
     Ref adminPosition
     String instructions = '' // access instructions
 
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['instructions']) as Set
+    }
+
+
 }

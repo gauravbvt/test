@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
  * Date: Jul 9, 2008
  * Time: 7:36:21 AM
  */
-class Invalid extends Problem {
+class Invalidation extends Problem {
 
     private static final Map INVALID_TAGS = [
             actorMissing: "The actor is missing.",
@@ -29,7 +29,7 @@ class Invalid extends Problem {
             relationshipIncomplete: "The relationship is not sufficiently defined; it is missing the 'from', the 'to' and/or a name."
     ]
 
-    Invalid(Referenceable referenceable, String tag) {
+    Invalidation(Referenceable referenceable, String tag) {
         super(referenceable, tag)
     }
 

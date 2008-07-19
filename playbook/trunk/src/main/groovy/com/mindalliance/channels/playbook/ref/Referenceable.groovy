@@ -27,4 +27,5 @@ interface Referenceable extends Bean, Identified {
     void afterDelete()
     void makeConstant()
     boolean isConstant()
+    Set hiddenProperties() // non-list, "internal use" properties, i.e. not to be displayed to end-user as element discriminator
 }

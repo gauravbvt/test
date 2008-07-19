@@ -17,7 +17,6 @@ abstract class OrganizationResource extends Resource {
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['project'])
     }
-    
 
     boolean isOrganizationResource() {
         return true

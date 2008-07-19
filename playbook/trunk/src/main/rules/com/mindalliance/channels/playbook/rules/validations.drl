@@ -25,7 +25,7 @@ rule "invalid information act"
         $el:  InformationAct($actor:actorAgent)
         eval(!Channels.isSet($actor))
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "actorMissing"), "The actor is missing");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "actorMissing"), "The actor is missing");
     end
 
 rule "invalid flow act target"
@@ -34,7 +34,7 @@ rule "invalid flow act target"
         $el: FlowAct($target:targetAgent)
         eval(!Channels.isSet($target))
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el,"targetMissing"), "The target agent is missing");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el,"targetMissing"), "The target agent is missing");
     end
 
 rule "invalid flow act information"
@@ -43,7 +43,7 @@ rule "invalid flow act information"
         $el: SharingAct($info:information)
         eval(!$info.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noSharedInfo"), "The shared information is not defined");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noSharedInfo"), "The shared information is not defined");
     end
 
 rule "invalid flow act - sender is receiver"
@@ -51,7 +51,7 @@ rule "invalid flow act - sender is receiver"
     when
         $el: FlowAct($actor:actorAgent, targetAgent == $actor)
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "senderIsReceiver"), "The sender can not also be the receiver");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "senderIsReceiver"), "The sender can not also be the receiver");
     end
 
 rule "invalid assignation assignee"
@@ -60,7 +60,7 @@ rule "invalid assignation assignee"
         $el: Assignation($assignee:assigneeAgent)
         eval(!Channels.isSet($assignee))
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "assigneeMissing"), "The assignee is missing");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "assigneeMissing"), "The assignee is missing");
     end
 
 rule "invalid assignation responsibility"
@@ -69,7 +69,7 @@ rule "invalid assignation responsibility"
         $el: Assignation($responsibility:responsibility)
         eval(!$responsibility.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noResponsibility"), "The responsibility is undefined");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noResponsibility"), "The responsibility is undefined");
     end
 
 rule "invalid association associate"
@@ -78,7 +78,7 @@ rule "invalid association associate"
         $el: Association($associate:toAgent)
         eval(!Channels.isSet($associate))
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "associateMissing"), "The associate is missing");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "associateMissing"), "The associate is missing");
     end
 
 rule "invalid association relationship"
@@ -87,7 +87,7 @@ rule "invalid association relationship"
         $el: Association($name:relationshipName)
         eval($name.trim().isEmpty())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noRelationshipName"), "No relationship name");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noRelationshipName"), "No relationship name");
     end
 
 rule "invalid information request need"
@@ -96,7 +96,7 @@ rule "invalid information request need"
         $el: InformationRequest($need:informationNeed)
         eval(!$need.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noInformationNeed"), "The information need is unspecified");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noInformationNeed"), "The information need is unspecified");
     end
 
 rule "invalid relocation"
@@ -105,7 +105,7 @@ rule "invalid relocation"
         $el: Relocation($location:location)
         eval(!$location.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noLocation"), "The location is not defined");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noLocation"), "The location is not defined");
     end
 
 rule "invalid sharing commitment"
@@ -114,7 +114,7 @@ rule "invalid sharing commitment"
         $el: SharingCommitment($protocol:protocol)
         eval(!$protocol.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noProtocol"), "The sharing protocol is not defined");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noProtocol"), "The sharing protocol is not defined");
     end
 
 rule "invalid sharing request protocol"
@@ -123,7 +123,7 @@ rule "invalid sharing request protocol"
         $el: SharingRequest($protocol:protocol)
         eval(!$protocol.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "noProtocol"), "The sharing protocol is not defined");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "noProtocol"), "The sharing protocol is not defined");
     end
 
 rule "invalid sharing request information spec"
@@ -132,7 +132,7 @@ rule "invalid sharing request information spec"
         $el: SharingRequest($infoSpec:protocol.informationSpec)
         eval(!((InformationDefinition)$infoSpec).matchesAll())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "protocolInfoSpec"), "The sharing protocol does not define what information it is about");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "protocolInfoSpec"), "The sharing protocol does not define what information it is about");
     end
 
 ### Validate project elements
@@ -143,7 +143,7 @@ rule "invalid sharing agreement"
         $el: SharingAgreement($source:source, $recipient:recipient, $protocol:protocol, $constraints:constraints)
         eval(!Channels.isSet($source) || !Channels.isSet($recipient) || !$protocol.isDefined())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "agreementIncomplete"), "The sharing agreement is not sufficiently defined");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "agreementIncomplete"), "The sharing agreement is not sufficiently defined");
     end
 
 rule "invalid policy"
@@ -152,7 +152,7 @@ rule "invalid policy"
         $el: Policy($sourceSpec:sourceSpec, $recipientSpec:recipientSpec, $infoSpec:informationSpec, $rels: relationshipNames)
         eval($sourceSpec.matchesAll() || $infoSpec.matchesAll() || ($recipientSpec.matchesAll() && $rels.isEmpty()) )
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "policyIncomplete"), "The policy is not sufficiently defined.");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "policyIncomplete"), "The policy is not sufficiently defined.");
     end
 
 rule "invalid relationship"
@@ -161,7 +161,7 @@ rule "invalid relationship"
         $el: Relationship($from: fromAgent, $to: toAgent, $name: name)
         eval(!Channels.isSet($from) || !Channels.isSet($to) || $name.isEmpty())
     then
-        RuleHelper.inferFrom(drools, $el, new Invalid($el, "relationshipIncomplete"), "The relationship is not sufficiently defined.");
+        RuleHelper.inferFrom(drools, $el, new Invalidation($el, "relationshipIncomplete"), "The relationship is not sufficiently defined.");
     end
 
 

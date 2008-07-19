@@ -21,6 +21,11 @@ class Person extends Resource {
         return (List<String>)(super.transientProperties() + ['name'])
     }
 
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['firstName', 'middleName', 'lastName']) as Set
+    }
+
+
     String getName() {
         return toString()
     }

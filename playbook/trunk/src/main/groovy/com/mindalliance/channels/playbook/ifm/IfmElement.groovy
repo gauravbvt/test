@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 * Date: Mar 19, 2008
 * Time: 12:36:45 PM
 */
-/*abstract*/ class IfmElement extends ReferenceableImpl implements Serializable {
+abstract class IfmElement extends ReferenceableImpl implements Serializable {
 
     Date createdOn = new Date()
     Date lastModified = new Date()
@@ -22,6 +22,10 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
     protected List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['projectElement', 'taxonomyElement', 'playbookElement',
                                                              'elementIssues', 'elementInvalidations', 'problems'])
+    }
+
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['projectElement', 'taxonomyElement', 'playbookElement']) as Set
     }
 
     void makeRoot() {

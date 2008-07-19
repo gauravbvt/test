@@ -13,16 +13,16 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: Jul 16, 2008
  * Time: 3:18:00 PM
  */
-public class InvalidForm extends AbstractAnalysisElementForm {
+public class InvalidationForm extends AbstractAnalysisElementForm {
 
-    public InvalidForm(String id, Ref element) {
+    public InvalidationForm(String id, Ref element) {
         super(id, element);
     }
 
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Basic")) {
              public Panel getPanel(String panelId) {
-                 return new InvalidBasicTab(panelId, InvalidForm.this);
+                 return new InvalidBasicTab(panelId, InvalidationForm.this);
              }
          });
     }

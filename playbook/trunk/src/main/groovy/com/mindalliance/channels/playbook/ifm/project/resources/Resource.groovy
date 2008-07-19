@@ -35,6 +35,11 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
                                   'resourceElement', 'team', 'group'])
     }
 
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['organizationResource', 'organizationElement']) as Set
+    }
+
+
     boolean isResourceElement() {
         return true
     }

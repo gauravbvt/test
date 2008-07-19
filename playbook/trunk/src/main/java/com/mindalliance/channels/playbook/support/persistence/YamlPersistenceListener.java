@@ -352,7 +352,7 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
      */
     protected char[] getCacheFileName(String key) {
         if ((key == null) || (key.length() == 0)) {
-            throw new IllegalArgumentException("Invalid key '" + key + "' specified to getCacheFile.");
+            throw new IllegalArgumentException("Key not valid'" + key + "' specified to getCacheFile.");
         }
 
         char[] chars = key.toCharArray();
@@ -386,7 +386,7 @@ public class YamlPersistenceListener implements PersistenceListener, Serializabl
         int AVERAGE_PATH_LENGTH = 30;
 
         if ((group == null) || (group.length() == 0)) {
-            throw new IllegalArgumentException("Invalid group '" + group + "' specified to getCacheGroupFile.");
+            throw new IllegalArgumentException("Group not valid '" + group + "' specified to getCacheGroupFile.");
         }
 
         StringBuffer path = new StringBuffer(AVERAGE_PATH_LENGTH);

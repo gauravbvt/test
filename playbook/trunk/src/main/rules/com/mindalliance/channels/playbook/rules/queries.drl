@@ -42,7 +42,7 @@ end
 
 # Find all invalidations of an element
 query "elementInvalids" (String _element_id)
-    _invalid : Invalid(element.id == _element_id)
+    _invalid : Invalidation(element.id == _element_id)
 end
 
 # Find all issues about an element
@@ -52,13 +52,13 @@ end
 
 # Find all invalidations in a project
 query "invalidsInProject" (String _project_id)
-    ProjectElement($id:id, project.id == _project_id )
-    _invalid : Invalid(element.id == $id)
+    ProjectElement($id:id, project != null, project.id == _project_id )
+    _invalid : Invalidation(element.id == $id)
 end
 
 # Find all issues in a project
 query "issuesInProject" (String _project_id)
-    ProjectElement($id:id, project.id == _project_id )
+    ProjectElement($id:id, project != null, project.id == _project_id )
     _issue : Issue(element.id == $id)
 end
 
@@ -66,5 +66,5 @@ end
 
 # Find all Invalid
 query "allInvalids"
-    invalid : Invalid()
+    invalid : Invalidation()
 end

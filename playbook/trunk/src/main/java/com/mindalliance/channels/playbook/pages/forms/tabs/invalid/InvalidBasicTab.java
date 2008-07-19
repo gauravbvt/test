@@ -2,7 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.invalid;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.analysisElement.AnalysisElementBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.analysis.problem.Invalid;
+import com.mindalliance.channels.playbook.analysis.problem.Invalidation;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,7 +17,7 @@ import org.apache.wicket.model.Model;
  */
 public class InvalidBasicTab extends AnalysisElementBasicTab {
 
-    Invalid invalid;
+    Invalidation invalid;
     protected AjaxLink elementLink;
     protected Label elementLabel;
     protected Label tagLabel;
@@ -28,7 +28,7 @@ public class InvalidBasicTab extends AnalysisElementBasicTab {
 
     protected void load() {
         super.load();
-        invalid = (Invalid)getElement().deref();
+        invalid = (Invalidation)getElement().deref();
         elementLink = new AjaxLink("elementLink"){
                     public void onClick(AjaxRequestTarget target) {
                         edit(invalid.getElement().getReference(), target);
