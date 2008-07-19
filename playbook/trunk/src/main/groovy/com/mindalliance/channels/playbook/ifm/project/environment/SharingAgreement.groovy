@@ -33,7 +33,7 @@ class SharingAgreement extends ProjectElement implements Described {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['description']) as Set
+        return (super.keyProperties() + ['description']) as Set
     }
 
 

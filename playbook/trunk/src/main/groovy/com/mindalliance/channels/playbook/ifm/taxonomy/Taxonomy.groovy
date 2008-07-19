@@ -5,7 +5,6 @@ import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.Channels
 
@@ -36,9 +35,12 @@ class Taxonomy extends IfmElement implements Described {
     }
 
     protected List<String> transientProperties() {
-        return super.transientProperties() + ['elements', 'participatingUsers']
+        return (List<String>)(super.transientProperties() + ['elements', 'participatingUsers'])
     }
 
+    Set keyProperties() {
+        return (super.keyProperties() + ['name', 'description']) as Set
+    }
 
     Referenceable doAddToField(String field, Object object) {
         object.taxonomy = this.reference

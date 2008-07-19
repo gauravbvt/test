@@ -37,7 +37,7 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['name', 'description']) as Set
+        return (super.keyProperties() + ['name', 'description']) as Set
     }
 
     String toString() {

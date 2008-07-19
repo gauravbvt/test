@@ -26,7 +26,7 @@ class Person extends Resource {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['firstName', 'middleName', 'lastName']) as Set
+        return (super.keyProperties() + ['firstName', 'middleName', 'lastName']) as Set
     }
 
 

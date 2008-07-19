@@ -17,6 +17,10 @@ abstract class Category extends TaxonomyElement implements Named, Described {
     String description = ''
     List<? extends Category> narrowedTypes  = []
 
+    Set keyProperties() {
+        return (super.keyProperties() + ['name', 'description']) as Set
+    }
+
     String toString() {
         return name
     }

@@ -25,7 +25,7 @@ abstract class IfmElement extends ReferenceableImpl implements Serializable {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['createdOn', 'lastModified']) as Set
+        return (super.keyProperties() + ['createdOn', 'lastModified']) as Set
     }
 
 

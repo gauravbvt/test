@@ -41,7 +41,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
 
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['name', 'description']) as Set
+        return (super.keyProperties() + ['name', 'description']) as Set
     }
 
     boolean isResourceElement() {

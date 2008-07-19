@@ -53,7 +53,7 @@ class Project extends IfmElement implements Named, Described {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['name', 'description']) as Set
+        return (super.keyProperties() + ['name', 'description']) as Set
     }
     
 

@@ -27,7 +27,7 @@ class Relationship extends ProjectElement implements Named {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['name']) as Set
+        return (super.keyProperties() + ['name']) as Set
     }
 
     void afterDelete() {

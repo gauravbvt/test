@@ -43,7 +43,7 @@ class Policy extends ProjectElement implements Named, Described {
     }
 
     Set keyProperties() {
-        return (super.hiddenProperties() + ['name', 'description']) as Set
+        return (super.keyProperties() + ['name', 'description']) as Set
     }
 
     static List<String> getEdictKinds() {

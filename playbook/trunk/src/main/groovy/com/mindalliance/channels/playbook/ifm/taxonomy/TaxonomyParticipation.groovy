@@ -7,6 +7,6 @@ import com.mindalliance.channels.playbook.ref.Ref
 */
 class TaxonomyParticipation extends TaxonomyElement {
 
-    Ref user;
+    Ref user
 
 }

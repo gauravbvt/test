@@ -57,7 +57,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     }
 
     protected List<String> transientProperties() {
-        return super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type']
+        return (List<String>)(super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type'])
     }
 
     Set hiddenProperties() {
