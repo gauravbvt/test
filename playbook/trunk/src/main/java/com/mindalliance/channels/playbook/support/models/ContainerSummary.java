@@ -238,8 +238,8 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         private Map<PropertyDescriptor,Set<Object>> values = new HashMap<PropertyDescriptor,Set<Object>>();
         private Map<PropertyDescriptor,Set<String>> printValues = new HashMap<PropertyDescriptor,Set<String>>();
         private List<PropertyDescriptor> properties;
-        private boolean hasTransients;
-        private Set<String> transients;
+        Set<String> hiddenProperties;
+
         private int count;
 
         public ClassUse( Class<?> c ) {
@@ -257,13 +257,6 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                         properties.add( pd );
                 }
 
-                try {
-                    c.getMethod( "transientProperties" );
-                    hasTransients = true;
-                } catch ( NoSuchMethodException e ) {
-                    hasTransients = false;
-                }
-
             } catch ( IntrospectionException e ) {
                 e.printStackTrace();
             }
@@ -274,38 +267,21 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                 && Modifier.isPublic( pd.getWriteMethod().getModifiers() );
         }
 
-        private Set<String> getTransients() {
-            if ( transients == null )
-                transients = new HashSet<String>();
-            return transients;
+        public Set<String> getHiddenProperties() {
+            return hiddenProperties;
         }
 
-        private Set<String> getTransients( Referenceable item ) {
-            if ( transients == null ) {
-                Set<String> result = getTransients();
-                Class itemClass = item.getClass();
-                try {
-                    List<String> t = (List<String>) itemClass.getMethod( "transientProperties" )
-                                            .invoke( item );
-
-                    result.addAll( t );
-
-                } catch ( IllegalAccessException e ) {
-                    e.printStackTrace();
-                } catch ( InvocationTargetException e ) {
-                    e.printStackTrace();
-                } catch ( NoSuchMethodException e ) {
-                    e.printStackTrace();
-                }
-            }
-
-            return transients;
+        public void setHiddenProperties( Set<String> hiddenProperties ) {
+            this.hiddenProperties = hiddenProperties;
         }
 
         public void grok( Referenceable item ) {
             try {
+                if ( getHiddenProperties() == null ) {
+                    setHiddenProperties( item.hiddenProperties() );
+                }
                 for ( PropertyDescriptor pd : properties ){
-                    if ( !hasTransients || !getTransients( item ).contains( pd.getName() ) ) {
+                    if ( !getHiddenProperties().contains( pd.getName() ) ) {
                         final Method getter = pd.getReadMethod();
                         final Object value = getter.invoke( item );
                         Set<String> propStrings = printValues.get( pd );
@@ -342,7 +318,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         public Set<RefMetaProperty> getAllColumns() {
             Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
             for ( PropertyDescriptor p : properties )
-                if ( !hasTransients || !getTransients().contains( p.getName() ) )
+                if ( !getHiddenProperties().contains( p.getName() ) )
                     result.add( newRMP( p ) );
             return result;
         }
@@ -350,7 +326,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         public Set<RefMetaProperty> getDistinctColumns() {
             Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
             for ( PropertyDescriptor p : properties ) {
-                if ( !hasTransients || !getTransients().contains( p.getName() ) )
+                if ( !getHiddenProperties().contains( p.getName() ) )
                     if ( printValues.get( p ).size() > 1 )
                         result.add( newRMP( p ) );
             }
@@ -361,7 +337,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
             Map<Method,Object> result = new HashMap<Method,Object>();
             for ( PropertyDescriptor p : properties ) {
                 if ( isWritable( p ) && (
-                        !hasTransients || !getTransients().contains( p.getName() ) ) ) {
+                        !getHiddenProperties().contains( p.getName() ) ) ) {
                     Set<Object> objects = values.get( p );
                     if ( objects.size() == 1 )
                         result.put( p.getWriteMethod(), objects.iterator().next() );
