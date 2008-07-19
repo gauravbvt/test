@@ -2,9 +2,12 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
+import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -25,6 +28,7 @@ public class PolicyAboutTab extends AbstractFormTab {
     TextArea descriptionField;
     CheckBox effectiveField;
     DropDownChoice edictChoice;
+    DynamicFilterTree authorityTree;
 
     public PolicyAboutTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -47,5 +51,13 @@ public class PolicyAboutTab extends AbstractFormTab {
             }
         });
         addReplaceable(edictChoice);
+        authorityTree = new DynamicFilterTree("authority", new RefPropertyModel(getElement(), "authority"),
+                                               new RefPropertyModel(getProject(), "organizations"), SINGLE_SELECTION) {
+            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                Ref selected = authorityTree.getNewSelection();
+                RefUtils.set(getElement(), "authority", selected);
+            }
+        };
+        addReplaceable(authorityTree);
     }
 }

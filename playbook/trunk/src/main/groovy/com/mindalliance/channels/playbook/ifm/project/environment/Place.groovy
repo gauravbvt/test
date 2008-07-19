@@ -22,6 +22,10 @@ class Place extends ProjectElement implements Named, Described {
     Ref enclosingPlace
     GeoLocation geoLocation = new GeoLocation()   // Left undefined unless the place itself is geolocated
 
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['name', 'description']) as Set
+    }
+
     String toString() {
         return name ?: 'no name'
     }

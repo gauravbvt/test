@@ -32,6 +32,11 @@ class SharingAgreement extends ProjectElement implements Described {
         return (List<String>)(super.transientProperties() + ['name'])
     }
 
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['description']) as Set
+    }
+
+
     String toString() {
         Referenceable source = source.deref()
         String sourceName = (source) ? source.name : "Undefined source"

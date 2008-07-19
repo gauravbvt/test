@@ -52,6 +52,11 @@ class Project extends IfmElement implements Named, Described {
         return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations', 'allProblems'])
     }
 
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['name', 'description']) as Set
+    }
+    
+
     static Ref current() {
         PlaybookSession session = (PlaybookSession) Session.get()
         return session.project

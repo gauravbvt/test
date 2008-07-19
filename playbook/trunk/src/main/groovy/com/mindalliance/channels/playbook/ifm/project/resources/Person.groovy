@@ -25,6 +25,11 @@ class Person extends Resource {
         return (super.hiddenProperties() + ['firstName', 'middleName', 'lastName']) as Set
     }
 
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['firstName', 'middleName', 'lastName']) as Set
+    }
+
+
 
     String getName() {
         return toString()

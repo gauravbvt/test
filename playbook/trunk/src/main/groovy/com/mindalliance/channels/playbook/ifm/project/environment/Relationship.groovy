@@ -22,6 +22,14 @@ class Relationship extends ProjectElement implements Named {
         return new Relationship(fromAgent: fromAgent, name: name, toAgent: toAgent)
     }
 
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['reverseRelationship']) as Set
+    }
+
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['name']) as Set
+    }
+
     void afterDelete() {
         if (reverseRelationship as boolean) {
             reverseRelationship.begin()

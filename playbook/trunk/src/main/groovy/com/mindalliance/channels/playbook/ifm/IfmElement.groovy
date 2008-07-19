@@ -24,6 +24,11 @@ abstract class IfmElement extends ReferenceableImpl implements Serializable {
                                                              'elementIssues', 'elementInvalidations', 'problems'])
     }
 
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['createdOn', 'lastModified']) as Set
+    }
+
+
     Set hiddenProperties() {
         return (super.hiddenProperties() + ['projectElement', 'taxonomyElement', 'playbookElement']) as Set
     }

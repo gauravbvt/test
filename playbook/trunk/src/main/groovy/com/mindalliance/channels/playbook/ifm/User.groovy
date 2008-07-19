@@ -18,6 +18,11 @@ class User extends IfmElement {
     boolean analyst
     boolean manager
 
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['password']) as Set
+    }
+
+
     List<Ref> tabs = []
     Ref selectedTab
 

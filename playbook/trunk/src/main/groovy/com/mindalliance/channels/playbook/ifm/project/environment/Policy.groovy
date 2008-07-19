@@ -27,6 +27,7 @@ class Policy extends ProjectElement implements Named, Described {
 
     String name = ''
     String description = ''
+    Ref authority       // Organization
     boolean effective = false // whether the policy is in place in the real world
     String edict =  'forbidden' // either interdicts or obligates
     AgentSpecification sourceSpec = new AgentSpecification()
@@ -39,6 +40,10 @@ class Policy extends ProjectElement implements Named, Described {
     @Override
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['edictKinds','forbidden','restricted','required', 'allowed'])
+    }
+
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['name', 'description']) as Set
     }
 
     static List<String> getEdictKinds() {

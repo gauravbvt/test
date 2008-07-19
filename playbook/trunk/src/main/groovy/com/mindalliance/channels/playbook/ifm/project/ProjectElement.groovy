@@ -24,7 +24,6 @@ class ProjectElement extends IfmElement implements InProject {
         return (super.hiddenProperties() + ['resourceElement']) as Set
     }
 
-
     boolean isProjectElement() {
         return true
     }

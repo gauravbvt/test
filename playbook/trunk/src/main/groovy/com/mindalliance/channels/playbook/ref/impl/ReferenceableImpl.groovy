@@ -64,6 +64,10 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
         return ['id', 'db', 'pcs', 'reference'] as Set
     }
 
+    Set keyProperties() {
+        return [] as Set
+    }
+
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
         if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("^^^ changed: ${getType()}.$propName")
         propertyChanged(propName, null, this."$propName") // don't care about old value

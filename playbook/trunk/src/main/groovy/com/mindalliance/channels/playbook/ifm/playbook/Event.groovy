@@ -36,6 +36,10 @@ class Event extends PlaybookElement implements Named, Described {
         return (List<String>)(super.transientProperties() + ['informationAct', 'impliedEventType'])
     }
 
+    Set keyProperties() {
+        return (super.hiddenProperties() + ['name', 'description']) as Set
+    }
+
     String toString() {
         return name ?: "Unnamed event"
     }
