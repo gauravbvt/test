@@ -238,7 +238,8 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         private Map<PropertyDescriptor,Set<Object>> values = new HashMap<PropertyDescriptor,Set<Object>>();
         private Map<PropertyDescriptor,Set<String>> printValues = new HashMap<PropertyDescriptor,Set<String>>();
         private List<PropertyDescriptor> properties;
-        Set<String> hiddenProperties;
+        private Set hiddenProperties;
+        private Set keyProperties;
 
         private int count;
 
@@ -267,19 +268,29 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                 && Modifier.isPublic( pd.getWriteMethod().getModifiers() );
         }
 
-        public Set<String> getHiddenProperties() {
+        public Set getHiddenProperties() {
             return hiddenProperties;
         }
 
-        public void setHiddenProperties( Set<String> hiddenProperties ) {
+        public void setHiddenProperties( Set hiddenProperties ) {
             this.hiddenProperties = hiddenProperties;
+        }
+
+        public Set getKeyProperties() {
+            return keyProperties;
+        }
+
+        public void setKeyProperties( Set keyProperties ) {
+            this.keyProperties = keyProperties;
         }
 
         public void grok( Referenceable item ) {
             try {
-                if ( getHiddenProperties() == null ) {
+                if ( getHiddenProperties() == null )
                     setHiddenProperties( item.hiddenProperties() );
-                }
+                if ( getKeyProperties() == null )
+                    setKeyProperties( item.keyProperties() );
+
                 for ( PropertyDescriptor pd : properties ){
                     if ( !getHiddenProperties().contains( pd.getName() ) ) {
                         final Method getter = pd.getReadMethod();
@@ -336,8 +347,10 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         public Map<Method,Object> getCommonValues() {
             Map<Method,Object> result = new HashMap<Method,Object>();
             for ( PropertyDescriptor p : properties ) {
-                if ( isWritable( p ) && (
-                        !getHiddenProperties().contains( p.getName() ) ) ) {
+                String s = p.getName();
+                if ( isWritable( p )
+                        && !getHiddenProperties().contains( s )
+                        && !getKeyProperties().contains( s ) ) {
                     Set<Object> objects = values.get( p );
                     if ( objects.size() == 1 )
                         result.put( p.getWriteMethod(), objects.iterator().next() );
