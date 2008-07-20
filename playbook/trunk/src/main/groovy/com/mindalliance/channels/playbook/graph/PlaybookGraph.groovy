@@ -64,7 +64,7 @@ abstract class PlaybookGraph extends DirectedGraph {
     void buildProblems(GraphVizBuilder builder) {
         allElements().each {el ->
             el.problems.each {problem ->
-                builder.node(name: nameFor(problem), label: problem.makeLabel(30), URL: urlFor(problem), template: 'problem')
+                builder.node(name: nameFor(problem), label: problem.makeLabel(30), URL: urlFor(problem.deref()), template: 'problem')
                 builder.edge(source: nameFor(el), target: nameFor(problem), template: 'problemEdge')
             }
         }
