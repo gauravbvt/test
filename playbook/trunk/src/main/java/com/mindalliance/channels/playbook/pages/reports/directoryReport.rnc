@@ -25,15 +25,15 @@ Body = element body { Index , Resource* }
 Index =
       element index {
         element entry {
-            attribute key {xsd:IDREF},
-            text
+            attribute key {text},
+            attribute ref {text}
         }*
       }
 
 Resource =
     element resource {
-        attribute id {xsd:ID},
-        attribute type {"Person" | "Organization"},
+        attribute id {text},
+        attribute type {"Person" | "Organization" |"System" | "Position"},
         attribute first {text}?,
         Card,
         ## if resource is an organization -- members are positions and systems
@@ -66,23 +66,23 @@ Address =
 
 Roles =
     element roles {
-        element role {text}
+        element role {text}*
     }
 
 Holders =
     element holders {
         element holder {
-            attribute ref {xsd:IDREF},
+            attribute ref {text},
             text
-        }
+        }*
     }
 
 Jobs =
     element jobs {
         element job {
-            attribute ref {xsd:IDREF},
+            attribute ref {text},
             text
-        }
+        }*
     }
 
 ContactInfos =
