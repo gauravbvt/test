@@ -68,6 +68,7 @@ class QueryManager implements PropertyChangeListener {
                 findAllPlacesInAreasOfTypeImplying: [Place.class, AreaType.class],
                 findAllAgentsMatchingSpec: [Agent.class, AgentSpecification.class, Event.class],
                 findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
+                findAllParentsOf: [Organization.class],
                 // Taxonomy
                 findTaxonomiesOfUser: [Taxonomy.class, User.class],  // static
                 findInheritedTopics: [EventType.class],

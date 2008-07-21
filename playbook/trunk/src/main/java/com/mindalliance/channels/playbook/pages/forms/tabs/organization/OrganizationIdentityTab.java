@@ -47,10 +47,8 @@ public class OrganizationIdentityTab extends ResourceIdentityTab {
                                                                         new Query("findCandidateSubOrganizationsFor", getElement())
                                                       )) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedOrganizations = subOrganizationsTree.getNewSelections();
-                for (Ref sub : selectedOrganizations) {
-                    RefUtils.add(getElement(), "subOrganizations", sub);
-                }
+                List<Ref> selected = subOrganizationsTree.getNewSelections();
+                setProperty("subOrganizations", selected);
             }
         };
         addReplaceable(subOrganizationsTree);

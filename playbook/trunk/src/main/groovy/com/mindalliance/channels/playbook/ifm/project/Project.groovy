@@ -250,10 +250,15 @@ class Project extends IfmElement implements Named, Described {
         List<Ref> candidates = (List<Ref>) organizations.findAll {org ->
             org as boolean &&
                     org != organization &&
-                    !org.parent as boolean &&
-                    !organization.allParents().contains(org)
+                    !organization.ancestors.contains(org)
         }
         return candidates
+    }
+
+    List<Ref> findAllParentsOf(Ref org) {
+        return (List<Ref>)organizations.findAll{ref ->
+            ref.subOrganizations.contains(org)
+        }
     }
 
     List<Ref> findAllPositionsAnywhere() {

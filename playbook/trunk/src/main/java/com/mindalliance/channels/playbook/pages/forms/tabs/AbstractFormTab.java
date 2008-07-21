@@ -11,6 +11,7 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
+import com.mindalliance.channels.playbook.support.RefUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -70,6 +71,14 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
 
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         elementForm.elementChanged(propPath, target);
+    }
+
+    protected void setProperty(String propPath, Object value) {
+        RefUtils.set(getElement(), propPath, value);
+    }
+
+    protected Object getProperty(String propPath) {
+        return RefUtils.get(getElement(), propPath);
     }
 
     public void addOtherElement(Ref otherElement) {

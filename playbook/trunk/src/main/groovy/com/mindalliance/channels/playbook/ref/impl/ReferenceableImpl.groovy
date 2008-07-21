@@ -89,7 +89,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     }
 
     String makeGuid() {
-        String uuid = "${UUID.randomUUID()}"
+        String uuid = RefUtils.makeUUID()
         return uuid
     }
 

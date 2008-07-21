@@ -39,7 +39,9 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
     }
 
     void detach() {
-        computed = null
+        use (NoSessionCategory) {
+            computed = null
+        }
     }
 
     Referenceable computeReferenceable() {

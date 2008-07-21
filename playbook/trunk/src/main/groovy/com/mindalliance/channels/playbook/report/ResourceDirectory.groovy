@@ -32,6 +32,7 @@ class ResourceDirectory extends Report {
 
     Map<String, Set<Ref>> index = new HashMap<String, Set<Ref>>()
     Map<Ref, Set<Ref>> orgs = new HashMap<Ref, Set<Ref>>()
+    Set<Ref> retained = new HashSet<Ref>()
 
     ResourceDirectory(Tab tab) {
         super(tab)
@@ -93,17 +94,21 @@ class ResourceDirectory extends Report {
     }
 
     private void retain(Ref ref) {
-        Resource res = (Resource) ref.deref()
-        switch (res) {
-            case System.class:
-                addToOrganization((OrganizationResource) res); break
-            case Position.class:
-                addToOrganization((OrganizationResource) res)
-                addPosition((Position) res); break
-            case Organization.class:
-                addToIndex(res); break
-            case Person.class:
-                addToIndex(res)
+        if (!retained.contains(ref)) {
+            retained.add(ref)
+            Resource res = (Resource) ref.deref()
+            switch (res) {
+                case System.class:
+                    addToOrganization((OrganizationResource) res); break
+                case Position.class:
+                    addToOrganization((OrganizationResource) res)
+                    addPosition((Position) res); break
+                case Organization.class:
+                    addToIndex(res); break
+                case Person.class:
+                    addToIndex(res)
+            }
+            addJobs(res)
         }
     }
 
@@ -111,6 +116,14 @@ class ResourceDirectory extends Report {
         List<Ref> allInPosition = (List<Ref>) Query.execute(position, "findAllInPosition")
         allInPosition.each {res ->
             retain(res)
+        }
+    }
+
+    private void addJobs(Resource res) {
+        res.jobs.each {position ->
+            if (position as boolean) {
+                retain(position)
+            }
         }
     }
 
@@ -172,10 +185,10 @@ class ResourceDirectory extends Report {
                     buildResourceCard(res, xml)
                     // if organization, add included org resources
                     if (res instanceof Organization) {
-                        List<Ref> members = sortOnNames(orgs[ref] as List<Ref>)
+                        Set<Ref> members = (Set<Ref>) orgs[ref]
                         if (members) {
                             xml.members {
-                                members.each {member ->
+                                sortOnNames(members as List<Ref>).each {member ->
                                     if (member as boolean) {
                                         xml.resource(id: member.id, type: member.type) {
                                             buildResourceCard((Resource) member.deref(), xml)
@@ -221,7 +234,6 @@ class ResourceDirectory extends Report {
         xml.jobs {
             res.jobs.each {position ->
                 if (position as boolean) {
-                    retain(position)
                     xml.job(ref: position.id, position.name)
                 }
             }

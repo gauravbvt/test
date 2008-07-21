@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,7 +17,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
  */
 class Organization extends Resource {   // a company, agency, team, matrix etc.
 
-    Ref parent // // set only via organization.add|removeSubOrganization(...)
+    // Ref parent // // set only via organization.add|removeSubOrganization(...)
     List<Ref> subOrganizations = []
     List<Ref> positions = []
     List<Ref> systems = []
@@ -25,8 +26,9 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['resources'])
+        return (List<String>)(super.transientProperties() + ['resources', 'parents', 'ancestors', 'parent'])
     }
+
 
     void beforeStore(ApplicationMemory memory) {
         super.beforeStore(memory)
@@ -41,14 +43,23 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
         super.changed(propName)
     }
 
-
     boolean isOrganizationElement() {
         return true
     }
 
     boolean isLocatedWithin(Location loc) {
         return super.isLocatedWithin(loc) || jurisdiction.isWithin(loc)
-    }        
+    }
+
+    Ref getParent() {           // TODO -KLUDGE until OrganizationFilter updated to multi-parents
+        List<Ref> allParents = getParents()
+        return (parents) ? (Ref)parents[0] : null
+    }
+
+    List<Ref> getParents() {
+        List<Ref> directParents = (List<Ref>)Query.execute(this.project, "findAllParentsOf", this.reference)
+        return directParents
+    }
 
     List<Ref> getResources() {
         List<Ref> resources = []
@@ -64,32 +75,35 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
     }
 
     Referenceable doAddToField(String field, Object object) {
-        switch (object.deref()) {
-            case Organization.class: object.parent = this.reference;  super.doAddToField(field, object); break
+        Referenceable referenceable = object.deref()
+        switch (referenceable) {
             case Position.class:
             case System.class:
-                object.organization = this.reference 
+                referenceable.reference.begin()    // TODO -- may fail in multi-user scenario
+                referenceable.organization = this.reference
                 super.doAddToField(field, object); break
             default: super.doAddToField(field, object);
         }
     }
 
     Referenceable doRemoveFromField(String field, Object object) {
-        switch (object.deref()) {
-            case Organization.class: object.parent = null;  super.doRemoveFromField(field, object); break
+        Referenceable referenceable = object.deref()
+        switch (referenceable) {
             case Position.class:
-            case System.class: object.organization = null; super.doRemoveFromField(field, object); break
+            case System.class:
+                referenceable.reference.begin()   // TODO -- may fail in multi-user scenario
+                referenceable.organization = null
+                super.doRemoveFromField(field, object); break
             default: super.doRemoveFromField(field, object);
         }
     }
 
-    List<Ref> allParents() {
-        List<Ref> parents = []
-        if (parent as boolean) {
-            parents.addAll(parent.allParents())
-            parents.add(parent)
+    List<Ref> getAncestors() {   // meaning ancestors
+        List<Ref> ancestry = this.parents
+        this.parents.each {ref ->
+            if (ref as boolean) ancestry.addAll(ref.ancestors)
         }
-        return parents
+        return ancestry
     }
 
     boolean hasJurisdiction() {

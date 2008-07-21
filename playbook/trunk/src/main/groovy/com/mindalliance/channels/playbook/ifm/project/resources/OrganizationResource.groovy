@@ -1,6 +1,10 @@
 package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
+import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ifm.InProject
+import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

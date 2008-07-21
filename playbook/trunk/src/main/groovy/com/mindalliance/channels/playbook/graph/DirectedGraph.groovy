@@ -105,11 +105,11 @@ abstract class DirectedGraph implements Serializable {
     }
 
     static public String nameFor(Referenceable referenceable) {
-        return referenceable.id.replaceAll("-", "")
+        return referenceable.id
     }
 
     static public String nameFor(Ref ref) {
-        return ref.id.replaceAll("-", "")
+        return ref.id
     }
 
     static String labelFor(Bean bean) {

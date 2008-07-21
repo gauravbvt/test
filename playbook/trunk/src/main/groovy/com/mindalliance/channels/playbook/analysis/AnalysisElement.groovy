@@ -29,7 +29,7 @@ abstract class AnalysisElement extends ReferenceableImpl implements Identified {
     
 
     AnalysisElement() {
-       id = "${UUID.randomUUID()}"
+       id = RefUtils.makeUUID()
     }
 
     String about() {

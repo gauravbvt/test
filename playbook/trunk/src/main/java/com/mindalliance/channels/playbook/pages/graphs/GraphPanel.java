@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.pages.SelectionManager;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.components.NoFormButton;
+import com.mindalliance.channels.playbook.support.RefUtils;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.RequestCycle;
@@ -16,14 +17,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -69,7 +67,7 @@ abstract public class GraphPanel extends ContentView {
         svgContent.setOutputMarkupId(true);
         addOrReplace(svgContent);
         // String args = "'" + url + "','" + svgElementId + "'";
-        svgElementId = UUID.randomUUID().toString();
+        svgElementId = RefUtils.makeUUID();
         controlsDiv = new WebMarkupContainer("controls");
         zoomInButton = new NoFormButton("zoomIn");
         controlsDiv.add(zoomInButton);

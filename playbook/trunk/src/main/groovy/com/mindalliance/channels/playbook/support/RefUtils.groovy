@@ -27,6 +27,10 @@ class RefUtils {
 
     */
 
+    static String makeUUID() {
+        "${UUID.randomUUID()}".replaceAll('-', '')
+    }
+
 
     static def getOrDefault(def holder, String path, def defaultValue) {
         def result = get(holder, path)
