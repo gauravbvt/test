@@ -17,7 +17,6 @@ interface Agent extends Referenceable, Named, Described, Locatable {
     List<Responsibility> getResponsibilities()
     List<Ref> getResourcesAt(Ref event)
     boolean isResourceElement()
-    boolean isTeam()
     boolean isGroup()
     boolean hasJurisdiction()
     boolean hasLocation()

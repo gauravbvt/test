@@ -16,13 +16,11 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
-import com.mindalliance.channels.playbook.ifm.project.resources.Team
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.Channels
-import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,7 +36,6 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> participations = []
     List<Ref> persons = []
     List<Ref> organizations = []
-    List<Ref> teams = []
     List<Ref> places = []
     List<Ref> relationships = []
     List<Ref> policies = []
@@ -119,7 +116,6 @@ class Project extends IfmElement implements Named, Described {
         List<Ref> resources = []
         resources.addAll(persons.findAll {res -> res as boolean && res != resource })
         resources.addAll(organizations.findAll {res -> res as boolean && res != resource })
-        resources.addAll(teams.findAll {res -> res as boolean && res != resource })
         organizations.each {org ->
             resources.addAll(org.systems.findAll {res -> res as boolean && res != resource })
             resources.addAll(org.positions.findAll {res -> res as boolean && res != resource })
@@ -163,13 +159,13 @@ class Project extends IfmElement implements Named, Described {
         Ref taxonomy = (Ref) taxonomies.find {model ->
             taxonomy as boolean && taxonomy.placeTypes.size() > 0
         }
-        return model != null
+        return taxonomy != null
     }
 
     List<Ref> findAllTypes(String typeType) {
         List<Ref> types = []
-        taxonomies.each {model ->
-            types.addAll(model.findAllTypes(typeType))
+        taxonomies.each {taxonomy ->
+            types.addAll(taxonomy.findAllTypes(typeType))
         }
         return types
     }
@@ -386,7 +382,6 @@ class Project extends IfmElement implements Named, Described {
         // When changing this method, don't forget to update the next one...
         List<Class<?>> result = new ArrayList<Class<?>>()
         result.addAll([Organization.class])
-        result.addAll([Team.class])
         result.addAll([Place.class])
         result.addAll([Playbook.class])
         result.addAll([Person.class])
@@ -401,7 +396,6 @@ class Project extends IfmElement implements Named, Described {
         playbooks.each { it.addContents(result) }
         result.addAll(analysisElements)
         result.addAll(organizations)
-        result.addAll(teams)
         result.addAll(persons)
         result.addAll(places)
         result.addAll(playbooks)
@@ -415,7 +409,7 @@ class Project extends IfmElement implements Named, Described {
      * Return system objects that a project manager can add.
      */
     static List<Class<?>> managerClasses() {
-        [Project.class]
+        return (List<Class<?>>)[Project.class]
     }
 
     void addManagerContents(List<Ref> result) {

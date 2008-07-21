@@ -57,7 +57,7 @@ public class ResourceAgreementsTab extends AbstractFormTab {
                 };
                 Label whereSourceString = new Label("whereSourceString", (String)RefUtils.get(agreement, "name"));
                 whereSourceLink.add(whereSourceString);
-                addReplaceable(whereSourceLink);
+                item.add(whereSourceLink);
             }
         };
         addReplaceable(whereSourceView);
@@ -82,7 +82,7 @@ public class ResourceAgreementsTab extends AbstractFormTab {
                  };
                  Label whereRecipientString = new Label("whereRecipientString", (String)RefUtils.get(agreement, "name"));
                  whereRecipientLink.add(whereRecipientString);
-                 addReplaceable(whereRecipientLink);
+                 item.add(whereRecipientLink);
              }
          };
          addReplaceable(whereRecipientView);

@@ -54,19 +54,6 @@ class Taxonomy extends IfmElement implements Described {
         super.doRemoveFromField(field, object)
     }
 
-/*    Map toMap() {
-        super.toMap()
-    }
-
-    void setEventTypes(List<Ref> list) {
-        super.setEventTypes(list)
-    }
-
-    void addEventType(Ref et) {
-        eventTypes.add(et)
-    }*/
-
-
     List<Ref> getAllEventTypes() {
         List<Ref> all = []
         all.addAll(eventTypes)
@@ -85,16 +72,18 @@ class Taxonomy extends IfmElement implements Described {
     }
 
     static List<Ref> findAllImplicitTypes(String typeType) {
+        List<Ref> implicits = []
         switch(typeType) {
-            case 'EventType': return (List<Ref>)Query.execute(Event.class, 'findAllImplicitEventTypes')
-            default: return []
+            case 'EventType': implicits = (List<Ref>)Event.findAllImplicitEventTypes()
         }
+        return implicits
     }
 
 
     List<Ref> findAllTypes(String typeType) {
         String propName = RefUtils.decapitalize("${typeType}s")
-        List<Ref> allTypes = this."$propName"
+        List<Ref> allTypes = []
+        allTypes.addAll(this."$propName")
         allTypes.addAll(Taxonomy.findAllImplicitTypes(typeType))
         return allTypes
     }
@@ -137,7 +126,7 @@ class Taxonomy extends IfmElement implements Described {
     List<Ref> getElements() {
         List<Ref> elements = []
         elements.addAll(areaTypes)
-        elements.addAll(eventTypes)
+        elements.addAll(getAllEventTypes())
         elements.addAll(mediumTypes)
         elements.addAll(organizationTypes)
         elements.addAll(placeTypes)

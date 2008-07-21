@@ -24,6 +24,7 @@ import java.io.Serializable;
 public class ResourceResponsibilitiesTab extends AbstractFormTab {
 
     DynamicFilterTree roleTree;
+    DynamicFilterTree jobsTree;
 
     public ResourceResponsibilitiesTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -39,5 +40,13 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
              }
         };
         addReplaceable(roleTree);
+        jobsTree = new DynamicFilterTree("jobs", new RefPropertyModel(getElement(), "jobs"),
+                                             new RefQueryModel(getProject(), new Query("findAllPositionsAnywhere"))) {
+             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
+                List<Ref> newSelections = jobsTree.getNewSelections();
+                RefUtils.set(getElement(), "jobs", newSelections);
+             }
+        };
+        addReplaceable(jobsTree);
     }
 }

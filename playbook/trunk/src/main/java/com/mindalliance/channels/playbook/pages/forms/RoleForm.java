@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.elementType.ElementTypeBasicTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.category.CategoryBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.role.RoleResponsibilitiesTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
@@ -23,7 +23,7 @@ public class RoleForm  extends AbstractCategoryForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Basic")) {
              public Panel getPanel(String panelId) {
-                 return new ElementTypeBasicTab(panelId, RoleForm.this);
+                 return new CategoryBasicTab(panelId, RoleForm.this);
              }
          });
         tabs.add(new AbstractTab(new Model("Responsibilities")) {

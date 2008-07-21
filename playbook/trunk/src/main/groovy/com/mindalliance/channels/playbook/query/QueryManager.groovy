@@ -77,7 +77,7 @@ class QueryManager implements PropertyChangeListener {
                 findAllSubOrganizations: [Organization.class],
                 // Position
                 findOtherPositionsInOrganization: [Position.class, Organization.class],
-                findAllPersonsInPosition: [Position.class, Person.class],
+                findAllInPosition: [Position.class, Resource.class],
                 // Playbook
                 findCandidateCauses: [Event.class],
                 findPriorInformationActs: [Event.class],
@@ -102,6 +102,7 @@ class QueryManager implements PropertyChangeListener {
                 createsMatchingRelationship: [Association.class],
                 // Resource
                 findAllInformationActsForResource: [InformationAct.class, Resource.class],
+                findAllRoles: [Resource.class],
                 // Event
                 findAllInformationActsCausedByEvent: [InformationAct.class, Event.class],
                 findAllEventsCausedByEvent: [InformationAct.class, Event.class],
@@ -109,9 +110,7 @@ class QueryManager implements PropertyChangeListener {
                 findAllPriorEvents: [Event.class],
                 findAllPriorOccurrences: [Event.class, InformationAct.class],
                 // Place
-                findAllCandidateEnclosingPlaces: [Place.class, PlaceType.class],
-                // Event class
-                findAllImplicitEventTypes: []
+                findAllCandidateEnclosingPlaces: [Place.class, PlaceType.class]
         ]
     }
 

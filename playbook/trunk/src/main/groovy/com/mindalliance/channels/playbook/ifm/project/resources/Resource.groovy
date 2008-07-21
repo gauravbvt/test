@@ -25,6 +25,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     String description = ''
     List<ContactInfo> contactInfos = []
     List<Ref> roles = []
+    List<Ref> jobs = []        // positions
     Location location = new Location()
     List<SharingProtocol> access = []
     boolean effective = true // whether the resource is operational in real life
@@ -32,7 +33,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     @Override
     List<String> transientProperties() {
         return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement', 'responsibilities',
-                                  'resourceElement', 'team', 'group'])
+                                  'resourceElement', 'group'])
     }
 
     Set hiddenProperties() {
@@ -46,10 +47,6 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
 
     boolean isResourceElement() {
         return true
-    }
-
-    public boolean isTeam() {
-        return false;
     }
 
     public boolean isGroup() {
@@ -150,8 +147,12 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     }
 
     List<Ref> findAllRoles() {
-        return roles
+        Set<Ref> allRoles = new HashSet<Ref>()
+        allRoles.addAll(roles)
+        allRoles.addAll(jobs.collect {it.findAllRoles()}.flatten())
+        return allRoles as List<Ref>
     }
+
     // end queries
 
 

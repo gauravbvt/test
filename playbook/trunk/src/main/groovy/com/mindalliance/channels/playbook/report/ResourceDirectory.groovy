@@ -6,9 +6,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.taxonomy.Role
-import com.mindalliance.channels.playbook.ifm.project.resources.Team
 import com.mindalliance.channels.playbook.ifm.project.resources.Position
-import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.System
@@ -17,9 +15,11 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.Channels
-import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
+import com.mindalliance.channels.playbook.ifm.project.resources.OrganizationResource
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,8 +30,8 @@ import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
  */
 class ResourceDirectory extends Report {
 
-    static final boolean EXPAND = true
-    Set processed = new HashSet()
+    Map<String, Set<Ref>> index = new HashMap<String, Set<Ref>>()
+    Map<Ref, Set<Ref>> orgs = new HashMap<Ref, Set<Ref>>()
 
     ResourceDirectory(Tab tab) {
         super(tab)
@@ -40,203 +40,219 @@ class ResourceDirectory extends Report {
     String getTitle() {
         return "Resource Directory";
     }
-    /*
-    resource =
-        element resource {
-            attribute type {text} // people, organizations, systems, positions...
-            attribute id {text}
-            element name {text},
-            element description {text}?,
-            element organization {
-                attribute name {text},
-                attribute id {text}
-            }?
-            element role  {
-                attribute name {text},
-                attribute id {text}
-            }*,
-            element contactInfo {
-                attribute medium {text},
-                text // end point
-            }*,
-            element instructions {text}?,
-            group?
-        }
-    group =
-        element group {
-            attribute type {text},
-            attribute name {text},
-            attribute id {text}?,
-            group*,
-            resource*
-        }
-    element body {
-        group*,
-        resource*
-    }
-     */
 
     void buildBody(MarkupBuilder xml) {
-        List elements = []
+        Set<Referenceable> elements = new HashSet()
         this.tab.iterator().each {ref ->
             if (ref as boolean) elements.add(ref.deref())
         }
-        sortOnNames(elements).each {el -> processElement(el, xml)}
+        elements.each {el -> extractResources(el)}
+        buildDirectory(xml)
     }
 
-    private void processElement(Referenceable element, MarkupBuilder xml) {
-        switch (element) {
-            case Project.class: processProject((Project) element, xml); break
-            case Playbook.class: processPlaybook((Playbook) element, xml); break
-            case Role.class: processRole((Role) element, xml); break
-            case Location.class: processLocation((Location) element, xml); break
-            case Resource.class: processResource((Resource) element, EXPAND, xml); break
-            case InformationAct.class: processInformationAct((InformationAct) element, xml)
+    private void extractResources(Referenceable res) {
+        switch (res) {
+            case Project.class: extractResourcesFromProject((Project) res); break
+            case Playbook.class: extractResourcesFromPlaybook((Playbook) res); break
+            case InformationAct.class: extractResourcesFromInformationAct((InformationAct) res); break
+            case Role.class: extractResourcesFromRole((Role) res); break
+            case Resource.class: extractResource((Resource) res)
+        // default = ignore
         }
     }
 
-    private void processProject(Project project, MarkupBuilder xml) {
-        if (processed.contains(project.reference)) return
-        xml.group(type: project.type, name: "In project ${project.name}") {
-            project.findAllResources().each {res ->
-                processResource((Resource) res.deref(), !EXPAND, xml)
-            }
-        }
-        processed.add(project.reference)
+    private void extractResourcesFromProject(Project project) {
+        project.findAllResources().each {retain(it)}
     }
 
-    private void processPlaybook(Playbook playbook, MarkupBuilder xml) {
-        if (processed.contains(playbook.reference)) return
-        xml.group(type: playbook.type, name: "In playbook ${playbook.name}") {
-            playbook.findAllAgents().each {ref ->
-                Referenceable agent = ref.deref()
-                if (agent instanceof Resource) {
-                    processResource((Resource) agent, !EXPAND, xml)
-                }
-            }
-        }
-        processed.add(playbook.reference)
+    private void extractResourcesFromPlaybook(Playbook playbook) {
+        playbook.findAllAgents().each {retain(it)}
     }
 
-    private void processInformationAct(InformationAct act, MarkupBuilder xml) {
-        if (processed.contains(act.reference)) return
-        Ref ref = act.actorAgent
-        if (ref as boolean) {
-            Agent actor = (Agent) ref.deref()
-
-            if (!processed.contains(actor.reference) && actor instanceof Resource) processResource((Resource) actor, !EXPAND, xml)
-        }
+    private void extractResourcesFromInformationAct(InformationAct act) {
+        retain(act.actorAgent)
         if (act instanceof FlowAct) {
-            ref = ((FlowAct) act).targetAgent
-            if (ref as boolean) {
-                Agent target = (Agent) ref.deref()
-                if (!processed.contains(target.reference) && target instanceof Resource) processResource((Resource) target, !EXPAND, xml)
-            }
+            retain(act.targetAgent)
         }
-        processed.add(act.reference)
     }
 
-    private void processRole(Role role, MarkupBuilder xml) {
-        if (processed.contains(role.reference)) return
-        xml.group(type: role.type, name: "In role ${role.name}", id: role.id) {
-            this.userProjects.each {project ->
-                project.findAllResources().each {ref ->
-                    Resource res = (Resource) ref.deref()
-                    boolean roleImplied = res.roles.any {it.implies(role.reference)}
-                    if (roleImplied) {
-                        processResource((Resource) res, !EXPAND, xml)
+    private void extractResourcesFromRole(Role role) {
+        this.userProjects.each {project ->
+            project.findAllResources().each {ref ->
+                Resource res = (Resource) ref.deref()
+                boolean roleImplied = res.roles.any {it.implies(role.reference)}
+                if (roleImplied) {
+                    retain(res.reference)
+                }
+            }
+        }
+    }
+
+    private void extractResource(Resource res) {
+        retain(res.reference)
+    }
+
+    private void retain(Ref ref) {
+        Resource res = (Resource) ref.deref()
+        switch (res) {
+            case System.class:
+                addToOrganization((OrganizationResource) res); break
+            case Position.class:
+                addToOrganization((OrganizationResource) res)
+                addPosition((Position) res); break
+            case Organization.class:
+                addToIndex(res); break
+            case Person.class:
+                addToIndex(res)
+        }
+    }
+
+    private void addPosition(Position position) {
+        List<Ref> allInPosition = (List<Ref>) Query.execute(position, "findAllInPosition")
+        allInPosition.each {res ->
+            retain(res)
+        }
+    }
+
+    private void addToIndex(Resource res) {
+        String name = res.name
+        String key = (name && (name[0].toUpperCase() in ('A'..'Z'))) ? name[0] : '*'
+        Set<Ref> indexed = (Set<Ref>) index[key]
+        if (indexed == null) {
+            indexed = new HashSet<Ref>()
+            index.put(key, indexed)
+        }
+        indexed.add(res.reference)
+    }
+
+    private void addToOrganization(OrganizationResource orgRes) {
+        Ref org = orgRes.organization
+        if (org as boolean) {
+            Set<Ref> orgResources = (Set<Ref>) orgs.get(org.reference)
+            if (orgResources == null) {
+                orgResources = new HashSet<Ref>()
+                orgs.put(org, orgResources)
+                addToIndex((Resource) org.deref()) // add the organization to the index
+            }
+            orgResources.add(orgRes.reference)
+        }
+    }
+
+    private void buildDirectory(MarkupBuilder xml) {
+        Map<Ref, String> firsts = buildIndex(xml)
+        buildEntries(firsts, xml)
+    }
+
+    // Map<String, Set<Ref>> index = new HashMap<String, Set<Ref>>()
+    private Map<Ref, String> buildIndex(MarkupBuilder xml) {
+        Map<Ref, String> firsts = new HashMap<Ref, String>()
+        xml.index {
+            (('A'..'Z') + ['*']).each {key ->
+                List<Ref> refs = sortOnNames((index[key] ?: []) as List<Ref>)
+                if (refs) {
+                    xml.entry(key: key, ref: refs[0].id)
+                    firsts[refs[0]] = key
+                }
+            }
+        }
+        return firsts
+    }
+
+    private void buildEntries(Map<Ref, String> firsts, MarkupBuilder xml) {
+        (('A'..'Z') + ['*']).each {key ->
+            List<Ref> refs = sortOnNames((index[key] ?: []) as List<Ref>)
+            refs.each {ref ->
+                Resource res = (Resource) ref.deref()
+                Map attributes = [id: ref.id, type: res.type]
+                if (firsts[ref]) {
+                    attributes += [first: firsts[ref]]
+                }
+                xml.resource(attributes) {  // either organization or person
+                    // name, location, jurisdiction, roles, contact info
+                    buildResourceCard(res, xml)
+                    // if organization, add included org resources
+                    if (res instanceof Organization) {
+                        List<Ref> members = sortOnNames(orgs[ref] as List<Ref>)
+                        if (members) {
+                            xml.members {
+                                members.each {member ->
+                                    if (member as boolean) {
+                                        xml.resource(id: member.id, type: member.type) {
+                                            buildResourceCard((Resource) member.deref(), xml)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        processed.add(role.reference)
     }
 
-    private void processLocation(Location loc, MarkupBuilder xml) {
-        if (processed.contains(loc.reference)) return
-        xml.group(type: 'Location', name: "In location $loc") {
-            this.userProjects.each {project ->
-                project.findAllResources().each {ref ->
-                    Resource res = (Resource) ref.deref()
-                    if (res.hasLocation() && res.location.isWithin(loc) ||
-                            res.hasJurisdiction() && res.jurisdiction.isWithin(loc)) {
-                        processResource((Resource) res, !EXPAND, xml)
-                    }
+    private void buildResourceCard(Resource res, MarkupBuilder xml) {
+        xml.name(res.name)
+        buildResourceAddress(res, xml)
+        buildRoles(res, xml)
+        if (res instanceof Position) {
+            buildPositionHolders((Position) res, xml)
+        }
+        buildJobs(res, xml)
+        buildContactInfos(res, xml)
+    }
+
+    private void buildResourceAddress(Resource res, MarkupBuilder xml) {
+        GeoLocation geoLoc = res.location.effectiveGeoLocation
+        if (geoLoc.isDefined()) {
+            AreaInfo areaInfo = geoLoc.areaInfo
+            if (areaInfo.isDefined()) {
+                xml.address {
+                    xml.street(areaInfo.street)
+                    xml.city(areaInfo.city)
+                    xml.state(areaInfo.state)
+                    xml.country(areaInfo.country)
+                    xml.code(areaInfo.code)
                 }
             }
         }
-        processed.add(loc.reference)
     }
 
-    private void processResource(Resource res, boolean expand, MarkupBuilder xml) {
-        xml.resource(type: res.type, id: res.id) {
-            name(res.name)
-            description(res.description)
-            if (res.isOrganizationResource()) {
-                xml.organization(name: res.organization.name, id: res.organization.id)
-            }
-            res.roles.each {role -> xml.role(name: role.name, id: role.id)}
-            xml.contactInfos {
-                if (!res.contactInfos) {
-                    xml.noContactInfo()
-                }
-                else {
-                    res.contactInfos.each {contactInfo ->
-                        xml.contactInfo(medium: contactInfo.mediumType.name, contactInfo.endPoint)
-                    }
-                }
-            }
-            if (res instanceof System) processSystem((System) res, xml)
-            switch (res) {
-                case Organization.class: if (expand) processOrganization((Organization) res, xml); break
-                case Position.class: processPosition((Position) res, xml); break
-                case Team.class: if (expand) processTeam((Team) res, xml)
-            }
-        }
-        processed.add(res.reference)
-    }
-
-    private void processOrganization(Organization org, MarkupBuilder xml) {
-        if (processed.contains(org.reference)) return
-        List<Ref> resources = org.resources
-        if (resources) {
-            xml.group(type: org.type, name: 'Resources in this organization', id: org.id) {
-                sortOnNames(resources).each {res ->
-                    processResource((Resource) res.deref(), !EXPAND, xml)
+    private void buildJobs(Resource res, MarkupBuilder xml) {
+        xml.jobs {
+            res.jobs.each {position ->
+                if (position as boolean) {
+                    retain(position)
+                    xml.job(ref: position.id, position.name)
                 }
             }
         }
-        processed.add(org.reference)
     }
 
-    private void processPosition(Position pos, MarkupBuilder xml) {
-        List<Ref> persons = (List<Ref>) Query.execute(pos, "findAllPersonsInPosition")
-        if (persons) {
-            xml.group(type: pos.type, name: 'Persons in this position', id: pos.id) {
-                sortOnNames(persons).each {person ->
-                    processResource((Resource) person.deref(), !EXPAND, xml)
+    private void buildPositionHolders(Position position, MarkupBuilder xml) {
+        xml.holders {
+            position.findAllInPosition().each {res ->
+                xml.holder(ref: res.id, res.name)
+            }
+        }
+    }
+
+    private void buildRoles(Resource res, MarkupBuilder xml) {
+        xml.roles {
+            res.findAllRoles().each {role ->
+                if (role as boolean) {
+                    xml.role(role.name)
                 }
             }
         }
-        processed.add(pos.reference)
     }
 
-    private void processTeam(Team team, MarkupBuilder xml) {
-        if (processed.contains(team.reference)) return
-        List<Ref> members = team.resources
-        if (members) {
-            xml.group(type: team.type, name: 'Team members', id: team.id) {
-                sortOnNames(members).each {member ->
-                    processResource((Resource) member.deref(), !EXPAND, xml)
+    private void buildContactInfos(Resource res, MarkupBuilder xml) {
+        xml.contactInfos {
+            res.contactInfos.each {ci ->
+                if (ci.mediumType as boolean) {
+                    xml.contactInfo(medium: ci.mediumType.name, ci.endPoint)
                 }
             }
-        }
-        processed.add(team.reference)
-    }
-
-    private void processSystem(System system, MarkupBuilder xml) {
-        if (system.instructions) {
-            xml.instruction(system.instructions)
         }
     }
 

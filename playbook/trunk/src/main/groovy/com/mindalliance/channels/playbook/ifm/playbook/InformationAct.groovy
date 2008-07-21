@@ -15,7 +15,7 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
  */
 abstract class InformationAct extends Event {
 
-    Ref actorAgent // an agent, i.e. group or team within the scope of the Playbook, or a resource in the scope of the Playbook's Project
+    Ref actorAgent // an agent, i.e. group within the scope of the Playbook, or a resource in the scope of the Playbook's Project
 
     @Override
     List<String> transientProperties() {

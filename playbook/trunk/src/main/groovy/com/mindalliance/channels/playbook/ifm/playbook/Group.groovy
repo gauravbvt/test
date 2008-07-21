@@ -22,7 +22,7 @@ class Group extends PlaybookElement implements Agent {
     @Override
     List<String> transientProperties() {
         return (List<String>) (super.transientProperties() + ['resourceKinds', 'responsibilities', 'location', 'group',
-                                                              'team', 'resourceElement'])
+                                                              'resourceElement'])
     }
 
     String toString() {
@@ -30,10 +30,6 @@ class Group extends PlaybookElement implements Agent {
     }
 
     boolean isResourceElement() {
-         return false
-     }
-
-    boolean isTeam() {
          return false
      }
 

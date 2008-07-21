@@ -30,6 +30,8 @@ class Event extends PlaybookElement implements Named, Described {
             Relocation.class, SharingCommitment.class, SharingRequest.class, Task.class
     ]
 
+    static private List<Ref> implicitEventTypes
+
     String name = ''
     String description = ''
     Cause cause = new Cause()
@@ -39,7 +41,7 @@ class Event extends PlaybookElement implements Named, Described {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['informationAct', 'implicitEventType', 'eventClasses'])
+        return (List<String>) (super.transientProperties() + ['informationAct', 'implicitEventType', 'eventClasses', 'implicitEventTypes'])
     }
 
     Set keyProperties() {
@@ -78,12 +80,14 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     static List<Ref> findAllImplicitEventTypes() {
-        List<Ref> implicits = []
-        EventClasses.each {clazz ->
-            Ref implicit = clazz.implicitEventType()
-            implicits.add(implicit)
+        if (implicitEventTypes == null) {
+            implicitEventTypes = []
+            EventClasses.each {clazz ->
+                Ref implicit = clazz.implicitEventType()
+                implicitEventTypes.add(implicit)
+            }
         }
-        return implicits
+        return implicitEventTypes
     }
 
     // Return event type implied by the event (provides for reflexion on events, including information acts)

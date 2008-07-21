@@ -62,11 +62,13 @@
            <artifactId>wicket-datetime</artifactId>
            <version>${wicket.version}</version>
         </dependency>
+<!--
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicket-contrib-gmap2</artifactId>
             <version>1.4-SNAPSHOT</version>
         </dependency>
+-->
 
         <!-- LOGGING DEPENDENCIES - LOG4J -->
         <dependency>

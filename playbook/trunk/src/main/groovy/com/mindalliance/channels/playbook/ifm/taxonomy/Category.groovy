@@ -15,7 +15,7 @@ abstract class Category extends TaxonomyElement implements Named, Described {
 
     String name = ''           // -- required
     String description = ''
-    List<? extends Category> narrowedTypes  = []
+    List<Ref> narrowedTypes  = []
 
     Set keyProperties() {
         return (super.keyProperties() + ['name', 'description']) as Set
@@ -30,7 +30,7 @@ abstract class Category extends TaxonomyElement implements Named, Described {
     }
 
     void broaden(Ref type) {
-       type.addNarrowedType(this)
+       type.addNarrowedType(this.reference)
     }
 
     void narrow (Ref type) {
@@ -42,7 +42,7 @@ abstract class Category extends TaxonomyElement implements Named, Described {
     }
 
     boolean broadens(Ref type) {
-        return type.narrowedTypes.contains(this)
+        return type.narrowedTypes.contains(this.reference)
     }
 
     List<Ref> ancestors() {

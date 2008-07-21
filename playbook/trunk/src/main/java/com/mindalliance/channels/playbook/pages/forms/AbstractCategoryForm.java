@@ -20,7 +20,13 @@ abstract public class AbstractCategoryForm extends AbstractElementForm {
     // ElementPanel
 
     public Taxonomy getTaxonomy() {
-        return (Taxonomy)((Category)element.deref()).getTaxonomy().deref();
+        Ref ref = ((Category)element.deref()).getTaxonomy();
+        if (ref != null) {
+            return (Taxonomy)ref.deref();
+        }
+        else {
+            return null;
+        }
     }
 
     public boolean isTaxonomyPanel() {

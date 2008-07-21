@@ -104,7 +104,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
         return elementForm.getPlaybook();
     }
 
-    public Ref getScope() // either Channels.instance(), a Project, an IFM Taxonomy or a Playbook
+    public Ref getScope() // either Channels.instance(), a Project, a Taxonomy or a Playbook
     {
         return elementForm.getScope();
     }

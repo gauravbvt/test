@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.tabs.elementType.ElementTypeBasicTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.category.CategoryBasicTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeIntentTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.taskType.TaskTypeInputsTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -24,7 +24,7 @@ public class TaskTypeForm extends AbstractCategoryForm {
     void loadTabs() {
         tabs.add(new AbstractTab(new Model("Basic")) {
              public Panel getPanel(String panelId) {
-                 return new ElementTypeBasicTab(panelId, TaskTypeForm.this);
+                 return new CategoryBasicTab(panelId, TaskTypeForm.this);
              }
          });
         tabs.add(new AbstractTab(new Model("Intent")) {

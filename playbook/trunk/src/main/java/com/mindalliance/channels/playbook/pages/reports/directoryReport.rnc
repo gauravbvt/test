@@ -4,6 +4,7 @@ namespace rng = "http://relaxng.org/ns/structure/1.0"
 
 ## include "report.rnc"
 start = Report
+
 Report = element report { Header, Body, Footer }
 Header =
     element header {
@@ -19,36 +20,75 @@ Footer =
     }
 
 
-Body = element body { Group* & Resource* }
+Body = element body { Index , Resource* }
+
+Index =
+      element index {
+        element entry {
+            attribute key {xsd:IDREF},
+            text
+        }*
+      }
+
 Resource =
     element resource {
-        attribute type { text }
-        & attribute id { text }
-        & element name { text }
-        & element description { text }?
-        & element organization {
-              attribute name { text }
-              & attribute id { text }
-          }?
-        & element role {
-              attribute name { text },
-              attribute id { text }
-          }*
-        & element contactInfos {
-              element noContactInfo { empty }
-              | element contactInfo {
-                    attribute medium { text },
-                    text
-                }*
-          }
-        & element instructions { text }?
-        & Group?
+        attribute id {xsd:ID},
+        attribute type {"Person" | "Organization"},
+        attribute first {text}?,
+        Card,
+        ## if resource is an organization -- members are positions and systems
+        Members?
     }
-Group =
-    element group {
-        attribute type { text },
-        attribute name { text },
-        attribute id { text }?,
-        Group*,
+
+Members =
+    element members {
         Resource*
+    }
+
+
+Card =
+    element name {text} &
+    Address? &
+    Roles &
+    ## if resource has positions
+    Holders? &
+    Jobs &
+    ContactInfos
+
+Address =
+    element address {
+        element street {text} &
+        element city {text} &
+        element state {text} &
+        element country {text} &
+        element code {text}
+    }
+
+Roles =
+    element roles {
+        element role {text}
+    }
+
+Holders =
+    element holders {
+        element holder {
+            attribute ref {xsd:IDREF},
+            text
+        }
+    }
+
+Jobs =
+    element jobs {
+        element job {
+            attribute ref {xsd:IDREF},
+            text
+        }
+    }
+
+ContactInfos =
+    element contactInfos {
+        element contactInfo {
+            attribute medium {text},
+            text
+        }*
     }

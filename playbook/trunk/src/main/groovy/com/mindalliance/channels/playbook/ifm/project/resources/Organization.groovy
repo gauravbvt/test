@@ -14,7 +14,7 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
  * Date: Apr 17, 2008
  * Time: 11:24:14 AM
  */
-class Organization extends Resource {
+class Organization extends Resource {   // a company, agency, team, matrix etc.
 
     Ref parent // // set only via organization.add|removeSubOrganization(...)
     List<Ref> subOrganizations = []

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms.tabs.elementType;
+package com.mindalliance.channels.playbook.pages.forms.tabs.category;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
@@ -10,9 +10,13 @@ import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.validators.UniqueValidator;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ifm.taxonomy.Category;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.Component;
 
 import java.util.List;
 import java.util.Iterator;
@@ -25,37 +29,65 @@ import java.util.ArrayList;
  * Date: May 5, 2008
  * Time: 3:21:20 PM
  */
-public class ElementTypeBasicTab extends AbstractFormTab {
+public class CategoryBasicTab extends AbstractFormTab {         // TODO -- make nice (patched for implicit Categories; event types only so far
 
+    protected Label readonly;
+    protected Category category;
     protected AutoCompleteTextField nameField;
     protected TextArea descriptionField;
-    protected DynamicFilterTree narrowedTypesTree;
+    protected Component narrowedTypesTree;
 
-    public ElementTypeBasicTab(String id, AbstractElementForm elementForm) {
+    public CategoryBasicTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
     protected void load() {
         super.load();
+        category = (Category) getElement().deref();
+        readonly = new Label("readonly", new Model("This category is built-in and can not be edited."));
+        addReplaceable(readonly);
+        setVisibility(readonly, getElement().isComputed());
         nameField = new AutoCompleteTextField("name", new RefPropertyModel(getElement(), "name")) {
             protected Iterator getChoices(String input) {
                 return otherCategoryNames(input, 10);
             }
         };
-        nameField.add(UniqueValidator.inQuery(getScope(), new Query("findAllOtherTypeNames", getElement())));
+        nameField.setEnabled(!getElement().isComputed());
+        if (!getElement().isComputed()) {
+            nameField.add(UniqueValidator.inQuery(getScope(), new Query("findAllOtherTypeNames", getElement())));
+        } else {
+            nameField.setEnabled(false);
+        }
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
+        descriptionField.setEnabled(!getElement().isComputed());
         addInputField(descriptionField);
-        narrowedTypesTree = new DynamicFilterTree("narrowedTypes",
-                new RefPropertyModel(getElement(), "narrowedTypes"),
-                new RefQueryModel(this, new Query("findAllOtherTypes"))
-        ) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                List<Ref> selectedTypes = narrowedTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "narrowedTypes", selectedTypes);
-            }
-        };
+        if (!getElement().isComputed()) {
+            narrowedTypesTree = new DynamicFilterTree("narrowedTypes",
+                    new RefPropertyModel(getElement(), "narrowedTypes"),
+                    new RefQueryModel(this, new Query("findAllOtherTypes"))
+            ) {
+                public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
+                    List<Ref> selectedTypes = ((DynamicFilterTree) narrowedTypesTree).getNewSelections();
+                    RefUtils.set(getElement(), "narrowedTypes", selectedTypes);
+                }
+            };
+        } else {
+            narrowedTypesTree = new Label("narrowedTypes", new Model(narrowedTypesAsString()));
+        }
         addReplaceable(narrowedTypesTree);
+    }
+
+    private String narrowedTypesAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Ref ref : (List<Ref>)category.getNarrowedTypes()) {
+            Category broad = (Category) ref.deref();
+            if (broad != null) {
+                sb.append(broad.getName());
+                sb.append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     private Iterator otherCategoryNames(String input, int max) {

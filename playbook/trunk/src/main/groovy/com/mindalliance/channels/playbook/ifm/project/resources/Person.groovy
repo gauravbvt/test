@@ -14,7 +14,6 @@ class Person extends Resource {
     String firstName = ''
     String middleName = ''
     String lastName = ''
-    List<Ref> positions = []
 
     @Override
     List<String> transientProperties() {
@@ -52,9 +51,6 @@ class Person extends Resource {
 
     // Queries
 
-    List<Ref> findAllRoles() {
-        return positions.collect {it.findAllRoles()}.flatten()
-    }
 
 
     // end queries

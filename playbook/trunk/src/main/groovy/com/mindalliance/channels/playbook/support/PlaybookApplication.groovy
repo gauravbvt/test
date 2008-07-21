@@ -153,23 +153,32 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
         ContactInfo phone1 = new ContactInfo(mediumType: m.findType('MediumType', 'phone'), endPoint:'800-328-7448')
         ContactInfo email1 = new ContactInfo(mediumType: m.findType('MediumType', 'email'), endPoint:'gopher@bigcorp.com')
-        Ref pos1 = store(new Position(name: 'Position 1', roles:[m.findType('Role', 'Employee')], contactInfos:[phone1, email1]))
-        Ref pos2 = store(new Position(name: 'Position 2'))
-        Ref pos3 = store(new Position(name: 'Position 3'))
+        Position pos1 = new Position(name: 'Position 1', roles:[m.findType('Role', 'Employee')], contactInfos:[phone1, email1])
+        Position pos2 = new Position(name: 'Position 2')
+        Position pos3 = new Position(name: 'Position 3')
         acme.addPosition(pos1)
         acme.addPosition(pos2)
         acme.addPosition(pos3)
-        acme.addSystem(store(new System(name: 'Hal 9000')))
-        p.addRelationship(store(new Relationship(fromAgent: acme.reference, toAgent: nadir.reference, name: "client")))
+        System hal = new System(name: 'Hal 9000')
+        acme.addSystem(hal)
+        store(hal)
+        Relationship client = new Relationship(fromAgent: acme.reference, toAgent: nadir.reference, name: "client")
+        p.addRelationship(client)
+        store(client)
         store(acme)
-        Ref pos4 = store(new Position(name: 'Position 4', roles:[m.findType('Role', 'Gopher')]))
-        Ref pos5 = store(new Position(name: 'Position 5'))
+        Position pos4 = new Position(name: 'Position 4', roles:[m.findType('Role', 'Gopher')])
+        Position pos5 = new Position(name: 'Position 5')
         nadir.addPosition(pos4)
         nadir.addPosition(pos5)
         store(nadir)
+        store(pos1)
+        store(pos2)
+        store(pos3)
+        store(pos4)
+        store(pos5)
 
-        joe.addPosition(pos1)
-        joe.addPosition(pos4)
+        joe.addJob(pos1)
+        joe.addJob(pos4)
         store(joe)
         Person jane = new Person(firstName: 'Jane', lastName: 'Shmoe')
         p.addPerson(jane)
@@ -183,16 +192,18 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         p.addSharingAgreement(ag2)
         store(ag1)
         store(ag2)
-        p.addParticipation(
-                store(new Participation(
+        Participation part1 = new Participation(
                         user: admin.getReference(),
                         project: p.getReference(),
-                        manager: true)))
-        p.addParticipation(
-                store(new Participation(
+                        manager: true)
+        p.addParticipation(part1)
+        store(part1)
+        Participation part2 = new Participation(
                         user: user.getReference(),
-                        project: p.getReference())))
-
+                        project: p.getReference())
+        p.addParticipation(part2)
+        store(part2)
+        
         initializeDefaultPlaybook(p, m)
         channels.addProject(store(p))
         channels.addTaxonomy(store(m));

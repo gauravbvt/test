@@ -10,40 +10,21 @@
         </head>
         <body>
             <div class="report">
-                <xsl:apply-templates/>
+                <div class="title"><xsl:value-of select="header/title"/></div>
+                <div class="info">
+                    <xsl:value-of select="concat('Produced by ',header/user, ' on ', header/date)"/>
+                </div>
+                <table>
+                    <xsl:attribute name="summary">
+                        <xsl:value-of select="concat(header/title, ' for ' , header/context)"/>
+                    </xsl:attribute>
+                    <xsl:apply-templates/>
+                </table>
             </div>
         </body>
     </xsl:template>
 
-    <xsl:template match="header">
-        <div class="header">
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="header/title">
-        <div class="title">
-            <xsl:value-of select="."/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="header/context">
-        <div class="context">
-            <xsl:value-of select="."/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="header/user">
-        <div class="user">
-            <xsl:value-of select="."/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="header/date">
-        <div class="date">
-            <xsl:value-of select="."/>
-        </div>
-    </xsl:template>
+    <xsl:template match="header"/>
 
     <xsl:template match="body">
         <div class="body">

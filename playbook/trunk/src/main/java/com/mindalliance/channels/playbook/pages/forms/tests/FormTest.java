@@ -167,7 +167,6 @@ public class FormTest extends WebPage {
         choices.add(SharingCommitment.class);
         choices.add(SharingRequest.class);
         choices.add(Task.class);
-        choices.add(Team.class);
         // Project elements
         choices.add(Taxonomy.class);
         choices.add(Playbook.class);
