@@ -21,6 +21,7 @@ import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.Channels
+import com.mindalliance.channels.playbook.ifm.Participation
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -52,7 +53,7 @@ class Project extends IfmElement implements Named, Described {
     Set keyProperties() {
         return (super.keyProperties() + ['name', 'description']) as Set
     }
-    
+
 
     static Ref current() {
         PlaybookSession session = (PlaybookSession) Session.get()
@@ -414,6 +415,23 @@ class Project extends IfmElement implements Named, Described {
 
     void addManagerContents(List<Ref> result) {
         // Projects are added in UserScope.getContents()
+    }
+
+    Ref persist() {
+        super.persist()
+        if (!playbooks) {
+            Playbook initialPlaybook = new Playbook(name: 'Playbook', description: '(automatically created)')
+            initialPlaybook.persist()
+            this.addPlaybook(initialPlaybook)
+            initialPlaybook.persist()
+        }
+        if (!participations) {
+            Participation p = new Participation(user: PlaybookSession.get().getUser(), project: this.reference, manager: true)
+            p.persist()
+            this.addParticipation(p)
+            p.persist()
+        }
+        return this.reference
     }
 
 }

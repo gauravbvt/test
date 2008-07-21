@@ -2,10 +2,11 @@ package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
+import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl;
+import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
-import com.mindalliance.channels.playbook.support.RefUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -66,11 +67,17 @@ public class ClassFilter extends Filter {
     public void setObjectType( Class<?> objectType ) {
         this.objectType = objectType;
         filtersType = null;
-        while ( objectType != Object.class && filtersType == null )
+        while ( objectType != ReferenceableImpl.class && filtersType == null )
         try {
             filtersType = Class.forName( Package + objectType.getSimpleName() + "Filters" );
         } catch ( ClassNotFoundException e ) {
             objectType = objectType.getSuperclass();
+
+            // Don't apply filters if already applied in a super-filter
+            Filter parent = getParent();
+            if ( parent != null && (parent instanceof ClassFilter)
+                   && objectType.equals( ((ClassFilter) parent).getFiltersType() ) )
+                break;
         }
     }
 

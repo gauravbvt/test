@@ -68,7 +68,6 @@ public class PlaybookPage extends WebPage {
         addOrReplace( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         tabPanel = createTabPanel( "user-tabs" );
-        tabPanel.setRenderBodyOnly( true );
         addOrReplace( tabPanel );
 
         //--------------

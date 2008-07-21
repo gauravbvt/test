@@ -12,7 +12,7 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    bottom: 10px;
+    bottom: 8px;
     left: 0;
 }
 div#everything {
@@ -20,51 +20,63 @@ div#everything {
     margin: 0 auto;
     min-height: 30em;
     min-width: 50em;
-    max-width: 102em;
 }
 
 div.title {
     position: relative;
     width: 100%;
+    margin-bottom: 5px;
 }
 
 div#tab-content {
+    border-right: 1px ridge #80806E;
+    border-left: 1px ridge #80806E;
+    border-bottom: 1px ridge #80806E;
+    padding: 5px 0 5px 5px;
     position: absolute;
-    top: 105px;
-    bottom: 5px;
-    left: 5px;
+    left: 0;
     right: 0;
+    bottom: 5px;
+    top: 1.3em;
+    background-color: #F8F8F8;
 }
 
 div#tab-content > div {
     position: relative;
-    height: 100%;
     width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 div.tab-left {
-    vertical-align: top;
-    padding: 0 5px 5px 0;
     width: 20em;
-}
-
-div.tab-left p {
-    margin: 5px;
-    text-align: right;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
 }
 
 div.tab-right {
-    left: 20.5em;
-    right: 0;
-    top: 0;
     bottom: 0;
+    left: 20.5em;
     position: absolute;
-    vertical-align: top;
-    padding: 0 5px 0 0;
+    right: 5px;
+    top: 0;
 }
 
-div.tab-right > div.tab-panel {
-    max-height: 25em;
+div.tab-right > div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-right: 5px;
+}
+
+div.tab-right > div > div.tab-panel {
+    border-left: 1px ridge gray;
+    border-right: 1px ridge gray;
+    border-bottom: 1px ridge gray;
+    padding: 5px;
 }
 
 div.content-list {
@@ -73,40 +85,52 @@ div.content-list {
 
 div#filter {
     margin: 0 0 5px 0;
+    width: 20em;
     position: absolute;
     top: 0;
+    bottom: 25px;
     left: 0;
-    width: 20em;
-    bottom: 3.5em;
 }
 
 div#filter > form {
-    height: 94%;
-    margin: 3px 0 0;
-    overflow: auto;
-    position: relative;
-    width: 100%;
+}
+
+div#filter > form > div {
+    background-color: white;
+    bottom: 2.5em;
+    position: absolute;
+    top: 1.3em;
+}
+
+div#filter p {
+    border-top: 1px ridge gray;
+    border-bottom: 1px ridge gray;
+    bottom: 0;
+    left: 0;
+    padding: 5px 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
 }
 
 div#links {
-    margin: 0 0 5px 0;
     position: absolute;
-    width: 20em;
-    height: 3em;
+    height: auto;
     left: 0;
     bottom: 0;
+    width: 20em;
 }
 
+div#links h3 {
+    display: none;
+}
 div#links ul {
-    margin: 5px;
     list-style: none;
-
+    padding-top: 5px;
 }
 
 div#links ul li {
     display: inline;
-    margin: 5px 0 0 0;
-    line-height: 30px;
 }
 
 .tall {
@@ -118,6 +142,14 @@ div#links ul li {
 }
 
 div.content-form {
+    padding-top: 5px;
+}
+
+div.content-form div.tab-panel {
+    border-left: 1px ridge gray;
+    border-right: 1px ridge gray;
+    border-bottom: 1px ridge gray;
+    padding: 5px;
 }
 
 div#graph {
@@ -169,23 +201,31 @@ div#signout, div.content-pager {
  }
 
 /* ----------------- Hovers */
-input:hover, a:hover, #todos input[ type='submit']:hover, #todos input[ type='button' ]:hover {
+input:hover, #todos input[ type='submit']:hover, #todos input[ type='button' ]:hover {
     background-color: #D8DDE8 !important;
     color: black;
 }
 
 /* ----------------- Selections */
-tr.selected, div.row-selected, div.tab-row li.selected, div.list-type li.selected {
+tr.selected, div.row-selected {
     background: #D8DDE8 !important;
     color: black;
 }
 
 /* ----------------- Colors/Textures */
-th, h1, div.content-footer, div.tab-left h3, div.tab-row li, div.list-type li {
-   background: #7A7E87 url(back.png) no-repeat scroll 0% 50%;
+h1 {
+   background: #7A7E87 url(back.png) no-repeat scroll 0 50%;
    border: 1px outset gray;
    color: black;
    text-align: left;
+}
+
+th, div.content-footer, div.tab-left h3 {
+   background: #7A7E87 url(head.png) repeat scroll 0 50%;
+   border: 1px ridge gray;
+   color: black;
+   text-align: left;
+   font-weight: normal;
 }
 
 body, div.content-list {
@@ -193,8 +233,18 @@ body, div.content-list {
     color: black;
 }
 
-div#everything {
-    background-color: #f2f2f2;
+div.page-contents {
+    bottom:5px;
+    left:0;
+    position:absolute;
+    right:0;
+    top:80px;
+}
+
+div.page-contents > div {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 /* ----------------- Forms */
@@ -256,38 +306,62 @@ div.content-footer {
 
 /* ----------------- Tabs */
 div.tab-row {
-   display: block;
+    border-bottom: 1px inset gray;
+    line-height: normal;
+    font-size: inherit;
+    margin: 5px 0 0;
+}
+div.tab-right > div.tab-row {
+    margin-top: 2px;
 }
 
-div.tab-row ul, div.list-type ul {
-    display: block;
+div.tab-row ul {
     list-style: none;
 }
-div#everything > div.tab-row ul, div.tab-right div.tab-row ul {
-    margin: 1px 0;
-}
-div.content-form div.tab-row ul {
-    margin: 0 0 5px 0;
-}
-div#tab-title div.tab-row ul {
-    margin-bottom: 1px;
-}
-div.tab-row li.tab0 {
-    margin-left: 0 !important;
-}
-div.tab-row li.selected, div.list-type li.selected {
-    font-weight: bold;
-}
-div.tab-row li, div.list-type li {
+
+div.tab-row li {
+    background: transparent url("tabs.png") no-repeat scroll -3px -139px;
+    padding: 5px 0 1px 3px;
     display: inline;
-    margin-left: 5px;
-    padding: 0 5px;
 }
-div.tab-row a, div.list-type a {
+
+div.tab-row li.tab0 {
+    background-position: -6px -139px;
+}
+
+div.tab-row li.last {
+}
+
+div.tab-row li.selected {
+    background-position: -6px 0;
+}
+
+div.tab-row li.selected + li {
+    background-position: 0 -139px;
+}
+
+div.tab-row a {
+    background: #F8F8F8 url("tabs.png") no-repeat scroll -9px -139px;
+    padding: 5px 0.3em 1px 0.3em;
     color: black;
 }
 
-div.list-type {
+div.tab-row .tab0 a {
+}
+div.tab-row .last a {
+    padding-right: 0.4em;
+    background-position: right -139px;
+}
+
+div.tab-row .selected a {
+    background-position: -9px 0;
+}
+
+div.tab-row li.selected.last a {
+    background-position: right 0;
+}
+
+div.tab-row a span {
 }
 
 /* ----------------- Contents */
@@ -296,9 +370,11 @@ hr, div.content-list h3, div.content-form h3 {
 }
 
 div.wicket-tree {
+    border: medium none !important;
+    height: 100%;
     margin: 2px 0 0 1px !important;
-    width: auto !important;
-    border: none !important;
+    position: relative;
+    width:100% !important;
 }
 
 div.wicket-tree div.a_ {
@@ -325,13 +401,16 @@ th, td, div.tab-left h3 {
     padding: 0 5px;
     font-size: medium;
 }
-tbody, div.content-form li {
+tbody {
     line-height: 1.4em;
  }
 
 div.content-list td {
     cursor: pointer;
     vertical-align: top;
+}
+div.content-list tr.even {
+    background-color: #F0F0F0;
 }
 
 div.content-list table {
