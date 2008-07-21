@@ -53,6 +53,13 @@ class Tab extends IfmElement implements Container {
         super.transientProperties() + [ "summary", "buffer", "allowedClasses", "object" ]
     }
 
+    public Set hiddenProperties() {
+        Set result = super.hiddenProperties()
+        result.add( "summary" )
+        result.add( "object" )
+        return result
+    }
+
     //---------------------------------
     public synchronized Filter getFilter() {
         if ( filter == null )

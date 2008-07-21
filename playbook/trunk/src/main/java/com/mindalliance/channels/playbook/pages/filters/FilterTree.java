@@ -61,11 +61,6 @@ public class FilterTree extends Tree {
             item.add( new FilterCheck( "filter-selector", new PropertyModel( f, selector ) ) {
                 public void onFilterSelect( AjaxRequestTarget target ) {
                     getTreeModel().reload();
-
-                    // Make sure old selection (now unchecked) is refreshed in browser
-                    if ( isSingleSelect() && oldTarget != null ) {
-                        target.addComponent( oldTarget );
-                    }
                     oldTarget = this.getCheckBox();
                     updateTree( target );
                     FilterTree.this.onFilterSelect( target, f );
