@@ -13,6 +13,8 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
+import java.util.List;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -42,7 +44,7 @@ public class RiskPanel extends AbstractComponentPanel {
         possibleOutcomesTree = new DynamicFilterTree("possibleOutcomes", new RefPropertyModel(getComponent(), "possibleOutcomes"),
                                              new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selected = possibleOutcomesTree.getNewSelection();
+                List<Ref> selected = possibleOutcomesTree.getNewSelections();
                 setProperty("possibleOutcomes", selected);
             }
         };
