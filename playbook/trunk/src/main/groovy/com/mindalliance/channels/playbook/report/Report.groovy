@@ -44,13 +44,14 @@ abstract class Report {
     String build() {
         StringWriter writer = new StringWriter()
         MarkupBuilder xml = new MarkupBuilder(writer)
-        xml.header { buildHeader(xml) }
+        xml.info { buildInfo(xml) }
         xml.body { buildBody(xml) }
+        buildIndex(xml)
         xml.footer { buildFooter(xml) }
         return writer.toString()
     }
 
-    void buildHeader(MarkupBuilder xml) {
+    void buildInfo(MarkupBuilder xml) {
         xml.title(this.title)
         xml.context(tab.getName())
         xml.user(getUser().name)
@@ -70,7 +71,9 @@ abstract class Report {
         return "Copyright (C) ${String.format('%tY', Calendar.instance)} Mind-Alliance Systems. All Rights Reserved."
     }
 
-    abstract void buildBody(MarkupBuilder xml)
+    abstract protected void buildIndex(MarkupBuilder xml)
+
+    abstract protected void buildBody(MarkupBuilder xml)
 
     abstract String getTitle()
 

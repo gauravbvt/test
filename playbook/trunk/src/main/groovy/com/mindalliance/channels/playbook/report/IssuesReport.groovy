@@ -24,4 +24,8 @@ class IssuesReport extends Report {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    protected void buildIndex(MarkupBuilder xml) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 }

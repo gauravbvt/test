@@ -87,7 +87,7 @@ public class TabPanel extends Panel implements SelectionManager {
                 Object[] details = (Object[]) item.getModelObject();
                 PageParameters params = new PageParameters();
                 params.put(ReportPage.REPORT_TAB_PARAM, getTab().getId());
-                params.put(ReportPage.REPORT_MIMETYPE_PARAM, "xml");
+                params.put(ReportPage.REPORT_MIMETYPE_PARAM, "xhtml");
                 BookmarkablePageLink link = new BookmarkablePageLink("link", (Class<?>) details[2], new PageParameters(params));
                 WebMarkupContainer image = new WebMarkupContainer("link-text");
                 image.add(new AttributeModifier("src", new Model((String) details[1])));

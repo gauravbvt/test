@@ -33,6 +33,7 @@ class ResourceDirectory extends Report {
     Map<String, Set<Ref>> index = new HashMap<String, Set<Ref>>()
     Map<Ref, Set<Ref>> orgs = new HashMap<Ref, Set<Ref>>()
     Set<Ref> retained = new HashSet<Ref>()
+    Map<Ref, String> firsts = new HashMap<Ref, String>()
 
     ResourceDirectory(Tab tab) {
         super(tab)
@@ -42,13 +43,32 @@ class ResourceDirectory extends Report {
         return "Resource Directory";
     }
 
-    void buildBody(MarkupBuilder xml) {
+    // Map<String, Set<Ref>> index = new HashMap<String, Set<Ref>>()
+    protected void buildIndex(MarkupBuilder xml) {
+        xml.index {
+            firsts.each {ref, key ->
+                xml.entry(key: key, ref: ref.id)
+                }
+            }
+        }
+
+    protected void buildBody(MarkupBuilder xml) {
         Set<Referenceable> elements = new HashSet()
         this.tab.iterator().each {ref ->
             if (ref as boolean) elements.add(ref.deref())
         }
         elements.each {el -> extractResources(el)}
-        buildDirectory(xml)
+        computeIndex()
+        buildResources(xml)
+    }
+
+    private void computeIndex() {
+        (('A'..'Z') + ['*']).each {key ->
+            List<Ref> refs = sortOnNames((index[key] ?: []) as List<Ref>)
+            if (refs) {
+                firsts[refs[0]] = key
+            }
+        }
     }
 
     private void extractResources(Referenceable res) {
@@ -151,27 +171,8 @@ class ResourceDirectory extends Report {
         }
     }
 
-    private void buildDirectory(MarkupBuilder xml) {
-        Map<Ref, String> firsts = buildIndex(xml)
-        buildEntries(firsts, xml)
-    }
 
-    // Map<String, Set<Ref>> index = new HashMap<String, Set<Ref>>()
-    private Map<Ref, String> buildIndex(MarkupBuilder xml) {
-        Map<Ref, String> firsts = new HashMap<Ref, String>()
-        xml.index {
-            (('A'..'Z') + ['*']).each {key ->
-                List<Ref> refs = sortOnNames((index[key] ?: []) as List<Ref>)
-                if (refs) {
-                    xml.entry(key: key, ref: refs[0].id)
-                    firsts[refs[0]] = key
-                }
-            }
-        }
-        return firsts
-    }
-
-    private void buildEntries(Map<Ref, String> firsts, MarkupBuilder xml) {
+    private void buildResources(MarkupBuilder xml) {
         (('A'..'Z') + ['*']).each {key ->
             List<Ref> refs = sortOnNames((index[key] ?: []) as List<Ref>)
             refs.each {ref ->
