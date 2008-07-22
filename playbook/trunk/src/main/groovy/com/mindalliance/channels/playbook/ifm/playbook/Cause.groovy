@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ifm.playbook
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ifm.Defineable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,14 +12,14 @@ import com.mindalliance.channels.playbook.ifm.Timing
  * Date: May 16, 2008
  * Time: 11:53:53 AM
  */
-class Cause extends BeanImpl {
+class Cause extends BeanImpl implements Defineable {
 
     Ref trigger // another Event
     Timing delay = new Timing(amount:0)
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['known']
+        return (List<String>)(super.transientProperties() + ['known', 'defined'])
     }
 
     boolean isKnown() {
@@ -29,4 +30,7 @@ class Cause extends BeanImpl {
         return trigger as boolean ? trigger.deref().toString() : "" ;
     }
 
+    public boolean isDefined() {
+        return trigger as boolean && delay.isDefined()
+    }
 }

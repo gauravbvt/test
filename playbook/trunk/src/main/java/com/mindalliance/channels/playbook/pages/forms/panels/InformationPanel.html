@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:extend>
-    <input wicket:id="affirmed" type = "checkbox"/>is affirmed <br/>
+    <input wicket:id="affirmed" type="checkbox"/>is affirmed <br/>
     <input wicket:id="negated" type="checkbox"/>is negated
     <table>
         <tr>
@@ -19,34 +19,27 @@
             </td>
             <td>
                 <fieldset>
-                    <legend>classified as</legend>
+                    <legend>categorized as</legend>
                     <span wicket:id="eventTypes">[Event types tree]</span>
                 </fieldset>
             </td>
-        </tr>
-        <tr>
             <td>
                 <fieldset>
-                    <legend>has elements of information</legend>
-                    <span wicket:id="eventDetails">[EOIs panel]</span>
-                </fieldset>
-            </td>
-            <td>
-                <fieldset>
-                    <legend>obtained from</legend>
-                    <span wicket:id="sourceAgents">[agents panel]</span>
-                </fieldset>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>and expires in</legend>
+                    <legend>expires in</legend>
                     <span wicket:id="timeToLive">[timing panel]</span><span>(0 means never)</span>
                 </fieldset>
             </td>
         </tr>
     </table>
+    <fieldset>
+        <legend>has elements of information</legend>
+        <span wicket:id="eventDetails">[EOIs panel]</span>
+    </fieldset>
+    <fieldset>
+        <legend>obtained from</legend>
+        <span wicket:id="sourceAgents">[agents panel]</span>
+    </fieldset>
+
 </wicket:extend>
 </body>
 </html>

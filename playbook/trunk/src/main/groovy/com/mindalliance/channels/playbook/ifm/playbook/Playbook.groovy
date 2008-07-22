@@ -103,13 +103,18 @@ class Playbook extends ProjectElement implements Described {
     }
 
     List<Ref> findCandidateCauses(Ref event) {
-        List<Ref> candidates = (List<Ref>) informationActs.findAll {act ->
-             act as boolean && act != event && !act.isAfter(event)
+        if (!event.cause.isDefined()) {
+            return (List<Ref>) (informationActs + events)
         }
-        candidates.addAll(events.findAll {other ->
-            other as boolean && other != event && !other.isAfter(event)
-        })
-        return candidates
+        else {
+            List<Ref> candidates = (List<Ref>) informationActs.findAll {act ->
+                act as boolean && act != event && !act.isAfter(event)
+            }
+            candidates.addAll(events.findAll {other ->
+                other as boolean && other != event && !other.isAfter(event)
+            })
+            return candidates
+        }
     }
 
     List<Ref> findPriorInformationActs(Ref event, String type) {

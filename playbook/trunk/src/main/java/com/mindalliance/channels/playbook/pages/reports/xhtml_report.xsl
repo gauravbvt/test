@@ -3,11 +3,11 @@
     <xsl:output method="xml" omit-xml-declaration="yes" indent="yes"/>
     <xsl:strip-space elements="*"/>
     <xsl:template match="/report">
-        <html>
             <head>
                 <title>
                     <xsl:value-of select="info/title"/>
                 </title>
+                <link href="report.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <table class="report">
@@ -23,7 +23,6 @@
                     </tfoot>
                 </table>
             </body>
-        </html>
     </xsl:template>
 
     <xsl:template match="info">
