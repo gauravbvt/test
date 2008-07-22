@@ -66,8 +66,7 @@ public class InformationPanel extends AbstractComponentPanel {
                                            new RefQueryModel(getPlaybook(), new Query("findAllOccurrences")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  Ref selected = eventTree.getNewSelection();
-                RefUtils.set(getElement(), "event", selected);
-                elementChanged(propPath+".event", target);
+                setProperty("event", selected);
             }
         };
         addReplaceable(eventTree);
@@ -75,8 +74,7 @@ public class InformationPanel extends AbstractComponentPanel {
                                             new RefQueryModel(getProject(), new Query("findAllTypes", "EventType"))) {
              public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                  List<Ref> selected = eventTypesTree.getNewSelections();
-                 RefUtils.set(getElement(), "eventTypes", selected);
-                 elementChanged(propPath+".eventTypes", target);
+                 setProperty("eventTypes", selected);
                  target.addComponent(eoisPanel);
              }
          };
@@ -90,7 +88,7 @@ public class InformationPanel extends AbstractComponentPanel {
                                                  new RefQueryModel(getScope(), new Query("findAllAgents"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selected = sourceAgentsTree.getNewSelections();
-                RefUtils.set(getElement(), propPath+".sourceAgents", selected);
+                setProperty("sourceAgents", selected);
             }
         };
         addReplaceable(sourceAgentsTree);
@@ -101,7 +99,7 @@ public class InformationPanel extends AbstractComponentPanel {
     @Override
     public void elementChanged(String propPath, AjaxRequestTarget target) {
         super.elementChanged(propPath, target);
-        if (propPath.endsWith(".event.eventTypes")) {
+        if (propPath.endsWith(".eventTypes")) {
             target.addComponent(eoisPanel);
         }
     }

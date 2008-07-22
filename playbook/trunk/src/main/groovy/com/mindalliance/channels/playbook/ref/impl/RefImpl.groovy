@@ -137,7 +137,7 @@ class RefImpl implements Ref {
             return this.@"$name"
         }
         else {
-            def value
+            def value = null
             Referenceable referenceable
             try {
                 referenceable = deref()

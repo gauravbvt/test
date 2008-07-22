@@ -108,15 +108,16 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     private boolean isLocked(Ref ref) {
-        return getApplicationMemory().isLocked(ref)
+        return false
+        // return getApplicationMemory().isLocked(ref)
     }
 
     private void lock(Ref ref) {
-        getApplicationMemory().lock(ref)
+        // getApplicationMemory().lock(ref)
     }
 
     private void unlock(Ref ref) {
-        getApplicationMemory().unlock(ref)
+        // getApplicationMemory().unlock(ref)
     }
 
     private void doBegin(Referenceable referenceable) {

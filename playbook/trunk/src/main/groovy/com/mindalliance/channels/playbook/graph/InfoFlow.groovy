@@ -114,7 +114,7 @@ class InfoFlow extends PlaybookGraph {
         agents.each {agentRef ->
             Agent agent = agentRef.deref()
             builder.cluster(name: "_${nameFor(agent)}", label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
-                builder.node(name:nameFor(agent), label:'?', template: 'invisible')
+                builder.node(name: nameFor(agent), label: '?', template: 'invisible')
                 buildActsAndInfoForAgent(agentRef, builder)
             }
         }
@@ -134,9 +134,11 @@ class InfoFlow extends PlaybookGraph {
                 String name = "${new Random().nextLong()}"
                 builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
                 links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
-                Event subject = (Event) info.event.deref()
-                events.add(info.event)
-                links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+                if (info.event as boolean) {
+                    Event subject = (Event) info.event.deref()
+                    events.add(info.event)
+                    links.add([name, nameFor(subject), 'about', 'aboutEdge'])
+                }
             }
             // Actor's task-acquired information needs
             if (act instanceof Task && areSame(act.actorAgent, agentRef)) {

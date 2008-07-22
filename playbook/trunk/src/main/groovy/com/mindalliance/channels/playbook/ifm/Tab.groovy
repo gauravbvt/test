@@ -9,16 +9,16 @@ import org.apache.wicket.model.IModel
 import com.mindalliance.channels.playbook.pages.filters.RootFilter
 import com.mindalliance.channels.playbook.support.models.FilteredContainer
 import com.mindalliance.channels.playbook.pages.filters.Filter
-import com.mindalliance.channels.playbook.support.models.ContainerSummary
 
 /**
 * ...
 */
-class Tab extends IfmElement implements Container {
+class Tab extends IfmElement implements Container, Named, Described {
 
     Boolean shared
     Filter filter
     String name = 'Everything'
+    String description = ''
     Container base
     Container buffer
 
@@ -49,8 +49,8 @@ class Tab extends IfmElement implements Container {
 
     }
 
-    List transientProperties() {
-        super.transientProperties() + [ "summary", "buffer", "allowedClasses", "object" ]
+    List<String> transientProperties() {
+        return (List<String>)(super.transientProperties() + [ "summary", "buffer", "allowedClasses", "object" ])
     }
 
     public Set hiddenProperties() {
