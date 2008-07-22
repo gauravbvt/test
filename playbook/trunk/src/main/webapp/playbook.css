@@ -35,7 +35,7 @@ div#tab-content {
     left: 0;
     right: 0;
     bottom: 5px;
-    top: 1.3em;
+    top: 1.18em;
     background-color: #F8F8F8;
 }
 
@@ -447,9 +447,10 @@ ul.new-item-choices {
     background: white;
     text-align: left;
     padding: 0 5px;
-    max-height: 40%;
+    max-height: 16em;
     overflow: auto;
     margin-top: 2px;
+    z-index: 10;
 }
 ul.new-item-choices li {
     display: inline;
