@@ -6,7 +6,7 @@
 <body>
 <wicket:extend>
     <fieldset>
-        <legend>About</legend>
+        <legend></legend>
         <ul>
             <li><label><span>Name:</span><input wicket:id="name" type="text" size="60"/></label></li>
             <li><label><span>Description:</span><textarea wicket:id="description" rows="4"
@@ -14,19 +14,6 @@
         </ul>
     </fieldset>
     <wicket:child/>
-    <fieldset>
-        <legend>Contact info</legend>
-        <div wicket:id="contactInfosDiv">
-            <table>
-                <tr wicket:id="contactInfos">
-                    <td><select wicket:id="mediumType">
-                        <option>[a medium type]</option>
-                    </select></td>
-                    <td><input wicket:id="endPoint" type="text" size="60"/></td>
-                </tr>
-            </table>
-        </div>
-    </fieldset>
 </wicket:extend>
 </body>
 </html>

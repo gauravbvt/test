@@ -150,7 +150,7 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="addess">
+    <xsl:template match="address">
         <table>
             <tr>
                 <th>Street address:</th>

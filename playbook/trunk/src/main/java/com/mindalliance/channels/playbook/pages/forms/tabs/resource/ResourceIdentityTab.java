@@ -38,8 +38,6 @@ public class ResourceIdentityTab extends AbstractFormTab {
 
     protected TextField nameField;
     protected TextArea descriptionField;
-    protected WebMarkupContainer contactInfosDiv;
-    protected RefreshingView contactInfosView;
 
     public ResourceIdentityTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -53,52 +51,6 @@ public class ResourceIdentityTab extends AbstractFormTab {
         // description
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField); 
-        // contact infos
-        contactInfosDiv = new WebMarkupContainer("contactInfosDiv");
-        addReplaceable(contactInfosDiv);
-        contactInfosView = new RefreshingView("contactInfos", new RefPropertyModel(getElement(), "contactInfos")) {
-            protected Iterator getItemModels() {
-                List items = new ArrayList();
-                items.addAll((List) getModel().getObject());
-                items.add(new ContactInfo()); // to be added to the resource's contact infos if set
-                return new ModelIteratorAdapter(items.iterator()) {
-                    protected IModel model(Object contactInfo) {
-                        return new Model((ContactInfo) contactInfo);
-                    }
-                };
-            }
-            protected void populateItem(Item item) {
-                final ContactInfo contactInfo = (ContactInfo) item.getModel().getObject();
-                // Add medium dropdown
-                // List<Ref> allMedia = getProject().findAllTypes("MediumType");
-                final DropDownChoice mediumChoice = new DropDownChoice("mediumType",new Model((Ref)RefUtils.get(contactInfo, "mediumType")),
-                                                                                    new RefQueryModel(getProject(),new Query("findAllTypes", "MediumType") ),
-                                                                                    new RefChoiceRenderer("name", "id"));
-                mediumChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-                    protected void onUpdate(AjaxRequestTarget target) {
-                        Ref selectedMediumType = (Ref)mediumChoice.getModelObject();
-                        contactInfo.setMediumType(selectedMediumType);
-                        List<ContactInfo> contactInfos = ((Resource) getElement().deref()).getContactInfos();
-                        int index = contactInfos.indexOf(contactInfo);
-                        if (index == -1) {   // new contact info
-                            contactInfos.add(contactInfo);
-                        }
-                        getElement().changed("contactInfos");
-                        target.addComponent(contactInfosDiv);
-                    }
-                });
-                item.add(mediumChoice);
-                // Add place item name textfield
-                TextField endPointField = new TextField("endPoint", new RefPropertyModel(contactInfo, "endPoint"));
-                endPointField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-                    protected void onUpdate(AjaxRequestTarget target) {
-                        getElement().changed("contactInfos");
-                    }
-                });
-                item.add(endPointField);
-            }
-        };
-        contactInfosDiv.add(contactInfosView);
     }
 
 }
