@@ -41,7 +41,8 @@ abstract class PlaybookGraph extends DirectedGraph {
                 detection: [shape: 'egg', fillcolor: 'azure2', fontname: LABEL_FONT_NAME, fontsize:LABEL_FONT_SIZE],
                 event: [shape: 'octagon', fillcolor: 'mistyrose', fontname: LABEL_FONT_NAME, fontsize:LABEL_FONT_SIZE],
                 problem: [shape: 'plaintext', fontcolor: PROBLEM_COLOR , fontname:PROBLEM_FONT_NAME, fontsize:PROBLEM_FONT_SIZE],
-                problemEdge: [dir: 'none', style: 'dotted', color:PROBLEM_COLOR, weight: '10000']
+                problemEdge: [dir: 'none', style: 'dotted', color:PROBLEM_COLOR, weight: '10000'],
+                invisible:[style: 'invisible', shape: 'plaintext']
         ]
     }
 

@@ -16,9 +16,9 @@ class Issue extends Problem implements InProject {
 
     private static final Map ISSUE_TAGS = [
             noContact:"No contact information is given.",
-            missingProtocol: "There is no access protocol through which to satisfy the information need.",
+            missingProtocol: "There is no access protocol through which to satisfy an information need.",
             sharingWithoutCommitment: "Information sharing without standing agreement or prior commitment.",
-            criticalNeedUnsatisfied: "An information need critical to the successof the task is unsatisfied."
+            criticalNeedUnsatisfied: "An information need critical to the success of the task is unsatisfied."
             ]
 
     Referenceable cause

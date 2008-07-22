@@ -208,7 +208,7 @@ public class TabPanel extends Panel implements SelectionManager {
                 && (this.selected == null || !this.selected.equals(ref))) {
 
             setSelected(ref);
-            target.addComponent(views.get(getSelectedView()));
+            target.addComponent(views.get(Math.min(views.size()-1,getSelectedView())));  // TODO - KLUDGE TO PREVENT IndexOutOfBoundsException
             target.addComponent(form);
         }
     }

@@ -37,6 +37,7 @@ class InfoFlow extends PlaybookGraph {
         List<Ref> elements = []
         elements.addAll(acts)
         elements.addAll(events)
+        elements.addAll(agents)
         return elements
     }
 
@@ -69,7 +70,7 @@ class InfoFlow extends PlaybookGraph {
         }
     }
 
-    void processPlaybook(Playbook pb) {   // TODO -- not needed
+    void processPlaybook(Playbook pb) {   // TODO -- not needed?
         pb.events.each {ref -> if (ref as boolean) processEvent((Event) ref.deref())}
         pb.informationActs.each {ref -> if (ref as boolean) processAct((InformationAct) ref.deref())}
         pb.groups.each {ref -> if (ref as boolean) processAgent((Agent) ref.deref())}
@@ -112,7 +113,8 @@ class InfoFlow extends PlaybookGraph {
     void buildAgents(GraphVizBuilder builder) {
         agents.each {agentRef ->
             Agent agent = agentRef.deref()
-            builder.cluster(name: nameFor(agent), label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
+            builder.cluster(name: "_${nameFor(agent)}", label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
+                builder.node(name:nameFor(agent), label:'?', template: 'invisible')
                 buildActsAndInfoForAgent(agentRef, builder)
             }
         }
@@ -152,7 +154,6 @@ class InfoFlow extends PlaybookGraph {
                 links.add([nameFor(act), name, durationToText(act.startTime()), 'flowEdge'])
                 buildInformationNeed(need, name)
             }
-            // TODO - add dynamic relationships, assignments, agreements
         }
     }
 
