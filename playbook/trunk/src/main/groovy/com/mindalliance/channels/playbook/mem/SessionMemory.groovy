@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.query.QueryManager
 import java.beans.PropertyChangeSupport
+import com.mindalliance.channels.playbook.ifm.Channels
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -175,6 +176,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
             getApplicationMemory().storeAll(toCommit)
             getApplicationMemory().deleteAll(deletes)
             reset()
+            getApplicationMemory().exportRef(Channels.instance().reference, 'channels')    // TODO - temporary
         }
     }
 
@@ -268,7 +270,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     boolean save(Ref ref) {
         ref.references().each {it.commit()}
-        this.commit()
+        ref.commit()
         int count = getApplicationMemory().exportRef(ref, ref.toString())
         return count > 0
     }

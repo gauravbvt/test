@@ -26,6 +26,7 @@ import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -208,6 +209,9 @@ public class TabPanel extends Panel implements SelectionManager {
                 && (this.selected == null || !this.selected.equals(ref))) {
 
             setSelected(ref);
+            if (getSelectedView() >= views.size()) {
+                Logger.getLogger(this.getClass()).error("An IndexOutOfBoundsException would normally have happened here.");
+            }
             target.addComponent(views.get(Math.min(views.size()-1,getSelectedView())));  // TODO - KLUDGE TO PREVENT IndexOutOfBoundsException
             target.addComponent(form);
         }
