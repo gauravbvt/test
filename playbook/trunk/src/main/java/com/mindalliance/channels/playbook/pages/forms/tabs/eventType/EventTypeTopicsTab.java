@@ -102,7 +102,7 @@ public class EventTypeTopicsTab extends AbstractFormTab {
         topicsDiv = new WebMarkupContainer("topicsDiv");
         topicsView = new RefreshingView("topics", new RefPropertyModel(getElement(), "topics")) {
             protected Iterator getItemModels() {
-                List<String> topics = (List<String>) RefUtils.get(getElement(), "topics");
+                List<String> topics = (List<String>) getProperty("topics");
                 return new ModelIteratorAdapter(topics.iterator()) {
                     protected IModel model(Object topic) {
                         return new Model((String) topic);
@@ -136,7 +136,7 @@ public class EventTypeTopicsTab extends AbstractFormTab {
         return !(newTopic == null ||
                  newTopic.isEmpty() ||
                  getInheritedTopics().contains(topic) ||
-                 ((List<Ref>)RefUtils.get(getElement(), "topics")).contains(topic));
+                 ((List<Ref>)getProperty("topics")).contains(topic));
     }
 
     private List<String>getInheritedTopics() {
@@ -146,7 +146,7 @@ public class EventTypeTopicsTab extends AbstractFormTab {
     private Iterator matchingTopics(String input) {
         List<String> matches = new ArrayList<String>();
         List<String> allTopics = new ArrayList<String>();
-        allTopics.addAll((List<String>)RefUtils.get(getElement(), "topics"));
+        allTopics.addAll((List<String>)getProperty("topics"));
         allTopics.addAll(getInheritedTopics());
         for (String topic : allTopics) {
             if (topic.toLowerCase().startsWith(input.toLowerCase())) {

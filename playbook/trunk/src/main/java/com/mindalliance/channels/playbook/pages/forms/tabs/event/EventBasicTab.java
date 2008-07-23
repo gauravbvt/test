@@ -30,7 +30,7 @@ public class EventBasicTab extends AbstractFormTab {
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        causePanel = new CausePanel("cause", this, "cause", EDITABLE, feedback);
+        causePanel = new CausePanel("cause", this, "cause");
         addReplaceable(causePanel);
     }
 }

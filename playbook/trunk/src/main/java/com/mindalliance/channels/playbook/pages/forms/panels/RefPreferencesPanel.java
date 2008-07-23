@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -40,8 +41,8 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
     List<Ref> selectedElements = new ArrayList<Ref>();
     Ref selectedPreferred;
 
-    public RefPreferencesPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, IModel choices) {
-        super(id, parentPanel, propPath , readOnly, feedback);
+    public RefPreferencesPanel(String id, AbstractPlaybookPanel parentPanel, String propPath, IModel choices) {
+        super(id, parentPanel, propPath);
         this.choices = choices;
         doLoad();
     }
@@ -52,7 +53,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 selectedElements = new ArrayList<Ref>();
                 List<Ref>selection = choicesTree.getNewSelections();
-                List<Ref> preferred = (List<Ref>) RefUtils.get(getElement(), propPath);
+                List<Ref> preferred = (List<Ref>) getComponent();
                 for (Ref type : selection) {
                    if (!preferred.contains(type)) selectedElements.add(type);
                 }
@@ -88,7 +89,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
         upPreferredButton = new Button("upPreferred");
         upPreferredButton.add(new AjaxEventBehavior("onclick") {
             protected void onEvent(AjaxRequestTarget target) {
-                List<Ref> preferred = (List<Ref>)RefUtils.get(getElement(), propPath);
+                List<Ref> preferred = (List<Ref>)getComponent();
                 int index = preferred.indexOf(selectedPreferred);
                 if (index > 0) {
                     preferred.remove(index);
@@ -103,7 +104,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
         downPreferredButton = new Button("downPreferred");
         downPreferredButton.add(new AjaxEventBehavior("onclick") {
             protected void onEvent(AjaxRequestTarget target) {
-                List<Ref> preferred = (List<Ref>)RefUtils.get(getElement(), propPath);
+                List<Ref> preferred = (List<Ref>)getComponent();
                 int index = preferred.indexOf(selectedPreferred);
                 if (index != preferred.size()-1) {
                     preferred.remove(index);
@@ -136,7 +137,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
           upPreferredButton.setEnabled(false);
         }
         else {
-            List<Ref> preferred = (List<Ref>)RefUtils.get(getElement(), propPath);
+            List<Ref> preferred = (List<Ref>)getComponent();
             int index = preferred.indexOf(selectedPreferred);
             upPreferredButton.setEnabled(index != 0);
             downPreferredButton.setEnabled(index < preferred.size() -1);
@@ -148,7 +149,7 @@ public class RefPreferencesPanel extends AbstractComponentPanel {
     }
 
     private void updateAddButtonVisibility(AjaxRequestTarget target) {
-        List<Ref> preferred = (List<Ref>)RefUtils.get(getElement(), propPath);
+        List<Ref> preferred = (List<Ref>)getComponent();
         boolean enabled = false;
         for (Ref type : selectedElements) {
             if (!preferred.contains(type)) {

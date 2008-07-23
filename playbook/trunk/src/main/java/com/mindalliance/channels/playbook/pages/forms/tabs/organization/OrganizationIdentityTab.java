@@ -37,7 +37,7 @@ public class OrganizationIdentityTab extends ResourceIdentityTab {
                                                       new RefQueryModel(getScope(), new Query("findAllTypes", "OrganizationType"))){
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selectedTypes = organizationTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "organizationTypes", selectedTypes);
+                setProperty("organizationTypes", selectedTypes);
             }
         };
         addReplaceable(organizationTypesTree);

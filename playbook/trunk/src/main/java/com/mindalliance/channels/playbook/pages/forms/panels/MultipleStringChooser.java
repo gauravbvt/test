@@ -15,6 +15,7 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,8 +40,8 @@ public class MultipleStringChooser extends AbstractComponentPanel {
     protected Label fullStringLabel;
 
 
-    public MultipleStringChooser(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, IModel choices) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public MultipleStringChooser(String id, AbstractPlaybookPanel parentPanel, String propPath, IModel choices) {
+        super(id, parentPanel, propPath);
         this.choices = choices;
         doLoad();
     }

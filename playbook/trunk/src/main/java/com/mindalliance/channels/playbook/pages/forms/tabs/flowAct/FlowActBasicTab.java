@@ -34,7 +34,7 @@ public class FlowActBasicTab extends InformationActBasicTab {
                                                     SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = targetAgentTree.getNewSelection();
-                RefUtils.set(getElement(), "targetAgent", selectedResource);
+                setProperty("targetAgent", selectedResource);
             }
         };
         addReplaceable(targetAgentTree);

@@ -95,10 +95,9 @@ public class TaskInfoNeedsTab  extends AbstractFormTab {
             Label dummyInfoTemplatePanel = new Label("informationNeed", "dummy");
             infoNeedDiv.addOrReplace(dummyInfoTemplatePanel);
         } else {
-            int index = ((List<InformationNeed>) RefUtils.get(getElement(), "informationNeeds")).indexOf(selectedInfoNeed);
+            int index = ((List<InformationNeed>) getProperty("informationNeeds")).indexOf(selectedInfoNeed);
             InformationNeedPanel infoNeedPanel = new InformationNeedPanel("informationNeed", this,
-                    "informationNeeds[" + index + "]",
-                    EDITABLE, feedback);
+                    "informationNeeds[" + index + "]");
             infoNeedDiv.addOrReplace(infoNeedPanel);
         }
     }

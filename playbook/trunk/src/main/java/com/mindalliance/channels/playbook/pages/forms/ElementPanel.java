@@ -28,4 +28,5 @@ public interface ElementPanel {
     Playbook getPlaybook();
     Ref getScope(); // either Channels.instance(), a Project, an IFM Taxonomy or a Playbook
     void edit(Ref ref, AjaxRequestTarget target);
+    boolean isReadOnly();
 }

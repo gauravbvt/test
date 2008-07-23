@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
@@ -35,8 +36,8 @@ abstract public class AbstractSharingProtocolPanel extends AbstractComponentPane
     protected WebMarkupContainer mediaPreferrencesDiv;
     protected RefPreferencesPanel mediaPreferrences;
 
-    public AbstractSharingProtocolPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public AbstractSharingProtocolPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
@@ -47,13 +48,13 @@ abstract public class AbstractSharingProtocolPanel extends AbstractComponentPane
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 String chosenDelivery = deliveryChoice.getModelObjectAsString();
-                RefUtils.set(getElement(), propPath + ".delivery", chosenDelivery);
+                setProperty("delivery", chosenDelivery);
             }
         });
         addReplaceable(deliveryChoice);
-        contactsPanel = new AgentSpecificationPanel("contacts", this, propPath+".contacts", isReadOnly(), feedback);
+        contactsPanel = new AgentSpecificationPanel("contacts", this, propPath+".contacts");
         addReplaceable(contactsPanel);
-        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath+".informationSpec",isReadOnly(), feedback);
+        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath+".informationSpec");
         addReplaceable(infoSpecPanel);
 
         anyMediumCheckBox = new AjaxCheckBox("anyMedium", new Model((Boolean)sharingProtocol.getPreferredMediumTypes().isEmpty())){
@@ -61,7 +62,7 @@ abstract public class AbstractSharingProtocolPanel extends AbstractComponentPane
                 boolean anyMedium = (Boolean)anyMediumCheckBox.getModelObject();
                 if (anyMedium) {
                     setProperty("preferredMediumTypes", new ArrayList<Ref>());
-                    mediaPreferrences = new RefPreferencesPanel("preferredMedia", AbstractSharingProtocolPanel.this, propPath + ".preferredMediumTypes", isReadOnly(), feedback,
+                    mediaPreferrences = new RefPreferencesPanel("preferredMedia", AbstractSharingProtocolPanel.this, propPath + ".preferredMediumTypes",
                                                    new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType")));
                     addReplaceableTo(mediaPreferrences, mediaPreferrencesDiv);
                 }
@@ -72,7 +73,7 @@ abstract public class AbstractSharingProtocolPanel extends AbstractComponentPane
         mediaPreferrencesDiv = new WebMarkupContainer("preferredMediaDiv");
         setVisibility(mediaPreferrencesDiv, !sharingProtocol.getPreferredMediumTypes().isEmpty());
         addReplaceable(mediaPreferrencesDiv);
-        mediaPreferrences = new RefPreferencesPanel("preferredMedia", this, propPath + ".preferredMediumTypes", isReadOnly(), feedback,
+        mediaPreferrences = new RefPreferencesPanel("preferredMedia", this, propPath + ".preferredMediumTypes",
                                                    new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType")));
         addReplaceableTo(mediaPreferrences, mediaPreferrencesDiv);
     }

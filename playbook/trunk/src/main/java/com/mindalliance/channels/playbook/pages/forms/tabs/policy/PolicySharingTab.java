@@ -21,7 +21,7 @@ public class PolicySharingTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, "informationSpec", EDITABLE, feedback);
+        infoSpecPanel = new InformationDefinitionPanel("informationSpec", this, "informationSpec");
         addReplaceable(infoSpecPanel);
     }
 

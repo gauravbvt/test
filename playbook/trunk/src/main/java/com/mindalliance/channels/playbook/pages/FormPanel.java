@@ -33,6 +33,7 @@ public class FormPanel extends Panel {
             Class formClass = ref.formClass();
             if ( formClass != null ) try {
                 Constructor c = formClass.getConstructor( String.class, Ref.class );
+                terminate();
                 form = (AbstractElementForm) c.newInstance( "form-details", ref );
                 form.setRenderBodyOnly( true );
                 addOrReplace( form );

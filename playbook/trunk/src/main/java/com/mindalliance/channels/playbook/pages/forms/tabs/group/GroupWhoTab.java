@@ -30,7 +30,7 @@ public class GroupWhoTab extends AbstractFormTab {
         addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
-        agentSpecPanel = new AgentSpecificationPanel("agentSpec", this, "agentSpec", EDITABLE, feedback);
+        agentSpecPanel = new AgentSpecificationPanel("agentSpec", this, "agentSpec");
         addReplaceable(agentSpecPanel);
     }
 }

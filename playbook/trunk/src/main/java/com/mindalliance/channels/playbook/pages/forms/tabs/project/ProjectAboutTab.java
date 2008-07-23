@@ -45,7 +45,7 @@ public class ProjectAboutTab extends AbstractFormTab {
         modelsTree = new DynamicFilterTree("taxonomies", new RefPropertyModel(getElement(), "taxonomies"), new Model((Serializable)allModels)) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> newSelections = modelsTree.getNewSelections();
-                RefUtils.set(getElement(), "taxonomies", newSelections);
+                setProperty("taxonomies", newSelections);
             }
         };
         addReplaceable(modelsTree);

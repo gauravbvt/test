@@ -65,7 +65,7 @@ public class AssociationRelationshipTab extends AbstractFormTab {
                 SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = toAgentTree.getNewSelection();
-                RefUtils.set(getElement(), "toAgent", selectedResource);
+                setProperty("toAgent", selectedResource);
                 setReverseRelationshipVisibility();
                 target.addComponent(reverseRelationshipDiv);
             }

@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.mem.RefLockException;
+import com.mindalliance.channels.playbook.ifm.User;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
  */
 public class PlaybookCache extends Cache {
 
-    Map<Ref, PlaybookSession> locks = new HashMap<Ref, PlaybookSession>();
+    Map<Ref, Lock> locks = new HashMap<Ref, Lock>();
 
     public PlaybookCache(boolean useMemoryCaching, boolean unlimitedDiskCache, boolean overflowPersistence) {
         super(useMemoryCaching, unlimitedDiskCache, overflowPersistence);
@@ -56,45 +57,83 @@ public class PlaybookCache extends Cache {
     // always called within a synchroized(ApplicationMemory) block
     public void clear() {
         super.clear();
-        locks = new HashMap<Ref, PlaybookSession>();
+        locks = new HashMap<Ref, Lock>();
     }
 
     // always called within a synchroized(ApplicationMemory) block
-    public void lock(Ref ref, PlaybookSession session) {
-        if (isLocked(ref, session)) throw new RefLockException("Can't lock $ref - locked by another session");
-        locks.put(ref, session);
-    }
-
-    // always called within a synchroized(ApplicationMemory) block
-    public void unlock(Ref ref, PlaybookSession session) {
-        if (isLocked(ref, session)) throw new RefLockException("Can't unlock $ref - locked by another session");
-        locks.remove(ref);
-    }
-
-    // always called within a synchroized(ApplicationMemory) block
-    public boolean isLocked(Ref ref, PlaybookSession session) {
-        PlaybookSession owner = locks.get(ref);
-        if (owner != null) {
-            if (owner == session) {
-                return false;
-            } else {
-                if (owner.isSessionInvalidated()) {
-                    cleanupLocks(owner); // lazily triggered locks cleanup
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        } else {
+    public boolean lock(Ref ref) {
+        if (isReadOnly(ref)) throw new RefLockException("Can't lock $ref - locked by another session");
+        if (!isReadWrite(ref)) {
+            locks.put(ref, new Lock(ref));
+            Logger.getLogger(this.getClass()).info("Locked " + ref);
+            return true;
+        }
+        else {
             return false;
         }
     }
 
-    private void cleanupLocks(PlaybookSession invalidatedSession) {     // TODO - how about cleaning up ALL invlidated locks?
+    // always called within a synchroized(ApplicationMemory) block
+    public boolean unlock(Ref ref) {
+        if (isReadOnly(ref)) throw new RefLockException("Can't unlock $ref - locked by another session");
+        if (isReadWrite(ref)) {
+            Logger.getLogger(this.getClass()).info("Unlocked " + ref);
+            locks.remove(ref);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    // always called within a synchroized(ApplicationMemory) block
+    public boolean isReadOnly(Ref ref) {
+        Lock lock = locks.get(ref);
+        if (lock == null) return false;
+        if (lock.session == PlaybookSession.current()) return false;
+        if (lock.isTimedOut()) {
+            locks.remove(ref);
+            return false;
+        }
+        if (lock.session.isSessionInvalidated()) {
+            cleanupLocks(lock.session); // lazily triggered locks cleanup
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isReadWrite(Ref ref) {
+        Lock lock = locks.get(ref);
+        if (lock == null) return false;
+        if (lock.session != PlaybookSession.current()) return false;
+        if (lock.isTimedOut()) {
+            locks.remove(ref);
+            return false;
+        }
+        if (lock.session.isSessionInvalidated()) {
+            cleanupLocks(lock.session); // lazily triggered locks cleanup
+            return false;
+        }
+        return true;
+
+    }
+
+    public String getOwner(Ref ref) {
+        String owner = null;
+        Lock lock = locks.get(ref);
+        if (lock != null) {
+            User user = (User) lock.session.getUser().deref();
+            if (user != null) owner = user.getName();
+        }
+        return owner;
+    }
+
+    private void cleanupLocks(PlaybookSession invalidatedSession) {
         Logger.getLogger(this.getClass()).info("Releasing all locks from invalidated session " + invalidatedSession);
         List<Ref> expiredLocks = new ArrayList<Ref>();
-        for (Map.Entry<Ref, PlaybookSession> entry : locks.entrySet()) {
-            if (entry.getValue() == invalidatedSession) {
+        for (Map.Entry<Ref, Lock> entry : locks.entrySet()) {
+            Lock lock = entry.getValue();
+            if (lock.session == invalidatedSession) {
                 expiredLocks.add(entry.getKey());
             }
         }

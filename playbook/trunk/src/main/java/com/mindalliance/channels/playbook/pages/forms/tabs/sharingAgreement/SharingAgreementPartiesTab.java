@@ -48,7 +48,7 @@ public class SharingAgreementPartiesTab extends AbstractFormTab {
                                             new RefQueryModel(getProject(), new Query("findAllAgentsExcept", getElement(), "recipient")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedSource = sourceTree.getNewSelection();
-                if (selectedSource != null) RefUtils.set(getElement(), "source", selectedSource);
+                if (selectedSource != null) setProperty("source", selectedSource);
             }
         };
         addReplaceable(sourceTree);
@@ -57,7 +57,7 @@ public class SharingAgreementPartiesTab extends AbstractFormTab {
                                             SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedRecipient = recipientTree.getNewSelection();
-                if (selectedRecipient != null) RefUtils.set(getElement(), "recipient", selectedRecipient);
+                if (selectedRecipient != null) setProperty("recipient", selectedRecipient);
             }
         };
         addReplaceable(recipientTree);

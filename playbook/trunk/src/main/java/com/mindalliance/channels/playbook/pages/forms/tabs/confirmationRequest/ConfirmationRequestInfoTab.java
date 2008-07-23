@@ -21,7 +21,7 @@ public class ConfirmationRequestInfoTab extends InformationActInfoTab {
 
     protected void load() {
         super.load();
-        agentSpecPanel = new AgentSpecificationPanel("agentSpec", this, "sourceSpec", EDITABLE, feedback);
+        agentSpecPanel = new AgentSpecificationPanel("agentSpec", this, "sourceSpec");
         addReplaceable(agentSpecPanel);
     }
 }

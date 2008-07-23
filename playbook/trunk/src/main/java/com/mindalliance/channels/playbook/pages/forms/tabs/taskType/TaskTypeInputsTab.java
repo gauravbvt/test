@@ -88,10 +88,9 @@ public class TaskTypeInputsTab extends AbstractFormTab {
             Label dummyInfoSpecPanel = new Label("informationSpec", "dummy");
             infoSpecDiv.addOrReplace(dummyInfoSpecPanel);
         } else {
-            int index = ((List<InformationDefinition>) RefUtils.get(getElement(), "inputs")).indexOf(selectedInfoSpec);
+            int index = ((List<InformationDefinition>) getProperty("inputs")).indexOf(selectedInfoSpec);
             InformationDefinitionPanel infoSpecPanel = new InformationDefinitionPanel("informationSpec", this,
-                    "inputs[" + index + "]",
-                    EDITABLE, feedback);
+                    "inputs[" + index + "]");
             infoSpecDiv.addOrReplace(infoSpecPanel);
         }
     }

@@ -69,7 +69,7 @@ public class CategoryBasicTab extends AbstractFormTab {         // TODO -- make 
             ) {
                 public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                     List<Ref> selectedTypes = ((DynamicFilterTree) narrowedTypesTree).getNewSelections();
-                    RefUtils.set(getElement(), "narrowedTypes", selectedTypes);
+                    setProperty("narrowedTypes", selectedTypes);
                 }
             };
         } else {

@@ -23,7 +23,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
  */
 class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
-    Map<Ref, Referenceable> begun =  new HashMap<Ref, Referenceable>()
+    Map<Ref, Referenceable> begun = new HashMap<Ref, Referenceable>()
     Set<Ref> changes = new HashSet<Ref>()
     Set<Ref> deletes = new HashSet<Ref>()
     private QueryCache queryCache = new QueryCache()
@@ -33,12 +33,12 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
 
     void addPropertyChangeListener(PropertyChangeListener listener) {
-         this.pcs.addPropertyChangeListener(listener)
-     }
+        this.pcs.addPropertyChangeListener(listener)
+    }
 
     void removePropertyChangeListener(PropertyChangeListener listener) {
-         this.pcs.removePropertyChangeListener(listener)
-     }
+        this.pcs.removePropertyChangeListener(listener)
+    }
 
     private void propertyChanged(String name, def old, def value) {
         pcs.firePropertyChange(name, old, value)
@@ -54,7 +54,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     // return list of classes of elements in sessions
     Set<Class> inSessionClasses() {
-       return inSessionClasses
+        return inSessionClasses
     }
 
     Referenceable retrieve(Ref reference) {
@@ -81,22 +81,23 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void begin(Ref ref) {
-        synchronized(this.getApplicationMemory()) {
+        synchronized (this.getApplicationMemory()) {
             if (!begun.containsKey(ref)) {
                 ref.detach()
-                Referenceable referenceable
-                use (NoSessionCategory) {
+                use(NoSessionCategory) {
                     Referenceable original = retrieveFromApplicationMemory(ref)
                     if (original) {
-                        if (isLocked(ref)) {
-                            Logger.getLogger(this.class).warn("$ref is locked")
-                            throw new RefLockException("Can't begin: $ref is locked")
+                        if (ref.isReadOnly()) {
+                            Logger.getLogger(this.class).warn("$ref is locked by another session; changes in this session will not be persisted.")
+                            // throw new RefLockException("Can't begin: $ref is locked")
                         }
                         else {
-                            lock(original.reference)
-                            referenceable = (Referenceable)original.copy() // take a copy
-                            doBegin(referenceable)
+                            ref.lock()
                         }
+                        doBegin((Referenceable) original.copy())
+                    }
+                    else {
+                        Logger.getLogger(this.class).warn("Can't begin on $ref: dereferences to null")
                     }
                 }
             }
@@ -104,26 +105,13 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 Logger.getLogger(this.class).debug("Doing begin() on $ref already in session")
             }
         }
-        changed("begun")
-    }
-
-    private boolean isLocked(Ref ref) {
-        return false
-        // return getApplicationMemory().isLocked(ref)
-    }
-
-    private void lock(Ref ref) {
-        // getApplicationMemory().lock(ref)
-    }
-
-    private void unlock(Ref ref) {
-        // getApplicationMemory().unlock(ref)
     }
 
     private void doBegin(Referenceable referenceable) {
         addChangeListeners(referenceable) // register with change listeners
         begun.put(referenceable.reference, referenceable)
         inSessionClasses.add(referenceable.class)
+        changed("begun")
     }
 
     private void addChangeListeners(Referenceable referenceable) {
@@ -143,26 +131,38 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Ref hasChanged(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
         assert begun.containsKey(reference)
-        changes.add(reference)
-        if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
-        changed("changes")
+        if (!referenceable.reference.isReadOnly()) {
+            changes.add(reference)
+            if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
+            changed("changes")
+        }
+        else {
+            Logger.getLogger(this.class).warn("Readonly $ref was changed (changes will not be persisted)")
+        }
         return reference
     }
 
-    void delete(Ref ref) {
-        if (begun.containsKey(ref)) {
-            ref.detach()
-            ref.deref().changed("id") // raise change event on id
-            begun.remove(ref)
-            changes.remove(ref)
-            deletes.add(ref)
+    boolean delete(Ref ref) {
+        if (!ref.isReadOnly()) {
+            if (begun.containsKey(ref)) {
+                ref.detach()
+                ref.deref().changed("id") // raise change event on id
+                begun.remove(ref)
+                changes.remove(ref)
+                deletes.add(ref)
+                changed("deletes")
+                changed("begun")
+                changed("changes")
+                return true
+            }
+            else {
+                throw new NotModifiableException("Can't delete $ref : do begin() first")
+            }
         }
         else {
-            throw new NotModifiableException("Can't delete $ref : do begin() first")
+            Logger.getLogger(this.class).warn("Attempted to delete readonly $ref")
         }
-        changed("deletes")
-        changed("begun")
-        changed("changes")
+        return false
     }
 
 
@@ -171,9 +171,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void commit() {
-        synchronized(getApplicationMemory()) {
+        synchronized (getApplicationMemory()) {
             List<Referenceable> toCommit = []
-            changes.each { toCommit.add(begun.get((Ref)it)) }
+            changes.each { toCommit.add(begun.get((Ref) it)) }
             getApplicationMemory().storeAll(toCommit)
             getApplicationMemory().deleteAll(deletes)
             reset()
@@ -182,25 +182,25 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void abort() {
-        synchronized(getApplicationMemory()) {
+        synchronized (getApplicationMemory()) {
             reset()
         }
     }
 
     public void commit(Ref ref) {
         ref.detach()
-        synchronized(getApplicationMemory()) {
+        synchronized (getApplicationMemory()) {
             if (changes.contains(ref)) {
                 Referenceable referenceable = begun.get(ref)
                 changes.remove(ref)
                 begun.remove(ref)
                 getApplicationMemory().store(referenceable)
-                unlock(ref)
+                ref.unlock()
             }
             else if (deletes.contains(ref)) {
                 deletes.remove(ref)
                 getApplicationMemory().delete(ref)
-                unlock(ref)
+                ref.unlock()
             }
         }
         // does not update the query cache or inSessionClasses
@@ -208,23 +208,23 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     void reset(Ref ref) {
         ref.detach()
-        synchronized(getApplicationMemory()) {
+        synchronized (getApplicationMemory()) {
             if (begun.containsKey(ref)) {
                 begun.remove(ref)
-                unlock(ref)
+                if (ref.isReadWrite()) ref.unlock()
             }
             if (changes.contains(ref)) {
                 changes.remove(ref)   // no need to unlock again; was in begun
             }
             else if (deletes.contains(ref)) {
                 deletes.remove(ref)
-                unlock(ref)
+                if (ref.isReadWrite()) ref.unlock()
             }
         }
     }
 
     void reset() {
-        synchronized(getApplicationMemory()) {
+        synchronized (getApplicationMemory()) {
             changes = new HashSet<Ref>()
             unlockAll(deletes)
             deletes = new HashSet<Ref>()
@@ -236,9 +236,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     private void unlockAll(Set<Ref> refs) {
-        for (Ref ref : refs) {
+        for (Ref ref: refs) {
             ref.detach()
-            unlock(ref)
+            ref.unlock()
         }
     }
 

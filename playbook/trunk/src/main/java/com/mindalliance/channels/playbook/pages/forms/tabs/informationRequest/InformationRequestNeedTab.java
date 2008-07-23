@@ -21,7 +21,7 @@ public class InformationRequestNeedTab extends AbstractFormTab {
 
     protected void load() {
          super.load();
-        infoNeedPanel = new InformationNeedPanel("informationNeed", this, "informationNeed", EDITABLE, feedback);
+        infoNeedPanel = new InformationNeedPanel("informationNeed", this, "informationNeed");
         addReplaceable(infoNeedPanel);
     }
 

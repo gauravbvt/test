@@ -106,6 +106,10 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         return false;
     }
 
+    public boolean isReadOnly() {
+        return element.isReadOnly();
+    }
+
     public Project getProject() {
         throw new RuntimeException("No project identified to this panel");
     }
@@ -143,18 +147,13 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         init();
     }
 
-    public void terminate() { // quietly commit element if modified else kick it out of the session
-        if (element.isModified()) {
-            element.commit();
-        }
-        else {
-            element.reset();
+    // Called when detaching the form
+    public void terminate() {
+        if (!element.isModified()) {
+            element.reset();  // removes unmodified element(s) from session and session releases locks if held
         }
         for (Ref otherElement : otherElements) {
             if (otherElement.isModified()) {
-                otherElement.commit();
-            }
-            else {
                 otherElement.reset();
             }
         }
@@ -174,7 +173,7 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
     }
 
     protected Object getProperty(String property) {
-        return RefUtils.get(getElement(), property);
+        return (Object)RefUtils.get(getElement(), property);
     }
 
     abstract void loadTabs();

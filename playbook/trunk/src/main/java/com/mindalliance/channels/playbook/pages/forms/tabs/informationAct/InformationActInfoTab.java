@@ -21,7 +21,7 @@ public class InformationActInfoTab extends AbstractFormTab {
 
     protected void load() {   // TODO allow setting information from agent's profile (vs. from scratch)
         super.load();
-        informationPanel = new InformationPanel("information", this, "information", EDITABLE, feedback);
+        informationPanel = new InformationPanel("information", this, "information");
         addReplaceable(informationPanel);
     }
 }

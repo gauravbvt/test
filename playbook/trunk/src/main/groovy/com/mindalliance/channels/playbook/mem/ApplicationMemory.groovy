@@ -19,7 +19,6 @@ import com.mindalliance.channels.playbook.support.persistence.PlaybookCache
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.support.persistence.Mappable
-import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -93,18 +92,26 @@ class ApplicationMemory implements Serializable {
     }
 
     // always called within synchronized(this) block
-    void lock(Ref ref) {
-        cache.lock(ref, PlaybookSession.current())
+    boolean lock(Ref ref) {
+        return cache.lock(ref)
     }
 
     // always called within synchronized(this) block
-    boolean isLocked(Ref ref) {
-        return cache.isLocked(ref, PlaybookSession.current())
+    boolean isReadWrite(Ref ref) {
+        return cache.isReadWrite(ref)
     }
 
     // always called within synchronized(this) block
-    void unlock(Ref ref) {
-        cache.unlock(ref, PlaybookSession.current())
+    boolean unlock(Ref ref) {
+        return cache.unlock(ref)
+    }
+
+    boolean isReadOnly(Ref ref) {
+        return cache.isReadOnly(ref)
+    }
+
+    String getOwner(Ref ref) {
+        return cache.getOwner(ref)
     }
 
     Ref store(Referenceable referenceable) {
@@ -235,6 +242,7 @@ class ApplicationMemory implements Serializable {
     }
 
     // Create and store all elements serialized in file named <name>.yml
+
     int importRef(String name) {
         int count = 0
         File file = new File(EXPORT_DIRECTORY, "${name}.yml")

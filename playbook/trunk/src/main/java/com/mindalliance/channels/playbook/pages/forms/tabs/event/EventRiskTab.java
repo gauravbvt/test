@@ -21,7 +21,7 @@ public class EventRiskTab extends AbstractFormTab {
     
     protected void load() {
         super.load();
-        riskPanel = new RiskPanel("risk", this, "risk", false, feedback);
+        riskPanel = new RiskPanel("risk", this, "risk");
         addReplaceable(riskPanel);
     }
 }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ifm.definition.TaskDefinition;
@@ -40,8 +41,8 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
     protected TimingPanel responseTimingPanel;
 
 
-    public TaskDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public TaskDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
@@ -75,7 +76,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
                 boolean anyPurpose = (Boolean)anyPurposeCheckBox.getModelObject();
                 if (anyPurpose) {
                     setProperty("specificPurposes", new ArrayList<String>());
-                    purposesChooser = new MultipleStringChooser("purposes", TaskDefinitionPanel.this, propPath+".specificPurposes", EDITABLE, feedback,
+                    purposesChooser = new MultipleStringChooser("purposes", TaskDefinitionPanel.this, propPath+".specificPurposes",
                             new RefQueryModel(getScope(), new Query("findAllPurposes")));
                     addReplaceableTo(purposesChooser, purposesDiv);
                 }
@@ -86,7 +87,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
         purposesDiv = new WebMarkupContainer("purposesDiv");
         setVisibility(purposesDiv, !taskDefinition.getSpecificPurposes().isEmpty());
         addReplaceable(purposesDiv);
-        purposesChooser = new MultipleStringChooser("purposes", this, propPath+".specificPurposes", EDITABLE, feedback,
+        purposesChooser = new MultipleStringChooser("purposes", this, propPath+".specificPurposes",
                 new RefQueryModel(getScope(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
         // anyReponseTiming checkbox
@@ -95,7 +96,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
                 boolean anyResponseTiming = (Boolean)anyResponseTimingCheckBox.getModelObject();
                 if (anyResponseTiming) {
                     setProperty("reponseTiming", new Timing());
-                    responseTimingPanel = new TimingPanel("responseTiming", TaskDefinitionPanel.this, propPath+".responseTiming", isReadOnly(), feedback);
+                    responseTimingPanel = new TimingPanel("responseTiming", TaskDefinitionPanel.this, propPath+".responseTiming");
                     addReplaceableTo(responseTimingPanel, responseTimingDiv);
                 }
                 setVisibility(responseTimingDiv, !anyResponseTiming, target);
@@ -105,7 +106,7 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
         responseTimingDiv = new WebMarkupContainer("responseTimingDiv");
         setVisibility(responseTimingDiv, taskDefinition.getResponseTiming().isDefined());
         addReplaceable(responseTimingDiv);
-        responseTimingPanel = new TimingPanel("responseTiming", this, propPath+".responseTiming", isReadOnly(), feedback);
+        responseTimingPanel = new TimingPanel("responseTiming", this, propPath+".responseTiming");
         addReplaceableTo(responseTimingPanel, responseTimingDiv);
     }
 }

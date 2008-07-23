@@ -21,7 +21,7 @@ public class EventCauseTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        causePanel = new CausePanel("cause", this, "cause", EDITABLE, feedback);
+        causePanel = new CausePanel("cause", this, "cause");
         addReplaceable(causePanel);
 
     }

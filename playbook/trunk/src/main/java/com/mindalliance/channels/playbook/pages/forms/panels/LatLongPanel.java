@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.LatLong;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,13 +28,13 @@ public class LatLongPanel extends AbstractComponentPanel {
     WebMarkupContainer readOnlyDiv;
     LatLong latLong;
 
-    public LatLongPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public LatLongPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
         super.load();
-        latLong = (LatLong) RefUtils.get(getElement(), propPath);
+        latLong = (LatLong) getComponent();
         editableDiv = new WebMarkupContainer("editable");
         addReplaceable(editableDiv);
         readOnlyDiv = new WebMarkupContainer("readOnly");
@@ -66,7 +67,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                 }
                 latLong.setLongitude(value);
                 elementChanged(propPath, target);
-                target.addComponent(feedback);
+                target.addComponent(getFeedback());
             }
 
             @Override
@@ -74,7 +75,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                 Logger.getLogger(this.getClass()).error("Error updating " + longitudeField + ": " + e);
                 longitudeField.clearInput();
                 target.addComponent(longitudeField);
-                target.addComponent(feedback);
+                target.addComponent(getFeedback());
             }
         });
         final TextField latitudeField = new TextField("latitude", new Model(latLong.getLatitude()));
@@ -95,7 +96,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                 }
                 latLong.setLatitude(value);
                 elementChanged(propPath, target);
-                target.addComponent(feedback);
+                target.addComponent(getFeedback());
             }
 
             @Override
@@ -103,7 +104,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                 Logger.getLogger(this.getClass()).error("Error updating " + latitudeField + ": " + e);
                 latitudeField.clearInput();
                 target.addComponent(latitudeField);
-                target.addComponent(feedback);
+                target.addComponent(getFeedback());
             }
         });
         editableDiv.add(longitudeField);

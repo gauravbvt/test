@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.definition.RelationshipDefinition;
 import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification;
@@ -32,8 +33,8 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
     protected WebMarkupContainer agentSpecificationDiv;
     protected Component agentSpecificationPanel;
 
-    public RelationshipDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public RelationshipDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
@@ -55,7 +56,7 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
                 boolean anyAgent = (Boolean)anyAgentCheckBox.getModelObject();
                 if (anyAgent) {
                     setProperty("withAgentSpecification", new AgentSpecification());
-                    agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", RelationshipDefinitionPanel.this, propPath+".withAgentSpecification", isReadOnly(), feedback);
+                    agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", RelationshipDefinitionPanel.this, propPath+".withAgentSpecification");
                     addReplaceableTo(agentSpecificationPanel, agentSpecificationDiv);
                 }
                 setVisibility(agentSpecificationDiv, !anyAgent, target);
@@ -65,7 +66,7 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
         agentSpecificationDiv = new WebMarkupContainer("agentSpecificationDiv");
         setVisibility(agentSpecificationDiv, !relationshipDefinition.getWithAgentSpecification().matchesAll());
         addReplaceable(agentSpecificationDiv);
-        agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", this, propPath+".withAgentSpecification", isReadOnly(), feedback);
+        agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", this, propPath+".withAgentSpecification");
         addReplaceableTo(agentSpecificationPanel, agentSpecificationDiv);
     }
 }

@@ -77,7 +77,7 @@ class Place extends ProjectElement implements Named, Described {
     List<Ref> findAllCandidateEnclosingPlaces() {
         if (placeType as boolean) {
             return project.places.findAll{place ->
-                place as boolean && place != this && place.placeType as boolean && placeType.implies(place.placeType)
+                place as boolean && place != this.reference && place.placeType as boolean && placeType.implies(place.placeType)
             }
         }
         else {

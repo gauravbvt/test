@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import com.mindalliance.channels.playbook.ifm.definition.Definition;
 import com.mindalliance.channels.playbook.ifm.definition.OrganizationDefinition;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 
 /**
@@ -16,8 +17,8 @@ import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
  */
 public class OrganizationSpecificationPanel extends AbstractSpecificationPanel {
 
-    public OrganizationSpecificationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public OrganizationSpecificationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected String getMatchingDomainName() {
@@ -29,7 +30,7 @@ public class OrganizationSpecificationPanel extends AbstractSpecificationPanel {
     }
 
     protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath) {
-        return new OrganizationDefinitionPanel(id, this, propPath, isReadOnly(), feedback);
+        return new OrganizationDefinitionPanel(id, this, propPath);
     }
 
     protected Definition makeNewDefinition() {

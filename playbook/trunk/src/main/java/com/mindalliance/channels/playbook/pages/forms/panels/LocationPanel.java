@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -33,8 +34,8 @@ public class LocationPanel extends AbstractComponentPanel {
     Ref priorPlace;
     GeoLocation priorGeoLocation;
 
-    public LocationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public LocationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class LocationPanel extends AbstractComponentPanel {
         replacePlaceTree(null);
         geoLocationDiv = new WebMarkupContainer("geoLocationDiv");
         addReplaceable(geoLocationDiv);
-        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation");
         addReplaceableTo(geoLocationPanel, geoLocationDiv);
         setVisibility();
     }
@@ -97,7 +98,7 @@ public class LocationPanel extends AbstractComponentPanel {
                                           new RefPropertyModel(getProject(), "places"), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref place = placeTree.getNewSelection();
-                RefUtils.set(getElement(), propPath+".place", place);
+                setProperty("place", place);
             }
         };
         addReplaceableTo(placeTree, placeDiv);
@@ -105,7 +106,7 @@ public class LocationPanel extends AbstractComponentPanel {
     }
 
     private void replaceGeoLocationPanel(AjaxRequestTarget target) {
-        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation");
         addReplaceableTo(geoLocationPanel, geoLocationDiv);
         target.addComponent(geoLocationDiv);
     }

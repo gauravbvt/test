@@ -36,11 +36,11 @@ public class AssignationResponsibilityTab extends AbstractFormTab {
                                                     SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = assigneeAgentTree.getNewSelection();
-                RefUtils.set(getElement(), "assigneeAgent", selectedResource);
+                setProperty("assigneeAgent", selectedResource);
             }
         };
         addReplaceable(assigneeAgentTree);
-        responsibilityPanel = new ResponsibilityPanel("responsibility", this, "responsibility", EDITABLE, feedback);
+        responsibilityPanel = new ResponsibilityPanel("responsibility", this, "responsibility");
         addReplaceable(responsibilityPanel);
     }
 

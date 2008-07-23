@@ -21,7 +21,7 @@ public class OrganizationJurisdictionTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        jurisdictionPanel = new LocationPanel("jurisdiction", this, "jurisdiction", false, feedback);
+        jurisdictionPanel = new LocationPanel("jurisdiction", this, "jurisdiction");
         addReplaceable(jurisdictionPanel);
     }
 }

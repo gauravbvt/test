@@ -33,7 +33,7 @@ public class InformationTransferMediaTab extends AbstractFormTab {
                                                    SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selection = mediumTypeChoice.getNewSelection();
-                RefUtils.set(getElement(), "mediumType", selection);
+                setProperty("mediumType", selection);
             }
         };
         addReplaceable(mediumTypeChoice);

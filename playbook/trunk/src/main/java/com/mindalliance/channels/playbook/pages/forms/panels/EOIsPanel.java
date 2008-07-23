@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
@@ -49,14 +50,14 @@ public class EOIsPanel extends AbstractComponentPanel {
 
     String topicToAdd;
 
-    public EOIsPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback, IModel topicChoicesModel) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public EOIsPanel(String id, AbstractPlaybookPanel parentPanel, String propPath, IModel topicChoicesModel) {
+        super(id, parentPanel, propPath);
         this.availableTopicChoicesModel = new RefQueryModel(this, new Query("availableTopics", topicChoicesModel));
         doLoad();
     }
 
     protected void doLoad() {  // load after setting availableTopicChoicesModel
-        eois = (List<ElementOfInformation>) RefUtils.get(getElement(), propPath);
+        eois = (List<ElementOfInformation>) getComponent();
         if (eois == null) {
             eois = new ArrayList<ElementOfInformation>();
             RefUtils.set(getElement(), propPath, eois);

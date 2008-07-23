@@ -47,7 +47,7 @@ public class PolicyAboutTab extends AbstractFormTab {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 String selectedEdict = edictChoice.getModelObjectAsString();
-                RefUtils.set(getElement(), "edict", selectedEdict);
+                setProperty("edict", selectedEdict);
             }
         });
         addReplaceable(edictChoice);
@@ -55,7 +55,7 @@ public class PolicyAboutTab extends AbstractFormTab {
                                                new RefPropertyModel(getProject(), "organizations"), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selected = authorityTree.getNewSelection();
-                RefUtils.set(getElement(), "authority", selected);
+                setProperty("authority", selected);
             }
         };
         addReplaceable(authorityTree);

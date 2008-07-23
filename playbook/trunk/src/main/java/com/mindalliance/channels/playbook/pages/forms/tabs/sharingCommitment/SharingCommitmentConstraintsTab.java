@@ -21,7 +21,7 @@ public class SharingCommitmentConstraintsTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        constraintsPanel = new SharingConstraintsPanel("constraints", this, "constraints", EDITABLE, feedback);
+        constraintsPanel = new SharingConstraintsPanel("constraints", this, "constraints");
         addReplaceable(constraintsPanel);
     }
 }

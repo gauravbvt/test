@@ -39,6 +39,22 @@ class InferredRef extends RefImpl {
         return analysisElement != null
     }
 
+    boolean isReadOnly() {
+        return true
+    }
+
+    boolean isReadWrite() {
+        return false
+    }
+
+    boolean lock() {
+        return false
+    }
+
+    boolean unlock() {
+        return false
+    }
+
     void detach() {
         analysisElement = null
     }

@@ -105,7 +105,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         // new relationship
         newRelationshipDiv = new WebMarkupContainer("newRelationshipDiv");
         addReplaceable(newRelationshipDiv);
-        newFromAgentNameLabel = new Label("newFromAgentName", (String)RefUtils.get(getElement(), "name"));
+        newFromAgentNameLabel = new Label("newFromAgentName", (String)getProperty("name"));
         addReplaceableTo(newFromAgentNameLabel, newRelationshipDiv);
         newRelationshipNameField = new AutoCompleteTextFieldWithChoices("newRelationshipName",
                                                                  new Model(),
@@ -119,7 +119,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         });
         addReplaceableTo(newRelationshipNameField, newRelationshipDiv);
         agentsTree = new DynamicFilterTree("agents", new Model(),
-                                               new RefQueryModel(getProject(), new Query("findAllResourcesExcept", RefUtils.get(getElement(), "fromAgent"))),
+                                               new RefQueryModel(getProject(), new Query("findAllResourcesExcept", getProperty("fromAgent"))),
                                                SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 newToAgent = agentsTree.getNewSelection();
@@ -144,7 +144,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
             }
         });
         addReplaceableTo(reverseRelationshipNameField,reverseRelationshipDiv);
-        Label reverseToAgentNameLabel = new Label("reverseToAgentName", (String)RefUtils.get(getElement(), "name"));
+        Label reverseToAgentNameLabel = new Label("reverseToAgentName", (String)getProperty("name"));
         addReplaceableTo(reverseToAgentNameLabel,reverseRelationshipDiv);
         reverseRelationshipDiv.add(new AttributeModifier("style", true, new Model("display:none")));
         addRelationshipsButton = new AjaxButton("addRelationships") {

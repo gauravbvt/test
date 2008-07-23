@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.ifm.User
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -160,8 +161,9 @@ class RefImpl implements Ref {
     void delete() {
         Referenceable referenceable = this.deref()
         Store store = PlaybookApplication.locateStore()
-        store.delete(this)
-        referenceable.afterDelete()
+        if (store.delete(this)) {
+            referenceable.afterDelete()
+        }
     }
 
     Ref persist() {
@@ -298,5 +300,26 @@ class RefImpl implements Ref {
        }
        return fresh
     }
+
+    String getOwner() {
+         return PlaybookApplication.current().getAppMemory().getOwner(this)
+    }
+
+    boolean lock() {
+       return PlaybookApplication.current().getAppMemory().lock(this)
+    }
+
+    boolean unlock() {
+      return PlaybookApplication.current().getAppMemory().unlock(this)
+    }
+
+    boolean isReadWrite() {
+      return PlaybookApplication.current().getAppMemory().isReadWrite(this)
+    }
+
+    boolean isReadOnly() {
+        return PlaybookApplication.current().getAppMemory().isReadOnly(this)   // some other sessions has a lock on the Ref
+    }
+
 
 }

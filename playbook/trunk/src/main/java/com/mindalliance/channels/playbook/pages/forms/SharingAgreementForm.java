@@ -36,10 +36,5 @@ public class SharingAgreementForm extends AbstractProjectElementForm {
                return new SharingAgreementConstraintsTab(panelId, SharingAgreementForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Risk")) {
-             public Panel getPanel(String panelId) {
-                 return new EventRiskTab(panelId, SharingAgreementForm.this);
-             }
-         });
     }
 }

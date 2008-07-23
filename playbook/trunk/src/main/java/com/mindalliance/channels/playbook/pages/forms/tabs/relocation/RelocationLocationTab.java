@@ -21,7 +21,7 @@ public class RelocationLocationTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        locationPanel = new LocationPanel("location", this, "location", EDITABLE, feedback);
+        locationPanel = new LocationPanel("location", this, "location");
         addReplaceable(locationPanel);
     }
 }

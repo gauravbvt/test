@@ -50,7 +50,8 @@ public class ContentView extends Panel implements SelectionManager {
 
         addOrReplace( new Link( "content-delete" ){
             public boolean isEnabled() {
-                return getSelected() != null;
+                Ref ref = getSelected();
+                return ref != null && !ref.isReadOnly();
             }
 
             public void onClick() {

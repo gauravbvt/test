@@ -56,7 +56,7 @@ public class TaskBasicTab extends InformationActBasicTab {
                         new Query("findAllTypes", "TaskType")), SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedType = taskTypeTree.getNewSelection();
-                RefUtils.set(getElement(), "taskType", selectedType);
+                setProperty("taskType", selectedType);
             }
         };
         addReplaceable(taskTypeTree);
@@ -102,7 +102,7 @@ public class TaskBasicTab extends InformationActBasicTab {
             }
         };
         addReplaceableTo(addPurposeButton,purposesDiv);
-        durationPanel = new TimingPanel("duration", this, "duration", EDITABLE, feedback);
+        durationPanel = new TimingPanel("duration", this, "duration");
         addReplaceable(durationPanel);
     }
 

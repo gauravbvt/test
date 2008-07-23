@@ -6,7 +6,7 @@ interface Store {
     Ref persist(Referenceable referenceable)  // marks referenceable's ref as both begun and changed
     void commit()
     void commit(Ref reference)
-    void delete(Ref reference) // remove from session and from application if commit
+    boolean delete(Ref reference) // remove from session and from application if commit
     String getDefaultDb()
     boolean save(Ref ref)
     void begin(Ref ref)

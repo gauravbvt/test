@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ifm.taxonomy.EventType;
@@ -35,8 +36,8 @@ public class InformationPanel extends AbstractComponentPanel {
     DynamicFilterTree sourceAgentsTree;
     TimingPanel timeToLivePanel;
 
-    public InformationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public InformationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
@@ -82,7 +83,7 @@ public class InformationPanel extends AbstractComponentPanel {
         RefQueryModel topicChoicesModel = new RefQueryModel(EventType.class,
                 new Query("findAllTopicsIn",
                         new RefPropertyModel(getElement(), propPath + ".eventTypes")));
-        eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", isReadOnly(), feedback, topicChoicesModel);
+        eoisPanel = new EOIsPanel("eventDetails", this, propPath + ".eventDetails", topicChoicesModel);
         addReplaceable(eoisPanel);
         sourceAgentsTree = new DynamicFilterTree("sourceAgents", new RefPropertyModel(getComponent(), "sourceAgents"),
                                                  new RefQueryModel(getScope(), new Query("findAllAgents"))) {
@@ -92,7 +93,7 @@ public class InformationPanel extends AbstractComponentPanel {
             }
         };
         addReplaceable(sourceAgentsTree);
-        timeToLivePanel = new TimingPanel("timeToLive", this, propPath+".timeToLive", isReadOnly(), feedback);
+        timeToLivePanel = new TimingPanel("timeToLive", this, propPath+".timeToLive");
         addReplaceable(timeToLivePanel);
     }
 

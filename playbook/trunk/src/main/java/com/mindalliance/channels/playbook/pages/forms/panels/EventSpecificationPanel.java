@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import com.mindalliance.channels.playbook.ifm.definition.Definition;
 import com.mindalliance.channels.playbook.ifm.definition.EventDefinition;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 
@@ -20,8 +21,8 @@ import java.util.ArrayList;
  */
 public class EventSpecificationPanel extends AbstractSpecificationPanel {
     
-    public EventSpecificationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public EventSpecificationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected String getMatchingDomainName() {
@@ -38,7 +39,7 @@ public class EventSpecificationPanel extends AbstractSpecificationPanel {
     }
 
     protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath) {
-        return new EventDefinitionPanel(id, this, propPath, isReadOnly(), feedback);
+        return new EventDefinitionPanel(id, this, propPath);
     }
 
     protected Definition makeNewDefinition() {

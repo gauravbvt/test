@@ -36,7 +36,7 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
                                                   new RefQueryModel(getProject(), new Query("findAllTypes", "Role"))) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = roleTree.getNewSelections();
-                RefUtils.set(getElement(), "roles", newSelections);
+                setProperty("roles", newSelections);
              }
         };
         addReplaceable(roleTree);
@@ -44,7 +44,7 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
                                              new RefQueryModel(getProject(), new Query("findAllPositionsAnywhere"))) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 List<Ref> newSelections = jobsTree.getNewSelections();
-                RefUtils.set(getElement(), "jobs", newSelections);
+                setProperty("jobs", newSelections);
              }
         };
         addReplaceable(jobsTree);

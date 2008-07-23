@@ -44,7 +44,7 @@ public class PlaceAboutTab extends AbstractFormTab {
                 SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedType = placeTypeTree.getNewSelection();
-                RefUtils.set(getElement(), "placeType", selectedType);
+                setProperty("placeType", selectedType);
             }
         };
         addReplaceable(placeTypeTree);
@@ -53,7 +53,7 @@ public class PlaceAboutTab extends AbstractFormTab {
                                                    SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                Ref selectedPlace = enclosingPlaceTree.getNewSelection();
-                RefUtils.set(getElement(), "enclosingPlace", selectedPlace);
+                setProperty("enclosingPlace", selectedPlace);
             }
         };
         addReplaceable(enclosingPlaceTree);

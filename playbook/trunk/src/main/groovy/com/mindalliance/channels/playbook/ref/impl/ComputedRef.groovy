@@ -30,6 +30,22 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
         return true
     }
 
+    boolean isReadOnly() {
+        return true
+    }
+
+    boolean isReadWrite() {
+        return false
+    }
+
+    boolean lock() {
+        return false
+    }
+
+    boolean unlock() {
+        return false
+    }
+
     Referenceable deref() {   // returns Referenceable from session change set or UNCOPIED referenceable from application
         if (!computedValue) {
             computedValue = computeReferenceable()

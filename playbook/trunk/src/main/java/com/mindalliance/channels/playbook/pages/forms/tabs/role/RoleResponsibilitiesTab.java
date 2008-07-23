@@ -100,10 +100,9 @@ public class RoleResponsibilitiesTab extends AbstractFormTab {
             Label dummyResponsibilityPanel = new Label("responsibility", "dummy");
             responsibilityDiv.addOrReplace(dummyResponsibilityPanel);
         } else {
-            int index = ((List<Responsibility>) RefUtils.get(getElement(), "responsibilities")).indexOf(selectedResponsibility);
+            int index = ((List<Responsibility>) getProperty("responsibilities")).indexOf(selectedResponsibility);
             ResponsibilityPanel responsibilityPanel = new ResponsibilityPanel("responsibility", this,
-                    "responsibilities[" + index + "]",
-                    EDITABLE, feedback);
+                    "responsibilities[" + index + "]");
             responsibilityDiv.addOrReplace(responsibilityPanel);
         }
     }

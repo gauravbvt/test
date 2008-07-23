@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
@@ -33,8 +34,8 @@ import java.util.ArrayList;
  */
 public class AreaInfoPanel extends AbstractComponentPanel {
 
-    public AreaInfoPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public AreaInfoPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     AreaInfo areaInfo;
@@ -81,7 +82,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         stateField = new AutoCompleteTextField("state", new RefPropertyModel(getElement(), propPath +".state")) {
             protected Iterator getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
-                String countryName = (String) RefUtils.get(getElement(),  propPath +".country");
+                String countryName = (String) getProperty("country");
                 return stateIterator(input, countryName,  10);
             }
 
@@ -90,8 +91,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected Iterator getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
                 // String stateName = (String)stateField.getModel().getObject();
-                String countryName = (String)RefUtils.get(getElement(),  propPath +".country");
-                String stateName = (String)RefUtils.get(getElement(),  propPath +".state");
+                String countryName = (String)getProperty("country");
+                String stateName = (String)getProperty("state");
                 return countyIterator(input, countryName, stateName,  10);
             }
 
@@ -115,11 +116,11 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countryName = (String)countryField.getModel().getObject();
                 // System.out.println("Updating country to " + countryName);
-                RefUtils.set(getElement(),propPath + ".state", "");
-                RefUtils.set(getElement(),propPath + ".county", "");
-                RefUtils.set(getElement(),propPath + ".city", "");
-                RefUtils.set(getElement(),propPath + ".street", "");
-                RefUtils.set(getElement(),propPath + ".code", "");
+                setProperty("state", "");
+                setProperty("county", "");
+                setProperty("city", "");
+                setProperty("street", "");
+                setProperty("code", "");
                 elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(stateField);
@@ -140,10 +141,10 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String stateName = stateField..getModel().getObject();
                 // System.out.println("Updating state to " + stateName);
-                RefUtils.set(getElement(),propPath + ".county", "");
-                RefUtils.set(getElement(),propPath + ".city", "");
-                RefUtils.set(getElement(),propPath + ".street", "");
-                RefUtils.set(getElement(),propPath + ".code", "");
+                setProperty("county", "");
+                setProperty("city", "");
+                setProperty("street", "");
+                setProperty("code", "");
                 elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(countyField);
@@ -164,10 +165,9 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countyName = countyField..getModel().getObject();
                 // System.out.println("Updating county to " + countyName);
-                RefUtils.set(getElement(),propPath + ".city", "");
-                RefUtils.set(getElement(),propPath + ".street", "");
-                RefUtils.set(getElement(),propPath + ".code", "");
-                elementChanged(propPath, target);
+                setProperty("city", "");
+                setProperty("street", "");
+                setProperty("code", "");
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(cityField);
                 target.addComponent(streetField);
@@ -184,9 +184,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 // String cityName = cityField.getModel().getObject();
                 // System.out.println("Updating city to " + cityName);
-                RefUtils.set(getElement(),propPath + ".street", "");
-                RefUtils.set(getElement(),propPath + ".code", "");
-                elementChanged(propPath, target);
+                setProperty("street", "");
+                setProperty("code", "");
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(streetField);
                 target.addComponent(codeField);

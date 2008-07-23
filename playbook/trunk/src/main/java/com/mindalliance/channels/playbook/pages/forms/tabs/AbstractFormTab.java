@@ -3,8 +3,10 @@ package com.mindalliance.channels.playbook.pages.forms.tabs;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Component;
+import org.apache.wicket.model.Model;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
@@ -27,10 +29,10 @@ import java.util.HashMap;
  */
 public class AbstractFormTab extends AbstractPlaybookPanel {
 
-    protected static final boolean READONLY = true;
     protected static final boolean EDITABLE = false;
     protected static final boolean SINGLE_SELECTION = true;
 
+    protected Label readOnlyLabel;
     protected FeedbackPanel feedback;
     protected AbstractElementForm elementForm;
     private List<FormComponent> inputFields = new ArrayList<FormComponent>();
@@ -44,7 +46,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
         init();
     }
 
-    protected FeedbackPanel getFeedback() {
+    public FeedbackPanel getFeedback() {
         return feedback;
     }
 
@@ -54,6 +56,17 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
 
     protected void load() {       
         // feedback panel
+        String owner = getElement().getOwner();
+        String reasonReadOnly;
+        if (owner != null) {
+           reasonReadOnly = "The element is being edited by " + owner + ". Any changes you make will not be saved."; 
+        }
+        else {
+            reasonReadOnly = "This element can not be changed.";
+        }
+        readOnlyLabel = new Label("readOnly", new Model(reasonReadOnly));
+        setVisibility(readOnlyLabel, getElement().isReadOnly());
+        addReplaceable(readOnlyLabel);
         feedback = new FeedbackPanel("feedback");
         feedback.setOutputMarkupId(true);
         add(feedback);
@@ -99,6 +112,10 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
 
     public boolean isPlaybookPanel() {
         return elementForm.isPlaybookPanel();
+    }
+
+    public boolean isReadOnly() {
+        return getElement().isReadOnly();
     }
 
     public Project getProject() {

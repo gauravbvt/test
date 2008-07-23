@@ -35,7 +35,7 @@ public class TaxonomyParticipationTab extends AbstractFormTab {
                                                        new RefPropertyModel(Channels.instance(), "users")) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selectedUsers = participatingUsersTree.getNewSelections();
-                List<Ref> participations = (List<Ref>)RefUtils.get(getElement(), "participations");
+                List<Ref> participations = (List<Ref>)getProperty("participations");
                 // Delete obsolete participations
                 for (Ref participation: participations) {
                     Ref participatingUser = (Ref)RefUtils.get(participation, "user");

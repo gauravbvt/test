@@ -79,7 +79,7 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
         switch (referenceable) {
             case Position.class:
             case System.class:
-                referenceable.reference.begin()    // TODO -- may fail in multi-user scenario
+                // referenceable.reference.begin()    // TODO -- may fail in multi-user scenario
                 referenceable.organization = this.reference
                 super.doAddToField(field, object); break
             default: super.doAddToField(field, object);
@@ -91,7 +91,7 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
         switch (referenceable) {
             case Position.class:
             case System.class:
-                referenceable.reference.begin()   // TODO -- may fail in multi-user scenario
+                // referenceable.reference.begin()   // TODO -- may fail in multi-user scenario
                 referenceable.organization = null
                 super.doRemoveFromField(field, object); break
             default: super.doRemoveFromField(field, object);

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.definition.EventDefinition;
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification;
 import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
@@ -28,8 +29,8 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
     protected EventSpecificationPanel causeSpecificationPanel;
 
 
-    public EventDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public EventDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
@@ -40,7 +41,7 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
                 boolean anyLocation = (Boolean)anyLocationCheckBox.getModelObject();
                 if (anyLocation) {
                     setProperty("locationDefinition", new LocationDefinition());
-                    locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", EventDefinitionPanel.this, propPath+".locationDefinition", isReadOnly(), feedback);
+                    locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", EventDefinitionPanel.this, propPath+".locationDefinition");
                     addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
                 }
                 setVisibility(locationDefinitionDiv, !anyLocation, target);
@@ -50,14 +51,14 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
         locationDefinitionDiv = new WebMarkupContainer("locationDefinitionDiv");
         setVisibility(locationDefinitionDiv, !eventDefinition.getLocationDefinition().matchesAll());
         addReplaceable(locationDefinitionDiv);
-        locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition", isReadOnly(), feedback);
+        locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition");
         addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
         anyCauseCheckBox = new AjaxCheckBox("anyCause", new Model((Boolean)eventDefinition.getCauseEventSpec().matchesAll())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyCause = (Boolean)anyCauseCheckBox.getModelObject();
                 if (anyCause) {
                     setProperty("causeEventSpec", new EventSpecification());
-                    causeSpecificationPanel = new EventSpecificationPanel("causeSpecification", EventDefinitionPanel.this, propPath+".causeEventSpec", isReadOnly(), feedback);
+                    causeSpecificationPanel = new EventSpecificationPanel("causeSpecification", EventDefinitionPanel.this, propPath+".causeEventSpec");
                     addReplaceableTo(causeSpecificationPanel, causeSpecificationDiv);
                 }
                 setVisibility(causeSpecificationDiv, !anyCause, target);
@@ -67,7 +68,7 @@ public class EventDefinitionPanel extends AbstractDefinitionPanel {
         causeSpecificationDiv = new WebMarkupContainer("causeSpecificationDiv");
         setVisibility(causeSpecificationDiv, !eventDefinition.getCauseEventSpec().matchesAll());
         addReplaceable(causeSpecificationDiv);
-        causeSpecificationPanel = new EventSpecificationPanel("causeSpecification", this, propPath+".causeEventSpec", isReadOnly(), feedback);
+        causeSpecificationPanel = new EventSpecificationPanel("causeSpecification", this, propPath+".causeEventSpec");
         addReplaceableTo(causeSpecificationPanel, causeSpecificationDiv);
     }
 

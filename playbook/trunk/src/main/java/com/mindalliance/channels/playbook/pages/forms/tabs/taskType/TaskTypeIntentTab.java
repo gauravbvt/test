@@ -34,14 +34,14 @@ public class TaskTypeIntentTab  extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
+        purposesChooser = new MultipleStringChooser("purposes", this, "purposes",
                                                     new RefQueryModel(getScope(), new Query("findAllPurposes")));
         addReplaceable(purposesChooser);
         eventTypesTree = new DynamicFilterTree("eventTypes", new RefPropertyModel(getElement(), "eventTypes"),
                                                  new RefQueryModel(getScope(), new Query("findAllTypes", "EventType"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selectedTypes = eventTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "eventTypes", selectedTypes);
+                setProperty("eventTypes", selectedTypes);
             }
         };
         addReplaceable(eventTypesTree);

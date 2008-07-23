@@ -150,7 +150,7 @@ public class ResourceAccessTab extends AbstractFormTab {
         protocolDiv.remove(protocolPanel);
         if (selectedProtocol != null) {
             int index = resource.getAccess().indexOf(selectedProtocol);
-            protocolPanel = new IncomingSharingProtocolPanel("protocol", this, "access["+index+"]", EDITABLE, feedback);
+            protocolPanel = new IncomingSharingProtocolPanel("protocol", this, "access["+index+"]");
         }
         else {
             protocolPanel = new Label("protocol", new Model(""));

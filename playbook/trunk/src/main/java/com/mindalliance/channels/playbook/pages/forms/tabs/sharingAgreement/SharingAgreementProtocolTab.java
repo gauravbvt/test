@@ -24,9 +24,9 @@ public class SharingAgreementProtocolTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        protocolPanel = new OutgoingSharingProtocolPanel("protocol", this, "protocol", EDITABLE, feedback);
+        protocolPanel = new OutgoingSharingProtocolPanel("protocol", this, "protocol");
         addReplaceable(protocolPanel);
-        maxDelayPanel = new TimingPanel("maxDelay", this, "maxDelay", EDITABLE, feedback);
+        maxDelayPanel = new TimingPanel("maxDelay", this, "maxDelay");
         addReplaceable(maxDelayPanel);
     }
 

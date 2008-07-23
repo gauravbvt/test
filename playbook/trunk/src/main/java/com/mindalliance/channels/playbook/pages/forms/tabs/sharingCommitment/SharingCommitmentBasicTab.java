@@ -32,7 +32,7 @@ public class SharingCommitmentBasicTab extends FlowActBasicTab {
                                                 SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selected = approvedByTree.getNewSelection();
-                RefUtils.set(getElement(), "approvedBy", selected);
+                setProperty("approvedBy", selected);
             }
         };
         addReplaceable(approvedByTree);

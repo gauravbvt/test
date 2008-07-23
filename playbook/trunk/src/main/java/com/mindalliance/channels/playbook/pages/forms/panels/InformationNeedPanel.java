@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ifm.taxonomy.EventType;
 import com.mindalliance.channels.playbook.ifm.info.InformationNeed;
@@ -21,16 +22,16 @@ public class InformationNeedPanel extends AbstractComponentPanel {
     protected TimingPanel deadlinePanel;
     protected CheckBox criticalField;
 
-    public InformationNeedPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public InformationNeedPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
         super.load();
         informationNeed = (InformationNeed)getComponent();
-        informationSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath + ".informationSpec", isReadOnly(), feedback);
+        informationSpecPanel = new InformationDefinitionPanel("informationSpec", this, propPath + ".informationSpec");
         this.addReplaceable(informationSpecPanel);
-        deadlinePanel = new TimingPanel("deadline", this, propPath+".deadline", isReadOnly(), feedback);
+        deadlinePanel = new TimingPanel("deadline", this, propPath+".deadline");
         addReplaceable(deadlinePanel);
         criticalField = new CheckBox("critical", new RefPropertyModel(getElement(), propPath+".critical"));
         addInputField(criticalField);

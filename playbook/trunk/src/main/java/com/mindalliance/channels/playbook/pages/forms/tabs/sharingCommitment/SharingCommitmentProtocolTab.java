@@ -21,7 +21,7 @@ public class SharingCommitmentProtocolTab  extends AbstractFormTab {
         
     protected void load() {
         super.load();
-        protocolPanel = new OutgoingSharingProtocolPanel("protocol", this, "protocol", EDITABLE, feedback);
+        protocolPanel = new OutgoingSharingProtocolPanel("protocol", this, "protocol");
         addReplaceable(protocolPanel);
     }
 

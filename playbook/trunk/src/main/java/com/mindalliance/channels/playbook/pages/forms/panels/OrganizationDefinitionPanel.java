@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.ifm.definition.OrganizationDefinition;
@@ -39,8 +40,8 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
     protected LocationDefinitionPanel jurisdictionDefinitionPanel;
 
 
-    public OrganizationDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public OrganizationDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
@@ -74,7 +75,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
                 boolean anyLocation = (Boolean)anyLocationCheckBox.getModelObject();
                 if (anyLocation) {
                     setProperty("locationDefinition", new LocationDefinition(), target);
-                    locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", OrganizationDefinitionPanel.this, propPath+".locationDefinition", isReadOnly(), feedback);
+                    locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", OrganizationDefinitionPanel.this, propPath+".locationDefinition");
                     addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
                 }
                 setVisibility(locationDefinitionDiv, !anyLocation, target);
@@ -84,7 +85,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
         locationDefinitionDiv = new WebMarkupContainer("locationDefinitionDiv");
         setVisibility(locationDefinitionDiv, !organizationDefinition.getLocationDefinition().matchesAll());
         addReplaceable(locationDefinitionDiv);
-        locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition", isReadOnly(), feedback);
+        locationDefinitionPanel = new LocationDefinitionPanel("locationDefinition", this, propPath+".locationDefinition");
         addReplaceableTo(locationDefinitionPanel, locationDefinitionDiv);
 
         anyJurisdictionCheckBox = new AjaxCheckBox("anyJurisdiction", new Model((Boolean)organizationDefinition.getJurisdictionDefinition().matchesAll())){
@@ -92,7 +93,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
                 boolean anyLocation = (Boolean)anyJurisdictionCheckBox.getModelObject();
                 if (anyLocation) {
                     setProperty("jurisdictionDefinition", new LocationDefinition(), target);
-                    jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", OrganizationDefinitionPanel.this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
+                    jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", OrganizationDefinitionPanel.this, propPath+".jurisdictionDefinition");
                     addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);
                 }
                 setVisibility(jurisdictionDefinitionDiv, !anyLocation, target);
@@ -102,7 +103,7 @@ public class OrganizationDefinitionPanel extends AbstractDefinitionPanel {
         jurisdictionDefinitionDiv = new WebMarkupContainer("jurisdictionDefinitionDiv");
         setVisibility(jurisdictionDefinitionDiv, !organizationDefinition.getJurisdictionDefinition().matchesAll());
         addReplaceable(jurisdictionDefinitionDiv);
-        jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", this, propPath+".jurisdictionDefinition", isReadOnly(), feedback);
+        jurisdictionDefinitionPanel = new LocationDefinitionPanel("jurisdictionDefinition", this, propPath+".jurisdictionDefinition");
         addReplaceableTo(jurisdictionDefinitionPanel, jurisdictionDefinitionDiv);
     }
 }

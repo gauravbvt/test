@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation;
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
 import com.mindalliance.channels.playbook.ifm.info.LatLong;
@@ -24,16 +25,16 @@ public class GeoLocationPanel extends AbstractComponentPanel {
     AreaInfoPanel areaInfoPanel;
     LatLongPanel latLongPanel;
 
-    public GeoLocationPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public GeoLocationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
 
     protected void load() {
         super.load();
-        areaInfoPanel = new AreaInfoPanel("areaInfo", this, propPath + ".areaInfo", readOnly, feedback);
+        areaInfoPanel = new AreaInfoPanel("areaInfo", this, propPath + ".areaInfo");
         addReplaceable(areaInfoPanel);
-        latLongPanel = new LatLongPanel("latLong", this, propPath + ".latLong", readOnly, feedback);
+        latLongPanel = new LatLongPanel("latLong", this, propPath + ".latLong");
         addReplaceable(latLongPanel);
     }
 

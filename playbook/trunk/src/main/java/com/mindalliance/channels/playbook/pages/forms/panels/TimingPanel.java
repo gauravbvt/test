@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.Timing;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -24,13 +25,13 @@ public class TimingPanel extends AbstractComponentPanel {
 
     Timing timing;
 
-    public TimingPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public TimingPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
 
     protected void load() {
         super.load();
-        timing = (Timing) RefUtils.get(getElement(), propPath);
+        timing = (Timing) getComponent();
         // amount
         final TextField amountField = new TextField("amount", new Model(timing.getAmount()));
         amountField.setType(Integer.class);
@@ -49,7 +50,7 @@ public class TimingPanel extends AbstractComponentPanel {
               }
               timing.setAmount(value);
               elementChanged(propPath, target);
-              target.addComponent(feedback);
+              target.addComponent(getFeedback());
             }
 
             @Override
@@ -57,7 +58,7 @@ public class TimingPanel extends AbstractComponentPanel {
                 Logger.getLogger(this.getClass()).error("Error updating " + amountField + ": " + e);
                 amountField.clearInput();
                 target.addComponent(amountField);
-                target.addComponent(feedback);
+                target.addComponent(getFeedback());
             }
         });
         addReplaceable(amountField);

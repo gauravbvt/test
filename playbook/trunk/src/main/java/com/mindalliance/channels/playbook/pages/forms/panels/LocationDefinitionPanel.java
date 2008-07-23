@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
 import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -64,8 +65,8 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     protected DropDownChoice kindOfTargetChoice;
     protected DynamicFilterTree targetTree;
 
-    public LocationDefinitionPanel(String id, ElementPanel parentPanel, String propPath, boolean readOnly, FeedbackPanel feedback) {
-        super(id, parentPanel, propPath, readOnly, feedback);
+    public LocationDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
+        super(id, parentPanel, propPath);
     }
     
     protected void load() {
@@ -121,7 +122,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                 boolean isByGeoLocation = (Boolean)isByGeoLocationCheckBox.getModelObject();
                 setProperty("byGeoLocation", isByGeoLocation);
                 enable(byGeoLocationRelationChoice,isByGeoLocation, target);
-                geoLocationPanel = new GeoLocationPanel("geoLocation", LocationDefinitionPanel.this, propPath+".geoLocation", isReadOnly(), feedback);
+                geoLocationPanel = new GeoLocationPanel("geoLocation", LocationDefinitionPanel.this, propPath+".geoLocation");
                 addReplaceable(geoLocationPanel);
                 setVisibility(geoLocationPanel,isByGeoLocation, target);
             }
@@ -138,7 +139,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         });
         byGeoLocationRelationChoice.setEnabled(locationDefinition.isByGeoLocation());
         addReplaceable(byGeoLocationRelationChoice);
-        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation", isReadOnly(), feedback);
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation");
         setVisibility(geoLocationPanel, locationDefinition.isByGeoLocation());
         addReplaceable(geoLocationPanel);
         isByJurisdictionCheckBox = new AjaxCheckBox("isByJurisdiction", new RefPropertyModel(getElement(), propPath+".byJurisdiction")) {

@@ -34,7 +34,7 @@ public class SystemIdentityTab extends ResourceIdentityTab {
         super.load();
         AjaxLink organizationLink = new AjaxLink("organizationLink") {
             public void onClick(AjaxRequestTarget target) {
-                edit((Ref)RefUtils.get(getElement(), "organization"), target);
+                edit((Ref)getProperty("organization"), target);
             }
         };
         Label organizationNameLabel = new Label("organizationName", new RefPropertyModel(getElement(), "organization.name"));
@@ -46,7 +46,7 @@ public class SystemIdentityTab extends ResourceIdentityTab {
                                                    new RefPropertyModel(getElement(), "organization.positions", new ArrayList<Ref>()), SINGLE_SELECTION) {
              public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                  Ref position = adminPositionTree.getNewSelection();
-                 RefUtils.set(getElement(), "adminPosition", position);
+                 setProperty("adminPosition", position);
              }
         };
         addReplaceable(adminPositionTree);

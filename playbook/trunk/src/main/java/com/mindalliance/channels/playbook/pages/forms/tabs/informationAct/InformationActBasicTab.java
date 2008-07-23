@@ -43,7 +43,7 @@ public class InformationActBasicTab extends AbstractFormTab {
                 SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = actorAgentTree.getNewSelection();
-                RefUtils.set(getElement(), "actorAgent", selectedResource);
+                setProperty("actorAgent", selectedResource);
             }
         };
         addReplaceable(actorAgentTree);

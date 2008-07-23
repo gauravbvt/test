@@ -39,7 +39,7 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
         super(id, model);
     }
 
-    abstract protected FeedbackPanel getFeedback();
+    abstract public FeedbackPanel getFeedback();
 
     abstract protected void addReplaceable(Component component);
 

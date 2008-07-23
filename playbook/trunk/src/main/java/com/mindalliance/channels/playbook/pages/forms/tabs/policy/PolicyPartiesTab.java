@@ -39,7 +39,7 @@ public class PolicyPartiesTab extends AbstractFormTab {
     protected void load() {
         super.load();
         policy = (Policy)getElement().deref();
-        sourceSpecPanel = new AgentSpecificationPanel("sourceSpec", this, "sourceSpec", EDITABLE, feedback);
+        sourceSpecPanel = new AgentSpecificationPanel("sourceSpec", this, "sourceSpec");
         addReplaceable(sourceSpecPanel);
         relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
         addReplaceable(relationshipsDiv);
@@ -58,10 +58,10 @@ public class PolicyPartiesTab extends AbstractFormTab {
             }
         };
         addReplaceable(anyRelationshipField);
-        relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames", EDITABLE, feedback,
+        relationshipNamesChooser = new MultipleStringChooser("relationshipNames", this, "relationshipNames",
                                                               new RefQueryModel(getProject(),new Query("findAllRelationshipNames")));
         addReplaceableTo(relationshipNamesChooser, relationshipsDiv);
-        recipientSpecPanel = new AgentSpecificationPanel("recipientSpec", this, "recipientSpec", EDITABLE, feedback);
+        recipientSpecPanel = new AgentSpecificationPanel("recipientSpec", this, "recipientSpec");
         addReplaceable(recipientSpecPanel);
     }
 

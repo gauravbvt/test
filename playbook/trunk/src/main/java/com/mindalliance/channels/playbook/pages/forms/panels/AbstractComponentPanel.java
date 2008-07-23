@@ -26,29 +26,23 @@ import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
 
     public final static boolean SINGLE_SELECTION = true;
-    protected static final boolean READONLY = true;
-    protected static final boolean EDITABLE = false;
 
-    protected boolean readOnly = false;
-    protected ElementPanel parentPanel;
+    protected AbstractPlaybookPanel parentPanel;
     protected String propPath; // path to the element's property which value is the component to be edited
     // protected WebMarkupContainer div;
-    protected FeedbackPanel feedback;
 
     private Object editedComponent;
 
-    public AbstractComponentPanel(String id, ElementPanel parentPanel, String propPath , boolean readOnly, FeedbackPanel feedback) {
+    public AbstractComponentPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
         super(id);
         this.parentPanel = parentPanel;
         this.propPath = propPath;
-        this.readOnly = readOnly;
-        this.feedback = feedback;
         load();
         init();
     }
 
-    protected FeedbackPanel getFeedback() {
-        return feedback;
+    public FeedbackPanel getFeedback() {
+        return parentPanel.getFeedback();
     }
 
     // ElementPanel
@@ -92,6 +86,10 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.isTaxonomyPanel();
     }
 
+    public boolean isReadOnly() {
+        return parentPanel.isReadOnly();
+    }
+
     public boolean isPlaybookPanel() {
         return parentPanel.isPlaybookPanel();
     }
@@ -118,14 +116,6 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     
 
     // end ElementPanel
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    public void setFeedbackPanel(FeedbackPanel feedback) {
-        this.feedback = feedback;
-    }
 
     protected void beforeLoad() {
         // do nothing

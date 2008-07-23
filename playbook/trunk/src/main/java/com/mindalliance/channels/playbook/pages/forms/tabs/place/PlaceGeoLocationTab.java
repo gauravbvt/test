@@ -21,7 +21,7 @@ public class PlaceGeoLocationTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        geoLocationPanel = new GeoLocationPanel("geoLocation", this, "geoLocation", false, feedback);
+        geoLocationPanel = new GeoLocationPanel("geoLocation", this, "geoLocation");
         addReplaceable(geoLocationPanel);
     }
 }

@@ -72,7 +72,7 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
                 new RefQueryModel(getScope(), new Query("findAllTypes", "MediumType"))) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selectedTypes = mediumTypesTree.getNewSelections();
-                RefUtils.set(getElement(), "mediumTypes", selectedTypes);
+                setProperty("mediumTypes", selectedTypes);
             }
         };
         addReplaceableTo(mediumTypesTree, mediumTypesDiv);
@@ -91,7 +91,7 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
         addReplaceable(purposesDiv);
         setVisibility(purposesDiv, !policy.getPurposes().isEmpty());
         addReplaceable(anyPurposeField);
-        purposesChooser = new MultipleStringChooser("purposes", this, "purposes", EDITABLE, feedback,
+        purposesChooser = new MultipleStringChooser("purposes", this, "purposes",
                 new RefQueryModel(getProject(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
     }
