@@ -23,9 +23,14 @@ import com.mindalliance.channels.playbook.ifm.Channels
  */
 class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
-    Map<Ref, Referenceable> begun = new HashMap<Ref, Referenceable>()
+    // Refs under session
+    Map<Ref, Referenceable> begun = new HashMap<Ref, Referenceable>() // Refs under session management. Locked as readWrite unless in ReadOnlyRefs.
+    Set<Ref> readOnlyRefs = new HashSet<Ref>() // Refs begun while readOnly stay readonly until reset (even though other session may have released lock). This is needed to force a re-deref before becoming writable.
+
+    // Ref changes and deletes to be persisted if committed
     Set<Ref> changes = new HashSet<Ref>()
     Set<Ref> deletes = new HashSet<Ref>()
+
     private QueryCache queryCache = new QueryCache()
     // any query execution dependent on elements belonging to any of these classes will be cached in session memory
     private Set<Class> inSessionClasses = new HashSet<Class>()
@@ -87,7 +92,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
                 use(NoSessionCategory) {
                     Referenceable original = retrieveFromApplicationMemory(ref)
                     if (original) {
-                        if (ref.isReadOnly()) {
+                        if (isReadOnly(ref)) {
+                            readOnlyRefs.add(ref)
                             Logger.getLogger(this.class).warn("$ref is locked by another session; changes in this session will not be persisted.")
                             // throw new RefLockException("Can't begin: $ref is locked")
                         }
@@ -131,7 +137,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Ref hasChanged(Referenceable referenceable) {// Persist the change in session and, on save, in application
         Ref reference = referenceable.getReference()
         assert begun.containsKey(reference)
-        if (!referenceable.reference.isReadOnly()) {
+        if (!readOnlyRefs.contains(referenceable.reference)) { // changes will not be persisted if ref entered session readOnly
             changes.add(reference)
             if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("==> to session: ${referenceable.type} $referenceable")
             changed("changes")
@@ -143,7 +149,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     boolean delete(Ref ref) {
-        if (!ref.isReadOnly()) {
+        if (!readOnlyRefs.contains(ref)) { // delete not allowed if ref entered session readOnly
             if (begun.containsKey(ref)) {
                 ref.detach()
                 ref.deref().changed("id") // raise change event on id
@@ -206,11 +212,16 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         // does not update the query cache or inSessionClasses
     }
 
+
+    // Remove Ref from session management. Release any lock held by session on Ref.
+    // ref.begin() will be required to put ref under session management again
     void reset(Ref ref) {
+        Logger.getLogger(this.class).info("Releasing $ref from session")
         ref.detach()
         synchronized (getApplicationMemory()) {
             if (begun.containsKey(ref)) {
                 begun.remove(ref)
+                readOnlyRefs.remove(ref)
                 if (ref.isReadWrite()) ref.unlock()
             }
             if (changes.contains(ref)) {
@@ -232,6 +243,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
             begun = new HashMap<Ref, Referenceable>()
             queryCache.clear()
             inSessionClasses = new HashSet<Class>()
+            readOnlyRefs = new HashSet<Ref>()
         }
     }
 
@@ -286,5 +298,14 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     boolean isFresh(Ref ref) {
         return isModifiable(ref) || getApplicationMemory().isFresh(ref)
+    }
+
+    boolean isReadOnly(Ref ref) {
+        if (readOnlyRefs.contains(ref)) {
+            return true
+        }
+        else {
+            return PlaybookApplication.current().getAppMemory().isReadOnly(ref)
+        }
     }
 }

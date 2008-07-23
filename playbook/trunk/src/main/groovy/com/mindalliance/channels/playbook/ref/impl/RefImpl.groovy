@@ -318,7 +318,8 @@ class RefImpl implements Ref {
     }
 
     boolean isReadOnly() {
-        return PlaybookApplication.current().getAppMemory().isReadOnly(this)   // some other sessions has a lock on the Ref
+        Store store = PlaybookApplication.locateStore()
+        return store.isReadOnly(this)   // this session has ref as readOnly or some other sessions has a lock on the Ref
     }
 
 

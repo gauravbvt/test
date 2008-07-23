@@ -13,4 +13,5 @@ interface Store {
     boolean isModifiable(Ref ref)
     boolean isModified(Ref ref)
     boolean isFresh(Ref ref)  // i.e. not stale -- calling deref() will return a Referenceable
+    boolean isReadOnly(Ref ref) // in sessin as readOnly or other session has lock on ref
 }

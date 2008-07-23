@@ -149,10 +149,10 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
 
     // Called when detaching the form
     public void terminate() {
-        if (!element.isModified()) {
+        if (!element.isModified()) {   // only release from session if *not* modified
             element.reset();  // removes unmodified element(s) from session and session releases locks if held
         }
-        for (Ref otherElement : otherElements) {
+        for (Ref otherElement : otherElements) {    // only release from session if *not* modified
             if (otherElement.isModified()) {
                 otherElement.reset();
             }
