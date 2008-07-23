@@ -59,7 +59,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
         String owner = getElement().getOwner();
         String reasonReadOnly;
         if (owner != null) {
-           reasonReadOnly = "The element is being edited by " + owner + ". Any changes you make will not be saved."; 
+           reasonReadOnly = "The element is being edited by " + owner + ". Your changes you will not be saved.";
         }
         else {
             reasonReadOnly = "This element can not be changed.";
