@@ -1,10 +1,8 @@
 package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.project.ProjectElement
-import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.InProject
 import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.Channels
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,11 +13,16 @@ import com.mindalliance.channels.playbook.query.Query
  */
 abstract class OrganizationResource extends Resource {
 
-    Ref organization     // set only via organization.add|remove<Resource>()
+    private Ref cachedOrganization     // cached value found by query
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['project'])
+        return (List<String>) (super.transientProperties() + ['project', 'organization', 'cachedOrganization'])
+    }
+
+    void detach() {
+        super.detach()
+        cachedOrganization = null
     }
 
     boolean isOrganizationResource() {
@@ -27,8 +30,15 @@ abstract class OrganizationResource extends Resource {
     }
 
     Ref getProject() {
-        return (organization as boolean) ? organization.project : null
+        Ref org = getOrganization()
+        return (org as boolean) ? org.project : null
     }
 
+    Ref getOrganization() {
+        if (cachedOrganization == null) {
+            cachedOrganization = (Ref)Query.execute(Channels.instance(), "findOrganizationOfResource", this.reference)
+        }
+        return cachedOrganization
+    }
 
 }

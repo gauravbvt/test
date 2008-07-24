@@ -5,7 +5,14 @@ import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ifm.playbook.Event
-import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
+import com.mindalliance.channels.playbook.support.RefUtils
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
+import com.mindalliance.channels.playbook.ifm.project.resources.*
+import com.mindalliance.channels.playbook.ifm.project.environment.*
+import com.mindalliance.channels.playbook.analysis.AnalysisElement
+import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement
+import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.taxonomy.*
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,7 +38,7 @@ class Channels extends IfmElement {
     }
 
     static Ref reference() {   // CAUTION: this will *not* force an initial load of Channels root data
-       PlaybookApplication.current().getRoot()
+        PlaybookApplication.current().getRoot()
     }
 
     // Queries
@@ -58,10 +65,6 @@ class Channels extends IfmElement {
         return (Ref) users.find {user -> user as boolean && user.userId == uid}
     }
 
-    Ref findModel(String mid) {
-        return (Ref) taxonomies.find {model -> model as boolean && model.id == mid}
-    }
-    
     List<Ref> findProjectsForUser(Ref user) {
         List<Ref> result = []
         projects.each {project ->
@@ -72,27 +75,37 @@ class Channels extends IfmElement {
 
     List<Ref> findUsersNotInProject(Ref project) {
         List<Ref> results
-        results = users.findAll {user ->
+        results = (List<Ref>) users.findAll {user ->
             user as boolean &&
                     project.participations.every {part -> part as boolean && part.user != user}
         }
         return results
     }
 
+    // Taxonomies modifiable by user
     List<Ref> findTaxonomiesForUser(Ref user) {
         List<Ref> result = []
         if (user.analyst)
-            taxonomies.each {model ->
-                if (model as boolean && model.isAnalyst(user)) result.add(model)
+            taxonomies.each {taxonomy ->
+                if (taxonomy as boolean && taxonomy.isAnalyst(user)) result.add(taxonomy)
             }
         return result
+    }
+
+    List<Ref> findTaxonomiesVisibleToUser(Ref user) {
+        Set<Ref> results = new HashSet<Ref>()
+        results.addAll(findTaxonomiesForUser(user)) // all taxonomies writable by user
+        findProjectsForUser(user).each {project ->
+            results.addAll(project.taxonomies)
+        }
+        return results as List<Ref>
     }
 
     List<Ref> findAllTypes(String typeType) {
         List<Ref> types = []
         types.addAll(findAllImpliedTypes(typeType))
-        taxonomies.each {model ->
-            if (model as boolean) types.addAll(model.findAllTypes(typeType))
+        taxonomies.each {taxonomy ->
+            if (taxonomy as boolean) types.addAll(taxonomy.findAllTypes(typeType))
         }
         return types
     }
@@ -111,17 +124,111 @@ class Channels extends IfmElement {
     }
 
     List<Ref> findAllProjectsOfUser(Ref user) {
-        return (List<Ref>)projects.findAll{project -> project.participations.any{part -> part.user == user}}
+        return (List<Ref>) projects.findAll {project -> project.participations.any {part -> part.user == user}}
+    }
+
+    Ref findOrganizationOfResource(Ref res) {
+        Ref organization = null
+        RefUtils.getUserProjects().any {project ->
+            project.organizations.any {
+                Ref org = it
+                if (org.positions.contains(res)) {
+                    organization = org
+                }
+                else if (org.systems.contains(res)) {
+                    organization = org
+                }
+            }
+        }
+        return organization
+    }
+
+    Ref findPlaybookOfElement(Ref ref) {
+        Ref playbook = null
+        PlaybookElement element = (PlaybookElement) ref.deref()
+        if (!element) return null
+        RefUtils.getUserProjects().any {project ->
+            project.playbooks.any {pb ->
+                switch (element) {
+                    case Group.class:
+                        if (pb.groups.contains(ref)) playbook = pb; break
+                    case InformationAct.class:
+                        if (pb.informationActs.contains(ref)) playbook = pb; break
+                    case Event.class:
+                        if (pb.events.contains(ref)) playbook = pb; break
+                }
+            }
+        }
+        return playbook
+    }
+
+
+    Ref findProjectOfElement(Ref ref) {
+        Ref project = null
+        ProjectElement element = (ProjectElement) ref.deref()
+        if (element == null) return null
+        RefUtils.getUserProjects().any {proj ->
+            switch (element) {
+                case Participation.class:
+                    if (proj.participations.contains(ref)) project = proj; break
+                case Person.class:
+                    if (proj.persons.contains(ref)) project = proj; break
+                case Organization.class:
+                    if (proj.organizations.contains(ref)) project = proj; break
+                case Place.class:
+                    if (proj.places.contains(ref)) project = proj; break
+                case Relationship.class:
+                    if (proj.relationships.contains(ref)) project = proj; break
+                case Policy.class:
+                    if (proj.policies.contains(ref)) project = proj; break
+                case SharingAgreement.class:
+                    if (proj.sharingAgreements.contains(ref)) project = proj; break
+                case Playbook.class:
+                    if (proj.playbooks.contains(ref)) project = proj; break
+                case Taxonomy.class:
+                    if (proj.taxonomies.contains(ref)) project = proj; break
+                case AnalysisElement.class:
+                    if (proj.analysisElements.contains(ref)) project = proj; break
+            }
+        }
+        return project
+    }
+
+    Ref findTaxonomyOfElement(Ref ref) {
+        Ref taxonomy = null
+        TaxonomyElement element = (TaxonomyElement) ref.deref()
+        if (element == null) return null
+        findTaxonomiesVisibleToUser(RefUtils.getUser()).any {taxo ->
+            switch (element) {
+                case TaxonomyParticipation.class:
+                    if (taxo.participations.contains(ref)) taxonomy = taxo; break
+                case AreaType.class:
+                    if (taxo.areaTypes.contains(ref)) taxonomy = taxo; break
+                case EventType.class:
+                    if (taxo.eventTypes.contains(ref)) taxonomy = taxo; break
+                case MediumType.class:
+                    if (taxo.mediumTypes.contains(ref)) taxonomy = taxo; break
+                case OrganizationType.class:
+                    if (taxo.organizationTypes.contains(ref)) taxonomy = taxo; break
+                case PlaceType.class:
+                    if (taxo.placeTypes.contains(ref)) taxonomy = taxo; break
+                case Role.class:
+                    if (taxo.roles.contains(ref)) taxonomy = taxo; break
+                case TaskType.class:
+                    if (taxo.taskTypes.contains(ref)) taxonomy = taxo;
+            }
+        }
+        return taxonomy
     }
 
     // end queries
 
     static List<Class<?>> adminClasses() {
-        [User.class]
+        return (List<Class<?>>) [User.class]
     }
 
     static List<Class<?>> contentClasses() {
-        [User.class, Project.class, Taxonomy.class]
+        return (List<Class<?>>) [User.class, Project.class, Taxonomy.class]
     }
 
     static boolean isSet(Ref ref) {  // always called in application scope

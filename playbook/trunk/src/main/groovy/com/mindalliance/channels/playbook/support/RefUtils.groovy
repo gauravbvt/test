@@ -4,6 +4,8 @@ import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import java.util.regex.Matcher
+import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.Channels
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -186,6 +188,15 @@ class RefUtils {
             }
         }
         return field
+    }
+
+    static Ref getUser() {
+        return PlaybookSession.current().getUser()
+    }
+
+    static List<Ref> getUserProjects() {
+        List<Ref> projects = (List<Ref>) Query.execute(Channels.instance(), "findAllProjectsOfUser", getUser())
+        return projects
     }
 
 }

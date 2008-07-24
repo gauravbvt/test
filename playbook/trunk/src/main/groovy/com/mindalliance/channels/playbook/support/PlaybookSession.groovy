@@ -35,7 +35,6 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     public PlaybookSession( AuthenticatedWebApplication application, Request request ) {
         super( application, request );
         this.application = (PlaybookApplication) application;
-
     }
 
     static PlaybookSession current() {
@@ -59,9 +58,8 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     public boolean authenticate( String id, String password ) {
         this.userId = id
-
-        Ref user = user
-        return user && user.password == password;
+        Ref aUser = getUser()
+        return aUser && aUser.password == password;
     }
 
     public Roles getRoles() {

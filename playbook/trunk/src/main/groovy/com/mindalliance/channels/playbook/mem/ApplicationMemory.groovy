@@ -91,17 +91,14 @@ class ApplicationMemory implements Serializable {
         getRuleBaseSession().fireAllRules()
     }
 
-    // always called within synchronized(this) block
     boolean lock(Ref ref) {
         return cache.lock(ref)
     }
 
-    // always called within synchronized(this) block
     boolean isReadWrite(Ref ref) {
         return cache.isReadWrite(ref)
     }
 
-    // always called within synchronized(this) block
     boolean unlock(Ref ref) {
         return cache.unlock(ref)
     }

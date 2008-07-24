@@ -9,10 +9,7 @@ import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.mem.RefLockException;
 import com.mindalliance.channels.playbook.ifm.User;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +22,7 @@ import org.apache.log4j.Logger;
  */
 public class PlaybookCache extends Cache {
 
-    Map<Ref, Lock> locks = new HashMap<Ref, Lock>();
+    Map<Ref, Lock> locks = Collections.synchronizedMap(new HashMap<Ref, Lock>());
 
     public PlaybookCache(boolean useMemoryCaching, boolean unlimitedDiskCache, boolean overflowPersistence) {
         super(useMemoryCaching, unlimitedDiskCache, overflowPersistence);
@@ -60,15 +57,14 @@ public class PlaybookCache extends Cache {
         locks = new HashMap<Ref, Lock>();
     }
 
-    // always called within a synchroized(ApplicationMemory) block
+    // always called within a synchronized(ApplicationMemory) block
     public boolean lock(Ref ref) {
         if (isReadOnly(ref)) throw new RefLockException("Can't lock $ref - locked by another session");
         if (!isReadWrite(ref)) {
             locks.put(ref, new Lock(ref));
             Logger.getLogger(this.getClass()).info("Locked " + ref);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -80,8 +76,7 @@ public class PlaybookCache extends Cache {
             Logger.getLogger(this.getClass()).info("Unlocked " + ref);
             locks.remove(ref);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -129,16 +124,18 @@ public class PlaybookCache extends Cache {
     }
 
     private void cleanupLocks(PlaybookSession invalidatedSession) {
-        Logger.getLogger(this.getClass()).info("Releasing all locks from invalidated session " + invalidatedSession);
-        List<Ref> expiredLocks = new ArrayList<Ref>();
-        for (Map.Entry<Ref, Lock> entry : locks.entrySet()) {
-            Lock lock = entry.getValue();
-            if (lock.session == invalidatedSession) {
-                expiredLocks.add(entry.getKey());
+        synchronized (this) {
+            Logger.getLogger(this.getClass()).info("Releasing all locks from invalidated session " + invalidatedSession);
+            List<Ref> expiredLocks = new ArrayList<Ref>();
+            for (Map.Entry<Ref, Lock> entry : locks.entrySet()) {
+                Lock lock = entry.getValue();
+                if (lock.session == invalidatedSession) {
+                    expiredLocks.add(entry.getKey());
+                }
             }
-        }
-        for (Ref ref : expiredLocks) {
-            locks.remove(ref);
+            for (Ref ref : expiredLocks) {
+                locks.remove(ref);
+            }
         }
     }
 

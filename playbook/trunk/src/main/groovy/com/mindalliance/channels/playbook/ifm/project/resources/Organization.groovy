@@ -30,6 +30,10 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
     }
 
 
+    protected List<String> childProperties() {
+        return (List<String>)(super.childProperties() + ['positions', 'systems'])
+    }
+
     void beforeStore(ApplicationMemory memory) {
         super.beforeStore(memory)
         jurisdiction.detach()
@@ -72,30 +76,6 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
         String type = element.type
         String field = "${RefUtils.decapitalize(type)}s"
         doAddToField(field, element)
-    }
-
-    Referenceable doAddToField(String field, Object object) {
-        Referenceable referenceable = object.deref()
-        switch (referenceable) {
-            case Position.class:
-            case System.class:
-                // referenceable.reference.begin()    // TODO -- may fail in multi-user scenario
-                referenceable.organization = this.reference
-                super.doAddToField(field, object); break
-            default: super.doAddToField(field, object);
-        }
-    }
-
-    Referenceable doRemoveFromField(String field, Object object) {
-        Referenceable referenceable = object.deref()
-        switch (referenceable) {
-            case Position.class:
-            case System.class:
-                // referenceable.reference.begin()   // TODO -- may fail in multi-user scenario
-                referenceable.organization = null
-                super.doRemoveFromField(field, object); break
-            default: super.doRemoveFromField(field, object);
-        }
     }
 
     List<Ref> getAncestors() {   // meaning ancestors

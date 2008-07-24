@@ -71,7 +71,7 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
         return result
     }
 
-    void delete() {
+    boolean delete() {
         throw new Exception("Can't delete a computed ref")
     }
 

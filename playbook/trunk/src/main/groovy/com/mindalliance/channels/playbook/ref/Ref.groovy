@@ -17,7 +17,7 @@ interface Ref extends Serializable {
     Object get(String name)
     Ref persist() // add modifiable copy to session change set
     void reset() // remove from session pending change or deletion
-    void delete() // add to session deleted set
+    boolean delete() // add to session deleted set -- returns if successful
     void commit() // commit only this Ref
     void become(Ref ref) // take the id and db of ref
     void changed(String propName) // the propName of the referenced Referenceable changed

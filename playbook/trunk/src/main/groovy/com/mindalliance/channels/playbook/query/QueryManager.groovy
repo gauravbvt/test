@@ -44,12 +44,17 @@ class QueryManager implements PropertyChangeListener {
     static void initializeDependencies() {
         dependencies = [     // large-grain dependencies but better than none
                 // Channels
-                findProjectsForUser: [Project.class, User.class],
-                findTaxonomiesForUser: [Taxonomy.class, User.class],
+                findProjectsForUser: [Project.class, User.class, Channels.class],
+                findTaxonomiesForUser: [Taxonomy.class, User.class, Channels.class],
                 findUser: [User.class],
                 findProjectNamed: [Project.class],
                 findUsersNotInProject: [Project.class, Participation.class, User.class],
                 findAllProjectsOfUser: [Project.class, Participation.class, User.class],
+                findOrganizationOfResource: [Project.class, Organization.class],
+                findProjectOfElement: [Project.class, Channels.class],
+                findPlaybookOfElement: [Project.class, Playbook.class],
+                findTaxonomyOfElement: [Taxonomy.class, Channels.class],
+                findTaxonomiesVisibleToUser: [Taxonomy.class, Project.class, Channels.class],
                 // Channels, Project, Taxonomy
                 findAllTypes: [Category.class],
                 findAllTypesNarrowingAny: [Category.class],

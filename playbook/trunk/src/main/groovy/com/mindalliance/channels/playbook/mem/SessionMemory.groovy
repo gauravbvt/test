@@ -149,17 +149,27 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     boolean delete(Ref ref) {
+        boolean deleted = false
         if (!readOnlyRefs.contains(ref)) { // delete not allowed if ref entered session readOnly
             if (begun.containsKey(ref)) {
-                ref.detach()
-                ref.deref().changed("id") // raise change event on id
-                begun.remove(ref)
-                changes.remove(ref)
-                deletes.add(ref)
-                changed("deletes")
-                changed("begun")
-                changed("changes")
-                return true
+                List<Ref> family = ref.deref().family() // ref + children + their children etc.
+                if (getApplicationMemory().isStored(ref)) {
+                    // Attempt to grab locks on all children
+                    boolean allLocked
+                    synchronized (getApplicationMemory()) {
+                        allLocked = LockManager.lockAll(family)   // all locked or locks left as they were
+                    }
+                    // if fails, release any taken and abandon the delete
+                    // if succeeded, proceed to delete ref and children
+                    if (allLocked) {
+                        family.each {child -> doDelete(child)}
+                        deleted = true
+                    }
+                }
+                else { // deleting newly created, persisted element
+                    family.each {child -> doDelete(child)}
+                    deleted = true
+                }
             }
             else {
                 throw new NotModifiableException("Can't delete $ref : do begin() first")
@@ -168,7 +178,18 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         else {
             Logger.getLogger(this.class).warn("Attempted to delete readonly $ref")
         }
-        return false
+        return deleted
+    }
+
+    private void doDelete(Ref ref) {
+        ref.detach()
+        ref.deref().changed("id") // raise change event on id
+        begun.remove(ref)
+        changes.remove(ref)
+        deletes.add(ref)
+        changed("deletes")
+        changed("begun")
+        changed("changes")
     }
 
 
@@ -188,9 +209,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     void abort() {
-        synchronized (getApplicationMemory()) {
-            reset()
-        }
+        reset()
     }
 
     public void commit(Ref ref) {
@@ -212,25 +231,23 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         // does not update the query cache or inSessionClasses
     }
 
-
     // Remove Ref from session management. Release any lock held by session on Ref.
     // ref.begin() will be required to put ref under session management again
+    // a deleted ref can *not* be individually reset becuase of cascaded deletes
     void reset(Ref ref) {
         Logger.getLogger(this.class).info("Releasing $ref from session")
         ref.detach()
-        synchronized (getApplicationMemory()) {
-            if (begun.containsKey(ref)) {
-                begun.remove(ref)
-                readOnlyRefs.remove(ref)
-                if (ref.isReadWrite()) ref.unlock()
-            }
-            if (changes.contains(ref)) {
-                changes.remove(ref)   // no need to unlock again; was in begun
-            }
-            else if (deletes.contains(ref)) {
-                deletes.remove(ref)
-                if (ref.isReadWrite()) ref.unlock()
-            }
+        if (begun.containsKey(ref)) {
+            begun.remove(ref)
+            readOnlyRefs.remove(ref)
+            if (ref.isReadWrite()) ref.unlock()
+        }
+        if (changes.contains(ref)) {
+            changes.remove(ref)   // no need to unlock again; was in begun
+        }
+        else if (deletes.contains(ref)) {
+            deletes.remove(ref)
+            if (ref.isReadWrite()) ref.unlock()
         }
     }
 
@@ -305,7 +322,7 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
             return true
         }
         else {
-            return PlaybookApplication.current().getAppMemory().isReadOnly(ref)
+            return LockManager.isReadOnly(ref)
         }
     }
 }

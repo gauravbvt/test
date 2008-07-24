@@ -20,6 +20,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
 import com.mindalliance.channels.playbook.ifm.project.resources.OrganizationResource
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.info.AreaInfo
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -288,8 +289,7 @@ class ResourceDirectory extends Report {
     }
 
     private List<Ref> getUserProjects() {
-        List<Ref> projects = (List<Ref>) Query.execute(Channels.instance(), "findAllProjectsOfUser", this.user)
-        return projects
+        return RefUtils.getUserProjects()
     }
 
 }

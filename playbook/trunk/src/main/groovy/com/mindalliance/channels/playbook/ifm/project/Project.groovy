@@ -9,7 +9,6 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Place
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.wicket.Session
@@ -43,11 +42,15 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> sharingAgreements = []
     List<Ref> playbooks = []
     List<Ref> taxonomies = []
-    List<Ref> analysisElements = []
 
     @Override
     protected List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations', 'allProblems'])
+    }
+
+    protected List<String> childProperties() {
+        return (List<String>)(super.childProperties() + ['participations', 'persons', 'organizations', 'places',
+                                'relationships', 'policies', 'sharingAgreements', 'playbooks'])
     }
 
     Set keyProperties() {
@@ -61,16 +64,6 @@ class Project extends IfmElement implements Named, Described {
     }
 
     String toString() { name }
-
-    Referenceable doAddToField(String field, Object object) {
-        object.project = this.reference
-        super.doAddToField(field, object);
-    }
-
-    Referenceable doRemoveFromField(String field, Object object) {
-        object.project = null
-        super.doRemoveFromField(field, object);
-    }
 
 
     // Rulebase queries
@@ -95,10 +88,6 @@ class Project extends IfmElement implements Named, Described {
 
     static List<Ref> findProjectsOfUser(Ref user) {
         return Channels.instance().findProjectsForUser(user)
-    }
-
-    Ref findModelNamed(String name) {
-        return (Ref) taxonomies.find {it as boolean && it.name == name}
     }
 
     List<Ref> findAllResources() {
@@ -400,7 +389,6 @@ class Project extends IfmElement implements Named, Described {
 
     void addContents(List<Ref> result) {
         playbooks.each { it.addContents(result) }
-        result.addAll(analysisElements)
         result.addAll(organizations)
         result.addAll(persons)
         result.addAll(places)

@@ -126,7 +126,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         wtc.setPlaceType(m.findType("PlaceType", "Building"))
         p.addPlace(wtc)
         store(wtc)
-        assert wtc.project
         Place jfk = new Place(name: "JFK")
         jfk.setPlaceType(m.findType("PlaceType", "Airport"))
         p.addPlace(jfk)
@@ -134,7 +133,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         p.addTaxonomy(m);
         Playbook pb = new Playbook(name: "Playbook A", description: "This is Playbook A")
         p.addPlaybook(pb)
-        assert pb.project
         store(pb)
         pb = new Playbook(name: "Playbook B", description: "This is Playbook B")
         p.addPlaybook(pb)

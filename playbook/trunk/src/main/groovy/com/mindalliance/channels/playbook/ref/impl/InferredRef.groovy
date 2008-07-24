@@ -74,7 +74,7 @@ class InferredRef extends RefImpl {
 
     // Do nothing Ref methods
 
-    void delete() {
+    boolean delete() {
         throw new Exception("Can't delete a computed ref")
     }
 

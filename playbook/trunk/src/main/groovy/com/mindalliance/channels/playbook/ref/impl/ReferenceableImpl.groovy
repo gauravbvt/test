@@ -57,7 +57,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     }
 
     protected List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type'])
+        return (List<String>) (super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type'])
     }
 
     Set hiddenProperties() {
@@ -66,6 +66,10 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
 
     Set keyProperties() {
         return [] as Set
+    }
+
+    protected List<String> childProperties() {
+        return []
     }
 
     void changed(String propName) {// MUST be called when ifmElement is changed other than via a property get/set
@@ -85,7 +89,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     }
 
     Ref getReference() {
-       return new RefImpl(id: getId(), db: getDb(), value: this)  // cache self in reference
+        return new RefImpl(id: getId(), db: getDb(), value: this)  // cache self in reference
     }
 
     String makeGuid() {
@@ -246,11 +250,29 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
         db = map['db']
     }
 
-    public boolean save() {
+    boolean save() {
         this.reference.save()
     }
 
-    public void afterDelete() {
+    void afterDelete() {
         // Do nothing
+    }
+
+    List<Ref> children() {
+        List<Ref> children = []
+        childProperties().each {prop ->
+            children.addAll(this."$prop")
+        }
+        return children
+    }
+
+    List<Ref> family() {
+        List<Ref> family = []
+        family.add(this.reference)
+        children().each {child ->
+            Referenceable referenceable = child.deref()
+            if (referenceable != null) family.addAll(child.family())
+        }
+        return family
     }
 }

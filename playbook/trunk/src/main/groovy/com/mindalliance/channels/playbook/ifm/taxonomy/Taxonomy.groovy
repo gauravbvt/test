@@ -3,12 +3,10 @@ package com.mindalliance.channels.playbook.ifm.taxonomy
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.playbook.Event
-import com.mindalliance.channels.playbook.query.Query
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -44,14 +42,9 @@ class Taxonomy extends IfmElement implements Described {
         return (super.keyProperties() + ['name', 'description']) as Set
     }
 
-    Referenceable doAddToField(String field, Object object) {
-        object.taxonomy = this.reference
-        super.doAddToField(field, object)
-    }
-
-    Referenceable doRemoveFromField(String field, Object object) {
-        object.taxonomy = null
-        super.doRemoveFromField(field, object)
+    protected List<String> childProperties() {
+        return (List<String>)(super.childProperties() + ['participations', 'areaTypes', 'eventTypes', 'mediumTypes',
+                                'organizationTypes', 'placeTypes', 'roles', 'taskTypes'])
     }
 
     List<Ref> getAllEventTypes() {
@@ -72,9 +65,10 @@ class Taxonomy extends IfmElement implements Described {
     }
 
     static List<Ref> findAllImplicitTypes(String typeType) {
-        List<Ref> implicits = []
+        List<Ref> implicits
         switch(typeType) {
-            case 'EventType': implicits = (List<Ref>)Event.findAllImplicitEventTypes()
+            case 'EventType': implicits = (List<Ref>)Event.findAllImplicitEventTypes(); break
+            default: implicits = []
         }
         return implicits
     }
@@ -139,7 +133,7 @@ class Taxonomy extends IfmElement implements Described {
      * Return what model content an analyst can create.
      */
     static List<Class<?>> contentClasses() {
-        [
+        return (List<Class<?>>)[
                 AreaType.class, EventType.class,
                 MediumType.class,
                 PlaceType.class, OrganizationType.class,
@@ -155,6 +149,6 @@ class Taxonomy extends IfmElement implements Described {
      * Return what system objects an analyst can create.
      */
     static List<Class<?>> analystClasses() {
-        [Taxonomy.class]
+        return (List<Class<?>>)[Taxonomy.class]
     }
 }

@@ -29,6 +29,10 @@ class Playbook extends ProjectElement implements Described {
         return (List<String>) (super.transientProperties() + ['occurrences'])
     }
 
+    protected List<String> childProperties() {
+        return (List<String>)(super.childProperties() + ['groups', 'events', 'informationActs'])
+    }
+
     String toString() {
         return name
     }
@@ -79,14 +83,12 @@ class Playbook extends ProjectElement implements Described {
     }
 
     Referenceable doAddToField(String field, Object val) {
-        val.playbook = this.reference
         String actualField = field
         if (!['events', 'groups'].contains(field)) actualField = 'informationActs'
         super.doAddToField(actualField, val)
     }
 
     Referenceable doRemoveFromField(String field, Object val) {
-        val.playbook = null
         String actualField = field
         if (!['events', 'groups'].contains(field)) actualField = 'informationActs'
         return super.doRemoveFromField(actualField, val)

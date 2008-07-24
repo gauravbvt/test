@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.support.PlaybookSession
 import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.ref.Ref
 import java.text.SimpleDateFormat
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -64,7 +65,7 @@ abstract class Report {
     }
 
     Ref getUser() {
-        return PlaybookSession.current().getUser()
+        return RefUtils.getUser()
     }
 
     private String getCopyrightNotice() {
