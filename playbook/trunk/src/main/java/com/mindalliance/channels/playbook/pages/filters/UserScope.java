@@ -19,6 +19,7 @@ import com.mindalliance.channels.playbook.support.models.RefModel;
 import groovy.lang.MissingPropertyException;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
+import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -45,84 +46,84 @@ public class UserScope implements Container {
     }
 
     public String toString() {
-        return MessageFormat.format( "{0}''s scope", getUser() );
+        return MessageFormat.format("{0}''s scope", getUser());
     }
 
     //================================
     public synchronized List<Class<?>> getAllowedClasses() {
-        if ( allowedClasses == null ) {
+        if (allowedClasses == null) {
             Set<Class<?>> result = new TreeSet<Class<?>>(
-                new Comparator<Class<?>>(){
-                    public int compare( Class<?> o1, Class<?> o2 ) {
-                        return ContainerSummary.toDisplay( o1.getSimpleName() )
-                                .compareTo( ContainerSummary.toDisplay( o2.getSimpleName() ));
+                    new Comparator<Class<?>>() {
+                        public int compare(Class<?> o1, Class<?> o2) {
+                            return ContainerSummary.toDisplay(o1.getSimpleName())
+                                    .compareTo(ContainerSummary.toDisplay(o2.getSimpleName()));
+                        }
                     }
-                }
             );
             final User u = getUser();
-            if ( u.getAdmin() )
-                result.addAll( Channels.adminClasses() );
-            if ( u.getAnalyst() ) {
-                result.addAll( Taxonomy.analystClasses() );
-                boolean hasTaxonomies = getApplication().findTaxonomiesForUser( u.getReference() ).size() > 0;
-                if ( hasTaxonomies )
-                    result.addAll( Taxonomy.contentClasses() );
+            if (u.getAdmin())
+                result.addAll(Channels.adminClasses());
+            if (u.getAnalyst()) {
+                result.addAll(Taxonomy.analystClasses());
+                boolean hasTaxonomies = getApplication().findTaxonomiesForUser(u.getReference()).size() > 0;
+                if (hasTaxonomies)
+                    result.addAll(Taxonomy.contentClasses());
             }
-            if ( u.getManager() )
-                result.addAll( Project.managerClasses() );
+            if (u.getManager())
+                result.addAll(Project.managerClasses());
 
-            if ( getDefaultProject() != null ) {
+            if (getDefaultProject() != null) {
                 // Project contents
-                result.addAll( Project.contentClasses() );
+                result.addAll(Project.contentClasses());
             }
 
-            result.addAll( User.contentClasses() );
-            allowedClasses = new ArrayList<Class<?>>( result );
+            result.addAll(User.contentClasses());
+            allowedClasses = new ArrayList<Class<?>>(result);
         }
         return allowedClasses;
     }
 
     //================================
     private synchronized List<Ref> getContents() {
-        if ( contents == null ) {
+        if (contents == null) {
             List<Ref> result = new ArrayList<Ref>();
             final Ref uRef = getSession().getUser();
             final User u = (User) uRef.deref();
             Channels channels = Channels.instance();
-            if ( u.getAdmin() )
-                result.addAll( channels.getUsers() );
+            if (u.getAdmin())
+                result.addAll(channels.getUsers());
 
-            if ( u.getAnalyst() ) {
-                for ( Ref mRef: (List<Ref>) channels.getTaxonomies() ) {
+            if (u.getAnalyst()) {
+                for (Ref mRef : (List<Ref>) channels.getTaxonomies()) {
                     Taxonomy m = (Taxonomy) mRef.deref();
-                    if ( m.isAnalyst( uRef ) ) {
-                        result.add( mRef );
-                        m.addContents( result );
+                    if (m.isAnalyst(uRef)) {
+                        result.add(mRef);
+                        m.addContents(result);
                     }
                     mRef.detach();
                 }
             }
 
-            if ( u.getManager() ) {
-                for ( Ref pRef: (List<Ref>) getApplication().findProjectsForUser( uRef ) ) {
+            if (u.getManager()) {
+                for (Ref pRef : (List<Ref>) getApplication().findProjectsForUser(uRef)) {
                     Project p = (Project) pRef.deref();
-                    if ( p.isManager( uRef ) ) {
-                        result.add( pRef );
-                        p.addManagerContents( result );
+                    if (p.isManager(uRef)) {
+                        result.add(pRef);
+                        p.addManagerContents(result);
                     }
                     pRef.detach();
                 }
             }
 
             // Add assigned project contents
-            for ( Ref pRef: (List<Ref>) getApplication().findProjectsForUser( uRef ) ) {
+            for (Ref pRef : (List<Ref>) getApplication().findProjectsForUser(uRef)) {
                 Project project = (Project) pRef.deref();
-                project.addContents( result );
+                project.addContents(result);
                 pRef.detach();
             }
 
             // Add user tabs
-            result.addAll( u.getTabs() );
+            result.addAll(u.getTabs());
             uRef.detach();
             contents = result;
         }
@@ -130,16 +131,16 @@ public class UserScope implements Container {
         return contents;
     }
 
-    public Ref get( int index ) {
-        return getContents().get( index );
+    public Ref get(int index) {
+        return getContents().get(index);
     }
 
-    public boolean contains( Ref ref ) {
-        return getContents().contains( ref );
+    public boolean contains(Ref ref) {
+        return getContents().contains(ref);
     }
 
-    public Iterator<Ref> iterator( int first, int count ) {
-        return getContents().subList( first, first+count ).iterator();
+    public Iterator<Ref> iterator(int first, int count) {
+        return getContents().subList(first, first + count).iterator();
     }
 
     public Iterator<Ref> iterator() {
@@ -150,114 +151,130 @@ public class UserScope implements Container {
         return getContents().size();
     }
 
-    public int indexOf( Ref ref ) {
-        return getContents().indexOf( ref );
+    public int indexOf(Ref ref) {
+        return getContents().indexOf(ref);
     }
 
     //================================
     /**
      * Figure out what container to use to add/delete a given object.
+     *
      * @param object the object
      * @return the likely container
      */
-    private Ref getTarget( Referenceable object ) {
+    private Ref getTarget(Referenceable object) {
         final Class<? extends Referenceable> objectClass = object.getClass();
 
-        if ( Channels.contentClasses().contains( objectClass ) )
+        if (Channels.contentClasses().contains(objectClass))
             return Channels.reference();
 
         final Ref uRef = getSession().getUser();
-        if ( uRef != null && User.contentClasses().contains( objectClass ) )
+        if (uRef != null && User.contentClasses().contains(objectClass))
             return uRef;
 
-        if ( object instanceof PlaybookElement ) {
+        if (object instanceof PlaybookElement) {
             PlaybookElement element = (PlaybookElement) object;
             Ref pbRef = element.getPlaybook();
-            Ref pRef  = element.getProject();
-            if ( pRef == null )
+            Ref pRef = element.getProject();
+            if (pRef == null)
                 pRef = getDefaultProject();
 
             Project p = (Project) pRef.deref();
-            if ( p.findParticipation( uRef ) != null ) {
-                if ( pbRef == null )
-                    pbRef = getDefaultPlaybook( pRef  );
+            if (p.findParticipation(uRef) != null) {
+                if (pbRef == null)
+                    pbRef = getDefaultPlaybook(pRef);
                 pRef.detach();
                 return pbRef;
             }
             pRef.detach();
 
-        } else if ( object instanceof ProjectElement ) {
+        } else if (object instanceof ProjectElement) {
             ProjectElement element = (ProjectElement) object;
             Ref pRef = element.getProject();
-            if ( pRef == null )
+            if (pRef == null)
                 pRef = getDefaultProject();
             return pRef;
         }
 
-        if ( object instanceof TaxonomyElement) {
+        if (object instanceof TaxonomyElement) {
             TaxonomyElement element = (TaxonomyElement) object;
             Ref mRef = element.getTaxonomy();
-            if ( mRef == null )
+            if (mRef == null)
                 mRef = getDefaultTaxonomy();
-            if ( mRef != null ) {
+            if (mRef != null) {
                 Taxonomy model = (Taxonomy) mRef.deref();
-                if ( model.isAnalyst( uRef ) )
+                if (model.isAnalyst(uRef))
                     return mRef;
             }
         }
 
         throw new RuntimeException(
-            MessageFormat.format(
-                "Unable to add objects of class {0}",
-                objectClass.getName() )
-            );
+                MessageFormat.format(
+                        "Unable to add objects of class {0}",
+                        objectClass.getName())
+        );
     }
 
-    public void add( Referenceable object ) {
-        Ref target = getTarget( object );
+    public void add(Referenceable object) {
+        Ref target = getTarget(object);
         target.begin();
         try {
-            target.add( object );
-        } catch ( MissingPropertyException e ) {
+            target.add(object);
+        } catch (MissingPropertyException e) {
             // TODO remove this hack
             final ReferenceableImpl ri = (ReferenceableImpl) target.deref();
-            ri.doAddToField( object.getType(), object );
+            ri.doAddToField(object.getType(), object);
         }
         detach();
     }
 
-    public void remove( Referenceable ref ) {
-        Ref target = getTarget( ref );
-        target.begin();
-        try {
-            target.remove( ref );
-        } catch ( MissingPropertyException e ) {
+    public void remove(Referenceable ref) {
+        Ref target = getTarget(ref);
+        boolean deleted = false;
+        try { // remove AND delete
+            target.begin();
+            if (target.isReadWrite()) {  // rw lock acquired?
+                if (ref.getReference().delete()) { // if cascaded delete was successful
+                    target.remove(ref);
+                    target.commit();
+                    deleted = true;
+                }
+            }
+        } catch (MissingPropertyException e) {
             // TODO remove this hack
+            Logger.getLogger(this.getClass()).error("Missing property on remove: " + e);
             final ReferenceableImpl ri = (ReferenceableImpl) target.deref();
-            ri.doRemoveFromField( ref.getType(), ref );
+            ri.doRemoveFromField(ref.getType(), ref);
         }
-        detach();
+        finally {
+            target.reset();   // clean up the begin no matter what
+        }
+        if (deleted) {
+            detach();
+        } else {
+            // TODO -- Alert the user that (cascaded) delete failed because not all locks could be acquired
+        }
     }
 
-    public void remove( Ref ref ) {
-        remove( ref.deref() );
+    public void remove(Ref ref) {
+        remove(ref.deref());
     }
 
-    public IModel model( Object object ) {
-        return new RefModel( object );
+    public IModel model(Object object) {
+        return new RefModel(object);
     }
 
     public synchronized void detach() {
         user = null;
         contents = null;
         allowedClasses = null;
-        if ( summary != null )
+        if (summary != null)
             summary.detach();
     }
 
     public synchronized ContainerSummary getSummary() {
-        if ( summary == null )
-            summary = new ContainerSummary( this );
+        if (summary == null)
+            summary = new ContainerSummary(this);
 
         return summary;
     }
@@ -275,11 +292,11 @@ public class UserScope implements Container {
         return getSession().getTaxonomy();
     }
 
-    private Ref getDefaultPlaybook( Ref projectRef ) {
-        if ( projectRef != null ) {
+    private Ref getDefaultPlaybook(Ref projectRef) {
+        if (projectRef != null) {
             Project project = (Project) projectRef.deref();
             List<Ref> pbRefs = project.getPlaybooks();
-            if ( pbRefs.size() > 0 )
+            if (pbRefs.size() > 0)
                 return pbRefs.get(0);
         }
 
@@ -296,10 +313,11 @@ public class UserScope implements Container {
 
     /**
      * Get the user of this session.
+     *
      * @return null when no user is logged in
      */
     public synchronized User getUser() {
-        if ( user == null )
+        if (user == null)
             user = (User) getSession().getUser().deref();
 
         return user;
@@ -310,17 +328,17 @@ public class UserScope implements Container {
         return getUser();
     }
 
-    public void setObject( Object object ) {
-        throw new RuntimeException( "Can't set the user of a scope");
+    public void setObject(Object object) {
+        throw new RuntimeException("Can't set the user of a scope");
     }
 
     public Map toMap() {
-        HashMap<String,String> map = new HashMap<String,String>();
-        map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put(Mappable.CLASS_NAME_KEY, getClass().getName());
         return map;
     }
 
-    public void initFromMap( Map map ) {
+    public void initFromMap(Map map) {
     }
 
     public Map beanProperties() {  // all bean properties are transient

@@ -31,6 +31,10 @@ import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.query.Query
+import java.beans.PropertyChangeListener
+import java.beans.PropertyChangeEvent
+import com.mindalliance.channels.playbook.ref.impl.RefImpl
+import java.beans.PropertyChangeSupport
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,7 +43,7 @@ import com.mindalliance.channels.playbook.query.Query
  * Date: Mar 21, 2008
  * Time: 11:01:36 AM
  */
-class PlaybookApplication extends AuthenticatedWebApplication implements Serializable {
+class PlaybookApplication extends AuthenticatedWebApplication implements Serializable, PropertyChangeListener {
 
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
     static final String FORM_SUFFIX = 'Form'
@@ -47,6 +51,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     ApplicationMemory appMemory
     String message
     boolean initial = true
+    Channels cachedChannels
 
     PlaybookApplication() {
         super()
@@ -422,8 +427,12 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     // ----------------------- Data access
 
     Ref getChannels() {  // Load memory from file if needed
-        Ref channels = getRoot()
-        if (channels.deref() == null) {
+        RefImpl channels = (RefImpl)getRoot()
+        if (cachedChannels && !channels.isAttached()) {
+            channels.attach(cachedChannels)
+        }
+        Channels rootElement = (Channels)channels.deref()
+        if (rootElement == null) {
             use(NoSessionCategory) { // bypass session transactions
                 if (!load(channels)) {  // if no export file, bootstrap memory and export
                     initializeContents()
@@ -434,12 +443,23 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
             initial = false
         }
         else {
+            if (rootElement != cachedChannels) {
+                cachedChannels = rootElement
+                cachedChannels.addPropertyChangeListener(this)
+            }
             if (initial) {
                 appMemory.insertFact(channels)  // with references if not already done
                 initial = false
             }
         }
         return channels
+    }
+
+    void propertyChange(PropertyChangeEvent evt) {
+        Referenceable referenceable = (Referenceable)evt.source
+        if (referenceable.getReference() == getRoot()) {
+            cachedChannels = (Channels)referenceable   // cache the latest version of Channels
+        }
     }
 
     boolean load(Ref ref) {

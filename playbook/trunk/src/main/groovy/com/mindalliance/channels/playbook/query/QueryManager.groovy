@@ -205,7 +205,7 @@ class QueryManager implements PropertyChangeListener {
         instance().hasChanged(element, queryCache)
     }
 
-    public void propertyChange(PropertyChangeEvent evt) { // only elements in session can be modified and thus raise change events
+    void propertyChange(PropertyChangeEvent evt) { // only elements in session can be modified and thus raise change events
         Referenceable element = (Referenceable) evt.source
         QueryCache queryCache = getSessionQueryCache()
         hasChanged(element, queryCache)

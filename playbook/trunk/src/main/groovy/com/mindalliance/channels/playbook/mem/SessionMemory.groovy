@@ -7,7 +7,6 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
 import org.apache.log4j.Logger
-import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.query.QueryCache
 import com.mindalliance.channels.playbook.query.QueryManager
@@ -27,9 +26,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     Map<Ref, Referenceable> begun = new HashMap<Ref, Referenceable>() // Refs under session management. Locked as readWrite unless in ReadOnlyRefs.
     Set<Ref> readOnlyRefs = new HashSet<Ref>() // Refs begun while readOnly stay readonly until reset (even though other session may have released lock). This is needed to force a re-deref before becoming writable.
 
-    // Ref changes and deletes to be persisted if committed
+    // Ref changes to be persisted if committed
     Set<Ref> changes = new HashSet<Ref>()
-    Set<Ref> deletes = new HashSet<Ref>()
 
     private QueryCache queryCache = new QueryCache()
     // any query execution dependent on elements belonging to any of these classes will be cached in session memory
@@ -68,19 +66,17 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     Referenceable retrieve(Ref reference, Referenceable dirtyRead) {
         Referenceable referenceable = null
-        if (!deletes.contains(reference)) {  // deleted in session
-            referenceable = begun.get(reference)
-            if (!referenceable) {
-                if (dirtyRead) {
-                    return dirtyRead
-                }
-                else {
-                    referenceable = retrieveFromApplicationMemory(reference)
-                }
+        referenceable = begun.get(reference)
+        if (!referenceable) {
+            if (dirtyRead) {
+                return dirtyRead
             }
             else {
-                if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
+                referenceable = retrieveFromApplicationMemory(reference)
             }
+        }
+        else {
+            if (ApplicationMemory.DEBUG) Logger.getLogger(this.class.name).debug("<== from session: ${referenceable.type} $referenceable")
         }
         return referenceable
     }
@@ -148,50 +144,6 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return reference
     }
 
-    boolean delete(Ref ref) {
-        boolean deleted = false
-        if (!readOnlyRefs.contains(ref)) { // delete not allowed if ref entered session readOnly
-            if (begun.containsKey(ref)) {
-                List<Ref> family = ref.deref().family() // ref + children + their children etc.
-                if (getApplicationMemory().isStored(ref)) {
-                    // Attempt to grab locks on all children
-                    boolean allLocked
-                    synchronized (getApplicationMemory()) {
-                        allLocked = LockManager.lockAll(family)   // all locked or locks left as they were
-                    }
-                    // if fails, release any taken and abandon the delete
-                    // if succeeded, proceed to delete ref and children
-                    if (allLocked) {
-                        family.each {child -> doDelete(child)}
-                        deleted = true
-                    }
-                }
-                else { // deleting newly created, persisted element
-                    family.each {child -> doDelete(child)}
-                    deleted = true
-                }
-            }
-            else {
-                throw new NotModifiableException("Can't delete $ref : do begin() first")
-            }
-        }
-        else {
-            Logger.getLogger(this.class).warn("Attempted to delete readonly $ref")
-        }
-        return deleted
-    }
-
-    private void doDelete(Ref ref) {
-        ref.detach()
-        ref.deref().changed("id") // raise change event on id
-        begun.remove(ref)
-        changes.remove(ref)
-        deletes.add(ref)
-        changed("deletes")
-        changed("begun")
-        changed("changes")
-    }
-
 
     String getDefaultDb() {
         return ApplicationMemory.getDefaultDb();
@@ -202,7 +154,6 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
             List<Referenceable> toCommit = []
             changes.each { toCommit.add(begun.get((Ref) it)) }
             getApplicationMemory().storeAll(toCommit)
-            getApplicationMemory().deleteAll(deletes)
             reset()
             getApplicationMemory().exportRef(Channels.instance().reference, 'channels')    // TODO - temporary
         }
@@ -217,15 +168,8 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         synchronized (getApplicationMemory()) {
             if (changes.contains(ref)) {
                 Referenceable referenceable = begun.get(ref)
-                changes.remove(ref)
-                begun.remove(ref)
                 getApplicationMemory().store(referenceable)
-                ref.unlock()
-            }
-            else if (deletes.contains(ref)) {
-                deletes.remove(ref)
-                getApplicationMemory().delete(ref)
-                ref.unlock()
+                reset(ref)
             }
         }
         // does not update the query cache or inSessionClasses
@@ -233,29 +177,20 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     // Remove Ref from session management. Release any lock held by session on Ref.
     // ref.begin() will be required to put ref under session management again
-    // a deleted ref can *not* be individually reset becuase of cascaded deletes
     void reset(Ref ref) {
-        Logger.getLogger(this.class).info("Releasing $ref from session")
-        ref.detach()
         if (begun.containsKey(ref)) {
+            Logger.getLogger(this.class).info("Releasing $ref from session")
             begun.remove(ref)
+            changes.remove(ref)
             readOnlyRefs.remove(ref)
             if (ref.isReadWrite()) ref.unlock()
         }
-        if (changes.contains(ref)) {
-            changes.remove(ref)   // no need to unlock again; was in begun
-        }
-        else if (deletes.contains(ref)) {
-            deletes.remove(ref)
-            if (ref.isReadWrite()) ref.unlock()
-        }
+        ref.detach()
     }
 
     void reset() {
         synchronized (getApplicationMemory()) {
             changes = new HashSet<Ref>()
-            unlockAll(deletes)
-            deletes = new HashSet<Ref>()
             unlockAll(begun.keySet())
             begun = new HashMap<Ref, Referenceable>()
             queryCache.clear()
@@ -282,11 +217,16 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
 
     void propertyChange(PropertyChangeEvent evt) {
         Referenceable referenceable = (Referenceable) evt.source
-        hasChanged(referenceable)
+        if (evt.propertyName == Referenceable.DELETED) {
+            wasDeleted(referenceable)
+        }
+        else {
+            hasChanged(referenceable)
+        }
     }
 
     boolean isEmpty() {  // no changes?
-        return changes.isEmpty() && deletes.isEmpty()
+        return changes.isEmpty()
     }
 
     int getSize() { // number of changes
@@ -294,8 +234,9 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
         return size
     }
 
-    int getPendingDeletesCount() {
-        return deletes.size()
+    // Ref was deleted from application memory
+    void wasDeleted(Referenceable referenceable) {
+        reset(referenceable.reference)
     }
 
     boolean save(Ref ref) {
@@ -314,7 +255,14 @@ class SessionMemory implements Store, PropertyChangeListener, Serializable {
     }
 
     boolean isFresh(Ref ref) {
-        return isModifiable(ref) || getApplicationMemory().isFresh(ref)
+        Referenceable referenceable = begun.get(ref)
+        if (referenceable) {
+            ref.attach(referenceable)
+            return true
+        }
+        else {
+            return getApplicationMemory().isFresh(ref)
+        }
     }
 
     boolean isReadOnly(Ref ref) {

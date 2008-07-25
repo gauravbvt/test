@@ -22,6 +22,7 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
 
     String id
     String db
+    boolean deleted = false
     private boolean constant = false    // if constant then can't be modified or persisted
 
     PropertyChangeSupport pcs = new PropertyChangeSupport(this)
@@ -42,6 +43,11 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
         return constant
     }
 
+    void markDeleted() {
+        deleted = true
+        propertyChanged('deleted', false, true)
+    }
+
     @Override
     Bean copy() {
         if (isConstant()) {
@@ -57,11 +63,11 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
     }
 
     protected List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type'])
+        return (List<String>) (super.transientProperties() + ['id', 'db', 'pcs', 'reference', 'type', 'deleted'])
     }
 
     Set hiddenProperties() {
-        return ['id', 'db', 'pcs', 'reference'] as Set
+        return ['id', 'db', 'pcs', 'reference', 'deleted'] as Set
     }
 
     Set keyProperties() {

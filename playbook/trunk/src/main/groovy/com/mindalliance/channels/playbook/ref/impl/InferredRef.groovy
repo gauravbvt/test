@@ -35,6 +35,10 @@ class InferredRef extends RefImpl {
         return true
     }
 
+    void attach(Referenceable referenceable) {
+        // Do nothing
+    }
+
     boolean isAttached() {
         return analysisElement != null
     }
@@ -63,7 +67,7 @@ class InferredRef extends RefImpl {
         if (getId() == null) return null
         if (!analysisElement) {
             // query RuleBaseSession for AnalysisElement of same id. If none return null.
-            analysisElement = (AnalysisElement)RuleBaseSession.current().deref(getId())
+            analysisElement = (AnalysisElement) RuleBaseSession.current().deref(getId())
         }
         return analysisElement
     }

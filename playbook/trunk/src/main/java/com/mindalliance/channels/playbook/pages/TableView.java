@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.pages;
 
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -96,9 +97,18 @@ public class TableView extends ContentView {
                 item.add( new DataView( "cell", dp ) {
                     protected void populateItem( final Item cellItem ) {
                         final Object mo = cellItem.getModelObject();
-                        String mos = mo == null ? ""
-                                   : mo instanceof Ref ? ((Ref) mo).deref().toString()
-                                   : cellItem.getModelObjectAsString();
+                        String mos = "";
+                        if (mo != null) {    // [JF] TODO -- Modified to prevent NPE on mo.deref() == null
+                            if (mo instanceof Ref) {
+                                Referenceable referenceable = ((Ref) mo).deref();
+                                if (referenceable != null) {
+                                    mos = referenceable.toString();
+                                }
+                            }
+                            else {
+                                mos = cellItem.getModelObjectAsString();
+                            }
+                        }
                         cellItem.add( new Label( "cell-value", RefUtils.deCamelCase(RefUtils.summarize(mos, MAX_CELL_CONTENT_SIZE)) ) );
                     }
                 } );

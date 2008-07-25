@@ -6,7 +6,6 @@ import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
-import com.mindalliance.channels.playbook.ifm.User
 import com.mindalliance.channels.playbook.mem.LockManager
 
 /**
@@ -45,6 +44,10 @@ class RefImpl implements Ref {
 
     boolean isAttached() {
         return value != null
+    }
+
+    void attach(Referenceable referenceable) {
+        value = referenceable
     }
 
     // Two References are equal if they both have the same id (not null) and the same db (both can be null)
@@ -140,7 +143,7 @@ class RefImpl implements Ref {
         }
         else {
             def value = null
-            Referenceable referenceable
+            Referenceable referenceable = null
             try {
                 referenceable = deref()
                 if (referenceable) {
@@ -160,11 +163,11 @@ class RefImpl implements Ref {
     }
 
     boolean delete() {
+        boolean deleted = false
         Referenceable referenceable = this.deref()
-        Store store = PlaybookApplication.locateStore()
-        boolean deleted = store.delete(this)  // deleted in session. Will be deleted in application upon commit
-        if (deleted) {
-            referenceable.afterDelete()
+        if (referenceable != null) {
+            // cascaded delete in application scope, or noop if can not be completely done
+            deleted = PlaybookApplication.current().appMemory.delete(referenceable)
         }
         detach()
         return deleted
@@ -186,10 +189,10 @@ class RefImpl implements Ref {
         Referenceable referenceable = deref()
         def metamethod = referenceable.class.metaClass.getMetaMethod(name, args)
         if (metamethod == null) {
-          value = referenceable.invokeMethod(name, args)  // call referenceable's undefined method handler
+            value = referenceable.invokeMethod(name, args)  // call referenceable's undefined method handler
         }
         else {
-          value = referenceable.metaClass.invokeMethod(referenceable, name, args)  // invoke referenceable's defined method
+            value = referenceable.metaClass.invokeMethod(referenceable, name, args)  // invoke referenceable's defined method
         }
         return value
     }
@@ -218,7 +221,7 @@ class RefImpl implements Ref {
     }
 
     Class formClass() {
-        return deref().formClass() 
+        return deref().formClass()
     }
 
     Ref find(String listPropName, Map<String, Object> args) {
@@ -258,7 +261,7 @@ class RefImpl implements Ref {
     }
 
     void remove(Referenceable referenceable, String type) {
-        referenceable.persist() // make sure it is persisted TODO -- first test that it is *not* in the app memory
+        // referenceable.persist() // make sure it is persisted TODO -- first test that it is *not* in the app memory
         String suffix = RefUtils.capitalize(type)
         this."remove$suffix"(referenceable.reference)
     }
@@ -282,8 +285,8 @@ class RefImpl implements Ref {
     }
 
     boolean isModified() {
-       Store store = PlaybookApplication.locateStore()
-       return store.isModified(this)
+        Store store = PlaybookApplication.locateStore()
+        return store.isModified(this)
     }
 
     Object asType(Class type) {
@@ -296,14 +299,15 @@ class RefImpl implements Ref {
     }
 
     boolean isFresh() {
-       if (this.@id == null) return false
-       // Store store = PlaybookApplication.locateStore()
-       // boolean fresh = store.isFresh(this)
-       boolean fresh = (deref() != null)   // by testing with deref, the Ref caches any referenceable, and freshness is sticky
-       if (!fresh) {
-           this.@id = null // nullify the id
-       }
-       return fresh
+        if (this.@id == null) return false
+        if (isAttached()) return true
+        Store store = PlaybookApplication.locateStore()
+        boolean fresh = store.isFresh(this)
+        // boolean fresh = (deref() != null)   // by testing with deref, the Ref caches any referenceable, and freshness is sticky
+        if (!fresh) {
+            this.@id = null // nullify the id
+        }
+        return fresh
     }
 
     String getOwner() {
@@ -311,15 +315,15 @@ class RefImpl implements Ref {
     }
 
     boolean lock() {
-       return LockManager.lock(this)
+        return LockManager.lock(this)
     }
 
     boolean unlock() {
-      return LockManager.unlock(this)
+        return LockManager.unlock(this)
     }
 
     boolean isReadWrite() {
-      return LockManager.isReadWrite(this)
+        return LockManager.isReadWrite(this)
     }
 
     boolean isReadOnly() {

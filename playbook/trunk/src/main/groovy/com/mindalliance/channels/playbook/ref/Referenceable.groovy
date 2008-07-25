@@ -6,6 +6,8 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 
 interface Referenceable extends Bean, Identified {
 
+    static final String DELETED = 'deleted'
+
     String getDb()
     Ref getReference()
     void changed() // give the object a chance to clean up computed data
@@ -31,4 +33,5 @@ interface Referenceable extends Bean, Identified {
     Set keyProperties() // non-transient properties with values meant to be unique i.e. not to be shared when creating an element in the context of others
     List<Ref> children() // returns a list of refs that are logically contained in this (used for cascaded deletes)
     List<Ref> family() // self, children, children's children etc.
+    void markDeleted()
 }

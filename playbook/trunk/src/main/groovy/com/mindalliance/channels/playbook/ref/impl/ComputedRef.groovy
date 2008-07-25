@@ -54,6 +54,10 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
         return computedValue
     }
 
+    void attach(Referenceable referenceable) {
+        // Do nothing
+    }
+
     void detach() {
         use (NoSessionCategory) {
             computed = null

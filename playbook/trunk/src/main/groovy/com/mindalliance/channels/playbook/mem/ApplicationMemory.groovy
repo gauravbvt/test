@@ -126,23 +126,44 @@ class ApplicationMemory implements Serializable {
         getRuleBaseSession().insert(referenceable)
     }
 
-    void deleteAll(Set<Ref> deletes) {
-        deletes.each {doDelete(it) }
-        getRuleBaseSession().fireAllRules()
-    }
 
-    void delete(Ref ref) {
-        doDelete(ref)
-        getRuleBaseSession().fireAllRules()
-    }
-
-    private void doDelete(Ref ref) {
-        use(NoSessionCategory) {
-            QueryManager.modifiedInApplication(ref.deref())    // retrieve referenceable from application memory
+    boolean delete(Referenceable referenceable) {
+        boolean deleted = false
+        Ref ref = referenceable.reference
+        if (!ref.isReadOnly()) { // delete not allowed if ref is readOnly
+            List<Ref> family = referenceable.family() // ref + children + their children etc.
+            // Attempt to grab locks on all children
+            boolean allLocked
+            synchronized (this) {
+                allLocked = LockManager.lockAll(family)   // all locked or locks left as they were
+            }
+            // if fails, release any taken and abandon the delete
+            // if succeeded, proceed to delete ref and children
+            if (allLocked) {
+                family.each {child ->
+                    if (child as boolean) doDelete(child.deref())}
+                deleted = true
+            }
         }
-        cache.flushEntry(ref.id)
-        getRuleBaseSession().retract(ref)
+        else {
+            Logger.getLogger(this.class).warn("Attempted to delete readonly $ref")
+        }
+        if (deleted) getRuleBaseSession().fireAllRules()
+        return deleted
     }
+
+    private void doDelete(Referenceable referenceable) {
+        Ref ref = referenceable.reference
+        use(NoSessionCategory) {
+            QueryManager.modifiedInApplication(referenceable)    // retrieve referenceable from application memory
+        }
+        getRuleBaseSession().retract(ref)
+        cache.flushEntry(ref.id)
+        referenceable.markDeleted() // raises change event on transient property 'delete'
+        referenceable.afterDelete()
+        ref.detach()
+    }
+
 
     Referenceable retrieve(Ref ref) {
         Referenceable referenceable = null
@@ -167,6 +188,10 @@ class ApplicationMemory implements Serializable {
 
     boolean isStored(Ref ref) {
         return cache.isStored(ref)
+    }
+
+    boolean isFresh(Ref ref) {
+        return cache.isStored(ref)                        
     }
 
     void clearAll() {

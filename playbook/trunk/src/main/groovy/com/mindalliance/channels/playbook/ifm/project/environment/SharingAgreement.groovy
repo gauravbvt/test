@@ -38,10 +38,8 @@ class SharingAgreement extends ProjectElement implements Described {
 
 
     String toString() {
-        Referenceable source = source.deref()
-        String sourceName = (source) ? source.name : "Undefined source"
-        Referenceable recipient = recipient.deref()
-        String recipientName = (recipient) ? recipient.name : "undefined recipient"
+        String sourceName = (source as boolean) ? source.name : "Undefined source"
+        String recipientName = (recipient as boolean) ? recipient.name : "undefined recipient"
         return "${sourceName} shall ${protocol.delivery} ${recipientName}"
     }
 

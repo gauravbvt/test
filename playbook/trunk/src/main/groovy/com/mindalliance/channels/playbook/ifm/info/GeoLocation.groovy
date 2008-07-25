@@ -19,10 +19,11 @@ class GeoLocation extends BeanImpl implements Defineable {
 
     @Override
     List<String> transientProperties() {
-        return super.transientProperties() + ['longitude', 'latitude', 'defined', 'areaType']
+        return (List<String>)(super.transientProperties() + ['longitude', 'latitude', 'defined', 'areaType'])
     }
 
     String toString() {
+       if (!isDefined()) return "Unknown"
        String s = ""
        if (areaInfo) s += " ${areaInfo.toString()}"
        s += " [${latLong.toString()}]"

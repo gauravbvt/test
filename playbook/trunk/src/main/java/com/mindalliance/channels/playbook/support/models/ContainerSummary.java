@@ -126,7 +126,13 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
             flowable = false;
 
             for ( Ref ref : data ){
+                if (ref == null) {
+                    System.out.println("null");                    
+                }
                 Referenceable object = ref.deref();
+                if (object == null) {
+                    System.out.println(ref + " derefs to null");
+                }
                 Class<?> objectClass = object.getClass();
                 ClassUse use = result.get( objectClass );
                 if ( use == null ) {
@@ -196,8 +202,14 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
         return classUse == null ? 0 : classUse.getCount();
     }
 
+    static private boolean isBound(Object value) {
+        if (value == null) return false;
+        if (value instanceof Ref && !((Ref)value).isFresh()) return false;
+        return true;
+    }
+
     public static String valueToDisplay( Object object ) {
-        if ( object == null )
+        if ( !isBound(object) )
             return "" ;
 
         if ( object instanceof Date )
@@ -306,7 +318,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                             propValues = new HashSet<Object>();
                             values.put( pd, propValues );
                         }
-                        if ( value != null )
+                        if ( isBound(value) )
                             propValues.add( value );
                         propStrings.add( valueToDisplay( value ) );
                     }
@@ -317,6 +329,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                 e.printStackTrace();
             }
         }
+
 
         public void tally() {
             count++;

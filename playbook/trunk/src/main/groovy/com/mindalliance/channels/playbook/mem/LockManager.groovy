@@ -1,7 +1,6 @@
 package com.mindalliance.channels.playbook.mem
 
 import com.mindalliance.channels.playbook.support.PlaybookApplication
-import com.mindalliance.channels.playbook.ref.Store
 import com.mindalliance.channels.playbook.ref.Ref
 import org.apache.log4j.Logger
 

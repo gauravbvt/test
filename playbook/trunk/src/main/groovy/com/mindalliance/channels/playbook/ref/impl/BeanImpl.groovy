@@ -46,6 +46,7 @@ abstract class BeanImpl implements Bean {
                 copy."$name" = value
             }
             catch (Exception e) {// Read-only/computed field
+                e.printStackTrace()
                 Logger.getLogger(this.getClass().getName()).warn("Can't copy field $name in ${this.class.name}: $e")
             }
         }
@@ -59,7 +60,7 @@ abstract class BeanImpl implements Bean {
            case {it instanceof Class}: value = val; break
            case ComputedRef.class: value = val; break
            case Ref.class:
-                if (val == null) {
+                if (val == null || val.id == null) {
                     value = null
                 }
                 else {
