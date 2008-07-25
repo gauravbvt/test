@@ -17,7 +17,7 @@ abstract class SharingAct extends FlowAct {
 
     Information information = new Information()
 
-    String toString() {
+    String about() {
         return "${this.type} of $information"
     }
 

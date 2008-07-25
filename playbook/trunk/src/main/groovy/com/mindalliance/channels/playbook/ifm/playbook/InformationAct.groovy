@@ -38,10 +38,6 @@ abstract class InformationAct extends Event {
         return new Timing(amount: 0)
     }
 
-    String toString() {
-        return "${this.type}"    // TODO - do better than this
-    }
-
     boolean hasInformation() {
         return false
     }

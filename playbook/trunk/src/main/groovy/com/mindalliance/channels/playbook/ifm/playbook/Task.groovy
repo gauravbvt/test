@@ -21,10 +21,6 @@ class Task extends InformationAct {
     List<InformationNeed> informationNeeds = []
     List<String> specificPurposes = [] // specific purposes (vs thoses stated in TaskTypes)
 
-    String toString() {
-        return "a task"
-    }
-
     // Return implied event type
     static Ref implicitEventType() {
         return ComputedRef.from(Task.class, 'makeImplicitEventType')

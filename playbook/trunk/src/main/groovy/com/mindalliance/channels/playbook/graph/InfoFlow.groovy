@@ -51,7 +51,6 @@ class InfoFlow extends PlaybookGraph {
     void buildContent(GraphVizBuilder builder) {
         processData()
         buildAgents(builder)
-        buildActsAndInfoForAgent(null, builder) // for acts with null actors
         buildEvents(builder)
         buildLinks(builder)
         super.buildContent(builder)
@@ -85,7 +84,8 @@ class InfoFlow extends PlaybookGraph {
 
     // Add all acts this resource is actor or target of in all playbooks in resource's project
     void processResource(Resource res) {
-        acts.addAll(Query.execute(res, "findAllInformationActsForResource"))
+        List<Ref> resourceActs = (List<Ref>)Query.execute(res, "findAllInformationActsForResource")
+        resourceActs.each { processAct(it) }
         agents.add(res.reference)
     }
 
@@ -93,20 +93,30 @@ class InfoFlow extends PlaybookGraph {
     void processPlaybookAgent(Agent agent) {
         Playbook playbook = agent.playbook
         assert playbook
-        acts.addAll(Query.execute(playbook, "findAllInformationActsForAgent", agent.reference))
-    }
-
-    // Add act, actor and target agents
-    void processAct(InformationAct act) {
-        acts.add(act.reference)
-        if (act.actorAgent as boolean) agents.add(act.actorAgent)
-        if (act.isFlowAct() && act.targetAgent as boolean) agents.add(act.targetAgent)
+        List<Ref> playbookActs = (List<Ref>)Query.execute(playbook, "findAllInformationActsForAgent", agent.reference)
+        playbookActs.each { processAct(it) }
     }
 
     // Add all acts with information/need about the event
     void processEvent(Event event) {
         events.add(event.reference)
-        acts.addAll(Query.execute(event, "findAllInformationActsAboutEvent"))
+        List<Ref> aboutEventActs = (List<Ref>)Query.execute(event, "findAllInformationActsAboutEvent")
+        aboutEventActs.each { processAct(it) }
+    }
+
+    void processAct(Ref ref) {
+        if (ref as boolean) processAct((InformationAct)ref.deref())
+    }
+
+    // Add act, actor and target agents
+    void processAct(InformationAct act) { // only keep acts that have all required agents set (otherwise flow is undefined)
+        boolean valid = (act.actorAgent as boolean)
+        if (act.isFlowAct() && !(act.targetAgent as boolean)) valid = false
+        if (valid) {
+            acts.add(act.reference)
+            agents.add(act.actorAgent)
+            if (act.isFlowAct()) agents.add(act.targetAgent)
+        }
     }
 
     // Add agent nodes, containing its acts and info/needs/responsibilities/agreements from any acts where actor or target (based on akind of ct). Setup links.
@@ -124,12 +134,12 @@ class InfoFlow extends PlaybookGraph {
         acts.each {actRef ->
             InformationAct act = actRef.deref()
             // Actor's acts
-            if (areSame(agentRef, act.actorAgent)) {
+            if (agentRef == act.actorAgent) {
                 builder.node(name: nameFor(act), label: labelFor(act), URL: urlFor(act), template: templateFor(act))
             }
             // Actor's acquired information
-            if (act.hasInformation() && ((act.isFlowAct() && areSame(act.targetAgent, agentRef)) ||
-                    (!act.isFlowAct() && areSame(act.actorAgent, agentRef)))) {
+            if (act.hasInformation() && ((act.isFlowAct() && act.targetAgent == agentRef) ||
+                    (!act.isFlowAct() && act.actorAgent == agentRef))) {
                 Information info = act.information
                 String name = "${new Random().nextLong()}"
                 builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
@@ -141,7 +151,7 @@ class InfoFlow extends PlaybookGraph {
                 }
             }
             // Actor's task-acquired information needs
-            if (act instanceof Task && areSame(act.actorAgent, agentRef)) {
+            if (act instanceof Task && act.actorAgent == agentRef) {
                 act.informationNeeds.each {need ->
                     String name = "${new Random().nextLong()}"
                     builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
@@ -149,7 +159,7 @@ class InfoFlow extends PlaybookGraph {
                     buildInformationNeed(need, name)
                 }
             }
-            if (act instanceof InformationRequest && areSame(act.targetAgent, agentRef)) {
+            if (act instanceof InformationRequest && act.targetAgent == agentRef) {
                 InformationNeed need = act.informationNeed
                 String name = "${new Random().nextLong()}"
                 builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')
@@ -159,9 +169,16 @@ class InfoFlow extends PlaybookGraph {
         }
     }
 
-    private boolean areSame(Ref agent, Ref other) { // both same fresh Ref, or both are either stale or null
-        return (agent as boolean && other as boolean && agent == other) || (!agent as boolean && !other as boolean)
-    }
+/*    private boolean areSame(Ref agent, Ref other) { // both same fresh Ref, or both are either stale or null
+        boolean same
+        if (agent as boolean && other as boolean && agent == other) {
+            same = true
+        }
+        else if (!(agent as boolean) && !(other as boolean)) {
+            same = true
+        }
+        return true
+    }*/
 
     void buildInformationNeed(InformationNeed need, String name) {
         if (need.isAboutSpecificEvents()) {

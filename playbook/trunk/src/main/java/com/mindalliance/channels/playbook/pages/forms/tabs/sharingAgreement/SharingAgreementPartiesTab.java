@@ -13,6 +13,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
  */
 public class SharingAgreementPartiesTab extends AbstractFormTab {
 
+    protected TextField nameField;
     protected TextArea descriptionField;
     protected DynamicFilterTree sourceTree;
     protected DynamicFilterTree recipientTree;
@@ -35,6 +37,8 @@ public class SharingAgreementPartiesTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
+        nameField = new TextField("name", new RefPropertyModel(getElement(), "name"));
+        addInputField(nameField);
         descriptionField = new TextArea("description", new RefPropertyModel(getElement(), "description"));
         addInputField(descriptionField);
         CheckBox formalizedCheckBox = new CheckBox("formalized", new RefPropertyModel(getElement(), "formalized"));

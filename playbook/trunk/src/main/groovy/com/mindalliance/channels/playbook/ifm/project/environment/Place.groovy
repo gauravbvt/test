@@ -27,7 +27,7 @@ class Place extends ProjectElement implements Named, Described {
     }
 
     String toString() {
-        return name ?: 'no name'
+        return name ?: 'Unnamed'
     }
 
     GeoLocation findGeoLocation() { // defaults to undefined geolocation

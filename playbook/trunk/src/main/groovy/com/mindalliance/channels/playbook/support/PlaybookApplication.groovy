@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.project.*
 import com.mindalliance.channels.playbook.ifm.*
-import com.mindalliance.channels.playbook.ref.Store
+import com.mindalliance.channels.playbook.mem.Store
 import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.project.resources.*

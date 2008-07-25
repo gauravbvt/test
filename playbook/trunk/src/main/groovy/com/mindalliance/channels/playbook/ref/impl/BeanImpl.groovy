@@ -6,7 +6,6 @@ import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.support.persistence.Mappable
 import com.mindalliance.channels.playbook.support.Mapper
 import com.mindalliance.channels.playbook.ifm.Named
-import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
@@ -20,7 +19,7 @@ abstract class BeanImpl implements Bean {
 
     static Map<Class,List<MetaBeanProperty>> WritableProperties = [:]
 
-    String version         // TODO -- belongs in IfmElement
+    String version         
 
     String getVersion() {
         return '1.0.0' // default
@@ -29,7 +28,7 @@ abstract class BeanImpl implements Bean {
    /* synchronized */ static List<MetaBeanProperty> writablePropertiesOf(BeanImpl beanImpl) {
         List metaBeanProperties = (List<MetaBeanProperty>)WritableProperties[beanImpl.class]
         if (!metaBeanProperties) {
-            metaBeanProperties = beanImpl.metaClass.getProperties().findAll {mp ->
+            metaBeanProperties = (List<MetaBeanProperty>)beanImpl.metaClass.getProperties().findAll {mp ->
                !beanImpl.transientProperties().contains(mp.name)
             }
             WritableProperties[beanImpl.class] = metaBeanProperties

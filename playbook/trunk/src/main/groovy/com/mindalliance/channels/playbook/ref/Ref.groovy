@@ -40,7 +40,7 @@ interface Ref extends Serializable {
     boolean isModified() // is in session and has been changed
     boolean isComputed()
     boolean isInferred()
-    boolean isFresh() // is it not stale?
+    boolean isFresh() // is it not stale? -- if not stale, the deref-ed value is attached to provide a dirty read value for the lifetime of the instance, or until detached
     void detach() // remove cached copy of referenceable
     boolean isAttached() // has a cached copy of referenceable
     void attach(Referenceable referenceable) // cache a referecenced value

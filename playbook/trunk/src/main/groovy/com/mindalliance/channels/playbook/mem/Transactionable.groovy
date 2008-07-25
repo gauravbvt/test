@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.support
+package com.mindalliance.channels.playbook.mem
 
 
 import com.mindalliance.channels.playbook.ref.Ref
@@ -18,6 +18,5 @@ interface Transactionable {
     void commit(Ref ref) // commit only this Ref
     void reset(Ref reference)  // remove from session only
     int getPendingChangesCount()
-    int getPendingDeletesCount()
 
 }

@@ -28,11 +28,22 @@ class Information extends AbstractInformation implements Defineable {  // the co
     }
 
     String toString() {
-        if (!event as boolean) {
-            return "info about ?"
+        return (affirmed ? 'affirmed' : 'negated') + " info lasting $timeToLive"
+    }
+
+    String about() {
+        if (eventTypes) {
+            StringBuilder sb = new StringBuilder()
+            sb.append("info about")
+            eventTypes.each { et ->
+                sb.append(et.name)
+                sb.append(', ')
+            }
+            String about = sb.toString()
+            return about[0..about.size()-2]
         }
         else {
-            return "info about ${event.deref().toString()}" 
+            return 'some info'
         }
     }
 

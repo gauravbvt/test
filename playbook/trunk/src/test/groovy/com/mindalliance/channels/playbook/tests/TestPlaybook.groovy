@@ -106,24 +106,19 @@ public class TestPlaybook extends TestCase {
         assertTrue(session.pendingChangesCount == 2)
         myProject.delete()
         assertTrue(session.pendingChangesCount == 1)
-        assertTrue(session.pendingDeletesCount > 0)
         // reset and redo change
         sessionMem.reset()
         assertTrue(session.pendingChangesCount == 0)
-        assertTrue(session.pendingDeletesCount == 0)
-        assertTrue(myProject.name.equals("Your project"))
-        myProject.begin()
-        myProject.name = "Your own project"
-        assertTrue(session.pendingChangesCount == 1)
-        //
-        def yourProject = sessionMem.retrieve(myProject.reference)
-        assertTrue(myProject.equals(yourProject.reference))
-        assertTrue(yourProject.name.equals("Your own project"))
+        assert !(myProject as boolean)
+/*        Ref yourProject = new Project(name:"Your project").persist()
+        channels.begin()
+        channels.add(yourProject)
+        session.commit()
+        assertTrue(yourProject.name.equals("Your project"))
+        yourProject.begin()
         yourProject.name = "Your big project"
         // Put project back into channels
         // channels.addProject(yourProject)
-        channels.begin()
-        channels.add(yourProject)
         // Verify that project in application scope still unchanged
         def appLevelProject = app.retrieve(yourProject.reference)
         assertTrue(appLevelProject.name.equals("Your project"))
@@ -144,12 +139,10 @@ public class TestPlaybook extends TestCase {
         assertTrue(session.pendingChangesCount == 4) // project creates participation and initial playbook which creates initial event
         boolean deleted = newProject.delete()
         assertTrue(session.pendingChangesCount == 0)
-        assertTrue(session.pendingDeletesCount == 4)
         Ref anotherProject = new Project(name: "another new project").persist()
         session.commit()
         assert ! (newProject as Boolean)     // is stale
         assertTrue(session.pendingChangesCount == 0)
-        assertTrue(session.pendingDeletesCount == 0)
         Project p = (Project) anotherProject.deref()
         assert p.name == "another new project"
         anotherProject.begin()
@@ -157,7 +150,7 @@ public class TestPlaybook extends TestCase {
         assertNull anotherProject.deref()
         assert app.retrieve(anotherProject) != null
         session.commit()
-        assertNull anotherProject.deref()
+        assertNull anotherProject.deref()*/
     }
 
     void testExportImport() {

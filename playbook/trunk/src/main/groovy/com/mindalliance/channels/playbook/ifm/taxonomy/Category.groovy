@@ -22,7 +22,7 @@ abstract class Category extends TaxonomyElement implements Named, Described {
     }
 
     String toString() {
-        return name
+        return name ?: "Unnamed"
     }
 
      boolean isCategory() {

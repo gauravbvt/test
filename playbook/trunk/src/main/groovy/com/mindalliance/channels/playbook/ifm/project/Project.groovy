@@ -63,7 +63,7 @@ class Project extends IfmElement implements Named, Described {
         return session.project
     }
 
-    String toString() { name }
+    String toString() { name ?: "Unnamed" }
 
 
     // Rulebase queries

@@ -4,6 +4,7 @@ import com.opensymphony.oscache.base.Cache;
 import com.opensymphony.oscache.base.CacheEntry;
 import com.opensymphony.oscache.base.NeedsRefreshException;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.mem.RefLockException;
@@ -49,6 +50,23 @@ public class PlaybookCache extends Cache {
         CacheEntry cacheEntry = this.getCacheEntry(ref.getId(), null, null);
         boolean stale = isStale(cacheEntry, CacheEntry.INDEFINITE_EXPIRY, "");
         return !stale;
+    }
+
+    public boolean isFresh(Ref ref) {
+        if (isStored(ref)) { // if tries to get from cache a stale entry, cache may get into a wait state, believing another thread is busy updating
+            try {
+                Referenceable referenceable = (Referenceable) getFromCache(ref.getId(), CacheEntry.INDEFINITE_EXPIRY);
+                ref.attach(referenceable);  // If fresh, attaches deref-ed value to ref
+                return true;
+            }
+            catch (NeedsRefreshException e) {
+                ref.detach();
+                return false;
+            }
+        } else {
+            ref.detach();
+            return false;
+        }
     }
 
     // always called within a synchroized(ApplicationMemory) block

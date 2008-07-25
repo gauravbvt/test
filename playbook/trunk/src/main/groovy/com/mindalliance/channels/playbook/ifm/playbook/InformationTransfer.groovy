@@ -16,7 +16,7 @@ class InformationTransfer extends SharingAct {
 
     Ref mediumType
 
-    String toString() {
+    String about() {
         return "Transfer of info: $information"
     }
 

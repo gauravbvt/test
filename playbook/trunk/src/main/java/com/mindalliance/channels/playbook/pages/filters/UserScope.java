@@ -96,7 +96,7 @@ public class UserScope implements Container {
             if (u.getAnalyst()) {
                 for (Ref mRef : (List<Ref>) channels.getTaxonomies()) {
                     Taxonomy m = (Taxonomy) mRef.deref();
-                    if (m.isAnalyst(uRef)) {
+                    if (m != null && m.isAnalyst(uRef)) {
                         result.add(mRef);
                         m.addContents(result);
                     }
@@ -107,7 +107,7 @@ public class UserScope implements Container {
             if (u.getManager()) {
                 for (Ref pRef : (List<Ref>) getApplication().findProjectsForUser(uRef)) {
                     Project p = (Project) pRef.deref();
-                    if (p.isManager(uRef)) {
+                    if (p != null && p.isManager(uRef)) {
                         result.add(pRef);
                         p.addManagerContents(result);
                     }
@@ -118,7 +118,7 @@ public class UserScope implements Container {
             // Add assigned project contents
             for (Ref pRef : (List<Ref>) getApplication().findProjectsForUser(uRef)) {
                 Project project = (Project) pRef.deref();
-                project.addContents(result);
+                if (project != null) project.addContents(result);
                 pRef.detach();
             }
 
@@ -180,7 +180,7 @@ public class UserScope implements Container {
                 pRef = getDefaultProject();
 
             Project p = (Project) pRef.deref();
-            if (p.findParticipation(uRef) != null) {
+            if (p != null && p.findParticipation(uRef) != null) {
                 if (pbRef == null)
                     pbRef = getDefaultPlaybook(pRef);
                 pRef.detach();

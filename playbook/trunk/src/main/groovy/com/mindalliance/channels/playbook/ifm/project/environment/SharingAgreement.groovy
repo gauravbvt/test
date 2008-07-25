@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.Timing
+import com.mindalliance.channels.playbook.ifm.Named
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,8 +17,9 @@ import com.mindalliance.channels.playbook.ifm.Timing
 * Date: Apr 17, 2008
 * Time: 10:43:29 AM
 */
-class SharingAgreement extends ProjectElement implements Described {
+class SharingAgreement extends ProjectElement implements Named, Described {
 
+    String name = ''
     String description = ''
     Ref source   // readOnly -- set on creation
     Ref recipient     // readOnly -- set on creation
@@ -36,15 +38,14 @@ class SharingAgreement extends ProjectElement implements Described {
         return (super.keyProperties() + ['description']) as Set
     }
 
-
     String toString() {
+        return (name) ? name : 'Unnamed'
+    }
+
+    String about() {
         String sourceName = (source as boolean) ? source.name : "Undefined source"
         String recipientName = (recipient as boolean) ? recipient.name : "undefined recipient"
         return "${sourceName} shall ${protocol.delivery} ${recipientName}"
-    }
-
-    String getName() {
-        return toString()
     }
 
     // queries

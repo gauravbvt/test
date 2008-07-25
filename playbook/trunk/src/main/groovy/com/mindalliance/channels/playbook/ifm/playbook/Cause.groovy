@@ -27,7 +27,8 @@ class Cause extends BeanImpl implements Defineable {
     }
 
     String toString() {
-        return trigger as boolean ? trigger.deref().toString() : "" ;
+        return "$delay after"  // TODO do better without a deref?
+        // return trigger as boolean ? trigger.deref().toString() : "" ;
     }
 
     public boolean isDefined() {

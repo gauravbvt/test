@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.mem
 import com.mindalliance.channels.playbook.ref.impl.ReferenceableImpl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ref.impl.NotModifiableException
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
@@ -23,10 +22,15 @@ class NoSessionCategory {
     }
 
     // Don't raise change event
-    static void doSetProperty(ReferenceableImpl self, String name, def value) {
+/*    static void doSetProperty(ReferenceableImpl self, String name, def value) {
         String setterName = "set${name[0].toUpperCase()}${name.substring(1)}"
         self."$setterName"(value)
+    }*/
+
+    static void propertyChanged(ReferenceableImpl self, String name, def old, def value) {
+       // Do nothing
     }
+
 
     // Can't persist new elements out of session
     static void persist(ReferenceableImpl self) {
@@ -35,14 +39,12 @@ class NoSessionCategory {
 
     // Dereference only from application memory
     static Referenceable retrieve(SessionMemory self, Ref reference, Referenceable dirtyRead) {
-        Referenceable referenceable = null
         if (dirtyRead) {
             return dirtyRead
         }
         else {
-            referenceable = self.retrieveFromApplicationMemory(reference)
+            return self.retrieveFromApplicationMemory(reference)
         }
-        return referenceable
     }
 
     static void fireAllRules(RuleBaseSession ruleBaseSession) {

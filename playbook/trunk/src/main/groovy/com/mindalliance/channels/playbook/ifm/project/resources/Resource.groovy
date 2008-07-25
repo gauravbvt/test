@@ -75,7 +75,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return allResponsibilities
     }
 
-    String toString() { name }
+    String toString() { name ?: "Unnamed" }
 
     /**
      * Return subclass that a project user may want to create.

@@ -2,8 +2,6 @@ package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.Named
-import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Channels
 

@@ -17,17 +17,14 @@ class Detection extends InformationAct {
 
     Information information = new Information()
 
-    String toString() {
-        return "Detection of ${information.event as boolean ? information.event.deref() : '?'}"
-    }
-
     boolean hasInformation() {
         return true
     }
 
     void setInformation(Information information) { // make sure actorAgent is the only source
         this.@information = information
-        if (actorAgent as boolean) information.sourceAgents = [actorAgent]
+        /*if (actorAgent as boolean) */ // -- as boolean calls isFresh, calls makeClone, calls this -> infinite loop
+        if (actorAgent) information.sourceAgents = [actorAgent]
         this.propertyChanged('information', null, information)
     }
 

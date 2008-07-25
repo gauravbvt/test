@@ -4,7 +4,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import java.beans.PropertyChangeSupport
 import java.beans.PropertyChangeListener
-import com.mindalliance.channels.playbook.ref.Store
+import com.mindalliance.channels.playbook.mem.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.ref.Bean
 import com.mindalliance.channels.playbook.mem.ApplicationMemory

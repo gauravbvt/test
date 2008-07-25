@@ -34,7 +34,7 @@ class Playbook extends ProjectElement implements Described {
     }
 
     String toString() {
-        return name
+        return name ?: "Unnamed"
     }
 
     void beforeStore(ApplicationMemory memory) {

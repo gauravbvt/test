@@ -1,4 +1,7 @@
-package com.mindalliance.channels.playbook.ref
+package com.mindalliance.channels.playbook.mem
+
+import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ref.Ref
 
 interface Store {
 

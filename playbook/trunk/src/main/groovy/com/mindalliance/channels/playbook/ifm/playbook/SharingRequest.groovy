@@ -17,7 +17,7 @@ class SharingRequest extends FlowAct {
 
     SharingProtocol protocol = new SharingProtocol()
 
-    String toString() {
+    String about() {
         return "Request to commit to sharing ${protocol.informationSpec}"
     }
 

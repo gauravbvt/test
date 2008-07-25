@@ -31,7 +31,7 @@ class Taxonomy extends IfmElement implements Described {
     List<Ref> taskTypes = []
 
     String toString() {
-        name
+        return name ?: "Unnamed"
     }
 
     protected List<String> transientProperties() {

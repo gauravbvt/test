@@ -41,7 +41,7 @@ class Association extends InformationAct {   // Creation of a relationship
         }
     }
 
-    String toString() {
+    String about() {
         return "Association: ${actorAgent} $relationshipName ${toAgent} "
     }
 

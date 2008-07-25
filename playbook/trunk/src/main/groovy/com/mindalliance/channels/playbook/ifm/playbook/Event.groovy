@@ -49,7 +49,7 @@ class Event extends PlaybookElement implements Named, Described {
     }
 
     String toString() {
-        return name ?: "Unnamed event"
+        return name ?: "Unnamed"
     }
 
     boolean isInformationAct() {

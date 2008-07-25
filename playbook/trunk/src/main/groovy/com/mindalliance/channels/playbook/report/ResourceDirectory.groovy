@@ -49,9 +49,9 @@ class ResourceDirectory extends Report {
         xml.index {
             firsts.each {ref, key ->
                 xml.entry(key: key, ref: ref.id)
-                }
             }
         }
+    }
 
     protected void buildBody(MarkupBuilder xml) {
         Set<Referenceable> elements = new HashSet()
@@ -92,19 +92,25 @@ class ResourceDirectory extends Report {
     }
 
     private void extractResourcesFromInformationAct(InformationAct act) {
-        retain(act.actorAgent)
-        if (act instanceof FlowAct) {
-            retain(act.targetAgent)
+        if (act as boolean) {
+            retain(act.actorAgent)
+            if (act instanceof FlowAct) {
+                retain(act.targetAgent)
+            }
         }
     }
 
     private void extractResourcesFromRole(Role role) {
         this.userProjects.each {project ->
-            project.findAllResources().each {ref ->
-                Resource res = (Resource) ref.deref()
-                boolean roleImplied = res.roles.any {it.implies(role.reference)}
-                if (roleImplied) {
-                    retain(res.reference)
+            if (project as boolean) {
+                project.findAllResources().each {ref ->
+                    Resource res = (Resource) ref.deref()
+                    if (res as boolean) {
+                        boolean roleImplied = res.roles.any {it.implies(role.reference)}
+                        if (roleImplied) {
+                            retain(res.reference)
+                        }
+                    }
                 }
             }
         }
@@ -115,21 +121,23 @@ class ResourceDirectory extends Report {
     }
 
     private void retain(Ref ref) {
-        if (!retained.contains(ref)) {
-            retained.add(ref)
-            Resource res = (Resource) ref.deref()
-            switch (res) {
-                case System.class:
-                    addToOrganization((OrganizationResource) res); break
-                case Position.class:
-                    addToOrganization((OrganizationResource) res)
-                    addPosition((Position) res); break
-                case Organization.class:
-                    addToIndex(res); break
-                case Person.class:
-                    addToIndex(res)
+        if (ref as boolean) {
+            if (!retained.contains(ref)) {
+                retained.add(ref)
+                Resource res = (Resource) ref.deref()
+                switch (res) {
+                    case System.class:
+                        addToOrganization((OrganizationResource) res); break
+                    case Position.class:
+                        addToOrganization((OrganizationResource) res)
+                        addPosition((Position) res); break
+                    case Organization.class:
+                        addToIndex(res); break
+                    case Person.class:
+                        addToIndex(res)
+                }
+                addJobs(res)
             }
-            addJobs(res)
         }
     }
 
@@ -141,9 +149,11 @@ class ResourceDirectory extends Report {
     }
 
     private void addJobs(Resource res) {
-        res.jobs.each {position ->
-            if (position as boolean) {
-                retain(position)
+        if (res as boolean) {
+            res.jobs.each {position ->
+                if (position as boolean) {
+                    retain(position)
+                }
             }
         }
     }

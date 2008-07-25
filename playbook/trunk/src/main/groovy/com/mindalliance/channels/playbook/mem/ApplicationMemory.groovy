@@ -141,7 +141,8 @@ class ApplicationMemory implements Serializable {
             // if succeeded, proceed to delete ref and children
             if (allLocked) {
                 family.each {child ->
-                    if (child as boolean) doDelete(child.deref())}
+                    if (child as boolean) doDelete(child.deref())
+                }
                 deleted = true
             }
         }
@@ -191,7 +192,11 @@ class ApplicationMemory implements Serializable {
     }
 
     boolean isFresh(Ref ref) {
-        return cache.isStored(ref)                        
+        boolean fresh = false
+        synchronized (this) {
+            use(NoSessionCategory) { fresh = cache.isFresh(ref) }
+        }
+        return fresh
     }
 
     void clearAll() {

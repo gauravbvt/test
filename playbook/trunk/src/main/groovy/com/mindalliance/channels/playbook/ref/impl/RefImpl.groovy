@@ -2,11 +2,12 @@ package com.mindalliance.channels.playbook.ref.impl
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ref.Store
+import com.mindalliance.channels.playbook.mem.Store
 import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.RefUtils
 import org.apache.log4j.Logger
 import com.mindalliance.channels.playbook.mem.LockManager
+import com.mindalliance.channels.playbook.mem.Store
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
