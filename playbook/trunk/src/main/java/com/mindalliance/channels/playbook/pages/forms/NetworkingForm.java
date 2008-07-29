@@ -20,7 +20,7 @@ public class NetworkingForm extends AbstractElementForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model("Networking")) {
             public Panel getPanel(String panelId) {
                 return new NetworkingBasicTab(panelId, NetworkingForm.this);
             }

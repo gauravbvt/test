@@ -6,7 +6,6 @@ import com.mindalliance.channels.playbook.ifm.Agent
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.models.Container
 import com.mindalliance.channels.playbook.ref.Referenceable
-import org.apache.log4j.Logger
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

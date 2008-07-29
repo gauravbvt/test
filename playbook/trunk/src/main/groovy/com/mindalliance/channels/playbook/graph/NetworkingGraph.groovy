@@ -30,7 +30,7 @@ class NetworkingGraph extends PlaybookGraph {
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
             networking: [shape: 'circle', fillcolor: 'azure2', fontname: PlaybookGraph.LABEL_FONT_NAME, fontsize:PlaybookGraph.LABEL_FONT_SIZE],
-            fromEdge: [dir: 'none']
+            netEdge: [fontname: PlaybookGraph.LABEL_FONT_NAME, fontsize: PlaybookGraph.LABEL_FONT_SIZE]
         ]
     }
 
@@ -47,15 +47,15 @@ class NetworkingGraph extends PlaybookGraph {
 
     void processData() {
         container.iterator().each {ref ->
-            if (el as boolean) {
+            if (ref as boolean) {
                 Referenceable el = ref.deref()
                 switch (el) {
                     case Resource.class: processResource((Resource) el); break
                     case InformationAct.class: processInformationAct((InformationAct) el); break
                     case Group.class: processGroup((Group) el); break
                     case Playbook.class: processPlaybook((Playbook) el); break
-                    case SharingAgreement.class: processSharingAgreement((SharingAgreement)agreement); break
-                    case Relationship.class: processRelationship((Relationship)relationship); break
+                    case SharingAgreement.class: processSharingAgreement((SharingAgreement)el); break
+                    case Relationship.class: processRelationship((Relationship)el); break
                     case Project.class: processProject((Project) el); break
                 }
             }
@@ -78,7 +78,7 @@ class NetworkingGraph extends PlaybookGraph {
 
     void processInformationAct(InformationAct act) {
         if (act as boolean) {
-            Ref latest = playbook.latestOccurrence
+            Ref latest = act.playbook.latestOccurrence
             if (act.actorAgent as boolean) {
                 act.actorAgent.getResourcesAt(latest).each {processResource(it)}
             }
@@ -111,7 +111,7 @@ class NetworkingGraph extends PlaybookGraph {
     void buildResources(GraphVizBuilder builder) {
         resources.each {ref ->
             Resource res = (Resource)ref.deref()
-            builder.node(name: nameFor(res), label: labelFor(res), URL: urlFor(res), template: 'agent')
+            builder.node(name: nameFor(res), label: labelFor(res), URL: urlFor(res), template: 'resource')
         }
     }
 
@@ -119,11 +119,9 @@ class NetworkingGraph extends PlaybookGraph {
         resources.each {fromRef ->
             resources.each {toRef ->
                 if (fromRef != toRef) {
-                    Networking networking = new Networking(fromResource: fromRef, toResource: toAgent)
+                    Networking networking = new Networking(fromResource: fromRef, toResource: toRef)
                     if (networking.size() > 0) {
-                        builder.node(name: nameFor(networking), label: labelFor(networking), URL, urlFor(networking), template: 'networking')
-                        builder.edge(source: nameFor(fromRef), target: nameFor(networking), template: 'fromEdge')
-                        builder.edge(source: nameFor(networking), target:nameFor(toRef))
+                        builder.edge(source: nameFor(fromRef), target: nameFor(toRef), label: "${networking.size()}", URL: urlFor(networking), template: "netEdge")
                     }
                 }
             }

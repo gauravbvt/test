@@ -43,8 +43,8 @@ class InfoFlow extends PlaybookGraph {
 
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
-                aboutEdge: [dir: 'none', style: 'dashed', fontsize: '7'],
-                flowEdge: [fontsize: '7']
+                aboutEdge: [dir: 'none', style: 'dashed', fontsize: PlaybookGraph.LABEL_FONT_SIZE],
+                flowEdge: [fontsize: PlaybookGraph.LABEL_FONT_SIZE]
         ]
     }
 

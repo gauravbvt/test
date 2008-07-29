@@ -32,6 +32,7 @@ abstract class PlaybookGraph extends DirectedGraph {
     protected Map getStyleTemplate() {
         return super.getStyleTemplate() + [
                 agent: [color: 'lightgray', fillcolor: 'ghostwhite', style: 'filled', fontname: TITLE_FONT_NAME, fontsize:TITLE_FONT_SIZE],
+                resource: [shape: 'rectangle', color: 'lightgray', fillcolor: 'ghostwhite', style: 'filled', fontname: TITLE_FONT_NAME, fontsize:TITLE_FONT_SIZE],
                 info: [shape: 'record', fillcolor: 'cornsilk1', style: 'filled, rounded', fontname: LABEL_FONT_NAME, fontsize:LABEL_FONT_SIZE],
                 need: [shape: 'record', fillcolor: 'cornsilk2', style: 'filled, rounded', fontname: LABEL_FONT_NAME, fontsize:LABEL_FONT_SIZE],
                 infoEdge: [dir: 'none', style: 'dotted', fontname: LABEL_FONT_NAME, fontsize:LABEL_FONT_SIZE],

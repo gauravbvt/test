@@ -366,19 +366,22 @@ class Project extends IfmElement implements Named, Described {
 
     List<Ref> findAllAgreementsBetween(Ref source, Ref recipient) {
         return (List<Ref>)sharingAgreements.findAll {agr ->
+            agr.source == source && agr.recipient == recipient
+/*
             (agr.source == source || agr.source.hasResource(source)) &&
             (agr.recipient == recipient || agr.recipient.hasResource(recipient)) &&
-            (agr.protocol.contacts.matches(recipient, null))
+            (agr.protocol.contacts.matches(recipient.deref(), null))
+*/
         }
     }
 
     List<Ref> findAllFlowActsBetween(Ref actor, Ref target) {
         List<Ref> flowActs = []
         playbooks.each {pb ->
-            flowActs.addAll (pb.informationActs.each {act ->
+            flowActs.addAll (pb.informationActs.findAll {act ->
                                 (act as boolean && act.isFlowAct()) &&
-                                (act.actorAgent as boolean && act.actorAgent == actor || (actor.isAnOrganization() && actor.hasResource(act.actorAgent))) &&
-                                (act.targetAgent as boolean && act.targetAgent == target || (target.isAnOrganization() && target.hasResource(act.targetAgent)))
+                                (act.actorAgent as boolean && (act.actorAgent == actor || (actor.isAnOrganization() && actor.hasResource(act.actorAgent)))) &&
+                                (act.targetAgent as boolean && (act.targetAgent == target || (target.isAnOrganization() && target.hasResource(act.targetAgent))))
             })
         }
         return flowActs

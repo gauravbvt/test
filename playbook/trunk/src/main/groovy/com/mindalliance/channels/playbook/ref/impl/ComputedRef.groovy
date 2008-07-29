@@ -84,7 +84,7 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
     }
 
     Object[] processArguments(List args) {
-        List values = (List)args.collect(RefUtils.valueFromString(it) ?: it)
+        List values = (List)args.collect {RefUtils.valueFromString(it) ?: it}
         return values as Object[]
     }
 

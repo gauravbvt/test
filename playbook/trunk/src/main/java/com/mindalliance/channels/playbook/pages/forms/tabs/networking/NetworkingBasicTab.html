@@ -5,8 +5,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
-    [NETWORKING]
-     <wicket:child/>
+    <fieldset>
+        <legend></legend>
+        Networking from <a wicket:id="fromResourceLink"><span wicket:id="fromResource">[from resource]</span></a>
+        to <a wicket:id="toResourceLink"><span wicket:id="toResource">[to resource]</span></a>
+    </fieldset>
+    <div wicket:id="accessAndJobDiv">
+        <fieldset>
+            <legend>Access</legend>
+            <div wicket:id="hasJobDiv">
+                <span wicket:id="fromResourceJob">[from resource]</span>&#160;is in organization&#160;<span
+                    wicket:id="toResourceJob">[to resource]</span>
+            </div>
+            <div wicket:id="hasAccessDiv">
+                <span wicket:id="fromResourceAccess">[from resource]</span>&#160;can contact&#160;<span
+                    wicket:id="toResourceAccess">[to resource]</span>
+            </div>
+        </fieldset>
+    </div>
+    <div wicket:id="agreementsDiv">
+        <fieldset>
+            <legend>Agreements</legend>
+            <ul wicket:id="agreements">
+                <li><a wicket:id="agreementLink" href="#"><span wicket:id="agreement">[agreement]</span></a></li>
+            </ul>
+        </fieldset>
+    </div>
+    <div wicket:id="relationshipsDiv">
+        <fieldset>
+            <legend>Relationships</legend>
+            <ul wicket:id="relationships">
+                <li><a wicket:id="relationshipLink" href="#"><span
+                        wicket:id="relationship">[relationship ]</span></a></li>
+            </ul>
+        </fieldset>
+    </div>
+    <div wicket:id="flowsDiv">
+        <fieldset>
+            <legend>Flows</legend>
+            <ul wicket:id="flowActs">
+                <li><a wicket:id="flowActLink" href="#"><span wicket:id="flowAct">[flow ]</span></a></li>
+            </ul>
+        </fieldset>
+    </div>
+    <wicket:child/>
 </wicket:extend>
 </body>
 </html>

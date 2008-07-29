@@ -27,8 +27,8 @@ import java.util.List;
  */
 public class ResourceAgreementsTab extends AbstractFormTab {
 
-    RefreshingView whereSourceView;
-    RefreshingView whereRecipientView;
+    protected RefreshingView whereSourceView;
+    protected RefreshingView whereRecipientView;
 
     public ResourceAgreementsTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);

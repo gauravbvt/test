@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource
 import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ref.impl.AbstractReferenceableImpl
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,8 +14,7 @@ import com.mindalliance.channels.playbook.ref.impl.ComputedRef
  * Date: Jul 28, 2008
  * Time: 1:31:45 PM
  */
-// TODO - implements Referenceable -- update Ref/Referenceable framework
-class Networking {  // scope is the fromResource's project
+class Networking extends AbstractReferenceableImpl {  // scope is the fromResource's project
 
     Ref fromResource
     Ref toResource
@@ -26,11 +26,11 @@ class Networking {  // scope is the fromResource's project
     }
 
     Ref getReference() {
-       return new ComputedRef("${this.class},makeNetworking,$fromResource,$toResource")
+       return new ComputedRef(getId())
     }
 
     List<Ref> getRelationships() {
-        return relationships = (List<Ref>) fromResource.project.relationships.findAll {rel -> rel.fromAgent == fromResource && rel.toAgent == toResource }
+        return (List<Ref>) fromResource.project.relationships.findAll {rel -> rel.fromAgent == fromResource && rel.toAgent == toResource }
     }
 
     List<Ref> getAgreements() {
@@ -42,41 +42,55 @@ class Networking {  // scope is the fromResource's project
     }
 
     boolean hasAccess() {
-        return toResource.access.any {protocol ->
+        boolean result = toResource.access.any {protocol ->
             protocol.contacts.any {agentSpec -> agentSpec.matches(fromResource, null) }
         }
+        return result
     }
 
     boolean hasJobWith() {
         return hasJobWith(fromResource, toResource)
     }
 
-    boolean isOrganizationOf() {
-        return hasJobWith(toResource, fromResource)
-    }
-
-    private boolean hasJobWith(Ref resource, Ref organization) {
-        Resource res = (Resource) resource.deref()
-        if (res.isAnOrganization()) {
-            return ((Organization) res).hasResource(resource)
+    private boolean hasJobWith(Ref res1, Ref res2) {
+        Resource resource2 = (Resource) res2.deref()
+        if (resource2.isAnOrganization()) {
+            return ((Organization) resource2).hasResource(res1)
         }
         else {
             return false
         }
     }
 
-    int getSize() {
+    int size() {
         if (cachedSize == -1) {
             int count = 0
-            count += this.relationships.size()
-            count += this.agreements.size()
-            count += this.flowActs.size()
+            List<Ref> rels = this.relationships
+            count += rels.size()
+            List<Ref> agrs = this.agreements
+            count += agrs.size()
+            List<Ref> fas = this.flowActs
+            count += fas.size()
             if (hasAccess()) count++
             if (hasJobWith()) count++
-            if (isOrganizationOf()) count++
             cachedSize = count
         }
         return cachedSize
     }
 
+   public boolean isConstant() {
+        return true;
+    }
+
+    public String makeLabel(int maxWidth) {
+        return "${size()}";
+    }
+
+    public String about() {
+        return "Networking between ${fromResource.about()} and ${toResource.about()}";
+    }
+
+    public String getId() {
+        return "${this.class.name},makeNetworking,$fromResource,$toResource";
+    }
 }
