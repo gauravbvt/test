@@ -20,4 +20,5 @@ interface Agent extends Referenceable, Named, Described, Locatable {
     boolean isGroup()
     boolean hasJurisdiction()
     boolean hasLocation()
+    boolean isAnOrganization()
 }

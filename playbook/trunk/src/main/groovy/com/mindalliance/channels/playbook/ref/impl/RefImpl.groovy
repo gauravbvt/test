@@ -68,7 +68,7 @@ class RefImpl implements Ref {
     }
 
     String toString() {
-        return "Ref<$id,$db>"
+        return "Ref<$id>"
     }
 
     Referenceable deref() {   // returns Referenceable from session change set or UNCOPIED referenceable from application

@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.support.models;
 
 import com.mindalliance.channels.playbook.ifm.Agent;
 import com.mindalliance.channels.playbook.ifm.Locatable;
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.ifm.playbook.Event;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
@@ -52,6 +53,7 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
     private transient boolean timelineable;
     private transient boolean mappable;
     private transient boolean flowable;
+    private transient boolean networkable;
 
     public ContainerSummary( Container data ) {
         if ( data == null )
@@ -145,6 +147,10 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
                                     || Agent.class.isAssignableFrom( objectClass ) )
                             )
                         flowable = true;
+                    if ( !networkable
+                            && ( Resource.class.isAssignableFrom( objectClass ))
+                            )
+                        networkable = true;
                     use = new ClassUse( objectClass );
                     result.put( objectClass, use);
                 }
@@ -240,6 +246,11 @@ public class ContainerSummary extends BeanImpl implements IDataProvider {
     public boolean isFlowable() {
         getUsage();
         return flowable;
+    }
+
+    public boolean isNetworkable() {
+        getUsage();
+        return networkable;
     }
 
     //====================================

@@ -4,6 +4,7 @@ import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.graphs.InfoFlowPanel;
 import com.mindalliance.channels.playbook.pages.graphs.TimelinePanel;
+import com.mindalliance.channels.playbook.pages.graphs.NetworkPanel;
 import com.mindalliance.channels.playbook.pages.reports.DirectoryReportPage;
 import com.mindalliance.channels.playbook.pages.reports.RSSTab;
 import com.mindalliance.channels.playbook.pages.reports.ReportPage;
@@ -177,6 +178,23 @@ public class TabPanel extends Panel implements SelectionManager {
                     // TODO filter to Agent.class or Event.class
                     if (panel == null) {
                         panel = new InfoFlowPanel(panelId, tabModel, TabPanel.this);
+                        views.add(panel);
+                        add(panel);
+                        panel.setSelected(getSelected());
+                    }
+                    return panel;
+                }
+            });
+        }
+
+        if (summary.isNetworkable()) {
+            result.add(new AbstractTab(new Model("Network")) {
+                private NetworkPanel panel;
+
+                public Panel getPanel(String panelId) {
+                    // TODO filter to Agent.class or Event.class
+                    if (panel == null) {
+                        panel = new NetworkPanel(panelId, tabModel, TabPanel.this);
                         views.add(panel);
                         add(panel);
                         panel.setSelected(getSelected());

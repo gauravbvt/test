@@ -6,6 +6,10 @@ import com.mindalliance.channels.playbook.ref.Ref
 import java.util.regex.Matcher
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Channels
+import java.util.regex.Pattern
+import com.mindalliance.channels.playbook.ref.impl.RefImpl
+import com.mindalliance.channels.playbook.ref.impl.ComputedRef
+import com.mindalliance.channels.playbook.ref.impl.InferredRef
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -197,6 +201,25 @@ class RefUtils {
     static List<Ref> getUserProjects() {
         List<Ref> projects = (List<Ref>) Query.execute(Channels.instance(), "findAllProjectsOfUser", getUser())
         return projects
+    }
+
+    static Object valueFromString(String s) {
+        Pattern pattern = Pattern.compile("([Computed|Inferred]?Ref)<(.*)>")
+        Matcher matcher = pattern.matcher(s)
+        if (matcher.matches()) {
+            Ref ref
+            String type = matcher.group(1)
+            String id = matcher.group(2)
+            switch(type) {
+                case "Ref": ref = new RefImpl(id); break
+                case "ComputedRef": ref = new ComputedRef(id); break
+                case "InferredRef": ref = new InferredRef(id); break
+            }
+            return ref
+        }
+        else {
+            return s
+        }
     }
 
 }

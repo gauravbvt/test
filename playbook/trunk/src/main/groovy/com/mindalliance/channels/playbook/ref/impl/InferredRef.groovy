@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.ref.impl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.support.PlaybookApplication
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 
 /**
@@ -19,6 +18,10 @@ class InferredRef extends RefImpl {
 
     InferredRef() {}
 
+    InferredRef(String id) {
+        super(id)
+    }
+
 
     static InferredRef from(AnalysisElement analysisElement) {
         InferredRef ir = new InferredRef()
@@ -28,7 +31,7 @@ class InferredRef extends RefImpl {
     }
 
     String toString() {
-        return "InferredRef<$id,$db>"
+        return "InferredRef<$id>"
     }
 
     boolean isInferred() {

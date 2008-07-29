@@ -91,8 +91,12 @@ abstract class DirectedGraph implements Serializable {
     abstract void buildContent(GraphVizBuilder builder);
         
     String urlFor(Referenceable referenceable) {
-        String refKind = referenceable.reference.class.name
-        return "javascript:svg_wicket_call('__CALLBACK__','selected','$refKind:${referenceable.id}')"
+        return urlFor(referenceable.reference)
+    }
+
+    String urlFor(Ref reference) {
+        String refKind = reference.class.name
+        return "javascript:svg_wicket_call('__CALLBACK__','selected','$refKind:${reference.id}')"
     }
 
     protected Map getStyleTemplate() {

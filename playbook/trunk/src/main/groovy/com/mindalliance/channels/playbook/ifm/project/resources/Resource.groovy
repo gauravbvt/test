@@ -49,6 +49,10 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return true
     }
 
+    boolean isAnOrganization() {
+        return false
+    }
+
     public boolean isGroup() {
         return false;
     }

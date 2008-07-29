@@ -37,6 +37,10 @@ class Group extends PlaybookElement implements Agent {
          return true
      }
 
+    boolean isAnOrganization() {
+        return false
+    }
+
     boolean hasJurisdiction() {
         return false
     }
@@ -55,7 +59,10 @@ class Group extends PlaybookElement implements Agent {
 
     // queries
     List<Ref> getResourcesAt(Ref event) {
-         return agentSpec.getResourcesAt(event)
+        if (event as boolean)
+            return agentSpec.getResourcesAt(event)
+        else
+            return []
      }
      // end queries
 

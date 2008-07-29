@@ -51,6 +51,15 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
         return true
     }
 
+    boolean isAnOrganization() {
+         return true
+     }
+
+    boolean hasResource(Ref resource) {
+        if (this.resources.contains(resource)) return true
+        return subOrganizations.any {org -> org.hasResource(resource)}
+    }
+
     boolean isLocatedWithin(Location loc) {
         return super.isLocatedWithin(loc) || jurisdiction.isWithin(loc)
     }

@@ -22,8 +22,9 @@ import com.mindalliance.channels.playbook.support.drools.*
 rule "invalid information act"
     agenda-group "validations"
     when
-        $el:  InformationAct($actor:actorAgent)
-        eval(!Channels.isSet($actor))
+        $project: Project($id: id)   # force re-evaluation whenever project changes (e.g. a resource is removed)
+        $el:  InformationAct(project.id == $project.id, $actor:actorAgent)
+        eval(!$project.getResources().contains($actor))
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el, "actorMissing"), "The actor is missing");
     end
@@ -31,8 +32,9 @@ rule "invalid information act"
 rule "invalid flow act target"
     agenda-group "validations"
     when
-        $el: FlowAct($target:targetAgent)
-        eval(!Channels.isSet($target))
+        $project: Project($id: id)   # force re-evaluation whenever project changes (e.g. a resource is removed)
+        $el: FlowAct(project.id == $project.id, $target:targetAgent)
+        eval(!$project.getResources().contains($target))
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el,"targetMissing"), "The target agent is missing");
     end
@@ -57,8 +59,9 @@ rule "invalid flow act - sender is receiver"
 rule "invalid assignation assignee"
     agenda-group "validations"
     when
-        $el: Assignation($assignee:assigneeAgent)
-        eval(!Channels.isSet($assignee))
+        $project: Project($id: id)   # force re-evaluation whenever project changes (e.g. a resource is removed)
+        $el: Assignation(project.id == $project.id, $assignee:assigneeAgent)
+        eval(!$project.getResources().contains($assignee))
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el, "assigneeMissing"), "The assignee is missing");
     end
@@ -75,8 +78,9 @@ rule "invalid assignation responsibility"
 rule "invalid association associate"
     agenda-group "validations"
     when
-        $el: Association($associate:toAgent)
-        eval(!Channels.isSet($associate))
+        $project: Project($id: id)   # force re-evaluation whenever project changes (e.g. a resource is removed)
+        $el: Association(project.id == $project.id, $associate:toAgent)
+        eval(!$project.getResources().contains($associate))
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el, "associateMissing"), "The associate is missing");
     end

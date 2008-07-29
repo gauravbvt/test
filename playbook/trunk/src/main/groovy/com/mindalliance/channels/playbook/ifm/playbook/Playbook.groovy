@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import org.joda.time.Duration
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,7 +27,7 @@ class Playbook extends ProjectElement implements Described {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['occurrences'])
+        return (List<String>) (super.transientProperties() + ['occurrences', 'latestOccurrence'])
     }
 
     protected List<String> childProperties() {
@@ -80,6 +81,19 @@ class Playbook extends ProjectElement implements Described {
 
     List<Ref> getOccurrences() {
         return (List<Ref>) (events + informationActs)
+    }
+
+    Ref getLatestOccurrence() {
+        Ref latest = null
+        Duration latestStart = Duration.ZERO
+        this.occurrences.each {occ ->
+           Duration occStart = occ.startTime()
+           if (occStart > latestStart)  {
+               latest = occ
+               latestStart = occStart
+           }
+        }
+        return latest
     }
 
     Referenceable doAddToField(String field, Object val) {

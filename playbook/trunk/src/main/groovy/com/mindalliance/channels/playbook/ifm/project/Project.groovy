@@ -45,7 +45,7 @@ class Project extends IfmElement implements Named, Described {
 
     @Override
     protected List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations', 'allProblems'])
+        return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations', 'allProblems', 'resources'])
     }
 
     protected List<String> childProperties() {
@@ -64,6 +64,10 @@ class Project extends IfmElement implements Named, Described {
     }
 
     String toString() { name ?: "Unnamed" }
+
+    List<Ref> getResources() {
+        return findAllResources()
+    }
 
 
     // Rulebase queries
@@ -357,6 +361,27 @@ class Project extends IfmElement implements Named, Described {
             m.taskTypes.each {tt -> if (tt as boolean) countedSet.addAll(tt.purposes)}
         }
         return countedSet.toList()
+
+    }
+
+    List<Ref> findAllAgreementsBetween(Ref source, Ref recipient) {
+        return (List<Ref>)sharingAgreements.findAll {agr ->
+            (agr.source == source || agr.source.hasResource(source)) &&
+            (agr.recipient == recipient || agr.recipient.hasResource(recipient)) &&
+            (agr.protocol.contacts.matches(recipient, null))
+        }
+    }
+
+    List<Ref> findAllFlowActsBetween(Ref actor, Ref target) {
+        List<Ref> flowActs = []
+        playbooks.each {pb ->
+            flowActs.addAll (pb.informationActs.each {act ->
+                                (act as boolean && act.isFlowAct()) &&
+                                (act.actorAgent as boolean && act.actorAgent == actor || (actor.isAnOrganization() && actor.hasResource(act.actorAgent))) &&
+                                (act.targetAgent as boolean && act.targetAgent == target || (target.isAnOrganization() && target.hasResource(act.targetAgent)))
+            })
+        }
+        return flowActs
     }
 
     // End queries

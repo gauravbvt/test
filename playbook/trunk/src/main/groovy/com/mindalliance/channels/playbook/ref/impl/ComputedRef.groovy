@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ref.impl
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,14 +17,19 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
 
     Referenceable computedValue
 
+    ComputedRef() {}
+
+    ComputedRef(String id) {
+        super(id)
+    }
+
     static ComputedRef from(Class clazz, String method) {
-        ComputedRef cref = new ComputedRef()
-        cref.setId("${clazz.name},$method")
+        ComputedRef cref = new ComputedRef("${clazz.name},$method")
         return cref
     }
 
     String toString() {
-        return "ComputedRef<$id,$db>"
+        return "ComputedRef<$id>"
     }
 
     boolean isComputed() {
@@ -66,11 +72,20 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
         List<String> list = id.tokenize(',')
         Class clazz = Class.forName((String)list[0])
         String methodName = (String)list[1]
+        Object[] args = null
+        if (list.size() > 2) {
+            args = processArguments(list[2..list.size()-1])
+        }
         Referenceable result = null
         use (NoSessionCategory) {
-            result = (Referenceable)this.metaClass.invokeStaticMethod(clazz, methodName, null)
+            result = (Referenceable)this.metaClass.invokeStaticMethod(clazz, methodName, args)
         }
         return result
+    }
+
+    Object[] processArguments(List args) {
+        List values = (List)args.collect(RefUtils.valueFromString(it) ?: it)
+        return values as Object[]
     }
 
     boolean delete() {
