@@ -18,6 +18,7 @@ import org.joda.time.Duration
  * Time: 1:26:15 PM
  */
 class Playbook extends ProjectElement implements Described {
+    private static final long serialVersionUID = -1L;
 
     String name = ''
     String description = ''

@@ -3,9 +3,9 @@ package com.mindalliance.channels.playbook.pages;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
+import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,15 +29,15 @@ public class TableView extends ContentView {
 
     private static final int ITEMS_PER_PAGE = 6;
     private DataView rows;
-    private DeferredProvider summary;
+    private DeferredSummary summary;
     private DeferredProvider rowProvider;
     private CustomPagingNavigator pager;
 
-    protected TableView( String id, final IModel model, SelectionManager masterSelection ) {
+    protected TableView( String id, IModel<? extends Container> model, SelectionManager masterSelection ) {
+        // Note: call to super invokes getPager() which in turn invokes createRows()
         super( id, model, masterSelection );
 
-        // Note: call to super invokes getPager() which in turn invokes createRows()
-        summary = new DeferredProvider( true );
+        summary = new DeferredSummary();
 
         //-------
         WebMarkupContainer table = new WebMarkupContainer( "table" ){
@@ -46,9 +46,9 @@ public class TableView extends ContentView {
             }
         };
         table.setOutputMarkupId( true );
-        table.add( new DataView( "columns", summary ){
-            protected void populateItem( Item item ) {
-                RefMetaProperty mp = (RefMetaProperty) item.getModelObject();
+        table.add( new DataView<RefMetaProperty>( "columns", summary ){
+            protected void populateItem( Item<RefMetaProperty> item ) {
+                RefMetaProperty mp = item.getModelObject();
                 item.add( new Label( "column-name", mp.getDisplayName() ));
             }
         } );
@@ -67,10 +67,11 @@ public class TableView extends ContentView {
     }
 
     private DataView createRows() {
-        rowProvider = new DeferredProvider( false );
-        rows = new DataView( "rows", rowProvider ) {
-            protected void populateItem( final Item item ) {
-                final IDataProvider dp = new IDataProvider() {
+        rowProvider = new DeferredProvider();
+        rows = new DataView<Ref>( "rows", rowProvider ) {
+            protected void populateItem( final Item<Ref> item ) {
+                final IDataProvider cellProvider = new IDataProvider() {
+
                     public Iterator iterator( int first, int count ) {
                         return summary.iterator( first, count );
                     }
@@ -90,12 +91,11 @@ public class TableView extends ContentView {
 
                 item.add( new AjaxEventBehavior( "onclick" ) {
                     protected void onEvent( AjaxRequestTarget target ) {
-                        final Ref newSelection = (Ref) item.getModelObject();
-                        doAjaxSelection( newSelection, target );
+                        doAjaxSelection( item.getModelObject(), target );
                     }
                 } );
-                item.add( new DataView( "cell", dp ) {
-                    protected void populateItem( final Item cellItem ) {
+                item.add( new DataView( "cell", cellProvider ) {
+                    protected void populateItem( Item cellItem ) {
                         final Object mo = cellItem.getModelObject();
                         String mos = "";
                         if (mo != null) {    // [JF] TODO -- Modified to prevent NPE on mo.deref() == null
@@ -106,7 +106,7 @@ public class TableView extends ContentView {
                                 }
                             }
                             else {
-                                mos = cellItem.getModelObjectAsString();
+                                mos = cellItem.getDefaultModelObjectAsString();
                             }
                         }
                         cellItem.add( new Label( "cell-value", RefUtils.deCamelCase(RefUtils.summarize(mos, MAX_CELL_CONTENT_SIZE)) ) );
@@ -115,10 +115,9 @@ public class TableView extends ContentView {
 
                 item.add( new AttributeModifier( "class", true, new AbstractReadOnlyModel() {
                     public Object getObject() {
-                        String style = ( item.getIndex() % 2 == 1 ) ? "even" : "odd";
+                        String style = item.getIndex() % 2 == 1 ? "even" : "odd";
                         Ref oldRef = getSelected();
-                        Ref newRef = (Ref) item.getModelObject();
-                        if ( oldRef != null && newRef.equals( oldRef ) )
+                        if ( oldRef != null && item.getModelObject().equals( oldRef ) )
                             style += " selected";
                         return style;
                     }

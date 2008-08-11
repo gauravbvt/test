@@ -23,22 +23,22 @@ public class AssignationForm  extends AbstractInformationActForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
             public Panel getPanel(String panelId) {
                 return new FlowActBasicTab(panelId, AssignationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Cause")) {
+        tabs.add(new AbstractTab(new Model<String>("Cause")) {
              public Panel getPanel(String panelId) {
                  return new EventCauseTab(panelId, AssignationForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Responsibility")) {
+        tabs.add(new AbstractTab(new Model<String>("Responsibility")) {
             public Panel getPanel(String panelId) {
                 return new AssignationResponsibilityTab(panelId, AssignationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Risk")) {
+        tabs.add(new AbstractTab(new Model<String>("Risk")) {
              public Panel getPanel(String panelId) {
                  return new EventRiskTab(panelId, AssignationForm.this);
              }

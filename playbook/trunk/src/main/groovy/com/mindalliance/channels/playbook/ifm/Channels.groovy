@@ -13,6 +13,7 @@ import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement
 import com.mindalliance.channels.playbook.ifm.playbook.*
 import com.mindalliance.channels.playbook.ifm.taxonomy.*
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -223,12 +224,12 @@ class Channels extends IfmElement {
 
     // end queries
 
-    static List<Class<?>> adminClasses() {
-        return (List<Class<?>>) [User.class]
+    static List adminClasses() {
+        [User.class]
     }
 
-    static List<Class<?>> contentClasses() {
-        return (List<Class<?>>) [User.class, Project.class, Taxonomy.class]
+    static List contentClasses() {
+        [User.class, Project.class, Taxonomy.class]
     }
 
     static boolean isSet(Ref ref) {  // always called in application scope

@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.mem.SessionMemory;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.filters.UserScope;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.FilteredContainer;
@@ -15,6 +16,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authentication.pages.SignOutPage;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -51,7 +53,7 @@ public class PlaybookPage extends WebPage {
     }
 
     private void load() {
-        setModel( new Model( getSession() ) );
+        setDefaultModel( new Model<PlaybookSession>( getSession() ) );
 
         addOrReplace( new Label("title", new AbstractReadOnlyModel(){
             public Object getObject() {
@@ -64,7 +66,7 @@ public class PlaybookPage extends WebPage {
                 }
             }
         } ));
-        addOrReplace( new Label("name", new RefPropertyModel(getModel(), "user.name")));
+        addOrReplace( new Label("name", new RefPropertyModel(getDefaultModel(), "user.name")));
         addOrReplace( new BookmarkablePageLink("signout", SignOutPage.class, getPageParameters()));
 
         tabPanel = createTabPanel( "user-tabs" );
@@ -150,7 +152,7 @@ public class PlaybookPage extends WebPage {
             user.changed( "selectedTab" );
             ref.commit();
             ref.detach();
-            assert( this.selectedTab.equals( getUser().getSelectedTab() ) );
+            assert this.selectedTab.equals( getUser().getSelectedTab() );
             tabPanel.setSelectedTab( refList.indexOf( this.selectedTab ) );
         }
     }
@@ -174,8 +176,8 @@ public class PlaybookPage extends WebPage {
         };
     }
 
-    private List<AbstractTab> createUserTabs() {
-        List<AbstractTab> result = new ArrayList<AbstractTab>();
+    private List<ITab> createUserTabs() {
+        List<ITab> result = new ArrayList<ITab>();
 
         final Ref userRef = getUserRef();
         User user = (User) userRef.deref();
@@ -195,12 +197,12 @@ public class PlaybookPage extends WebPage {
             userRef.begin();
             // The following is required, as the begin sometimes produces a copy
             user = (User) userRef.deref();
-            assert( !getSessionMemory().getChanges().contains( userRef ));
+            assert !getSessionMemory().getChanges().contains( userRef );
             user.addTab( tabRef );
-            assert( getSessionMemory().getChanges().contains( userRef ));
+            assert getSessionMemory().getChanges().contains( userRef );
             tabRef.commit();
             userRef.commit();
-            assert( !getSessionMemory().getChanges().contains( userRef ));
+            assert !getSessionMemory().getChanges().contains( userRef );
 
             result.add( createTab( tabRef ) );
             scope.detach();
@@ -236,21 +238,21 @@ public class PlaybookPage extends WebPage {
                             userRef.begin();
                             User u = (User) userRef.deref();
 
-                            List<Class<?>> c = newTab.getAllowedClasses();
+                            List<Class<? extends Referenceable>> c = newTab.getAllowedClasses();
                             if ( c.size() == 1 ) {
                                 newTab.setName( ContainerSummary.toDisplay( c.get(0).getSimpleName() ) + "s" );
                             } else
                                 newTab.setName( "Tab " + (u.getTabs().size() + 1) );
 
                             u.addTab( newTabRef );
-                            assert( getSessionMemory().getChanges().contains( userRef ));
+                            assert getSessionMemory().getChanges().contains( userRef );
                             newTab.detach();
                             newTabRef.commit();
                             userRef.commit();
-                            assert( !getSessionMemory().getChanges().contains( userRef ));
-                            assert( !getSessionMemory().getBegun().containsKey( userRef ));
-                            assert( !getSessionMemory().getChanges().contains( newTabRef ));
-                            assert( !getSessionMemory().getBegun().containsKey( newTabRef ));
+                            assert !getSessionMemory().getChanges().contains( userRef );
+                            assert !getSessionMemory().getBegun().containsKey( userRef );
+                            assert !getSessionMemory().getChanges().contains( newTabRef );
+                            assert !getSessionMemory().getBegun().containsKey( newTabRef );
                             PlaybookPage.this.detach();
                             load();
                         }

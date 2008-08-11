@@ -15,7 +15,6 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import com.mindalliance.channels.playbook.ifm.project.resources.*
 import com.mindalliance.channels.playbook.ifm.taxonomy.*
 import com.mindalliance.channels.playbook.ifm.playbook.*
-import com.mindalliance.channels.playbook.pages.forms.tests.FormTest
 import org.apache.wicket.Application
 import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.query.QueryCache
@@ -34,7 +33,9 @@ import com.mindalliance.channels.playbook.query.Query
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeEvent
 import com.mindalliance.channels.playbook.ref.impl.RefImpl
-import java.beans.PropertyChangeSupport
+import org.apache.wicket.markup.html.WebPage
+import org.apache.wicket.authentication.AuthenticatedWebSession
+import org.apache.wicket.Page
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -45,6 +46,7 @@ import java.beans.PropertyChangeSupport
  */
 class PlaybookApplication extends AuthenticatedWebApplication implements Serializable, PropertyChangeListener {
 
+    private static final long serialVersionUID = -1L;
     static final String FORM_PACKAGE = 'com.mindalliance.channels.playbook.pages.forms'
     static final String FORM_SUFFIX = 'Form'
 
@@ -79,18 +81,18 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     //----------------------
     @Override
-    public Class getHomePage() {
+    public Class<? extends Page> getHomePage() {
        return PlaybookPage.class
        // return FormTest.class
     }
 
     @Override
-    protected Class getWebSessionClass() {
+    protected Class<? extends AuthenticatedWebSession> getWebSessionClass() {
         return PlaybookSession.class
     }
 
     @Override
-    protected Class getSignInPageClass() {
+    protected Class<? extends WebPage> getSignInPageClass() {
         return LoginPage.class;
     }
 
@@ -206,7 +208,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
                         project: p.getReference())
         p.addParticipation(part2)
         store(part2)
-        
+
         initializeDefaultPlaybook(p, m)
         channels.addProject(store(p))
         channels.addTaxonomy(store(m));
@@ -527,9 +529,9 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     Ref createNewElement(String type) {
         Class clazz = (Class) Eval.me("${type}.class")
-        return clazz.newInstance()
+        return (Ref) clazz.newInstance()
     }
-    
+
     Class formClassFor(String type) {
        String className = "${FORM_PACKAGE}.${type}${FORM_SUFFIX}"
         try {

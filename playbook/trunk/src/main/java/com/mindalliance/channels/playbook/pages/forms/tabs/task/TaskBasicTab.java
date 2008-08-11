@@ -1,33 +1,31 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.task;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.TimingPanel;
+import com.mindalliance.channels.playbook.ifm.playbook.Task;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.panels.TimingPanel;
+import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.playbook.Task;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.repeater.RefreshingView;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RefreshingView;
+import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -64,7 +62,7 @@ public class TaskBasicTab extends InformationActBasicTab {
         addReplaceable(purposesDiv);
         purposesView = new RefreshingView("purposes", new RefPropertyModel(getElement(), "specificPurposes")) {
             protected Iterator getItemModels() {
-                List<Integer> indices = listIndicesIn((List)purposesView.getModelObject());                
+                List<Integer> indices = listIndicesIn((List)purposesView.getDefaultModelObject());
                 return new ModelIteratorAdapter(indices.iterator()) {
                     protected IModel model(Object index) {
                         return new Model((Integer) index);
@@ -78,7 +76,7 @@ public class TaskBasicTab extends InformationActBasicTab {
                 purposeField.add(new AjaxFormComponentUpdatingBehavior("onchange"){
                     protected void onUpdate(AjaxRequestTarget target) {
                         task.getSpecificPurposes().remove(index);
-                        task.getSpecificPurposes().add(index, purposeField.getModelObjectAsString());
+                        task.getSpecificPurposes().add(index, purposeField.getDefaultModelObjectAsString());
                         task.changed("specificPurposes");
                     }
                 });

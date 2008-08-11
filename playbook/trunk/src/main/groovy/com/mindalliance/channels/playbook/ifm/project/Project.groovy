@@ -21,6 +21,7 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.Participation
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,6 +31,7 @@ import com.mindalliance.channels.playbook.ifm.Participation
  * Time: 2:10:46 PM
  */
 class Project extends IfmElement implements Named, Described {
+    private static final long serialVersionUID = -1L;
 
     String name = 'Unnamed'
     String description = ''
@@ -44,11 +46,11 @@ class Project extends IfmElement implements Named, Described {
     List<Ref> taxonomies = []
 
     @Override
-    protected List<String> transientProperties() {
+    protected List transientProperties() {
         return (List<String>)(super.transientProperties() + ['allIssues', 'allInvalidations', 'allProblems', 'resources'])
     }
 
-    protected List<String> childProperties() {
+    protected List childProperties() {
         return (List<String>)(super.childProperties() + ['participations', 'persons', 'organizations', 'places',
                                 'relationships', 'policies', 'sharingAgreements', 'playbooks'])
     }
@@ -202,7 +204,7 @@ class Project extends IfmElement implements Named, Described {
         elementTypes.each {elementType ->
             if (elementType as boolean) types.addAll(this.findAllTypesNarrowing(elementType))
         }
-        return types as List
+        return types as List<Ref>
     }
 
     List<Ref> findPlaceTypesNarrowing(Ref placeType) {
@@ -303,11 +305,11 @@ class Project extends IfmElement implements Named, Described {
         return (List<Ref>) findAllAgents().findAll {agent -> agent.hasLocation() && (geoLoc = agent.location.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
     }
 
-    List<Ref> findAllAgentsWithJurisdictionsInAreasOfTypeImplying(Ref areaType) {
+    List findAllAgentsWithJurisdictionsInAreasOfTypeImplying(Ref areaType) {
         return (List<Ref>) findAllAgents().findAll {agent -> agent.hasJurisdiction() && (geoLoc = agent.jurisdiction.effectiveGeoLocation) && geoLoc.isDefined() && geoLoc.areaType.implies(areaType)}
     }
 
-    List<String> findAllRelationshipNames() {  // TODO write a VocabularyManager to keep vocabulary usage count from everywhere
+    List<Ref> findAllRelationshipNames() {  // TODO write a VocabularyManager to keep vocabulary usage count from everywhere
         CountedSet countedSet = new CountedSet();
         // Permanent relationships
         relationships.each {rel -> if (rel as boolean && rel.name) countedSet.add(rel.name)}
@@ -344,7 +346,7 @@ class Project extends IfmElement implements Named, Described {
     }
 
 
-    List<String> findAllPurposes() {
+    List<Ref> findAllPurposes() {
         CountedSet countedSet = new CountedSet();
         policies.each {pol -> if (pol as boolean) countedSet.addAll(pol.purposes)}
         sharingAgreements.each {agr -> if (agr as boolean) countedSet.addAll(agr.constraints.allowedPurposes)}
@@ -401,9 +403,9 @@ class Project extends IfmElement implements Named, Described {
     /**
      * Return project contents that a participant can add.
      */
-    static List<Class<?>> contentClasses() {
+    static List contentClasses() {
         // When changing this method, don't forget to update the next one...
-        List<Class<?>> result = new ArrayList<Class<?>>()
+        List<Class<? extends Referenceable>> result = new ArrayList<Class<? extends Referenceable>>()
         result.addAll([Organization.class])
         result.addAll([Place.class])
         result.addAll([Playbook.class])
@@ -430,8 +432,8 @@ class Project extends IfmElement implements Named, Described {
     /**
      * Return system objects that a project manager can add.
      */
-    static List<Class<?>> managerClasses() {
-        return (List<Class<?>>)[Project.class]
+    static List managerClasses() {
+        [Project.class]
     }
 
     void addManagerContents(List<Ref> result) {

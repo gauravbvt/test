@@ -1,19 +1,17 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.ifm.Timing;
+import com.mindalliance.channels.playbook.ifm.definition.TaskDefinition;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.ifm.definition.TaskDefinition;
-import com.mindalliance.channels.playbook.ifm.Timing;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.query.Query;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
@@ -48,9 +46,9 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
     protected void load() {
         super.load();
         taskDefinition = (TaskDefinition)getComponent();
-        anyTaskTypeCheckBox = new AjaxCheckBox("anyTaskType", new Model((Boolean)taskDefinition.getTaskTypes().isEmpty())){
+        anyTaskTypeCheckBox = new AjaxCheckBox("anyTaskType", new Model<Boolean>(taskDefinition.getTaskTypes().isEmpty())){
              protected void onUpdate(AjaxRequestTarget target) {
-                 boolean anyTaskType = (Boolean)anyTaskTypeCheckBox.getModelObject();
+                 boolean anyTaskType = anyTaskTypeCheckBox.getModelObject();
                  if (anyTaskType) {
                      setProperty("taskTypes", new ArrayList<Ref>());
                  }
@@ -71,9 +69,9 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
          };
          addReplaceableTo(taskTypesTree, taskTypesDiv);
 
-        anyPurposeCheckBox = new AjaxCheckBox("anyPurpose", new Model((Boolean)taskDefinition.getSpecificPurposes().isEmpty())){
+        anyPurposeCheckBox = new AjaxCheckBox("anyPurpose", new Model<Boolean>( taskDefinition.getSpecificPurposes().isEmpty() )){
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean anyPurpose = (Boolean)anyPurposeCheckBox.getModelObject();
+                boolean anyPurpose = anyPurposeCheckBox.getModelObject();
                 if (anyPurpose) {
                     setProperty("specificPurposes", new ArrayList<String>());
                     purposesChooser = new MultipleStringChooser("purposes", TaskDefinitionPanel.this, propPath+".specificPurposes",
@@ -91,9 +89,9 @@ public class TaskDefinitionPanel extends AbstractDefinitionPanel {
                 new RefQueryModel(getScope(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
         // anyReponseTiming checkbox
-        anyResponseTimingCheckBox = new AjaxCheckBox("anyResponseTiming", new Model(!(Boolean)taskDefinition.getResponseTiming().isDefined())){
+        anyResponseTimingCheckBox = new AjaxCheckBox("anyResponseTiming", new Model<Boolean>(!taskDefinition.getResponseTiming().isDefined() )){
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean anyResponseTiming = (Boolean)anyResponseTimingCheckBox.getModelObject();
+                boolean anyResponseTiming = anyResponseTimingCheckBox.getModelObject();
                 if (anyResponseTiming) {
                     setProperty("reponseTiming", new Timing());
                     responseTimingPanel = new TimingPanel("responseTiming", TaskDefinitionPanel.this, propPath+".responseTiming");

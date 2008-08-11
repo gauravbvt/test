@@ -1,13 +1,11 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import com.mindalliance.channels.playbook.ifm.definition.Definition;
 import com.mindalliance.channels.playbook.ifm.definition.TaskDefinition;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.query.Query;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -18,26 +16,37 @@ import com.mindalliance.channels.playbook.query.Query;
  */
 public class TaskSpecificationPanel extends AbstractSpecificationPanel {
 
-    public TaskSpecificationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
-        super(id, parentPanel, propPath);
+    private static final long serialVersionUID = 4606384303074912251L;
+
+    public TaskSpecificationPanel(
+            String id, AbstractPlaybookPanel parentPanel, String propPath ) {
+        super( id, parentPanel, propPath );
     }
 
+    @Override
     protected String getMatchingDomainName() {
         return "task";
     }
 
-    protected IModel getEnumerationChoicesModel() {
-        return new RefQueryModel(getPlaybook(), new Query("findInformationActsOfType", "Task"));
+    @Override
+    protected IModel<?> getEnumerationChoicesModel() {
+        return new RefQueryModel(
+                getPlaybook(),
+                new Query( "findInformationActsOfType", "Task" ) );
     }
 
-    protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath) {
-        return new TaskDefinitionPanel(id, this, propPath);
+    @Override
+    protected AbstractDefinitionPanel makeDefinitionEditor(
+            String id, String propPath ) {
+        return new TaskDefinitionPanel( id, this, propPath );
     }
 
+    @Override
     protected Definition makeNewDefinition() {
         return new TaskDefinition();
     }
 
+    @Override
     protected boolean isEnumerable() {
         return isPlaybookPanel();
     }

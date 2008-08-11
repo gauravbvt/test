@@ -6,29 +6,36 @@ import com.mindalliance.channels.playbook.support.models.Container;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * ...
- */
+/** ... */
 public class UserFilters extends AbstractFilters {
 
-    public enum Type { Normal, Admins, Analysts, Managers }
-    private Map<Type,Integer> count = new HashMap<Type,Integer>();
+    public UserFilters() {
+    }
 
+    public enum Type {
+
+        Normal, Admins, Analysts, Managers
+    }
+
+    private Map<Type, Integer> count = new EnumMap<Type, Integer>( Type.class );
+
+    @SuppressWarnings( { "TypeMayBeWeakened" } )
     private int get( Type type ) {
-        Integer c = count.get( type );
-        return c == null ? 0 : c ;
+        Integer i = count.get( type );
+        return i == null ? 0 : i;
     }
 
     private void addTo( Type type ) {
         count.put( type, get( type ) + 1 );
     }
 
-    public void addFilters( Container container, List<Filter> result ) {
-        final int size = container.size();
+    @Override
+    public void addFilters( Container container, List<Filter> results ) {
+        int size = container.size();
         for ( Ref userRef : container ) {
             User user = (User) userRef.deref();
             if ( user.getAdmin() )
@@ -42,80 +49,103 @@ public class UserFilters extends AbstractFilters {
         }
 
         if ( get( Type.Admins ) > 0 && get( Type.Admins ) < size )
-            result.add( new AdminFilter() );
+            results.add( new AdminFilter() );
         if ( get( Type.Managers ) > 0 && get( Type.Managers ) < size )
-            result.add( new ManagerFilter() );
+            results.add( new ManagerFilter() );
         if ( get( Type.Analysts ) > 0 && get( Type.Analysts ) < size )
-            result.add( new AnalystFilter() );
+            results.add( new AnalystFilter() );
         if ( get( Type.Normal ) > 0 && get( Type.Normal ) < size )
-            result.add( new NormalUserFilter() );
+            results.add( new NormalUserFilter() );
     }
 
-    static abstract class UserFilter extends Filter {
+    abstract static class UserFilter extends Filter {
 
-        public UserFilter( String text ) {
+        private static final long serialVersionUID = 8019612134908670407L;
+
+        protected UserFilter( String text ) {
             super( text, text + "..." );
+            setInclusion( true );
         }
 
-        protected List<Filter> createChildren() {
+        @Override
+        protected List<Filter> createChildren( boolean selectionState ) {
             if ( isShowingLeaves() ) {
                 List<Filter> results = new ArrayList<Filter>();
-                for ( Ref ref : getContainer() )
-                    results.add( new RefFilter( ref ) );
+                for ( Ref ref : getContainer() ) {
+                    RefFilter f = new RefFilter( ref );
+                    f.setSelected( selectionState );
+                    results.add( f );
+                }
                 return results;
-
             } else
                 return Collections.emptyList();
         }
 
-        protected boolean strictlyAllowsClass( Class<?> c ) {
+        @Override
+        protected boolean allowsClassLocally( Class<?> c ) {
             return c.equals( User.class );
         }
     }
 
     static class AdminFilter extends UserFilter {
 
-        public AdminFilter() {
+        private static final long serialVersionUID = 1312226051936967710L;
+
+        AdminFilter() {
             super( "Administrators" );
         }
 
-        public boolean match( Ref object ) {
-            return object.getType().equals( "User" ) && ( (User) object.deref() ).getAdmin();
+        @Override
+        public boolean isMatching( Ref object ) {
+            return "User".equals( object.getType() ) && ( (User) object
+                    .deref() ).getAdmin();
         }
     }
 
     static class ManagerFilter extends UserFilter {
 
-        public ManagerFilter() {
+        private static final long serialVersionUID = 8940928416718004856L;
+
+        ManagerFilter() {
             super( "Managers" );
         }
 
-        public boolean match( Ref object ) {
-            return object.getType().equals( "User" ) && ( (User) object.deref() ).getManager();
+        @Override
+        public boolean isMatching( Ref object ) {
+            return "User".equals( object.getType() ) && ( (User) object
+                    .deref() ).getManager();
         }
     }
 
     static class AnalystFilter extends UserFilter {
 
-        public AnalystFilter() {
+        private static final long serialVersionUID = -3759575510396620670L;
+
+        AnalystFilter() {
             super( "Analysts" );
         }
 
-        public boolean match( Ref object ) {
-            return object.getType().equals( "User" ) && ( (User) object.deref() ).getAnalyst();
+        @Override
+        public boolean isMatching( Ref object ) {
+            return "User".equals( object.getType() ) && ( (User) object
+                    .deref() ).getAnalyst();
         }
     }
 
     static class NormalUserFilter extends UserFilter {
 
-        public NormalUserFilter() {
+        private static final long serialVersionUID = 6354327699147333774L;
+
+        NormalUserFilter() {
             super( "Normal users" );
         }
 
-        public boolean match( Ref object ) {
-            if ( object.getType().equals( "User" ) ) {
-                final User user = (User) object.deref();
-                return !user.getAdmin() && !user.getManager() && !user.getAnalyst();
+        @Override
+        public boolean isMatching( Ref object ) {
+            if ( "User".equals( object.getType() ) ) {
+                User user = (User) object.deref();
+                return !user.getAdmin() && !user.getManager() && !user
+                        .getAnalyst();
             }
 
             return false;

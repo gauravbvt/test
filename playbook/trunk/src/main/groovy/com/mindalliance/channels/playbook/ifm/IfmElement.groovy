@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 * Time: 12:36:45 PM
 */
 abstract class IfmElement extends ReferenceableImpl implements Serializable {
+    private static final long serialVersionUID = -1L;
 
     Date createdOn = new Date()
     Date lastModified = new Date()
@@ -56,7 +57,7 @@ abstract class IfmElement extends ReferenceableImpl implements Serializable {
 
     boolean isProjectElement() {
         return false
-    }                                                                     
+    }
 
     boolean isTaxonomyElement() {
         return false

@@ -12,15 +12,19 @@ import org.apache.wicket.model.IModel;
  * Time: 9:28:34 PM
  */
 public class NoFormButton extends Button {
+
+    private static final long serialVersionUID = 137472117913062342L;
+
     public NoFormButton(String id) {
         super(id);
     }
 
-    public NoFormButton(String id, IModel model) {
+    public NoFormButton(String id, IModel<String> model) {
         super(id, model);
     }
 
-    public Form getForm() {
+    @Override
+    public Form<?> getForm() {
         return null;
     }
 }

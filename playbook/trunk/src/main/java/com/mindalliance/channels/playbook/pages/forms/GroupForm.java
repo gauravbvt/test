@@ -15,13 +15,19 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class GroupForm extends AbstractPlaybookElementForm {
 
+    private static final long serialVersionUID = 4220328369697624789L;
+
     public GroupForm(String id, Ref element) {
         super(id, element);
     }
 
+    @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Who")) {
-             public Panel getPanel(String panelId) {
+        tabs.add(new AbstractTab(new Model<String>("Who")) {
+            private static final long serialVersionUID = 8209308066914876871L;
+
+            @Override
+            public Panel getPanel(String panelId) {
                  return new GroupWhoTab(panelId, GroupForm.this);
              }
          });

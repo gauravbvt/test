@@ -20,7 +20,7 @@ public class OrganizationTypeForm  extends AbstractCategoryForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
              public Panel getPanel(String panelId) {
                  return new CategoryBasicTab(panelId, OrganizationTypeForm.this);
              }

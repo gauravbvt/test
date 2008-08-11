@@ -1,13 +1,10 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.sharingCommitment;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.tabs.flowAct.FlowActBasicTab;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
@@ -19,22 +16,31 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public class SharingCommitmentBasicTab extends FlowActBasicTab {
 
-    DynamicFilterTree approvedByTree;
+    private DynamicFilterTree approvedByTree;
+    private static final long serialVersionUID = -1146865203210427229L;
 
-    public SharingCommitmentBasicTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public SharingCommitmentBasicTab(
+            String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
-        approvedByTree = new DynamicFilterTree("approvedBy", new RefPropertyModel(getElement(), "approvedBy"),
-                                                new RefPropertyModel(getProject(), "positions"),
-                                                SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selected = approvedByTree.getNewSelection();
-                setProperty("approvedBy", selected);
+        approvedByTree = new DynamicFilterTree(
+                "approvedBy",
+                new RefPropertyModel( getElement(), "approvedBy" ),
+                new RefPropertyModel( getProject(), "positions" ),
+                SINGLE_SELECTION ) {
+            private static final long serialVersionUID = -3103659188760093080L;
+
+            @Override
+            public void onFilterSelect(
+                    AjaxRequestTarget target, Filter filter ) {
+                Object selected = approvedByTree.getNewSelection();
+                setProperty( "approvedBy", selected );
             }
         };
-        addReplaceable(approvedByTree);
+        addReplaceable( approvedByTree );
     }
 }

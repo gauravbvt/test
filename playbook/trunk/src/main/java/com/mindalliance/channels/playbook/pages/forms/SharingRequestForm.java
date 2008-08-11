@@ -16,26 +16,47 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Time: 2:05:18 PM
  */
 public class SharingRequestForm extends AbstractInformationActForm {
-    
-    public SharingRequestForm(String id, Ref element) {
-        super(id, element);
+
+    private static final long serialVersionUID = 5178388214398411136L;
+
+    public SharingRequestForm( String id, Ref element ) {
+        super( id, element );
     }
 
+    @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
-             public Panel getPanel(String panelId) {
-                 return new FlowActBasicTab(panelId, SharingRequestForm.this);
-             }
-         });
-        tabs.add(new AbstractTab(new Model("Protocol")) {
-             public Panel getPanel(String panelId) {
-                 return new SharingRequestProtocolTab(panelId, SharingRequestForm.this);
-             }
-         });
-        tabs.add(new AbstractTab(new Model("Risk")) {
-             public Panel getPanel(String panelId) {
-                 return new EventRiskTab(panelId, SharingRequestForm.this);
-             }
-         });
+        tabs.add(
+                new AbstractTab( new Model<String>( "Basic" ) ) {
+                    private static final long serialVersionUID =
+                            -2464090334126795424L;
+
+                    @Override
+                    public Panel getPanel( String panelId ) {
+                        return new FlowActBasicTab(
+                                panelId, SharingRequestForm.this );
+                    }
+                } );
+        tabs.add(
+                new AbstractTab( new Model<String>( "Protocol" ) ) {
+                    private static final long serialVersionUID =
+                            -1929224681236782663L;
+
+                    @Override
+                    public Panel getPanel( String panelId ) {
+                        return new SharingRequestProtocolTab(
+                                panelId, SharingRequestForm.this );
+                    }
+                } );
+        tabs.add(
+                new AbstractTab( new Model<String>( "Risk" ) ) {
+                    private static final long serialVersionUID =
+                            -7300797998988029256L;
+
+                    @Override
+                    public Panel getPanel( String panelId ) {
+                        return new EventRiskTab(
+                                panelId, SharingRequestForm.this );
+                    }
+                } );
     }
 }

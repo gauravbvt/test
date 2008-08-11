@@ -1,31 +1,30 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.models.RefModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.support.components.AutoCompleteTextFieldWithChoices;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.project.environment.Relationship;
-import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.components.AutoCompleteTextFieldWithChoices;
+import com.mindalliance.channels.playbook.support.models.RefModel;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.RefreshingView;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.AttributeModifier;
 
 import java.util.Iterator;
 import java.util.List;
@@ -113,7 +112,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         newRelationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                newRelationshipName = newRelationshipNameField.getModelObjectAsString();
+                newRelationshipName = newRelationshipNameField.getDefaultModelObjectAsString();
                 updateVisibility(target);
             }
         });
@@ -124,7 +123,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 newToAgent = agentsTree.getNewSelection();
                 updateVisibility(target);
-                reverseFromAgentNameLabel.setModelObject((String)RefUtils.get(newToAgent, "name"));
+                reverseFromAgentNameLabel.setDefaultModelObject((String)RefUtils.get(newToAgent, "name"));
                 target.addComponent(reverseFromAgentNameLabel);
             }
         };
@@ -139,7 +138,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
         reverseRelationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                newReverseRelationshipName = reverseRelationshipNameField.getModelObjectAsString();
+                newReverseRelationshipName = reverseRelationshipNameField.getDefaultModelObjectAsString();
                 updateVisibility(target);
             }
         });
@@ -160,7 +159,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
                     newReverseRelationship.setName(newReverseRelationshipName.trim().toLowerCase());
                     newReverseRelationship.setToAgent(getElement());
                     newReverseRelationship.setReverseRelationship(newRelationship.getReference());
-                    newRelationship.setReverseRelationship(newReverseRelationship.getReference());                    
+                    newRelationship.setReverseRelationship(newReverseRelationship.getReference());
                     RefUtils.add(getProject(), "relationships", newReverseRelationship.persist());
                 }
                 newRelationshipName = "";

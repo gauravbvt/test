@@ -1,8 +1,6 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,8 +11,10 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  */
 public class OutgoingSharingProtocolPanel extends AbstractSharingProtocolPanel {
 
-    public OutgoingSharingProtocolPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
-        super(id, parentPanel, propPath);
+    private static final long serialVersionUID = 4169012705043185796L;
+
+    public OutgoingSharingProtocolPanel(
+            String id, AbstractPlaybookPanel parentPanel, String propPath ) {
+        super( id, parentPanel, propPath );
     }
-    
 }

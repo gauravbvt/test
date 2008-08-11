@@ -13,15 +13,18 @@ import com.mindalliance.channels.playbook.pages.forms.panels.OutgoingSharingProt
  */
 public class SharingRequestProtocolTab extends AbstractFormTab {
 
-    OutgoingSharingProtocolPanel protocolPanel;
+    private static final long serialVersionUID = 106231697111617108L;
 
-    public SharingRequestProtocolTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public SharingRequestProtocolTab(
+            String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
-        protocolPanel = new OutgoingSharingProtocolPanel("protocol", this, "protocol");
-        addReplaceable(protocolPanel);
+        addReplaceable(
+                new OutgoingSharingProtocolPanel(
+                        "protocol", this, "protocol" ) );
     }
 }

@@ -19,6 +19,7 @@ import org.apache.log4j.Logger
  * Time: 8:49:28 AM
  */
 abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
+    private static final long serialVersionUID = -1L;
 
     String id
     String db
@@ -244,13 +245,13 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
         return ref
     }
 
-    Map toMap() {
+    Map<String,Object> toMap() {
         Map map = super.toMap()
         map = map + [id: id, db: db]
         return map
     }
 
-    void initFromMap(Map map) {
+    void initFromMap(Map<String,Object> map) {
         super.initFromMap(map)
         id = map['id']
         db = map['db']

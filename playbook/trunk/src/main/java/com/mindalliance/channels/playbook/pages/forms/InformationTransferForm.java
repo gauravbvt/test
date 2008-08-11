@@ -24,27 +24,27 @@ public class InformationTransferForm extends AbstractInformationActForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
             public Panel getPanel(String panelId) {
                 return new FlowActBasicTab(panelId, InformationTransferForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Cause")) {
+        tabs.add(new AbstractTab(new Model<String>("Cause")) {
              public Panel getPanel(String panelId) {
                  return new EventCauseTab(panelId, InformationTransferForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Information")) {
+        tabs.add(new AbstractTab(new Model<String>("Information")) {
             public Panel getPanel(String panelId) {
                 return new InformationActInfoTab(panelId, InformationTransferForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Medium")) {
+        tabs.add(new AbstractTab(new Model<String>("Medium")) {
             public Panel getPanel(String panelId) {
                 return new InformationTransferMediaTab(panelId, InformationTransferForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Risk")) {
+        tabs.add(new AbstractTab(new Model<String>("Risk")) {
              public Panel getPanel(String panelId) {
                  return new EventRiskTab(panelId, InformationTransferForm.this);
              }

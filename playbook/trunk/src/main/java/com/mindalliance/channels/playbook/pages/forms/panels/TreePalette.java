@@ -14,6 +14,7 @@ import org.apache.wicket.model.IModel;
 public class TreePalette extends Palette {
 
     private Filter filter;
+    private static final long serialVersionUID = -5529833518360832119L;
 
     /**
      * Create a new tree palette.
@@ -27,6 +28,9 @@ public class TreePalette extends Palette {
                selections,
                choices,
                new ChoiceRenderer(){
+                   private static final long serialVersionUID = -6034699352306143340L;
+
+                   @Override
                    public Object getDisplayValue( Object ref ) {
                        return super.getDisplayValue( ((Ref) ref).deref() );
                    }
@@ -45,6 +49,7 @@ public class TreePalette extends Palette {
         return null;
     }
 
+    @Override
     public synchronized void detachModels() {
         super.detachModels();
         filter = null;

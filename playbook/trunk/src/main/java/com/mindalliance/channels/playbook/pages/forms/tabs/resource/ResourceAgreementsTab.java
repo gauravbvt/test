@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.Component;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,65 +28,98 @@ import java.util.List;
  */
 public class ResourceAgreementsTab extends AbstractFormTab {
 
-    protected RefreshingView whereSourceView;
-    protected RefreshingView whereRecipientView;
+    private Component whereSourceView;
+    private Component whereRecipientView;
+    private static final long serialVersionUID = -6527452369969183810L;
 
-    public ResourceAgreementsTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public ResourceAgreementsTab( String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
-        whereSourceView = new RefreshingView("agreementsWhereSource",
-                                              new RefQueryModel(getScope(),
-                                                                new Query("findAgreementsWhereSource", getElement()))) {
-            protected Iterator getItemModels() {
-                List<Ref> agreements = (List<Ref>) whereSourceView.getModelObject();
-                return new ModelIteratorAdapter(agreements.iterator()) {
-                     protected IModel model(Object agreement) {
-                         return new RefModel(agreement);
-                     }
-                 };
-            }
+        whereSourceView = new RefreshingView<Ref>(
+                "agreementsWhereSource", new RefQueryModel(
+                getScope(),
+                new Query( "findAgreementsWhereSource", getElement() ) ) ) {
+            private static final long serialVersionUID = 6065498237705151943L;
 
-            protected void populateItem(Item item) {
-                final Ref agreement = (Ref)item.getModelObject();
-                AjaxLink whereSourceLink = new AjaxLink("whereSourceLink") {
-                    public void onClick(AjaxRequestTarget target) {
-                         edit(agreement, target);
+            @Override
+            @SuppressWarnings( { "unchecked" } )
+            protected Iterator<IModel<Ref>> getItemModels() {
+                List<Ref> agreements =
+                        (List<Ref>) whereSourceView.getDefaultModelObject();
+                return new ModelIteratorAdapter<Ref>( agreements.iterator() ) {
+                    @Override
+                    protected IModel<Ref> model( Ref object ) {
+                        return new RefModel( object );
                     }
                 };
-                Label whereSourceString = new Label("whereSourceString", (String)RefUtils.get(agreement, "name"));
-                whereSourceLink.add(whereSourceString);
-                item.add(whereSourceLink);
+            }
+
+            @Override
+            protected void populateItem( Item<Ref> item ) {
+                final Ref agreement = item.getModelObject();
+                AjaxLink<?> whereSourceLink =
+                        new AjaxLink( "whereSourceLink" ) {
+                            private static final long serialVersionUID =
+                                    -6704558538100335056L;
+
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                edit( agreement, target );
+                            }
+                        };
+                Label whereSourceString = new Label(
+                        "whereSourceString",
+                        (String) RefUtils.get( agreement, "name" ) );
+                whereSourceLink.add( whereSourceString );
+                item.add( whereSourceLink );
             }
         };
-        addReplaceable(whereSourceView);
-        whereRecipientView = new RefreshingView("agreementsWhereRecipient",
-                                               new RefQueryModel(getScope(),
-                                                                 new Query("findAgreementsWhereRecipient", getElement()))) {
-             protected Iterator getItemModels() {
-                 List<Ref> agreements = (List<Ref>) whereRecipientView.getModelObject();
-                 return new ModelIteratorAdapter(agreements.iterator()) {
-                      protected IModel model(Object agreement) {
-                          return new RefModel(agreement);
-                      }
-                  };
-             }
+        addReplaceable( whereSourceView );
 
-             protected void populateItem(Item item) {
-                 final Ref agreement = (Ref)item.getModelObject();
-                 AjaxLink whereRecipientLink = new AjaxLink("whereRecipientLink") {
-                     public void onClick(AjaxRequestTarget target) {
-                          edit(agreement, target);
-                     }
-                 };
-                 Label whereRecipientString = new Label("whereRecipientString", (String)RefUtils.get(agreement, "name"));
-                 whereRecipientLink.add(whereRecipientString);
-                 item.add(whereRecipientLink);
-             }
-         };
-         addReplaceable(whereRecipientView);
+        whereRecipientView = new RefreshingView<Ref>(
+                "agreementsWhereRecipient",
+                new RefQueryModel(
+                    getScope(),
+                    new Query( "findAgreementsWhereRecipient", getElement() ) ) ) {
+            private static final long serialVersionUID = 3219878969996778194L;
+
+            @Override
+            @SuppressWarnings( { "unchecked" } )
+            protected Iterator<IModel<Ref>> getItemModels() {
+                List<Ref> agreements =
+                        (List<Ref>) whereRecipientView.getDefaultModelObject();
+                return new ModelIteratorAdapter<Ref>( agreements.iterator() ) {
+                    @Override
+                    protected IModel<Ref> model( Ref object ) {
+                        return new RefModel( object );
+                    }
+                };
+            }
+
+            @Override
+            protected void populateItem( Item<Ref> item ) {
+                final Ref agreement = item.getModelObject();
+                AjaxLink<?> whereRecipientLink =
+                        new AjaxLink( "whereRecipientLink" ) {
+                            private static final long serialVersionUID =
+                                    3884368691634698424L;
+
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                edit( agreement, target );
+                            }
+                        };
+                Label whereRecipientString = new Label(
+                        "whereRecipientString",
+                        (String) RefUtils.get( agreement, "name" ) );
+                whereRecipientLink.add( whereRecipientString );
+                item.add( whereRecipientLink );
+            }
+        };
+        addReplaceable( whereRecipientView );
     }
-
 }

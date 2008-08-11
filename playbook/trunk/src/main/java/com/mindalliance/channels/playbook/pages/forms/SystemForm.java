@@ -16,37 +16,58 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class SystemForm extends AbstractResourceForm {
 
+    private static final long serialVersionUID = 8067319437147455996L;
+
     public SystemForm(String id, Ref element) {
         super(id, element);
     }
 
+    @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
+            private static final long serialVersionUID = -6540476106153770917L;
+
+            @Override
             public Panel getPanel(String panelId) {
                 return new SystemIdentityTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Access")) {
+        tabs.add(new AbstractTab(new Model<String>("Access")) {
+            private static final long serialVersionUID = 828826989096318176L;
+
+            @Override
             public Panel getPanel(String panelId) {
                 return new ResourceAccessTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Location")) {
+        tabs.add(new AbstractTab(new Model<String>("Location")) {
+            private static final long serialVersionUID = -8188670975795388813L;
+
+            @Override
             public Panel getPanel(String panelId) {
                 return new ResourceLocationTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Responsibilities")) {
+        tabs.add(new AbstractTab(new Model<String>("Responsibilities")) {
+            private static final long serialVersionUID = -2752426071603904860L;
+
+            @Override
             public Panel getPanel(String panelId) {
                 return new ResourceResponsibilitiesTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Relationships")) {
+        tabs.add(new AbstractTab(new Model<String>("Relationships")) {
+            private static final long serialVersionUID = -2951722505083449747L;
+
+            @Override
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Agreements")) {
+        tabs.add(new AbstractTab(new Model<String>("Agreements")) {
+            private static final long serialVersionUID = 4366142411612959546L;
+
+            @Override
             public Panel getPanel(String panelId) {
                 return new ResourceAgreementsTab(panelId, SystemForm.this);
             }

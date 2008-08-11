@@ -23,6 +23,7 @@ public class RefContainer implements Container, Serializable {
     public RefContainer() {}
 
     public RefContainer( List<Ref> contents ) {
+        this();
         setContents( contents );
     }
 
@@ -61,8 +62,8 @@ public class RefContainer implements Container, Serializable {
                 ref.detach();
     }
 
-    public List<Class<?>> getAllowedClasses() {
-        return new ArrayList<Class<?>>();
+    public List<Class<? extends Referenceable>> getAllowedClasses() {
+        return new ArrayList<Class<? extends Referenceable>>();
     }
 
     public synchronized ContainerSummary getSummary() {
@@ -83,7 +84,7 @@ public class RefContainer implements Container, Serializable {
         return getContents().iterator();
     }
 
-    public IModel model( Object object ) {
+    public IModel<Ref> model( Ref object ) {
         return new RefModel( object );
     }
 
@@ -93,14 +94,6 @@ public class RefContainer implements Container, Serializable {
 
     public void remove( Referenceable ref ) {
         remove( ref.getReference() );
-    }
-
-    public Object getObject() {
-        return getContents();
-    }
-
-    public void setObject( Object object ) {
-        setContents( (List<Ref>) object );
     }
 
     public void initFromMap( Map map ) {

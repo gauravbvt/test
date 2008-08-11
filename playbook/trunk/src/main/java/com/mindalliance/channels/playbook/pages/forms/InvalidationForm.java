@@ -20,7 +20,7 @@ public class InvalidationForm extends AbstractAnalysisElementForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
              public Panel getPanel(String panelId) {
                  return new InvalidBasicTab(panelId, InvalidationForm.this);
              }

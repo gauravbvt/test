@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.pages.forms.panels.InformationPanel;
 public class InformationActInfoTab extends AbstractFormTab {
 
     protected InformationPanel informationPanel;
+    private static final long serialVersionUID = -8978642630095376133L;
 
     public InformationActInfoTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);

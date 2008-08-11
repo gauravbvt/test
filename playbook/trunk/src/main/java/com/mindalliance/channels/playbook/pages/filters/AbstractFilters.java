@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public abstract class AbstractFilters {
 
-    public AbstractFilters() {
+    protected AbstractFilters() {
     }
 
     /**
@@ -21,7 +21,7 @@ public abstract class AbstractFilters {
      * @param container the objects
      * @param results list to add to
      */
-    abstract public void addFilters( Container container, List<Filter> results );
+    abstract void addFilters( Container container, List<Filter> results );
 
     public List<Filter> getFilters( Container container, boolean showLeaves ) {
        List<Filter> result = new ArrayList<Filter>();
@@ -29,7 +29,7 @@ public abstract class AbstractFilters {
        addFilters( container, result );
 
        if ( showLeaves ) {
-           if ( result.size() == 0 )
+           if ( result.isEmpty() )
                for ( Ref ref : container  )
                    result.add( new RefFilter( ref ) );
            else

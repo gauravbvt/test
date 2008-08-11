@@ -1,19 +1,15 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
-import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.ifm.info.LatLong;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import org.apache.log4j.Logger;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.validation.validator.NumberValidator;
-import org.apache.log4j.Logger;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -49,7 +45,7 @@ public class LatLongPanel extends AbstractComponentPanel {
     }
 
     private void loadEditable() {
-        final TextField longitudeField = new TextField("longitude", new Model(latLong.getLongitude()));
+        final TextField<Double> longitudeField = new TextField<Double>("longitude", new Model<Double>(latLong.getLongitude()));
         longitudeField.setType(Double.class);
         longitudeField.add(NumberValidator.minimum(-180.0));
         longitudeField.add(NumberValidator.maximum(180.0));
@@ -58,11 +54,11 @@ public class LatLongPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 double value = 0.0;
                 try {
-                    value = new Double(longitudeField.getModelObjectAsString());
+                    value = new Double(longitudeField.getDefaultModelObjectAsString());
                 }
                 catch (NumberFormatException e) {
                     longitudeField.error("Not a number");
-                    longitudeField.setModelObject(0);
+                    longitudeField.setModelObject(0.0);
                     target.addComponent(longitudeField);
                 }
                 latLong.setLongitude(value);
@@ -78,7 +74,7 @@ public class LatLongPanel extends AbstractComponentPanel {
                 target.addComponent(getFeedback());
             }
         });
-        final TextField latitudeField = new TextField("latitude", new Model(latLong.getLatitude()));
+        final TextField<Double> latitudeField = new TextField<Double>("latitude", new Model<Double>(latLong.getLatitude()));
         latitudeField.setType(Double.class);
         latitudeField.add(NumberValidator.minimum(-90.0));
         latitudeField.add(NumberValidator.maximum(90.0));
@@ -87,11 +83,11 @@ public class LatLongPanel extends AbstractComponentPanel {
             protected void onUpdate(AjaxRequestTarget target) {
                 double value = 0.0;
                 try {
-                    value = new Double(latitudeField.getModelObjectAsString());
+                    value = new Double(latitudeField.getDefaultModelObjectAsString());
                 }
                 catch (NumberFormatException e) {
                     latitudeField.error("Not a number");
-                    latitudeField.setModelObject(0);
+                    latitudeField.setModelObject(0.0);
                     target.addComponent(latitudeField);
                 }
                 latLong.setLatitude(value);

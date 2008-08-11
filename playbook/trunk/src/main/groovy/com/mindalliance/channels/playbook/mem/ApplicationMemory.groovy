@@ -28,6 +28,7 @@ import com.mindalliance.channels.playbook.support.persistence.Mappable
  * Time: 10:06:15 AM
  */
 class ApplicationMemory implements Serializable {
+    private static final long serialVersionUID = -1L;
 
     static final String ROOT_ID = 'CHANNELS'
     static final String ROOT_DB = 'channels'

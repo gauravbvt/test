@@ -13,15 +13,15 @@ import com.mindalliance.channels.playbook.pages.forms.panels.LocationPanel;
  */
 public class EventLocationTab extends AbstractFormTab {
 
-    protected LocationPanel locationPanel;
+    private static final long serialVersionUID = -5161450765013774592L;
 
     public EventLocationTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
+    @Override
     protected void load() {
         super.load();
-        locationPanel = new LocationPanel("location", this, "location");
-        addReplaceable(locationPanel);
+        addReplaceable( new LocationPanel( "location", this, "location" ) );
     }
 }

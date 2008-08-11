@@ -11,6 +11,7 @@ import org.joda.time.Duration
  * Time: 7:33:29 PM
  */
 class Timing extends BeanImpl implements Defineable {
+    private static final long serialVersionUID = -1L;
 
     static final List<String> units = ['seconds', 'minutes', 'hours', 'days', 'weeks']
 

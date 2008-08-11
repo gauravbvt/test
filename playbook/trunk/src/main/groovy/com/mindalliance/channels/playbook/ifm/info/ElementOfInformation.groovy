@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.support.Level
 * Time: 1:06:55 PM
 */
 class ElementOfInformation extends BeanImpl {
+    private static final long serialVersionUID = -1L;
     
     String topic = ''
     String content = ''

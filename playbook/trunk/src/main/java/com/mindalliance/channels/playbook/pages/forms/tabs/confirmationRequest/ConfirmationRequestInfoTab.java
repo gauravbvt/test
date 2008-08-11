@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecificationP
 public class ConfirmationRequestInfoTab extends InformationActInfoTab {
 
     protected AgentSpecificationPanel agentSpecPanel;
+    private static final long serialVersionUID = 1258582515279951672L;
 
     public ConfirmationRequestInfoTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);

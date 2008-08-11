@@ -1,19 +1,16 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.ifm.info.GeoLocation;
+import com.mindalliance.channels.playbook.ifm.info.Location;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.ifm.info.Location;
-import com.mindalliance.channels.playbook.ifm.info.GeoLocation;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.Model;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,6 +30,7 @@ public class LocationPanel extends AbstractComponentPanel {
     GeoLocationPanel geoLocationPanel;
     Ref priorPlace;
     GeoLocation priorGeoLocation;
+    private static final long serialVersionUID = 2792462610238553884L;
 
     public LocationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
         super(id, parentPanel, propPath);
@@ -44,9 +42,11 @@ public class LocationPanel extends AbstractComponentPanel {
         location = (Location)getComponent();
         priorPlace = location.getPlace();
         priorGeoLocation = location.getGeoLocation();
-        isAPlaceCheckBox = new AjaxCheckBox("isAPlace", new Model((Boolean)location.isAPlace())){
+        isAPlaceCheckBox = new AjaxCheckBox("isAPlace", new Model<Boolean>(location.isAPlace())){
+            private static final long serialVersionUID = -5585840326866305753L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
                 toggle(isAPlaceCheckBox, isAGeoLocationCheckBox, target);
                 updateLocationFlavor(target);
                 target.addComponent(geoLocationDiv);
@@ -54,9 +54,11 @@ public class LocationPanel extends AbstractComponentPanel {
             }
         };
         addReplaceable(isAPlaceCheckBox);
-        isAGeoLocationCheckBox = new AjaxCheckBox("isAGeoLocation", new Model((Boolean)location.isAGeoLocation())){
+        isAGeoLocationCheckBox = new AjaxCheckBox("isAGeoLocation", new Model<Boolean>(location.isAGeoLocation())){
+            private static final long serialVersionUID = -5838536172248136177L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isAGeoLocation = (Boolean)isAGeoLocationCheckBox.getModelObject();
                 toggle(isAGeoLocationCheckBox,isAPlaceCheckBox,  target);
                 updateLocationFlavor(target);
                 target.addComponent(geoLocationDiv);
@@ -75,7 +77,7 @@ public class LocationPanel extends AbstractComponentPanel {
     }
 
     private void updateLocationFlavor(AjaxRequestTarget target) {
-        boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
+        boolean isAPlace = isAPlaceCheckBox.getModelObject();
         if (isAPlace) {
             priorGeoLocation = location.getGeoLocation();
             setProperty("geoLocation", new GeoLocation(), target);
@@ -96,9 +98,11 @@ public class LocationPanel extends AbstractComponentPanel {
     private void replacePlaceTree(AjaxRequestTarget target) {
         placeTree = new DynamicFilterTree("place", new RefPropertyModel(getElement(), propPath+".place"),
                                           new RefPropertyModel(getProject(), "places"), SINGLE_SELECTION) {
+            private static final long serialVersionUID = -6468641120444278840L;
+
+            @Override
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref place = placeTree.getNewSelection();
-                setProperty("place", place);
+                setProperty("place", placeTree.getNewSelection() );
             }
         };
         addReplaceableTo(placeTree, placeDiv);
@@ -112,7 +116,7 @@ public class LocationPanel extends AbstractComponentPanel {
     }
 
     private void setVisibility() {
-       boolean isAPlace = (Boolean)isAPlaceCheckBox.getModelObject();
+       boolean isAPlace = isAPlaceCheckBox.getModelObject();
         if (isAPlace) {
             display(placeDiv);
             hide(geoLocationDiv);

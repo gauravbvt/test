@@ -28,7 +28,7 @@ public class FormPanel extends Panel {
     }
 
     public void resetForm() {
-        Ref ref = (Ref) getModelObject();
+        Ref ref = (Ref) getDefaultModelObject();
         if ( ref != null ) {
             Class formClass = ref.formClass();
             if ( formClass != null ) try {

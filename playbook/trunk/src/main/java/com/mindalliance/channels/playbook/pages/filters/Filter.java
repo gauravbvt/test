@@ -7,48 +7,61 @@ import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 import com.mindalliance.channels.playbook.support.persistence.Mappable;
 
 import javax.swing.tree.TreeNode;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-/**
- * A node in the filter tree.
- */
-abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappable {
+/** A node in the filter tree. */
+public abstract class Filter
+        implements Cloneable, TreeNode, Serializable, Mappable {
 
     private String collapsedText;
     private String expandedText;
+    private List<Filter> children;
+    private Filter parent;
     private transient Container container;
-
     private boolean expanded;
     private boolean selected;
     private boolean showingLeaves;
-    private Filter parent;
     private boolean invalid;
-    private boolean orable = true;
-
+    private boolean inclusion;
     private boolean singleSelect;
 
-    private List<Filter> children;
+    private static final String COLLAPSED_TEXT = "collapsedText";// NON-NLS
+    private static final String EXPANDED_TEXT = "expandedText";// NON-NLS
+    private static final String EXPANDED = "expanded";// NON-NLS
+    private static final String SELECTED = "selected";// NON-NLS
+    private static final String CHILDREN = "children";// NON-NLS
+    private static final long serialVersionUID = -83012746444045817L;
 
     //-------------------------
-    public Filter() {}
-
+    // Constructors
     protected Filter( String collapsedText, String expandedText ) {
         this.collapsedText = collapsedText;
         this.expandedText = expandedText;
+        container = null;
+        children = null;
+        parent = null;
     }
 
-    public Filter( String text ) {
+    protected Filter( String text ) {
         this( text, text );
     }
 
-    public Filter clone() throws CloneNotSupportedException {
-        final Filter shallow = (Filter) super.clone();
+    protected Filter() {
+        this( "" );
+    }
+
+    @Override
+    public final synchronized Filter clone() throws CloneNotSupportedException {
+        Filter shallow = (Filter) super.clone();
 
         if ( children != null ) {
             List<Filter> cs = new ArrayList<Filter>();
@@ -60,85 +73,84 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         return shallow;
     }
 
-    public boolean equals( Object o ) {
-        if ( this == o )
-            return true;
-        if ( o == null || getClass() != o.getClass() )
-            return false;
-
-        Filter filter = (Filter) o;
-
-        return collapsedText.equals( filter.collapsedText )
-            && expandedText.equals( filter.expandedText );
+    private void readObject( ObjectInputStream in )
+            throws IOException, ClassNotFoundException {
+        container = null;
+        children = null;
+        parent = null;
+        in.defaultReadObject();
     }
 
+    //-------------------------
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj )
+            return true;
+        if ( obj == null || getClass() != obj.getClass() )
+            return false;
+
+        Filter filter = (Filter) obj;
+
+        return getCollapsedText().equals( filter.getCollapsedText() )
+               && getExpandedText().equals( filter.getExpandedText() );
+    }
+
+    @Override
     public int hashCode() {
-        int result;
-        result = collapsedText.hashCode();
-        result = 31 * result + expandedText.hashCode();
+        int result = getCollapsedText().hashCode();
+        result = 31 * result + getExpandedText().hashCode();
         return result;
     }
 
-    public Filter getRoot() {
-        if ( getParent() == null )
-            return this;
-        else
-            return getParent().getRoot();
+    private Filter getRoot() {
+        Filter p = getParent();
+        return p == null ? this : p.getRoot();
     }
 
-    public void invalidate() {
+    public synchronized void invalidate() {
         if ( !invalid ) {
-            setInvalid( true );
-            if ( container != null && ! ( getContainer() instanceof UserScope ) )
-                getContainer().detach();
+            invalid = true;
+            if ( !( container instanceof UserScope ) )
+                container.detach();
+
             if ( children != null )
-                for( Filter f : children )
+                for ( Filter f : children )
                     f.invalidate();
         }
     }
 
-    public boolean isInvalid() {
-        return invalid;
-    }
-
-    public void setInvalid( boolean invalid ) {
-        this.invalid = invalid;
-    }
-
-    public Map<String,Object> toMap() {
-        Map<String,Object> map = new HashMap<String,Object>();
+    public synchronized Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put( Mappable.CLASS_NAME_KEY, getClass().getName() );
-        map.put("collapsedText", collapsedText);
-        map.put("expandedText", expandedText);
-        map.put("expanded", expanded);
-        map.put("selected", selected);
-        if (children != null) {
-            map.put("children", (Object) Mapper.toPersistedValue( children ));
-        }
+        map.put( COLLAPSED_TEXT, getCollapsedText() );
+        map.put( EXPANDED_TEXT, getExpandedText() );
+        map.put( EXPANDED, isExpanded() );
+        map.put( SELECTED, isSelected() );
+        if ( children != null )
+            map.put( CHILDREN, (Object) Mapper.toPersistedValue( children ) );
+
         return map;
     }
 
-    public void initFromMap(Map map) {
-        collapsedText = (String)map.get("collapsedText");
-        expandedText = (String)map.get("expandedText");
-        expanded = (Boolean)map.get("expanded");
-        selected = (Boolean)map.get("selected");
-        if (map.containsKey("children")) {
-            List<Filter> list = (List<Filter>) Mapper.valueFromPersisted( map.get( "children" ) );
-            setChildren( list );
-            for ( Filter k : children )
-                assert( equals( k.getParent() ) );
-        }
+    @SuppressWarnings( { "unchecked" } )
+    public void initFromMap( Map<String, Object> map ) {
+        setCollapsedText( (String) map.get( COLLAPSED_TEXT ) );
+        setExpandedText( (String) map.get( EXPANDED_TEXT ) );
+        setExpanded( (Boolean) map.get( EXPANDED ) );
+        setSelected( (Boolean) map.get( SELECTED ) );
+        if ( map.containsKey( CHILDREN ) )
+            setChildren(
+                    (List<Filter>) Mapper.valueFromPersisted(
+                            map.get( CHILDREN ) ) );
 
         // Force a reevaluation on next display
-        setInvalid( true );
+        invalidate();
     }
 
     public final synchronized Container getContainer() {
         if ( container == null ) {
             Filter p = getParent();
-            Container pc = p == null ? new UserScope()
-                                     : p.getContainer();
+            Container pc = p == null ? new UserScope() : p.getContainer();
             container = new FilteredContainer( pc, this, true );
         }
 
@@ -149,44 +161,30 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         this.container = container;
     }
 
+    @Override
     public String toString() {
         return getText();
     }
 
-    /**
-     * @return true if children should be saved/persisted.
-     */
-    public boolean childrenRequired() {
-        if ( children == null )
-            return false;
-        else if ( !isSelected() ) {
-            for ( Filter f : getChildren() )
-                if ( f.isSelected() )
-                    return true;
-            return false;
-        } else
-            return true;
-    }
-
     //-------------------------
-    public String getCollapsedText() {
+    String getCollapsedText() {
         return collapsedText;
     }
 
-    public void setCollapsedText( String collapsedText ) {
-        this.collapsedText = collapsedText;
-    }
-
-    public String getExpandedText() {
+    String getExpandedText() {
         return expandedText;
     }
 
-    public String getText() {
-        return isExpanded()? getExpandedText() : getCollapsedText();
+    void setCollapsedText( String collapsedText ) {
+        this.collapsedText = collapsedText;
     }
 
-    public void setExpandedText( String expandedText ) {
+    void setExpandedText( String expandedText ) {
         this.expandedText = expandedText;
+    }
+
+    public String getText() {
+        return isExpanded() ? getExpandedText() : getCollapsedText();
     }
 
     public boolean isExpanded() {
@@ -217,19 +215,26 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         return isSelected();
     }
 
-    public void setForceSelected( boolean selected ) {
+    public synchronized void setForceSelected( boolean selected ) {
         setSelected( selected );
 
         if ( children != null )
             for ( Filter kid : getChildren() ) {
-                assert( equals( kid.getParent() ) );
+                assert equals( kid.getParent() );
                 kid.setForceSelected( selected );
             }
 
-        if ( !selected && parent != null )
-        {
-            assert( parent.getChildren().contains( this ) );
-            parent.childDeselected();
+        if ( parent != null ) {
+            if ( !selected ) {
+                assert parent.getChildren().contains( this );
+                parent.childDeselected();
+            }
+            if ( isInclusion() ) {
+                // Invalidate normal siblings
+                for ( Filter sibling : parent.getChildren() )
+                    if ( this != sibling && !sibling.isInclusion() )
+                        sibling.invalidate();
+            }
         }
     }
 
@@ -246,53 +251,43 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             setExpanded( selection );
             first.setUniqueSelection( selection );
         }
-
     }
 
-    /**
-     * Called by a child when deselected.
-     */
-    protected void childDeselected() {
-        this.selected = false;
+    /** Called by a child when deselected. */
+    void childDeselected() {
+        selected = false;
         if ( getParent() != null )
             getParent().childDeselected();
     }
 
-    public final Filter getParent() {
+    public final synchronized Filter getParent() {
         return parent;
     }
 
-    private void setParent( Filter parent ) {
+    private synchronized void setParent( Filter parent ) {
         this.parent = parent;
     }
 
     /**
-     * Returns the index of <code>node</code> in the receivers children. If the receiver does not contain
-     * <code>node</code>, -1 will be returned.
+     * Returns the index of <code>node</code> in the receivers children. If the
+     * receiver does not contain <code>node</code>, -1 will be returned.
      */
-    public final int getIndex( TreeNode node ) {
-        Filter o = (Filter) node;
-        return children.indexOf( o );
+    public final synchronized int getIndex( TreeNode node ) {
+        return children == null ? -1 : children.indexOf( node );
     }
 
-    /**
-     * Returns true if the receiver allows children.
-     */
+    /** Returns true if the receiver allows children. */
     public final boolean getAllowsChildren() {
         return true;
     }
 
-    /**
-     * Returns true if the receiver is a leaf.
-     */
+    /** Returns true if the receiver is a leaf. */
     public final boolean isLeaf() {
         return getChildren().isEmpty();
     }
 
-    /**
-     * Force recomputing of children on next access.
-     */
-    public synchronized void resetChildren() {
+    /** Force recomputing of children on next access. */
+    private synchronized void resetChildren() {
         if ( children != null )
             for ( Filter f : children ) {
                 f.resetChildren();
@@ -300,17 +295,12 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         children = null;
     }
 
-    public final synchronized List<Filter> getChildren() {
-        if ( children == null ) {
-            List<Filter> list = createChildren();
-            for ( Filter f : list ) {
-                f.setSelected( this.isSelected() );
-            }
-            setChildren( list );
-            setInvalid( false );
-        } else if ( isInvalid() ) {
+    private synchronized List<Filter> getChildren() {
+        if ( children == null )
+            setChildren( createChildren( isSelected() ) );
+        else if ( invalid ) {
             // Recompute while preserving order and selections
-            List<Filter> newChildren = createChildren();
+            List<Filter> newChildren = createChildren( isSelected() );
 
             for ( Filter oldKid : children ) {
                 int i = newChildren.indexOf( oldKid );
@@ -328,13 +318,13 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             }
 
             setChildren( newChildren );
-            setInvalid( false );
         }
 
+        invalid = false;
         return children;
     }
 
-    public final synchronized void setChildren( List<Filter> children ){
+    private synchronized void setChildren( List<Filter> children ) {
         this.children = children;
         for ( Filter f : children ) {
             f.setParent( this );
@@ -343,36 +333,40 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
     /**
      * Select the first leaf node matching a ref.
+     *
      * @param ref the ref to match
      * @return true if a selection was done
      */
-    public boolean selectFirstMatch( Ref ref ) {
-        if ( match( ref ) ) {
+    public boolean hasSelected( Ref ref ) {
+        if ( isMatching( ref ) ) {
             List<Filter> fs = getChildren();
-            if ( fs.size() == 0 ) {
+            if ( fs.isEmpty() ) {
                 setSelected( true );
                 return true;
-            }
-            else for( Filter kid : fs ) {
-                if ( kid.selectFirstMatch( ref ) )
-                    return true;
-            }
+            } else
+                for ( Filter kid : fs ) {
+                    if ( kid.hasSelected( ref ) )
+                        return true;
+                }
         }
         return false;
     }
 
     /**
      * Simplify the tree. Enforces the following conditions:
-     * <ol><li>If all simplified children are selected+collapsed, select+collapse this one and
-     *         forget children.</li>
-     *     <li>If all simplified children are deselected+collapsed, deselect+collapse this one and
-     *         forget children.</li>
-     *     <li>If any remaining child is selected, deselect+expand this one</li>
-     *     <li>Otherwise, deselect+collapse this one</li>
-     * </ol>
+     * <ol><li>If all simplified children are selected+collapsed,
+     *      select+collapse this one and forget children.</li>
+     * <li>If all simplified children are deselected+collapsed,
+     *      deselect+collapse this one and forget children.</li>
+     * <li>If any remaining child is selected,
+     *      deselect+expand this one</li>
+     * <li>Otherwise, deselect+collapse this one</li> </ol>
      */
     public synchronized void simplify() {
-        if ( children != null && children.size() > 0 ) {
+        if ( children == null || children.isEmpty() ) {
+            // keep selection as is
+            setExpanded( false );
+        } else {
             boolean allDeselected = true;
             boolean allSelected = true;
 
@@ -385,79 +379,86 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
             }
 
             if ( allDeselected || allSelected ) {
-                if ( !isSingleSelect() ) {
+                if ( isSingleSelect() )
+                    setExpanded( !allDeselected );
+                else {
                     resetChildren();
                     setExpanded( false );
-                } else
-                    setExpanded( !allDeselected );
+                }
 
                 setSelected( allSelected );
-
             } else {
                 setExpanded( true );
                 setSelected( false );
             }
-        } else {
-            setExpanded( false );
-            // keep selection as is
         }
     }
 
-    /**
-     * Returns the children of the receiver as an <code>Enumeration</code>.
-     */
+    /** Returns the children of the receiver as an <code>Enumeration</code>. */
     public final Enumeration<Filter> children() {
         return new EnumerationAdaptor<Filter>( getChildren().iterator() );
     }
-    /**
-     * Returns the child <code>TreeNode</code> at index <code>childIndex</code>.
-     */
+
+    /** Returns the child <code>TreeNode</code> at index <code>childIndex</code>. */
     public final TreeNode getChildAt( int childIndex ) {
         return getChildren().get( childIndex );
     }
 
     /**
-     * Returns the number of children <code>TreeNode</code>s the receiver contains.
+     * Returns the number of children <code>TreeNode</code>s the receiver
+     * contains.
      */
     public final int getChildCount() {
         return getChildren().size();
     }
 
     /**
-     * Test if this filter applies to the given object.
+     * Test if this filter or subfilters applies to the given object.
+     *
      * @param object the object.
-     * @return  true if the object should be removed from the results,
-     * false if object does not apply
+     * @return true if the object should be removed from the results, false if
+     *         object does not apply
      */
-    public boolean filter( Ref object ) {
+    public synchronized boolean isApplicableTo( Ref object ) {
 
         if ( isSelected() )
-            return match( object );
+            return isMatching( object );
 
         // Do the equivalent of
-        //  ( orable1 || ... || orableN )
-        //   && ( andable1 || ... || andableM )
+        //  ( normal1 || ... || normalN )
+        //   && ( inclusion1 || ... || inclusionM )
 
         if ( children != null ) {
-            boolean orClauses = false;
-            for ( Filter f : getChildren() )
-                if ( f.isOrable() && f.filter( object ) ) {
-                    orClauses = true;
+            boolean hasNormal = false;
+            for ( Filter f : getChildren() ) {
+                if ( !f.isInclusion() && f.isApplicableTo( object ) ) {
+                    hasNormal = true;
                     break;
                 }
-            if ( orClauses ) {
-                boolean andClauses = true;
-                for ( Filter f : getChildren() )
-                    if ( !f.isOrable() ) {
-                        if ( f.filter( object ) )
-                            return true;
-                        andClauses = false;
-                    }
-                return andClauses;
             }
+            if ( hasNormal )
+                return isIncluding( object );
         }
 
         return false;
+    }
+
+    /**
+     * Test if an object satisfies at least one inclusion filter.
+     *
+     * @param object the object to test
+     * @return true if a match or there are no inclusion filters
+     */
+    public synchronized boolean isIncluding( Ref object ) {
+        boolean hasInclusion = false;
+        if ( children != null )
+            for ( Filter kid : children )
+                if ( kid.isInclusion() ) {
+                    hasInclusion = true;
+                    if ( kid.isSelected() && kid.isMatching( object ) )
+                        return true;
+                }
+        return !hasInclusion;
     }
 
     //-------------------------
@@ -465,73 +466,79 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
 
     /**
      * Create the children of this filter given a container.
+     *
+     * @param selectionState initial selection of children
      * @return filters to add to this one
      */
-    abstract protected List<Filter> createChildren();
+    protected abstract List<Filter> createChildren( boolean selectionState );
 
     /**
-     * Test if given object is a match for this filter.
+     * Test if given object is a direct match for this filter, without its
+     * subfilters.
+     *
      * @param object the object
      * @return true if the filter matches the object.
      */
-    abstract public boolean match( Ref object );
+    public abstract boolean isMatching( Ref object );
 
     /**
-     * Test if this filter would allow creation of objects
-     * of the given class, without consideration of selection
-     * and/or children.
+     * Test if this filter would allow creation of objects of the given class,
+     * without consideration of selection and/or children.
+     *
      * @param c the class
-     * @return  true if this filter allows this class
+     * @return true if this filter allows this class
      */
-    abstract protected boolean strictlyAllowsClass( Class<?> c );
+    protected abstract boolean allowsClassLocally( Class<?> c );
 
     /**
-     * Test if this filter would allow creation of objects
-     * of the given class.
+     * Test if this filter would allow creation of objects of the given class.
+     *
      * @param clazz the class
-     * @return  true if this filter (or children) allows
-     * this class
+     * @return true if this filter (or children) allows this class
      */
     public boolean allowsClass( Class<?> clazz ) {
         if ( isSelected() )
-            return strictlyAllowsClass( clazz );
-        else for ( Filter f : getChildren() )
+            return allowsClassLocally( clazz );
+
+        for ( Filter f : getChildren() )
             if ( f.allowsClass( clazz ) )
                 return true;
 
         return false;
     }
 
-    public boolean isOrable() {
-        return orable;
+    public boolean isInclusion() {
+        return inclusion;
     }
 
-    public void setOrable( boolean orable ) {
-        this.orable = orable;
+    public void setInclusion( boolean inclusion ) {
+        this.inclusion = inclusion;
     }
 
     public boolean isSingleSelect() {
-        return parent == null ? singleSelect : parent.isSingleSelect();
+        Filter p = getParent();
+        return p == null ? singleSelect : p.isSingleSelect();
     }
 
     public void setSingleSelect( boolean singleSelect ) {
         this.singleSelect = singleSelect;
     }
 
-
     //===================================================
-    static class EnumerationAdaptor<T> implements Serializable, Enumeration<T> {
+    static class EnumerationAdaptor<T extends Serializable>
+            implements Enumeration<T> {
 
-        private Iterator<T> iterator;
+        private final Iterator<T> iterator;
 
-        public EnumerationAdaptor( Iterator<T> iterator ) {
+        EnumerationAdaptor( Iterator<T> iterator ) {
             this.iterator = iterator;
         }
 
         /**
          * Tests if this enumeration contains more elements.
          *
-         * @return <code>true</code> if and only if this enumeration object contains at least one more element to provide;
+         * @return <code>true</code> if and only if this enumeration object
+         *         contains at least one more element to provide;
          *         <code>false</code> otherwise.
          */
         public boolean hasMoreElements() {
@@ -539,17 +546,15 @@ abstract public class Filter implements Cloneable, TreeNode, Serializable, Mappa
         }
 
         /**
-         * Returns the next element of this enumeration if this enumeration object has at least one more element to
-         * provide.
+         * Returns the next element of this enumeration if this enumeration
+         * object has at least one more element to provide.
          *
          * @return the next element of this enumeration.
          *
-         * @throws java.util.NoSuchElementException
-         *          if no more elements exist.
+         * @throws NoSuchElementException if no more elements exist.
          */
         public T nextElement() {
             return iterator.next();
         }
     }
-
 }

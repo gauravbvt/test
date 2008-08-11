@@ -8,6 +8,8 @@ import com.mindalliance.channels.playbook.support.models.Container;
  */
 public class RootFilter extends ClassFilter {
 
+    private static final long serialVersionUID = 2376421333113630571L;
+
     public RootFilter() {
         this( null );
     }

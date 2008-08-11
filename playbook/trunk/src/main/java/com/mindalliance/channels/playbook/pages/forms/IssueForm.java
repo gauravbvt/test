@@ -20,7 +20,7 @@ public class IssueForm extends AbstractAnalysisElementForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
              public Panel getPanel(String panelId) {
                  return new IssueBasicTab(panelId, IssueForm.this);
              }

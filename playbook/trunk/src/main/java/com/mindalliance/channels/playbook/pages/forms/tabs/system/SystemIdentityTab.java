@@ -1,17 +1,18 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.system;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
 import com.mindalliance.channels.playbook.ref.Ref;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.MarkupContainer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -23,33 +24,51 @@ import java.util.ArrayList;
  */
 public class SystemIdentityTab extends ResourceIdentityTab {
 
-    TextArea accessField;
-    DynamicFilterTree adminPositionTree;
+    private DynamicFilterTree adminPositionTree;
+    private static final long serialVersionUID = -4933477828541778293L;
 
-    public SystemIdentityTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public SystemIdentityTab( String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
-        AjaxLink organizationLink = new AjaxLink("organizationLink") {
-            public void onClick(AjaxRequestTarget target) {
-                edit((Ref)getProperty("organization"), target);
+
+        MarkupContainer organizationLink = new AjaxLink( "organizationLink" ) {
+            private static final long serialVersionUID = -362300226534862551L;
+
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                edit( (Ref) getProperty( "organization" ), target );
             }
         };
-        Label organizationNameLabel = new Label("organizationName", new RefPropertyModel(getElement(), "organization.name"));
-        organizationLink.add(organizationNameLabel);
-        addReplaceable(organizationLink);
-        accessField = new TextArea("instructions", new RefPropertyModel(getElement(), "instructions"));
-        addInputField(accessField);
-        adminPositionTree = new DynamicFilterTree("adminPosition", new RefPropertyModel(getElement(), "adminPosition"),
-                                                   new RefPropertyModel(getElement(), "organization.positions", new ArrayList<Ref>()), SINGLE_SELECTION) {
-             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
-                 Ref position = adminPositionTree.getNewSelection();
-                 setProperty("adminPosition", position);
-             }
-        };
-        addReplaceable(adminPositionTree);
-    }
+        organizationLink.add( new Label(
+            "organizationName",
+            new RefPropertyModel( getElement(), "organization.name" ) ) );
+        addReplaceable( organizationLink );
 
+        addInputField( new TextArea<String>(
+            "instructions",
+            new RefPropertyModel<String>( getElement(), "instructions" ) ) );
+
+        adminPositionTree = new DynamicFilterTree(
+                "adminPosition",
+                new RefPropertyModel( getElement(), "adminPosition" ),
+                new RefPropertyModel<Serializable>(
+                        getElement(),
+                        "organization.positions",
+                        new ArrayList<Ref>() ),
+                SINGLE_SELECTION ) {
+            private static final long serialVersionUID = -1117702529285434233L;
+
+            @Override
+            public void onFilterSelect(
+                    AjaxRequestTarget target, Filter filter ) {
+                setProperty(
+                        "adminPosition", adminPositionTree.getNewSelection() );
+            }
+        };
+        addReplaceable( adminPositionTree );
+    }
 }

@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.ref.Ref
  * Time: 5:28:48 PM
  */
 class AgentSpecification extends Specification {
+    private static final long serialVersionUID = -1L;
 
     public Class<? extends Bean> getMatchingDomainClass() {
         return Agent.class

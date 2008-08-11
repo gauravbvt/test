@@ -1,29 +1,26 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
 import com.mindalliance.channels.playbook.geo.Area;
 import com.mindalliance.channels.playbook.geo.GeoService;
+import com.mindalliance.channels.playbook.ifm.info.AreaInfo;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.log4j.Logger;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.feedback.FeedbackMessagesModel;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.feedback.IFeedbackMessageFilter;
-import org.apache.wicket.feedback.FeedbackMessagesModel;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.string.Strings;
-import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,6 +30,8 @@ import java.util.ArrayList;
  * Time: 8:55:01 PM
  */
 public class AreaInfoPanel extends AbstractComponentPanel {
+
+    private static final long serialVersionUID = 5599388101838463510L;
 
     public AreaInfoPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
         super(id, parentPanel, propPath);
@@ -49,11 +48,13 @@ public class AreaInfoPanel extends AbstractComponentPanel {
     TextField codeField;
     FeedbackPanel feedback;
 
+    @Override
     protected void init() {
         super.init();
         // Do amything else?
     }
 
+    @Override
     protected void load() {
         super.load();
         areaInfo = (AreaInfo)getComponent();
@@ -74,21 +75,30 @@ public class AreaInfoPanel extends AbstractComponentPanel {
     private void loadEditable() {
         feedback = new FeedbackPanel("areaInfoFeedback", IFeedbackMessageFilter.ALL);
         // Fields
-        countryField = new AutoCompleteTextField("country", new RefPropertyModel(getElement(), propPath +".country")) {
-            protected Iterator getChoices(String input) {
+        countryField = new AutoCompleteTextField<String>("country", new RefPropertyModel<String>(getElement(), propPath +".country")) {
+            private static final long serialVersionUID = 2481441547151661125L;
+
+            @Override
+            protected Iterator<String> getChoices(String input) {
                 return countryIterator(input, 10);
             }
         };
-        stateField = new AutoCompleteTextField("state", new RefPropertyModel(getElement(), propPath +".state")) {
-            protected Iterator getChoices(String input) {
+        stateField = new AutoCompleteTextField<String>("state", new RefPropertyModel<String>(getElement(), propPath +".state")) {
+            private static final long serialVersionUID = -7145618667067471210L;
+
+            @Override
+            protected Iterator<String> getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
                 String countryName = (String) getProperty("country");
                 return stateIterator(input, countryName,  10);
             }
 
         };
-        countyField = new AutoCompleteTextField("county", new RefPropertyModel(getElement(), propPath +".county")) {
-            protected Iterator getChoices(String input) {
+        countyField = new AutoCompleteTextField<String>("county", new RefPropertyModel<String>(getElement(), propPath +".county")) {
+            private static final long serialVersionUID = -4431443285928642860L;
+
+            @Override
+            protected Iterator<String> getChoices(String input) {
                 // String countryName = (String)countryField.getModel().getObject();
                 // String stateName = (String)stateField.getModel().getObject();
                 String countryName = (String)getProperty("country");
@@ -97,22 +107,27 @@ public class AreaInfoPanel extends AbstractComponentPanel {
             }
 
         };
-        cityField = new AutoCompleteTextField("city", new RefPropertyModel(getElement(), propPath +".city")) {
-            protected Iterator getChoices(String input) {
+        cityField = new AutoCompleteTextField<String>("city", new RefPropertyModel<String>(getElement(), propPath +".city")) {
+            private static final long serialVersionUID = 3395343437945223422L;
+
+            @Override
+            protected Iterator<String> getChoices(String input) {
                 String countryName = (String)countryField.getModel().getObject();
                 String stateName = (String)stateField.getModel().getObject();
                 String countyName = (String)countyField.getModel().getObject();
                 return cityIterator(input, countryName, stateName, countyName, 10);
             }
         };
-        streetField = new TextField("street", new RefPropertyModel(getElement(), propPath +".street"));
+        streetField = new TextField<String>("street", new RefPropertyModel<String>(getElement(), propPath +".street"));
         streetField.setPersistent(false);
-        codeField = new TextField("code", new RefPropertyModel(getElement(), propPath +".code"));
+        codeField = new TextField<String>("code", new RefPropertyModel<String>(getElement(), propPath +".code"));
         codeField.setPersistent(false);
        // Ajax
        // Country field
        countryField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-            @Override
+           private static final long serialVersionUID = -3674354982470179179L;
+
+           @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countryName = (String)countryField.getModel().getObject();
                 // System.out.println("Updating country to " + countryName);
@@ -128,7 +143,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 target.addComponent(cityField);
                 target.addComponent(streetField);
                 target.addComponent(codeField);
-                feedback.setModel(new FeedbackMessagesModel(feedback));
+                feedback.setDefaultModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
@@ -137,6 +152,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         // State field
         stateField.setOutputMarkupId(true);
         stateField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 9110036325123681415L;
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String stateName = stateField..getModel().getObject();
@@ -151,7 +168,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 target.addComponent(cityField);
                 target.addComponent(streetField);
                 target.addComponent(codeField);
-                feedback.setModel(new FeedbackMessagesModel(feedback));
+                feedback.setDefaultModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
@@ -161,6 +178,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         // County field
         countyField.setOutputMarkupId(true);
         countyField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 2586075009731377796L;
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String countyName = countyField..getModel().getObject();
@@ -172,7 +191,7 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 target.addComponent(cityField);
                 target.addComponent(streetField);
                 target.addComponent(codeField);
-                feedback.setModel(new FeedbackMessagesModel(feedback));
+                feedback.setDefaultModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
@@ -180,6 +199,8 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         // City field
         cityField.setOutputMarkupId(true);
         cityField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 488234351312291232L;
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String cityName = cityField.getModel().getObject();
@@ -189,33 +210,37 @@ public class AreaInfoPanel extends AbstractComponentPanel {
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
                 target.addComponent(streetField);
                 target.addComponent(codeField);
-                feedback.setModel(new FeedbackMessagesModel(feedback));
+                feedback.setDefaultModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
         editableDiv.add(cityField);
         // Street field
         streetField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 1665194877331264197L;
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String streetName = streetField.getModel().getObject();
                 // System.out.println("Updating street to " + streetName);
                 elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
-                feedback.setModel(new FeedbackMessagesModel(feedback));
+                feedback.setDefaultModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
         editableDiv.add(streetField);
         // Code field
         codeField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 8158760582000861530L;
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // String streetName = streetField.getModel().getObject();
                  // System.out.println("Updating street to " + streetName);
                 elementChanged(propPath, target);
                 // System.out.println("GeoLocation = " + element.deref(propPath).toString());
-                feedback.setModel(new FeedbackMessagesModel(feedback));
+                feedback.setDefaultModel(new FeedbackMessagesModel(feedback));
                 target.addComponent(feedback);
             }
         });
@@ -223,10 +248,13 @@ public class AreaInfoPanel extends AbstractComponentPanel {
         // Feedback
         feedback.setOutputMarkupId(true);
         editableDiv.add(feedback);
-        editableDiv.add(new AjaxLink("verify", new RefPropertyModel(getElement(), propPath)) {
+        editableDiv.add(new AjaxLink<AreaInfo>("verify", new RefPropertyModel(getElement(), propPath)) {
+            private static final long serialVersionUID = 8573952687515529224L;
+
+            @Override
             public void onClick(AjaxRequestTarget target) {
                 try {
-                   AreaInfo areaInfo = (AreaInfo)getModelObject();
+                   AreaInfo areaInfo = getModelObject();
                    Area area = areaInfo.getArea(false);  // don't cache it (won't serialize)
                    if (area.isUnknown()) {
                        error("Unknown location");
@@ -255,43 +283,43 @@ public class AreaInfoPanel extends AbstractComponentPanel {
 
     private boolean isValidCode(AreaInfo areaInfo) {
         String code = areaInfo.getCode();
-        if (code != null && code.length() > 0) {
-           return GeoService.validateCode(code, areaInfo.getCountry(), areaInfo.getState(), areaInfo.getCounty(), areaInfo.getCity());
-        }
-        else {
-            return true;
-        }
+        return code == null
+            || code.length() <= 0
+            || GeoService.validateCode( code, areaInfo.getCountry(),
+                                              areaInfo.getState(),
+                                              areaInfo.getCounty(),
+                                              areaInfo.getCity() );
     }
 
-    private Iterator countryIterator(String input, int max) {
+    private Iterator<String> countryIterator(String input, int max) {
         if (Strings.isEmpty(input)) {
-            return new ArrayList().iterator();
+            return new ArrayList<String>().iterator();
         }
-        List choices = GeoService.findCandidateCountryNames(input, max);
+        List<String> choices = GeoService.findCandidateCountryNames(input, max);
         return choices.iterator();
     }
 
-    private Iterator stateIterator(String input, String countryName, int max) {
+    private Iterator<String> stateIterator(String input, String countryName, int max) {
         if (Strings.isEmpty(input)) {
-            return  new ArrayList().iterator();
+            return  new ArrayList<String>().iterator();
         }
-        List choices = GeoService.findCandidateStateNames(input, countryName, max);
+        List<String> choices = GeoService.findCandidateStateNames(input, countryName, max);
         return choices.iterator();
     }
 
-    private Iterator countyIterator(String input, String countryName, String stateName, int max) {
+    private Iterator<String> countyIterator(String input, String countryName, String stateName, int max) {
         if (Strings.isEmpty(input)) {
-            return  new ArrayList().iterator();
+            return  new ArrayList<String>().iterator();
         }
-        List choices = GeoService.findCandidateCountyNames(input, countryName, stateName, max);
+        List<String> choices = GeoService.findCandidateCountyNames(input, countryName, stateName, max);
         return choices.iterator();
     }
 
-    private Iterator cityIterator(String input, String countryName, String stateName, String countyName, int max) {
+    private Iterator<String> cityIterator(String input, String countryName, String stateName, String countyName, int max) {
         if (Strings.isEmpty(input)) {
-            return  new ArrayList().iterator();
+            return  new ArrayList<String>().iterator();
         }
-        List choices = GeoService.findCandidateCityNames(input, countryName, stateName, countyName, max);
+        List<String> choices = GeoService.findCandidateCityNames(input, countryName, stateName, countyName, max);
         return choices.iterator();
     }
 }

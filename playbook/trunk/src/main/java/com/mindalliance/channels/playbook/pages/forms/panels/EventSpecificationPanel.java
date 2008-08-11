@@ -1,14 +1,12 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import com.mindalliance.channels.playbook.ifm.definition.Definition;
 import com.mindalliance.channels.playbook.ifm.definition.EventDefinition;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 
@@ -20,32 +18,40 @@ import java.util.ArrayList;
  * Time: 9:55:48 AM
  */
 public class EventSpecificationPanel extends AbstractSpecificationPanel {
-    
-    public EventSpecificationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
-        super(id, parentPanel, propPath);
+
+    private static final long serialVersionUID = 8416857074094237612L;
+
+    public EventSpecificationPanel(
+            String id, AbstractPlaybookPanel parentPanel, String propPath ) {
+        super( id, parentPanel, propPath );
     }
 
+    @Override
     protected String getMatchingDomainName() {
-        return "event"; 
+        return "event";
     }
 
-    protected IModel getEnumerationChoicesModel() {
-        if (isPlaybookPanel()) {
-            return new RefPropertyModel(getPlaybook(), "events");
+    @Override
+    protected IModel<ArrayList<Ref>> getEnumerationChoicesModel() {
+        if ( isPlaybookPanel() ) {
+            return new RefPropertyModel( getPlaybook(), "events" );
+        } else {
+            return new Model<ArrayList<Ref>>( new ArrayList<Ref>() );
         }
-        else {
-            return new Model(new ArrayList<Ref>());
-        }
     }
 
-    protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath) {
-        return new EventDefinitionPanel(id, this, propPath);
+    @Override
+    protected AbstractDefinitionPanel makeDefinitionEditor(
+            String id, String propPath ) {
+        return new EventDefinitionPanel( id, this, propPath );
     }
 
+    @Override
     protected Definition makeNewDefinition() {
         return new EventDefinition();
     }
 
+    @Override
     protected boolean isEnumerable() {
         return isPlaybookPanel();
     }

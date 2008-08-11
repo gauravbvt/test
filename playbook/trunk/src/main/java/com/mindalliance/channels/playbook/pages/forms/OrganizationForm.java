@@ -23,37 +23,37 @@ public class OrganizationForm extends AbstractResourceForm {
 
     @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
             public Panel getPanel(String panelId) {
                 return new OrganizationIdentityTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Access")) {
+        tabs.add(new AbstractTab(new Model<String>("Access")) {
             public Panel getPanel(String panelId) {
                 return new ResourceAccessTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Location")) {
+        tabs.add(new AbstractTab(new Model<String>("Location")) {
             public Panel getPanel(String panelId) {
                 return new ResourceLocationTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Jurisdiction")) {
+        tabs.add(new AbstractTab(new Model<String>("Jurisdiction")) {
             public Panel getPanel(String panelId) {
                 return new OrganizationJurisdictionTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Responsibilities")) {
+        tabs.add(new AbstractTab(new Model<String>("Responsibilities")) {
             public Panel getPanel(String panelId) {
                 return new ResourceResponsibilitiesTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Relationships")) {
+        tabs.add(new AbstractTab(new Model<String>("Relationships")) {
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Agreements")) {
+        tabs.add(new AbstractTab(new Model<String>("Agreements")) {
             public Panel getPanel(String panelId) {
                 return new ResourceAgreementsTab(panelId, OrganizationForm.this);
             }

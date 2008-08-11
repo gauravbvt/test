@@ -62,7 +62,7 @@ public class ResourceAccessTab extends AbstractFormTab {
         contactInfosView = new RefreshingView("contactInfos", new RefPropertyModel(getElement(), "contactInfos")) {
             protected Iterator getItemModels() {
                 List items = new ArrayList();
-                items.addAll((List) getModel().getObject());
+                items.addAll((List) getDefaultModel().getObject());
                 items.add(new ContactInfo()); // to be added to the resource's contact infos if set
                 return new ModelIteratorAdapter(items.iterator()) {
                     protected IModel model(Object contactInfo) {

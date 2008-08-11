@@ -2,6 +2,7 @@ package com.mindalliance.channels.playbook.pages;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
+import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -20,8 +21,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -34,12 +35,15 @@ public class ContentView extends Panel implements SelectionManager {
     private boolean menuVisible;
     private Ref selected;
     private WebMarkupContainer menu;
+    private static final long serialVersionUID = -7502067766103274758L;
 
-    protected ContentView( String id, IModel model, SelectionManager masterSelection ) {
+    protected ContentView(
+            String id, IModel<? extends Container> model,
+            SelectionManager masterSelection ) {
         super( id, model );
         if ( masterSelection == null || model == null )
-            throw new NullPointerException();
-        this.selectionManager = masterSelection;
+            throw new IllegalArgumentException();
+        selectionManager = masterSelection;
         setOutputMarkupId( true );
 
         load();
@@ -48,31 +52,47 @@ public class ContentView extends Panel implements SelectionManager {
     protected void load() {
         addOrReplace( getPager( "content-pager" ) );
 
-        addOrReplace( new Link( "content-delete" ){
-            public boolean isEnabled() {
-                Ref ref = getSelected();
-                return ref != null && !ref.isReadOnly();
-            }
+        addOrReplace(
+                new Link( "content-delete" ) {
+                    private static final long serialVersionUID =
+                            -6769812495977103745L;
 
-            public void onClick() {
-                final Container container = getContainer();
-                Ref ref = getSelected();
-                int index = container.indexOf( ref );
-                container.remove( ref );
-                if ( container.size() == 0 )
-                    setSelected( null );
-                else
-                    setSelected( container.get( Math.min( index, container.size()-1 ) ) );
-            }
-        } );
+                    @Override
+                    public boolean isEnabled() {
+                        Ref ref = getSelected();
+                        return ref != null && !ref.isReadOnly();
+                    }
+
+                    @Override
+                    public void onClick() {
+                        Container container = getContainer();
+                        Ref ref = getSelected();
+                        int index = container.indexOf( ref );
+                        container.remove( ref );
+                        if ( container.size() == 0 )
+                            setSelected( null );
+                        else
+                            setSelected(
+                                    container.get(
+                                            Math.min(
+                                                    index, container.size()
+                                                           - 1 ) ) );
+                    }
+                } );
 
         menu = createNewMenu();
-        addOrReplace( new AjaxLink( "new-item", new Model("New...") ){
-            public void onClick( AjaxRequestTarget target ) {
-                menuVisible = !menuVisible;
-                target.addComponent( menu );
-            }
-        } );
+        addOrReplace(
+                new AjaxLink<String>(
+                        "new-item", new Model<String>( "New..." ) ) {
+                    private static final long serialVersionUID =
+                            5290637379338712371L;
+
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        menuVisible = !menuVisible;
+                        target.addComponent( menu );
+                    }
+                } );
         addOrReplace( menu );
     }
 
@@ -86,12 +106,13 @@ public class ContentView extends Panel implements SelectionManager {
      * @param c the class of the new instance
      * @return the new object
      */
-    private Ref createInstance( Class c ) {
+    private Ref createInstance( Class<? extends Referenceable> c ) {
 
         try {
-            Referenceable object = (Referenceable) c.newInstance();
+            Referenceable object = c.newInstance();
             Container container = getContainer();
-            Map<Method,Object> defaults = container.getSummary().getCommonValues( c );
+            Map<Method, Object> defaults =
+                    container.getSummary().getCommonValues( c );
             for ( Method setter : defaults.keySet() ) {
                 Object value = defaults.get( setter );
                 setter.invoke( object, value );
@@ -101,7 +122,6 @@ public class ContentView extends Panel implements SelectionManager {
             container.add( object );
 
             return ref;
-
         } catch ( InstantiationException e ) {
             throw new RuntimeException( e );
         } catch ( IllegalAccessException e ) {
@@ -112,35 +132,59 @@ public class ContentView extends Panel implements SelectionManager {
     }
 
     private WebMarkupContainer createNewMenu() {
-        final ListView items = new ListView( "new-popup-item", new RefPropertyModel( this, "container.allowedClasses" ) ) {
-            protected void populateItem( final ListItem item ) {
-                final Class c = (Class) item.getModelObject();
-                final AjaxLink link = new AjaxLink( "new-item-link" ) {
-                    public void onClick( AjaxRequestTarget target ) {
-                        Ref newObject = createInstance( c );
-                        menuVisible = false;
-                        target.addComponent( menu );
-                        doAjaxSelection( newObject, target );
-                    }
-                };
-                item.add( link );
-                String displayName = ContainerSummary.toDisplay( c.getSimpleName() );
-                link.add( new Label( "new-item-text", displayName ) );
-            }
-        };
 
         WebMarkupContainer list = new WebMarkupContainer( "new-popup" );
-        list.add( new AttributeModifier( "style", true, new AbstractReadOnlyModel(){
-            public Object getObject() {
-                return menuVisible? "display: block !important;" : "display: none !important;";
-            } } ) );
         list.setOutputMarkupId( true );
-        list.add( items );
+        list.add(
+                new AttributeModifier(
+                        "style", true, new AbstractReadOnlyModel() {
+                    private static final long serialVersionUID =
+                            -4488949702777520421L;
+
+                    @Override
+                    public Object getObject() {
+                        return menuVisible ?
+                               "display: block !important;" :
+                               "display: none !important;";
+                    }
+                } ) );
+        list.add(
+                new ListView<Class<? extends Referenceable>>(
+                        "new-popup-item", new RefPropertyModel(
+                        ContentView.this, "container.allowedClasses" ) ) {
+                    private static final long serialVersionUID =
+                            3109213407264000628L;
+
+                    @Override
+                    protected void populateItem(
+                            ListItem<Class<? extends Referenceable>> item ) {
+                        final Class<? extends Referenceable> c =
+                                item.getModelObject();
+                        AjaxLink link = new AjaxLink( "new-item-link" ) {
+                            private static final long serialVersionUID =
+                                    5162954411019183107L;
+
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                Ref newObject = createInstance( c );
+                                menuVisible = false;
+                                target.addComponent( menu );
+                                doAjaxSelection( newObject, target );
+                            }
+                        };
+                        item.add( link );
+                        link.add(
+                                new Label(
+                                        "new-item-text",
+                                        ContainerSummary.toDisplay(
+                                                c.getSimpleName() ) ) );
+                    }
+                } );
         return list;
     }
 
     public Container getContainer() {
-        return (Container) getModelObject();
+        return (Container) getDefaultModelObject();
     }
 
     public final SelectionManager getSelectionManager() {
@@ -151,12 +195,12 @@ public class ContentView extends Panel implements SelectionManager {
         return selected;
     }
 
-    public void setSelected( Ref selected ) {
-        if ( this.selected != selected
-             && ( this.selected == null || !this.selected.equals( selected ) ) ) {
+    public void setSelected( Ref ref ) {
+        if ( selected != ref && ( selected == null || !selected.equals(
+                ref ) ) ) {
 
-            this.selected = selected;
-            getSelectionManager().setSelected( selected );
+            this.selected = ref;
+            getSelectionManager().setSelected( ref );
         }
     }
 
@@ -168,23 +212,22 @@ public class ContentView extends Panel implements SelectionManager {
             setSelected( null );
     }
 
-    public void doAjaxSelection( Ref newSelection, AjaxRequestTarget target ) {
-        getSelectionManager().doAjaxSelection( newSelection, target );
+    public void doAjaxSelection( Ref ref, AjaxRequestTarget target ) {
+        getSelectionManager().doAjaxSelection( ref, target );
     }
 
     //============================
-    public class DeferredProvider implements IDataProvider {
-        private transient IDataProvider actual;
-        private boolean summary;
+    public class DeferredProvider implements IDataProvider<Ref> {
 
-        public DeferredProvider( boolean summary ) {
-            this.summary = summary;
+        private transient IDataProvider<Ref> actual;
+        private static final long serialVersionUID = 1487122522996998407L;
+
+        public DeferredProvider() {
         }
 
-        private synchronized IDataProvider getActual() {
+        private synchronized IDataProvider<Ref> getActual() {
             if ( actual == null )
-                actual = summary ? getContainer().getSummary()
-                                : getContainer();
+                actual = getContainer();
             return actual;
         }
 
@@ -192,11 +235,43 @@ public class ContentView extends Panel implements SelectionManager {
             actual = null;
         }
 
-        public Iterator iterator( int first, int count ) {
+        public Iterator<? extends Ref> iterator( int first, int count ) {
             return getActual().iterator( first, count );
         }
 
-        public IModel model( Object object ) {
+        public IModel<Ref> model( Ref object ) {
+            return getActual().model( object );
+        }
+
+        public int size() {
+            return getActual().size();
+        }
+    }
+
+    public class DeferredSummary implements IDataProvider<RefMetaProperty> {
+
+        private transient IDataProvider<RefMetaProperty> actual;
+        private static final long serialVersionUID = 9032999745902649705L;
+
+        public DeferredSummary() {
+        }
+
+        private synchronized IDataProvider<RefMetaProperty> getActual() {
+            if ( actual == null )
+                actual = getContainer().getSummary();
+            return actual;
+        }
+
+        public synchronized void detach() {
+            actual = null;
+        }
+
+        public Iterator<? extends RefMetaProperty> iterator(
+                int first, int count ) {
+            return getActual().iterator( first, count );
+        }
+
+        public IModel<RefMetaProperty> model( RefMetaProperty object ) {
             return getActual().model( object );
         }
 

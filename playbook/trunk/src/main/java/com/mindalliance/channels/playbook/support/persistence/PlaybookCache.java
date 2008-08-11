@@ -1,18 +1,21 @@
 package com.mindalliance.channels.playbook.support.persistence;
 
-import com.opensymphony.oscache.base.Cache;
-import com.opensymphony.oscache.base.CacheEntry;
-import com.opensymphony.oscache.base.NeedsRefreshException;
+import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.mem.RefLockException;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
 import com.mindalliance.channels.playbook.support.PlaybookSession;
-import com.mindalliance.channels.playbook.mem.RefLockException;
-import com.mindalliance.channels.playbook.ifm.User;
-
-import java.util.*;
-
+import com.opensymphony.oscache.base.Cache;
+import com.opensymphony.oscache.base.CacheEntry;
+import com.opensymphony.oscache.base.NeedsRefreshException;
 import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -24,6 +27,7 @@ import org.apache.log4j.Logger;
 public class PlaybookCache extends Cache {
 
     Map<Ref, Lock> locks = Collections.synchronizedMap(new HashMap<Ref, Lock>());
+    private static final long serialVersionUID = -5444682147868470080L;
 
     public PlaybookCache(boolean useMemoryCaching, boolean unlimitedDiskCache, boolean overflowPersistence) {
         super(useMemoryCaching, unlimitedDiskCache, overflowPersistence);

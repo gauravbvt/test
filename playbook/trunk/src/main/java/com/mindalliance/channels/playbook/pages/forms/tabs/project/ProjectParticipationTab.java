@@ -53,6 +53,7 @@ public class ProjectParticipationTab extends AbstractFormTab {
     DynamicFilterTree personsTree;
 
     Channels channels;
+    private static final long serialVersionUID = -923565368883864937L;
 
     public ProjectParticipationTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -73,18 +74,19 @@ public class ProjectParticipationTab extends AbstractFormTab {
         addReplaceable(addParticipationButton);
         // Participations
         participationsDiv = new WebMarkupContainer("participationsDiv");
-        participationsView = new RefreshingView("participations", new RefPropertyModel(getElement(), "participations")) {
-            protected Iterator getItemModels() {
-                List<Ref> participations = (List<Ref>) getModelObject();
-                return new ModelIteratorAdapter(participations.iterator()) {
-                    protected IModel model(Object object) {
+        participationsView = new RefreshingView<Ref>("participations", new RefPropertyModel(getElement(), "participations")) {
+            @SuppressWarnings( { "unchecked" } )
+            protected Iterator<IModel<Ref>> getItemModels() {
+                List<Ref> participations = (List<Ref>) getDefaultModelObject();
+                return new ModelIteratorAdapter<Ref>(participations.iterator()) {
+                    protected IModel<Ref> model(Ref object) {
                         return new RefModel(object);
                     }
                 };
             }
 
-            protected void populateItem(Item item) {
-                final Ref participation = (Ref) item.getModelObject();
+            protected void populateItem(Item<Ref> item) {
+                final Ref participation = item.getModelObject();
                 AjaxLink participationLink = new AjaxLink("participationLink") {
                     public void onClick(AjaxRequestTarget target) {
                         selectedParticipation = participation;
@@ -114,11 +116,11 @@ public class ProjectParticipationTab extends AbstractFormTab {
         // Participation
         participationDiv = new WebMarkupContainer("participation");
         loadParticipationDiv();
-        participationDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        participationDiv.add(new AttributeModifier("style", true, new Model<String>("display:none")));
         addReplaceable(participationDiv);
     }
     private void loadUsersTree() {
-        usersTree = new DynamicFilterTree("users", new Model(new ArrayList<Ref>()),
+        usersTree = new DynamicFilterTree("users", new Model<ArrayList<Ref>>(new ArrayList<Ref>()),
                                          new RefQueryModel(Channels.instance(), new Query("findUsersNotInProject", getElement())),
                                          true) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
@@ -145,12 +147,12 @@ public class ProjectParticipationTab extends AbstractFormTab {
         participationDiv.addOrReplace(userLink);
         Label userLabel = new Label("user", new RefPropertyModel(selectedParticipation, "user.userId"));
         userLink.addOrReplace(userLabel);
-        List<Ref> personsSelection = new ArrayList<Ref>();
+        ArrayList<Ref> personsSelection = new ArrayList<Ref>();
         if (selectedParticipation != null) {
             Ref person = (Ref) RefUtils.get(selectedParticipation, "person");
             if (person != null) personsSelection.add(person);
         }
-        personsTree = new DynamicFilterTree("persons", new Model((Serializable) personsSelection),
+        personsTree = new DynamicFilterTree("persons", new Model<Serializable>(personsSelection),
                                              new RefPropertyModel(getProject(), "persons"),
                                              true) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
@@ -188,10 +190,10 @@ public class ProjectParticipationTab extends AbstractFormTab {
 
     private void updateParticipationDiv(AjaxRequestTarget target) {
         if (selectedParticipation == null) {
-            participationDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+            participationDiv.add(new AttributeModifier("style", true, new Model<String>("display:none")));
         } else {
             loadParticipationDiv();
-            participationDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+            participationDiv.add(new AttributeModifier("style", true, new Model<String>("display:block")));
         }
         target.addComponent(participationDiv);
 

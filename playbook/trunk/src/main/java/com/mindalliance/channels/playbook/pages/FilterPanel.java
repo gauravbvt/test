@@ -83,10 +83,10 @@ public class FilterPanel extends Panel {
     public void onFilterSave( Filter filter ){}
 
     public final Filter getFilter() {
-        return (Filter) getModelObject();
+        return (Filter) getDefaultModelObject();
     }
 
     public final void setFilter( Filter filter ) {
-        setModelObject( filter );
+        setDefaultModelObject( filter );
     }
 }

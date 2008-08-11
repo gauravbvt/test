@@ -23,6 +23,7 @@ import com.mindalliance.channels.playbook.ifm.info.Risk
 // How it is classified and accounted is the point of views of individual agents
 // that they may share with others fully or partially, dispute and confirm
 class Event extends PlaybookElement implements Named, Described {
+    private static final long serialVersionUID = -1L;
 
     static private List<Class<? extends Event>> EventClasses = [
             Event.class, InformationAct.class, FlowAct.class, SharingAct.class, Assignation.class, Association.class,

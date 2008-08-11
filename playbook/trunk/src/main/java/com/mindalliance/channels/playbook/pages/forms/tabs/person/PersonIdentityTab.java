@@ -1,8 +1,7 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.person;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.pages.forms.tabs.resource.ResourceIdentityTab;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.markup.html.form.TextField;
 
@@ -15,29 +14,36 @@ import org.apache.wicket.markup.html.form.TextField;
  */
 public class PersonIdentityTab extends ResourceIdentityTab {
 
-    TextField firstNameField;
-    TextField middleNameField;
-    TextField lastNameField;
+    private static final long serialVersionUID = 1113046201776255358L;
 
-    public PersonIdentityTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public PersonIdentityTab( String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
     protected void load() {
         super.load();
         // first name
-        firstNameField = new TextField("firstName", new RefPropertyModel(getElement(), "firstName"));
-        addInputField(firstNameField, nameField);
+        TextField<String> firstNameField = new TextField<String>(
+                "firstName",
+                new RefPropertyModel<String>( getElement(), "firstName" ) );
+        addInputField( firstNameField, nameField );
+        
         // middle name
-        middleNameField = new TextField("middleName", new RefPropertyModel(getElement(), "middleName"));
-        addInputField(middleNameField, nameField);
+        TextField<String> middleNameField = new TextField<String>(
+                "middleName",
+                new RefPropertyModel<String>( getElement(), "middleName" ) );
+        addInputField( middleNameField, nameField );
+
         // last name
-        lastNameField = new TextField("lastName", new RefPropertyModel(getElement(), "lastName"));
-        addInputField(lastNameField, nameField);
+        TextField<String> lastNameField = new TextField<String>(
+                "lastName",
+                new RefPropertyModel<String>( getElement(), "lastName" ) );
+        addInputField( lastNameField, nameField );
     }
 
+    @Override
     protected void init() {
         super.init();
-        nameField.setEnabled(false);
+        nameField.setEnabled( false );
     }
 }

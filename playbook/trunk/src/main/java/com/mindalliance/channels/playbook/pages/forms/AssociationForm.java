@@ -23,22 +23,22 @@ public class AssociationForm extends AbstractInformationActForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
              public Panel getPanel(String panelId) {
                  return new InformationActBasicTab(panelId, AssociationForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Relationship")) {
+        tabs.add(new AbstractTab(new Model<String>("Relationship")) {
              public Panel getPanel(String panelId) {
                  return new AssociationRelationshipTab(panelId, AssociationForm.this);
              }
          });
-         tabs.add(new AbstractTab(new Model("Cause")) {
+         tabs.add(new AbstractTab(new Model<String>("Cause")) {
               public Panel getPanel(String panelId) {
                   return new EventCauseTab(panelId, AssociationForm.this);
               }
           });
-        tabs.add(new AbstractTab(new Model("Risk")) {
+        tabs.add(new AbstractTab(new Model<String>("Risk")) {
              public Panel getPanel(String panelId) {
                  return new EventRiskTab(panelId, AssociationForm.this);
              }

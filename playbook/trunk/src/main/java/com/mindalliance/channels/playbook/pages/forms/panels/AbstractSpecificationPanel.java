@@ -1,31 +1,29 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.ifm.definition.Definition;
+import com.mindalliance.channels.playbook.ifm.definition.Specification;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.definition.Specification;
-import com.mindalliance.channels.playbook.ifm.definition.Definition;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ref.Ref;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.ListChoice;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.form.ListChoice;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.Component;
+import org.apache.wicket.model.Model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,12 +32,12 @@ import java.util.ArrayList;
  * Date: Jun 23, 2008
  * Time: 8:31:05 PM
  */
-abstract public class AbstractSpecificationPanel extends AbstractComponentPanel {
+public abstract class AbstractSpecificationPanel extends AbstractComponentPanel {
 
-    static protected int MAX_SUMMARY_LENGTH = 16;
-    static protected int MAX_CHOICE_ROWS = 3;
+    protected static int MAX_SUMMARY_LENGTH = 16;
+    protected static int MAX_CHOICE_ROWS = 3;
 
-    protected TextArea descriptionField;
+    protected TextArea<String> descriptionField;
     protected AjaxCheckBox affirmedCheckBox;
     protected AjaxCheckBox negatedCheckBox;
     protected AjaxCheckBox specifiedCheckBox;
@@ -47,7 +45,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
     protected WebMarkupContainer specifiedDiv;
     protected WebMarkupContainer enumerationDiv;
     protected DynamicFilterTree enumerationTree;
-    protected ListChoice definitionsList;
+    protected ListChoice<Definition> definitionsList;
     protected Definition selectedDefinition;
     protected Button addDefinitionButton;
     protected Button deleteDefinitionButton;
@@ -55,6 +53,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
     Component definitionPanel;
     protected List<Ref> priorEnumeration;
     protected List<Definition> priorDefinitions;
+    private static final long serialVersionUID = -462632146133249221L;
 
     public AbstractSpecificationPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
         super(id, parentPanel, propPath);
@@ -63,26 +62,34 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
     protected void load() {
         super.load();
         final Specification specification = (Specification)getComponent();
-        descriptionField = new TextArea("description", new RefPropertyModel(getElement(), propPath+".description"));
+        descriptionField = new TextArea<String>("description", new RefPropertyModel<String>(getElement(), propPath+".description"));
         descriptionField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-                @Override
+            private static final long serialVersionUID = -2167666512339045047L;
+
+            @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                     elementChanged(propPath+".description", target);
                 }
         });
         addReplaceable(descriptionField);
-        affirmedCheckBox= new AjaxCheckBox("affirmed", new Model(!specification.isNegated())) {
+        affirmedCheckBox= new AjaxCheckBox("affirmed", new Model<Boolean>(!specification.isNegated())) {
+            private static final long serialVersionUID = -3489932306026709004L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean affirmed = (Boolean)affirmedCheckBox.getModelObject();
+                boolean affirmed = affirmedCheckBox.getModelObject();
                 setProperty("negated", !affirmed, target);
                 negatedCheckBox.setModelObject(!affirmed);
                 target.addComponent(negatedCheckBox);
             }
         };
         addReplaceable(affirmedCheckBox);
-        negatedCheckBox= new AjaxCheckBox("negated", new Model(specification.isNegated())) {
+        negatedCheckBox= new AjaxCheckBox("negated", new Model<Boolean>(specification.isNegated())) {
+            private static final long serialVersionUID = -4056114676121806206L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean negated = (Boolean)negatedCheckBox.getModelObject();
+                boolean negated = negatedCheckBox.getModelObject();
                 setProperty("negated", negated, target);
                 affirmedCheckBox.setModelObject(!negated);
                 target.addComponent(affirmedCheckBox);
@@ -91,9 +98,12 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         addReplaceable(negatedCheckBox);
         matchingDomainClassLabel = new Label("matchingDomainClass", getMatchingDomainName());
         addReplaceable(matchingDomainClassLabel);
-        specifiedCheckBox = new AjaxCheckBox("specified", new Model((Boolean)specification.isDefined())) {
+        specifiedCheckBox = new AjaxCheckBox("specified", new Model<Boolean>(specification.isDefined())) {
+            private static final long serialVersionUID = -2060848530271743592L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean specified = (Boolean)specifiedCheckBox.getModelObject();    // selected means does NOT match all
+                boolean specified = specifiedCheckBox.getModelObject();    // selected means does NOT match all
                 if (specified) {
                     // reset enumeration and definitions taxonomies
                     if (priorEnumeration != null) {
@@ -103,7 +113,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
                     }
                     if (priorDefinitions != null) {
                         setProperty("definitions", priorDefinitions, target);
-                        definitionsList.setModel(new Model());
+                        definitionsList.setModel(new Model<Definition>());
                         target.addComponent(definitionsList);
                     }
                 }
@@ -113,7 +123,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
                     priorDefinitions = specification.getDefinitions();
                     setProperty("definitions", new ArrayList<Definition>(), target);
                 }
-                setVisibility(specifiedDiv, (Boolean)specifiedCheckBox.getModelObject(), target);
+                setVisibility(specifiedDiv, specifiedCheckBox.getModelObject(), target);
             }
         };
         addReplaceable(specifiedCheckBox);
@@ -123,19 +133,25 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         setVisibility(enumerationDiv, isEnumerable());
         addReplaceableTo(enumerationDiv, specifiedDiv);
         enumerationTree = new DynamicFilterTree("enumeration", new RefPropertyModel(getComponent(), "enumeration"), getEnumerationChoicesModel()) {
+            private static final long serialVersionUID = -8664259756260998673L;
+
+            @Override
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 List<Ref> selections = enumerationTree.getNewSelections();
                 setProperty("enumeration", selections, target);
             }
         };
         addReplaceableTo(enumerationTree, enumerationDiv);
-        definitionsList = new ListChoice("definitions", new Model(selectedDefinition),
+        definitionsList = new ListChoice<Definition>("definitions", new Model<Definition>(selectedDefinition),
                                          new RefPropertyModel(getComponent(), "definitions"),
-                                         new ChoiceRenderer("summary"));
+                                         new ChoiceRenderer<Definition>("summary"));
         definitionsList.setMaxRows(MAX_CHOICE_ROWS);
         definitionsList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = -6109345315215953539L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                selectedDefinition = (Definition)definitionsList.getModelObject();
+                selectedDefinition = definitionsList.getModelObject();
                 updateDefinitionPanel(target);
                 enable(deleteDefinitionButton, selectedDefinition != null, target);
             }
@@ -143,6 +159,9 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         addReplaceableTo(definitionsList, specifiedDiv);
         addDefinitionButton = new Button("addDefinition");
         addDefinitionButton.add(new AjaxEventBehavior("onclick"){
+            private static final long serialVersionUID = 5638926824375554123L;
+
+            @Override
             protected void onEvent(AjaxRequestTarget target) {
                 selectedDefinition = makeNewDefinition();
                 definitionsList.setModelObject(selectedDefinition);
@@ -155,6 +174,9 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         addReplaceableTo(addDefinitionButton, specifiedDiv);
         deleteDefinitionButton = new Button("deleteDefinition");
         deleteDefinitionButton.add(new AjaxEventBehavior("onclick"){
+            private static final long serialVersionUID = -2507509550378560129L;
+
+            @Override
             protected void onEvent(AjaxRequestTarget target) {
                 RefUtils.remove(getElement(), propPath+".definitions", selectedDefinition);
                 selectedDefinition = null;
@@ -170,7 +192,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         definitionPanel = new Label("definition", "");
         setVisibility(definitionDiv, selectedDefinition != null);
         addReplaceableTo(definitionPanel, definitionDiv);
-        setVisibility(specifiedDiv, (Boolean)specifiedCheckBox.getModelObject());
+        setVisibility(specifiedDiv, specifiedCheckBox.getModelObject());
     }
 
     private void updateDefinitionPanel(AjaxRequestTarget target) {
@@ -181,7 +203,7 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
             definitionPanel = makeDefinitionEditor("definition", propPath + ".definitions["+index+"]");
         }
         else {
-            definitionPanel = new Label("definition", new Model(""));
+            definitionPanel = new Label("definition", new Model<String>(""));
         }
         addReplaceableTo(definitionPanel, definitionDiv);
         setVisibility(definitionDiv, selectedDefinition != null, target);
@@ -196,13 +218,13 @@ abstract public class AbstractSpecificationPanel extends AbstractComponentPanel 
         }
     }
 
-    abstract protected String getMatchingDomainName();
+    protected abstract String getMatchingDomainName();
 
-    abstract protected IModel getEnumerationChoicesModel();
+    protected abstract IModel<?> getEnumerationChoicesModel();
 
-    abstract protected AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath);
+    protected abstract AbstractDefinitionPanel makeDefinitionEditor(String id, String propPath);
 
-    abstract protected Definition makeNewDefinition();
+    protected abstract Definition makeNewDefinition();
 
-    abstract protected boolean isEnumerable();
+    protected abstract boolean isEnumerable();
 }

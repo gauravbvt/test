@@ -16,14 +16,16 @@ import java.util.Map;
 public class ProjectFilter extends Filter {
 
     private Ref project;
+    private static final long serialVersionUID = -1842485671488024904L;
 
     //-------------------------
     public ProjectFilter() {
-        super();
+        project = null;
     }
     public ProjectFilter(Ref ref) {
-        super("in project " + getProject(ref));
-        this.project = ref;
+        super("... in project " + getProject(ref));
+        setInclusion( true );
+        project = ref;
     }
 
     static Project getProject(Ref projectRef) {
@@ -32,32 +34,38 @@ public class ProjectFilter extends Filter {
         return result;
     }
 
+    @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = super.toMap();
         map.put("project", (Object) Mapper.toPersistedValue( project ));
         return map;
     }
 
-    public void initFromMap( Map map ) {
-        project = (Ref)Mapper.valueFromPersisted( map.get( "project" ));
+    @Override
+    public void initFromMap( Map<String,Object> map ) {
+        setProject( (Ref)Mapper.valueFromPersisted( map.get( "project" )));
         super.initFromMap( map );
     }
 
-    protected List<Filter> createChildren() {
+    @Override
+    protected List<Filter> createChildren( boolean selectionState ) {
         return Collections.emptyList();
     }
 
-    public boolean match( Ref object ) {
+    @Override
+    public boolean isMatching( Ref object ) {
         Referenceable r = object.deref();
+        boolean result = false;
         if ( r instanceof InProject ) {
             InProject ip = (InProject) r;
-            return getProject().equals( ip.getProject() );
+            result = getProject().equals( ip.getProject() );
         }
-        else
-            return false;
+
+        return result;
     }
 
-    protected boolean strictlyAllowsClass( Class<?> c ) {
+    @Override
+    protected boolean allowsClassLocally( Class<?> c ) {
         return InProject.class.isAssignableFrom( c );
     }
 

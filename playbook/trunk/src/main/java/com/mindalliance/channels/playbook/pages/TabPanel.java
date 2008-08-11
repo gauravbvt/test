@@ -12,10 +12,13 @@ import com.mindalliance.channels.playbook.pages.reports.TBDReportPage;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -27,8 +30,8 @@ import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,24 +80,39 @@ public class TabPanel extends Panel implements SelectionManager {
         add(form);
     }
 
+    private static class LinkDef implements Serializable {
+        String name;
+        String icon;
+        Class<? extends Page> pageClass;
+        String description;
+
+        private LinkDef( String name, String icon, Class<? extends Page> pageClass, String description ) {
+            this.description = description;
+            this.icon = icon;
+            this.name = name;
+            this.pageClass = pageClass;
+        }
+    }
+
     private void addLinks() {
-        Object[][] links = {
-                {"Directory", "address_book2.png", DirectoryReportPage.class, "Resource directory for this tab"},
-                {"Playbook", "branch_element.png", TBDReportPage.class, "Playbook report for this tab"},
-                {"Issues", "flag_red.png", TBDReportPage.class, "Issues report for this tab"},
-                {"RSS", "feed-icon-14x14.png", RSSTab.class, "RSS feed for changes to this tab"}
+        LinkDef[] links = {
+            new LinkDef( "Directory", "address_book2.png",DirectoryReportPage.class,"Resource directory for this tab" ),
+            new LinkDef( "Playbook", "branch_element.png", TBDReportPage.class, "Playbook report for this tab" ),
+            new LinkDef( "Issues", "flag_red.png", TBDReportPage.class, "Issues report for this tab" ),
+            new LinkDef( "RSS", "feed-icon-14x14.png", RSSTab.class, "RSS feed for changes to this tab" )
         };
-        add(new DataView("links", new ListDataProvider(Arrays.asList(links))) {
+        add(new DataView<LinkDef>("links", new ListDataProvider<LinkDef>(Arrays.asList(links))) {
             protected void populateItem(Item item) {
-                Object[] details = (Object[]) item.getModelObject();
+                LinkDef details = (LinkDef) item.getModelObject();
                 PageParameters params = new PageParameters();
                 params.put(ReportPage.REPORT_TAB_PARAM, getTab().getId());
                 params.put(ReportPage.REPORT_MIMETYPE_PARAM, "xhtml");
-                BookmarkablePageLink link = new BookmarkablePageLink("link", (Class<?>) details[2], new PageParameters(params));
+                BookmarkablePageLink link =
+                        new BookmarkablePageLink("link", details.pageClass, new PageParameters(params));
                 WebMarkupContainer image = new WebMarkupContainer("link-text");
-                image.add(new AttributeModifier("src", new Model((String) details[1])));
-                image.add(new AttributeModifier("alt", new Model((String) details[0])));
-                image.add(new AttributeModifier("title", new Model((String) details[3])));
+                image.add(new AttributeModifier("src", new Model<String>( details.icon )));
+                image.add(new AttributeModifier("alt", new Model<String>( details.name )));
+                image.add(new AttributeModifier("title", new Model<String>( details.description )));
                 link.add(image);
                 item.add(link);
             }
@@ -117,11 +135,11 @@ public class TabPanel extends Panel implements SelectionManager {
         return viewTabs;
     }
 
-    private List<AbstractTab> createViewTabs() {
-        List<AbstractTab> result = new ArrayList<AbstractTab>();
-        final IModel tabModel = new PropertyModel(this, "tab");
+    private List<ITab> createViewTabs() {
+        List<ITab> result = new ArrayList<ITab>();
+        final IModel<Tab> tabModel = new PropertyModel<Tab>(this, "tab");
 
-        result.add(new AbstractTab(new Model("Table")) {
+        result.add(new AbstractTab(new Model<String>("Table")) {
             private TableView panel;
 
             public Panel getPanel(String panelId) {
@@ -137,7 +155,7 @@ public class TabPanel extends Panel implements SelectionManager {
 
         ContainerSummary summary = getTab().getSummary();
         if (summary.isTimelineable()) {
-            result.add(new AbstractTab(new Model("Timeline")) {
+            result.add(new AbstractTab(new Model<String>("Timeline")) {
                 private TimelinePanel panel;
 
                 public Panel getPanel(String panelId) {
@@ -154,7 +172,7 @@ public class TabPanel extends Panel implements SelectionManager {
         }
 
         if (summary.isMappable()) {
-            result.add(new AbstractTab(new Model("Map")) {
+            result.add(new AbstractTab(new Model<String>("Map")) {
                 private ContentView panel;
 
                 public Panel getPanel(String panelId) {
@@ -171,7 +189,7 @@ public class TabPanel extends Panel implements SelectionManager {
         }
 
         if (summary.isFlowable()) {
-            result.add(new AbstractTab(new Model("Flow")) {
+            result.add(new AbstractTab(new Model<String>("Flow")) {
                 private InfoFlowPanel panel;
 
                 public Panel getPanel(String panelId) {
@@ -211,7 +229,7 @@ public class TabPanel extends Panel implements SelectionManager {
     }
 
     public Ref getTabRef() {
-        return (Ref) getModelObject();
+        return (Ref) getDefaultModelObject();
     }
 
     public Tab getTab() {
@@ -219,7 +237,7 @@ public class TabPanel extends Panel implements SelectionManager {
     }
 
     public void setTabRef(Ref ref) {
-        setModelObject(ref);
+        setDefaultModelObject(ref);
     }
 
     public void doAjaxSelection(Ref ref, AjaxRequestTarget target) {

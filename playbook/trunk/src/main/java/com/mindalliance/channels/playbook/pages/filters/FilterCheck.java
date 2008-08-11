@@ -10,17 +10,16 @@ import org.apache.wicket.model.IModel;
  */
 public class FilterCheck extends Panel {
 
-    private AjaxCheckBox checkBox;
+    private static final long serialVersionUID = -2429186406303958407L;
 
-    public AjaxCheckBox getCheckBox() {
-        return checkBox;
-    }
-
-    public FilterCheck( String id, IModel model ) {
+    public FilterCheck( String id, IModel<Boolean> model ) {
         super( id );
         setRenderBodyOnly( true );
 
-        checkBox = new AjaxCheckBox( "filter-check", model ){
+        AjaxCheckBox checkBox = new AjaxCheckBox( "filter-check", model ) {
+            private static final long serialVersionUID = -4539076269840356122L;
+
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 onFilterSelect( target );
             }

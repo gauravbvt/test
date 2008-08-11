@@ -1,15 +1,14 @@
 package com.mindalliance.channels.playbook.pages.reports;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.transformer.XsltTransformerBehavior;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.model.Model;
 import com.mindalliance.channels.playbook.ifm.Tab;
 import com.mindalliance.channels.playbook.ref.impl.RefImpl;
 import com.mindalliance.channels.playbook.report.Report;
-import com.mindalliance.channels.playbook.support.RefUtils;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.transformer.XsltTransformerBehavior;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebResponse;
 
 /**
  * ...
@@ -40,7 +39,7 @@ abstract public class ReportPage extends WebPage {
     protected void load(Tab tab, String mimeType) {
         Report report = makeReport(tab);
         String reportXml = report.build();
-        reportElement = new Label(getComponentId(mimeType), new Model(reportXml));
+        reportElement = new Label(getComponentId(mimeType), new Model<String>(reportXml));
         reportElement.setEscapeModelStrings(false);
         reportElement.add(new XsltTransformerBehavior());
         add(reportElement);

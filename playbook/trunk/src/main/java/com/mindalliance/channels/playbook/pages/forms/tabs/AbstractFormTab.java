@@ -1,24 +1,18 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs;
 
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.Component;
-import org.apache.wicket.model.Model;
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.RefUtils;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,8 +29,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
     protected Label readOnlyLabel;
     protected FeedbackPanel feedback;
     protected AbstractElementForm elementForm;
-    private List<FormComponent> inputFields = new ArrayList<FormComponent>();
-    private Map<Component, List<Component>> dependencies = new HashMap<Component, List<Component>>();
+    private static final long serialVersionUID = 3519026609274108987L;
 
     public AbstractFormTab(String id, AbstractElementForm elementForm) {
         super(id);
@@ -54,7 +47,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
         // do nothing
     }
 
-    protected void load() {       
+    protected void load() {
         // feedback panel
         String owner = getElement().getOwner();
         String reasonReadOnly;
@@ -64,7 +57,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
         else {
             reasonReadOnly = "This element can not be changed.";
         }
-        readOnlyLabel = new Label("readOnly", new Model(reasonReadOnly));
+        readOnlyLabel = new Label("readOnly", new Model<String>(reasonReadOnly));
         setVisibility(readOnlyLabel, getElement().isReadOnly());
         addReplaceable(readOnlyLabel);
         feedback = new FeedbackPanel("feedback");
@@ -142,6 +135,7 @@ public class AbstractFormTab extends AbstractPlaybookPanel {
     // end ElementPanel
 
 
+    @Override
     protected void addReplaceable(Component component) {
         addReplaceableTo(component, this);
     }

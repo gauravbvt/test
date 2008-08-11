@@ -1,11 +1,8 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
+import com.mindalliance.channels.playbook.ifm.info.InformationNeed;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.ifm.taxonomy.EventType;
-import com.mindalliance.channels.playbook.ifm.info.InformationNeed;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.CheckBox;
 
 /**

@@ -4,24 +4,27 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import org.apache.wicket.model.IModel;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ...
  */
-public class ContainerModel extends RefPropertyModel implements Container {
+public class ContainerModel extends RefPropertyModel<Ref> implements Container {
 
-    private List<Class<?>> allowedClasses;
+    private final List<Class<? extends Referenceable>> allowedClasses;
     private transient ContainerSummary summary;
-    private List<Ref> contents;
+    private transient List<Ref> contents;
 
-    public ContainerModel( Object modelObject, String expression, List<Class<?>> allowedClasses ) {
-        super( modelObject, expression );
-        this.allowedClasses = Collections.unmodifiableList( allowedClasses );
-    }
+    public ContainerModel(
+            Serializable target, String expression, List<Class<? extends Referenceable>> allowedClasses ) {
 
-    public Object getTarget() {
-        return super.getTarget();
+        super( target, expression );
+        this.allowedClasses = allowedClasses;
     }
 
     //==================================
@@ -54,6 +57,7 @@ public class ContainerModel extends RefPropertyModel implements Container {
     }
 
     //==================================
+    @Override
     public void detach() {
         super.detach();
         if ( summary != null )
@@ -61,8 +65,8 @@ public class ContainerModel extends RefPropertyModel implements Container {
         contents = null;
     }
 
-    public List<Class<?>> getAllowedClasses() {
-        return allowedClasses;
+    public List<Class<? extends Referenceable>> getAllowedClasses() {
+        return Collections.unmodifiableList( allowedClasses );
     }
 
     public ContainerSummary getSummary() {
@@ -72,12 +76,13 @@ public class ContainerModel extends RefPropertyModel implements Container {
         return summary;
     }
 
+    @SuppressWarnings( { "unchecked" } )
     private List<Ref> getContents() {
         if ( contents == null ) {
             contents = (List<Ref>) getObject();
             if ( contents == null ) {
                 // Happens on empty scenarios, etc
-                contents = new ArrayList<Ref>();
+                contents = new ArrayList<Ref>(0);
             }
         }
 
@@ -85,7 +90,7 @@ public class ContainerModel extends RefPropertyModel implements Container {
     }
 
     public Iterator<Ref> iterator( int first, int count ) {
-        return getContents().subList( first, first+count ).iterator();
+        return getContents().subList( first, first + count ).iterator();
     }
 
     public Iterator<Ref> iterator() {
@@ -96,18 +101,16 @@ public class ContainerModel extends RefPropertyModel implements Container {
         return getContents().size();
     }
 
-    public IModel model( Object object ) {
+    public IModel<Ref> model( Ref object ) {
         return new RefModel( object );
     }
 
     // Mappable
+    public Map<String, Object> toMap() {
+        return null;// TODO
+    }
 
-    // Converts self to a map with key = property name and value = a JavaBean or simple data type
-    public Map toMap() {
-        return null;  // TODO
-    }// Initializes self from a map
-
-    public void initFromMap(Map map) {
+    public void initFromMap( Map<String, Object> map ) {
         // TODO
     }
 

@@ -1,23 +1,23 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
-import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
-import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.Panel;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,14 +26,15 @@ import java.util.HashSet;
  * Date: Apr 23, 2008
  * Time: 4:43:09 PM
  */
-abstract public class AbstractElementForm extends Panel implements ElementPanel {
+public abstract class AbstractElementForm extends Panel implements ElementPanel {
 
     protected Ref element;
     protected Set<Ref> otherElements = new HashSet<Ref>();
     protected Form elementForm;
-    protected List<AbstractTab> tabs = new ArrayList<AbstractTab>();
+    protected List<ITab> tabs = new ArrayList<ITab>();
     protected Label typeLabel;
     protected AjaxTabbedPanel tabbedPanel;
+    private static final long serialVersionUID = 6987033791125697755L;
 
     public AbstractElementForm(String id, Ref element) {
         super(id);
@@ -52,6 +53,8 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
         typeLabel = new Label("type", element.getType());
         add(typeLabel);
         elementForm = new Form("elementForm") {
+            private static final long serialVersionUID = 3207844118187786163L;
+
             @Override
             public boolean isTransparentResolver() { // so that the children fields will resolve under it
                 return true;
@@ -67,8 +70,8 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
     }
 
     protected void init() {
-        this.add(new SimpleAttributeModifier("class", "element"));
-        this.setOutputMarkupId(true);
+        add(new SimpleAttributeModifier("class", "element"));
+        setOutputMarkupId(true);
     }
 
     // ElementPanel
@@ -135,7 +138,7 @@ abstract public class AbstractElementForm extends Panel implements ElementPanel 
             // TODO - open breadcrumbed editor on agreement
         }
     }
-    
+
     // end ElementPanel
 
     public void reset() {

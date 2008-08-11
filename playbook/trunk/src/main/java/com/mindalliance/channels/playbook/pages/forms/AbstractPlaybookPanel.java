@@ -1,23 +1,22 @@
 package com.mindalliance.channels.playbook.pages.forms;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.FormComponent;
+import com.mindalliance.channels.playbook.ref.Ref;
+import org.apache.log4j.Logger;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.Component;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.log4j.Logger;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
-
-import com.mindalliance.channels.playbook.ref.Ref;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,10 +25,11 @@ import com.mindalliance.channels.playbook.ref.Ref;
  * Date: May 9, 2008
  * Time: 6:03:21 PM
  */
-abstract public class AbstractPlaybookPanel extends Panel  implements ElementPanel {
+public abstract class AbstractPlaybookPanel extends Panel  implements ElementPanel {
 
     protected List<FormComponent> inputFields = new ArrayList<FormComponent>();
     protected Map<Component, List<Component>> dependencies = new HashMap<Component, List<Component>>();
+    private static final long serialVersionUID = -3397328755932980127L;
 
     public AbstractPlaybookPanel(String id) {
         super(id);
@@ -47,6 +47,8 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
         this.setOutputMarkupId(true);
         for (final FormComponent inputField : inputFields) {
             inputField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+                private static final long serialVersionUID = 6239144101227811010L;
+
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                     List<Component> dependents = dependencies.get(inputField);
@@ -103,19 +105,19 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
     }
 
     protected void hide(Component component) {
-        component.add(new AttributeModifier("style", true, new Model("display:none")));
+        component.add(new AttributeModifier("style", true, new Model<String>("display:none")));
     }
 
     protected void display(Component component) {
-        component.add(new AttributeModifier("style", true, new Model("display:block")));
+        component.add(new AttributeModifier("style", true, new Model<String>("display:block")));
     }
 
     protected void display(Component component, String style) {
-        component.add(new AttributeModifier("style", true, new Model("display:" + style)));
+        component.add(new AttributeModifier("style", true, new Model<String>("display:" + style)));
     }
 
     protected void toggle(CheckBox setCheckBox, CheckBox toggledCheckBox, AjaxRequestTarget target) {
-        toggledCheckBox.setModelObject(!(Boolean)setCheckBox.getModelObject());
+        toggledCheckBox.setModelObject(!setCheckBox.getModelObject());
         target.addComponent(toggledCheckBox);
     }
 
@@ -127,5 +129,5 @@ abstract public class AbstractPlaybookPanel extends Panel  implements ElementPan
     protected boolean isFresh(Ref ref) {
         return ref != null && ref.isFresh();
     }
-   
+
 }

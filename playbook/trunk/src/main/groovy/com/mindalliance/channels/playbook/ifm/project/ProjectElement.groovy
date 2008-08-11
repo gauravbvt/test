@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
  * Time: 2:40:03 PM
  */
 class ProjectElement extends IfmElement implements InProject {
+    private static final long serialVersionUID = -1L;
 
     private Ref cachedProject
 

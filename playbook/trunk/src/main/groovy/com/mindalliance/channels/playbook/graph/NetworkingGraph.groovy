@@ -1,15 +1,15 @@
 package com.mindalliance.channels.playbook.graph
 
-import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.support.models.Container
-import com.mindalliance.channels.playbook.ref.Referenceable
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook
-import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.project.resources.Resource
 import com.mindalliance.channels.playbook.ifm.playbook.Group
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
-import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook
+import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.support.models.Container
 import com.mindalliance.channels.playbook.graph.support.Networking
 
 /**

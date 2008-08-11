@@ -23,22 +23,22 @@ public class ConfirmationRequestForm extends AbstractInformationActForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
             public Panel getPanel(String panelId) {
                 return new FlowActBasicTab(panelId, ConfirmationRequestForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Cause")) {
+        tabs.add(new AbstractTab(new Model<String>("Cause")) {
              public Panel getPanel(String panelId) {
                  return new EventCauseTab(panelId, ConfirmationRequestForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Information")) {
+        tabs.add(new AbstractTab(new Model<String>("Information")) {
             public Panel getPanel(String panelId) {
                 return new ConfirmationRequestInfoTab(panelId, ConfirmationRequestForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Risk")) {
+        tabs.add(new AbstractTab(new Model<String>("Risk")) {
              public Panel getPanel(String panelId) {
                  return new EventRiskTab(panelId, ConfirmationRequestForm.this);
              }

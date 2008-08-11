@@ -12,6 +12,7 @@ import com.mindalliance.channels.playbook.ifm.Named
 * Time: 10:45:25 AM
 */
 class Relationship extends ProjectElement implements Named {
+    private static final long serialVersionUID = -1L;
 
     Ref fromAgent
     Ref toAgent

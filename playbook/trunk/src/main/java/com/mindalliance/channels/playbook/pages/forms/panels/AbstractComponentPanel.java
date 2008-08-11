@@ -1,46 +1,46 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.Component;
-import org.apache.log4j.Logger;
-import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ref.Bean;
-import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.ifm.project.Project;
 import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
-import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.ref.Bean;
+import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import org.apache.log4j.Logger;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+
+import java.io.Serializable;
 
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 28, 2008
- * Time: 3:15:33 PM
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and Confidential. User: jf Date: Mar 28,
+ * 2008 Time: 3:15:33 PM
  */
 // Not much to abstract...
-abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
+public abstract class AbstractComponentPanel extends AbstractPlaybookPanel {
 
-    public final static boolean SINGLE_SELECTION = true;
+    public static final boolean SINGLE_SELECTION = true;
 
     protected AbstractPlaybookPanel parentPanel;
-    protected String propPath; // path to the element's property which value is the component to be edited
+    protected String propPath;// path to the element's property which value is the component to be edited
     // protected WebMarkupContainer div;
 
-    private Object editedComponent;
+    private Serializable editedComponent;
+    private static final long serialVersionUID = -8991995817484671424L;
 
-    public AbstractComponentPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
-        super(id);
+    protected AbstractComponentPanel( String id, AbstractPlaybookPanel parentPanel, String propPath ) {
+        super( id );
         this.parentPanel = parentPanel;
         this.propPath = propPath;
         load();
         init();
     }
 
+    @Override
     public FeedbackPanel getFeedback() {
         return parentPanel.getFeedback();
     }
@@ -55,9 +55,9 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return getComponent();
     }
 
-    public Object getComponent() {
-        if (editedComponent == null) {
-         editedComponent = RefUtils.get(getElement(), propPath);
+    public Serializable getComponent() {
+        if ( editedComponent == null ) {
+            editedComponent = (Serializable) RefUtils.get( getElement(), propPath );
         }
         return editedComponent;
     }
@@ -66,12 +66,12 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.getObject();
     }
 
-    public void elementChanged(String propPath, AjaxRequestTarget target) {
-        parentPanel.elementChanged(propPath, target);
+    public void elementChanged( String propPath, AjaxRequestTarget target ) {
+        parentPanel.elementChanged( propPath, target );
     }
 
-    public void addOtherElement(Ref otherElement) {
-        parentPanel.addOtherElement(otherElement);
+    public void addOtherElement( Ref otherElement ) {
+        parentPanel.addOtherElement( otherElement );
     }
 
     public AbstractElementForm getTopElementPanel() {
@@ -110,10 +110,9 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
         return parentPanel.getScope();
     }
 
-    public  void edit(Ref ref, AjaxRequestTarget target) {
-        parentPanel.edit(ref, target);
+    public void edit( Ref ref, AjaxRequestTarget target ) {
+        parentPanel.edit( ref, target );
     }
-    
 
     // end ElementPanel
 
@@ -122,44 +121,46 @@ abstract public class AbstractComponentPanel extends AbstractPlaybookPanel {
     }
 
     protected void load() {
-    /*  div = new WebMarkupContainer("component");
-      div.setOutputMarkupId(true);
-      add(div);*/
+        /*  div = new WebMarkupContainer("component");
+        div.setOutputMarkupId(true);
+        add(div);*/
     }
 
-
+    @Override
     public void onDetach() {
         try {
             Object component = getComponent();
             if ( component != null && component instanceof Bean )
-                ((Bean)component).detach();
-        } catch (RuntimeException e) {
-            Logger.getLogger(this.getClass()).error("Error detaching " + getElement() + "'s " + propPath);
+                ( (Bean) component ).detach();
+        } catch ( RuntimeException e ) {
+            Logger.getLogger( getClass() ).error( "Error detaching " + getElement() + "'s " + propPath );
             throw e;
         }
         super.onDetach();
     }
 
-    protected void addReplaceable(Component component) {
-        addReplaceableTo(component, this);
+    @Override
+    protected void addReplaceable( Component component ) {
+        addReplaceableTo( component, this );
     }
 
-    protected void addReplaceableTo(Component component, WebMarkupContainer container) {
-        component.setOutputMarkupId(true);
-        container.addOrReplace(component);
-        if (isReadOnly()) component.setEnabled(false);
+    protected void addReplaceableTo( Component component, MarkupContainer container ) {
+        component.setOutputMarkupId( true );
+        container.addOrReplace( component );
+        if ( isReadOnly() )
+            component.setEnabled( false );
     }
 
-    protected void setProperty(String property, Object value) {
-        RefUtils.set(getElement(), propPath+"."+property, value);
+    protected void setProperty( String property, Object value ) {
+        RefUtils.set( getElement(), propPath + '.' + property, value );
     }
 
-    protected void setProperty(String property, Object value, AjaxRequestTarget target) {
-        setProperty(property, value);
-        elementChanged(propPath+"."+property, target);
+    protected void setProperty( String property, Object value, AjaxRequestTarget target ) {
+        setProperty( property, value );
+        elementChanged( propPath + '.' + property, target );
     }
 
-    protected Object getProperty(String property) {
-        return RefUtils.get(getElement(), propPath+"."+property);
+    protected Object getProperty( String property ) {
+        return RefUtils.get( getElement(), propPath + '.' + property );
     }
 }

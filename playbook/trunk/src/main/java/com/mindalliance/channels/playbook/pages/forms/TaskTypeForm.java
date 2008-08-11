@@ -22,17 +22,17 @@ public class TaskTypeForm extends AbstractCategoryForm {
     }
 
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
              public Panel getPanel(String panelId) {
                  return new CategoryBasicTab(panelId, TaskTypeForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Intent")) {
+        tabs.add(new AbstractTab(new Model<String>("Intent")) {
              public Panel getPanel(String panelId) {
                  return new TaskTypeIntentTab(panelId, TaskTypeForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Inputs")) {
+        tabs.add(new AbstractTab(new Model<String>("Inputs")) {
              public Panel getPanel(String panelId) {
                  return new TaskTypeInputsTab(panelId, TaskTypeForm.this);
              }

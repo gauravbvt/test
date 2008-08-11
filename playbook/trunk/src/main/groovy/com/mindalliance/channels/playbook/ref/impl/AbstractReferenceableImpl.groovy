@@ -107,10 +107,10 @@ abstract class AbstractReferenceableImpl implements Referenceable {
         return RefUtils.shortClassName(this);
     }
 
-    Map toMap() {
+    Map<String,Object> toMap() {
         return null;
     }
 
-    void initFromMap(Map map) {}
+    void initFromMap(Map<String,Object> map) {}
 
 }

@@ -14,6 +14,7 @@ import com.mindalliance.channels.playbook.pages.filters.Filter
 * ...
 */
 class Tab extends IfmElement implements Container, Named, Described {
+    private static final long serialVersionUID = -83012746444045817L;
 
     Boolean shared
     Filter filter
@@ -36,21 +37,21 @@ class Tab extends IfmElement implements Container, Named, Described {
         name
     }
 
-    Map toMap() {
+    Map<String,Object> toMap() {
         Map map = super.toMap()
         buffer = null
         return map
     }
 
-    public void initFromMap(Map map) {
+    public void initFromMap(Map<String,Object> map) {
         super.initFromMap(map)
         filter.container = base
         filter.invalidate();
 
     }
 
-    List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + [ "summary", "buffer", "allowedClasses", "object" ])
+    List transientProperties() {
+        super.transientProperties() + [ "summary", "buffer", "allowedClasses", "object" ] as List
     }
 
     public Set hiddenProperties() {
@@ -70,13 +71,14 @@ class Tab extends IfmElement implements Container, Named, Described {
 
     public synchronized void setFilter( Filter filter ) {
         this.filter = filter;
-        filter.setContainer( base );
+        filter.container = base;
         buffer = null;
     }
 
     public synchronized Container getBuffer() {
-        if ( buffer == null )
+        if ( buffer == null ) {
             buffer = new FilteredContainer( base, getFilter() )
+        }
 
         return buffer
     }
@@ -92,7 +94,7 @@ class Tab extends IfmElement implements Container, Named, Described {
 
     //---------------------------------
     public ContainerSummary getSummary() {
-        return getBuffer().getSummary();
+        return getBuffer().summary;
     }
 
     public boolean contains(Ref ref) {
@@ -107,23 +109,23 @@ class Tab extends IfmElement implements Container, Named, Described {
         return getBuffer().indexOf( ref );
     }
 
-    public List<Class<?>> getAllowedClasses() {
-        return getBuffer().getAllowedClasses();
+    public List<Class<? extends Referenceable>> getAllowedClasses() {
+        return getBuffer().allowedClasses;
     }
 
     public Object getObject() {
-        return base instanceof Tab ? base.getObject() : base ;
+        return base instanceof Tab ? base.object : base ;
     }
 
     public void setObject(Object object) {
-        if ( base instanceof Tab )
-            base.setObject( object )
-        else
+        if ( base instanceof Tab ) {
+            base.object = object
+        } else
             setBase( (Container) object );
         detach();
     }
 
-    public Iterator<Ref> iterator( int first, int count ) {
+    public Iterator<? extends Ref> iterator( int first, int count ) {
         return getBuffer().iterator( first, count );
     }
 
@@ -131,7 +133,7 @@ class Tab extends IfmElement implements Container, Named, Described {
         return getBuffer().iterator();
     }
 
-    public IModel model( Object object ) {
+    public IModel<Ref> model( Ref object ) {
         return base.model( object );
     }
 

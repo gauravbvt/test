@@ -21,6 +21,7 @@ public class Lock implements Serializable {
     PlaybookSession session = PlaybookSession.current();
     long start = System.currentTimeMillis();
     long timeout = MAX_TIMEOUT;
+    private static final long serialVersionUID = -1626963653289024733L;
 
     Lock(Ref ref) {
         this.ref = ref;
@@ -36,6 +37,6 @@ public class Lock implements Serializable {
 
     String getOwner() {
         User user = (User)session.getUser().deref();
-        return user.getName();        
+        return user.getName();
     }
 }

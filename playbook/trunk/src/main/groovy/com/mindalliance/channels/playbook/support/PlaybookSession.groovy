@@ -26,16 +26,16 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
 
     private SessionMemory memory = new SessionMemory();
 
-     public PlaybookSession(){
+    public PlaybookSession(){
     }
 
     public String toString() {
         return "Session for $userId"
     }
 
-    public PlaybookSession( AuthenticatedWebApplication application, Request request ) {
-        super( application, request );
-        this.application = (PlaybookApplication) application;
+    public PlaybookSession( Request request ) {
+        super( request );
+        this.application = (PlaybookApplication) PlaybookApplication.get();
     }
 
     static PlaybookSession current() {

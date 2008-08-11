@@ -18,28 +18,43 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class EventForm extends AbstractPlaybookElementForm {
 
+    private static final long serialVersionUID = 7914823630521873790L;
+
     public EventForm(String id, Ref element) {
         super(id, element);
     }
 
+    @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
-             public Panel getPanel(String panelId) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
+            private static final long serialVersionUID = 5008540484586918053L;
+
+            @Override
+            public Panel getPanel(String panelId) {
                  return new EventBasicTab(panelId, EventForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Cause")) {
-             public Panel getPanel(String panelId) {
+        tabs.add(new AbstractTab(new Model<String>("Cause")) {
+            private static final long serialVersionUID = 2094012212437657674L;
+
+            @Override
+            public Panel getPanel(String panelId) {
                  return new EventCauseTab(panelId, EventForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Location")) {
-             public Panel getPanel(String panelId) {
+        tabs.add(new AbstractTab(new Model<String>("Location")) {
+            private static final long serialVersionUID = 4512666886503892719L;
+
+            @Override
+            public Panel getPanel(String panelId) {
                  return new EventLocationTab(panelId, EventForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Risk")) {
-             public Panel getPanel(String panelId) {
+        tabs.add(new AbstractTab(new Model<String>("Risk")) {
+            private static final long serialVersionUID = 2269346597721301307L;
+
+            @Override
+            public Panel getPanel(String panelId) {
                  return new EventRiskTab(panelId, EventForm.this);
              }
          });

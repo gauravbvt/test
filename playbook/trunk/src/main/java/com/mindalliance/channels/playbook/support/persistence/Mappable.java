@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * YAML imposes the following constraints on objects it serializes:
  * They must be simple types (String, int etc.), Maps, Lists or JavaBeans, and be composed of the same.
- * 
+ *
  * To control which properties get persisted and for other reasons, YAML-serializable objects are instances of interface
  * Mappable (e.g. Bean implements Mappable).Mappables are first converted to Maps that are then
  * serialized to YAML (Mappable.toMap()).
@@ -19,11 +19,17 @@ import java.util.Map;
  * For this to work, Mappable classes *must* have an empty constructor.
  */
 public interface Mappable {
-    public static final String CLASS_NAME_KEY = "_bean_class_";    
+    String CLASS_NAME_KEY = "_bean_class_"; // NON-NLS
 
-    // Converts self to a map with key = property name and value = a JavaBean or simple data type
-    Map toMap();
-    // Initializes self from a map
-    void initFromMap(Map map);
+    /**
+     * Converts self to a map with key = property name and value = a JavaBean or simple data type.
+     * @return a persistable map
+     */
+    Map<String,Object> toMap();
+
+    /** Initializes self from a map.
+     * @param map a persistable map created by toMap()
+     */
+    void initFromMap(Map<String,Object> map);
 
 }

@@ -1,14 +1,12 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.flowAct;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.tabs.informationAct.InformationActBasicTab;
+import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.query.Query;
-import com.mindalliance.channels.playbook.ref.Ref;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
@@ -20,24 +18,31 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public class FlowActBasicTab extends InformationActBasicTab {
 
-    protected DynamicFilterTree targetAgentTree;
+    private DynamicFilterTree targetAgentTree;
+    private static final long serialVersionUID = -3370326716881724968L;
 
-    public FlowActBasicTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public FlowActBasicTab( String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
-        targetAgentTree = new DynamicFilterTree("targetAgent", new RefPropertyModel(getElement(), "targetAgent"),
-                                                    new RefQueryModel(getPlaybook(),
-                                                        new Query("findAllAgentsExcept", getElement(), "actorAgent")),
-                                                    SINGLE_SELECTION) {
-            public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
-                Ref selectedResource = targetAgentTree.getNewSelection();
-                setProperty("targetAgent", selectedResource);
+        targetAgentTree = new DynamicFilterTree(
+                "targetAgent",
+                new RefPropertyModel( getElement(), "targetAgent" ),
+                new RefQueryModel(
+                        getPlaybook(), new Query(
+                        "findAllAgentsExcept", getElement(), "actorAgent" ) ),
+                SINGLE_SELECTION ) {
+            private static final long serialVersionUID = -2462883153913078647L;
+
+            @Override
+            public void onFilterSelect(
+                    AjaxRequestTarget target, Filter filter ) {
+                setProperty( "targetAgent", targetAgentTree.getNewSelection() );
             }
         };
-        addReplaceable(targetAgentTree);
+        addReplaceable( targetAgentTree );
     }
-
 }

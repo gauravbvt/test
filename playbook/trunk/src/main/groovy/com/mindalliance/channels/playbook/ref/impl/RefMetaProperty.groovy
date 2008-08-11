@@ -7,6 +7,7 @@ package com.mindalliance.channels.playbook.ref.impl
  * Time: 6:45:44 PM
  */
 class RefMetaProperty implements Serializable, Comparable {
+    private static final long serialVersionUID = -1L;
 
     String propertyName
     String displayName

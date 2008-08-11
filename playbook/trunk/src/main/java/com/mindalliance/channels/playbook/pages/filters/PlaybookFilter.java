@@ -4,13 +4,11 @@ import com.mindalliance.channels.playbook.ifm.playbook.Playbook;
 import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
-import com.mindalliance.channels.playbook.support.persistence.Mappable;
 import com.mindalliance.channels.playbook.support.Mapper;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * ...
@@ -22,7 +20,8 @@ public class PlaybookFilter extends Filter {
     public PlaybookFilter() {} // for persistency only
 
     public PlaybookFilter(Ref ref) {
-        super("in playbook " + getPlaybook(ref));
+        super("... in playbook " + getPlaybook(ref));
+        setInclusion( true );
         this.playbook = ref;
     }
 
@@ -32,11 +31,11 @@ public class PlaybookFilter extends Filter {
         return result;
     }
 
-    protected List<Filter> createChildren() {
+    protected List<Filter> createChildren( boolean selectionState ) {
         return Collections.emptyList();
     }
 
-    public boolean match(Ref ref) {
+    public boolean isMatching(Ref ref) {
         Referenceable object = ref.deref();
         if (object instanceof PlaybookElement) {
             PlaybookElement pe = (PlaybookElement) object;
@@ -45,7 +44,7 @@ public class PlaybookFilter extends Filter {
         return false;
     }
 
-    protected boolean strictlyAllowsClass(Class<?> c) {
+    protected boolean allowsClassLocally(Class<?> c) {
         return PlaybookElement.class.isAssignableFrom(c);
     }
 
@@ -59,7 +58,7 @@ public class PlaybookFilter extends Filter {
         return map;
     }
 
-    public void initFromMap(Map map) {
+    public void initFromMap(Map<String,Object> map) {
         playbook = (Ref)Mapper.valueFromPersisted( map.get( "playbook" ));
         super.initFromMap(map);
     }

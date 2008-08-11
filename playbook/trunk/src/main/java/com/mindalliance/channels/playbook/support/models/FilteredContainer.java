@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.support.models;
 
 import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.filters.UserScope;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.support.Mapper;
@@ -18,13 +19,13 @@ public class FilteredContainer extends RefContainer {
     private Filter filter;
     private boolean strict;
 
-    private transient List<Class<?>> allowedClasses;
+    private transient List<Class<? extends Referenceable>> allowedClasses;
 
     public FilteredContainer() {
-        super();
     }
 
     public FilteredContainer( Container data, Filter filter, boolean strict ) {
+         this();
          this.data = data;
          this.filter = filter;
          filter.setContainer( data );
@@ -59,6 +60,8 @@ public class FilteredContainer extends RefContainer {
     public synchronized void detach() {
         super.detach();
         setContents( null );
+        if ( !( data instanceof UserScope ) )
+            data.detach();
         allowedClasses = null;
     }
 
@@ -68,9 +71,10 @@ public class FilteredContainer extends RefContainer {
             buffer = new ArrayList<Ref>();
             for ( Ref ref : getData() ) {
                   if ( isStrict() ) {
-                    if ( getFilter().match( ref ) )
+                    if ( getFilter().isMatching( ref ) && getFilter().isIncluding( ref ) ) {
                         buffer.add( ref );
-                } else if ( getFilter().filter( ref ) )
+                    }
+                } else if ( getFilter().isApplicableTo( ref ) )
                     buffer.add( ref );
             }
             setContents( buffer );
@@ -78,10 +82,10 @@ public class FilteredContainer extends RefContainer {
         return buffer;
     }
 
-    public synchronized List<Class<?>> getAllowedClasses() {
+    public synchronized List<Class<? extends Referenceable>> getAllowedClasses() {
         if ( allowedClasses == null ) {
-            List<Class<?>> ac = new ArrayList<Class<?>>();
-            for ( Class<?> c : getData().getAllowedClasses() )
+            List<Class<? extends Referenceable>> ac = new ArrayList<Class<? extends Referenceable>>();
+            for ( Class<? extends Referenceable> c : getData().getAllowedClasses() )
                 if ( getFilter().allowsClass( c ) )
                     ac.add( c );
             allowedClasses = ac;

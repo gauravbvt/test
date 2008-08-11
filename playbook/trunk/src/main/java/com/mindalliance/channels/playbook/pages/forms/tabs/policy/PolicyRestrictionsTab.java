@@ -1,25 +1,25 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
-import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.panels.MultipleStringChooser;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
-import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -51,14 +51,14 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
         policy = (Policy) getElement().deref();
         setLabels(policy);
         addReplaceable(mediumLegendLabel);
-        anyMediumField = new AjaxCheckBox("anyMedium", new Model(policy.getMediumTypes().isEmpty())) {
+        anyMediumField = new AjaxCheckBox("anyMedium", new Model<Boolean>(policy.getMediumTypes().isEmpty())) {
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean any = (Boolean) anyMediumField.getModelObject();
+                boolean any = anyMediumField.getModelObject();
                 if (any) {
                     RefUtils.set(policy, "mediumTypes", new ArrayList<Ref>());
-                    mediumTypesDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+                    mediumTypesDiv.add(new AttributeModifier("style", true, new Model<String>("display:none")));
                 } else {
-                    mediumTypesDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+                    mediumTypesDiv.add(new AttributeModifier("style", true, new Model<String>("display:block")));
                 }
                 target.addComponent(mediumTypesDiv);
             }
@@ -77,9 +77,9 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
         };
         addReplaceableTo(mediumTypesTree, mediumTypesDiv);
         addReplaceable(purposesLegendLabel);
-        anyPurposeField = new AjaxCheckBox("anyPurpose", new Model(((List<Ref>) RefUtils.get(policy, "purposes")).isEmpty())) {
+        anyPurposeField = new AjaxCheckBox("anyPurpose", new Model<Boolean>( getPurposes().isEmpty())) {
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean any = (Boolean) anyPurposeField.getModelObject();
+                boolean any = anyPurposeField.getModelObject();
                 if (any) {
                     RefUtils.set(policy, "purposes", new ArrayList<String>());
                 }
@@ -94,6 +94,11 @@ public class PolicyRestrictionsTab extends AbstractFormTab {
         purposesChooser = new MultipleStringChooser("purposes", this, "purposes",
                 new RefQueryModel(getProject(), new Query("findAllPurposes")));
         addReplaceableTo(purposesChooser, purposesDiv);
+    }
+
+    @SuppressWarnings( { "unchecked" } )
+    private List<Ref> getPurposes() {
+        return (List<Ref>) RefUtils.get(policy, "purposes");
     }
 
     private void setLabels(Policy policy) {

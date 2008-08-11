@@ -1,19 +1,18 @@
 package com.mindalliance.channels.playbook.pages.forms.tabs.policy;
 
-import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
-import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
+import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.ref.Ref;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.TextArea;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,7 +45,7 @@ public class PolicyAboutTab extends AbstractFormTab {
         edictChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                String selectedEdict = edictChoice.getModelObjectAsString();
+                String selectedEdict = edictChoice.getDefaultModelObjectAsString();
                 setProperty("edict", selectedEdict);
             }
         });

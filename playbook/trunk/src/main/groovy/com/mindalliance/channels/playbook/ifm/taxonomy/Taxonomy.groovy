@@ -7,6 +7,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.playbook.Event
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +17,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event
  * Time: 1:09:50 PM
  */
 class Taxonomy extends IfmElement implements Described {
+    private static final long serialVersionUID = -1L;
 
     String name
     String description
@@ -132,8 +134,8 @@ class Taxonomy extends IfmElement implements Described {
     /**
      * Return what model content an analyst can create.
      */
-    static List<Class<?>> contentClasses() {
-        return (List<Class<?>>)[
+    static List<Class<? extends Referenceable>> contentClasses() {
+        return (List<Class<? extends Referenceable>>)[
                 AreaType.class, EventType.class,
                 MediumType.class,
                 PlaceType.class, OrganizationType.class,
@@ -148,7 +150,7 @@ class Taxonomy extends IfmElement implements Described {
     /**
      * Return what system objects an analyst can create.
      */
-    static List<Class<?>> analystClasses() {
-        return (List<Class<?>>)[Taxonomy.class]
+    static List<Class<? extends Referenceable>> analystClasses() {
+        return (List<Class<? extends Referenceable>>)[Taxonomy.class]
     }
 }

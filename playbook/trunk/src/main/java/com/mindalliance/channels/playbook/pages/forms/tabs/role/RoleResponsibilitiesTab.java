@@ -83,14 +83,14 @@ public class RoleResponsibilitiesTab extends AbstractFormTab {
         responsibilityDiv = new WebMarkupContainer("responsibilityDiv");
         loadResponsibilityPanel();
         addReplaceable(responsibilityDiv);
-        responsibilityDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+        responsibilityDiv.add(new AttributeModifier("style", true, new Model<String>("display:none")));
     }
 
     private void setResponsibilityPanelVisibility(AjaxRequestTarget target) {
         if (selectedResponsibility != null) {
-            responsibilityDiv.add(new AttributeModifier("style", true, new Model("display:block")));
+            responsibilityDiv.add(new AttributeModifier("style", true, new Model<String>("display:block")));
         } else {
-            responsibilityDiv.add(new AttributeModifier("style", true, new Model("display:none")));
+            responsibilityDiv.add(new AttributeModifier("style", true, new Model<String>("display:none")));
         }
         target.addComponent(responsibilityDiv);
     }

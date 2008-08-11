@@ -1,32 +1,30 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.panels.AbstractComponentPanel;
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
+import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.query.Query;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.wicket.model.Model;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -41,14 +39,15 @@ public class EOIsPanel extends AbstractComponentPanel {
 
     List<ElementOfInformation> eois;
 
-    AutoCompleteTextField adHocTopicField;
+    AutoCompleteTextField<String> adHocTopicField;
     WebMarkupContainer topicChoiceDiv;
-    ListChoice topicChoiceList;
+    ListChoice<String> topicChoiceList;
     Button addTopicButton;
     WebMarkupContainer eoisDiv;
     RefreshingView eoisView;
 
     String topicToAdd;
+    private static final long serialVersionUID = -2083107339838991260L;
 
     public EOIsPanel(String id, AbstractPlaybookPanel parentPanel, String propPath, IModel topicChoicesModel) {
         super(id, parentPanel, propPath);
@@ -57,7 +56,7 @@ public class EOIsPanel extends AbstractComponentPanel {
     }
 
     protected void doLoad() {  // load after setting availableTopicChoicesModel
-        eois = (List<ElementOfInformation>) getComponent();
+        eois = getEois();
         if (eois == null) {
             eois = new ArrayList<ElementOfInformation>();
             RefUtils.set(getElement(), propPath, eois);
@@ -65,26 +64,34 @@ public class EOIsPanel extends AbstractComponentPanel {
 
         // Topic choices
         // add hoc topic
-        adHocTopicField = new AutoCompleteTextField("adHocTopic", new Model()) {
-            protected Iterator getChoices(String input) {
+        adHocTopicField = new AutoCompleteTextField<String>("adHocTopic", new Model<String>()) {
+            private static final long serialVersionUID = 7222015781276564838L;
+
+            @Override
+            protected Iterator<String> getChoices(String input) {
                 return topicIterator(input, 10);
             }
         };
         adHocTopicField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 2947107379052903211L;
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                String topic = adHocTopicField.getModelObjectAsString();
+                String topic = adHocTopicField.getDefaultModelObjectAsString();
                 topicToAddInputed(topic, target);
             }
         });
         addReplaceable(adHocTopicField);
         // Topic choices
         topicChoiceDiv = new WebMarkupContainer("topicChoiceDiv");
-        topicChoiceList = new ListChoice("topicChoices", new Model(), availableTopicChoicesModel);
+        topicChoiceList = new ListChoice<String>("topicChoices", new Model<String>(), availableTopicChoicesModel);
         topicChoiceList.setMaxRows(4);
         topicChoiceList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 2022319035477795720L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                topicToAdd = topicChoiceList.getModelObjectAsString();
+                topicToAdd = topicChoiceList.getDefaultModelObjectAsString();
                 adHocTopicField.setModelObject("");
                 target.addComponent(adHocTopicField);
             }
@@ -95,6 +102,9 @@ public class EOIsPanel extends AbstractComponentPanel {
         // Add button
         addTopicButton = new Button("addTopic");
         addTopicButton.add(new AjaxEventBehavior("onclick") {
+            private static final long serialVersionUID = 6919490657377068019L;
+
+            @Override
             protected void onEvent(AjaxRequestTarget target) {
                 addNewEOI(target);
             }
@@ -102,27 +112,40 @@ public class EOIsPanel extends AbstractComponentPanel {
         addReplaceable(addTopicButton);
         // EOIs
         eoisDiv = new WebMarkupContainer("eoisDiv");
-        eoisView = new RefreshingView("eois", new Model((Serializable) eois)) {
-            protected Iterator getItemModels() {
-                return new ModelIteratorAdapter(eois.iterator()) {
-                    protected IModel model(Object eoi) {
-                        return new Model((ElementOfInformation) eoi);
+        eoisView = new RefreshingView<ElementOfInformation>("eois", new Model<Serializable>((Serializable)eois)) {
+            private static final long serialVersionUID = -4119452880940422115L;
+
+            @Override
+            protected Iterator<IModel<ElementOfInformation>> getItemModels() {
+                return new ModelIteratorAdapter<ElementOfInformation>(eois.iterator()) {
+                    @Override
+                    protected IModel<ElementOfInformation> model(ElementOfInformation eoi) {
+                        return new Model<ElementOfInformation>(eoi);
                     }
                 };
             }
-            protected void populateItem(Item item) {
-                final ElementOfInformation eoi = (ElementOfInformation) item.getModelObject();
-                Label topicLabel = new Label("topic", new Model(eoi.getTopic()));
+            @Override
+            protected void populateItem(Item<ElementOfInformation> item) {
+                final ElementOfInformation eoi = item.getModelObject();
+                Label topicLabel = new Label("topic", new Model<String>(eoi.getTopic()));
                 item.add(topicLabel);
-                final TextArea contentField = new TextArea("content", new Model(eoi.getContent()));
+                final TextArea contentField = new TextArea<String>("content", new Model<String>(eoi.getContent()));
                 contentField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+                    private static final long serialVersionUID =
+                            -4770523741955929952L;
+
+                    @Override
                     protected void onUpdate(AjaxRequestTarget target) {
-                        eoi.setContent(contentField.getModelObjectAsString());
+                        eoi.setContent(contentField.getDefaultModelObjectAsString());
                         elementChanged(propPath, target);
                     }
                 });
                 item.add(contentField);
                 AjaxLink deleteLink = new AjaxLink("deleteEoi") {
+                    private static final long serialVersionUID =
+                            -296690121632797043L;
+
+                    @Override
                     public void onClick(AjaxRequestTarget target) {
                         removeEoi(eoi, target);
                     }
@@ -134,15 +157,25 @@ public class EOIsPanel extends AbstractComponentPanel {
         addReplaceable(eoisDiv);
     }
 
-    private Iterator topicIterator(String input, int max) {
+    @SuppressWarnings( { "unchecked" } )
+    private List<ElementOfInformation> getEois() {
+        return (List<ElementOfInformation>) getComponent();
+    }
+
+    private Iterator<String> topicIterator(String input, int max) {
         List<String> matches = new ArrayList<String>();
-        for (String topic : (List<String>) availableTopicChoicesModel.getObject()) {
+        for (String topic : getAvailableTopicChoices() ) {
             if (topic.toLowerCase().startsWith(input.toLowerCase())) {
                 matches.add(topic);
                 if (matches.size() >= max) break;
             }
         }
         return matches.iterator();
+    }
+
+    @SuppressWarnings( { "unchecked" } )
+    private List<String> getAvailableTopicChoices() {
+        return (List<String>) availableTopicChoicesModel.getObject();
     }
 
     private void topicToAddInputed(String topic, AjaxRequestTarget target) {
@@ -154,7 +187,7 @@ public class EOIsPanel extends AbstractComponentPanel {
     }
 
     private void updateTopicChoicesSelection() {
-        for (String topic : (List<String>) availableTopicChoicesModel.getObject()) {
+        for (String topic : getAvailableTopicChoices() ) {
             if (topic.equalsIgnoreCase(topicToAdd)) {
                 topicChoiceList.setModelObject(topic);
                 topicChoiceList.modelChanged();
@@ -184,16 +217,16 @@ public class EOIsPanel extends AbstractComponentPanel {
         target.addComponent(eoisDiv);
     }
 
-    private List<String> availableTopics(List<String>choices) {
-        List<String> chosenTopics = new ArrayList<String>();
-        for (ElementOfInformation eoi : eois) {
-            chosenTopics.add(eoi.getTopic());
-        }
-        Collection availableTopics = CollectionUtils.subtract(choices, chosenTopics);
-        List<String> results = new ArrayList<String>();
-        results.addAll(availableTopics);
-        Collections.sort(results);
-        return results;
-    }
+//    private List<String> availableTopics(List<String>choices) {
+//        List<String> chosenTopics = new ArrayList<String>();
+//        for (ElementOfInformation eoi : eois) {
+//            chosenTopics.add(eoi.getTopic());
+//        }
+//        Collection availableTopics = CollectionUtils.subtract(choices, chosenTopics);
+//        List<String> results = new ArrayList<String>();
+//        results.addAll(availableTopics);
+//        Collections.sort(results);
+//        return results;
+//    }
 
 }

@@ -21,155 +21,177 @@ import java.util.Iterator;
 import java.io.Serializable;
 
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 29, 2008
- * Time: 10:58:30 AM
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and Confidential. User: jf Date: Jul 29,
+ * 2008 Time: 10:58:30 AM
  */
 public class NetworkingBasicTab extends AbstractFormTab {
 
-    protected Networking networking;
-    protected AjaxLink fromResourceLink;
-    protected AjaxLink toResourceLink;
-    protected Label fromResourceLabel;
-    protected Label toResourceLabel;
-    protected WebMarkupContainer accessAndJobDiv;
-    protected WebMarkupContainer hasJobDiv;
-    protected Label fromResourceJobLabel;
-    protected Label toResourceJobLabel;
-    protected WebMarkupContainer hasAccessDiv;
-    protected Label fromResourceAccessLabel;
-    protected Label toResourceAccessLabel;
-    protected WebMarkupContainer agreementsDiv;
-    protected RefreshingView agreementsView;
-    protected WebMarkupContainer relationshipsDiv;
-    protected RefreshingView relationshipsView;
-    protected WebMarkupContainer flowsDiv;
-    protected RefreshingView flowsView;
+    private Networking networking;
+    private RefreshingView<Ref> agreementsView;
+    private RefreshingView<Ref> relationshipsView;
+    private RefreshingView<Ref> flowsView;
+    private static final long serialVersionUID = -861232619548475750L;
 
-    public NetworkingBasicTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public NetworkingBasicTab( String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
         networking = (Networking) getElement().deref();
-        fromResourceLink = new AjaxLink("fromResourceLink") {
-            public void onClick(AjaxRequestTarget target) {
-                edit(networking.getFromResource(), target);
+        AjaxLink<?> fromResourceLink = new AjaxLink( "fromResourceLink" ) {
+            private static final long serialVersionUID = 4946836796769745510L;
+
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                edit( networking.getFromResource(), target );
             }
         };
-        add(fromResourceLink);
-        fromResourceLabel = new Label("fromResource", new Model((String) RefUtils.get(networking.getFromResource(), "name")));
-        fromResourceLink.add(fromResourceLabel);
-        toResourceLink = new AjaxLink("toResourceLink") {
-            public void onClick(AjaxRequestTarget target) {
-                edit(networking.getToResource(), target);
+        fromResourceLink.add( new Label( "fromResource", new Model<String>(
+                (String) RefUtils.get( networking.getFromResource(), "name" ) ) ) );
+        add( fromResourceLink );
+
+        AjaxLink<?> toResourceLink = new AjaxLink( "toResourceLink" ) {
+            private static final long serialVersionUID = 1194233347779221982L;
+
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                edit( networking.getToResource(), target );
             }
         };
-        add(toResourceLink);
-        toResourceLabel = new Label("toResource", new Model((String) RefUtils.get(networking.getToResource(), "name")));
-        toResourceLink.add(toResourceLabel);
+        toResourceLink.add( new Label( "toResource", new Model<String>(
+                (String) RefUtils.get( networking.getToResource(), "name" ) ) ) );
+        add( toResourceLink );
 
-        accessAndJobDiv = new WebMarkupContainer("accessAndJobDiv");
-        setVisibility(accessAndJobDiv, networking.hasAccess() || networking.hasJobWith());
-        add(accessAndJobDiv);
+        WebMarkupContainer accessAndJobDiv = new WebMarkupContainer( "accessAndJobDiv" );
+        setVisibility( accessAndJobDiv, networking.hasAccess() || networking.hasJobWith() );
+        add( accessAndJobDiv );
 
-        hasJobDiv = new WebMarkupContainer("hasJobDiv");
-        setVisibility(hasJobDiv, networking.hasJobWith());
-        accessAndJobDiv.add(hasJobDiv);
-        fromResourceJobLabel = new Label("fromResourceJob", new Model((String) RefUtils.get(networking.getFromResource(), "name")));
-        hasJobDiv.add(fromResourceJobLabel);
-        toResourceJobLabel = new Label("toResourceJob", new Model((String) RefUtils.get(networking.getToResource(), "name")));
-        hasJobDiv.add(toResourceJobLabel);
+        WebMarkupContainer hasJobDiv = new WebMarkupContainer( "hasJobDiv" );
+        setVisibility( hasJobDiv, networking.hasJobWith() );
+        hasJobDiv.add( new Label( "fromResourceJob", new Model<String>(
+                (String) RefUtils.get( networking.getFromResource(), "name" ) ) ) );
+        hasJobDiv.add( new Label( "toResourceJob",
+                                  new Model<String>( (String) RefUtils.get( networking.getToResource(), "name" ) ) ) );
+        accessAndJobDiv.add( hasJobDiv );
 
-        hasAccessDiv = new WebMarkupContainer("hasAccessDiv");
-        setVisibility(hasAccessDiv, networking.hasAccess());
-        accessAndJobDiv.add(hasAccessDiv);
-        fromResourceAccessLabel = new Label("fromResourceAccess", new Model((String) RefUtils.get(networking.getFromResource(), "name")));
-        hasAccessDiv.add(fromResourceAccessLabel);
-        toResourceAccessLabel = new Label("toResourceAccess", new Model((String) RefUtils.get(networking.getToResource(), "name")));
-        hasAccessDiv.add(toResourceAccessLabel);
+        WebMarkupContainer hasAccessDiv = new WebMarkupContainer( "hasAccessDiv" );
+        setVisibility( hasAccessDiv, networking.hasAccess() );
+        hasAccessDiv.add( new Label( "fromResourceAccess", new Model<String>(
+                (String) RefUtils.get( networking.getFromResource(), "name" ) ) ) );
+        hasAccessDiv.add( new Label( "toResourceAccess", new Model<String>(
+                (String) RefUtils.get( networking.getToResource(), "name" ) ) ) );
+        accessAndJobDiv.add( hasAccessDiv );
 
-        agreementsDiv = new WebMarkupContainer("agreementsDiv");
-        setVisibility(agreementsDiv, networking.getAgreements().size() > 0);
-        add(agreementsDiv);
-        agreementsView = new RefreshingView("agreements", new Model((Serializable) networking.getAgreements())) {
-            protected Iterator getItemModels() {
-                List<Ref> agreements = (List<Ref>) agreementsView.getModelObject();
-                return new ModelIteratorAdapter(agreements.iterator()) {
-                    protected IModel model(Object agreement) {
-                        return new RefModel(agreement);
+        WebMarkupContainer agreementsDiv = new WebMarkupContainer( "agreementsDiv" );
+        setVisibility( agreementsDiv, !networking.getAgreements().isEmpty() );
+        add( agreementsDiv );
+
+        agreementsView = new RefreshingView<Ref>( "agreements", new Model<Serializable>(
+                (Serializable) networking.getAgreements() ) ) {
+            private static final long serialVersionUID = 4118515098233355340L;
+
+            @Override
+            protected Iterator<IModel<Ref>> getItemModels() {
+                List<Ref> agreements = (List<Ref>) agreementsView.getDefaultModelObject();
+                return new ModelIteratorAdapter<Ref>( agreements.iterator() ) {
+                    @Override
+                    protected IModel<Ref> model( Ref object ) {
+                        return new RefModel( object );
                     }
                 };
             }
-            protected void populateItem(Item item) {
-                final Ref agreement = (Ref) item.getModelObject();
-                AjaxLink agreementLink = new AjaxLink("agreementLink") {
-                    public void onClick(AjaxRequestTarget target) {
-                        edit(agreement, target);
-                    }
-                };
-                Label agreementString = new Label("agreement", agreement.deref().about());
-                agreementLink.add(agreementString);
-                item.add(agreementLink);
-            }
-        };
-        agreementsDiv.add(agreementsView);
 
-        relationshipsDiv = new WebMarkupContainer("relationshipsDiv");
-        setVisibility(relationshipsDiv, networking.getRelationships().size() > 0);
-        add(relationshipsDiv);
-        relationshipsView = new RefreshingView("relationships", new Model((Serializable) networking.getRelationships())) {
-            protected Iterator getItemModels() {
-                List<Ref> relationships = (List<Ref>) relationshipsView.getModelObject();
-                return new ModelIteratorAdapter(relationships.iterator()) {
-                    protected IModel model(Object relationship) {
-                        return new RefModel(relationship);
+            @Override
+            protected void populateItem( Item<Ref> item ) {
+                final Ref agreement = item.getModelObject();
+                AjaxLink<?> agreementLink = new AjaxLink( "agreementLink" ) {
+                    // NON-NLS
+                    private static final long serialVersionUID = 3399671396919220120L;
+
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        edit( agreement, target );
                     }
                 };
-            }
-            protected void populateItem(Item item) {
-                final Ref relationship = (Ref) item.getModelObject();
-                AjaxLink relationshipLink = new AjaxLink("relationshipLink") {
-                    public void onClick(AjaxRequestTarget target) {
-                        edit(relationship, target);
-                    }
-                };
-                Label relationshipString = new Label("relationship", relationship.deref().about());
-                relationshipLink.add(relationshipString);
-                item.add(relationshipLink);
+                Label agreementString = new Label( "agreement", agreement.deref().about() );
+                agreementLink.add( agreementString );
+                item.add( agreementLink );
             }
         };
-        relationshipsDiv.add(relationshipsView);
+        agreementsDiv.add( agreementsView );
 
-        flowsDiv = new WebMarkupContainer("flowsDiv");
-        setVisibility(flowsDiv, networking.getFlowActs().size() > 0);
-        add(flowsDiv);
-        flowsView = new RefreshingView("flowActs", new Model((Serializable) networking.getFlowActs())) {
-            protected Iterator getItemModels() {
-                List<Ref> flowActs = (List<Ref>) flowsView.getModelObject();
-                return new ModelIteratorAdapter(flowActs.iterator()) {
-                    protected IModel model(Object flowAct) {
-                        return new RefModel(flowAct);
+        WebMarkupContainer relationshipsDiv = new WebMarkupContainer( "relationshipsDiv" );
+        setVisibility( relationshipsDiv, !networking.getRelationships().isEmpty() );
+        add( relationshipsDiv );
+        relationshipsView = new RefreshingView<Ref>( "relationships", new Model<Serializable>(
+                (Serializable) networking.getRelationships() ) ) {
+            private static final long serialVersionUID = -5797876356831379791L;
+
+            @Override
+            protected Iterator<IModel<Ref>> getItemModels() {
+                List<Ref> relationships = (List<Ref>) relationshipsView.getDefaultModelObject();
+                return new ModelIteratorAdapter<Ref>( relationships.iterator() ) {
+                    @Override
+                    protected IModel<Ref> model( Ref object ) {
+                        return new RefModel( object );
                     }
                 };
             }
-            protected void populateItem(Item item) {
-                final Ref flowAct = (Ref) item.getModelObject();
-                AjaxLink flowActLink = new AjaxLink("flowActLink") {
-                    public void onClick(AjaxRequestTarget target) {
-                        edit(flowAct, target);
+
+            @Override
+            protected void populateItem( Item<Ref> item ) {
+                final Ref relationship = item.getModelObject();
+                AjaxLink<?> relationshipLink = new AjaxLink( "relationshipLink" ) {
+                    private static final long serialVersionUID = 4628314579650647543L;
+
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        edit( relationship, target );
                     }
                 };
-                Label flowActString = new Label("flowAct", flowAct.deref().about());
-                flowActLink.add(flowActString);
-                item.add(flowActLink);
+                Label relationshipString = new Label( "relationship", relationship.deref().about() );
+                relationshipLink.add( relationshipString );
+                item.add( relationshipLink );
             }
         };
-        flowsDiv.add(flowsView);
+        relationshipsDiv.add( relationshipsView );
+
+        WebMarkupContainer flowsDiv = new WebMarkupContainer( "flowsDiv" );
+        setVisibility( flowsDiv, !networking.getFlowActs().isEmpty() );
+        add( flowsDiv );
+        flowsView = new RefreshingView<Ref>( "flowActs",
+                                             new Model<Serializable>( (Serializable) networking.getFlowActs() ) ) {
+            private static final long serialVersionUID = 5647693305839268716L;
+
+            @Override
+            protected Iterator<IModel<Ref>> getItemModels() {
+                List<Ref> flowActs = (List<Ref>) flowsView.getDefaultModelObject();
+                return new ModelIteratorAdapter<Ref>( flowActs.iterator() ) {
+                    @Override
+                    protected IModel<Ref> model( Ref object ) {
+                        return new RefModel( object );
+                    }
+                };
+            }
+
+            @Override
+            protected void populateItem( Item<Ref> item ) {
+                final Ref flowAct = item.getModelObject();
+                AjaxLink<?> flowActLink = new AjaxLink( "flowActLink" ) {
+                    private static final long serialVersionUID = -6988662846808852426L;
+
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        edit( flowAct, target );
+                    }
+                };
+                Label flowActString = new Label( "flowAct", flowAct.deref().about() );
+                flowActLink.add( flowActString );
+                item.add( flowActLink );
+            }
+        };
+        flowsDiv.add( flowsView );
     }
-
-
 }

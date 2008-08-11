@@ -16,10 +16,11 @@ import com.mindalliance.channels.playbook.support.RefUtils
  * Time: 6:56:49 AM
  */
 abstract class BeanImpl implements Bean {
+    private static final long serialVersionUID = -1L;
 
     static Map<Class,List<MetaBeanProperty>> WritableProperties = [:]
 
-    String version         
+    String version
 
     String getVersion() {
         return '1.0.0' // default
@@ -63,7 +64,7 @@ abstract class BeanImpl implements Bean {
                     value = null
                 }
                 else {
-                     value = new RefImpl(id:val.id, db:val.db)                       
+                     value = new RefImpl(id:val.id, db:val.db)
                 }
                  break
             case Bean.class: value = val.copy(); break
@@ -117,7 +118,7 @@ abstract class BeanImpl implements Bean {
 
     // ****** Persistence support for YAML
 
-    void initFromMap(Map map) {
+    void initFromMap(Map<String,Object> map) {
         // TODO -- manage versioning here
         map.each {key, val ->
             if (isWritableProperty(key)) {
@@ -149,7 +150,7 @@ abstract class BeanImpl implements Bean {
         return references
     }
 
-    Map toMap() {
+    Map<String,Object> toMap() {
         // System.out.println(this.class.name + ' to map')
         Map map = [:]
         beanProperties().each {key, val ->

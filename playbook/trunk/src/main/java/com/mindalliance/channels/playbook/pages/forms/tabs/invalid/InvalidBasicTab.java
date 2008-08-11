@@ -17,27 +17,34 @@ import org.apache.wicket.model.Model;
  */
 public class InvalidBasicTab extends AnalysisElementBasicTab {
 
-    Invalidation invalid;
-    protected AjaxLink elementLink;
-    protected Label elementLabel;
-    protected Label tagLabel;
+    private Invalidation invalid;
+    private static final long serialVersionUID = 9193448169954816664L;
 
-    public InvalidBasicTab(String id, AbstractElementForm elementForm) {
-        super(id, elementForm);
+    public InvalidBasicTab( String id, AbstractElementForm elementForm ) {
+        super( id, elementForm );
     }
 
+    @Override
     protected void load() {
         super.load();
-        invalid = (Invalidation)getElement().deref();
-        elementLink = new AjaxLink("elementLink"){
-                    public void onClick(AjaxRequestTarget target) {
-                        edit(invalid.getElement().getReference(), target);
-                    }
-                };
-        addReplaceable(elementLink);
-        elementLabel = new Label("element", new Model(invalid.getElement().toString()));
-        elementLink.add(elementLabel);
-        tagLabel = new Label("tag", new Model(invalid.labelText()));
-        addReplaceable(tagLabel);
+        invalid = (Invalidation) getElement().deref();
+
+        AjaxLink<?> elementLink = new AjaxLink( "elementLink" ) {
+            private static final long serialVersionUID = 3615464809321222524L;
+
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                edit( invalid.getElement().getReference(), target );
+            }
+        };
+        elementLink.add(
+                new Label(
+                        "element",
+                        new Model<String>( invalid.getElement().toString() ) ) );
+        addReplaceable( elementLink );
+
+        addReplaceable(
+                new Label(
+                        "tag", new Model<String>( invalid.labelText() ) ) );
     }
 }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ref.Referenceable
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,11 +18,6 @@ class User extends IfmElement {
     boolean admin
     boolean analyst
     boolean manager
-
-    Set hiddenProperties() {
-        return (super.hiddenProperties() + ['password']) as Set
-    }
-
 
     List<Ref> tabs = []
     Ref selectedTab
@@ -42,8 +38,11 @@ class User extends IfmElement {
         changed( "tabs" );
     }
 
-    static List<Class<?>> contentClasses() {
+    static List contentClasses() {
         [ Tab.class ]
     }
 
+    Set hiddenProperties() {
+        return (super.hiddenProperties() + ['password']) as Set
+    }
 }

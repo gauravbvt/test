@@ -16,6 +16,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
  * A matching domain defined by intention
  */
 abstract class Definition extends BeanImpl implements MatchingDomain, Described {
+    private static final long serialVersionUID = -1L;
 
     String description = ''
 
@@ -33,7 +34,7 @@ abstract class Definition extends BeanImpl implements MatchingDomain, Described 
     String about() {
         return description
     }
-    
+
 
     boolean matches(Bean bean, InformationAct informationAct) {
         MatchResult result = match(bean, informationAct)

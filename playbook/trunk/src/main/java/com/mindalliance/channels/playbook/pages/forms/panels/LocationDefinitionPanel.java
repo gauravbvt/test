@@ -1,30 +1,28 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
-import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
-import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
-import com.mindalliance.channels.playbook.pages.filters.Filter;
-import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
-import com.mindalliance.channels.playbook.support.models.RefQueryModel;
-import com.mindalliance.channels.playbook.support.RefUtils;
-import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
 import com.mindalliance.channels.playbook.ifm.taxonomy.AreaType;
+import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
+import com.mindalliance.channels.playbook.pages.filters.Filter;
+import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import com.mindalliance.channels.playbook.support.RefUtils;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
+import com.mindalliance.channels.playbook.support.models.RefQueryModel;
+import com.mindalliance.channels.playbook.support.renderers.RefChoiceRenderer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.Model;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -64,26 +62,35 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     protected Label asToLabel;
     protected DropDownChoice kindOfTargetChoice;
     protected DynamicFilterTree targetTree;
+    private static final long serialVersionUID = 3474425276531333673L;
 
     public LocationDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
         super(id, parentPanel, propPath);
     }
-    
+
+    @Override
     protected void load() {
         super.load();
         locationDefinition = (LocationDefinition)getComponent();
-        isPlaceCheckBox = new AjaxCheckBox("isPlace", new Model((Boolean)locationDefinition.getLocationIsAPlace())) {
+        isPlaceCheckBox = new AjaxCheckBox("isPlace", new Model<Boolean>(
+                locationDefinition.getLocationIsAPlace() )) {
+            private static final long serialVersionUID = -3070509927973869806L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isPlace = (Boolean)isPlaceCheckBox.getModelObject();
+                boolean isPlace = isPlaceCheckBox.getModelObject();
                 setProperty("locationIsAPlace", isPlace);
                 setVisibility(placeTypeDiv, isPlace, target);
                 toggle(isPlaceCheckBox, isGeoLocationCheckBox, target);
             }
         };
         addReplaceable(isPlaceCheckBox);
-        isGeoLocationCheckBox = new AjaxCheckBox("isGeoLocation", new Model((Boolean)!locationDefinition.getLocationIsAPlace())) {
+        isGeoLocationCheckBox = new AjaxCheckBox("isGeoLocation", new Model<Boolean>( !locationDefinition.getLocationIsAPlace() )) {
+            private static final long serialVersionUID = 1124995355540791263L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isGeoLocation = (Boolean)isPlaceCheckBox.getModelObject();
+                boolean isGeoLocation = isPlaceCheckBox.getModelObject();
                 setProperty("locationIsAPlace", !isGeoLocation);
                 setVisibility(placeTypeDiv, !isGeoLocation, target);
                 toggle(isGeoLocationCheckBox, isPlaceCheckBox, target);
@@ -96,6 +103,9 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         placeTypeTree = new DynamicFilterTree("placeType", new RefPropertyModel(getComponent(), "placeType"),
                                                new RefPropertyModel(getProject(), "places"),
                                                SINGLE_SELECTION) {
+            private static final long serialVersionUID = 2049765807506265109L;
+
+            @Override
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref placeType = placeTypeTree.getNewSelection();
                 setProperty("placeType", placeType);
@@ -103,23 +113,33 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
             }
         };
         addReplaceableTo(placeTypeTree, placeTypeDiv);
-        isAffirmedCheckBox = new AjaxCheckBox("isAffirmed", new Model((Boolean)!locationDefinition.isNegated())) {
+        isAffirmedCheckBox = new AjaxCheckBox("isAffirmed", new Model<Boolean>( !locationDefinition.isNegated() )) {
+            private static final long serialVersionUID = 7182969347307455381L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                setProperty("negated", !(Boolean)isAffirmedCheckBox.getModelObject());
+                setProperty("negated", !isAffirmedCheckBox.getModelObject() );
                 toggle(isAffirmedCheckBox, isNegatedCheckBox, target);
             }
         };
         addReplaceable(isAffirmedCheckBox);
-        isNegatedCheckBox = new AjaxCheckBox("isNegated", new Model((Boolean)locationDefinition.isNegated())) {
+        isNegatedCheckBox = new AjaxCheckBox("isNegated", new Model<Boolean>(
+                locationDefinition.isNegated() )) {
+            private static final long serialVersionUID = -3862842528848952013L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                setProperty("negated", (Boolean)isNegatedCheckBox.getModelObject());
+                setProperty("negated", isNegatedCheckBox.getModelObject() );
                 toggle(isNegatedCheckBox, isAffirmedCheckBox, target);
             }
         };
         addReplaceable(isNegatedCheckBox);
-        isByGeoLocationCheckBox = new AjaxCheckBox("isByGeoLocation", new RefPropertyModel(getComponent(), "byGeoLocation")) {
+        isByGeoLocationCheckBox = new AjaxCheckBox("isByGeoLocation", new RefPropertyModel<Boolean>(getComponent(), "byGeoLocation")) {
+            private static final long serialVersionUID = 1281524352492183864L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isByGeoLocation = (Boolean)isByGeoLocationCheckBox.getModelObject();
+                boolean isByGeoLocation = isByGeoLocationCheckBox.getModelObject();
                 setProperty("byGeoLocation", isByGeoLocation);
                 enable(byGeoLocationRelationChoice,isByGeoLocation, target);
                 geoLocationPanel = new GeoLocationPanel("geoLocation", LocationDefinitionPanel.this, propPath+".geoLocation");
@@ -132,8 +152,11 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                                       new RefQueryModel(this, new Query("getGeoLocationRelation")),
                                                       new Model((Serializable)getRelationChoices()));
         byGeoLocationRelationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = -7883455823711704462L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isWithin = meansIsWithin(byGeoLocationRelationChoice.getModelObjectAsString());
+                boolean isWithin = meansIsWithin(byGeoLocationRelationChoice.getDefaultModelObjectAsString());
                 setProperty("withinGeoLocation", isWithin);
             }
         });
@@ -142,9 +165,12 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         geoLocationPanel = new GeoLocationPanel("geoLocation", this, propPath+".geoLocation");
         setVisibility(geoLocationPanel, locationDefinition.isByGeoLocation());
         addReplaceable(geoLocationPanel);
-        isByJurisdictionCheckBox = new AjaxCheckBox("isByJurisdiction", new RefPropertyModel(getElement(), propPath+".byJurisdiction")) {
+        isByJurisdictionCheckBox = new AjaxCheckBox("isByJurisdiction", new RefPropertyModel<Boolean>(getElement(), propPath+".byJurisdiction")) {
+            private static final long serialVersionUID = -6512698253595968188L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isByJurisdiction = (Boolean)isByJurisdictionCheckBox.getModelObject();
+                boolean isByJurisdiction = isByJurisdictionCheckBox.getModelObject();
                 enable(byJurisdictionRelationChoice,isByJurisdiction, target);
                 if (!isByJurisdiction) setProperty("jurisdictionable", null);
                 jurisdictionableTree.modelChanged();
@@ -156,16 +182,22 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                                       new RefQueryModel(this, new Query("getJurisdictionRelation")),
                                                       new Model((Serializable)getRelationChoices()));
         byJurisdictionRelationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = -7828288333965208498L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isWithin = meansIsWithin(byJurisdictionRelationChoice.getModelObjectAsString());
+                boolean isWithin = meansIsWithin(byJurisdictionRelationChoice.getDefaultModelObjectAsString());
                 setProperty("withinJurisdiction", isWithin);
             }
         });
         byJurisdictionRelationChoice.setEnabled(locationDefinition.isByJurisdiction());
         addReplaceable(byJurisdictionRelationChoice);
         jurisdictionableTree = new DynamicFilterTree("jurisdictionable", new RefPropertyModel(getComponent(), "jurisdictionable"),
-                                                      new RefQueryModel(getScope(), new Query("findAllJurisdictionables")), 
+                                                      new RefQueryModel(getScope(), new Query("findAllJurisdictionables")),
                                                       SINGLE_SELECTION) {
+            private static final long serialVersionUID = -7064147120229271040L;
+
+            @Override
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selected = jurisdictionableTree.getNewSelection();
                 setProperty("jurisdictionable", selected);
@@ -173,9 +205,12 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         };
         setVisibility(jurisdictionableTree, locationDefinition.isByJurisdiction());
         addReplaceable(jurisdictionableTree);
-        isByProximityCheckBox = new AjaxCheckBox("isByProximity", new RefPropertyModel(getElement(), propPath+".byProximity")) {
+        isByProximityCheckBox = new AjaxCheckBox("isByProximity", new RefPropertyModel<Boolean>(getElement(), propPath+".byProximity")) {
+            private static final long serialVersionUID = 9173578299246311270L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isByProximity = (Boolean)isByProximityCheckBox.getModelObject();
+                boolean isByProximity = isByProximityCheckBox.getModelObject();
                 enable(byProximityRelationChoice,isByProximity, target);
                 enable(placeTypesChoice,isByProximity, target);
                 enable(areaTypesChoice,isByProximity, target);
@@ -189,14 +224,17 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                                       new RefQueryModel(this, new Query("getProximityRelation")),
                                                       new Model((Serializable)getProximityRelationChoices()));
         byProximityRelationChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = -7604338591282719880L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                boolean isWithin = meansIsWithin(byProximityRelationChoice.getModelObjectAsString());
+                boolean isWithin = meansIsWithin(byProximityRelationChoice.getDefaultModelObjectAsString());
                 setProperty("withinProximity", isWithin);
                 if (isWithin) {
-                    asToLabel.setModelObject("as");
+                    asToLabel.setDefaultModelObject("as");
                 }
                 else {
-                    asToLabel.setModelObject("of");
+                    asToLabel.setDefaultModelObject("of");
                 }
                 target.addComponent(asToLabel);
                 target.addComponent(targetTree);
@@ -208,8 +246,11 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                             new Model(getProximityAreaTypeName()),
                                             new Model((Serializable) AreaType.allAreaTypeNames()));
         areaTypesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = 354816265111661077L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                Ref areaType = AreaType.areaTypeNamed(areaTypesChoice.getModelObjectAsString());
+                Ref areaType = AreaType.areaTypeNamed(areaTypesChoice.getDefaultModelObjectAsString());
                 setProperty("proximityAreaType", areaType);
                 placeTypesChoice.setModelObject(null);
                 target.addComponent(placeTypesChoice); // should show no selection in proximity place types
@@ -224,6 +265,9 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
                                            new Model((Serializable)getProximityPlaceTypeChoices()),
                                            new RefChoiceRenderer("name", "id"));
         placeTypesChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            private static final long serialVersionUID = -1948831170888173856L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 areaTypesChoice.setEnabled(locationDefinition.isByProximity() && isFresh(locationDefinition.getProximityAreaType()));
                 areaTypesChoice.setModelObject(null);
@@ -235,11 +279,14 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         placeTypesChoice.setEnabled(locationDefinition.isByProximity() && isFresh(locationDefinition.getProximityPlaceType()));
         setVisibility(placeTypesChoice, isFresh(locationDefinition.getPlaceType()));
         addReplaceable(placeTypesChoice);
-        asToLabel = new Label("as-of", new Model("as"));
+        asToLabel = new Label("as-of", new Model<String>("as"));
         addReplaceable(asToLabel);
         kindOfTargetChoice = new DropDownChoice("kindOfTarget", new Model(getProximityTargetKind()),
                                                             new Model((Serializable)getProximityTargetKindChoices()));
         kindOfTargetChoice.add(new AjaxFormComponentUpdatingBehavior("onchange"){
+            private static final long serialVersionUID = -3372183838744888381L;
+
+            @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 replaceTargetTree(target);
             }
@@ -255,6 +302,9 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
         targetTree = new DynamicFilterTree("targetTree", new RefQueryModel(this, new Query("getSelectedProximityTarget")),
                                                          new RefQueryModel(this, new Query("getProximityTargetChoices")),
                                             SINGLE_SELECTION){
+            private static final long serialVersionUID = -4985522904051354683L;
+
+            @Override
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selected = targetTree.getNewSelection();
                 setProximityTarget(selected);
@@ -351,15 +401,15 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     }
 
     private boolean targetIsPlace() {
-        return kindOfTargetChoice.getModelObjectAsString().equals(THIS_PLACE);
+        return kindOfTargetChoice.getDefaultModelObjectAsString().equals(THIS_PLACE);
     }
 
     private boolean targetIsLocatable() {
-        return kindOfTargetChoice.getModelObjectAsString().equals(THE_LOCATION_OF);
+        return kindOfTargetChoice.getDefaultModelObjectAsString().equals(THE_LOCATION_OF);
     }
 
     private boolean targetIsJurisdictionable() {
-        return kindOfTargetChoice.getModelObjectAsString().equals(THE_JURISDICTION_OF);
+        return kindOfTargetChoice.getDefaultModelObjectAsString().equals(THE_JURISDICTION_OF);
     }
 
     public Ref getSelectedProximityTarget() {
@@ -370,7 +420,7 @@ public class LocationDefinitionPanel extends AbstractDefinitionPanel {
     }
 
     private void setProximityTarget(Ref selected) {
-        String proximityTargetKind = kindOfTargetChoice.getModelObjectAsString();
+        String proximityTargetKind = kindOfTargetChoice.getDefaultModelObjectAsString();
         if (proximityTargetKind != null) {
             if (proximityTargetKind.equals(THIS_PLACE)) locationDefinition.setProximalPlace(selected);
             else if (proximityTargetKind.equals(THE_LOCATION_OF)) locationDefinition.setProximalLocatable(selected);
