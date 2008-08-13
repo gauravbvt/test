@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Collection;
 
 /** A node in the filter tree. */
 public abstract class Filter
@@ -110,7 +111,7 @@ public abstract class Filter
     public synchronized void invalidate() {
         if ( !invalid ) {
             invalid = true;
-            if ( !( container instanceof UserScope ) )
+            if ( container != null && !( container instanceof UserScope ) )
                 container.detach();
 
             if ( children != null )
@@ -339,7 +340,7 @@ public abstract class Filter
      */
     public boolean hasSelected( Ref ref ) {
         if ( isMatching( ref ) ) {
-            List<Filter> fs = getChildren();
+            Collection<Filter> fs = getChildren();
             if ( fs.isEmpty() ) {
                 setSelected( true );
                 return true;
