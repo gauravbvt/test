@@ -51,12 +51,12 @@ class NetworkingGraph extends PlaybookGraph {
                 Referenceable el = ref.deref()
                 switch (el) {
                     case Resource.class: processResource((Resource) el); break
-                    case InformationAct.class: processInformationAct((InformationAct) el); break
-                    case Group.class: processGroup((Group) el); break
-                    case Playbook.class: processPlaybook((Playbook) el); break
-                    case SharingAgreement.class: processSharingAgreement((SharingAgreement)el); break
-                    case Relationship.class: processRelationship((Relationship)el); break
-                    case Project.class: processProject((Project) el); break
+                    // case InformationAct.class: processInformationAct((InformationAct) el); break
+                    // case Group.class: processGroup((Group) el); break
+                    // case Playbook.class: processPlaybook((Playbook) el); break
+                    // case SharingAgreement.class: processSharingAgreement((SharingAgreement)el); break
+                    // case Relationship.class: processRelationship((Relationship)el); break
+                    // case Project.class: processProject((Project) el); break
                 }
             }
         }
@@ -71,6 +71,7 @@ class NetworkingGraph extends PlaybookGraph {
         if (resource.isOrganizationResource()) resources.add(resource.organization)
     }
 
+/*
     void processGroup(Group group) {
         Ref latest = group.playbook.latestOccurrence
         group.getResourcesAt(latest).each {processResource(it)}
@@ -107,6 +108,8 @@ class NetworkingGraph extends PlaybookGraph {
     void processProject(Project project) {
         project.resources.each {processResource(it)}
     }
+
+    */
 
     void buildResources(GraphVizBuilder builder) {
         resources.each {ref ->

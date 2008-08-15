@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.ifm.playbook.Event;
 import com.mindalliance.channels.playbook.ifm.playbook.FlowAct;
 import com.mindalliance.channels.playbook.ifm.project.environment.Relationship;
 import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement;
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl;
@@ -151,13 +152,8 @@ public class ContainerSummary extends BeanImpl
                             Event.class.isAssignableFrom( objectClass )
                             || Agent.class.isAssignableFrom( objectClass ) ) )
                         flowable = true;
-                    if ( !networkable && (
-                            Agent.class.isAssignableFrom( objectClass )
-                            || FlowAct.class.isAssignableFrom( objectClass )
-                            || SharingAgreement.class
-                                    .isAssignableFrom( objectClass )
-                            || Relationship.class
-                                    .isAssignableFrom( objectClass ) ) )
+                    if ( !networkable &&
+                            Resource.class.isAssignableFrom( objectClass ))
                         networkable = true;
                     use = new ClassUse( objectClass );
                     result.put( objectClass, use );
