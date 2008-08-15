@@ -12,30 +12,25 @@ import org.drools.RuleBase
 import org.drools.RuleBaseFactory
 import com.mindalliance.channels.playbook.support.drools.PackageLoader
 import org.drools.StatefulSession
-import org.drools.event.DebugAgendaEventListener
-import org.drools.event.DebugWorkingMemoryEventListener
-import org.drools.audit.WorkingMemoryFileLogger
 import com.mindalliance.channels.playbook.ref.Ref
 import org.drools.FactHandle
 import com.mindalliance.channels.playbook.ref.Referenceable
-import org.apache.log4j.Logger
 import org.drools.RuleBaseConfiguration
-import com.mindalliance.channels.playbook.analysis.AnalysisElement
 import org.drools.QueryResults
 import org.drools.QueryResult
-import com.mindalliance.channels.playbook.support.PlaybookApplication;
+import com.mindalliance.channels.playbook.support.PlaybookApplication
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 
 class RuleBaseSession implements Serializable {
 
-    static final String LOG_PATH = "rules_log/firing"
-    static final boolean LOG_FIRING = false
-
+    static Logger L4jLogger = LoggerFactory.getLogger(RuleBaseSession.class)
     static final List<String> FLOW = ['validations', 'profiles', 'completeness', 'beliefs', 'compliance', 'issues', 'actions']
 
     private String rulesPackageName
     private StatefulSession session
-    private WorkingMemoryFileLogger logger
+    private LoggerAdapter logger
     private Map<Ref, FactHandle> factHandles
     private Set<Referenceable> inserts
     private Set<Ref> retracts
@@ -61,17 +56,13 @@ class RuleBaseSession implements Serializable {
     private void initialize() {
         Package pkg = PackageLoader.loadPackage(this.class, rulesPackageName)
         RuleBaseConfiguration conf = new RuleBaseConfiguration();
-        conf.setShadowProxy(false);
+        conf.shadowProxy = false;
         RuleBase ruleBase = RuleBaseFactory.newRuleBase(conf)
         ruleBase.addPackage(pkg)
         session = ruleBase.newStatefulSession()
         reset()
-        if (LOG_FIRING) {
-            session.addEventListener(new DebugAgendaEventListener());
-            session.addEventListener(new DebugWorkingMemoryEventListener());
-            logger = new WorkingMemoryFileLogger(session);
-            logger.setFileName(LOG_PATH);
-        }
+
+        logger = new LoggerAdapter( L4jLogger, session );
         factHandles = new HashMap<Ref, FactHandle>()
     }
 
@@ -105,7 +96,7 @@ class RuleBaseSession implements Serializable {
             factHandles.remove(ref)
         }
         else {
-            Logger.getLogger(this.class).warn("Attempted to retract not-inserted $ref")
+            l4jLogger.warn("Attempted to retract not-inserted $ref")
         }
     }
 
@@ -117,7 +108,6 @@ class RuleBaseSession implements Serializable {
                 reset()
                 setFlow(FLOW)
                 session.fireAllRules()
-                if (LOG_FIRING) logger.writeToDisk()
             }
         }
     }

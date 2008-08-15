@@ -521,7 +521,6 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
     }
 
     void sessionTimedOut(PlaybookSession session) {
-        Logger.getLogger(this.class).info("Session $session timed out")
         appMemory.sessionTimedOut(session)
     }
 

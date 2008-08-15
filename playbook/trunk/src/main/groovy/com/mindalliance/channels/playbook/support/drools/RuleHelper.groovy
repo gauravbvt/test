@@ -9,7 +9,7 @@ package com.mindalliance.channels.playbook.support.drools
 
 import com.mindalliance.channels.playbook.analysis.*
 import com.mindalliance.channels.playbook.ref.*
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import org.drools.spi.KnowledgeHelper
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.analysis.profile.ProfileElement
@@ -23,7 +23,7 @@ class RuleHelper {
     }
 
     static void log(Referenceable cause, AnalysisElement analysis) {
-        Logger.getLogger("rules").info("Inferred " + analysis + " from " + cause + "(" + cause.getReference() + ")");
+        LoggerFactory.getLogger(RuleBaseSession.class).debug("Inferred " + analysis + " from " + cause + "(" + cause.getReference() + ")");
     }
 
     // does information act start during a profile element?

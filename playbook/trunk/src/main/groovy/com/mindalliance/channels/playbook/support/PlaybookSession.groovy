@@ -9,6 +9,8 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.query.QueryCache
 import javax.servlet.http.HttpServletRequest
 import com.mindalliance.channels.playbook.mem.Transactionable
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,6 +21,7 @@ import com.mindalliance.channels.playbook.mem.Transactionable
 */
 class PlaybookSession extends KludgeWebSession implements Transactionable, Serializable {
 
+    private static final Logger Log = LoggerFactory.getLogger( PlaybookSession.class );
     private String userId;
     private Ref sessionUser;
 
@@ -50,6 +53,9 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     void invalidate() {
         PlaybookApplication.current().sessionTimedOut(this)
         super.invalidate()
+
+        if ( Log.isInfoEnabled() )
+            Log.info( "User " + id + " logged out session " + super.getId() )
     }
 
     // For testing only
@@ -60,7 +66,14 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     public boolean authenticate( String id, String password ) {
         this.userId = id
         Ref aUser = getUser()
-        return aUser && aUser.password == password;
+        boolean result = aUser && aUser.password == password
+        if ( result ) {
+            if ( Log.isInfoEnabled() )
+                Log.info( "User " + id + " logged in session " + super.getId() )
+        } else if ( Log.isWarnEnabled() )
+            Log.warn( "Bad password for user " + id )
+
+        return result;
     }
 
     public Roles getRoles() {

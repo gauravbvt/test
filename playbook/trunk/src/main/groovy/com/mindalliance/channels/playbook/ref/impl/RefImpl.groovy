@@ -156,7 +156,7 @@ class RefImpl implements Ref {
                 }
             }
             catch (Exception e) {
-                Logger.getLogger(this.class.name).warn("Can't get $name in $referenceable")
+                Logger.getLogger(this.class.name).debug("Can't get $name in $referenceable")
                 // throw new IllegalArgumentException("Can't get $name in $referenceable")
             }
             return value
