@@ -14,15 +14,15 @@ import com.mindalliance.channels.playbook.ref.impl.AbstractReferenceableImpl
  * Date: Jul 28, 2008
  * Time: 1:31:45 PM
  */
-class Networking extends AbstractReferenceableImpl {  // scope is the fromResource's project
+class Networking extends AbstractReferenceableImpl {  // scope is the resource's project
 
-    Ref fromResource
-    Ref toResource
+    Ref resource
+    Ref otherResource
 
     private int cachedSize = -1
 
-    static Networking makeNetworking(Ref fromResource, Ref toResource) {
-        return new Networking(fromResource: fromResource, toResource: toResource)
+    static Networking makeNetworking(Ref resource, Ref otherResource) {
+        return new Networking(resource: resource, otherResource: otherResource)
     }
 
     Ref getReference() {
@@ -30,36 +30,20 @@ class Networking extends AbstractReferenceableImpl {  // scope is the fromResour
     }
 
     List<Ref> getRelationships() {
-        return (List<Ref>) fromResource.project.relationships.findAll {rel -> rel.fromAgent == fromResource && rel.toAgent == toResource }
+        return (List<Ref>) resource.project.relationships.findAll {rel -> (rel.fromAgent == resource && rel.toAgent == otherResource) ||
+                                                                              (rel.fromAgent == otherResource && rel.toAgent == resource) }
     }
 
     List<Ref> getAgreements() {
-        return (List<Ref>) Query.execute(fromResource.project, "findAllAgreementsBetween", fromResource, toResource)
+        List<Ref> agreements = (List<Ref>)Query.execute(resource.project, "findAllAgreementsBetween", resource, otherResource)
+        agreements += (List<Ref>)Query.execute(resource.project, "findAllAgreementsBetween", otherResource, resource)
+        return agreements
     }
 
     List<Ref> getFlowActs() {
-        return (List<Ref>) Query.execute(fromResource.project, "findAllFlowActsBetween", fromResource, toResource)
-    }
-
-    boolean hasAccess() {
-        boolean result = toResource.access.any {protocol ->
-            protocol.contacts.any {agentSpec -> agentSpec.matches(fromResource, null) }
-        }
-        return result
-    }
-
-    boolean hasJobWith() {
-        return hasJobWith(fromResource, toResource)
-    }
-
-    private boolean hasJobWith(Ref res1, Ref res2) {
-        Resource resource2 = (Resource) res2.deref()
-        if (resource2.isAnOrganization()) {
-            return ((Organization) resource2).hasResource(res1)
-        }
-        else {
-            return false
-        }
+        List<Ref> acts = (List<Ref>) Query.execute(resource.project, "findAllFlowActsBetween", resource, otherResource)
+        acts += (List<Ref>) Query.execute(resource.project, "findAllFlowActsBetween", otherResource, resource)
+        return acts
     }
 
     int size() {
@@ -71,8 +55,10 @@ class Networking extends AbstractReferenceableImpl {  // scope is the fromResour
             count += agrs.size()
             List<Ref> fas = this.flowActs
             count += fas.size()
-            if (hasAccess()) count++
-            if (hasJobWith()) count++
+            if (resource.hasAccessTo(otherResource)) count++
+            if (otherResource.hasAccessTo(resource)) count++
+            if (resource.hasJobWith(otherResource)) count++
+            if (otherResource.hasJobWith(resource)) count++
             cachedSize = count
         }
         return cachedSize
@@ -87,10 +73,10 @@ class Networking extends AbstractReferenceableImpl {  // scope is the fromResour
     }
 
     public String about() {
-        return "Networking between ${fromResource.about()} and ${toResource.about()}";
+        return "Networking between ${resource.about()} and ${otherResource.about()}";
     }
 
     public String getId() {
-        return "${this.class.name},makeNetworking,$fromResource,$toResource";
+        return "${this.class.name},makeNetworking,$resource,$otherResource";
     }
 }

@@ -125,6 +125,24 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return this.location.isWithin(loc)
     }
 
+    boolean hasAccessTo(Ref resource) {
+        boolean result = access.any {protocol ->
+            protocol.contacts.any {agentSpec -> agentSpec.matches(resource, null) }
+        }
+        return result
+    }
+
+    boolean hasJobWith(Ref org) {
+        Resource resource = (Resource) org.deref()
+        if (resource && resource.isAnOrganization()) {
+            return jobs.any {job -> ((Organization) resource).hasResource(job)}
+        }
+        else {
+            return false
+        }
+    }
+
+
     // Queries
 
     boolean hasRelationship(String relName, Ref otherResource, Ref event) {

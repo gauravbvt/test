@@ -30,7 +30,7 @@ class NetworkingGraph extends PlaybookGraph {
     Map getStyleTemplate() {
         return super.getStyleTemplate() + [
             networking: [shape: 'circle', fillcolor: 'azure2', fontname: PlaybookGraph.LABEL_FONT_NAME, fontsize:PlaybookGraph.LABEL_FONT_SIZE],
-            netEdge: [fontname: PlaybookGraph.LABEL_FONT_NAME, fontsize: PlaybookGraph.LABEL_FONT_SIZE]
+            netEdge: [dir: 'none', fontname: PlaybookGraph.LABEL_FONT_NAME, fontsize: PlaybookGraph.LABEL_FONT_SIZE]
         ]
     }
 
@@ -68,7 +68,7 @@ class NetworkingGraph extends PlaybookGraph {
 
     void processResource(Resource resource) {
         resources.add(resource.reference)
-        if (resource.isOrganizationResource()) resources.add(resource.organization)
+        // if (resource.isOrganizationResource()) resources.add(resource.organization)
     }
 
 /*
@@ -119,20 +119,21 @@ class NetworkingGraph extends PlaybookGraph {
     }
 
     void buildNetworking(GraphVizBuilder builder) {
-        resources.each {fromRef ->
-            resources.each {toRef ->
-                if (fromRef != toRef) {
-                    Networking networking = new Networking(fromResource: fromRef, toResource: toRef)
+        List<Ref> list = resources as List
+        for (int i=0; i< list.size()-1; i++ ) {
+            for (int j=i+1; j < list.size(); j++) {
+                Ref ref = (Ref)list[i]
+                Ref otherRef = (Ref)list[j]
+                Networking networking = new Networking(resource: ref, otherResource: otherRef)
                     if (networking.size() > 0) {
-                        builder.edge(source: nameFor(fromRef), target: nameFor(toRef), label: "${networking.size()}", URL: urlFor(networking), template: "netEdge")
+                        builder.edge(source: nameFor(ref), target: nameFor(otherRef), label: "${networking.size()}", URL: urlFor(networking), template: "netEdge")
                     }
-                }
             }
         }
     }
 
     protected String nameFor(Networking networking) {
-       return "${nameFor(networking.fromResource)}_${nameFor(networking.toResource)}"
+       return "${nameFor(networking.resource)}_${nameFor(networking.otherResource)}"
     }
 
 

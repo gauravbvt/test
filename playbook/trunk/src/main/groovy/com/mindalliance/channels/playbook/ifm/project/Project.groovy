@@ -368,7 +368,7 @@ class Project extends IfmElement implements Named, Described {
 
     List<Ref> findAllAgreementsBetween(Ref source, Ref recipient) {
         return (List<Ref>)sharingAgreements.findAll {agr ->
-            agr.source == source && agr.recipient == recipient
+            (agr.source == source && agr.recipient == recipient)
 /*
             (agr.source == source || agr.source.hasResource(source)) &&
             (agr.recipient == recipient || agr.recipient.hasResource(recipient)) &&

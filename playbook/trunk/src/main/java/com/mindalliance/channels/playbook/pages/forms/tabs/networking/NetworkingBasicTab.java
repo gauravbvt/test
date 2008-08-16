@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.graph.support.Networking;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.ref.Ref;
+import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.RefreshingView;
@@ -40,49 +41,69 @@ public class NetworkingBasicTab extends AbstractFormTab {
     protected void load() {
         super.load();
         networking = (Networking) getElement().deref();
-        AjaxLink<?> fromResourceLink = new AjaxLink( "fromResourceLink" ) {
+        Resource resource = (Resource)networking.getResource().deref();
+        Resource otherResource = (Resource)networking.getOtherResource().deref();
+        AjaxLink<?> resourceLink = new AjaxLink( "resourceLink" ) {
             private static final long serialVersionUID = 4946836796769745510L;
 
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                edit( networking.getFromResource(), target );
+                edit( networking.getResource(), target );
             }
         };
-        fromResourceLink.add( new Label( "fromResource", new Model<String>(
-                (String) RefUtils.get( networking.getFromResource(), "name" ) ) ) );
-        add( fromResourceLink );
+        resourceLink.add( new Label( "resource", new Model<String>(
+                (String) RefUtils.get( networking.getResource(), "name" ) ) ) );
+        add( resourceLink );
 
-        AjaxLink<?> toResourceLink = new AjaxLink( "toResourceLink" ) {
+        AjaxLink<?> otherResourceLink = new AjaxLink( "otherResourceLink" ) {
             private static final long serialVersionUID = 1194233347779221982L;
 
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                edit( networking.getToResource(), target );
+                edit( networking.getOtherResource(), target );
             }
         };
-        toResourceLink.add( new Label( "toResource", new Model<String>(
-                (String) RefUtils.get( networking.getToResource(), "name" ) ) ) );
-        add( toResourceLink );
+        otherResourceLink.add( new Label( "otherResource", new Model<String>(
+                (String) RefUtils.get( networking.getOtherResource(), "name" ) ) ) );
+        add( otherResourceLink );
 
         WebMarkupContainer accessAndJobDiv = new WebMarkupContainer( "accessAndJobDiv" );
-        setVisibility( accessAndJobDiv, networking.hasAccess() || networking.hasJobWith() );
+        setVisibility( accessAndJobDiv, resource.hasAccessTo(otherResource.getReference()) ||
+                                        otherResource.hasAccessTo(resource.getReference()) ||
+                                        resource.hasJobWith(otherResource.getReference()) ||
+                                        otherResource.hasJobWith(resource.getReference())
+                                        );
         add( accessAndJobDiv );
 
-        WebMarkupContainer hasJobDiv = new WebMarkupContainer( "hasJobDiv" );
-        setVisibility( hasJobDiv, networking.hasJobWith() );
-        hasJobDiv.add( new Label( "fromResourceJob", new Model<String>(
-                (String) RefUtils.get( networking.getFromResource(), "name" ) ) ) );
-        hasJobDiv.add( new Label( "toResourceJob",
-                                  new Model<String>( (String) RefUtils.get( networking.getToResource(), "name" ) ) ) );
-        accessAndJobDiv.add( hasJobDiv );
+        WebMarkupContainer resourceHasJobDiv = new WebMarkupContainer( "resourceHasJobDiv" );
+        setVisibility( resourceHasJobDiv, resource.hasJobWith(otherResource.getReference()) );
+        resourceHasJobDiv.add( new Label( "resourceJob", new Model<String>(resource.getName())) );
+        resourceHasJobDiv.add( new Label( "otherResourceOrg",
+                                  new Model<String>( otherResource.getName() ) ) );
+        accessAndJobDiv.add( resourceHasJobDiv );
 
-        WebMarkupContainer hasAccessDiv = new WebMarkupContainer( "hasAccessDiv" );
-        setVisibility( hasAccessDiv, networking.hasAccess() );
-        hasAccessDiv.add( new Label( "fromResourceAccess", new Model<String>(
-                (String) RefUtils.get( networking.getFromResource(), "name" ) ) ) );
-        hasAccessDiv.add( new Label( "toResourceAccess", new Model<String>(
-                (String) RefUtils.get( networking.getToResource(), "name" ) ) ) );
-        accessAndJobDiv.add( hasAccessDiv );
+        WebMarkupContainer otherResourceHasJobDiv = new WebMarkupContainer( "otherResourceHasJobDiv" );
+        setVisibility( otherResourceHasJobDiv, otherResource.hasJobWith(resource.getReference()) );
+        otherResourceHasJobDiv.add( new Label( "otherResourceJob", new Model<String>(otherResource.getName())) );
+        otherResourceHasJobDiv.add( new Label( "resourceOrg",
+                                  new Model<String>( resource.getName() ) ) );
+        accessAndJobDiv.add( otherResourceHasJobDiv );
+
+        WebMarkupContainer resourceHasAccessDiv = new WebMarkupContainer( "resourceHasAccessDiv" );
+        setVisibility( resourceHasAccessDiv, resource.hasAccessTo(otherResource.getReference()) );
+        resourceHasAccessDiv.add( new Label( "resourceAccessor",
+                                             new Model<String>(resource.getName()) ) );
+        resourceHasAccessDiv.add( new Label( "otherResourceAccessed",
+                                             new Model<String>( otherResource.getName() ) ) );
+        accessAndJobDiv.add( resourceHasAccessDiv );
+
+        WebMarkupContainer otherResourceHasAccessDiv = new WebMarkupContainer( "otherResourceHasAccessDiv" );
+        setVisibility( otherResourceHasAccessDiv, otherResource.hasAccessTo(resource.getReference()) );
+        otherResourceHasAccessDiv.add( new Label( "otherResourceAccessor",
+                                             new Model<String>(otherResource.getName()) ) );
+        otherResourceHasAccessDiv.add( new Label( "resourceAccessed",
+                                             new Model<String>( resource.getName() ) ) );
+        accessAndJobDiv.add( otherResourceHasAccessDiv );
 
         WebMarkupContainer agreementsDiv = new WebMarkupContainer( "agreementsDiv" );
         setVisibility( agreementsDiv, !networking.getAgreements().isEmpty() );

@@ -7,19 +7,27 @@
 <wicket:extend>
     <fieldset>
         <legend></legend>
-        Networking from <a wicket:id="fromResourceLink"><span wicket:id="fromResource">[from resource]</span></a>
-        to <a wicket:id="toResourceLink"><span wicket:id="toResource">[to resource]</span></a>
+        Networking between <a wicket:id="resourceLink"><span wicket:id="resource">[resource]</span></a>
+        and <a wicket:id="otherResourceLink"><span wicket:id="otherResource">[other resource]</span></a>
     </fieldset>
     <div wicket:id="accessAndJobDiv">
         <fieldset>
             <legend>Access</legend>
-            <div wicket:id="hasJobDiv">
-                <span wicket:id="fromResourceJob">[from resource]</span>&#160;is in organization&#160;<span
-                    wicket:id="toResourceJob">[to resource]</span>
+            <div wicket:id="resourceHasJobDiv">
+                <span wicket:id="resourceJob">[resource]</span>&#160;is in organization&#160;<span
+                    wicket:id="otherResourceOrg">[other resource]</span>
             </div>
-            <div wicket:id="hasAccessDiv">
-                <span wicket:id="fromResourceAccess">[from resource]</span>&#160;can contact&#160;<span
-                    wicket:id="toResourceAccess">[to resource]</span>
+            <div wicket:id="otherResourceHasJobDiv">
+                <span wicket:id="otherResourceJob">[other resource]</span>&#160;is in organization&#160;<span
+                    wicket:id="resourceOrg">[resource]</span>
+            </div>
+            <div wicket:id="resourceHasAccessDiv">
+                <span wicket:id="resourceAccessor">[resource]</span>&#160;can contact&#160;<span
+                    wicket:id="otherResourceAccessed">[other resource]</span>
+            </div>
+            <div wicket:id="otherResourceHasAccessDiv">
+                <span wicket:id="otherResourceAccessor">[other resource]</span>&#160;can contact&#160;<span
+                    wicket:id="resourceAccessed">[resource]</span>
             </div>
         </fieldset>
     </div>
