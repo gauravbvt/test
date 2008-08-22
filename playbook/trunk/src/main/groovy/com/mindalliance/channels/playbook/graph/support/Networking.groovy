@@ -30,8 +30,8 @@ class Networking extends AbstractReferenceableImpl {  // scope is the resource's
     }
 
     List<Ref> getRelationships() {
-        return (List<Ref>) resource.project.relationships.findAll {rel -> (rel.fromAgent == resource && rel.toAgent == otherResource) ||
-                                                                              (rel.fromAgent == otherResource && rel.toAgent == resource) }
+        return (List<Ref>) resource.project.relationships.findAll {rel -> (rel.fromResource == resource && rel.toResource == otherResource) ||
+                                                                              (rel.fromResource == otherResource && rel.toResource == resource) }
     }
 
     List<Ref> getAgreements() {

@@ -1,9 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.info
 
-import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Timing
-import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
-import com.mindalliance.channels.playbook.ifm.definition.EventSpecification
 import com.mindalliance.channels.playbook.ifm.Defineable
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
 import com.mindalliance.channels.playbook.ref.impl.BeanImpl

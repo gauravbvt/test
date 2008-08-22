@@ -15,13 +15,13 @@ import org.apache.wicket.Session
 import com.mindalliance.channels.playbook.ifm.project.resources.Organization
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
-import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import com.mindalliance.channels.playbook.ifm.info.GeoLocation
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.Participation
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.project.resources.Job
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,14 +36,16 @@ class Project extends IfmElement implements Named, Described {
     String name = 'Unnamed'
     String description = ''
     List<Ref> participations = []
+    List<Ref> playbooks = []
+    List<Ref> taxonomies = []
+    // Todo -- put below in Environment (a kind of Module, - Playbooks and Taxonomies are also Modules, Modules contain Modules and have permissions)
     List<Ref> persons = []
     List<Ref> organizations = []
     List<Ref> places = []
     List<Ref> relationships = []
+    List<Ref> jobs = []
     List<Ref> policies = []
     List<Ref> sharingAgreements = []
-    List<Ref> playbooks = []
-    List<Ref> taxonomies = []
 
     @Override
     protected List transientProperties() {
@@ -52,7 +54,7 @@ class Project extends IfmElement implements Named, Described {
 
     protected List childProperties() {
         return (List<String>)(super.childProperties() + ['participations', 'persons', 'organizations', 'places',
-                                'relationships', 'policies', 'sharingAgreements', 'playbooks'])
+                                'relationships', 'jobs', 'policies', 'sharingAgreements', 'playbooks'])
     }
 
     Set keyProperties() {
@@ -112,6 +114,7 @@ class Project extends IfmElement implements Named, Described {
         List<Ref> resources = []
         resources.addAll(persons.findAll {res -> res as boolean && res != resource })
         resources.addAll(organizations.findAll {res -> res as boolean && res != resource })
+        resources.addAll(jobs.findAll {res -> res as boolean && res != resource })
         organizations.each {org ->
             resources.addAll(org.systems.findAll {res -> res as boolean && res != resource })
             resources.addAll(org.positions.findAll {res -> res as boolean && res != resource })
@@ -120,12 +123,12 @@ class Project extends IfmElement implements Named, Described {
     }
 
     List<Ref> findAllAgents() {
-        return findAllResources()
+        return (List<Ref>)findAllResources().findAll{it.isAgent()}
     }
 
     List<Ref> findAllAgentsExcept(def holder, String propPath) {
         Ref party = RefUtils.get(holder, propPath)
-        return findAllResourcesExcept(party)
+        return (List<Ref>)findAllResourcesExcept(party).findAll{it.isAgent()}
     }
 
     Ref findPlaybookNamed(String name) {
@@ -224,11 +227,13 @@ class Project extends IfmElement implements Named, Described {
         return narrowing
     }
 
-    List<Ref> findAllAgentsMatchingSpec(AgentSpecification spec, Ref event) {
-        return (List<Ref>) findAllAgents().findAll {agent ->
-            agent as boolean && event as boolean && spec.matches(agent.deref(), event.deref())
+/*
+    List<Ref> findAllResourcesMatchingSpec(ResourceSpecification spec, Ref act) {
+        return (List<Ref>) findAllResources().findAll {resource ->
+            resource as boolean && act as boolean && spec.matches(resource.deref(), act.deref())
         }
     }
+*/
 
     List<Ref> findAllAgreementsOf(Ref resource) {
         List<Ref> ags = (List<Ref>) sharingAgreements.findAll {agreement ->
@@ -264,7 +269,7 @@ class Project extends IfmElement implements Named, Described {
 
     List<Ref> findAllRelationshipsOf(Ref resource) {
         return (List<Ref>) relationships.findAll {rel ->
-            rel as boolean && rel.fromAgent == resource || rel.toAgent == resource
+            rel as boolean && rel.fromResource == resource || rel.toResource == resource
         }
     }
 
@@ -319,7 +324,6 @@ class Project extends IfmElement implements Named, Described {
                 playbook.informationActs.each {act ->
                     if (act as boolean && act.type == "Association") {
                         if (act.relationshipName) countedSet.add(act.relationshipName)
-                        if (act.reverseRelationshipName) countedSet.add(act.reverseRelationshipName)
                     }
                 }
                 // agent specs in groups
@@ -382,12 +386,21 @@ class Project extends IfmElement implements Named, Described {
         playbooks.each {pb ->
             flowActs.addAll (pb.informationActs.findAll {act ->
                                 (act as boolean && act.isFlowAct()) &&
-                                (act.actorAgent as boolean && (act.actorAgent == actor || (actor.isAnOrganization() && actor.hasResource(act.actorAgent)))) &&
+                                ((act.actors.contains(actor)|| (actor.isAnOrganization() && act.actors.any {actor.hasResource(it)}))) &&
                                 (act.targetAgent as boolean && (act.targetAgent == target || (target.isAnOrganization() && target.hasResource(act.targetAgent))))
             })
         }
         return flowActs
     }
+
+    List<Ref> findAllJobsOf(Ref individual) {
+        return (List<Ref>)jobs.findAll {job -> job.individual == individual}
+    }
+
+    List<Ref> findAllIndividuals() {
+        return persons + organizations.systems.flatten()
+    }
+
 
     // End queries
 
@@ -412,6 +425,7 @@ class Project extends IfmElement implements Named, Described {
         result.addAll([Person.class])
         result.addAll([Policy.class])
         result.addAll([Relationship.class])
+        result.addAll([Job.class])
         result.addAll([SharingAgreement.class])
         result.addAll(Playbook.contentClasses())
         return result
@@ -425,6 +439,7 @@ class Project extends IfmElement implements Named, Described {
         result.addAll(playbooks)
         result.addAll(policies)
         result.addAll(relationships)
+        result.addAll(jobs)
         result.addAll(sharingAgreements)
         result.addAll(allProblems)
     }

@@ -36,10 +36,7 @@ public class AssociationRelationshipTab extends AbstractFormTab {
     protected Association association;
     AutoCompleteTextFieldWithChoices relationshipNameField;
     DynamicFilterTree toAgentTree;
-    WebMarkupContainer reverseRelationshipDiv;
     Label toAgentNameLabel;
-    AutoCompleteTextFieldWithChoices reverseRelationshipNameField;
-    Label actorAgentNameLabel;
 
     public AssociationRelationshipTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
@@ -54,44 +51,21 @@ public class AssociationRelationshipTab extends AbstractFormTab {
         relationshipNameField.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                setReverseRelationshipVisibility();
-                target.addComponent(reverseRelationshipDiv);
+                // do nothing
             }
         });
         addReplaceable(relationshipNameField);
         toAgentTree = new DynamicFilterTree("toAgent", new RefPropertyModel(getElement(), "toAgent"),
                 new RefQueryModel(getPlaybook(),
-                        new Query("findAllAgentsExcept", getElement(), "actorAgent")),
+                        new Query("findAllAgentsExcept", getElement(), "actors")),
                 SINGLE_SELECTION) {
             public void onFilterSelect(AjaxRequestTarget target, Filter filter) {
                 Ref selectedResource = toAgentTree.getNewSelection();
                 setProperty("toAgent", selectedResource);
-                setReverseRelationshipVisibility();
-                target.addComponent(reverseRelationshipDiv);
             }
         };
         addReplaceable(toAgentTree);
-        reverseRelationshipDiv = new WebMarkupContainer("reverseRelationship");
-        addReplaceable(reverseRelationshipDiv);
-        toAgentNameLabel = new Label("toAgentName", new RefPropertyModel(getElement(), "toAgent.name"));
-        addReplaceableTo(toAgentNameLabel, reverseRelationshipDiv);
-        reverseRelationshipNameField = new AutoCompleteTextFieldWithChoices("reverseRelationshipName",
-                new RefPropertyModel(getElement(), "reverseRelationshipName"),
-                new RefQueryModel(getProject(), new Query("findAllRelationshipNames")));
-        addReplaceableTo(reverseRelationshipNameField,reverseRelationshipDiv);
-        actorAgentNameLabel = new Label("actorAgentName", new RefPropertyModel(getElement(), "actorAgent.name"));
-        addReplaceableTo(actorAgentNameLabel, reverseRelationshipDiv);
-        setReverseRelationshipVisibility();
     }
 
-    private void setReverseRelationshipVisibility() {
-        if (association.getActorAgent() != null &&
-                association.getToAgent() != null &&
-                association.getRelationshipName() != null &&
-                !association.getRelationshipName().trim().isEmpty()) {
-            reverseRelationshipDiv.add(new AttributeModifier("style", true, new Model("display:block")));
-        } else {
-            reverseRelationshipDiv.add(new AttributeModifier("style", true, new Model("display:none")));
-        }
-    }
+
 }

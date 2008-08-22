@@ -14,7 +14,6 @@ import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.Named
-import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.playbook.InformationAct
 import com.mindalliance.channels.playbook.ifm.playbook.FlowAct
 import com.mindalliance.channels.playbook.ifm.project.resources.OrganizationResource
@@ -93,7 +92,7 @@ class ResourceDirectory extends Report {
 
     private void extractResourcesFromInformationAct(InformationAct act) {
         if (act as boolean) {
-            retain(act.actorAgent)
+            act.actors.each { retain(it) }
             if (act instanceof FlowAct) {
                 retain(act.targetAgent)
             }
@@ -105,7 +104,7 @@ class ResourceDirectory extends Report {
             if (project as boolean) {
                 project.findAllResources().each {ref ->
                     Resource res = (Resource) ref.deref()
-                    if (res as boolean) {
+                    if (res as boolean && res.isAgent()) {
                         boolean roleImplied = res.roles.any {it.implies(role.reference)}
                         if (roleImplied) {
                             retain(res.reference)
@@ -150,9 +149,11 @@ class ResourceDirectory extends Report {
 
     private void addJobs(Resource res) {
         if (res as boolean) {
-            res.jobs.each {position ->
-                if (position as boolean) {
-                    retain(position)
+            if (res.isAnIndividual()) {
+                res.jobs.each {job ->
+                    if (job as boolean && job.position as boolean) {
+                        retain(job.position)
+                    }
                 }
             }
         }
@@ -244,9 +245,11 @@ class ResourceDirectory extends Report {
 
     private void buildJobs(Resource res, MarkupBuilder xml) {
         xml.jobs {
-            res.jobs.each {position ->
-                if (position as boolean) {
-                    xml.job(ref: position.id, position.name)
+            if (res.isAnIndividual()) {
+                res.jobs.each {job ->
+                    if (job as boolean && job.position as boolean) {
+                        xml.job(ref: job.position.id, job.position.name)
+                    }
                 }
             }
         }
@@ -262,9 +265,11 @@ class ResourceDirectory extends Report {
 
     private void buildRoles(Resource res, MarkupBuilder xml) {
         xml.roles {
-            res.findAllRoles().each {role ->
-                if (role as boolean) {
-                    xml.role(role.name)
+            if (res.isAgent()) {
+                res.findAllRoles().each {role ->
+                    if (role as boolean) {
+                        xml.role(role.name)
+                    }
                 }
             }
         }

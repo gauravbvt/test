@@ -17,7 +17,6 @@ class Association extends InformationAct {   // Creation of a relationship
 
     String relationshipName = ''
     Ref toAgent
-    String reverseRelationshipName = ''
 
     // Return implied event type
     static Ref implicitEventType() {
@@ -27,7 +26,7 @@ class Association extends InformationAct {   // Creation of a relationship
     static EventType makeImplicitEventType() {
         EventType eventType =  new EventType(name:'association',              // note: model is null
                                              description:'A new relationship',
-                                             topics: ['relationship', 'to', 'reverse' ])
+                                             topics: ['relationship', 'to' ])
         use(NoSessionCategory) {eventType.narrow(InformationAct.implicitEventType())}; // setting state of a computed ref
         return eventType
     }
@@ -36,26 +35,16 @@ class Association extends InformationAct {   // Creation of a relationship
         switch (topic) {
             case 'relationship': return [relationshipName]
             case 'to': return [toAgent.about()]
-            case 'reverse': return [reverseRelationshipName]
             default: return super.contentsAboutTopic(topic)
         }
     }
 
     String about() {
-        return "Association: ${actorAgent} $relationshipName ${toAgent} "
+        return "Association: ${this.actorNames()} $relationshipName ${toAgent} "
     }
 
     // Queries
 
-    boolean createsMatchingRelationship(Relationship relationship) {
-        if (relationship.name == relationshipName &&  // TODO -- apply semantic matching
-                this.playbook.agentImplied(relationship.fromAgent, actorAgent, this.reference)
-                        && this.playbook.agentImplied(relationship.toAgent, toAgent, this.reference)) return true
-        if (relationship.name == reverseRelationshipName &&
-                this.playbook.agentImplied(relationship.fromAgent, toAgent, this.reference)
-                        && this.playbook.agentImplied(relationship.toAgent, actorAgent, this.reference)) return true
-        return false
-    }
 
     // End queries
 

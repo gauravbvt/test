@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Choose from</legend>
+                    <span wicket:id="choices">[elements tree]</span>
+                </fieldset>
+            </td>
+            <td>
+                <input wicket:id="select" type="button" value="&gt;&gt;"/><br/>
+                <input wicket:id="deselect" type="button" value="&lt;&lt;"/>
+            </td>
+            <td>
+                <div>
+                    <select wicket:id="references">
+                        <option>[ref summary]</option>
+                    </select>
+                </div>
+                <input wicket:id="edit" type="button" value="Edit"/>
+            </td>
+        </tr>
+    </table>
+</wicket:extend>
+</body>
+</html>

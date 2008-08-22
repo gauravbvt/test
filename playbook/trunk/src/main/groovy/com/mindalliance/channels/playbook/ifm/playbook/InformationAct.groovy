@@ -15,11 +15,11 @@ import com.mindalliance.channels.playbook.mem.NoSessionCategory
  */
 abstract class InformationAct extends Event {
 
-    Ref actorAgent // an agent, i.e. group within the scope of the Playbook, or a resource in the scope of the Playbook's Project
+    List<Ref> actors = []  // one agent or a team of agents
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['duration', 'flowAct', 'sharingAct'])
+        return (List<String>)(super.transientProperties() + ['duration', 'flowAct', 'sharingAct', 'actingAgents'])
     }
 
     boolean isInformationAct() {
@@ -42,6 +42,12 @@ abstract class InformationAct extends Event {
         return false
     }
 
+    String getActingAgents() {
+        String names = ''
+        actors.each {agent -> names += "${agent.name},"}
+        return (names.size() > 1 && names.endsWith(',')) ? names[0..names.size()-2] : names
+    }
+
     // Return implied event type
     static Ref implicitEventType() {
         return ComputedRef.from(InformationAct.class, 'makeImplicitEventType')
@@ -57,9 +63,17 @@ abstract class InformationAct extends Event {
 
     List<String> contentsAboutTopic(String topic) {
         switch (topic) {
-            case 'actor': return [actorAgent.about()]
+            case 'actor': return actors.collect{it.about()}
             default: return super.contentsAboutTopic(topic)
         }
+    }
+
+    String actorNames() {
+        String names = ''
+        actors.each {agent -> names += (agent.toString() + ",")}
+        if (names.size() > 1 && names.endsWith(',')) return names[0..names.size()-2]
+        if (!names) return "NO ONE"
+        return names
     }
 
 

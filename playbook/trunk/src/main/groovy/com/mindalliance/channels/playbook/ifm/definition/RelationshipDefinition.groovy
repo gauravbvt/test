@@ -16,14 +16,14 @@ import com.mindalliance.channels.playbook.support.Level
 class RelationshipDefinition extends Definition {
 
     String relationshipName = '' // if empty, means any kind of relationship
-    AgentSpecification withAgentSpecification = new AgentSpecification()    
+    ResourceSpecification withResourceSpec = new ResourceSpecification()
 
     Class<? extends Bean> getMatchingDomainClass() {
         return Relationship.class
     }
 
     boolean matchesAll() {
-        return !relationshipName && withAgentSpecification.matchesAll()
+        return !relationshipName && withResourceSpec.matchesAll()
     }
 
     MatchResult match(Bean bean, InformationAct informationAct) {
@@ -35,7 +35,7 @@ class RelationshipDefinition extends Definition {
                 return new MatchResult(matched:false, failures:["$relationship does not match specified kind $relationshipName ($level)"])
             }
         }
-        if (relationship.toAgent as boolean && !withAgentSpecification.matches(relationship.toAgent.deref(), informationAct)) {
+        if (relationship.toResource as boolean && !withResourceSpec.matches(relationship.toResource.deref(), informationAct)) {
             return new MatchResult(matched:false, failures:["$relationship does not match specified target agent"])
         }
         return new MatchResult(matched:true)
@@ -49,7 +49,7 @@ class RelationshipDefinition extends Definition {
         RelationshipDefinition other = (RelationshipDefinition)matchingDomain
         if (other.matchesAll()) return true
         if (other.relationshipName && !SemanticMatcher.matches(relationshipName, other.relationshipName, Level.HIGH)) return false
-        if (!withAgentSpecification.implies(other.withAgentSpecification)) return false
+        if (!withResourceSpec.implies(other.withResourceSpec)) return false
         return true;
     }
 

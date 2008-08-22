@@ -4,6 +4,8 @@ import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.*;
 import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationIdentityTab;
 import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationJurisdictionTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationAgreementsTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionRolesTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -43,11 +45,6 @@ public class OrganizationForm extends AbstractResourceForm {
                 return new OrganizationJurisdictionTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model<String>("Responsibilities")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceResponsibilitiesTab(panelId, OrganizationForm.this);
-            }
-        });
         tabs.add(new AbstractTab(new Model<String>("Relationships")) {
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, OrganizationForm.this);
@@ -55,7 +52,7 @@ public class OrganizationForm extends AbstractResourceForm {
         });
         tabs.add(new AbstractTab(new Model<String>("Agreements")) {
             public Panel getPanel(String panelId) {
-                return new ResourceAgreementsTab(panelId, OrganizationForm.this);
+                return new OrganizationAgreementsTab(panelId, OrganizationForm.this);
             }
         });
     }

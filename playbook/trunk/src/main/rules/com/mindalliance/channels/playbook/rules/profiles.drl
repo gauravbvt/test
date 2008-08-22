@@ -24,17 +24,18 @@ import com.mindalliance.channels.playbook.support.drools.*
 rule "detection"
     agenda-group "profiles"
 	when
-		$act: Detection($actor:actorAgent,  $information: information)
+		$act: Detection($actors:actors,  $information: information)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
 	then
 	    RuleHelper.inferFrom(drools, $act, new Know($act, (Agent)$actor.deref(), $information), "Agent knows what it detects");
     end
 
-
 rule "sharing act"
     agenda-group "profiles"
     when
-        $act: SharingAct($actor:actorAgent, $target:targetAgent, $information: information)
+        $act: SharingAct($actors:actors, $target:targetAgent, $information: information)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act, new Know($act, (Agent)$target.deref(), $information), "Source agent knows information it shares.");
@@ -42,24 +43,26 @@ rule "sharing act"
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Know($act, (Agent)$target.deref(), $information)), "Source aware that the recipient knows the shared information.");
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$target.deref(), new Know($act, (Agent)$actor.deref(), $information)), "Recipient aware that the source knows the shared information.");
     end
-
-rule "task"
-    agenda-group "profiles"
-    when
-        $act: Task($actor:actorAgent, $needs:informationNeeds)
-		not (exists Invalidation(element == $act))
-    then
-        for (InformationNeed need : (List<InformationNeed>)$needs) {
-            if (need.isDefined()) {
-                RuleHelper.inferFrom(drools, $act, new NeedToKnow($act, (Agent)$actor.deref(), need), "Agent needs to know while doing task.");
-            }
-        }
-    end
+    
+ rule "task"
+     agenda-group "profiles"
+     when
+         $act: Task($actors:actors, $needs:informationNeeds)
+ 		$actor: Ref() from $actors
+ 		not (exists Invalidation(element == $act))
+     then
+         for (InformationNeed need : (List<InformationNeed>)$needs) {
+             if (need.isDefined()) {
+                 RuleHelper.inferFrom(drools, $act, new NeedToKnow($act, (Agent)$actor.deref(), need), "Agent needs to know while doing task.");
+             }
+         }
+     end
 
 rule "information request"
     agenda-group "profiles"
     when
-        $act: InformationRequest($actor:actorAgent, $target:targetAgent, $need:informationNeed)
+        $act: InformationRequest($actors:actors, $target:targetAgent, $need:informationNeed)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act, new NeedToKnow($act, (Agent)$actor.deref(), $need), "An agent expressed a need to know.");
@@ -69,8 +72,9 @@ rule "information request"
 rule "assignation transmitted"
     agenda-group "profiles"
     when
-        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility:responsibility, $assignee:assigneeAgent,
-                          assigneeAgent != targetAgent, assigneeAgent != $actor)
+        $act: Assignation($actors:actors, $target:targetAgent, $responsibility:responsibility, $assignee:assigneeAgent,
+                          assigneeAgent != targetAgent, assigneeAgent not memberOf $actors)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Assignment($act, (Agent)$assignee.deref(), $responsibility)), "Sender knows of another agent's assignment.");
@@ -80,7 +84,8 @@ rule "assignation transmitted"
 rule "own assignation received"
     agenda-group "profiles"
     when
-        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent)
+        $act: Assignation($actors:actors, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent)
+		$actor: Ref() from $actors
         eval($assignee == $target)
 		not (exists Invalidation(element == $act))
     then
@@ -91,7 +96,8 @@ rule "own assignation received"
 rule "own assignation sent"
     agenda-group "profiles"
     when
-        $act: Assignation($actor:actorAgent, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent)
+        $act: Assignation($actors:actors, $target:targetAgent, $responsibility: responsibility, $assignee:assigneeAgent)
+		$actor: Ref() from $actors
         eval($assignee == $actor)
 		not (exists Invalidation(element == $act))
     then
@@ -102,26 +108,18 @@ rule "own assignation sent"
 rule "association"
     agenda-group "profiles"
     when
-        $act: Association($actor:actorAgent, $associate:toAgent, $name:relationshipName)
+        $act: Association($actors:actors, $associate:toAgent, $name:relationshipName)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act, new Link($act, (Agent)$actor.deref(), $name, (Agent)$associate.deref()), "Agent now engaged in relationship.");
     end
 
-rule "reverse association"
-    agenda-group "profiles"
-    when
-        $act: Association($actor:actorAgent, $associate:toAgent, $name:reverseRelationshipName)
-        eval(!$name.isEmpty())
-		not (exists Invalidation(element == $act))
-    then
-        RuleHelper.inferFrom(drools, $act, new Link($act, (Agent)$associate.deref(), $name, (Agent)$actor.deref()), "Agent now engaged in reverse relationship.");
-    end
-
 rule "confirmation request"
     agenda-group "profiles"
     when
-        $act: ConfirmationRequest($actor:actorAgent, $target:targetAgent, $information:information, $sourceSpec:sourceSpec)
+        $act: ConfirmationRequest($actors:actors, $target:targetAgent, $information:information, $sourceSpec:sourceSpec)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act, new SourceNeed($act, (Agent)$actor.deref(), $sourceSpec, $information), "Sender needs a source for given information.");
@@ -131,10 +129,11 @@ rule "confirmation request"
 rule "current relocation"
     agenda-group "profiles"
     when
-        $act: Relocation($actor:actorAgent, $location:location)
+        $act: Relocation($actors:actors, $location:location)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
 		// there is no later locality of the agent
-		not ( exists (Locality(agent == $actor , eval(start.isLongerThan($act.startTime())))) )
+		not ( exists (Locality(agent.id == $actor.id , eval(start.isLongerThan($act.startTime())))) )
     then
         RuleHelper.inferFrom(drools, $act, new Locality($act, (Agent)$actor.deref(), $location), "Agent now at current location.");
     end
@@ -142,12 +141,13 @@ rule "current relocation"
 rule "prior relocation"
     agenda-group "profiles"
     when
-        $act: Relocation($actor:actorAgent, $location:location)
+        $act: Relocation($actors:actors, $location:location)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
 		// there is a later locality of the agent
-		$later:Locality(agent == $actor , $later_start:start , eval(start.isLongerThan($act.startTime())))
+		$later:Locality(agent.id == $actor.id , $later_start:start , eval(start.isLongerThan($act.startTime())))
 		// and none in between
-		not (exists (Locality(agent == $actor, this != $later, eval(start.isLongerThan($act.startTime())), eval(start.isShorterThan($later_start)))))
+		not (exists (Locality(agent.id == $actor.id, this != $later, eval(start.isLongerThan($act.startTime())), eval(start.isShorterThan($later_start)))))
     then
         Locality locality = new Locality($act , (Agent)$actor.deref(), $location);
         locality.setEnd($later_start);
@@ -157,7 +157,8 @@ rule "prior relocation"
 rule "sharing request"
     agenda-group "profiles"
     when
-        $act: SharingRequest($actor:actorAgent, $target:targetAgent, $protocol:protocol, $infoSpec:protocol.informationSpec)
+        $act: SharingRequest($actors:actors, $target:targetAgent, $protocol:protocol, $infoSpec:protocol.informationSpec)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act, new NeedToKnow($act, (Agent)$actor.deref(), InformationNeed.fromSharingProtocol($protocol)),
@@ -170,7 +171,8 @@ rule "sharing request"
 rule "sharing commitment"
     agenda-group "profiles"
     when
-        $act: SharingCommitment($actor:actorAgent, $target:targetAgent, $protocol:protocol, $constraints:constraints)
+        $act: SharingCommitment($actors:actors, $target:targetAgent, $protocol:protocol, $constraints:constraints)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
     then
         RuleHelper.inferFrom(drools, $act,new Commitment($act, (Agent)$actor.deref(), (Agent)$target.deref(), $protocol, $constraints), "Agent is committed.");
@@ -185,9 +187,11 @@ rule "sharing commitment"
 rule "detection of sharing act"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, $event:information.event != null)
+        $act: Detection($actors:actors, $event:information.event != null)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
-        $sharing: SharingAct(eval (id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_target:targetAgent, $d_info:information)
+        $sharing: SharingAct(eval (id == $act.getInformation().getEvent().getId()), $d_actors:actors, $d_target:targetAgent, $d_info:information)
+        $d_actor: Ref() from $d_actors
 		not (exists Invalidation(element == $sharing))
     then
         RuleHelper.inferFrom(drools, $act, new Know($act, (Agent)$actor.deref(), $d_info), "Observer learns shared information.");
@@ -198,9 +202,11 @@ rule "detection of sharing act"
 rule "detection of assignation"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, information.event != null)
+        $act: Detection($actors:actors, information.event != null)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
-        $assignation: Assignation(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_target:targetAgent, $d_resp:responsibility, $d_assignee:assigneeAgent)
+        $assignation: Assignation(eval(id == $act.getInformation().getEvent().getId()), $d_actors:actors, $d_target:targetAgent, $d_resp:responsibility, $d_assignee:assigneeAgent)
+        $d_actor: Ref() from $d_actors
 		not (exists Invalidation(element == $assignation))
     then
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Assignment($assignation, (Agent)$d_assignee.deref(), $d_resp)), "Observer aware of assignment.");
@@ -209,32 +215,25 @@ rule "detection of assignation"
 rule "detection of association"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, information.event != null)
+        $act: Detection($actors:actors, information.event != null)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
-        $association: Association(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_associate:toAgent, $d_name:relationshipName)
+        $association: Association(eval(id == $act.getInformation().getEvent().getId()), $d_actors:actors, $d_associate:toAgent, $d_name:relationshipName)
+        $d_actor: Ref() from $d_actors
 		not (exists Invalidation(element == $association))
     then
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Link($association, (Agent)$d_actor.deref(), $d_name, (Agent)$d_associate.deref())), "Observer aware of new relationship.");
     end
 
-rule "detection of reverse association"
-    agenda-group "profiles"
-    when
-        $act: Detection($actor:actorAgent, information.event != null)
-		not (exists Invalidation(element == $act))
-        $association: Association(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_associate:toAgent, $d_rname:reverseRelationshipName != "")
-		not (exists Invalidation(element == $association))
-    then
-        RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Link($association, (Agent)$d_associate.deref(), $d_rname, (Agent)$d_actor.deref())), "Observer aware of new, reverse relationship.");
-    end
-
 rule "detection of confirmation request"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, information.event != null)
+        $act: Detection($actors:actors, information.event != null)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
-        $confirmationRequest: ConfirmationRequest(eval(id == $act.getInformation().getEvent().getId()), $d_actor:actorAgent, $d_target:targetAgent,
+        $confirmationRequest: ConfirmationRequest(eval(id == $act.getInformation().getEvent().getId()), $d_actors:actors, $d_target:targetAgent,
                                                   $d_info:information, $d_sourceSpec:sourceSpec)
+        $d_actor: Ref() from $d_actors
 		not (exists Invalidation(element == $confirmationRequest))
     then
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new SourceNeed($confirmationRequest, (Agent)$d_actor.deref(), $d_sourceSpec, $d_info)), "Observer aware of sender's source need.");
@@ -243,11 +242,13 @@ rule "detection of confirmation request"
 rule "detection of information request"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, information.event != null)
+        $act: Detection($actors:actors, information.event != null)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
         $informationRequest: InformationRequest(eval(id == $act.getInformation().getEvent().getId()),
-                                                  $d_actor:actorAgent, $d_target:targetAgent,
+                                                  $d_actors:actors, $d_target:targetAgent,
                                                   $d_need:informationNeed)
+        $d_actor: Ref() from $d_actors
 		not (exists Invalidation(element == $informationRequest))
     then
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new NeedToKnow($informationRequest, (Agent)$d_actor.deref(), $d_need)), "Observer aware of sender's need to know.");
@@ -256,11 +257,13 @@ rule "detection of information request"
 rule "detection of relocation"
     agenda-group "profiles"
     when
-        $act: Detection($actor:actorAgent, information.event != null)
+        $act: Detection($actors:actors, information.event != null)
+		$actor: Ref() from $actors
 		not (exists Invalidation(element == $act))
-        $relocation: Relocation(eval(id == $act.getInformation().getEvent().getId()), 
-                                      $d_actor:actorAgent,
+        $relocation: Relocation(eval(id == $act.getInformation().getEvent().getId()),
+                                      $d_actors:actors,
                                       $d_location:location)
+        $d_actor: Ref() from $d_actors
 		not (exists Invalidation(element == $relocation))
     then
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Locality($relocation, (Agent)$d_actor.deref(), $d_location)), "Observer aware of other's relocation.");
@@ -270,11 +273,11 @@ rule "detection of relocation"
 
 # Assignments from Roles
 
-rule "assignments from role"    // add role-defined assignments for each resource in each playbook
+rule "assignments from role"    // add role-defined assignments for each agent in each playbook
     agenda-group "profiles"
     when
-        $resource: Resource($roles:roles)
-        not (exists Invalidation(element == $resource))
+        $agent: Agent($roles:roles)
+        not (exists Invalidation(element == $agent))
         $playbook: Playbook()
         not (exists Invalidation(element == $playbook))
     then
@@ -283,7 +286,7 @@ rule "assignments from role"    // add role-defined assignments for each resourc
            Role role = (Role)ref.deref();
            if (role != null) {
                for (Responsibility responsibility : (List<Responsibility>)role.getResponsibilities()) {
-                RuleHelper.inferFrom(drools, role, new Assignment($playbook, (Agent)$resource, responsibility), "Permanent assignment from role.");
+                RuleHelper.inferFrom(drools, role, new Assignment($playbook, (Agent)$agent, responsibility), "Permanent assignment from role.");
                }
            }
         }
@@ -317,24 +320,28 @@ rule "commitments from sharing agreement via organization" // add Commitments in
         not (exists Invalidation(element == $agreement))
         $organization: Organization(id == $source_id)
         not (exists Invalidation(element == $organization))
-        $resource: OrganizationResource(organization.id == $source_id)
+        $resource: OrganizationResource()
+        eval ($resource.getOrganization().getId() == $source_id)
+        eval ($resource.isAgent())
         not (exists Invalidation(element == $resource))
         $playbook: Playbook()
         not (exists Invalidation(element == $playbook))
     then
-        RuleHelper.inferFrom(drools, $agreement, new Commitment($playbook, $resource, (Agent)$recipient.deref(), $agreement), "Permanent commitment from sharing agreement via organization.");
+        RuleHelper.inferFrom(drools, $agreement, new Commitment($playbook, (Agent)$resource, (Agent)$recipient.deref(), $agreement), "Permanent commitment from sharing agreement via organization.");
     end
 
 
 # Links from Relationships
 
-rule "links from relationships"
+rule "links from relationships between agents" // what about relationship btw persons -> rels btw persons in jobs?
     agenda-group "profiles"
     when
-        $relationship: Relationship($from: fromAgent, $to: toAgent, $name: name)
+        $relationship: Relationship($from: fromResource, $to: toResource, $name: name)
         not (exists Invalidation(element == $relationship))
+        eval(((Resource)$from.deref()).isAgent() && ((Resource)$to.deref()).isAgent())
         $playbook: Playbook()
         not (exists Invalidation(element == $playbook))
     then
         RuleHelper.inferFrom(drools, $relationship, new Link($relationship, $playbook, (Agent)$from.deref(), $name, (Agent)$to.deref()), "Permanent link from relationship");
     end
+

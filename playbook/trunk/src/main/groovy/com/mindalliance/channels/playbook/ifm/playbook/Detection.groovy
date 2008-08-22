@@ -21,17 +21,16 @@ class Detection extends InformationAct {
         return true
     }
 
-    void setInformation(Information information) { // make sure actorAgent is the only source
+    void setInformation(Information information) { // make sure actors are the only source
         this.@information = information
-        /*if (actorAgent as boolean) */ // -- as boolean calls isFresh, calls makeClone, calls this -> infinite loop
-        if (actorAgent) information.sourceAgents = [actorAgent]
+        information.sourceAgents = actors
         this.propertyChanged('information', null, information)
     }
 
-    void setActorAgent(Ref agent) {
-        super.setActorAgent(agent)
-        information.sourceAgents = [agent]
-        this.propertyChanged('actorAgent', null, actorAgent)
+    void setActors(List<Ref> agents) {
+        super.setActors(agents)
+        information.sourceAgents = agents
+        this.propertyChanged('actors', null, actors)
         this.propertyChanged('information', null, information)
     }
 

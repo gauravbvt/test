@@ -30,6 +30,7 @@ class PlaybookSession extends KludgeWebSession implements Transactionable, Seria
     private SessionMemory memory = new SessionMemory();
 
     public PlaybookSession(){
+        println "allo"
     }
 
     public String toString() {

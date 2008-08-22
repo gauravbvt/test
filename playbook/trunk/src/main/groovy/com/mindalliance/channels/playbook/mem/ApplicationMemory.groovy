@@ -189,7 +189,11 @@ class ApplicationMemory implements Serializable {
     }
 
     boolean isStored(Ref ref) {
-        return cache.isStored(ref)
+        boolean stored = false
+        use (NoSessionCategory) {
+            stored = cache.isStored(ref)
+        }
+        return stored
     }
 
     boolean isFresh(Ref ref) {

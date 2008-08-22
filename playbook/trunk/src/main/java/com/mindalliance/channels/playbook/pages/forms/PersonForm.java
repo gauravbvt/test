@@ -3,6 +3,8 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.*;
 import com.mindalliance.channels.playbook.pages.forms.tabs.person.PersonIdentityTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionRolesTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.individual.IndividualJobsTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -22,34 +24,29 @@ public class PersonForm extends AbstractResourceForm {
 
     @Override
     void loadTabs() {
-        tabs.add(new AbstractTab(new Model("Basic")) {
+        tabs.add(new AbstractTab(new Model<String>("Basic")) {
             public Panel getPanel(String panelId) {
                 return new PersonIdentityTab(panelId, PersonForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Access")) {
+        tabs.add(new AbstractTab(new Model<String>("Access")) {
             public Panel getPanel(String panelId) {
                 return new ResourceAccessTab(panelId, PersonForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Location")) {
+        tabs.add(new AbstractTab(new Model<String>("Location")) {
             public Panel getPanel(String panelId) {
                 return new ResourceLocationTab(panelId, PersonForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Responsibilities")) {
+        tabs.add(new AbstractTab(new Model<String>("Jobs")) {
             public Panel getPanel(String panelId) {
-                return new ResourceResponsibilitiesTab(panelId, PersonForm.this);
+                return new IndividualJobsTab(panelId, PersonForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model("Relationships")) {
+        tabs.add(new AbstractTab(new Model<String>("Relationships")) {
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, PersonForm.this);
-            }
-        });
-        tabs.add(new AbstractTab(new Model("Agreements")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceAgreementsTab(panelId, PersonForm.this);
             }
         });
     }

@@ -1,10 +1,12 @@
 package com.mindalliance.channels.playbook.ifm.playbook
 
-import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.Responsibility
+import com.mindalliance.channels.playbook.ifm.project.resources.ContactInfo
 import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.ifm.Responsibility
+import com.mindalliance.channels.playbook.ifm.Jurisdictionable
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,54 +19,47 @@ class Group extends PlaybookElement implements Agent {
 
     String name = ''
     String description = ''
-    AgentSpecification agentSpec = new AgentSpecification()
-
-    @Override
-    List<String> transientProperties() {
-        return (List<String>) (super.transientProperties() + ['resourceKinds', 'responsibilities', 'location', 'group',
-                                                              'resourceElement'])
-    }
+    AgentSpecification agentSpec = new AgentSpecification()  // all matching agents
+    List<ContactInfo> contactInfos
 
     String toString() {
         return name
     }
 
-    boolean isResourceElement() {
-         return false
-     }
-
-    boolean isGroup() {
-         return true
-     }
-
-    boolean isAnOrganization() {
-        return false
-    }
-
     boolean hasJurisdiction() {
-        return false
+        return false;
     }
 
     boolean hasLocation() {
-        return false
+        return false;
     }
 
-    List<Responsibility> getResponsibilities() {    // a group as a whole has no responsibility? -- TODO
-        return []
+    boolean isAnOrganization() {
+        return false;
     }
 
-    Location getLocation() {   // a group has no defined location? TODO --
-        return new Location()
+    boolean isAnIndividual() {
+        return false;
+    }
+
+    Location getLocation() {
+        return new Location();   // undefined
     }
 
     // queries
-    List<Ref> getResourcesAt(Ref event) {
-        if (event as boolean)
-            return agentSpec.getResourcesAt(event)
-        else
-            return []
-     }
+
      // end queries
 
+    List<Ref> getRoles() {
+        return agentSpec.roles;
+    }
 
- }
+    List<Responsibility> getResponsibilities() {
+        return roles.responsibilities.flatten();
+    }
+
+    boolean hasRole(Ref role) {
+        return roles.any {r -> r.implies(role)};
+    }
+
+}

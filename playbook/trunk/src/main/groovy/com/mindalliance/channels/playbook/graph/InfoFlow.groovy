@@ -72,7 +72,6 @@ class InfoFlow extends PlaybookGraph {
     void processPlaybook(Playbook pb) {   // TODO -- not needed?
         pb.events.each {ref -> if (ref as boolean) processEvent((Event) ref.deref())}
         pb.informationActs.each {ref -> if (ref as boolean) processAct((InformationAct) ref.deref())}
-        pb.groups.each {ref -> if (ref as boolean) processAgent((Agent) ref.deref())}
     }
 
     void processAgent(Agent agent) {
@@ -110,11 +109,11 @@ class InfoFlow extends PlaybookGraph {
 
     // Add act, actor and target agents
     void processAct(InformationAct act) { // only keep acts that have all required agents set (otherwise flow is undefined)
-        boolean valid = (act.actorAgent as boolean)
+        boolean valid = act.actors.every{agent -> agent as boolean}
         if (act.isFlowAct() && !(act.targetAgent as boolean)) valid = false
         if (valid) {
             acts.add(act.reference)
-            agents.add(act.actorAgent)
+            agents.addAll(act.actors)
             if (act.isFlowAct()) agents.add(act.targetAgent)
         }
     }
@@ -134,12 +133,12 @@ class InfoFlow extends PlaybookGraph {
         acts.each {actRef ->
             InformationAct act = actRef.deref()
             // Actor's acts
-            if (agentRef == act.actorAgent) {
+            if (act.actors.contains(agentRef)) {
                 builder.node(name: nameFor(act), label: labelFor(act), URL: urlFor(act), template: templateFor(act))
             }
             // Actor's acquired information
             if (act.hasInformation() && ((act.isFlowAct() && act.targetAgent == agentRef) ||
-                    (!act.isFlowAct() && act.actorAgent == agentRef))) {
+                    (!act.isFlowAct() && act.actors.contains(agentRef)))) {
                 Information info = act.information
                 String name = "${new Random().nextLong()}"
                 builder.node(name: name, label: labelFor(info), URL: urlFor(act), template: 'info')
@@ -151,7 +150,7 @@ class InfoFlow extends PlaybookGraph {
                 }
             }
             // Actor's task-acquired information needs
-            if (act instanceof Task && act.actorAgent == agentRef) {
+            if (act instanceof Task && act.actors.contains(agentRef)) {
                 act.informationNeeds.each {need ->
                     String name = "${new Random().nextLong()}"
                     builder.node(name: name, label: labelFor(need), URL: urlFor(act), template: 'need')

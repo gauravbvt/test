@@ -235,4 +235,5 @@ class Channels extends IfmElement {
     static boolean isSet(Ref ref) {  // always called in application scope
         return ref != null && (ref.isComputed() || ref.isAttached() || PlaybookApplication.current().isStored(ref))
     }
+    
 }

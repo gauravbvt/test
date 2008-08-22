@@ -151,16 +151,21 @@ public abstract class AbstractComponentPanel extends AbstractPlaybookPanel {
             component.setEnabled( false );
     }
 
-    protected void setProperty( String property, Object value ) {
-        RefUtils.set( getElement(), propPath + '.' + property, value );
+    protected void setProperty( String property, Object value ) { 
+        RefUtils.set( getElement(), getPropertyPath(property), value );
     }
 
     protected void setProperty( String property, Object value, AjaxRequestTarget target ) {
         setProperty( property, value );
-        elementChanged( propPath + '.' + property, target );
+        elementChanged( getPropertyPath(property), target );
     }
 
     protected Object getProperty( String property ) {
-        return RefUtils.get( getElement(), propPath + '.' + property );
+        String path = propPath.isEmpty() ? property : (propPath + '.' + property);
+        return RefUtils.get( getElement(), getPropertyPath(property) );
+    }
+
+    private String getPropertyPath(String property) {
+       return propPath.isEmpty() ? property : (propPath + '.' + property);
     }
 }

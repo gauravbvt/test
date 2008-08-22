@@ -2,11 +2,11 @@ package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
-import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.IfmElement
 import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,9 +15,8 @@ import com.mindalliance.channels.playbook.query.Query
  * Date: Apr 17, 2008
  * Time: 11:24:14 AM
  */
-class Organization extends Resource {   // a company, agency, team, matrix etc.
+class Organization extends Resource implements Agent {   // a company, agency, team, matrix etc.
 
-    // Ref parent // // set only via organization.add|removeSubOrganization(...)
     List<Ref> subOrganizations = []
     List<Ref> positions = []
     List<Ref> systems = []
@@ -26,7 +25,7 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['resources', 'parents', 'ancestors', 'parent'])
+        return (List<String>)(super.transientProperties() + ['resources', 'parents', 'ancestors', 'parent', 'roles'])
     }
 
 
@@ -55,6 +54,10 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
          return true
      }
 
+    boolean isAgent() {
+        return true
+    }
+
     boolean hasResource(Ref resource) {
         if (this.resources.contains(resource)) return true
         return subOrganizations.any {org -> org.hasResource(resource)}
@@ -65,7 +68,6 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
     }
 
     Ref getParent() {           // TODO -KLUDGE until OrganizationFilter updated to multi-parents
-        List<Ref> allParents = getParents()
         return (parents) ? (Ref)parents[0] : null
     }
 
@@ -99,6 +101,11 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
         return jurisdiction.isDefined()
     }
 
+    List<Ref> getRoles() {
+        return positions.roles.flatten()
+    }
+
+
     // Queries
 
     List<Ref> findAllSubOrganizations() {
@@ -117,10 +124,12 @@ class Organization extends Resource {   // a company, agency, team, matrix etc.
     }
 
     boolean hasRole(Ref role) {
-        if (super.hasRole(role)) return true
         if (this.positions.any {position -> position as boolean && position.hasRole(role) }) return true
-        if (this.systems.any {system -> system as boolean && system.hasRole(role) }) return true
         return false
+    }
+
+    boolean employs(Ref individual) {
+        return project.jobs.any {job -> positions.contains(job.position) && job.individual == individual}
     }
 
     // end queries

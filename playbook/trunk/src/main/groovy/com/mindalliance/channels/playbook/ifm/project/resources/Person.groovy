@@ -1,15 +1,17 @@
 package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
-* Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-* Proprietary and Confidential.
-* User: jf
-* Date: Apr 17, 2008
-* Time: 11:19:24 AM
-*/
-class Person extends Resource {
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Apr 17, 2008
+ * Time: 11:19:24 AM
+ */
+class Person extends Resource implements Individual {
 
     String firstName = ''
     String middleName = ''
@@ -17,7 +19,7 @@ class Person extends Resource {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['name'])
+        return (List<String>) (super.transientProperties() + ['name', 'jobs'])
     }
 
     Set hiddenProperties() {
@@ -28,11 +30,22 @@ class Person extends Resource {
         return (super.keyProperties() + ['firstName', 'middleName', 'lastName']) as Set
     }
 
+    boolean isAnIndividual() {
+        return true
+    }
 
+    boolean isAPerson() {
+        return true
+    }
 
     String getName() {
         return toString()
     }
+
+    List<Ref> getJobs() {
+        return (List<Ref>) Query.execute(project, "findAllJobsOf", this.reference)
+    }
+
 
     @Override
     String toString() {
@@ -50,8 +63,6 @@ class Person extends Resource {
     }
 
     // Queries
-
-
 
     // end queries
 

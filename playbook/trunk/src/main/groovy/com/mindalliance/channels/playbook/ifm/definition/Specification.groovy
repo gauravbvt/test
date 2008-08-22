@@ -18,15 +18,17 @@ import org.apache.log4j.Logger
 
  A matching domain defined by extension (enumeration of Referenceables) and/or intension (alternate definitions)
 
-When negated:
+ When negated:
     Succeeds if
-        specification dose not match all, and
-        enumeration does not contains (reference to) bean and no description matches bean
+        specification dose not match all (it is not the universal set),
+        and the enumeration does not contain (reference to) the bean tested for inclusion,
+        and no description matches the bean
 
-   When affirmed:
+ When affirmed:
     Succeeds if
-        specification matches all, or
-        enumeration contains (a reference to) to matched bean or at least one description matches bean
+        specification matches all (it is the universal set),
+        or the enumeration contains (a reference to) to bean for inclusion,
+        or at least one description matches the bean
 
 */
 abstract class Specification extends BeanImpl implements MatchingDomain, Described {
@@ -75,6 +77,7 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
         return !isEnumerated() && !isDefined() && !negated
     }
 
+    // Match bean as of start of information act
     MatchResult match(Bean bean, InformationAct informationAct) {
         if (!bean) throw new IllegalArgumentException("Can't match null")
         if (!this.matchingDomainClass.isAssignableFrom(bean.class))
@@ -225,9 +228,10 @@ abstract class Specification extends BeanImpl implements MatchingDomain, Describ
     }
 
     /*
-        Narrows specification if
+        This specification narrows other specification if
             enumeration is a subset
-            AND all definitions narrow a specification's description  (the described matching domain is a subset of specification's described matching domain)
+            AND all definitions narrow one of the other specification's descriptions
+            (the described matching domain is a subset of specification's described matching domain)
      */
     private boolean impliesAffirmed(Specification specification) {
         if (specification.matchesAll()) return true // specification "defines" a universal matching domain

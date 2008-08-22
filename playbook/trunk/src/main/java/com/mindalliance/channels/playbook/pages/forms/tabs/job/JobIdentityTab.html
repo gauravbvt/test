@@ -5,15 +5,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 <body>
 <wicket:extend>
+    <fieldset>
+        <legend>Person or system</legend>
+        <span wicket:id="individual">[associates panel on individual]</span>
+    </fieldset>
+    <fieldset>
+        <legend>occupying position</legend>
+        <span wicket:id="position">[associates panel on position]</span>
+    </fieldset>
     <wicket:child/>
-    <fieldset>
-        <legend>Roles</legend>
-        <span wicket:id="roles"/>
-    </fieldset>
-    <fieldset>
-        <legend>Positions held</legend>
-        <span wicket:id="jobs"/>
-    </fieldset>
 </wicket:extend>
 </body>
 </html>

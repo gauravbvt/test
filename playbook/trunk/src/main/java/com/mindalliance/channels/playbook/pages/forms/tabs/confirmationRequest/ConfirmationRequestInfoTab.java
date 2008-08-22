@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecificationP
  */
 public class ConfirmationRequestInfoTab extends InformationActInfoTab {
 
-    protected AgentSpecificationPanel agentSpecPanel;
+    protected AgentSpecificationPanel resourceSpecPanel;
     private static final long serialVersionUID = 1258582515279951672L;
 
     public ConfirmationRequestInfoTab(String id, AbstractElementForm elementForm) {
@@ -22,7 +22,7 @@ public class ConfirmationRequestInfoTab extends InformationActInfoTab {
 
     protected void load() {
         super.load();
-        agentSpecPanel = new AgentSpecificationPanel("agentSpec", this, "sourceSpec");
-        addReplaceable(agentSpecPanel);
+        resourceSpecPanel = new AgentSpecificationPanel("sourceSpec", this, "sourceSpec");
+        addReplaceable(resourceSpecPanel);
     }
 }

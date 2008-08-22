@@ -36,10 +36,6 @@ class ProjectElement extends IfmElement implements InProject {
         return true
     }
 
-    boolean isResourceElement() {
-        return false
-    }
-
     Ref getProject() {
         if (cachedProject == null) {
             cachedProject = (Ref)Query.execute(Channels.instance(), "findProjectOfElement", this.reference)

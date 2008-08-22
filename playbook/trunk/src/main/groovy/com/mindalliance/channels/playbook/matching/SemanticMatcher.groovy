@@ -59,7 +59,7 @@ class SemanticMatcher {
     static SimilarityMeasure initializeSimilarityMeasure() {
        // return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: SIMILARITY_DATA])
        URL url = ClassLoader.getResource(SIMILARITY_DATA)
-       SimilarityMeasure sm = SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: url.toExternalForm()])
+       SimilarityMeasure sm = (SimilarityMeasure)SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: url.toExternalForm()])
        return sm
     }
 

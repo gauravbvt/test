@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+<table>
+    <tr>
+        <td nowrap="nowrap">
+            Any resource of:
+        </td>
+        <td nowrap="nowrap">
+            <input wicket:id="anyType" type="checkbox"/>any type
+        </td>
+        <td width="99%">
+            <div wicket:id="typesDiv">
+                <fieldset>
+                    <legend>this type</legend>
+                    <select wicket:id="types">
+                        <option>[a type]</option>
+                    </select>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            <label>belonging to organizations:</label>
+        </td>
+        <td colspan="2" width="99%" >
+            <input wicket:id="anyOrganization" type="checkbox"/> of any kind
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <div wicket:id="organizationSpecificationDiv">
+                <fieldset>
+                    <legend>such as</legend>
+                    <span wicket:id="organizationSpecification">[organization specification]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            <label>resource is located:</label>
+        </td>
+        <td nowrap="nowrap" colspan="2" width="99%" >
+            <input wicket:id="anyLocation" type="checkbox"/> anywhere
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td colspan="2">
+            <div wicket:id="locationDefinitionDiv">
+                <fieldset>
+                    <legend>in</legend>
+                    <span wicket:id="locationDefinition">[location definition]</span>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">
+            has relationships:
+        </td>
+        <td nowrap="nowrap" width="99%" colspan="2">
+            <input wicket:id="anyRelationship" type="checkbox"/>any
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td colspan="2">
+            <div wicket:id="relationshipDefinitionsDiv">
+                <fieldset>
+                    <legend>such as</legend>
+                    <table>
+                        <tr>
+                            <td nowrap="nowrap">
+                                <select wicket:id="relationshipDefinitions">
+                                    <option>[relationship definition label]</option>
+                                </select><br/>
+                                <input wicket:id="addRelationshipDefinition" type = "button" value = "Add new"/>
+                                <input wicket:id="deleteRelationshipDefinition" type = "button" value = "Delete"/>
+                            </td>
+                            <td width="99%">
+                                <div wicket:id="relationshipDefinitionDiv">
+                                    <fieldset>
+                                        <legend>this relationship</legend>
+                                        <span wicket:id="relationshipDefinition">[relationship definition]</span>
+                                    </fieldset>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+</table>
+</wicket:extend>
+</body>
+</html>

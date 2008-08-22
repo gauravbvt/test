@@ -175,7 +175,7 @@ abstract class BeanImpl implements Bean {
         else {
             name = toString()
         }
-        if (name.size() > maxWidth) name = name[0, maxWidth - 1]
+        if (name.size() > maxWidth) name = name[0 .. maxWidth - 1] + '..'
         label += "\n$name"
         return label
     }

@@ -1,9 +1,10 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification;
 import com.mindalliance.channels.playbook.ifm.definition.EventSpecification;
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition;
+import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification;
 import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation;
+import com.mindalliance.channels.playbook.ifm.taxonomy.EventType;
 import com.mindalliance.channels.playbook.pages.filters.DynamicFilterTree;
 import com.mindalliance.channels.playbook.pages.filters.Filter;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
@@ -19,6 +20,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary
@@ -194,10 +196,10 @@ public class InformationDefinitionPanel extends AbstractDefinitionPanel {
         return new RefQueryModel( this, new Query( "findAllKnownTopics" ) );
     }
 
-//    @SuppressWarnings( { "unchecked" } )
-//    private List<String> findAllKnownTopics() {
-//        return (List<String>) Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventTypes());
-//    }
+    @SuppressWarnings( { "unchecked" } )
+    private List<String> findAllKnownTopics() {
+        return (List<String>) Query.execute(EventType.class, "findAllTopicsIn", informationDefinition.getEventTypes());
+    }
 
     @Override
     public void elementChanged( String propPath, AjaxRequestTarget target ) {

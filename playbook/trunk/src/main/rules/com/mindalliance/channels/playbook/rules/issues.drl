@@ -48,7 +48,8 @@ rule "sharing without commitment"
     agenda-group "issues"
     when
         // there is a sharing act such that...
-        $sharing: SharingAct($playbook:playbook, $agent:actorAgent, $target:targetAgent, $info:information)
+        $sharing: SharingAct($playbook:playbook, $actors:actors, $target:targetAgent, $info:information)
+        $agent: Agent() from $actors
         // there is no prior commitment (from SharingAgreement or SharingCommitment) ...
         not (exists ( Commitment(playbook == $playbook, agent == $agent, $toward:towardAgent, $infoSpec:protocol.informationSpec,
                                  eval(start.isShorterThan($sharing.startTime())))

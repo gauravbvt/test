@@ -1,16 +1,13 @@
 package com.mindalliance.channels.playbook.pages.forms.panels;
 
-import com.mindalliance.channels.playbook.pages.forms.ElementPanel;
 import com.mindalliance.channels.playbook.pages.forms.AbstractPlaybookPanel;
 import com.mindalliance.channels.playbook.ifm.definition.RelationshipDefinition;
-import com.mindalliance.channels.playbook.ifm.definition.LocationDefinition;
+import com.mindalliance.channels.playbook.ifm.definition.ResourceSpecification;
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification;
-import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.support.components.AutoCompleteTextFieldWithChoices;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.query.Query;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,8 +27,8 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
     protected RelationshipDefinition relationshipDefinition;
     protected AutoCompleteTextFieldWithChoices relationshipNameField;
     protected AjaxCheckBox anyAgentCheckBox;
-    protected WebMarkupContainer agentSpecificationDiv;
-    protected Component agentSpecificationPanel;
+    protected WebMarkupContainer resourceSpecificationDiv;
+    protected Component resourceSpecificationPanel;
 
     public RelationshipDefinitionPanel(String id, AbstractPlaybookPanel parentPanel, String propPath) {
         super(id, parentPanel, propPath);
@@ -51,22 +48,22 @@ public class RelationshipDefinitionPanel extends AbstractDefinitionPanel {
         });
         addReplaceable(relationshipNameField);
 
-        anyAgentCheckBox = new AjaxCheckBox("anyAgent", new Model((Boolean)relationshipDefinition.getWithAgentSpecification().matchesAll())){
+        anyAgentCheckBox = new AjaxCheckBox("anyAgent", new Model((Boolean)relationshipDefinition.getWithResourceSpec().matchesAll())){
             protected void onUpdate(AjaxRequestTarget target) {
                 boolean anyAgent = (Boolean)anyAgentCheckBox.getModelObject();
                 if (anyAgent) {
                     setProperty("withAgentSpecification", new AgentSpecification());
-                    agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", RelationshipDefinitionPanel.this, propPath+".withAgentSpecification");
-                    addReplaceableTo(agentSpecificationPanel, agentSpecificationDiv);
+                    resourceSpecificationPanel = new ResourceSpecificationPanel("resourceSpecification", RelationshipDefinitionPanel.this, propPath+".withresourceSpecification");
+                    addReplaceableTo(resourceSpecificationPanel, resourceSpecificationDiv);
                 }
-                setVisibility(agentSpecificationDiv, !anyAgent, target);
+                setVisibility(resourceSpecificationDiv, !anyAgent, target);
             }
         };
         addReplaceable(anyAgentCheckBox);
-        agentSpecificationDiv = new WebMarkupContainer("agentSpecificationDiv");
-        setVisibility(agentSpecificationDiv, !relationshipDefinition.getWithAgentSpecification().matchesAll());
-        addReplaceable(agentSpecificationDiv);
-        agentSpecificationPanel = new AgentSpecificationPanel("agentSpecification", this, propPath+".withAgentSpecification");
-        addReplaceableTo(agentSpecificationPanel, agentSpecificationDiv);
+        resourceSpecificationDiv = new WebMarkupContainer("resourceSpecificationDiv");
+        setVisibility(resourceSpecificationDiv, !relationshipDefinition.getWithResourceSpec().matchesAll());
+        addReplaceable(resourceSpecificationDiv);
+        resourceSpecificationPanel = new ResourceSpecificationPanel("resourceSpecification", this, propPath+".withResourceSpecification");
+        addReplaceableTo(resourceSpecificationPanel, resourceSpecificationDiv);
     }
 }

@@ -20,11 +20,10 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -217,16 +216,16 @@ public class EOIsPanel extends AbstractComponentPanel {
         target.addComponent(eoisDiv);
     }
 
-//    private List<String> availableTopics(List<String>choices) {
-//        List<String> chosenTopics = new ArrayList<String>();
-//        for (ElementOfInformation eoi : eois) {
-//            chosenTopics.add(eoi.getTopic());
-//        }
-//        Collection availableTopics = CollectionUtils.subtract(choices, chosenTopics);
-//        List<String> results = new ArrayList<String>();
-//        results.addAll(availableTopics);
-//        Collections.sort(results);
-//        return results;
-//    }
+    private List<String> availableTopics(List<String>choices) {
+        List<String> chosenTopics = new ArrayList<String>();
+        for (ElementOfInformation eoi : eois) {
+            chosenTopics.add(eoi.getTopic());
+        }
+        Collection<String> availableTopics = CollectionUtils.subtract(choices, chosenTopics);
+        List<String> results = new ArrayList<String>();
+        results.addAll(availableTopics);
+        Collections.sort(results);
+        return results;
+    }
 
 }

@@ -212,7 +212,7 @@ public class FormTest extends WebPage {
             else if (element.isProjectElement()) {
                 ProjectElement projectElement = (ProjectElement) element;
                 project.getReference().begin();
-                if (projectElement.isResourceElement()) {
+                if (projectElement instanceof Resource) {
                     Resource resource = (Resource) projectElement;
                     if (resource.isOrganizationResource()) {
                         Ref org = (Ref) project.getOrganizations().get(0); // assumes at least one organization pre-defined

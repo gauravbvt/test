@@ -14,32 +14,22 @@ import com.mindalliance.channels.playbook.ifm.Named
 class Relationship extends ProjectElement implements Named {
     private static final long serialVersionUID = -1L;
 
-    Ref fromAgent
-    Ref toAgent
+    Ref fromResource
+    Ref toResource
     String name = ''
-    Ref reverseRelationship // if any
 
     String toString() {
         return name ?: "Unnamed"
     }
 
-    static Relationship create(Ref fromAgent, String name, Ref toAgent) {
-        return new Relationship(fromAgent: fromAgent, name: name, toAgent: toAgent)
+    static Relationship create(Ref fromResource, String name, Ref toResource) {
+        return new Relationship(fromResource: fromResource, name: name, toResource: toResource)
     }
 
-    Set hiddenProperties() {
-        return (super.hiddenProperties() + ['reverseRelationship']) as Set
-    }
 
     Set keyProperties() {
         return (super.keyProperties() + ['name']) as Set
     }
 
-    void afterDelete() {
-        if (reverseRelationship as boolean) {
-            reverseRelationship.begin()
-            reverseRelationship.delete()
-        }
-    }
 
 }

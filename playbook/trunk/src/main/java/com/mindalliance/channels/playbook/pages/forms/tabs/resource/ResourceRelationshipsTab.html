@@ -8,55 +8,9 @@
 <body>
 <wicket:extend>
     <fieldset>
-        <legend>Existing relationships</legend>
-        <div wicket:id="relationshipsDiv">
-            <ul wicket:id="relationships">
-                <li>
-                    <a wicket:id="fromAgentLink" href="#"><span wicket:id="fromAgentName">[from agent name]</span></a>
-                    <span wicket:id="relationshipName">[relationship name]</span>
-                    <a wicket:id="toAgentLink" href="#"><span wicket:id="toAgentName">[to agent name]</span></a>
-                    <a wicket:id="deleteRelationship" href="#">(delete)</a>
-                </li>
-            </ul>
-        </div>
+        <legend>All relationships in the project</legend>
+        <span wicket:id="relationships">[relationships]</span>
     </fieldset>
-    <div wicket:id="newRelationshipDiv">
-        <fieldset>
-            <legend>New relationship</legend>
-            <table>
-                <tr>
-                    <td>
-                        <span wicket:id="newFromAgentName">[agent's name]</span>
-                    </td>
-                    <td>
-                        <input wicket:id="newRelationshipName" type="text"/>
-                    </td>
-                    <td>
-                        <span wicket:id="agents">[agents tree]</span>
-                    </td>
-                </tr>
-            </table>
-            <div wicket:id="reverseRelationshipDiv">
-                <fieldset>
-                    <legend>Also means that</legend>
-                    <table>
-                        <tr>
-                            <td>
-                                <span wicket:id="reverseFromAgentName">[agent name]</span>
-                            </td>
-                            <td>
-                                <input wicket:id="reverseRelationshipName" type="text"/>
-                            </td>
-                            <td>
-                                <span wicket:id="reverseToAgentName">[agent name]</span>
-                            </td>
-                        </tr>
-                    </table>
-                </fieldset>
-            </div>
-            <input wicket:id="addRelationships" type="button" value="Add"/>
-        </fieldset>
-    </div>
 </wicket:extend>
 </body>
 </html>

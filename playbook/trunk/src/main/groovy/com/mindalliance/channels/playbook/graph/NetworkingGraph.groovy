@@ -51,12 +51,6 @@ class NetworkingGraph extends PlaybookGraph {
                 Referenceable el = ref.deref()
                 switch (el) {
                     case Resource.class: processResource((Resource) el); break
-                    // case InformationAct.class: processInformationAct((InformationAct) el); break
-                    // case Group.class: processGroup((Group) el); break
-                    // case Playbook.class: processPlaybook((Playbook) el); break
-                    // case SharingAgreement.class: processSharingAgreement((SharingAgreement)el); break
-                    // case Relationship.class: processRelationship((Relationship)el); break
-                    // case Project.class: processProject((Project) el); break
                 }
             }
         }
@@ -70,46 +64,6 @@ class NetworkingGraph extends PlaybookGraph {
         resources.add(resource.reference)
         // if (resource.isOrganizationResource()) resources.add(resource.organization)
     }
-
-/*
-    void processGroup(Group group) {
-        Ref latest = group.playbook.latestOccurrence
-        group.getResourcesAt(latest).each {processResource(it)}
-    }
-
-    void processInformationAct(InformationAct act) {
-        if (act as boolean) {
-            Ref latest = act.playbook.latestOccurrence
-            if (act.actorAgent as boolean) {
-                act.actorAgent.getResourcesAt(latest).each {processResource(it)}
-            }
-            if (act.isFlowAct() && act.targetAgent as boolean) {
-                act.targetAgent.getResourcesAt(latest).each {processResource(it)}
-            }
-        }
-    }
-
-    void processSharingAgreement(SharingAgreement sharingAgreement) {
-        if (sharingAgreement.source) processResource(sharingAgreement.source)
-        if (sharingAgreement.recipient) processResource(sharingAgreement.recipient)
-    }
-
-    void processRelationship(Relationship relationship) {
-        if (relationship.fromAgent as boolean) processResource(relationship.fromAgent)
-        if (relationship.toAgent as boolean) processResource(relationship.toAgent)
-    }
-
-    void processPlaybook(Playbook playbook) {
-        playbook.informationActs.each {act ->
-            if (act as boolean) processInformationAct((InformationAct)act.deref())
-        }
-    }
-
-    void processProject(Project project) {
-        project.resources.each {processResource(it)}
-    }
-
-    */
 
     void buildResources(GraphVizBuilder builder) {
         resources.each {ref ->

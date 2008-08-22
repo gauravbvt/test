@@ -71,11 +71,12 @@ class QueryManager implements PropertyChangeListener {
                 findAgreementsWhereSource: [SharingAgreement.class],
                 findAllPlacesOfTypeImplying: [Place.class, PlaceType.class],
                 findAllPlacesInAreasOfTypeImplying: [Place.class, AreaType.class],
-                findAllAgentsMatchingSpec: [Agent.class, AgentSpecification.class, Event.class],
                 findAllRelationshipNames: [Agent.class, FlowAct.class, Policy.class],
                 findAllParentsOf: [Organization.class],
                 findAllAgreementsBetween: [SharingAgreement.class, Agent.class],
                 findAllFlowActsBetween: [Playbook.class, FlowAct.class, Agent.class],
+                findAllIndividuals: [Individual.class, Organization.class],
+                findAllJobsOf: [Job.class, Organization.class, Individual.class],
                 // Taxonomy
                 findTaxonomiesOfUser: [Taxonomy.class, User.class],  // static
                 findInheritedTopics: [EventType.class],
@@ -83,9 +84,10 @@ class QueryManager implements PropertyChangeListener {
                 // Organization
                 findAllPositions: [Position.class],
                 findAllSubOrganizations: [Organization.class],
+                employs: [Job.class, Position.class, Person.class, System.class, Organization.class],
                 // Position
                 findOtherPositionsInOrganization: [Position.class, Organization.class],
-                findAllInPosition: [Position.class, Resource.class],
+                findAllInPosition: [Position.class, Job.class],
                 // Playbook
                 findCandidateCauses: [Event.class],
                 findPriorInformationActs: [Event.class],
@@ -110,7 +112,6 @@ class QueryManager implements PropertyChangeListener {
                 createsMatchingRelationship: [Association.class],
                 // Resource
                 findAllInformationActsForResource: [InformationAct.class, Resource.class],
-                findAllRoles: [Resource.class],
                 // Event
                 findAllInformationActsCausedByEvent: [InformationAct.class, Event.class],
                 findAllEventsCausedByEvent: [InformationAct.class, Event.class],

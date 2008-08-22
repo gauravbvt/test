@@ -3,6 +3,8 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.*;
 import com.mindalliance.channels.playbook.pages.forms.tabs.system.SystemIdentityTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionRolesTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.individual.IndividualJobsTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -48,12 +50,9 @@ public class SystemForm extends AbstractResourceForm {
                 return new ResourceLocationTab(panelId, SystemForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model<String>("Responsibilities")) {
-            private static final long serialVersionUID = -2752426071603904860L;
-
-            @Override
+        tabs.add(new AbstractTab(new Model<String>("Jobs")) {
             public Panel getPanel(String panelId) {
-                return new ResourceResponsibilitiesTab(panelId, SystemForm.this);
+                return new IndividualJobsTab(panelId, SystemForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model<String>("Relationships")) {
@@ -62,14 +61,6 @@ public class SystemForm extends AbstractResourceForm {
             @Override
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, SystemForm.this);
-            }
-        });
-        tabs.add(new AbstractTab(new Model<String>("Agreements")) {
-            private static final long serialVersionUID = 4366142411612959546L;
-
-            @Override
-            public Panel getPanel(String panelId) {
-                return new ResourceAgreementsTab(panelId, SystemForm.this);
             }
         });
     }

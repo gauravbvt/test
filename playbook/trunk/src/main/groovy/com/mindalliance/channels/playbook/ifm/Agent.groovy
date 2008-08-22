@@ -1,9 +1,8 @@
 package com.mindalliance.channels.playbook.ifm
 
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.playbook.Event
-import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.project.resources.ContactInfo
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,11 +13,13 @@ import com.mindalliance.channels.playbook.ref.Referenceable
  */
 interface Agent extends Referenceable, Named, Described, Locatable {
 
+    List<Ref> getRoles()
     List<Responsibility> getResponsibilities()
-    List<Ref> getResourcesAt(Ref event)
-    boolean isResourceElement()
-    boolean isGroup()
+    boolean hasRole(Ref role)
+    List<ContactInfo> getContactInfos()
+
     boolean hasJurisdiction()
     boolean hasLocation()
     boolean isAnOrganization()
+    boolean isAnIndividual()
 }

@@ -33,7 +33,7 @@ public class FlowActBasicTab extends InformationActBasicTab {
                 new RefPropertyModel( getElement(), "targetAgent" ),
                 new RefQueryModel(
                         getPlaybook(), new Query(
-                        "findAllAgentsExcept", getElement(), "actorAgent" ) ),
+                        "findAllAgentsExcept", getElement(), "actors" ) ),
                 SINGLE_SELECTION ) {
             private static final long serialVersionUID = -2462883153913078647L;
 

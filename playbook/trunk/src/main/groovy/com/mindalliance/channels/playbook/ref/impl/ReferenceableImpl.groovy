@@ -71,11 +71,11 @@ abstract class ReferenceableImpl extends BeanImpl implements Referenceable {
         return ['id', 'db', 'pcs', 'reference', 'deleted'] as Set
     }
 
-    Set keyProperties() {
+    Set keyProperties() { // Properties that have unique values
         return [] as Set
     }
 
-    protected List<String> childProperties() {
+    protected List<String> childProperties() { // Properties participating in cascaded deletes
         return []
     }
 

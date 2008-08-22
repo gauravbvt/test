@@ -1,9 +1,8 @@
 package com.mindalliance.channels.playbook.analysis.profile
 
-import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
-import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

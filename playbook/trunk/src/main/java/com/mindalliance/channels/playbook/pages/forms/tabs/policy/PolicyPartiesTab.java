@@ -7,7 +7,6 @@ import com.mindalliance.channels.playbook.pages.forms.panels.AgentSpecificationP
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy;
-import com.mindalliance.channels.playbook.ifm.Channels;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;

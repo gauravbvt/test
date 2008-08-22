@@ -83,10 +83,12 @@ class Timeline extends PlaybookGraph {
     void buildOccurrences(GraphVizBuilder builder) {
         timed.each {dur, occSet ->
             occSet.each {occ ->
-                if (occ instanceof InformationAct && occ.actorAgent as boolean) {
-                    Agent agent = (Agent) occ.actorAgent.deref()
-                    builder.cluster(name: nameFor(occ) + nameFor(agent), label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
-                        builder.node(name: nameFor(occ), label: labelFor(occ), URL: urlFor(occ), template: templateFor(occ))
+                if (occ instanceof InformationAct && occ.actors.every{agent -> agent as boolean}) {
+                    occ.actors.each {ref ->
+                        Agent agent = (Agent) ref.deref()
+                        builder.cluster(name: nameFor(occ) + nameFor(agent), label: labelFor(agent), URL: urlFor(agent), template: 'agent') {
+                            builder.node(name: nameFor(occ), label: labelFor(occ), URL: urlFor(occ), template: templateFor(occ))
+                        }
                     }
                 }
                 else {

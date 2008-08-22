@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
+package com.mindalliance.channels.playbook.pages.forms.tabs.organization;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
@@ -26,13 +26,13 @@ import java.util.List;
  * Date: May 13, 2008
  * Time: 12:45:52 PM
  */
-public class ResourceAgreementsTab extends AbstractFormTab {
+public class OrganizationAgreementsTab extends AbstractFormTab {
 
     private Component whereSourceView;
     private Component whereRecipientView;
     private static final long serialVersionUID = -6527452369969183810L;
 
-    public ResourceAgreementsTab( String id, AbstractElementForm elementForm ) {
+    public OrganizationAgreementsTab( String id, AbstractElementForm elementForm ) {
         super( id, elementForm );
     }
 

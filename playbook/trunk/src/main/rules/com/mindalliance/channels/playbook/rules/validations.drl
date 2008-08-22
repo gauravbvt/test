@@ -23,7 +23,8 @@ rule "invalid information act"
     agenda-group "validations"
     when
         $project: Project($id: id)   # force re-evaluation whenever project changes (e.g. a resource is removed)
-        $el:  InformationAct(project.id == $project.id, $actor:actorAgent)
+        $el:  InformationAct(project.id == $project.id, $actors:actors)
+		$actor: Ref() from $actors
         eval(!$project.getResources().contains($actor))
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el, "actorMissing"), "The actor is missing");
@@ -51,7 +52,7 @@ rule "invalid flow act information"
 rule "invalid flow act - sender is receiver"
     agenda-group "validations"
     when
-        $el: FlowAct($actor:actorAgent, targetAgent == $actor)
+        $el: FlowAct($actors:actors, targetAgent memberOf $actors)
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el, "senderIsReceiver"), "The sender can not also be the receiver");
     end
@@ -162,7 +163,7 @@ rule "invalid policy"
 rule "invalid relationship"
     agenda-group "validations"        // TODO break into smaller rules for pointed diagnostic
     when
-        $el: Relationship($from: fromAgent, $to: toAgent, $name: name)
+        $el: Relationship($from: fromResource, $to: toResource, $name: name)
         eval(!Channels.isSet($from) || !Channels.isSet($to) || $name.isEmpty())
     then
         RuleHelper.inferFrom(drools, $el, new Invalidation($el, "relationshipIncomplete"), "The relationship is not sufficiently defined.");

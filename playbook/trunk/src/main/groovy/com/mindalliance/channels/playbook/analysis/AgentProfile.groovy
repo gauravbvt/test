@@ -39,7 +39,7 @@ class AgentProfile {
         List<Relationship> relationships = (List<Relationship>)Query.execute(informationAct.getProject(), "findAllRelationshipsOf", agent.reference)
         List<Link> results = (List<Link>)RuleBaseSession.query("agentLinks", [agent.id, informationAct.id], "_link")
         for (Link link : results) {
-            Relationship rel = new Relationship(fromAgent: agent.reference, toAgent:link.toAgent.reference, name:link.relationshipName)
+            Relationship rel = new Relationship(fromResource: agent.reference, toResource:link.toAgent.reference, name:link.relationshipName)
             relationships.add(rel)
         }
         return relationships

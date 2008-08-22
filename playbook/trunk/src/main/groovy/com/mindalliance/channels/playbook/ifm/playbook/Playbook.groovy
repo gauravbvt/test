@@ -149,15 +149,15 @@ class Playbook extends ProjectElement implements Described {
     }
 
     List<Ref> findAllAgents() {
-        List<Ref> agents = getProject().findAllResources()
+        List<Ref> agents = project.findAllAgents()
         agents.addAll(groups)
         return agents
     }
 
     List<Ref> findAllAgentsExcept(def holder, String propPath) {
         List<Ref> agents = findAllAgents()
-        Ref agent = RefUtils.get(holder, propPath)
-        agents.remove(agent)
+        List<Ref> except = [] + RefUtils.get(holder, propPath)    // works with Objects that are not Lists
+        agents.removeAll(except)
         return agents
     }
 
@@ -165,15 +165,18 @@ class Playbook extends ProjectElement implements Described {
         return (Ref) events.find {event -> event as boolean && event.name == name}
     }
 
+/*
     // Playbook shows transient relationship by start of event
     boolean createsRelationshipBefore(Relationship relationship, Ref event) {
         return findPriorInformationActsOfType("Association", event).any {association ->
             association as boolean && association.createsMatchingRelationship(relationship)
         }
     }
+*/
 
+/*
     // Whether an agent is the same as or implied by another agent at start of an event
-    boolean agentImplied(Ref agent, Ref otherAgent, Ref event) {
+    boolean agentImplied(Ref agent, Ref otherAgent, Ref event) { // TODO -- revise
         if (!agent as boolean || !otherAgent as boolean || !event as boolean) return false
         if (agent == otherAgent) return true
         List<Ref> otherResources = otherAgent.getResourcesAt(event)
@@ -181,6 +184,7 @@ class Playbook extends ProjectElement implements Described {
         boolean implied = agent.getResourcesAt(event).any {res -> res.as boolean && otherResources.contains(res)}
         return implied
     }
+*/
 
     List<Ref> findAllOccurrences() {
         return findAllOccurrencesExcept(null)
@@ -196,7 +200,7 @@ class Playbook extends ProjectElement implements Described {
     List<Ref> findAllInformationActsForAgent(Ref agent) {
         return (List<Ref>) informationActs.findAll {act ->
             act as boolean && agent as boolean &&
-                    ((act.actorAgent == agent) || (act.isFlowAct() && act.targetAgent == agent))
+                    ((act.actors.contains(agent)) || (act.isFlowAct() && act.targetAgent == agent))
         }
     }
 

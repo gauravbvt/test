@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.*;
 import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionJurisdictionTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionRolesTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -42,19 +43,14 @@ public class PositionForm extends AbstractResourceForm {
                  return new PositionJurisdictionTab(panelId, PositionForm.this);
              }
          });
-        tabs.add(new AbstractTab(new Model("Responsibilities")) {
+        tabs.add(new AbstractTab(new Model("Roles")) {
             public Panel getPanel(String panelId) {
-                return new ResourceResponsibilitiesTab(panelId, PositionForm.this);
+                return new PositionRolesTab(panelId, PositionForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model("Relationships")) {
             public Panel getPanel(String panelId) {
                 return new ResourceRelationshipsTab(panelId, PositionForm.this);
-            }
-        });
-        tabs.add(new AbstractTab(new Model("Agreements")) {
-            public Panel getPanel(String panelId) {
-                return new ResourceAgreementsTab(panelId, PositionForm.this);
             }
         });
     }

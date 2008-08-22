@@ -6,6 +6,7 @@ import com.mindalliance.channels.playbook.query.Query
 import org.apache.commons.collections.CollectionUtils
 import com.mindalliance.channels.playbook.ifm.Jurisdictionable
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
+import com.mindalliance.channels.playbook.ifm.Agent
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,13 +15,18 @@ import com.mindalliance.channels.playbook.mem.ApplicationMemory
 * Date: Apr 17, 2008
 * Time: 11:21:56 AM
 */
-class Position extends OrganizationResource implements Jurisdictionable {
+class Position extends OrganizationResource implements Agent, Jurisdictionable {
 
     Location jurisdiction = new Location()
+    List<Ref> roles = []
 
     void beforeStore(ApplicationMemory memory) {
         super.beforeStore(memory)
         if (jurisdiction.isDefined()) jurisdiction.detach()
+    }
+
+    boolean isAgent() {
+        return true
     }
 
     boolean isLocatedWithin(Location loc) {
@@ -29,7 +35,12 @@ class Position extends OrganizationResource implements Jurisdictionable {
 
     boolean hasJurisdiction() {
         return jurisdiction.isDefined()
-    }    
+    }
+
+    boolean hasRole(Ref role) {
+        return (this.roles.any {resRole -> resRole.implies(role) })
+    }
+
 
     // Queries
 
@@ -43,9 +54,9 @@ class Position extends OrganizationResource implements Jurisdictionable {
     }
 
     List<Ref> findAllInPosition() {
-        return this.project.findAllResources().findAll{res ->
-            res.jobs.contains(this.reference)
-        }
+        return (List<Ref>)project.jobs.findAll{job -> job.position == this.reference}
     }
+
+    // End queries
     
 }

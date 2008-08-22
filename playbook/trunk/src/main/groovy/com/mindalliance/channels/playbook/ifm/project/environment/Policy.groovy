@@ -4,9 +4,9 @@ import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ifm.Named
-import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 import com.mindalliance.channels.playbook.ifm.playbook.SharingAct
+import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

@@ -6,8 +6,6 @@ import com.mindalliance.channels.playbook.ifm.project.resources.System
 import com.mindalliance.channels.playbook.ifm.Locatable
 import com.mindalliance.channels.playbook.ifm.project.Project
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
-import com.mindalliance.channels.playbook.ifm.Agent
-import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.ifm.Responsibility
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
@@ -19,13 +17,11 @@ import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
  * Date: Apr 17, 2008
  * Time: 11:16:29 AM
  */
-abstract class Resource extends ProjectElement implements Agent, Locatable {
+abstract class Resource extends ProjectElement implements Locatable {
 
     String name = ''
     String description = ''
     List<ContactInfo> contactInfos = []
-    List<Ref> roles = []
-    List<Ref> jobs = []        // positions
     Location location = new Location()
     List<SharingProtocol> access = []
     boolean effective = true // whether the resource is operational in real life
@@ -33,7 +29,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
     @Override
     List<String> transientProperties() {
         return (List<String>) (super.transientProperties() + ['organizationResource', 'organizationElement', 'responsibilities',
-                                  'resourceElement', 'group'])
+                                  'resourceElement', 'anOrganization', 'anIndividual', 'responsible', 'agent', 'aPerson', 'aJob', 'aSystem'])
     }
 
     Set hiddenProperties() {
@@ -45,16 +41,20 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return (super.keyProperties() + ['name', 'description']) as Set
     }
 
-    boolean isResourceElement() {
-        return true
-    }
-
     boolean isAnOrganization() {
         return false
     }
 
-    public boolean isGroup() {
-        return false;
+    boolean isAPerson() {
+        return false
+    }
+
+    boolean isASystem() {
+        return false
+    }
+
+    boolean isAJob() {
+        return false
     }
 
     boolean isOrganizationResource() {
@@ -69,15 +69,25 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return false
     }
 
+    boolean isAnIndividual() {
+        return false
+    }
+
+    boolean isAgent() {   // can be an agent
+        return false
+    }
+
     boolean hasLocation() {
         return location.isDefined()
     }
 
+
     List<Responsibility> getResponsibilities() {
         List<Responsibility> allResponsibilities = []
-        roles.each {role -> if (role as boolean) allResponsibilities.addAll(role.responsibilities)}
+        getRoles().each {role -> if (role as boolean) allResponsibilities.addAll(role.responsibilities)}
         return allResponsibilities
     }
+
 
     String toString() { name ?: "Unnamed" }
 
@@ -85,7 +95,7 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
      * Return subclass that a project user may want to create.
      */
     static List<Class<?>> contentClasses() {
-        [
+        return (List<Class<?>>)[
                 Organization.class, Person.class, System.class,
                 Position.class
         ]
@@ -105,10 +115,10 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         super.changed(propName)
     }
 
-    public List<Ref> getResourcesAt(Ref event) {
+ /*   public List<Ref> getResourcesAt(Ref event) {
         return [this.reference]
     }
-
+*/
     Location getLocation() {
         return location
     }
@@ -117,9 +127,6 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
         return Project.current().findAllAgreementsOf(this.reference)
     }
 
-    boolean hasRole(Ref role) {
-        return (this.roles.any {resRole -> resRole.implies(role) })
-    }
 
     boolean isLocatedWithin(Location loc) {
         return this.location.isWithin(loc)
@@ -127,15 +134,14 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
 
     boolean hasAccessTo(Ref resource) {
         boolean result = access.any {protocol ->
-            protocol.contacts.any {agentSpec -> agentSpec.matches(resource, null) }
+            protocol.contacts.any {resSpec -> resSpec.matches(resource, null) }
         }
         return result
     }
 
     boolean hasJobWith(Ref org) {
-        Resource resource = (Resource) org.deref()
-        if (resource && resource.isAnOrganization()) {
-            return jobs.any {job -> ((Organization) resource).hasResource(job)}
+        if (isAnIndividual() && org as boolean && org.isAnOrganization()) {
+            return org.employs(this.reference)
         }
         else {
             return false
@@ -145,34 +151,26 @@ abstract class Resource extends ProjectElement implements Agent, Locatable {
 
     // Queries
 
-    boolean hasRelationship(String relName, Ref otherResource, Ref event) {
-        boolean related = false
+ /*   boolean hasRelationship(String relName, Ref otherResource, Ref event) {
         // Look in project
         related = getProject().relationships.any {rel ->
-            rel.fromAgent == this && (!otherResource || rel.toAgent == otherResource) && rel.name == relName
+            rel.fromResource == this && (!otherResource || rel.toResource == otherResource) && rel.name == relName
         }
         // Look at associations before act
-        related = related || event.playbook.createsRelationshipBefore(new Relationship(fromAgent:this.reference, name:relName, toAgent:otherResource), event)
+        related = related || event.playbook.createsRelationshipBefore(new Relationship(fromResource:this.reference, name:relName, toResource:otherResource), event)
         return related
-    }
+    }*/
 
     List<Ref> findAllInformationActsForResource() {
         List<Ref> acts = []
         assert this.project
         this.project.playbooks.each {pb ->
             pb.informationActs.each {act ->
-                if (act.actorAgent == this.reference) { acts.add(act) }
+                if (act.actors.contains(this.reference)) { acts.add(act) }
                 if (act.isFlowAct() && act.targetAgent == this.reference) { acts.add(act) }
             }
         }
         return acts
-    }
-
-    List<Ref> findAllRoles() {
-        Set<Ref> allRoles = new HashSet<Ref>()
-        allRoles.addAll(roles)
-        allRoles.addAll(jobs.collect {it.findAllRoles()}.flatten())
-        return allRoles as List<Ref>
     }
 
     // end queries

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.pages.forms.tabs.resource;
+package com.mindalliance.channels.playbook.pages.forms.tabs.position;
 
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
@@ -21,12 +21,11 @@ import java.io.Serializable;
  * Date: Apr 24, 2008
  * Time: 9:21:40 AM
  */
-public class ResourceResponsibilitiesTab extends AbstractFormTab {
+public class PositionRolesTab extends AbstractFormTab {
 
     DynamicFilterTree roleTree;
-    DynamicFilterTree jobsTree;
 
-    public ResourceResponsibilitiesTab(String id, AbstractElementForm elementForm) {
+    public PositionRolesTab(String id, AbstractElementForm elementForm) {
         super(id, elementForm);
     }
 
@@ -40,13 +39,5 @@ public class ResourceResponsibilitiesTab extends AbstractFormTab {
              }
         };
         addReplaceable(roleTree);
-        jobsTree = new DynamicFilterTree("jobs", new RefPropertyModel(getElement(), "jobs"),
-                                             new RefQueryModel(getProject(), new Query("findAllPositionsAnywhere"))) {
-             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
-                List<Ref> newSelections = jobsTree.getNewSelections();
-                setProperty("jobs", newSelections);
-             }
-        };
-        addReplaceable(jobsTree);
     }
 }

@@ -31,7 +31,8 @@ rule "broken commitment to notify"
         $know: Know(id == $know_id, $info:information)
         eval(((InformationDefinition)$infoSpec).matches($info, $know.getAct()))  // that matches what agent committed to share
         // and no info comprised of the info believed and committed to be shared has been transferred
-        not (exists ( $transfer:InformationTransfer(actorAgent == $agent, targetAgent == $toward, $t_info:information)
+        not (exists ( $transfer:InformationTransfer($actors:actors, targetAgent == $toward, $t_info:information)
+                      && eval ($actors.contains($agent))
                       && eval($t_info.isComprisedIn($info))
                     )
             )
@@ -51,7 +52,7 @@ rule "late notification"
         eval(((InformationDefinition)$infoSpec).matches($info, $know.getAct()))  // that matches what agent committed to share
         // info comprising the info believed and committed to sharing has been transferred
         $notifications: ArrayList(size > 0)
-                        from collect(InformationTransfer(actorAgent == $agent, targetAgent == $toward, $t_info:information, eval($t_info.isComprisedIn($info))))
+                        from collect(InformationTransfer(eval(actors.contains($agent)), targetAgent == $toward, $t_info:information, eval($t_info.isComprisedIn($info))))
         // but none before max delay
         not ( exists (
                 $notification: InformationTransfer() from $notifications
@@ -78,11 +79,13 @@ rule "late notification"
 rule "sharing obeys policy"
     agenda-group "compliance"
     when
-        $sharing: SharingAct($agent:actorAgent)
+        $sharing: SharingAct($actors:actors)
         $policy: Policy(effective == true, allowing == true)
         eval($policy.appliesTo($sharing) && $policy.allRestrictionsObeyed($sharing))     // TODO - implement tests
     then
-       RuleHelper.inferFrom(drools, $sharing, new PolicyCompliance(true, (Agent)$agent.deref(), $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
+       for (Iterator iter = $actors.iterator(); iter.hasNext();) {
+            RuleHelper.inferFrom(drools, $sharing, new PolicyCompliance(true, (Agent)((Ref)iter.next()).deref(), $sharing, "policy obeyed", $policy), "Sharing of information done according to policy.");
+        }
     end
 
 # Sharing information in contradiction of policy

@@ -21,8 +21,8 @@ class SharingAgreement extends ProjectElement implements Named, Described {
 
     String name = ''
     String description = ''
-    Ref source   // readOnly -- set on creation
-    Ref recipient     // readOnly -- set on creation
+    Ref source   // readOnly -- set on creation  -- organization
+    Ref recipient     // readOnly -- set on creation   -- other organization
     SharingProtocol protocol = new SharingProtocol(incoming:false)
     SharingConstraints constraints = new SharingConstraints()
     Timing maxDelay = new Timing(amount:0)

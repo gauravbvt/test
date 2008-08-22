@@ -34,7 +34,7 @@ import com.mindalliance.channels.playbook.ref.impl.InferredRef
  * Date: Mar 19, 2008
  * Time: 2:47:42 PM
  */
-public class TestPlaybook extends TestCase {
+public class TestPlaybook extends TestCase {  // run mvn test -Ddebugger=true
 
     PlaybookApplication app
     WicketTester tester
@@ -152,6 +152,7 @@ public class TestPlaybook extends TestCase {
         session.commit()
         assertNull anotherProject.deref()*/
     }
+
 
     void testExportImport() {
         int exportCount = app.memory.exportRef(channels, 'channels')
