@@ -1,39 +1,66 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-	 version="2.4">
-
-	<display-name>playbook</display-name>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+    <description>Information flow modeling</description>
+    <display-name>channels</display-name>
     <icon>
         <small-icon>/favicon.ico</small-icon>
     </icon>
-	 <!--
-	      There are three means to configure Wickets configuration mode and they are
-	      tested in the order given.
-	      1) A system property: -Dwicket.configuration
-	      2) servlet specific <init-param>
-	      3) context specific <context-param>
-	      The value might be either "development" (reloading when templates change)
-	      or "deployment". If no configuration is found, "development" is the default.
-	-->
 
-	<filter>
-		<filter-name>wicket.playbook</filter-name>
- 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-			<param-name>applicationClassName</param-name>
-			<param-value>com.mindalliance.channels.playbook.support.PlaybookApplication</param-value>
- 		</init-param>
- 	</filter>
+    <filter>
+        <filter-name>wicket.playbook</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter
+        </filter-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>
+                com.mindalliance.channels.playbook.support.PlaybookApplication
+            </param-value>
+        </init-param>
+    </filter>
 
- <filter-mapping>
-  <filter-name>wicket.playbook</filter-name>
-	<url-pattern>/*</url-pattern>
- </filter-mapping>
+    <filter-mapping>
+        <filter-name>wicket.playbook</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-<context-param>
-    <param-name>configuration</param-name>
-    <param-value>deployment</param-value>
-</context-param>
+    <!--<security-constraint>-->
+        <!--<web-resource-collection>-->
+            <!--<web-resource-name>Secured pages</web-resource-name>-->
+            <!--<url-pattern>/*</url-pattern>-->
+            <!--<http-method>GET</http-method>-->
+            <!--<http-method>POST</http-method>-->
+        <!--</web-resource-collection>-->
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    <!--</security-constraint>-->
+
+    <context-param>
+        <description>Path to graphviz's dot executable</description>
+        <param-name>dot</param-name>
+        <param-value>dot</param-value>
+    </context-param>
+    <context-param>
+        <description>Wicket execution mode</description>
+        <param-name>configuration</param-name>
+        <param-value>deployment</param-value>
+    </context-param>
+    <context-param>
+        <description>Path to writable folder for persistence (with trailing slash)</description>
+        <param-name>persistence-dir</param-name>
+        <param-value>./target/yaml/</param-value>
+    </context-param>
+    <context-param>
+        <description>Path to WordNet dictionary directory (no trailing slash)</description>
+        <param-name>wordnet-data</param-name>
+        <param-value>./data/wordnet-2.0/dict</param-value>
+    </context-param>
+    <context-param>
+        <description>Path to JWNL trained data file</description>
+        <param-name>trained-data</param-name>
+        <param-value>./data/wsj3t0-18-bidirectional/train-wsj-0-18.holder</param-value>
+    </context-param>
 </web-app>

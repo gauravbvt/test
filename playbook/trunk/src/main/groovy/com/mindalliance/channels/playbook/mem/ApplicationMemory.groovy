@@ -33,13 +33,10 @@ class ApplicationMemory implements Serializable {
     static final String ROOT_ID = 'CHANNELS'
     static final String ROOT_DB = 'channels'
 
-    static final String EXPORT_DIRECTORY = 'data/yaml'
-    static final String BACKUP_DIRECTORY = 'data/yaml/backup'
-
     static final String RULES_PACKAGE = '/com/mindalliance/channels/playbook/rules/channels.rules'
 
     static DEBUG = false
-    static PlaybookCache cache
+    private PlaybookCache cached
     static RuleBaseSession ruleBaseSession
     private PlaybookApplication application
 
@@ -47,25 +44,25 @@ class ApplicationMemory implements Serializable {
 
     ApplicationMemory(PlaybookApplication app) {
         application = app
-        if (!cache) ApplicationMemory.initializeCache()
         // if (!ruleBaseSession) ApplicationMemory.initializeRuleBaseSession()
     }
 
-    static synchronized void initializeCache() {
-        if (!cache) {  // in the highly unlikely event of a race condition, test again
+    private synchronized PlaybookCache getCache() {
+        if (!cached) {  // in the highly unlikely event of a race condition, test again
             boolean useMemoryCaching = true
             boolean unlimitedDiskCache = true
             boolean overflowPersistence = false
             boolean blocking = true
             String algorithmClass = 'com.opensymphony.oscache.base.algorithm.UnlimitedCache'
             int capacity = -1
-            cache = new PlaybookCache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
+            cached = new PlaybookCache(useMemoryCaching, unlimitedDiskCache, overflowPersistence, blocking, algorithmClass, capacity)
             YamlPersistenceListener listener = new YamlPersistenceListener()
             Config config = new Config()
-            config.set('cache.path', "./target/work/cache")
+            config.set('cache.path', getCacheDirectory() )
             listener.configure(config)
-            cache.setPersistenceListener(listener)
+            cached.setPersistenceListener(listener)
         }
+        return cached;
     }
 
 /*    static synchronized void initializeRuleBaseSession() {
@@ -81,6 +78,18 @@ class ApplicationMemory implements Serializable {
             }
         }
         return ruleBaseSession
+    }
+
+    static private String getExportDirectory() {
+        PlaybookApplication.get().servletContext.getInitParameter("persistence-dir")
+    }
+
+    static private String getCacheDirectory() {
+        getExportDirectory() + "cache/"
+    }
+
+    static private String getBackupDirectory() {
+        getExportDirectory() + "skip backup/"
     }
 
     QueryCache getQueryCache() {
@@ -204,11 +213,9 @@ class ApplicationMemory implements Serializable {
         return fresh
     }
 
-    void clearAll() {
-        synchronized (this) {
-            cache.clear()
-            ruleBaseSession = null
-        }
+    synchronized void clearAll() {
+        cache.clear()
+        ruleBaseSession = null
     }
 
     static Ref getRoot() {
@@ -219,11 +226,12 @@ class ApplicationMemory implements Serializable {
     int exportRef(Ref ref, String name) {
         String fileName = "${name}.yml"
         int count = 0
-        File file = new File(EXPORT_DIRECTORY, fileName)
+        String dir = getExportDirectory()
+        File file = new File(dir, fileName)
         if (file.exists()) { // make a backup
             backupFile(fileName, file)
         }
-        File tempFile = new File(EXPORT_DIRECTORY, "_$fileName")
+        File tempFile = new File(dir, "_$fileName")
         FileOutputStream out = new FileOutputStream(tempFile)
         YamlEncoder enc = new YamlEncoder(out)
         List<Ref> queue = [ref]
@@ -261,7 +269,7 @@ class ApplicationMemory implements Serializable {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss_z", Locale.getDefault());
         String timestamp = formatter.format(now);
         String bkName = "${name}_${timestamp}.bak"
-        File copy = new File(BACKUP_DIRECTORY, bkName)
+        File copy = new File(getBackupDirectory(), bkName)
         FileWriter out = new FileWriter(copy)
         try {
             file.eachLine {line ->
@@ -277,7 +285,7 @@ class ApplicationMemory implements Serializable {
 
     int importRef(String name) {
         int count = 0
-        File file = new File(EXPORT_DIRECTORY, "${name}.yml")
+        File file = new File(getExportDirectory(), "${name}.yml")
         if (!file.exists()) {
             Logger.getLogger(this.class.name).info("Import failed: unknown file $name")
         }

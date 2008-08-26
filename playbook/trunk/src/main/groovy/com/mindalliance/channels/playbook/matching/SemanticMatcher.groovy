@@ -11,8 +11,10 @@ import net.didion.jwnl.data.IndexWord
 import net.didion.jwnl.data.POS
 import shef.nlp.wordnet.similarity.SimilarityMeasure      // TODO -- GPL
 import edu.stanford.nlp.ling.TaggedWord
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import com.mindalliance.channels.playbook.support.Level
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,8 +29,8 @@ class SemanticMatcher {
     static final double BEST_MATCH_FACTOR = 1.0 // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
 
     static final String TAGGER_TRAINED_DATA = './data/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
-    static final String JWNL_PROPERTIES = '/config/semantic/jwnl_properties.xml'
-    static final String SIMILARITY_DATA = '/config/semantic/ic-bnc-resnik-add1.dat'
+    static final String JWNL_PROPERTIES = 'jwnl_properties.xml'
+    static final String SIMILARITY_DATA = 'ic-bnc-resnik-add1.dat'
 
     static SemanticMatcher instance  // singleton
 
@@ -41,24 +43,39 @@ class SemanticMatcher {
     static SemanticMatcher getInstance() {
         if (!instance) {
             instance = new SemanticMatcher()
+
             initializeJWNL()
             instance.dictionary = Dictionary.getInstance()
             instance.morpher = instance.dictionary.morphologicalProcessor
-            instance.tagger = new MaxentTagger(TAGGER_TRAINED_DATA)
+            instance.tagger = new MaxentTagger(getTrainedData())
             instance.similarityMeasure = initializeSimilarityMeasure()
-            instance.logger = Logger.getLogger(instance.class)
+            instance.logger = LoggerFactory.getLogger(instance.class)
         }
         return instance
     }
 
+    private static String getTrainedData() {
+        return PlaybookApplication.get().servletContext
+                    .getInitParameter("trained-data")
+    }
+
     static initializeJWNL() {
-        InputStream is = ClassLoader.getResourceAsStream(JWNL_PROPERTIES)
-        JWNL.initialize(is)
+        JWNL.initialize(getJWNLProperties())
+    }
+
+    private static InputStream getJWNLProperties() {
+        URL url = SemanticMatcher.class.getResource("jwnl_properties.xml")
+        String dict = PlaybookApplication.get().servletContext
+                    .getInitParameter("wordnet-data")
+//        String dict = "./data/wordnet-2.0/dict"
+        String template = url.text.replaceFirst("_WORDNET_DICT_",dict)
+
+        return new ByteArrayInputStream( template.bytes );
     }
 
     static SimilarityMeasure initializeSimilarityMeasure() {
        // return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: SIMILARITY_DATA])
-       URL url = ClassLoader.getResource(SIMILARITY_DATA)
+       URL url = SemanticMatcher.class.getResource(SIMILARITY_DATA)
        SimilarityMeasure sm = (SimilarityMeasure)SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: url.toExternalForm()])
        return sm
     }

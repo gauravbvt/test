@@ -1,6 +1,7 @@
 package com.mindalliance.channels.playbook.graph
 
 import org.apache.log4j.Logger
+import com.mindalliance.channels.playbook.support.PlaybookApplication
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -45,10 +46,14 @@ class GraphVizRenderer {
         renderProcess(output, format)
     }*/
 
+    private String getDotPath() {
+        PlaybookApplication.get().servletContext.getInitParameter("dot")
+    }
+
     private renderProcess(Writer output, String format) {
         if (dotWriter != null) {
             // Logger.getLogger(this.class).info(dotWriter.toString())
-            def command="dot -T${format}"
+            def command="$dotPath -T${format}"
             Process  proc = command.execute()
             proc.withWriter({Writer wr ->
                 wr.print dotWriter.toString()

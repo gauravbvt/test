@@ -16,13 +16,15 @@ import com.mindalliance.channels.playbook.ref.impl.RefImpl
 import com.mindalliance.channels.playbook.support.drools.RuleBaseSession
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import org.apache.log4j.Logger
 import org.apache.wicket.Application
 import org.apache.wicket.Page
-import org.apache.wicket.Session
+import javax.servlet.ServletContext
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.apache.wicket.authentication.AuthenticatedWebApplication
 import org.apache.wicket.authentication.AuthenticatedWebSession
 import org.apache.wicket.markup.html.WebPage
+import org.apache.wicket.Session;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -47,12 +49,10 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
         appMemory = new ApplicationMemory(this)
     }
 
-//    void init() {
-//        super.init();
-//        println "INITING"
-//        getMarkupSettings().setStripXmlDeclarationFromOutput(false);
-//        getMarkupSettings().setStripWicketTags(true);
-//    }
+    void init() {
+        super.init();
+        logConfig();
+    }
 
     static PlaybookApplication current() {
         return (PlaybookApplication) Application.get()
@@ -91,9 +91,29 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
 
     void initializeContents() {
         TestData.load()
-        // TODO - implement minimal initialization for clean slate 
+        // TODO - implement minimal initialization for clean slate
     }
 
+
+
+        /**
+         * Log current configuration
+         */
+        void logConfig() {
+            Logger log = LoggerFactory.getLogger( getClass() )
+
+            if ( log.isInfoEnabled() ) {
+                ServletContext ctx = PlaybookApplication.get().servletContext
+                log.info( "**** Starting Channels" );
+                log.info( "current dir = " +  java.lang.System.properties[ "user.dir" ] )
+                log.info( "user dir = " +  java.lang.System.properties[ "user.home" ] )
+                log.info( "persistence-dir = " + ctx.getInitParameter("persistence-dir"))
+                log.info( "trained-data = " + ctx.getInitParameter("trained-data"))
+                log.info( "wordnet-data = " + ctx.getInitParameter("wordnet-data"))
+                log.info( "wicket configuration = " + ctx.getInitParameter("configuration"))
+                log.info( "dot executable = " + ctx.getInitParameter("dot"))
+            }
+        }
 
     // ----------------------- Data access
 
@@ -206,7 +226,7 @@ class PlaybookApplication extends AuthenticatedWebApplication implements Seriali
             return Class.forName(className)
         }
         catch (Exception e) {
-            Logger.getLogger(this.class.name).warn("No form class $className", e)
+            LoggerFactory.getLogger(this.class.name).warn("No form class $className", e)
             return null
         }
     }

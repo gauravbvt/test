@@ -4,10 +4,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mindalliance.channels</groupId>
-    <artifactId>playbook</artifactId>
+    <artifactId>channels</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>Playbook</name>
+    <name>Channels</name>
     <description>Channels Playbook</description>
 
     <organization>
@@ -36,12 +36,44 @@
                 <surefire.argLine>-Xms120m -Xmx512m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005</surefire.argLine>
             </properties>
         </profile>
+        <profile>
+            <!-- Exclude dependencies provided by the hosting server.
+                 See http://esupport.getnetvps.net/tomcat_jars.html -->
+
+            <id>hosted</id>
+            <dependencies>
+                <dependency>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                    <version>3.2</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                    <version>3.1</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                    <version>1.2.2</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+
+        </profile>
+
+        <profile>
+            <id>jetty</id>
+            <dependencies>
+            </dependencies>
+        </profile>
     </profiles>
 
     <dependencies>
 
         <!--  WICKET DEPENDENCIES -->
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket</artifactId>
@@ -73,19 +105,22 @@
         <!-- LOGGING DEPENDENCIES - LOG4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.0</version>
         </dependency>
 
-        <!--  JUNIT DEPENDENCY FOR TESTING -->
+        <!--  TESTING DEPENDENCIES -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.3</version>
             <scope>test</scope>
         </dependency>
-
-        <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
@@ -105,6 +140,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--  SERVLET CONTAINER DEPENDENCIES  -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.3</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Playbook dependencies -->
         <dependency>
           <groupId>joda-time</groupId>
@@ -116,6 +159,16 @@
             <groupId>opensymphony</groupId>
             <artifactId>oscache</artifactId>
             <version>2.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>logkit</groupId>
+                    <artifactId>logkit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>avalon-framework</groupId>
+                    <artifactId>avalon-framework</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
           <groupId>commons-beanutils</groupId>
@@ -124,9 +177,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy.maven.runtime</groupId>
-            <artifactId>gmaven-runtime-default</artifactId>
-            <version>1.0-rc-3-SNAPSHOT</version>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all-minimal</artifactId>
+            <version>1.5.6</version>
         </dependency>
 
         <dependency>
@@ -160,6 +213,7 @@
             <artifactId>jyaml</artifactId>
             <version>1.3</version>
         </dependency>
+
         <!-- DROOLS dependencies -->
         <dependency>
             <groupId>org.drools</groupId>
@@ -171,6 +225,7 @@
           <artifactId>xstream</artifactId>
           <version>1.2.2</version>
         </dependency>
+
         <!-- For geonames -->
         <dependency>
             <groupId>jdom</groupId>
@@ -250,6 +305,7 @@
                      </execution>
                  </executions>
             </plugin>
+
             <!-- DROOLS compile -->
             <plugin>
                 <groupId>org.drools.maven.plugins</groupId>
@@ -381,5 +437,4 @@
         <wicket.version>1.4-m3</wicket.version>
         <jetty.version>6.1.4</jetty.version>
     </properties>
-
 </project>
