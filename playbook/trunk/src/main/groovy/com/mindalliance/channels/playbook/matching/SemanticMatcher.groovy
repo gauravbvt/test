@@ -28,7 +28,7 @@ class SemanticMatcher {
     static final double POWER = 0.6 // between 0 and 1, lower value lifts asymptotic scoring curve more
     static final double BEST_MATCH_FACTOR = 1.0 // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
 
-    static final String TAGGER_TRAINED_DATA = './data/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
+    static final String TAGGER_TRAINED_DATA = 'data/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
     static final String JWNL_PROPERTIES = 'jwnl_properties.xml'
     static final String SIMILARITY_DATA = 'ic-bnc-resnik-add1.dat'
 
@@ -56,7 +56,7 @@ class SemanticMatcher {
 
     private static String getTrainedData() {
         return PlaybookApplication.get().servletContext
-                    .getInitParameter("trained-data")
+                    .getInitParameter("trained-data") ?: 'data/wsj3t0-18-bidirectional/train-wsj-0-18.holder'
     }
 
     static initializeJWNL() {
@@ -66,7 +66,7 @@ class SemanticMatcher {
     private static InputStream getJWNLProperties() {
         URL url = SemanticMatcher.class.getResource("jwnl_properties.xml")
         String dict = PlaybookApplication.get().servletContext
-                    .getInitParameter("wordnet-data")
+                    .getInitParameter("wordnet-data")  ?: 'data/wordnet-2.0/dict'
 //        String dict = "./data/wordnet-2.0/dict"
         String template = url.text.replaceFirst("_WORDNET_DICT_",dict)
 

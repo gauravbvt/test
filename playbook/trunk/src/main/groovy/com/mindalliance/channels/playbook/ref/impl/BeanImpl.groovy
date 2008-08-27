@@ -18,7 +18,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
 abstract class BeanImpl implements Bean {
     private static final long serialVersionUID = -1L;
 
-    static Map<Class,List<MetaBeanProperty>> WritableProperties = [:]
+    static Map<Class, List<MetaBeanProperty>> WritableProperties = [:]
 
     String version
 
@@ -26,11 +26,13 @@ abstract class BeanImpl implements Bean {
         return '1.0.0' // default
     }
 
-   /* synchronized */ static List<MetaBeanProperty> writablePropertiesOf(BeanImpl beanImpl) {
-        List metaBeanProperties = (List<MetaBeanProperty>)WritableProperties[beanImpl.class]
+    /* synchronized */
+
+    static List<MetaBeanProperty> writablePropertiesOf(BeanImpl beanImpl) {
+        List metaBeanProperties = (List<MetaBeanProperty>) WritableProperties[beanImpl.class]
         if (!metaBeanProperties) {
-            metaBeanProperties = (List<MetaBeanProperty>)beanImpl.metaClass.getProperties().findAll {mp ->
-               !beanImpl.transientProperties().contains(mp.name)
+            metaBeanProperties = (List<MetaBeanProperty>) beanImpl.metaClass.getProperties().findAll {mp ->
+                !beanImpl.transientProperties().contains(mp.name)
             }
             WritableProperties[beanImpl.class] = metaBeanProperties
         }
@@ -56,17 +58,19 @@ abstract class BeanImpl implements Bean {
     static Object makeClone(Object val) {
         if (val == null) return null
         def value
-        switch(val) {
-           case {it instanceof Class}: value = val; break
-           case ComputedRef.class: value = val; break
-           case Ref.class:
-                if (val == null || val.id == null) {
+        switch (val) {
+            case {it instanceof Class}: value = val; break
+            case ComputedRef.class: value = val; break
+            case InferredRef.class: value = val; break
+            case Ref.class:
+                Ref ref = (Ref) val
+                if (ref == null || ref.id == null || !ref.isStored()) {
                     value = null
                 }
                 else {
-                     value = new RefImpl(id:val.id, db:val.db)
+                    value = new RefImpl(id: ref.id, db: ref.db)
                 }
-                 break
+                break
             case Bean.class: value = val.copy(); break
             case Collection.class:   // filter out nulls, (dangling Refs are cloned to null)
                 value = val.class.newInstance()
@@ -86,7 +90,7 @@ abstract class BeanImpl implements Bean {
     }
 
     Map beanProperties() {
-        Map<String,Object> properties = [:]
+        Map<String, Object> properties = [:]
         BeanImpl.writablePropertiesOf(this).each {mbp ->
             properties[mbp.name] = mbp.getProperty(this)
         }
@@ -118,7 +122,7 @@ abstract class BeanImpl implements Bean {
 
     // ****** Persistence support for YAML
 
-    void initFromMap(Map<String,Object> map) {
+    void initFromMap(Map<String, Object> map) {
         // TODO -- manage versioning here
         map.each {key, val ->
             if (isWritableProperty(key)) {
@@ -140,7 +144,7 @@ abstract class BeanImpl implements Bean {
                 references.add(obj)
                 break
             case Bean:
-                obj.beanProperties().each{key, val ->
+                obj.beanProperties().each {key, val ->
                     references.addAll(findAllReferencesIn(val))
                 }
                 break
@@ -150,7 +154,7 @@ abstract class BeanImpl implements Bean {
         return references
     }
 
-    Map<String,Object> toMap() {
+    Map<String, Object> toMap() {
         // System.out.println(this.class.name + ' to map')
         Map map = [:]
         beanProperties().each {key, val ->
@@ -170,12 +174,12 @@ abstract class BeanImpl implements Bean {
         String label = RefUtils.deCamelCase(shortClassName())
         String name
         if (this instanceof Named) {
-            name = ((Named)this).name ?: '?'
+            name = ((Named) this).name ?: '?'
         }
         else {
             name = toString()
         }
-        if (name.size() > maxWidth) name = name[0 .. maxWidth - 1] + '..'
+        if (name.size() > maxWidth) name = name[0..maxWidth - 1] + '..'
         label += "\n$name"
         return label
     }

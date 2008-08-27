@@ -47,7 +47,7 @@ class GraphVizRenderer {
     }*/
 
     private String getDotPath() {
-        PlaybookApplication.get().servletContext.getInitParameter("dot")
+        PlaybookApplication.get().servletContext.getInitParameter("dot") ?: 'dot'
     }
 
     private renderProcess(Writer output, String format) {

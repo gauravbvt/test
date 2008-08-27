@@ -49,4 +49,5 @@ interface Ref extends Serializable {
     boolean unlock() // unlock refs if locked by current session. Does nothing (and returns false) if not locked. Raises RefLockException is locked by other session.
     boolean isReadWrite() // whether this session hs a lock on this Ref
     String getOwner() // the name of the user who currently has a lock on the Ref
+    boolean isStored() // references a persistent Referenceable
 }

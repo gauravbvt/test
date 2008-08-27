@@ -114,4 +114,8 @@ class InferredRef extends RefImpl {
     boolean isModified() {
         return false
     }
+
+    boolean isStored() {
+        return false
+    }
 }

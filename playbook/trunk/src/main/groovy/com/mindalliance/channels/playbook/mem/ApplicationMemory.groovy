@@ -81,7 +81,7 @@ class ApplicationMemory implements Serializable {
     }
 
     static private String getExportDirectory() {
-        PlaybookApplication.get().servletContext.getInitParameter("persistence-dir")
+        String dirPath = PlaybookApplication.get().servletContext.getInitParameter("persistence-dir") ?: 'data/yaml/'
     }
 
     static private String getCacheDirectory() {
@@ -89,7 +89,7 @@ class ApplicationMemory implements Serializable {
     }
 
     static private String getBackupDirectory() {
-        getExportDirectory() + "skip backup/"
+        getExportDirectory() + "backup/"
     }
 
     QueryCache getQueryCache() {
@@ -169,7 +169,7 @@ class ApplicationMemory implements Serializable {
             QueryManager.modifiedInApplication(referenceable)    // retrieve referenceable from application memory
         }
         getRuleBaseSession().retract(ref)
-        cache.flushEntry(ref.id)
+        cache.flushEntry(ref.id)     // unpersist
         referenceable.markDeleted() // raises change event on transient property 'delete'
         referenceable.afterDelete()
         ref.detach()

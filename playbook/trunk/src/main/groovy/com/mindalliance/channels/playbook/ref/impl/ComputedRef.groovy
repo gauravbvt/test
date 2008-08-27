@@ -129,4 +129,8 @@ class ComputedRef extends RefImpl {  // TODO - implement AbstractRefImpl and sub
     boolean isFresh() {
         return true
     }
+
+    boolean isStored() {
+        return false
+    }
 }
