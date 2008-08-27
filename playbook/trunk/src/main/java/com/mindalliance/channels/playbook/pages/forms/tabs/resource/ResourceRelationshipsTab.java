@@ -48,7 +48,7 @@ public class ResourceRelationshipsTab extends AbstractFormTab {
 
     protected void load() {
         super.load();
-        relationshipsPanel = new RefListPanel("relationships", this, new RefPropertyModel(getElement(), "relationships"));
+        relationshipsPanel = new RefListPanel("relationships", this, new RefQueryModel(getProject(), new Query("findAllRelationshipsOf", getElement())));
         add(relationshipsPanel);
     }
  }

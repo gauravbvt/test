@@ -2,8 +2,10 @@ package com.mindalliance.channels.playbook.pages.forms.tabs.organization;
 
 import com.mindalliance.channels.playbook.pages.forms.tabs.AbstractFormTab;
 import com.mindalliance.channels.playbook.pages.forms.AbstractElementForm;
+import com.mindalliance.channels.playbook.pages.forms.panels.RefListPanel;
 import com.mindalliance.channels.playbook.support.models.RefQueryModel;
 import com.mindalliance.channels.playbook.support.models.RefModel;
+import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.support.RefUtils;
 import com.mindalliance.channels.playbook.query.Query;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -26,13 +28,14 @@ import java.util.List;
  * Date: May 13, 2008
  * Time: 12:45:52 PM
  */
-public class OrganizationAgreementsTab extends AbstractFormTab {
+public class OrganizationAgreementsAndPoliciesTab extends AbstractFormTab {
 
     private Component whereSourceView;
     private Component whereRecipientView;
+    private RefListPanel policiesPanel;
     private static final long serialVersionUID = -6527452369969183810L;
 
-    public OrganizationAgreementsTab( String id, AbstractElementForm elementForm ) {
+    public OrganizationAgreementsAndPoliciesTab( String id, AbstractElementForm elementForm ) {
         super( id, elementForm );
     }
 
@@ -121,5 +124,9 @@ public class OrganizationAgreementsTab extends AbstractFormTab {
             }
         };
         addReplaceable( whereRecipientView );
+
+        policiesPanel = new RefListPanel("policies", this, new RefPropertyModel(getElement(), "policies"));
+        addReplaceable(policiesPanel);
     }
+
 }

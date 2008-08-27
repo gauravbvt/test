@@ -2,8 +2,6 @@ package com.mindalliance.channels.playbook.ifm.project.resources
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.info.Location
-import com.mindalliance.channels.playbook.ifm.IfmElement
-import com.mindalliance.channels.playbook.support.RefUtils
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Agent
@@ -20,6 +18,7 @@ class Organization extends Resource implements Agent {   // a company, agency, t
     List<Ref> subOrganizations = []
     List<Ref> positions = []
     List<Ref> systems = []
+    List<Ref> policies = []
     Location jurisdiction = new Location()
     List<Ref> organizationTypes = []
 
@@ -30,7 +29,7 @@ class Organization extends Resource implements Agent {   // a company, agency, t
 
 
     protected List<String> childProperties() {
-        return (List<String>)(super.childProperties() + ['positions', 'systems'])
+        return (List<String>)(super.childProperties() + ['positions', 'systems', 'policies'])
     }
 
     void beforeStore(ApplicationMemory memory) {
@@ -81,12 +80,6 @@ class Organization extends Resource implements Agent {   // a company, agency, t
         resources.addAll(positions)
         resources.addAll(systems)
         return resources
-    }
-
-    void addElement(IfmElement element) {
-        String type = element.type
-        String field = "${RefUtils.decapitalize(type)}s"
-        doAddToField(field, element)
     }
 
     List<Ref> getAncestors() {   // meaning ancestors

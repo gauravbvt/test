@@ -131,8 +131,7 @@ class Channels extends IfmElement {
     Ref findOrganizationOfResource(Ref res) {
         Ref organization = null
         RefUtils.getUserProjects().any {project ->
-            project.organizations.any {
-                Ref org = it
+            project.organizations.any { org ->
                 if (org.positions.contains(res)) {
                     organization = org
                 }
@@ -143,6 +142,19 @@ class Channels extends IfmElement {
         }
         return organization
     }
+
+    Ref findOrganizationOfPolicy(Ref policy) {
+        Ref organization = null
+        RefUtils.getUserProjects().any {project ->
+            project.organizations.any {org ->
+                if (org.policies.contains(policy)) {
+                    organization = org
+                }
+            }
+        }
+        return organization
+    }
+
 
     Ref findPlaybookOfElement(Ref ref) {
         Ref playbook = null

@@ -7,6 +7,9 @@ import com.mindalliance.channels.playbook.ifm.Named
 import com.mindalliance.channels.playbook.ifm.definition.InformationDefinition
 import com.mindalliance.channels.playbook.ifm.playbook.SharingAct
 import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
+import com.mindalliance.channels.playbook.query.Query
+import com.mindalliance.channels.playbook.ifm.Channels
+import com.mindalliance.channels.playbook.ifm.project.OrganizationElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +18,7 @@ import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 * Date: Apr 17, 2008
 * Time: 12:38:52 PM
 */
-class Policy extends ProjectElement implements Named, Described {
+class Policy extends ProjectElement implements Named, Described, OrganizationElement {
 
     // restricted: specified parties *may* share specified info (source -> recipient),
     //             but only over any of listed media (any if none given) and only for one of described purposes (any if none given)
@@ -25,10 +28,11 @@ class Policy extends ProjectElement implements Named, Described {
 
     static final public List<String> edictKinds = ['forbidden', 'required', 'restricted']
 
+    private Ref cachedOrganization     // cached value found by query
+
     String name = ''
     String description = ''
-    Ref authority       // Organization
-    boolean effective = false // whether the policy is in place in the real world
+    boolean effective = true // whether the policy is in place in the real world
     String edict =  'forbidden' // either interdicts or obligates
     AgentSpecification sourceSpec = new AgentSpecification()
     AgentSpecification recipientSpec = new AgentSpecification()
@@ -39,7 +43,7 @@ class Policy extends ProjectElement implements Named, Described {
 
     @Override
     List<String> transientProperties() {
-        return (List<String>)(super.transientProperties() + ['edictKinds','forbidden','restricted','required', 'allowed'])
+        return (List<String>)(super.transientProperties() + ['edictKinds','forbidden','restricted','required', 'allowed', 'organization', 'cachedOrganization'])
     }
 
     Set keyProperties() {
@@ -63,7 +67,7 @@ class Policy extends ProjectElement implements Named, Described {
     }
 
     boolean isAllowing() {
-        return isRestricting() || isRequiring()
+        return isRestricting() || isRequired()
     }
 
     boolean appliesTo(SharingAct sharingAct) {
@@ -73,5 +77,13 @@ class Policy extends ProjectElement implements Named, Described {
     boolean allRestrictionsObeyed(SharingAct sharingAct) {
         return false // TODO
     }
+
+    Ref getOrganization() {
+        if (cachedOrganization == null) {
+            cachedOrganization = (Ref)Query.execute(Channels.instance(), "findOrganizationOfPolicy", this.reference)
+        }
+        return cachedOrganization
+    }
+
 
 }

@@ -3,9 +3,9 @@ package com.mindalliance.channels.playbook.pages.forms;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.forms.tabs.resource.*;
 import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationIdentityTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationJurisdictionTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationAgreementsTab;
-import com.mindalliance.channels.playbook.pages.forms.tabs.position.PositionRolesTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationWhereTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationAgreementsAndPoliciesTab;
+import com.mindalliance.channels.playbook.pages.forms.tabs.organization.OrganizationAssetsTab;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -35,14 +35,9 @@ public class OrganizationForm extends AbstractResourceForm {
                 return new ResourceAccessTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model<String>("Location")) {
+        tabs.add(new AbstractTab(new Model<String>("Location & Jurisdiction")) {
             public Panel getPanel(String panelId) {
-                return new ResourceLocationTab(panelId, OrganizationForm.this);
-            }
-        });
-        tabs.add(new AbstractTab(new Model<String>("Jurisdiction")) {
-            public Panel getPanel(String panelId) {
-                return new OrganizationJurisdictionTab(panelId, OrganizationForm.this);
+                return new OrganizationWhereTab(panelId, OrganizationForm.this);
             }
         });
         tabs.add(new AbstractTab(new Model<String>("Relationships")) {
@@ -50,9 +45,14 @@ public class OrganizationForm extends AbstractResourceForm {
                 return new ResourceRelationshipsTab(panelId, OrganizationForm.this);
             }
         });
-        tabs.add(new AbstractTab(new Model<String>("Agreements")) {
+        tabs.add(new AbstractTab(new Model<String>("Assets")) {
             public Panel getPanel(String panelId) {
-                return new OrganizationAgreementsTab(panelId, OrganizationForm.this);
+                return new OrganizationAssetsTab(panelId, OrganizationForm.this);
+            }
+        });
+        tabs.add(new AbstractTab(new Model<String>("Agreements and policies")) {
+            public Panel getPanel(String panelId) {
+                return new OrganizationAgreementsAndPoliciesTab(panelId, OrganizationForm.this);
             }
         });
     }

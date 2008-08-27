@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ifm.project.resources
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Channels
+import com.mindalliance.channels.playbook.ifm.project.OrganizationElement
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,7 +12,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
  * Date: May 5, 2008
  * Time: 10:15:50 AM
  */
-abstract class OrganizationResource extends Resource {
+abstract class OrganizationResource extends Resource implements OrganizationElement {
 
     private Ref cachedOrganization     // cached value found by query
 

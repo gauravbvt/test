@@ -41,13 +41,8 @@ abstract class IfmElement extends ReferenceableImpl implements Serializable {
     }
 
     void addElement(IfmElement element) {
-        String type = element.type
-        String field = "${RefUtils.decapitalize(type)}s"
+        String field = RefUtils.pluralize(RefUtils.decapitalize(element.type))
         doAddToField(field, element)
-    }
-
-    void initializeFromContext(IfmElement context) {
-        // Do nothing  -- override this
     }
 
     void changed() {
