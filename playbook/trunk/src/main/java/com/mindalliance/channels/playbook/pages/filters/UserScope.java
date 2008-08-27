@@ -17,9 +17,9 @@ import com.mindalliance.channels.playbook.support.models.ContainerSummary;
 import com.mindalliance.channels.playbook.support.models.RefModel;
 import com.mindalliance.channels.playbook.support.persistence.Mappable;
 import groovy.lang.MissingPropertyException;
-import org.apache.log4j.Logger;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -53,6 +53,9 @@ public class UserScope implements Container, IModel<User> {
 
     //================================
     @SuppressWarnings( { "unchecked" } )
+    /**
+     * Return default classes a user is allowed to create anytime anywhere
+     */
     public synchronized List<Class<? extends Referenceable>> getAllowedClasses() {
         if ( allowedClasses == null ) {
             Collection<Class<? extends Referenceable>> result =
@@ -69,22 +72,14 @@ public class UserScope implements Container, IModel<User> {
             User u = getUser();
             if ( u.getAdmin() )
                 result.addAll( Channels.adminClasses() );
-            if ( u.getAnalyst() ) {
+            if ( u.getAnalyst() )
                 result.addAll( Taxonomy.analystClasses() );
-                boolean hasTaxonomies = getApplication()
-                        .findTaxonomiesForUser( u.getReference() ).size() > 0;
-                if ( hasTaxonomies )
-                    result.addAll( Taxonomy.contentClasses() );
-            }
             if ( u.getManager() )
                 result.addAll( Project.managerClasses() );
 
-            if ( getDefaultProject() != null )
-                result.addAll( Project.contentClasses() );
-
             result.addAll( User.contentClasses() );
-            allowedClasses = new ArrayList<Class<? extends Referenceable>>(
-                    result );
+            allowedClasses =
+                new ArrayList<Class<? extends Referenceable>>( result );
         }
         return allowedClasses;
     }
@@ -224,7 +219,10 @@ public class UserScope implements Container, IModel<User> {
     }
 
     public void add( Referenceable object ) {
-        Ref target = getTarget( object );
+        add( getTarget( object ), object );
+    }
+
+    public void add( Ref target, Referenceable object ) {
         target.begin();
         try {
             target.add( object );
@@ -237,13 +235,16 @@ public class UserScope implements Container, IModel<User> {
     }
 
     public void remove( Referenceable ref ) {
-        Ref target = getTarget( ref );
+        remove( getTarget( ref ), ref );
+    }
+
+    public void remove( Ref target, Referenceable ref ) {
         boolean deleted = false;
         try {// remove AND delete
             target.begin();
             if ( target.isReadWrite() ) {// rw lock acquired?
-                if ( ref.getReference()
-                        .delete() ) {// if cascaded delete was successful
+                if ( ref.getReference().delete() ) {
+                    // cascaded delete was successful
                     target.remove( ref );
                     target.commit();
                     deleted = true;
@@ -251,7 +252,7 @@ public class UserScope implements Container, IModel<User> {
             }
         } catch ( MissingPropertyException e ) {
             // TODO remove this hack
-            Logger.getLogger( this.getClass() )
+            LoggerFactory.getLogger( this.getClass() )
                     .error( "Missing property on remove: " + e );
             final ReferenceableImpl ri = (ReferenceableImpl) target.deref();
             ri.doRemoveFromField( ref.getType(), ref );

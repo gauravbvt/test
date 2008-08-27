@@ -32,6 +32,12 @@ class Organization extends Resource implements Agent {   // a company, agency, t
         return (List<String>)(super.childProperties() + ['positions', 'systems', 'policies'])
     }
 
+    public Set<Class<?>> childClasses() {
+        return super.childClasses() + [
+               Position.class, System.class, Policy.class
+               ] as Set<Class<?>>
+    }
+
     void beforeStore(ApplicationMemory memory) {
         super.beforeStore(memory)
         jurisdiction.detach()

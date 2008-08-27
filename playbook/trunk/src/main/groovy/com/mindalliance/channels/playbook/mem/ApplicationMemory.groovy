@@ -89,7 +89,11 @@ class ApplicationMemory implements Serializable {
     }
 
     static private String getBackupDirectory() {
-        getExportDirectory() + "backup/"
+        String result = getExportDirectory() + "backup/"
+        File file = new File(result)
+        if ( ! file.exists() )
+            file.mkdir();
+        return result
     }
 
     QueryCache getQueryCache() {

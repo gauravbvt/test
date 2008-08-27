@@ -109,6 +109,9 @@ class Tab extends IfmElement implements Container, Named, Described {
         return getBuffer().indexOf( ref );
     }
 
+    /**
+     * Return allowed classes for new instances, depending on selection.
+     */
     public List<Class<? extends Referenceable>> getAllowedClasses() {
         return getBuffer().allowedClasses;
     }

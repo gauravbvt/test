@@ -35,6 +35,31 @@ class Playbook extends ProjectElement implements Described {
         return (List<String>)(super.childProperties() + ['groups', 'events', 'informationActs'])
     }
 
+    public Set<Class<?>> childClasses() {
+        Set<Class<?>> result = new HashSet<Class<?>>();
+        result.addAll( super.childClasses() )
+
+        // Playbook Elements
+        result.addAll( [ Event.class, Group.class ] )
+
+        // Information acts
+        result.addAll( [
+            Association.class, Detection.class, Relocation.class,
+            Task.class
+            ] )
+
+        // Flow acts
+        result.addAll( [
+            Assignation.class, InformationRequest.class,
+            SharingCommitment.class, SharingRequest.class ] )
+
+        // Sharing acts
+        result.addAll( [
+             ConfirmationRequest.class, InformationTransfer.class ] )
+        
+        return result
+    }
+
     String toString() {
         return name ?: "Unnamed"
     }

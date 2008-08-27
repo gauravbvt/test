@@ -1,14 +1,21 @@
 package com.mindalliance.channels.playbook.pages;
 
+import com.mindalliance.channels.playbook.ifm.Channels;
+import com.mindalliance.channels.playbook.ifm.Tab;
+import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.pages.filters.UserScope;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.ref.impl.RefMetaProperty;
+import com.mindalliance.channels.playbook.support.PlaybookSession;
 import com.mindalliance.channels.playbook.support.models.Container;
 import com.mindalliance.channels.playbook.support.models.ContainerSummary;
+import com.mindalliance.channels.playbook.support.models.FilteredContainer;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -23,8 +30,13 @@ import org.apache.wicket.model.Model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * A visualization of the contents of a tab panel.
@@ -100,6 +112,35 @@ public class ContentView extends Panel implements SelectionManager {
         return new EmptyPanel( id );
     }
 
+    private UserScope getUserScope() {
+        Object container = getContainer();
+        while ( container != null ) {
+            if ( container instanceof FilteredContainer )
+                container = ((FilteredContainer) container).getData();
+            else if ( container instanceof Tab )
+                container = ((Tab) container).getBase();
+            else if ( container instanceof UserScope )
+                return (UserScope) container;
+            else
+                container = null;
+        }
+
+        return (UserScope) container;
+    }
+
+    private Ref getTarget( Object object ) {
+        Object objectClass = object.getClass();
+        if ( Channels.contentClasses().contains( objectClass ) )
+            return Channels.reference();
+
+        PlaybookSession session = (PlaybookSession) AuthenticatedWebSession.get();
+        Ref uRef = session.getUser();
+        if ( uRef != null && User.contentClasses().contains( objectClass ) )
+            return uRef;
+
+        return getSelected();
+    }
+
     /**
      * Create a new referenceable with all the trimmings
      * and add it to the container.
@@ -119,7 +160,8 @@ public class ContentView extends Panel implements SelectionManager {
             }
 
             Ref ref = object.persist();
-            container.add( object );
+            getUserScope().add( getTarget( object ), object );
+            container.detach();
 
             return ref;
         } catch ( InstantiationException e ) {
@@ -129,6 +171,31 @@ public class ContentView extends Panel implements SelectionManager {
         } catch ( InvocationTargetException e ) {
             throw new RuntimeException( e );
         }
+    }
+
+    /**
+     * Return classes that can be created, given current selection.
+     * @return sorted list of class
+     */
+    public List<Class<?>> getCreatableClasses() {
+        Collection<Class<?>> result = new TreeSet<Class<?>>(
+            new Comparator<Class<?>>(){
+                public int compare( Class<?> o1, Class<?> o2 ) {
+                    return ContainerSummary
+                            .toDisplay( o1.getSimpleName() )
+                            .compareTo(
+                                    ContainerSummary.toDisplay(
+                                            o2.getSimpleName() ) );
+                }
+            } );
+        result.addAll( getContainer().getAllowedClasses() );
+        Ref selection = getSelected();
+        if ( selection != null ) {
+            Referenceable r = selection.deref();
+            result.addAll( r.childClasses() );
+        }
+
+        return new ArrayList<Class<?>>( result );
     }
 
     private WebMarkupContainer createNewMenu() {
@@ -151,7 +218,7 @@ public class ContentView extends Panel implements SelectionManager {
         list.add(
                 new ListView<Class<? extends Referenceable>>(
                         "new-popup-item", new RefPropertyModel(
-                        ContentView.this, "container.allowedClasses" ) ) {
+                        ContentView.this, "creatableClasses" ) ) {
                     private static final long serialVersionUID =
                             3109213407264000628L;
 
@@ -160,7 +227,7 @@ public class ContentView extends Panel implements SelectionManager {
                             ListItem<Class<? extends Referenceable>> item ) {
                         final Class<? extends Referenceable> c =
                                 item.getModelObject();
-                        AjaxLink link = new AjaxLink( "new-item-link" ) {
+                        AjaxLink<?> link = new AjaxLink( "new-item-link" ) {
                             private static final long serialVersionUID =
                                     5162954411019183107L;
 

@@ -18,7 +18,7 @@ public interface Container extends IDataProvider<Ref>, Iterable<Ref>, Mappable {
 
     boolean contains( Ref ref );
 
-    void add( Referenceable ref );
+    void add( Referenceable item );
 
     void remove( Ref ref );
 

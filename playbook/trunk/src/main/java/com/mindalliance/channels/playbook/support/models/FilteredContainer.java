@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.pages.filters.UserScope;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.support.Mapper;
+import org.apache.wicket.model.IDetachable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class FilteredContainer extends RefContainer {
     private Filter filter;
     private boolean strict;
 
-    private transient List<Class<? extends Referenceable>> allowedClasses;
+    private static final long serialVersionUID = 2029951316750602859L;
 
     public FilteredContainer() {
     }
@@ -57,14 +58,16 @@ public class FilteredContainer extends RefContainer {
         this.strict = strict;
     }
 
+    @Override
     public synchronized void detach() {
         super.detach();
         setContents( null );
-        if ( !( data instanceof UserScope ) )
-            data.detach();
-        allowedClasses = null;
+        IDetachable d = getData();
+        if ( !( d instanceof UserScope ) )
+            d.detach();
     }
 
+    @Override
     protected synchronized List<Ref> getContents() {
         List<Ref> buffer = super.getContents();
         if ( buffer == null ) {
@@ -82,38 +85,36 @@ public class FilteredContainer extends RefContainer {
         return buffer;
     }
 
-    public synchronized List<Class<? extends Referenceable>> getAllowedClasses() {
-        if ( allowedClasses == null ) {
-            List<Class<? extends Referenceable>> ac = new ArrayList<Class<? extends Referenceable>>();
-            for ( Class<? extends Referenceable> c : getData().getAllowedClasses() )
-                if ( getFilter().allowsClass( c ) )
-                    ac.add( c );
-            allowedClasses = ac;
-        }
-        return allowedClasses;
+    @Override
+    public List<Class<? extends Referenceable>> getAllowedClasses() {
+        return getData().getAllowedClasses();
     }
 
+    @Override
     public void remove( Ref ref ) {
         getData().remove( ref );
         setContents( null );
     }
 
+    @Override
     public void add( Referenceable ref ) {
         getData().add( ref );
         setContents( null );
     }
 
+    @Override
     public Map<String,Object> toMap() {
         Map<String,Object> result = super.toMap();
 
-        result.put( "strict", strict );
-        result.put( "data", (Object) Mapper.toPersistedValue( data ) );
+        result.put( "strict", isStrict() );
+        result.put( "data", (Object) Mapper.toPersistedValue( getData() ) );
         result.put( "filter", (Object) Mapper.toPersistedValue( filter ) );
 
         return result;
     }
 
-    public void initFromMap( Map map ) {
+    @Override
+    public void initFromMap( Map<String,Object> map ) {
         super.initFromMap( map );
 
         strict = (Boolean) map.get( "strict" );
@@ -122,6 +123,7 @@ public class FilteredContainer extends RefContainer {
         filter.setContainer( data );
     }
 
+    @Override
     public String toString() {
         return "filtered data";
     }

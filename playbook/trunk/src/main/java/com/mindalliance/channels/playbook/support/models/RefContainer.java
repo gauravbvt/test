@@ -96,7 +96,7 @@ public class RefContainer implements Container, Serializable {
         remove( ref.getReference() );
     }
 
-    public void initFromMap( Map map ) {
+    public void initFromMap( Map<String,Object> map ) {
     }
 
     public Map<String,Object> toMap() {

@@ -8,6 +8,7 @@ import com.mindalliance.channels.playbook.support.util.CountedSet
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ifm.Participation
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -47,6 +48,13 @@ class Taxonomy extends IfmElement implements Described {
     protected List<String> childProperties() {
         return (List<String>)(super.childProperties() + ['participations', 'areaTypes', 'eventTypes', 'mediumTypes',
                                 'organizationTypes', 'placeTypes', 'roles', 'taskTypes'])
+    }
+
+    public Set<Class<?>> childClasses() {
+        return super.childClasses() + [
+               Participation.class, AreaType.class, EventType.class,
+               MediumType.class, OrganizationType.class, PlaceType.class,
+               Role.class, TaskType.class ] as Set<Class<?>>
     }
 
     List<Ref> getAllEventTypes() {

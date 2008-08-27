@@ -34,4 +34,9 @@ interface Referenceable extends Bean, Identified {
     List<Ref> children() // returns a list of refs that are logically contained in this (used for cascaded deletes)
     List<Ref> family() // self, children, children's children etc.
     void markDeleted()
+
+    /**
+     * Return what kind of objects can be added from this object.
+     */
+    Set<Class<?>> childClasses()
 }

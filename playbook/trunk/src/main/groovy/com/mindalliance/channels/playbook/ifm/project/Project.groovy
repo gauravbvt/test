@@ -57,6 +57,26 @@ class Project extends IfmElement implements Named, Described {
                                 'relationships', 'jobs', 'policies', 'sharingAgreements', 'playbooks'])
     }
 
+    public Set<Class<?>> childClasses() {
+        Set<Class<?>> result = super.childClasses()
+
+        // IFM elements
+        result.addAll( [ Participation.class ] )
+
+        // Project elements
+        result.addAll( [
+            Place.class, Relationship.class, Policy.class,
+            SharingAgreement.class, Playbook.class  ] )
+
+        // Resources
+        result.addAll( [
+               Person.class, Organization.class ] )
+
+        // Organization resources
+        result.addAll( [ Job.class ] )
+        return result
+    }
+
     Set keyProperties() {
         return (super.keyProperties() + ['name', 'description']) as Set
     }

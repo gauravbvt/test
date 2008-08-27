@@ -16,6 +16,10 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication
  */
 abstract class AbstractReferenceableImpl implements Referenceable {
 
+    public Set<Class<?>> childClasses() {
+        return [] as Set<Class<?>>
+    }
+
     String getDb() {
         return null;
     }
