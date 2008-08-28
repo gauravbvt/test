@@ -197,6 +197,7 @@ public class ContentView extends Panel implements SelectionManager {
                 result.addAll( r.childClasses() );
             }
 
+            result.remove( Tab.class );
             creatables = new ArrayList<Class<?>>( result );
         }
 
