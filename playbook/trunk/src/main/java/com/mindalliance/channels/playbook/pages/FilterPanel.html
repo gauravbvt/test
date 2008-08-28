@@ -7,13 +7,13 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3>Filter</h3>
+    <h3><span>Filter</span></h3>
     <form wicket:id="filter-form">
         <div wicket:id="filter-tree"/>
-        <p>
+        <div class="content-footer">
             <input wicket:id="filter-apply" type="submit" name="apply" value="Apply"/>
-            <input wicket:id="filter-save" type="submit" name="save" value="New tab"/>
-        </p>
+            &ndash; <input wicket:id="filter-save" type="submit" name="save" value="New tab"/>
+        </div>
     </form>
 </wicket:panel>
 </body>

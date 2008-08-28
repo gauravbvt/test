@@ -18,7 +18,7 @@ body {
 div#everything {
     position: relative;
     margin: 0 auto;
-    min-height: 30em;
+    min-height: 25em;
     min-width: 50em;
 }
 
@@ -76,6 +76,7 @@ div.tab-right > div > div.tab-row {
 div.tab-right div.tab-panel {
     padding: 5px;
     margin-right: 5px;
+    background-color: white;
 }
 
 div.tab-panel {
@@ -92,30 +93,57 @@ div#filter {
     margin: 0 0 5px 0;
     width: 20em;
     position: absolute;
-    top: 0;
+    top: 4px;
     bottom: 25px;
     left: 0;
 }
 
 div#filter > form {
+    border: 1px ridge gray;
+    display: block;
+    top: 1.3em;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 5px 0 0 0;
+    position: absolute;
+    background-color: white;
+}
+
+div#filter h3 {
+    background: white url("tabs.png") no-repeat scroll -6px 0;
+    padding: 5px 0 5px 0.3em;
+    color: black;
+    font-weight: normal;
+    display: inline;
+    font-size: inherit;
+    line-height: normal;
+}
+div#filter h3 span {
+    background: white url("tabs.png") no-repeat scroll right 0;
+    padding:5px 0.3em 5px 0;
 }
 
 div#filter > form > div {
-    background-color: white;
-    bottom: 2.5em;
     position: absolute;
-    top: 1.5em;
+    top: 0;
+    bottom: 2em;
+    overflow: auto;
+    left: 0;
+    right: 0;
 }
 
-div#filter p {
-    border-top: 1px ridge gray;
-    border-bottom: 1px ridge gray;
+div#filter div.content-footer {
     bottom: 0;
     left: 0;
-    padding: 5px 0;
+    margin: 5px;
     position: absolute;
     right: 0;
     text-align: right;
+    font-size: small;
+    padding: 0;
+    height: auto;
+    top: auto;
 }
 
 div#links {
@@ -185,17 +213,17 @@ input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
 }
 
 /* ----------------- Links */
-a, #todos input[ type='submit'], #todos input[ type='button' ] {
+a, #filter input[ type='submit'], #filter input[ type='button' ] {
     color: #000BAD;
     background-color: transparent;
     text-decoration: none !important;
     cursor: pointer;
 }
-#todos input[ type='submit'], #todos input[ type='button' ] {
+#filter input[ type='submit'], #filter input[ type='button' ] {
     color: #000BAD !important;
 }
 
-div.content-buttons,#todos input[ type='submit'], #todos input[ type='button' ],
+div.content-buttons,#filter input[ type='submit'], #filter input[ type='button' ],
 div#signout, div.content-pager {
     text-align: right;
     font-size: small;
@@ -204,7 +232,7 @@ div#signout, div.content-pager {
  }
 
 /* ----------------- Hovers */
-input:hover, #todos input[ type='submit']:hover, #todos input[ type='button' ]:hover {
+input:hover, #filter input[ type='submit']:hover, #filter input[ type='button' ]:hover {
     background-color: #D8DDE8 !important;
     color: black;
 }
@@ -223,7 +251,7 @@ h1 {
    text-align: left;
 }
 
-th, div.content-footer, div.tab-left h3 {
+th, div.content-footer {
    background: #7A7E87 url(head.png) repeat scroll 0 50%;
    border: 1px ridge gray;
    color: black;
@@ -346,6 +374,7 @@ div.tab-row a {
     background: white url("tabs.png") no-repeat scroll -9px -139px;
     padding: 5px 0.3em 1px 0.3em;
     color: black;
+    font-weight: normal;
 }
 div.tab-right div.tab-row a {
     background-color: #F8F8F8;
@@ -379,10 +408,10 @@ hr, div.content-list h3, div.content-form h3 {
 
 div.wicket-tree {
     border: medium none !important;
-    height: 100%;
     margin: 2px 0 0 1px !important;
     position: relative;
-    width:100% !important;
+    width: auto !important;
+    max-width: 30em;
 }
 
 div.wicket-tree div.a_ {
@@ -390,7 +419,8 @@ div.wicket-tree div.a_ {
     padding: 0 !important;
 }
 
-div.wicket-tree div.a_ > div {
+div.wicket-tree div.a_ > span {
+    overflow: hidden;
 }
 
 div.wicket-tree div.a_ input {
@@ -405,7 +435,7 @@ table {
     border-spacing: 0;
 }
 
-th, td, div.tab-left h3 {
+th, td {
     padding: 0 5px;
     font-size: medium;
 }

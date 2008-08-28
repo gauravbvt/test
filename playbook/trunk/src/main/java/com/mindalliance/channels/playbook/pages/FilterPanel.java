@@ -15,11 +15,15 @@ import org.apache.wicket.model.IModel;
 public class FilterPanel extends Panel {
 
     private FilterTree tree;
+    private static final long serialVersionUID = 4087476156321431707L;
 
-    public FilterPanel( String id, IModel filterModel ) {
+    public FilterPanel( String id, IModel<Filter> filterModel ) {
         super( id, filterModel );
 
         final Button saveButton = new Button( "filter-save" ) {
+            private static final long serialVersionUID = -2843911679384226175L;
+
+            @Override
             public void onSubmit() {
                 setEnabled(false);
                 onFilterSave( getFilter() );
@@ -36,18 +40,25 @@ public class FilterPanel extends Panel {
         applyButton.setEnabled( false );
 
         tree = new FilterTree( "filter-tree", copyFilter() ){
+            private static final long serialVersionUID = 188064423994094109L;
+
+            @Override
             public void onFilterSelect( AjaxRequestTarget target, Filter filter ) {
                 applyButton.setEnabled( true );
                 saveButton.setEnabled( true );
                 target.addComponent( applyButton );
             }
 
+            @Override
             public void onExpandCollapse( AjaxRequestTarget target, Filter filter ) {
             }
         };
         tree.setLinkType( DefaultAbstractTree.LinkType.AJAX_FALLBACK );
 
-        final Form form = new Form( "filter-form" ){
+        Form form = new Form( "filter-form" ){
+            private static final long serialVersionUID = 2542195753411167205L;
+
+            @Override
             protected void onSubmit() {
                 applyButton.setEnabled( false );
                 Filter filter = tree.getFilter();
