@@ -8,7 +8,9 @@
     <icon>
         <small-icon>/favicon.ico</small-icon>
     </icon>
-
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
     <filter>
         <filter-name>wicket.playbook</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter
@@ -27,15 +29,15 @@
     </filter-mapping>
 
     <!--<security-constraint>-->
-        <!--<web-resource-collection>-->
-            <!--<web-resource-name>Secured pages</web-resource-name>-->
-            <!--<url-pattern>/*</url-pattern>-->
-            <!--<http-method>GET</http-method>-->
-            <!--<http-method>POST</http-method>-->
-        <!--</web-resource-collection>-->
-        <!--<user-data-constraint>-->
-            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
-        <!--</user-data-constraint>-->
+    <!--<web-resource-collection>-->
+    <!--<web-resource-name>Secured pages</web-resource-name>-->
+    <!--<url-pattern>/*</url-pattern>-->
+    <!--<http-method>GET</http-method>-->
+    <!--<http-method>POST</http-method>-->
+    <!--</web-resource-collection>-->
+    <!--<user-data-constraint>-->
+    <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+    <!--</user-data-constraint>-->
     <!--</security-constraint>-->
 
     <context-param>

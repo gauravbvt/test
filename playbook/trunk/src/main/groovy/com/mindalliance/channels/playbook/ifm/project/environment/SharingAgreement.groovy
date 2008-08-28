@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.info.ElementOfInformation
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.Timing
 import com.mindalliance.channels.playbook.ifm.Named
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

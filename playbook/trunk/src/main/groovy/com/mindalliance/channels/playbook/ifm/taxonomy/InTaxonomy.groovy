@@ -1,4 +1,4 @@
-package com.mindalliance.channels.playbook.ifm
+package com.mindalliance.channels.playbook.ifm.taxonomy
 
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.Identified
@@ -7,11 +7,11 @@ import com.mindalliance.channels.playbook.Identified
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jul 19, 2008
- * Time: 9:45:58 AM
+ * Date: Aug 28, 2008
+ * Time: 2:32:05 PM
  */
-interface InProject extends Identified {
+interface InTaxonomy extends Identified {
 
-    Ref getProject()
+    Ref getTaxonomy()
 
 }

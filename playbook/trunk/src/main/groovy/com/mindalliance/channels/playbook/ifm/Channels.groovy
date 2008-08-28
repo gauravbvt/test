@@ -1,19 +1,18 @@
 package com.mindalliance.channels.playbook.ifm
 
-import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.project.Project
-import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy
-import com.mindalliance.channels.playbook.support.PlaybookApplication
-import com.mindalliance.channels.playbook.ifm.playbook.Event
-import com.mindalliance.channels.playbook.support.RefUtils
-import com.mindalliance.channels.playbook.ifm.project.ProjectElement
-import com.mindalliance.channels.playbook.ifm.project.resources.*
-import com.mindalliance.channels.playbook.ifm.project.environment.*
 import com.mindalliance.channels.playbook.analysis.AnalysisElement
-import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement
 import com.mindalliance.channels.playbook.ifm.playbook.*
+import com.mindalliance.channels.playbook.ifm.project.Project
+import com.mindalliance.channels.playbook.ifm.project.environment.Place
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy
+import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
+import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization
+import com.mindalliance.channels.playbook.ifm.project.resources.Person
 import com.mindalliance.channels.playbook.ifm.taxonomy.*
-import com.mindalliance.channels.playbook.ref.Referenceable
+import com.mindalliance.channels.playbook.ref.Ref
+import com.mindalliance.channels.playbook.support.PlaybookApplication
+import com.mindalliance.channels.playbook.support.RefUtils
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -178,7 +177,7 @@ class Channels extends IfmElement {
 
     Ref findProjectOfElement(Ref ref) {
         Ref project = null
-        ProjectElement element = (ProjectElement) ref.deref()
+        InProject element = (InProject) ref.deref()
         if (element == null) return null
         RefUtils.getUserProjects().any {proj ->
             switch (element) {

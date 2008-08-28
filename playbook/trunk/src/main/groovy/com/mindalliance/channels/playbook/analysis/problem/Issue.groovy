@@ -3,7 +3,6 @@ package com.mindalliance.channels.playbook.analysis.problem
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.InProject
 import com.mindalliance.channels.playbook.ref.Ref
-import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,8 +32,8 @@ class Issue extends Problem implements InProject {
     }
 
     Ref getProject() {
-        if (element instanceof ProjectElement) {
-            return ((ProjectElement)element).getProject()
+        if (element instanceof InProject) {
+            return ((InProject)element).getProject()
         }
         else {
             return null

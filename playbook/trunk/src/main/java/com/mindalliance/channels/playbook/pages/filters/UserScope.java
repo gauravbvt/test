@@ -2,9 +2,9 @@ package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ifm.Channels;
 import com.mindalliance.channels.playbook.ifm.User;
+import com.mindalliance.channels.playbook.ifm.InProject;
 import com.mindalliance.channels.playbook.ifm.playbook.PlaybookElement;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.project.ProjectElement;
 import com.mindalliance.channels.playbook.ifm.taxonomy.Taxonomy;
 import com.mindalliance.channels.playbook.ifm.taxonomy.TaxonomyElement;
 import com.mindalliance.channels.playbook.ref.Ref;
@@ -192,15 +192,15 @@ public class UserScope implements Container, IModel<User> {
                 return pbRef;
             }
             pRef.detach();
-        } else if ( object instanceof ProjectElement ) {
-            ProjectElement element = (ProjectElement) object;
+        } else if ( object instanceof InProject) {
+            InProject element = (InProject) object;
             Ref pRef = element.getProject();
             if ( pRef == null )
                 pRef = getDefaultProject();
             return pRef;
         }
 
-        if ( object instanceof TaxonomyElement ) {
+        if ( object instanceof TaxonomyElement) {
             TaxonomyElement element = (TaxonomyElement) object;
             Ref mRef = element.getTaxonomy();
             if ( mRef == null )

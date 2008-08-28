@@ -12,7 +12,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
  * Date: Apr 30, 2008
  * Time: 2:43:50 PM
  */
-abstract class TaxonomyElement extends IfmElement {
+abstract class TaxonomyElement extends IfmElement implements InTaxonomy {
 
     private Ref cachedTaxonomy
 

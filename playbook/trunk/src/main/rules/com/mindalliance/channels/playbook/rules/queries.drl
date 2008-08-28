@@ -50,15 +50,15 @@ query "elementIssues" (String _element_id)
     _issue : Issue(element.id == _element_id)
 end
 
-# Find all invalidations in a project
+# Find all invalidations in a project element
 query "invalidsInProject" (String _project_id)
-    ProjectElement($id:id, project != null, project.id == _project_id )
+    InProject($id:id, project != null, project.id == _project_id )
     _invalid : Invalidation(element.id == $id)
 end
 
 # Find all issues in a project
 query "issuesInProject" (String _project_id)
-    ProjectElement($id:id, project != null, project.id == _project_id )
+    InProject($id:id, project != null, project.id == _project_id )
     _issue : Issue(element.id == $id)
 end
 

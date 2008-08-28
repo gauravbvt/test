@@ -3,6 +3,7 @@ package com.mindalliance.channels.playbook.ifm.project.environment
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Named
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 
 /**
 * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

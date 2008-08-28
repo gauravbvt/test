@@ -5,6 +5,7 @@ import com.mindalliance.channels.playbook.ifm.info.Location
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Agent
+import com.mindalliance.channels.playbook.ifm.project.environment.Policy
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

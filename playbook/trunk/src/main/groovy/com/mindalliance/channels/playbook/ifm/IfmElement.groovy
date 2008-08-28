@@ -50,11 +50,11 @@ abstract class IfmElement extends ReferenceableImpl implements Serializable {
        lastModified = new Date()
     }
 
-    boolean isProjectElement() {
+    boolean isProjectElement() {    // class implements InProject
         return false
     }
 
-    boolean isTaxonomyElement() {
+    boolean isTaxonomyElement() {  // class implements InTaxonomyElement
         return false
     }
 

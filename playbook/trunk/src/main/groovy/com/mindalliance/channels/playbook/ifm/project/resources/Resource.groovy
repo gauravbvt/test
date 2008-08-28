@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 import com.mindalliance.channels.playbook.ifm.Responsibility
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.ifm.sharing.SharingProtocol
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

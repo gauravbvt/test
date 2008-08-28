@@ -20,16 +20,12 @@ import com.mindalliance.channels.playbook.support.PlaybookApplication;
 import com.mindalliance.channels.playbook.support.models.RefPropertyModel;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.pages.FormPanel;
-import com.mindalliance.channels.playbook.ifm.Channels;
-import com.mindalliance.channels.playbook.ifm.User;
-import com.mindalliance.channels.playbook.ifm.Tab;
-import com.mindalliance.channels.playbook.ifm.IfmElement;
+import com.mindalliance.channels.playbook.ifm.*;
 import com.mindalliance.channels.playbook.ifm.playbook.*;
 import com.mindalliance.channels.playbook.ifm.taxonomy.*;
 import com.mindalliance.channels.playbook.ifm.project.resources.*;
 import com.mindalliance.channels.playbook.ifm.project.resources.System;
 import com.mindalliance.channels.playbook.ifm.project.Project;
-import com.mindalliance.channels.playbook.ifm.project.ProjectElement;
 import com.mindalliance.channels.playbook.ifm.project.environment.*;
 
 import java.util.List;
@@ -210,7 +206,7 @@ public class FormTest extends WebPage {
             taxonomy.addElement(element);
             }
             else if (element.isProjectElement()) {
-                ProjectElement projectElement = (ProjectElement) element;
+                InProject projectElement = (InProject) element;
                 project.getReference().begin();
                 if (projectElement instanceof Resource) {
                     Resource resource = (Resource) projectElement;

@@ -81,7 +81,7 @@ class ApplicationMemory implements Serializable {
     }
 
     static private String getExportDirectory() {
-        String dirPath = PlaybookApplication.get().servletContext.getInitParameter("persistence-dir") ?: 'data/yaml/'
+        return PlaybookApplication.get().servletContext.getInitParameter("persistence-dir") ?: 'data/yaml/'
     }
 
     static private String getCacheDirectory() {

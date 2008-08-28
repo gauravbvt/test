@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.project.environment.Relationship
 import com.mindalliance.channels.playbook.mem.ApplicationMemory
 import com.mindalliance.channels.playbook.mem.NoSessionCategory
 import org.joda.time.Duration
+import com.mindalliance.channels.playbook.ifm.project.ProjectElement
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
