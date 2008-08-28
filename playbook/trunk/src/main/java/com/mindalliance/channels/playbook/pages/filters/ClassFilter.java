@@ -135,6 +135,8 @@ public class ClassFilter extends Filter {
 //            }
         }
 
+        if ( !subclasses.isEmpty() && isConcrete( getObjectType() ) )
+            result.add( new ConcreteClassFilter( getObjectType() ) );
         addSubclassFilters( result, subclasses, filtered );
         addOtherFilters( result, filtered );
         addLeaves( result, filtered );
@@ -253,24 +255,23 @@ public class ClassFilter extends Filter {
             classes.add( objectClass );
 
         else {
-            Class<?> first = subs.iterator().next();
             if ( subs.size() == 1 ) {
                 if ( isConcrete( objectClass ) ) {
                     // Superclass is not abstract and has instances
                     classes.add( objectClass );
                 } else
-                    simplifySet( classes, first, map, dig );
-            } else if ( !dig )
+                    simplifySet( classes, subs.iterator().next(), map, dig );
+            } else // if ( !dig )
                 classes.add( objectClass );
 
-            else
-                for ( Class<?> c : subs ) {
-                    Set<Class<?>> ssubs = map.get( c );
-                    if ( ssubs == null || ssubs.size() > 1 )
-                        classes.add( c );
-                    else
-                        simplifySet( classes, c, map, false );
-                }
+//            else
+//                for ( Class<?> c : subs ) {
+//                    Set<Class<?>> ssubs = map.get( c );
+//                    if ( ssubs == null || ssubs.size() > 1 )
+//                        classes.add( c );
+//                    else
+//                        simplifySet( classes, c, map, false );
+//                }
         }
     }
 }

@@ -452,11 +452,12 @@ class Project extends IfmElement implements Named, Described {
     }
 
     void addContents(List<Ref> result) {
-        playbooks.each { it.addContents(result) }
         result.addAll(organizations)
+        organizations.each { it.addContents(result) }
         result.addAll(persons)
         result.addAll(places)
         result.addAll(playbooks)
+        playbooks.each { it.addContents(result) }
         result.addAll(policies)
         result.addAll(relationships)
         result.addAll(jobs)

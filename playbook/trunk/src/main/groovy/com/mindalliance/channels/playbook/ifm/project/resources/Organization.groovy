@@ -23,6 +23,12 @@ class Organization extends Resource implements Agent {   // a company, agency, t
     Location jurisdiction = new Location()
     List<Ref> organizationTypes = []
 
+    void addContents(List<Ref> result) {
+        result.addAll(positions)
+        result.addAll(systems)
+        result.addAll(policies)
+    }
+
     @Override
     List<String> transientProperties() {
         return (List<String>)(super.transientProperties() + ['resources', 'parents', 'ancestors', 'parent', 'roles'])

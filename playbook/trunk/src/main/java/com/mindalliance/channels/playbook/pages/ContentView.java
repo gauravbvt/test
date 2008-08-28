@@ -46,6 +46,7 @@ public class ContentView extends Panel implements SelectionManager {
     private SelectionManager selectionManager;
     private boolean menuVisible;
     private Ref selected;
+    private List<Class<?>> creatables;
     private WebMarkupContainer menu;
     private static final long serialVersionUID = -7502067766103274758L;
 
@@ -178,24 +179,28 @@ public class ContentView extends Panel implements SelectionManager {
      * @return sorted list of class
      */
     public List<Class<?>> getCreatableClasses() {
-        Collection<Class<?>> result = new TreeSet<Class<?>>(
-            new Comparator<Class<?>>(){
-                public int compare( Class<?> o1, Class<?> o2 ) {
-                    return ContainerSummary
-                            .toDisplay( o1.getSimpleName() )
-                            .compareTo(
-                                    ContainerSummary.toDisplay(
-                                            o2.getSimpleName() ) );
-                }
-            } );
-        result.addAll( getContainer().getAllowedClasses() );
-        Ref selection = getSelected();
-        if ( selection != null ) {
-            Referenceable r = selection.deref();
-            result.addAll( r.childClasses() );
+        if ( creatables == null ) {
+            Collection<Class<?>> result = new TreeSet<Class<?>>(
+                new Comparator<Class<?>>(){
+                    public int compare( Class<?> o1, Class<?> o2 ) {
+                        return ContainerSummary
+                                .toDisplay( o1.getSimpleName() )
+                                .compareTo(
+                                        ContainerSummary.toDisplay(
+                                                o2.getSimpleName() ) );
+                    }
+                } );
+            result.addAll( getContainer().getAllowedClasses() );
+            Ref selection = getSelected();
+            if ( selection != null ) {
+                Referenceable r = selection.deref();
+                result.addAll( r.childClasses() );
+            }
+
+            creatables = new ArrayList<Class<?>>( result );
         }
 
-        return new ArrayList<Class<?>>( result );
+        return creatables;
     }
 
     private WebMarkupContainer createNewMenu() {
@@ -263,11 +268,12 @@ public class ContentView extends Panel implements SelectionManager {
     }
 
     public void setSelected( Ref ref ) {
-        if ( selected != ref && ( selected == null || !selected.equals(
-                ref ) ) ) {
+        if ( selected != ref &&
+             ( selected == null || !selected.equals( ref ) ) ) {
 
             this.selected = ref;
             getSelectionManager().setSelected( ref );
+            creatables = null;
         }
     }
 
