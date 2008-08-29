@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.taxonomy
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ifm.ModelElement
 import com.mindalliance.channels.playbook.ifm.Described
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.support.RefUtils
@@ -9,6 +9,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.playbook.Event
 import com.mindalliance.channels.playbook.ref.Referenceable
 import com.mindalliance.channels.playbook.ifm.Participation
+import com.mindalliance.channels.playbook.ifm.ModelElement
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -17,7 +18,7 @@ import com.mindalliance.channels.playbook.ifm.Participation
  * Date: Apr 17, 2008
  * Time: 1:09:50 PM
  */
-class Taxonomy extends IfmElement implements Described {
+class Taxonomy extends ModelElement implements Described {
     private static final long serialVersionUID = -1L;
 
     String name

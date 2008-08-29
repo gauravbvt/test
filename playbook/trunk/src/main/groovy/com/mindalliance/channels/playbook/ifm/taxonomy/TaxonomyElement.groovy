@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.taxonomy
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ifm.ModelElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Channels
@@ -12,7 +12,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
  * Date: Apr 30, 2008
  * Time: 2:43:50 PM
  */
-abstract class TaxonomyElement extends IfmElement implements InTaxonomy {
+abstract class TaxonomyElement extends ModelElement implements InTaxonomy {
 
     private Ref cachedTaxonomy
 

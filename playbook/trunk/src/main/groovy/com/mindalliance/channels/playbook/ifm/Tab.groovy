@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.pages.filters.Filter
 /**
 * ...
 */
-class Tab extends IfmElement implements Container, Named, Described {
+class Tab extends ModelElement implements Container, Named, Described {
     private static final long serialVersionUID = -83012746444045817L;
 
     Boolean shared

@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.impl.BeanImpl
 * Date: Mar 21, 2008
 * Time: 11:42:26 AM
 */
-class Participation extends IfmElement {
+class Participation extends ModelElement {
 
     Ref user
     Ref project

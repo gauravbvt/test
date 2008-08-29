@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.ifm.project
 
 import com.mindalliance.channels.playbook.ifm.Described
-import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ifm.ModelElement
 import com.mindalliance.channels.playbook.ifm.playbook.Playbook
 import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement
 import com.mindalliance.channels.playbook.ifm.project.environment.Policy
@@ -30,7 +30,7 @@ import com.mindalliance.channels.playbook.ifm.project.resources.Job
  * Date: Mar 19, 2008
  * Time: 2:10:46 PM
  */
-class Project extends IfmElement implements Named, Described {
+class Project extends ModelElement implements Named, Described {
     private static final long serialVersionUID = -1L;
 
     String name = 'Unnamed'

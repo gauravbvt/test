@@ -21,7 +21,7 @@ import com.mindalliance.channels.playbook.support.RefUtils
  * Date: Mar 19, 2008
  * Time: 2:08:19 PM
  */
-class Channels extends IfmElement {
+class Channels extends ModelElement {
 
     String about
     List<Ref> projects = []

@@ -10,7 +10,7 @@ import com.mindalliance.channels.playbook.ref.Referenceable
 * Date: Mar 21, 2008
 * Time: 11:34:02 AM
 */
-class User extends IfmElement {
+class User extends ModelElement {
 
     String name = 'No name'
     String userId

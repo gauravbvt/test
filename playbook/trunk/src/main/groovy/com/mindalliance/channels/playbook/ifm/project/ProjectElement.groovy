@@ -1,6 +1,6 @@
 package com.mindalliance.channels.playbook.ifm.project
 
-import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ifm.ModelElement
 import com.mindalliance.channels.playbook.ref.Ref
 import com.mindalliance.channels.playbook.ifm.InProject
 import com.mindalliance.channels.playbook.query.Query
@@ -13,7 +13,7 @@ import com.mindalliance.channels.playbook.ifm.Channels
  * Date: Apr 30, 2008
  * Time: 2:40:03 PM
  */
-class ProjectElement extends IfmElement implements InProject {
+class ProjectElement extends ModelElement implements InProject {
     private static final long serialVersionUID = -1L;
 
     private Ref cachedProject

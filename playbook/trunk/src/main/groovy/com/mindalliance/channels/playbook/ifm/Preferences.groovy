@@ -5,7 +5,7 @@ import com.mindalliance.channels.playbook.ref.Ref
 /**
  * ...
  */
-class Preferences extends IfmElement {
+class Preferences extends ModelElement {
 
     List<Ref> tabs
 

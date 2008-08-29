@@ -9,7 +9,7 @@ import com.mindalliance.channels.playbook.ifm.definition.AgentSpecification
 import com.mindalliance.channels.playbook.query.Query
 import com.mindalliance.channels.playbook.ifm.Channels
 import com.mindalliance.channels.playbook.ifm.project.InOrganization
-import com.mindalliance.channels.playbook.ifm.IfmElement
+import com.mindalliance.channels.playbook.ifm.ModelElement
 import com.mindalliance.channels.playbook.ifm.project.InOrganization
 
 /**
@@ -19,7 +19,7 @@ import com.mindalliance.channels.playbook.ifm.project.InOrganization
 * Date: Apr 17, 2008
 * Time: 12:38:52 PM
 */
-class Policy extends IfmElement implements Named, Described, InOrganization {
+class Policy extends ModelElement implements Named, Described, InOrganization {
 
     // restricted: specified parties *may* share specified info (source -> recipient),
     //             but only over any of listed media (any if none given) and only for one of described purposes (any if none given)

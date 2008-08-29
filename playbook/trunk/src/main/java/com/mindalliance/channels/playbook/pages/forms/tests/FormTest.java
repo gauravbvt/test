@@ -192,7 +192,7 @@ public class FormTest extends WebPage {
         if (results.size() > 0) {
             return results.get(0);
         } else {   // Project, model and playbook elements (assumes at least one pre-defined project, model and playbook
-            IfmElement element = (IfmElement) type.newInstance();
+            ModelElement element = (ModelElement) type.newInstance();
             element.persist();
             Ref ref = element.getReference();
             if (element.isPlaybookElement()) {
