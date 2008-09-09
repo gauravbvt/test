@@ -80,7 +80,22 @@ class Organization extends Resource implements Agent {   // a company, agency, t
     }
 
     Ref getParent() {           // TODO -KLUDGE until OrganizationFilter updated to multi-parents
-        return (parents) ? (Ref)parents[0] : null
+        List refs = parents
+        return refs ? (Ref)refs[0] : null
+    }
+
+    boolean isPartOf( Ref org ) {
+        List<Ref> parents = getParents()
+        if ( parents.isEmpty() && org == null )
+            return true
+        else if ( org == null )
+            return false
+        if ( parents.contains( org ) )
+            return true
+        for( Ref p: parents )
+            if ( p.isPartOf( org ) )
+                return true
+        return false
     }
 
     List<Ref> getParents() {

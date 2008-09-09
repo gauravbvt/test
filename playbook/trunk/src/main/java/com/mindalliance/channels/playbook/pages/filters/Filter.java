@@ -8,16 +8,16 @@ import com.mindalliance.channels.playbook.support.persistence.Mappable;
 
 import javax.swing.tree.TreeNode;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Collection;
 
 /** A node in the filter tree. */
 public abstract class Filter
@@ -422,6 +422,13 @@ public abstract class Filter
      */
     public synchronized boolean isApplicableTo( Ref object ) {
 
+        // Optimization:  only consider valid objects that we would treat
+        // when selected
+//        Referenceable referenceable = object.deref();
+//        if ( referenceable == null
+//             || !allowsClassLocally( referenceable.getClass() ) )
+//            return false;
+
         if ( isSelected() )
             return isMatching( object );
 
@@ -456,7 +463,7 @@ public abstract class Filter
             for ( Filter kid : children )
                 if ( kid.isInclusion() ) {
                     hasInclusion = true;
-                    if ( kid.isSelected() && kid.isMatching( object ) )
+                    if ( kid.isApplicableTo( object ) )
                         return true;
                 }
         return !hasInclusion;

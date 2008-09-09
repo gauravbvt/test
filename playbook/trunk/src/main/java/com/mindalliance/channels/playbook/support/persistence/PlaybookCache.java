@@ -84,7 +84,7 @@ public class PlaybookCache extends Cache {
         if (isReadOnly(ref)) throw new RefLockException("Can't lock $ref - locked by another session");
         if (!isReadWrite(ref)) {
             locks.put(ref, new Lock(ref));
-            Logger.getLogger(this.getClass()).info("Locked " + ref);
+            Logger.getLogger(this.getClass()).debug("Locked " + ref);
             return true;
         } else {
             return false;
@@ -95,7 +95,7 @@ public class PlaybookCache extends Cache {
     public boolean unlock(Ref ref) {
         if (isReadOnly(ref)) throw new RefLockException("Can't unlock $ref - locked by another session");
         if (isReadWrite(ref)) {
-            Logger.getLogger(this.getClass()).info("Unlocked " + ref);
+            Logger.getLogger(this.getClass()).debug("Unlocked " + ref);
             locks.remove(ref);
             return true;
         } else {

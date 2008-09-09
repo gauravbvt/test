@@ -26,6 +26,7 @@ abstract class ModelElement extends ReferenceableImpl implements Serializable {
     }
 
     Set keyProperties() {
+        // TODO remove dates, but modify new instances
         return (super.keyProperties() + ['createdOn', 'lastModified']) as Set
     }
 

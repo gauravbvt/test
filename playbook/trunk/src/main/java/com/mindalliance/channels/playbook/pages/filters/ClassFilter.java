@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -230,8 +231,9 @@ public class ClassFilter extends Filter {
     private Map<Class<?>, Set<Class<?>>> getRawSubclasses() {
         Map<Class<?>, Set<Class<?>>> result = new HashMap<Class<?>, Set<Class<?>>>();
 
-        for ( Class<?> c : getContainer().getSummary().getClasses() ) {
-            Class<?> sc = c;
+        for ( Iterator<Class<?>> i=getContainer().getSummary().classIterator();
+                i.hasNext(); ) {
+            Class<?> sc = i.next();
             while ( sc != getObjectType() && getObjectType()
                     .isAssignableFrom( sc ) ) {
                 Class<?> ssc = sc.getSuperclass();

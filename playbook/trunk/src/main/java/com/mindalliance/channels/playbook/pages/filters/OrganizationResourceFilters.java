@@ -1,7 +1,7 @@
 package com.mindalliance.channels.playbook.pages.filters;
 
 import com.mindalliance.channels.playbook.ifm.project.InOrganization;
-import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
+import com.mindalliance.channels.playbook.ifm.project.resources.Organization;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
 import com.mindalliance.channels.playbook.support.models.Container;
@@ -21,24 +21,27 @@ public class OrganizationResourceFilters extends AbstractFilters {
 
     @Override
     void addFilters( Container container, List<Filter> results ) {
-        Collection<Ref> orgRefs = new TreeSet<Ref>( new Comparator<Ref>(){
-            public int compare( Ref o1, Ref o2 ) {
-                Resource org1 = (Resource) o1.deref();
-                Resource org2 = (Resource) o2.deref();
-                return org1.getName().compareTo( org2.getName() );
-            }
-        } );
+        Collection<Organization> orgs = new TreeSet<Organization>(
+            new Comparator<Organization>(){
+                public int compare( Organization o1, Organization o2 ) {
+                    return o1.getName().compareTo( o2.getName() );
+                }
+            } );
         for ( Ref ref: container ) {
             Referenceable object = ref.deref();
             if ( object != null && object instanceof InOrganization ) {
                 InOrganization pe = (InOrganization) object;
-                orgRefs.add( pe.getOrganization() );
+                Ref orgRef = pe.getOrganization();
+                Organization org = (Organization) orgRef.deref();
+                if ( org != null )
+                    orgs.add( org );
             }
         }
 
-        if ( orgRefs.size() > 1 )
-            for ( Ref ref: orgRefs ) {
-                results.add( new OrganizationFilter( ref  ) );
+        if ( orgs.size() > 1 )
+            for ( Organization org: orgs ) {
+                if ( org.getParents().isEmpty() )
+                    results.add( new OrganizationFilter( org.getReference() ) );
             }
     }
 }

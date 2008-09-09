@@ -3,9 +3,6 @@ package com.mindalliance.channels.playbook.support.models;
 import com.mindalliance.channels.playbook.ifm.Agent;
 import com.mindalliance.channels.playbook.ifm.Locatable;
 import com.mindalliance.channels.playbook.ifm.playbook.Event;
-import com.mindalliance.channels.playbook.ifm.playbook.FlowAct;
-import com.mindalliance.channels.playbook.ifm.project.environment.Relationship;
-import com.mindalliance.channels.playbook.ifm.project.environment.SharingAgreement;
 import com.mindalliance.channels.playbook.ifm.project.resources.Resource;
 import com.mindalliance.channels.playbook.ref.Ref;
 import com.mindalliance.channels.playbook.ref.Referenceable;
@@ -16,6 +13,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -35,6 +34,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -43,9 +43,11 @@ import java.util.TreeSet;
 public class ContainerSummary extends BeanImpl
         implements IDataProvider<RefMetaProperty> {
 
+    private static final Logger Log =
+            LoggerFactory.getLogger( ContainerSummary.class );
+
     private Container data;
     private transient Map<Class<?>, ClassUse> usage;
-    private transient Set<Class<?>> classes;
     private transient Map<String, RefMetaProperty> columnIndex;
     private transient List<RefMetaProperty> columns;
     private transient boolean timelineable;
@@ -56,7 +58,7 @@ public class ContainerSummary extends BeanImpl
 
     public ContainerSummary( Container data ) {
         if ( data == null )
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         this.data = data;
     }
 
@@ -70,15 +72,14 @@ public class ContainerSummary extends BeanImpl
         return list;
     }
 
-    public synchronized List<RefMetaProperty> getColumns() {
+    private synchronized List<RefMetaProperty> getColumns() {
         if ( columns == null ) {
             List<RefMetaProperty> list = new ArrayList<RefMetaProperty>(
                     getColumnIndex().values() );
             if ( getUsage().size() > 1 ) {
-                // More than on class. Add a "Class" column
-                list.add(
-                        0,
-                        new RefMetaProperty( "type", String.class, "Type" ) );
+                // More than one class. Add a "Class" column
+                list.add( 0,
+                    new RefMetaProperty( "type", String.class, "Type" ) );
             }
             columns = Collections.unmodifiableList( list );
         }
@@ -106,13 +107,14 @@ public class ContainerSummary extends BeanImpl
     private synchronized Map<String, RefMetaProperty> getColumnIndex() {
         if ( columnIndex == null ) {
             Map<String, RefMetaProperty> result = new TreeMap<String, RefMetaProperty>();
-            boolean oneClassShown = data.size() == 1;
-            for ( ClassUse use : getUsage().values() ) {
-                Collection<RefMetaProperty> cols = use.getDistinctColumns();
-                if ( oneClassShown && cols.isEmpty() )
-                    cols = use.getAllColumns();
-                for ( RefMetaProperty p : cols )
+            for ( ClassUse use: getUsage().values() ) {
+                Iterator<RefMetaProperty> cols = use.distinctColumns();
+                if ( !cols.hasNext() ) // all values same (or only one object)
+                    cols = use.keyColumns();
+                while ( cols.hasNext() ) {
+                    RefMetaProperty p = cols.next();
                     result.put( p.getDisplayName(), p );
+                }
             }
 
             columnIndex = result;
@@ -142,18 +144,15 @@ public class ContainerSummary extends BeanImpl
                 Class<?> objectClass = object.getClass();
                 ClassUse use = result.get( objectClass );
                 if ( use == null ) {
-                    if ( !mappable
-                         && Locatable.class.isAssignableFrom( objectClass ) )
+                    if ( !mappable && object instanceof Locatable )
                         mappable = true;
-                    if ( !timelineable
-                         && Event.class.isAssignableFrom( objectClass ) )
+                    if ( !timelineable && object instanceof Event )
                         timelineable = true;
-                    if ( !flowable && (
-                            Event.class.isAssignableFrom( objectClass )
-                            || Agent.class.isAssignableFrom( objectClass ) ) )
+                    if ( !flowable &&
+                         ( object instanceof Event
+                            || object instanceof Agent ) )
                         flowable = true;
-                    if ( !networkable &&
-                            Resource.class.isAssignableFrom( objectClass ))
+                    if ( !networkable && object instanceof Resource )
                         networkable = true;
                     use = new ClassUse( objectClass );
                     result.put( objectClass, use );
@@ -167,10 +166,8 @@ public class ContainerSummary extends BeanImpl
         return usage;
     }
 
-    public synchronized Set<Class<?>> getClasses() {
-        if ( classes == null )
-            classes = Collections.unmodifiableSet( getUsage().keySet() );
-        return classes;
+    public Iterator<Class<?>> classIterator() {
+        return getUsage().keySet().iterator();
     }
 
     public Iterator<RefMetaProperty> iterator( int first, int count ) {
@@ -185,15 +182,15 @@ public class ContainerSummary extends BeanImpl
         return new Model<RefMetaProperty>( object );
     }
 
+    @Override
     public synchronized void detach() {
         columns = null;
         columnIndex = null;
-        classes = null;
         usage = null;
     }
 
     public static String toDisplay( String propName ) {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder( 32 );
         if ( propName.length() > 0 ) {
             b.append( Character.toUpperCase( propName.charAt( 0 ) ) );
             for ( int i = 1; i < propName.length(); i++ ) {
@@ -211,24 +208,7 @@ public class ContainerSummary extends BeanImpl
         return classUse == null ? 0 : classUse.getCount();
     }
 
-    static private boolean isBound( Object value ) {
-        return value != null && !( value instanceof Ref && !( (Ref) value )
-                .isFresh() );
-    }
-
-    public static String valueToDisplay( Object object ) {
-        if ( !isBound( object ) )
-            return "";
-
-        if ( object instanceof Date )
-            return DateFormat.getDateInstance(
-                    DateFormat.SHORT, Session.get().getLocale() )
-                    .format( (Date) object );
-
-        return object.toString().trim();
-    }
-
-    public boolean includes( String name ) {
+    public boolean contains( String name ) {
         return getColumnIndex().containsKey( name );
     }
 
@@ -236,22 +216,22 @@ public class ContainerSummary extends BeanImpl
         return getColumnIndex().get( name );
     }
 
-    public boolean isTimelineable() {
+    public synchronized boolean isTimelineable() {
         getUsage();
         return timelineable;
     }
 
-    public boolean isMappable() {
+    public synchronized boolean isMappable() {
         getUsage();
         return mappable;
     }
 
-    public boolean isFlowable() {
+    public synchronized boolean isFlowable() {
         getUsage();
         return flowable;
     }
 
-    public boolean isNetworkable() {
+    public synchronized boolean isNetworkable() {
         getUsage();
         return networkable;
     }
@@ -260,57 +240,79 @@ public class ContainerSummary extends BeanImpl
     /** Class usage, mapped by property names. */
     static class ClassUse {
 
-        private Map<PropertyDescriptor, Set<Object>> values = new HashMap<PropertyDescriptor, Set<Object>>();
-        private Map<PropertyDescriptor, Set<String>> printValues = new HashMap<PropertyDescriptor, Set<String>>();
-        private List<PropertyDescriptor> properties;
-        private Set hiddenProperties;
-        private Set keyProperties;
+        private Map<String, Set<Object>> values = new HashMap<String, Set<Object>>();
+        private Map<String, Set<String>> printValues = new HashMap<String, Set<String>>();
+        private Collection<PropertyDescriptor> properties;
+        private Set<String> hiddenProperties;
+        private Set<String> keyProperties;
         private int count;
+        private Set<RefMetaProperty> allColumns;
 
-        public ClassUse( Class<?> c ) {
+        ClassUse( Class<?> c ) {
             properties = new ArrayList<PropertyDescriptor>();
             try {
                 for ( PropertyDescriptor pd : Introspector
                         .getBeanInfo( c, ReferenceableImpl.class )
                         .getPropertyDescriptors() ) {
 
-                    final boolean readable =
-                            pd.getReadMethod() != null && Modifier.isPublic(
-                                    pd.getReadMethod().getModifiers() );
-                    final Class<?> type = pd.getPropertyType();
-                    final boolean isCollection =
-                            type.isArray() || Collection.class
-                                    .isAssignableFrom( type );
+                    boolean readable = pd.getReadMethod() != null
+                        && Modifier.isPublic(
+                            pd.getReadMethod().getModifiers() );
+                    Class<?> type = pd.getPropertyType();
+                    boolean isCollection = type.isArray()
+                        || Collection.class.isAssignableFrom( type );
 
                     if ( readable && !isCollection )
                         properties.add( pd );
                 }
             } catch ( IntrospectionException e ) {
-                e.printStackTrace();
+                LoggerFactory.getLogger( getClass() ).error(
+                        "Unable to read properties", e );
             }
         }
 
-        private boolean isWritable( PropertyDescriptor pd ) {
-            return pd.getWriteMethod() != null && Modifier
-                    .isPublic( pd.getWriteMethod().getModifiers() );
+        public static String valueToDisplay( Object object ) {
+            if ( !isBound( object ) )
+                return "";
+            else if ( object instanceof Ref )
+                return ((Ref)object).deref().toString().trim();
+
+            else if ( object instanceof Date )
+                return DateFormat.getDateInstance(
+                        DateFormat.SHORT, Session.get().getLocale() )
+                        .format( (Date) object );
+
+            return object.toString().trim();
         }
 
-        public Set getHiddenProperties() {
+        private static boolean isBound( Object value ) {
+            return value != null
+                   && !( value instanceof Ref && !( (Ref) value ).isFresh() );
+        }
+
+        private static boolean isWritable( PropertyDescriptor pd ) {
+            Method writeMethod = pd.getWriteMethod();
+            return writeMethod != null
+                   && Modifier.isPublic( writeMethod.getModifiers() );
+        }
+
+        private Set<String> getHiddenProperties() {
             return hiddenProperties;
         }
 
-        public void setHiddenProperties( Set hiddenProperties ) {
+        private void setHiddenProperties( Set<String> hiddenProperties ) {
             this.hiddenProperties = hiddenProperties;
         }
 
-        public Set getKeyProperties() {
+        private Set<String> getKeyProperties() {
             return keyProperties;
         }
 
-        public void setKeyProperties( Set keyProperties ) {
+        private void setKeyProperties( Set<String> keyProperties ) {
             this.keyProperties = keyProperties;
         }
 
+        @SuppressWarnings( { "unchecked" } )
         public void grok( Referenceable item ) {
             try {
                 if ( getHiddenProperties() == null )
@@ -319,29 +321,32 @@ public class ContainerSummary extends BeanImpl
                     setKeyProperties( item.keyProperties() );
 
                 for ( PropertyDescriptor pd : properties ) {
-                    if ( !getHiddenProperties().contains( pd.getName() ) ) {
-                        final Method getter = pd.getReadMethod();
-                        final Object value = getter.invoke( item );
-                        Set<String> propStrings = printValues.get( pd );
+                    String name = pd.getName();
+                    if ( !getHiddenProperties().contains( name ) ) {
+                        Method getter = pd.getReadMethod();
+                        Object value = getter.invoke( item );
+                        Set<String> propStrings = printValues.get( name );
                         if ( propStrings == null ) {
                             propStrings = new HashSet<String>();
-                            printValues.put( pd, propStrings );
+                            printValues.put( name, propStrings );
                         }
+                        propStrings.add( valueToDisplay( value ) );
 
-                        Set<Object> propValues = values.get( pd );
+                        Set<Object> propValues = values.get( name );
                         if ( propValues == null ) {
                             propValues = new HashSet<Object>();
-                            values.put( pd, propValues );
+                            values.put( name, propValues );
                         }
                         if ( isBound( value ) )
                             propValues.add( value );
-                        propStrings.add( valueToDisplay( value ) );
                     }
                 }
             } catch ( InvocationTargetException e ) {
-                e.printStackTrace();
+                LoggerFactory.getLogger( getClass() ).error(
+                        "Unable to get a property value", e );
             } catch ( IllegalAccessException e ) {
-                e.printStackTrace();
+                LoggerFactory.getLogger( getClass() ).error(
+                        "Unable to get a property value", e );
             }
         }
 
@@ -349,28 +354,43 @@ public class ContainerSummary extends BeanImpl
             count++;
         }
 
-        private RefMetaProperty newRMP( PropertyDescriptor p ) {
+        private static RefMetaProperty newRMP( PropertyDescriptor p ) {
             String name = p.getName();
             return new RefMetaProperty(
                     name, p.getPropertyType(), toDisplay( name ) );
         }
 
-        public Set<RefMetaProperty> getAllColumns() {
-            Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
-            for ( PropertyDescriptor p : properties )
-                if ( !getHiddenProperties().contains( p.getName() ) )
-                    result.add( newRMP( p ) );
-            return result;
+        public Iterator<RefMetaProperty> allColumns() {
+            if ( allColumns == null ) {
+                Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
+                for ( PropertyDescriptor p : properties )
+                    if ( !getHiddenProperties().contains( p.getName() ) )
+                        result.add( newRMP( p ) );
+                allColumns = result;
+            }
+            return allColumns.iterator() ;
         }
 
-        public Set<RefMetaProperty> getDistinctColumns() {
-            Set<RefMetaProperty> result = new TreeSet<RefMetaProperty>();
-            for ( PropertyDescriptor p : properties ) {
-                if ( !getHiddenProperties().contains( p.getName() ) )
-                    if ( printValues.get( p ).size() > 1 )
-                        result.add( newRMP( p ) );
-            }
-            return result;
+        public Iterator<RefMetaProperty> distinctColumns() {
+            return new FilterIterator(){
+                @Override
+                boolean isApplicable( RefMetaProperty p ) {
+                    return printValues.get( p.getPropertyName() ).size() > 1;
+                }
+            };
+        }
+
+        public Iterator<RefMetaProperty> keyColumns() {
+            return new FilterIterator(){
+                @Override
+                boolean isApplicable( RefMetaProperty p ) {
+                    return getKeyProperties().contains( p.getPropertyName() );
+                }
+            };
+        }
+
+        public Set<String> getPrintValues( String propertyName ) {
+            return printValues.get( propertyName );
         }
 
         public Map<Method, Object> getCommonValues() {
@@ -379,7 +399,7 @@ public class ContainerSummary extends BeanImpl
                 String s = p.getName();
                 if ( isWritable( p ) && !getHiddenProperties().contains( s )
                      && !getKeyProperties().contains( s ) ) {
-                    Set<Object> objects = values.get( p );
+                    Collection<Object> objects = values.get( s );
                     if ( objects.size() == 1 )
                         result.put(
                                 p.getWriteMethod(), objects.iterator().next() );
@@ -390,6 +410,45 @@ public class ContainerSummary extends BeanImpl
 
         public int getCount() {
             return count;
+        }
+
+        //=========================================
+        private abstract class FilterIterator
+                implements Iterator<RefMetaProperty> {
+
+            private Iterator<RefMetaProperty> all = allColumns();
+            private RefMetaProperty next = null;
+
+            private FilterIterator() {
+            }
+
+            private boolean isNotDone() {
+                while ( next == null && all.hasNext() ) {
+                    RefMetaProperty p = all.next();
+                    if ( isApplicable( p ) )
+                        next = p;
+                }
+
+                return next != null;
+            }
+
+            abstract boolean isApplicable( RefMetaProperty p );
+
+            public boolean hasNext() {
+                return isNotDone();
+            }
+
+            public RefMetaProperty next() {
+                if ( !isNotDone() )
+                    throw new NoSuchElementException();
+                RefMetaProperty result = next;
+                next = null;
+                return result;
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
         }
     }
 }

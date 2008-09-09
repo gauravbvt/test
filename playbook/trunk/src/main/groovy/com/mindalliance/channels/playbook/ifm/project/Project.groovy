@@ -270,6 +270,7 @@ class Project extends ModelElement implements Named, Described {
         List<Ref> candidates = (List<Ref>) organizations.findAll {org ->
             org as boolean &&
                     org != organization &&
+                    organization.ancestors != null &&
                     !organization.ancestors.contains(org)
         }
         return candidates
