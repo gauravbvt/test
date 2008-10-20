@@ -43,7 +43,7 @@ rule "sharing act"
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$actor.deref(), new Know($act, (Agent)$target.deref(), $information)), "Source aware that the recipient knows the shared information.");
         RuleHelper.inferFrom(drools, $act, new Insight($act, (Agent)$target.deref(), new Know($act, (Agent)$actor.deref(), $information)), "Recipient aware that the source knows the shared information.");
     end
-    
+
  rule "task"
      agenda-group "profiles"
      when
@@ -301,7 +301,8 @@ rule "n2k from assignment"
     end
 
 # Commitments from SharingAgreements
-
+/*
+TODO fix this
 rule "commitments from sharing agreement" // add Commitments from SharingAgreements in each playbook
     agenda-group "profiles"
     when
@@ -329,7 +330,7 @@ rule "commitments from sharing agreement via organization" // add Commitments in
     then
         RuleHelper.inferFrom(drools, $agreement, new Commitment($playbook, (Agent)$resource, (Agent)$recipient.deref(), $agreement), "Permanent commitment from sharing agreement via organization.");
     end
-
+*/
 
 # Links from Relationships
 
