@@ -5,14 +5,14 @@
 
 /* ----------------- Layout */
 html {
-    margin: 5px;
+    margin: 0;
 }
 
 body {
     position: absolute;
     top: 0;
     right: 0;
-    bottom: 5px;
+    bottom: 0;
     left: 0;
 }
 div#everything {
@@ -29,14 +29,14 @@ div.title {
 }
 
 div#tab-content {
-    border: 1px ridge #80806E;
+    border-top: 1px outset #c3d9ff;
     padding-left: 5px;
     position: absolute;
     left: 0;
     right: 0;
     bottom: 5px;
-    top: 1.18em;
-    background-color: #F8F8F8;
+    top: 1.4em;
+    background-color: #e8eef9;
 }
 
 div#tab-content > div {
@@ -70,7 +70,7 @@ div.tab-right > div {
     overflow-x: hidden;
 }
 div.tab-right > div > div.tab-row {
-    padding-top: 5px;
+    padding-top:5px;
 }
 
 div.tab-right div.tab-panel {
@@ -80,7 +80,7 @@ div.tab-right div.tab-panel {
 }
 
 div.tab-panel {
-    border: 1px ridge gray;
+    border: 1px inset #c3d9ff;
     padding: 0 5px 5px 0;
     position: relative;
 }
@@ -99,9 +99,9 @@ div#filter {
 }
 
 div#filter > form {
-    border: 1px ridge gray;
+    border:1px inset #c3d9ff;
     display: block;
-    top: 1.3em;
+    top: 1.5em;
     right: 0;
     bottom: 0;
     left: 0;
@@ -111,17 +111,8 @@ div#filter > form {
 }
 
 div#filter h3 {
-    background: white url("tabs.png") no-repeat scroll -6px 0;
-    padding: 5px 0 5px 0.3em;
-    color: black;
-    font-weight: normal;
-    display: inline;
     font-size: inherit;
     line-height: normal;
-}
-div#filter h3 span {
-    background: white url("tabs.png") no-repeat scroll right 0;
-    padding:5px 0.3em 5px 0;
 }
 
 div#filter > form > div {
@@ -186,9 +177,6 @@ div.content-form {
 div#graph {
     overflow: auto;
 }
-div#graph > div {
-}
-
 div#graph-controls {
     left: 0;
     position: absolute;
@@ -199,11 +187,12 @@ div#graph-controls {
 /* ----------------- Fonts */
 body, input {
     font-size: 1em;
-    font-family: "Times New Roman", times, serif;
+    font-family: Verdana,arial,sans-serif;
 }
 
 h1, h2, h3, h4, .tab-row, table thead {
-    font-family: arial, helvetica, sans-serif;
+    font-family: Verdana,Lucida,Helvetica,Arial,sans-serif;
+    font-weight: bold;
 }
 
 input[ type="submit" ], input[ type="button" ] , input[ type="reset" ] {
@@ -233,30 +222,29 @@ div#signout, div.content-pager {
 
 /* ----------------- Hovers */
 input:hover, #filter input[ type='submit']:hover, #filter input[ type='button' ]:hover {
-    background-color: #D8DDE8 !important;
+    background-color: #C3D9FF !important;
     color: black;
 }
 
 /* ----------------- Selections */
 tr.selected, div.row-selected {
-    background: #D8DDE8 !important;
+    background: #c3d9ff !important;
     color: black;
 }
 
 /* ----------------- Colors/Textures */
 h1 {
-   background: #7A7E87 url(back.png) no-repeat scroll 0 50%;
-   border: 1px outset gray;
+   background: #c3d9ff url(back.png) no-repeat scroll 0 50%;
+   border-bottom: 1px solid #cccccc;
    color: black;
    text-align: left;
 }
 
 th, div.content-footer {
-   background: #7A7E87 url(head.png) repeat scroll 0 50%;
-   border: 1px ridge gray;
+   background: #c3d9ff url(head.png) repeat scroll 0 50%;
+   border: 1px outset #c3d9ff;
    color: black;
    text-align: left;
-   font-weight: normal;
 }
 
 body, div.content-list {
@@ -266,9 +254,9 @@ body, div.content-list {
 
 div.page-contents {
     bottom:5px;
-    left:0;
+    left:5px;
     position:absolute;
-    right:0;
+    right:5px;
     top:80px;
 }
 
@@ -295,12 +283,9 @@ label span {
     width: 10em;
 
 }
-legend {
-}
 fieldset {
     padding: 0 5px 5px;
 }
-
 fieldset ul  {
     list-style: none;
 }
@@ -347,11 +332,12 @@ div.tab-right > div.tab-row {
 
 div.tab-row ul {
     list-style: none;
+    padding-bottom: 2px;
 }
 
-div.tab-row li {
+div.tab-row li, div#filter h3 {
     background: transparent url("tabs.png") no-repeat scroll -3px -139px;
-    padding: 5px 0 1px 3px;
+    padding: 5px 0 5px 3px;
     display: inline;
 }
 
@@ -359,10 +345,7 @@ div.tab-row li.tab0 {
     background-position: -6px -139px;
 }
 
-div.tab-row li.last {
-}
-
-div.tab-row li.selected {
+div.tab-row li.selected, div#filter h3 {
     background-position: -6px 0;
 }
 
@@ -370,19 +353,13 @@ div.tab-row li.selected + li {
     background-position: 0 -139px;
 }
 
-div.tab-row a {
-    background: white url("tabs.png") no-repeat scroll -9px -139px;
-    padding: 5px 0.3em 1px 0.3em;
+div.tab-row a, div#filter h3 span {
+    background: #e8eef9 url("tabs.png") no-repeat scroll -9px -139px;
+    padding: 5px 0.3em 5px 0.3em;
     color: black;
-    font-weight: normal;
-}
-div.tab-right div.tab-row a {
-    background-color: #F8F8F8;
 }
 
-div.tab-row .tab0 a {
-}
-div.tab-row .last a {
+div.tab-row .last a, div#filter h3 span {
     padding-right: 0.4em;
     background-position: right -139px;
 }
@@ -391,12 +368,10 @@ div.tab-row .selected a {
     background-position: -9px 0;
 }
 
-div.tab-row li.selected.last a {
+div.tab-row li.selected.last a, div#filter h3 span {
     background-position: right 0;
 }
 
-div.tab-row a span {
-}
 div.tab-row .selected a span {
     padding-bottom: 2px;
 }
@@ -448,7 +423,7 @@ div.content-list td {
     vertical-align: top;
 }
 div.content-list tr.even {
-    background-color: #F0F0F0;
+    background-color: #e8eef9;
 }
 
 div.content-list table {
@@ -503,7 +478,7 @@ div.sc-picker {
 div#controls {
     position: absolute;
     right: 5px;
-    bottom: 3px;
+    bottom: 5px;
 }
 
 /* ----------------- Signout */
