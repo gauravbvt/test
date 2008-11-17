@@ -1,0 +1,137 @@
+
+/* Fonts */
+body {
+    font-size: 100%;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+}
+td, th, input, textarea, select {
+    font: inherit;
+  }
+th {
+    font-weight: bold;
+}
+input, textarea {
+    padding-left: 0.3em;
+}
+input[type='checkbox'] {
+    padding: 0;
+    margin: 0;
+    vertical-align: text-bottom;
+}
+
+/* Margins and layout */
+body {
+    margin: 0.5em;
+    padding: 0;
+    position: relative;
+}
+div#everything {
+    max-width: 95em;
+    min-width: 45.5em;
+    margin: auto;
+    position: relative;
+}
+
+h2 {
+    margin: 0 0 0 0;
+}
+h1 {
+    margin: 0 0.25em 0 0;
+}
+p, table {
+    margin: 1em 0 0 0;
+}
+
+div#scenario {
+    margin-bottom: 0.5em;
+}
+
+div#part, div#parts, div#reqs, div#outcomes {
+    width: 47em;
+    margin: 0 0.45em 0.5em 0;
+    float: left;
+}
+div#reqs {
+    clear: both;
+}
+
+div#footer {
+    clear: both;
+    font-size: small;
+    position: relative;
+    margin: 0 0.5em 0 0;
+    border-top: 1px solid lightgray;
+}
+
+form#sc-sel {
+    display: block;
+}
+form#sc-sel ul {
+    margin:0.5em 0pt 0pt;
+    padding:0pt 0pt 0pt 2em;
+}
+
+p#logout {
+    display: block;
+    position: absolute;
+    margin-top: 0.5em;
+    top: 0;
+    right: 0;
+}
+
+#form-buttons {
+    margin: 0;
+    position: absolute;
+    right: 1em;
+    top: 0.25em;
+}
+
+ol {
+    margin:0.5em 0 0 0;
+    padding:0pt 0pt 0pt 2em;
+}
+
+/* Menus */
+ul.menu {
+    font-size: small;
+    font-weight: normal;
+    list-style: none;
+    margin: 0 0 1em 0;
+    padding: 0;
+    display: inline;
+    white-space: nowrap;
+  }
+ul.menu li {
+    display: inline;
+  }
+ul.menu li:before {
+    content: " \2015  ";
+  }
+
+/* Attachment lists */
+ul.attach {
+    list-style-position: inside;
+    list-style-type: square;
+    padding: 0 0 0 0.3em;
+    margin: 0;
+}
+
+/* Colors */
+h3, h1 {
+    background: #CAE1FF;
+    padding-left: 0.2em;
+}
+
+/* Diagram */
+hr {
+    display: none;
+}
+#parts img {
+    border: 1px solid lightgray;
+    padding: 5px;
+    width: 42em;
+}
+#parts .caption {
+    margin: 0;
+    font-size: small;
+}
