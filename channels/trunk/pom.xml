@@ -43,6 +43,16 @@
         </license>
     </licenses>
 
+    <issueManagement>
+        <system>FogBugz</system>
+        <url>https://mindalliance.fogbugz.com/default.asp?pgx=FS&amp;ixPersonAssignedTo=-1</url>
+    </issueManagement>
+    <scm>
+        <developerConnection>scm:svn:https://wush.net/svn/mindalliance/channels/trunk</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://wush.net/websvn/mindalliance/listing.php?repname=mindalliance&amp;path=%2Fchannels%2Ftrunk%2F</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -186,6 +196,7 @@
             </plugin>
         </plugins>
     </build>
+    
     <properties>
         <wicket.version>1.4-rc1</wicket.version>
         <jetty.version>6.1.4</jetty.version>
