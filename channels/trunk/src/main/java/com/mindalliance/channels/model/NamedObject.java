@@ -26,7 +26,7 @@ public abstract class NamedObject implements Comparable<NamedObject> {
         return id;
     }
 
-    public final void setId( long id ) {
+    private void setId( long id ) {
         this.id = id;
     }
 

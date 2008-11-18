@@ -9,6 +9,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 public class Channels extends WebApplication {
 
     private ScenarioDao scenarioDao;
+    private FlowDiagram flowDiagram;
 
     /**
      * Constructor
@@ -29,5 +30,13 @@ public class Channels extends WebApplication {
 
     public void setScenarioDao( ScenarioDao scenarioDao ) {
         this.scenarioDao = scenarioDao;
+    }
+
+    public FlowDiagram getFlowDiagram() {
+        return flowDiagram;
+    }
+
+    public void setFlowDiagram( FlowDiagram flowDiagram ) {
+        this.flowDiagram = flowDiagram;
     }
 }
