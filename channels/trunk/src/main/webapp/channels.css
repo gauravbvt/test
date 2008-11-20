@@ -67,8 +67,8 @@ form#sc-sel {
     display: block;
 }
 form#sc-sel ul {
-    margin:0.5em 0pt 0pt;
-    padding:0pt 0pt 0pt 2em;
+    margin:0.5em 0 0;
+    padding:0 0 0 2em;
 }
 
 p#logout {
@@ -88,7 +88,7 @@ p#logout {
 
 ol {
     margin:0.5em 0 0 0;
-    padding:0pt 0pt 0pt 2em;
+    padding:0 0 0 2em;
 }
 
 /* Menus */

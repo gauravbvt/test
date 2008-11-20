@@ -1,0 +1,18 @@
+<project>
+    <bannerLeft>
+      <name>Channels</name>
+      <src>channels-logo-name.png</src>
+      <href></href>
+    </bannerLeft>
+
+    <body>
+
+        <menu name="Developer's Guide">
+            <item name="Coding standards" href="standards.html"/>
+            <item name="IDE settings" href="ide.html"/>
+        </menu>
+
+        <menu ref="reports" />
+
+    </body>
+</project>

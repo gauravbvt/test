@@ -12,7 +12,7 @@
     <bean id="memoryDao" class="com.mindalliance.channels.dao.Memory"/>
 
      <!-- setup wicket application -->
-     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
+     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
          <property name="scenarioDao" ref="memoryDao"/>
      </bean>
 

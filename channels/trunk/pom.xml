@@ -48,7 +48,8 @@
         <url>https://mindalliance.fogbugz.com/default.asp?pgx=FS&amp;ixPersonAssignedTo=-1</url>
     </issueManagement>
     <scm>
-        <developerConnection>scm:svn:https://wush.net/svn/mindalliance/channels/trunk</developerConnection>
+        <developerConnection>scm:svn:https://wush.net/svn/mindalliance/channels/trunk
+        </developerConnection>
         <tag>HEAD</tag>
         <url>https://wush.net/websvn/mindalliance/listing.php?repname=mindalliance&amp;path=%2Fchannels%2Ftrunk%2F</url>
     </scm>
@@ -196,7 +197,49 @@
             </plugin>
         </plugins>
     </build>
-    
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <targetJdk>1.5</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>surefire-report-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <links>
+                        <link>http://java.sun.com/javase/6/docs/api/</link>
+                        <link>http://www.ddpoker.com/javadoc/wicket/1.4-m2/</link>
+                    </links>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>${basedir}/src/site/resources/checkstyle.xml</configLocation>
+                    <enableRulesSummary>false</enableRulesSummary>
+                </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <properties>
         <wicket.version>1.4-rc1</wicket.version>
         <jetty.version>6.1.4</jetty.version>
