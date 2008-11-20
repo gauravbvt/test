@@ -31,9 +31,9 @@ public class GraphBuilder {
     private DirectedGraph<Part, Flow> getDirectedGraph() {
         DirectedGraph<Part, Flow> dgraph = new DefaultDirectedGraph<Part, Flow>(Flow.class);
         // add parts as vertices
-        for (Part part : scenario.getParts()) {
+/*        for (Part part : scenario.getParts()) {
             dgraph.addVertex(part);
-        }
+        }*/
         // add flows as edges
         // TODO
         return dgraph;

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Project;
 
 import java.io.*;
 
@@ -62,8 +62,8 @@ public class GraphvizRenderer {
 
     private String getDotPath() {
         String dotPath = null;
-        if (Channels.exists()) {
-            dotPath = Channels.get().getServletContext().getInitParameter("dot");
+        if (Project.exists()) {
+            dotPath = Project.get().getServletContext().getInitParameter("dot");
         }
         if (dotPath == null) dotPath = DOT_PATH;
         return dotPath;
