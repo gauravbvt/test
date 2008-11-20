@@ -41,7 +41,7 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void init( Scenario scenario ) {
-        init( scenario, scenario.nodes().next() );
+        init( scenario, scenario.iterator().next() );
     }
 
     private void init( Scenario scenario, Node selected ) {

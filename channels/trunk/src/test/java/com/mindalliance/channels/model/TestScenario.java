@@ -75,7 +75,7 @@ public class TestScenario extends TestCase {
     }
 
     public void testRemoveOnly() {
-        final Iterator<Node> nodes = scenario.nodes();
+        final Iterator<Node> nodes = scenario.iterator();
         assertTrue( nodes.hasNext() );
         Node initial = nodes.next();
         assertSame( initial, scenario.getNode( initial.getId() ) );

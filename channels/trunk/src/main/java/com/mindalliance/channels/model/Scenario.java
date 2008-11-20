@@ -9,8 +9,9 @@ import java.util.TreeSet;
 
 /**
  * A scenario in the project.
+ * Provides an iterator on its nodes.
  */
-public class Scenario extends NamedObject {
+public class Scenario extends NamedObject implements Iterable<Node> {
 
     /** The default name for new scenarios. */
     static final String DEFAULT_NAME = "Untitled";
@@ -79,7 +80,7 @@ public class Scenario extends NamedObject {
      * There should always be at least a node in the scenario.
      * @return an iterator on nodes
      * */
-    public Iterator<Node> nodes() {
+    public Iterator<Node> iterator() {
         return getNodes().iterator();
     }
 
