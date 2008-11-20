@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
 
 /**
  * Test a scenario in isolation.
@@ -58,9 +59,8 @@ public class TestScenario extends TestCase {
     }
 
     public void testNodes() {
-        assertTrue( scenario.nodes().hasNext() );
 
-        final Part p1 = new Part();
+        final Node p1 = new Connector();
         assertNull( scenario.getNode( p1.getId() ) );
         scenario.addNode( p1 );
         assertSame( p1, scenario.getNode( p1.getId() ) );
@@ -74,11 +74,21 @@ public class TestScenario extends TestCase {
         } catch ( IllegalArgumentException ignored ) {}
     }
 
-    public void testSetParts() {
+    public void testRemoveOnly() {
+        final Iterator<Node> nodes = scenario.nodes();
+        assertTrue( nodes.hasNext() );
+        Node initial = nodes.next();
+        assertSame( initial, scenario.getNode( initial.getId() ) );
+
+        scenario.removeNode( initial );
+        assertSame( initial, scenario.getNode( initial.getId() ) );
+    }
+
+    public void testSetNodes() {
         final Set<Node> ps = new HashSet<Node>( 2 );
         final Part p1 = new Part();
         ps.add( p1 );
-        final Part p2 = new Part();
+        final Node p2 = new ScenarioNode();
         ps.add( p2 );
         scenario.setNodes( ps );
         assertSame( p1, scenario.getNode( p1.getId() ) );

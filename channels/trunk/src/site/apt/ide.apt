@@ -5,6 +5,12 @@
 IDE settings
 
  This section, while not essential, will specify the recommended configuration for
- Channels developers.
+ Channels developers. It is intended as a guide for new developers joining the project.
 
- It is intended as a guide for new developers joining the project.
+ The recommended IDE is {{{http://support.jetbrains.com/kb/entry.jspa?categoryID=5&externalID=291}IDEA v7.0.5}}
+
+* IDEA Plugins
+
+ There are a bunch of plugins available for IDEA. Here are some of the essentials:
+
+   [[1]] Checkstyle.

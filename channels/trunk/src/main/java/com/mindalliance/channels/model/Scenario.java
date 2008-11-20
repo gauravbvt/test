@@ -98,8 +98,10 @@ public class Scenario extends NamedObject {
      * @param node the node to remove.
      */
     public void removeNode( Node node ) {
-        getNodes().remove( node );
-        nodeIndex.remove( node.getId() );
+        if ( nodeIndex.size() > 1 ) {
+            getNodes().remove( node );
+            nodeIndex.remove( node.getId() );
+        }
     }
 
     /**

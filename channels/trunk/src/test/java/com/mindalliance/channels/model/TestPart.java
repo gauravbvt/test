@@ -40,12 +40,37 @@ public class TestPart extends TestCase {
         assertEquals( "Bob standing by", part.toString() );
 
         Role role = new Role();
-        role.setName( "Employee" );
+        role.setName( "Operator" );
         part.setRole( role );
         assertEquals( "Bob standing by", part.toString() );
 
         part.setActor( null );
-        assertEquals( "Employee standing by", part.toString() );
+        assertEquals( "Operator standing by", part.toString() );
+    }
 
+    // ================ Bogus tests for coverage
+
+    public void testOrganization() {
+        assertNull( part.getOrganization() );
+        final Organization org = new Organization();
+        org.setName( "Org" );
+        part.setOrganization( org );
+        assertSame( org, part.getOrganization() );
+    }
+
+    public void testLocation() {
+        assertNull( part.getLocation() );
+        final Location location = new Location();
+        location.setName( "Somewhere" );
+        part.setLocation( location );
+        assertSame( location, part.getLocation() );
+    }
+
+    public void testJurisdiction() {
+        assertNull( part.getJurisdiction() );
+        final Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setName( "Somewhere" );
+        part.setJurisdiction( jurisdiction );
+        assertSame( jurisdiction, part.getJurisdiction() );
     }
 }

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import java.util.Set;
 import java.text.MessageFormat;
 
 /**
@@ -31,9 +30,6 @@ public class Part extends Node {
 
     /** The jurisdiction (optional). */
     private Jurisdiction jurisdiction;
-
-    private Set<Flow> requirements;
-    private Set<Flow> outcomes;
 
     public Part() {
     }
