@@ -7,14 +7,27 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-     <context:annotation-config/>
+    <context:annotation-config/>
 
     <bean id="memoryDao" class="com.mindalliance.channels.dao.Memory"/>
 
-     <!-- setup wicket application -->
-     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
-         <property name="scenarioDao" ref="memoryDao"/>
-     </bean>
+    <!-- setup wicket application -->
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
+        <property name="scenarioDao" ref="memoryDao"/>
+    </bean>
+
+    <!-- Flow diagram -->
+    <bean id="flowDiagram" class="com.mindalliance.channels.graph.DefaultFlowDiagram">
+        <property name="graphBuilder" ref="graphBuilder"/>
+        <property name="graphRenderer" ref="graphRenderer"/>
+        <property name="urlFormat" value="?scenario={0}&amp;node={1}"/>
+    </bean>
+
+    <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
+
+    <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
+        <property name="dotPath" value="/usr/bin/dot"/>
+    </bean>
 
 
 </beans>

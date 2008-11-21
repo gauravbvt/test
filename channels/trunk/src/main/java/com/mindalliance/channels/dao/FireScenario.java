@@ -60,8 +60,8 @@ public class FireScenario extends Scenario {
         connect( alarm, fd ).setName( "address" );
         connect( fd, chief );
         connect( chief, connector ).setName( "all-clear" );
-        connect( js1, evac ).setName( "start" );
-        connect( evac, js2 ).setName( "end" );
+        connect( js1, evac ).setName( "started" );
+        connect( evac, js2 ).setName( "ended" );
         connect( js2, chief ).setName( "status" );
     }
 }

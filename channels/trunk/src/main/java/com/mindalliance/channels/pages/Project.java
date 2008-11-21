@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.FlowDiagram;
+import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.dao.ScenarioDao;
 import org.apache.wicket.protocol.http.WebApplication;
 

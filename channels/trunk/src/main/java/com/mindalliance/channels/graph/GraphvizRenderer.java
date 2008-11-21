@@ -1,8 +1,12 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.pages.Project;
+import org.jgrapht.Graph;
+import org.jgrapht.ext.EdgeNameProvider;
+import org.jgrapht.ext.VertexNameProvider;
 
 import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -13,18 +17,63 @@ import java.io.*;
  * <p/>
  * Renders a dot-formatted diagram specification using graphviz.
  */
-public class GraphvizRenderer {
+public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
 
-    private static final String DOT_PATH = "/usr/bin/dot";
+    private String dotPath = "/usr/bin/dot";   // configured
+
+    private Set<V> highlightedVertices;
+    private Set<E> highlightedEdges;
+
+    public GraphvizRenderer() {
+        resetHighlight();
+    }
+
+    public String getDotPath() {
+        return dotPath;
+    }
+
+    public void setDotPath(String path) {
+        dotPath = path;
+    }
+
+    public void highlightVertex(V vertex) {
+        highlightedVertices.add(vertex);
+    }
+
+    public void highlightEdge(E edge) {
+        highlightedEdges.add(edge);
+    }
+
+    public void resetHighlight() {
+        highlightedVertices = new HashSet<V>();
+        highlightedEdges = new HashSet<E>();
+    }
+
+    public InputStream render(Graph<V,E> graph,
+                              VertexNameProvider<V> vertexIDProvider,
+                              VertexNameProvider<V> vertexLabelProvider,
+                              EdgeNameProvider<E> edgeLabelProvider,
+                              DOTAttributeProvider<V,E> dotAttributeProvider,
+                              URLProvider<V,E> urlProvider,
+                              String format) throws DiagramException {
+        String dot = getDOT(graph,
+                            vertexIDProvider,
+                            vertexLabelProvider,
+                            edgeLabelProvider,
+                            dotAttributeProvider,
+                            urlProvider);
+        return doRender(dot, format);
+    }
 
     /**
      * Renders a graph specified in DOT in a given format.
-     * @param dot Graph description in DOT language
+     *
+     * @param dot    Graph description in DOT language
      * @param format a Grpahviz output format ("png", "svg", "imap" etc.)
      * @return an InputStream with the generated output
      * @throws DiagramException if generation fails
      */
-    public InputStream render(String dot, String format) throws DiagramException {
+    private InputStream doRender(String dot, String format) throws DiagramException {
         String command = getDotPath() + " -T" + format;
         Process p = null;
         int exitValue;
@@ -60,13 +109,33 @@ public class GraphvizRenderer {
         }
     }
 
-    private String getDotPath() {
-        String dotPath = null;
-        if (Project.exists()) {
-            dotPath = Project.get().getServletContext().getInitParameter("dot");
-        }
-        if (dotPath == null) dotPath = DOT_PATH;
-        return dotPath;
+    /**
+     * Produces a description of a graph in DOT format
+     *
+     * @param graph -- the graph to be converted to DOT format
+     * @param vertexIDProvider  -- a name provider
+     * @param vertexLabelProvider  -- a label provider
+     * @param edgeLabelProvider  -- a label provider
+     * @param dotAttributeProvider  -- a "style" attribute provider
+     * @param urlProvider -- a URL provider
+     * @return a String in DOT format
+     */
+    public String getDOT(Graph<V, E> graph,
+                         VertexNameProvider<V> vertexIDProvider,
+                         VertexNameProvider<V> vertexLabelProvider,
+                         EdgeNameProvider<E> edgeLabelProvider,
+                         DOTAttributeProvider<V,E> dotAttributeProvider,
+                         URLProvider<V,E> urlProvider) {
+        StyledDOTExporter<V,E> styledDotExporter = new StyledDOTExporter<V,E>(  vertexIDProvider,
+                                                                                vertexLabelProvider,
+                                                                                edgeLabelProvider,
+                                                                                dotAttributeProvider,
+                                                                                urlProvider);
+        styledDotExporter.setHighlightedVertices(highlightedVertices);
+        styledDotExporter.setHighlightedEdges(highlightedEdges);
+        StringWriter writer = new StringWriter();
+        styledDotExporter.export(writer, graph);
+        return writer.toString();
     }
 
 }
