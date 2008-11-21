@@ -7,4 +7,9 @@ public class ScenarioNode extends Node {
 
     public ScenarioNode() {
     }
+
+    public boolean isScenarioNode() {
+        return true;
+    }
+
 }

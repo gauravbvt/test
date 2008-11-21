@@ -127,4 +127,17 @@ public abstract class Node extends NamedObject {
         getRequirements().remove( requirement );
         reqIndex.remove( requirement.getId() );
     }
+
+    public boolean isPart() {
+        return false;
+    }
+
+    public boolean isScenarioNode() {
+        return false;
+    }
+
+    public boolean isConnector() {
+        return false;
+    }
+
 }

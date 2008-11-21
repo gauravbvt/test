@@ -7,4 +7,9 @@ public class Connector extends Node {
 
     public Connector() {
     }
+
+    public boolean isConnector() {
+        return true;
+    }
+
 }

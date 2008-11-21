@@ -113,4 +113,8 @@ public class Scenario extends NamedObject implements Iterable<Node> {
     public Node getNode( long id ) {
         return nodeIndex.get( id );
     }
+
+    public Iterator<Flow> flows() {
+        return null; // TBD
+    }
 }

@@ -91,4 +91,9 @@ public class Part extends Node {
     public void setRole( Role role ) {
         this.role = role;
     }
+
+    public boolean isPart() {
+         return true;
+     }
+
 }
