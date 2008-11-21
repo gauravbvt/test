@@ -35,7 +35,9 @@ public class TestNode extends TestCase {
 
         node.setOutcomes( flows );
         assertSame( a, node.getFlow( a.getId() ) );
+        assertSame( node, a.getSource() );
         assertSame( b, node.getFlow( b.getId() ) );
+        assertSame( node, b.getSource() );
     }
 
     public void testSetRequirements() {
@@ -45,7 +47,9 @@ public class TestNode extends TestCase {
 
         node.setRequirements( flows );
         assertSame( a, node.getFlow( a.getId() ) );
+        assertSame( node, a.getTarget() );
         assertSame( b, node.getFlow( b.getId() ) );
+        assertSame( node, b.getTarget() );
     }
 
     public void testOutcomes() {
@@ -112,5 +116,22 @@ public class TestNode extends TestCase {
         assertSame( a, node.getFlow( a.getId() ) );
         node.removeRequirement( a );
         assertNull( node.getFlow( a.getId() ) );
+    }
+
+    public void testIsness() {
+        final Part part = new Part( new Person(), "" );
+        assertTrue( part.isPart() );
+        assertFalse( part.isConnector() );
+        assertFalse( part.isScenarioNode() );
+
+        final Connector connector = new Connector();
+        assertFalse( connector.isPart() );
+        assertTrue( connector.isConnector() );
+        assertFalse( connector.isScenarioNode() );
+
+        final ScenarioNode sn = new ScenarioNode();
+        assertFalse( sn.isPart() );
+        assertFalse( sn.isConnector() );
+        assertTrue( sn.isScenarioNode() );
     }
 }

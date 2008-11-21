@@ -8,6 +8,7 @@ public class Connector extends Node {
     public Connector() {
     }
 
+    @Override
     public boolean isConnector() {
         return true;
     }

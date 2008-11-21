@@ -34,18 +34,23 @@ public class TestPart extends TestCase {
         part.setTask( "standing by" );
         assertEquals( "Unknown actor standing by", part.toString() );
 
-        final Person bob = new Person();
-        bob.setName( "Bob" );
+        final Person bob = new Person( "Bob" );
         part.setActor( bob );
         assertEquals( "Bob standing by", part.toString() );
 
-        Role role = new Role();
+        final Role role = new Role();
         role.setName( "Operator" );
         part.setRole( role );
         assertEquals( "Bob standing by", part.toString() );
 
         part.setActor( null );
         assertEquals( "Operator standing by", part.toString() );
+
+        part.setOrganization( new Organization( "Verizon" ) );
+        assertEquals( "Operator standing by", part.toString() );
+        part.setRole( null );
+        assertEquals( "Verizon standing by", part.toString() );
+
     }
 
     // ================ Bogus tests for coverage
@@ -72,5 +77,30 @@ public class TestPart extends TestCase {
         jurisdiction.setName( "Somewhere" );
         part.setJurisdiction( jurisdiction );
         assertSame( jurisdiction, part.getJurisdiction() );
+    }
+
+    public void testName() {
+        assertSame( Part.DEFAULT_ACTOR, part.getName() );
+
+        final String s = "MAS";
+        part.setOrganization( new Organization( s ) );
+        assertSame( s, part.getName() );
+
+        final String s1 = "Guru";
+        part.setRole( new Role( s1 ) );
+        assertSame( s1, part.getName() );
+
+        final String s2 = "JF";
+        part.setActor( new Person( s2 ) );
+        assertSame( s2, part.getName() );
+
+        part.setActor( null );
+        assertSame( s1, part.getName() );
+
+        part.setRole( null );
+        assertSame( s, part.getName() );
+
+        part.setOrganization( null );
+        assertSame( Part.DEFAULT_ACTOR, part.getName() );
     }
 }

@@ -45,7 +45,7 @@ public class GraphBuilder {
             dgraph.addEdge(flow.getSource(), flow.getTarget(), flow);
         }
         // add nodes as vertices
-        Iterator<Node> nodes = scenario.iterator();
+        Iterator<Node> nodes = scenario.nodes();
         while(nodes.hasNext()) {
             dgraph.addVertex(nodes.next());  // added if not part of a flow
         }

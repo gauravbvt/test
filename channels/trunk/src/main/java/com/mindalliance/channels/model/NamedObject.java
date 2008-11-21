@@ -7,15 +7,30 @@ import java.text.Collator;
  */
 public abstract class NamedObject implements Comparable<NamedObject> {
 
+    /** Cheap way of creating unique default ids. Overloaded by hibernate eventually. */
     private static long Counter = 1L ;
 
+    /** Unique id of this object. */
     private long id;
+
+    /** Name of this object. */
     private String name = "";
+
+    /** The description. */
     private String description = "";
 
     //=============================
     protected NamedObject() {
         setId( Counter++ );
+    }
+
+    /**
+     * Utility constructor for tests.
+     * @param name the name of the new object
+     */
+    protected NamedObject( String name ) {
+        this();
+        setName( name );
     }
 
     public long getId() {
@@ -26,7 +41,7 @@ public abstract class NamedObject implements Comparable<NamedObject> {
         this.id = id;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -34,7 +49,7 @@ public abstract class NamedObject implements Comparable<NamedObject> {
      * Set the name of this object.
      * @param name the name. Will complain if null.
      */
-    public void setName( String name ) {
+    public final void setName( String name ) {
         if ( name == null )
             throw new IllegalArgumentException( "Name can't be null" );
         this.name = name;
@@ -55,8 +70,18 @@ public abstract class NamedObject implements Comparable<NamedObject> {
     }
 
     //=============================
+    /**
+     * Compare with another named object.
+     * @param o the object.
+     * @return 0 if equals, -1 if this object smaller than the other, 1 if greater
+     */
     public int compareTo( NamedObject o ) {
-        return Collator.getInstance().compare( toString(), o.toString() );
+        int result = Collator.getInstance().compare( toString(), o.toString() );
+        if ( result == 0 )
+            result = getId() > o.getId() ? 1
+                   : getId() < o.getId() ? -1
+                   : 0;
+        return result;
     }
 
     //=============================

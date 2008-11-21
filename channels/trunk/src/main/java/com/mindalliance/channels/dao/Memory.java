@@ -26,7 +26,9 @@ public final class Memory implements ScenarioDao {
     private Map<Long,Scenario> idIndex = new HashMap<Long,Scenario>( INITIAL_CAPACITY );
 
     public Memory() {
-        addScenario( Scenario.createDefault() );
+        // TODO initialize memory to default scenario instead of test scenario
+        // addScenario( Scenario.createDefault() );
+        addScenario( new FireScenario() );
     }
 
     /** {@inheritDoc} */

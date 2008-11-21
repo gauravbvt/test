@@ -3,8 +3,9 @@ package com.mindalliance.channels.model;
 import junit.framework.TestCase;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * Test a scenario in isolation.
@@ -20,7 +21,7 @@ public class TestScenario extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        scenario = new Scenario();
+        scenario = Scenario.createDefault();
     }
 
     public void testDescription() {
@@ -75,9 +76,9 @@ public class TestScenario extends TestCase {
     }
 
     public void testRemoveOnly() {
-        final Iterator<Node> nodes = scenario.iterator();
+        final Iterator<Node> nodes = scenario.nodes();
         assertTrue( nodes.hasNext() );
-        Node initial = nodes.next();
+        final Node initial = nodes.next();
         assertSame( initial, scenario.getNode( initial.getId() ) );
 
         scenario.removeNode( initial );
@@ -93,5 +94,79 @@ public class TestScenario extends TestCase {
         scenario.setNodes( ps );
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertSame( p2, scenario.getNode( p2.getId() ) );
+    }
+
+    public void testConnect() {
+        final Part p1 = new Part();
+        final Part p2 = new Part();
+
+        try {
+            scenario.connect( p1, p2 );
+            fail();
+        } catch ( IllegalArgumentException ignored ) {}
+
+        scenario.addNode( p1 );
+        scenario.addNode( p2 );
+
+        final Flow f = scenario.connect( p1, p2 );
+        assertSame( p1, f.getSource() );
+        assertSame( p2, f.getTarget() );
+        assertSame( f, p1.getFlow( f.getId() ) );
+        assertSame( f, p2.getFlow( f.getId() ) );
+        assertSame( f, p1.outcomes().next() );
+        assertSame( f, p2.requirements().next() );
+
+        try {
+            scenario.connect( p1, p2 );
+            fail();
+        } catch ( IllegalArgumentException ignored ) {}
+    }
+
+    public void testDisconnect() {
+        final Part p1 = new Part();
+        final Part p2 = new Part();
+        scenario.addNode( p1 );
+        scenario.addNode( p2 );
+
+        final Flow f = scenario.connect( p1, p2 );
+
+        assertSame( f, p1.getFlow( f.getId() ) );
+        assertSame( f, p2.getFlow( f.getId() ) );
+        scenario.disconnect( p1, p2 );
+        assertNull( p1.getFlow( f.getId() ) );
+        assertNull( p2.getFlow( f.getId() ) );
+    }
+
+    public void testFlows() {
+        final Part bob = new Part( new Person( "Bob" ), "talking" );
+        final Part sue = new Part( new Person( "Sue" ), "repeating" );
+        final Part joe = new Part( new Person( "Joe" ), "zoning out" );
+        scenario.addNode( bob );
+        scenario.addNode( sue );
+        scenario.addNode( joe );
+
+        Flow f1 = scenario.connect( bob, sue );
+        Flow f2 = scenario.connect( bob, joe );
+        Flow f3 = scenario.connect( sue, joe );
+        Flow f4 = scenario.connect( joe, bob );
+
+        Iterator<Flow> flows = scenario.flows();
+        assertTrue( flows.hasNext() );
+        assertSame( f1, flows.next() );
+        assertSame( f2, flows.next() );
+        assertSame( f4, flows.next() );
+        assertSame( f3, flows.next() );
+
+        assertFalse( flows.hasNext() );
+
+        try {
+            flows.next();
+            fail();
+        } catch ( NoSuchElementException e ) {}
+
+        try {
+            scenario.flows().remove();
+            fail();
+        } catch ( UnsupportedOperationException e ) {}
     }
 }

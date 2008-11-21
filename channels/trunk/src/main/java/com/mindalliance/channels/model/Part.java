@@ -11,7 +11,7 @@ public class Part extends Node {
     static final String DEFAULT_TASK = "doing something";
 
     /** Default actor label, when unknown. */
-    private static final String DEFAULT_ACTOR = "Unknown actor";
+    static final String DEFAULT_ACTOR = "Unknown actor";
 
     /** The task label of this part (never null or empty). */
     private String task = DEFAULT_TASK;
@@ -32,32 +32,72 @@ public class Part extends Node {
     private Jurisdiction jurisdiction;
 
     public Part() {
+        adjustName();
+    }
+
+    /**
+     * Utility constructor for tests.
+     * @param actor an actor
+     * @param task a task
+     */
+    public Part( Actor actor, String task ) {
+        this();
+        setActor( actor );
+        setTask( task );
+    }
+
+    /**
+     * Utility constructor for tests.
+     * @param role a role
+     * @param task a task
+     */
+    public Part( Role role, String task ) {
+        this();
+        setRole( role );
+        setTask( task );
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        final String actorString = getActor() != null ? getActor().toString()
-                                 : getRole()  != null ? getRole().toString()
+        final String actorString = getActor()        != null ? getActor().toString()
+                                 : getRole()         != null ? getRole().toString()
+                                 : getOrganization() != null ? getOrganization().toString()
                                  : DEFAULT_ACTOR;
         return MessageFormat.format( "{0} {1}", actorString, getTask() );
     }
 
-    public String getTask() {
+    public final String getTask() {
         return task;
     }
 
-    public void setTask( String task ) {
+    public final void setTask( String task ) {
         this.task = task == null || task.length() == 0 ? DEFAULT_TASK
                                                        : task ;
     }
 
-    public Actor getActor() {
+    private void adjustName() {
+        if ( getActor() != null )
+            setName( getActor().toString() );
+        else if ( getRole() != null )
+            setName( getRole().toString() );
+        else if ( getOrganization() != null )
+            setName( getOrganization().toString() );
+        else
+            setName( DEFAULT_ACTOR );
+    }
+
+    public final Actor getActor() {
         return actor;
     }
 
-    public void setActor( Actor actor ) {
+    /**
+     * Set the actor. Also resets name accordingly.
+     * @param actor the new actor.
+     */
+    public final void setActor( Actor actor ) {
         this.actor = actor;
+        adjustName();
     }
 
     public Jurisdiction getJurisdiction() {
@@ -80,20 +120,30 @@ public class Part extends Node {
         return organization;
     }
 
+    /**
+     * Set the organization. Also resets name accordingly.
+     * @param organization the new organization.
+     */
     public void setOrganization( Organization organization ) {
         this.organization = organization;
+        adjustName();
     }
 
-    public Role getRole() {
+    public final Role getRole() {
         return role;
     }
 
-    public void setRole( Role role ) {
+    /**
+     * Set the role. Also resets name accordingly.
+     * @param role the new role.
+     */
+    public final void setRole( Role role ) {
         this.role = role;
+        adjustName();
     }
 
+    @Override
     public boolean isPart() {
-         return true;
-     }
-
+        return true;
+    }
 }

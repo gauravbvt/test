@@ -32,6 +32,15 @@ public abstract class Node extends NamedObject {
     }
 
     /**
+     * Utility constructor for tests.
+     * @param name the name of the new object
+     */
+    protected Node( String name ) {
+        this();
+        setName( name );
+    }
+
+    /**
      * Find a flow connected to this node, given its id.
      * @param id the id
      * @return a flow or null
@@ -56,8 +65,10 @@ public abstract class Node extends NamedObject {
     final void setOutcomes( Set<Flow> outcomes ) {
         this.outcomes = new TreeSet<Flow>( outcomes );
         outIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
-        for ( Flow f: outcomes )
+        for ( Flow f: outcomes ) {
             outIndex.put( f.getId(), f );
+            f.setSource( this );
+        }
     }
 
     /**
@@ -75,6 +86,7 @@ public abstract class Node extends NamedObject {
     public void addOutcome( Flow outcome ) {
         getOutcomes().add( outcome );
         outIndex.put( outcome.getId(), outcome );
+        outcome.setSource( this );
     }
 
     /**
@@ -84,6 +96,7 @@ public abstract class Node extends NamedObject {
     public void removeOutcome( Flow outcome ) {
         getOutcomes().remove( outcome );
         outIndex.remove( outcome.getId() );
+        outcome.setSource( null );
     }
 
     private Set<Flow> getRequirements() {
@@ -98,8 +111,10 @@ public abstract class Node extends NamedObject {
     final void setRequirements( Set<Flow> requirements ) {
         this.requirements = new TreeSet<Flow>( requirements );
         reqIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
-        for ( Flow f: requirements )
+        for ( Flow f: requirements ) {
             reqIndex.put( f.getId(), f );
+            f.setTarget( this );
+        }
     }
 
     /**
@@ -117,6 +132,7 @@ public abstract class Node extends NamedObject {
     public void addRequirement( Flow requirement ) {
         getRequirements().add( requirement );
         reqIndex.put( requirement.getId(), requirement );
+        requirement.setTarget( this );
     }
 
     /**
@@ -126,6 +142,7 @@ public abstract class Node extends NamedObject {
     public void removeRequirement( Flow requirement ) {
         getRequirements().remove( requirement );
         reqIndex.remove( requirement.getId() );
+        requirement.setTarget( this );
     }
 
     public boolean isPart() {
