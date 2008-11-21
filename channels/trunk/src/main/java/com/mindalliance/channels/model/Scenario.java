@@ -60,6 +60,7 @@ public class Scenario extends NamedObject {
         scenario.setDescription( DEFAULT_DESCRIPTION );
 
         final Set<Node> nodes = new HashSet<Node>( INITIAL_CAPACITY );
+
         nodes.add( new Part() );
         scenario.setNodes( nodes );
     }
@@ -166,7 +167,7 @@ public class Scenario extends NamedObject {
         if ( !nodes.contains( source ) || !nodes.contains( target ) )
             throw new IllegalArgumentException();
 
-        for ( Iterator<Flow> flows = source.outcomes(); flows.hasNext();) {
+        for ( Iterator<Flow> flows = source.outcomes(); flows.hasNext(); ) {
             final Flow f = flows.next();
             if ( target.equals( f.getTarget() ) )
                 return f;
@@ -192,24 +193,24 @@ public class Scenario extends NamedObject {
     private final class FlowIterator implements Iterator<Flow> {
 
         /** Iterator on nodes. */
-        private Iterator<Node> nodeIterator = nodes();
+        private final Iterator<Node> nodeIterator = nodes();
 
         /** Iterator on the outcomes of the current node. */
-        private Iterator<Flow> nodeOutcomesIterator = nodeIterator.next().outcomes();
+        private Iterator<Flow> outcomeIterator = nodeIterator.next().outcomes();
 
         private FlowIterator() {
         }
 
         public boolean hasNext() {
-            while ( !nodeOutcomesIterator.hasNext() && nodeIterator.hasNext() )
-                nodeOutcomesIterator = nodeIterator.next().outcomes();
-            return nodeOutcomesIterator.hasNext();
+            while ( !outcomeIterator.hasNext() && nodeIterator.hasNext() )
+                outcomeIterator = nodeIterator.next().outcomes();
+            return outcomeIterator.hasNext();
         }
 
         public Flow next() {
             if ( !hasNext() )
                 throw new NoSuchElementException();
-            return nodeOutcomesIterator.next();
+            return outcomeIterator.next();
         }
 
         public void remove() {

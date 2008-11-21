@@ -96,7 +96,7 @@ public abstract class NamedObject implements Comparable<NamedObject> {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        return (int) ( id ^ id >>> 32 );
+        return (int) id;
     }
 
     /** {@inheritDoc} */

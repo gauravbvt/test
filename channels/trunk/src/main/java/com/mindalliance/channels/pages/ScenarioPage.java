@@ -18,9 +18,10 @@ import java.util.List;
 public final class ScenarioPage extends WebPage {
 
     /** Class logger. */
-    private static final Log Logger = LogFactory.getLog( ScenarioPage.class );
+    private static final Log LOG = LogFactory.getLog( ScenarioPage.class );
 
-    private static final String SCENARIO_PARM = "scenario";
+    /** Name of the scenario parameter in the URL. */
+    private static final String SCENARIO_PARM = "scenario";   // NON-NLS
 
     public ScenarioPage() {
         init( getScenarioDao().getDefaultScenario() );
@@ -34,7 +35,7 @@ public final class ScenarioPage extends WebPage {
             try {
                 scenario = scenarioDao.findScenario( parameters.getLong( SCENARIO_PARM ) );
             } catch ( NotFoundException ignored ) {
-                    Logger.warn( "Unknown scenario in parameter. Using default." );
+                LOG.warn( "Unknown scenario in parameter. Using default." );
             }
 
         init( scenario );
@@ -49,7 +50,7 @@ public final class ScenarioPage extends WebPage {
         init( scenario, selected, expanded );
     }
 
-    private void init( Scenario scenario, Node selected, List<String> expanded ) {
+    private void init( Scenario scenario, Node selected, List< String > expanded ) {
     }
 
     /**
