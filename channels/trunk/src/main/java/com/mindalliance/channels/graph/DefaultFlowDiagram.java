@@ -23,13 +23,13 @@ import org.jgrapht.ext.VertexNameProvider;
  * Date: Nov 19, 2008
  * Time: 2:56:50 PM
  */
-public class DefaultFlowDiagram implements FlowDiagram {
+public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
 
     static private final String PNG = "png";
     static private final String SVG = "svg";
     static private final String IMAGE_MAP = "imap";
 
-    private DefaultGraphBuilder graphBuilder;
+    private GraphBuilder graphBuilder;
     private GraphRenderer<Node, Flow> graphRenderer;
     private String urlFormat = "?scenario={0}&node={1}";  // 0: scenario id, 1: node id
 
@@ -40,7 +40,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
     public DefaultFlowDiagram() {
     }
 
-    public void setGraphBuilder(DefaultGraphBuilder graphBuilder) {
+    public void setGraphBuilder(GraphBuilder graphBuilder) {
         this.graphBuilder = graphBuilder;
     }
 

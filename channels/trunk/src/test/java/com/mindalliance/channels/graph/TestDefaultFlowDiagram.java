@@ -3,6 +3,7 @@ package com.mindalliance.channels.graph;
 import junit.framework.TestCase;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.dao.FireScenario;
 
 import java.io.BufferedReader;
@@ -23,13 +24,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class TestDefaultFlowDiagram extends TestCase {
 
-    FlowDiagram flowDiagram;
+    FlowDiagram<Node,Flow> flowDiagram;
 
     @Override
     protected void setUp() {
-//        defaultFlowDiagram = new DefaultFlowDiagram();
-        ApplicationContext context = new ClassPathXmlApplicationContext();   // TODO this is wrong
-        flowDiagram = (FlowDiagram) context.getBean("flowDiagram");
+        GraphvizRenderer<Node,Flow> graphRenderer = new GraphvizRenderer<Node, Flow>();
+        graphRenderer.setDotPath("/usr/bin/dot");
+        flowDiagram = new DefaultFlowDiagram();
+        flowDiagram.setGraphRenderer(graphRenderer);
+        flowDiagram.setGraphBuilder(new DefaultGraphBuilder());
     }
 
     public void testGetSVG() {

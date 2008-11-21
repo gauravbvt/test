@@ -11,7 +11,11 @@ import java.io.InputStream;
 /**
  * Information flow diagram generator interface.
  */
-public interface FlowDiagram {
+public interface FlowDiagram<V,E> {
+
+    void setGraphRenderer(GraphRenderer<V,E> graphRenderer);
+
+    void setGraphBuilder(GraphBuilder graphBuilder);
 
     /**
      * Produces the PNG stream of a directed graph diagram of the scenario.
