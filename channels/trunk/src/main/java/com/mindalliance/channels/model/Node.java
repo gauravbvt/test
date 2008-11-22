@@ -9,7 +9,7 @@ import java.util.TreeSet;
 /**
  * A node in the flow graph
  */
-public abstract class Node extends NamedObject {
+public abstract class Node extends ModelObject {
 
     /** Initial capacity of outcome and requirement flows. */
     private static final int INITIAL_CAPACITY = 5;
@@ -39,6 +39,12 @@ public abstract class Node extends NamedObject {
         this();
         setName( name );
     }
+
+    /**
+     * Get a long string that can be used as a title for this node.
+     * @return a generated short description
+     */
+    public abstract String getTitle();
 
     /**
      * Find a flow connected to this node, given its id.

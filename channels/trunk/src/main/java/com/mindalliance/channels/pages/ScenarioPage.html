@@ -6,7 +6,7 @@
         xml:lang="en"
         lang="en">
 <head>
-  <title>Fire in the building</title>
+  <title wicket:id="sc-title">Title</title>
   <link rel="stylesheet" href="channels.css" type="text/css" />
 </head>
 
@@ -14,7 +14,7 @@
   <div id="everything">
     <form action="#" method="post">
       <div id="scenario">
-        <h1>Fire in the building
+        <h1><span wicket:id="header">Title</span>
 
         <ul class="menu">
           <li><a href="#">Edit</a></li>
@@ -28,7 +28,7 @@
         <img src="flow-graph.png" alt="[Information flow diagram]" border="0" />
 
         <div class="caption">
-          A fire occurs in the building.
+          <span wicket:id="sc-desc">A description.</span>
 
           <ul class="menu">
             <li><a href="#">View as list</a></li>
@@ -39,46 +39,17 @@
       </div>
 
       <div id="part">
-        <h2>Joe Smith investigating fire
+        <h2><span wicket:id="node-title">Node title</span>
 
         <ul class="menu">
-          <li><input type="checkbox" name="del" value="part" alt="Delete this part" /> Delete</li>
+          <li><input type="checkbox" name="del" value="node" alt="Delete this node" /> Delete</li>
         </ul></h2>
 
-        <table summary="Part description">
-          <tr>
-            <th align="right"><label for="task">Task:</label></th>
-            <td><input type="text" size="40" id="task" value="investigating fire" /></td>
-          </tr>
-
-          <tr>
-            <th align="right"><label for="actor">Actor:</label></th>
-            <td><input type="text" id="actor" value="Joe Smith" size="40" /> (see <a href="#">details</a>)</td>
-          </tr>
-
-          <tr>
-            <th align="right"><label for="role">Role:</label></th>
-            <td><input type="text" size="40" id="role" value="Fire Warden" /> (see <a href="#">details</a>)</td>
-          </tr>
-
-          <tr>
-            <th align="right"><label for="org">Organization:</label></th>
-            <td><input type="text" size="40" id="org" value="" /> (see <a href="#">details</a>)</td>
-          </tr>
-
-          <tr>
-            <th align="right"><label for="juris">Jurisdiction:</label></th>
-            <td><input type="text" size="40" id="juris" value="" /> (see <a href="#">details</a>)</td>
-          </tr>
-
-          <tr>
-            <th align="right"><label for="loc">Location:</label></th>
-            <td><input type="text" size="40" id="loc" value="" /> (see <a href="#">details</a>)</td>
-          </tr>
-
+        <table summary="Node description">
+<div wicket:id="specialty"></div>
           <tr>
             <th align="right" valign="top"><label for="description">Description:</label></th>
-            <td><textarea id="description" cols="40" rows="4">
+            <td><textarea id="description" wicket:id="node-desc" cols="40" rows="4">
 Fire alarms must be investigated carefully to assert if building evacuation is warranted.
 </textarea></td>
           </tr>

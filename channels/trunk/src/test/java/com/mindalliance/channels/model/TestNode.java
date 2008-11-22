@@ -21,7 +21,7 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        node = new System();
+        node = new Connector();
         a = new Flow();
         a.setName( "A" );
         b = new Flow();
@@ -119,7 +119,7 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        final Part part = new Part( new Person(), "" );
+        final Part part = new Part( new Actor(), "" );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
         assertFalse( part.isScenarioNode() );

@@ -32,4 +32,10 @@ public class ScenarioNode extends Node {
     public boolean isScenarioNode() {
         return true;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return scenario.toString();
+    }
 }

@@ -19,6 +19,11 @@ public class TestScenarioNode extends TestCase {
         assertNull( node.getScenario() );
         final Scenario scenario = new Scenario();
         node.setScenario( scenario );
-        assertSame( scenario, node.getScenario() );       
+        assertSame( scenario, node.getScenario() );
+    }
+
+    public void testTitle() {
+        node.setScenario( new Scenario( "Bla" ) );
+        assertEquals( node.getScenario().toString(), node.getTitle() );
     }
 }

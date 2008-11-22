@@ -34,7 +34,7 @@ public class TestPart extends TestCase {
         part.setTask( "standing by" );
         assertEquals( "Unknown actor standing by", part.toString() );
 
-        final Person bob = new Person( "Bob" );
+        final Actor bob = new Actor( "Bob" );
         part.setActor( bob );
         assertEquals( "Bob standing by", part.toString() );
 
@@ -65,16 +65,14 @@ public class TestPart extends TestCase {
 
     public void testLocation() {
         assertNull( part.getLocation() );
-        final Location location = new Location();
-        location.setName( "Somewhere" );
+        final Location location = new Location( "Somewhere" );
         part.setLocation( location );
         assertSame( location, part.getLocation() );
     }
 
     public void testJurisdiction() {
         assertNull( part.getJurisdiction() );
-        final Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setName( "Somewhere" );
+        final Jurisdiction jurisdiction = new Jurisdiction( "Somewhere" );
         part.setJurisdiction( jurisdiction );
         assertSame( jurisdiction, part.getJurisdiction() );
     }
@@ -90,8 +88,11 @@ public class TestPart extends TestCase {
         part.setRole( new Role( s1 ) );
         assertSame( s1, part.getName() );
 
-        final String s2 = "JF";
-        part.setActor( new Person( s2 ) );
+        final String s2 = "HAL 9000";
+        final Actor actor = new Actor( s2 );
+        actor.setSystem( true );
+        assertTrue( actor.isSystem() );
+        part.setActor( actor );
         assertSame( s2, part.getName() );
 
         part.setActor( null );

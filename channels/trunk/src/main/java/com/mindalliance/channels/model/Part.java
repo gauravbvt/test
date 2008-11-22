@@ -59,12 +59,18 @@ public class Part extends Node {
 
     /** {@inheritDoc} */
     @Override
-    public String toString() {
+    public String getTitle() {
         final String actorString = getActor()        != null ? getActor().toString()
                                  : getRole()         != null ? getRole().toString()
                                  : getOrganization() != null ? getOrganization().toString()
                                  : DEFAULT_ACTOR;
         return MessageFormat.format( "{0} {1}", actorString, getTask() );
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return getTitle();
     }
 
     public final String getTask() {

@@ -13,4 +13,10 @@ public class Connector extends Node {
         return true;
     }
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return "Connector";
+    }
 }

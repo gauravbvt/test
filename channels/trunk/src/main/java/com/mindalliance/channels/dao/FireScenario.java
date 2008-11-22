@@ -1,14 +1,14 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Person;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioNode;
-import com.mindalliance.channels.model.System;
 
 /**
  * The fire in the building scenario...
@@ -17,7 +17,12 @@ import com.mindalliance.channels.model.System;
 public class FireScenario extends Scenario {
 
     public FireScenario() {
-        final Person joe = new Person( "Joe Smith" );
+        setName( "Fire in the building" );
+        setDescription( "A fire happens" );
+
+        final Node defNode = nodes().next();
+
+        final Actor joe = new Actor( "Joe Smith" );
 
         final Part js1    = new Part( joe, "investigating fire" );
         js1.setRole( new Role( "Fire Warden" ) );
@@ -28,7 +33,9 @@ public class FireScenario extends Scenario {
         final Part chief  = new Part( new Role( "Fire Chief" ), "supervising operations" );
         final Connector connector = new Connector();
         final ScenarioNode evac = new ScenarioNode( new Scenario( "Building Evacuation" ) );
-        final Part alarm  = new Part( new System( "Fire Alarm" ), "ringing" );
+        final Actor system = new Actor( "Fire Alarm" );
+        system.setSystem( true );
+        final Part alarm  = new Part( system, "ringing" );
 
         final Part fd     = new Part();
         fd.setOrganization( new Organization( "Fire Department" ) );
@@ -63,5 +70,7 @@ public class FireScenario extends Scenario {
         connect( js1, evac ).setName( "started" );
         connect( evac, js2 ).setName( "ended" );
         connect( js2, chief ).setName( "status" );
+
+        removeNode( defNode );
     }
 }

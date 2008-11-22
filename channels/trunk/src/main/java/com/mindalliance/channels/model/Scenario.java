@@ -12,7 +12,7 @@ import java.util.TreeSet;
  * A scenario in the project.
  * Provides an iterator on its nodes.
  */
-public class Scenario extends NamedObject {
+public class Scenario extends ModelObject {
 
     /** The default name for new scenarios. */
     static final String DEFAULT_NAME = "Untitled";

@@ -138,9 +138,9 @@ public class TestScenario extends TestCase {
     }
 
     public void testFlows() {
-        final Part bob = new Part( new Person( "Bob" ), "talking" );
-        final Part sue = new Part( new Person( "Sue" ), "repeating" );
-        final Part joe = new Part( new Person( "Joe" ), "zoning out" );
+        final Part bob = new Part( new Actor( "Bob" ), "talking" );
+        final Part sue = new Part( new Actor( "Sue" ), "repeating" );
+        final Part joe = new Part( new Actor( "Joe" ), "zoning out" );
         scenario.addNode( bob );
         scenario.addNode( sue );
         scenario.addNode( joe );

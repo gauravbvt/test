@@ -82,6 +82,7 @@ public class TestMemory extends TestCase {
 
     public void testAddSameName() throws DuplicateKeyException {
         final Scenario a = new Scenario();
+        memory.addScenario( new Scenario() );
         try {
             memory.addScenario( new Scenario() );
             fail();
