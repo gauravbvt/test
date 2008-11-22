@@ -11,30 +11,40 @@ import java.util.ArrayList;
  * Time: 10:45:02 AM
  */
 public class DOTAttribute {
+    /**
+     * The attribute's name
+     */
+    private String name;
+    /**
+     * The attribute's value
+     */
+    private String value;
 
-    String name;
-    String value;
-
-    DOTAttribute(String name, String value) {
+    DOTAttribute( String name, String value ) {
         this.name = name;
         this.value = value;
     }
 
+    /**
+     * DOTAttribute as string
+     *
+     * @return string representation
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(name);
-        sb.append('=');
-        sb.append("\"");
-        sb.append(value);
-        sb.append("\"");
-        return sb.toString();        
+        sb.append( name );
+        sb.append( '=' );
+        sb.append( "\"" );
+        sb.append( value );
+        sb.append( "\"" );
+        return sb.toString();
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName( String name ) {
         this.name = name;
     }
 
@@ -42,17 +52,27 @@ public class DOTAttribute {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue( String value ) {
         this.value = value;
     }
 
+    /**
+     * Create a list with the DOTAttribute as single element
+     *
+     * @return a list of one DOTAttribute
+     */
     public List<DOTAttribute> asList() {
         List<DOTAttribute> list = new ArrayList<DOTAttribute>();
-        list.add(this);
+        list.add( this );
         return list;
     }
 
-    static public List<DOTAttribute> emptyList() {
+    /**
+     * Produces an empty list
+     *
+     * @return an empty list of DOTAttributes
+     */
+    static List<DOTAttribute> emptyList() {
         return new ArrayList<DOTAttribute>();
     }
 

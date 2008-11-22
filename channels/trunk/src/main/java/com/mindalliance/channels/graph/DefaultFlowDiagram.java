@@ -23,15 +23,31 @@ import org.jgrapht.ext.VertexNameProvider;
  * Date: Nov 19, 2008
  * Time: 2:56:50 PM
  */
-public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
-
-    static private final String PNG = "png";
-    static private final String SVG = "svg";
-    static private final String IMAGE_MAP = "imap";
-
+public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
+    /**
+     * The PNG format
+     */
+    static final String PNG = "png";
+    /**
+     * The SVG format
+     */
+    static final String SVG = "svg";
+    /**
+     * The image map format
+     */
+    static final String IMAGE_MAP = "imap";
+    /**
+     * A graph builder
+     */
     private GraphBuilder graphBuilder;
+    /**
+     * A GraphRenderer for nodes and flows
+     */
     private GraphRenderer<Node, Flow> graphRenderer;
-    private String urlFormat = "?scenario={0}&node={1}";  // 0: scenario id, 1: node id
+    /**
+     * 0: scenario id, 1: node id
+     */
+    private String urlFormat = "?scenario={0}&node={1}";
 
 
     /**
@@ -40,11 +56,11 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
     public DefaultFlowDiagram() {
     }
 
-    public void setGraphBuilder(GraphBuilder graphBuilder) {
+    public void setGraphBuilder( GraphBuilder graphBuilder ) {
         this.graphBuilder = graphBuilder;
     }
 
-    public void setGraphRenderer(GraphRenderer<Node,Flow> graphRenderer) {
+    public void setGraphRenderer( GraphRenderer<Node, Flow> graphRenderer ) {
         this.graphRenderer = graphRenderer;
     }
 
@@ -52,7 +68,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
         return urlFormat;
     }
 
-    public void setUrlFormat(String urlFormat) {
+    public void setUrlFormat( String urlFormat ) {
         this.urlFormat = urlFormat;
     }
 
@@ -65,10 +81,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public InputStream getPNG(Scenario scenario, Node selectedNode) throws DiagramException {
-        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph(scenario);
-        graphRenderer.highlightVertex(selectedNode);
-        return render(graph, PNG, scenario);
+    public InputStream getPNG( Scenario scenario, Node selectedNode ) throws DiagramException {
+        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        graphRenderer.highlightVertex( selectedNode );
+        return render( graph, PNG, scenario );
     }
 
     /**
@@ -80,10 +96,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public InputStream getSVG(Scenario scenario, Node selectedNode) throws DiagramException {
-        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph(scenario);
-        graphRenderer.highlightVertex(selectedNode);
-        return render(graph, SVG, scenario);
+    public InputStream getSVG( Scenario scenario, Node selectedNode ) throws DiagramException {
+        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        graphRenderer.highlightVertex( selectedNode );
+        return render( graph, SVG, scenario );
     }
 
 
@@ -96,44 +112,46 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public ImageMap getImageMap(Scenario scenario, Node selectedNode) throws DiagramException {
-        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph(scenario);
-        InputStream in = render(graph, IMAGE_MAP, scenario);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    public ImageMap getImageMap( Scenario scenario, Node selectedNode ) throws DiagramException {
+        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        InputStream in = render( graph, IMAGE_MAP, scenario );
+        BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
         StringBuilder sb = new StringBuilder();
         String line;
         try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
+            while ( ( line = reader.readLine() ) != null ) {
+                sb.append( line );
             }
-        } catch (IOException e) {
-            throw new DiagramException("Failed to read generated diagram", e);
+        } catch ( IOException e ) {
+            throw new DiagramException( "Failed to read generated diagram", e );
         }
         String map = sb.toString();
-        map = map.replace("base referer", "base referer "); // patches apparent bug in dot
-        System.out.println(map);
-        return new ImageMap(map);
+        // patches apparent bug in dot
+        map = map.replace( "base referer", "base referer " );
+        System.out.println( map );
+        return new ImageMap( map );
     }
 
-    private InputStream render(Graph<Node, Flow> graph, String format, Scenario scenario) throws DiagramException {
-        return graphRenderer.render(graph,
+    private InputStream render( Graph<Node, Flow> graph, String format,
+                                Scenario scenario ) throws DiagramException {
+        return graphRenderer.render( graph,
                 getVertexIDProvider(),
                 getVertexLabelProvider(),
                 getEdgeLabelProvider(),
                 getDOTAttributeProvider(),
-                getUrlProvider(scenario),
+                getUrlProvider( scenario ),
                 format
         );
     }
 
-    private URLProvider<Node, Flow> getUrlProvider(final Scenario scenario) {
+    private URLProvider<Node, Flow> getUrlProvider( final Scenario scenario ) {
         return new URLProvider<Node, Flow>() {
-            public String getVertexURL(Node vertex) {
+            public String getVertexURL( Node vertex ) {
                 Object[] args = {scenario.getId(), vertex.getId()};
-                return MessageFormat.format(urlFormat, args);
+                return MessageFormat.format( urlFormat, args );
             }
 
-            public String getEdgeURL(Flow edge) {
+            public String getEdgeURL( Flow edge ) {
                 return null;
             }
         };
@@ -142,28 +160,29 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
     private DOTAttributeProvider<Node, Flow> getDOTAttributeProvider() {
         return new DOTAttributeProvider<Node, Flow>() {
             public List<DOTAttribute> getGraphAttributes() {
-                return new DOTAttribute("rankdir", "LR").asList();
+                return new DOTAttribute( "rankdir", "LR" ).asList();
             }
 
-            public List<DOTAttribute> getVertexAttributes(Node vertex, boolean highlighted) {
+            public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
                 List<DOTAttribute> list = DOTAttribute.emptyList();
-                if (vertex.isPart()) {
-                    list.add(new DOTAttribute("shape", "box"));
-                } else if (vertex.isConnector()) {
-                    list.add(new DOTAttribute("shape", "point"));
-                } else { // scenarioNode
-                    list.add(new DOTAttribute("shape", "egg"));
+                if ( vertex.isPart() ) {
+                    list.add( new DOTAttribute( "shape", "box" ) );
+                } else if ( vertex.isConnector() ) {
+                    list.add( new DOTAttribute( "shape", "point" ) );
+                    // scenarioNode
+                } else {
+                    list.add( new DOTAttribute( "shape", "egg" ) );
                 }
-                if (highlighted) {
-                    list.add(new DOTAttribute("style", "bold"));
+                if ( highlighted ) {
+                    list.add( new DOTAttribute( "style", "bold" ) );
                 }
                 return list;
             }
 
-            public List<DOTAttribute> getEdgeAttributes(Flow edge, boolean highlighted) {
+            public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
                 List<DOTAttribute> list = DOTAttribute.emptyList();
-                if (edge.isAskedFor()) {
-                    list.add(new DOTAttribute("style", "dotted"));
+                if ( edge.isAskedFor() ) {
+                    list.add( new DOTAttribute( "style", "dotted" ) );
                 }
                 return list;
             }
@@ -172,7 +191,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
 
     private EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
-            public String getEdgeName(Flow flow) {
+            public String getEdgeName( Flow flow ) {
                 return flow.getName();
             }
         };
@@ -180,7 +199,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
 
     private VertexNameProvider<Node> getVertexLabelProvider() {
         return new VertexNameProvider<Node>() {
-            public String getVertexName(Node node) {
+            public String getVertexName( Node node ) {
                 return node.getName();
             }
         };
@@ -188,11 +207,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node,Flow> {
 
     private VertexNameProvider<Node> getVertexIDProvider() {
         return new VertexNameProvider<Node>() {
-            public String getVertexName(Node node) {
+            public String getVertexName( Node node ) {
                 return "" + node.getId();
             }
         };
     }
-
 
 }

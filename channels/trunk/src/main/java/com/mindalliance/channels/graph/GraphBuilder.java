@@ -14,7 +14,13 @@ import org.jgrapht.Graph;
  */
 public interface GraphBuilder {
 
-    Graph<Node, Flow> buildScenarioGraph(Scenario scenario);
+    /**
+     * Build a graph representing the scenario
+     *
+     * @param scenario -- a scenario
+     * @return a Graph
+     */
+    Graph<Node, Flow> buildScenarioGraph( Scenario scenario );
 
     // other graphs here
 }

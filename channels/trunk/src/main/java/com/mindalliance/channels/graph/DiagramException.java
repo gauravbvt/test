@@ -13,11 +13,11 @@ public class DiagramException extends Exception {
         super();
     }
 
-    public DiagramException(String message) {
-        super(message);
+    public DiagramException( String message ) {
+        super( message );
     }
 
-    public DiagramException(String message, Throwable cause) {
-        super(message, cause);
+    public DiagramException( String message, Throwable cause ) {
+        super( message, cause );
     }
 }
