@@ -22,12 +22,14 @@
         <property name="graphBuilder" ref="graphBuilder"/>
         <property name="graphRenderer" ref="graphRenderer"/>
         <property name="urlFormat" value="?scenario={0}&amp;node={1}"/>
+        <property name="imageDirectory" value="src/site/resources/images"/>
     </bean>
 
     <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
-        <property name="dotPath" value="/usr/bin/dot"/>
+        <property name="dotPath" value="/usr/bin"/>
+        <property name="algo" value="neato"/>
     </bean>
 
 

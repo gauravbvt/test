@@ -15,6 +15,8 @@ public interface FlowDiagram<V, E> {
 
     void setGraphBuilder( GraphBuilder graphBuilder );
 
+    public void setImageDirectory( String imageDirectory );
+
     /**
      * Produces the PNG stream of a directed graph diagram of the scenario.
      *

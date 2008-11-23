@@ -29,7 +29,12 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * The path to the dot executable
      */
-    private String dotPath = "/usr/bin/dot";
+    private String dotPath = "/usr/bin/";
+
+    /**
+     * Drawing algorithm (neato, dot...)
+     */
+    private String algo ="neato";
     /**
      * The vertices to highlight
      */
@@ -49,6 +54,10 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
 
     public void setDotPath( String path ) {
         dotPath = path;
+    }
+
+    public void setAlgo( String algo ) {
+        this.algo = algo;
     }
 
     /**
@@ -101,6 +110,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                 edgeLabelProvider,
                 dotAttributeProvider,
                 urlProvider );
+        System.out.println(dot);
         return doRender( dot, format );
     }
 
@@ -113,7 +123,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * @throws DiagramException if generation fails
      */
     private InputStream doRender( String dot, String format ) throws DiagramException {
-        String command = getDotPath() + " -T" + format;
+        String command = getDotPath() + "/" + algo + " -T" + format;
         Process p;
         int exitValue;
         try {

@@ -3,6 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
 
 import java.io.InputStream;
 import java.io.BufferedReader;
@@ -48,7 +49,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      * 0: scenario id, 1: node id
      */
     private String urlFormat = "?scenario={0}&node={1}";
-
+    /**
+     * Path to image directory
+     */
+    private String imageDirectory;
 
     /**
      * Constructor
@@ -70,6 +74,14 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
 
     public void setUrlFormat( String urlFormat ) {
         this.urlFormat = urlFormat;
+    }
+
+    public String getImageDirectory() {
+        return imageDirectory;
+    }
+
+    public void setImageDirectory( String imageDirectory ) {
+        this.imageDirectory = imageDirectory;
     }
 
     /**
@@ -138,7 +150,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
                 getVertexIDProvider(),
                 getVertexLabelProvider(),
                 getEdgeLabelProvider(),
-                getDOTAttributeProvider(),
+                getDOTAttributeProvider( format ),
                 getUrlProvider( scenario ),
                 format
         );
@@ -157,33 +169,49 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
         };
     }
 
-    private DOTAttributeProvider<Node, Flow> getDOTAttributeProvider() {
+    private DOTAttributeProvider<Node, Flow> getDOTAttributeProvider( final String format ) {
         return new DOTAttributeProvider<Node, Flow>() {
             public List<DOTAttribute> getGraphAttributes() {
-                return new DOTAttribute( "rankdir", "LR" ).asList();
+                return DOTAttribute.emptyList();
             }
 
             public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
                 List<DOTAttribute> list = DOTAttribute.emptyList();
-                if ( vertex.isPart() ) {
-                    list.add( new DOTAttribute( "shape", "box" ) );
-                } else if ( vertex.isConnector() ) {
-                    list.add( new DOTAttribute( "shape", "point" ) );
-                    // scenarioNode
+                if ( format.equalsIgnoreCase( SVG ) ) {
+                    if ( vertex.isPart() ) {
+                        list.add( new DOTAttribute( "shape", "box" ) );
+                    } else if ( vertex.isConnector() ) {
+                        list.add( new DOTAttribute( "shape", "point" ) );
+                        // scenarioNode
+                    } else {
+                        list.add( new DOTAttribute( "shape", "egg" ) );
+                    }
+                    // assuming a bitmap format
                 } else {
-                    list.add( new DOTAttribute( "shape", "egg" ) );
+                    list.add( new DOTAttribute( "image", getIcon( vertex, format ) ) );
+                    list.add( new DOTAttribute( "labelloc", "b" ) );
+                    if ( highlighted ) {
+                        list.add( new DOTAttribute( "shape", "box" ) );
+                        list.add( new DOTAttribute( "style", "dotted" ) );
+                    } else {
+                        list.add( new DOTAttribute( "shape", "none" ) );
+                    }
                 }
-                if ( highlighted ) {
-                    list.add( new DOTAttribute( "style", "bold" ) );
-                }
+                list.add( new DOTAttribute( "fontsize", "10" ) );
+                list.add( new DOTAttribute( "fontname", "Arial" ) );
                 return list;
             }
 
             public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
                 List<DOTAttribute> list = DOTAttribute.emptyList();
                 if ( edge.isAskedFor() ) {
-                    list.add( new DOTAttribute( "style", "dotted" ) );
+                    // list.add( new DOTAttribute( "style", "dotted" ) );
+                    list.add( new DOTAttribute( "arrowtail", "onormal" ) );
                 }
+                list.add( new DOTAttribute( "fontname", "Arial" ) );
+                list.add( new DOTAttribute( "fontsize", "9" ) );
+                list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
+                list.add( new DOTAttribute( "len", "1.5" ) );
                 return list;
             }
         };
@@ -200,7 +228,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
     private VertexNameProvider<Node> getVertexLabelProvider() {
         return new VertexNameProvider<Node>() {
             public String getVertexName( Node node ) {
-                return node.getName();
+                return getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
             }
         };
     }
@@ -211,6 +239,46 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
                 return "" + node.getId();
             }
         };
+    }
+
+    private String getIcon( Node node, String format ) {
+        String iconName;
+        int numLines = 0;
+        if ( node.isScenarioNode() ) {
+            iconName = "scenario1";
+        } else if ( node.isConnector() ) {
+            iconName = "connector";
+        }
+        // node is a part
+        else {
+            String label = getNodeLabel( node );
+            String[] lines = label.split( "\\|" );
+            numLines = Math.min( lines.length, 2 );
+            Part part = (Part) node;
+            if ( part.getActor() != null ) {
+                iconName = part.getActor().isSystem() ? "system" : "person";
+            } else if ( part.getRole() != null ) {
+                iconName = "role";
+            } else if ( part.getOrganization() != null ) {
+                iconName = "organization";
+            } else {
+                iconName = "unknown";
+            }
+        }
+        return imageDirectory + "/" + iconName + ( numLines > 0 ? numLines : "" ) + "." + format;
+    }
+
+    private String getNodeLabel( Node node ) {
+        if ( node.isPart() ) {
+            Part part = (Part) node;
+            final String actorString = part.getActor() != null ? part.getActor().toString()
+                    : part.getRole() != null ? part.getRole().toString()
+                    : part.getOrganization() != null ? part.getOrganization().toString()
+                    : Part.DEFAULT_ACTOR;
+            return MessageFormat.format( "{0}|{1}", actorString, part.getTask() );
+        } else {
+            return node.getName();
+        }
     }
 
 }
