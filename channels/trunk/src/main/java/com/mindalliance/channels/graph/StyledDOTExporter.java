@@ -72,13 +72,11 @@ public class StyledDOTExporter<V, E> {
         out.println();
         // Vertices
         for ( V v : g.vertexSet() ) {
-            out.print( indent + getVertexID( v ) );
-            out.print( "[" );
-            if ( vertexLabelProvider != null ) {
-                out.print(
-                        "label = \"" + vertexLabelProvider.getVertexName( v ) + "\"" );
-            }
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
+            if ( vertexLabelProvider != null ) {
+                String label = vertexLabelProvider.getVertexName( v );
+                attributes.add( new DOTAttribute( "label", label ) );
+            }
             if ( attributeProvider != null ) {
                 attributes.addAll( attributeProvider.getVertexAttributes( v, highlightedVertices.contains( v ) ) );
             }
@@ -86,24 +84,20 @@ public class StyledDOTExporter<V, E> {
                 String url = urlProvider.getVertexURL( v );
                 if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
             }
+            out.print( indent + getVertexID( v ) );
+            out.print( "[" );
             if ( !attributes.isEmpty() ) {
-                out.print( "," );
                 out.print( asElementAttributes( attributes ) );
             }
             out.println( "];" );
         }
         // Edges
         for ( E e : g.edgeSet() ) {
-            String source = getVertexID( g.getEdgeSource( e ) );
-            String target = getVertexID( g.getEdgeTarget( e ) );
-
-            out.print( indent + source + connector + target );
-            out.print( "[" );
-            if ( edgeLabelProvider != null ) {
-                out.print(
-                        "label = \"" + edgeLabelProvider.getEdgeName( e ) + "\"" );
-            }
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
+            if ( edgeLabelProvider != null ) {
+                String label = edgeLabelProvider.getEdgeName( e );
+                attributes.add( new DOTAttribute( "label", label ) );
+            }
             if ( attributeProvider != null ) {
                 attributes.addAll( attributeProvider.getEdgeAttributes( e, highlightedEdges.contains( e ) ) );
             }
@@ -111,8 +105,11 @@ public class StyledDOTExporter<V, E> {
                 String url = urlProvider.getEdgeURL( e );
                 if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
             }
+            String source = getVertexID( g.getEdgeSource( e ) );
+            String target = getVertexID( g.getEdgeTarget( e ) );
+            out.print( indent + source + connector + target );
+            out.print( "[" );
             if ( !attributes.isEmpty() ) {
-                out.print( "," );
                 out.print( asElementAttributes( attributes ) );
             }
             out.println( "];" );

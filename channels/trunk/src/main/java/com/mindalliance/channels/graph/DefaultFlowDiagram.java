@@ -205,9 +205,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
             public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
                 List<DOTAttribute> list = DOTAttribute.emptyList();
                 if ( edge.isAskedFor() ) {
-                    // list.add( new DOTAttribute( "style", "dotted" ) );
-                    list.add( new DOTAttribute( "arrowtail", "onormal" ) );
+                    list.add( new DOTAttribute( "style", "dotted" ) );
+                    // list.add( new DOTAttribute( "arrowtail", "onormal" ) );
                 }
+                list.add( new DOTAttribute( "arrowsize", "0.75" ) );
                 list.add( new DOTAttribute( "fontname", "Arial" ) );
                 list.add( new DOTAttribute( "fontsize", "9" ) );
                 list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
