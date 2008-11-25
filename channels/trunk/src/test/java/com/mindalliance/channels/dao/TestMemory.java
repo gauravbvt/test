@@ -35,7 +35,10 @@ public class TestMemory extends TestCase {
     public void testAddDelete() throws DuplicateKeyException, NotFoundException {
         final Scenario s = new Scenario();
         s.setName( "Bogus" );
+
+        final int size = memory.getScenarioCount();
         memory.addScenario( s );
+        assertEquals( size+1, memory.getScenarioCount() );
 
         assertSame( s, memory.findScenario( s.getName() ) );
         assertSame( s, memory.findScenario( s.getId() ) );

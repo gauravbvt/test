@@ -29,10 +29,10 @@ public class TestPart extends TestCase {
     }
 
     public void testToString() {
-        assertEquals( "Unknown actor doing something", part.toString() );
+        assertEquals( "Somebody doing something", part.toString() );
 
         part.setTask( "standing by" );
-        assertEquals( "Unknown actor standing by", part.toString() );
+        assertEquals( "Somebody standing by", part.toString() );
 
         final Actor bob = new Actor( "Bob" );
         part.setActor( bob );

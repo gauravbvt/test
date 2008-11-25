@@ -11,7 +11,7 @@ public class Part extends Node {
     static final String DEFAULT_TASK = "doing something";
 
     /** Default actor label, when unknown. */
-    public static final String DEFAULT_ACTOR = "Unknown actor";
+    static final String DEFAULT_ACTOR = "Somebody";
 
     /** The task label of this part (never null or empty). */
     private String task = DEFAULT_TASK;

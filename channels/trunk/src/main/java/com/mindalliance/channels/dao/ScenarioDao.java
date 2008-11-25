@@ -2,6 +2,7 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Scenario;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -9,7 +10,12 @@ import java.util.Iterator;
  * Implementations should ensure that there is at least one scenario available.
  * @see Scenario#createDefault()
  */
-public interface ScenarioDao {
+public interface ScenarioDao extends Serializable {
+
+    /**
+     * The initial number of scenario slots.
+     * This should be close to the observed average scenarios. */
+    int INITIAL_CAPACITY = 10;
 
     /**
      * Find a scenario given its name.
@@ -52,4 +58,9 @@ public interface ScenarioDao {
      * @return a scenario
      */
     Scenario getDefaultScenario();
+
+    /**
+     * @return the total number of scenarios.
+     */
+    int getScenarioCount();
 }

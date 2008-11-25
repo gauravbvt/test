@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages;
+package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.model.ScenarioNode;
 import org.apache.wicket.markup.html.panel.Panel;

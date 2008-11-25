@@ -2,24 +2,39 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.components.PartPanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.StatelessForm;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,22 +43,25 @@ import java.util.Set;
 public final class ScenarioPage extends WebPage {
 
     /** The 'scenario' parameter in the URL. */
-    static final String SCENARIO_PARM = "scenario";             // NON-NLS
+    static final String SCENARIO_PARM = "scenario";                                       // NON-NLS
 
     /** The 'part' parameter in the URL. */
-    static final String NODE_PARM = "node";                     // NON-NLS
+    static final String NODE_PARM = "node";                                               // NON-NLS
 
     /** The 'expand' parameter in the URL. */
-    static final String EXPAND_PARM = "expand";                 // NON-NLS
+    static final String EXPAND_PARM = "expand";                                           // NON-NLS
 
     /** Class logger. */
     private static final Log LOG = LogFactory.getLog( ScenarioPage.class );
 
-    /** Description field name. */
-    private static final String DESC_FIELD = "description";     // NON-NLS
+    /** Name property name... */
+    private static final String NAME_PROPERTY = "name";                                   // NON-NLS
+
+    /** Description property name. */
+    private static final String DESC_PROPERTY = "description";                            // NON-NLS
 
     /** Specialty field name. */
-    private static final String SPECIALTY_FIELD = "specialty";  // NON-NLS
+    private static final String SPECIALTY_FIELD = "specialty";                            // NON-NLS
 
     /**
      * Used when page is called without parameters.
@@ -75,9 +93,17 @@ public final class ScenarioPage extends WebPage {
     /**
      * Utility constructor for tests.
      * @param scenario a scenario
+     */
+    public ScenarioPage( Scenario scenario ) {
+        this( scenario, scenario.nodes().next() );
+    }
+
+    /**
+     * Utility constructor for tests.
+     * @param scenario a scenario
      * @param node a node in the scenario
      */
-    ScenarioPage( Scenario scenario, Node node ) {
+    public ScenarioPage( Scenario scenario, Node node ) {
         final Set<String> expansions = Collections.emptySet();
         init( scenario, node, expansions );
     }
@@ -125,10 +151,7 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Scenario scenario ) {
-        final Iterator<Node> nodes = scenario.nodes();
-        // TODO remove the next line when able to navigate across nodes
-        nodes.next(); nodes.next(); nodes.next();
-        redirectTo( scenario, nodes.next() );
+        redirectTo( scenario, scenario.nodes().next() );
     }
 
     private void redirectTo( Scenario scenario, Node node ) {
@@ -139,20 +162,34 @@ public final class ScenarioPage extends WebPage {
                         MessageFormat.format( "?scenario={0}&node={1}", sid, nid ) ) );   // NON-NLS
     }
 
+    /**
+     * Return initialized parameters for given scenario and node.
+     * @param scenario the scenario
+     * @param node the node, maybe null (in which case, would link to first node in scenario)
+     * @return page parameters to use in links, etc.
+     */
+    public static PageParameters getParameters( Scenario scenario, Node node ) {
+        final PageParameters result = new PageParameters();
+        result.put( SCENARIO_PARM, scenario.getId() );
+        if ( node != null )
+            result.put( NODE_PARM, node.getId() );
+        return result;
+    }
+
+    /** Set content-type to application/xhtml+xml. */
+    @Override
+    protected void configureResponse() {
+        super.configureResponse();
+        getResponse().setContentType( "application/xhtml+xml" );                          // NON-NLS
+    }
+
     private void init( Scenario scenario, Node node, Set<String> expansions ) {
         final PropertyModel<String> title =
                 new PropertyModel<String>( scenario, "name" );                            // NON-NLS
         add( new Label( "sc-title", title ) );                                            // NON-NLS
-        add( new Label( "header", title ) );                                              // NON-NLS
-        add( new Label( "sc-desc", new PropertyModel<String>( scenario, DESC_FIELD ) ) ); // NON-NLS
 
-        add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) );     // NON-NLS
-        add( new Label( "node-desc", new PropertyModel<String>( node, DESC_FIELD ) ) );   // NON-NLS
-
-        if ( node.isPart() )
-            add( new PartPanel( SPECIALTY_FIELD, new Model<Part>( (Part) node ) ) );
-        else
-            add( new Label( SPECIALTY_FIELD, "" ) );
+        final Form<?> form = new ScenarioForm( "big-form", scenario, node );              // NON-NLS
+        add( form );
 
         LOG.info( "Scenario page generated" );
     }
@@ -162,6 +199,169 @@ public final class ScenarioPage extends WebPage {
      * @return the scenario DAO
      */
     private ScenarioDao getScenarioDao() {
-        return ( (Project) getApplication() ).getScenarioDao();
+        return getProject().getScenarioDao();
+    }
+
+    private Project getProject() {
+        return (Project) getApplication();
+    }
+
+    //==============================================================
+    /**
+     * The scenario form.
+     */
+    private final class ScenarioForm extends StatelessForm<Scenario> {
+
+        /** The scenario import field. */
+        private FileUploadField scenarioImport;
+
+        //------------------------------
+        private ScenarioForm( String id, Scenario scenario, Node node ) {
+            super( id );
+            setMultiPart( true );
+            setStatelessHint( true );
+
+            add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
+            add( new Label( "node-desc",                                                  // NON-NLS
+                     new PropertyModel<String>( node, DESC_PROPERTY ) ) );
+
+            final Component panel = node.isPart() ?
+                    new PartPanel( SPECIALTY_FIELD, (Part) node )
+                  : new Label( SPECIALTY_FIELD, "" );
+            panel.setRenderBodyOnly( true );
+            add( panel );
+
+            addScenarioFields( scenario );
+        }
+
+        //------------------------------
+        /**
+         * Add scenario-related components.
+         * @param scenario the underlying scenario
+         */
+        private void addScenarioFields( Scenario scenario ) {
+            add( new Label( "header",                                                     // NON-NLS
+                            new PropertyModel<String>( scenario, NAME_PROPERTY ) ) );
+            add( new Label( "sc-desc",                                                    // NON-NLS
+                            new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
+
+            add( createExportScenario( "sc-export", scenario ) );                         // NON-NLS
+            add( new NewScenarioLink( "sc-new" ) );                                       // NON-NLS
+
+            add( new DeleteScenarioBox( "sc-del", scenario ) );                           // NON-NLS
+            add( createSelectScenario( "sc-sel", scenario ) );                            // NON-NLS
+
+            scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
+            add( scenarioImport );
+        }
+
+        //------------------------------
+        private DropDownChoice<Scenario> createSelectScenario( String id, Scenario scenario ) {
+            final List<Scenario> scenarios =
+                    new ArrayList<Scenario>( ScenarioDao.INITIAL_CAPACITY );
+
+            final Iterator<Scenario> iterator = getScenarioDao().scenarios();
+            while ( iterator.hasNext() )
+                scenarios.add( iterator.next() );
+
+            return new DropDownChoice<Scenario>( id, new Model<Scenario>( scenario ), scenarios ) {
+                @Override
+                protected void onSelectionChanged( Scenario newSelection ) {
+                    redirectTo( newSelection );
+                }
+            };
+        }
+
+        //------------------------------
+        private BookmarkablePageLink<Scenario> createExportScenario(
+                String id, Scenario scenario ) {
+
+            final PageParameters parms = new PageParameters();
+            parms.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
+            return new BookmarkablePageLink<Scenario>( id, ExportPage.class, parms );
+        }
+
+        //------------------------------
+        @Override
+        protected void onSubmit() {
+            super.onSubmit();
+
+            final FileUpload fileUpload = scenarioImport.getFileUpload();
+            if ( fileUpload != null ) {
+                // Import and switch to scenario
+                final Importer importer = getProject().getImporter();
+                try {
+                    final InputStream inputStream = fileUpload.getInputStream();
+                    final Scenario imported = importer.importScenario( inputStream );
+                    getScenarioDao().addScenario( imported );
+                    redirectTo( imported );
+                } catch ( IOException e ) {
+                    final String s = "Import error";
+                    LOG.error( s, e );
+                    throw new RuntimeException( s, e );
+                }
+            }
+        }
+    }
+
+    //==============================================================
+        /**
+         * A link that creates and link to a new scenario.
+     */
+    private final class NewScenarioLink extends Link<Scenario> {
+
+        private NewScenarioLink( String id ) {
+            super( id );
+        }
+
+        @Override
+        public void onClick() {
+            final Scenario newScenario = new Scenario();
+            getScenarioDao().addScenario( newScenario );
+            LOG.info( "Created new scenario" );
+            redirectTo( newScenario );
+        }
+    }
+
+    //==============================================================
+    /**
+     * A check box that causes the current scenario to be deleted,
+     * if selected and form is submitted.
+     */
+    private final class DeleteScenarioBox extends CheckBox {
+
+        /** The scenario to delete. */
+        private final Scenario scenario;
+
+        /** The selection state of the checkbox. */
+        private boolean selected;
+
+        private DeleteScenarioBox( String id, Scenario scenario ) {
+            super( id );
+            this.scenario = scenario;
+            setModel( new PropertyModel<Boolean>( this, "selected" ) );                   // NON-NLS
+        }
+
+        @Override
+        protected void onSelectionChanged( Object newSelection ) {
+            if ( (Boolean) newSelection ) {
+                final ScenarioDao dao = getScenarioDao();
+                dao.removeScenario( scenario );
+                if ( LOG.isInfoEnabled() )
+                    LOG.info( MessageFormat.format(
+                            "Deleted scenario {0} - {1}",
+                            scenario.getId(), scenario.getName() ) );
+                redirectTo( dao.getDefaultScenario() );
+            }
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        public void setSelected( boolean selected ) {
+            this.selected = selected;
+        }
+
     }
 }

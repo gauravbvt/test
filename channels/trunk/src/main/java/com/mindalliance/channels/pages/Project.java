@@ -1,8 +1,14 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
 /**
  * Application object for Channels.
@@ -18,12 +24,32 @@ public final class Project extends WebApplication {
     /**
      * The creator of nifty diagrams.
      */
-    private FlowDiagram flowDiagram;
+    private FlowDiagram<Node,Flow> flowDiagram;
+
+    /**
+     * The official manager of attachements.
+     */
+    private AttachmentManager attachmentManager;
+
+    /** Scenario importer. */
+    private Importer importer;
+
+    /** Scenario exporter. */
+    private Exporter exporter;
 
     /**
      * Default Constructor.
      */
     public Project() {
+    }
+
+    /** Set to strip wicket tags from subpanels. */
+    @Override
+    protected void init() {
+        super.init();
+
+        getMarkupSettings().setStripWicketTags( true );
+        mount( new QueryStringUrlCodingStrategy( "scenario.bin", ExportPage.class ) );
     }
 
     @Override
@@ -39,11 +65,35 @@ public final class Project extends WebApplication {
         this.scenarioDao = scenarioDao;
     }
 
-    public FlowDiagram getFlowDiagram() {
+    public FlowDiagram<Node,Flow> getFlowDiagram() {
         return flowDiagram;
     }
 
-    public void setFlowDiagram( FlowDiagram flowDiagram ) {
+    public void setFlowDiagram( FlowDiagram<Node,Flow> flowDiagram ) {
         this.flowDiagram = flowDiagram;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
+    }
+
+    public Exporter getExporter() {
+        return exporter;
+    }
+
+    public void setExporter( Exporter exporter ) {
+        this.exporter = exporter;
+    }
+
+    public Importer getImporter() {
+        return importer;
+    }
+
+    public void setImporter( Importer importer ) {
+        this.importer = importer;
     }
 }

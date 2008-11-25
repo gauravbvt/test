@@ -13,9 +13,6 @@ import java.util.TreeSet;
  */
 public final class Memory implements ScenarioDao {
 
-    /** The initial number of scenario slots. */
-    private static final int INITIAL_CAPACITY = 10;
-
     /** The sorted scenarios. */
     private Set<Scenario> scenarios = new TreeSet<Scenario>();
 
@@ -73,5 +70,10 @@ public final class Memory implements ScenarioDao {
     /** {@inheritDoc} */
     public Scenario getDefaultScenario() {
         return scenarios.iterator().next();
+    }
+
+    /** {@inheritDoc} */
+    public int getScenarioCount() {
+        return scenarios.size();
     }
 }

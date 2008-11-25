@@ -1,11 +1,13 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 
 import java.util.Iterator;
@@ -13,10 +15,12 @@ import java.util.Iterator;
 /**
  * Simple test using the WicketTester.
  */
+@SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestScenarioPage extends TestCase {
 
     private WicketTester tester;
     private Scenario scenario;
+    private Memory dao;
 
     public TestScenarioPage() {
     }
@@ -24,8 +28,9 @@ public class TestScenarioPage extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        dao = new Memory();
         final Project project = new Project();
-        project.setScenarioDao( new Memory() );
+        project.setScenarioDao( dao );
         scenario = project.getScenarioDao().getDefaultScenario();
         tester = new WicketTester( project );
     }
@@ -79,17 +84,42 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
     }
 
-    /** Test all part pages in default scenario. */
-    public void testParts() {
+    /** Test all nodes pages in default scenario. */
+    public void testNodes() {
         final Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
-            Node n = nodes.next();
-            if ( n.isPart() ) {
-                tester.startPage( new ScenarioPage( scenario, n ) );
-                tester.assertRenderedPage( ScenarioPage.class );
-                tester.assertNoErrorMessage();
-            }
+            tester.startPage( new ScenarioPage( scenario, nodes.next() ) );
+            tester.assertRenderedPage( ScenarioPage.class );
+            tester.assertNoErrorMessage();
         }
+    }
+
+    public void testNewScenario() throws NotFoundException {
+        tester.startPage( new ScenarioPage( scenario ) );
+
+        final int size = dao.getScenarioCount();
+        tester.clickLink( "big-form:sc-new" );
+        assertEquals( size+1, dao.getScenarioCount() );
+
+        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertNoErrorMessage();
+    }
+
+    /** Test submit with part modifications. */
+    public void testPartSubmit() throws NotFoundException {
+        tester.startPage( new ScenarioPage( scenario ) );
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+
+        final FormTester ft = tester.newFormTester( "big-form" );
+
+        ft.submit();
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+    }
+
+    public void testDeleteScenario() {
 
     }
+
 }

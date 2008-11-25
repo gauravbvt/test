@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages;
+package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Jurisdiction;
@@ -8,8 +8,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.ComponentPropertyModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.CompoundPropertyModel;
 
 import java.text.Collator;
 
@@ -43,27 +42,22 @@ public class PartPanel extends Panel {
     private static final Collator COMPARATOR = Collator.getInstance();
     static { COMPARATOR.setStrength( Collator.PRIMARY ); }
 
+    /** The part edited by this form. */
+    private Part part;
+
     //====================================
-    public PartPanel( String id, Model<Part> model ) {
-        super( id, model );
+    public PartPanel( String id, Part part ) {
+        super( id );
+        super.setDefaultModel( new CompoundPropertyModel( this ) );
+        super.setOutputMarkupPlaceholderTag( false );
+        setPart( part );
 
-        add( new TextField<String>( TASK_PROPERTY,
-                new ComponentPropertyModel<String>( TASK_PROPERTY ) ) );
-
-        add( new TextField<String>( ACTOR_PROPERTY,
-                new ComponentPropertyModel<String>( ACTOR_PROPERTY ) ) );
-
-        add( new TextField<String>( ROLE_PROPERTY,
-                new ComponentPropertyModel<String>( ROLE_PROPERTY ) ) );
-
-        add( new TextField<String>( ORG_PROPERTY,
-                new ComponentPropertyModel<String>( ORG_PROPERTY ) ) );
-
-        add( new TextField<String>( JURISDICTION_PROPERTY,
-                new ComponentPropertyModel<String>( JURISDICTION_PROPERTY ) ) );
-
-        add( new TextField<String>( LOCATION_PROPERTY,
-                new ComponentPropertyModel<String>( LOCATION_PROPERTY ) ) );
+        add( new TextField<String>( TASK_PROPERTY ) );
+        add( new TextField<String>( ACTOR_PROPERTY ) );
+        add( new TextField<String>( ROLE_PROPERTY ) );
+        add( new TextField<String>( ORG_PROPERTY ) );
+        add( new TextField<String>( JURISDICTION_PROPERTY ) );
+        add( new TextField<String>( LOCATION_PROPERTY ) );
     }
 
     /**
@@ -204,7 +198,11 @@ public class PartPanel extends Panel {
         getPart().setTask( task );
     }
 
-    public Part getPart() {
-        return (Part) getDefaultModelObject();
+    public final Part getPart() {
+        return part;
+    }
+
+    public final void setPart( Part part ) {
+        this.part = part;
     }
 }

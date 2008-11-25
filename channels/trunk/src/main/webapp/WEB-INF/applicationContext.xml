@@ -9,12 +9,17 @@
 
     <context:annotation-config/>
 
+    <bean id="serializer" class="com.mindalliance.channels.export.Serializer"/>
     <bean id="memoryDao" class="com.mindalliance.channels.dao.Memory"/>
+    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.BitBucket"/>
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
         <property name="scenarioDao" ref="memoryDao"/>
         <property name="flowDiagram" ref="flowDiagram"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
+        <property name="importer" ref="serializer"/>
+        <property name="exporter" ref="serializer"/>
     </bean>
 
     <!-- Flow diagram -->
