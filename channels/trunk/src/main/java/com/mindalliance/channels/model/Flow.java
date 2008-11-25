@@ -5,6 +5,8 @@ package com.mindalliance.channels.model;
  */
 public class Flow extends ModelObject {
 
+    // TODO Should we annotate a flow as primary vs seconday (when multiple flows are mutually redundant)?
+
     /** The source of the flow. */
     private Node source;
 

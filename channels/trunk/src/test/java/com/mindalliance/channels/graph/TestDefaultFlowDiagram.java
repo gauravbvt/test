@@ -37,6 +37,7 @@ public class TestDefaultFlowDiagram extends TestCase {
         GraphvizRenderer<Node, Flow> graphRenderer = new GraphvizRenderer<Node, Flow>();
         graphRenderer.setDotPath( "/usr/bin" );
         graphRenderer.setAlgo( "neato" );
+        graphRenderer.setTimeout(5000);
         flowDiagram = new DefaultFlowDiagram();
         flowDiagram.setGraphRenderer( graphRenderer );
         flowDiagram.setGraphBuilder( new DefaultGraphBuilder() );

@@ -8,6 +8,8 @@ public class Organization extends ModelObject {
     public Organization() {
     }
 
+    // TODO Add properties: mission, parent
+
     /**
      * Utility constructor for tests.
      * @param name the name of the new object

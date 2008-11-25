@@ -6,6 +6,8 @@ import org.jgrapht.ext.VertexNameProvider;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
@@ -34,7 +36,12 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Drawing algorithm (neato, dot...)
      */
-    private String algo ="neato";
+    private String algo = "neato";
+
+   /**
+     * Maximum time allocated to graphviz process before it is interrupted and forcibly terminated.
+     */
+    private long timeout = Long.MAX_VALUE;
     /**
      * The vertices to highlight
      */
@@ -60,7 +67,11 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         this.algo = algo;
     }
 
-    /**
+    public void setTimeout( long timeout ) {
+        this.timeout = timeout;
+    }
+
+     /**
      * Highlights a vertex
      *
      * @param vertex -- the vertex to highlight
@@ -110,7 +121,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                 edgeLabelProvider,
                 dotAttributeProvider,
                 urlProvider );
-        System.out.println(dot);
+        System.out.println( dot );
         return doRender( dot, format );
     }
 
@@ -124,8 +135,9 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      */
     private InputStream doRender( String dot, String format ) throws DiagramException {
         String command = getDotPath() + "/" + algo + " -T" + format;
-        Process p;
+        Process p = null;
         int exitValue;
+        Timer timer = new Timer();
         try {
             // start process
             p = Runtime.getRuntime().exec( command );
@@ -138,6 +150,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             }
             input.flush();
             input.close();
+            timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
             // wait for process to complete (assumes the dot always terminates)
             exitValue = p.waitFor();
             if ( exitValue != 0 ) {
@@ -145,7 +158,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                 BufferedInputStream error = new BufferedInputStream( p.getErrorStream() );
                 StringBuilder buffer = new StringBuilder();
                 while ( error.available() != 0 ) {
-                    buffer.append( ( char ) error.read() );
+                    buffer.append( (char) error.read() );
                 }
                 String errorMessage = buffer.toString().trim();
                 throw new DiagramException( errorMessage );
@@ -153,18 +166,18 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             // return process output stream
             return p.getInputStream();
         } catch ( IOException e ) {
-            // TODO -- replace with logging
-            System.err.println( e );
             throw new DiagramException( "Diagram generation failed", e );
         } catch ( InterruptedException e ) {
-            // TODO -- replace with logging
-            System.err.println( e );
+            p.destroy();
             throw new DiagramException( "Diagram generation failed", e );
         } catch ( DiagramException e ) {
             // TODO -- replace with logging
             System.err.println( e );
             throw e;
-        } 
+        } finally {
+            // Stop the timer
+            timer.cancel();
+        }
     }
 
     /**
@@ -194,6 +207,26 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         StringWriter writer = new StringWriter();
         styledDotExporter.export( writer, graph );
         return writer.toString();
+    }
+
+    /**
+     * Task that interrupts a threads when run
+     */
+    private class InterruptScheduler extends TimerTask {
+        /**
+         * Thread to interrupt
+         */
+        private Thread target;
+
+        public InterruptScheduler( Thread target ) {
+            this.target = target;
+        }
+
+        @Override
+        public void run() {
+            target.interrupt();
+        }
+
     }
 
 }

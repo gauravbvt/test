@@ -7,6 +7,9 @@ import java.text.MessageFormat;
  */
 public class Part extends Node {
 
+
+    // TODO Should describe severity level of failure
+
     /** Default task name. */
     static final String DEFAULT_TASK = "doing something";
 

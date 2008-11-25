@@ -14,6 +14,8 @@ import java.util.TreeSet;
  */
 public class Scenario extends ModelObject {
 
+    // TODO - Add location (as in area) of the scenario (where the scenario applies - e.g. avian flu case in New Jersey)
+
     /** The default name for new scenarios. */
     static final String DEFAULT_NAME = "Untitled";
 
