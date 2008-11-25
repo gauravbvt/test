@@ -1,10 +1,8 @@
 package com.mindalliance.channels.graph;
 
 import org.jgrapht.Graph;
-import org.jgrapht.ext.EdgeNameProvider;
-import org.jgrapht.ext.VertexNameProvider;
 
-import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,6 +10,8 @@ import java.io.InputStream;
  * User: jf
  * Date: Nov 21, 2008
  * Time: 1:05:18 PM
+ * @param <V> a vertex class
+ * @param <E> an edge class
  */
 public interface GraphRenderer<V, E> {
 
@@ -36,21 +36,14 @@ public interface GraphRenderer<V, E> {
 
     /**
      * @param graph                -- a Graph
-     * @param vertexIDProvider     -- a vertex ID provider
-     * @param vertexLabelProvider  -- a vertex label provider
-     * @param edgeLabelProvider    -- an edge lable provider
-     * @param dotAttributeProvider -- a DOT attribute provider
-     * @param urlProvider          -- a URL provider
      * @param format               -- an output format (png, svg, imap etc.)
-     * @return an InputStream on the rendered graph
+     * @param output               -- the rendered graph
+     * @param metaProvider         -- a provider of graph, vertex, edge attribute providers
      * @throws DiagramException -- if generation fails
      */
-    InputStream render( Graph<V, E> graph,
-                        VertexNameProvider<V> vertexIDProvider,
-                        VertexNameProvider<V> vertexLabelProvider,
-                        EdgeNameProvider<E> edgeLabelProvider,
-                        DOTAttributeProvider<V, E> dotAttributeProvider,
-                        URLProvider<V, E> urlProvider,
-                        String format ) throws DiagramException;
+    void render( Graph<V, E> graph,
+                 MetaProvider<V,E> metaProvider,
+                 String format,
+                 OutputStream output ) throws DiagramException;
 
 }

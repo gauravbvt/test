@@ -1,25 +1,17 @@
 package com.mindalliance.channels.graph;
 
-import junit.framework.TestCase;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.dao.FireScenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
+import junit.framework.TestCase;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.DataInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
-
-import org.apache.wicket.markup.html.link.ImageMap;
-import org.apache.wicket.markup.MarkupStream;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -37,7 +29,7 @@ public class TestDefaultFlowDiagram extends TestCase {
         GraphvizRenderer<Node, Flow> graphRenderer = new GraphvizRenderer<Node, Flow>();
         graphRenderer.setDotPath( "/usr/bin" );
         graphRenderer.setAlgo( "neato" );
-        graphRenderer.setTimeout(5000);
+        graphRenderer.setTimeout( 5000 );
         flowDiagram = new DefaultFlowDiagram();
         flowDiagram.setGraphRenderer( graphRenderer );
         flowDiagram.setGraphBuilder( new DefaultGraphBuilder() );
@@ -46,19 +38,14 @@ public class TestDefaultFlowDiagram extends TestCase {
 
     public void testGetSVG() {
         Scenario scenario = new FireScenario();
-        Node selectedNode = findSelected(scenario);
+        Node selectedNode = findSelected( scenario );
         try {
-            StringWriter writer = new StringWriter();
-            BufferedReader reader = new BufferedReader( new InputStreamReader( flowDiagram.getSVG( scenario, selectedNode ) ) );
-            String line;
-            while ( ( line = reader.readLine() ) != null ) {
-                writer.write( line );
-                writer.write( '\n' );
-            }
-            String svg = writer.toString();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            flowDiagram.getSVG( scenario, selectedNode, new BufferedOutputStream( baos ) );
+            String svg = baos.toString();
             assertFalse( svg.isEmpty() );
             assertTrue( svg.startsWith( "<?xml" ) );
-            System.out.print( svg );
+            // System.out.print( svg );
         } catch ( Exception e ) {
             fail( e.toString() );
         }
@@ -66,20 +53,13 @@ public class TestDefaultFlowDiagram extends TestCase {
 
     public void testGetPNG() {
         Scenario scenario = new FireScenario();
-        Node selectedNode = findSelected(scenario);
+        Node selectedNode = findSelected( scenario );
         try {
             FileOutputStream fileOut = new FileOutputStream( "test.png" );
-            DataInputStream data = new DataInputStream( flowDiagram.getPNG( scenario, selectedNode ) );
-            int count = 0;
-            int size = 0;
-            while ( ( size = data.available() ) > 0 ) {
-                byte[] b = new byte[size];
-                count += data.read( b );
-                fileOut.write( b );
-            }
+            flowDiagram.getPNG( scenario, selectedNode, fileOut );
             fileOut.flush();
             fileOut.close();
-            assertTrue( count > 0 );
+            assertTrue( new File( "test.png" ).length() > 0 );
         } catch ( IOException e ) {
             fail( e.toString() );
         }

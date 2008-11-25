@@ -155,4 +155,8 @@ public class Part extends Node {
     public boolean isPart() {
         return true;
     }
+
+    public static String getDefaultActor() {
+        return DEFAULT_ACTOR;
+    }
 }
