@@ -17,17 +17,44 @@ import java.util.Set;
  * User: jf
  * Date: Nov 19, 2008
  * Time: 4:15:11 PM
+ *
+ * @param <V> a vertx class
+ * @param <E> an edge class
+ * Exports a Graph in DOT format
  */
 public class StyledDOTExporter<V, E> {
-
+    /**
+     * Indentation
+     */
+    private static String INDENT = "    ";
+    /**
+     * Vertices to highlight
+     */
     private Set<V> highlightedVertices;
+    /**
+     * Edges to highlight
+     */
     private Set<E> highlightedEdges;
-
+    /**
+     * A vertex ID provider
+     */
     private VertexNameProvider<V> vertexIDProvider;
+    /**
+     * A vertex label provider
+     */
     private VertexNameProvider<V> vertexLabelProvider;
+    /**
+     * An edge label provider
+     */
     private EdgeNameProvider<E> edgeLabelProvider;
-    DOTAttributeProvider<V, E> attributeProvider;
-    URLProvider<V, E> urlProvider;
+    /**
+     * A DOT attribute provider
+     */
+    private DOTAttributeProvider<V, E> attributeProvider;
+    /**
+     * A URL provider
+     */
+    private URLProvider<V, E> urlProvider;
 
     public StyledDOTExporter() {
         this( new IntegerNameProvider<V>(), null, null, null, null );
@@ -54,9 +81,14 @@ public class StyledDOTExporter<V, E> {
         this.highlightedEdges = highlightedEdges;
     }
 
+    /**
+     * Writes a Graph in DOT format
+     *
+     * @param writer -- where to export
+     * @param g      -- the graph being exported
+     */
     public void export( Writer writer, Graph<V, E> g ) {
         PrintWriter out = new PrintWriter( writer );
-        String indent = "  ";
         String connector;
         // Graph declaration
         if ( g instanceof DirectedGraph ) {
@@ -70,6 +102,42 @@ public class StyledDOTExporter<V, E> {
             out.print( asGraphAttributes( attributeProvider.getGraphAttributes() ) );
         }
         out.println();
+        exportVertices( out, g );
+
+        // Edges
+        exportEdges( out, g, connector );
+        // Close graph
+        out.println( "}" );
+        out.flush();
+    }
+
+    private void exportEdges( PrintWriter out, Graph<V, E> g, String connector ) {
+        for ( E e : g.edgeSet() ) {
+            List<DOTAttribute> attributes = DOTAttribute.emptyList();
+            if ( edgeLabelProvider != null ) {
+                String label = edgeLabelProvider.getEdgeName( e );
+                attributes.add( new DOTAttribute( "label", label ) );
+            }
+            if ( attributeProvider != null ) {
+                attributes.addAll( attributeProvider.getEdgeAttributes( e,
+                        highlightedEdges.contains( e ) ) );
+            }
+            if ( urlProvider != null ) {
+                String url = urlProvider.getEdgeURL( e );
+                if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
+            }
+            String source = getVertexID( g.getEdgeSource( e ) );
+            String target = getVertexID( g.getEdgeTarget( e ) );
+            out.print( INDENT + source + connector + target );
+            out.print( "[" );
+            if ( !attributes.isEmpty() ) {
+                out.print( asElementAttributes( attributes ) );
+            }
+            out.println( "];" );
+        }
+    }
+
+    private void exportVertices( PrintWriter out, Graph<V, E> g ) {
         // Vertices
         for ( V v : g.vertexSet() ) {
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
@@ -78,45 +146,20 @@ public class StyledDOTExporter<V, E> {
                 attributes.add( new DOTAttribute( "label", label ) );
             }
             if ( attributeProvider != null ) {
-                attributes.addAll( attributeProvider.getVertexAttributes( v, highlightedVertices.contains( v ) ) );
+                attributes.addAll( attributeProvider.getVertexAttributes( v,
+                        highlightedVertices.contains( v ) ) );
             }
             if ( urlProvider != null ) {
                 String url = urlProvider.getVertexURL( v );
                 if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
             }
-            out.print( indent + getVertexID( v ) );
+            out.print( INDENT + getVertexID( v ) );
             out.print( "[" );
             if ( !attributes.isEmpty() ) {
                 out.print( asElementAttributes( attributes ) );
             }
             out.println( "];" );
         }
-        // Edges
-        for ( E e : g.edgeSet() ) {
-            List<DOTAttribute> attributes = DOTAttribute.emptyList();
-            if ( edgeLabelProvider != null ) {
-                String label = edgeLabelProvider.getEdgeName( e );
-                attributes.add( new DOTAttribute( "label", label ) );
-            }
-            if ( attributeProvider != null ) {
-                attributes.addAll( attributeProvider.getEdgeAttributes( e, highlightedEdges.contains( e ) ) );
-            }
-            if ( urlProvider != null ) {
-                String url = urlProvider.getEdgeURL( e );
-                if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
-            }
-            String source = getVertexID( g.getEdgeSource( e ) );
-            String target = getVertexID( g.getEdgeTarget( e ) );
-            out.print( indent + source + connector + target );
-            out.print( "[" );
-            if ( !attributes.isEmpty() ) {
-                out.print( asElementAttributes( attributes ) );
-            }
-            out.println( "];" );
-        }
-        // Close graph
-        out.println( "}" );
-        out.flush();
     }
 
     private String asGraphAttributes( List<DOTAttribute> attributes ) {
@@ -137,8 +180,9 @@ public class StyledDOTExporter<V, E> {
         return sb.toString();
     }
 
+    // Assumes vertex name is DOT-compliant
     private String getVertexID( V v ) {
-        return vertexIDProvider.getVertexName( v );  // assume vertex name is DOT-compliant
+        return vertexIDProvider.getVertexName( v );
     }
 
 
