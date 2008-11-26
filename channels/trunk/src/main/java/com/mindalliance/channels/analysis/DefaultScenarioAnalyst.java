@@ -32,15 +32,7 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * @return an iterator of issues
      */
     public Iterator<Issue> findIssues( ModelObject modelObject ) {
-        // Todo -- implement lazy iteration
-        List<Issue> issues = new ArrayList<Issue>();
-        for ( IssueDetector detector : issueDetectors ) {
-            if ( detector.appliesTo( modelObject ) ) {
-                Issue issue = detector.detectIssue( modelObject );
-                if ( issue != null ) issues.add( issue );
-            }
-        }
-        return issues.iterator();
+        return new IssueIterator(issueDetectors, modelObject);
     }
 
     /**
@@ -51,15 +43,7 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * @return an iterator on issues detected
      */
     public Iterator<Issue> findIssues( ModelObject modelObject, String property ) {
-        // Todo -- implement lazy iteration
-        List<Issue> issues = new ArrayList<Issue>();
-        for ( IssueDetector detector : issueDetectors ) {
-            if ( detector.appliesTo( modelObject, property ) ) {
-                Issue issue = detector.detectIssue( modelObject );
-                if ( issue != null ) issues.add( issue );
-            }
-        }
-        return issues.iterator();
+        return new IssueIterator(issueDetectors, modelObject, property );
     }
 
     /**
