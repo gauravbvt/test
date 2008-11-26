@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+<span wicket:id="title">Communicating fire location to Fire Chief supervising operations, when asked</span>
+
+<ul class="menu">
+    <li><a wicket:id="hide" href="#">Hide</a></li>
+    <li><label><input wicket:id="delete" type="checkbox"/> Delete</label></li>
+</ul>
+
+<table summary="Flow list">
+    <tr>
+        <th align="right"><label wicket:id="other-label"><span wicket:id="type">Target:</span></label></th>
+        <td><select wicket:id="other">
+            <option>
+                * Outside of scenario *
+            </option>
+
+            <option>
+                * Unknown part *
+            </option>
+
+            <option>
+                Fire Alarm ringing
+            </option>
+
+            <option selected="selected">
+                Fire Chief supervising operations
+            </option>
+
+            <option>
+                Fire Department responding
+            </option>
+
+            <option>
+                Joe Smith monitoring evacuation
+            </option>
+
+            <option>
+                Start Building Evacuation
+            </option>
+
+            <option>
+                Tenant noticing fire
+            </option>
+        </select> (<a wicket:id="other-details" href="#">details</a>)
+        </td>
+    </tr>
+
+    <tr>
+        <th align="right"><label wicket:id="name-label">Flow:</label></th>
+        <td><input wicket:id="name" type="text" value="fire location" size="40"/></td>
+    </tr>
+
+    <tr>
+        <th>&nbsp;</th>
+        <td><label><input wicket:id="critical" type="checkbox" value="yes"/> Critical</label>
+            <label><input wicket:id="askedFor" type="checkbox" value="yes"/> Must ask</label></td>
+    </tr>
+
+    <tr>
+        <th align="right"><label wicket:id="channel-label">Channel:</label></th>
+        <td><input wicket:id="channel" type="text" value="" size="40"/></td>
+    </tr>
+
+    <tr>
+        <th align="right"><label wicket:id="maxDelay-label">Max Delay:</label></th>
+        <td><input wicket:id="maxDelay" type="text" value="0min"/></td>
+    </tr>
+
+    <tr>
+        <th align="right" valign="top"><label wicket:id="description-label">Description:</label></th>
+        <td><textarea wicket:id="description" cols="40" rows="4">Communicate the location of the fire.</textarea></td>
+    </tr>
+
+    <tr wicket:id="attachments">
+        <th align="right" valign="top">Attachments:</th>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+</wicket:panel>
+</body>
+</html>

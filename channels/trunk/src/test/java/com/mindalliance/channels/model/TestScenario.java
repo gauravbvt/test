@@ -89,7 +89,7 @@ public class TestScenario extends TestCase {
         final Set<Node> ps = new HashSet<Node>( 2 );
         final Part p1 = new Part();
         ps.add( p1 );
-        final Node p2 = new ScenarioNode();
+        final Node p2 = new ScenarioNode( new Scenario() );
         ps.add( p2 );
         scenario.setNodes( ps );
         assertSame( p1, scenario.getNode( p1.getId() ) );

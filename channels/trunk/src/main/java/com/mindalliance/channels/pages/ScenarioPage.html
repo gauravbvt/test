@@ -34,8 +34,9 @@
         <span wicket:id="sc-desc">A description.</span>
 
         <ul class="menu">
-            <li><a href="#">View as list</a></li>
             <li><a href="#">Add a part</a></li>
+            <li><a href="#">Add a connector</a></li>
+            <li><a href="#">Embed a scenario</a></li>
         </ul>
     </div>
     <hr/>
@@ -56,247 +57,19 @@
             <td><textarea id="description" wicket:id="node-desc" cols="40" rows="4"></textarea></td>
         </tr>
 
-        <tr>
+        <tr wicket:id="attachments">
             <th align="right" valign="top">Attachments:</th>
-            <td>
-                <ul class="attach">
-                    <li>
-                        <a href="#">Fire Safety Precautions</a>
-
-                        <ul class="menu">
-                            <li><label><input type="checkbox" name="del" value="doc_1"/>&nbsp;Delete</label>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li><label>New: <input type="file" name="part_upload" value="Upload"/></label>
-                    </li>
-                </ul>
-            </td>
+            <td>&nbsp;</td>
         </tr>
     </table>
 </div>
 
-<div id="reqs">
-<hr/>
-
-<h3>Requirements
-
-    <ul class="menu">
-        <li><a href="#">New</a></li>
-    </ul>
-</h3>
-
-<ol>
-    <li>Obtaining location from Fire Alarm ringing
-
-        <ul class="menu">
-            <li><a href="#">Hide</a></li>
-            <li><input type="checkbox" name="del" value="req_1"/> Delete</li>
-        </ul>
-
-        <table summary="Part requirements">
-            <tr>
-                <th align="right"><label for="part_req_1">Source:</label></th>
-                <td><select id="part_req_1">
-                    <option>
-                        * Outside of scenario *
-                    </option>
-
-                    <option>
-                        * Unknown part *
-                    </option>
-
-                    <option>
-                        Building Evacuation end
-                    </option>
-
-                    <option>
-                        Building Evacuation started
-                    </option>
-
-                    <option selected="selected">
-                        Fire Alarm ringing
-                    </option>
-
-                    <option>
-                        Fire Chief supervising operations
-                    </option>
-
-                    <option>
-                        Fire Department responding
-                    </option>
-
-                    <option>
-                        Joe Smith monitoring evacuation
-                    </option>
-
-                    <option>
-                        Tenant noticing fire
-                    </option>
-                </select> (see <a href="#">details</a>)
-                </td>
-            </tr>
-
-            <tr>
-                <th align="right"><label for="flow_req_1">Flow:</label></th>
-                <td><input type="text" id="flow_req_1" value="location" size="40"/></td>
-            </tr>
-
-            <tr>
-                <th>&nbsp;</th>
-                <td><label><input type="checkbox" name="critical_req_1" value="yes"/>
-                    Critical</label>
-                    <label><input type="checkbox" checked="checked" name="ask_req_1" value="yes"/>
-                        Must ask</label></td>
-            </tr>
-
-            <tr>
-                <th align="right"><label for="channel_req_1">Channel:</label></th>
-                <td><input type="text" id="channel_req_1" name="channel_req_1" value="wall panel"
-                           size="40"/></td>
-            </tr>
-
-            <tr>
-                <th align="right"><label for="delay_req_1">Max Delay:</label></th>
-                <td><input type="text" id="delay_req_1" name="delay_req_1" value="0min"/></td>
-            </tr>
-
-            <tr>
-                <th align="right" valign="top"><label for="desc_req_1">Description:</label></th>
-                <td>
-                    <textarea id="desc_req_1" name="desc_req_1" cols="40" rows="4">The alarm location reported by the system</textarea></td>
-            </tr>
-
-            <tr>
-                <th align="right" valign="top">Attachments:</th>
-                <td>
-                    <ul class="attach">
-                        <li>
-                            <a href="#">Fire Alarm System User Manual</a>
-
-                            <ul class="menu">
-                                <li><label><input type="checkbox" name="del" value="req_1_doc_1"/>
-                                    Delete</label></li>
-                            </ul>
-                        </li>
-
-                        <li><label>New: <input type="file" name="upload_req_1"
-                                               value="Upload"/></label></li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
-    </li>
-</ol>
+<div wicket:id="reqs" id="reqs">
+<h3>Requirements</h3>
 </div>
 
-<div id="outcomes">
-<hr/>
-
-<h3>Outcomes
-
-    <ul class="menu">
-        <li><a href="#">New</a></li>
-    </ul>
-</h3>
-
-<ol>
-    <li>Start Building Evacuation
-
-        <ul class="menu">
-            <li><a href="#">Edit</a></li>
-        </ul>
-    </li>
-
-    <li>Communicating fire location to Fire Chief supervising operations, when asked
-
-        <ul class="menu">
-            <li><a href="#">Hide</a></li>
-            <li><label><input type="checkbox" name="del" value="out_2"/> Delete</label></li>
-        </ul>
-
-        <table summary="Part outcome">
-            <tr>
-                <th align="right"><label for="part_out_2">Target:</label></th>
-                <td><select id="part_out_2" name="part_out_2">
-                    <option>
-                        * Outside of scenario *
-                    </option>
-
-                    <option>
-                        * Unknown part *
-                    </option>
-
-                    <option>
-                        Fire Alarm ringing
-                    </option>
-
-                    <option selected="selected">
-                        Fire Chief supervising operations
-                    </option>
-
-                    <option>
-                        Fire Department responding
-                    </option>
-
-                    <option>
-                        Joe Smith monitoring evacuation
-                    </option>
-
-                    <option>
-                        Start Building Evacuation
-                    </option>
-
-                    <option>
-                        Tenant noticing fire
-                    </option>
-                </select> (see <a href="#">details</a>)
-                </td>
-            </tr>
-
-            <tr>
-                <th align="right"><label for="label_out_2">Flow:</label></th>
-                <td><input type="text" id="label_out_2" name="label_out_2" value="fire location"
-                           size="40"/></td>
-            </tr>
-
-            <tr>
-                <th>&nbsp;</th>
-                <td><label><input type="checkbox" name="critical_out_2" value="yes"/>
-                    Critical</label>
-                    <label><input type="checkbox" checked="checked" name="ask_out_2" value="yes"/>
-                        Must ask</label></td>
-            </tr>
-
-            <tr>
-                <th align="right"><label for="channel_out_2">Channel:</label></th>
-                <td><input style="background: #FFBFBF;" type="text" id="channel_out_2"
-                           name="channel_out_2" value="" size="40"/></td>
-            </tr>
-
-            <tr>
-                <th align="right"><label for="delay_out_2">Max Delay:</label></th>
-                <td><input type="text" id="delay_out_2" name="delay" value="0min"/></td>
-            </tr>
-
-            <tr>
-                <th align="right" valign="top"><label for="desc_out_2">Description:</label></th>
-                <td><textarea id="desc_out_2" name="desc_out_2" cols="40" rows="4">Communicate the location of the fire.</textarea></td>
-            </tr>
-
-            <tr>
-                <th align="right" valign="top">Attachments:</th>
-                <td>
-                    <ul class="attach">
-                        <li><label>New: <input type="file" name="upload_out_2"
-                                               value="Upload"/></label></li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
-    </li>
-</ol>
+<div wicket:id="outcomes" id="outcomes">
+<h3>Outcomes</h3>
 </div>
 
 <p id="form-buttons" align="right"><input type="submit" value="submit"/></p>

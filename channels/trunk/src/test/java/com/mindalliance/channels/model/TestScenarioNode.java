@@ -16,14 +16,14 @@ public class TestScenarioNode extends TestCase {
     }
 
     public void testScenario() {
-        assertNull( node.getScenario() );
+        assertNull( node.getEmbeddedScenario() );
         final Scenario scenario = new Scenario();
-        node.setScenario( scenario );
-        assertSame( scenario, node.getScenario() );
+        node.setEmbeddedScenario( scenario );
+        assertSame( scenario, node.getEmbeddedScenario() );
     }
 
     public void testTitle() {
-        node.setScenario( new Scenario( "Bla" ) );
-        assertEquals( node.getScenario().toString(), node.getTitle() );
+        node.setEmbeddedScenario( new Scenario( "Bla" ) );
+        assertEquals( node.getEmbeddedScenario().toString(), node.getTitle() );
     }
 }

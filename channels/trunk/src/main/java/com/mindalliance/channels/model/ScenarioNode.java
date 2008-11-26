@@ -6,7 +6,7 @@ package com.mindalliance.channels.model;
 public class ScenarioNode extends Node {
 
     /** The scenario referred to by this node. */
-    private Scenario scenario;
+    private Scenario embeddedScenario;
 
     public ScenarioNode() {
     }
@@ -17,15 +17,16 @@ public class ScenarioNode extends Node {
      */
     public ScenarioNode( Scenario scenario ) {
         super( scenario.getName() );
-        setScenario( scenario );
+        setEmbeddedScenario( scenario );
     }
 
-    public final Scenario getScenario() {
-        return scenario;
+    public final Scenario getEmbeddedScenario() {
+        return embeddedScenario;
     }
 
-    public final void setScenario( Scenario scenario ) {
-        this.scenario = scenario;
+    public final void setEmbeddedScenario( Scenario embeddedScenario ) {
+        this.embeddedScenario = embeddedScenario;
+        setName( embeddedScenario.getName() );
     }
 
     @Override
@@ -36,6 +37,6 @@ public class ScenarioNode extends Node {
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return scenario.toString();
+        return embeddedScenario.toString();
     }
 }

@@ -83,7 +83,7 @@ public class Scenario extends ModelObject {
         this.nodes = new TreeSet<Node>( nodes );
         nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
         for ( Node node: nodes ) {
-            nodeIndex.put( node.getId(), node );
+            addNode( node );
         }
     }
 
@@ -97,12 +97,20 @@ public class Scenario extends ModelObject {
     }
 
     /**
+     * @return the number of nodes in this scenario
+     */
+    public int getNodeCount() {
+        return getNodes().size();
+    }
+
+    /**
      * Add a node to this scenario.
      * @param node the new node
      */
     public void addNode( Node node ) {
         getNodes().add( node );
         nodeIndex.put( node.getId(), node );
+        node.setScenario( this );
     }
 
     /**
@@ -114,6 +122,7 @@ public class Scenario extends ModelObject {
         if ( nodeIndex.size() > 1 ) {
             getNodes().remove( node );
             nodeIndex.remove( node.getId() );
+            node.setScenario( null );
         }
     }
 

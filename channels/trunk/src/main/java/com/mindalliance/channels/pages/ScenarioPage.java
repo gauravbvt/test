@@ -6,6 +6,8 @@ import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.FlowListPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,6 +65,9 @@ public final class ScenarioPage extends WebPage {
     /** Specialty field name. */
     private static final String SPECIALTY_FIELD = "specialty";                            // NON-NLS
 
+    /** Id of components that are expanded. */
+    private Set<String> expansions;
+
     /**
      * Used when page is called without parameters.
      * Redirect to default scenario, default node, all collapsed.
@@ -74,6 +79,7 @@ public final class ScenarioPage extends WebPage {
     public ScenarioPage( PageParameters parameters ) {
         // Call super to remember parameters in links
         super( parameters );
+        setStatelessHint( true );
 
         final ScenarioDao scenarioDao = getScenarioDao();
         final Scenario scenario = findScenario( scenarioDao, parameters );
@@ -104,8 +110,8 @@ public final class ScenarioPage extends WebPage {
      * @param node a node in the scenario
      */
     public ScenarioPage( Scenario scenario, Node node ) {
-        final Set<String> expansions = Collections.emptySet();
-        init( scenario, node, expansions );
+        final Set<String> expanded = Collections.emptySet();
+        init( scenario, node, expanded );
     }
 
     private static Set<String> findExpansions( PageParameters parameters ) {
@@ -166,14 +172,31 @@ public final class ScenarioPage extends WebPage {
      * Return initialized parameters for given scenario and node.
      * @param scenario the scenario
      * @param node the node, maybe null (in which case, would link to first node in scenario)
+     * @param expanded components id that should be expanded
+     * @return page parameters to use in links, etc.
+     */
+    public static PageParameters getParameters(
+            Scenario scenario, Node node, Set<String> expanded ) {
+
+        final PageParameters result = new PageParameters();
+        result.put( SCENARIO_PARM, scenario.getId() );
+        if ( node != null ) {
+            result.put( NODE_PARM, node.getId() );
+            for ( String id : expanded )
+                result.add( EXPAND_PARM, id );
+        }
+        return result;
+    }
+
+    /**
+     * Return initialized parameters for given scenario and node.
+     * @param scenario the scenario
+     * @param node the node, maybe null (in which case, would link to first node in scenario)
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node ) {
-        final PageParameters result = new PageParameters();
-        result.put( SCENARIO_PARM, scenario.getId() );
-        if ( node != null )
-            result.put( NODE_PARM, node.getId() );
-        return result;
+        final Set<String> expansions = Collections.emptySet();
+        return getParameters( scenario, node, expansions );
     }
 
     /** Set content-type to application/xhtml+xml. */
@@ -183,7 +206,9 @@ public final class ScenarioPage extends WebPage {
         getResponse().setContentType( "application/xhtml+xml" );                          // NON-NLS
     }
 
-    private void init( Scenario scenario, Node node, Set<String> expansions ) {
+    private void init( Scenario scenario, Node node, Set<String> expanded ) {
+        expansions = expanded;
+
         final PropertyModel<String> title =
                 new PropertyModel<String>( scenario, "name" );                            // NON-NLS
         add( new Label( "sc-title", title ) );                                            // NON-NLS
@@ -231,7 +256,12 @@ public final class ScenarioPage extends WebPage {
             panel.setRenderBodyOnly( true );
             add( panel );
 
+            add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
+
             addScenarioFields( scenario );
+
+            add( new FlowListPanel( "reqs", node, false, expansions ) );                  // NON-NLS
+            add( new FlowListPanel( "outcomes", node, true, expansions ) );               // NON-NLS
         }
 
         //------------------------------

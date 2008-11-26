@@ -7,14 +7,13 @@ import java.text.MessageFormat;
  */
 public class Part extends Node {
 
-
     // TODO Should describe severity level of failure
+
+    /** Default actor label, when unknown. */
+    public static final String DEFAULT_ACTOR = "Somebody";
 
     /** Default task name. */
     static final String DEFAULT_TASK = "doing something";
-
-    /** Default actor label, when unknown. */
-    static final String DEFAULT_ACTOR = "Somebody";
 
     /** The task label of this part (never null or empty). */
     private String task = DEFAULT_TASK;
@@ -68,12 +67,6 @@ public class Part extends Node {
                                  : getOrganization() != null ? getOrganization().toString()
                                  : DEFAULT_ACTOR;
         return MessageFormat.format( "{0} {1}", actorString, getTask() );
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getTitle();
     }
 
     public final String getTask() {

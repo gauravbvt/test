@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import java.text.MessageFormat;
+
 /**
  * An arrow between two nodes in the information flow graph.
  */
@@ -76,10 +78,45 @@ public class Flow extends ModelObject {
         this.target = target;
     }
 
+    /**
+     * Get a title for an out-of-context flow.
+     * @return a short description of the flow, for titles and lists.
+     */
+    public String getTitle() {
+        return getName();
+    }
+
+    /**
+     * Get a title for this flow, when used in the context of a requirement.
+     * @return a short description of the flow, for titles and lists.
+     */
+    public String getRequirementTitle() {
+        final boolean noName = getName() == null || getName().trim().isEmpty();
+        return MessageFormat.format(
+                 noName       ? isAskedFor() ? "Questioning {1}, when needed"
+                                             : "Responding to {1}"
+               : isAskedFor() ? "Asking {1} about {0}, when needed"
+                              : "Receiving {0} from {1}",
+                getName(), getSource() );
+    }
+
+    /**
+     * Get a title for this flow, when used in the context of an outcome.
+     * @return a short description of the flow, for titles and lists.
+     */
+    public String getOutcomeTitle() {
+        final boolean noName = getName() == null || getName().trim().isEmpty();
+        return MessageFormat.format(
+                noName       ? isAskedFor() ? "Answering {1}, when asked"
+                                            : "Notifying {1}"
+              : isAskedFor() ? "Communicating {0} to {1}, when asked"
+                             : "Notifying {1} of {0}",
+                getName(), getTarget() );
+    }
+
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        // TODO implement flow print strings.
-        return super.toString();
+        return getTitle();
     }
 }

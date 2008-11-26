@@ -26,6 +26,9 @@ public abstract class Node extends ModelObject {
     /** All outcomes, indexed by id. */
     private Map<Long,Flow> outIndex;
 
+    /** The unique scenario containing this node. */
+    private Scenario scenario;
+
     protected Node() {
         setOutcomes( new TreeSet<Flow>() );
         setRequirements( new TreeSet<Flow>() );
@@ -163,4 +166,17 @@ public abstract class Node extends ModelObject {
         return false;
     }
 
+    public Scenario getScenario() {
+        return scenario;
+    }
+
+    public void setScenario( Scenario scenario ) {
+        this.scenario = scenario;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return getTitle();
+    }
 }

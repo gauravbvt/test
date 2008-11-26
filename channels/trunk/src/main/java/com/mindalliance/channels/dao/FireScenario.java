@@ -69,7 +69,9 @@ public class FireScenario extends Scenario {
         connect( chief, connector ).setName( "all-clear" );
         connect( js1, evac ).setName( "started" );
         connect( evac, js2 ).setName( "ended" );
-        connect( js2, chief ).setName( "status" );
+        final Flow flow = connect( js2, chief );
+        flow.setName( "status" );
+        flow.setAskedFor( true );
 
         removeNode( defNode );
     }
