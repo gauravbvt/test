@@ -152,4 +152,8 @@ public class Part extends Node {
     public static String getDefaultActor() {
         return DEFAULT_ACTOR;
     }
+
+    public boolean isUndefined() {
+        return actor == null && role == null && organization == null;
+    }
 }

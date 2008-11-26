@@ -7,6 +7,7 @@ import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
@@ -36,6 +37,9 @@ public final class Project extends WebApplication {
 
     /** Scenario exporter. */
     private Exporter exporter;
+
+    /** Scenario analyst */
+    private ScenarioAnalyst scenarioAnalyst;
 
     /**
      * Default Constructor.
@@ -95,5 +99,13 @@ public final class Project extends WebApplication {
 
     public void setImporter( Importer importer ) {
         this.importer = importer;
+    }
+
+    public ScenarioAnalyst getScenarioAnalyst() {
+        return scenarioAnalyst;
+    }
+
+    public void setScenarioAnalyst( ScenarioAnalyst scenarioAnalyst ) {
+        this.scenarioAnalyst = scenarioAnalyst;
     }
 }

@@ -25,6 +25,26 @@ abstract public class AnalysisObject {
      */
     private String property;
 
+    /**
+     * Constructor
+     *
+     * @param about -- the ModelObject the issue is about
+     */
+    public AnalysisObject( ModelObject about ) {
+        this.about = about;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param about    -- the ModelObject the issue is about
+     * @param property -- the problematic property
+     */
+    public AnalysisObject( ModelObject about, String property ) {
+        this( about );
+        this.property = property;
+    }
+
     public ModelObject getAbout() {
         return about;
     }

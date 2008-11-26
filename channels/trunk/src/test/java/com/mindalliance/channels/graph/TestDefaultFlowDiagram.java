@@ -22,7 +22,7 @@ import java.util.Iterator;
  */
 public class TestDefaultFlowDiagram extends TestCase {
 
-    FlowDiagram<Node, Flow> flowDiagram;
+    private FlowDiagram<Node, Flow> flowDiagram;
 
     @Override
     protected void setUp() {

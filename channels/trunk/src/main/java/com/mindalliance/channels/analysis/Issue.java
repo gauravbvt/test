@@ -1,5 +1,7 @@
 package com.mindalliance.channels.analysis;
 
+import com.mindalliance.channels.model.ModelObject;
+
 /**
  * A problem uncovered about a model object.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,21 +13,45 @@ package com.mindalliance.channels.analysis;
 public class Issue extends AnalysisObject {
 
     /**
-     * The kind of issue
-     */
-    private String type;
-
-    /**
      * How to resolve the issue
      */
     private String remediation;
 
-    public String getType() {
-        return type;
+    /**
+     * Constructor
+     *
+     * @param about -- the ModelObject the issue is about
+     */
+    public Issue( ModelObject about ) {
+        super( about );
     }
 
-    public void setType( String type ) {
-        this.type = type;
+    /**
+     * Constructor
+     *
+     * @param about    -- the ModelObject the issue is about
+     * @param property -- the problematic property
+     */
+    public Issue( ModelObject about, String property ) {
+        super( about, property );
+    }
+
+    /**
+     * To String
+     *
+     * @return a string
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getAbout().getClass().getSimpleName() );
+        sb.append( " " );
+        sb.append( getAbout().getName() );
+        sb.append( "(" );
+        sb.append( getAbout().getId() );
+        sb.append( ")" );
+        sb.append( ": " );
+        sb.append( getDescription() );
+        return sb.toString();
     }
 
     public String getRemediation() {

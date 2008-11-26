@@ -20,6 +20,7 @@
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
+        <property name="scenarioAnalyst" ref="scenarioAnalyst"/>
     </bean>
 
     <!-- Flow diagram -->
@@ -36,6 +37,18 @@
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="neato"/>
         <property name="timeout" value="10000"/>
+    </bean>
+
+    <!-- Scenario analyst -->
+    <bean id="scenarioAnalyst" class="com.mindalliance.channels.analysis.DefaultScenarioAnalyst">
+        <property name="issueDetectors">
+            <list value-type="java.util.ArrayList">
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
+            </list>
+        </property>
     </bean>
 
 
