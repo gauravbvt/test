@@ -29,7 +29,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
         Flow flow = (Flow) modelObject;
         String name = flow.getName();
         if ( name == null || name.trim().isEmpty() ) {
-            issue = new Issue( modelObject, "name" );
+            issue = new Issue( Issue.DEFINITION, modelObject, "name" );
             issue.setDescription( "The information is not defined" );
         }
         return issue;

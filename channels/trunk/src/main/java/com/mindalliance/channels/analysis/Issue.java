@@ -11,6 +11,26 @@ import com.mindalliance.channels.model.ModelObject;
  * Time: 9:30:12 AM
  */
 public class Issue extends AnalysisObject {
+    /**
+     * Type of issue having to do with the definition of a model object
+     */
+    public static final String DEFINITION = "Definition";
+    /**
+     * Type of having having to do with a flow of information
+     */
+    public static final String FLOW = "Flow";
+    /**
+     * Type of issue having to do with a point fo failure in a scenario
+     */
+    public static final String POINT_OF_FAILURE = "Point of failure";
+    /**
+     * All possible types of issues
+     */
+    public static final String[] TYPES = new String[]{DEFINITION, FLOW, POINT_OF_FAILURE};
+    /**
+     * Type of issue
+     */
+    private String type;
 
     /**
      * How to resolve the issue
@@ -20,20 +40,24 @@ public class Issue extends AnalysisObject {
     /**
      * Constructor
      *
+     * @param type  -- the type of issue
      * @param about -- the ModelObject the issue is about
      */
-    public Issue( ModelObject about ) {
+    public Issue( String type, ModelObject about ) {
         super( about );
+        this.type = type;
     }
 
     /**
      * Constructor
      *
+     * @param type     -- the type of issue
      * @param about    -- the ModelObject the issue is about
      * @param property -- the problematic property
      */
-    public Issue( ModelObject about, String property ) {
+    public Issue( String type, ModelObject about, String property ) {
         super( about, property );
+        this.type = type;
     }
 
     /**
@@ -43,6 +67,8 @@ public class Issue extends AnalysisObject {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append( type );
+        sb.append( " issue on " );
         sb.append( getAbout().getClass().getSimpleName() );
         sb.append( " " );
         sb.append( getAbout().getName() );

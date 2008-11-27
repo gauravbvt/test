@@ -92,26 +92,25 @@ public class TestDefaultScenarioAnalyst extends TestCase {
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             Node node = nodes.next();
-            String summary = analyst.getIssuesSummary( node );
-            System.out.println( node.getClass().getSimpleName() + " " + node.getId() );
-            System.out.println( summary );
+            processSummary(node);
             Iterator<Flow> requirements = node.requirements();
             while ( requirements.hasNext() ) {
-                Flow requirement = requirements.next();
-                summary = analyst.getIssuesSummary( requirement );
-                System.out.println( requirement.getClass().getSimpleName() +
-                        " " + requirement.getId() );
-                System.out.println( summary );
+                processSummary(requirements.next());
             }
             Iterator<Flow> outcomes = node.outcomes();
             while ( outcomes.hasNext() ) {
-                Flow outcome = outcomes.next();
-                summary = analyst.getIssuesSummary( outcome );
-                System.out.println( outcome.getClass().getSimpleName() + " " + outcome.getId() );
-                System.out.println( summary );
+                processSummary(outcomes.next());
             }
         }
         assertTrue( true );
+    }
+
+    private void processSummary(ModelObject modelObject) {
+        String summary = analyst.getIssuesSummary( modelObject );
+        System.out.println( modelObject.getClass().getSimpleName() +
+                " " + modelObject.getName() + " " + modelObject.getId() );
+        System.out.println( summary );
+
     }
 
 

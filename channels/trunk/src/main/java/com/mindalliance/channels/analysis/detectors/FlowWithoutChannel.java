@@ -28,7 +28,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         Flow flow = (Flow) modelObject;
         String channel = flow.getChannel();
         if ( channel == null || channel.trim().isEmpty() ) {
-            issue = new Issue( modelObject, "channel" );
+            issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
             issue.setDescription( "The channel is not defined" );
         }
         return issue;
