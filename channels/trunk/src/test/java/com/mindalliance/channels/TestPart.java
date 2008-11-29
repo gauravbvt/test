@@ -1,6 +1,12 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
 
 import junit.framework.TestCase;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Location;
+import com.mindalliance.channels.Organization;
 
 public class TestPart extends TestCase {
 

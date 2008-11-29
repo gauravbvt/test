@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Scenario;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.wicket.PageParameters;

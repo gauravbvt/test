@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.ModelObject;
 
 /**
  * Analysis about a model object, possibly specific to one of its property.

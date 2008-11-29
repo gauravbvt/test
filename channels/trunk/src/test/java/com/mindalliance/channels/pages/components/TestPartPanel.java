@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Jurisdiction;
-import com.mindalliance.channels.model.Location;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Location;
+import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.pages.Project;
 import junit.framework.TestCase;
 import org.apache.wicket.util.tester.WicketTester;

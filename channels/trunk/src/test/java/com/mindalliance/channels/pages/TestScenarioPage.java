@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;

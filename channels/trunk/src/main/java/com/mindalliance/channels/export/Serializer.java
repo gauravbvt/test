@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Scenario;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;

@@ -1,4 +1,6 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.Node;
 
 /**
  * A connector to an unspecified node outside of the scenario.

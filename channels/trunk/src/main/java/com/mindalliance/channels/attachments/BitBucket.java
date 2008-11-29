@@ -1,6 +1,6 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.ModelObject;
 
 import java.util.Collections;
 import java.util.Iterator;

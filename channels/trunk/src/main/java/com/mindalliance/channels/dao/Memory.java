@@ -1,6 +1,6 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Scenario;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ public final class Memory implements ScenarioDao {
     private Set<Scenario> scenarios = new TreeSet<Scenario>();
 
     /** Scenarios, indexed by name. */
-    private Map<String, Scenario> nameIndex = new HashMap<String,Scenario>( INITIAL_CAPACITY );
+    private Map<String, Scenario> nameIndex = new HashMap<String, Scenario>( INITIAL_CAPACITY );
 
     /** Scenarios, indexed by id. */
     private Map<Long,Scenario> idIndex = new HashMap<Long,Scenario>( INITIAL_CAPACITY );

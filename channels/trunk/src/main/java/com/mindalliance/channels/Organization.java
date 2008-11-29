@@ -1,4 +1,6 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.ModelObject;
 
 /**
  * A company, agency, social club, etc.

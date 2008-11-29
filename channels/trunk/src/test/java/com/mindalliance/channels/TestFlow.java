@@ -1,6 +1,7 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
 
 import junit.framework.TestCase;
+import com.mindalliance.channels.Flow;
 
 public class TestFlow extends TestCase {
 

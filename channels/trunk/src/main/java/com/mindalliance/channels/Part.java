@@ -1,4 +1,11 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Location;
 
 import java.text.MessageFormat;
 

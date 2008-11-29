@@ -1,4 +1,7 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Node;
 
 /**
  * A reference to another scenario.

@@ -1,4 +1,8 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
 
 import java.util.HashMap;
 import java.util.Iterator;

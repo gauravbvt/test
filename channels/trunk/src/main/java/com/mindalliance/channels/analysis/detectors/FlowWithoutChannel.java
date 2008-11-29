@@ -2,8 +2,8 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.Issue;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Flow;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

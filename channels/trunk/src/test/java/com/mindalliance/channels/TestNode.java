@@ -1,10 +1,17 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
 
 import junit.framework.TestCase;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.ScenarioNode;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Node;
 
 /**
  * Test generic node functionality

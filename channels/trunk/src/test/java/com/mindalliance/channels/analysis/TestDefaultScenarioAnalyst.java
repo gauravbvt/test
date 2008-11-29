@@ -10,10 +10,10 @@ import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.dao.FireScenario;
 
 /**

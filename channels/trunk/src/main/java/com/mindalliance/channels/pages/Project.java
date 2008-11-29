@@ -5,8 +5,8 @@ import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Node;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
@@ -75,7 +75,7 @@ public final class Project extends WebApplication {
         return flowDiagram;
     }
 
-    public void setFlowDiagram( FlowDiagram<Node,Flow> flowDiagram ) {
+    public void setFlowDiagram( FlowDiagram<Node, Flow> flowDiagram ) {
         this.flowDiagram = flowDiagram;
     }
 

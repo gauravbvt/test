@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Jurisdiction;
-import com.mindalliance.channels.model.Location;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Location;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Role;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;

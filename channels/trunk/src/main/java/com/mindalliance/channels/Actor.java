@@ -1,4 +1,6 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.ModelObject;
 
 /**
  * Someone or something playing a part in a scenario.

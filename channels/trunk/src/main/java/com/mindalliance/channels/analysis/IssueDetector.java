@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.ModelObject;
 
 /**
  * A strategy for detecting issues on a model object

@@ -2,10 +2,10 @@ package com.mindalliance.channels.graph;
 
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Part;
 
 import java.text.MessageFormat;
 import java.util.List;

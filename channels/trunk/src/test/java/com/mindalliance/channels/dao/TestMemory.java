@@ -1,6 +1,6 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Scenario;
 import junit.framework.TestCase;
 
 import java.util.Iterator;

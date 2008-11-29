@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;

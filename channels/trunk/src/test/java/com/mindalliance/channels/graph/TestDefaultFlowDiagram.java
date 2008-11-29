@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.dao.FireScenario;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Node;
 import junit.framework.TestCase;
 
 import java.io.BufferedOutputStream;

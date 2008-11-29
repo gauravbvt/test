@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
 import org.apache.wicket.markup.html.link.ImageMap;
 import java.io.OutputStream;
 
