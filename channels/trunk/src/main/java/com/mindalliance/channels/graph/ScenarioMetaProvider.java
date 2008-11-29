@@ -163,11 +163,14 @@ public class ScenarioMetaProvider implements MetaProvider<Node,Flow> {
             final String actorString = part.getActor() != null ? part.getActor().toString()
                     : part.getRole() != null ? part.getRole().toString()
                     : part.getOrganization() != null ? part.getOrganization().toString()
-                    : Part.getDefaultActor();
+                    : getDefaultActor();
             return MessageFormat.format( "{0}|{1}", actorString, part.getTask() );
         } else {
             return node.getName();
         }
     }
 
+    public static String getDefaultActor() {
+        return Part.DEFAULT_ACTOR;
+    }
 }

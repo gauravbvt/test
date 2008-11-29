@@ -62,7 +62,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     /**
      * Set the description of this object.
-     * @param description the description. Will complain if null.
+     * @param description the description. Will set to empty string if null.
      */
     public void setDescription( String description ) {
         if ( description == null )

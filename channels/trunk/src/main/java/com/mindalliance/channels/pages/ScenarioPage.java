@@ -18,7 +18,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.StatelessForm;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -79,7 +79,6 @@ public final class ScenarioPage extends WebPage {
     public ScenarioPage( PageParameters parameters ) {
         // Call super to remember parameters in links
         super( parameters );
-        setStatelessHint( true );
 
         final ScenarioDao scenarioDao = getScenarioDao();
         final Scenario scenario = findScenario( scenarioDao, parameters );
@@ -157,11 +156,11 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Scenario scenario ) {
-        redirectTo( scenario, scenario.nodes().next() );
+        redirectTo( scenario.nodes().next() );
     }
 
-    private void redirectTo( Scenario scenario, Node node ) {
-        final long sid = scenario.getId();
+    private void redirectTo( Node node ) {
+        final long sid = node.getScenario().getId();
         final long nid = node.getId();
         setResponsePage(
                 new RedirectPage(
@@ -235,19 +234,28 @@ public final class ScenarioPage extends WebPage {
     /**
      * The scenario form.
      */
-    private final class ScenarioForm extends StatelessForm<Scenario> {
+    private final class ScenarioForm extends Form<Scenario> {
 
         /** The scenario import field. */
         private FileUploadField scenarioImport;
 
+        /** The node edited by the form. */
+        private Node node;
+
+        /**
+         * The scenario to display after submit.
+         * If null, redisplay current node.
+         */
+        private Scenario target;
+
         //------------------------------
         private ScenarioForm( String id, Scenario scenario, Node node ) {
             super( id );
+            this.node = node;
             setMultiPart( true );
-            setStatelessHint( true );
 
             add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
-            add( new Label( "node-desc",                                                  // NON-NLS
+            add( new TextArea<String>( "node-desc",                                       // NON-NLS
                      new PropertyModel<String>( node, DESC_PROPERTY ) ) );
 
             final Component panel = node.isPart() ?
@@ -297,7 +305,7 @@ public final class ScenarioPage extends WebPage {
             return new DropDownChoice<Scenario>( id, new Model<Scenario>( scenario ), scenarios ) {
                 @Override
                 protected void onSelectionChanged( Scenario newSelection ) {
-                    redirectTo( newSelection );
+                    target = newSelection;
                 }
             };
         }
@@ -324,13 +332,18 @@ public final class ScenarioPage extends WebPage {
                     final InputStream inputStream = fileUpload.getInputStream();
                     final Scenario imported = importer.importScenario( inputStream );
                     getScenarioDao().addScenario( imported );
-                    redirectTo( imported );
+                    target = imported;
                 } catch ( IOException e ) {
                     final String s = "Import error";
                     LOG.error( s, e );
                     throw new RuntimeException( s, e );
                 }
             }
+
+            if ( target != null )
+                redirectTo( target );
+            else
+                redirectTo( node );
         }
     }
 

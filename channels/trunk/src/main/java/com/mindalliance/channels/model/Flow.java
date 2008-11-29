@@ -83,7 +83,23 @@ public class Flow extends ModelObject {
      * @return a short description of the flow, for titles and lists.
      */
     public String getTitle() {
-        return getName();
+        String content = getName();
+        if ( content == null || content.trim().isEmpty() )
+            content = "something";
+        return MessageFormat.format( isAskedFor() ? "{2} asking {1} about {0}"
+                                                  : "{1} communicating {0} to {2}",
+
+            content, getShortName( getSource() ), getShortName( getTarget() ) );
+    }
+
+    private static String getShortName( Node node ) {
+        if ( node != null ) {
+            final String sourceName = node.getName();
+            if ( sourceName != null && !sourceName.trim().isEmpty() )
+                return sourceName;
+        }
+
+        return "somebody";
     }
 
     /**
@@ -95,9 +111,9 @@ public class Flow extends ModelObject {
         return MessageFormat.format(
                  noName       ? isAskedFor() ? "Questioning {1}, when needed"
                                              : "Responding to {1}"
-               : isAskedFor() ? "Asking {1} about {0}, when needed"
+               : isAskedFor() ? "Obtaining {0} from {1}, when needed"
                               : "Receiving {0} from {1}",
-                getName(), getSource() );
+                getName(), getShortName( getSource() ) );
     }
 
     /**
@@ -111,7 +127,7 @@ public class Flow extends ModelObject {
                                             : "Notifying {1}"
               : isAskedFor() ? "Communicating {0} to {1}, when asked"
                              : "Notifying {1} of {0}",
-                getName(), getTarget() );
+                getName(), getShortName( getTarget() ) );
     }
 
     /** {@inheritDoc} */

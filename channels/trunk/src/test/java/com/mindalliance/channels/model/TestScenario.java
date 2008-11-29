@@ -63,10 +63,13 @@ public class TestScenario extends TestCase {
 
         final Node p1 = new Connector();
         assertNull( scenario.getNode( p1.getId() ) );
+        int size = scenario.getNodeCount();
         scenario.addNode( p1 );
+        assertEquals( size+1, scenario.getNodeCount() );
         assertSame( p1, scenario.getNode( p1.getId() ) );
 
         scenario.removeNode( p1 );
+        assertEquals( size, scenario.getNodeCount() );
         assertNull( scenario.getNode( p1.getId() ) );
 
         try {
@@ -91,9 +94,13 @@ public class TestScenario extends TestCase {
         ps.add( p1 );
         final Node p2 = new ScenarioNode( new Scenario() );
         ps.add( p2 );
+        assertNull( p1.getScenario() );
+        assertNull( p2.getScenario() );
         scenario.setNodes( ps );
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertSame( p2, scenario.getNode( p2.getId() ) );
+        assertSame( scenario, p1.getScenario() );
+        assertSame( scenario, p2.getScenario() );
     }
 
     public void testConnect() {

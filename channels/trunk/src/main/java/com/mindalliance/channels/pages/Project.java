@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
  * Application object for Channels.
@@ -53,6 +54,7 @@ public final class Project extends WebApplication {
         super.init();
 
         getMarkupSettings().setStripWicketTags( true );
+        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "scenario.bin", ExportPage.class ) );
     }
 

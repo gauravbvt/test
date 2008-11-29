@@ -62,11 +62,7 @@ public class Part extends Node {
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        final String actorString = getActor()        != null ? getActor().toString()
-                                 : getRole()         != null ? getRole().toString()
-                                 : getOrganization() != null ? getOrganization().toString()
-                                 : DEFAULT_ACTOR;
-        return MessageFormat.format( "{0} {1}", actorString, getTask() );
+        return MessageFormat.format( "{0} {1}", getName(), getTask() );
     }
 
     public final String getTask() {
@@ -147,10 +143,6 @@ public class Part extends Node {
     @Override
     public boolean isPart() {
         return true;
-    }
-
-    public static String getDefaultActor() {
-        return DEFAULT_ACTOR;
     }
 
     public boolean isUndefined() {
