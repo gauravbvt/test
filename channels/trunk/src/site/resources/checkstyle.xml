@@ -148,7 +148,6 @@
         </module>
         <module name="TabCharacter"/>
         <module name="ThrowsCount"/>
-        <module name="TodoComment"/>
         <module name="TrailingComment">
             <property name="legalComment" value=" *NON-NLS"/>
         </module>

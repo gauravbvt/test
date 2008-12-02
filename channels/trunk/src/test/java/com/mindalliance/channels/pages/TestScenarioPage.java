@@ -1,15 +1,24 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.export.Importer;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import static org.easymock.EasyMock.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Simple test using the WicketTester.
@@ -20,6 +29,7 @@ public class TestScenarioPage extends TestCase {
     private WicketTester tester;
     private Scenario scenario;
     private Memory dao;
+    private Project project;
 
     public TestScenarioPage() {
     }
@@ -27,11 +37,43 @@ public class TestScenarioPage extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+
         dao = new Memory();
-        final Project project = new Project();
+        project = new Project();
         project.setScenarioDao( dao );
+
         scenario = project.getScenarioDao().getDefaultScenario();
         tester = new WicketTester( project );
+    }
+
+    /** Workaround for wicket form tester bug re: file upload. File must be set
+     * otherwise all fields set to null. Resolved in wickets 1.4-RC2, coming out
+     * soon to a theater near you...
+     * @param ft the tester to fix
+     * @param project
+     * @see {https://issues.apache.org/jira/browse/WICKET-1931}
+     * @todo remove when moving to Wickets 1.4-RC2
+     */
+    public static void setFiles( FormTester ft, Project project ) throws IOException {
+
+        final Importer importer = createMock( Importer.class );
+        expect( importer.importScenario( (InputStream) notNull() ) ).andReturn( new Scenario() );
+
+        replay( importer );
+        project.setImporter( importer );
+
+        final File file = new File( TestScenarioPage.class.getResource( "test.txt" ).getFile() );
+        assertTrue( "Can't find " + file.getAbsolutePath(), file.exists() );
+        ft.setFile( "sc-import", file, "text/plain" );
+        ft.setFile( "attachments:upload", file, "text/plain" );
+    }
+
+    /**
+     * @param project
+     * @todo remove when moving to Wickets 1.4-RC2
+     */
+    public static void checkFiles( Project project ) {
+        verify( project.getImporter() );
     }
 
     public void testParms() {
@@ -104,26 +146,117 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
     }
 
-    /** Test submit with part modifications. */
-    public void testPartSubmit() throws NotFoundException {
-//        final Node node = scenario.nodes().next();
-//
-//        tester.startPage( new ScenarioPage( scenario, node ) );
-//        tester.assertRenderedPage( ScenarioPage.class );
-//        tester.assertNoErrorMessage();
-//
-//        FormTester ft = tester.newFormTester( "big-form" );
-//        final String desc = "New value";
-//        ft.setValue( "node-desc", desc );
-//        ft.submit();
-//        tester.assertRenderedPage( RedirectPage.class );
-//        tester.assertNoErrorMessage();
-//
-//        assertEquals( desc, node.getDescription() );
+    /** Test submit with part modifications.
+     * @throws NotFoundException on error */
+    public void testEmptySubmit() throws NotFoundException, IOException {
+        final Node node = scenario.nodes().next();
+
+        tester.startPage( new ScenarioPage( scenario, node ) );
+        tester.setupRequestAndResponse();
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+
+        final FormTester ft = tester.newFormTester( "big-form" );
+        setFiles( ft, project );
+        ft.submit();
+
+        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertNoErrorMessage();
+        checkFiles( project );
     }
 
-    public void testDeleteScenario() {
+    /** Test submit with part modifications.
+     * @throws NotFoundException on error */
+    public void testDescriptionSubmit1() throws NotFoundException, IOException {
+        final Node node = scenario.nodes().next();
+        assertEquals( "", node.getDescription() );
 
+        tester.startPage( new ScenarioPage( scenario, node ) );
+        tester.setupRequestAndResponse();
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+
+        final FormTester ft = tester.newFormTester( "big-form" );
+        final String desc = "New value";
+        ft.setValue( "description", desc );
+        setFiles( ft, project );
+        ft.submit();
+
+        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertNoErrorMessage();
+
+        assertEquals( desc, node.getDescription() );
+        checkFiles( project );
     }
 
+    /** Test submit with part modifications.
+     * @throws NotFoundException on error */
+    public void testDescriptionSubmit2() throws NotFoundException, IOException {
+        final Node node = scenario.nodes().next();
+        node.setDescription( "something" );
+
+        tester.startPage( new ScenarioPage( scenario, node ) );
+        tester.setupRequestAndResponse();
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+
+        final FormTester ft = tester.newFormTester( "big-form" );
+        final String desc = "";
+        ft.setValue( "description", desc );
+        setFiles( ft, project );
+        ft.submit();
+
+        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertNoErrorMessage();
+
+        assertEquals( desc, node.getDescription() );
+        checkFiles( project );
+    }
+
+    public void testDeleteScenario() throws IOException {
+        final Scenario sc2 = Scenario.createDefault();
+        sc2.setName( "Test" );
+        dao.addScenario( sc2 );
+
+        tester.startPage( new ScenarioPage( scenario ) );
+        tester.setupRequestAndResponse();
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+        assertEquals( 2, dao.getScenarioCount() );
+
+        final FormTester ft = tester.newFormTester( "big-form" );
+        setFiles( ft, project );
+        ft.setValue( "sc-del", "true" );
+
+        ft.submit();
+        try {
+            assertNull( dao.findScenario( scenario.getId() ) );
+            fail();
+        } catch ( NotFoundException ignored ) {}
+    }
+
+    public void testGetParameters1() {
+        final Node node = scenario.nodes().next();
+        final PageParameters parms = ScenarioPage.getParameters( scenario, node );
+
+        assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
+        assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
+    }
+
+    public void testGetParameters2() {
+        final Node node = scenario.nodes().next();
+
+        final Set<String> expand = new HashSet<String>( Arrays.asList( "1", "2" ) );
+        final PageParameters parms = ScenarioPage.getParameters( scenario, node, expand );
+
+        assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
+        assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
+
+        final Set<String> results = new HashSet<String>(
+                Arrays.asList( parms.getStringArray( "expand" ) ) );
+
+        assertEquals( 2, results.size() );
+        assertTrue( results.contains( "1" ) );
+        assertTrue( results.contains( "2" ) );
+    }
 }

@@ -1,19 +1,24 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Jurisdiction;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Location;
+import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ScenarioPage;
+import com.mindalliance.channels.pages.TestScenarioPage;
 import junit.framework.TestCase;
+import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 
 import java.util.Iterator;
+import java.io.IOException;
 
 /**
  * Test behavoir of a part panel.
@@ -25,9 +30,15 @@ public class TestPartPanel extends TestCase {
     private Part part;
     private WicketTester tester;
     private Scenario scenario;
+    private Project project;
 
     public TestPartPanel() {
-        final Project project = new Project();
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        project = new Project();
         project.setScenarioDao( new Memory() );
         tester = new WicketTester( project );
 
@@ -40,11 +51,7 @@ public class TestPartPanel extends TestCase {
             if ( n.isPart() )
                 part = (Part) n;
         }
-    }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
         panel = new PartPanel( "id", part );
         tester.startComponent( panel );
     }
@@ -68,7 +75,7 @@ public class TestPartPanel extends TestCase {
         assertSame( s1, part.getJurisdiction().getName() );
 
         panel.setJurisdiction( s );
-        assertSame( s1, part.getJurisdiction().getName() );
+        assertSame( s, part.getJurisdiction().getName() );
 
         panel.setJurisdiction( null );
         assertNull( part.getJurisdiction() );
@@ -99,7 +106,7 @@ public class TestPartPanel extends TestCase {
         assertSame( s1, part.getLocation().getName() );
 
         panel.setLocation( s );
-        assertSame( s1, part.getLocation().getName() );
+        assertSame( s, part.getLocation().getName() );
 
         panel.setLocation( null );
         assertNull( part.getLocation() );
@@ -130,7 +137,7 @@ public class TestPartPanel extends TestCase {
         assertSame( s1, part.getActor().getName() );
 
         panel.setActor( s );
-        assertSame( s1, part.getActor().getName() );
+        assertSame( s, part.getActor().getName() );
 
         panel.setActor( null );
         assertNull( part.getActor() );
@@ -161,7 +168,7 @@ public class TestPartPanel extends TestCase {
         assertSame( s1, part.getOrganization().getName() );
 
         panel.setOrganization( s );
-        assertSame( s1, part.getOrganization().getName() );
+        assertSame( s, part.getOrganization().getName() );
 
         panel.setOrganization( null );
         assertNull( part.getOrganization() );
@@ -192,7 +199,7 @@ public class TestPartPanel extends TestCase {
         assertSame( s1, part.getRole().getName() );
 
         panel.setRole( s );
-        assertSame( s1, part.getRole().getName() );
+        assertSame( s, part.getRole().getName() );
 
         panel.setRole( null );
         assertNull( part.getRole() );
@@ -215,25 +222,34 @@ public class TestPartPanel extends TestCase {
     }
 
     /** Test all fields in the form using page tester. */
-//    public void testForm() {
-//        tester.startPage( new ScenarioPage( scenario, part ) );
-//        tester.assertRenderedPage( ScenarioPage.class );
-//        tester.assertNoErrorMessage();
-//
-//        final FormTester ft = tester.newFormTester( "big-form" );
-//        ft.setValue( "specialty:task", "multitasking" );
-//        ft.setValue( "specialty:actor", "Bob" );
-//        ft.setValue( "specialty:role", "Dispatcher" );
-//
-//        ft.submit();
-//        tester.assertRenderedPage( ScenarioPage.class );
-//        tester.assertNoErrorMessage();
-//
-//        assertEquals( "multitasking", part.getTask() );
-//        assertNotNull( part.getActor() );
-//        assertEquals( "Bob", part.getActor().getName() );
-//        assertNotNull( part.getRole() );
-//        assertEquals( "Dispatcher", part.getRole().getName() );
-//
-//    }
+    public void testForm() throws IOException {
+        tester.startPage( new ScenarioPage( scenario, part ) );
+        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertNoErrorMessage();
+
+        final FormTester ft = tester.newFormTester( "big-form" );
+        TestScenarioPage.setFiles( ft, project );
+        ft.setValue( "description", "some description" );
+        ft.setValue( "specialty:task", "multitasking" );
+        ft.setValue( "specialty:actor", "Bob" );
+        ft.setValue( "specialty:role", "Dispatcher" );
+        ft.setValue( "specialty:jurisdiction", "World" );
+        ft.setValue( "specialty:location", "Somewhere" );
+
+        ft.submit();
+        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertNoErrorMessage();
+
+        assertEquals( "some description", part.getDescription() );
+        assertEquals( "multitasking", part.getTask() );
+        assertNotNull( part.getActor() );
+        assertEquals( "Bob", part.getActor().getName() );
+        assertNotNull( part.getRole() );
+        assertEquals( "Dispatcher", part.getRole().getName() );
+        assertNotNull( part.getJurisdiction() );
+        assertEquals( "World", part.getJurisdiction().getName() );
+        assertNotNull( part.getLocation() );
+        assertEquals( "Somewhere", part.getLocation().getName() );
+        TestScenarioPage.checkFiles( project );
+    }
 }

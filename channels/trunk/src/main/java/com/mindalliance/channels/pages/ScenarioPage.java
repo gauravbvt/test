@@ -208,12 +208,8 @@ public final class ScenarioPage extends WebPage {
     private void init( Scenario scenario, Node node, Set<String> expanded ) {
         expansions = expanded;
 
-        final PropertyModel<String> title =
-                new PropertyModel<String>( scenario, "name" );                            // NON-NLS
-        add( new Label( "sc-title", title ) );                                            // NON-NLS
-
-        final Form<?> form = new ScenarioForm( "big-form", scenario, node );              // NON-NLS
-        add( form );
+        add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
+        add( new ScenarioForm( "big-form", scenario, node ) );                            // NON-NLS
 
         LOG.info( "Scenario page generated" );
     }
@@ -248,14 +244,18 @@ public final class ScenarioPage extends WebPage {
          */
         private Scenario target;
 
+        /**
+         * The delete scenario check box.
+         */
+        private DeleteBox deleteScenario;
+
         //------------------------------
         private ScenarioForm( String id, Scenario scenario, Node node ) {
-            super( id );
+            super( id, new Model<Scenario>( scenario ) );
             this.node = node;
-            setMultiPart( true );
 
             add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
-            add( new TextArea<String>( "node-desc",                                       // NON-NLS
+            add( new TextArea<String>( "description",                                     // NON-NLS
                      new PropertyModel<String>( node, DESC_PROPERTY ) ) );
 
             final Component panel = node.isPart() ?
@@ -285,8 +285,8 @@ public final class ScenarioPage extends WebPage {
 
             add( createExportScenario( "sc-export", scenario ) );                         // NON-NLS
             add( new NewScenarioLink( "sc-new" ) );                                       // NON-NLS
-
-            add( new DeleteScenarioBox( "sc-del", scenario ) );                           // NON-NLS
+            deleteScenario = new DeleteBox( "sc-del" );                 // NON-NLS
+            add( deleteScenario );
             add( createSelectScenario( "sc-sel", scenario ) );                            // NON-NLS
 
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
@@ -305,7 +305,7 @@ public final class ScenarioPage extends WebPage {
             return new DropDownChoice<Scenario>( id, new Model<Scenario>( scenario ), scenarios ) {
                 @Override
                 protected void onSelectionChanged( Scenario newSelection ) {
-                    target = newSelection;
+                    setTarget( newSelection );
                 }
             };
         }
@@ -319,10 +319,16 @@ public final class ScenarioPage extends WebPage {
             return new BookmarkablePageLink<Scenario>( id, ExportPage.class, parms );
         }
 
+        /** Set new target. First call wins.
+         * @param target the scenario to display after processing of the form.
+         * */
+        private void setTarget( Scenario target ) {
+            if ( this.target == null )
+                this.target = target;
+        }
         //------------------------------
         @Override
         protected void onSubmit() {
-            super.onSubmit();
 
             final FileUpload fileUpload = scenarioImport.getFileUpload();
             if ( fileUpload != null ) {
@@ -331,13 +337,23 @@ public final class ScenarioPage extends WebPage {
                 try {
                     final InputStream inputStream = fileUpload.getInputStream();
                     final Scenario imported = importer.importScenario( inputStream );
-                    getScenarioDao().addScenario( imported );
-                    target = imported;
+                    setTarget( imported );
                 } catch ( IOException e ) {
+                    // TODO redirect to a proper error screen... user has to know...
                     final String s = "Import error";
                     LOG.error( s, e );
                     throw new RuntimeException( s, e );
                 }
+            }
+            if ( deleteScenario.isSelected() ) {
+                final ScenarioDao dao = getScenarioDao();
+                final Scenario scenario = getModelObject();
+                dao.removeScenario( scenario );
+                if ( LOG.isInfoEnabled() )
+                    LOG.info( MessageFormat.format(
+                            "Deleted scenario {0} - {1}",
+                            scenario.getId(), scenario.getName() ) );
+                setTarget( dao.getDefaultScenario() );
             }
 
             if ( target != null )
@@ -371,31 +387,14 @@ public final class ScenarioPage extends WebPage {
      * A check box that causes the current scenario to be deleted,
      * if selected and form is submitted.
      */
-    private final class DeleteScenarioBox extends CheckBox {
-
-        /** The scenario to delete. */
-        private final Scenario scenario;
+    private static final class DeleteBox extends CheckBox {
 
         /** The selection state of the checkbox. */
         private boolean selected;
 
-        private DeleteScenarioBox( String id, Scenario scenario ) {
+        private DeleteBox( String id ) {
             super( id );
-            this.scenario = scenario;
             setModel( new PropertyModel<Boolean>( this, "selected" ) );                   // NON-NLS
-        }
-
-        @Override
-        protected void onSelectionChanged( Object newSelection ) {
-            if ( (Boolean) newSelection ) {
-                final ScenarioDao dao = getScenarioDao();
-                dao.removeScenario( scenario );
-                if ( LOG.isInfoEnabled() )
-                    LOG.info( MessageFormat.format(
-                            "Deleted scenario {0} - {1}",
-                            scenario.getId(), scenario.getName() ) );
-                redirectTo( dao.getDefaultScenario() );
-            }
         }
 
         public boolean isSelected() {

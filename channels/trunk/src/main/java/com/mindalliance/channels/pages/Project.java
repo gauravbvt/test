@@ -1,16 +1,15 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
-import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
  * Application object for Channels.
@@ -54,7 +53,7 @@ public final class Project extends WebApplication {
         super.init();
 
         getMarkupSettings().setStripWicketTags( true );
-        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
+//        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "scenario.bin", ExportPage.class ) );
     }
 

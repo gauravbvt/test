@@ -19,7 +19,7 @@
         <ul class="menu">
             <li><a href="#">Edit</a></li>
             <li><a wicket:id="sc-export" href="#">Export</a></li>
-            <li><label><input type="checkbox" name="del" wicket:id="sc-del" value="scenario" alt="Delete this scenario"/>
+            <li><label><input type="checkbox" wicket:id="sc-del" alt="Delete this scenario"/>
                 Delete</label>
             </li>
         </ul>
@@ -54,7 +54,7 @@
         <div wicket:id="specialty"></div>
         <tr>
             <th align="right" valign="top"><label for="description">Description:</label></th>
-            <td><textarea id="description" name="description" wicket:id="node-desc" cols="40" rows="4"></textarea></td>
+            <td><textarea id="description" name="description" wicket:id="description" cols="40" rows="4"></textarea></td>
         </tr>
 
         <tr wicket:id="attachments">

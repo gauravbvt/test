@@ -129,7 +129,7 @@ public class PartPanel extends Panel {
             getPart().setActor( null );
         else {
             final Actor actor = getPart().getActor();
-            if ( actor == null || isSame( name, actor.getName() ) )
+            if ( actor == null || !isSame( name, actor.getName() ) )
                 getPart().setActor( new Actor( name ) );
         }
     }
@@ -143,7 +143,7 @@ public class PartPanel extends Panel {
             getPart().setJurisdiction( null );
         else {
             final Jurisdiction jurisdiction = getPart().getJurisdiction();
-            if ( jurisdiction == null || isSame( name, jurisdiction.getName() ) )
+            if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
                 getPart().setJurisdiction( new Jurisdiction( name ) );
         }
     }
@@ -157,7 +157,7 @@ public class PartPanel extends Panel {
             getPart().setLocation( null );
         else {
             final Location location = getPart().getLocation();
-            if ( location == null || isSame( name, location.getName() ) )
+            if ( location == null || !isSame( name, location.getName() ) )
                 getPart().setLocation( new Location( name ) );
         }
     }
@@ -171,7 +171,7 @@ public class PartPanel extends Panel {
             getPart().setOrganization( null );
         else {
             final Organization organization = getPart().getOrganization();
-            if ( organization == null || isSame( name, organization.getName() ) )
+            if ( organization == null || !isSame( name, organization.getName() ) )
                 getPart().setOrganization( new Organization( name ) );
         }
     }
@@ -185,7 +185,7 @@ public class PartPanel extends Panel {
             getPart().setRole( null );
         else {
             final Role role = getPart().getRole();
-            if ( role == null || isSame( name, role.getName() ) )
+            if ( role == null || !isSame( name, role.getName() ) )
                 getPart().setRole( new Role( name ) );
         }
     }
