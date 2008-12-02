@@ -75,8 +75,8 @@ public final class Project extends WebApplication {
         return flowDiagram;
     }
 
-    public void setFlowDiagram( FlowDiagram<Node, Flow> flowDiagram ) {
-        this.flowDiagram = flowDiagram;
+    public void setFlowDiagram( FlowDiagram<Node, Flow> fd ) {
+        flowDiagram = fd;
     }
 
     public AttachmentManager getAttachmentManager() {

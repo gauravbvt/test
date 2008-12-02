@@ -155,4 +155,8 @@ public class Part extends Node {
     public boolean isUndefined() {
         return actor == null && role == null && organization == null;
     }
+
+    public boolean hasDefaultTask() {
+        return task.equals(DEFAULT_TASK);
+    }
 }

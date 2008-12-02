@@ -6,6 +6,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -20,16 +21,19 @@ import java.util.List;
  */
 public class ScenarioMetaProvider implements MetaProvider<Node,Flow> {
 
-    Scenario scenario;
-    String outputFormat;
-    String urlFormat;
-    String imageDirectory;
+    private static final String COLOR_ERROR = "red3";
+    private Scenario scenario;
+    private String outputFormat;
+    private String urlFormat;
+    private String imageDirectory;
+    private ScenarioAnalyst analyst;
 
-    public ScenarioMetaProvider( Scenario scenario, String outputFormat, String urlFormat, String imageDirectory ) {
+    public ScenarioMetaProvider( Scenario scenario, String outputFormat, String urlFormat, String imageDirectory, ScenarioAnalyst analyst ) {
         this.scenario = scenario;
         this.outputFormat = outputFormat;
         this.urlFormat = urlFormat;
         this.imageDirectory = imageDirectory;
+        this.analyst = analyst;
     }
 
     public URLProvider<Node,Flow> getURLProvider() {
@@ -87,6 +91,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node,Flow> {
             }
             list.add( new DOTAttribute( "fontsize", "10" ) );
             list.add( new DOTAttribute( "fontname", "Arial" ) );
+            if (analyst.hasIssues( vertex )) {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR));
+                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( vertex )));
+            }
             return list;
         }
 
@@ -101,6 +109,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node,Flow> {
             list.add( new DOTAttribute( "fontsize", "9" ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
+            if (analyst.hasIssues( edge )) {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR));
+                list.add( new DOTAttribute( "color", COLOR_ERROR));
+                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( edge )));
+            }
             return list;
         }
     };
@@ -109,7 +122,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node,Flow> {
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
-                return flow.getName();
+                return flow.getName().replaceAll( "\\s+", "\\\\n" );
             }
         };
     }

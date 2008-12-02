@@ -1,8 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
-
 import java.text.MessageFormat;
 
 /**

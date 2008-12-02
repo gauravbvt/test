@@ -43,6 +43,8 @@
     <bean id="scenarioAnalyst" class="com.mindalliance.channels.analysis.DefaultScenarioAnalyst">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>

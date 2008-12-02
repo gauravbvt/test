@@ -17,6 +17,8 @@ import java.util.ArrayList;
 // TODO - cache detected issues, reset cache according to changes to the model
 public class DefaultScenarioAnalyst implements ScenarioAnalyst {
 
+    private static final String DESCRIPTION_SEPARATOR = " -- ";
+
     /**
      * Issue detectors registered with the scenario analyst.
      */
@@ -102,7 +104,7 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
         while ( issues.hasNext() ) {
             Issue issue = issues.next();
             sb.append( issue.getDescription() );
-            if ( issues.hasNext() ) sb.append( '\n' );
+            if ( issues.hasNext() ) sb.append( DESCRIPTION_SEPARATOR );
         }
         return sb.toString();
     }

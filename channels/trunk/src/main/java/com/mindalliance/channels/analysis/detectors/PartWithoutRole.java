@@ -1,22 +1,18 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Part;
 
 /**
- * Detects issue where a flow's information property is undefined.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Nov 26, 2008
- * Time: 1:35:38 PM
+ * Date: Dec 2, 2008
+ * Time: 12:47:49 PM
  */
-public class UnnamedFlow extends AbstractIssueDetector {
-
-    public UnnamedFlow() {
-    }
+public class PartWithoutRole extends AbstractIssueDetector {
 
     /**
      * Detect an issue on a model object
@@ -26,11 +22,10 @@ public class UnnamedFlow extends AbstractIssueDetector {
      */
     public Issue detectIssue( ModelObject modelObject ) {
         Issue issue = null;
-        Flow flow = (Flow) modelObject;
-        String name = flow.getName();
-        if ( name == null || name.trim().isEmpty() ) {
-            issue = new Issue( Issue.DEFINITION, modelObject, "name" );
-            issue.setDescription( "The information is missing" );
+        Part part = (Part) modelObject;
+        if ( part.getRole() == null) {
+            issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
+            issue.setDescription( "The role is missing" );
         }
         return issue;
     }
@@ -42,7 +37,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
      * @return whether the detector applies
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Flow;
+        return modelObject instanceof Part;
     }
 
     /**
@@ -51,6 +46,6 @@ public class UnnamedFlow extends AbstractIssueDetector {
      * @return the name of a property or null if test applies to some combination of properties
      */
     public String getTestedProperty() {
-        return "name";
+        return "role";
     }
 }

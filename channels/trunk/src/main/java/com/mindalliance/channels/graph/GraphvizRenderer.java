@@ -105,7 +105,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                         String format,
                         OutputStream output ) throws DiagramException {
         String dot = getDOT( graph, metaProvider );
-        // System.out.println( dot );
+       // System.out.println( dot );
         doRender( dot, format, output );
     }
 

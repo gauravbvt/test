@@ -10,6 +10,8 @@ import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
+import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
+import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
@@ -48,6 +50,8 @@ public class TestDefaultScenarioAnalyst extends TestCase {
         detectors.add( new FlowWithUndefinedSource() );
         detectors.add( new FlowWithUndefinedTarget() );
         detectors.add( new UnnamedFlow() );
+        detectors.add( new PartWithoutTask() );
+        detectors.add( new PartWithoutRole() );
         analyst.setIssueDetectors( detectors );
         // get a scenario
         scenario = new FireScenario();
@@ -107,8 +111,10 @@ public class TestDefaultScenarioAnalyst extends TestCase {
 
     private void processSummary(ModelObject modelObject) {
         String summary = analyst.getIssuesSummary( modelObject );
+        System.out.println();
         System.out.println( modelObject.getClass().getSimpleName() +
                 " " + modelObject.getName() + " " + modelObject.getId() );
+        System.out.println("-----------------");
         System.out.println( summary );
 
     }
