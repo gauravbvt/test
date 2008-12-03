@@ -55,6 +55,7 @@ public final class Project extends WebApplication {
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "scenario.bin", ExportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
     }
 
     @Override

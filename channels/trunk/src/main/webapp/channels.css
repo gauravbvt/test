@@ -129,7 +129,7 @@ hr {
 #parts img {
     border: 1px solid lightgray;
     padding: 5px;
-    width: 42em;
+    max-width: 42em;
 }
 #parts .caption {
     margin: 0;

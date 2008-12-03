@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.dao.ScenarioDao;
-import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.FlowListPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -24,6 +25,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -127,7 +129,7 @@ public final class ScenarioPage extends WebPage {
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
-    private static Scenario findScenario( ScenarioDao scenarioDao, PageParameters parameters ) {
+    static Scenario findScenario( ScenarioDao scenarioDao, PageParameters parameters ) {
         if ( parameters.containsKey( SCENARIO_PARM ) )
             try {
                 return scenarioDao.findScenario( parameters.getLong( SCENARIO_PARM ) );
@@ -145,7 +147,7 @@ public final class ScenarioPage extends WebPage {
      * @param parameters the page parameters
      * @return a node, or null if not found
      */
-    private static Node findNode( Scenario scenario, PageParameters parameters ) {
+    static Node findNode( Scenario scenario, PageParameters parameters ) {
         if ( parameters.containsKey( NODE_PARM ) )
             try {
                 return scenario.getNode( parameters.getLong( NODE_PARM ) );
@@ -178,9 +180,9 @@ public final class ScenarioPage extends WebPage {
             Scenario scenario, Node node, Set<String> expanded ) {
 
         final PageParameters result = new PageParameters();
-        result.put( SCENARIO_PARM, scenario.getId() );
+        result.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
         if ( node != null ) {
-            result.put( NODE_PARM, node.getId() );
+            result.put( NODE_PARM, Long.toString( node.getId() ) );
             for ( String id : expanded )
                 result.add( EXPAND_PARM, id );
         }
@@ -250,13 +252,24 @@ public final class ScenarioPage extends WebPage {
         private DeleteBox deleteScenario;
 
         //------------------------------
-        private ScenarioForm( String id, Scenario scenario, Node node ) {
+        private ScenarioForm( String id, final Scenario scenario, final Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             this.node = node;
+            target = scenario;
 
             add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
                      new PropertyModel<String>( node, DESC_PROPERTY ) ) );
+
+            add( new MarkupContainer( "graph" ) {                                         // NON-NLS
+                @Override
+                protected void onComponentTag( ComponentTag tag ) {
+                    super.onComponentTag( tag );
+                    tag.put( "src", MessageFormat.format(                                 // NON-NLS
+                        "scenario.png?scenario={0}&amp;node={1}",                         // NON-NLS
+                        scenario.getId(), node.getId() ) );
+                }
+            } );
 
             final Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
@@ -285,6 +298,7 @@ public final class ScenarioPage extends WebPage {
 
             add( createExportScenario( "sc-export", scenario ) );                         // NON-NLS
             add( new NewScenarioLink( "sc-new" ) );                                       // NON-NLS
+
             deleteScenario = new DeleteBox( "sc-del" );                 // NON-NLS
             add( deleteScenario );
             add( createSelectScenario( "sc-sel", scenario ) );                            // NON-NLS
@@ -302,7 +316,8 @@ public final class ScenarioPage extends WebPage {
             while ( iterator.hasNext() )
                 scenarios.add( iterator.next() );
 
-            return new DropDownChoice<Scenario>( id, new Model<Scenario>( scenario ), scenarios ) {
+            return new DropDownChoice<Scenario>(
+                    id, new PropertyModel<Scenario>( this, "target" ), scenarios ) {      // NON-NLS
                 @Override
                 protected void onSelectionChanged( Scenario newSelection ) {
                     setTarget( newSelection );
@@ -314,18 +329,22 @@ public final class ScenarioPage extends WebPage {
         private BookmarkablePageLink<Scenario> createExportScenario(
                 String id, Scenario scenario ) {
 
-            final PageParameters parms = new PageParameters();
-            parms.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
-            return new BookmarkablePageLink<Scenario>( id, ExportPage.class, parms );
+           return new BookmarkablePageLink<Scenario>(
+                   id, ExportPage.class, getParameters( scenario, null ) );
         }
 
-        /** Set new target. First call wins.
-         * @param target the scenario to display after processing of the form.
-         * */
-        private void setTarget( Scenario target ) {
-            if ( this.target == null )
-                this.target = target;
+        public void setTarget( Scenario target ) {
+            this.target = target;
         }
+
+        public Scenario getTarget() {
+            return target;
+        }
+
+        public Scenario getScenario() {
+            return getModelObject();
+        }
+
         //------------------------------
         @Override
         protected void onSubmit() {
@@ -347,7 +366,7 @@ public final class ScenarioPage extends WebPage {
             }
             if ( deleteScenario.isSelected() ) {
                 final ScenarioDao dao = getScenarioDao();
-                final Scenario scenario = getModelObject();
+                final Scenario scenario = getScenario();
                 dao.removeScenario( scenario );
                 if ( LOG.isInfoEnabled() )
                     LOG.info( MessageFormat.format(
@@ -356,8 +375,9 @@ public final class ScenarioPage extends WebPage {
                 setTarget( dao.getDefaultScenario() );
             }
 
-            if ( target != null )
-                redirectTo( target );
+            final Scenario t = getTarget();
+            if ( t != null )
+                redirectTo( t );
             else
                 redirectTo( node );
         }
