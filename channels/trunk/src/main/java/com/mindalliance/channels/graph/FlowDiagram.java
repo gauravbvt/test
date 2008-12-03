@@ -23,7 +23,7 @@ public interface FlowDiagram<V, E> {
     /**
      * The image map format
      */
-    static final String IMAGE_MAP = "imap";
+    static final String IMAGE_MAP = "cmapx";
 
     void setGraphRenderer( GraphRenderer<V, E> graphRenderer );
 

@@ -105,9 +105,9 @@ public class TestDefaultFlowDiagram extends TestCase {
         Scenario scenario = project.getScenarioDao().getDefaultScenario();
         try {
             String map = project.getFlowDiagram().getImageMap(scenario, project.getScenarioAnalyst());
-            // System.out.print(map);
+            System.out.print(map);
             assertFalse(map.isEmpty());
-            assertTrue(map.startsWith("base referer"));
+            assertTrue(map.startsWith("<map"));
         } catch (Exception e) {
             fail(e.toString());
         }

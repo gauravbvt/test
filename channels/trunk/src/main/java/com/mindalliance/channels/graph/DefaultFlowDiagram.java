@@ -76,6 +76,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      */
     public void getPNG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream pngOut ) throws DiagramException {
         Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
         render( graph, PNG, scenario, analyst, pngOut );
     }
@@ -92,6 +93,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      */
     public void getSVG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream svgOut ) throws DiagramException {
         Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
         render( graph, SVG, scenario, analyst, svgOut );
     }
