@@ -38,7 +38,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Maximum time allocated to graphviz process before it is interrupted and forcibly terminated.
      */
-    private long timeout = Long.MAX_VALUE;
+    private long timeout = 30000L;
     /**
      * The vertices to highlight
      */
@@ -105,7 +105,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                         String format,
                         OutputStream output ) throws DiagramException {
         String dot = getDOT( graph, metaProvider );
-       // System.out.println( dot );
+        // System.out.println( dot );
         doRender( dot, format, output );
     }
 
@@ -127,7 +127,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             p = Runtime.getRuntime().exec( command );
             // send dot string
             OutputStream input = p.getOutputStream();
-            StringReader reader = new StringReader( dot );
+            StringReader reader = new StringReader( dot );                                     
             int c;
             while ( ( c = reader.read() ) > 0 ) {
                 input.write( c );
@@ -138,6 +138,8 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
             // wait for process to complete
             exitValue = p.waitFor();
+            // Stop the timer
+            timer.cancel();
             if ( exitValue != 0 ) {
                 // grab error if any
                 BufferedInputStream error = new BufferedInputStream( p.getErrorStream() );
@@ -157,6 +159,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                 assert readCount == count;
                 output.write( bytes );
             }
+            output.flush();
         } catch ( IOException e ) {
             throw new DiagramException( "Diagram generation failed", e );
         } catch ( InterruptedException e ) {

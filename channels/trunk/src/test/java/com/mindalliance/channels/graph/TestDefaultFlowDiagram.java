@@ -11,7 +11,6 @@ import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
 import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
 import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
-import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.pages.Project;
@@ -67,6 +66,7 @@ public class TestDefaultFlowDiagram extends TestCase {
         detectors.add( new PartWithoutRole() );
         analyst.setIssueDetectors( detectors );
         project.setScenarioAnalyst( analyst );
+
     }
 
     public void testGetSVG() {
@@ -85,7 +85,7 @@ public class TestDefaultFlowDiagram extends TestCase {
     }
 
     public void testGetPNG() {
-        Scenario scenario = new FireScenario();
+        Scenario scenario = project.getScenarioDao().getDefaultScenario();
         Node selectedNode = findSelected( scenario );
         try {
             FileOutputStream fileOut = new FileOutputStream( "test.png" );
@@ -101,20 +101,17 @@ public class TestDefaultFlowDiagram extends TestCase {
         }
     }
 
-    /* public void testGetImageMap() {
-        Scenario scenario = new FireScenario();
-        Node node = scenario.nodes().next();
+     public void testGetImageMap() {
+        Scenario scenario = project.getScenarioDao().getDefaultScenario();
         try {
-            ImageMap imageMap = defaultFlowDiagram.getImageMap(scenario, node);
-            MarkupStream stream = imageMap.getMarkupStream();
-            String map = stream.toString();
+            String map = project.getFlowDiagram().getImageMap(scenario, project.getScenarioAnalyst());
+            // System.out.print(map);
             assertFalse(map.isEmpty());
-            assertTrue(map.startsWith("<"));
-            System.out.print(map);
+            assertTrue(map.startsWith("base referer"));
         } catch (Exception e) {
             fail(e.toString());
         }
-    }*/
+    }
 
     private Node findSelected( Scenario scenario ) {
         Node selectedNode = null;

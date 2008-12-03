@@ -1,12 +1,10 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import org.apache.wicket.markup.html.link.ImageMap;
 import org.jgrapht.Graph;
-
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -108,15 +106,11 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public ImageMap getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException {
+    public String getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException {
         Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         render( graph, IMAGE_MAP, scenario, analyst, new BufferedOutputStream( baos ) );
-        String map = baos.toString();
-        // patches apparent bug in dot
-        map = map.replace( "base referer", "base referer " );
-        // System.out.println( map );
-        return new ImageMap( map );
+        return baos.toString();
     }
 
     private void render( Graph<Node, Flow> graph, String outputFormat,

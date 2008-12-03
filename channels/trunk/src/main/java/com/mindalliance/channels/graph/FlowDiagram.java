@@ -60,10 +60,10 @@ public interface FlowDiagram<V, E> {
      *
      * @param scenario     A scenario
      * @param analyst      The scenario analyst used to detect issues
-     * @return an ImageMap
+     * @return a String
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    ImageMap getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException;
+    String getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException;
 
 }
