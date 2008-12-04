@@ -74,7 +74,10 @@ public final class ScenarioPage extends WebPage {
     private static final String SPECIALTY_FIELD = "specialty";                            // NON-NLS
 
     /** Id of components that are expanded. */
-    private Set<String> expansions;
+    private Set<Long> expansions;
+
+    /** The current node. */
+    private Node node;
 
     /**
      * Used when page is called without parameters.
@@ -95,9 +98,9 @@ public final class ScenarioPage extends WebPage {
             redirectTo( scenarioDao.getDefaultScenario() );
 
         else {
-            final Node node = findNode( scenario, parameters );
-            if ( node != null )
-                init( scenario, node, findExpansions( parameters ) );
+            final Node n = findNode( scenario, parameters );
+            if ( n != null )
+                init( scenario, n, findExpansions( parameters ) );
             else
                 redirectTo( scenario );
         }
@@ -117,14 +120,22 @@ public final class ScenarioPage extends WebPage {
      * @param node a node in the scenario
      */
     public ScenarioPage( Scenario scenario, Node node ) {
-        final Set<String> expanded = Collections.emptySet();
+        final Set<Long> expanded = Collections.emptySet();
         init( scenario, node, expanded );
     }
 
-    private static Set<String> findExpansions( PageParameters parameters ) {
-        final Set<String> result = new HashSet<String>( parameters.size() );
-        if ( parameters.containsKey( EXPAND_PARM ) )
-            result.addAll( Arrays.asList( parameters.getStringArray( EXPAND_PARM ) ) );
+    private static Set<Long> findExpansions( PageParameters parameters ) {
+        final Set<Long> result = new HashSet<Long>( parameters.size() );
+        if ( parameters.containsKey( EXPAND_PARM ) ) {
+            final List<String> stringList =
+                    Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
+            for ( String id : stringList )
+                try {
+                    result.add( Long.valueOf( id ) );
+                } catch ( NumberFormatException ignored ) {
+                    LOG.warn( MessageFormat.format( "Invalid expansion parameter: {0}", id ) );
+                }
+        }
 
         return result;
     }
@@ -167,12 +178,25 @@ public final class ScenarioPage extends WebPage {
         redirectTo( scenario.nodes().next() );
     }
 
-    private void redirectTo( Node node ) {
-        final long sid = node.getScenario().getId();
-        final long nid = node.getId();
+    private void redirectTo( Node n ) {
+        final long sid = n.getScenario().getId();
+        final long nid = n.getId();
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format( "?scenario={0}&node={1}", sid, nid ) ) );   // NON-NLS
+    }
+
+    private void redirectHere() {
+        final long sid = node.getScenario().getId();
+        final long nid = node.getId();
+        final StringBuffer exps = new StringBuffer();
+        for ( long id : expansions ) {
+            exps.append( "&expand=" );                                                    // NON-NLS
+            exps.append( Long.toString( id ) );
+        }
+        setResponsePage(
+                new RedirectPage( MessageFormat.format( "?scenario={0}&node={1}{2}",      // NON-NLS
+                                                        sid, nid, exps ) ) );
     }
 
     /**
@@ -183,14 +207,14 @@ public final class ScenarioPage extends WebPage {
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters(
-            Scenario scenario, Node node, Set<String> expanded ) {
+            Scenario scenario, Node node, Set<Long> expanded ) {
 
         final PageParameters result = new PageParameters();
         result.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
         if ( node != null ) {
             result.put( NODE_PARM, Long.toString( node.getId() ) );
-            for ( String id : expanded )
-                result.add( EXPAND_PARM, id );
+            for ( long id : expanded )
+                result.add( EXPAND_PARM, Long.toString( id  ) );
         }
         return result;
     }
@@ -202,7 +226,7 @@ public final class ScenarioPage extends WebPage {
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node ) {
-        final Set<String> expansions = Collections.emptySet();
+        final Set<Long> expansions = Collections.emptySet();
         return getParameters( scenario, node, expansions );
     }
 
@@ -214,8 +238,8 @@ public final class ScenarioPage extends WebPage {
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node, long id ) {
-        final Set<String> expansions = new HashSet<String>( 1 );
-        expansions.add( Long.toString( id ) );
+        final Set<Long> expansions = new HashSet<Long>( 1 );
+        expansions.add( id );
         return getParameters( scenario, node, expansions );
     }
 
@@ -226,11 +250,12 @@ public final class ScenarioPage extends WebPage {
         getResponse().setContentType( "application/xhtml+xml" );                          // NON-NLS
     }
 
-    private void init( Scenario scenario, Node node, Set<String> expanded ) {
+    private void init( Scenario scenario, Node n, Set<Long> expanded ) {
+        this.node = n;
         expansions = expanded;
 
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
-        add( new ScenarioForm( "big-form", scenario, node ) );                            // NON-NLS
+        add( new ScenarioForm( "big-form", scenario, n ) );                               // NON-NLS
 
         LOG.info( "Scenario page generated" );
     }
@@ -247,6 +272,10 @@ public final class ScenarioPage extends WebPage {
         return (Project) getApplication();
     }
 
+    public Node getNode() {
+        return node;
+    }
+
     //==============================================================
     /**
      * The scenario form.
@@ -255,9 +284,6 @@ public final class ScenarioPage extends WebPage {
 
         /** The scenario import field. */
         private FileUploadField scenarioImport;
-
-        /** The node edited by the form. */
-        private Node node;
 
         /**
          * The scenario to display after submit.
@@ -273,7 +299,6 @@ public final class ScenarioPage extends WebPage {
         //------------------------------
         private ScenarioForm( String id, Scenario scenario, Node node ) {
             super( id, new Model<Scenario>( scenario ) );
-            this.node = node;
             target = scenario;
 
             add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
@@ -331,7 +356,7 @@ public final class ScenarioPage extends WebPage {
             add( new Label( "sc-desc",                                                    // NON-NLS
                             new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
 
-            if ( expansions.contains( Long.toString( scenario.getId() ) ) ) {
+            if ( expansions.contains( scenario.getId() ) ) {
                 add( new BookmarkablePageLink<Scenario>(
                     "sc-edit", ScenarioPage.class,                                        // NON-NLS
                     getParameters( scenario, node ) ) );
@@ -377,7 +402,7 @@ public final class ScenarioPage extends WebPage {
         private BookmarkablePageLink<Scenario> createExportScenario(
                 String id, Scenario scenario ) {
 
-           return new BookmarkablePageLink<Scenario>(
+            return new BookmarkablePageLink<Scenario>(
                    id, ExportPage.class, getParameters( scenario, null ) );
         }
 
@@ -396,6 +421,8 @@ public final class ScenarioPage extends WebPage {
         //------------------------------
         @Override
         protected void onSubmit() {
+
+            // TODO node deletion
 
             final FileUpload fileUpload = scenarioImport.getFileUpload();
             if ( fileUpload != null ) {
@@ -425,7 +452,7 @@ public final class ScenarioPage extends WebPage {
 
             final Scenario t = getTarget();
             if ( t.getId() == getScenario().getId() )
-                redirectTo( node );
+                redirectHere();
             else
                 redirectTo( t );
         }

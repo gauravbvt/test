@@ -254,7 +254,7 @@ public class TestScenarioPage extends TestCase {
     public void testGetParameters2() {
         final Node node = scenario.nodes().next();
 
-        final Set<String> expand = new HashSet<String>( Arrays.asList( "1", "2" ) );
+        final Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
         final PageParameters parms = ScenarioPage.getParameters( scenario, node, expand );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
