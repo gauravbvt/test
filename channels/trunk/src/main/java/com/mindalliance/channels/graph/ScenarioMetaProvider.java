@@ -197,8 +197,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( edge.isAskedFor() ) {
-                list.add( new DOTAttribute( "style", "dotted" ) );
-                // list.add( new DOTAttribute( "arrowtail", "onormal" ) );
+                list.add( new DOTAttribute( "style", edge.isCritical() ? "dashed" : "dotted" ) );
+            } else {
+                if ( edge.isCritical() ) {
+                    list.add( new DOTAttribute( "style", "bold" ) );
+                }
             }
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );

@@ -1,10 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Part;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;

@@ -8,13 +8,14 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.graph.GraphBuilder;
-import org.jgrapht.alg.CycleDetector;
+import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.DirectedGraph;
 
 import java.util.Set;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Detects a potential deadlock in the scenario.
@@ -29,11 +30,10 @@ import java.util.ArrayList;
 public class PotentialDeadlock extends AbstractIssueDetector {
 
     public PotentialDeadlock() {
-
     }
 
     /**
-     * Detect cycles where at least one flow is a critical requirement.
+     * Detect cycles where all flows are critical requirements.
      *
      * @param modelObject -- the ModelObject being analyzed
      * @return an Issue or null of none detected
@@ -43,23 +43,49 @@ public class PotentialDeadlock extends AbstractIssueDetector {
         Scenario scenario = (Scenario) modelObject;
         GraphBuilder graphBuilder = Project.graphBuilder();
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
-        CycleDetector<Node, Flow> cycleDetector = new CycleDetector<Node, Flow>( digraph );
-        Set<Node> cycleNodes = cycleDetector.findCycles();
-        if ( !cycleNodes.isEmpty() ) {
-            List<Flow> criticalRequirements = new ArrayList<Flow>();
-            for ( Node node : cycleNodes ) {
-                Iterator<Flow> requirements = node.requirements();
-                while ( requirements.hasNext() ) {
-                    Flow requirement = requirements.next();
-                    if ( requirement.isCritical() ) {
-                        criticalRequirements.add( requirement );
+        StrongConnectivityInspector<Node, Flow> sci =
+                new StrongConnectivityInspector<Node, Flow>( digraph );
+        List<Set<Node>> cycles = sci.stronglyConnectedSets();
+        if ( !cycles.isEmpty() ) {
+            Set<Flow> cyclicCriticalRequirements = new HashSet<Flow>();
+            // For each cycle where all nodes have at least one critical requirement,
+            // collect all critical requirements of the nodes in the cycle.
+            for ( Set<Node> cycle : cycles ) {
+                if ( cycle.size() > 1 ) {
+                    // All nodes in the cycle have at least one ciritical requirement?
+                    boolean allCritical = true;
+                    // Critical requirements of nodes on the cycle
+                    List<Flow> criticalRequirementsInCycle = new ArrayList<Flow>();
+                    // Verify if all nodes in cycle has critical requirements and collect them
+                    Iterator<Node> nodes = cycle.iterator();
+                    while ( allCritical && nodes.hasNext() ) {
+                        Node node = nodes.next();
+                        // All critical requirements in a cycle
+                        boolean nodeHasCritical = false;
+                        Iterator<Flow> requirements = node.requirements();
+                        while ( requirements.hasNext() ) {
+                            Flow requirement = requirements.next();
+                            if ( requirement.isCritical() ) {
+                                nodeHasCritical = true;
+                                criticalRequirementsInCycle.add( requirement );
+                            }
+                        }
+                        if ( !nodeHasCritical ) {
+                            allCritical = false;
+                        }
+                    }
+                    // If all nodes in the cycle have critical requirements,
+                    // add these requirements to the set
+                    if ( allCritical ) {
+                        cyclicCriticalRequirements.addAll( criticalRequirementsInCycle );
                     }
                 }
             }
-            if ( !criticalRequirements.isEmpty() ) {
+            // There are cycles where all nodes have critical requirements
+            if ( !cyclicCriticalRequirements.isEmpty() ) {
                 issue = new Issue( Issue.SYSTEMIC, scenario );
                 issue.setDescription( "Potential deadlock if "
-                        + getRequirementDescriptions( criticalRequirements )
+                        + getRequirementDescriptions( cyclicCriticalRequirements )
                         + " fails." );
                 issue.setRemediation( "Provide redundancy for these critical flows." );
             }
@@ -69,10 +95,11 @@ public class PotentialDeadlock extends AbstractIssueDetector {
 
     /**
      * Construct a string describing the list of requirements.
+     *
      * @param requirements -- list of flows
      * @return a string description
      */
-    private String getRequirementDescriptions( List<Flow> requirements ) {
+    private String getRequirementDescriptions( Set<Flow> requirements ) {
         StringBuilder sb = new StringBuilder();
         Iterator<Flow> iterator = requirements.iterator();
         while ( iterator.hasNext() ) {

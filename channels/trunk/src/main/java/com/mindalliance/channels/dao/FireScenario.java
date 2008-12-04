@@ -72,14 +72,24 @@ public class FireScenario extends Scenario {
         f3.setChannel( "Radio" );
         f3.setDescription( "Confirms that stairways are safe for evacuation" );
 
+        final Flow f4 = connect( js2, chief );
+        f4.setName( "evacuation status" );
+        f4.setAskedFor( true );
+        f4.setCritical( true );
+
+        final Flow f5 = connect( js1, evac );
+        f5.setName( "\"go-ahead\"" );
+        f5.setCritical( true );
+
+        final Flow f6 = connect( evac, js2 );
+        f6.setName( "\"end\"" );
+        f6.setCritical( true );
+
+
         connect( alarm, fd ).setName( "address" );
         connect( fd, chief );
-        connect( chief, connector ).setName( "all-clear" );
-        connect( js1, evac ).setName( "\"go-ahead\"" );
-        connect( evac, js2 ).setName( "end" );
-        final Flow flow = connect( js2, chief );
-        flow.setName( "evacuation status" );
-        flow.setAskedFor( true );
+        connect( chief, connector ).setName( "\"all-clear\"" );
+
 
         removeNode( defNode );
     }
