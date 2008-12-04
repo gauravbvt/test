@@ -17,7 +17,8 @@
     <h1><span wicket:id="header">Title</span>
 
         <ul class="menu">
-            <li><a href="#">Edit</a></li>
+            <li><a wicket:id="sc-edit" href="#">Edit</a></li>
+
             <li><a wicket:id="sc-export" href="#">Export</a></li>
             <li><label><input type="checkbox" wicket:id="sc-del" alt="Delete this scenario"/>
                 Delete</label>
@@ -25,10 +26,10 @@
         </ul>
     </h1>
 </div>
-
+<div wicket:id="sc-editor">(Scenario Editor)</div>
 <div id="parts">
     <hr/>
-    <img wicket:id="graph" src="#" alt="[Information flow diagram]" border="0"/>
+    <img wicket:id="graph" src="#" alt="[Information flow diagram]" border="0" usemap="G"/>
 
     <div class="caption">
         <span wicket:id="sc-desc">A description.</span>

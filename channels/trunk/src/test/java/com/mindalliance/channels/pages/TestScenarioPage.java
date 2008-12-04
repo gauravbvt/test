@@ -1,10 +1,13 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.graph.FlowDiagram;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -41,6 +44,11 @@ public class TestScenarioPage extends TestCase {
         dao = new Memory();
         project = new Project();
         project.setScenarioDao( dao );
+        final FlowDiagram<Node,Flow> fd = createMock( FlowDiagram.class );
+        expect( fd.getImageMap( (Scenario) anyObject(), (ScenarioAnalyst) anyObject() ) )
+                .andReturn( "" ).anyTimes();
+        replay( fd );
+        project.setFlowDiagram( fd );
 
         scenario = project.getScenarioDao().getDefaultScenario();
         tester = new WicketTester( project );

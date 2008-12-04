@@ -51,9 +51,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
      * @param name the name. Will complain if null.
      */
     public final void setName( String name ) {
-        if ( name == null )
-            throw new IllegalArgumentException( "Name can't be null" );
-        this.name = name;
+        this.name = name == null ? "" : name;
     }
 
     public String getDescription() {

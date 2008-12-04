@@ -1,19 +1,26 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.FlowListPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
+import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -25,7 +32,6 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -200,6 +206,19 @@ public final class ScenarioPage extends WebPage {
         return getParameters( scenario, node, expansions );
     }
 
+    /**
+     * Return initialized parameters for given scenario and node.
+     * @param scenario the scenario
+     * @param node the node, maybe null (in which case, would link to first node in scenario)
+     * @param id the id to expand
+     * @return page parameters to use in links, etc.
+     */
+    public static PageParameters getParameters( Scenario scenario, Node node, long id ) {
+        final Set<String> expansions = new HashSet<String>( 1 );
+        expansions.add( Long.toString( id ) );
+        return getParameters( scenario, node, expansions );
+    }
+
     /** Set content-type to application/xhtml+xml. */
     @Override
     protected void configureResponse() {
@@ -252,7 +271,7 @@ public final class ScenarioPage extends WebPage {
         private DeleteBox deleteScenario;
 
         //------------------------------
-        private ScenarioForm( String id, final Scenario scenario, final Node node ) {
+        private ScenarioForm( String id, Scenario scenario, Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             this.node = node;
             target = scenario;
@@ -260,17 +279,7 @@ public final class ScenarioPage extends WebPage {
             add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
                      new PropertyModel<String>( node, DESC_PROPERTY ) ) );
-
-            add( new MarkupContainer( "graph" ) {                                         // NON-NLS
-                @Override
-                protected void onComponentTag( ComponentTag tag ) {
-                    super.onComponentTag( tag );
-                    tag.put( "src", MessageFormat.format(                                 // NON-NLS
-                        "scenario.png?scenario={0}&amp;node={1}",                         // NON-NLS
-                        scenario.getId(), node.getId() ) );
-                }
-            } );
-
+            addGraph( scenario, node );
             final Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
                   : new Label( SPECIALTY_FIELD, "" );
@@ -286,6 +295,32 @@ public final class ScenarioPage extends WebPage {
         }
 
         //------------------------------
+        private void addGraph( final Scenario scenario, final Node n ) {
+            add( new MarkupContainer( "graph" ) {                                         // NON-NLS
+                @Override
+                protected void onComponentTag( ComponentTag tag ) {
+                    super.onComponentTag( tag );
+                    tag.put( "src", MessageFormat.format(                                 // NON-NLS
+                        "scenario.png?scenario={0}&amp;node={1}",                         // NON-NLS
+                        scenario.getId(), n.getId() ) );
+                }
+
+                @Override
+                protected void onRender( MarkupStream markupStream ) {
+                    super.onRender( markupStream );
+                    try {
+                        final ScenarioAnalyst analyst = getProject().getScenarioAnalyst();
+                        final FlowDiagram<Node,Flow> diagram = getProject().getFlowDiagram();
+                        getResponse().write( diagram.getImageMap( scenario, analyst ) );
+
+                    } catch ( DiagramException e ) {
+                        LOG.error( "Can't generate image map", e );
+                    }
+                }
+            } );
+        }
+
+        //------------------------------
         /**
          * Add scenario-related components.
          * @param scenario the underlying scenario
@@ -296,19 +331,32 @@ public final class ScenarioPage extends WebPage {
             add( new Label( "sc-desc",                                                    // NON-NLS
                             new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
 
+            if ( expansions.contains( Long.toString( scenario.getId() ) ) ) {
+                add( new BookmarkablePageLink<Scenario>(
+                    "sc-edit", ScenarioPage.class,                                        // NON-NLS
+                    getParameters( scenario, node ) ) );
+
+                add( new ScenarioEditPanel( "sc-editor", scenario ) );                    // NON-NLS
+
+            } else {
+                add( new BookmarkablePageLink<Scenario>( "sc-edit", ScenarioPage.class,   // NON-NLS
+                    getParameters( scenario, node, scenario.getId() ) ) );
+                add( new Label( "sc-editor" ) );                                          // NON-NLS
+            }
+
             add( createExportScenario( "sc-export", scenario ) );                         // NON-NLS
             add( new NewScenarioLink( "sc-new" ) );                                       // NON-NLS
 
-            deleteScenario = new DeleteBox( "sc-del" );                 // NON-NLS
+            deleteScenario = new DeleteBox( "sc-del" );                                   // NON-NLS
             add( deleteScenario );
-            add( createSelectScenario( "sc-sel", scenario ) );                            // NON-NLS
+            add( createSelectScenario( "sc-sel" ) );                                      // NON-NLS
 
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
         }
 
         //------------------------------
-        private DropDownChoice<Scenario> createSelectScenario( String id, Scenario scenario ) {
+        private DropDownChoice<Scenario> createSelectScenario( String id ) {
             final List<Scenario> scenarios =
                     new ArrayList<Scenario>( ScenarioDao.INITIAL_CAPACITY );
 
@@ -376,10 +424,10 @@ public final class ScenarioPage extends WebPage {
             }
 
             final Scenario t = getTarget();
-            if ( t != null )
-                redirectTo( t );
-            else
+            if ( t.getId() == getScenario().getId() )
                 redirectTo( node );
+            else
+                redirectTo( t );
         }
     }
 

@@ -36,14 +36,13 @@ public class TestScenario extends TestCase {
 
     public void testName() {
         assertEquals( Scenario.DEFAULT_NAME, scenario.getName() );
-        try {
-            scenario.setName( null );
-            fail();
-        } catch ( IllegalArgumentException ignored ) {
-            final String s = "Bla";
-            scenario.setName( s );
-            assertSame( s, scenario.getName() );
-        }
+
+        scenario.setName( null );
+        assertEquals( "", scenario.getName() );
+
+        final String s = "Bla";
+        scenario.setName( s );
+        assertSame( s, scenario.getName() );
     }
 
     public void testEquals() {

@@ -8,7 +8,9 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
@@ -16,9 +18,10 @@ import junit.framework.TestCase;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import static org.easymock.EasyMock.*;
 
-import java.util.Iterator;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Test behavoir of a part panel.
@@ -40,6 +43,11 @@ public class TestPartPanel extends TestCase {
         super.setUp();
         project = new Project();
         project.setScenarioDao( new Memory() );
+        final FlowDiagram fd = createMock( FlowDiagram.class );
+        expect( fd.getImageMap( (Scenario) anyObject(), (ScenarioAnalyst) anyObject() ) )
+                .andReturn( "" ).anyTimes();
+        replay( fd );
+        project.setFlowDiagram( fd );
         tester = new WicketTester( project );
 
         // Find first part in scenario
