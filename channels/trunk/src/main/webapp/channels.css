@@ -50,6 +50,7 @@ div#scenario {
 div#parts {
     margin: 0 0.45em 0.5em 0;
     min-width: 42em;
+    max-width: 50em;
     float: right;
 }
 

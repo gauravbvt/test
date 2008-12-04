@@ -68,14 +68,18 @@ public class ExpandedFlowPanel extends Panel {
         final DropDownChoice<Node> other = new DropDownChoice<Node>( "other",             // NON-NLS
             new PropertyModel<Node>( this, "other" ),                                     // NON-NLS
             new PropertyModel<List<? extends Node>>( this, "otherNodes" ) );              // NON-NLS
+
+        final ScenarioLink details = new ScenarioLink(
+                "other-details", getNode().getScenario(), getOther() );                   // NON-NLS
+        details.add(
+            new Label( "type",                                                            // NON-NLS
+                       new Model<String>( isOutcome() ? "Target" : "Source" ) ) );
+
         final FormComponentLabel otherLabel =
             new FormComponentLabel( "other-label", other );                               // NON-NLS
-        otherLabel.add(
-            new Label( "type",                                                            // NON-NLS
-                       new Model<String>( isOutcome() ? "Target:" : "Source:" ) ) );
+        otherLabel.add( details );
         add( otherLabel );
 
-        add( new ScenarioLink( "other-details", getNode().getScenario(), getOther() ) );  // NON-NLS
         add( other );
     }
 

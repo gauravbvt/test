@@ -251,8 +251,11 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void init( Scenario scenario, Node n, Set<Long> expanded ) {
-        this.node = n;
+        node = n;
         expansions = expanded;
+
+        setVersioned( false );
+        setStatelessHint( true );
 
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
         add( new ScenarioForm( "big-form", scenario, n ) );                               // NON-NLS
