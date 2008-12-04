@@ -99,7 +99,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
-                return flow.getName().replaceAll( "\\s+", "\\\\n" );
+                String label = flow.getName().replaceAll( "\\s+", "\\\\n" );
+                return sanitizeLabel( label );
             }
         };
     }
@@ -107,7 +108,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     public VertexNameProvider<Node> getVertexLabelProvider() {
         return new VertexNameProvider<Node>() {
             public String getVertexName( Node node ) {
-                return getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
+                String label = getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
+                return sanitizeLabel( label );
             }
         };
     }
@@ -118,6 +120,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 return "" + node.getId();
             }
         };
+    }
+
+    private String sanitizeLabel( String label ) {
+        return label.replaceAll( "\"", "\\\\\"" );
     }
 
     private String getNodeLabel( Node node ) {

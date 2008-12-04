@@ -75,7 +75,7 @@ public class FireScenario extends Scenario {
         connect( alarm, fd ).setName( "address" );
         connect( fd, chief );
         connect( chief, connector ).setName( "all-clear" );
-        connect( js1, evac ).setName( "go-ahead" );
+        connect( js1, evac ).setName( "\"go-ahead\"" );
         connect( evac, js2 ).setName( "end" );
         final Flow flow = connect( js2, chief );
         flow.setName( "evacuation status" );

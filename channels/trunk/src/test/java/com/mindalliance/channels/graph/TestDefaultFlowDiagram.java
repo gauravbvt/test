@@ -45,11 +45,11 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
     public void testGetPNG() {
         Node selectedNode = findSelected( scenario );
         try {
-            FileOutputStream fileOut = new FileOutputStream( "test.png" );
+            FileOutputStream fileOut = new FileOutputStream( "target/test.png" );
             project.getFlowDiagram().getPNG( scenario, selectedNode, project.getScenarioAnalyst(), fileOut );
             fileOut.flush();
             fileOut.close();
-            assertTrue( new File( "test.png" ).length() > 0 );
+            assertTrue( new File( "target/test.png" ).length() > 0 );
         } catch ( IOException e ) {
             fail( e.toString() );
         }
