@@ -1,7 +1,7 @@
 
 /* Fonts */
 body {
-    font-size: 100%;
+    font-size: 85%;
     font-family:Verdana,Arial,Helvetica,sans-serif;
 }
 td, th, input, textarea, select {
@@ -26,6 +26,7 @@ body {
     position: relative;
 }
 div#everything {
+    font-size: 100%;
     max-width: 95em;
     min-width: 45.5em;
     margin: auto;
@@ -46,13 +47,15 @@ div#scenario {
     margin-bottom: 0.5em;
 }
 
-div#part, div#parts, div#reqs, div#outcomes {
-    width: 47em;
+div#parts {
     margin: 0 0.45em 0.5em 0;
-    float: left;
+    min-width: 42em;
+    float: right;
 }
-div#reqs {
-    clear: both;
+
+div#part, div#outcomes, div#reqs {
+    width: 42em;
+    margin: 0 0.45em 0.5em 0;
 }
 
 div#footer {
@@ -127,11 +130,13 @@ hr {
     display: none;
 }
 #parts img {
-    border: 1px solid lightgray;
     padding: 5px;
-    max-width: 42em;
 }
 #parts .caption {
     margin: 0;
     font-size: small;
+}
+#parts .picture {
+    border: 1px solid lightgray;
+    overflow: auto;
 }
