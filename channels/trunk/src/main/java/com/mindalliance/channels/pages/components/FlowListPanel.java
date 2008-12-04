@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -39,7 +39,7 @@ public class FlowListPanel extends Panel {
             public void onClick() {
                 final Node n = getNode();
                 final Scenario s = n.getScenario();
-                final Part other = new Part();
+                final Connector other = new Connector();
                 s.addNode( other );
                 final Flow f = isOutcomes() ? s.connect( n, other )
                                       : s.connect( other, n );

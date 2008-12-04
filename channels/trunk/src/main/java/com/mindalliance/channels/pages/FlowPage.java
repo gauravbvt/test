@@ -9,9 +9,11 @@ import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.Response;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 
 import java.text.MessageFormat;
@@ -19,7 +21,7 @@ import java.text.MessageFormat;
 /**
  * PNG view of the flow graph.
  */
-public class FlowPage extends Page {
+public class FlowPage extends WebPage {
 
     /** The log. */
     private static final Log LOG = LogFactory.getLog( ExportPage.class );
@@ -58,6 +60,10 @@ public class FlowPage extends Page {
     @Override
     protected void onRender( MarkupStream markupStream ) {
         try {
+            final Response resp = getWebRequestCycle().getResponse();
+            if ( resp instanceof WebResponse )
+                setHeaders( (WebResponse) resp );
+
             getFlowDiagram().getPNG(
                     scenario, node, getScenarioAnalyst(), getResponse().getOutputStream() );
         } catch ( DiagramException e ) {

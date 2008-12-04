@@ -260,7 +260,7 @@ public final class ScenarioPage extends WebPage {
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
         add( new ScenarioForm( "big-form", scenario, n ) );                               // NON-NLS
 
-        LOG.info( "Scenario page generated" );
+        LOG.debug( "Scenario page generated" );
     }
 
     /**
@@ -353,11 +353,20 @@ public final class ScenarioPage extends WebPage {
          * Add scenario-related components.
          * @param scenario the underlying scenario
          */
-        private void addScenarioFields( Scenario scenario ) {
+        private void addScenarioFields( final Scenario scenario ) {
             add( new Label( "header",                                                     // NON-NLS
                             new PropertyModel<String>( scenario, NAME_PROPERTY ) ) );
             add( new Label( "sc-desc",                                                    // NON-NLS
                             new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
+
+            add( new Link( "add-part" ) {                                                 // NON-NLS
+                @Override
+                public void onClick() {
+                    final Part newPart = new Part();
+                    scenario.addNode( newPart );
+                    redirectTo( newPart );
+                }
+            } );
 
             if ( expansions.contains( scenario.getId() ) ) {
                 add( new BookmarkablePageLink<Scenario>(

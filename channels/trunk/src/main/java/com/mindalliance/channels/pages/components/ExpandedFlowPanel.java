@@ -122,10 +122,23 @@ public class ExpandedFlowPanel extends Panel {
      * @param node the new source or target
      */
     public void setOther( Node node ) {
-        if ( isOutcome() )
-            getFlow().setTarget( node );
-        else
-            getFlow().setSource( node );
+        final Scenario s = node.getScenario();
+        final Flow f = getFlow();
+        if ( isOutcome() ) {
+            final Node target = f.getTarget();
+            target.removeRequirement( f );
+            f.setTarget( node );
+            node.addRequirement( f );
+            if ( target.isConnector() )
+                s.removeNode( target );
+        } else {
+            final Node source = f.getSource();
+            source.removeOutcome( f );
+            f.setSource( node );
+            node.addOutcome( f );
+            if ( source.isConnector() )
+                s.removeNode( source );
+        }
     }
 
     /**
@@ -133,15 +146,15 @@ public class ExpandedFlowPanel extends Panel {
      */
     public List<? extends Node> getOtherNodes() {
         final Node node = getNode();
+        final Node other = getOther();
         final Scenario scenario = node.getScenario();
         final List<Node> result = new ArrayList<Node>( scenario.getNodeCount() );
 
         final Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             final Node n = nodes.next();
-            if ( !node.equals( n ) ) {
+            if ( !node.equals( n ) && ( other.equals( n ) || !n.isConnector() ) )
                 result.add( n );
-            }
         }
 
         return result;
