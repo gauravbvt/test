@@ -16,6 +16,7 @@ import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
 import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
 import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
 import com.mindalliance.channels.analysis.detectors.SinglePointOfFailure;
+import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new PartWithoutTask() );
         detectors.add( new PartWithoutRole() );
         detectors.add( new SinglePointOfFailure() );
+        detectors.add( new PotentialDeadlock() );
         analyst.setIssueDetectors( detectors );
         project.setScenarioAnalyst( analyst );
         tester = new WicketTester( project );

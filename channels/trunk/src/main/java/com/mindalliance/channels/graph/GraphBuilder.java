@@ -1,11 +1,9 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import org.jgrapht.Graph;
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.UndirectedGraph;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

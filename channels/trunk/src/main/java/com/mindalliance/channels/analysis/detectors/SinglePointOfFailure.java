@@ -70,12 +70,11 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
             issue = new Issue( Issue.SYSTEMIC, scenario );
             if (spfs.size() == 1) {
                 issue.setDescription( getIssueDescription( spfs ) + " is a single point of failure.");
-                issue.setRemediation( "The actor should delegate some responsibilities." );
             }
             else {
                 issue.setDescription( getIssueDescription( spfs ) + " are single points of failure.");
-                issue.setRemediation( "These actors should delegate some of their responsibilities." );
             }
+            issue.setRemediation( "Delegate responsibilities or add redundancy." );
         }
         return issue;
     }

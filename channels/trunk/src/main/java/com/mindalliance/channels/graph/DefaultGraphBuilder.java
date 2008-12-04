@@ -1,15 +1,11 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.UndirectedGraph;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.UnmodifiableUndirectedGraph;
-import org.jgrapht.graph.Pseudograph;
 
 import java.util.Iterator;
 

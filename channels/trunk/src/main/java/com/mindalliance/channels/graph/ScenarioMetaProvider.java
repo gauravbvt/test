@@ -26,6 +26,22 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private static final String COLOR_ERROR = "red3";
     /**
+     * Font for node labels
+     */
+    private static final String NODE_FONT = "Helvetica";
+    /**
+     * Font for edge labels
+     */
+    private static final String EDGE_FONT = "Helvetica-Oblique";
+    /**
+     * Font size for edge labels
+     */
+    private static final String EDGE_FONT_SIZE = "8";
+    /**
+     * Font size for node labels
+     */
+    private static final String NODE_FONT_SIZE = "10";
+    /**
      * Scenario in context
      */
     private Scenario scenario;
@@ -134,7 +150,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         }
 
         public List<DOTAttribute> getGraphAttributes() {
-            return DOTAttribute.emptyList();
+            List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "overlap", "false" ) );
+            // list.add( new DOTAttribute( "splines", "true" ) );
+            // list.add( new DOTAttribute( "sep", ".1" ) );
+            return list;
         }
 
         public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
@@ -159,8 +179,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "shape", "none" ) );
                 }
             }
-            list.add( new DOTAttribute( "fontsize", "10" ) );
-            list.add( new DOTAttribute( "fontname", "Arial" ) );
+            list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
+            list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             if ( analyst.hasIssues( vertex ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( vertex ) ) );
@@ -175,10 +195,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 // list.add( new DOTAttribute( "arrowtail", "onormal" ) );
             }
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
-            list.add( new DOTAttribute( "fontname", "Arial" ) );
-            list.add( new DOTAttribute( "fontsize", "9" ) );
+            list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
+            list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
+            list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( analyst.hasIssues( edge ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );

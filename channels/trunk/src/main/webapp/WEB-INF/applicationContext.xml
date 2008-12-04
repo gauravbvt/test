@@ -50,6 +50,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
             </list>
         </property>
     </bean>

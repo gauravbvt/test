@@ -61,8 +61,16 @@ public class FireScenario extends Scenario {
         final Flow f2 = connect( js1, chief );
         f2.setName( "fire location" );
         f2.setAskedFor( true );
+        f2.setCritical( true );
         f2.setMaxDelay( "0min" );
         f2.setDescription( "Communicate the location of the fire" );
+
+        final Flow f3 = connect( chief, js1 );
+        f3.setName( "stairways safe" );
+        f3.setMaxDelay( "10min" );
+        f3.setCritical( true );
+        f3.setChannel( "Radio" );
+        f3.setDescription( "Confirms that stairways are safe for evacuation" );
 
         connect( alarm, fd ).setName( "address" );
         connect( fd, chief );
