@@ -12,10 +12,13 @@
     <bean id="serializer" class="com.mindalliance.channels.export.Serializer"/>
     <bean id="memoryDao" class="com.mindalliance.channels.dao.Memory"/>
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.BitBucket"/>
+    <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
+
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
         <property name="scenarioDao" ref="memoryDao"/>
+        <property name="graphBuilder" ref="graphBuilder"/>
         <property name="flowDiagram" ref="flowDiagram"/>
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
@@ -25,13 +28,10 @@
 
     <!-- Flow diagram -->
     <bean id="flowDiagram" class="com.mindalliance.channels.graph.DefaultFlowDiagram">
-        <property name="graphBuilder" ref="graphBuilder"/>
         <property name="graphRenderer" ref="graphRenderer"/>
         <property name="urlFormat" value="?scenario={0}&amp;node={1}"/>
         <property name="imageDirectory" value="src/site/resources/images"/>
     </bean>
-
-    <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -49,6 +49,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
             </list>
         </property>
     </bean>

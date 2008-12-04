@@ -4,6 +4,8 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import org.jgrapht.Graph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.UndirectedGraph;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,12 +17,11 @@ import org.jgrapht.Graph;
 public interface GraphBuilder {
 
     /**
-     * Build a graph representing the scenario
+     * Build a directed graph representing the scenario
      *
      * @param scenario -- a scenario
      * @return a Graph
      */
-    Graph<Node, Flow> buildScenarioGraph( Scenario scenario );
+    DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario );
 
-    // other graphs here
 }

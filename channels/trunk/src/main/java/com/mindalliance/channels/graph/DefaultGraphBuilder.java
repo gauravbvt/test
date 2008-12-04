@@ -4,7 +4,12 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import org.jgrapht.DirectedGraph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.UnmodifiableUndirectedGraph;
+import org.jgrapht.graph.Pseudograph;
 
 import java.util.Iterator;
 
@@ -30,20 +35,30 @@ public class DefaultGraphBuilder implements GraphBuilder {
      *
      * @return a DirectedGraph
      */
-    public DirectedGraph<Node, Flow> buildScenarioGraph( Scenario scenario ) {
+    public DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario ) {
         DirectedGraph<Node, Flow> dgraph = new DefaultDirectedGraph<Node, Flow>( Flow.class );
+        populateGraph( dgraph, scenario );
+        return dgraph;
+    }
+
+    /**
+     * Populates a graph from a scenario.
+     *
+     * @param graph    -- a graph
+     * @param scenario -- a scenario
+     */
+    private void populateGraph( Graph<Node, Flow> graph, Scenario scenario ) {
         // add nodes as vertices
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
-            dgraph.addVertex( nodes.next() );  // added if not part of a flow
+            graph.addVertex( nodes.next() );  // added if not part of a flow
         }
         // add flows as edges
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
-            dgraph.addEdge( flow.getSource(), flow.getTarget(), flow );
+            graph.addEdge( flow.getSource(), flow.getTarget(), flow );
         }
-        return dgraph;
     }
 
 

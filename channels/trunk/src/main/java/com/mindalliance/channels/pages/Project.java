@@ -8,6 +8,7 @@ import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.graph.GraphBuilder;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
@@ -21,6 +22,8 @@ public final class Project extends WebApplication {
      * The manipulator of scenarios.
      */
     private ScenarioDao scenarioDao;
+
+    private GraphBuilder graphBuilder;
 
     /**
      * The creator of nifty diagrams.
@@ -79,6 +82,14 @@ public final class Project extends WebApplication {
         flowDiagram = fd;
     }
 
+    public GraphBuilder getGraphBuilder() {
+        return graphBuilder;
+    }
+
+    public void setGraphBuilder( GraphBuilder graphBuilder ) {
+        this.graphBuilder = graphBuilder;
+    }
+
     public AttachmentManager getAttachmentManager() {
         return attachmentManager;
     }
@@ -109,5 +120,10 @@ public final class Project extends WebApplication {
 
     public void setScenarioAnalyst( ScenarioAnalyst scenarioAnalyst ) {
         this.scenarioAnalyst = scenarioAnalyst;
+    }
+
+    public static GraphBuilder graphBuilder() {
+        Project project = (Project)WebApplication.get();
+        return project.getGraphBuilder();
     }
 }

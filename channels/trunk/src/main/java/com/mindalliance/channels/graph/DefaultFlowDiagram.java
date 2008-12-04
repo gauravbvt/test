@@ -3,6 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import org.jgrapht.Graph;
 import java.io.BufferedOutputStream;
@@ -17,10 +18,7 @@ import java.io.OutputStream;
  * Time: 2:56:50 PM
  */
 public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
-    /**
-     * A graph builder
-     */
-    private GraphBuilder graphBuilder;
+
     /**
      * A GraphRenderer for nodes and flows
      */
@@ -38,10 +36,6 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      * Constructor
      */
     public DefaultFlowDiagram() {
-    }
-
-    public void setGraphBuilder( GraphBuilder graphBuilder ) {
-        this.graphBuilder = graphBuilder;
     }
 
     public void setGraphRenderer( GraphRenderer<Node, Flow> graphRenderer ) {
@@ -75,7 +69,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      *          when diagram generation fails
      */
     public void getPNG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream pngOut ) throws DiagramException {
-        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
         render( graph, PNG, scenario, analyst, pngOut );
@@ -92,7 +86,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      *          when diagram generation fails
      */
     public void getSVG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream svgOut ) throws DiagramException {
-        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
         render( graph, SVG, scenario, analyst, svgOut );
@@ -109,7 +103,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      *          when diagram generation fails
      */
     public String getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException {
-        Graph<Node, Flow> graph = graphBuilder.buildScenarioGraph( scenario );
+        Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         render( graph, IMAGE_MAP, scenario, analyst, new BufferedOutputStream( baos ) );
         return baos.toString();

@@ -24,7 +24,8 @@ public class PartWithoutTask extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
             issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
-            issue.setDescription( "The task is missing" );
+            issue.setDescription( "The task is missing," );
+            issue.setRemediation( "Provide a task." );
         }
         return issue;
     }

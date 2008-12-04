@@ -30,7 +30,8 @@ public class UnnamedFlow extends AbstractIssueDetector {
         String name = flow.getName();
         if ( name == null || name.trim().isEmpty() ) {
             issue = new Issue( Issue.DEFINITION, modelObject, "name" );
-            issue.setDescription( "The information is missing" );
+            issue.setDescription( "The information is missing." );
+            issue.setRemediation( "Name the flow." );
         }
         return issue;
     }

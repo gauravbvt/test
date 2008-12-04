@@ -25,10 +25,6 @@ public interface FlowDiagram<V, E> {
      */
     static final String IMAGE_MAP = "cmapx";
 
-    void setGraphRenderer( GraphRenderer<V, E> graphRenderer );
-
-    void setGraphBuilder( GraphBuilder graphBuilder );
-
     public void setImageDirectory( String imageDirectory );
 
     /**

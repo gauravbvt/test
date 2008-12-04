@@ -1,22 +1,14 @@
 package com.mindalliance.channels.analysis;
 
-import junit.framework.TestCase;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
-import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource;
-import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget;
-import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
-import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
-import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Node;
+import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.dao.FireScenario;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,36 +17,16 @@ import com.mindalliance.channels.dao.FireScenario;
  * Date: Nov 26, 2008
  * Time: 2:23:18 PM
  */
-public class TestDefaultScenarioAnalyst extends TestCase {
+public class TestDefaultScenarioAnalyst extends AbstractChannelsTest {
 
-    /**
-     * Model analyst
-     */
-    private DefaultScenarioAnalyst analyst;
-    /**
-     * Scenario
-     */
-    private Scenario scenario;
+    Scenario scenario;
+    ScenarioAnalyst analyst;
 
-    public TestDefaultScenarioAnalyst() {
-    }
-
-    /**
-     * Setup
-     */
+    @Override
     protected void setUp() {
-        // Initialize analyst
-        analyst = new DefaultScenarioAnalyst();
-        List<IssueDetector> detectors = new ArrayList<IssueDetector>();
-        detectors.add( new FlowWithoutChannel() );
-        detectors.add( new FlowWithUndefinedSource() );
-        detectors.add( new FlowWithUndefinedTarget() );
-        detectors.add( new UnnamedFlow() );
-        detectors.add( new PartWithoutTask() );
-        detectors.add( new PartWithoutRole() );
-        analyst.setIssueDetectors( detectors );
-        // get a scenario
-        scenario = new FireScenario();
+        super.setUp();
+        scenario = project.getScenarioDao().getDefaultScenario();
+        analyst = project.getScenarioAnalyst();
     }
 
     /**
@@ -62,6 +34,7 @@ public class TestDefaultScenarioAnalyst extends TestCase {
      */
     public void testFindAllIssues() {
         List<Issue> allIssues = new ArrayList<Issue>();
+        collectIssues( scenario, allIssues );
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             Node node = nodes.next();
@@ -93,28 +66,29 @@ public class TestDefaultScenarioAnalyst extends TestCase {
      * Get issue summaries on all model objects.
      */
     public void testGetIssueSummaries() {
+        processSummary( scenario );
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             Node node = nodes.next();
-            processSummary(node);
+            processSummary( node );
             Iterator<Flow> requirements = node.requirements();
             while ( requirements.hasNext() ) {
-                processSummary(requirements.next());
+                processSummary( requirements.next() );
             }
             Iterator<Flow> outcomes = node.outcomes();
             while ( outcomes.hasNext() ) {
-                processSummary(outcomes.next());
+                processSummary( outcomes.next() );
             }
         }
         assertTrue( true );
     }
 
-    private void processSummary(ModelObject modelObject) {
+    private void processSummary( ModelObject modelObject ) {
         String summary = analyst.getIssuesSummary( modelObject );
         System.out.println();
         System.out.println( modelObject.getClass().getSimpleName() +
                 " " + modelObject.getName() + " " + modelObject.getId() );
-        System.out.println("-----------------");
+        System.out.println( "-----------------" );
         System.out.println( summary );
 
     }

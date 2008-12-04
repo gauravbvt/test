@@ -20,13 +20,13 @@ public class Issue extends AnalysisObject {
      */
     public static final String FLOW = "Flow";
     /**
-     * Type of issue having to do with a point fo failure in a scenario
+     * Type of issue having to do with a scenario as a whole
      */
-    public static final String POINT_OF_FAILURE = "Point of failure";
+    public static final String SYSTEMIC = "Systemic";
     /**
      * All possible types of issues
      */
-    public static final String[] TYPES = new String[]{DEFINITION, FLOW, POINT_OF_FAILURE};
+    public static final String[] TYPES = new String[]{DEFINITION, FLOW, SYSTEMIC};
     /**
      * Type of issue
      */
@@ -77,6 +77,11 @@ public class Issue extends AnalysisObject {
         sb.append( ")" );
         sb.append( ": " );
         sb.append( getDescription() );
+        if (remediation != null) {
+            sb.append(" [");
+            sb.append(remediation);
+            sb.append(']');
+        }
         return sb.toString();
     }
 
