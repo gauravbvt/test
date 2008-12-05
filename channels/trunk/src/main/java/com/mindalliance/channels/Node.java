@@ -1,14 +1,10 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ModelObject;
-
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * A node in the flow graph
@@ -34,8 +30,8 @@ public abstract class Node extends ModelObject {
     private Scenario scenario;
 
     protected Node() {
-        setOutcomes( new TreeSet<Flow>() );
-        setRequirements( new TreeSet<Flow>() );
+        setOutcomes( new HashSet<Flow>() );
+        setRequirements( new HashSet<Flow>() );
     }
 
     /**
@@ -76,7 +72,7 @@ public abstract class Node extends ModelObject {
      * @param outcomes the new outcomes
      */
     final void setOutcomes( Set<Flow> outcomes ) {
-        this.outcomes = new TreeSet<Flow>( outcomes );
+        this.outcomes = new HashSet<Flow>( outcomes );
         outIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
         for ( Flow f: outcomes ) {
             outIndex.put( f.getId(), f );
@@ -104,12 +100,17 @@ public abstract class Node extends ModelObject {
 
     /**
      * Remove an outcome from this node.
+     * Removes the source node if a connector.
      * @param outcome the outcome
      */
     public void removeOutcome( Flow outcome ) {
+        final Node source = outcome.getSource();
         getOutcomes().remove( outcome );
         outIndex.remove( outcome.getId() );
         outcome.setSource( null );
+
+        if ( source != null && source.isConnector() )
+            source.getScenario().removeNode( source );
     }
 
     private Set<Flow> getRequirements() {
@@ -122,7 +123,7 @@ public abstract class Node extends ModelObject {
      * @param requirements the new requirements
      */
     final void setRequirements( Set<Flow> requirements ) {
-        this.requirements = new TreeSet<Flow>( requirements );
+        this.requirements = new HashSet<Flow>( requirements );
         reqIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
         for ( Flow f: requirements ) {
             reqIndex.put( f.getId(), f );
@@ -150,12 +151,17 @@ public abstract class Node extends ModelObject {
 
     /**
      * Remove a requirement from this node.
+     * Removes the target node if a connector.
      * @param requirement the requirement
      */
     public void removeRequirement( Flow requirement ) {
+        final Node target = requirement.getTarget();
         getRequirements().remove( requirement );
         reqIndex.remove( requirement.getId() );
-        requirement.setTarget( this );
+        requirement.setTarget( null );
+
+        if ( target != null && target.isConnector() )
+            target.getScenario().removeNode( target );
     }
 
     public boolean isPart() {

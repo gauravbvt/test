@@ -39,6 +39,8 @@ public class ExpandedFlowPanel extends Panel {
         setOutcome( outcome );
         setDefaultModel( new CompoundPropertyModel<Flow>( flow ) );
 
+        // TODO add any/all depending on actor
+
         add( new Label( "title", new PropertyModel( flow,                                 // NON-NLS
                             outcome ? "outcomeTitle" : "requirementTitle" ) ) );          // NON-NLS
 
@@ -167,4 +169,6 @@ public class ExpandedFlowPanel extends Panel {
     public void setMarkedForDeletion( boolean markedForDeletion ) {
         this.markedForDeletion = markedForDeletion;
     }
+
+
 }

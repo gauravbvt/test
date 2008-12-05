@@ -111,7 +111,7 @@ public final class ScenarioPage extends WebPage {
      * @param scenario a scenario
      */
     public ScenarioPage( Scenario scenario ) {
-        this( scenario, scenario.nodes().next() );
+        this( scenario, scenario.getDefaultNode() );
     }
 
     /**
@@ -175,7 +175,7 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Scenario scenario ) {
-        redirectTo( scenario.nodes().next() );
+        redirectTo( scenario.getDefaultNode() );
     }
 
     private void redirectTo( Node n ) {
@@ -285,6 +285,9 @@ public final class ScenarioPage extends WebPage {
      */
     private final class ScenarioForm extends Form<Scenario> {
 
+        /** The nodeDeleted property name. */
+        private static final String NODE_DELETED_PROPERTY = "nodeDeleted";
+
         /** The scenario import field. */
         private FileUploadField scenarioImport;
 
@@ -294,10 +297,17 @@ public final class ScenarioPage extends WebPage {
          */
         private Scenario target;
 
-        /**
-         * The delete scenario check box.
-         */
+        /** The delete scenario check box. */
         private DeleteBox deleteScenario;
+
+        /**  The requirement list. */
+        private FlowListPanel reqs;
+
+        /** The outcomes list. */
+        private FlowListPanel outcomes;
+
+        /** True if current node will be deleted. */
+        private boolean nodeDeleted;
 
         //------------------------------
         private ScenarioForm( String id, Scenario scenario, Node node ) {
@@ -306,7 +316,9 @@ public final class ScenarioPage extends WebPage {
 
             add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
-                     new PropertyModel<String>( node, DESC_PROPERTY ) ) );
+                                       new PropertyModel<String>( node, DESC_PROPERTY ) ) );
+            add( new CheckBox( "node-del",                                                // NON-NLS
+                               new PropertyModel<Boolean>( this, NODE_DELETED_PROPERTY ) ) );
             addGraph( scenario, node );
             final Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
@@ -317,9 +329,10 @@ public final class ScenarioPage extends WebPage {
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
             addScenarioFields( scenario );
-
-            add( new FlowListPanel( "reqs", node, false, expansions ) );                  // NON-NLS
-            add( new FlowListPanel( "outcomes", node, true, expansions ) );               // NON-NLS
+            reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
+            add( reqs );
+            outcomes = new FlowListPanel( "outcomes", node, true, expansions );           // NON-NLS
+            add( outcomes );
         }
 
         //------------------------------
@@ -434,8 +447,35 @@ public final class ScenarioPage extends WebPage {
         @Override
         protected void onSubmit() {
 
-            // TODO node deletion
+            reqs.deleteSelectedFlows( expansions );
+            outcomes.deleteSelectedFlows( expansions );
+            uploadNodeAttachment();
 
+            if ( deleteScenario.isSelected() ) {
+                final ScenarioDao dao = getScenarioDao();
+                final Scenario scenario = getScenario();
+                dao.removeScenario( scenario );
+                if ( LOG.isInfoEnabled() )
+                    LOG.info( MessageFormat.format(
+                            "Deleted scenario {0} - {1}",
+                            scenario.getId(), scenario.getName() ) );
+                setTarget( dao.getDefaultScenario() );
+            }
+
+            if ( isNodeDeleted() ) {
+                getScenario().removeNode( getNode() );
+                redirectTo( getScenario() );
+
+            } else {
+                final Scenario t = getTarget();
+                if ( t.getId() == getScenario().getId() )
+                    redirectHere();
+                else
+                    redirectTo( t );
+            }
+        }
+
+        private void uploadNodeAttachment() {
             final FileUpload fileUpload = scenarioImport.getFileUpload();
             if ( fileUpload != null ) {
                 // Import and switch to scenario
@@ -451,22 +491,14 @@ public final class ScenarioPage extends WebPage {
                     throw new RuntimeException( s, e );
                 }
             }
-            if ( deleteScenario.isSelected() ) {
-                final ScenarioDao dao = getScenarioDao();
-                final Scenario scenario = getScenario();
-                dao.removeScenario( scenario );
-                if ( LOG.isInfoEnabled() )
-                    LOG.info( MessageFormat.format(
-                            "Deleted scenario {0} - {1}",
-                            scenario.getId(), scenario.getName() ) );
-                setTarget( dao.getDefaultScenario() );
-            }
+        }
 
-            final Scenario t = getTarget();
-            if ( t.getId() == getScenario().getId() )
-                redirectHere();
-            else
-                redirectTo( t );
+        public boolean isNodeDeleted() {
+            return nodeDeleted;
+        }
+
+        public void setNodeDeleted( boolean nodeDeleted ) {
+            this.nodeDeleted = nodeDeleted;
         }
     }
 

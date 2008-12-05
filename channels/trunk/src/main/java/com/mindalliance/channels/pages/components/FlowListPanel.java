@@ -11,8 +11,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,6 +27,9 @@ public class FlowListPanel extends Panel {
 
     /** True if outcomes are listed; false if requirements are listed. */
     private boolean outcomes;
+
+    /** Panels of expanded flows. */
+    private List<ExpandedFlowPanel> expandedFlows;
 
     public FlowListPanel( String id, Node node, boolean outcomes, final Set<Long> expansions ) {
         super( id );
@@ -52,17 +57,28 @@ public class FlowListPanel extends Panel {
 
         final RepeatingView flowList = new RepeatingView( "flows" );                      // NON-NLS
         final Iterator<Flow> flows = outcomes ? node.outcomes() : node.requirements();
+        expandedFlows = new ArrayList<ExpandedFlowPanel>();
         while ( flows.hasNext() ) {
             final Flow flow = flows.next();
             final long flowId = flow.getId();
-            flowList.add( expansions.contains( flowId ) ?
-                            new ExpandedFlowPanel( Long.toString( flowId ), flow, outcomes )
-                          : new CollapsedFlowPanel( Long.toString( flowId ), flow, outcomes ) );
+            final Panel panel;
+            if ( expansions.contains( flowId ) ) {
+                final ExpandedFlowPanel flowPanel =
+                        new ExpandedFlowPanel( Long.toString( flowId ), flow, outcomes );
+                panel = flowPanel;
+                expandedFlows.add( flowPanel );
+            }
+            else
+                panel = new CollapsedFlowPanel( Long.toString( flowId ), flow, outcomes );
+            flowList.add( panel );
         }
 
         add( flowList );
     }
 
+    /**
+     * @return the title of this panel.
+     */
     public String getTitle() {
         return isOutcomes() ?  "Outcomes" : "Requirements" ;
     }
@@ -81,5 +97,25 @@ public class FlowListPanel extends Panel {
 
     public final void setOutcomes( boolean outcomes ) {
         this.outcomes = outcomes;
+    }
+
+    /**
+     * Delete flows that are marked for deletion.
+     * @param expansions the component expansion list to modify on deletions
+     */
+    public void deleteSelectedFlows( Set<Long> expansions ) {
+        final Scenario s = getNode().getScenario();
+        for ( ExpandedFlowPanel p : expandedFlows )
+            if ( p.isMarkedForDeletion() ) {
+                final Node other = p.getOther();
+                expansions.remove( p.getFlow().getId() ); 
+                if ( isOutcomes() )
+                    s.disconnect( getNode(), other );
+                else
+                    s.disconnect( other, getNode() );
+
+                if ( other.isConnector() )
+                    s.removeNode( other );
+            }
     }
 }

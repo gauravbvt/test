@@ -80,7 +80,7 @@ public class Scenario extends ModelObject {
         if ( nodes.isEmpty() )
             throw new IllegalArgumentException();
 
-        this.nodes = new TreeSet<Node>( nodes );
+        this.nodes = new HashSet<Node>( nodes );
         nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
         for ( Node node: nodes ) {
             addNode( node );
@@ -93,7 +93,8 @@ public class Scenario extends ModelObject {
      * @return an iterator on nodes
      * */
     public Iterator<Node> nodes() {
-        return getNodes().iterator();
+        // TODO should nodes be sorted here?
+        return new TreeSet<Node>( getNodes() ).iterator();
     }
 
     /**
@@ -123,6 +124,18 @@ public class Scenario extends ModelObject {
             getNodes().remove( node );
             nodeIndex.remove( node.getId() );
             node.setScenario( null );
+
+            final Iterator<Flow> ins = node.requirements();
+            while ( ins.hasNext() ) {
+                final Flow f = ins.next();
+                f.getSource().removeOutcome( f );
+            }
+
+            final Iterator<Flow> outs = node.outcomes();
+            while ( outs.hasNext() ) {
+                final Flow f = outs.next();
+                f.getTarget().removeRequirement( f );
+            }
         }
     }
 
@@ -174,7 +187,7 @@ public class Scenario extends ModelObject {
      * @return the connecting flow, or null if none
      * @throws IllegalArgumentException when nodes are not both in this scenario
      */
-    private Flow getFlow( Node source, Node target ) {
+    public Flow getFlow( Node source, Node target ) {
         if ( !nodes.contains( source ) || !nodes.contains( target ) )
             throw new IllegalArgumentException();
 
@@ -193,6 +206,17 @@ public class Scenario extends ModelObject {
      */
     public Iterator<Flow> flows() {
         return new FlowIterator();
+    }
+
+    /**
+     * Find node to display when none was specified.
+     * @return the first part in this scenario
+     */
+    public Node getDefaultNode() {
+        for ( Node n : nodes )
+            if ( n.isPart() )
+                return n;
+        throw new IllegalStateException( "Scenario has no parts" );
     }
 
     //=================================================

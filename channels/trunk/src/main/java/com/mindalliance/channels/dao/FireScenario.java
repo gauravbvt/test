@@ -20,7 +20,7 @@ public class FireScenario extends Scenario {
         setName( "Fire in the building" );
         setDescription( "A fire happens" );
 
-        final Node defNode = nodes().next();
+        final Node defNode = getDefaultNode();
 
         final Actor joe = new Actor( "Joe Smith" );
 

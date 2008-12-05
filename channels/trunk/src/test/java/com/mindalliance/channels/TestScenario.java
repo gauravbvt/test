@@ -58,15 +58,33 @@ public class TestScenario extends TestCase {
     public void testNodes() {
 
         final Node p1 = new Connector();
-        assertNull( scenario.getNode( p1.getId() ) );
-        int size = scenario.getNodeCount();
-        scenario.addNode( p1 );
-        assertEquals( size+1, scenario.getNodeCount() );
-        assertSame( p1, scenario.getNode( p1.getId() ) );
+        Part p2 = new Part();
+        Part p3 = new Part();
 
-        scenario.removeNode( p1 );
-        assertEquals( size, scenario.getNodeCount() );
+
         assertNull( scenario.getNode( p1.getId() ) );
+        assertNull( scenario.getNode( p2.getId() ) );
+        assertNull( scenario.getNode( p3.getId() ) );
+        final int size = scenario.getNodeCount();
+
+        scenario.addNode( p1 );
+        scenario.addNode( p2 );
+        scenario.addNode( p3 );
+        final Flow f1 = scenario.connect( p1, p2 );
+        final Flow f2 = scenario.connect( p2, p3 );
+
+        assertEquals( size+3, scenario.getNodeCount() );
+        assertSame( p1, scenario.getNode( p1.getId() ) );
+        assertSame( f1, p1.getFlow( f1.getId() ) );
+        assertSame( f1, p2.getFlow( f1.getId() ) );
+        assertSame( f2, p2.getFlow( f2.getId() ) );
+        assertSame( f2, p3.getFlow( f2.getId() ) );
+        scenario.removeNode( p2 );
+
+        assertEquals( size+2, scenario.getNodeCount() );
+        assertNull( scenario.getNode( p2.getId() ) );
+        assertNull( p1.getFlow( f1.getId() ) );
+        assertNull( p3.getFlow( f2.getId() ) );
 
         try {
             scenario.setNodes( new HashSet<Node>(0) );
@@ -153,12 +171,18 @@ public class TestScenario extends TestCase {
         Flow f3 = scenario.connect( sue, joe );
         Flow f4 = scenario.connect( joe, bob );
 
+        Set<Flow> fs = new HashSet<Flow>();
+        fs.add( f1 );
+        fs.add( f2 );
+        fs.add( f3 );
+        fs.add( f4 );
+
         Iterator<Flow> flows = scenario.flows();
         assertTrue( flows.hasNext() );
-        assertSame( f1, flows.next() );
-        assertSame( f2, flows.next() );
-        assertSame( f4, flows.next() );
-        assertSame( f3, flows.next() );
+        assertTrue( fs.contains( flows.next() ) );
+        assertTrue( fs.contains( flows.next() ) );
+        assertTrue( fs.contains( flows.next() ) );
+        assertTrue( fs.contains( flows.next() ) );
 
         assertFalse( flows.hasNext() );
 

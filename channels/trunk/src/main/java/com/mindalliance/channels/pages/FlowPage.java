@@ -85,7 +85,7 @@ public class FlowPage extends WebPage {
     }
 
     private void redirectTo( Scenario s ) {
-        redirectTo( s.nodes().next() );
+        redirectTo( s.getDefaultNode() );
     }
 
     private void redirectTo( Node n ) {

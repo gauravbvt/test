@@ -3,8 +3,6 @@ package com.mindalliance.channels.dao;
 import com.mindalliance.channels.Scenario;
 import junit.framework.TestCase;
 
-import java.util.Iterator;
-
 public class TestMemory extends TestCase {
 
     private Memory memory ;
@@ -54,21 +52,11 @@ public class TestMemory extends TestCase {
         } catch ( NotFoundException ignored ) {}
 
         // Following should not complain
-        memory.removeScenario( s );
-    }
-
-    public void testSort() throws DuplicateKeyException {
-        final Scenario a = new Scenario();
-        a.setName( "A" );
-
-        final Scenario b = new Scenario();
-        b.setName( "B" );
-
-        memory.addScenario( b );
-        memory.addScenario( a );
-        final Iterator<Scenario> iterator = memory.scenarios();
-        assertSame( a, iterator.next() );
-        assertSame( b, iterator.next() );
+        assertEquals( 1, memory.getScenarioCount() );
+        Scenario s2 = memory.getDefaultScenario();
+        memory.removeScenario( s2 );
+        assertEquals( 1, memory.getScenarioCount() );
+        assertSame( s2, memory.getDefaultScenario() );
     }
 
     public void testAddTwice() throws DuplicateKeyException {
@@ -83,18 +71,8 @@ public class TestMemory extends TestCase {
         }
     }
 
-    public void testAddSameName() throws DuplicateKeyException {
-        final Scenario a = new Scenario();
-        memory.addScenario( new Scenario() );
-        try {
-            memory.addScenario( new Scenario() );
-            fail();
-        } catch ( DuplicateKeyException ignored ) {
-            // success
-        }
-    }
-
     public void testDefault() {
         assertNotNull( memory.getDefaultScenario() );
     }
+
 }

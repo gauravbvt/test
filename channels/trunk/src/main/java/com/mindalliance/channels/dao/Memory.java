@@ -3,10 +3,10 @@ package com.mindalliance.channels.dao;
 import com.mindalliance.channels.Scenario;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * An in-memory, no-transactions implementation of a store.
@@ -14,10 +14,7 @@ import java.util.TreeSet;
 public final class Memory implements ScenarioDao {
 
     /** The sorted scenarios. */
-    private Set<Scenario> scenarios = new TreeSet<Scenario>();
-
-    /** Scenarios, indexed by name. */
-    private Map<String, Scenario> nameIndex = new HashMap<String, Scenario>( INITIAL_CAPACITY );
+    private Set<Scenario> scenarios = new HashSet<Scenario>();
 
     /** Scenarios, indexed by id. */
     private Map<Long,Scenario> idIndex = new HashMap<Long,Scenario>( INITIAL_CAPACITY );
@@ -30,10 +27,12 @@ public final class Memory implements ScenarioDao {
 
     /** {@inheritDoc} */
     public Scenario findScenario( String name ) throws NotFoundException {
-        final Scenario result = nameIndex.get( name );
-        if ( result == null )
-            throw new NotFoundException();
-        return result;
+        for ( Scenario s : scenarios ) {
+            if ( name.equals( s.getName() ) )
+                return s;
+        }
+
+        throw new NotFoundException();
     }
 
     /** {@inheritDoc} */
@@ -51,19 +50,18 @@ public final class Memory implements ScenarioDao {
 
     /** {@inheritDoc} */
     public void removeScenario( Scenario scenario ) {
-        scenarios.remove( scenario );
-        nameIndex.remove( scenario.getName() );
-        idIndex.remove( scenario.getId() );
+        if ( scenarios.size() > 1 ) {
+            scenarios.remove( scenario );
+            idIndex.remove( scenario.getId() );
+        }
     }
 
     /** {@inheritDoc} */
     public void addScenario( Scenario scenario ) {
-        final String name = scenario.getName();
         final long id = scenario.getId();
-        if ( nameIndex.containsKey( name ) || idIndex.containsKey( id ) )
+        if ( idIndex.containsKey( id ) )
             throw new DuplicateKeyException();
         scenarios.add( scenario );
-        nameIndex.put( name, scenario );
         idIndex.put( id, scenario );
     }
 
