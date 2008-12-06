@@ -19,6 +19,13 @@ input[type='checkbox'] {
     vertical-align: text-bottom;
 }
 
+input.error {
+    background-color: bisque;
+}
+span.error {
+    color: red;
+}
+
 /* Margins and layout */
 body {
     margin: 0.5em;

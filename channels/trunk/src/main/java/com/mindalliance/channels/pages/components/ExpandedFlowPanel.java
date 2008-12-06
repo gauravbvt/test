@@ -3,6 +3,9 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -64,6 +67,16 @@ public class ExpandedFlowPanel extends Panel {
     private void addLabeled( String id, FormComponent<?> component ) {
         add( new FormComponentLabel( id, component ) );
         add( component );
+
+        // Add style mods from scenario analyst.
+        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final String issue = analyst.getIssuesSummary( getFlow(), component.getId() );
+        if ( !issue.isEmpty() ) {
+            component.add(
+                new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
+            component.add(
+                new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
+        }
     }
 
     private void addOtherField() {

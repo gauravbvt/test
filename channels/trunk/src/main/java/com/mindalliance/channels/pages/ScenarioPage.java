@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -189,7 +190,7 @@ public final class ScenarioPage extends WebPage {
     private void redirectHere() {
         final long sid = node.getScenario().getId();
         final long nid = node.getId();
-        final StringBuffer exps = new StringBuffer();
+        final StringBuffer exps = new StringBuffer( 128 );
         for ( long id : expansions ) {
             exps.append( "&expand=" );                                                    // NON-NLS
             exps.append( Long.toString( id ) );
@@ -313,8 +314,7 @@ public final class ScenarioPage extends WebPage {
         private ScenarioForm( String id, Scenario scenario, Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
-
-            add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
+            addNodeTitle( node );
             add( new TextArea<String>( "description",                                     // NON-NLS
                                        new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
@@ -333,6 +333,22 @@ public final class ScenarioPage extends WebPage {
             add( reqs );
             outcomes = new FlowListPanel( "outcomes", node, true, expansions );           // NON-NLS
             add( outcomes );
+        }
+
+        private void addNodeTitle( Node node ) {
+            final Label title =
+                new Label( "node-title", new PropertyModel<String>( node, "title" ) );    // NON-NLS
+
+            // Add style mods from scenario analyst.
+            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            final String issue = analyst.getIssuesSummary( node );
+            if ( !issue.isEmpty() ) {
+                title.add( new AttributeModifier(
+                        "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
+                title.add( new AttributeModifier(
+                        "title", true, new Model<String>( issue ) ) );                    // NON-NLS
+            }
+            add( title );
         }
 
         //------------------------------
@@ -367,8 +383,7 @@ public final class ScenarioPage extends WebPage {
          * @param scenario the underlying scenario
          */
         private void addScenarioFields( final Scenario scenario ) {
-            add( new Label( "header",                                                     // NON-NLS
-                            new PropertyModel<String>( scenario, NAME_PROPERTY ) ) );
+            addHeader( scenario );
             add( new Label( "sc-desc",                                                    // NON-NLS
                             new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
 
@@ -403,6 +418,25 @@ public final class ScenarioPage extends WebPage {
 
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
+        }
+
+        //------------------------------
+        private void addHeader( Scenario scenario ) {
+            final Label header = new Label(
+                    "header",                                                             // NON-NLS
+                    new PropertyModel<String>( scenario, NAME_PROPERTY ) );
+
+            // Add style mods from scenario analyst.
+            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            final String issue = analyst.getIssuesSummary( scenario );
+            if ( !issue.isEmpty() ) {
+                header.add( new AttributeModifier(
+                        "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
+                header.add( new AttributeModifier(
+                        "title", true, new Model<String>( issue ) ) );                    // NON-NLS
+            }
+
+            add( header );
         }
 
         //------------------------------

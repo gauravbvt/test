@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.NotFoundException;
@@ -49,6 +50,13 @@ public class TestScenarioPage extends TestCase {
                 .andReturn( "" ).anyTimes();
         replay( fd );
         project.setFlowDiagram( fd );
+
+        final ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
+        expect( sa.getIssuesSummary( (ModelObject) anyObject() ) ).andReturn( "" ).anyTimes();
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
+                .andReturn( "" ).anyTimes();
+        replay( sa );
+        project.setScenarioAnalyst( sa );
 
         scenario = project.getScenarioDao().getDefaultScenario();
         tester = new WicketTester( project );
@@ -248,7 +256,7 @@ public class TestScenarioPage extends TestCase {
             assertNull( dao.findScenario( scenario.getId() ) );
             fail();
         } catch ( NotFoundException ignored ) {}
-        
+
         final Scenario defaultScenario = dao.getDefaultScenario();
 
         tester.startPage( new ScenarioPage( defaultScenario ) );

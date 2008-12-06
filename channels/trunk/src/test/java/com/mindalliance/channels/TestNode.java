@@ -6,21 +6,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ScenarioNode;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Node;
-
 /**
  * Test generic node functionality
  */
 public class TestNode extends TestCase {
 
-    private Node node;
-    private Flow a;
-    private Flow b;
+    private Node connector;
+    private Flow f1;
+    private Flow f2;
+    private Part p1;
+    private Part p2;
+    private Scenario scenario;
 
     public TestNode() {
     }
@@ -28,101 +24,66 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        node = new Connector();
-        a = new Flow();
-        a.setName( "A" );
-        b = new Flow();
-        b.setName( "B" );
+        scenario = new Scenario();
+        p1 = new Part( new Actor( "bob" ), "p1" );
+        connector = new Connector();
+        p2 = new Part( new Actor( "joe" ), "p3" );
+        scenario.addNode( p1 );
+        scenario.addNode( connector );
+        scenario.addNode( p2 );
+        f1 = scenario.connect( p1, connector );
+        f1.setName( "A" );
+        f2 = scenario.connect( connector, p2 );
+        f2.setName( "B" );
     }
 
     public void testSetOutcomes() {
         final Set<Flow> flows = new HashSet<Flow>(4);
-        flows.add( a );
-        flows.add( b );
+        flows.add( f1 );
+        flows.add( f2 );
 
-        node.setOutcomes( flows );
-        assertSame( a, node.getFlow( a.getId() ) );
-        assertSame( node, a.getSource() );
-        assertSame( b, node.getFlow( b.getId() ) );
-        assertSame( node, b.getSource() );
+        connector.setOutcomes( flows );
+        assertSame( f1, connector.getFlow( f1.getId() ) );
+        assertSame( connector, f1.getSource() );
+        assertSame( f2, connector.getFlow( f2.getId() ) );
+        assertSame( connector, f2.getSource() );
     }
 
     public void testSetRequirements() {
         final Set<Flow> flows = new HashSet<Flow>(4);
-        flows.add( a );
-        flows.add( b );
+        flows.add( f1 );
+        flows.add( f2 );
 
-        node.setRequirements( flows );
-        assertSame( a, node.getFlow( a.getId() ) );
-        assertSame( node, a.getTarget() );
-        assertSame( b, node.getFlow( b.getId() ) );
-        assertSame( node, b.getTarget() );
+        connector.setRequirements( flows );
+        assertSame( f1, connector.getFlow( f1.getId() ) );
+        assertSame( connector, f1.getTarget() );
+        assertSame( f2, connector.getFlow( f2.getId() ) );
+        assertSame( connector, f2.getTarget() );
     }
 
     public void testOutcomes() {
-        assertFalse( node.outcomes().hasNext() );
+        final Iterator<Flow> iterator1 = connector.outcomes();
+        assertTrue( iterator1.hasNext() );
+        assertSame( p2, iterator1.next().getTarget() );
+        assertFalse( iterator1.hasNext() );
 
-        node.addOutcome( b );
-        final Iterator<Flow> iterator = node.outcomes();
-        assertTrue( iterator.hasNext() );
-        assertSame( b, iterator.next() );
-        assertFalse( iterator.hasNext() );
-
-        node.addOutcome( a );
-        final Iterator<Flow> iterator2 = node.outcomes();
-        assertTrue( iterator2.hasNext() );
-        assertSame( a, iterator2.next() );
-        assertSame( b, iterator2.next() );
-        assertFalse( iterator2.hasNext() );
-
-        node.removeOutcome( b );
-        final Iterator<Flow> iterator3 = node.outcomes();
-        assertTrue( iterator3.hasNext() );
-        assertSame( a, iterator3.next() );
-        assertFalse( iterator3.hasNext() );
-
-        node.removeOutcome( a );
-        assertFalse( node.outcomes().hasNext() );
+        assertFalse( p2.outcomes().hasNext() );
     }
 
     public void testRequirements() {
-        assertFalse( node.requirements().hasNext() );
+        final Iterator<Flow> iterator1 = connector.requirements();
+        assertTrue( iterator1.hasNext() );
+        assertSame( p1, iterator1.next().getSource() );
+        assertFalse( iterator1.hasNext() );
 
-        node.addRequirement( b );
-        final Iterator<Flow> iterator = node.requirements();
-        assertTrue( iterator.hasNext() );
-        assertSame( b, iterator.next() );
-        assertFalse( iterator.hasNext() );
-
-        node.addRequirement( a );
-        final Iterator<Flow> iterator2 = node.requirements();
-        assertTrue( iterator2.hasNext() );
-        assertSame( a, iterator2.next() );
-        assertSame( b, iterator2.next() );
-        assertFalse( iterator2.hasNext() );
-
-        node.removeRequirement( b );
-        final Iterator<Flow> iterator3 = node.requirements();
-        assertTrue( iterator3.hasNext() );
-        assertSame( a, iterator3.next() );
-        assertFalse( iterator3.hasNext() );
-
-        node.removeRequirement( a );
-        assertFalse( node.requirements().hasNext() );
+        assertFalse( p1.requirements().hasNext() );
     }
 
     public void testGetFlow() {
-        assertNull( node.getFlow( a.getId() ) );
-
-        node.addOutcome( a );
-        assertSame( a, node.getFlow( a.getId() ) );
-        node.removeOutcome( a );
-        assertNull( node.getFlow( a.getId() ) );
-
-        node.addRequirement( a );
-        assertSame( a, node.getFlow( a.getId() ) );
-        node.removeRequirement( a );
-        assertNull( node.getFlow( a.getId() ) );
+        assertSame( f1, connector.getFlow( f1.getId() ) );
+        assertSame( f2, connector.getFlow( f2.getId() ) );
+        assertNull( p1.getFlow( f2.getId() ) );
+        assertNull( p2.getFlow( f1.getId() ) );
     }
 
     public void testIsness() {

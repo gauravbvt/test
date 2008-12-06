@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.Location;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
@@ -48,6 +49,14 @@ public class TestPartPanel extends TestCase {
                 .andReturn( "" ).anyTimes();
         replay( fd );
         project.setFlowDiagram( fd );
+
+        ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
+        expect( sa.getIssuesSummary( (ModelObject) anyObject() ) ).andReturn( "" ).anyTimes();
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
+                .andReturn( "" ).anyTimes();
+        replay( sa );
+        project.setScenarioAnalyst( sa );
+
         tester = new WicketTester( project );
 
         // Find first part in scenario

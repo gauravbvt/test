@@ -6,9 +6,13 @@ import com.mindalliance.channels.Location;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
 
 import java.text.Collator;
 
@@ -52,12 +56,27 @@ public class PartPanel extends Panel {
         super.setOutputMarkupPlaceholderTag( false );
         setPart( part );
 
-        add( new TextField<String>( TASK_PROPERTY ) );
-        add( new TextField<String>( ACTOR_PROPERTY ) );
-        add( new TextField<String>( ROLE_PROPERTY ) );
-        add( new TextField<String>( ORG_PROPERTY ) );
-        add( new TextField<String>( JURISDICTION_PROPERTY ) );
-        add( new TextField<String>( LOCATION_PROPERTY ) );
+        addField( TASK_PROPERTY );
+        addField( ACTOR_PROPERTY );
+        addField( ROLE_PROPERTY );
+        addField( ORG_PROPERTY );
+        addField( JURISDICTION_PROPERTY );
+        addField( LOCATION_PROPERTY );
+    }
+
+    private void addField( String property ) {
+        final TextField<String> field = new TextField<String>( property );
+
+        // Add style mods from scenario analyst.
+        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final String issue = analyst.getIssuesSummary( getPart(), property );
+        if ( !issue.isEmpty() ) {
+            field.add(
+                new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
+            field.add(
+                new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
+        }
+        add( field );
     }
 
     /**

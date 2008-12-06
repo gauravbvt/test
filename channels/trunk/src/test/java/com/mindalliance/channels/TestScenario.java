@@ -81,9 +81,9 @@ public class TestScenario extends TestCase {
         assertSame( f2, p3.getFlow( f2.getId() ) );
         scenario.removeNode( p2 );
 
-        assertEquals( size+2, scenario.getNodeCount() );
+        assertEquals( size+1, scenario.getNodeCount() );
+        assertNull( scenario.getNode( p1.getId() ) );
         assertNull( scenario.getNode( p2.getId() ) );
-        assertNull( p1.getFlow( f1.getId() ) );
         assertNull( p3.getFlow( f2.getId() ) );
 
         try {
