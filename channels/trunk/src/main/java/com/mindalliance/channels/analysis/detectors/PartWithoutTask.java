@@ -5,6 +5,9 @@ import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -17,17 +20,19 @@ public class PartWithoutTask extends AbstractIssueDetector {
      * Detect an issue on a model object
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return an Issue or null of none detected
+     * @return a list of Issues or null of none detected
      */
-    public Issue detectIssue( ModelObject modelObject ) {
-        Issue issue = null;
+    public List<Issue> detectIssues( ModelObject modelObject ) {
+        List<Issue> issues = null;
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
-            issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
+            Issue issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The task is missing," );
             issue.setRemediation( "Provide a task." );
+            issues = new ArrayList<Issue>();
+            issues.add(issue);
         }
-        return issue;
+        return issues;
     }
 
     /**

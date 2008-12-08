@@ -33,13 +33,13 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     }
 
     /**
-     * Detect cycles where all flows are critical requirements.
+     * Detect cycles where all flows are critical.
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return an Issue or null of none detected
+     * @return a list of Issues or null of none detected
      */
-    public Issue detectIssue( ModelObject modelObject ) {
-        Issue issue = null;
+    public List<Issue> detectIssues( ModelObject modelObject ) {
+        List<Issue> issues = null;
         Scenario scenario = (Scenario) modelObject;
         GraphBuilder graphBuilder = Project.graphBuilder();
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
@@ -47,15 +47,14 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                 new StrongConnectivityInspector<Node, Flow>( digraph );
         List<Set<Node>> cycles = sci.stronglyConnectedSets();
         if ( !cycles.isEmpty() ) {
-            Set<Flow> cyclicCriticalRequirements = new HashSet<Flow>();
             // For each cycle where all nodes have at least one critical requirement,
-            // collect all critical requirements of the nodes in the cycle.
+            // collect all critical requirements of nodes in the cycle.
             for ( Set<Node> cycle : cycles ) {
                 if ( cycle.size() > 1 ) {
                     // All nodes in the cycle have at least one ciritical requirement?
                     boolean allCritical = true;
                     // Critical requirements of nodes on the cycle
-                    List<Flow> criticalRequirementsInCycle = new ArrayList<Flow>();
+                    Set<Flow> criticalRequirementsInCycle = new HashSet<Flow>();
                     // Verify if all nodes in cycle has critical requirements and collect them
                     Iterator<Node> nodes = cycle.iterator();
                     while ( allCritical && nodes.hasNext() ) {
@@ -65,7 +64,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                         Iterator<Flow> requirements = node.requirements();
                         while ( requirements.hasNext() ) {
                             Flow requirement = requirements.next();
-                            if ( requirement.isCritical() ) {
+                            if ( requirement.isCritical() && cycle.contains(requirement.getSource()) ) {
                                 nodeHasCritical = true;
                                 criticalRequirementsInCycle.add( requirement );
                             }
@@ -74,23 +73,20 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                             allCritical = false;
                         }
                     }
-                    // If all nodes in the cycle have critical requirements,
-                    // add these requirements to the set
-                    if ( allCritical ) {
-                        cyclicCriticalRequirements.addAll( criticalRequirementsInCycle );
+                    // This is a "critical" cycle
+                    if (allCritical) {
+                       if (issues == null) issues = new ArrayList<Issue>();
+                        Issue issue = new Issue( Issue.SYSTEMIC, scenario );
+                        issue.setDescription( "Potential deadlock if "
+                        + getRequirementDescriptions( criticalRequirementsInCycle )
+                        + " fails." );
+                        issue.setRemediation( "Provide redundancy for these critical flows." );
+                        issues.add(issue);
                     }
                 }
             }
-            // There are cycles where all nodes have critical requirements
-            if ( !cyclicCriticalRequirements.isEmpty() ) {
-                issue = new Issue( Issue.SYSTEMIC, scenario );
-                issue.setDescription( "Potential deadlock if "
-                        + getRequirementDescriptions( cyclicCriticalRequirements )
-                        + " fails." );
-                issue.setRemediation( "Provide redundancy for these critical flows." );
-            }
         }
-        return issue;
+        return issues;
     }
 
     /**

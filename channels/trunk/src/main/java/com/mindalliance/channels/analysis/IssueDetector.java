@@ -2,6 +2,8 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 
+import java.util.List;
+
 /**
  * A strategy for detecting issues on a model object
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,9 +18,9 @@ public interface IssueDetector {
      * Detect an issue on a model object
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return an Issue or null of none detected
+     * @return a list of Issues or null if none detected
      */
-    Issue detectIssue( ModelObject modelObject );
+    List<Issue> detectIssues( ModelObject modelObject );
 
     /**
      * Tests whether the detector applies to the model object

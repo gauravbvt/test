@@ -30,16 +30,16 @@ public class IssueIterator implements Iterator<Issue> {
     /**
      * The next issue
      */
-    private Issue currentIssue;
+    private Iterator<Issue> currentIssues;
 
-    public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject, String property) {
+    public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject, String property ) {
         this.detectors = detectors.iterator();
         this.modelObject = modelObject;
         this.property = property;
     }
 
-    public IssueIterator(List<IssueDetector> detectors, ModelObject modelObject) {
-        this(detectors, modelObject, null);
+    public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject ) {
+        this( detectors, modelObject, null );
     }
 
     /**
@@ -51,7 +51,7 @@ public class IssueIterator implements Iterator<Issue> {
      */
     public boolean hasNext() {
         findCurrentIssue();
-        return currentIssue != null;
+        return hasMoreIssues();
     }
 
     /**
@@ -63,9 +63,7 @@ public class IssueIterator implements Iterator<Issue> {
      */
     public Issue next() {
         findCurrentIssue();
-        Issue issue = currentIssue;
-        currentIssue = null;
-        return issue;
+        return currentIssues.next();
     }
 
     /**
@@ -90,18 +88,24 @@ public class IssueIterator implements Iterator<Issue> {
      * Finds the current issue if any
      */
     private void findCurrentIssue() {
-        while (currentIssue == null && detectors.hasNext()) {
+        while ( !hasMoreIssues() && detectors.hasNext() ) {
             IssueDetector detector = detectors.next();
-            if (property != null) {
-               if (detector.appliesTo( modelObject, property )) {
-                   currentIssue = detector.detectIssue( modelObject );
-               }
+            if ( detectorApplies( detector ) ) {
+                List<Issue> detectedIssues = detector.detectIssues( modelObject );
+                if ( detectedIssues != null ) currentIssues = detectedIssues.iterator();
             }
-            else {
-                if (detector.appliesTo( modelObject )) {
-                    currentIssue = detector.detectIssue( modelObject );
-                }
-            }
+        }
+    }
+
+    private boolean hasMoreIssues() {
+        return currentIssues != null && currentIssues.hasNext();
+    }
+
+    private boolean detectorApplies( IssueDetector detector ) {
+        if ( property != null ) {
+            return detector.appliesTo( modelObject, property );
+        } else {
+            return detector.appliesTo( modelObject );
         }
     }
 }

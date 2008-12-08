@@ -2,6 +2,8 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 
+import java.util.List;
+
 /**
  * Abstract IssueDetector class.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,9 +17,9 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * Detect an issue on a model object
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return an Issue or null of none detected
+     * @return a list of Issues or null of none detected
      */
-    public abstract Issue detectIssue( ModelObject modelObject );
+    public abstract List<Issue> detectIssues( ModelObject modelObject );
 
     /**
      * Tests whether the detector applies to the model object

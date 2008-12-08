@@ -5,6 +5,9 @@ import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -23,16 +26,18 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return an Issue or null of none detected
      */
-    public Issue detectIssue( ModelObject modelObject ) {
-        Issue issue = null;
+    public List<Issue> detectIssues( ModelObject modelObject ) {
+        List<Issue> issues = null;
         Flow flow = (Flow) modelObject;
         String channel = flow.getChannel();
         if ( channel == null || channel.trim().isEmpty() ) {
-            issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
+            Issue issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
             issue.setDescription( "The channel is missing." );
             issue.setRemediation( "Provide a channel." );
+            issues = new ArrayList<Issue>();
+            issues.add(issue);
         }
-        return issue;
+        return issues;
     }
 
     /**

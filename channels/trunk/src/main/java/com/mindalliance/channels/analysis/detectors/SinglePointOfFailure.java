@@ -7,7 +7,6 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.Project;
 import org.jgrapht.alg.BlockCutpointGraph;
@@ -17,6 +16,8 @@ import org.jgrapht.graph.AsUndirectedGraph;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -41,59 +42,42 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * disjoint subgraphs) with a large enough out degree (count of outcomes).
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return an Issue or null of none detected
+     * @return a list of Issues or null of none detected
      */
-    public Issue detectIssue( ModelObject modelObject ) {
-        Issue issue = null;
-        Scenario scenario = (Scenario) modelObject;
+    public List<Issue> detectIssues( ModelObject modelObject ) {
+        List<Issue> issues = null;
+        Part part = (Part)modelObject;
+        Scenario scenario = part.getScenario();
         GraphBuilder graphBuilder = Project.graphBuilder();
+        // TODO -- cache graphs when scenario change notification implemented
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
         BlockCutpointGraph<Node, Flow> bcg = new BlockCutpointGraph<Node, Flow>(
                 new AsUndirectedGraph<Node, Flow>( digraph ) );
         Set<Node> cutpoints = bcg.getCutpoints();
         Iterator<Node> nodes = cutpoints.iterator();
-        Set<Actor> spfs = new HashSet<Actor>();
+        Set<Node> actorNodes = new HashSet<Node>();
         // Keep only cutpoints (articulation vertices) that are parts with actors
         // and with a minimum number of outcomes.
         while ( nodes.hasNext() ) {
             Node node = nodes.next();
-            if ( node.isPart() ) {
-                Part part = (Part) node;
+            if ( node == part ) {
                 if ( part.getActor() != null
                         && digraph.outDegreeOf( part ) >= MINIMUM_OUT_DEGREE ) {
-                    spfs.add( part.getActor() );
+                    actorNodes.add( part );
                 }
             }
         }
         // Found single points of failure?
-        if ( spfs.size() > 0 ) {
-            issue = new Issue( Issue.SYSTEMIC, scenario );
-            if (spfs.size() == 1) {
-                issue.setDescription( getIssueDescription( spfs ) + " is a single point of failure.");
+        if ( actorNodes.size() == 1 ) {
+            issues = new ArrayList<Issue>();
+            for ( Node node : actorNodes ) {
+                Issue issue = new Issue( Issue.SYSTEMIC, node );
+                issue.setDescription( "Single point of failure" );
+                issue.setRemediation( "Delegate responsibilities or add redundancy." );
+                issues.add( issue );
             }
-            else {
-                issue.setDescription( getIssueDescription( spfs ) + " are single points of failure.");
-            }
-            issue.setRemediation( "Delegate responsibilities or add redundancy." );
         }
-        return issue;
-    }
-
-    /**
-     * Constructs a string with the names of all actors in set
-     *
-     * @param actors -- set of actors
-     * @return a String collating the names of given actors
-     */
-    private String getIssueDescription( Set<Actor> actors ) {
-        StringBuilder sb = new StringBuilder();
-        Iterator<Actor> iterator = actors.iterator();
-        while ( iterator.hasNext() ) {
-            Actor actor = iterator.next();
-            sb.append( actor.getName() );
-            if (iterator.hasNext()) sb.append( "," );
-        }
-        return sb.toString();
+        return issues;
     }
 
     /**
@@ -103,7 +87,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * @return whether the detector applies
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Scenario;
+        return modelObject instanceof Part;
     }
 
     /**
