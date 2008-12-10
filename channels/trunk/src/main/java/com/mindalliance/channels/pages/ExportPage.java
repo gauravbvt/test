@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.Scenario;
 import org.apache.commons.logging.LogFactory;
@@ -27,27 +27,27 @@ public class ExportPage extends WebPage {
     public ExportPage( PageParameters parameters ) {
         super( parameters );
 
-        final ScenarioDao scenarioDao = getScenarioDao();
+        final Dao dao = getScenarioDao();
         if ( parameters.containsKey( ScenarioPage.SCENARIO_PARM ) )
             try {
-                scenario = scenarioDao.findScenario(
+                scenario = dao.findScenario(
                         parameters.getLong( ScenarioPage.SCENARIO_PARM ) );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad scenario specified. Exporting default scenario.", ignored );
-                scenario = scenarioDao.getDefaultScenario();
+                scenario = dao.getDefaultScenario();
             } catch ( NotFoundException ignored ) {
                 LOG.warn( "Unknown scenario specified. Exporting default scenario.", ignored );
-                scenario = scenarioDao.getDefaultScenario();
+                scenario = dao.getDefaultScenario();
             }
         else {
             LOG.warn( "No scenario specified. Exporting default scenario." );
-            scenario = scenarioDao.getDefaultScenario();
+            scenario = dao.getDefaultScenario();
         }
     }
 
-    private ScenarioDao getScenarioDao() {
-        return ( (Project) getApplication() ).getScenarioDao();
+    private Dao getScenarioDao() {
+        return ( (Project) getApplication() ).getDao();
     }
 
     private Exporter getExporter() {

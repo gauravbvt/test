@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
@@ -43,11 +42,9 @@ public class FlowListPanel extends Panel {
             @Override
             public void onClick() {
                 final Node n = getNode();
+                final Flow f = isOutcomes() ? n.createOutcome()
+                                            : n.createRequirement();
                 final Scenario s = n.getScenario();
-                final Connector other = new Connector();
-                s.addNode( other );
-                final Flow f = isOutcomes() ? s.connect( n, other )
-                                      : s.connect( other, n );
                 final Set<Long> newExpansions = new HashSet<Long>( expansions );
                 newExpansions.add( f.getId() );
                 setResponsePage( ScenarioPage.class,
@@ -104,18 +101,11 @@ public class FlowListPanel extends Panel {
      * @param expansions the component expansion list to modify on deletions
      */
     public void deleteSelectedFlows( Set<Long> expansions ) {
-        final Scenario s = getNode().getScenario();
         for ( ExpandedFlowPanel p : expandedFlows )
             if ( p.isMarkedForDeletion() ) {
-                final Node other = p.getOther();
-                expansions.remove( p.getFlow().getId() ); 
-                if ( isOutcomes() )
-                    s.disconnect( getNode(), other );
-                else
-                    s.disconnect( other, getNode() );
-
-                if ( other.isConnector() )
-                    s.removeNode( other );
+                final Flow flow = p.getFlow();
+                expansions.remove( flow.getId() );
+                flow.disconnect();
             }
     }
 }

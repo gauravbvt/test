@@ -3,8 +3,8 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import com.mindalliance.channels.dao.ScenarioDao;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
 import org.apache.commons.logging.Log;
@@ -35,11 +35,11 @@ public class FlowPage extends WebPage {
     public FlowPage( PageParameters parameters ) {
         super( parameters );
 
-        final ScenarioDao scenarioDao = getScenarioDao();
-        scenario = ScenarioPage.findScenario( scenarioDao, parameters );
+        final Dao dao = getScenarioDao();
+        scenario = ScenarioPage.findScenario( dao, parameters );
 
         if ( scenario == null )
-            redirectTo( scenarioDao.getDefaultScenario() );
+            redirectTo( dao.getDefaultScenario() );
 
         else {
             node = ScenarioPage.findNode( scenario, parameters );
@@ -80,12 +80,12 @@ public class FlowPage extends WebPage {
         return ( (Project) getApplication() ).getScenarioAnalyst();
     }
 
-    private ScenarioDao getScenarioDao() {
-        return ( (Project) getApplication() ).getScenarioDao();
+    private Dao getScenarioDao() {
+        return ( (Project) getApplication() ).getDao();
     }
 
     private void redirectTo( Scenario s ) {
-        redirectTo( s.getDefaultNode() );
+        redirectTo( s.getDefaultPart() );
     }
 
     private void redirectTo( Node n ) {

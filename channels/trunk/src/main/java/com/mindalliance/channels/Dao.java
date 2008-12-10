@@ -1,21 +1,25 @@
-package com.mindalliance.channels.dao;
-
-import com.mindalliance.channels.Scenario;
+package com.mindalliance.channels;
 
 import java.io.Serializable;
 import java.util.Iterator;
 
 /**
- * Protocol for manipulating scenarios.
+ * Protocol for manipulating objects.
  * Implementations should ensure that there is at least one scenario available.
  * @see Scenario#createDefault()
  */
-public interface ScenarioDao extends Serializable {
+public interface Dao extends Serializable {
 
     /**
      * The initial number of scenario slots.
      * This should be close to the observed average scenarios. */
     int INITIAL_CAPACITY = 10;
+
+    /**
+     * Create a brand new scenario.
+     * @return an initialized default scenario
+     */
+    Scenario createScenario();
 
     /**
      * Find a scenario given its name.
@@ -63,4 +67,14 @@ public interface ScenarioDao extends Serializable {
      * @return the total number of scenarios.
      */
     int getScenarioCount();
+
+    /**
+     * @return a new default part.
+     */
+    Part createPart();
+
+    /**
+     * @return a new connector.
+     */
+    Connector createConnector();
 }

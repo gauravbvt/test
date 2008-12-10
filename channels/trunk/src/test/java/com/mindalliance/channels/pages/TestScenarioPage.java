@@ -4,9 +4,9 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
 import junit.framework.TestCase;
@@ -44,7 +44,7 @@ public class TestScenarioPage extends TestCase {
 
         dao = new Memory();
         project = new Project();
-        project.setScenarioDao( dao );
+        project.setDao( dao );
         final FlowDiagram<Node,Flow> fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (ScenarioAnalyst) anyObject() ) )
                 .andReturn( "" ).anyTimes();
@@ -58,7 +58,7 @@ public class TestScenarioPage extends TestCase {
         replay( sa );
         project.setScenarioAnalyst( sa );
 
-        scenario = project.getScenarioDao().getDefaultScenario();
+        scenario = project.getDao().getDefaultScenario();
         tester = new WicketTester( project );
     }
 
@@ -73,7 +73,8 @@ public class TestScenarioPage extends TestCase {
     public static void setFiles( FormTester ft, Project project ) throws IOException {
 
         final Importer importer = createMock( Importer.class );
-        expect( importer.importScenario( (InputStream) notNull() ) ).andReturn( new Scenario() );
+        expect( importer.importScenario( (InputStream) notNull() ) )
+                .andReturn( project.getDao().createScenario() );
 
         replay( importer );
         project.setImporter( importer );
@@ -125,7 +126,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.NODE_PARM, scenario.getDefaultNode().getId() );
+        parms.put( ScenarioPage.NODE_PARM, scenario.getDefaultPart().getId() );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
@@ -171,7 +172,7 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testEmptySubmit() throws NotFoundException, IOException {
-        final Node node = scenario.getDefaultNode();
+        final Node node = scenario.getDefaultPart();
 
         tester.startPage( new ScenarioPage( scenario, node ) );
         tester.setupRequestAndResponse();
@@ -190,7 +191,7 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testDescriptionSubmit1() throws NotFoundException, IOException {
-        final Node node = scenario.getDefaultNode();
+        final Node node = scenario.getDefaultPart();
         node.setDescription( "" );
         assertEquals( "", node.getDescription() );
 
@@ -215,7 +216,7 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testDescriptionSubmit2() throws NotFoundException, IOException {
-        final Node node = scenario.getDefaultNode();
+        final Node node = scenario.getDefaultPart();
         node.setDescription( "something" );
 
         tester.startPage( new ScenarioPage( scenario, node ) );
@@ -237,15 +238,16 @@ public class TestScenarioPage extends TestCase {
     }
 
     public void testDeleteScenario() throws IOException, NotFoundException {
-        final Scenario sc2 = Scenario.createDefault();
+        assertEquals( 2, dao.getScenarioCount() );
+        final Scenario sc2 = dao.createScenario();
         sc2.setName( "Test" );
-        dao.addScenario( sc2 );
+        assertEquals( 3, dao.getScenarioCount() );
 
         tester.startPage( new ScenarioPage( scenario ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
-        assertEquals( 2, dao.getScenarioCount() );
+        assertEquals( 3, dao.getScenarioCount() );
 
         final FormTester ft = tester.newFormTester( "big-form" );
         setFiles( ft, project );
@@ -257,27 +259,13 @@ public class TestScenarioPage extends TestCase {
             fail();
         } catch ( NotFoundException ignored ) {}
 
-        final Scenario defaultScenario = dao.getDefaultScenario();
+        assertEquals( 3, dao.getScenarioCount() );
+        // the setFiles() imports/creates a new scenario...
 
-        tester.startPage( new ScenarioPage( defaultScenario ) );
-        tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ScenarioPage.class );
-        tester.assertNoErrorMessage();
-        assertEquals( 1, dao.getScenarioCount() );
-
-        final FormTester ft2 = tester.newFormTester( "big-form" );
-        setFiles( ft2, project );
-        ft2.setValue( "sc-del", "true" );
-
-        ft2.submit();
-        tester.assertRenderedPage( RedirectPage.class );
-        tester.assertNoErrorMessage();
-        assertSame( defaultScenario, dao.findScenario( defaultScenario.getId() ) );
-        assertEquals( 1, dao.getScenarioCount() );
     }
 
     public void testGetParameters1() {
-        final Node node = scenario.getDefaultNode();
+        final Node node = scenario.getDefaultPart();
         final PageParameters parms = ScenarioPage.getParameters( scenario, node );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
@@ -285,7 +273,7 @@ public class TestScenarioPage extends TestCase {
     }
 
     public void testGetParameters2() {
-        final Node node = scenario.getDefaultNode();
+        final Node node = scenario.getDefaultPart();
 
         final Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
         final PageParameters parms = ScenarioPage.getParameters( scenario, node, expand );

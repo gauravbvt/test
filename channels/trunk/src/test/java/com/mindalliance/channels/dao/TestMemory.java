@@ -1,6 +1,8 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.DuplicateKeyException;
+import com.mindalliance.channels.NotFoundException;
 import junit.framework.TestCase;
 
 public class TestMemory extends TestCase {
@@ -17,6 +19,7 @@ public class TestMemory extends TestCase {
     }
 
     public void testInitial() {
+        assertEquals( 2, memory.getScenarioCount() );
         assertTrue( memory.scenarios().hasNext() );
         try {
             memory.findScenario( "bla" );
@@ -31,11 +34,11 @@ public class TestMemory extends TestCase {
     }
 
     public void testAddDelete() throws DuplicateKeyException, NotFoundException {
-        final Scenario s = new Scenario();
+        final int size = memory.getScenarioCount();
+
+        final Scenario s = memory.createScenario();
         s.setName( "Bogus" );
 
-        final int size = memory.getScenarioCount();
-        memory.addScenario( s );
         assertEquals( size+1, memory.getScenarioCount() );
 
         assertSame( s, memory.findScenario( s.getName() ) );
@@ -51,12 +54,10 @@ public class TestMemory extends TestCase {
             fail();
         } catch ( NotFoundException ignored ) {}
 
-        // Following should not complain
+        for ( int i = size; i > 0 ; i-- )
+            memory.removeScenario( memory.getDefaultScenario() );
         assertEquals( 1, memory.getScenarioCount() );
-        Scenario s2 = memory.getDefaultScenario();
-        memory.removeScenario( s2 );
-        assertEquals( 1, memory.getScenarioCount() );
-        assertSame( s2, memory.getDefaultScenario() );
+        // last one not deleted
     }
 
     public void testAddTwice() throws DuplicateKeyException {
@@ -73,6 +74,13 @@ public class TestMemory extends TestCase {
 
     public void testDefault() {
         assertNotNull( memory.getDefaultScenario() );
+    }
+
+    public void testCreateScenario() throws NotFoundException {
+        assertEquals( 2, memory.getScenarioCount() );
+        Scenario s = memory.createScenario();
+        assertEquals( 3, memory.getScenarioCount() );
+        assertSame( s, memory.findScenario( s.getId() ) );
     }
 
 }

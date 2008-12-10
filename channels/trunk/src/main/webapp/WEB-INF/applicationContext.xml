@@ -17,7 +17,7 @@
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
-        <property name="scenarioDao" ref="memoryDao"/>
+        <property name="dao" ref="memoryDao"/>
         <property name="graphBuilder" ref="graphBuilder"/>
         <property name="flowDiagram" ref="flowDiagram"/>
         <property name="attachmentManager" ref="attachmentManager"/>

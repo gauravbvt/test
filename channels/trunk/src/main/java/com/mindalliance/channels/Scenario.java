@@ -1,5 +1,8 @@
 package com.mindalliance.channels;
 
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,33 +34,18 @@ public class Scenario extends ModelObject {
     /** Nodes, indexed by id. */
     private Map<Long,Node> nodeIndex;
 
+    /** The dao responsible for this scenario. */
+    private Dao dao;
+
     public Scenario() {
         initializeScenario( this );
-    }
-
-    /**
-     * Utility constructor for tests.
-     * @param name the name of the new object
-     */
-    public Scenario( String name ) {
-        super( name );
-    }
-
-    /**
-     * Create a new "empty" default project.
-     * @return something to kick start the editing process
-     */
-    public static Scenario createDefault() {
-        final Scenario result = new Scenario();
-        initializeScenario( result );
-        return result;
     }
 
     /**
      * Initialize a scenario to default project settings.
      * @param scenario the scenario to initialize
      */
-    private static void initializeScenario( Scenario scenario ) {
+    public static void initializeScenario( Scenario scenario ) {
         scenario.setName( DEFAULT_NAME );
         scenario.setDescription( DEFAULT_DESCRIPTION );
 
@@ -105,10 +93,58 @@ public class Scenario extends ModelObject {
     }
 
     /**
-     * Add a node to this scenario.
+     * Create and add a new part to this scenario.
+     * @return the new part
+     */
+    public Part createPart() {
+        final Part node = getDao().createPart();
+        addNode( node );
+        return node;
+    }
+
+    /**
+     * Convenience accessor for tests.
+     * @param actor the actor for the new part
+     * @param name the name of the new part
+     * @return the new part
+     */
+    public Part createPart( Actor actor, String name ) {
+        final Part result = createPart();
+        result.setActor( actor );
+        result.setName( name );
+
+        return result;
+    }
+
+    /**
+     * Convenience accessor for tests.
+     * @param role the role for the new part
+     * @param name the name of the new part
+     * @return the new part
+     */
+    public Part createPart( Role role, String name ) {
+        final Part result = createPart();
+        result.setRole( role );
+        result.setName( name );
+
+        return result;
+    }
+
+    /**
+     * Create and add a new connector to this scenario.
+     * @return the new connector
+     */
+    Connector createConnector() {
+        final Connector node = getDao().createConnector();
+        addNode( node );
+        return node;
+    }
+
+    /**
+     * Add a new node to this scenario.
      * @param node the new node
      */
-    public void addNode( Node node ) {
+    private void addNode( Node node ) {
         getNodes().add( node );
         nodeIndex.put( node.getId(), node );
         node.setScenario( this );
@@ -120,23 +156,35 @@ public class Scenario extends ModelObject {
      * @param node the node to remove.
      */
     public void removeNode( Node node ) {
-        if ( nodeIndex.size() > 1 ) {
+        if ( getNodes().contains( node ) && ( node.isConnector() || hasMoreThanOnePart() ) ) {
+            // TODO move to dao?
             getNodes().remove( node );
             nodeIndex.remove( node.getId() );
-            node.setScenario( null );
 
             final Iterator<Flow> ins = node.requirements();
-            while ( ins.hasNext() ) {
-                final Flow f = ins.next();
-                f.getSource().removeOutcome( f );
-            }
+            while ( ins.hasNext() )
+                ins.next().disconnect();
 
             final Iterator<Flow> outs = node.outcomes();
-            while ( outs.hasNext() ) {
-                final Flow f = outs.next();
-                f.getTarget().removeRequirement( f );
+            while ( outs.hasNext() )
+                outs.next().disconnect();
+
+            if ( node.isConnector() ) {
+                final Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
+                while ( xf.hasNext() ) {
+                    xf.next().disconnect();
+                }
             }
+
+            node.setScenario( null );
         }
+    }
+
+    private boolean hasMoreThanOnePart() {
+        final Iterator<Part> parts = parts();
+        parts.next();
+        // Note: scenario always has at least one part
+        return parts.hasNext();
     }
 
     /**
@@ -149,35 +197,55 @@ public class Scenario extends ModelObject {
     }
 
     /**
-     * Create a flow between two nodes in the scenario.
+     * Create a flow between two nodes in this scenario, or between a node in this scenario and a
+     * connector in another scenario.
      * @param source the source node.
-     * @param target the source node.
+     * @param target the target node.
      * @return a new flow.
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
-     * in this scenario
+     * in this scenario, or one of the node isn't a connector in a different scenario.
      */
     public Flow connect( Node source, Node target ) {
-        if ( getFlow( source, target ) != null )
-                throw new IllegalArgumentException();
+        final Flow result;
 
-        final Flow result = new Flow();
-        source.addOutcome( result );
-        target.addRequirement( result );
+        if ( isInternal( source, target ) ) {
+            if ( getFlow( source, target ) != null )
+                    throw new IllegalArgumentException();
+
+            result = new InternalFlow( source, target );
+            source.addOutcome( result );
+            target.addRequirement( result );
+
+        } else if ( isExternal( source, target ) ) {
+            result = new ExternalFlow( source, target );
+            if ( source.isConnector() ) {
+                target.addRequirement( result );
+                ( (Connector) source ).addExternalFlow( (ExternalFlow) result );
+            } else {
+                source.addOutcome( result );
+                ( (Connector) target ).addExternalFlow( (ExternalFlow) result );
+            }
+
+        } else
+            throw new IllegalArgumentException();
 
         return result;
     }
 
-    /**
-     * Disconnect two nodes. No effect if nodes are not connected.
-     * @param source a source node
-     * @param target a target node
-     */
-    public void disconnect( Node source, Node target ) {
-        final Flow flow = getFlow( source, target );
-        if ( flow != null ) {
-            source.removeOutcome( flow );
-            target.removeRequirement( flow );
-        }
+    private boolean isInternal( Node source, Node target ) {
+        final Scenario scenario = source.getScenario();
+        return equals( scenario )
+            && scenario.equals( target.getScenario() );
+    }
+
+    private boolean isExternal( Node source, Node target ) {
+        final boolean targetIsConnector = equals( source.getScenario() )
+                                          && !equals( target.getScenario() )
+                                          && target.isConnector();
+        final boolean sourceIsConnector = !equals( source.getScenario() )
+                                          && equals( target.getScenario() )
+                                          && source.isConnector();
+        return targetIsConnector || sourceIsConnector;
     }
 
     /**
@@ -185,12 +253,8 @@ public class Scenario extends ModelObject {
      * @param source the source
      * @param target the target
      * @return the connecting flow, or null if none
-     * @throws IllegalArgumentException when nodes are not both in this scenario
      */
-    public Flow getFlow( Node source, Node target ) {
-        if ( !nodes.contains( source ) || !nodes.contains( target ) )
-            throw new IllegalArgumentException();
-
+    private static Flow getFlow( Node source, Node target ) {
         for ( Iterator<Flow> flows = source.outcomes(); flows.hasNext(); ) {
             final Flow f = flows.next();
             if ( target.equals( f.getTarget() ) )
@@ -198,6 +262,48 @@ public class Scenario extends ModelObject {
         }
 
         return null;
+    }
+
+    /**
+     * Iterates over inputs of this scenario.
+     * @return an iterator on connectors having outcomes
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public Iterator<Connector> inputs() {
+        return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
+            public boolean evaluate( Object o ) {
+                final Node n = (Node) o;
+                return n.isConnector() && n.outcomes().hasNext();
+            }
+        } );
+    }
+
+    /**
+     * Iterates over the parts of this scenario.
+     * @return an iterator on parts
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public Iterator<Part> parts() {
+        return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
+            public boolean evaluate( Object o ) {
+                final Node n = (Node) o;
+                return n.isPart();
+            }
+        } );
+    }
+
+    /**
+     * Iterates over outputs of this scenario.
+     * @return an iterator on connectors having requirements
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public Iterator<Connector> outputs() {
+        return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
+            public boolean evaluate( Object o ) {
+                final Node n = (Node) o;
+                return n.isConnector() && n.requirements().hasNext();
+            }
+        } );
     }
 
     /**
@@ -212,11 +318,16 @@ public class Scenario extends ModelObject {
      * Find node to display when none was specified.
      * @return the first part in this scenario
      */
-    public Node getDefaultNode() {
-        for ( Node n : nodes )
-            if ( n.isPart() )
-                return n;
-        throw new IllegalStateException( "Scenario has no parts" );
+    public Part getDefaultPart() {
+        return parts().next();
+    }
+
+    public final Dao getDao() {
+        return dao;
+    }
+
+    public final void setDao( Dao dao ) {
+        this.dao = dao;
     }
 
     //=================================================

@@ -47,12 +47,17 @@ public class DefaultGraphBuilder implements GraphBuilder {
         // add nodes as vertices
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
-            graph.addVertex( nodes.next() );  // added if not part of a flow
+            final Node node = nodes.next();
+            if ( !node.outcomes().hasNext() && !node.requirements().hasNext() )
+                graph.addVertex( node );  // added if not part of a flow
         }
         // add flows as edges
+        // TODO fix for external flows
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
+            graph.addVertex( flow.getSource() );
+            graph.addVertex( flow.getTarget() );
             graph.addEdge( flow.getSource(), flow.getTarget(), flow );
         }
     }

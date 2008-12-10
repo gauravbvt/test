@@ -5,8 +5,8 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -92,11 +92,11 @@ public final class ScenarioPage extends WebPage {
         // Call super to remember parameters in links
         super( parameters );
 
-        final ScenarioDao scenarioDao = getScenarioDao();
-        final Scenario scenario = findScenario( scenarioDao, parameters );
+        final Dao dao = getScenarioDao();
+        final Scenario scenario = findScenario( dao, parameters );
 
         if ( scenario == null )
-            redirectTo( scenarioDao.getDefaultScenario() );
+            redirectTo( dao.getDefaultScenario() );
 
         else {
             final Node n = findNode( scenario, parameters );
@@ -112,7 +112,7 @@ public final class ScenarioPage extends WebPage {
      * @param scenario a scenario
      */
     public ScenarioPage( Scenario scenario ) {
-        this( scenario, scenario.getDefaultNode() );
+        this( scenario, scenario.getDefaultPart() );
     }
 
     /**
@@ -143,14 +143,14 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Find scenario specified in parameters.
-     * @param scenarioDao the scenario container
+     * @param dao the scenario container
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
-    static Scenario findScenario( ScenarioDao scenarioDao, PageParameters parameters ) {
+    static Scenario findScenario( Dao dao, PageParameters parameters ) {
         if ( parameters.containsKey( SCENARIO_PARM ) )
             try {
-                return scenarioDao.findScenario( parameters.getLong( SCENARIO_PARM ) );
+                return dao.findScenario( parameters.getLong( SCENARIO_PARM ) );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid scenario specified in parameters. Using default." );
             } catch ( NotFoundException ignored ) {
@@ -176,7 +176,7 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Scenario scenario ) {
-        redirectTo( scenario.getDefaultNode() );
+        redirectTo( scenario.getDefaultPart() );
     }
 
     private void redirectTo( Node n ) {
@@ -268,8 +268,8 @@ public final class ScenarioPage extends WebPage {
      * Get the scenario manager from project via the application context.
      * @return the scenario DAO
      */
-    private ScenarioDao getScenarioDao() {
-        return getProject().getScenarioDao();
+    private Dao getScenarioDao() {
+        return getProject().getDao();
     }
 
     private Project getProject() {
@@ -390,8 +390,7 @@ public final class ScenarioPage extends WebPage {
             add( new Link( "add-part" ) {                                                 // NON-NLS
                 @Override
                 public void onClick() {
-                    final Part newPart = new Part();
-                    scenario.addNode( newPart );
+                    final Part newPart = scenario.createPart();
                     redirectTo( newPart );
                 }
             } );
@@ -442,7 +441,7 @@ public final class ScenarioPage extends WebPage {
         //------------------------------
         private DropDownChoice<Scenario> createSelectScenario( String id ) {
             final List<Scenario> scenarios =
-                    new ArrayList<Scenario>( ScenarioDao.INITIAL_CAPACITY );
+                    new ArrayList<Scenario>( Dao.INITIAL_CAPACITY );
 
             final Iterator<Scenario> iterator = getScenarioDao().scenarios();
             while ( iterator.hasNext() )
@@ -486,7 +485,7 @@ public final class ScenarioPage extends WebPage {
             uploadNodeAttachment();
 
             if ( deleteScenario.isSelected() ) {
-                final ScenarioDao dao = getScenarioDao();
+                final Dao dao = getScenarioDao();
                 final Scenario scenario = getScenario();
                 dao.removeScenario( scenario );
                 if ( LOG.isInfoEnabled() )
@@ -548,8 +547,7 @@ public final class ScenarioPage extends WebPage {
 
         @Override
         public void onClick() {
-            final Scenario newScenario = new Scenario();
-            getScenarioDao().addScenario( newScenario );
+            final Scenario newScenario = getScenarioDao().createScenario();
             LOG.info( "Created new scenario" );
             redirectTo( newScenario );
         }

@@ -5,16 +5,9 @@ import java.text.MessageFormat;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public class Flow extends ModelObject {
+public abstract class Flow extends ModelObject {
 
     // TODO Should we annotate a flow as primary vs seconday (when multiple flows are mutually redundant)?
-
-    /** The source of the flow. */
-    private Node source;
-
-    /** The target of the flow. */
-    private Node target;
-
     /** A string describing the channel of communication involved. */
     private String channel;
 
@@ -27,7 +20,7 @@ public class Flow extends ModelObject {
     /** A string describing how much lag time is expected for this flow. */
     private String maxDelay;
 
-    public Flow() {
+    protected Flow() {
     }
 
     public boolean isAskedFor() {
@@ -62,25 +55,9 @@ public class Flow extends ModelObject {
         this.maxDelay = maxDelay;
     }
 
-    public Node getSource() {
-        return source;
-    }
-
-    public void setSource( Node source ) {
-        this.source = source;
-    }
-
-    public Node getTarget() {
-        return target;
-    }
-
-    public void setTarget( Node target ) {
-        this.target = target;
-    }
-
     /**
-     * Get a title for an out-of-context flow.
-     * @return a short description of the flow, for titles and lists.
+     * Provide a out-of-context description of the flow.
+     * @return the description
      */
     public String getTitle() {
         String content = getName();
@@ -103,8 +80,8 @@ public class Flow extends ModelObject {
     }
 
     /**
-     * Get a title for this flow, when used in the context of a requirement.
-     * @return a short description of the flow, for titles and lists.
+     * Provide a description of the flow, when viewed as a requirement.
+     * @return the description
      */
     public String getRequirementTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
@@ -117,8 +94,8 @@ public class Flow extends ModelObject {
     }
 
     /**
-     * Get a title for this flow, when used in the context of an outcome.
-     * @return a short description of the flow, for titles and lists.
+     * Provide a description of the flow, when viewed as an outcome.
+     * @return the description
      */
     public String getOutcomeTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
@@ -135,4 +112,36 @@ public class Flow extends ModelObject {
     public String toString() {
         return getTitle();
     }
+
+    /** @return Get the source of this flow. */
+    public abstract Node getSource();
+
+    /** @return the target of this flow. */
+    public abstract Node getTarget();
+
+    /**
+     * Set the source of this flow.
+     * Note: this method should not be called directly.
+     * @see Scenario#connect( Node, Node )
+     * @param source the source node.
+     */
+    abstract void setSource( Node source );
+
+    /**
+     * Set the target of this flow.
+     * Note: this method should not be called directly.
+     * @see Scenario#connect( Node, Node )
+     * @param target the target node.
+     */
+    abstract void setTarget( Node target );
+
+    /**
+     * Disconnect from source and target.
+     */
+    public abstract void disconnect();
+
+    /**
+     * @return true for internal flows; false for external flows.
+     */
+    public abstract boolean isInternal();
 }

@@ -43,7 +43,7 @@ public class TestPartPanel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         project = new Project();
-        project.setScenarioDao( new Memory() );
+        project.setDao( new Memory() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (ScenarioAnalyst) anyObject() ) )
                 .andReturn( "" ).anyTimes();
@@ -60,7 +60,7 @@ public class TestPartPanel extends TestCase {
         tester = new WicketTester( project );
 
         // Find first part in scenario
-        scenario = project.getScenarioDao().getDefaultScenario();
+        scenario = project.getDao().getDefaultScenario();
         final Iterator<Node> nodes = scenario.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {

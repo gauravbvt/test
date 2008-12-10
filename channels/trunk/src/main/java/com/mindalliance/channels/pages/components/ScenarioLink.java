@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 public class ScenarioLink extends ExternalLink {
 
     public ScenarioLink( String id, Scenario scenario ) {
-        this( id, scenario, scenario.getDefaultNode() );
+        this( id, scenario, scenario.getDefaultPart() );
     }
 
     public ScenarioLink( String id, Scenario scenario, Node node ) {

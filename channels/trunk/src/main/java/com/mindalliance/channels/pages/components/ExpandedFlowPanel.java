@@ -134,25 +134,20 @@ public class ExpandedFlowPanel extends Panel {
 
     /**
      * Set the node at the other side of this flow
-     * @param node the new source or target
+     * @param other the new source or target
      */
-    public void setOther( Node node ) {
-        final Scenario s = node.getScenario();
+    public void setOther( Node other ) {
+        final Scenario s = other.getScenario();
         final Flow f = getFlow();
         if ( isOutcome() ) {
-            final Node target = f.getTarget();
-            target.removeRequirement( f );
-            f.setTarget( node );
-            node.addRequirement( f );
-            if ( target.isConnector() )
-                s.removeNode( target );
-        } else {
             final Node source = f.getSource();
-            source.removeOutcome( f );
-            f.setSource( node );
-            node.addOutcome( f );
-            if ( source.isConnector() )
-                s.removeNode( source );
+            f.disconnect();
+            setFlow( s.connect( source, other ) );
+
+        } else {
+            final Node target = f.getTarget();
+            f.disconnect();
+            setFlow( s.connect( other, target ) );
         }
     }
 

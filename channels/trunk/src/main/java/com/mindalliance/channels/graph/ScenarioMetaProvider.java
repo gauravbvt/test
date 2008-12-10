@@ -222,9 +222,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     private String getIcon( Node node ) {
         String iconName;
         int numLines = 0;
-        if ( node.isScenarioNode() ) {
-            iconName = "scenario1";
-        } else if ( node.isConnector() ) {
+        if ( node.isConnector() ) {
             iconName = "connector";
         }
         // node is a part

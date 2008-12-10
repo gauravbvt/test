@@ -2,7 +2,7 @@ package com.mindalliance.channels;
 
 import junit.framework.TestCase;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DefaultGraphBuilder;
 import com.mindalliance.channels.graph.GraphvizRenderer;
@@ -39,8 +39,8 @@ public class AbstractChannelsTest extends TestCase {
     protected void setUp() {
         project = new Project();
         // Set DAO
-        ScenarioDao dao = new Memory();
-        project.setScenarioDao( dao );
+        Dao dao = new Memory();
+        project.setDao( dao );
         project.setGraphBuilder( new DefaultGraphBuilder() );
         // Set default scenario
         // project.getScenarioDao().addScenario(new FireScenario());

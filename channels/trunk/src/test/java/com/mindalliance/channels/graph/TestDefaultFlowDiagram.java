@@ -25,7 +25,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenario = project.getScenarioDao().getDefaultScenario();
+        scenario = project.getDao().getDefaultScenario();
     }
 
     public void testGetSVG() {
@@ -59,7 +59,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
     }
 
      public void testGetImageMap() {
-        Scenario scenario = project.getScenarioDao().getDefaultScenario();
+        Scenario scenario = project.getDao().getDefaultScenario();
         try {
             String map = project.getFlowDiagram().getImageMap(scenario, project.getScenarioAnalyst());
             // System.out.print(map);

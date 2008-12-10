@@ -1,12 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Jurisdiction;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Location;
-
 import java.text.MessageFormat;
 
 /**
@@ -42,28 +35,6 @@ public class Part extends Node {
 
     public Part() {
         adjustName();
-    }
-
-    /**
-     * Utility constructor for tests.
-     * @param actor an actor
-     * @param task a task
-     */
-    public Part( Actor actor, String task ) {
-        this();
-        setActor( actor );
-        setTask( task );
-    }
-
-    /**
-     * Utility constructor for tests.
-     * @param role a role
-     * @param task a task
-     */
-    public Part( Role role, String task ) {
-        this();
-        setRole( role );
-        setTask( task );
     }
 
     /** {@inheritDoc} */
@@ -156,7 +127,10 @@ public class Part extends Node {
         return actor == null && role == null && organization == null;
     }
 
+    /**
+     * @return true if task has not been specified
+     */
     public boolean hasDefaultTask() {
-        return task.equals(DEFAULT_TASK);
+        return task.equals( DEFAULT_TASK );
     }
 }

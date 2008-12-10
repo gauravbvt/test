@@ -1,4 +1,4 @@
-package com.mindalliance.channels.dao;
+package com.mindalliance.channels;
 
 /**
  * Thrown when an object could not be added because one or more of its keys

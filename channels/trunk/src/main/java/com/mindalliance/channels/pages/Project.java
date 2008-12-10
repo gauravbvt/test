@@ -4,7 +4,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.ScenarioDao;
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -21,7 +21,7 @@ public final class Project extends WebApplication {
     /**
      * The manipulator of scenarios.
      */
-    private ScenarioDao scenarioDao;
+    private Dao dao;
 
     private GraphBuilder graphBuilder;
 
@@ -67,12 +67,12 @@ public final class Project extends WebApplication {
         return ScenarioPage.class;
     }
 
-    public ScenarioDao getScenarioDao() {
-        return scenarioDao;
+    public Dao getDao() {
+        return dao;
     }
 
-    public void setScenarioDao( ScenarioDao scenarioDao ) {
-        this.scenarioDao = scenarioDao;
+    public void setDao( Dao dao ) {
+        this.dao = dao;
     }
 
     public FlowDiagram<Node,Flow> getFlowDiagram() {

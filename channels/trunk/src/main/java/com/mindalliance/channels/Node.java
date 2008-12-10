@@ -35,15 +35,6 @@ public abstract class Node extends ModelObject {
     }
 
     /**
-     * Utility constructor for tests.
-     * @param name the name of the new object
-     */
-    protected Node( String name ) {
-        this();
-        setName( name );
-    }
-
-    /**
      * Get a long string that can be used as a title for this node.
      * @return a generated short description
      */
@@ -72,12 +63,13 @@ public abstract class Node extends ModelObject {
      * @param outcomes the new outcomes
      */
     final void setOutcomes( Set<Flow> outcomes ) {
-        this.outcomes = new HashSet<Flow>( outcomes );
+        if ( this.outcomes != null )
+            for ( Flow f: new HashSet<Flow>( this.outcomes ) )
+                removeOutcome( f );
+        this.outcomes = new HashSet<Flow>( outcomes.size() );
         outIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
-        for ( Flow f: outcomes ) {
-            outIndex.put( f.getId(), f );
-            f.setSource( this );
-        }
+        for ( Flow f: outcomes )
+            addOutcome( f );
     }
 
     /**
@@ -89,10 +81,20 @@ public abstract class Node extends ModelObject {
     }
 
     /**
+     * Create a new outcome for this node.
+     * @return an internal flow to a new connector
+     */
+    public Flow createOutcome() {
+        final Flow flow = getScenario().connect( this, getScenario().createConnector() );
+        addOutcome( flow );
+        return flow;
+    }
+
+    /**
      * Add an outcome to this node.
      * @param outcome the outcome
      */
-    public void addOutcome( Flow outcome ) {
+    void addOutcome( Flow outcome ) {
         getOutcomes().add( outcome );
         outIndex.put( outcome.getId(), outcome );
         outcome.setSource( this );
@@ -103,15 +105,20 @@ public abstract class Node extends ModelObject {
      * Removes the source node if a connector.
      * @param outcome the outcome
      */
-    public void removeOutcome( Flow outcome ) {
-        final Node source = outcome.getSource();
+    void removeOutcome( Flow outcome ) {
         getOutcomes().remove( outcome );
         outIndex.remove( outcome.getId() );
         outcome.setSource( null );
-
-        if ( source != null && source.isConnector() )
-            source.getScenario().removeNode( source );
     }
+
+    /**
+     * Disconnect all outcomes from this node.
+     */
+    public void removeAllOutcomes() {
+        for ( Flow flow : new HashSet<Flow>( getOutcomes() ) )
+            flow.disconnect();
+    }
+
 
     private Set<Flow> getRequirements() {
         return requirements;
@@ -123,12 +130,13 @@ public abstract class Node extends ModelObject {
      * @param requirements the new requirements
      */
     final void setRequirements( Set<Flow> requirements ) {
-        this.requirements = new HashSet<Flow>( requirements );
+        if ( this.requirements != null )
+            for ( Flow f: new HashSet<Flow>( this.requirements ) )
+                removeRequirement( f );
+        this.requirements = new HashSet<Flow>( requirements.size() );
         reqIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
-        for ( Flow f: requirements ) {
-            reqIndex.put( f.getId(), f );
-            f.setTarget( this );
-        }
+        for ( Flow f: requirements )
+            addRequirement( f );
     }
 
     /**
@@ -140,10 +148,20 @@ public abstract class Node extends ModelObject {
     }
 
     /**
+     * Create and add a new requirement.
+     * @return a flow from a new connector to this node
+     */
+    public Flow createRequirement() {
+        final Flow flow = getScenario().connect( getScenario().createConnector(), this );
+        addRequirement( flow );
+        return flow;
+    }
+
+    /**
      * Add a requirement to this node.
      * @param requirement the requirement
      */
-    public void addRequirement( Flow requirement ) {
+    void addRequirement( Flow requirement ) {
         getRequirements().add( requirement );
         reqIndex.put( requirement.getId(), requirement );
         requirement.setTarget( this );
@@ -154,21 +172,21 @@ public abstract class Node extends ModelObject {
      * Removes the target node if a connector.
      * @param requirement the requirement
      */
-    public void removeRequirement( Flow requirement ) {
-        final Node target = requirement.getTarget();
+    void removeRequirement( Flow requirement ) {
         getRequirements().remove( requirement );
         reqIndex.remove( requirement.getId() );
         requirement.setTarget( null );
+    }
 
-        if ( target != null && target.isConnector() )
-            target.getScenario().removeNode( target );
+    /**
+     * Disconnect all requirements from this node.
+     */
+    public void removeAllRequirements() {
+        for ( Flow flow : new HashSet<Flow>( getRequirements() ) )
+            flow.disconnect();
     }
 
     public boolean isPart() {
-        return false;
-    }
-
-    public boolean isScenarioNode() {
         return false;
     }
 

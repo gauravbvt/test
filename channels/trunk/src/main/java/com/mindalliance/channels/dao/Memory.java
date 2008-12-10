@@ -1,5 +1,10 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.DuplicateKeyException;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 
 import java.util.HashMap;
@@ -11,7 +16,7 @@ import java.util.Set;
 /**
  * An in-memory, no-transactions implementation of a store.
  */
-public final class Memory implements ScenarioDao {
+public final class Memory implements Dao {
 
     /** The sorted scenarios. */
     private Set<Scenario> scenarios = new HashSet<Scenario>();
@@ -22,7 +27,19 @@ public final class Memory implements ScenarioDao {
     public Memory() {
         // TODO initialize memory to default scenario instead of test scenario
         // addScenario( Scenario.createDefault() );
-        addScenario( new FireScenario() );
+        final EvacuationScenario evac = new EvacuationScenario( this );
+        addScenario( evac );
+        addScenario( new FireScenario( this, evac ) );
+    }
+
+    /** {@inheritDoc} */
+    public Scenario createScenario() {
+        // TODO factor out id initialization
+        final Scenario result = new Scenario();
+        result.setDao( this );
+        Scenario.initializeScenario( result );
+        addScenario( result );
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -53,7 +70,17 @@ public final class Memory implements ScenarioDao {
         if ( scenarios.size() > 1 ) {
             scenarios.remove( scenario );
             idIndex.remove( scenario.getId() );
+
+            final Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                final Part p = parts.next();
+                p.removeAllOutcomes();
+                p.removeAllRequirements();
+            }
+
+            // TODO hook to dao for nodes/flows deletions?
         }
+
     }
 
     /** {@inheritDoc} */
@@ -73,5 +100,15 @@ public final class Memory implements ScenarioDao {
     /** {@inheritDoc} */
     public int getScenarioCount() {
         return scenarios.size();
+    }
+
+    /** {@inheritDoc} */
+    public Part createPart() {
+        return new Part();
+    }
+
+    /** {@inheritDoc} */
+    public Connector createConnector() {
+        return new Connector();
     }
 }

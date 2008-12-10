@@ -1,8 +1,8 @@
 package com.mindalliance.channels;
 
 import junit.framework.TestCase;
-import com.mindalliance.channels.Flow;
 
+@SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestFlow extends TestCase {
 
     private Flow flow;
@@ -13,7 +13,7 @@ public class TestFlow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        flow = new Flow();
+        flow = new InternalFlow();
     }
 
     // Bogus tests for coverage
@@ -41,5 +41,27 @@ public class TestFlow extends TestCase {
         final String s = "Bla";
         flow.setMaxDelay( s );
         assertSame( s, flow.getMaxDelay() );
+    }
+
+    public void testIsness() {
+        assertTrue( new InternalFlow().isInternal() );
+        assertFalse( new ExternalFlow().isInternal() );
+    }
+
+    public void testGetTitle() {
+        // just to make sure no NPE...
+        final String s = "somebody communicating something to somebody";
+        assertEquals( s, flow.toString() );
+
+        flow.setName( null );
+        assertEquals( s, flow.toString() );
+        flow.setName( " " );
+        assertEquals( s, flow.toString() );
+
+        flow.setAskedFor( true );
+        assertEquals( "somebody asking somebody about something", flow.toString() );
+
+        flow.setName( "something else" );
+        assertEquals( "somebody asking somebody about something else", flow.toString() );
     }
 }

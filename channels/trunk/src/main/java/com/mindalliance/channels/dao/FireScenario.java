@@ -2,13 +2,12 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ScenarioNode;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
 
 /**
  * The fire in the building scenario...
@@ -16,39 +15,30 @@ import com.mindalliance.channels.Organization;
  */
 public class FireScenario extends Scenario {
 
-    public FireScenario() {
+    public FireScenario( Dao dao, EvacuationScenario evac ) {
+        setDao( dao );
+
         setName( "Fire in the building" );
         setDescription( "A fire happens" );
 
-        final Node defNode = getDefaultNode();
-
         final Actor joe = new Actor( "Joe Smith" );
-
-        final Part js1    = new Part( joe, "investigating fire" );
+        final Part js1 = getDefaultPart();
+        js1.setActor( joe );
+        js1.setName( "investigating fire" );
         js1.setRole( new Role( "Fire Warden" ) );
         js1.setDescription( "Fire alarms must be investigated carefully." );
 
-        final Part js2    = new Part( joe, "monitoring evacuation" );
-        final Part tenant = new Part( new Role( "Tenant" ), "noticing fire" );
-        final Part chief  = new Part( new Role( "Fire Chief" ), "supervising operations" );
-        final Connector connector = new Connector();
-        final ScenarioNode evac = new ScenarioNode( new Scenario( "Building Evacuation" ) );
+        final Part js2    = createPart( joe, "monitoring evacuation" );
+        final Part tenant = createPart( new Role( "Tenant" ), "noticing fire" );
+        final Part chief  = createPart( new Role( "Fire Chief" ), "supervising operations" );
+
         final Actor system = new Actor( "Fire Alarm" );
         system.setSystem( true );
-        final Part alarm  = new Part( system, "ringing" );
+        final Part alarm  = createPart( system, "ringing" );
 
-        final Part fd     = new Part();
+        final Part fd     = createPart();
         fd.setOrganization( new Organization( "Fire Department" ) );
         fd.setTask( "responding" );
-
-        addNode( connector );
-        addNode( evac );
-        addNode( js1 );
-        addNode( js2 );
-        addNode( tenant );
-        addNode( chief );
-        addNode( alarm );
-        addNode( fd );
 
         connect( tenant, alarm );
         final Flow f1 = connect( alarm, js1 );
@@ -77,20 +67,16 @@ public class FireScenario extends Scenario {
         f4.setAskedFor( true );
         f4.setCritical( true );
 
-        final Flow f5 = connect( js1, evac );
-        f5.setName( "\"go-ahead\"" );
-        f5.setCritical( true );
+        final Connector ga = evac.inputs().next();
+        connect( js1, ga );
 
-        final Flow f6 = connect( evac, js2 );
-        f6.setName( "\"end\"" );
+        final Connector end = evac.outputs().next();
+        final Flow f6 = connect( end, js2 );
         f6.setCritical( true );
-
 
         connect( alarm, fd ).setName( "address" );
         connect( fd, chief );
-        connect( chief, connector ).setName( "\"all-clear\"" );
 
-
-        removeNode( defNode );
+        chief.createOutcome().setName( "\"all-clear\"" );
     }
 }
