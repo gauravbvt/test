@@ -34,7 +34,7 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * @return an iterator of issues
      */
     public Iterator<Issue> findIssues( ModelObject modelObject ) {
-        return new IssueIterator(issueDetectors, modelObject);
+        return new IssueIterator( issueDetectors, modelObject );
     }
 
     /**
@@ -45,7 +45,7 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * @return an iterator on issues detected
      */
     public Iterator<Issue> findIssues( ModelObject modelObject, String property ) {
-        return new IssueIterator(issueDetectors, modelObject, property );
+        return new IssueIterator( issueDetectors, modelObject, property );
     }
 
     /**

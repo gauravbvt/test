@@ -30,7 +30,7 @@ public class PartWithoutTask extends AbstractIssueDetector {
             issue.setDescription( "The task is missing," );
             issue.setRemediation( "Provide a task." );
             issues = new ArrayList<Issue>();
-            issues.add(issue);
+            issues.add( issue );
         }
         return issues;
     }

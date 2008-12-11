@@ -20,8 +20,8 @@ public abstract class Flow extends ModelObject {
     /** A string describing how much lag time is expected for this flow. */
     private String maxDelay;
 
-    protected Flow() {
-    }
+/*    protected Flow() {
+    }*/
 
     public boolean isAskedFor() {
         return askedFor;

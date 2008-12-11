@@ -35,7 +35,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             issue.setDescription( "The channel is missing." );
             issue.setRemediation( "Provide a channel." );
             issues = new ArrayList<Issue>();
-            issues.add(issue);
+            issues.add( issue );
         }
         return issues;
     }

@@ -77,10 +77,10 @@ public class Issue extends AnalysisObject {
         sb.append( ")" );
         sb.append( ": " );
         sb.append( getDescription() );
-        if (remediation != null) {
-            sb.append(" [");
-            sb.append(remediation);
-            sb.append(']');
+        if ( remediation != null ) {
+            sb.append( " [" );
+            sb.append( remediation );
+            sb.append( ']' );
         }
         return sb.toString();
     }

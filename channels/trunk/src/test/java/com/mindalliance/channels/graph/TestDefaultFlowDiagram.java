@@ -20,53 +20,61 @@ import java.util.Iterator;
  */
 public class TestDefaultFlowDiagram extends AbstractChannelsTest {
 
-    Scenario scenario;
+    Iterator<Scenario> scenarios;
 
     @Override
     protected void setUp() {
         super.setUp();
-        scenario = project.getDao().getDefaultScenario();
+        scenarios = project.getDao().scenarios();
     }
 
     public void testGetSVG() {
-        Node selectedNode = findSelected( scenario );
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            project.getFlowDiagram().getSVG( scenario, selectedNode, project.getScenarioAnalyst(), new BufferedOutputStream( baos ) );
-            String svg = baos.toString();
-            assertFalse( svg.isEmpty() );
-            assertTrue( svg.startsWith( "<?xml" ) );
-            // System.out.print( svg );
-        } catch ( Exception e ) {
-            fail( e.toString() );
+        while ( scenarios.hasNext() ) {
+            Scenario scenario = scenarios.next();
+            Node selectedNode = findSelected( scenario );
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                project.getFlowDiagram().getSVG( scenario, selectedNode, project.getScenarioAnalyst(), new BufferedOutputStream( baos ) );
+                String svg = baos.toString();
+                assertFalse( svg.isEmpty() );
+                assertTrue( svg.startsWith( "<?xml" ) );
+                // System.out.print( svg );
+            } catch ( Exception e ) {
+                fail( e.toString() );
+            }
         }
     }
 
     public void testGetPNG() {
-        Node selectedNode = findSelected( scenario );
-        try {
-            FileOutputStream fileOut = new FileOutputStream( "target/test.png" );
-            project.getFlowDiagram().getPNG( scenario, selectedNode, project.getScenarioAnalyst(), fileOut );
-            fileOut.flush();
-            fileOut.close();
-            assertTrue( new File( "target/test.png" ).length() > 0 );
-        } catch ( IOException e ) {
-            fail( e.toString() );
-        }
-        catch ( DiagramException e ) {
-            fail( e.toString() );
+        while ( scenarios.hasNext() ) {
+            Scenario scenario = scenarios.next();
+            Node selectedNode = findSelected( scenario );
+            try {
+                FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
+                project.getFlowDiagram().getPNG( scenario, selectedNode, project.getScenarioAnalyst(), fileOut );
+                fileOut.flush();
+                fileOut.close();
+                assertTrue( new File( "target/" + scenario.getName() + ".png" ).length() > 0 );
+            } catch ( IOException e ) {
+                fail( e.toString() );
+            }
+            catch ( DiagramException e ) {
+                fail( e.toString() );
+            }
         }
     }
 
-     public void testGetImageMap() {
-        Scenario scenario = project.getDao().getDefaultScenario();
-        try {
-            String map = project.getFlowDiagram().getImageMap(scenario, project.getScenarioAnalyst());
-            // System.out.print(map);
-            assertFalse(map.isEmpty());
-            assertTrue(map.startsWith("<map"));
-        } catch (Exception e) {
-            fail(e.toString());
+    public void testGetImageMap() {
+        while ( scenarios.hasNext() ) {
+            Scenario scenario = scenarios.next();
+            try {
+                String map = project.getFlowDiagram().getImageMap( scenario, project.getScenarioAnalyst() );
+                // System.out.print(map);
+                assertFalse( map.isEmpty() );
+                assertTrue( map.startsWith( "<map" ) );
+            } catch ( Exception e ) {
+                fail( e.toString() );
+            }
         }
     }
 

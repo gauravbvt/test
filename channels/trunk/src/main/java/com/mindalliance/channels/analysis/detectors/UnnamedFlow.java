@@ -36,7 +36,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
             issue.setDescription( "The information is missing." );
             issue.setRemediation( "Name the flow." );
             issues = new ArrayList<Issue>();
-            issues.add(issue);
+            issues.add( issue );
         }
         return issues;
     }

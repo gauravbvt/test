@@ -64,7 +64,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                         Iterator<Flow> requirements = node.requirements();
                         while ( requirements.hasNext() ) {
                             Flow requirement = requirements.next();
-                            if ( requirement.isCritical() && cycle.contains(requirement.getSource()) ) {
+                            if ( requirement.isCritical() && cycle.contains( requirement.getSource() ) ) {
                                 nodeHasCritical = true;
                                 criticalRequirementsInCycle.add( requirement );
                             }
@@ -74,14 +74,14 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                         }
                     }
                     // This is a "critical" cycle
-                    if (allCritical) {
-                       if (issues == null) issues = new ArrayList<Issue>();
+                    if ( allCritical ) {
+                        if ( issues == null ) issues = new ArrayList<Issue>();
                         Issue issue = new Issue( Issue.SYSTEMIC, scenario );
                         issue.setDescription( "Potential deadlock if "
-                        + getRequirementDescriptions( criticalRequirementsInCycle )
-                        + " fails." );
+                                + getRequirementDescriptions( criticalRequirementsInCycle )
+                                + " fails." );
                         issue.setRemediation( "Provide redundancy for these critical flows." );
-                        issues.add(issue);
+                        issues.add( issue );
                     }
                 }
             }

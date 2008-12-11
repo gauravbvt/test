@@ -37,7 +37,7 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
             issue.setDescription( "The source is not defined." );
             issue.setRemediation( "Name the actor, role or organization of the source." );
             issues = new ArrayList<Issue>();
-            issues.add(issue);
+            issues.add( issue );
         }
         return issues;
     }

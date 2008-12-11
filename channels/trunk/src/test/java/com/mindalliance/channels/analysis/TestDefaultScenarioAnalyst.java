@@ -19,13 +19,13 @@ import java.util.List;
  */
 public class TestDefaultScenarioAnalyst extends AbstractChannelsTest {
 
-    Scenario scenario;
+    Iterator<Scenario> scenarios;
     ScenarioAnalyst analyst;
 
     @Override
     protected void setUp() {
         super.setUp();
-        scenario = project.getDao().getDefaultScenario();
+        scenarios = project.getDao().scenarios();
         analyst = project.getScenarioAnalyst();
     }
 
@@ -33,24 +33,27 @@ public class TestDefaultScenarioAnalyst extends AbstractChannelsTest {
      * Apply all applicable detectors to all nodes and flows and gather issues.
      */
     public void testFindAllIssues() {
-        List<Issue> allIssues = new ArrayList<Issue>();
-        collectIssues( scenario, allIssues );
-        Iterator<Node> nodes = scenario.nodes();
-        while ( nodes.hasNext() ) {
-            Node node = nodes.next();
-            collectIssues( node, allIssues );
-            Iterator<Flow> requirements = node.requirements();
-            while ( requirements.hasNext() ) {
-                Flow requirement = requirements.next();
-                collectIssues( requirement, allIssues );
+        while ( scenarios.hasNext() ) {
+            Scenario scenario = scenarios.next();
+            List<Issue> allIssues = new ArrayList<Issue>();
+            collectIssues( scenario, allIssues );
+            Iterator<Node> nodes = scenario.nodes();
+            while ( nodes.hasNext() ) {
+                Node node = nodes.next();
+                collectIssues( node, allIssues );
+                Iterator<Flow> requirements = node.requirements();
+                while ( requirements.hasNext() ) {
+                    Flow requirement = requirements.next();
+                    collectIssues( requirement, allIssues );
+                }
+                Iterator<Flow> outcomes = node.outcomes();
+                while ( outcomes.hasNext() ) {
+                    Flow outcome = outcomes.next();
+                    collectIssues( outcome, allIssues );
+                }
             }
-            Iterator<Flow> outcomes = node.outcomes();
-            while ( outcomes.hasNext() ) {
-                Flow outcome = outcomes.next();
-                collectIssues( outcome, allIssues );
-            }
+            assertFalse( allIssues.isEmpty() );
         }
-        assertFalse( allIssues.isEmpty() );
     }
 
     private void collectIssues( ModelObject modelObject, List<Issue> collector ) {
@@ -66,21 +69,24 @@ public class TestDefaultScenarioAnalyst extends AbstractChannelsTest {
      * Get issue summaries on all model objects.
      */
     public void testGetIssueSummaries() {
-        processSummary( scenario );
-        Iterator<Node> nodes = scenario.nodes();
-        while ( nodes.hasNext() ) {
-            Node node = nodes.next();
-            processSummary( node );
-            Iterator<Flow> requirements = node.requirements();
-            while ( requirements.hasNext() ) {
-                processSummary( requirements.next() );
+        while ( scenarios.hasNext() ) {
+            Scenario scenario = scenarios.next();
+            processSummary( scenario );
+            Iterator<Node> nodes = scenario.nodes();
+            while ( nodes.hasNext() ) {
+                Node node = nodes.next();
+                processSummary( node );
+                Iterator<Flow> requirements = node.requirements();
+                while ( requirements.hasNext() ) {
+                    processSummary( requirements.next() );
+                }
+                Iterator<Flow> outcomes = node.outcomes();
+                while ( outcomes.hasNext() ) {
+                    processSummary( outcomes.next() );
+                }
             }
-            Iterator<Flow> outcomes = node.outcomes();
-            while ( outcomes.hasNext() ) {
-                processSummary( outcomes.next() );
-            }
+            assertTrue( true );
         }
-        assertTrue( true );
     }
 
     private void processSummary( ModelObject modelObject ) {

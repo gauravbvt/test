@@ -29,10 +29,12 @@ public class DefaultGraphBuilder implements GraphBuilder {
     /**
      * Build a graph from the scenario
      *
+     * @param scenario The scenario being graphed
      * @return a DirectedGraph
      */
     public DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario ) {
-        DirectedGraph<Node, Flow> dgraph = new DefaultDirectedGraph<Node, Flow>( Flow.class );
+        DirectedGraph<Node, Flow> dgraph = new DefaultDirectedGraph<Node, Flow>(
+                new FlowFactory() );
         populateGraph( dgraph, scenario );
         return dgraph;
     }
@@ -49,7 +51,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
         while ( nodes.hasNext() ) {
             final Node node = nodes.next();
             if ( !node.outcomes().hasNext() && !node.requirements().hasNext() )
-                graph.addVertex( node );  // added if not part of a flow
+                // added if not part of a flow
+                graph.addVertex( node );
         }
         // add flows as edges
         // TODO fix for external flows

@@ -46,7 +46,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = null;
-        Part part = (Part)modelObject;
+        Part part = (Part) modelObject;
         Scenario scenario = part.getScenario();
         GraphBuilder graphBuilder = Project.graphBuilder();
         // TODO -- cache graphs when scenario change notification implemented
@@ -60,6 +60,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         // and with a minimum number of outcomes.
         while ( nodes.hasNext() ) {
             Node node = nodes.next();
+            // If the target node is one of the cutpoint nodes
+            // TODO - wasteful since cutpoint identification is repeated for each targeted node
             if ( node == part ) {
                 if ( part.getActor() != null
                         && digraph.outDegreeOf( part ) >= MINIMUM_OUT_DEGREE ) {
