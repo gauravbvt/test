@@ -339,24 +339,42 @@ public class Scenario extends ModelObject {
     private final class FlowIterator implements Iterator<Flow> {
 
         /** Iterator on nodes. */
-        private final Iterator<Node> nodeIterator = nodes();
+        private final Iterator<Node> nodeIterator;
 
         /** Iterator on the outcomes of the current node. */
-        private Iterator<Flow> outcomeIterator = nodeIterator.next().outcomes();
+        private Iterator<Flow> outcomeIterator;
+
+        /** Iterator on the external requirements of the current node. */
+        private Iterator<Flow> reqIterator;
 
         private FlowIterator() {
+            nodeIterator = nodes();
+            setIterators( nodeIterator.next() );
+        }
+
+        @SuppressWarnings( { "unchecked" } )
+        private void setIterators( Node node ) {
+            outcomeIterator = node.outcomes();
+            reqIterator = (Iterator<Flow>) new FilterIterator( node.requirements(), new Predicate() {
+                public boolean evaluate( Object o ) {
+                    return !( (Flow) o ).isInternal();
+                }
+            } );
         }
 
         public boolean hasNext() {
-            while ( !outcomeIterator.hasNext() && nodeIterator.hasNext() )
-                outcomeIterator = nodeIterator.next().outcomes();
-            return outcomeIterator.hasNext();
+            while ( !outcomeIterator.hasNext() && !reqIterator.hasNext()
+                    && nodeIterator.hasNext() )
+                setIterators( nodeIterator.next() );
+
+            return outcomeIterator.hasNext() || reqIterator.hasNext();
         }
 
         public Flow next() {
             if ( !hasNext() )
                 throw new NoSuchElementException();
-            return outcomeIterator.next();
+            return outcomeIterator.hasNext() ? outcomeIterator.next()
+                                             : reqIterator.next();
         }
 
         public void remove() {
