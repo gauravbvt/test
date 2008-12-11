@@ -24,7 +24,7 @@ public class FireScenario extends Scenario {
         final Actor joe = new Actor( "Joe Smith" );
         final Part js1 = getDefaultPart();
         js1.setActor( joe );
-        js1.setName( "investigating fire" );
+        js1.setTask( "investigating fire" );
         js1.setRole( new Role( "Fire Warden" ) );
         js1.setDescription( "Fire alarms must be investigated carefully." );
 

@@ -11,6 +11,9 @@ public class ExternalFlow extends Flow {
     /** The connector. */
     private Connector connector;
 
+    /** True if an input flow, ie an output from a scenario. */
+    private boolean input;
+
     /** The part. */
     private Part part;
 
@@ -21,6 +24,7 @@ public class ExternalFlow extends Flow {
         if ( source.isConnector() && target.isPart() ) {
             setConnector( (Connector) source );
             setPart( (Part) target );
+            setInput( true );
         } else if ( target.isConnector() && source.isPart() ) {
             setConnector( (Connector) target );
             setPart( (Part) source );
@@ -109,5 +113,31 @@ public class ExternalFlow extends Flow {
 
     public final void setConnector( Connector connector ) {
         this.connector = connector;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setName( String name ) {
+        final Flow flow = isInput() ? getConnector().requirements().next()
+                                    : getConnector().outcomes().next();
+        flow.setName( name );
+    }
+
+    /**
+     * @return the name of the flow
+     */
+    @Override
+    public String getName() {
+        final Flow flow = isInput() ? getConnector().requirements().next()
+                                    : getConnector().outcomes().next();
+        return  flow.getName();
+    }
+
+    public boolean isInput() {
+        return input;
+    }
+
+    public final void setInput( boolean input ) {
+        this.input = input;
     }
 }

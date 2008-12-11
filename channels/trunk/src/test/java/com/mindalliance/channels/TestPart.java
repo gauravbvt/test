@@ -1,12 +1,6 @@
 package com.mindalliance.channels;
 
 import junit.framework.TestCase;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Jurisdiction;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Location;
-import com.mindalliance.channels.Organization;
 
 public class TestPart extends TestCase {
 
@@ -85,6 +79,9 @@ public class TestPart extends TestCase {
 
     public void testName() {
         assertSame( Part.DEFAULT_ACTOR, part.getName() );
+
+        part.setName( "task" );
+        assertSame( "task", part.getName() );
 
         final String s = "MAS";
         part.setOrganization( new Organization( s ) );

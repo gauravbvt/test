@@ -482,7 +482,7 @@ public final class ScenarioPage extends WebPage {
 
             reqs.deleteSelectedFlows( expansions );
             outcomes.deleteSelectedFlows( expansions );
-            uploadNodeAttachment();
+            importScenario();
 
             if ( deleteScenario.isSelected() ) {
                 final Dao dao = getScenarioDao();
@@ -508,7 +508,7 @@ public final class ScenarioPage extends WebPage {
             }
         }
 
-        private void uploadNodeAttachment() {
+        private void importScenario() {
             final FileUpload fileUpload = scenarioImport.getFileUpload();
             if ( fileUpload != null ) {
                 // Import and switch to scenario

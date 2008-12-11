@@ -42,7 +42,10 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         this.id = id;
     }
 
-    public final String getName() {
+    /**
+     * @return the name of the flow
+     */
+    public String getName() {
         return name;
     }
 
@@ -50,7 +53,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
      * Set the name of this object.
      * @param name the name. Will complain if null.
      */
-    public final void setName( String name ) {
+    public void setName( String name ) {
         this.name = name == null ? "" : name;
     }
 
@@ -93,7 +96,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        return (int) id;
+        return Long.valueOf( id ).hashCode();
     }
 
     /** {@inheritDoc} */

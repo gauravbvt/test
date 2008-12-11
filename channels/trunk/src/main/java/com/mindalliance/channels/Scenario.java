@@ -105,13 +105,13 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      * @param actor the actor for the new part
-     * @param name the name of the new part
+     * @param task the task of the new part
      * @return the new part
      */
-    public Part createPart( Actor actor, String name ) {
+    public Part createPart( Actor actor, String task ) {
         final Part result = createPart();
         result.setActor( actor );
-        result.setName( name );
+        result.setTask( task );
 
         return result;
     }
@@ -119,13 +119,13 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      * @param role the role for the new part
-     * @param name the name of the new part
+     * @param task the task of the new part
      * @return the new part
      */
-    public Part createPart( Role role, String name ) {
+    public Part createPart( Role role, String task ) {
         final Part result = createPart();
         result.setRole( role );
-        result.setName( name );
+        result.setTask( task );
 
         return result;
     }
