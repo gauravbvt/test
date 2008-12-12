@@ -55,7 +55,6 @@ public class DefaultGraphBuilder implements GraphBuilder {
                 graph.addVertex( node );
         }
         // add flows as edges
-        // TODO fix for external flows
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();

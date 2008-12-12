@@ -95,16 +95,19 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     }
 
     /**
-     * @param graph                -- a Graph
-     * @param format               -- an output format (png, svg, imap etc.)
-     * @param output               the rendered graph
+     * @param graph  -- a Graph
+     * @param dotExporter - a StyledDOTExporter
+     * @param format -- an output format (png, svg, imap etc.)
+     * @param output the rendered graph
      * @throws DiagramException -- if generation fails
      */
     public void render( Graph<V, E> graph,
-                        MetaProvider<V,E> metaProvider,
+                        StyledDOTExporter<V, E> dotExporter,
                         String format,
                         OutputStream output ) throws DiagramException {
-        String dot = getDOT( graph, metaProvider );
+        dotExporter.setHighlightedVertices( highlightedVertices );
+        dotExporter.setHighlightedEdges( highlightedEdges );
+        String dot = getDOT( graph, dotExporter );
         // System.out.println( dot );
         doRender( dot, format, output );
     }
@@ -117,7 +120,8 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * @param output the rendered graph
      * @throws DiagramException if generation fails
      */
-    private void doRender( String dot, String format, OutputStream output ) throws DiagramException {
+    private void doRender( String dot, String format, 
+                           OutputStream output ) throws DiagramException {
         String command = getDotPath() + "/" + algo + " -T" + format;
         Process p = null;
         int exitValue;
@@ -127,7 +131,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             p = Runtime.getRuntime().exec( command );
             // send dot string
             OutputStream input = p.getOutputStream();
-            StringReader reader = new StringReader( dot );                                     
+            StringReader reader = new StringReader( dot );
             int c;
             while ( ( c = reader.read() ) > 0 ) {
                 input.write( c );
@@ -178,22 +182,14 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Produces a description of a graph in DOT format
      *
-     * @param graph                -- the graph to be converted to DOT format
-     * @param metaProvider         -- a provider of graph, vertex, edge attribute providers
+     * @param graph       -- the graph to be converted to DOT format
+     * @param dotExporter -- a DOT generator
      * @return a String in DOT format
      */
     public String getDOT( Graph<V, E> graph,
-                          MetaProvider<V,E> metaProvider) {
-        StyledDOTExporter<V, E> styledDotExporter = new StyledDOTExporter<V, E>(
-                metaProvider.getVertexIDProvider(),
-                metaProvider.getVertexLabelProvider(),
-                metaProvider.getEdgeLabelProvider(),
-                metaProvider.getDOTAttributeProvider(),
-                metaProvider.getURLProvider() );
-        styledDotExporter.setHighlightedVertices( highlightedVertices );
-        styledDotExporter.setHighlightedEdges( highlightedEdges );
+                          StyledDOTExporter<V, E> dotExporter ) {
         StringWriter writer = new StringWriter();
-        styledDotExporter.export( writer, graph );
+        dotExporter.export( writer, graph );
         return writer.toString();
     }
 

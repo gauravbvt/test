@@ -47,7 +47,7 @@ public class AbstractChannelsTest extends TestCase {
         // Set flow diagram
         GraphvizRenderer<Node, Flow> graphRenderer = new GraphvizRenderer<Node, Flow>();
         graphRenderer.setDotPath( "/usr/bin" );
-        graphRenderer.setAlgo( "neato" );
+        graphRenderer.setAlgo( "dot" );
         graphRenderer.setTimeout( 5000 );
         DefaultFlowDiagram flowDiagram = new DefaultFlowDiagram();
         flowDiagram.setGraphRenderer( graphRenderer );

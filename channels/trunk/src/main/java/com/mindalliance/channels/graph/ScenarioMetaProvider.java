@@ -26,6 +26,18 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private static final String COLOR_ERROR = "red3";
     /**
+      * Color for subgraph contour
+      */
+     private static final String SUBGRAPH_COLOR = "lightsteelblue1";
+    /**
+     * Font for subgraph labels
+     */
+    private static final String SUBGRAPH_FONT = "Helvetica-Bold";
+    /**
+     * Font size for subgraph labels
+     */
+    private static final String SUBGRAPH_FONT_SIZE = "10";
+    /**
      * Font for node labels
      */
     private static final String NODE_FONT = "Helvetica";
@@ -69,6 +81,14 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         this.urlFormat = urlFormat;
         this.imageDirectory = imageDirectory;
         this.analyst = analyst;
+    }
+
+    /**
+     * Get context provisioned from
+     * @return an object that knows of the vertices and edges
+     */
+    public Object getContext() {
+        return scenario;
     }
 
     public URLProvider<Node, Flow> getURLProvider() {
@@ -157,9 +177,23 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "overlap", "false" ) );
+            // list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );
             // list.add( new DOTAttribute( "sep", ".1" ) );
+            return list;
+        }
+
+        /**
+         * Gets semi-colon-separated style declarations for subgraphs
+         *
+         * @return the style declarations
+         */
+        public List<DOTAttribute> getSubgraphAttributes() {
+            List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "fontsize", SUBGRAPH_FONT_SIZE ) );
+            list.add( new DOTAttribute( "fontname", SUBGRAPH_FONT ) );
+            list.add( new DOTAttribute( "color", SUBGRAPH_COLOR ) );
+            list.add( new DOTAttribute( "style", "filled" ) );
             return list;
         }
 

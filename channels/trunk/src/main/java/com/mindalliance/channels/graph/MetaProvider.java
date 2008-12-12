@@ -17,6 +17,12 @@ import org.jgrapht.ext.VertexNameProvider;
 public interface MetaProvider<V,E> {
 
     /**
+     * Get context provisioned from
+     * @return an object that knows of the vertices and edges
+     */
+    Object getContext();
+
+    /**
      * Gets a URLProvider
      * @return a URLProvider
      */

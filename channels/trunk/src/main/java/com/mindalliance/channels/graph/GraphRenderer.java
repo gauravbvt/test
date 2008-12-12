@@ -38,11 +38,11 @@ public interface GraphRenderer<V, E> {
      * @param graph                -- a Graph
      * @param format               -- an output format (png, svg, imap etc.)
      * @param output               -- the rendered graph
-     * @param metaProvider         -- a provider of graph, vertex, edge attribute providers
+     * @param dotExporter         -- a DOT generator
      * @throws DiagramException -- if generation fails
      */
     void render( Graph<V, E> graph,
-                 MetaProvider<V,E> metaProvider,
+                 StyledDOTExporter<V,E> dotExporter,
                  String format,
                  OutputStream output ) throws DiagramException;
 

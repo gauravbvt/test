@@ -111,8 +111,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
 
     private void render( Graph<Node, Flow> graph, String outputFormat,
                          Scenario scenario, ScenarioAnalyst analyst, OutputStream output ) throws DiagramException {
+        ScenarioMetaProvider metaProvider = new ScenarioMetaProvider( scenario, outputFormat, urlFormat, imageDirectory, analyst );
+        ScenarioDOTExporter dotExporter = new ScenarioDOTExporter(metaProvider);       
         graphRenderer.render( graph,
-                new ScenarioMetaProvider( scenario, outputFormat, urlFormat, imageDirectory, analyst ),
+                dotExporter,
                 outputFormat,
                 output
         );

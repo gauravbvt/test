@@ -35,7 +35,7 @@
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
-        <property name="algo" value="neato"/>
+        <property name="algo" value="dot"/>
         <property name="timeout" value="10000"/>
     </bean>
 

@@ -19,6 +19,13 @@ public interface DOTAttributeProvider<V, E> {
     List<DOTAttribute> getGraphAttributes();
 
     /**
+     * Gets semi-colon-separated style declarations for subgraphs
+     *
+     * @return the style declarations
+     */
+    List<DOTAttribute> getSubgraphAttributes();
+
+    /**
      * Gets a comma-separated style declarations for a vertex
      *
      * @param vertex      -- a vertex
