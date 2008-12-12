@@ -1,5 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
@@ -21,6 +23,8 @@ import org.apache.wicket.model.PropertyModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Details of an expanded flow.
@@ -48,7 +52,7 @@ public class ExpandedFlowPanel extends Panel {
                             outcome ? "outcomeTitle" : "requirementTitle" ) ) );          // NON-NLS
 
         // TODO don't collapse everything on hide
-        add( new ScenarioLink( "hide", getNode().getScenario(), getNode() ) );            // NON-NLS
+        add( new ScenarioLink( "hide", getNode() ) );                                     // NON-NLS
         add( new CheckBox( "delete",                                                      // NON-NLS
                            new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
 
@@ -84,8 +88,8 @@ public class ExpandedFlowPanel extends Panel {
             new PropertyModel<Node>( this, "other" ),                                     // NON-NLS
             new PropertyModel<List<? extends Node>>( this, "otherNodes" ) );              // NON-NLS
 
-        final ScenarioLink details = new ScenarioLink(
-                "other-details", getNode().getScenario(), getOther() );                   // NON-NLS
+        final Node otherNode = getOther();
+        final ScenarioLink details = new ScenarioLink( "other-details", otherNode );      // NON-NLS
         details.add(
             new Label( "type",                                                            // NON-NLS
                        new Model<String>( isOutcome() ? "Target" : "Source" ) ) );
@@ -128,8 +132,10 @@ public class ExpandedFlowPanel extends Panel {
      * @return the other side of this flow.
      */
     public Node getOther() {
-        return isOutcome() ? getFlow().getTarget()
-                           : getFlow().getSource();
+        final Flow f = getFlow();
+        return f.isInternal() ? isOutcome() ? f.getTarget()
+                                            : f.getSource()
+                              : ( (ExternalFlow) f ).getConnector();
     }
 
     /**
@@ -137,8 +143,8 @@ public class ExpandedFlowPanel extends Panel {
      * @param other the new source or target
      */
     public void setOther( Node other ) {
-        final Scenario s = other.getScenario();
         final Flow f = getFlow();
+        final Scenario s = f.getSource().getScenario();
         if ( isOutcome() ) {
             final Node source = f.getSource();
             f.disconnect();
@@ -158,8 +164,9 @@ public class ExpandedFlowPanel extends Panel {
         final Node node = getNode();
         final Node other = getOther();
         final Scenario scenario = node.getScenario();
-        final List<Node> result = new ArrayList<Node>( scenario.getNodeCount() );
+        final Set<Node> result = new TreeSet<Node>();
 
+        // Add other parts of this scenario
         final Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             final Node n = nodes.next();
@@ -167,7 +174,18 @@ public class ExpandedFlowPanel extends Panel {
                 result.add( n );
         }
 
-        return result;
+        // Add inputs/outputs of other scenarios
+        final Iterator<Scenario> scenarios = scenario.getDao().scenarios();
+        while ( scenarios.hasNext() ) {
+            final Scenario s = scenarios.next();
+            if ( !scenario.equals( s ) ) {
+                final Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
+                while ( c.hasNext() )
+                    result.add( c.next() );
+            }
+        }
+
+        return new ArrayList<Node>( result );
     }
 
     public boolean isMarkedForDeletion() {

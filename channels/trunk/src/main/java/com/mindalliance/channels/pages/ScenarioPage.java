@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -14,12 +14,13 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.FlowListPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import com.mindalliance.channels.pages.components.ScenarioEditPanel;
+import com.mindalliance.channels.pages.components.ScenarioLink;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -180,11 +181,7 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Node n ) {
-        final long sid = n.getScenario().getId();
-        final long nid = n.getId();
-        setResponsePage(
-                new RedirectPage(
-                        MessageFormat.format( "?scenario={0}&node={1}", sid, nid ) ) );   // NON-NLS
+        setResponsePage( new RedirectPage( ScenarioLink.linkFor( n ) ) );
     }
 
     private void redirectHere() {
@@ -314,7 +311,7 @@ public final class ScenarioPage extends WebPage {
         private ScenarioForm( String id, Scenario scenario, Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
-            addNodeTitle( node );
+            add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
                                        new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
@@ -333,22 +330,6 @@ public final class ScenarioPage extends WebPage {
             add( reqs );
             outcomes = new FlowListPanel( "outcomes", node, true, expansions );           // NON-NLS
             add( outcomes );
-        }
-
-        private void addNodeTitle( Node node ) {
-            final Label title =
-                new Label( "node-title", new PropertyModel<String>( node, "title" ) );    // NON-NLS
-
-            // Add style mods from scenario analyst.
-            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-            final String issue = analyst.getIssuesSummary( node );
-            if ( !issue.isEmpty() ) {
-                title.add( new AttributeModifier(
-                        "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
-                title.add( new AttributeModifier(
-                        "title", true, new Model<String>( issue ) ) );                    // NON-NLS
-            }
-            add( title );
         }
 
         //------------------------------
@@ -447,13 +428,22 @@ public final class ScenarioPage extends WebPage {
             while ( iterator.hasNext() )
                 scenarios.add( iterator.next() );
 
-            return new DropDownChoice<Scenario>(
+            final DropDownChoice<Scenario> dropDown = new DropDownChoice<Scenario>(
                     id, new PropertyModel<Scenario>( this, "target" ), scenarios ) {      // NON-NLS
+
+                @Override
+                protected boolean wantOnSelectionChangedNotifications() {
+                    return true;
+                }
+
                 @Override
                 protected void onSelectionChanged( Scenario newSelection ) {
-                    setTarget( newSelection );
+                    redirectTo( newSelection );
                 }
             };
+            dropDown.setOutputMarkupId( true );
+
+            return dropDown;
         }
 
         //------------------------------

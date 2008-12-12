@@ -3,6 +3,7 @@ package com.mindalliance.channels;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.text.MessageFormat;
 
 /**
  * A connector to unspecified node(s) outside of the scenario.
@@ -24,7 +25,14 @@ public class Connector extends Node {
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Connector";
+        final Iterator<Flow> outs = outcomes();
+        final boolean isInput = outs.hasNext();
+        final Flow inner = isInput ? outs.next() : requirements().next();
+        final Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
+        return MessageFormat.format( isInput ? "{0} to {1} (in {2})" : "{0} from {1} (in {2})",
+                                     inner.getName(),
+                                     part.getName(),
+                                     part.getScenario() );
     }
 
     private Set<ExternalFlow> getExternalFlows() {

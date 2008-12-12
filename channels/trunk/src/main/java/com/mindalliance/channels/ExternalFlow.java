@@ -118,9 +118,15 @@ public class ExternalFlow extends Flow {
     /** {@inheritDoc} */
     @Override
     public void setName( String name ) {
-        final Flow flow = isInput() ? getConnector().requirements().next()
-                                    : getConnector().outcomes().next();
-        flow.setName( name );
+        if ( getConnector() == null )
+            super.setName( name );
+        else
+            getConnectorFlow().setName( name );
+    }
+
+    private Flow getConnectorFlow() {
+        return isInput() ? getConnector().requirements().next()
+                         : getConnector().outcomes().next();
     }
 
     /**
@@ -128,9 +134,7 @@ public class ExternalFlow extends Flow {
      */
     @Override
     public String getName() {
-        final Flow flow = isInput() ? getConnector().requirements().next()
-                                    : getConnector().outcomes().next();
-        return  flow.getName();
+        return getConnector() == null ? super.getName() : getConnectorFlow().getName();
     }
 
     public boolean isInput() {
