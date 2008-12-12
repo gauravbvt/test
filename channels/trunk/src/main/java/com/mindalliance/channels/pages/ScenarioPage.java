@@ -408,7 +408,7 @@ public final class ScenarioPage extends WebPage {
 
             // Add style mods from scenario analyst.
             final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-            final String issue = analyst.getIssuesSummary( scenario );
+            final String issue = analyst.getIssuesSummary( scenario, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
             if ( !issue.isEmpty() ) {
                 header.add( new AttributeModifier(
                         "class", true, new Model<String>( "error" ) ) );                  // NON-NLS

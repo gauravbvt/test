@@ -238,9 +238,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             }
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
-            if ( analyst.hasIssues( vertex ) ) {
+            if ( analyst.hasIssues( vertex, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( vertex ) ) );
+                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( vertex,
+                        ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
             }
             return list;
         }
@@ -260,10 +261,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
-            if ( analyst.hasIssues( edge ) ) {
+            if ( analyst.hasIssues( edge, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( edge ) ) );
+                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( edge,
+                        ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
             }
             return list;
         }

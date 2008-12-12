@@ -14,13 +14,16 @@ import java.util.Iterator;
  */
 public interface ScenarioAnalyst {
 
+    public static final boolean INCLUDE_PROPERTY_SPECIFIC = true;
+
     /**
      * Use all applicable issue detectors to find issues about a model object
      *
      * @param modelObject -- the model object being analyzed
+     * @param all -- all issues or only those that are not specific to a property
      * @return an iterator on issues detected
      */
-    Iterator<Issue> findIssues( ModelObject modelObject );
+    Iterator<Issue> findIssues( ModelObject modelObject, boolean all );
 
     /**
      * Use all applicable issue detectors to find issues about a model object's property
@@ -35,9 +38,10 @@ public interface ScenarioAnalyst {
      * Tests whether a model object has issues
      *
      * @param modelObject -- the model object being analyzed
+     * @param all -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
-    boolean hasIssues( ModelObject modelObject );
+    boolean hasIssues( ModelObject modelObject, boolean all );
 
     /**
      * Tests whether a specifi property of a model object has issues
@@ -52,9 +56,10 @@ public interface ScenarioAnalyst {
      * Produces an aggregate description of issues detected about a model object
      *
      * @param modelObject -- the model object being analyzed
+     * @param all -- all issues or only those that are not specific to a property
      * @return an aggregate description of issues or an empty string if none
      */
-    String getIssuesSummary( ModelObject modelObject );
+    String getIssuesSummary( ModelObject modelObject, boolean all );
 
     /**
      * Produces an aggregate description of issues detected about a specific property

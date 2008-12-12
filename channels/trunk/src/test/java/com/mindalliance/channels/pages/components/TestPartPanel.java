@@ -51,7 +51,8 @@ public class TestPartPanel extends TestCase {
         project.setFlowDiagram( fd );
 
         ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
-        expect( sa.getIssuesSummary( (ModelObject) anyObject() ) ).andReturn( "" ).anyTimes();
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(),
+                ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC) ).andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( sa );
@@ -238,7 +239,9 @@ public class TestPartPanel extends TestCase {
         assertSame( s1, panel.getTask() );
     }
 
-    /** Test all fields in the form using page tester. */
+    /**
+     * Test all fields in the form using page tester.
+     */
     public void testForm() throws IOException {
         tester.startPage( new ScenarioPage( scenario, part ) );
         tester.assertRenderedPage( ScenarioPage.class );

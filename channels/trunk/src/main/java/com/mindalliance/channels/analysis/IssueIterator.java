@@ -24,6 +24,10 @@ public class IssueIterator implements Iterator<Issue> {
      */
     private String property;
     /**
+     * Whether all issues are sought or only those that are *not* specific to a property
+     */
+    private boolean all;
+    /**
      * An iterator on the issue detectors
      */
     private Iterator<IssueDetector> detectors;
@@ -38,8 +42,10 @@ public class IssueIterator implements Iterator<Issue> {
         this.property = property;
     }
 
-    public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject ) {
-        this( detectors, modelObject, null );
+    public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject, boolean all ) {
+        this.detectors = detectors.iterator();
+        this.modelObject = modelObject;
+        this.all = all;
     }
 
     /**
@@ -105,7 +111,12 @@ public class IssueIterator implements Iterator<Issue> {
         if ( property != null ) {
             return detector.appliesTo( modelObject, property );
         } else {
-            return detector.appliesTo( modelObject );
+            if ( all ) {
+                return detector.appliesTo( modelObject );
+            } else {
+                // applies to the modelObject but is not specific to one of its properties
+                return detector.appliesTo( modelObject ) && ( detector.getTestedProperty() == null );
+            }
         }
     }
 }

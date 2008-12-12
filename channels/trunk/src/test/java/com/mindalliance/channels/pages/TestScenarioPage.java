@@ -52,7 +52,8 @@ public class TestScenarioPage extends TestCase {
         project.setFlowDiagram( fd );
 
         final ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
-        expect( sa.getIssuesSummary( (ModelObject) anyObject() ) ).andReturn( "" ).anyTimes();
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(),
+                ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ).andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( sa );

@@ -31,10 +31,11 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * Use all applicable issue detectors to find issues about a model object
      *
      * @param modelObject -- the model object being analyzed
+     * @param all -- all issues or only those that are not specific to a property
      * @return an iterator of issues
      */
-    public Iterator<Issue> findIssues( ModelObject modelObject ) {
-        return new IssueIterator( issueDetectors, modelObject );
+    public Iterator<Issue> findIssues( ModelObject modelObject, boolean all ) {
+        return new IssueIterator( issueDetectors, modelObject, all );
     }
 
     /**
@@ -52,10 +53,11 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * Tests whether a model object has issues
      *
      * @param modelObject -- the model object being analyzed
+     * @param all -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
-    public boolean hasIssues( ModelObject modelObject ) {
-        return findIssues( modelObject ).hasNext();
+    public boolean hasIssues( ModelObject modelObject, boolean all ) {
+        return findIssues( modelObject, all ).hasNext();
     }
 
     /**
@@ -66,17 +68,18 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
      * @return whether a specifi property of a model object has issues
      */
     public boolean hasIssues( ModelObject modelObject, String property ) {
-        return findIssues( modelObject ).hasNext();
+        return findIssues( modelObject, property ).hasNext();
     }
 
     /**
      * Produces an aggregate description of issues detected about a model object
      *
      * @param modelObject -- the model object being analyzed
+     * @param all -- all issues or only those that are not specific to a property
      * @return an aggregate description of issues or an empty string if none
      */
-    public String getIssuesSummary( ModelObject modelObject ) {
-        Iterator<Issue> issues = findIssues( modelObject );
+    public String getIssuesSummary( ModelObject modelObject, boolean all ) {
+        Iterator<Issue> issues = findIssues( modelObject, all );
         return summarize( issues );
     }
 

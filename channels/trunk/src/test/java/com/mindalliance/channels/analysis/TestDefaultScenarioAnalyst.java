@@ -57,7 +57,8 @@ public class TestDefaultScenarioAnalyst extends AbstractChannelsTest {
     }
 
     private void collectIssues( ModelObject modelObject, List<Issue> collector ) {
-        Iterator<Issue> issues = analyst.findIssues( modelObject );
+        Iterator<Issue> issues = analyst.findIssues( modelObject,
+                ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
         while ( issues.hasNext() ) {
             Issue issue = issues.next();
             System.out.println( issue );
@@ -90,7 +91,8 @@ public class TestDefaultScenarioAnalyst extends AbstractChannelsTest {
     }
 
     private void processSummary( ModelObject modelObject ) {
-        String summary = analyst.getIssuesSummary( modelObject );
+        String summary = analyst.getIssuesSummary( modelObject,
+                ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
         System.out.println();
         System.out.println( modelObject.getClass().getSimpleName() +
                 " " + modelObject.getName() + " " + modelObject.getId() );

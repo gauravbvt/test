@@ -23,7 +23,7 @@ public class CollapsedFlowPanel extends Panel {
 
         // Add style mods from scenario analyst.
         final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-        final String issue = analyst.getIssuesSummary( flow );
+        final String issue = analyst.getIssuesSummary( flow, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !issue.isEmpty() ) {
             label.add(
                 new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
