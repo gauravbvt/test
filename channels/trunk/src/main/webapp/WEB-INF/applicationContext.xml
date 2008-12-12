@@ -30,6 +30,7 @@
     <bean id="flowDiagram" class="com.mindalliance.channels.graph.DefaultFlowDiagram">
         <property name="graphRenderer" ref="graphRenderer"/>
         <property name="urlFormat" value="?scenario={0}&amp;node={1}"/>
+        <property name="scenarioUrlFormat" value="?scenario={0}"/>
         <property name="imageDirectory" value="src/site/resources/images"/>
     </bean>
 

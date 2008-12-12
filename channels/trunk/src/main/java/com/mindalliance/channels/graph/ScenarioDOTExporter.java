@@ -99,10 +99,16 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
         for ( Scenario scenario : scenarioNodes.keySet() ) {
             if ( scenario != metaProvider.getContext() ) {
                 out.println( "subgraph cluster_" + scenario.getName().replaceAll( "\\s+", "_" ) + " {" );
-                out.print( asGraphAttributes( new DOTAttribute( "label", scenario.getName() ).asList() ) );
+                List<DOTAttribute> attributes = new DOTAttribute( "label", scenario.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    out.print( asGraphAttributes( metaProvider.getDOTAttributeProvider().getSubgraphAttributes() ) );
+                    attributes.addAll( metaProvider.getDOTAttributeProvider().getSubgraphAttributes() );
                 }
+                if ( metaProvider.getURLProvider() != null ) {
+                    String url = metaProvider.getURLProvider().
+                            getGraphURL( scenarioNodes.get( scenario ).iterator().next() );
+                    if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
+                }
+                out.print( asGraphAttributes( attributes ) );
                 out.println();
                 printoutNodes( out, scenarioNodes.get( scenario ) );
                 out.println( "}" );

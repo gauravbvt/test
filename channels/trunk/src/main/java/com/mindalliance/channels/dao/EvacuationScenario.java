@@ -17,6 +17,7 @@ public class EvacuationScenario extends Scenario {
 
         final Part p = getDefaultPart();
         p.setActor( new Actor( "Sam Adams" ) );
+        p.setTask( "supervising evacuation" );
 
         final Flow goAhead = p.createRequirement();
         goAhead.setName( "go-ahead" );

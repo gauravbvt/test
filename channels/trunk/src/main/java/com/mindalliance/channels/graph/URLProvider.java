@@ -11,6 +11,13 @@ package com.mindalliance.channels.graph;
  * @param <E> an edge class
  */
 public interface URLProvider<V, E> {
+
+    /**
+     * The URL for the graph that contains the vertex
+     * @param vertex -- a vertex
+     * @return a URL string
+     */
+    String getGraphURL( V vertex ); 
     /**
      * The vertex's URL. Returns null if none.
      * @param vertex -- a vertex

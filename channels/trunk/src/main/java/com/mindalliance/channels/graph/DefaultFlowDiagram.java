@@ -28,6 +28,10 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
      */
     private String urlFormat = "?scenario={0}&node={1}";
     /**
+     * 0: scenario id
+     */
+    private String scenarioUrlFormat = "?scenario={0}";
+    /**
      * Path to image directory
      */
     private String imageDirectory;
@@ -48,6 +52,14 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
 
     public void setUrlFormat( String urlFormat ) {
         this.urlFormat = urlFormat;
+    }
+
+    public String getScenarioUrlFormat() {
+        return scenarioUrlFormat;
+    }
+
+    public void setScenarioUrlFormat( String scenarioUrlFormat ) {
+        this.scenarioUrlFormat = scenarioUrlFormat;
     }
 
     public String getImageDirectory() {
@@ -111,7 +123,7 @@ public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
 
     private void render( Graph<Node, Flow> graph, String outputFormat,
                          Scenario scenario, ScenarioAnalyst analyst, OutputStream output ) throws DiagramException {
-        ScenarioMetaProvider metaProvider = new ScenarioMetaProvider( scenario, outputFormat, urlFormat, imageDirectory, analyst );
+        ScenarioMetaProvider metaProvider = new ScenarioMetaProvider( scenario, outputFormat, urlFormat, scenarioUrlFormat, imageDirectory, analyst );
         ScenarioDOTExporter dotExporter = new ScenarioDOTExporter(metaProvider);       
         graphRenderer.render( graph,
                 dotExporter,

@@ -62,6 +62,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private String outputFormat;
     /**
+     * Message format as URL template with {1} = scenario id
+     */
+    private String scenarioUrlFormat;
+    /**
      * Message format as URL template with {1} = scenario id and {2} = vertex id
      */
     private String urlFormat;
@@ -75,10 +79,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     private ScenarioAnalyst analyst;
 
     public ScenarioMetaProvider( Scenario scenario, String outputFormat, String urlFormat,
-                                 String imageDirectory, ScenarioAnalyst analyst ) {
+                                 String scenarioUrlFormat, String imageDirectory, ScenarioAnalyst analyst ) {
         this.scenario = scenario;
         this.outputFormat = outputFormat;
         this.urlFormat = urlFormat;
+        this.scenarioUrlFormat = urlFormat;
         this.imageDirectory = imageDirectory;
         this.analyst = analyst;
     }
@@ -94,13 +99,24 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     public URLProvider<Node, Flow> getURLProvider() {
         return new URLProvider<Node, Flow>() {
             /**
-             * The vertex's URL. Returns null if none.
+             * The URL for the graph that contains the vertex
              *
-             * @param vertex -- a vertex
+             * @param node -- a vertex
              * @return a URL string
              */
-            public String getVertexURL( Node vertex ) {
-                Object[] args = {scenario.getId(), vertex.getId()};
+            public String getGraphURL( Node node ) {
+                Object[] args = {node.getScenario().getId()};
+                return MessageFormat.format( urlFormat, args );
+            }
+
+            /**
+             * The vertex's URL. Returns null if none.
+             *
+             * @param node -- a vertex
+             * @return a URL string
+             */
+            public String getVertexURL( Node node ) {
+                Object[] args = {node.getScenario().getId(), node.getId()};
                 return MessageFormat.format( urlFormat, args );
             }
 
@@ -176,11 +192,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         }
 
         public List<DOTAttribute> getGraphAttributes() {
-            List<DOTAttribute> list = DOTAttribute.emptyList();
+            return DOTAttribute.emptyList();
             // list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );
             // list.add( new DOTAttribute( "sep", ".1" ) );
-            return list;
         }
 
         /**
