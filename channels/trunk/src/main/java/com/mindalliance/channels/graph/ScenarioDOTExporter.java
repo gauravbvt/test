@@ -73,7 +73,8 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
             out.println( "graph G {" );
         }
         if ( metaProvider.getDOTAttributeProvider() != null ) {
-            out.print( asGraphAttributes( metaProvider.getDOTAttributeProvider().getGraphAttributes() ) );
+            out.print( asGraphAttributes(
+                    metaProvider.getDOTAttributeProvider().getGraphAttributes() ) );
         }
         out.println();
         exportVertices( out, g );
@@ -98,10 +99,14 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
         }
         for ( Scenario scenario : scenarioNodes.keySet() ) {
             if ( scenario != metaProvider.getContext() ) {
-                out.println( "subgraph cluster_" + scenario.getName().replaceAll( "\\s+", "_" ) + " {" );
-                List<DOTAttribute> attributes = new DOTAttribute( "label", scenario.getName() ).asList();
+                out.println( "subgraph cluster_"
+                        + scenario.getName().replaceAll( "\\s+", "_" )
+                        + " {" );
+                List<DOTAttribute> attributes = new DOTAttribute( "label",
+                        scenario.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    attributes.addAll( metaProvider.getDOTAttributeProvider().getSubgraphAttributes() );
+                    attributes.addAll(
+                            metaProvider.getDOTAttributeProvider().getSubgraphAttributes() );
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().

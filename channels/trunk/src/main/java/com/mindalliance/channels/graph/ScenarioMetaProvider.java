@@ -26,9 +26,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private static final String COLOR_ERROR = "red3";
     /**
-      * Color for subgraph contour
-      */
-     private static final String SUBGRAPH_COLOR = "lightsteelblue1";
+     * Color for subgraph contour
+     */
+    private static final String SUBGRAPH_COLOR = "azure2";
     /**
      * Font for subgraph labels
      */
@@ -79,17 +79,19 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     private ScenarioAnalyst analyst;
 
     public ScenarioMetaProvider( Scenario scenario, String outputFormat, String urlFormat,
-                                 String scenarioUrlFormat, String imageDirectory, ScenarioAnalyst analyst ) {
+                                 String scenarioUrlFormat, String imageDirectory,
+                                 ScenarioAnalyst analyst ) {
         this.scenario = scenario;
         this.outputFormat = outputFormat;
         this.urlFormat = urlFormat;
-        this.scenarioUrlFormat = urlFormat;
+        this.scenarioUrlFormat = scenarioUrlFormat;
         this.imageDirectory = imageDirectory;
         this.analyst = analyst;
     }
 
     /**
      * Get context provisioned from
+     *
      * @return an object that knows of the vertices and edges
      */
     public Object getContext() {
@@ -106,7 +108,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
              */
             public String getGraphURL( Node node ) {
                 Object[] args = {node.getScenario().getId()};
-                return MessageFormat.format( urlFormat, args );
+                return MessageFormat.format( scenarioUrlFormat, args );
             }
 
             /**
