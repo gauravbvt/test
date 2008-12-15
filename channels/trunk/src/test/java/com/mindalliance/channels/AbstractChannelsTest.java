@@ -2,7 +2,6 @@ package com.mindalliance.channels;
 
 import junit.framework.TestCase;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DefaultGraphBuilder;
 import com.mindalliance.channels.graph.GraphvizRenderer;

@@ -14,7 +14,10 @@ import java.util.Iterator;
  */
 public interface ScenarioAnalyst {
 
-    public static final boolean INCLUDE_PROPERTY_SPECIFIC = true;
+    /**
+     * Whether to include issues that are property-specific
+     */
+    boolean INCLUDE_PROPERTY_SPECIFIC = true;
 
     /**
      * Use all applicable issue detectors to find issues about a model object

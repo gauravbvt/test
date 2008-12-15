@@ -18,8 +18,12 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
+ * Detects single points of failure in a scenario.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -27,11 +31,41 @@ import java.util.ArrayList;
  * Time: 7:45:00 PM
  */
 public class SinglePointOfFailure extends AbstractIssueDetector {
+    /**
+     * Timestamped list of cutpoints
+     */
+    static class FoundCutpoints {
+        /**
+         * List of cutpoints
+         */
+        private Set<Node> cutpoints;
+        /**
+         * Timestamp of list of cutpoints
+         */
+        private Date timestamp;
+
+        FoundCutpoints( Set<Node> cutpoints ) {
+            this.cutpoints = cutpoints;
+            timestamp = new Date();
+        }
+
+        public Set<Node> getCutpoints() {
+            return cutpoints;
+        }
+
+        public Date getTimestamp() {
+            return timestamp;
+        }
+    }
 
     /**
      * Minimum out degree of a part that is a bottleneck and thus a single point of failure.
      */
     private static final int MINIMUM_OUT_DEGREE = 2;
+    /**
+     * Cached cutpoints
+     */
+    private Map<Scenario, FoundCutpoints> cachedCutpoints = new HashMap<Scenario, FoundCutpoints>();
 
     public SinglePointOfFailure() {
     }
@@ -44,33 +78,25 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues or null of none detected
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = null;
         Part part = (Part) modelObject;
         Scenario scenario = part.getScenario();
-        GraphBuilder graphBuilder = Project.graphBuilder();
-        // TODO -- cache graphs when scenario change notification implemented
-        DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
-        BlockCutpointGraph<Node, Flow> bcg = new BlockCutpointGraph<Node, Flow>(
-                new AsUndirectedGraph<Node, Flow>( digraph ) );
-        Set<Node> cutpoints = bcg.getCutpoints();
-        Iterator<Node> nodes = cutpoints.iterator();
+        Iterator<Node> nodes = getCutpoints( scenario );
         Set<Node> actorNodes = new HashSet<Node>();
         // Keep only cutpoints (articulation vertices) that are parts with actors
         // and with a minimum number of outcomes.
         while ( nodes.hasNext() ) {
             Node node = nodes.next();
             // If the target node is one of the cutpoint nodes
-            // TODO - wasteful since cutpoint identification is repeated for each targeted node
             if ( node == part ) {
-                if ( part.getActor() != null
-                        && digraph.outDegreeOf( part ) >= MINIMUM_OUT_DEGREE ) {
+                if ( part.getActor() != null ) {
                     actorNodes.add( part );
                 }
             }
         }
         // Found single points of failure?
-        if ( actorNodes.size() == 1 ) {
+        if ( actorNodes.size() > 0 ) {
             issues = new ArrayList<Issue>();
             for ( Node node : actorNodes ) {
                 Issue issue = new Issue( Issue.SYSTEMIC, node );
@@ -83,21 +109,44 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     }
 
     /**
-     * Tests whether the detector applies to the model object
-     *
-     * @param modelObject -- the ModelObject being analyzed
-     * @return whether the detector applies
+     * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Part;
     }
 
     /**
-     * Gets the name of the specific property tested, if applicable
-     *
-     * @return the name of a property or null if test applies to some combination of properties
+     * {@inheritDoc}
      */
     public String getTestedProperty() {
         return null;
+    }
+
+    private Iterator<Node> getCutpoints( Scenario scenario ) {
+        Set<Node> cutpoints;
+        FoundCutpoints foundCutpoints = cachedCutpoints.get( scenario );
+        if ( foundCutpoints != null
+                && !foundCutpoints.getTimestamp().before( scenario.lastModified() ) )
+        {
+            cutpoints = foundCutpoints.getCutpoints();
+        } else {
+            cutpoints = detectSignificantCutpoints( scenario );
+            cachedCutpoints.put( scenario, new FoundCutpoints( cutpoints ) );
+        }
+        return cutpoints.iterator();
+    }
+
+    private Set<Node> detectSignificantCutpoints( Scenario scenario ) {
+        GraphBuilder graphBuilder = Project.graphBuilder();
+        final DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
+        BlockCutpointGraph<Node, Flow> bcg = new BlockCutpointGraph<Node, Flow>(
+                new AsUndirectedGraph<Node, Flow>( digraph ) );
+        Set<Node> cutpoints = new HashSet<Node>();
+        for ( Node node : bcg.getCutpoints() ) {
+            if ( digraph.outDegreeOf( node ) >= MINIMUM_OUT_DEGREE ) {
+                cutpoints.add( node );
+            }
+        }
+        return cutpoints;
     }
 }

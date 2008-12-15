@@ -38,7 +38,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues or null of none detected
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = null;
         Scenario scenario = (Scenario) modelObject;
         GraphBuilder graphBuilder = Project.graphBuilder();
@@ -64,7 +64,9 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                         Iterator<Flow> requirements = node.requirements();
                         while ( requirements.hasNext() ) {
                             Flow requirement = requirements.next();
-                            if ( requirement.isCritical() && cycle.contains( requirement.getSource() ) ) {
+                            if ( requirement.isCritical()
+                                    && cycle.contains( requirement.getSource() ) )
+                            {
                                 nodeHasCritical = true;
                                 criticalRequirementsInCycle.add( requirement );
                             }
@@ -108,19 +110,14 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     }
 
     /**
-     * Tests whether the detector applies to the model object
-     *
-     * @param modelObject -- the ModelObject being analyzed
-     * @return whether the detector applies
+     * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Scenario;
     }
 
     /**
-     * Gets the name of the specific property tested, if applicable
-     *
-     * @return the name of a property or null if test applies to some combination of properties
+     * {@inheritDoc}
      */
     public String getTestedProperty() {
         return null;

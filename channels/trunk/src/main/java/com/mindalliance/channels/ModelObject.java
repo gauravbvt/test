@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import java.io.Serializable;
 import java.text.Collator;
+import java.util.Date;
 
 /**
  * An object with name, id and description, comparable by its toString() values.
@@ -104,4 +105,10 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
     public String toString() {
         return name;
     }
+
+    // TODO -- Implement this
+    public Date lastModified() {
+        return new Date();
+    }
+
 }

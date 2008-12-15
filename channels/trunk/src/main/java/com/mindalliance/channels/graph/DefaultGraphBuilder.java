@@ -8,6 +8,9 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
 import java.util.Iterator;
+import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Builds the graph structure of a scenario
@@ -19,6 +22,41 @@ import java.util.Iterator;
  * Time: 3:02:40 PM
  */
 public class DefaultGraphBuilder implements GraphBuilder {
+
+    /**
+     * A timestamped graph
+     */
+    private static class BuiltGraph<V, N> {
+
+        /**
+         * When the graph was built.
+         */
+        private Date timestamp;
+        /**
+         * A cached graph
+         */
+        private Graph<V, N> graph;
+
+        BuiltGraph( Graph<V, N> graph ) {
+            this.graph = graph;
+            timestamp = new Date();
+        }
+
+        public Date getTimestamp() {
+            return timestamp;
+        }
+
+        public Graph<V, N> getGraph() {
+            return graph;
+        }
+
+    }
+
+    /**
+     * Cached directed graphs
+     */
+    private Map<Scenario, BuiltGraph<Node, Flow>> digraphs =
+            new HashMap<Scenario, BuiltGraph<Node, Flow>>();
 
     /**
      * Constructor
@@ -33,10 +71,28 @@ public class DefaultGraphBuilder implements GraphBuilder {
      * @return a DirectedGraph
      */
     public DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario ) {
-        DirectedGraph<Node, Flow> dgraph = new DefaultDirectedGraph<Node, Flow>(
-                new FlowFactory() );
-        populateGraph( dgraph, scenario );
-        return dgraph;
+        DirectedGraph<Node, Flow> digraph = getDirectedGraphFromCache( scenario );
+        if ( digraph == null ) {
+            digraph = new DefaultDirectedGraph<Node, Flow>(
+                    new FlowFactory() );
+            populateGraph( digraph, scenario );
+            cacheDirectedGraph( scenario, digraph );
+        }
+        return digraph;
+    }
+
+    private DirectedGraph<Node, Flow> getDirectedGraphFromCache( Scenario scenario ) {
+        DirectedGraph<Node, Flow> digraph = null;
+        BuiltGraph<Node, Flow> builtGraph = digraphs.get( scenario );
+        // Return cached graph if not outdated, else return null
+        if ( builtGraph != null && !builtGraph.getTimestamp().before( scenario.lastModified() ) ) {
+            digraph = (DirectedGraph<Node, Flow>) builtGraph.getGraph();
+        }
+        return digraph;
+    }
+
+    private void cacheDirectedGraph( Scenario scenario, DirectedGraph<Node, Flow> digraph ) {
+        digraphs.put( scenario, new BuiltGraph<Node, Flow>( digraph ) );
     }
 
     /**

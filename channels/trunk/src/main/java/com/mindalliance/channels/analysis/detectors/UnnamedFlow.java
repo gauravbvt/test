@@ -21,13 +21,8 @@ public class UnnamedFlow extends AbstractIssueDetector {
     public UnnamedFlow() {
     }
 
-    /**
-     * Detect an issue on a model object
-     *
-     * @param modelObject -- the ModelObject being analyzed
-     * @return a list of Issues or null of none detected
-     */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    /** {@inheritDoc} */
+    public List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = null;
         Flow flow = (Flow) modelObject;
         String name = flow.getName();
@@ -41,21 +36,12 @@ public class UnnamedFlow extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * Tests whether the detector applies to the model object
-     *
-     * @param modelObject -- the ModelObject being analyzed
-     * @return whether the detector applies
-     */
+    /** {@inheritDoc} */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /**
-     * Gets the name of the specific property tested, if applicable
-     *
-     * @return the name of a property or null if test applies to some combination of properties
-     */
+    /** {@inheritDoc} */
     public String getTestedProperty() {
         return "name";
     }
