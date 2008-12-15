@@ -50,9 +50,8 @@ public class TestPartPanel extends TestCase {
         replay( fd );
         project.setFlowDiagram( fd );
 
-        ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
-        expect( sa.getIssuesSummary( (ModelObject) anyObject(),
-                ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC) ).andReturn( "" ).anyTimes();
+        final ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( sa );

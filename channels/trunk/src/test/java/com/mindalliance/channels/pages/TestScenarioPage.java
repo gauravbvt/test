@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
@@ -52,8 +52,8 @@ public class TestScenarioPage extends TestCase {
         project.setFlowDiagram( fd );
 
         final ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
-        expect( sa.getIssuesSummary( (ModelObject) anyObject(),
-                ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ).andReturn( "" ).anyTimes();
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )
+                .andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( sa );

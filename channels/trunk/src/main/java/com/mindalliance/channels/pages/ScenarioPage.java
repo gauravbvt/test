@@ -311,7 +311,7 @@ public final class ScenarioPage extends WebPage {
         private ScenarioForm( String id, Scenario scenario, Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
-            add( new Label( "node-title", new PropertyModel<String>( node, "title" ) ) ); // NON-NLS
+            addNodeTitle( node );
             add( new TextArea<String>( "description",                                     // NON-NLS
                                        new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
@@ -330,6 +330,22 @@ public final class ScenarioPage extends WebPage {
             add( reqs );
             outcomes = new FlowListPanel( "outcomes", node, true, expansions );           // NON-NLS
             add( outcomes );
+        }
+
+        private void addNodeTitle( Node node ) {
+            final Label title =
+                new Label( "node-title", new PropertyModel<String>( node, "title" ) );    // NON-NLS
+
+            // Add style mods from scenario analyst.
+            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            final String issue = analyst.getIssuesSummary( node, false );
+            if ( !issue.isEmpty() ) {
+                title.add( new AttributeModifier(
+                        "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
+                title.add( new AttributeModifier(
+                        "title", true, new Model<String>( issue ) ) );                    // NON-NLS
+            }
+            add( title );
         }
 
         //------------------------------
