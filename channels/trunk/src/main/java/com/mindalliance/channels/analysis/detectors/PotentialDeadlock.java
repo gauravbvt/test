@@ -36,10 +36,10 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * Detect cycles where all flows are critical.
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return a list of Issues or null of none detected
+     * @return a list of Issues
      */
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = null;
+        List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         GraphBuilder graphBuilder = Project.graphBuilder();
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
@@ -77,7 +77,6 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        if ( issues == null ) issues = new ArrayList<Issue>();
                         Issue issue = new Issue( Issue.SYSTEMIC, scenario );
                         issue.setDescription( "Potential deadlock if "
                                 + getRequirementDescriptions( criticalRequirementsInCycle )

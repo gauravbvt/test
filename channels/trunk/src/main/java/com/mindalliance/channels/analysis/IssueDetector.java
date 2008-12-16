@@ -18,7 +18,7 @@ public interface IssueDetector {
      * Detect an issue on a model object
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return a list of Issues or null if none detected
+     * @return a list of Issues
      */
     List<Issue> detectIssues( ModelObject modelObject );
 

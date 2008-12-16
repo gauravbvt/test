@@ -19,13 +19,12 @@ import java.util.ArrayList;
 public class PartWithoutTask extends AbstractIssueDetector {
     /** {@inheritDoc} */
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = null;
+        List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
             Issue issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The task is missing," );
             issue.setRemediation( "Provide a task." );
-            issues = new ArrayList<Issue>();
             issues.add( issue );
         }
         return issues;

@@ -7,6 +7,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.util.SimpleCache;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.Project;
 import org.jgrapht.alg.BlockCutpointGraph;
@@ -18,9 +19,6 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Detects single points of failure in a scenario.
@@ -31,32 +29,6 @@ import java.util.HashMap;
  * Time: 7:45:00 PM
  */
 public class SinglePointOfFailure extends AbstractIssueDetector {
-    /**
-     * Timestamped list of cutpoints
-     */
-    static class FoundCutpoints {
-        /**
-         * List of cutpoints
-         */
-        private Set<Node> cutpoints;
-        /**
-         * Timestamp of list of cutpoints
-         */
-        private Date timestamp;
-
-        FoundCutpoints( Set<Node> cutpoints ) {
-            this.cutpoints = cutpoints;
-            timestamp = new Date();
-        }
-
-        public Set<Node> getCutpoints() {
-            return cutpoints;
-        }
-
-        public Date getTimestamp() {
-            return timestamp;
-        }
-    }
 
     /**
      * Minimum out degree of a part that is a bottleneck and thus a single point of failure.
@@ -65,7 +37,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     /**
      * Cached cutpoints
      */
-    private Map<Scenario, FoundCutpoints> cachedCutpoints = new HashMap<Scenario, FoundCutpoints>();
+    private SimpleCache<Scenario, Set<Node>> cachedCutpoints =
+            new SimpleCache<Scenario, Set<Node>>();
 
     public SinglePointOfFailure() {
     }
@@ -76,10 +49,10 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * disjoint subgraphs) with a large enough out degree (count of outcomes).
      *
      * @param modelObject -- the ModelObject being analyzed
-     * @return a list of Issues or null of none detected
+     * @return a list of Issues
      */
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = null;
+        List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         Scenario scenario = part.getScenario();
         Iterator<Node> nodes = getCutpoints( scenario );
@@ -96,14 +69,11 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
             }
         }
         // Found single points of failure?
-        if ( actorNodes.size() > 0 ) {
-            issues = new ArrayList<Issue>();
-            for ( Node node : actorNodes ) {
-                Issue issue = new Issue( Issue.SYSTEMIC, node );
-                issue.setDescription( "Single point of failure" );
-                issue.setRemediation( "Delegate responsibilities or add redundancy." );
-                issues.add( issue );
-            }
+        for ( Node node : actorNodes ) {
+            Issue issue = new Issue( Issue.SYSTEMIC, node );
+            issue.setDescription( "Single point of failure" );
+            issue.setRemediation( "Delegate responsibilities or add redundancy." );
+            issues.add( issue );
         }
         return issues;
     }
@@ -123,15 +93,10 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     }
 
     private Iterator<Node> getCutpoints( Scenario scenario ) {
-        Set<Node> cutpoints;
-        FoundCutpoints foundCutpoints = cachedCutpoints.get( scenario );
-        if ( foundCutpoints != null
-                && !foundCutpoints.getTimestamp().before( scenario.lastModified() ) )
-        {
-            cutpoints = foundCutpoints.getCutpoints();
-        } else {
+        Set<Node> cutpoints = cachedCutpoints.get( scenario, scenario.lastModified() );
+        if ( cutpoints == null ) {
             cutpoints = detectSignificantCutpoints( scenario );
-            cachedCutpoints.put( scenario, new FoundCutpoints( cutpoints ) );
+            cachedCutpoints.put( scenario, cutpoints );
         }
         return cutpoints.iterator();
     }

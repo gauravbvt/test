@@ -20,13 +20,12 @@ public class PartWithoutRole extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = null;
+        List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getRole() == null ) {
             Issue issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The role is missing." );
             issue.setRemediation( "Name a role." );
-            issues = new ArrayList<Issue>();
             issues.add( issue );
         }
         return issues;

@@ -23,14 +23,13 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = null;
+        List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         String channel = flow.getChannel();
         if ( channel == null || channel.trim().isEmpty() ) {
             Issue issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
             issue.setDescription( "The channel is missing." );
             issue.setRemediation( "Provide a channel." );
-            issues = new ArrayList<Issue>();
             issues.add( issue );
         }
         return issues;
