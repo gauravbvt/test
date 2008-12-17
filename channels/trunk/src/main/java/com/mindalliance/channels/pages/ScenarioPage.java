@@ -15,8 +15,6 @@ import com.mindalliance.channels.pages.components.FlowListPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -37,6 +35,8 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +64,7 @@ public final class ScenarioPage extends WebPage {
     static final String EXPAND_PARM = "expand";                                           // NON-NLS
 
     /** Class logger. */
-    private static final Log LOG = LogFactory.getLog( ScenarioPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ScenarioPage.class );
 
     /** Name property name... */
     private static final String NAME_PROPERTY = "name";                                   // NON-NLS
@@ -414,6 +414,8 @@ public final class ScenarioPage extends WebPage {
 
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
+
+            add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
         }
 
         //------------------------------

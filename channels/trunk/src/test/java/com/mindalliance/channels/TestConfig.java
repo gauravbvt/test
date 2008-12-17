@@ -3,7 +3,8 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.pages.Project;
 import junit.framework.TestCase;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.web.context.ContextLoader;
 
 /**
  * Test Spring configuration.
@@ -14,8 +15,13 @@ public class TestConfig extends TestCase {
     }
 
     public void testContext() {
-        final ApplicationContext ac = new FileSystemXmlApplicationContext( "src/main/webapp/WEB-INF/applicationContext.xml" );
-        final Project p = (Project) ac.getBean( "wicketApplication" );
+        final MockServletContext context = new MockServletContext();
+        context.addInitParameter(
+                ContextLoader.CONFIG_LOCATION_PARAM,
+                "WEB-INF/applicationContext.xml" );                                       // NON-NLS
+        final ApplicationContext ctx = new ContextLoader().initWebApplicationContext( context );
+
+        final Project p = (Project) ctx.getBean( "wicketApplication" );                   // NON-NLS
         assertNotNull( p );
     }
 }

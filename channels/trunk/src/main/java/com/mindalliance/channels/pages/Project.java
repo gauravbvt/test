@@ -1,14 +1,17 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
+import org.acegisecurity.Authentication;
+import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.userdetails.UserDetails;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
@@ -65,6 +68,21 @@ public final class Project extends WebApplication {
     @Override
     public Class<ScenarioPage> getHomePage() {
         return ScenarioPage.class;
+    }
+
+    /**
+     * @return the user name of the current user (or empty string for anonymous.
+     */
+    public static String getUserName() {
+        String result = "Anonymous";
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ( authentication != null ) {
+            final Object obj = authentication.getPrincipal();
+            result = obj instanceof UserDetails ? ( (UserDetails) obj ).getUsername()
+                                                :  obj.toString();
+        }
+
+        return result;
     }
 
     public Dao getDao() {

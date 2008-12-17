@@ -1,20 +1,20 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.protocol.http.WebResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 
@@ -24,7 +24,7 @@ import java.text.MessageFormat;
 public class FlowPage extends WebPage {
 
     /** The log. */
-    private static final Log LOG = LogFactory.getLog( ExportPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ExportPage.class );
 
     /** The scenario being graphed. */
     private Scenario scenario;

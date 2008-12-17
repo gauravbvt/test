@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
+import com.mindalliance.channels.export.Exporter;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.string.StringValueConversionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class ExportPage extends WebPage {
 
     /** The log. */
-    private static final Log LOG = LogFactory.getLog( ExportPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ExportPage.class );
 
     /** The scenario to export. */
     private Scenario scenario;

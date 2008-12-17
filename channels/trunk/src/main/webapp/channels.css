@@ -120,7 +120,7 @@ ul.menu li:before {
   }
 
 /* Attachment lists */
-ul.attach {
+ul.attach, ul.call-list {
     list-style-position: inside;
     list-style-type: square;
     padding: 0 0 0 0.3em;

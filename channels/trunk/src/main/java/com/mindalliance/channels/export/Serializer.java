@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.Scenario;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ public class Serializer implements Importer, Exporter {
             return (Scenario) new ObjectInputStream( stream ).readObject();
 
         } catch ( ClassNotFoundException e ) {
-            LogFactory.getLog( getClass() ).error( IMPORT_FAILED, e );
+            LoggerFactory.getLogger( getClass() ).error( IMPORT_FAILED, e );
             throw new IOException( IMPORT_FAILED, e );
         }
     }
