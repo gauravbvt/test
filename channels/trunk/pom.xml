@@ -73,6 +73,12 @@
             <version>0.7.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream-benchmark</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
@@ -227,17 +233,17 @@
                 <configuration>
                     <links>
                         <link>http://java.sun.com/javase/6/docs/api/</link>
-<!--                        <link>http://www.ddpoker.com/javadoc/wicket/1.4-m2/</link>
--->
+                        <!--                        <link>http://www.ddpoker.com/javadoc/wicket/1.4-m2/</link>
+                        -->
                     </links>
                 </configuration>
                 <reportSets>
-                  <reportSet>
-                    <reports>
-                      <report>javadoc</report>
-                      <!-- <report>test-javadoc</report> -->
-                    </reports>
-                  </reportSet>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                            <!-- <report>test-javadoc</report> -->
+                        </reports>
+                    </reportSet>
                 </reportSets>
             </plugin>
             <plugin>
@@ -249,8 +255,8 @@
                 </configuration>
             </plugin>
             <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>jdepend-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>

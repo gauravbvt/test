@@ -127,4 +127,10 @@ public final class Project extends WebApplication {
         Project project = (Project)WebApplication.get();
         return project.getGraphBuilder();
     }
+
+    public static Project getProject() {
+        return (Project)get();
+    }
+
+
 }

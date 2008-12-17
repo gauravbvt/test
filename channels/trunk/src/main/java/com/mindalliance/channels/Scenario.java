@@ -144,7 +144,7 @@ public class Scenario extends ModelObject {
      * Add a new node to this scenario.
      * @param node the new node
      */
-    private void addNode( Node node ) {
+    protected void addNode( Node node ) {
         getNodes().add( node );
         nodeIndex.put( node.getId(), node );
         node.setScenario( this );
