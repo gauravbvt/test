@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 
@@ -52,12 +53,15 @@ public class TestXmlStreamer extends AbstractChannelsTest {
                 exported.put(name,xml);
                 assertTrue( xml.length() > 0 );
             }
-            // remove all scenarios
+            // remove all named scenarios (create an empty one to allow removal of others)
+            dao.createScenario();
             for ( String name : scenarioNames ) {
                 Scenario scenario = dao.findScenario( name );
                 dao.removeScenario( scenario );
             }
             // Import all scenarios
+            // Import Fire in Building first
+            Collections.reverse( scenarioNames );
             for ( String name : scenarioNames ) {
                 String xml = exported.get( name );
                 ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
