@@ -8,15 +8,25 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.InternalFlow;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.collections.Predicate;
 
 /**
+ * An XStream Flow converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -25,29 +35,28 @@ import java.util.Map;
  */
 public class FlowConverter implements Converter {
 
+    public FlowConverter() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean canConvert( Class aClass ) {
         return Flow.class.isAssignableFrom( aClass );
     }
 
-    public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void marshal( Object object, HierarchicalStreamWriter writer,
+                         MarshallingContext context ) {
         Flow flow = (Flow) object;
-        String sourceId;
-        String targetId;
+        Scenario currentScenario = (Scenario) context.get( "scenario" );
         if ( flow.isInternal() ) {
-            sourceId = getId( flow.getSource() );
-            targetId = getId( flow.getTarget() );
+            writeFlow( (InternalFlow) flow, writer, currentScenario );
         } else {
-            ExternalFlow xflow = (ExternalFlow) flow;
-            if ( xflow.isInput() ) {
-                sourceId = "connector";
-                targetId = getId( xflow.getPart() );
-            } else {
-                sourceId = getId( xflow.getPart() );
-                targetId = "connector";
-            }
+            writeFlow( (ExternalFlow) flow, writer, currentScenario );
         }
-        writer.addAttribute( "source", sourceId );
-        writer.addAttribute( "target", targetId );
         writer.startNode( "name" );
         writer.setValue( flow.getName() );
         writer.endNode();
@@ -72,55 +81,254 @@ public class FlowConverter implements Converter {
         }
     }
 
+    private void writeFlow( InternalFlow flow,
+                            HierarchicalStreamWriter writer,
+                            Scenario currentScenario ) {
+        writer.startNode( "source" );
+        writeNode( flow.getSource(), writer, currentScenario );
+        writer.endNode();
+        writer.startNode( "target" );
+        writeNode( flow.getTarget(), writer, currentScenario );
+        writer.endNode();
+    }
+
+    private void writeFlow( ExternalFlow flow,
+                            HierarchicalStreamWriter writer,
+                            Scenario currentScenario ) {
+        writer.startNode( "source" );
+        writeNode( !flow.isInput()
+                ? flow.getPart()
+                : flow.getConnector(), writer, currentScenario );
+        writer.endNode();
+        writer.startNode( "target" );
+        writeNode( flow.isInput() ? flow.getPart() : flow.getConnector(), writer, currentScenario );
+        writer.endNode();
+    }
+
+    private void writeNode( Node node,
+                            HierarchicalStreamWriter writer,
+                            Scenario currentScenario ) {
+        if ( node.isPart() ) {
+            writePart( (Part) node, writer );
+        } else {
+            writeConnector( (Connector) node, writer, currentScenario );
+        }
+    }
+
+    private void writePart( Part part, HierarchicalStreamWriter writer ) {
+        writer.startNode( "part" );
+        writer.addAttribute( "id", String.valueOf( part.getId() ) );
+        writer.endNode();
+    }
+
+    private void writeConnector( Connector connector,
+                                 HierarchicalStreamWriter writer,
+                                 Scenario currentScenario ) {
+        writer.startNode( "connector" );
+        if ( connector.getScenario() != currentScenario ) {
+            // writer.addAttribute( "external", "false" );
+            writer.addAttribute( "scenario", connector.getScenario().getName() );
+            Flow innerFlow = connector.getInnerFlow();
+            writer.startNode( "flow" );
+            writer.addAttribute( "name", innerFlow.getName() );
+            writer.endNode();
+            Part part = (Part) ( connector.isInput()
+                    ? innerFlow.getTarget()
+                    : innerFlow.getSource() );
+            if ( part.getRole() != null ) {
+                writer.startNode( "part-role" );
+                writer.addAttribute( "name", part.getRole().getName() );
+                writer.endNode();
+            }
+            if ( part.getTask() != null ) {
+                writer.startNode( "part-task" );
+                writer.addAttribute( "name", part.getTask() );
+                writer.endNode();
+            }
+            if ( part.getOrganization() != null ) {
+                writer.startNode( "part-organization" );
+                writer.addAttribute( "name", part.getOrganization().getName() );
+                writer.endNode();
+            }
+        }
+        writer.endNode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         Scenario scenario = (Scenario) context.get( "scenario" );
-        String sourceId = reader.getAttribute( "source" );
-        String targetId = reader.getAttribute( "target" );
-        Flow flow = createFlow( sourceId, targetId, scenario, idMap );
+//        Flow flow = createFlow( sourceId, targetId, scenario, idMap );
+        reader.moveDown();
+        assert reader.getNodeName().equals( "source" );
+        List<Node> sources = resolveNodes( reader, scenario, idMap, true );
+        reader.moveUp();
+        reader.moveDown();
+        assert reader.getNodeName().equals( "target" );
+        // If a node is a "connector specification", multiple actual connectors might match
+        List<Node> targets = resolveNodes( reader, scenario, idMap, false );
+        reader.moveUp();
+        List<Flow> flows = makeFlows( scenario, sources, targets );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
-                flow.setDescription( reader.getValue() );
+                String description = reader.getValue();
+                for ( Flow flow : flows ) flow.setDescription( description );
             } else if ( nodeName.equals( "name" ) ) {
                 String name = reader.getValue();
-                flow.setName( name );
+                for ( Flow flow : flows ) flow.setName( name );
             } else if ( nodeName.equals( "channel" ) ) {
-                flow.setChannel( reader.getValue() );
+                String channel = reader.getValue();
+                for ( Flow flow : flows ) flow.setChannel( channel );
             } else if ( nodeName.equals( "maxDelay" ) ) {
-                flow.setMaxDelay( reader.getValue() );
+                String maxDelay = reader.getValue();
+                for ( Flow flow : flows ) flow.setMaxDelay( maxDelay );
             } else if ( nodeName.equals( "askedFor" ) ) {
-                flow.setAskedFor( reader.getValue().equals( "true" ) );
+                boolean askedFor = reader.getValue().equals( "true" );
+                for ( Flow flow : flows ) flow.setAskedFor( askedFor );
             } else if ( nodeName.equals( "critical" ) ) {
-                flow.setCritical( reader.getValue().equals( "true" ) );
+                boolean critical = reader.getValue().equals( "true" );
+                for ( Flow flow : flows ) flow.setCritical( critical );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }
-        return flow;
+        return flows;
     }
 
-    private Flow createFlow( String sourceId, String targetId, Scenario scenario, Map<String, Long> idMap ) {
-        Flow flow;
-        if ( sourceId.equals( "connector" ) ) {
-            flow = scenario.getNode( idMap.get( targetId ) ).createRequirement();
-        } else if ( targetId.equals( "connector" ) ) {
-            flow = scenario.getNode( idMap.get( sourceId ) ).createOutcome();
-        } else {
-            flow = scenario.connect( scenario.getNode( idMap.get( sourceId ) ),
-                    scenario.getNode( idMap.get( targetId ) ) );
+    private List<Flow> makeFlows( Scenario scenario, List<Node> sources, List<Node> targets ) {
+        List<Flow> flows = new ArrayList<Flow>();
+        for ( Node source : sources ) {
+            for ( Node target : targets ) {
+                flows.add( scenario.connect( source, target ) );
+            }
         }
-        return flow;
+        return flows;
     }
 
-    private String getId( ModelObject modelObject ) {
-        if ( modelObject instanceof Connector ) {
-            return "connector";
+    private List<Node> resolveNodes( HierarchicalStreamReader reader,
+                                     Scenario scenario,
+                                     Map<String, Long> idMap,
+                                     boolean isSource ) {
+        reader.moveDown();
+        List<Node> nodes = new ArrayList<Node>();
+        String nodeName = reader.getNodeName();
+        if ( reader.getNodeName().equals( "part" ) ) {
+            nodes.add( resolvePart( reader, scenario, idMap ) );
         } else {
-            return String.valueOf( modelObject.getId() );
+            assert nodeName.equals( "connector" );
+            nodes.addAll( resolveConnectors( reader, scenario, isSource ) );
         }
+        reader.moveUp();
+        return nodes;
+    }
+
+    private Part resolvePart( HierarchicalStreamReader reader,
+                              Scenario scenario,
+                              Map<String, Long> idMap ) {
+        String id = reader.getAttribute( "id" );
+        return (Part) scenario.getNode( idMap.get( id ) );
+    }
+
+    private List<Connector> resolveConnectors( HierarchicalStreamReader reader,
+                                               Scenario scenario,
+                                               boolean isSource ) {
+        // TODO - shoudn't this be about the "type" of a scenario?
+        List<Connector> connectors = new ArrayList<Connector>();
+        String externalScenarioName = reader.getAttribute( "scenario" );
+        if ( externalScenarioName == null ) {
+            connectors.add( scenario.createConnector() );
+        } else {
+            // Find an unambiguously matching external connector, else create internal connector
+            String flowName = null;
+            String roleName = null;
+            String organizationName = null;
+            String task = null;
+            while ( reader.hasMoreChildren() ) {
+                reader.moveDown();
+                String nodeName = reader.getNodeName();
+                String name = reader.getAttribute( "name" ).trim();
+                if ( nodeName.equals( "flow" ) ) {
+                    flowName = name;
+                } else if ( nodeName.equals( "part-role" ) ) {
+                    roleName = name;
+                } else if ( nodeName.equals( "part-task" ) ) {
+                    task = name;
+                } else if ( nodeName.equals( "part-organization" ) ) {
+                    organizationName = name;
+                }
+                reader.moveUp();
+            }
+            List<Connector> matchingConnectors = findMatchingConnectors( externalScenarioName,
+                    flowName, roleName, organizationName, task, isSource );
+            if ( matchingConnectors.isEmpty() ) {
+                connectors.add( scenario.createConnector() );
+            } else {
+                connectors.addAll( matchingConnectors );
+            }
+        }
+        return connectors;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Connector> findMatchingConnectors( String scenarioName,
+                                                    final String flowName,
+                                                    final String roleName,
+                                                    final String organizationName,
+                                                    final String taskName,
+                                                    final boolean isSource ) {
+        List<Connector> connectors = new ArrayList<Connector>();
+        Dao dao = Project.getProject().getDao();
+        try {
+            Scenario scenario = dao.findScenario( scenarioName );
+            Iterator<Connector> iterator =
+                    (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            Node node = (Node) obj;
+                            return node.isConnector()
+                                    && matches( (Connector) node, isSource, flowName,
+                                    roleName, organizationName, taskName );
+                        }
+                    }
+                    );
+            while ( iterator.hasNext() ) connectors.add( iterator.next() );
+        } catch ( NotFoundException e ) {
+            // TODO log this
+        }
+        return connectors;
+    }
+
+    private boolean matches( Connector connector, 
+                             boolean isSource,
+                             String flowName,
+                             String roleName,
+                             String organizationName,
+                             String task ) {
+        // we are matching the part attached to the connector,
+        // so it's input-edness is the reverse of that of the connector
+        if ( connector.isInput() == isSource ) return false;
+        Flow innerFlow = connector.getInnerFlow();
+        Part part = (Part) ( isSource ? innerFlow.getSource() : innerFlow.getTarget() );
+        if ( !innerFlow.getName().trim().equalsIgnoreCase( flowName ) ) return false;
+        if ( roleName != null ) {
+            if ( part.getRole() == null
+                    || !part.getRole().getName().trim().equalsIgnoreCase( roleName ) ) return false;
+        }
+        if ( organizationName != null ) {
+            if ( part.getOrganization() == null
+                    || !part.getOrganization().getName().trim().equalsIgnoreCase( organizationName ) )
+                return false;
+        }
+        if ( task != null ) {
+            if ( part.getTask() == null || !part.getTask().trim().equalsIgnoreCase( task ) )
+                return false;
+        }
+        return true;
     }
 
 }

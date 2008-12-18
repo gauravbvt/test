@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
+ * XStream scenario converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -25,12 +26,23 @@ import java.util.HashMap;
  */
 public class ScenarioConverter implements Converter {
 
+    public ScenarioConverter() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean canConvert( Class aClass ) {
         return Scenario.class.isAssignableFrom( aClass );
     }
 
-    public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void marshal( Object object, HierarchicalStreamWriter writer,
+                         MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
+        context.put("scenario", scenario);
         writer.addAttribute( "id", String.valueOf( scenario.getId() ) );
         writer.addAttribute( "name", scenario.getName() );
         writer.startNode( "description" );
@@ -50,11 +62,15 @@ public class ScenarioConverter implements Converter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<String,Long> idMap = new HashMap<String,Long>();
-        context.put ("idMap", idMap);
+        Map<String, Long> idMap = new HashMap<String, Long>();
+        context.put( "idMap", idMap );
         Dao dao = Project.getProject().getDao();
         Scenario scenario = dao.createScenario();
+        Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
         String oldId = reader.getAttribute( "id" );
@@ -73,6 +89,8 @@ public class ScenarioConverter implements Converter {
             }
             reader.moveUp();
         }
+        // Remove automatically created default part
+        scenario.removeNode( defaultPart );
         return scenario;
     }
 

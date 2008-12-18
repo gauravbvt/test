@@ -13,9 +13,12 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Location;
 import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Organization;
+
 import java.util.Map;
 
 /**
+ * An XStream Part converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -24,11 +27,21 @@ import java.util.Map;
  */
 public class PartConverter implements Converter {
 
+    public PartConverter() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean canConvert( Class aClass ) {
         return Part.class.isAssignableFrom( aClass );
     }
 
-    public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void marshal( Object object, HierarchicalStreamWriter writer,
+                         MarshallingContext context ) {
         Part part = (Part) object;
         writer.addAttribute( "id", String.valueOf( part.getId() ) );
         writer.addAttribute( "scenario", String.valueOf( part.getScenario().getId() ) );
@@ -47,6 +60,11 @@ public class PartConverter implements Converter {
             context.convertAnother( part.getActor() );
             writer.endNode();
         }
+        if ( part.getOrganization() != null ) {
+            writer.startNode( "organization" );
+            context.convertAnother( part.getOrganization() );
+            writer.endNode();
+        }
         if ( part.getLocation() != null ) {
             writer.startNode( "location" );
             context.convertAnother( part.getLocation() );
@@ -59,42 +77,42 @@ public class PartConverter implements Converter {
         }
     }
 
+    /** {@inheritDoc} */
+    @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Scenario scenario = (Scenario)context.get("scenario");
+        Scenario scenario = (Scenario) context.get( "scenario" );
         Part part = scenario.createPart();
-        Map<String,Long> idMap = (Map<String,Long>)context.get("idMap");
+        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         String id = reader.getAttribute( "id" );
         idMap.put( id, part.getId() );
-        while (reader.hasMoreChildren() ) {
+        while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
-            if (nodeName.equals("description")) {
-                part.setDescription(reader.getValue());
-            }
-            else if (nodeName.equals("task")) {
-                part.setTask(reader.getValue());
-            }
-            else if (nodeName.equals("role")) {
-                Role role = (Role)context.convertAnother( scenario, Role.class );
-                part.setRole(role);
-            }
-            else if (nodeName.equals("actor")) {
-                Actor actor = (Actor)context.convertAnother( scenario, Actor.class );
-                part.setActor(actor);
-            }
-            else if (nodeName.equals("location")) {
-                Location location = (Location)context.convertAnother( scenario, Location.class );
-                part.setLocation(location);
-            }
-            else if (nodeName.equals("jurisdiction")) {
-                Jurisdiction jurisdiction = (Jurisdiction)context.convertAnother( scenario, Jurisdiction.class );
-                part.setJurisdiction(jurisdiction);
-            }
-            else if (nodeName.equals("flow")) {
+            if ( nodeName.equals( "description" ) ) {
+                part.setDescription( reader.getValue() );
+            } else if ( nodeName.equals( "task" ) ) {
+                part.setTask( reader.getValue() );
+            } else if ( nodeName.equals( "role" ) ) {
+                Role role = (Role) context.convertAnother( scenario, Role.class );
+                part.setRole( role );
+            } else if ( nodeName.equals( "actor" ) ) {
+                Actor actor = (Actor) context.convertAnother( scenario, Actor.class );
+                part.setActor( actor );
+            } else if ( nodeName.equals( "organization" ) ) {
+                Organization organization = (Organization) context.convertAnother( scenario,
+                        Organization.class );
+                part.setOrganization( organization );
+            } else if ( nodeName.equals( "location" ) ) {
+                Location location = (Location) context.convertAnother( scenario, Location.class );
+                part.setLocation( location );
+            } else if ( nodeName.equals( "jurisdiction" ) ) {
+                Jurisdiction jurisdiction =
+                        (Jurisdiction) context.convertAnother( scenario, Jurisdiction.class );
+                part.setJurisdiction( jurisdiction );
+            } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );
-            }
-            else {
-                throw new ConversionException("Unknown element " + nodeName);
+            } else {
+                throw new ConversionException( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

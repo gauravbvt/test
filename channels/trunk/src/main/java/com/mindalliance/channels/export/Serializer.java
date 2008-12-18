@@ -19,7 +19,9 @@ public class Serializer implements Importer, Exporter {
     public Serializer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario importScenario( InputStream stream ) throws IOException {
         try {
             return (Scenario) new ObjectInputStream( stream ).readObject();
@@ -30,10 +32,21 @@ public class Serializer implements Importer, Exporter {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void exportScenario( Scenario scenario, OutputStream stream ) throws IOException {
         final ObjectOutputStream oos = new ObjectOutputStream( stream );
         oos.writeObject( scenario );
         oos.flush();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getMimeType() {
+        return "application/x-java-serialized-object";
+    }
+
+
 }

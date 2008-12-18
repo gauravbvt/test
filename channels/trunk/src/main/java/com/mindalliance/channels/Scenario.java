@@ -134,7 +134,7 @@ public class Scenario extends ModelObject {
      * Create and add a new connector to this scenario.
      * @return the new connector
      */
-    Connector createConnector() {
+    public Connector createConnector() {
         final Connector node = getDao().createConnector();
         addNode( node );
         return node;

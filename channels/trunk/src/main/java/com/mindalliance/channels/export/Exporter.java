@@ -19,4 +19,11 @@ public interface Exporter extends Serializable {
      * @throws IOException on errors
      */
     void exportScenario( Scenario scenario, OutputStream stream ) throws IOException;
+
+    /**
+     * The mime type of files to which scenarios are exported.
+     * @return -- a mime type
+     */
+    String getMimeType();
+
 }

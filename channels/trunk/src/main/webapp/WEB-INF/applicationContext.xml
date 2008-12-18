@@ -9,7 +9,8 @@
 
     <context:annotation-config/>
 
-    <bean id="serializer" class="com.mindalliance.channels.export.Serializer"/>
+<!--    <bean id="serializer" class="com.mindalliance.channels.export.Serializer"/> -->
+    <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer"/>
     <bean id="memoryDao" class="com.mindalliance.channels.dao.Memory"/>
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.BitBucket"/>
     <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>

@@ -17,5 +17,11 @@ public interface Importer {
      * @throws IOException on errors
      */
     Scenario importScenario( InputStream stream ) throws IOException;
+
+    /**
+     * The mime type of files from which scenarios are imported.
+     * @return -- a mime type
+     */
+    String getMimeType();
 }
 

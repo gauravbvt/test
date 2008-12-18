@@ -56,7 +56,7 @@ public class ExportPage extends WebPage {
 
     @Override
     public String getMarkupType() {
-        return "application/octet-stream";                                                // NON-NLS
+        return getExporter().getMimeType();                                                
     }
 
     /**
