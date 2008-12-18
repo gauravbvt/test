@@ -1,18 +1,20 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.export.xml.XmlStreamer;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.export.xml.XmlStreamer;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -40,37 +42,76 @@ public class TestXmlStreamer extends AbstractChannelsTest {
     }
 
     public void testExportImportScenario() {
-        Map<String,String> exported = new HashMap<String,String>();
-        // Export all scenarios
+        Map<String,String> exported0 = new HashMap<String,String>();
+        Map<String,String> exported1 = new HashMap<String,String>();
+        Map<String,String> exported2 = new HashMap<String,String>();
+        // allow removal of all named scenarios by creating an empty one
+        dao.createScenario();
+        // Export all named scenarios
         try {
-            for ( String name : scenarioNames ) {
-                ByteArrayOutputStream out;
-                Scenario scenario = dao.findScenario( name );
-                out = new ByteArrayOutputStream();
-                xmlStreamer.exportScenario( scenario, out );
-                String xml = out.toString();
-                System.out.println( xml );
-                exported.put(name,xml);
-                assertTrue( xml.length() > 0 );
-            }
-            // remove all named scenarios (create an empty one to allow removal of others)
-            dao.createScenario();
-            for ( String name : scenarioNames ) {
-                Scenario scenario = dao.findScenario( name );
-                dao.removeScenario( scenario );
-            }
-            // Import all scenarios
-            // Import Fire in Building first
+            exportAll(exported0);
+            removeAll();
+            importAll(exported0);
+            // re-export
+            exportAll(exported1);
+            // Import in reverse order
+            removeAll();
             Collections.reverse( scenarioNames );
-            for ( String name : scenarioNames ) {
-                String xml = exported.get( name );
-                ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
-                Scenario scenario = xmlStreamer.importScenario( in );
-                assertTrue(name.equals(scenario.getName()));
+            importAll(exported0);
+            // re-export
+            exportAll(exported2);
+            // Make sure all xml serializations are similar
+            for (String name : scenarioNames) {
+                // export vs export-import-export
+                compare(exported0.get(name), exported1.get(name));
+                // export vs export-reverse import-export
+                compare(exported1.get(name), exported2.get(name));
             }
+
         } catch ( Exception e ) {
             e.printStackTrace();
             fail( e.toString() );
+        }
+    }
+
+    private void compare(String xml, String otherXml) throws Exception {
+        // for now just check if same number of lines
+        assertTrue("same number of lines", countLines(xml) == countLines(otherXml));
+    }
+
+    private int countLines(String text) throws Exception {
+        int count = 0;
+        BufferedReader reader = new BufferedReader(new StringReader(text));
+        while(reader.readLine() != null) count++;
+        return count;
+    }
+
+    private void exportAll(Map<String,String> exported) throws Exception {
+        for ( String name : scenarioNames ) {
+            ByteArrayOutputStream out;
+            Scenario scenario = dao.findScenario( name );
+            out = new ByteArrayOutputStream();
+            xmlStreamer.exportScenario( scenario, out );
+            String xml = out.toString();
+            // System.out.println( xml );
+            exported.put(name,xml);
+            assertTrue( xml.length() > 0 );
+        }
+    }
+
+    private void removeAll() throws Exception {
+        for ( String name : scenarioNames ) {
+            Scenario scenario = dao.findScenario( name );
+            dao.removeScenario( scenario );
+        }
+    }
+
+    private void importAll(Map<String,String> exported) throws Exception {
+        for ( String name : scenarioNames ) {
+            String xml = exported.get( name );
+            ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
+            Scenario scenario = xmlStreamer.importScenario( in );
+            assertTrue(name.equals(scenario.getName()));
         }
     }
 }
