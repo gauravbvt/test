@@ -44,7 +44,7 @@ public class PartConverter implements Converter {
                          MarshallingContext context ) {
         Part part = (Part) object;
         writer.addAttribute( "id", String.valueOf( part.getId() ) );
-        writer.addAttribute( "scenario", String.valueOf( part.getScenario().getId() ) );
+//        writer.addAttribute( "scenario", String.valueOf( part.getScenario().getId() ) );
         if ( part.getTask() != null ) {
             writer.startNode( "task" );
             writer.setValue( part.getTask() );

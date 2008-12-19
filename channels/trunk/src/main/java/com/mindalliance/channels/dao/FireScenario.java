@@ -11,6 +11,7 @@ import com.mindalliance.channels.Scenario;
 
 /**
  * The fire in the building scenario...
+ *
  * @todo Move to test package when far enough along
  */
 public class FireScenario extends Scenario {
@@ -28,15 +29,15 @@ public class FireScenario extends Scenario {
         js1.setRole( new Role( "Fire Warden" ) );
         js1.setDescription( "Fire alarms must be investigated carefully." );
 
-        final Part js2    = createPart( joe, "monitoring evacuation" );
+        final Part js2 = createPart( joe, "monitoring evacuation" );
         final Part tenant = createPart( new Role( "Tenant" ), "noticing fire" );
-        final Part chief  = createPart( new Role( "Fire Chief" ), "supervising operations" );
+        final Part chief = createPart( new Role( "Fire Chief" ), "supervising operations" );
 
         final Actor system = new Actor( "Fire Alarm" );
         system.setSystem( true );
-        final Part alarm  = createPart( system, "ringing" );
+        final Part alarm = createPart( system, "ringing" );
 
-        final Part fd     = createPart();
+        final Part fd = createPart();
         fd.setOrganization( new Organization( "Fire Department" ) );
         fd.setTask( "responding" );
 
@@ -68,7 +69,8 @@ public class FireScenario extends Scenario {
         f4.setCritical( true );
 
         final Connector ga = evac.inputs().next();
-        connect( js1, ga );
+        /*final Flow f5 = */connect( js1, ga );
+        // f5.setCritical( true );
 
         final Connector end = evac.outputs().next();
         final Flow f6 = connect( end, js2 );

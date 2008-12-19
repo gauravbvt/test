@@ -57,7 +57,10 @@ public class ScenarioConverter implements Converter {
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {
             writer.startNode( "flow" );
-            context.convertAnother( flows.next() );
+            Flow flow = flows.next();
+            writer.addAttribute( "id", String.valueOf( flow.getId() ) );
+            writer.addAttribute( "name", flow.getName() );
+            context.convertAnother( flow );
             writer.endNode();
         }
     }

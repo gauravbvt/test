@@ -231,7 +231,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
-                    list.add( new DOTAttribute( "style", "dotted" ) );
+                    list.add( new DOTAttribute( "style", "solid" ) );
+                    list.add( new DOTAttribute( "color", "gray"));
                 } else {
                     list.add( new DOTAttribute( "shape", "none" ) );
                 }

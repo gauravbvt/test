@@ -14,6 +14,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
@@ -56,9 +57,6 @@ public class FlowConverter implements Converter {
         } else {
             writeFlow( (ExternalFlow) flow, writer, currentScenario );
         }
-        writer.startNode( "name" );
-        writer.setValue( flow.getName() );
-        writer.endNode();
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
         writer.endNode();
@@ -140,7 +138,7 @@ public class FlowConverter implements Converter {
             while ( externalFlows.hasNext() ) {
                 ExternalFlow externalFlow = externalFlows.next();
                 Part externalPart = externalFlow.getPart();
-                writer.startNode( "external-flow-part" );
+                writer.startNode( "connected-to" );
                 writer.addAttribute( "scenario", externalPart.getScenario().getName() );
                 writePartSpecification( externalPart, writer );
                 writer.endNode();
@@ -174,7 +172,7 @@ public class FlowConverter implements Converter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         Scenario scenario = (Scenario) context.get( "scenario" );
-//        Flow flow = createFlow( sourceId, targetId, scenario, idMap );
+        String flowName = reader.getAttribute( "name" );
         reader.moveDown();
         assert reader.getNodeName().equals( "source" );
         List<Node> sources = resolveNodes( reader, scenario, idMap, true );
@@ -186,14 +184,12 @@ public class FlowConverter implements Converter {
         reader.moveUp();
         List<Flow> flows = makeFlows( scenario, sources, targets );
         while ( reader.hasMoreChildren() ) {
+            for ( Flow flow : flows ) flow.setName( flowName );
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 String description = reader.getValue();
                 for ( Flow flow : flows ) flow.setDescription( description );
-            } else if ( nodeName.equals( "name" ) ) {
-                String name = reader.getValue();
-                for ( Flow flow : flows ) flow.setName( name );
             } else if ( nodeName.equals( "channel" ) ) {
                 String channel = reader.getValue();
                 for ( Flow flow : flows ) flow.setChannel( channel );
@@ -293,7 +289,7 @@ public class FlowConverter implements Converter {
         // for each external flow part
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
-            assert reader.getNodeName().equals( "external-flow-part" );
+            assert reader.getNodeName().equals( "connected-to" );
             String scenarioName = reader.getAttribute( "scenario" );
             try {
                 Scenario externalScenario = Project.getProject().getDao().
@@ -385,15 +381,15 @@ public class FlowConverter implements Converter {
                              String task ) {
         if ( roleName != null ) {
             if ( part.getRole() == null
-                    || !part.getRole().getName().trim().equalsIgnoreCase( roleName ) ) return false;
+                    || !SemMatch.same( part.getRole().getName(), roleName ) ) return false;
         }
         if ( organizationName != null ) {
             if ( part.getOrganization() == null
-                    || !part.getOrganization().getName().trim().equalsIgnoreCase( organizationName ) )
+                    || !SemMatch.same( part.getOrganization().getName(), organizationName ) )
                 return false;
         }
         if ( task != null ) {
-            if ( part.getTask() == null || !part.getTask().trim().equalsIgnoreCase( task ) )
+            if ( part.getTask() == null || !SemMatch.same( part.getTask(), task ) )
                 return false;
         }
         return true;
@@ -410,7 +406,7 @@ public class FlowConverter implements Converter {
         if ( connector.isInput() == isSource ) return false;
         Flow innerFlow = connector.getInnerFlow();
         Part part = (Part) ( isSource ? innerFlow.getSource() : innerFlow.getTarget() );
-        return innerFlow.getName().trim().equalsIgnoreCase( flowName )
+        return SemMatch.same( innerFlow.getName(), flowName )
                 && matches( part, roleName, organizationName, task );
     }
 
