@@ -133,4 +133,13 @@ public class Part extends Node {
     public boolean hasDefaultTask() {
         return task.equals( DEFAULT_TASK );
     }
+
+    /**
+     * @return true if role contains "system"
+     */
+    public boolean isSystem() {
+        final Role r = getRole();
+        return r != null
+            && r.getName().toLowerCase().contains( "system" );
+    }
 }

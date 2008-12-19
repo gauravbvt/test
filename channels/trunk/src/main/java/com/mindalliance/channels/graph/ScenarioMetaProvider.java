@@ -286,7 +286,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             numLines = Math.min( lines.length, 2 );
             Part part = (Part) node;
             if ( part.getActor() != null ) {
-                iconName = part.getActor().isSystem() ? "system" : "person";
+                iconName = part.isSystem() ? "system" : "person";
             } else if ( part.getRole() != null ) {
                 iconName = "role";
             } else if ( part.getOrganization() != null ) {

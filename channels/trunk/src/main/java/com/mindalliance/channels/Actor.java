@@ -1,14 +1,9 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.ModelObject;
-
 /**
  * Someone or something playing a part in a scenario.
  */
 public class Actor extends ModelObject {
-
-    /** True if actor is a system. A person otherwise. */
-    private boolean system;
 
     public Actor() {
     }
@@ -20,13 +15,4 @@ public class Actor extends ModelObject {
     public Actor( String name ) {
         super( name );
     }
-
-    public boolean isSystem() {
-        return system;
-    }
-
-    public void setSystem( boolean system ) {
-        this.system = system;
-    }
-
 }

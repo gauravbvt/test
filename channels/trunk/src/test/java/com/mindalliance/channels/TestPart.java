@@ -93,8 +93,6 @@ public class TestPart extends TestCase {
 
         final String s2 = "HAL 9000";
         final Actor actor = new Actor( s2 );
-        actor.setSystem( true );
-        assertTrue( actor.isSystem() );
         part.setActor( actor );
         assertSame( s2, part.getName() );
 
@@ -103,8 +101,17 @@ public class TestPart extends TestCase {
 
         part.setRole( null );
         assertSame( s, part.getName() );
-
+        
         part.setOrganization( null );
         assertSame( Part.DEFAULT_ACTOR, part.getName() );
+    }
+
+    public void testIsSystem() {
+        assertFalse( part.isSystem() );
+        part.setRole( new Role( "System" ) );
+        assertTrue( part.isSystem() );
+
+        part.setRole( new Role( "Computer system" ) );
+        assertTrue( part.isSystem() );
     }
 }

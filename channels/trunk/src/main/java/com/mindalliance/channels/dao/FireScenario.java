@@ -34,8 +34,8 @@ public class FireScenario extends Scenario {
         final Part chief = createPart( new Role( "Fire Chief" ), "supervising operations" );
 
         final Actor system = new Actor( "Fire Alarm" );
-        system.setSystem( true );
         final Part alarm = createPart( system, "ringing" );
+        alarm.setRole( new Role( "System" ) );
 
         final Part fd = createPart();
         fd.setOrganization( new Organization( "Fire Department" ) );
