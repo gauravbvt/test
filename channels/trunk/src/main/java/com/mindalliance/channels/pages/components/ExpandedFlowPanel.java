@@ -4,6 +4,7 @@ import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
@@ -38,7 +39,7 @@ public abstract class ExpandedFlowPanel extends Panel {
     /** True if this flow is marked for deletion. */
     private boolean markedForDeletion;
 
-    public ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
+    protected ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
         super( id );
         setFlow( flow );
         setOutcome( outcome );
@@ -59,11 +60,11 @@ public abstract class ExpandedFlowPanel extends Panel {
 
         add( new CheckBox( "critical" ) );                                                // NON-NLS
         final RadioGroup<Boolean> rg = new RadioGroup<Boolean>( "askedFor" );             // NON-NLS
-        rg.add( new Radio<Boolean>( "askedForTrue", new Model<Boolean>( true ) ) );       // NON-NLS                                // NON-NLS
+        rg.add( new Radio<Boolean>( "askedForTrue", new Model<Boolean>( true ) ) );       // NON-NLS
         rg.add( new Radio<Boolean>( "askedForFalse", new Model<Boolean>( false ) ) );     // NON-NLS
         add( rg );
 
-        addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );         // NON-NLS
+        addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
     }
 
@@ -77,18 +78,27 @@ public abstract class ExpandedFlowPanel extends Panel {
         final FormComponentLabel result = new FormComponentLabel( id, component );
         add( result );
         add( component );
+        addIssues( component, getFlow(), component.getId() );
+        return result;
+    }
 
-        // Add style mods from scenario analyst.
+    /**
+     * Add issues annotations to a component.
+     * @param component the component
+     * @param object the object of the issues
+     * @param property the property of concern. If null, get issues of object
+     */
+    protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
+
         final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-        final String issue = analyst.getIssuesSummary( getFlow(), component.getId() );
+        final String issue = property == null ? analyst.getIssuesSummary( object, false )
+                                              : analyst.getIssuesSummary( object, property );
         if ( !issue.isEmpty() ) {
             component.add(
                 new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
             component.add(
                 new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
         }
-
-        return result;
     }
 
     /**
@@ -114,7 +124,8 @@ public abstract class ExpandedFlowPanel extends Panel {
             } );
 
         final Node otherNode = getOther();
-        final ScenarioLink details = new ScenarioLink( "other-details", otherNode );      // NON-NLS
+        final ScenarioLink details =
+                new ScenarioLink( "other-details", otherNode, getFlow() );                // NON-NLS
         details.add(
             new Label( "type",                                                            // NON-NLS
                        new Model<String>( isOutcome() ? "Target" : "Source" ) ) );

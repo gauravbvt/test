@@ -5,7 +5,6 @@ import java.util.Iterator;
 /**
  * A flow from one Part in this scenario to/from a connector in another scenario.
  * Direction of flow matches other connector's only flow.
- * @TODO Figure out propagation of channel property
  */
 public class ExternalFlow extends Flow {
 
@@ -153,7 +152,8 @@ public class ExternalFlow extends Flow {
 
     /**
      * Delegate to connector flow.
-     * @param askedFor true is information is asked for
+     * @param askedFor the new value
+     * @see Flow#setAskedFor(boolean)
      */
     @Override
     public void setAskedFor( boolean askedFor ) {
@@ -161,5 +161,47 @@ public class ExternalFlow extends Flow {
             super.setAskedFor( askedFor );
         else
             getConnectorFlow().setAskedFor( askedFor );
+    }
+
+    @Override
+    public String getChannel() {
+        final Connector c = getConnector();
+        final boolean connectorBased = c != null
+                                       && c.isInput()
+                                       && !getConnectorFlow().isAskedFor();
+        return connectorBased ? getConnectorFlow().getChannel() : super.getChannel();
+    }
+
+    @Override
+    public void setChannel( String channel ) {
+        final Connector c = getConnector();
+        final boolean connectorBased = c != null
+                                       && c.isInput()
+                                       && !getConnectorFlow().isAskedFor();
+        if ( connectorBased )
+            getConnectorFlow().setChannel( channel );
+        else
+            super.setChannel( channel );
+    }
+
+    @Override
+    public void setCritical( boolean critical ) {
+        final Connector c = getConnector();
+        final boolean connectorBased = c != null
+                                       && c.isInput()
+                                       && !getConnectorFlow().isAskedFor();
+        if ( connectorBased )
+            getConnectorFlow().setCritical( critical );
+        else
+            super.setCritical( critical );
+    }
+
+    @Override
+    public boolean isCritical() {
+        final Connector c = getConnector();
+        final boolean connectorBased = c != null
+                                       && c.isInput()
+                                       && !getConnectorFlow().isAskedFor();
+        return connectorBased ? getConnectorFlow().isCritical() : super.isCritical();
     }
 }

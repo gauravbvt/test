@@ -27,6 +27,10 @@ public abstract class Flow extends ModelObject {
         return askedFor;
     }
 
+    /**
+     * Set if this flow is notified or asked for.
+     * @param askedFor true is information is asked for
+     */
     public void setAskedFor( boolean askedFor ) {
         this.askedFor = askedFor;
     }

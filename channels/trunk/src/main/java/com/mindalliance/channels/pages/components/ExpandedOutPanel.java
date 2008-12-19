@@ -4,15 +4,11 @@ import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.form.TextField;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,20 +44,12 @@ public class ExpandedOutPanel extends ExpandedFlowPanel {
         channelRow.add( label );
         channelRow.add( textField );
 
-        // Add style mods from scenario analyst.
-        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-        final String issue = analyst.getIssuesSummary( getFlow(), textField.getId() );
-        if ( !issue.isEmpty() ) {
-            textField.add(
-                new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
-            textField.add(
-                new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
-        }
-
+        addIssues( textField, getFlow(), textField.getId() );
         label.add( new Label( "channel-title",                                            // NON-NLS
                               flow.isAskedFor() ? "Source channel:" : "Target channel:" ) );
 
-        //channelRow.setVisible( !getOther().isConnector() || flow.isAskedFor() );
+        channelRow.setVisible(
+                !getOther().isConnector() || flow.isAskedFor() || !flow.isInternal() );
         add( channelRow );
     }
 

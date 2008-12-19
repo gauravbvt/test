@@ -22,7 +22,7 @@ input[type='checkbox'] {
 input.error {
     background-color: bisque;
 }
-span.error {
+span.error, li.error {
     color: red;
 }
 
