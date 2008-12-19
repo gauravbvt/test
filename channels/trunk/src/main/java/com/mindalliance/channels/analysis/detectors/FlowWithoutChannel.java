@@ -21,26 +21,34 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     public FlowWithoutChannel() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         String channel = flow.getChannel();
         if ( channel == null || channel.trim().isEmpty() ) {
-            Issue issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
-            issue.setDescription( "The channel is missing." );
-            issue.setRemediation( "Provide a channel." );
-            issues.add( issue );
+            if ( !( flow.getSource().isConnector() && !flow.isAskedFor() ) ) {
+                Issue issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
+                issue.setDescription( "The channel is missing." );
+                issue.setRemediation( "Provide a channel." );
+                issues.add( issue );
+            }
         }
         return issues;
     }
 
-    /** {@inheritDoc} */
-     public boolean appliesTo( ModelObject modelObject ) {
+    /**
+     * {@inheritDoc}
+     */
+    public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getTestedProperty() {
         return "channel";
     }
