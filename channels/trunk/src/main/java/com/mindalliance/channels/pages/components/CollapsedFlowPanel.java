@@ -1,29 +1,44 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.model.PropertyModel;
+
+import java.text.MessageFormat;
 
 /**
  * A collapsed flow.
  */
 public class CollapsedFlowPanel extends Panel {
 
-    public CollapsedFlowPanel( String id, Flow flow, boolean outcome ) {
+    public CollapsedFlowPanel( String id, final Flow flow, boolean outcome ) {
         super( id );
         final Label label = new Label( "title",                                           // NON-NLS
                 new PropertyModel( flow,
                                    outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
 
+        final String c = flow.getChannel();
+        final Label channel = new Label( "channel", new AbstractReadOnlyModel() {         // NON-NLS
+            @Override
+            public Object getObject() {
+                return c != null && c.isEmpty() ? ""
+                                   : MessageFormat.format( "({0})", c );
+            }
+        } );
+        channel.setVisible( c != null && !c.isEmpty() );
+        add( channel );
+
         // Add style mods from scenario analyst.
         final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-        final String issue = analyst.getIssuesSummary( flow, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
+        final String issue = analyst.getIssuesSummary(
+                flow, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !issue.isEmpty() ) {
             label.add(
                 new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
