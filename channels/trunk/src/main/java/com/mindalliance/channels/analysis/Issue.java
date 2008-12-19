@@ -22,11 +22,11 @@ public class Issue extends AnalysisObject {
     /**
      * Type of issue having to do with a scenario as a whole
      */
-    public static final String SYSTEMIC = "Systemic";
+    public static final String STRUCTURAL = "Structural";
     /**
      * All possible types of issues
      */
-    public static final String[] TYPES = new String[]{DEFINITION, FLOW, SYSTEMIC};
+    public static final String[] TYPES = new String[]{DEFINITION, FLOW, STRUCTURAL};
     /**
      * Type of issue
      */
@@ -60,6 +60,14 @@ public class Issue extends AnalysisObject {
         this.type = type;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType( String type ) {
+        this.type = type;
+    }
+
     /**
      * To String
      *
@@ -67,6 +75,7 @@ public class Issue extends AnalysisObject {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
+/*
         sb.append( type );
         sb.append( " issue on " );
         sb.append( getAbout().getClass().getSimpleName() );
@@ -76,11 +85,12 @@ public class Issue extends AnalysisObject {
         sb.append( getAbout().getId() );
         sb.append( ")" );
         sb.append( ": " );
+*/
         sb.append( getDescription() );
         if ( remediation != null ) {
-            sb.append( " [" );
+            sb.append( " (" );
             sb.append( remediation );
-            sb.append( ']' );
+            sb.append( ')' );
         }
         return sb.toString();
     }

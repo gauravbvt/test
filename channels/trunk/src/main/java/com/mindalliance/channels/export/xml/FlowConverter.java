@@ -323,7 +323,8 @@ public class FlowConverter implements Converter {
                 }
             }
             catch ( NotFoundException e ) {
-                // todo log this
+                // TODO - replace by logging
+                System.out.println( "scenario " + scenarioName + " not found" );
             }
             reader.moveUp();
         }
@@ -362,15 +363,19 @@ public class FlowConverter implements Converter {
                     (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
                         public boolean evaluate( Object obj ) {
                             Node node = (Node) obj;
-                            return node.isConnector()
-                                    && matches( (Connector) node, isSource, flowName,
-                                    roleName, organizationName, task );
+                            return node.isConnector() &&
+                                    matches( (Connector) node,
+                                            isSource,
+                                            flowName,
+                                            roleName,
+                                            organizationName,
+                                            task );
                         }
                     }
                     );
             while ( iterator.hasNext() ) connectors.add( iterator.next() );
         } catch ( NotFoundException e ) {
-            // TODO log this
+            return connectors;
         }
         return connectors;
     }

@@ -70,8 +70,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         }
         // Found single points of failure?
         for ( Node node : actorNodes ) {
-            Issue issue = new Issue( Issue.SYSTEMIC, node );
-            issue.setDescription( "Single point of failure" );
+            Issue issue = new Issue( Issue.STRUCTURAL, node );
+            issue.setDescription( "Single point of failure." );
             issue.setRemediation( "Delegate responsibilities or add redundancy." );
             issues.add( issue );
         }

@@ -42,7 +42,7 @@ public class ScenarioConverter implements Converter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
-        context.put("scenario", scenario);
+        context.put( "scenario", scenario );
         writer.addAttribute( "id", String.valueOf( scenario.getId() ) );
         writer.addAttribute( "name", scenario.getName() );
         writer.startNode( "description" );

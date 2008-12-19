@@ -75,11 +75,11 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = new Issue( Issue.SYSTEMIC, scenario );
-                        issue.setDescription( "Potential deadlock if "
+                        Issue issue = new Issue( Issue.STRUCTURAL, scenario );
+                        issue.setDescription( "Potential deadlock if any of "
                                 + getRequirementDescriptions( criticalRequirementsInCycle )
                                 + " fails." );
-                        issue.setRemediation( "Provide redundancy for these critical flows." );
+                        issue.setRemediation( "Provide redundancy for at least one of these critical flows." );
                         issues.add( issue );
                     }
                 }
