@@ -20,8 +20,11 @@ public abstract class Flow extends ModelObject {
     /** A string describing how much lag time is expected for this flow. */
     private String maxDelay;
 
-/*    protected Flow() {
-    }*/
+    /** If flow applies to all potential sources/targets. */
+    private boolean all;
+
+    protected Flow() {
+    }
 
     public boolean isAskedFor() {
         return askedFor;
@@ -73,14 +76,19 @@ public abstract class Flow extends ModelObject {
             content, getShortName( getSource() ), getShortName( getTarget() ) );
     }
 
-    private static String getShortName( Node node ) {
+    private String getShortName( Node node ) {
+        String result = "somebody";
+
         if ( node != null ) {
             final String sourceName = node.getName();
-            if ( sourceName != null && !sourceName.trim().isEmpty() )
-                return sourceName;
+            if ( sourceName != null && !sourceName.trim().isEmpty() ) {
+                result = sourceName;
+                if ( node.isPart() && ( (Part) node ).isRole() )
+                    result = MessageFormat.format( isAll() ? "every {0}" : "any {0}", result );
+            }
         }
 
-        return "somebody";
+        return result;
     }
 
     /**
@@ -148,4 +156,12 @@ public abstract class Flow extends ModelObject {
      * @return true for internal flows; false for external flows.
      */
     public abstract boolean isInternal();
+
+    public boolean isAll() {
+        return all;
+    }
+
+    public void setAll( boolean all ) {
+        this.all = all;
+    }
 }

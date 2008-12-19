@@ -24,7 +24,6 @@ public class ExpandedOutPanel extends ExpandedFlowPanel {
     public ExpandedOutPanel( String id, Flow flow ) {
         super( id, flow, true );
 
-        addOtherField();
         addChannelRow( flow );
 
         final Node node = getOther();

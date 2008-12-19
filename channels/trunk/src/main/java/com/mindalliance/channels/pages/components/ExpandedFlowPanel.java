@@ -2,9 +2,10 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
@@ -14,10 +15,10 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -64,8 +65,18 @@ public abstract class ExpandedFlowPanel extends Panel {
         rg.add( new Radio<Boolean>( "askedForFalse", new Model<Boolean>( false ) ) );     // NON-NLS
         add( rg );
 
+        addOtherField();
+        addAllField();
         addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
+    }
+
+    private void addAllField() {
+        final CheckBox checkBox = new CheckBox( "all" );
+        final FormComponentLabel label = new FormComponentLabel( "all-label", checkBox );
+        label.add( checkBox );
+        add( label );
+        label.setVisible( getOther().isPart() && ( (Part) getOther() ).isRole() );
     }
 
     /**
@@ -104,7 +115,7 @@ public abstract class ExpandedFlowPanel extends Panel {
     /**
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
-    protected void addOtherField() {
+    protected final void addOtherField() {
         final DropDownChoice<Node> other = new DropDownChoice<Node>( "other",             // NON-NLS
             new PropertyModel<Node>( this, "other" ),                                     // NON-NLS
             new PropertyModel<List<? extends Node>>( this, "otherNodes" ),                // NON-NLS

@@ -24,7 +24,6 @@ public class ExpandedReqPanel extends ExpandedFlowPanel {
     public ExpandedReqPanel( String id, Flow flow ) {
         super( id, flow, false );
 
-        addOtherField();
         final Node node = getOther();
         if ( node.isConnector() && node.getScenario().equals( getNode().getScenario() ) ) {
             add( new ConnectedFlowList( "others", (Connector) node ) );                   // NON-NLS

@@ -142,4 +142,11 @@ public class Part extends Node {
         return r != null
             && r.getName().toLowerCase().contains( "system" );
     }
+
+    /**
+     * @return true if part is only specified by a role.
+     */
+    public boolean isRole() {
+        return role != null && actor == null;
+    }
 }

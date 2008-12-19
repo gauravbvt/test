@@ -34,6 +34,23 @@
             <label><input wicket:id="critical" type="checkbox" value="yes"/> Critical</label>
         </td>
     </tr>
+    <tr>
+        <th align="right"><label wicket:id="other-label"><a wicket:id="other-details" href="#"><span wicket:id="type">Target</span></a>:</label></th>
+        <td><label wicket:id="all-label"><input wicket:id="all" type="checkbox"/> Every </label><select wicket:id="other">
+            <option>
+                Joe Smith monitoring evacuation
+            </option>
+
+            <option>
+                Start Building Evacuation
+            </option>
+
+            <option>
+                Tenant noticing fire
+            </option>
+        </select>
+        </td>
+    </tr>
 
     <wicket:child/>
 
