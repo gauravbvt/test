@@ -72,7 +72,7 @@ public class FlowPage extends WebPage {
         }
     }
 
-    private FlowDiagram<Node,Flow> getFlowDiagram() {
+    private FlowDiagram getFlowDiagram() {
         return ( (Project) getApplication() ).getFlowDiagram();
     }
 

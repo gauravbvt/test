@@ -17,7 +17,7 @@ import java.io.OutputStream;
  * Date: Nov 19, 2008
  * Time: 2:56:50 PM
  */
-public class DefaultFlowDiagram implements FlowDiagram<Node, Flow> {
+public class DefaultFlowDiagram implements FlowDiagram {
 
     /**
      * A GraphRenderer for nodes and flows

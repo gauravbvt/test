@@ -1,31 +1,34 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Node;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import org.apache.wicket.markup.html.link.ImageMap;
 
 import java.io.OutputStream;
 
 /**
  * Information flow diagram generator interface.
  */
-public interface FlowDiagram<V, E> {
+public interface FlowDiagram {
 
     /**
      * The PNG format
      */
-    static final String PNG = "png";
+    String PNG = "png";
     /**
      * The SVG format
      */
-    static final String SVG = "svg";
+    String SVG = "svg";
     /**
      * The image map format
      */
-    static final String IMAGE_MAP = "cmapx";
+    String IMAGE_MAP = "cmapx";
 
-    public void setImageDirectory( String imageDirectory );
+    /**
+     * Set image directory
+     * @param imageDirectory -- where to find images
+     */
+    void setImageDirectory( String imageDirectory );
 
     /**
      * Produces the PNG stream of a directed graph diagram of the scenario.
@@ -37,7 +40,10 @@ public interface FlowDiagram<V, E> {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    void getPNG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream png ) throws DiagramException;
+    void getPNG( Scenario scenario,
+                 Node selectedNode,
+                 ScenarioAnalyst analyst,
+                 OutputStream png ) throws DiagramException;
 
     /**
      * Produces the SVG stream of a directed graph diagram of the scenario.
@@ -49,7 +55,10 @@ public interface FlowDiagram<V, E> {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    void getSVG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream svg ) throws DiagramException;
+    void getSVG( Scenario scenario,
+                 Node selectedNode,
+                 ScenarioAnalyst analyst,
+                 OutputStream svg ) throws DiagramException;
 
     /**
      * Gets an image map component for a directed graph diagram of the scenario

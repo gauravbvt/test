@@ -45,7 +45,7 @@ public class TestScenarioPage extends TestCase {
         dao = new Memory();
         project = new Project();
         project.setDao( dao );
-        final FlowDiagram<Node,Flow> fd = createMock( FlowDiagram.class );
+        final FlowDiagram fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (ScenarioAnalyst) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( fd );

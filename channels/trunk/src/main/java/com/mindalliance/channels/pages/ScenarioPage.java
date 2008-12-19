@@ -364,7 +364,7 @@ public final class ScenarioPage extends WebPage {
                     super.onRender( markupStream );
                     try {
                         final ScenarioAnalyst analyst = getProject().getScenarioAnalyst();
-                        final FlowDiagram<Node,Flow> diagram = getProject().getFlowDiagram();
+                        final FlowDiagram diagram = getProject().getFlowDiagram();
                         getResponse().write( diagram.getImageMap( scenario, analyst ) );
 
                     } catch ( DiagramException e ) {

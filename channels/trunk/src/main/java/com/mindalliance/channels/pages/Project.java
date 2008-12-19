@@ -31,7 +31,7 @@ public final class Project extends WebApplication {
     /**
      * The creator of nifty diagrams.
      */
-    private FlowDiagram<Node,Flow> flowDiagram;
+    private FlowDiagram flowDiagram;
 
     /**
      * The official manager of attachements.
@@ -93,11 +93,11 @@ public final class Project extends WebApplication {
         this.dao = dao;
     }
 
-    public FlowDiagram<Node,Flow> getFlowDiagram() {
+    public FlowDiagram getFlowDiagram() {
         return flowDiagram;
     }
 
-    public void setFlowDiagram( FlowDiagram<Node, Flow> fd ) {
+    public void setFlowDiagram( FlowDiagram fd ) {
         flowDiagram = fd;
     }
 
