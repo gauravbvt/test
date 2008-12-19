@@ -2,6 +2,8 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 
+import java.io.Serializable;
+
 /**
  * Analysis about a model object, possibly specific to one of its property.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +12,7 @@ import com.mindalliance.channels.ModelObject;
  * Date: Nov 26, 2008
  * Time: 9:30:43 AM
  */
-abstract public class AnalysisObject {
+public abstract class AnalysisObject implements Serializable {
     /**
      * What model object the analysis is about
      */

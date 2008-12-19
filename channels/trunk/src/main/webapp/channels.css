@@ -98,8 +98,8 @@ p#logout {
 }
 
 ol {
-    margin:0.5em 0 0 0;
-    padding:0 0 0 2em;
+    margin: 0;
+    padding: 0 0 0 2em;
 }
 
 /* Menus */
@@ -131,6 +131,12 @@ ul.attach, ul.call-list {
 h3, h1 {
     background: #CAE1FF;
     padding-left: 0.2em;
+}
+
+span.suggest {
+    padding-left: 4em;
+    font-style: italic;
+    display: block;
 }
 
 /* Diagram */

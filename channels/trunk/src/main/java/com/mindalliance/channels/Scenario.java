@@ -355,11 +355,13 @@ public class Scenario extends ModelObject {
         @SuppressWarnings( { "unchecked" } )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
-            reqIterator = (Iterator<Flow>) new FilterIterator( node.requirements(), new Predicate() {
-                public boolean evaluate( Object o ) {
-                    return !( (Flow) o ).isInternal();
-                }
-            } );
+            reqIterator = (Iterator<Flow>) new FilterIterator(
+                    node.requirements(),
+                    new Predicate() {
+                        public boolean evaluate( Object o ) {
+                            return !( (Flow) o ).isInternal();
+                        }
+                    } );
         }
 
         public boolean hasNext() {

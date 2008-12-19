@@ -34,6 +34,7 @@ public class ExpandedOutPanel extends ExpandedFlowPanel {
             add( new Label( "others", "" ) );                                             // NON-NLS
         }
     }
+
     private void addChannelRow( Flow flow ) {
         final WebMarkupContainer channelRow = new WebMarkupContainer( "channel-row" );    // NON-NLS
 

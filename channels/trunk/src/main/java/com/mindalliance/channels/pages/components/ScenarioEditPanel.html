@@ -12,6 +12,13 @@
             <td><input width="40" wicket:id="name"/></td></tr>
         <tr><th align="right" valign="top"><label wicket:id="description-label">Description:</label></th>
             <td><textarea cols="40" rows="4" wicket:id="description">...</textarea></td></tr>
+        <tr wicket:id="issues">
+            <th valign="top" align="right">Issues:</th>
+            <td><ol>
+                <li wicket:id="issue"><span wicket:id="message" class="issue">Issue.</span><br/>
+                    <span wicket:id="suggest" class="suggest">Suggestion.</span></li>
+            </ol></td>
+        </tr>
     </table></div>
 </wicket:panel>
 </body>

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
@@ -15,12 +15,15 @@ import com.mindalliance.channels.pages.components.FlowListPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -32,6 +35,9 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RefreshingView;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -308,10 +314,11 @@ public final class ScenarioPage extends WebPage {
         private boolean nodeDeleted;
 
         //------------------------------
-        private ScenarioForm( String id, Scenario scenario, Node node ) {
+        private ScenarioForm( String id, Scenario scenario, final Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
-            addNodeTitle( node );
+            add( new Label( "node-title",                                                 // NON-NLS
+                            new PropertyModel<String>( node, "title" ) ) );               // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
                                        new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
@@ -325,27 +332,40 @@ public final class ScenarioPage extends WebPage {
 
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
+            final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );     // NON-NLS
+            issuesList.add( new RefreshingView<Issue>( "issue" ) {                        // NON-NLS
+                @SuppressWarnings( { "unchecked" } )
+                @Override
+                protected Iterator<IModel<Issue>> getItemModels() {
+                    final Project project = (Project) getApplication();
+                    final ScenarioAnalyst analyst = project.getScenarioAnalyst();
+                    return new TransformIterator(
+                            analyst.findIssues( node, false ),
+                            new Transformer() {
+                                public Object transform( Object o ) {
+                                    return new Model<Issue>( (Issue) o );
+
+                                }
+                            } );
+                }
+
+                @Override
+                protected void populateItem( Item<Issue> item ) {
+                    final Issue issue = item.getModelObject();
+                    item.add( new Label( "message", issue.getDescription() ) );           // NON-NLS
+                    item.add( new Label( "suggest", issue.getRemediation() ) );           // NON-NLS
+                }
+            } );
+
+            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            issuesList.setVisible( analyst.hasIssues( node, false ) );
+            add( issuesList );
+
             addScenarioFields( scenario );
             reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
             add( reqs );
             outcomes = new FlowListPanel( "outcomes", node, true, expansions );           // NON-NLS
             add( outcomes );
-        }
-
-        private void addNodeTitle( Node node ) {
-            final Label title =
-                new Label( "node-title", new PropertyModel<String>( node, "title" ) );    // NON-NLS
-
-            // Add style mods from scenario analyst.
-            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-            final String issue = analyst.getIssuesSummary( node, false );
-            if ( !issue.isEmpty() ) {
-                title.add( new AttributeModifier(
-                        "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
-                title.add( new AttributeModifier(
-                        "title", true, new Model<String>( issue ) ) );                    // NON-NLS
-            }
-            add( title );
         }
 
         //------------------------------
@@ -426,7 +446,8 @@ public final class ScenarioPage extends WebPage {
 
             // Add style mods from scenario analyst.
             final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-            final String issue = analyst.getIssuesSummary( scenario, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
+            final String issue = analyst.getIssuesSummary(
+                    scenario, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
             if ( !issue.isEmpty() ) {
                 header.add( new AttributeModifier(
                         "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
