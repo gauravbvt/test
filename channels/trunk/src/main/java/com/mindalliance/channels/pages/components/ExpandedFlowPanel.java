@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
@@ -13,23 +12,22 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Details of an expanded flow.
  */
-public class ExpandedFlowPanel extends Panel {
+public abstract class ExpandedFlowPanel extends Panel {
 
     /** The flow edited by this panel. */
     private Flow flow;
@@ -56,20 +54,28 @@ public class ExpandedFlowPanel extends Panel {
         add( new CheckBox( "delete",                                                      // NON-NLS
                            new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
 
-        addOtherField();
         addLabeled( "name-label", new TextField<String>( "name" ) );                      // NON-NLS
+        addLabeled( "description-label", new TextArea<String>( "description" ) );         // NON-NLS
 
         add( new CheckBox( "critical" ) );                                                // NON-NLS
-        add( new CheckBox( "askedFor" ) );                                                // NON-NLS
+        final RadioGroup<Boolean> rg = new RadioGroup<Boolean>( "askedFor" );             // NON-NLS
+        rg.add( new Radio<Boolean>( "askedForTrue", new Model<Boolean>( true ) ) );       // NON-NLS                                // NON-NLS
+        rg.add( new Radio<Boolean>( "askedForFalse", new Model<Boolean>( false ) ) );     // NON-NLS
+        add( rg );
 
-        addLabeled( "channel-label",     new TextField<String>( "channel"    ) );         // NON-NLS
-        addLabeled( "maxDelay-label",    new TextField<String>( "maxDelay"   ) );         // NON-NLS
-        addLabeled( "description-label", new TextArea<String>( "description" ) );         // NON-NLS
+        addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );         // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
     }
 
-    private void addLabeled( String id, FormComponent<?> component ) {
-        add( new FormComponentLabel( id, component ) );
+    /**
+     * Add a component with an attached label.
+     * @param id the id. Label is "id-label".
+     * @param component the component
+     * @return the label component
+     */
+    protected final FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
+        final FormComponentLabel result = new FormComponentLabel( id, component );
+        add( result );
         add( component );
 
         // Add style mods from scenario analyst.
@@ -81,12 +87,31 @@ public class ExpandedFlowPanel extends Panel {
             component.add(
                 new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
         }
+
+        return result;
     }
 
-    private void addOtherField() {
+    /**
+     * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
+     */
+    protected void addOtherField() {
         final DropDownChoice<Node> other = new DropDownChoice<Node>( "other",             // NON-NLS
             new PropertyModel<Node>( this, "other" ),                                     // NON-NLS
-            new PropertyModel<List<? extends Node>>( this, "otherNodes" ) );              // NON-NLS
+            new PropertyModel<List<? extends Node>>( this, "otherNodes" ),                // NON-NLS
+            new IChoiceRenderer<Node>() {
+                public Object getDisplayValue( Node object ) {
+                    final Node o = getOther();
+                    final boolean outside = object.equals( o )
+                                            && o.isConnector()
+                                            && o.getScenario().equals( getNode().getScenario() );
+                    return outside ? "* outside scenario *"
+                                            : object.toString();
+                }
+
+                public String getIdValue( Node object, int index ) {
+                    return Long.toString( object.getId() );
+                }
+            } );
 
         final Node otherNode = getOther();
         final ScenarioLink details = new ScenarioLink( "other-details", otherNode );      // NON-NLS
@@ -131,7 +156,7 @@ public class ExpandedFlowPanel extends Panel {
      * outcome.
      * @return the other side of this flow.
      */
-    public Node getOther() {
+    public final Node getOther() {
         final Flow f = getFlow();
         return f.isInternal() ? isOutcome() ? f.getTarget()
                                             : f.getSource()
@@ -160,33 +185,7 @@ public class ExpandedFlowPanel extends Panel {
     /**
      * @return list of nodes that can be potential targets of the underlying flow.
      */
-    public List<? extends Node> getOtherNodes() {
-        final Node node = getNode();
-        final Node other = getOther();
-        final Scenario scenario = node.getScenario();
-        final Set<Node> result = new TreeSet<Node>();
-
-        // Add other parts of this scenario
-        final Iterator<Node> nodes = scenario.nodes();
-        while ( nodes.hasNext() ) {
-            final Node n = nodes.next();
-            if ( !node.equals( n ) && ( other.equals( n ) || !n.isConnector() ) )
-                result.add( n );
-        }
-
-        // Add inputs/outputs of other scenarios
-        final Iterator<Scenario> scenarios = scenario.getDao().scenarios();
-        while ( scenarios.hasNext() ) {
-            final Scenario s = scenarios.next();
-            if ( !scenario.equals( s ) ) {
-                final Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
-                while ( c.hasNext() )
-                    result.add( c.next() );
-            }
-        }
-
-        return new ArrayList<Node>( result );
-    }
+    public abstract List<? extends Node> getOtherNodes();
 
     public boolean isMarkedForDeletion() {
         return markedForDeletion;

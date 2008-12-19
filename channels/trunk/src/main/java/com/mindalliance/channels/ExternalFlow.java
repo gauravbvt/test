@@ -5,6 +5,7 @@ import java.util.Iterator;
 /**
  * A flow from one Part in this scenario to/from a connector in another scenario.
  * Direction of flow matches other connector's only flow.
+ * @TODO Figure out propagation of channel property
  */
 public class ExternalFlow extends Flow {
 
@@ -143,5 +144,22 @@ public class ExternalFlow extends Flow {
 
     public final void setInput( boolean input ) {
         this.input = input;
+    }
+
+    @Override
+    public boolean isAskedFor() {
+        return getConnector() == null ? super.isAskedFor() : getConnectorFlow().isAskedFor();
+    }
+
+    /**
+     * Delegate to connector flow.
+     * @param askedFor true is information is asked for
+     */
+    @Override
+    public void setAskedFor( boolean askedFor ) {
+        if ( getConnector() == null )
+            super.setAskedFor( askedFor );
+        else
+            getConnectorFlow().setAskedFor( askedFor );
     }
 }

@@ -60,8 +60,9 @@ public class FlowListPanel extends Panel {
             final long flowId = flow.getId();
             final Panel panel;
             if ( expansions.contains( flowId ) ) {
-                final ExpandedFlowPanel flowPanel =
-                        new ExpandedFlowPanel( Long.toString( flowId ), flow, outcomes );
+                final ExpandedFlowPanel flowPanel = outcomes ? 
+                        new ExpandedOutPanel( Long.toString( flowId ), flow )
+                      : new ExpandedReqPanel( Long.toString( flowId ), flow );
                 panel = flowPanel;
                 expandedFlows.add( flowPanel );
             }
