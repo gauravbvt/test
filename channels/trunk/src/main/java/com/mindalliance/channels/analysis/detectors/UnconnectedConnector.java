@@ -23,6 +23,9 @@ import org.apache.commons.collections.Predicate;
  * Time: 2:52:42 PM
  */
 public class UnconnectedConnector extends AbstractIssueDetector {
+
+    public UnconnectedConnector() { }
+
     /**
      * {@inheritDoc}
      */
@@ -47,16 +50,18 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         Iterator<Connector> unconnectedConnectors = new FilterIterator( scenario.nodes(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ( (Node) obj ).isConnector() && !((Connector)obj).isConnected();
+                        return ( (Node) obj ).isConnector() && !( (Connector) obj ).isConnected();
                     }
                 } );
         while ( unconnectedConnectors.hasNext() ) {
             Connector connector = unconnectedConnectors.next();
             String flowName = connector.getInnerFlow().getName();
-            Issue issue = new Issue(Issue.STRUCTURAL, scenario);
-            issue.setDescription("Connection point -" + (flowName.isEmpty() ? "<no name>" : flowName) + "- is never used.");
-            issue.setRemediation("Consider removing it.");
-            issues.add(issue);
+            Issue issue = new Issue( Issue.STRUCTURAL, scenario );
+            issue.setDescription( "Connection point -"
+                    + flowName 
+                    + "- is never used." );
+            issue.setRemediation( "Consider removing it." );
+            issues.add( issue );
         }
         return issues;
     }
