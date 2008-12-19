@@ -18,6 +18,7 @@
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
+        <property name="uri" value="mindalliance.com/channels/demo"/>
         <property name="dao" ref="memoryDao"/>
         <property name="graphBuilder" ref="graphBuilder"/>
         <property name="flowDiagram" ref="flowDiagram"/>
@@ -53,6 +54,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
             </list>
         </property>
     </bean>

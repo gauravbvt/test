@@ -51,6 +51,14 @@ public class Connector extends Node {
         return isInput() ? outcomes().next() : requirements().next();
     }
 
+    /**
+     * Are there external flows to or from this connector?
+     * @return -- boolean
+     */
+    public boolean isConnected() {
+        return !getExternalFlows().isEmpty();
+    }
+
     private Set<ExternalFlow> getExternalFlows() {
         return externalFlows;
     }

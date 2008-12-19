@@ -84,6 +84,13 @@ public class XmlStreamer implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
+    public String getVersion() {
+        return "0.1";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public Scenario importScenario( InputStream stream ) throws IOException {
         ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
         Scenario scenario;
@@ -112,4 +119,5 @@ public class XmlStreamer implements Importer, Exporter {
     public String getMimeType() {
         return "application/xml";
     }
+
 }

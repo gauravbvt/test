@@ -23,5 +23,12 @@ public interface Importer {
      * @return -- a mime type
      */
     String getMimeType();
+
+    /**
+     * Current version
+     * @return -- a string
+     */
+    String getVersion();
+    
 }
 

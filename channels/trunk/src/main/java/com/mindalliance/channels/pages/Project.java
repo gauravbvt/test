@@ -1,8 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -20,6 +18,11 @@ import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
  * Initialized in /WEB-INF/applicationContext.xml.
  */
 public final class Project extends WebApplication {
+
+    /**
+     * The project's unique identifier
+     */
+    private String uri;
 
     /**
      * The manipulator of scenarios.
@@ -83,6 +86,14 @@ public final class Project extends WebApplication {
         }
 
         return result;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri( String uri ) {
+        this.uri = uri;
     }
 
     public Dao getDao() {

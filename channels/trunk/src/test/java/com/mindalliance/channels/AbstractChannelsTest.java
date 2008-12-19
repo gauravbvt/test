@@ -16,6 +16,8 @@ import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
 import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
 import com.mindalliance.channels.analysis.detectors.SinglePointOfFailure;
 import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
+import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
+import com.mindalliance.channels.export.xml.XmlStreamer;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -36,10 +38,13 @@ public class AbstractChannelsTest extends TestCase {
 
     @Override
     protected void setUp() {
+        XmlStreamer xmlStreamer = new XmlStreamer();
         project = new Project();
-        // Set DAO
+        project.setUri( "mindalliance.com/channels/demo" );
         Dao dao = new Memory();
         project.setDao( dao );
+        project.setExporter(xmlStreamer);
+        project.setImporter(xmlStreamer);
         project.setGraphBuilder( new DefaultGraphBuilder() );
         // Set default scenario
         // project.getScenarioDao().addScenario(new FireScenario());
@@ -64,6 +69,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new PartWithoutRole() );
         detectors.add( new SinglePointOfFailure() );
         detectors.add( new PotentialDeadlock() );
+        detectors.add( new UnconnectedConnector() );
         analyst.setIssueDetectors( detectors );
         project.setScenarioAnalyst( analyst );
         tester = new WicketTester( project );

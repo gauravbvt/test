@@ -26,4 +26,10 @@ public interface Exporter extends Serializable {
      */
     String getMimeType();
 
+    /**
+     * Current version
+     * @return -- a string
+     */
+    String getVersion();
+
 }

@@ -3,7 +3,6 @@ package com.mindalliance.channels.export;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.export.xml.XmlStreamer;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -23,9 +22,8 @@ import java.util.Map;
  * Date: Dec 16, 2008
  * Time: 4:23:11 PM
  */
-public class TestXmlStreamer extends AbstractChannelsTest {
+public class TestExportImport extends AbstractChannelsTest {
 
-    private XmlStreamer xmlStreamer;
     private List<String> scenarioNames;
     private Dao dao;
 
@@ -33,7 +31,6 @@ public class TestXmlStreamer extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         dao = project.getDao();
-        xmlStreamer = new XmlStreamer();
         scenarioNames = new ArrayList<String>();
         Iterator<Scenario> scenarios = project.getDao().scenarios();
         while ( scenarios.hasNext() ) {
@@ -91,7 +88,7 @@ public class TestXmlStreamer extends AbstractChannelsTest {
             ByteArrayOutputStream out;
             Scenario scenario = dao.findScenario( name );
             out = new ByteArrayOutputStream();
-            xmlStreamer.exportScenario( scenario, out );
+            project.getExporter().exportScenario( scenario, out );
             String xml = out.toString();
             // System.out.println( xml );
             exported.put(name,xml);
@@ -110,7 +107,7 @@ public class TestXmlStreamer extends AbstractChannelsTest {
         for ( String name : scenarioNames ) {
             String xml = exported.get( name );
             ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
-            Scenario scenario = xmlStreamer.importScenario( in );
+            Scenario scenario = project.getImporter().importScenario( in );
             assertTrue(name.equals(scenario.getName()));
         }
     }

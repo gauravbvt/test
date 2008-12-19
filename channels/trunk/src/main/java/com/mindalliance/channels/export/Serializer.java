@@ -48,5 +48,14 @@ public class Serializer implements Importer, Exporter {
         return "application/x-java-serialized-object";
     }
 
+    /**
+     * Current version
+     *
+     * @return -- a string
+     */
+    public String getVersion() {
+        return "1.0";
+    }
+
 
 }

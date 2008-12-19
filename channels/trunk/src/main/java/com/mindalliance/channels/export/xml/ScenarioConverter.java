@@ -15,6 +15,8 @@ import com.mindalliance.channels.pages.Project;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * XStream scenario converter.
@@ -42,7 +44,11 @@ public class ScenarioConverter implements Converter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
+        Project project = Project.getProject();
         context.put( "scenario", scenario );
+        writer.addAttribute( "project", project.getUri());
+        writer.addAttribute( "version", project.getExporter().getVersion());
+        writer.addAttribute( "date", new SimpleDateFormat("yyyy/MM/dd H:mm:ss z").format(new Date()));
         writer.addAttribute( "id", String.valueOf( scenario.getId() ) );
         writer.addAttribute( "name", scenario.getName() );
         writer.startNode( "description" );
