@@ -18,6 +18,7 @@ import com.mindalliance.channels.analysis.detectors.SinglePointOfFailure;
 import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
+import com.mindalliance.channels.analysis.detectors.OrphanedPart;
 import com.mindalliance.channels.export.xml.XmlStreamer;
 
 import java.util.List;
@@ -68,8 +69,9 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UnnamedFlow() );
         detectors.add( new PartWithoutTask() );
         detectors.add( new PartWithoutRole() );
-        detectors.add( new PotentialDeadlock() );
+        detectors.add( new OrphanedPart() );
         detectors.add( new UnconnectedConnector() );
+        detectors.add( new PotentialDeadlock() );
         detectors.add( new NoRedundancy() );
         analyst.setIssueDetectors( detectors );
         project.setScenarioAnalyst( analyst );
