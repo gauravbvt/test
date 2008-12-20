@@ -65,6 +65,9 @@ public class FlowConverter implements Converter {
             writer.setValue( flow.getChannel() );
             writer.endNode();
         }
+        writer.startNode( "all" );
+        writer.setValue( String.valueOf( flow.isAll() ) );
+        writer.endNode();
         writer.startNode( "critical" );
         writer.setValue( String.valueOf( flow.isCritical() ) );
         writer.endNode();
@@ -202,6 +205,9 @@ public class FlowConverter implements Converter {
             } else if ( nodeName.equals( "critical" ) ) {
                 boolean critical = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setCritical( critical );
+            } else if ( nodeName.equals( "all" ) ) {
+                boolean all = reader.getValue().equals( "true" );
+                for ( Flow flow : flows ) flow.setCritical( all );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }

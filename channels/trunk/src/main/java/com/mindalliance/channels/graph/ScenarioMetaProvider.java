@@ -232,7 +232,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
                     list.add( new DOTAttribute( "style", "solid" ) );
-                    list.add( new DOTAttribute( "color", "gray"));
+                    list.add( new DOTAttribute( "color", "gray" ) );
                 } else {
                     list.add( new DOTAttribute( "shape", "none" ) );
                 }
@@ -250,7 +250,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( edge.isAskedFor() ) {
-                list.add( new DOTAttribute( "style", edge.isCritical() ? "dashed" : "dotted" ) );
+                list.add( new DOTAttribute( "arrowtail", "onormal" ) );
+                list.add( new DOTAttribute( "style", edge.isCritical() ? "bold" : "solid" ) );
             } else {
                 if ( edge.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );

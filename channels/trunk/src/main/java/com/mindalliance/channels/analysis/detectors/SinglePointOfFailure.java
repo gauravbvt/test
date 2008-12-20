@@ -28,6 +28,8 @@ import java.util.ArrayList;
  * Date: Dec 3, 2008
  * Time: 7:45:00 PM
  */
+
+// NOT USED BECAUSE NOT MEANINGFUL
 public class SinglePointOfFailure extends AbstractIssueDetector {
 
     /**

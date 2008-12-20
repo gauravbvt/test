@@ -52,9 +52,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
             </list>
         </property>
     </bean>
