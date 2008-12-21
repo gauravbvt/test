@@ -49,13 +49,13 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrphanedPart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
             </list>
         </property>
     </bean>

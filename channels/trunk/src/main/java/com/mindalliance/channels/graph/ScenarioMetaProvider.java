@@ -32,7 +32,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     /**
      * Font for subgraph labels
      */
-    private static final String SUBGRAPH_FONT = "Helvetica-Bold";
+    private static final String SUBGRAPH_FONT = "Arial-Bold";
     /**
      * Font size for subgraph labels
      */
@@ -40,7 +40,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     /**
      * Font for node labels
      */
-    private static final String NODE_FONT = "Helvetica";
+    private static final String NODE_FONT = "Arial";
     /**
      * Font for edge labels
      */
@@ -138,6 +138,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
                 String label = flow.getName().replaceAll( "\\s+", "\\\\n" );
+                if (flow.isAskedFor() && !label.endsWith( "?" )) {
+                    label = label + "?";
+                }
                 return sanitizeLabel( label );
             }
         };
@@ -249,20 +252,21 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            if ( edge.isAskedFor() ) {
-                list.add( new DOTAttribute( "arrowtail", "onormal" ) );
-                list.add( new DOTAttribute( "style", edge.isCritical() ? "bold" : "solid" ) );
-            } else {
-                if ( edge.isCritical() ) {
-                    list.add( new DOTAttribute( "style", "bold" ) );
-                }
-            }
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
+            if ( edge.isAskedFor() ) {
+                list.add( new DOTAttribute( "arrowtail", "onormal" ) );
+                list.add( new DOTAttribute( "style", edge.isCritical() ? "bold" : "solid" ) );
+            } else {
+                if ( edge.isCritical() ) {
+                    list.add( new DOTAttribute( "style", "bold" ) );
+                    list.add( new DOTAttribute( "style", "bold" ) );
+                    list.add( new DOTAttribute( "fontcolor", "black" ) );                }
+            }
             if ( analyst.hasIssues( edge, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
