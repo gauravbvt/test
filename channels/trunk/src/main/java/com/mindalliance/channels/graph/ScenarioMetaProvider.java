@@ -22,6 +22,10 @@ import java.util.List;
 public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
     /**
+     * Direction of graph layout
+     */
+    private static final String RANKDIR = "LR";
+    /**
      * Color used to indicate issues.
      */
     private static final String COLOR_ERROR = "red3";
@@ -197,10 +201,12 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         }
 
         public List<DOTAttribute> getGraphAttributes() {
-            return DOTAttribute.emptyList();
+            List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "rankdir", RANKDIR ) );
             // list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );
             // list.add( new DOTAttribute( "sep", ".1" ) );
+            return list;
         }
 
         /**
