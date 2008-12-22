@@ -48,38 +48,38 @@ public class NoRedundancy extends AbstractIssueDetector {
     protected List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
-        // FInd all sourced requirements of a part
-        Iterator<Flow> requirements = new FilterIterator( part.requirements(),
+        // Find all critical sourced requirements of a part
+        Iterator<Flow> criticalRequirements = new FilterIterator( part.requirements(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Flow requirement = (Flow) obj;
-                        return !requirement.getName().isEmpty()
+                        return requirement.isCritical()
+                                && !requirement.getName().isEmpty()
                                 && requirement.getSource().isPart()
                                 && ( (Part) requirement.getSource() ).getActor() != null;
                     }
                 } );
         // Find critical requirements without alternate sources
-        while ( requirements.hasNext() ) {
-            final Flow requirement = requirements.next();
-            final Actor sourceActor = ( (Part) requirement.getSource() ).getActor();
-            final Part target = (Part) requirement.getTarget();
-            final String name = requirement.getName();
+        while ( criticalRequirements.hasNext() ) {
+            final Flow criticalRequirement = criticalRequirements.next();
+            final Actor sourceActor = ( (Part) criticalRequirement.getSource() ).getActor();
+            final String name = criticalRequirement.getName();
             // Get all differently sourced requirements for same info
             // by the part or other "matching" parts
-            Iterator<Flow> alternates = new FilterIterator( target.getScenario().flows(),
+            Iterator<Flow> alternates = new FilterIterator( part.getScenario().flows(),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
                             Flow otherFlow = (Flow) obj;
-                            return otherFlow != requirement
+                            return otherFlow != criticalRequirement
                                     && SemMatch.same( otherFlow.getName(), name )
                                     && otherFlow.getTarget().isPart()
-                                    && partsMatch( (Part) otherFlow.getTarget(), target )
+                                    && partsMatch( (Part) otherFlow.getTarget(), part )
                                     && otherFlow.getSource().isPart()
                                     && ( (Part) otherFlow.getSource() ).getActor() != sourceActor;
                         }
                     } );
             if ( !alternates.hasNext() ) {
-                Issue issue = new Issue( Issue.STRUCTURAL, target );
+                Issue issue = new Issue( Issue.STRUCTURAL, part );
                 issue.setDescription( "Has a only one source of critical information -"
                         + name + "-" );
                 issue.setRemediation( "Add alternate source." );

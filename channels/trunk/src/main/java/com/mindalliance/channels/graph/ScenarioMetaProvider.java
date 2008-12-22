@@ -142,7 +142,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
                 String label = flow.getName().replaceAll( "\\s+", "\\\\n" );
-                if (flow.isAskedFor() && !label.endsWith( "?" )) {
+                if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
                     label = label + "?";
                 }
                 return sanitizeLabel( label );
@@ -271,7 +271,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 if ( edge.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );
                     list.add( new DOTAttribute( "style", "bold" ) );
-                    list.add( new DOTAttribute( "fontcolor", "black" ) );                }
+                    list.add( new DOTAttribute( "fontcolor", "black" ) );
+                }
+            }
+            if ( edge.isAll() ) {
+                list.add( new DOTAttribute( "headlabel", "(all)" ) );
             }
             if ( analyst.hasIssues( edge, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
