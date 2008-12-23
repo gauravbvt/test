@@ -7,6 +7,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -16,10 +17,18 @@ import java.text.MessageFormat;
 /**
  * A collapsed flow.
  */
-public class CollapsedFlowPanel extends Panel {
+public class CollapsedFlowPanel extends Panel implements Deletable {
 
-    public CollapsedFlowPanel( String id, final Flow flow, boolean outcome ) {
+    /** True when flow should be deleted. */
+    private boolean markedForDeletion;
+
+    /** The underlying flow. */
+    private Flow flow;
+
+    public CollapsedFlowPanel( String id, Flow flow, boolean outcome ) {
         super( id );
+        this.flow = flow;
+
         final Label label = new Label( "title",                                           // NON-NLS
                 new PropertyModel( flow,
                                    outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
@@ -50,5 +59,22 @@ public class CollapsedFlowPanel extends Panel {
 
         // TODO replace expansion links by ajaxfallbacklinks
         add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );
+
+        add( new CheckBox( "delete",                                                      // NON-NLS
+                           new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
+    }
+
+    /** {@inheritDoc} */
+    public boolean isMarkedForDeletion() {
+        return markedForDeletion;
+    }
+
+    /** {@inheritDoc} */
+    public void setMarkedForDeletion( boolean delete ) {
+        markedForDeletion = delete;
+    }
+
+    public Flow getFlow() {
+        return flow;
     }
 }

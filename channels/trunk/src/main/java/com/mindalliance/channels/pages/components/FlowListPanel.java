@@ -28,7 +28,7 @@ public class FlowListPanel extends Panel {
     private boolean outcomes;
 
     /** Panels of expanded flows. */
-    private List<ExpandedFlowPanel> expandedFlows;
+    private List<Deletable> deletableFlows;
 
     public FlowListPanel( String id, Node node, boolean outcomes, final Set<Long> expansions ) {
         super( id );
@@ -47,38 +47,45 @@ public class FlowListPanel extends Panel {
                 final Scenario s = n.getScenario();
                 final Set<Long> newExpansions = new HashSet<Long>( expansions );
                 newExpansions.add( f.getId() );
-                setResponsePage( ScenarioPage.class,
-                                 ScenarioPage.getParameters( s, n, newExpansions ) );
+                setResponsePage( new ScenarioPage( n, f.getId() ) );
             }
         } );
 
+        add( createFlowPanels( node, outcomes, expansions ) );
+    }
+
+    private RepeatingView createFlowPanels( Node node, boolean outcomes, Set<Long> expansions ) {
+
         final RepeatingView flowList = new RepeatingView( "flows" );                      // NON-NLS
         final Iterator<Flow> flows = outcomes ? node.outcomes() : node.requirements();
-        expandedFlows = new ArrayList<ExpandedFlowPanel>();
+        deletableFlows = new ArrayList<Deletable>();
         while ( flows.hasNext() ) {
             final Flow flow = flows.next();
             final long flowId = flow.getId();
             final Panel panel;
             if ( expansions.contains( flowId ) ) {
-                final ExpandedFlowPanel flowPanel = outcomes ? 
+                final ExpandedFlowPanel flowPanel = outcomes ?
                         new ExpandedOutPanel( Long.toString( flowId ), flow )
                       : new ExpandedReqPanel( Long.toString( flowId ), flow );
                 panel = flowPanel;
-                expandedFlows.add( flowPanel );
+                deletableFlows.add( flowPanel );
             }
-            else
-                panel = new CollapsedFlowPanel( Long.toString( flowId ), flow, outcomes );
+            else {
+                final CollapsedFlowPanel dp =
+                        new CollapsedFlowPanel( Long.toString( flowId ), flow, outcomes );
+                panel = dp;
+                deletableFlows.add( dp );
+            }
             flowList.add( panel );
         }
-
-        add( flowList );
+        return flowList;
     }
 
     /**
      * @return the title of this panel.
      */
     public String getTitle() {
-        return isOutcomes() ?  "Outcomes" : "Requirements" ;
+        return isOutcomes() ?  "Send" : "Receive" ;
     }
 
     public final Node getNode() {
@@ -102,7 +109,7 @@ public class FlowListPanel extends Panel {
      * @param expansions the component expansion list to modify on deletions
      */
     public void deleteSelectedFlows( Set<Long> expansions ) {
-        for ( ExpandedFlowPanel p : expandedFlows )
+        for ( Deletable p : deletableFlows )
             if ( p.isMarkedForDeletion() ) {
                 final Flow flow = p.getFlow();
                 expansions.remove( flow.getId() );

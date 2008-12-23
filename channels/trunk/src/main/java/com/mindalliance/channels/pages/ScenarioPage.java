@@ -132,6 +132,17 @@ public final class ScenarioPage extends WebPage {
         init( scenario, node, expanded );
     }
 
+    /**
+     * Utility constructor.
+     * @param node the node to display
+     * @param id a section to expand
+     */
+    public ScenarioPage( Node node, long id ) {
+        final Set<Long> expanded = new HashSet<Long>();
+        expanded.add( id );
+        init( node.getScenario(), node, expanded );
+    }
+
     private static Set<Long> findExpansions( PageParameters parameters ) {
         final Set<Long> result = new HashSet<Long>( parameters.size() );
         if ( parameters.containsKey( EXPAND_PARM ) ) {

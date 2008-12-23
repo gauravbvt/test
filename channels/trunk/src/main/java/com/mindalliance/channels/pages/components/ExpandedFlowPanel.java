@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Details of an expanded flow.
  */
-public abstract class ExpandedFlowPanel extends Panel {
+public abstract class ExpandedFlowPanel extends Panel implements Deletable {
 
     /** The flow edited by this panel. */
     private Flow flow;
@@ -209,12 +209,14 @@ public abstract class ExpandedFlowPanel extends Panel {
      */
     public abstract List<? extends Node> getOtherNodes();
 
+    /** {@inheritDoc} */
     public boolean isMarkedForDeletion() {
         return markedForDeletion;
     }
 
-    public void setMarkedForDeletion( boolean markedForDeletion ) {
-        this.markedForDeletion = markedForDeletion;
+    /** {@inheritDoc} */
+    public void setMarkedForDeletion( boolean delete ) {
+        markedForDeletion = delete;
     }
 
 
