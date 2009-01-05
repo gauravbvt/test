@@ -8,6 +8,7 @@ body {
     left: 0;
     right: 0;
     min-width: 94em;
+    min-height: 34em;
 }
 
 form {
@@ -27,7 +28,7 @@ form {
 
 #contents {
     position: absolute;
-    top: 6.5em;
+    top: 4.1em;
     bottom: 6px;
     left: 6px;
     right: 6px;
@@ -43,6 +44,9 @@ form {
 
 #part {
     position: relative;
+}
+
+#part, #controls {
     width: 33em;
 }
 
@@ -75,32 +79,26 @@ form {
 }
 
 #sc-sel {
-    position: absolute;
-    top: 3px;
-    right: 6px;
-    font-size: 8pt;
     line-height: 1em;
     list-style: none;
     margin: 0;
-    padding: 6px;
+    padding: 0;
     text-align: left;
 }
-
-#part, #outcomes, #reqs, div.picture, #sc-details {
-    border: 1px inset #c3dede;
-}
-#sc-sel {
-    border: 1px inset #6FAFAF;
+#sc-sel li {
+    font-size: 8pt;
 }
 
 input[type='text'], textarea, select, table.flow-details {
     padding-left: 0.3em;
-    border: 1px inset #a7c092;
 }
 input[type='checkbox'], input[type='radio'] {
     padding: 0;
     margin: 0;
-    vertical-align: text-bottom;
+    vertical-align: middle;
+}
+input[type='text'], textarea {
+    width: 25em;
 }
 
 div.issues {
@@ -127,9 +125,9 @@ h1, h2, h3 {
     padding-right: 4em;
 }
 h1 {
-    background: transparent url('images/logo.png') no-repeat 0 50%;
-    min-height: 42px;
-    padding: 1em 6px 6px 60px;
+    background: transparent url('images/logo.png') no-repeat 6px 50%;
+    padding: 0.5em 6px 0.5em 42px;
+    font-size: 2em;
     margin: 0;
 }
 h2 {
@@ -167,17 +165,23 @@ ul.menu, div.caption {
     margin: 0;
 }
 
-#form-buttons {
-    margin: 0;
+#controls {
     position: absolute;
-    bottom: 6px;
-    left: 5px;
+    bottom: 0;
+    margin-top: 5px;
+    padding: 6px;
+}
+
+#form-buttons {
+    margin: 1em 0 0 0;
+    text-align: left;
 }
 
 ol {
     margin: 0.8em 0;
     padding: 0 0 0 2em;
 }
+
 #reqs div, #outcomes div {
     position: absolute;
     top: 2em;
@@ -254,21 +258,41 @@ a, a:link, a:visited {
     text-decoration: none;
 }
 
-/** Backgrounds */
-html, #sc-sel, h1 a, div.caption a {
+h1 a, div.caption a {
+    padding: 0 2px;
+}
+
+/** Backgrounds & borders */
+html, h1 a, div.caption a {
     background: #c3dede;
 }
 
-#header, #footer, #graph {
-    background: #6fafaf;
+#header, #footer, #graph, #controls {
+    background: #6fafaf url('images/back.png');
 }
-
-h1 a, div.caption a {
-    padding: 0 2px;
+div.caption, #footer, #controls {
+    border: 1px outset #6fafaf;
+}
+#header {
+    border-bottom: 1px outset #6fafaf;
 }
 
 #part, #outcomes, #reqs, #sc-details {
     background: #f6f6f6;
     padding: 5px;
 }
+#part, #outcomes, #reqs, div.picture, #sc-details {
+    border: 1px inset #c3dede;
+}
+input[type='text'], textarea, select, table.flow-details {
+    border: 1px inset #a7c092;
+}
 
+#reqs h3 {
+    background: transparent url('images/arrow_right_blue.png') no-repeat;
+    padding-left: 20px;
+}
+#outcomes h3 {
+    background: transparent url('images/arrow_left_blue.png') no-repeat;
+    padding-left: 20px;
+}

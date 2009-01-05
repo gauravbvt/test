@@ -84,21 +84,24 @@
         <div wicket:id="outcomes" id="outcomes">
             <h3>Outcomes</h3>
         </div>
+
+        <div id="controls">
+            <ul id="sc-sel">
+                <li><label>Select scenario: <select wicket:id="sc-sel" name="scenario">
+                    <option>Some scenario</option>
+                </select></label></li>
+
+                <li><a wicket:id="sc-new" href="#">New scenario</a></li>
+
+                <li><label>Import scenario: <input type="file" wicket:id="sc-import" name="sc-import"
+                                                   value="Upload"/></label></li>
+            </ul>
+
+            <p id="form-buttons" align="right"><input type="submit" value="submit"/></p>
+        </div>
     </div>
 
     <hr/>
-    <ul id="sc-sel">
-        <li><label>Select scenario: <select wicket:id="sc-sel" name="scenario">
-            <option>Some scenario</option>
-        </select></label></li>
-
-        <li><a wicket:id="sc-new" href="#">New scenario</a></li>
-
-        <li><label>Import scenario: <input type="file" wicket:id="sc-import" name="sc-import"
-                                           value="Upload"/></label></li>
-    </ul>
-
-    <p id="form-buttons" align="right"><input type="submit" value="submit"/></p>
 
     <div id="footer">
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br/>
