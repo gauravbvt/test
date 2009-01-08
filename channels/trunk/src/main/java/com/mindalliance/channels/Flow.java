@@ -164,4 +164,18 @@ public abstract class Flow extends ModelObject {
     public void setAll( boolean all ) {
         this.all = all;
     }
+
+    /**
+     * Initialize relevant properties from another flow.
+     * @param flow the other flow
+     */
+    public void initFrom( Flow flow ) {
+        setName( flow.getName() );
+        setDescription( flow.getDescription() );
+        setMaxDelay( flow.getMaxDelay() );
+        setAskedFor( flow.isAskedFor() );
+        setChannel( flow.getChannel() );
+        setCritical( flow.isCritical() );
+
+    }
 }

@@ -86,6 +86,7 @@ public final class ScenarioPage extends WebPage {
 
     /** The current node. */
     private Node node;
+    private ScenarioForm form;
 
     /**
      * Used when page is called without parameters.
@@ -198,7 +199,8 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Node n ) {
-        setResponsePage( new RedirectPage( ScenarioLink.linkFor( n ) ) );
+        final Set<Long> ids = Collections.emptySet();
+        setResponsePage( new RedirectPage( ScenarioLink.linkStringFor( n, ids ) ) );
     }
 
     private void redirectHere() {
@@ -258,13 +260,6 @@ public final class ScenarioPage extends WebPage {
         return getParameters( scenario, node, expansions );
     }
 
-    /** Set content-type to application/xhtml+xml. */
-    @Override
-    protected void configureResponse() {
-        super.configureResponse();
-        getResponse().setContentType( "application/xhtml+xml" );                          // NON-NLS
-    }
-
     private void init( Scenario scenario, Node n, Set<Long> expanded ) {
         node = n;
         expansions = expanded;
@@ -273,7 +268,8 @@ public final class ScenarioPage extends WebPage {
         setStatelessHint( true );
 
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
-        add( new ScenarioForm( "big-form", scenario, n ) );                               // NON-NLS
+        form = new ScenarioForm( "big-form", scenario, n );                               // NON-NLS
+        add( form );
 
         LOG.debug( "Scenario page generated" );
     }
@@ -294,6 +290,14 @@ public final class ScenarioPage extends WebPage {
         return node;
     }
 
+    /**
+     * Accessor to the flow graph, for ajax updates.
+     * @return the component to add to ajax target
+     */
+    public MarkupContainer getGraph() {
+        return form.getGraph();
+    }
+
     //==============================================================
     /**
      * The scenario form.
@@ -301,7 +305,7 @@ public final class ScenarioPage extends WebPage {
     private final class ScenarioForm extends Form<Scenario> {
 
         /** The nodeDeleted property name. */
-        private static final String NODE_DELETED_PROPERTY = "nodeDeleted";
+        private static final String NODE_DELETED_PROPERTY = "nodeDeleted";                // NON-NLS
 
         /** The scenario import field. */
         private FileUploadField scenarioImport;
@@ -323,6 +327,9 @@ public final class ScenarioPage extends WebPage {
 
         /** True if current node will be deleted. */
         private boolean nodeDeleted;
+
+        /** The graph section. */
+        private MarkupContainer graph;
 
         //------------------------------
         private ScenarioForm( String id, Scenario scenario, final Node node ) {
@@ -381,13 +388,17 @@ public final class ScenarioPage extends WebPage {
 
         //------------------------------
         private void addGraph( final Scenario scenario, final Node n ) {
-            add( new MarkupContainer( "graph" ) {                                         // NON-NLS
+            graph = new MarkupContainer( "graph" ) {                                      // NON-NLS
+
                 @Override
                 protected void onComponentTag( ComponentTag tag ) {
                     super.onComponentTag( tag );
-                    tag.put( "src", MessageFormat.format(                                 // NON-NLS
-                        "scenario.png?scenario={0}&amp;node={1}",                         // NON-NLS
-                        scenario.getId(), n.getId() ) );
+                    tag.put( "src",                                                       // NON-NLS
+                             MessageFormat.format(
+                                 "scenario.png?scenario={0}&amp;node={1}&amp;time={2}",   // NON-NLS
+                                  scenario.getId(),
+                                  n.getId(),
+                                  System.currentTimeMillis() ) );
                 }
 
                 @Override
@@ -397,12 +408,18 @@ public final class ScenarioPage extends WebPage {
                         final ScenarioAnalyst analyst = getProject().getScenarioAnalyst();
                         final FlowDiagram diagram = getProject().getFlowDiagram();
                         getResponse().write( diagram.getImageMap( scenario, analyst ) );
-
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
                     }
                 }
-            } );
+            };
+
+            graph.setOutputMarkupId( true );
+            add( graph );
+        }
+
+        public MarkupContainer getGraph() {
+            return graph;
         }
 
         //------------------------------

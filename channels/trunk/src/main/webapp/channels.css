@@ -241,6 +241,9 @@ div.picture {
     left: 0;
     right: 0;
 }
+div.picture img {
+    border: none;
+}
 div.caption {
     position: absolute;
     bottom: 0;

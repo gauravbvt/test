@@ -47,7 +47,8 @@ public class FlowListPanel extends Panel {
                 final Scenario s = n.getScenario();
                 final Set<Long> newExpansions = new HashSet<Long>( expansions );
                 newExpansions.add( f.getId() );
-                setResponsePage( new ScenarioPage( n, f.getId() ) );
+                setResponsePage( ScenarioPage.class,
+                                 ScenarioPage.getParameters( s, n, newExpansions ) );
             }
         } );
 

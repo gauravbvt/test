@@ -1,17 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:wicket="http://wicket.apache.org/"
-        xml:lang="en"
-        lang="en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" xmlns:wicket="http://wicket.apache.org/">
 <head>
     <title wicket:id="sc-title">Title</title>
-    <link rel="stylesheet" href="channels.css" type="text/css"/>
+    <link rel="stylesheet" href="channels.css" type="text/css">
 </head>
 
 <body>
-<form wicket:id="big-form">
+<form wicket:id="big-form" action="#">
     <div id="header">
         <h1><span wicket:id="header">Title</span>
 
@@ -20,7 +16,7 @@
 
                 <li><a wicket:id="sc-export" href="#">Export</a></li>
                 <li><label><input type="checkbox" wicket:id="sc-del"
-                                  alt="Delete this scenario"/>
+                                  alt="Delete this scenario">
                     Delete</label>
                 </li>
             </ul>
@@ -29,10 +25,10 @@
     <div wicket:id="sc-editor">(Scenario Editor)</div>
     <div id="contents">
         <div id="graph">
-            <hr/>
+            <hr>
             <div class="picture">
-                <img wicket:id="graph" src="#" alt="[Information flow diagram]" border="0"
-                     usemap="#G"/>
+                <img wicket:id="graph" src="#" alt="[Information flow diagram]"
+                     usemap="#G">
             </div>
 
             <div class="caption">
@@ -42,25 +38,25 @@
                     <li><a wicket:id="add-part" href="#">Add a part</a></li>
                 </ul>
             </div>
-            <hr/>
+            <hr>
         </div>
 
         <div id="part">
             <h2><span wicket:id="node-title">Node title</span>
 
                 <ul class="menu">
-                    <li><label><input type="checkbox" wicket:id="node-del" alt="Delete this node"/>
+                    <li><label><input type="checkbox" wicket:id="node-del" alt="Delete this node">
                         Delete</label></li>
                 </ul>
             </h2>
             <div>
                 <table summary="Node description">
-                    <div wicket:id="specialty"></div>
+                    <div wicket:id="specialty">(Specialty)</div>
                     <tr>
                         <th align="right" valign="top"><label for="description">Description:</label>
                         </th>
                         <td><textarea id="description" name="description" wicket:id="description"
-                                      cols="40" rows="3"></textarea></td>
+                                      cols="40" rows="3">Description</textarea></td>
                     </tr>
 
                     <tr wicket:id="attachments">
@@ -70,7 +66,7 @@
                 </table>
                 <div class="issues" wicket:id="issues">
                     <ol>
-                        <li wicket:id="issue"><span wicket:id="message" class="issue">Issue.</span><br/>
+                        <li wicket:id="issue"><span wicket:id="message" class="issue">Issue.</span><br>
                             <span wicket:id="suggest" class="suggest">Suggestion.</span></li>
                     </ol>
                 </div>
@@ -94,17 +90,17 @@
                 <li><a wicket:id="sc-new" href="#">New scenario</a></li>
 
                 <li><label>Import scenario: <input type="file" wicket:id="sc-import" name="sc-import"
-                                                   value="Upload"/></label></li>
+                                                   value="Upload"></label></li>
             </ul>
 
-            <p id="form-buttons" align="right"><input type="submit" value="submit"/></p>
+            <p id="form-buttons"><input type="submit" value="submit"></p>
         </div>
     </div>
 
     <hr/>
 
     <div id="footer">
-        <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br/>
+        <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br>
             &copy; Copyright 2008 Mind-Alliance Inc. All Rights Reserved.</p>
     </div>
 </form>
