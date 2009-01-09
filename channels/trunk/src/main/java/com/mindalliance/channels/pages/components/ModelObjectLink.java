@@ -1,7 +1,8 @@
-package com.mindalliance.channels.pages;
+package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.model.IModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,9 +11,13 @@ import org.apache.wicket.markup.html.link.ExternalLink;
  * Date: Jan 8, 2009
  * Time: 12:40:26 PM
  */
-public class LinkFactory {
+public class ModelObjectLink extends ExternalLink {
 
-    public static ExternalLink linkFor( ModelObject mo) {
+    public ModelObjectLink( String s, String s1 ) {
+        super( s, s1 );
+    }
+
+    public static IModel<String> linkFor( ModelObject mo) {
         return null; // TODO
     }
 }

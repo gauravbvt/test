@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.profiles;
+package com.mindalliance.channels.analysis.profiling;
 
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Role;

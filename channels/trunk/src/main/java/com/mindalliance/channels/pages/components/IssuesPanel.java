@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.profiles;
+package com.mindalliance.channels.pages.components;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.WebMarkupContainer;

@@ -20,7 +20,13 @@ import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.analysis.profiling.Job;
+import com.mindalliance.channels.analysis.profiling.Play;
+import com.mindalliance.channels.analysis.profiling.SortableJobsProvider;
+import com.mindalliance.channels.analysis.profiling.SortablePlaysProvider;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.ModelObjectLinkPanel;
 
 import java.util.List;
 import java.util.ArrayList;
