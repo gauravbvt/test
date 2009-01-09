@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.ModelObject;
+import org.apache.wicket.markup.html.link.ExternalLink;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -11,7 +12,7 @@ import com.mindalliance.channels.ModelObject;
  */
 public class LinkFactory {
 
-    public static String linkFor( ModelObject mo) {
-        return ""; // TODO
+    public static ExternalLink linkFor( ModelObject mo) {
+        return null; // TODO
     }
 }
