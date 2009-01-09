@@ -26,11 +26,11 @@ public class DefaultFlowDiagram implements FlowDiagram {
     /**
      * 0: scenario id, 1: node id
      */
-    private String urlFormat = "?scenario={0}&node={1}";
+    private String urlFormat;
     /**
      * 0: scenario id
      */
-    private String scenarioUrlFormat = "?scenario={0}";
+    private String scenarioUrlFormat;
     /**
      * Path to image directory
      */

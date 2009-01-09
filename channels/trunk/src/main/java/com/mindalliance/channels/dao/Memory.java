@@ -6,6 +6,7 @@ import com.mindalliance.channels.DuplicateKeyException;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Role;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -110,5 +111,17 @@ public final class Memory implements Dao {
     /** {@inheritDoc} */
     public Connector createConnector() {
         return new Connector();
+    }
+
+    /**
+     * Find a role given its id.
+     *
+     * @param id the id
+     * @return the corresponding role, or null if not found.
+     * @throws com.mindalliance.channels.NotFoundException
+     *          when not found
+     */
+    public Role findRole( long id ) throws NotFoundException {
+        return null;  // Todo
     }
 }

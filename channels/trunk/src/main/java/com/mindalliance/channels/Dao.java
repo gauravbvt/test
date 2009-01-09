@@ -77,4 +77,13 @@ public interface Dao extends Serializable {
      * @return a new connector.
      */
     Connector createConnector();
+
+    /**
+     * Find a role given its id.
+     * @param id the id
+     * @return the corresponding role, or null if not found.
+     * @throws NotFoundException when not found
+     */
+    Role findRole( long id ) throws NotFoundException;
+
 }

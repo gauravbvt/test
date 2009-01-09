@@ -69,7 +69,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
             Scenario scenario = scenarios.next();
             try {
                 String map = project.getFlowDiagram().getImageMap( scenario, project.getScenarioAnalyst() );
-                // System.out.print(map);
+                System.out.print(map);
                 assertFalse( map.isEmpty() );
                 assertTrue( map.startsWith( "<map" ) );
             } catch ( Exception e ) {

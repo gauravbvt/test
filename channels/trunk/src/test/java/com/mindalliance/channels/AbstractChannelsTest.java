@@ -57,6 +57,8 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setTimeout( 5000 );
         DefaultFlowDiagram flowDiagram = new DefaultFlowDiagram();
         flowDiagram.setGraphRenderer( graphRenderer );
+        flowDiagram.setUrlFormat("?scenario={0}&amp;node={1}");
+        flowDiagram.setScenarioUrlFormat("?scenario={0}");
         flowDiagram.setImageDirectory( "src/site/resources/images" );
         project.setFlowDiagram( flowDiagram );
         // Set scenario analyst
