@@ -6,7 +6,7 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.pages.LinkFactory;
+import com.mindalliance.channels.pages.ModelObjectLink;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,7 +34,7 @@ public class ModelObjectLinkPanel extends Panel {
     private void init() {
         Link link = new Link( "link" ) {
             public void onClick() {
-                setResponsePage( new RedirectPage( LinkFactory.linkFor( modelObject ) ) );
+                setResponsePage( new RedirectPage( ModelObjectLink.linkFor( modelObject ).getObject() ) );
             }
         };
         add( link );

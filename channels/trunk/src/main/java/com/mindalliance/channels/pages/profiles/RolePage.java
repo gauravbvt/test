@@ -47,7 +47,7 @@ public class RolePage extends WebPage {
         try {
             init( parameters );
         } catch ( NotFoundException e ) {
-            setResponsePage( new ProfileNotFoundPage( e.getMessage() ) );
+            e.printStackTrace();
         }
     }
 
