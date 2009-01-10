@@ -18,6 +18,13 @@ form {
     height: 100%;
 }
 
+#sc-details {
+    z-index: 1;
+    position: absolute;
+    right: 12px;
+    top: 6em;
+}
+
 #contents {
     position: absolute;
     top: 5em;
@@ -284,7 +291,7 @@ h1 a, div.caption a {
 }
 
 /** Backgrounds & borders */
-html, h1 a {
+html, #sc-details {
     background: #c3dede;
 }
 
@@ -295,15 +302,18 @@ html, h1 a {
     border: 1px outset #6fafaf;
 }
 
-#part, #sc-details {
+#part {
     background: #f6f6f6;
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part, #graph, #sc-details {
+#part, #graph {
     border: 1px inset #c3dede;
+}
+#sc-details {
+    border: 1px outset #c3dede;
 }
 input[type='text'], textarea, select, table.flow-details {
     border: 1px inset #a7c092;
