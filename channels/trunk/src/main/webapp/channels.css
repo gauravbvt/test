@@ -18,70 +18,87 @@ form {
     height: 100%;
 }
 
-#sc-details {
-    margin: 0.4em;
-    max-width: 40em;
-    position: absolute;
-    right: 6px;
-    z-index: 1;
-}
-
 #contents {
     position: absolute;
-    top: 4.1em;
-    bottom: 6px;
-    left: 6px;
-    right: 6px;
-}
-
-#graph {
-    position: absolute;
-    top: 0;
-    bottom: 49%;
-    left: 34.5em;
+    top: 5em;
+    bottom: 5px;
+    left: 0;
     right: 0;
+    overflow: hidden;
+    padding-bottom: 5px;
 }
 
-#part {
-    position: relative;
+#part-header {
 }
 
-#part, #controls {
-    width: 33em;
+#part-header, #controls {
 }
 
-#part > div {
+#part-content {
+    position: absolute;
+    top: 2.5em;
+    bottom: 5px;
+    left: 5px;
+    width: 32.3%;
     overflow: auto;
 }
 
-#graph, #reqs {
-    left: 34.5em;
+#graph, #part {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 5px 5px 0 5px;
 }
 
-#outcomes {
-    left: 76em;
+#part {
+    bottom: 0;
+    top: 50.5%;
+    overflow: hidden;
+}
+
+#graph {
+    top: 0;
+    bottom: 49.5%;
+    overflow: auto;
+}
+
+#part-title {
+    position: relative;
 }
 
 #reqs, #outcomes {
     position: absolute;
-    bottom: 0;
-    width: 40em;
-    height: 46%;
+    top: 5px;
+    bottom: 5px;
+}
+
+#reqs {
+    left: 33.33%;
+}
+
+#outcomes {
+    left: 66.66%;
+}
+
+#reqs, #outcomes, #part-header, #sc-details {
+    width: 32.5%;
 }
 
 #header {
-    margin-bottom: 0.4em;
+    height: 5em;
+    padding-left: 64px;
+    margin-bottom: 5px;
 }
 
 #footer {
     display: none;
-    padding: 0.4em;
 }
 
 #sc-sel {
+    float: left;
     line-height: 1em;
-    list-style: none;
-    margin: 0;
+    list-style-position: inside;
+    margin: 0 2em 0 0;
     padding: 0;
     text-align: left;
 }
@@ -125,23 +142,19 @@ h1, h2, h3 {
     padding-right: 4em;
 }
 h1 {
-    background: transparent url('images/logo.png') no-repeat 6px 50%;
-    padding: 0.5em 6px 0.5em 42px;
+    padding: 0.5em 5px 5px 0;
     font-size: 2em;
     margin: 0;
+    float: left;
 }
-h2 {
-    padding-bottom: 2px;
-    border-bottom: 2px solid #4d8222;
-}
-h3 {
+h2, h3 {
     padding-bottom: 1px;
     border-bottom: 1px solid #4d8222;
 }
 
 body, ul.menu {
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.25em;
+    line-height: 1.3em;
 }
 
 table.flow-details {
@@ -167,13 +180,13 @@ ul.menu, div.caption {
 
 #controls {
     position: absolute;
-    bottom: 0;
-    margin-top: 5px;
-    padding: 6px;
+    top: 0;
+    right: 0;
+    padding: 5px;
 }
 
 #form-buttons {
-    margin: 1em 0 0 0;
+    margin: 0;
     text-align: left;
 }
 
@@ -185,16 +198,17 @@ ol {
 #reqs div, #outcomes div {
     position: absolute;
     top: 2em;
-    bottom: 1em;
+    bottom: 0;
     left: 0;
     right: 0;
-}
-#reqs ol, #outcomes ol {
-    height: 100%;
     overflow: auto;
 }
-#reqs ol li, #outcomes ol li {
+#reqs ol, #outcomes ol {
+}
+#reqs ol > li, #outcomes ol > li {
     position: relative;
+    padding-right: 8em;
+    margin: 0;
 }
 
 ul.menu {
@@ -204,6 +218,9 @@ ul.menu {
     padding: 0;
     display: inline;
     white-space: nowrap;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 ul.menu li {
     display: inline;
@@ -211,13 +228,21 @@ ul.menu li {
 ul.menu li:before {
     content: " \2015  ";
   }
+/**
 h2 ul.menu li:first-child:before, h3 ul.menu li:first-child:before, li ul.menu li:first-child:before {
     content: " ";
   }
+**/
+
+#header ul.menu {
+    display: block;
+    margin: 0;
+    padding-top: 1.5em;
+    position: static;
+}
 
 h2 ul.menu, h3 ul.menu, li ul.menu {
-    position: absolute;
-    right: 5px;
+    margin: 2px 5px 0 0;
 }
 
 ul.attach, ul.call-list {
@@ -235,21 +260,14 @@ span.suggest {
 div.picture {
     overflow: auto;
     background: white;
-    position: absolute;
-    top: 0;
-    bottom: 1.6em;
-    left: 0;
-    right: 0;
 }
 div.picture img {
     border: none;
 }
-div.caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 2px 6px;
+p.caption {
+    padding: 0;
+    margin: 0;
+    clear: both;
 }
 
 hr {
@@ -266,25 +284,25 @@ h1 a, div.caption a {
 }
 
 /** Backgrounds & borders */
-html, h1 a, div.caption a {
+html, h1 a {
     background: #c3dede;
 }
 
-#header, #footer, #graph, #controls {
-    background: #6fafaf url('images/back.png');
+#header {
+    background: transparent url('images/logo.png') no-repeat 5px 2px;
 }
-div.caption, #footer, #controls {
+#footer {
     border: 1px outset #6fafaf;
 }
-#header {
-    border-bottom: 1px outset #6fafaf;
-}
 
-#part, #outcomes, #reqs, #sc-details {
+#part, #sc-details {
     background: #f6f6f6;
     padding: 5px;
 }
-#part, #outcomes, #reqs, div.picture, #sc-details {
+#graph {
+    background: white;
+}
+#part, #graph, #sc-details {
     border: 1px inset #c3dede;
 }
 input[type='text'], textarea, select, table.flow-details {

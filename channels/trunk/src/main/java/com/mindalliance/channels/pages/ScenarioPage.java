@@ -86,6 +86,8 @@ public final class ScenarioPage extends WebPage {
 
     /** The current node. */
     private Node node;
+
+    /** The big form. */
     private ScenarioForm form;
 
     /**

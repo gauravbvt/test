@@ -9,97 +9,90 @@
 <body>
 <form wicket:id="big-form" action="#">
     <div id="header">
-        <h1><span wicket:id="header">Title</span>
+        <h1><span wicket:id="header">Title</span></h1>
+        <ul class="menu">
+            <li><a wicket:id="sc-edit" href="#">Edit</a></li>
+            <li><a wicket:id="add-part" href="#">Add a part</a></li>
 
-            <ul class="menu">
-                <li><a wicket:id="sc-edit" href="#">Edit</a></li>
-
-                <li><a wicket:id="sc-export" href="#">Export</a></li>
-                <li><label><input type="checkbox" wicket:id="sc-del"
-                                  alt="Delete this scenario">
-                    Delete</label>
-                </li>
-            </ul>
-        </h1>
+            <li><a wicket:id="sc-export" href="#">Export</a></li>
+            <li><label><input type="checkbox" wicket:id="sc-del"
+                              alt="Delete this scenario">
+                Delete</label>
+            </li>
+        </ul>
+        <p class="caption" wicket:id="sc-desc">A description.</p>
     </div>
     <div wicket:id="sc-editor">(Scenario Editor)</div>
     <div id="contents">
         <div id="graph">
-            <hr>
             <div class="picture">
                 <img wicket:id="graph" src="#" alt="[Information flow diagram]"
                      usemap="#G">
             </div>
-
-            <div class="caption">
-                <span wicket:id="sc-desc">A description.</span>
-
-                <ul class="menu">
-                    <li><a wicket:id="add-part" href="#">Add a part</a></li>
-                </ul>
-            </div>
             <hr>
         </div>
-
         <div id="part">
-            <h2><span wicket:id="node-title">Node title</span>
+            <div id="part-header">
+                <div id="part-title">
+                    <h2><span wicket:id="node-title">Node title</span></h2>
+                    <ul class="menu">
+                        <li><label><input type="checkbox" wicket:id="node-del" alt="Delete this node">
+                            Delete</label></li>
+                    </ul>
+                </div>
+                <div id="part-content">
+                    <table summary="Node description">
+                        <div wicket:id="specialty">(Specialty)</div>
+                        <tr>
+                            <th align="right" valign="top"><label for="description">Description:</label>
+                            </th>
+                            <td><textarea id="description" name="description" wicket:id="description"
+                                          cols="40" rows="3">Description</textarea></td>
+                        </tr>
 
-                <ul class="menu">
-                    <li><label><input type="checkbox" wicket:id="node-del" alt="Delete this node">
-                        Delete</label></li>
-                </ul>
-            </h2>
-            <div>
-                <table summary="Node description">
-                    <div wicket:id="specialty">(Specialty)</div>
-                    <tr>
-                        <th align="right" valign="top"><label for="description">Description:</label>
-                        </th>
-                        <td><textarea id="description" name="description" wicket:id="description"
-                                      cols="40" rows="3">Description</textarea></td>
-                    </tr>
-
-                    <tr wicket:id="attachments">
-                        <th align="right" valign="top">Attachments:</th>
-                        <td>&nbsp;</td>
-                    </tr>
-                </table>
-                <div class="issues" wicket:id="issues">
-                    <ol>
-                        <li wicket:id="issue"><span wicket:id="message" class="issue">Issue.</span><br>
-                            <span wicket:id="suggest" class="suggest">Suggestion.</span></li>
-                    </ol>
+                        <tr wicket:id="attachments">
+                            <th align="right" valign="top">Attachments:</th>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table>
+                    <div class="issues" wicket:id="issues">
+                        <ol>
+                            <li wicket:id="issue"><span wicket:id="message" class="issue">Issue.</span><br>
+                                <span wicket:id="suggest" class="suggest">Suggestion.</span></li>
+                        </ol>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div wicket:id="reqs" id="reqs">
-            <h3>Requirements</h3>
-        </div>
+            <div wicket:id="reqs" id="reqs">
+                <h3>Requirements</h3>
+            </div>
 
-        <div wicket:id="outcomes" id="outcomes">
-            <h3>Outcomes</h3>
-        </div>
-
-        <div id="controls">
-            <ul id="sc-sel">
-                <li><label>Select scenario: <select wicket:id="sc-sel" name="scenario">
-                    <option>Some scenario</option>
-                </select></label></li>
-
-                <li><a wicket:id="sc-new" href="#">New scenario</a></li>
-
-                <li><label>Import scenario: <input type="file" wicket:id="sc-import" name="sc-import"
-                                                   value="Upload"></label></li>
-            </ul>
-
-            <p id="form-buttons"><input type="submit" value="submit"></p>
+            <div wicket:id="outcomes" id="outcomes">
+                <h3>Outcomes</h3>
+            </div>
         </div>
     </div>
 
-    <hr/>
+    <hr>
+
+    <div id="controls">
+        <ul id="sc-sel">
+            <li><label>Select scenario: <select wicket:id="sc-sel" name="scenario">
+                <option>Some scenario</option>
+            </select></label></li>
+
+            <li><a wicket:id="sc-new" href="#">New scenario</a></li>
+
+            <li><label>Import scenario: <input type="file" wicket:id="sc-import" name="sc-import"
+                                               value="Upload"></label></li>
+        </ul>
+
+        <p id="form-buttons"><input type="submit" value="submit"></p>
+    </div>
 
     <div id="footer">
+        <hr>
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br>
             &copy; Copyright 2008 Mind-Alliance Inc. All Rights Reserved.</p>
     </div>
