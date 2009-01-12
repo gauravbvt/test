@@ -35,6 +35,9 @@ public class SemMatch {
      */
     public static boolean sameLocation( Jurisdiction loc, Jurisdiction otherLoc ) {
         // TODO - compare geofeatures
-        return same( loc.getName(), otherLoc.getName() );
+        if (loc == null || otherLoc == null)
+            return false;
+        else
+            return same( loc.getName(), otherLoc.getName() );
     }
 }
