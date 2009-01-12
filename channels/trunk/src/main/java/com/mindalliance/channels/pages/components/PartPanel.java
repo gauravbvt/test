@@ -6,13 +6,15 @@ import com.mindalliance.channels.Location;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.pages.ModelObjectLinkPanel;
+import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.model.PropertyModel;
 
 import java.text.Collator;
 
@@ -59,6 +61,8 @@ public class PartPanel extends Panel {
         addField( TASK_PROPERTY );
         addField( ACTOR_PROPERTY );
         addField( ROLE_PROPERTY );
+        add( new ModelObjectLinkPanel( "role-link",                                       // NON-NLS
+                                        new PropertyModel<Role>( part, ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY );
         addField( JURISDICTION_PROPERTY );
         addField( LOCATION_PROPERTY );

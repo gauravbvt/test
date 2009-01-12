@@ -7,6 +7,7 @@ import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.pages.profiles.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
@@ -66,6 +67,7 @@ public final class Project extends WebApplication {
         mount( new QueryStringUrlCodingStrategy( "node.html", ScenarioPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
     }
 
     @Override
