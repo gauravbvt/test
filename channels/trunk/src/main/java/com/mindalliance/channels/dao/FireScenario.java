@@ -6,7 +6,6 @@ import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 
 /**
@@ -26,16 +25,16 @@ public class FireScenario extends Scenario {
         final Part js1 = getDefaultPart();
         js1.setActor( joe );
         js1.setTask( "investigating fire" );
-        js1.setRole( new Role( "Fire Warden" ) );
+        js1.setRole( dao.findOrMakeRole( "Fire Warden" ) );
         js1.setDescription( "Fire alarms must be investigated carefully." );
 
         final Part js2 = createPart( joe, "monitoring evacuation" );
-        final Part tenant = createPart( new Role( "Tenant" ), "noticing fire" );
-        final Part chief = createPart( new Role( "Fire Chief" ), "supervising operations" );
+        final Part tenant = createPart( dao.findOrMakeRole( "Tenant" ), "noticing fire" );
+        final Part chief = createPart( dao.findOrMakeRole( "Fire Chief" ), "supervising operations" );
 
         final Actor system = new Actor( "Fire Alarm" );
         final Part alarm = createPart( system, "ringing" );
-        alarm.setRole( new Role( "System" ) );
+        alarm.setRole( dao.findOrMakeRole( "System" ) );
 
         final Part fd = createPart();
         fd.setOrganization( new Organization( "Fire Department" ) );

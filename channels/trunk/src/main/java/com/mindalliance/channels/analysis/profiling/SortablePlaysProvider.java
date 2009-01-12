@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.lang.reflect.InvocationTargetException;
 
 /**
+ * A sortable provider of plays.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -28,6 +30,9 @@ import java.util.Comparator;
  */
 public class SortablePlaysProvider extends SortableDataProvider<Play> {
 
+    /**
+     * Plays found in scenarios for a given actor, role or organization.
+     */
     private List<Play> plays;
 
     public SortablePlaysProvider( Role role ) {
@@ -43,10 +48,13 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
         // TODO
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Iterator<Play> iterator( int first, int count ) {
         final SortParam sortParam = getSort();
         List<Play> sortedPlays = new ArrayList<Play>();
-        Collections.copy( sortedPlays, plays );
+        sortedPlays.addAll( plays );
         Collections.sort( sortedPlays, new Comparator<Play>() {
             /**
              * @param play the first object to be compared.
@@ -59,13 +67,17 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
              */
             public int compare( Play play, Play otherPlay ) {
                 int comp = 0;
-                String sortProperty = sortParam.getProperty();
                 try {
+                    String sortProperty = sortParam.getProperty();
                     String value = PropertyUtils.getProperty( play, sortProperty ).toString();
-                    String otherValue = PropertyUtils.getProperty( otherPlay, sortProperty ).toString();
+                    String otherValue = PropertyUtils.getProperty( otherPlay, sortProperty )
+                            .toString();
                     comp = value.compareTo( otherValue );
-                }
-                catch ( Exception e ) {
+                } catch ( IllegalAccessException e ) {
+                    e.printStackTrace();
+                } catch ( InvocationTargetException e ) {
+                    e.printStackTrace();
+                } catch ( NoSuchMethodException e ) {
                     e.printStackTrace();
                 }
                 return sortParam.isAscending() ? comp : comp * -1;
@@ -74,31 +86,45 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
         return sortedPlays.subList( first, first + count ).iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int size() {
         return plays.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public IModel<Play> model( Play play ) {
         return new Model<Play>( play );
     }
 
+    /**
+     * Find all plays of a role
+     *
+     * @param role a given role
+     * @return a list of plays
+     */
     private List<Play> findAllPlaysOfRole( Role role ) {
-        ArrayList<Play> list = new ArrayList<Play>();
+        List<Play> list = new ArrayList<Play>();
         Iterator<Scenario> scenarios = Project.getProject().getDao().scenarios();
         while ( scenarios.hasNext() ) {
             Scenario scenario = scenarios.next();
             Iterator<Flow> flows = scenario.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
-                if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).getRole() == role ) {
-                    // role sends
-                    Play play = new Play( ( (Part) flow.getSource() ), flow, true );
-                    list.add( play );
-                }
-                if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).getRole() == role ) {
-                    // role receives
-                    Play play = new Play( ( (Part) flow.getTarget() ), flow, false );
-                    list.add( play );
+                if ( Play.hasPlay( flow ) ) {
+                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).getRole() == role ) {
+                        // role sends
+                        Play play = new Play( (Part) flow.getSource(), flow, true );
+                        list.add( play );
+                    }
+                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).getRole() == role ) {
+                        // role receives
+                        Play play = new Play( (Part) flow.getTarget(), flow, false );
+                        list.add( play );
+                    }
                 }
             }
         }

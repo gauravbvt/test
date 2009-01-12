@@ -97,7 +97,6 @@ public final class Project extends WebApplication {
     public void setUri( String uri ) {
         this.uri = uri;
     }
-
     public Dao getDao() {
         return dao;
     }

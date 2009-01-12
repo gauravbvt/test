@@ -79,6 +79,12 @@ public interface Dao extends Serializable {
     Connector createConnector();
 
     /**
+     * Iterator on all roles
+     * @return a role iterator
+     */
+    Iterator<Role> roles();
+
+    /**
      * Find a role given its id.
      * @param id the id
      * @return the corresponding role, or null if not found.
@@ -86,4 +92,16 @@ public interface Dao extends Serializable {
      */
     Role findRole( long id ) throws NotFoundException;
 
+    /**
+     * Finds a role named name. If none, creates it.
+     * @param name the role's name
+     * @return a role
+     */
+    Role findOrMakeRole( String name );
+
+    /**
+     * Remove a role
+     * @param role role to be removed
+     */
+    void removeRole( Role role );
 }

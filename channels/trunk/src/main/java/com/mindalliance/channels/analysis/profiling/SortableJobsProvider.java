@@ -18,8 +18,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
 
 /**
+ * A sortable provider of jobs for a given role or organization.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -27,7 +30,9 @@ import java.util.List;
  * Time: 1:16:32 PM
  */
 public class SortableJobsProvider extends SortableDataProvider<Job> {
-
+    /**
+     * Known applicable jobs from parts in the current project's scenarios
+     */
     private List<Job> jobs;
 
     public SortableJobsProvider( Role role ) {
@@ -39,11 +44,13 @@ public class SortableJobsProvider extends SortableDataProvider<Job> {
         // TODO
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public Iterator<Job> iterator( int first, int count ) {
         final SortParam sortParam = getSort();
         List<Job> sortedJobs = new ArrayList<Job>();
-        Collections.copy( sortedJobs, jobs );
+        sortedJobs.addAll( jobs );
         Collections.sort( sortedJobs, new Comparator<Job>() {
             /**
              * @param job the first object to be compared.
@@ -56,13 +63,17 @@ public class SortableJobsProvider extends SortableDataProvider<Job> {
              */
             public int compare( Job job, Job otherJob ) {
                 int comp = 0;
-                String sortProperty = sortParam.getProperty();
                 try {
+                    String sortProperty = sortParam.getProperty();
                     String value = PropertyUtils.getProperty( job, sortProperty ).toString();
-                    String otherValue = PropertyUtils.getProperty( otherJob, sortProperty ).toString();
+                    String otherValue = PropertyUtils.getProperty( otherJob, sortProperty )
+                            .toString();
                     comp = value.compareTo( otherValue );
-                }
-                catch ( Exception e ) {
+                } catch ( IllegalAccessException e ) {
+                    e.printStackTrace();
+                } catch ( InvocationTargetException e ) {
+                    e.printStackTrace();
+                } catch ( NoSuchMethodException e ) {
                     e.printStackTrace();
                 }
                 return sortParam.isAscending() ? comp : comp * -1;
@@ -71,33 +82,47 @@ public class SortableJobsProvider extends SortableDataProvider<Job> {
         return sortedJobs.subList( first, first + count ).iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int size() {
         return jobs.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public IModel<Job> model( Job job ) {
         return new Model<Job>( job );
     }
 
+    /**
+     * Finds all jobs in a project given a role
+     *
+     * @param role Role the given role
+     * @return list of jobs
+     */
     private List<Job> findAllJobsForRole( Role role ) {
-        HashSet<Job> set = new HashSet<Job>();
+        Set<Job> set = new HashSet<Job>();
         Iterator<Scenario> scenarios = Project.getProject().getDao().scenarios();
         while ( scenarios.hasNext() ) {
             Scenario scenario = scenarios.next();
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.getRole() == role && part.getActor() != null ) {
-                    Job job = new Job(part);
+                if ( part.getRole() == role && Job.hasJob( part ) ) {
+                    Job job = new Job( part );
                     // Find all channels used to communicate with this part
                     Iterator<Flow> flows = scenario.flows();
-                    while (flows.hasNext()) {
+                    while ( flows.hasNext() ) {
                         Flow flow = flows.next();
-                        if (flow.getTarget() == part && !flow.isAskedFor()) {
-                            job.addChannel(flow.getChannel());
-                        }
-                        if (flow.getSource() == part && flow.isAskedFor()) {
-                            job.addChannel(flow.getChannel());
+                        if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
+                            if ( flow.getTarget() == part && !flow.isAskedFor() ) {
+                                job.addChannel( flow.getChannel() );
+                            }
+                            if ( flow.getSource() == part && flow.isAskedFor() ) {
+                                job.addChannel( flow.getChannel() );
+                            }
                         }
                     }
                     set.add( job );

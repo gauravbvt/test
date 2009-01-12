@@ -209,7 +209,7 @@ public class PartPanel extends Panel {
         else {
             final Role role = getPart().getRole();
             if ( role == null || !isSame( name, role.getName() ) )
-                getPart().setRole( new Role( name ) );
+                getPart().setRole( Role.named( name) );
         }
     }
 
