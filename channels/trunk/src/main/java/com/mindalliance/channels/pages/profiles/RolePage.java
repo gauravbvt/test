@@ -12,7 +12,7 @@ import com.mindalliance.channels.analysis.profiling.Job;
 import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.analysis.profiling.SortableJobsProvider;
 import com.mindalliance.channels.analysis.profiling.SortablePlaysProvider;
-import com.mindalliance.channels.pages.ModelObjectLinkPanel;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.wicket.PageParameters;
@@ -32,7 +32,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
@@ -101,7 +100,7 @@ public class RolePage extends WebPage {
                     public void populateItem(
                             Item<ICellPopulator<Play>> cellItem, String id,
                             final IModel<Play> playModel ) {
-                        cellItem.add( new ModelObjectLinkPanel( id,
+                        cellItem.add( new ModelObjectLink( id,
                                 new AbstractReadOnlyModel<Part>() {
                                     @Override
                                     public Part getObject() {
@@ -133,7 +132,7 @@ public class RolePage extends WebPage {
                             Item<ICellPopulator<Play>> cellItem, String id,
                             final IModel<Play> playModel ) {
                         cellItem.add(
-                                new ModelObjectLinkPanel(
+                                new ModelObjectLink(
                                         id,
                                         new AbstractReadOnlyModel<Part>() {
                                             @Override
@@ -176,7 +175,7 @@ public class RolePage extends WebPage {
                             Item<ICellPopulator<Job>> cellItem, String id,
                             final IModel<Job> jobModel ) {
                         cellItem.add(
-                                new ModelObjectLinkPanel(
+                                new ModelObjectLink(
                                         id,
                                         new AbstractReadOnlyModel<Actor>() {
                                             @Override
@@ -201,7 +200,7 @@ public class RolePage extends WebPage {
                             Item<ICellPopulator<Job>> cellItem, String id,
                             final IModel<Job> jobModel ) {
                         cellItem.add(
-                                new ModelObjectLinkPanel(
+                                new ModelObjectLink(
                                         id,
                                         new AbstractReadOnlyModel<Role>() {
                                             @Override
@@ -227,7 +226,7 @@ public class RolePage extends WebPage {
                             Item<ICellPopulator<Job>> cellItem, String id,
                             final IModel<Job> jobModel ) {
                         cellItem.add(
-                                new ModelObjectLinkPanel(
+                                new ModelObjectLink(
                                         id,
                                         new AbstractReadOnlyModel<Organization>() {
                                             @Override
@@ -253,7 +252,7 @@ public class RolePage extends WebPage {
                             Item<ICellPopulator<Job>> cellItem, String id,
                             final IModel<Job> jobModel ) {
                         cellItem.add(
-                                new ModelObjectLinkPanel(
+                                new ModelObjectLink(
                                         id,
                                         new AbstractReadOnlyModel<Jurisdiction>() {
                                             @Override
