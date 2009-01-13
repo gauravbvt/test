@@ -34,11 +34,11 @@ public class SemMatch {
      * @return -- whether they are similar
      */
     public static boolean sameLocation( Jurisdiction loc, Jurisdiction otherLoc ) {
-        // TODO - compare geofeatures
         if (loc == null && otherLoc == null)
             return true;
         if (loc == null || otherLoc == null)
             return false;
+        // TODO - compare geofeatures
         return same( loc.getName(), otherLoc.getName() );
     }
 }

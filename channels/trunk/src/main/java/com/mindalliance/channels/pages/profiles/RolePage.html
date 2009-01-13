@@ -13,23 +13,13 @@
 <body>
 <div><h1>Role</h1></div>
 <div wicket:id="issues">[issues panel]</div>
-<form wicket:id="role-form">
-    <div wicket:id="role-details">
-        <table>
-            <tr><th align="right"><label>Name:</label></th>
-                <td><input width="40" wicket:id="name" type="text"/></td></tr>
-            <tr><th align="right" valign="top"><label>Description:</label></th>
-                <td><textarea cols="40" rows="4" wicket:id="description">...</textarea></td></tr>
-            <tr><td colspan="2" align = "right"><input type="submit" value="submit"/></td></tr>
-        </table>
-    </div>
-</form>
+<div wicket:id="role-form"></div>
 <div>
-    <h2><span>Playbook</span></h2>
+    <h2>Playbook</h2>
     <table wicket:id="playbook">[table]</table>
 </div>
 <div>
-    <h2><span>Directory</span></h2>
+    <h2>Directory</h2>
     <table wicket:id="directory">[actors]</table>
 </div>
 <div id="footer">

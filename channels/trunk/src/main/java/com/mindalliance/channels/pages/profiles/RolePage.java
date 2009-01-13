@@ -15,23 +15,19 @@ import com.mindalliance.channels.analysis.profiling.SortablePlaysProvider;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
@@ -53,7 +49,7 @@ public class RolePage extends WebPage {
      */
     static final String ID_PARM = "id";                                                   // NON-NLS
 
-    static final int PAGE_SIZE = 20;
+    static final int PAGE_SIZE = 10;
 
     public RolePage( PageParameters parameters ) {
         super( parameters );
@@ -72,16 +68,8 @@ public class RolePage extends WebPage {
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
         IssuesPanel issuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( role ) );
         add( issuesPanel );
-        Form roleForm = new Form( "role-form" );
+        ModelObjectPanel roleForm = new ModelObjectPanel("role-form", new Model<Role>(role));
         add( roleForm );
-        WebMarkupContainer roleDetailsDiv = new WebMarkupContainer( "role-details" );
-        roleForm.add( roleDetailsDiv );
-        roleDetailsDiv.add(
-                new TextField<String>( "name",                                            // NON-NLS
-                        new PropertyModel<String>( role, "name" ) ) );
-        roleDetailsDiv.add(
-                new TextArea<String>( "description",                                      // NON-NLS
-                        new PropertyModel<String>( role, "description" ) ) );
         addPlaybook( "playbook", role );
         addDirectory( "directory", role );
     }
