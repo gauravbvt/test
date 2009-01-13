@@ -4,6 +4,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 /**
  * The sending or receiving of information by a part.
@@ -74,6 +75,19 @@ public class Play implements Serializable {
             }
         }
         return otherPart;
+    }
+
+    /**
+     * Flow's other part as string
+     * @return a string
+     */
+    public String getOtherPartString() {
+        String channel = getFlow().getChannel();
+        if ( channel == null ) channel = "no channel";
+        return MessageFormat.format(
+                "{0} ({1})",
+                getOtherPartName(),
+                channel );
     }
 
     /**

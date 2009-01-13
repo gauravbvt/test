@@ -110,7 +110,7 @@ public class Resource implements Serializable {
      */
     public String getChannelsString() {
         if ( channels.isEmpty() ) {
-            return "No channel";
+            return "(No channel)";
         } else {
             StringBuilder sb = new StringBuilder();
             Iterator<String> iter = channels.iterator();
