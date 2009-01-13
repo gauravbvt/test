@@ -4,6 +4,7 @@ import com.mindalliance.channels.Resourceable;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.analysis.profiling.SortableResourceProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -38,6 +39,7 @@ public class DirectoryPanel extends AbstractTablePanel<Resource> {
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
+        if ( ! (resourceable instanceof Actor ) )
         columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
         if ( ! (resourceable instanceof Role) )
             columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );

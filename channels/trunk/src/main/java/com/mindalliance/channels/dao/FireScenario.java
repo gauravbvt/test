@@ -4,7 +4,6 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 
@@ -21,7 +20,7 @@ public class FireScenario extends Scenario {
         setName( "Fire in the building" );
         setDescription( "A fire happens" );
 
-        final Actor joe = new Actor( "Joe Smith" );
+        final Actor joe = dao.findOrMakeActor( "Joe Smith" );
         final Part js1 = getDefaultPart();
         js1.setActor( joe );
         js1.setTask( "investigating fire" );
@@ -32,12 +31,12 @@ public class FireScenario extends Scenario {
         final Part tenant = createPart( dao.findOrMakeRole( "Tenant" ), "noticing fire" );
         final Part chief = createPart( dao.findOrMakeRole( "Fire Chief" ), "supervising operations" );
 
-        final Actor system = new Actor( "Fire Alarm" );
+        final Actor system = dao.findOrMakeActor( "Fire Alarm" );
         final Part alarm = createPart( system, "ringing" );
         alarm.setRole( dao.findOrMakeRole( "System" ) );
 
         final Part fd = createPart();
-        fd.setOrganization( new Organization( "Fire Department" ) );
+        fd.setOrganization( dao.findOrMakeOrganization( "Fire Department" ) );
         fd.setTask( "responding" );
 
         connect( tenant, alarm );
@@ -68,7 +67,8 @@ public class FireScenario extends Scenario {
         f4.setCritical( true );
 
         final Connector ga = evac.inputs().next();
-        /*final Flow f5 = */connect( js1, ga );
+        /*final Flow f5 = */
+        connect( js1, ga );
         // f5.setCritical( true );
 
         final Connector end = evac.outputs().next();

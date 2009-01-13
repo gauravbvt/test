@@ -23,13 +23,13 @@ import java.util.Iterator;
  * Date: Jan 8, 2009
  * Time: 10:34:20 AM
  */
-public class IssuesPanel extends Panel {
+public class IssuesPanel<T extends ModelObject> extends Panel {
     /**
      * The model object possibly with issues.
      */
     private ModelObject modelObject;
 
-    public IssuesPanel( String s, IModel<ModelObject> iModel ) {
+    public IssuesPanel( String s, IModel<T> iModel ) {
         super( s, iModel );
         modelObject = iModel.getObject();
         init();

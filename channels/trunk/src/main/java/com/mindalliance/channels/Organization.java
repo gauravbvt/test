@@ -18,6 +18,7 @@ public class Organization extends ModelObject implements Player, Resourceable {
 
     /**
      * Utility constructor for tests.
+     *
      * @param name the name of the new object
      */
     public Organization( String name ) {
@@ -37,6 +38,6 @@ public class Organization extends ModelObject implements Player, Resourceable {
      * @return a list of resources
      */
     public List<Resource> findAllResources() {
-         return new ArrayList<Resource>(); // TODO
+        return new ArrayList<Resource>(); // TODO
     }
 }

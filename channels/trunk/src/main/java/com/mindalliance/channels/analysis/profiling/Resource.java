@@ -5,12 +5,18 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Resourceable;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -62,7 +68,7 @@ public class Resource implements Serializable {
         jurisdiction = part.getJurisdiction();
         channels = new ArrayList<String>();
     }
-
+    
     public Actor getActor() {
         return actor;
     }

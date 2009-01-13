@@ -8,6 +8,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.util.HashMap;
@@ -152,10 +154,29 @@ public final class Memory implements Dao {
     }
 
     /**
+     * Find an actor given its id.
+     *
+     * @param id the id
+     * @return the corresponding actor, or null if not found.
+     * @throws com.mindalliance.channels.NotFoundException
+     *          when not found
+     */
+    public Actor findActor( long id ) throws NotFoundException {
+        return (Actor) find( id );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Organization findOrganization( long id ) throws NotFoundException {
+        return (Organization) find( id );
+    }
+
+    /**
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Role> roles() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -163,6 +184,32 @@ public final class Memory implements Dao {
             }
         } );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    // TODO - Inefficient
+    @SuppressWarnings( {"unchecked"} )
+    public Iterator<Actor> actors() {
+        return new FilterIterator( idIndex.values().iterator(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                return obj instanceof Actor;
+            }
+        } );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( {"unchecked"} )
+    public Iterator<Organization> organizations() {
+        return new FilterIterator( idIndex.values().iterator(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                return obj instanceof Organization;
+            }
+        } );
+    }
+
 
     /**
      * {@inheritDoc}
@@ -184,9 +231,59 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
+    public Actor findOrMakeActor( String name ) {
+        Actor actor = null;
+        Iterator<Actor> actors = actors();
+        while ( actor == null && actors.hasNext() ) {
+            Actor r = actors.next();
+            if ( SemMatch.same( r.getName(), name ) ) actor = r;
+        }
+        if ( actor == null ) {
+            actor = new Actor( name );
+            idIndex.put( actor.getId(), actor );
+        }
+        return actor;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Organization findOrMakeOrganization( String name ) {
+        Organization organization = null;
+        Iterator<Organization> organizations = organizations();
+        while ( organization == null && organizations.hasNext() ) {
+            Organization r = organizations.next();
+            if ( SemMatch.same( r.getName(), name ) ) organization = r;
+        }
+        if ( organization == null ) {
+            organization = new Organization( name );
+            idIndex.put( organization.getId(), organization );
+        }
+        return organization;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     public void removeRole( Role role ) {
         idIndex.remove( role.getId() );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeActor( Actor actor ) {
+        idIndex.remove( actor.getId() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeOrganization( Organization organization ) {
+        idIndex.remove( organization.getId() );
+    }
+
 
     private ModelObject find( long id ) throws NotFoundException {
         final ModelObject result = idIndex.get( id );

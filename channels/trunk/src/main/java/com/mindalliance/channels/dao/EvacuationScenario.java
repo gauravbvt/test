@@ -16,7 +16,7 @@ public class EvacuationScenario extends Scenario {
         setName( "Building Evacuation" );
 
         final Part p = getDefaultPart();
-        p.setActor( new Actor( "Sam Adams" ) );
+        p.setActor( dao.findOrMakeActor( "Sam Adams" ) );
         p.setTask( "supervising evacuation" );
 
         final Flow goAhead = p.createRequirement();

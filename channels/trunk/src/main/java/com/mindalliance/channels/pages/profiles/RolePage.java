@@ -45,7 +45,7 @@ public class RolePage extends WebPage {
         Role role = findRole( parameters );
         assert role != null;
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
-        add( new IssuesPanel( "issues", new Model<ModelObject>( role ) ) );
+        add( new IssuesPanel<Role>( "issues", new Model<Role>( role ) ) );
         add( new ModelObjectPanel( "role-form", new Model<Role>( role ) ) );
         add( new PlaybookPanel( "playbook", new Model<Role>( role ) ) );
         add( new DirectoryPanel( "directory", new Model<Role>( role ) ) );

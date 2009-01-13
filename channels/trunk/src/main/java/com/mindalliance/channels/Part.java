@@ -149,4 +149,30 @@ public class Part extends Node {
     public boolean isRole() {
         return role != null && actor == null;
     }
+
+    public boolean involves( Resourceable resourceable ) {
+        if ( resourceable instanceof Role ) {
+            return role == resourceable;
+        }
+        if ( resourceable instanceof Actor ) {
+            return actor == resourceable;
+        }
+        if ( resourceable instanceof Organization ) {
+            return organization == resourceable;
+        }
+        return false;
+    }
+
+    public boolean involves( Player player ) {
+        if ( player instanceof Role ) {
+            return role == player;
+        }
+        if ( player instanceof Actor ) {
+            return actor == player;
+        }
+        if ( player instanceof Organization ) {
+            return organization == player;
+        }
+        return false;
+    }
 }
