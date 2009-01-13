@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.profiling;
 
-import com.mindalliance.channels.Player;
+import com.mindalliance.channels.Resourceable;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -15,48 +15,47 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A sortable provider of plays.
+ * A sortable provider of resources for a given role or organization.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Jan 8, 2009
- * Time: 1:12:32 PM
+ * Time: 1:16:32 PM
  */
-public class SortablePlaysProvider extends SortableDataProvider<Play> {
-
+public class SortableResourceProvider extends SortableDataProvider<Resource> {
     /**
-     * Plays found in scenarios for a given actor, role or organization.
+     * Known applicable resources from parts in the current project's scenarios
      */
-    private List<Play> plays;
+    private List<Resource> resources;
 
-    public SortablePlaysProvider( Player player ) {
-        plays = player.findAllPlays();
-        setSort( "part.scenario.name", true );
+    public SortableResourceProvider( Resourceable resourceable ) {
+        resources = resourceable.findAllResources();
+        setSort( "name", true );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Iterator<Play> iterator( int first, int count ) {
+    public Iterator<Resource> iterator( int first, int count ) {
         final SortParam sortParam = getSort();
-        List<Play> sortedPlays = new ArrayList<Play>();
-        sortedPlays.addAll( plays );
-        Collections.sort( sortedPlays, new Comparator<Play>() {
+        List<Resource> sortedResources = new ArrayList<Resource>();
+        sortedResources.addAll( resources );
+        Collections.sort( sortedResources, new Comparator<Resource>() {
             /**
-             * @param play the first object to be compared.
-             * @param otherPlay the second object to be compared.
+             * @param resource the first object to be compared.
+             * @param otherResource the second object to be compared.
              * @return a negative integer, zero, or a positive integer as the
              *         first argument is less than, equal to, or greater than the
              *         second.
              * @throws ClassCastException if the arguments' types prevent them from
              *                            being compared by this comparator.
              */
-            public int compare( Play play, Play otherPlay ) {
+            public int compare( Resource resource, Resource otherResource ) {
                 int comp = 0;
                 try {
                     String sortProperty = sortParam.getProperty();
-                    String value = PropertyUtils.getProperty( play, sortProperty ).toString();
-                    String otherValue = PropertyUtils.getProperty( otherPlay, sortProperty )
+                    String value = PropertyUtils.getProperty( resource, sortProperty ).toString();
+                    String otherValue = PropertyUtils.getProperty( otherResource, sortProperty )
                             .toString();
                     comp = value.compareTo( otherValue );
                 } catch ( IllegalAccessException e ) {
@@ -69,21 +68,21 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
                 return sortParam.isAscending() ? comp : comp * -1;
             }
         } );
-        return sortedPlays.subList( first, first + count ).iterator();
+        return sortedResources.subList( first, first + count ).iterator();
     }
 
     /**
      * {@inheritDoc}
      */
     public int size() {
-        return plays.size();
+        return resources.size();
     }
 
     /**
      * {@inheritDoc}
      */
-    public IModel<Play> model( Play play ) {
-        return new Model<Play>( play );
+    public IModel<Resource> model( Resource resource ) {
+        return new Model<Resource>( resource );
     }
 
 }

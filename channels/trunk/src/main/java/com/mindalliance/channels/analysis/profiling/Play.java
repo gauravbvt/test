@@ -99,7 +99,7 @@ public class Play implements Serializable {
             }
 
         } else {
-            sb.append( flow.isAskedFor() ? "ask" : "receive" );
+            sb.append( flow.isAskedFor() ? "ask" : "receive from" );
         }
         return sb.toString();
     }

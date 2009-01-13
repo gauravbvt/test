@@ -1,38 +1,19 @@
 package com.mindalliance.channels.pages.profiles;
 
-import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.analysis.profiling.Job;
-import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.profiling.SortableJobsProvider;
-import com.mindalliance.channels.analysis.profiling.SortablePlaysProvider;
-import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.DirectoryPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
+import com.mindalliance.channels.pages.components.PlaybookPanel;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.LoggerFactory;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Role profile page
@@ -68,203 +49,10 @@ public class RolePage extends WebPage {
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
         IssuesPanel issuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( role ) );
         add( issuesPanel );
-        ModelObjectPanel roleForm = new ModelObjectPanel("role-form", new Model<Role>(role));
+        ModelObjectPanel roleForm = new ModelObjectPanel( "role-form", new Model<Role>( role ) );
         add( roleForm );
-        addPlaybook( "playbook", role );
-        addDirectory( "directory", role );
-    }
-
-    private void addPlaybook( String playbookId, Role role ) {
-        final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-        // Scenario column
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Scenario" ),
-                "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
-        // Part column
-        columns.add(
-                new AbstractColumn<Play>( new Model<String>( "Task" ),
-                        "part.task" ) {                                 // NON-NLS
-
-                    public void populateItem(
-                            Item<ICellPopulator<Play>> cellItem, String id,
-                            final IModel<Play> playModel ) {
-                        cellItem.add( new ModelObjectLink( id,
-                                new AbstractReadOnlyModel<Part>() {
-                                    @Override
-                                    public Part getObject() {
-                                        return playModel.getObject().getPart();
-                                    }
-                                },
-                                new AbstractReadOnlyModel<String>() {
-                                    @Override
-                                    public String getObject() {
-                                        return playModel.getObject().getPart().getTask();
-                                    }
-                                } ) );
-                    }
-                } );
-        // Info column
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Info" ),
-                "flow.name", "flow.name" ) );                                     // NON-NLS
-        // Sent/received column
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Sent/received" ),
-                "kind", "kind" ) );                                               // NON-NLS
-        // To/from colum
-        columns.add(
-                new AbstractColumn<Play>( new Model<String>( "To/from" ),
-                        "otherPart.name" ) {                            // NON-NLS
-
-                    public void populateItem(
-                            Item<ICellPopulator<Play>> cellItem, String id,
-                            final IModel<Play> playModel ) {
-                        cellItem.add(
-                                new ModelObjectLink(
-                                        id,
-                                        new AbstractReadOnlyModel<Part>() {
-                                            @Override
-                                            public Part getObject() {
-                                                return playModel.getObject().getOtherPart();
-                                            }
-                                        },
-                                        new AbstractReadOnlyModel<String>() {
-                                            @Override
-                                            public String getObject() {
-                                                final Play play = playModel.getObject();
-                                                String channel = play.getFlow().getChannel();
-                                                if (channel == null) channel = "no channel" ;
-                                                return MessageFormat.format(
-                                                        "{0} ({1})",
-                                                        play.getOtherPartName(),
-                                                        channel );
-                                            }
-                                        } ) );
-                    }
-                } );
-        // Critical column
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Priority" ),
-                "criticality", "criticality" ) );                                 // NON-NLS
-
-        // provider and table
-        add( new AjaxFallbackDefaultDataTable<Play>(
-                playbookId, columns, new SortablePlaysProvider( role ), PAGE_SIZE ) );
-    }
-
-    private void addDirectory( String directoryId, Role role ) {
-        final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-        // Actor column
-        columns.add(
-                new AbstractColumn<Job>( new Model<String>( "Name" ),
-                        "actor.name" ) {               // NON-NLS
-
-                    public void populateItem(
-                            Item<ICellPopulator<Job>> cellItem, String id,
-                            final IModel<Job> jobModel ) {
-                        cellItem.add(
-                                new ModelObjectLink(
-                                        id,
-                                        new AbstractReadOnlyModel<Actor>() {
-                                            @Override
-                                            public Actor getObject() {
-                                                return jobModel.getObject().getActor();
-                                            }
-                                        },
-                                        new AbstractReadOnlyModel<String>() {
-                                            @Override
-                                            public String getObject() {
-                                                return jobModel.getObject().getActorName();
-                                            }
-                                        } ) );
-                    }
-                } );
-        // Role column
-        columns.add(
-                new AbstractColumn<Job>( new Model<String>( "Role" ),
-                        "role.name" ) {                                  // NON-NLS
-
-                    public void populateItem(
-                            Item<ICellPopulator<Job>> cellItem, String id,
-                            final IModel<Job> jobModel ) {
-                        cellItem.add(
-                                new ModelObjectLink(
-                                        id,
-                                        new AbstractReadOnlyModel<Role>() {
-                                            @Override
-                                            public Role getObject() {
-                                                return jobModel.getObject().getRole();
-                                            }
-                                        },
-                                        new AbstractReadOnlyModel<String>() {
-                                            @Override
-                                            public String getObject() {
-                                                return jobModel.getObject().getRole().getName();
-                                            }
-                                        } ) );
-                    }
-                } );
-        // Organization column
-        columns.add(
-                new AbstractColumn<Job>(
-                        new Model<String>( "Organization" ),
-                        "organization.name" ) {                                           // NON-NLS
-
-                    public void populateItem(
-                            Item<ICellPopulator<Job>> cellItem, String id,
-                            final IModel<Job> jobModel ) {
-                        cellItem.add(
-                                new ModelObjectLink(
-                                        id,
-                                        new AbstractReadOnlyModel<Organization>() {
-                                            @Override
-                                            public Organization getObject() {
-                                                return jobModel.getObject().getOrganization();
-                                            }
-                                        },
-                                        new AbstractReadOnlyModel<String>() {
-                                            @Override
-                                            public String getObject() {
-                                                return jobModel.getObject().getOrganizationName();
-                                            }
-                                        } ) );
-                    }
-                } );
-        // Jurisdiction column
-        columns.add(
-                new AbstractColumn<Job>(
-                        new Model<String>( "Jurisdiction" ),
-                        "jurisdiction.name" ) {                                           // NON-NLS
-
-                    public void populateItem(
-                            Item<ICellPopulator<Job>> cellItem, String id,
-                            final IModel<Job> jobModel ) {
-                        cellItem.add(
-                                new ModelObjectLink(
-                                        id,
-                                        new AbstractReadOnlyModel<Jurisdiction>() {
-                                            @Override
-                                            public Jurisdiction getObject() {
-                                                return jobModel.getObject().getJurisdiction();
-                                            }
-                                        },
-                                        new AbstractReadOnlyModel<String>() {
-                                            @Override
-                                            public String getObject() {
-                                                return jobModel.getObject().getJurisdictionName();
-                                            }
-                                        } ) );
-                    }
-                } );
-
-        // Channels column
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Channels" ),
-                "channelsString", "channelsString" ) );                           // NON-NLS
-
-        // provider and table
-        add( new AjaxFallbackDefaultDataTable<Job>(
-                directoryId, columns, new SortableJobsProvider( role ), PAGE_SIZE ) );
+        add( new PlaybookPanel( "playbook", new Model<Role>( role ) ) );
+        add( new DirectoryPanel( "directory", new Model<Role>( role ) ) );
     }
 
     private Role findRole( PageParameters parameters ) throws NotFoundException {
