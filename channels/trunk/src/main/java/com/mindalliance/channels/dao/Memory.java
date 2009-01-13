@@ -155,7 +155,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Role> roles() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {

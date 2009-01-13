@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.text.MessageFormat;
 
 /**
+ * Playbook page
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -28,8 +29,13 @@ import java.text.MessageFormat;
  * Time: 8:01:49 PM
  */
 public class PlaybookPanel extends Panel {
-
+    /**
+     * The player
+     */
     private Player player;
+    /**
+     * Number of plays shown in table at a time
+     */
     private int pageSize = 20;
 
     public PlaybookPanel( String s, IModel<? extends Player> model ) {
@@ -105,7 +111,7 @@ public class PlaybookPanel extends Panel {
                                             public String getObject() {
                                                 final Play play = playModel.getObject();
                                                 String channel = play.getFlow().getChannel();
-                                                if (channel == null) channel = "no channel" ;
+                                                if ( channel == null ) channel = "no channel";
                                                 return MessageFormat.format(
                                                         "{0} ({1})",
                                                         play.getOtherPartName(),

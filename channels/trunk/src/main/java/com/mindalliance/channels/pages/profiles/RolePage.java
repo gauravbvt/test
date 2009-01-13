@@ -16,7 +16,7 @@ import org.apache.wicket.model.Model;
 import org.slf4j.LoggerFactory;
 
 /**
- * Role profile page
+ * Role page.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -29,8 +29,6 @@ public class RolePage extends WebPage {
      * The role 'id' parameter in the URL.
      */
     static final String ID_PARM = "id";                                                   // NON-NLS
-
-    static final int PAGE_SIZE = 10;
 
     public RolePage( PageParameters parameters ) {
         super( parameters );
@@ -47,10 +45,8 @@ public class RolePage extends WebPage {
         Role role = findRole( parameters );
         assert role != null;
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
-        IssuesPanel issuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( role ) );
-        add( issuesPanel );
-        ModelObjectPanel roleForm = new ModelObjectPanel( "role-form", new Model<Role>( role ) );
-        add( roleForm );
+        add( new IssuesPanel( "issues", new Model<ModelObject>( role ) ) );
+        add( new ModelObjectPanel( "role-form", new Model<Role>( role ) ) );
         add( new PlaybookPanel( "playbook", new Model<Role>( role ) ) );
         add( new DirectoryPanel( "directory", new Model<Role>( role ) ) );
     }

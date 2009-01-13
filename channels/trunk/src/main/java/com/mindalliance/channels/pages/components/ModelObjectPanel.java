@@ -17,8 +17,10 @@ import com.mindalliance.channels.ModelObject;
  * Time: 7:05:45 PM
  */
 public class ModelObjectPanel extends Panel {
-
-    protected ModelObject mo;
+    /**
+     * The model object being edited
+     */
+    private ModelObject mo;
 
     public ModelObjectPanel( String id, IModel<? extends ModelObject> model ) {
         super( id, model );

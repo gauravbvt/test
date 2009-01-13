@@ -59,6 +59,7 @@ public class Play implements Serializable {
 
     /**
      * Get the other part in the flow
+     *
      * @return a part
      */
     public Part getOtherPart() {
@@ -77,16 +78,18 @@ public class Play implements Serializable {
 
     /**
      * Gets the other part in the flow's name or an empty string if none
+     *
      * @return a string
      */
     public String getOtherPartName() {
         Part otherPart = getOtherPart();
-        return (otherPart == null) ? "" : otherPart.getName();
+        return ( otherPart == null ) ? "" : otherPart.getName();
     }
 
     /**
      * Get a string description of the kind of communication
      * including max delay if applicable
+     *
      * @return a string description of the communication
      */
     public String getKind() {
@@ -106,6 +109,7 @@ public class Play implements Serializable {
 
     /**
      * Get string indicator of criticality
+     *
      * @return a string
      */
     public String getCriticality() {
@@ -114,6 +118,7 @@ public class Play implements Serializable {
 
     /**
      * Whether a flow should be included in a playbook
+     *
      * @param flow a flow
      * @return boolean
      */

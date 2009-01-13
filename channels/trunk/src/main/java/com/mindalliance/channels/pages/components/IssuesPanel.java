@@ -24,7 +24,9 @@ import java.util.Iterator;
  * Time: 10:34:20 AM
  */
 public class IssuesPanel extends Panel {
-
+    /**
+     * The model object possibly with issues.
+     */
     private ModelObject modelObject;
 
     public IssuesPanel( String s, IModel<ModelObject> iModel ) {
@@ -36,6 +38,7 @@ public class IssuesPanel extends Panel {
     private void init() {
         final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );     // NON-NLS
         issuesList.add( new RefreshingView<Issue>( "issue" ) {                        // NON-NLS
+
             @SuppressWarnings( { "unchecked" } )
             @Override
             protected Iterator<IModel<Issue>> getItemModels() {

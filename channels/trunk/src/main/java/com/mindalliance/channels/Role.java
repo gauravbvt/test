@@ -20,13 +20,19 @@ public class Role extends ModelObject implements Player, Resourceable {
 
     /**
      * Utility constructor for tests.
+     *
      * @param name the name of the new object
      */
     public Role( String name ) {
         super( name );
     }
 
-    public static Role named ( String name ) {
+    /**
+     * Find or create a role by name
+     * @param name String a given name
+     * @return a new or existing role
+     */
+    public static Role named( String name ) {
         Dao dao = Project.getProject().getDao();
         return dao.findOrMakeRole( name );
     }

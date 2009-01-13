@@ -5,6 +5,7 @@ import com.mindalliance.channels.analysis.profiling.Resource;
 import java.util.List;
 
 /**
+ * A container or implied set of resources
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

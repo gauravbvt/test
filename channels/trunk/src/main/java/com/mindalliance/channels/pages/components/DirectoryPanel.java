@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * A resource directory
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -30,8 +31,13 @@ import java.util.ArrayList;
  * Time: 8:10:00 PM
  */
 public class DirectoryPanel extends Panel {
-
+    /**
+     * A resource container or an implied set of resources
+     */
     private Resourceable resourceable;
+    /**
+     * The default number of resources shown at a time
+     */
     private int pageSize = 20;
 
     public DirectoryPanel( String id, IModel<? extends Resourceable> model ) {
