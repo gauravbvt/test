@@ -1,11 +1,14 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Place;
+import com.mindalliance.channels.analysis.profiling.Resource;
+
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A description of a jurisdiction.
  */
-public class Jurisdiction extends Place {
+public class Jurisdiction extends Place implements Resourceable {
 
     public Jurisdiction() {
     }
@@ -13,5 +16,12 @@ public class Jurisdiction extends Place {
     public Jurisdiction( String name ) {
         this();
         setName( name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Resource> findAllResources() {
+        return new ArrayList<Resource>(); // Todo
     }
 }

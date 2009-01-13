@@ -1,6 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Resourceable;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.analysis.profiling.SortableResourceProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -36,9 +39,12 @@ public class DirectoryPanel extends AbstractTablePanel<Resource> {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
         columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
-        columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
-        columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
-        columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
+        if ( ! (resourceable instanceof Role) )
+            columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
+        if ( ! (resourceable instanceof Organization ) )
+            columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
+        if ( ! (resourceable instanceof Jurisdiction ) )
+            columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Channels" ),
                 "channelsString", "channelsString" ) );                           // NON-NLS

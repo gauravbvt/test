@@ -78,47 +78,17 @@ public class Play implements Serializable {
     }
 
     /**
-     * Flow's other part as string
-     * @return a string
-     */
-    public String getOtherPartString() {
-        String channel = getFlow().getChannel();
-        if ( channel == null ) channel = "no channel";
-        return MessageFormat.format(
-                "{0} ({1})",
-                getOtherPartName(),
-                channel );
-    }
-
-    /**
-     * Gets the other part in the flow's name or an empty string if none
-     *
-     * @return a string
-     */
-    public String getOtherPartName() {
-        Part otherPart = getOtherPart();
-        return ( otherPart == null ) ? "" : otherPart.getName();
-    }
-
-    /**
      * Get a string description of the kind of communication
      * including max delay if applicable
      *
      * @return a string description of the communication
      */
     public String getKind() {
-        StringBuilder sb = new StringBuilder();
         if ( isSend ) {
-            sb.append( flow.isAskedFor() ? "answer" : "notify" );
-            if ( flow.getMaxDelay() != null && !flow.getMaxDelay().isEmpty() ) {
-                sb.append( " within " );
-                sb.append( flow.getMaxDelay() );
-            }
-
+            return flow.isAskedFor() ? "answer" : "notify";
         } else {
-            sb.append( flow.isAskedFor() ? "ask" : "receive from" );
+            return flow.isAskedFor() ? "ask" : "receive";
         }
-        return sb.toString();
     }
 
     /**

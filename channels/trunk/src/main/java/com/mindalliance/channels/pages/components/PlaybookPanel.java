@@ -39,13 +39,13 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Scenario" ),
                 "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
+        columns.add( makeColumn( "info", "flow.name", EMPTY ) );
+        // style class is one of: ask, notify, answer, receive
+        columns.add( makeLinkColumn( "To/from", "otherPart", "otherPart.name", "@kind", EMPTY ) );
+        columns.add( makeColumn( "Channel", "flow.channel", EMPTY ) );      // NON-NLS
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "Info" ),
-                "flow.name", "flow.name" ) );                                     // NON-NLS
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Sent/received" ),
-                "kind", "kind" ) );                                               // NON-NLS
-        columns.add( makeLinkColumn( "To/from", "otherPart", "otherPartString", EMPTY  ) );
+                new Model<String>( "Max delay" ),
+                "flow.maxDelay", "flow.maxDelay" ) );                                   // NON-NLS
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Priority" ),
                 "criticality", "criticality" ) );                                 // NON-NLS
