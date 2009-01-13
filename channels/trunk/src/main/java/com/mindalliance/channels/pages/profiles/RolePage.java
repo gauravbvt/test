@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.profiles;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.pages.Project;
@@ -13,6 +12,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -45,6 +45,7 @@ public class RolePage extends WebPage {
         Role role = findRole( parameters );
         assert role != null;
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
+        add( new Label( "header-title", new PropertyModel<String>( role, "name" ) ) );
         add( new IssuesPanel<Role>( "issues", new Model<Role>( role ) ) );
         add( new ModelObjectPanel( "role-form", new Model<Role>( role ) ) );
         add( new PlaybookPanel( "playbook", new Model<Role>( role ) ) );

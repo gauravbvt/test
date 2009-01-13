@@ -63,7 +63,7 @@ public class IssuesPanel<T extends ModelObject> extends Panel {
         } );
 
         final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
-        issuesList.setVisible( analyst.hasIssues( modelObject, false ) );
+        setVisible( analyst.hasIssues( modelObject, false ) );
         add( issuesList );
     }
 }

@@ -32,6 +32,7 @@ public class DirectoryPanel extends AbstractTablePanel<Resource> {
 
     public DirectoryPanel( String id, IModel<? extends Resourceable> model ) {
         super( id, model );
+        setRenderBodyOnly( true );
         resourceable = model.getObject();
         init();
     }

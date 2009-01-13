@@ -11,11 +11,17 @@ body {
     min-height: 34em;
 }
 
-form {
+body.profile {
+}
+
+.stretch {
     display: block;
     position: relative;
     width: 100%;
     height: 100%;
+}
+
+#details {
 }
 
 #sc-details {
@@ -93,8 +99,13 @@ form {
 
 #header {
     height: 5em;
-    padding-left: 64px;
+    padding-left: 60px;
     margin-bottom: 5px;
+}
+
+#details, #directory, #playbook {
+    margin: 5px auto;
+    max-width: 80em;
 }
 
 #footer {
@@ -123,6 +134,10 @@ input[type='checkbox'], input[type='radio'] {
 }
 input[type='text'], textarea {
     width: 25em;
+}
+
+.float {
+    float: right;
 }
 
 div.issues {
@@ -281,9 +296,10 @@ hr {
     display: none;
 }
 
-a, a:link, a:visited {
+a, a:link, a:visited, td.link span {
     color: #4f2d87;
     text-decoration: none;
+    cursor: pointer;
 }
 
 h1 a, div.caption a {
@@ -298,18 +314,21 @@ html, #sc-details {
 #header {
     background: transparent url('images/logo.png') no-repeat 5px 2px;
 }
+.role #header {
+    background: transparent url('images/masks.png') no-repeat 5px 2px;
+}
 #footer {
     border: 1px outset #6fafaf;
 }
 
-#part {
+#part, #directory, #playbook {
     background: #f6f6f6;
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part, #graph {
+#part, #graph, #directory, #playbook {
     border: 1px inset #c3dede;
 }
 #sc-details {
@@ -319,11 +338,38 @@ input[type='text'], textarea, select, table.flow-details {
     border: 1px inset #a7c092;
 }
 
-#reqs h3 {
+#reqs h3, td.link.notify, td.link.answer {
     background: transparent url('images/arrow_right_blue.png') no-repeat;
     padding-left: 20px;
 }
-#outcomes h3 {
+#outcomes h3, td.link.ask, td.link.receive {
     background: transparent url('images/arrow_left_blue.png') no-repeat;
     padding-left: 20px;
+}
+
+th.wicket_orderDown a {
+    background: transparent url('images/navigate_open.png') no-repeat 100% 0;
+    padding-right: 16px;
+}
+th.wicket_orderUp a {
+    background: transparent url('images/navigate_close.png') no-repeat 100% 0;
+    padding-right: 16px;
+}
+
+div#playbook table, div#directory table {
+}
+div#playbook th, div#directory th {
+    color: black;
+    font-weight: bold;
+    text-align: left;
+    text-decoration: underline;
+}
+.profile th, .profile td {
+    padding-right: 2em;
+    vertical-align: top;
+}
+
+div#playbook th a, div#playbook th a:link, div#playbook th a:visited,
+div#directory th a, div#directory th a:link, div#directory th a:visited {
+    color: black;
 }

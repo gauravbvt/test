@@ -60,12 +60,20 @@ public class PartPanel extends Panel {
 
         addField( TASK_PROPERTY );
         addField( ACTOR_PROPERTY );
+        add( new ModelObjectLink( "actor-link",                                           // NON-NLS
+                                 new PropertyModel<Actor>( part, ACTOR_PROPERTY ) ) );
         addField( ROLE_PROPERTY );
-        add( new ModelObjectLink( "role-link",                                       // NON-NLS
-                                        new PropertyModel<Role>( part, ROLE_PROPERTY ) ) );
+        add( new ModelObjectLink( "role-link",                                            // NON-NLS
+                                 new PropertyModel<Role>( part, ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY );
+        add( new ModelObjectLink( "org-link",                                             // NON-NLS
+                                 new PropertyModel<Organization>( part, ORG_PROPERTY ) ) );
         addField( JURISDICTION_PROPERTY );
+        add( new ModelObjectLink( "juris-link",                                           // NON-NLS
+                                 new PropertyModel<Jurisdiction>( part, JURISDICTION_PROPERTY ) ) );
         addField( LOCATION_PROPERTY );
+        add( new ModelObjectLink( "loc-link",                                             // NON-NLS
+                                 new PropertyModel<Location>( part, LOCATION_PROPERTY ) ) );
     }
 
     private void addField( String property ) {

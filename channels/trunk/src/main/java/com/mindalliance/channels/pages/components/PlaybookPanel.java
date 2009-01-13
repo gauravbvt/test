@@ -29,6 +29,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
     public PlaybookPanel( String s, IModel<? extends Player> model ) {
         super( s, model );
         player = model.getObject();
+        setRenderBodyOnly( true );
         init();
     }
 
