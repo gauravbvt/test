@@ -55,10 +55,11 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
                 int comp = 0;
                 try {
                     String sortProperty = sortParam.getProperty();
-                    String value = PropertyUtils.getProperty( play, sortProperty ).toString();
-                    String otherValue = PropertyUtils.getProperty( otherPlay, sortProperty )
-                            .toString();
-                    comp = value.compareTo( otherValue );
+                    Object value = PropertyUtils.getProperty( play, sortProperty );
+                    Object otherValue = PropertyUtils.getProperty( otherPlay, sortProperty );
+                    String stringValue = (value == null) ? "" : value.toString();
+                    String otherStringValue = (otherValue == null) ? "" : otherValue. toString();
+                    comp = stringValue.compareTo( otherStringValue );
                 } catch ( IllegalAccessException e ) {
                     e.printStackTrace();
                 } catch ( InvocationTargetException e ) {
