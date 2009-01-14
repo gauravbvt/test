@@ -96,7 +96,7 @@ public interface Dao extends Serializable {
      * Find a role given its id.
      *
      * @param id the id
-     * @return the corresponding role, or null if not found.
+     * @return the corresponding role.
      * @throws NotFoundException when not found
      */
     Role findRole( long id ) throws NotFoundException;
@@ -127,7 +127,7 @@ public interface Dao extends Serializable {
      * Find an actor given its id.
      *
      * @param id the id
-     * @return the corresponding actor, or null if not found.
+     * @return the corresponding actor.
      * @throws NotFoundException when not found
      */
     Actor findActor( long id ) throws NotFoundException;
@@ -158,7 +158,7 @@ public interface Dao extends Serializable {
      * Find an organization given its id.
      *
      * @param id the id
-     * @return the corresponding organization, or null if not found.
+     * @return the corresponding organization
      * @throws NotFoundException when not found
      */
     Organization findOrganization( long id ) throws NotFoundException;
@@ -177,4 +177,38 @@ public interface Dao extends Serializable {
      * @param organization organization to be removed
      */
     void removeOrganization( Organization organization );
+
+    /**
+     * Iterator on all jurisdictions
+     *
+     * @return a jurisdiction iterator
+     */
+    Iterator<Jurisdiction> jurisdictions();
+
+
+    /**
+     * Find a jurisdiction given its id.
+     *
+     * @param id the id
+     * @return the corresponding jurisdiction
+     * @throws NotFoundException when not found
+     */
+    Jurisdiction findJurisdiction( long id ) throws NotFoundException;
+
+    /**
+     * Finds a jurisdiction named name. If none, creates it.
+     *
+     * @param name the jurisdiction's name
+     * @return a jurisdiction
+     */
+    Jurisdiction findOrMakeJurisdiction( String name );
+
+    /**
+     * Remove a jurisdiction
+     *
+     * @param jurisdiction jurisdiction to be removed
+     */
+    void removeJurisdiction( Jurisdiction jurisdiction );
+
+
 }

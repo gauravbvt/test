@@ -1,17 +1,41 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
         "http://www.w3.org/TR/html4/strict.dtd">
 <html
+        xmlns="http://www.w3.org/1999/xhtml"
         xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
         lang="en">
 <head>
     <title wicket:id="title">[Title]</title>
     <link rel="stylesheet" href="channels.css" type="text/css">
 </head>
 
-<body class="profile part">
-<div id="header"><h1>Profile</h1></div>
-<div id="details">[model object panel]</div>
-<div id="profile">[profile]</div>
+<body class="profile resource">
+<div id="header"><h1><span wicket:id="resource-name">[resource name]</span></h1></div>
+<div id="resource-definition">
+    <table summary="Resource definition">
+        <tr wicket:id="actor">
+          <th align="right"><label><a wicket:id="actor-link" href="" title="Actor's name">Actor</a>:</label></th>
+          <td><span wicket:id="actor-name">[actor name]</span></td>
+        </tr>
+
+        <tr wicket:id="role">
+          <th align="right"><label><a wicket:id="role-link" href="#" title="Role's name">Role</a>:</label></th>
+          <td><span wicket:id="role-name">[role name]</span></td>
+        </tr>
+
+        <tr wicket:id="organization">
+          <th align="right"><label><a wicket:id="org-link" href="" title="Organization's name">Organization</a>:</label></th>
+          <td><span wicket:id="organization-name">[organization name]</span></td>
+        </tr>
+
+        <tr wicket:id="jurisdiction">
+          <th align="right"><label><a wicket:id="juris-link" href="" title="Jurisdiction's name">Jurisdiction</a>:</label></th>
+          <td><span wicket:id="jurisdiction-name">[jurisdiction name]</span></td>
+        </tr>
+    </table>
+</div>
+<div id="profile" wicket:id="profile">[resource profile]</div>
 <div id="footer">
     <hr>
     &copy; Copyright 2009 Mind-Alliance Inc. All Rights Reserved.

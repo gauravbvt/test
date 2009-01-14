@@ -65,6 +65,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource factory
+     *
      * @param resourceable a resourceable object
      * @return a new resource
      */
@@ -287,5 +288,40 @@ public class Resource implements Serializable {
      */
     public boolean hasJurisdiction() {
         return jurisdiction != null;
+    }
+
+    /**
+     * Resource is qualified by an actor, role, organization or jurisdiction?
+     *
+     * @return a boolean
+     */
+    public boolean isEmpty() {
+        return hasActor() ||
+                hasRole() ||
+                hasOrganization() ||
+                hasJurisdiction();
+    }
+
+    /**
+     * Composes a name for the resource
+     *
+     * @return a string
+     */
+    public String getName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( hasActor() ? actor.getName() : "Anyone" );
+        if ( hasRole() ) {
+            sb.append( " as " );
+            sb.append( role.getName() );
+        }
+        if ( hasOrganization() ) {
+            sb.append( " for " );
+            sb.append( organization.getName() );
+        }
+        if ( hasJurisdiction() ) {
+            sb.append( " in " );
+            sb.append( jurisdiction.getName() );
+        }
+        return sb.toString();
     }
 }

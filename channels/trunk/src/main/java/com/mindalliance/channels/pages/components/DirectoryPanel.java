@@ -35,13 +35,13 @@ public class DirectoryPanel extends AbstractTablePanel<Resource> {
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
-        if ( ! (resource.isActorOnly() ) )
+        if ( ! ( resource.hasActor()) )
         columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
-        if ( ! (resource.isRoleOnly()) )
+        if ( ! (resource.hasRole()) )
             columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
-        if ( ! (resource.isOrganizationOnly() ) )
+        if ( ! (resource.hasOrganization() ) )
             columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
-        if ( ! (resource.isJurisdictionOnly() ) )
+        if ( ! (resource.hasJurisdiction() ) )
             columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Channels" ),

@@ -10,6 +10,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.util.HashMap;
@@ -175,6 +176,13 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
+    public Jurisdiction findJurisdiction( long id ) throws NotFoundException {
+        return(Jurisdiction) find( id );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     // TODO - Inefficient
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Role> roles() {
@@ -209,6 +217,19 @@ public final class Memory implements Dao {
             }
         } );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( {"unchecked"} )
+    public Iterator<Jurisdiction> jurisdictions() {
+        return new FilterIterator( idIndex.values().iterator(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                return obj instanceof Jurisdiction;
+            }
+        } );
+    }
+
 
 
     /**
@@ -262,6 +283,22 @@ public final class Memory implements Dao {
         return organization;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Jurisdiction findOrMakeJurisdiction( String name ) {
+        Jurisdiction jurisdiction = null;
+        Iterator<Jurisdiction> jurisdictions = jurisdictions();
+        while ( jurisdiction == null && jurisdictions.hasNext() ) {
+            Jurisdiction j = jurisdictions.next();
+            if ( SemMatch.same( j.getName(), name ) ) jurisdiction = j;
+        }
+        if ( jurisdiction == null ) {
+            jurisdiction = new Jurisdiction( name );
+            idIndex.put( jurisdiction.getId(), jurisdiction );
+        }
+        return jurisdiction;
+    }
 
     /**
      * {@inheritDoc}
@@ -284,6 +321,12 @@ public final class Memory implements Dao {
         idIndex.remove( organization.getId() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void removeJurisdiction( Jurisdiction jurisdiction ) {
+        idIndex.remove( jurisdiction.getId() );
+    }
 
     private ModelObject find( long id ) throws NotFoundException {
         final ModelObject result = idIndex.get( id );

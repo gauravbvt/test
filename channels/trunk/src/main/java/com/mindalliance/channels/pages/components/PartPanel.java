@@ -161,7 +161,7 @@ public class PartPanel extends Panel {
         else {
             final Actor actor = getPart().getActor();
             if ( actor == null || !isSame( name, actor.getName() ) )
-                getPart().setActor( new Actor( name ) );
+                getPart().setActor( Actor.named( name ) );
         }
     }
 
@@ -175,7 +175,7 @@ public class PartPanel extends Panel {
         else {
             final Jurisdiction jurisdiction = getPart().getJurisdiction();
             if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
-                getPart().setJurisdiction( new Jurisdiction( name ) );
+                getPart().setJurisdiction( Jurisdiction.named( name ) );
         }
     }
 
@@ -203,7 +203,7 @@ public class PartPanel extends Panel {
         else {
             final Organization organization = getPart().getOrganization();
             if ( organization == null || !isSame( name, organization.getName() ) )
-                getPart().setOrganization( new Organization( name ) );
+                getPart().setOrganization( Organization.named( name ) );
         }
     }
 
