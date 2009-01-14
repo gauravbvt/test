@@ -15,6 +15,7 @@ import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.profiles.ActorPage;
 import com.mindalliance.channels.pages.profiles.OrganizationPage;
+import com.mindalliance.channels.pages.profiles.ResourcePage;
 import com.mindalliance.channels.pages.profiles.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -94,6 +95,7 @@ public final class Project extends WebApplication {
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "organization.html", OrganizationPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "resource.html", ResourcePage.class ) );
     }
 
     @Override

@@ -247,11 +247,11 @@ ul.menu li {
 ul.menu li:before {
     content: " \2015  ";
   }
-/**
-h2 ul.menu li:first-child:before, h3 ul.menu li:first-child:before, li ul.menu li:first-child:before {
+
+#part-title ul.menu li:first-child:before,
+#reqs ul.menu li:first-child:before, #outcomes ul.menu li:first-child:before {
     content: " ";
   }
-**/
 
 #header ul.menu {
     display: block;

@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.repeater.Item;
@@ -349,6 +350,11 @@ public final class ScenarioPage extends WebPage {
                   : new Label( SPECIALTY_FIELD, "" );
             panel.setRenderBodyOnly( true );
             add( panel );
+
+            // TODO simplify whole page... only displays parts, now.
+            add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
+                    "resource.html?scenario={0}&part={1}",                                // NON-NLS
+                    scenario.getId(), node.getId() ) ) );
 
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
