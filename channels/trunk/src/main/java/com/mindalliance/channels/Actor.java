@@ -1,14 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.pages.Project;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Someone or something playing a part in a scenario.

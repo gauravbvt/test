@@ -1,20 +1,17 @@
 package com.mindalliance.channels.pages.profiles;
 
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.ModelObjectPanel;
+import com.mindalliance.channels.pages.components.ResourceProfilePanel;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 import org.slf4j.LoggerFactory;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.analysis.profiling.Resource;
-import com.mindalliance.channels.pages.components.ModelObjectPanel;
-import com.mindalliance.channels.pages.components.PlaybookPanel;
-import com.mindalliance.channels.pages.components.DirectoryPanel;
-import com.mindalliance.channels.pages.components.ResourceIssuesTablePanel;
-import com.mindalliance.channels.pages.components.ResourceProfilePanel;
-import com.mindalliance.channels.pages.Project;
 
 /**
  * Actor page

@@ -57,8 +57,8 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
                     String sortProperty = sortParam.getProperty();
                     Object value = PropertyUtils.getProperty( play, sortProperty );
                     Object otherValue = PropertyUtils.getProperty( otherPlay, sortProperty );
-                    String stringValue = (value == null) ? "" : value.toString();
-                    String otherStringValue = (otherValue == null) ? "" : otherValue. toString();
+                    String stringValue = ( value == null ) ? "" : value.toString();
+                    String otherStringValue = ( otherValue == null ) ? "" : otherValue.toString();
                     comp = stringValue.compareTo( otherStringValue );
                 } catch ( IllegalAccessException e ) {
                     e.printStackTrace();

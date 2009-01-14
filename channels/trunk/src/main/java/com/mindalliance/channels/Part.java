@@ -180,10 +180,14 @@ public class Part extends Node {
      * @return a boolean
      */
     public boolean involves( Resource resource ) {
-        if ( resource.getActor() != null && actor != resource.getActor() ) return false;
-        if ( resource.getRole() != null && role != resource.getRole() ) return false;
-        if ( resource.getOrganization() != null && organization != resource.getOrganization() ) return false;
-        if ( resource.getJurisdiction() != null && jurisdiction != resource.getJurisdiction() ) return false;
+        if ( resource.getActor() != null && actor != resource.getActor() )
+            return false;
+        if ( resource.getRole() != null && role != resource.getRole() )
+            return false;
+        if ( resource.getOrganization() != null && organization != resource.getOrganization() )
+            return false;
+        if ( resource.getJurisdiction() != null && jurisdiction != resource.getJurisdiction() )
+            return false;
         return true;
     }
 

@@ -63,12 +63,21 @@ public class Resource implements Serializable {
         channels = new ArrayList<String>();
     }
 
-    public static Resource with ( Resourceable resourceable ) {
+    /**
+     * Resource factory
+     * @param resourceable a resourceable object
+     * @return a new resource
+     */
+    public static Resource with( Resourceable resourceable ) {
         Resource resource = new Resource();
-        if ( resourceable instanceof Actor ) resource.setActor( (Actor)resourceable );
-        if ( resourceable instanceof Organization ) resource.setOrganization( (Organization)resourceable );
-        if ( resourceable instanceof Role ) resource.setRole( (Role)resourceable );
-        if ( resourceable instanceof Jurisdiction ) resource.setJurisdiction( (Jurisdiction)resourceable );
+        if ( resourceable instanceof Actor )
+            resource.setActor( (Actor) resourceable );
+        if ( resourceable instanceof Organization )
+            resource.setOrganization( (Organization) resourceable );
+        if ( resourceable instanceof Role )
+            resource.setRole( (Role) resourceable );
+        if ( resourceable instanceof Jurisdiction )
+            resource.setJurisdiction( (Jurisdiction) resourceable );
         return resource;
     }
 
@@ -210,6 +219,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is an unqualified actor
+     *
      * @return a boolean
      */
     public boolean isActorOnly() {
@@ -218,6 +228,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is an unqualified role
+     *
      * @return a boolean
      */
     public boolean isRoleOnly() {
@@ -226,6 +237,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is an unqualified organization
+     *
      * @return a boolean
      */
     public boolean isOrganizationOnly() {
@@ -234,6 +246,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is an unqualified jurisdiction
+     *
      * @return a boolean
      */
     public boolean isJurisdictionOnly() {
@@ -242,6 +255,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is qualified by an actor
+     *
      * @return a boolean
      */
     public boolean hasActor() {
@@ -250,6 +264,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is qualified by an organization
+     *
      * @return a boolean
      */
     public boolean hasOrganization() {
@@ -258,6 +273,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is qualified by a role
+     *
      * @return a boolean
      */
     public boolean hasRole() {
@@ -266,6 +282,7 @@ public class Resource implements Serializable {
 
     /**
      * Resource is qualified by a jurisdiction
+     *
      * @return a boolean
      */
     public boolean hasJurisdiction() {

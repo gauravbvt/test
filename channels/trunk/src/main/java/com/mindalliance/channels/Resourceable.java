@@ -1,8 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.profiling.Resource;
-
-import java.util.List;
 
 /**
  * A container or implied set of resources

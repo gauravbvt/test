@@ -14,7 +14,9 @@ import com.mindalliance.channels.analysis.profiling.Resource;
  * Time: 10:58:29 AM
  */
 public class ResourceProfilePanel extends Panel {
-
+    /**
+     * Resource profiled
+     */
     private Resource resource;
 
     public ResourceProfilePanel( String id, IModel<Resource> model ) {

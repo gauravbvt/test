@@ -1,7 +1,6 @@
 package com.mindalliance.channels.analysis.profiling;
 
 import com.mindalliance.channels.analysis.Issue;
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
@@ -24,7 +23,9 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 7:45:54 PM
  */
 public class SortableResourceIssuesProvider extends SortableDataProvider<Issue> {
-
+    /**
+     * List of issues found
+     */
     private List<Issue> issues;
 
     public SortableResourceIssuesProvider( Resource resource ) {
@@ -55,8 +56,8 @@ public class SortableResourceIssuesProvider extends SortableDataProvider<Issue> 
                     String sortProperty = sortParam.getProperty();
                     Object value = PropertyUtils.getProperty( issue, sortProperty );
                     Object otherValue = PropertyUtils.getProperty( otherIssue, sortProperty );
-                    String stringValue = (value == null) ? "" : value.toString();
-                    String otherStringValue = (otherValue == null) ? "" : otherValue. toString();
+                    String stringValue = ( value == null ) ? "" : value.toString();
+                    String otherStringValue = ( otherValue == null ) ? "" : otherValue.toString();
                     comp = stringValue.compareTo( otherStringValue );
                 } catch ( IllegalAccessException e ) {
                     e.printStackTrace();
