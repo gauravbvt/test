@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Player;
 import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.analysis.profiling.SortablePlaysProvider;
+import com.mindalliance.channels.analysis.profiling.Resource;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -24,9 +24,9 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
     /**
      * The player
      */
-    private Player player;
+    private Resource player;
 
-    public PlaybookPanel( String s, IModel<? extends Player> model ) {
+    public PlaybookPanel( String s, IModel<Resource> model ) {
         super( s, model );
         player = model.getObject();
         setRenderBodyOnly( true );

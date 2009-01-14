@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.analysis.profiling.Resource;
+
 import java.text.MessageFormat;
 
 /**
@@ -9,35 +11,53 @@ public class Part extends Node {
 
     // TODO Should describe severity level of failure
 
-    /** Default actor label, when unknown. */
+    /**
+     * Default actor label, when unknown.
+     */
     public static final String DEFAULT_ACTOR = "Somebody";
 
-    /** Default task name. */
+    /**
+     * Default task name.
+     */
     static final String DEFAULT_TASK = "doing something";
 
-    /** The task label of this part (never null or empty). */
+    /**
+     * The task label of this part (never null or empty).
+     */
     private String task = DEFAULT_TASK;
 
-    /** The actor assigned to this task (optional). */
+    /**
+     * The actor assigned to this task (optional).
+     */
     private Actor actor;
 
-    /** The role of this task (optional). */
+    /**
+     * The role of this task (optional).
+     */
     private Role role;
 
-    /** The organization (optional). */
+    /**
+     * The organization (optional).
+     */
     private Organization organization;
 
-    /** The location (optional). */
+    /**
+     * The location (optional).
+     */
     private Location location;
 
-    /** The jurisdiction (optional). */
+    /**
+     * The jurisdiction (optional).
+     */
     private Jurisdiction jurisdiction;
 
     public Part() {
         adjustName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), getTask() );
@@ -49,7 +69,7 @@ public class Part extends Node {
 
     public final void setTask( String task ) {
         this.task = task == null || task.length() == 0 ? DEFAULT_TASK
-                                                       : task ;
+                : task;
     }
 
     private void adjustName() {
@@ -69,6 +89,7 @@ public class Part extends Node {
 
     /**
      * Set the actor. Also resets name accordingly.
+     *
      * @param actor the new actor.
      */
     public final void setActor( Actor actor ) {
@@ -98,6 +119,7 @@ public class Part extends Node {
 
     /**
      * Set the organization. Also resets name accordingly.
+     *
      * @param organization the new organization.
      */
     public void setOrganization( Organization organization ) {
@@ -111,6 +133,7 @@ public class Part extends Node {
 
     /**
      * Set the role. Also resets name accordingly.
+     *
      * @param role the new role.
      */
     public final void setRole( Role role ) {
@@ -140,7 +163,7 @@ public class Part extends Node {
     public boolean isSystem() {
         final Role r = getRole();
         return r != null
-            && r.getName().toLowerCase().contains( "system" );
+                && r.getName().toLowerCase().contains( "system" );
     }
 
     /**
@@ -150,29 +173,18 @@ public class Part extends Node {
         return role != null && actor == null;
     }
 
-    public boolean involves( Resourceable resourceable ) {
-        if ( resourceable instanceof Role ) {
-            return role == resourceable;
-        }
-        if ( resourceable instanceof Actor ) {
-            return actor == resourceable;
-        }
-        if ( resourceable instanceof Organization ) {
-            return organization == resourceable;
-        }
-        return false;
+    /**
+     * Test whether a part involves a resource
+     *
+     * @param resource a resource
+     * @return a boolean
+     */
+    public boolean involves( Resource resource ) {
+        if ( resource.getActor() != null && actor != resource.getActor() ) return false;
+        if ( resource.getRole() != null && role != resource.getRole() ) return false;
+        if ( resource.getOrganization() != null && organization != resource.getOrganization() ) return false;
+        if ( resource.getJurisdiction() != null && jurisdiction != resource.getJurisdiction() ) return false;
+        return true;
     }
 
-    public boolean involves( Player player ) {
-        if ( player instanceof Role ) {
-            return role == player;
-        }
-        if ( player instanceof Actor ) {
-            return actor == player;
-        }
-        if ( player instanceof Organization ) {
-            return organization == player;
-        }
-        return false;
-    }
 }

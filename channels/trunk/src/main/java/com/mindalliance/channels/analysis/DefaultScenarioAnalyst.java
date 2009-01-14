@@ -28,55 +28,56 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
     }
 
     /**
-     * Use all applicable issue detectors to find issues about a model object
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param all -- all issues or only those that are not specific to a property
-     * @return an iterator of issues
+     * {@inheritDoc}
      */
     public Iterator<Issue> findIssues( ModelObject modelObject, boolean all ) {
         return new IssueIterator( issueDetectors, modelObject, all );
     }
 
     /**
-     * Use all applicable issue detectors to find issues about a model object's property
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param property    -- the name of a property of the model object
-     * @return an iterator on issues detected
+     * {@inheritDoc}
      */
     public Iterator<Issue> findIssues( ModelObject modelObject, String property ) {
         return new IssueIterator( issueDetectors, modelObject, property );
     }
 
+
     /**
-     * Tests whether a model object has issues
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param all -- all issues or only those that are not specific to a property
-     * @return whether a model object has issues
+     * {@inheritDoc}
+     */
+    public List<Issue> listIssues( ModelObject modelObject, boolean all ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = findIssues( modelObject, all );
+        while (iterator.hasNext()) issues.add( iterator.next() );
+        return issues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> listIssues( ModelObject modelObject, String property ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = findIssues( modelObject, property );
+        while (iterator.hasNext()) issues.add( iterator.next() );
+        return issues;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public boolean hasIssues( ModelObject modelObject, boolean all ) {
         return findIssues( modelObject, all ).hasNext();
     }
 
     /**
-     * Tests whether a specifi property of a model object has issues
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param property    -- the specifiec property being analyzed
-     * @return whether a specifi property of a model object has issues
+     * {@inheritDoc}
      */
     public boolean hasIssues( ModelObject modelObject, String property ) {
         return findIssues( modelObject, property ).hasNext();
     }
 
     /**
-     * Produces an aggregate description of issues detected about a model object
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param all -- all issues or only those that are not specific to a property
-     * @return an aggregate description of issues or an empty string if none
+     * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, boolean all ) {
         Iterator<Issue> issues = findIssues( modelObject, all );
@@ -84,12 +85,7 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
     }
 
     /**
-     * Produces an aggregate description of issues detected about a specific property
-     * of a model object
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param property    -- the name of a property
-     * @return an aggregate description of issues or an empty string if none
+     * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, String property ) {
         Iterator<Issue> issues = findIssues( modelObject, property );

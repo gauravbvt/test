@@ -13,7 +13,7 @@ import java.util.HashSet;
 /**
  * Someone or something playing a part in a scenario.
  */
-public class Actor extends ModelObject implements Player, Resourceable {
+public class Actor extends ModelObject implements Resourceable {
 
     public Actor() {
     }
@@ -28,22 +28,6 @@ public class Actor extends ModelObject implements Player, Resourceable {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public List<Play> findAllPlays() {
-        return Project.getProject().findAllPlaysFor( this );
-    }
-
-    /**
-     * Find all implied resources within the current project.
-     *
-     * @return a list of resources
-     */
-    public List<Resource> findAllResources() {
-        return Project.getProject().findAllResourcesFor( this );
-    }
-
-    /**
      * Find or create an actor by name
      *
      * @param name String a given name
@@ -53,6 +37,5 @@ public class Actor extends ModelObject implements Player, Resourceable {
         Dao dao = Project.getProject().getDao();
         return dao.findOrMakeActor( name );
     }
-
 
 }

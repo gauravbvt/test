@@ -13,7 +13,7 @@ import java.util.HashSet;
 /**
  * A generic role.
  */
-public class Role extends ModelObject implements Player, Resourceable {
+public class Role extends ModelObject implements Resourceable {
 
     public Role() {
     }
@@ -38,17 +38,4 @@ public class Role extends ModelObject implements Player, Resourceable {
         return dao.findOrMakeRole( name );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Play> findAllPlays() {
-        return Project.getProject().findAllPlaysFor( this );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Resource> findAllResources() {
-        return Project.getProject().findAllResourcesFor( this );
-    }
 }

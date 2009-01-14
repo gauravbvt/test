@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Player;
 import com.mindalliance.channels.Resourceable;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
@@ -193,10 +192,10 @@ public final class Project extends WebApplication {
     /**
      * Find all resources implied by resourceable
      *
-     * @param resourceable a resourceable
-     * @return a list of resources
+     * @param resource a resource
+     * @return a list of implied resources
      */
-    public List<Resource> findAllResourcesFor( Resourceable resourceable ) {
+    public List<Resource> findAllImpliedResources( Resource resource ) {
         Set<Resource> set = new HashSet<Resource>();
         Iterator<Scenario> scenarios = getDao().scenarios();
         while ( scenarios.hasNext() ) {
@@ -204,22 +203,22 @@ public final class Project extends WebApplication {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.involves( resourceable ) ) {
-                    Resource resource = new Resource( part );
+                if ( part.involves( resource ) ) {
+                    Resource res = new Resource( part );
                     // Find all channels used to communicate with this part
                     Iterator<Flow> flows = scenario.flows();
                     while ( flows.hasNext() ) {
                         Flow flow = flows.next();
                         if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
                             if ( flow.getTarget() == part && !flow.isAskedFor() ) {
-                                resource.addChannel( flow.getChannel() );
+                                res.addChannel( flow.getChannel() );
                             }
                             if ( flow.getSource() == part && flow.isAskedFor() ) {
-                                resource.addChannel( flow.getChannel() );
+                                res.addChannel( flow.getChannel() );
                             }
                         }
                     }
-                    set.add( resource );
+                    set.add( res );
                 }
             }
         }
@@ -229,12 +228,12 @@ public final class Project extends WebApplication {
     }
 
     /**
-     * Find all plays for the player
+     * Find all plays for the resource
      *
-     * @param player a player
+     * @param resource a resource
      * @return a list of plays
      */
-    public List<Play> findAllPlaysFor( Player player ) {
+    public List<Play> findAllPlays( Resource resource ) {
         List<Play> list = new ArrayList<Play>();
         Iterator<Scenario> scenarios = getDao().scenarios();
         while ( scenarios.hasNext() ) {
@@ -243,12 +242,12 @@ public final class Project extends WebApplication {
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
-                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).involves( player ) ) {
+                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).involves( resource ) ) {
                         // role sends
                         Play play = new Play( (Part) flow.getSource(), flow, true );
                         list.add( play );
                     }
-                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).involves( player ) ) {
+                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).involves( resource ) ) {
                         // role receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
                         list.add( play );
@@ -260,32 +259,40 @@ public final class Project extends WebApplication {
     }
 
     /**
-     * Find all issues related to a model object
+     * Find all issues related to any of the components of a resource
      *
-     * @param modelObject a model object
+     * @param resource a resource
      * @return a list of issues
      */
-    public List<Issue> findAllIssuesFor( ModelObject modelObject ) {
+    public List<Issue> findAllIssuesFor( Resource resource ) {
+        ScenarioAnalyst analyst = getScenarioAnalyst();
         List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Issue> iterator = getScenarioAnalyst().findIssues( modelObject, true );
-        while ( iterator.hasNext() ) issues.add( iterator.next() );
-        if ( modelObject instanceof Player ) {
-            issues.addAll( findAllIssuesForPlayer( (Player) modelObject ) );
+        if ( resource.hasActor() ) {
+            issues.addAll( analyst.listIssues( resource.getActor(), true ) );
         }
-        // TODO  -- other cases
+        if ( resource.hasOrganization() ) {
+            issues.addAll( analyst.listIssues( resource.getOrganization(), true ) );
+        }
+        if ( resource.hasRole() ) {
+            issues.addAll( analyst.listIssues( resource.getRole(), true ) );
+        }
+        if ( resource.hasJurisdiction() ) {
+            issues.addAll( analyst.listIssues( resource.getJurisdiction(), true ) );
+        }
+        issues.addAll( findAllIssuesInPlays( resource ) );
         return issues;
     }
 
     /**
-     * Find the issues on parts and flows for all plays of a player
+     * Find the issues on parts and flows for all plays of a resource
      *
-     * @param player a player
+     * @param resource a resource
      * @return a list of issues
      */
-    private List<Issue> findAllIssuesForPlayer( Player player ) {
+    private List<Issue> findAllIssuesInPlays( Resource resource ) {
         ScenarioAnalyst analyst = getScenarioAnalyst();
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = findAllPlaysFor( player );
+        List<Play> plays = findAllPlays( resource );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPart() );

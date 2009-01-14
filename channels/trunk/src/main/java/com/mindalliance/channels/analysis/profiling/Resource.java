@@ -1,22 +1,17 @@
 package com.mindalliance.channels.analysis.profiling;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.Resourceable;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Role;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -61,14 +56,22 @@ public class Resource implements Serializable {
     }
 
     public Resource( Part part ) {
-        assert hasResource( part );
         actor = part.getActor();
         role = part.getRole();
         organization = part.getOrganization();
         jurisdiction = part.getJurisdiction();
         channels = new ArrayList<String>();
     }
-    
+
+    public static Resource with ( Resourceable resourceable ) {
+        Resource resource = new Resource();
+        if ( resourceable instanceof Actor ) resource.setActor( (Actor)resourceable );
+        if ( resourceable instanceof Organization ) resource.setOrganization( (Organization)resourceable );
+        if ( resourceable instanceof Role ) resource.setRole( (Role)resourceable );
+        if ( resourceable instanceof Jurisdiction ) resource.setJurisdiction( (Jurisdiction)resourceable );
+        return resource;
+    }
+
     public Actor getActor() {
         return actor;
     }
@@ -203,5 +206,69 @@ public class Resource implements Serializable {
      */
     public String getJurisdictionName() {
         return ( jurisdiction == null ) ? "" : jurisdiction.getName();
+    }
+
+    /**
+     * Resource is an unqualified actor
+     * @return a boolean
+     */
+    public boolean isActorOnly() {
+        return actor != null && role == null && organization == null && jurisdiction == null;
+    }
+
+    /**
+     * Resource is an unqualified role
+     * @return a boolean
+     */
+    public boolean isRoleOnly() {
+        return actor == null && role != null && organization == null && jurisdiction == null;
+    }
+
+    /**
+     * Resource is an unqualified organization
+     * @return a boolean
+     */
+    public boolean isOrganizationOnly() {
+        return actor == null && role == null && organization != null && jurisdiction == null;
+    }
+
+    /**
+     * Resource is an unqualified jurisdiction
+     * @return a boolean
+     */
+    public boolean isJurisdictionOnly() {
+        return actor == null && role == null && organization == null && jurisdiction != null;
+    }
+
+    /**
+     * Resource is qualified by an actor
+     * @return a boolean
+     */
+    public boolean hasActor() {
+        return actor != null;
+    }
+
+    /**
+     * Resource is qualified by an organization
+     * @return a boolean
+     */
+    public boolean hasOrganization() {
+        return organization != null;
+    }
+
+    /**
+     * Resource is qualified by a role
+     * @return a boolean
+     */
+    public boolean hasRole() {
+        return role != null;
+    }
+
+    /**
+     * Resource is qualified by a jurisdiction
+     * @return a boolean
+     */
+    public boolean hasJurisdiction() {
+        return jurisdiction != null;
     }
 }

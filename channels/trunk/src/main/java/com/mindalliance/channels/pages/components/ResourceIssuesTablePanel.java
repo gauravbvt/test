@@ -5,8 +5,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.analysis.profiling.SortableIssuesProvider;
+import com.mindalliance.channels.analysis.profiling.SortableResourceIssuesProvider;
+import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.analysis.Issue;
 
 import java.util.List;
@@ -19,13 +19,13 @@ import java.util.ArrayList;
  * Date: Jan 13, 2009
  * Time: 7:26:20 PM
  */
-public class IssuesTablePanel extends AbstractTablePanel {
+public class ResourceIssuesTablePanel extends AbstractTablePanel {
 
-    private ModelObject modelObject;
+    private Resource resource;
 
-    public IssuesTablePanel( String id, IModel<? extends ModelObject> model ) {
+    public ResourceIssuesTablePanel( String id, IModel<Resource> model ) {
         super( id, model );
-        modelObject = model.getObject();
+        resource = model.getObject();
         init();
     }
 
@@ -41,7 +41,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         columns.add( makeColumn("Remediation", "remediation", "remediation", EMPTY));
         // provider and table
         add( new AjaxFallbackDefaultDataTable<Issue>(
-                "issues", columns, new SortableIssuesProvider( modelObject ), getPageSize() ) );
+                "issues", columns, new SortableResourceIssuesProvider( resource ), getPageSize() ) );
 
     }
 

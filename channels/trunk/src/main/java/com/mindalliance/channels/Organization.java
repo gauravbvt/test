@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * A company, agency, social club, etc.
  */
-public class Organization extends ModelObject implements Player, Resourceable {
+public class Organization extends ModelObject implements Resourceable {
 
     public Organization() {
     }
@@ -27,18 +27,15 @@ public class Organization extends ModelObject implements Player, Resourceable {
     }
 
     /**
-     * {@inheritDoc}
+     * Find or create an organization by name
+     *
+     * @param name String a given name
+     * @return a new or existing organization
      */
-    public List<Play> findAllPlays() {
-        return Project.getProject().findAllPlaysFor( this );
+    public static Organization named( String name ) {
+        Dao dao = Project.getProject().getDao();
+        return dao.findOrMakeOrganization( name );
     }
 
-    /**
-     * Find all implied resources within the current project.
-     *
-     * @return a list of resources
-     */
-    public List<Resource> findAllResources() {
-        return Project.getProject().findAllResourcesFor( this );
-    }
-}
+
+ }

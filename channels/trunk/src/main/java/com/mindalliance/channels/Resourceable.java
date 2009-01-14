@@ -14,9 +14,5 @@ import java.util.List;
  */
 public interface Resourceable {
 
-    /**
-     * Find all implied resources within the current project.
-     * @return a list of resources
-     */
-    List<Resource> findAllResources();
+
 }

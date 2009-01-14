@@ -3,11 +3,13 @@ package com.mindalliance.channels.pages.profiles;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.DirectoryPanel;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import com.mindalliance.channels.pages.components.PlaybookPanel;
-import com.mindalliance.channels.pages.components.IssuesTablePanel;
+import com.mindalliance.channels.pages.components.ResourceIssuesTablePanel;
+import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -46,10 +48,8 @@ public class RolePage extends WebPage {
         assert role != null;
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( role, "name" ) ) );
-        add( new IssuesTablePanel( "issues", new Model<Role>( role ) ) );
         add( new ModelObjectPanel( "role-form", new Model<Role>( role ) ) );
-        add( new PlaybookPanel( "playbook", new Model<Role>( role ) ) );
-        add( new DirectoryPanel( "directory", new Model<Role>( role ) ) );
+        add( new ResourceProfilePanel( "profile", new Model<Resource>( Resource.with( role ) ) ) );
     }
 
     private Role findRole( PageParameters parameters ) throws NotFoundException {
