@@ -3,11 +3,9 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Resourceable;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.attachments.AttachmentManager;
@@ -45,7 +43,9 @@ public final class Project extends WebApplication {
      * The manipulator of scenarios.
      */
     private Dao dao;
-
+    /**
+     * The builder of graphs (as data)
+     */
     private GraphBuilder graphBuilder;
 
     /**
@@ -180,6 +180,10 @@ public final class Project extends WebApplication {
         this.scenarioAnalyst = scenarioAnalyst;
     }
 
+    /**
+     * Gets the project's graph builder
+     * @return a GraphBuilder
+     */
     public static GraphBuilder graphBuilder() {
         Project project = (Project) WebApplication.get();
         return project.getGraphBuilder();
