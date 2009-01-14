@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.pages.Project;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Organization extends ModelObject implements Player, Resourceable {
      * {@inheritDoc}
      */
     public List<Play> findAllPlays() {
-        return new ArrayList<Play>();  //Todo
+        return Project.getProject().findAllPlaysFor( this );
     }
 
     /**
@@ -38,6 +39,6 @@ public class Organization extends ModelObject implements Player, Resourceable {
      * @return a list of resources
      */
     public List<Resource> findAllResources() {
-        return new ArrayList<Resource>(); // TODO
+        return Project.getProject().findAllResourcesFor( this );
     }
 }
