@@ -35,17 +35,18 @@ public class DirectoryPanel extends AbstractTablePanel<Resource> {
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
-        if ( ! ( resource.hasActor()) )
-        columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
-        if ( ! (resource.hasRole()) )
+        if ( !( resource.hasActor() ) )
+            columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
+        if ( !( resource.hasRole() ) )
             columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
-        if ( ! (resource.hasOrganization() ) )
+        if ( !( resource.hasOrganization() ) )
             columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
-        if ( ! (resource.hasJurisdiction() ) )
+        if ( !( resource.hasJurisdiction() ) )
             columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Channels" ),
                 "channelsString", "channelsString" ) );                           // NON-NLS
+        columns.add( makeResourceLinkColumn( "", "(view profile)" ) );
         // provider and table
         add( new AjaxFallbackDefaultDataTable<Resource>(
                 "directory", columns, new SortableResourceProvider( resource ), getPageSize() ) );

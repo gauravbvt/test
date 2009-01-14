@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.ResourceProfileLink;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
@@ -82,7 +84,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
                                       String id,
                                       IModel<T> model ) {
                 String text = (String) evaluate( model.getObject(), labelProperty, defaultText );
-                String labelText = (text == null || text.isEmpty()) ? (defaultText == null ? "" : defaultText) : text;
+                String labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
                 if ( style != null ) {
                     String styleClass = findStyleClass( model.getObject(), style );
@@ -147,7 +149,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
         final String labelText;
         if ( mo != null ) {
             String text = (String) evaluate( bean, labelProperty, defaultText );
-            labelText = (text == null || text.isEmpty()) ? (defaultText == null ? "" : defaultText) : text;
+            labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
             return new ModelObjectLink( id,
                     new AbstractReadOnlyModel<ModelObject>() {
                         @Override
@@ -163,7 +165,36 @@ public abstract class AbstractTablePanel<T> extends Panel {
                     } );
         }
 
-        return new Label( id, new Model<String>( (defaultText == null ? "" : defaultText) ) );
+        return new Label( id, new Model<String>( defaultText == null ? "" : defaultText ) );
+    }
+
+    /**
+     * Make a column with a link to a resource's profile.
+     * Assumes the table rows are resources.
+     *
+     * @param name  the column's name
+     * @param label the cells' text
+     * @return an AbstractColumn
+     */
+    protected AbstractColumn<T> makeResourceLinkColumn( String name, final String label ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem, String id, final IModel<T> model ) {
+                cellItem.add( new ResourceProfileLink( id,
+                        new AbstractReadOnlyModel<Resource>() {
+                            public Resource getObject() {
+                                return (Resource) model.getObject();
+                            }
+                        },
+                        new AbstractReadOnlyModel<String>() {
+                            public String getObject() {
+                                return label;
+                            }
+                        }
+                ) );
+                cellItem.add( new AttributeModifier( "class", true, new Model<String>( "link" ) ) );
+            }
+        };
     }
 
     private Object evaluate( Object bean, String path, Object defaultValue ) {

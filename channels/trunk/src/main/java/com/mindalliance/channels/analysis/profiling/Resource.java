@@ -296,10 +296,7 @@ public class Resource implements Serializable {
      * @return a boolean
      */
     public boolean isEmpty() {
-        return hasActor() ||
-                hasRole() ||
-                hasOrganization() ||
-                hasJurisdiction();
+        return !hasActor() && !hasRole() && !hasOrganization() && !hasJurisdiction();
     }
 
     /**
