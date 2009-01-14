@@ -1,19 +1,21 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Player;
 import com.mindalliance.channels.Resourceable;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Player;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.analysis.profiling.Play;
+import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.pages.profiles.ActorPage;
+import com.mindalliance.channels.pages.profiles.OrganizationPage;
 import com.mindalliance.channels.pages.profiles.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -21,11 +23,11 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
-import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Application object for Channels.
@@ -81,6 +83,8 @@ public final class Project extends WebApplication {
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "organization.html", OrganizationPage.class ) );
     }
 
     @Override

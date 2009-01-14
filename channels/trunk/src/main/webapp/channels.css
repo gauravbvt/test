@@ -21,9 +21,6 @@ body.profile {
     height: 100%;
 }
 
-#details {
-}
-
 #sc-details {
     z-index: 1;
     position: absolute;
@@ -103,7 +100,7 @@ body.profile {
     margin-bottom: 5px;
 }
 
-#details, #directory, #playbook {
+#details, #directory, #playbook, #jobs {
     margin: 5px auto;
     max-width: 80em;
 }
@@ -321,14 +318,14 @@ html, #sc-details {
     border: 1px outset #6fafaf;
 }
 
-#part, #directory, #playbook {
+#part, #directory, #playbook, #jobs {
     background: #f6f6f6;
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part, #graph, #directory, #playbook {
+#part, #graph, #directory, #playbook, #jobs {
     border: 1px inset #c3dede;
 }
 #sc-details {
@@ -356,9 +353,7 @@ th.wicket_orderUp a {
     padding-right: 16px;
 }
 
-div#playbook table, div#directory table {
-}
-div#playbook th, div#directory th {
+#playbook th, #directory th, #jobs th {
     color: black;
     font-weight: bold;
     text-align: left;
@@ -369,7 +364,6 @@ div#playbook th, div#directory th {
     vertical-align: top;
 }
 
-div#playbook th a, div#playbook th a:link, div#playbook th a:visited,
-div#directory th a, div#directory th a:link, div#directory th a:visited {
+.profile th a, .profile th a:link, .profile th a:visited {
     color: black;
 }

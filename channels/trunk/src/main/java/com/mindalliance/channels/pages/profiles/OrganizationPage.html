@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:wicket="http://wicket.apache.org/"
@@ -7,23 +7,24 @@
         lang="en">
 <head>
     <title wicket:id="title">[Title]</title>
-    <link rel="stylesheet" href="channels.css" type="text/css"/>
+    <link rel="stylesheet" href="channels.css" type="text/css">
 </head>
 
-<body>
-<div><h1>Organization</h1></div>
-<div wicket:id="issues">[issues panel]</div>
-<div wicket:id="organization-form">[model object panel]</div>
-<div>
+<body class="profile org">
+<div id="header"><h1>Organization</h1></div>
+<div class="issues float" wicket:id="issues">[issues panel]</div>
+<div id="details" wicket:id="organization-form">[model object panel]</div>
+<div id="playbook">
     <h2>Playbook</h2>
     <span wicket:id="playbook">[playbook]</span>
 </div>
-<div>
+<div id="directory">
     <h2>Directory</h2>
     <span wicket:id="directory">[directory]</span>
 </div>
 <div id="footer">
-    &copy; Copyright 2008 Mind-Alliance Inc. All Rights Reserved.
+    <hr>
+    &copy; Copyright 2009 Mind-Alliance Inc. All Rights Reserved.
 </div>
 </body>
 </html>
