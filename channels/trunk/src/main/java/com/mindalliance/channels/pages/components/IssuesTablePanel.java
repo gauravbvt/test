@@ -33,7 +33,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "Issue" ),
+                new Model<String>( "Description" ),
                 "description", "description" ) );
         columns.add( makeLinkColumn( "About", "about", "about.label", "(no name)" ) );
         columns.add( new PropertyColumn<String>(
