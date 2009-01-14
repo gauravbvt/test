@@ -6,7 +6,9 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Player;
 import com.mindalliance.channels.Resourceable;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.attachments.AttachmentManager;
@@ -57,13 +59,19 @@ public final class Project extends WebApplication {
      */
     private AttachmentManager attachmentManager;
 
-    /** Scenario importer. */
+    /**
+     * Scenario importer.
+     */
     private Importer importer;
 
-    /** Scenario exporter. */
+    /**
+     * Scenario exporter.
+     */
     private Exporter exporter;
 
-    /** Scenario analyst */
+    /**
+     * Scenario analyst
+     */
     private ScenarioAnalyst scenarioAnalyst;
 
     /**
@@ -72,7 +80,9 @@ public final class Project extends WebApplication {
     public Project() {
     }
 
-    /** Set to strip wicket tags from subpanels. */
+    /**
+     * Set to strip wicket tags from subpanels.
+     */
     @Override
     protected void init() {
         super.init();
@@ -101,7 +111,7 @@ public final class Project extends WebApplication {
         if ( authentication != null ) {
             final Object obj = authentication.getPrincipal();
             result = obj instanceof UserDetails ? ( (UserDetails) obj ).getUsername()
-                                                :  obj.toString();
+                    : obj.toString();
         }
 
         return result;
@@ -114,6 +124,7 @@ public final class Project extends WebApplication {
     public void setUri( String uri ) {
         this.uri = uri;
     }
+
     public Dao getDao() {
         return dao;
     }
@@ -171,16 +182,17 @@ public final class Project extends WebApplication {
     }
 
     public static GraphBuilder graphBuilder() {
-        Project project = (Project)WebApplication.get();
+        Project project = (Project) WebApplication.get();
         return project.getGraphBuilder();
     }
 
     public static Project getProject() {
-        return (Project)get();
+        return (Project) get();
     }
 
     /**
      * Find all resources implied by resourceable
+     *
      * @param resourceable a resourceable
      * @return a list of resources
      */
@@ -218,6 +230,7 @@ public final class Project extends WebApplication {
 
     /**
      * Find all plays for the player
+     *
      * @param player a player
      * @return a list of plays
      */
@@ -246,5 +259,43 @@ public final class Project extends WebApplication {
         return list;
     }
 
+    /**
+     * Find all issues related to a model object
+     *
+     * @param modelObject a model object
+     * @return a list of issues
+     */
+    public List<Issue> findAllIssuesFor( ModelObject modelObject ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = getScenarioAnalyst().findIssues( modelObject, true );
+        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        if ( modelObject instanceof Player ) {
+            issues.addAll( findAllIssuesForPlayer( (Player) modelObject ) );
+        }
+        // TODO  -- other cases
+        return issues;
+    }
 
+    /**
+     * Find the issues on parts and flows for all plays of a player
+     *
+     * @param player a player
+     * @return a list of issues
+     */
+    private List<Issue> findAllIssuesForPlayer( Player player ) {
+        ScenarioAnalyst analyst = getScenarioAnalyst();
+        List<Issue> issues = new ArrayList<Issue>();
+        List<Play> plays = findAllPlaysFor( player );
+        Set<Part> parts = new HashSet<Part>();
+        for ( Play play : plays ) {
+            parts.add( play.getPart() );
+            Iterator<Issue> iterator = analyst.findIssues( play.getFlow(), true );
+            while ( iterator.hasNext() ) issues.add( iterator.next() );
+        }
+        for ( Part part : parts ) {
+            Iterator<Issue> iterator = analyst.findIssues( part, true );
+            while ( iterator.hasNext() ) issues.add( iterator.next() );
+        }
+        return issues;
+    }
 }

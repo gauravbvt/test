@@ -100,7 +100,7 @@ body.profile {
     margin-bottom: 5px;
 }
 
-#details, #directory, #playbook, #jobs {
+#details, #directory, #playbook, #jobs, #gaps {
     margin: 5px auto;
     max-width: 80em;
 }
@@ -318,14 +318,14 @@ html, #sc-details {
     border: 1px outset #6fafaf;
 }
 
-#part, #directory, #playbook, #jobs {
+#part, #directory, #playbook, #jobs, #gaps {
     background: #f6f6f6;
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part, #graph, #directory, #playbook, #jobs {
+#part, #graph, #directory, #playbook, #jobs, #gaps {
     border: 1px inset #c3dede;
 }
 #sc-details {
@@ -353,7 +353,7 @@ th.wicket_orderUp a {
     padding-right: 16px;
 }
 
-#playbook th, #directory th, #jobs th {
+#playbook th, #directory th, #jobs th, #gaps th {
     color: black;
     font-weight: bold;
     text-align: left;

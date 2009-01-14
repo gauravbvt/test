@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import com.mindalliance.channels.pages.components.PlaybookPanel;
 import com.mindalliance.channels.pages.components.DirectoryPanel;
+import com.mindalliance.channels.pages.components.IssuesTablePanel;
 import com.mindalliance.channels.pages.Project;
 
 /**
@@ -43,7 +43,7 @@ public class ActorPage extends WebPage {
         Actor actor = findActor( parameters );
         assert actor != null;
         add( new Label( "title", new Model<String>( "Actor: " + actor.getName() ) ) );
-        add( new IssuesPanel<Actor>( "issues", new Model<Actor>( actor ) ) );
+        add( new IssuesTablePanel( "issues", new Model<Actor>( actor ) ) );
         add( new ModelObjectPanel( "actor-form", new Model<Actor>( actor ) ) );
         add( new PlaybookPanel( "playbook", new Model<Actor>( actor ) ) );
         add( new DirectoryPanel( "directory", new Model<Actor>( actor ) ) );

@@ -111,4 +111,12 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         return new Date();
     }
 
+    /**
+     * Get a label
+     * @return a string
+     */
+    public String getLabel() {
+        return getName();
+    }
+
 }

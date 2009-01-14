@@ -82,7 +82,8 @@ public abstract class AbstractTablePanel<T> extends Panel {
                                       String id,
                                       IModel<T> model ) {
                 String text = (String) evaluate( model.getObject(), labelProperty, defaultText );
-                cellItem.add( new Label( id, new Model<String>( text ) ) );
+                String labelText = (text == null || text.isEmpty()) ? (defaultText == null ? "" : defaultText) : text;
+                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
                 if ( style != null ) {
                     String styleClass = findStyleClass( model.getObject(), style );
                     if ( styleClass != null )
@@ -145,7 +146,8 @@ public abstract class AbstractTablePanel<T> extends Panel {
         final ModelObject mo = (ModelObject) evaluate( bean, moProperty, null );
         final String labelText;
         if ( mo != null ) {
-            labelText = (String) evaluate( bean, labelProperty, defaultText );
+            String text = (String) evaluate( bean, labelProperty, defaultText );
+            labelText = (text == null || text.isEmpty()) ? (defaultText == null ? "" : defaultText) : text;
             return new ModelObjectLink( id,
                     new AbstractReadOnlyModel<ModelObject>() {
                         @Override
@@ -161,7 +163,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
                     } );
         }
 
-        return new Label( id, new Model<String>( defaultText ) );
+        return new Label( id, new Model<String>( (defaultText == null ? "" : defaultText) ) );
     }
 
     private Object evaluate( Object bean, String path, Object defaultValue ) {

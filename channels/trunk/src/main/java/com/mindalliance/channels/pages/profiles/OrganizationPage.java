@@ -1,19 +1,18 @@
 package com.mindalliance.channels.pages.profiles;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.model.Model;
-import org.slf4j.LoggerFactory;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.DirectoryPanel;
+import com.mindalliance.channels.pages.components.IssuesTablePanel;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import com.mindalliance.channels.pages.components.PlaybookPanel;
-import com.mindalliance.channels.pages.components.DirectoryPanel;
-import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
+import org.slf4j.LoggerFactory;
 
 /**
  * Organization page
@@ -44,7 +43,7 @@ public class OrganizationPage extends WebPage {
         Organization organization = findOrganization( parameters );
         assert organization != null;
         add( new Label( "title", new Model<String>( "Actor: " + organization.getName() ) ) );
-        add( new IssuesPanel<Organization>( "issues", new Model<Organization>( organization ) ) );
+        add( new IssuesTablePanel( "issues", new Model<Organization>( organization ) ) );
         add( new ModelObjectPanel( "organization-form", new Model<Organization>( organization ) ) );
         add( new PlaybookPanel( "playbook", new Model<Organization>( organization ) ) );
         add( new DirectoryPanel( "directory", new Model<Organization>( organization ) ) );

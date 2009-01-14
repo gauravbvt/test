@@ -207,4 +207,11 @@ public abstract class Node extends ModelObject {
     public String toString() {
         return getTitle();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getLabel() {
+        return getTitle();
+    }
+
 }

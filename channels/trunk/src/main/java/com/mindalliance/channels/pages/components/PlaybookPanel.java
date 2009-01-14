@@ -40,7 +40,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Scenario" ),
                 "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
-        columns.add( makeColumn( "info", "flow.name", EMPTY ) );
+        columns.add( makeColumn( "Info", "flow.name", "?" ) );
         // style class is one of: ask, notify, answer, receive
         columns.add( makeLinkColumn( "To/from", "otherPart", "otherPart.name", "@kind", EMPTY ) );
         columns.add( makeColumn( "Channel", "flow.channel", EMPTY ) );      // NON-NLS
@@ -50,7 +50,6 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Priority" ),
                 "criticality", "criticality" ) );                                 // NON-NLS
-
         // provider and table
         add( new AjaxFallbackDefaultDataTable<Play>(
                 "playbook", columns, new SortablePlaysProvider( player ), getPageSize() ) );
