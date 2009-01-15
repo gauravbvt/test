@@ -174,21 +174,14 @@ public class Part extends Node {
     }
 
     /**
-     * Test whether a part involves a resource
+     * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resource a resource
      * @return a boolean
      */
     public boolean involves( Resource resource ) {
-        if ( resource.getActor() != null && actor != resource.getActor() )
-            return false;
-        if ( resource.getRole() != null && role != resource.getRole() )
-            return false;
-        if ( resource.getOrganization() != null && organization != resource.getOrganization() )
-            return false;
-        if ( resource.getJurisdiction() != null && jurisdiction != resource.getJurisdiction() )
-            return false;
-        return true;
+        Resource partResource = new Resource( this );
+        return resource.intersects( partResource );
     }
 
 }

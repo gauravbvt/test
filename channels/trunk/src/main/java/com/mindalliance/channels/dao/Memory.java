@@ -11,6 +11,11 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.analysis.profiling.Play;
+import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.util.HashMap;
@@ -18,6 +23,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.collections.Predicate;

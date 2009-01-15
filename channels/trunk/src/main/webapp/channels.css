@@ -100,7 +100,7 @@ body.profile {
     margin-bottom: 5px;
 }
 
-#details, #directory, #playbook, #gaps, #res-details {
+#details, #directory, #playbook, #gaps, #res-details, #profile {
     margin: 5px auto;
     max-width: 80em;
 }

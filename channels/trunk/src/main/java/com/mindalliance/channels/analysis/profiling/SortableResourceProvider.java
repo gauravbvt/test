@@ -29,7 +29,7 @@ public class SortableResourceProvider extends SortableDataProvider<Resource> {
     private List<Resource> resources;
 
     public SortableResourceProvider( Resource resource ) {
-        resources = Project.getProject().findAllImpliedResources( resource );
+        resources = Project.getProject().findAllResourcesNarrowingOrEqualTo( resource );
         setSort( "name", true );
     }
 

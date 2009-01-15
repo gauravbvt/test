@@ -6,12 +6,14 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Resourceable;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -255,39 +257,39 @@ public class Resource implements Serializable {
     }
 
     /**
-     * Resource is qualified by an actor
+     * Resource is not qualified by an actor
      *
      * @return a boolean
      */
-    public boolean hasActor() {
-        return actor != null;
+    public boolean isAnyActor() {
+        return actor == null;
     }
 
     /**
-     * Resource is qualified by an organization
+     * Resource is not qualified by an organization
      *
      * @return a boolean
      */
-    public boolean hasOrganization() {
-        return organization != null;
+    public boolean isAnyOrganization() {
+        return organization == null;
     }
 
     /**
-     * Resource is qualified by a role
+     * Resource is not qualified by a role
      *
      * @return a boolean
      */
-    public boolean hasRole() {
-        return role != null;
+    public boolean isAnyRole() {
+        return role == null;
     }
 
     /**
-     * Resource is qualified by a jurisdiction
+     * Resource is not qualified by a jurisdiction
      *
      * @return a boolean
      */
-    public boolean hasJurisdiction() {
-        return jurisdiction != null;
+    public boolean isAnyJurisdiction() {
+        return jurisdiction == null;
     }
 
     /**
@@ -296,7 +298,7 @@ public class Resource implements Serializable {
      * @return a boolean
      */
     public boolean isEmpty() {
-        return !hasActor() && !hasRole() && !hasOrganization() && !hasJurisdiction();
+        return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction();
     }
 
     /**
@@ -306,19 +308,53 @@ public class Resource implements Serializable {
      */
     public String getName() {
         StringBuilder sb = new StringBuilder();
-        sb.append( hasActor() ? actor.getName() : "Anyone" );
-        if ( hasRole() ) {
+        sb.append( isAnyActor() ? "Anyone" : actor.getName() );
+        if ( !isAnyRole() ) {
             sb.append( " as " );
             sb.append( role.getName() );
         }
-        if ( hasOrganization() ) {
+        if ( !isAnyOrganization() ) {
             sb.append( " for " );
             sb.append( organization.getName() );
         }
-        if ( hasJurisdiction() ) {
+        if ( !isAnyJurisdiction() ) {
             sb.append( " in " );
             sb.append( jurisdiction.getName() );
         }
         return sb.toString();
+    }
+
+    /**
+     * Is this resource spec generalized by another resource spec?
+     *
+     * @param other a resource
+     * @return a boolean
+     */
+    public boolean narrowsOrEquals( Resource other ) {
+        if ( equals( other ) ) return true;
+        if ( actor != other.getActor() && !other.isAnyActor() )
+            return false;
+        if ( role != other.getRole() && !other.isAnyRole() )
+            return false;
+        // Todo compare inclusion
+        if ( organization != other.getOrganization() && !other.isAnyOrganization() )
+            return false;
+        // Todo compare inclusion, not equality
+        if ( jurisdiction != other.getJurisdiction() && !other.isAnyJurisdiction() )
+            return false;
+        return true;
+    }
+
+    /**
+     * Do two resource specs have common, known elements?
+     *
+     * @param other another resource spec
+     * @return a boolean
+     */
+    public boolean intersects( Resource other ) {
+        if ( equals( other ) ) return true;
+        List<Resource> resources = Project.getProject().findAllResourcesNarrowingOrEqualTo( this );
+        List<Resource> others = Project.getProject().findAllResourcesNarrowingOrEqualTo( other );
+        return !Collections.disjoint( resources, others );
     }
 }

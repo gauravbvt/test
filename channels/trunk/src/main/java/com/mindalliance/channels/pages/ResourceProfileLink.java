@@ -38,22 +38,22 @@ public class ResourceProfileLink extends ExternalLink {
     private static String linkFor( Resource resource ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "resource.html?" );
-        if ( resource.hasActor() ) {
+        if ( !resource.isAnyActor() ) {
             sb.append( "actor=" );
             sb.append( resource.getActor().getId() );
             sb.append( "&" );
         }
-        if ( resource.hasRole() ) {
+        if ( !resource.isAnyRole() ) {
             sb.append( "role=" );
             sb.append( resource.getRole().getId() );
             sb.append( "&" );
         }
-        if ( resource.hasOrganization() ) {
+        if ( !resource.isAnyOrganization() ) {
             sb.append( "organization=" );
             sb.append( resource.getOrganization().getId() );
             sb.append( "&" );
         }
-        if ( resource.hasJurisdiction() ) {
+        if ( !resource.isAnyJurisdiction() ) {
             sb.append( "jurisdiction=" );
             sb.append( resource.getJurisdiction().getId() );
         }

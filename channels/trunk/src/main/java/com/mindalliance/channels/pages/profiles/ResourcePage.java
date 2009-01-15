@@ -79,25 +79,25 @@ public class ResourcePage extends WebPage {
         actorRow.add( new ModelObjectLink( "actor-link",                                           // NON-NLS
                                  new PropertyModel<Actor>( resource, "actor" ) ) );
         actorRow.add( new Label( "actor-name", new PropertyModel<String>( resource, "actor")));
-        actorRow.setVisible( resource.hasActor() );
+        actorRow.setVisible( !resource.isAnyActor() );
         WebMarkupContainer roleRow = new WebMarkupContainer("role");
         add(roleRow);
         roleRow.add( new ModelObjectLink( "role-link",                                            // NON-NLS
                                  new PropertyModel<Role>( resource, "role" ) ) );
         roleRow.add( new Label( "role-name", new PropertyModel<String>( resource, "role")));
-        roleRow.setVisible( resource.hasRole() );
+        roleRow.setVisible( !resource.isAnyRole() );
         WebMarkupContainer organizationRow = new WebMarkupContainer("organization");
         add(organizationRow);
         organizationRow.add( new ModelObjectLink( "org-link",                                             // NON-NLS
                                  new PropertyModel<Organization>( resource, "organization" ) ) );
         organizationRow.add( new Label( "organization-name", new PropertyModel<String>( resource, "organization")));
-        organizationRow.setVisible( resource.hasOrganization() );
+        organizationRow.setVisible( !resource.isAnyOrganization() );
         WebMarkupContainer jurisdictionRow = new WebMarkupContainer("jurisdiction");
         add(jurisdictionRow);
         jurisdictionRow.add( new ModelObjectLink( "juris-link",                                           // NON-NLS
                                  new PropertyModel<Jurisdiction>( resource, "jurisdiction" ) ) );
         jurisdictionRow.add( new Label( "jurisdiction-name", new PropertyModel<String>( resource, "jurisdiction")));
-        jurisdictionRow.setVisible( resource.hasJurisdiction() );
+        jurisdictionRow.setVisible( !resource.isAnyJurisdiction() );
         add( new ResourceProfilePanel( "profile", new Model<Resource>( resource ) ) );
     }
 

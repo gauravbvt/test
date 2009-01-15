@@ -5,12 +5,14 @@ import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ResourceProfileLink;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -39,11 +41,22 @@ public class ActorPage extends WebPage {
     private void init( PageParameters parameters ) throws NotFoundException {
         // setVersioned( false );
         // setStatelessHint( true );
-        Actor actor = findActor( parameters );
+        final Actor actor = findActor( parameters );
         assert actor != null;
         add( new Label( "title", new Model<String>( "Actor: " + actor.getName() ) ) );
         add( new ModelObjectPanel( "actor-form", new Model<Actor>( actor ) ) );
-        add( new ResourceProfilePanel( "profile", new Model<Resource>( Resource.with( actor ) ) ) );
+        add( new ResourceProfileLink( "profile-link",
+                        new AbstractReadOnlyModel<Resource>() {
+                            public Resource getObject() {
+                                return (Resource.with( actor )) ;
+                            }
+                        },
+                        new AbstractReadOnlyModel<String>() {
+                            public String getObject() {
+                                return "View profile";
+                            }
+                        }
+                )  );
     }
 
     private Actor findActor( PageParameters parameters ) throws NotFoundException {

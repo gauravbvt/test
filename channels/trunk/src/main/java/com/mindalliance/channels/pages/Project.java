@@ -196,21 +196,24 @@ public final class Project extends WebApplication {
     }
 
     /**
-     * Find all resources implied by resourceable
+     * Find all resources that equal or narrow given resource
      *
      * @param resource a resource
      * @return a list of implied resources
      */
-    public List<Resource> findAllImpliedResources( Resource resource ) {
+    public List<Resource> findAllResourcesNarrowingOrEqualTo( Resource resource ) {
         Set<Resource> set = new HashSet<Resource>();
         Iterator<Scenario> scenarios = getDao().scenarios();
+        // Todo look in role and organization definitions
         while ( scenarios.hasNext() ) {
             Scenario scenario = scenarios.next();
             Iterator<Part> parts = scenario.parts();
+            // Looks for part resources that narrow or equal the given resource
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.involves( resource ) ) {
-                    Resource res = new Resource( part );
+                Resource res = new Resource( part );
+                if ( res.narrowsOrEquals( resource ) ) {
+                    set.add( res );
                     // Find all channels used to communicate with this part
                     Iterator<Flow> flows = scenario.flows();
                     while ( flows.hasNext() ) {
@@ -224,7 +227,6 @@ public final class Project extends WebApplication {
                             }
                         }
                     }
-                    set.add( res );
                 }
             }
         }
@@ -273,16 +275,16 @@ public final class Project extends WebApplication {
     public List<Issue> findAllIssuesFor( Resource resource ) {
         ScenarioAnalyst analyst = getScenarioAnalyst();
         List<Issue> issues = new ArrayList<Issue>();
-        if ( resource.hasActor() ) {
+        if ( !resource.isAnyActor() ) {
             issues.addAll( analyst.listIssues( resource.getActor(), true ) );
         }
-        if ( resource.hasOrganization() ) {
+        if ( !resource.isAnyOrganization() ) {
             issues.addAll( analyst.listIssues( resource.getOrganization(), true ) );
         }
-        if ( resource.hasRole() ) {
+        if ( !resource.isAnyRole() ) {
             issues.addAll( analyst.listIssues( resource.getRole(), true ) );
         }
-        if ( resource.hasJurisdiction() ) {
+        if ( !resource.isAnyJurisdiction() ) {
             issues.addAll( analyst.listIssues( resource.getJurisdiction(), true ) );
         }
         issues.addAll( findAllIssuesInPlays( resource ) );
