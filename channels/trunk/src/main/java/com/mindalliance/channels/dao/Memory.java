@@ -1,33 +1,30 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.DuplicateKeyException;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.Issue;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.util.SemMatch;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.collections.Predicate;
 
 /**
  * An in-memory, no-transactions implementation of a store.
@@ -184,14 +181,14 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public Jurisdiction findJurisdiction( long id ) throws NotFoundException {
-        return(Jurisdiction) find( id );
+        return (Jurisdiction) find( id );
     }
 
     /**
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Role> roles() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -204,7 +201,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Actor> actors() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -216,7 +213,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Organization> organizations() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -228,7 +225,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Jurisdiction> jurisdictions() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -236,7 +233,6 @@ public final class Memory implements Dao {
             }
         } );
     }
-
 
 
     /**
@@ -341,5 +337,71 @@ public final class Memory implements Dao {
             throw new NotFoundException();
         return result;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Resource> findAllResourcesNarrowingOrEqualTo( Resource resource ) {
+        Set<Resource> set = new HashSet<Resource>();
+        Iterator<Scenario> allScenarios = scenarios();
+        // Todo look in role and organization definitions
+        while ( allScenarios.hasNext() ) {
+            Scenario scenario = allScenarios.next();
+            Iterator<Part> parts = scenario.parts();
+            // Looks for part resources that narrow or equal the given resource
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                Resource res = new Resource( part );
+                if ( res.narrowsOrEquals( resource ) ) {
+                    set.add( res );
+                    // Find all channels used to communicate with this part
+                    Iterator<Flow> flows = scenario.flows();
+                    while ( flows.hasNext() ) {
+                        Flow flow = flows.next();
+                        if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
+                            if ( flow.getTarget() == part && !flow.isAskedFor() ) {
+                                res.addChannel( flow.getChannel() );
+                            }
+                            if ( flow.getSource() == part && flow.isAskedFor() ) {
+                                res.addChannel( flow.getChannel() );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<Resource> list = new ArrayList<Resource>();
+        list.addAll( set );
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Play> findAllPlays( Resource resource ) {
+        List<Play> list = new ArrayList<Play>();
+        Iterator<Scenario> allScenarios = scenarios();
+        while ( allScenarios.hasNext() ) {
+            Scenario scenario = allScenarios.next();
+            Iterator<Flow> flows = scenario.flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                if ( Play.hasPlay( flow ) ) {
+                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).involves( resource ) ) {
+                        // role sends
+                        Play play = new Play( (Part) flow.getSource(), flow, true );
+                        list.add( play );
+                    }
+                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).involves( resource ) ) {
+                        // role receives
+                        Play play = new Play( (Part) flow.getTarget(), flow, false );
+                        list.add( play );
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
 
 }

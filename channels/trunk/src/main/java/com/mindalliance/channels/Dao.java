@@ -1,7 +1,11 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.analysis.profiling.Play;
+
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Protocol for manipulating objects.
@@ -210,5 +214,20 @@ public interface Dao extends Serializable {
      */
     void removeJurisdiction( Jurisdiction jurisdiction );
 
+    /**
+     * Find all resources that equal or narrow given resource
+     *
+     * @param resource a resource
+     * @return a list of implied resources
+     */
+    List<Resource> findAllResourcesNarrowingOrEqualTo( Resource resource );
+
+    /**
+     * Find all plays for the resource
+     *
+     * @param resource a resource
+     * @return a list of plays
+     */
+    List<Play> findAllPlays( Resource resource );
 
 }

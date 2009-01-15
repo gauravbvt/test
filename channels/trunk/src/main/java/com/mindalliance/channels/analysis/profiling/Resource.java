@@ -352,9 +352,14 @@ public class Resource implements Serializable {
      * @return a boolean
      */
     public boolean intersects( Resource other ) {
-        if ( equals( other ) ) return true;
-        List<Resource> resources = Project.getProject().findAllResourcesNarrowingOrEqualTo( this );
-        List<Resource> others = Project.getProject().findAllResourcesNarrowingOrEqualTo( other );
-        return !Collections.disjoint( resources, others );
+        // Try cheap tests
+        if ( narrowsOrEquals( other ) || other.narrowsOrEquals( this ) ) {
+            return true;
+        } else {
+            // Try expensive test
+            List<Resource> resources = Project.getProject().findAllResourcesNarrowingOrEqualTo( this );
+            List<Resource> others = Project.getProject().findAllResourcesNarrowingOrEqualTo( other );
+            return !Collections.disjoint( resources, others );
+        }
     }
 }

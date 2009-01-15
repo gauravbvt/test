@@ -1,9 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.analysis.profiling.Play;
@@ -202,37 +200,7 @@ public final class Project extends WebApplication {
      * @return a list of implied resources
      */
     public List<Resource> findAllResourcesNarrowingOrEqualTo( Resource resource ) {
-        Set<Resource> set = new HashSet<Resource>();
-        Iterator<Scenario> scenarios = getDao().scenarios();
-        // Todo look in role and organization definitions
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
-            Iterator<Part> parts = scenario.parts();
-            // Looks for part resources that narrow or equal the given resource
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                Resource res = new Resource( part );
-                if ( res.narrowsOrEquals( resource ) ) {
-                    set.add( res );
-                    // Find all channels used to communicate with this part
-                    Iterator<Flow> flows = scenario.flows();
-                    while ( flows.hasNext() ) {
-                        Flow flow = flows.next();
-                        if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
-                            if ( flow.getTarget() == part && !flow.isAskedFor() ) {
-                                res.addChannel( flow.getChannel() );
-                            }
-                            if ( flow.getSource() == part && flow.isAskedFor() ) {
-                                res.addChannel( flow.getChannel() );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        List<Resource> list = new ArrayList<Resource>();
-        list.addAll( set );
-        return list;
+        return getDao().findAllResourcesNarrowingOrEqualTo( resource );
     }
 
     /**
@@ -242,28 +210,7 @@ public final class Project extends WebApplication {
      * @return a list of plays
      */
     public List<Play> findAllPlays( Resource resource ) {
-        List<Play> list = new ArrayList<Play>();
-        Iterator<Scenario> scenarios = getDao().scenarios();
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
-            Iterator<Flow> flows = scenario.flows();
-            while ( flows.hasNext() ) {
-                Flow flow = flows.next();
-                if ( Play.hasPlay( flow ) ) {
-                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).involves( resource ) ) {
-                        // role sends
-                        Play play = new Play( (Part) flow.getSource(), flow, true );
-                        list.add( play );
-                    }
-                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).involves( resource ) ) {
-                        // role receives
-                        Play play = new Play( (Part) flow.getTarget(), flow, false );
-                        list.add( play );
-                    }
-                }
-            }
-        }
-        return list;
+        return getDao().findAllPlays( resource );
     }
 
     /**
