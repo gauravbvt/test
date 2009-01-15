@@ -1,10 +1,12 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.InternalFlow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Node;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -14,6 +16,7 @@ import java.text.MessageFormat;
 
 /**
  * A link to an aggregate object.
+ * @todo rework to use bookmarkable page links.
  */
 public class ModelObjectLink extends ExternalLink {
 
@@ -39,6 +42,8 @@ public class ModelObjectLink extends ExternalLink {
                         result = linkFor( (Actor) obj );
                     else if ( obj instanceof Organization )
                         result = linkFor( (Organization) obj );
+                    else if ( obj instanceof InternalFlow )
+                        result = linkFor( (InternalFlow) obj );
                     else {
                         result = "#";
                         if ( obj != null )
@@ -57,17 +62,28 @@ public class ModelObjectLink extends ExternalLink {
     }
 
     private static String linkFor( Organization organization ) {
-        return MessageFormat.format( "organization.html?id={0}", organization.getId() );                  // NON-NLS
+        return MessageFormat.format( "organization.html?id={0}", organization.getId() );  // NON-NLS
     }
 
     private static String linkFor( Actor actor ) {
-        return MessageFormat.format( "actor.html?id={0}", actor.getId() );                  // NON-NLS
+        return MessageFormat.format( "actor.html?id={0}", actor.getId() );                // NON-NLS
     }
 
     private static String linkFor( Part part ) {
-        return MessageFormat.format( "node.html?scenario={0}&amp;node={1}",               // NON-NLS
-                                     part.getScenario().getId(),
-                                     part.getId()
-                                     );
+        return MessageFormat.format(
+                "node.html?scenario={0}&amp;node={1}",                                    // NON-NLS
+                part.getScenario().getId(),
+                part.getId()
+
+        );
+    }
+    private static String linkFor( InternalFlow flow ) {
+        final Node source = flow.getSource();
+        return MessageFormat.format(
+                "node.html?scenario={0}&amp;node={1}&expand={2}",                         // NON-NLS
+                source.getScenario().getId(),
+                source.getId(),
+                flow.getId()
+        );
     }
 }
