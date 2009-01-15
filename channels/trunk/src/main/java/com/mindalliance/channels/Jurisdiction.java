@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A description of a jurisdiction.
  */
-public class Jurisdiction extends Place  implements Resourceable {
+public class Jurisdiction extends Place  implements Entity {
 
     public Jurisdiction() {
     }

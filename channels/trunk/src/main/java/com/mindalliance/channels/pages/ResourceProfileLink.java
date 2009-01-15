@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.ResourceSpec;
 
 /**
  * A link to a resource's profile
@@ -15,17 +15,17 @@ import com.mindalliance.channels.analysis.profiling.Resource;
  */
 public class ResourceProfileLink extends ExternalLink {
 
-    public ResourceProfileLink( String id, IModel<Resource> model ) {
+    public ResourceProfileLink( String id, IModel<ResourceSpec> model ) {
         this( id, model, null );
     }
 
-    public ResourceProfileLink( String id, final IModel<Resource> model, IModel<String> s ) {
+    public ResourceProfileLink( String id, final IModel<ResourceSpec> model, IModel<String> s ) {
         super(
                 id,
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
-                        final Resource resource = model.getObject();
+                        final ResourceSpec resource = model.getObject();
                         final String result;
                         result = linkFor( resource );
                         return result;
@@ -35,7 +35,7 @@ public class ResourceProfileLink extends ExternalLink {
         );
     }
 
-    private static String linkFor( Resource resource ) {
+    private static String linkFor( ResourceSpec resource ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "resource.html?" );
         if ( !resource.isAnyActor() ) {

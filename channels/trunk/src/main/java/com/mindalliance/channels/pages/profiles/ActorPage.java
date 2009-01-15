@@ -3,11 +3,10 @@ package com.mindalliance.channels.pages.profiles;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ResourceProfileLink;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
-import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -46,9 +45,9 @@ public class ActorPage extends WebPage {
         add( new Label( "title", new Model<String>( "Actor: " + actor.getName() ) ) );
         add( new ModelObjectPanel( "actor-form", new Model<Actor>( actor ) ) );
         add( new ResourceProfileLink( "profile-link",
-                        new AbstractReadOnlyModel<Resource>() {
-                            public Resource getObject() {
-                                return (Resource.with( actor )) ;
+                        new AbstractReadOnlyModel<ResourceSpec>() {
+                            public ResourceSpec getObject() {
+                                return ( ResourceSpec.with( actor )) ;
                             }
                         },
                         new AbstractReadOnlyModel<String>() {

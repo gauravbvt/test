@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.ResourceProfileLink;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -181,9 +181,9 @@ public abstract class AbstractTablePanel<T> extends Panel {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem, String id, final IModel<T> model ) {
                 cellItem.add( new ResourceProfileLink( id,
-                        new AbstractReadOnlyModel<Resource>() {
-                            public Resource getObject() {
-                                return (Resource) model.getObject();
+                        new AbstractReadOnlyModel<ResourceSpec>() {
+                            public ResourceSpec getObject() {
+                                return (ResourceSpec) model.getObject();
                             }
                         },
                         new AbstractReadOnlyModel<String>() {

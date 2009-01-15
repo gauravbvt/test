@@ -1,16 +1,11 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.pages.Project;
-
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * A company, agency, social club, etc.
  */
-public class Organization extends ModelObject implements Resourceable {
+public class Organization extends ModelObject implements Entity {
 
     public Organization() {
     }

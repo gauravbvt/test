@@ -6,7 +6,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import com.mindalliance.channels.analysis.profiling.SortableResourceIssuesProvider;
-import com.mindalliance.channels.analysis.profiling.Resource;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.analysis.Issue;
 
 import java.util.List;
@@ -21,9 +21,9 @@ import java.util.ArrayList;
  */
 public class ResourceIssuesTablePanel extends AbstractTablePanel {
 
-    private Resource resource;
+    private ResourceSpec resource;
 
-    public ResourceIssuesTablePanel( String id, IModel<Resource> model ) {
+    public ResourceIssuesTablePanel( String id, IModel<ResourceSpec> model ) {
         super( id, model );
         resource = model.getObject();
         init();

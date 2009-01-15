@@ -1,7 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.profiling.Resource;
-
 import java.text.MessageFormat;
 
 /**
@@ -174,14 +172,21 @@ public class Part extends Node {
     }
 
     /**
+     * Gets the resourceSpec implied by the part
+     * @return a ResourceSpec
+     */
+    public ResourceSpec resourceSpec() {
+        return new ResourceSpec( this );
+    }
+
+    /**
      * Test whether the resource spec of the part intersects a given resource spec
      *
-     * @param resource a resource
+     * @param resourceSpec a resource
      * @return a boolean
      */
-    public boolean involves( Resource resource ) {
-        Resource partResource = new Resource( this );
-        return resource.intersects( partResource );
+    public boolean involves( ResourceSpec resourceSpec ) {
+        return resourceSpec.intersects( this.resourceSpec() );
     }
 
 }

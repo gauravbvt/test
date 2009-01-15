@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis.profiling;
 
 import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.ResourceSpec;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.model.IModel;
@@ -28,8 +29,8 @@ public class SortableResourceIssuesProvider extends SortableDataProvider<Issue> 
      */
     private List<Issue> issues;
 
-    public SortableResourceIssuesProvider( Resource resource ) {
-        issues = Project.getProject().findAllIssuesFor( resource );
+    public SortableResourceIssuesProvider( ResourceSpec resourceSpec ) {
+        issues = Project.getProject().findAllIssuesFor( resourceSpec );
         setSort( "about.name", true );
     }
 

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.analysis.profiling.Resource;
-import com.mindalliance.channels.analysis.profiling.SortableResourceProvider;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.analysis.profiling.SortableResourceSpecProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -19,13 +19,13 @@ import java.util.List;
  * Date: Jan 12, 2009
  * Time: 8:10:00 PM
  */
-public class DirectoryPanel extends AbstractTablePanel<Resource> {
+public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
     /**
      * A resource container or an implied set of resources
      */
-    private Resource resource;
+    private ResourceSpec resource;
 
-    public DirectoryPanel( String id, IModel<Resource> model ) {
+    public DirectoryPanel( String id, IModel<ResourceSpec> model ) {
         super( id, model );
         setRenderBodyOnly( true );
         resource = model.getObject();
@@ -48,7 +48,7 @@ public class DirectoryPanel extends AbstractTablePanel<Resource> {
                 "channelsString", "channelsString" ) );                           // NON-NLS
         columns.add( makeResourceLinkColumn( "", "(view profile)" ) );
         // provider and table
-        add( new AjaxFallbackDefaultDataTable<Resource>(
-                "directory", columns, new SortableResourceProvider( resource ), getPageSize() ) );
+        add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
+                "directory", columns, new SortableResourceSpecProvider( resource ), getPageSize() ) );
     }
 }

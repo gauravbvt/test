@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.profiling;
 
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.ResourceSpec;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -29,8 +30,8 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
      */
     private List<Play> plays;
 
-    public SortablePlaysProvider( Resource resource ) {
-        plays = Project.getProject().findAllPlays( resource );
+    public SortablePlaysProvider( ResourceSpec resourceSpec ) {
+        plays = Project.getProject().findAllPlays( resourceSpec );
         setSort( "part.scenario.name", true );
     }
 

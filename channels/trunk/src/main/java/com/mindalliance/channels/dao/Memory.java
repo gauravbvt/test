@@ -12,8 +12,8 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -341,8 +341,8 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public List<Resource> findAllResourcesNarrowingOrEqualTo( Resource resource ) {
-        Set<Resource> set = new HashSet<Resource>();
+    public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resource ) {
+        Set<ResourceSpec> set = new HashSet<ResourceSpec>();
         Iterator<Scenario> allScenarios = scenarios();
         // Todo look in role and organization definitions
         while ( allScenarios.hasNext() ) {
@@ -351,7 +351,7 @@ public final class Memory implements Dao {
             // Looks for part resources that narrow or equal the given resource
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                Resource res = new Resource( part );
+                ResourceSpec res = part.resourceSpec();
                 if ( res.narrowsOrEquals( resource ) ) {
                     set.add( res );
                     // Find all channels used to communicate with this part
@@ -370,7 +370,7 @@ public final class Memory implements Dao {
                 }
             }
         }
-        List<Resource> list = new ArrayList<Resource>();
+        List<ResourceSpec> list = new ArrayList<ResourceSpec>();
         list.addAll( set );
         return list;
     }
@@ -378,7 +378,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public List<Play> findAllPlays( Resource resource ) {
+    public List<Play> findAllPlays( ResourceSpec resource ) {
         List<Play> list = new ArrayList<Play>();
         Iterator<Scenario> allScenarios = scenarios();
         while ( allScenarios.hasNext() ) {

@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
 import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.profiling.Resource;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
@@ -13,7 +13,7 @@ import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.profiles.ActorPage;
 import com.mindalliance.channels.pages.profiles.OrganizationPage;
-import com.mindalliance.channels.pages.profiles.ResourcePage;
+import com.mindalliance.channels.pages.profiles.ResourceSpecPage;
 import com.mindalliance.channels.pages.profiles.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -93,7 +93,7 @@ public final class Project extends WebApplication {
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "organization.html", OrganizationPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "resource.html", ResourcePage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "resource.html", ResourceSpecPage.class ) );
     }
 
     @Override
@@ -199,7 +199,7 @@ public final class Project extends WebApplication {
      * @param resource a resource
      * @return a list of implied resources
      */
-    public List<Resource> findAllResourcesNarrowingOrEqualTo( Resource resource ) {
+    public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resource ) {
         return getDao().findAllResourcesNarrowingOrEqualTo( resource );
     }
 
@@ -209,7 +209,7 @@ public final class Project extends WebApplication {
      * @param resource a resource
      * @return a list of plays
      */
-    public List<Play> findAllPlays( Resource resource ) {
+    public List<Play> findAllPlays( ResourceSpec resource ) {
         return getDao().findAllPlays( resource );
     }
 
@@ -219,7 +219,7 @@ public final class Project extends WebApplication {
      * @param resource a resource
      * @return a list of issues
      */
-    public List<Issue> findAllIssuesFor( Resource resource ) {
+    public List<Issue> findAllIssuesFor( ResourceSpec resource ) {
         ScenarioAnalyst analyst = getScenarioAnalyst();
         List<Issue> issues = new ArrayList<Issue>();
         if ( !resource.isAnyActor() ) {
@@ -244,7 +244,7 @@ public final class Project extends WebApplication {
      * @param resource a resource
      * @return a list of issues
      */
-    private List<Issue> findAllIssuesInPlays( Resource resource ) {
+    private List<Issue> findAllIssuesInPlays( ResourceSpec resource ) {
         ScenarioAnalyst analyst = getScenarioAnalyst();
         List<Issue> issues = new ArrayList<Issue>();
         List<Play> plays = findAllPlays( resource );
