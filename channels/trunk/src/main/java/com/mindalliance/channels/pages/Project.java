@@ -1,11 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.analysis.Issue;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
@@ -13,19 +9,13 @@ import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.profiles.ActorPage;
 import com.mindalliance.channels.pages.profiles.OrganizationPage;
-import com.mindalliance.channels.pages.profiles.ResourceSpecPage;
+import com.mindalliance.channels.pages.profiles.ProfilePage;
 import com.mindalliance.channels.pages.profiles.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Application object for Channels.
@@ -93,7 +83,7 @@ public final class Project extends WebApplication {
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "organization.html", OrganizationPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "resource.html", ResourceSpecPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "resource.html", ProfilePage.class ) );
     }
 
     @Override
@@ -193,71 +183,4 @@ public final class Project extends WebApplication {
         return (Project) get();
     }
 
-    /**
-     * Find all resources that equal or narrow given resource
-     *
-     * @param resource a resource
-     * @return a list of implied resources
-     */
-    public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resource ) {
-        return getDao().findAllResourcesNarrowingOrEqualTo( resource );
-    }
-
-    /**
-     * Find all plays for the resource
-     *
-     * @param resource a resource
-     * @return a list of plays
-     */
-    public List<Play> findAllPlays( ResourceSpec resource ) {
-        return getDao().findAllPlays( resource );
-    }
-
-    /**
-     * Find all issues related to any of the components of a resource
-     *
-     * @param resource a resource
-     * @return a list of issues
-     */
-    public List<Issue> findAllIssuesFor( ResourceSpec resource ) {
-        ScenarioAnalyst analyst = getScenarioAnalyst();
-        List<Issue> issues = new ArrayList<Issue>();
-        if ( !resource.isAnyActor() ) {
-            issues.addAll( analyst.listIssues( resource.getActor(), true ) );
-        }
-        if ( !resource.isAnyOrganization() ) {
-            issues.addAll( analyst.listIssues( resource.getOrganization(), true ) );
-        }
-        if ( !resource.isAnyRole() ) {
-            issues.addAll( analyst.listIssues( resource.getRole(), true ) );
-        }
-        if ( !resource.isAnyJurisdiction() ) {
-            issues.addAll( analyst.listIssues( resource.getJurisdiction(), true ) );
-        }
-        issues.addAll( findAllIssuesInPlays( resource ) );
-        return issues;
-    }
-
-    /**
-     * Find the issues on parts and flows for all plays of a resource
-     *
-     * @param resource a resource
-     * @return a list of issues
-     */
-    private List<Issue> findAllIssuesInPlays( ResourceSpec resource ) {
-        ScenarioAnalyst analyst = getScenarioAnalyst();
-        List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = findAllPlays( resource );
-        Set<Part> parts = new HashSet<Part>();
-        for ( Play play : plays ) {
-            parts.add( play.getPart() );
-            Iterator<Issue> iterator = analyst.findIssues( play.getFlow(), true );
-            while ( iterator.hasNext() ) issues.add( iterator.next() );
-        }
-        for ( Part part : parts ) {
-            Iterator<Issue> iterator = analyst.findIssues( part, true );
-            while ( iterator.hasNext() ) issues.add( iterator.next() );
-        }
-        return issues;
-    }
 }

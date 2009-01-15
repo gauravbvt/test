@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.ResourceSpec;
 
 import java.util.Iterator;
 import java.util.List;
@@ -92,5 +93,13 @@ public interface ScenarioAnalyst {
      * @return an aggregate description of issues or an empty string if none
      */
     String getIssuesSummary( ModelObject modelObject, String property );
+
+    /**
+     * Find all issues related to any of the components of a resource
+     *
+     * @param resource a resource
+     * @return a list of issues
+     */
+    List<Issue> findAllIssuesFor( ResourceSpec resource );
 
 }

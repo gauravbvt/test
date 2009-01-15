@@ -1,11 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Jurisdiction;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Entity;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 
@@ -326,6 +320,13 @@ public class ResourceSpec implements Serializable {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return getName();
+    }
+
+    /**
      * Is this resource spec generalized by another resource spec?
      *
      * @param other a resource spec
@@ -358,8 +359,9 @@ public class ResourceSpec implements Serializable {
             return true;
         } else {
             // Try expensive test
-            List<ResourceSpec> resources = Project.getProject().findAllResourcesNarrowingOrEqualTo( this );
-            List<ResourceSpec> others = Project.getProject().findAllResourcesNarrowingOrEqualTo( other );
+            Dao dao = Project.getProject().getDao();
+            List<ResourceSpec> resources = dao.findAllResourcesNarrowingOrEqualTo( this );
+            List<ResourceSpec> others = dao.findAllResourcesNarrowingOrEqualTo( other );
             return !Collections.disjoint( resources, others );
         }
     }

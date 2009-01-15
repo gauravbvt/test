@@ -4,7 +4,6 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 /**
  * The sending or receiving of information by a part.
@@ -15,6 +14,13 @@ import java.text.MessageFormat;
  * Time: 1:50:39 PM
  */
 public class Play implements Serializable {
+
+    /**
+     * Used in calculating hashCode
+     */
+    private static int SEED = 31;
+
+
     /**
      * Part in play
      */
@@ -108,5 +114,24 @@ public class Play implements Serializable {
      */
     public static boolean hasPlay( Flow flow ) {
         return flow.getSource().isPart() && flow.getTarget().isPart();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object obj ) {
+      if ( !(obj instanceof Play) ) return false;
+        Play play = (Play)obj;
+        return flow == play.getFlow() && part == play.getPart();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        int hash = 1;
+        if ( part != null) hash = hash * SEED + part.hashCode();
+        if ( flow != null) hash = hash * SEED + flow.hashCode();
+        return hash;
     }
 }

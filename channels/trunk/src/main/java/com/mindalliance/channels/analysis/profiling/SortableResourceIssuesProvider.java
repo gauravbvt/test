@@ -8,6 +8,7 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.NestedNullException;
 
 import java.util.List;
 import java.util.Iterator;
@@ -30,7 +31,7 @@ public class SortableResourceIssuesProvider extends SortableDataProvider<Issue> 
     private List<Issue> issues;
 
     public SortableResourceIssuesProvider( ResourceSpec resourceSpec ) {
-        issues = Project.getProject().findAllIssuesFor( resourceSpec );
+        issues = Project.getProject().getScenarioAnalyst().findAllIssuesFor( resourceSpec );
         setSort( "about.name", true );
     }
 
@@ -60,12 +61,14 @@ public class SortableResourceIssuesProvider extends SortableDataProvider<Issue> 
                     String stringValue = ( value == null ) ? "" : value.toString();
                     String otherStringValue = ( otherValue == null ) ? "" : otherValue.toString();
                     comp = stringValue.compareTo( otherStringValue );
+                } catch ( NestedNullException e ) {
+                   System.out.println( e );
                 } catch ( IllegalAccessException e ) {
-                    e.printStackTrace();
+                    System.out.println( e );
                 } catch ( InvocationTargetException e ) {
-                    e.printStackTrace();
+                    System.out.println( e );
                 } catch ( NoSuchMethodException e ) {
-                    e.printStackTrace();
+                    System.out.println( e );
                 }
                 return sortParam.isAscending() ? comp : comp * -1;
             }

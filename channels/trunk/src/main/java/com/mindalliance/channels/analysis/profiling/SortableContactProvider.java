@@ -17,51 +17,50 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A sortable provider of plays.
+ * A sortable provider of contacts for specified resources.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Jan 8, 2009
- * Time: 1:12:32 PM
+ * Time: 1:16:32 PM
  */
-public class SortablePlaysProvider extends SortableDataProvider<Play> {
-
+public class SortableContactProvider extends SortableDataProvider<ResourceSpec> {
     /**
-     * Plays found in scenarios for a given actor, role or organization.
+     * Contacts
      */
-    private List<Play> plays;
+    private List<ResourceSpec> contacts;
 
-    public SortablePlaysProvider( ResourceSpec resourceSpec ) {
-        plays = Project.getProject().getDao().findAllPlays( resourceSpec );
-        setSort( "part.scenario.name", true );
+    public SortableContactProvider( ResourceSpec resourceSpec ) {
+        contacts = Project.getProject().getDao().findAllContacts( resourceSpec );
+        setSort( "name", true );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Iterator<Play> iterator( int first, int count ) {
+    public Iterator<ResourceSpec> iterator( int first, int count ) {
         final SortParam sortParam = getSort();
-        List<Play> sortedPlays = new ArrayList<Play>();
-        sortedPlays.addAll( plays );
-        Collections.sort( sortedPlays, new Comparator<Play>() {
+        List<ResourceSpec> sortedResources = new ArrayList<ResourceSpec>();
+        sortedResources.addAll( contacts );
+        Collections.sort( sortedResources, new Comparator<ResourceSpec>() {
             /**
-             * @param play the first object to be compared.
-             * @param otherPlay the second object to be compared.
+             * @param resourceSpec the first object to be compared.
+             * @param other the second object to be compared.
              * @return a negative integer, zero, or a positive integer as the
              *         first argument is less than, equal to, or greater than the
              *         second.
              * @throws ClassCastException if the arguments' types prevent them from
              *                            being compared by this comparator.
              */
-            public int compare( Play play, Play otherPlay ) {
+            public int compare( ResourceSpec resourceSpec, ResourceSpec other ) {
                 int comp = 0;
                 try {
                     String sortProperty = sortParam.getProperty();
-                    Object value = PropertyUtils.getProperty( play, sortProperty );
-                    Object otherValue = PropertyUtils.getProperty( otherPlay, sortProperty );
-                    String stringValue = ( value == null ) ? "" : value.toString();
-                    String otherStringValue = ( otherValue == null ) ? "" : otherValue.toString();
-                    comp = stringValue.compareTo( otherStringValue );
+                    Object value = PropertyUtils.getProperty( resourceSpec, sortProperty );
+                    Object otherValue = PropertyUtils.getProperty( other, sortProperty );
+                    String valueString = (value == null ? "" : value.toString());
+                    String otherValueString = (otherValue == null ? "" : otherValue.toString());
+                    comp = valueString.compareTo( otherValueString );
                 } catch ( NestedNullException e ) {
                    System.out.println( e );
                 } catch ( IllegalAccessException e ) {
@@ -74,21 +73,21 @@ public class SortablePlaysProvider extends SortableDataProvider<Play> {
                 return sortParam.isAscending() ? comp : comp * -1;
             }
         } );
-        return sortedPlays.subList( first, first + count ).iterator();
+        return sortedResources.subList( first, first + count ).iterator();
     }
 
     /**
      * {@inheritDoc}
      */
     public int size() {
-        return plays.size();
+        return contacts.size();
     }
 
     /**
      * {@inheritDoc}
      */
-    public IModel<Play> model( Play play ) {
-        return new Model<Play>( play );
+    public IModel<ResourceSpec> model( ResourceSpec resourceSpec ) {
+        return new Model<ResourceSpec>( resourceSpec );
     }
 
 }

@@ -2,8 +2,9 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Entity;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.ResourceProfileLink;
+import com.mindalliance.channels.pages.ProfileLink;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
@@ -37,7 +38,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
     /**
      * Number of plays shown in table at a time
      */
-    private int pageSize = 20;
+    private int pageSize = 5;
 
     public AbstractTablePanel( String s, IModel<?> iModel ) {
         super( s, iModel );
@@ -113,7 +114,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
 
     /**
      * Defines a styled column containing links to ModelObjects
-     *
+     * If a model object is an entity, the link is to its profile
      * @param name          the column's name
      * @param moProperty    a property path from row object to ModelObject-valued property
      * @param labelProperty a property path to the text to display in cell
@@ -150,19 +151,35 @@ public abstract class AbstractTablePanel<T> extends Panel {
         if ( mo != null ) {
             String text = (String) evaluate( bean, labelProperty, defaultText );
             labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
-            return new ModelObjectLink( id,
-                    new AbstractReadOnlyModel<ModelObject>() {
-                        @Override
-                        public ModelObject getObject() {
-                            return mo;
+            if ( mo instanceof Entity ) {
+                final Entity entity = (Entity) mo;
+                return new ProfileLink( id,
+                        new AbstractReadOnlyModel<ResourceSpec>() {
+                            public ResourceSpec getObject() {
+                                return ResourceSpec.with( entity );
+                            }
+                        },
+                        new AbstractReadOnlyModel<String>() {
+                            public String getObject() {
+                                return labelText;
+                            }
                         }
-                    },
-                    new AbstractReadOnlyModel<String>() {
-                        @Override
-                        public String getObject() {
-                            return labelText;
-                        }
-                    } );
+                );
+            } else {
+                return new ModelObjectLink( id,
+                        new AbstractReadOnlyModel<ModelObject>() {
+                            @Override
+                            public ModelObject getObject() {
+                                return mo;
+                            }
+                        },
+                        new AbstractReadOnlyModel<String>() {
+                            @Override
+                            public String getObject() {
+                                return labelText;
+                            }
+                        } );
+            }
         }
 
         return new Label( id, new Model<String>( defaultText == null ? "" : defaultText ) );
@@ -180,7 +197,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem, String id, final IModel<T> model ) {
-                cellItem.add( new ResourceProfileLink( id,
+                cellItem.add( new ProfileLink( id,
                         new AbstractReadOnlyModel<ResourceSpec>() {
                             public ResourceSpec getObject() {
                                 return (ResourceSpec) model.getObject();

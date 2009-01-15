@@ -1,6 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.analysis.profiling.Play;
 
 import java.io.Serializable;
@@ -217,17 +216,24 @@ public interface Dao extends Serializable {
     /**
      * Find all resources that equal or narrow given resource
      *
-     * @param resource a resource
+     * @param resourceSpec a resource
      * @return a list of implied resources
      */
-    List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resource );
+    List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec );
 
     /**
      * Find all plays for the resource
      *
-     * @param resource a resource
+     * @param resourceSpec a resource
      * @return a list of plays
      */
-    List<Play> findAllPlays( ResourceSpec resource );
+    List<Play> findAllPlays( ResourceSpec resourceSpec );
+
+    /**
+     * Find all contact of specified resources
+     * @param resourceSpec a resource specification
+     * @return a list of ResourceSpec's
+     */
+    List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec );
 
 }

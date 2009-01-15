@@ -6,15 +6,19 @@ import com.mindalliance.channels.Location;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Entity;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.analysis.ScenarioAnalyst;
-import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ProfileLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import java.text.Collator;
 
@@ -23,32 +27,53 @@ import java.text.Collator;
  */
 public class PartPanel extends Panel {
 
-    /** The task property. */
+    /**
+     * The task property.
+     */
     private static final String TASK_PROPERTY = "task";                     // NON-NLS
 
-    /** The actor property. */
+    /**
+     * The actor property.
+     */
     private static final String ACTOR_PROPERTY = "actor";                   // NON-NLS
 
-    /** The role property. */
+    /**
+     * The role property.
+     */
     private static final String ROLE_PROPERTY = "role";                     // NON-NLS
 
-    /** The organization property. */
+    /**
+     * The organization property.
+     */
     private static final String ORG_PROPERTY = "organization";              // NON-NLS
 
-    /** The jurisdiction property. */
+    /**
+     * The jurisdiction property.
+     */
     private static final String JURISDICTION_PROPERTY = "jurisdiction";     // NON-NLS
 
-    /** The location property. */
+    /**
+     * The location property.
+     */
     private static final String LOCATION_PROPERTY = "location";             // NON-NLS
 
-    /** The task property. */
+    /**
+     * The task property.
+     */
     private static final String EMPTY_STRING = "";
 
-    /** String comparator for equality tests. */
+    /**
+     * String comparator for equality tests.
+     */
     private static final Collator COMPARATOR = Collator.getInstance();
-    static { COMPARATOR.setStrength( Collator.PRIMARY ); }
 
-    /** The part edited by this form. */
+    static {
+        COMPARATOR.setStrength( Collator.PRIMARY );
+    }
+
+    /**
+     * The part edited by this form.
+     */
     private Part part;
 
     //====================================
@@ -60,20 +85,35 @@ public class PartPanel extends Panel {
 
         addField( TASK_PROPERTY );
         addField( ACTOR_PROPERTY );
-        add( new ModelObjectLink( "actor-link",                                           // NON-NLS
-                                 new PropertyModel<Actor>( part, ACTOR_PROPERTY ) ) );
+        add( makeProfileLink( "actor-link",                                           // NON-NLS
+                new PropertyModel<Entity>( part, ACTOR_PROPERTY ), "Actor" ) );
         addField( ROLE_PROPERTY );
-        add( new ModelObjectLink( "role-link",                                            // NON-NLS
-                                 new PropertyModel<Role>( part, ROLE_PROPERTY ) ) );
+        add( makeProfileLink( "role-link",                                            // NON-NLS
+                new PropertyModel<Entity>( part, ROLE_PROPERTY ), "Role" ) );
         addField( ORG_PROPERTY );
-        add( new ModelObjectLink( "org-link",                                             // NON-NLS
-                                 new PropertyModel<Organization>( part, ORG_PROPERTY ) ) );
+        add( makeProfileLink( "org-link",                                             // NON-NLS
+                new PropertyModel<Entity>( part, ORG_PROPERTY ), "Organization" ) );
         addField( JURISDICTION_PROPERTY );
-        add( new ModelObjectLink( "juris-link",                                           // NON-NLS
-                                 new PropertyModel<Jurisdiction>( part, JURISDICTION_PROPERTY ) ) );
+        add( makeProfileLink( "juris-link",                                           // NON-NLS
+                new PropertyModel<Entity>( part, JURISDICTION_PROPERTY ), "Jurisdiction" ) );
         addField( LOCATION_PROPERTY );
-        add( new ModelObjectLink( "loc-link",                                             // NON-NLS
-                                 new PropertyModel<Location>( part, LOCATION_PROPERTY ) ) );
+        add( makeProfileLink( "loc-link",                                             // NON-NLS
+                new PropertyModel<Entity>( part, LOCATION_PROPERTY ), "Location" ) );
+    }
+
+    private ProfileLink makeProfileLink( String id, final IModel<Entity> model, final String label ) {
+        return new ProfileLink( id,
+                new AbstractReadOnlyModel<ResourceSpec>() {
+                    public ResourceSpec getObject() {
+                        return ResourceSpec.with( model.getObject() );
+                    }
+                },
+                new AbstractReadOnlyModel<String>() {
+                    public String getObject() {
+                        return label;
+                    }
+                }
+        );
     }
 
     private void addField( String property ) {
@@ -84,16 +124,17 @@ public class PartPanel extends Panel {
         final String issue = analyst.getIssuesSummary( getPart(), property );
         if ( !issue.isEmpty() ) {
             field.add(
-                new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
+                    new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
             field.add(
-                new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
+                    new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
         }
         add( field );
     }
 
     /**
      * Test if strings are equivalent.
-     * @param name the new name
+     *
+     * @param name   the new name
      * @param target the original name
      * @return true if strings are equivalent
      */
@@ -104,6 +145,7 @@ public class PartPanel extends Panel {
     //====================================
     /**
      * Get the actor string.
+     *
      * @return the name of the actor, or the empty string if null
      */
     public String getActor() {
@@ -113,6 +155,7 @@ public class PartPanel extends Panel {
 
     /**
      * Get the jurisdiction string.
+     *
      * @return the name of the jurisdiction, or the empty string if null
      */
     public String getJurisdiction() {
@@ -122,6 +165,7 @@ public class PartPanel extends Panel {
 
     /**
      * Get the location string.
+     *
      * @return the name of the location, or the empty string if null
      */
     public String getLocation() {
@@ -131,6 +175,7 @@ public class PartPanel extends Panel {
 
     /**
      * Get the organization string.
+     *
      * @return the name of the organization, or the empty string if null
      */
     public String getOrganization() {
@@ -140,6 +185,7 @@ public class PartPanel extends Panel {
 
     /**
      * Get the role string.
+     *
      * @return the name of the role, or the empty string if null
      */
     public String getRole() {
@@ -153,6 +199,7 @@ public class PartPanel extends Panel {
 
     /**
      * Set the part's actor.
+     *
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setActor( String name ) {
@@ -167,6 +214,7 @@ public class PartPanel extends Panel {
 
     /**
      * Set the part's jurisdiction.
+     *
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setJurisdiction( String name ) {
@@ -181,6 +229,7 @@ public class PartPanel extends Panel {
 
     /**
      * Set the part's location.
+     *
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setLocation( String name ) {
@@ -195,6 +244,7 @@ public class PartPanel extends Panel {
 
     /**
      * Set the part's organization.
+     *
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setOrganization( String name ) {
@@ -209,6 +259,7 @@ public class PartPanel extends Panel {
 
     /**
      * Set the part's role.
+     *
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setRole( String name ) {
@@ -217,12 +268,13 @@ public class PartPanel extends Panel {
         else {
             final Role role = getPart().getRole();
             if ( role == null || !isSame( name, role.getName() ) )
-                getPart().setRole( Role.named( name) );
+                getPart().setRole( Role.named( name ) );
         }
     }
 
     /**
      * Set the part's task.
+     *
      * @param task the task
      */
     public void setTask( String task ) {

@@ -341,18 +341,18 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resource ) {
+    public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         Set<ResourceSpec> set = new HashSet<ResourceSpec>();
         Iterator<Scenario> allScenarios = scenarios();
         // Todo look in role and organization definitions
         while ( allScenarios.hasNext() ) {
             Scenario scenario = allScenarios.next();
             Iterator<Part> parts = scenario.parts();
-            // Looks for part resources that narrow or equal the given resource
+            // Looks for part resources that narrow or equal the given resourceSpec
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 ResourceSpec res = part.resourceSpec();
-                if ( res.narrowsOrEquals( resource ) ) {
+                if ( res.narrowsOrEquals( resourceSpec ) ) {
                     set.add( res );
                     // Find all channels used to communicate with this part
                     Iterator<Flow> flows = scenario.flows();
@@ -370,16 +370,14 @@ public final class Memory implements Dao {
                 }
             }
         }
-        List<ResourceSpec> list = new ArrayList<ResourceSpec>();
-        list.addAll( set );
-        return list;
+        return new ArrayList<ResourceSpec>( set );
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<Play> findAllPlays( ResourceSpec resource ) {
-        List<Play> list = new ArrayList<Play>();
+    public List<Play> findAllPlays( ResourceSpec resourceSpec ) {
+        Set<Play> plays = new HashSet<Play>();
         Iterator<Scenario> allScenarios = scenarios();
         while ( allScenarios.hasNext() ) {
             Scenario scenario = allScenarios.next();
@@ -387,20 +385,34 @@ public final class Memory implements Dao {
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
-                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).involves( resource ) ) {
+                    if ( flow.getSource().isPart() && ( (Part) flow.getSource() ).involves( resourceSpec ) ) {
                         // role sends
                         Play play = new Play( (Part) flow.getSource(), flow, true );
-                        list.add( play );
+                        plays.add( play );
                     }
-                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).involves( resource ) ) {
+                    if ( flow.getTarget().isPart() && ( (Part) flow.getTarget() ).involves( resourceSpec ) ) {
                         // role receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
-                        list.add( play );
+                        plays.add( play );
                     }
                 }
             }
         }
-        return list;
+        return new ArrayList<Play>(plays);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec ) {
+        Set<ResourceSpec> contacts = new HashSet<ResourceSpec>();
+        contacts.addAll( this.findAllResourcesNarrowingOrEqualTo( resourceSpec ));
+        List<Play> plays = findAllPlays( resourceSpec );
+        for (Play play : plays) {
+            contacts.add(play.getPart().resourceSpec());
+            contacts.add(play.getOtherPart().resourceSpec());
+        }
+        return new ArrayList<ResourceSpec>( contacts );  
     }
 
 

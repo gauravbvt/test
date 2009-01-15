@@ -5,7 +5,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ResourceProfileLink;
+import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
@@ -47,7 +47,7 @@ public class RolePage extends WebPage {
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( role, "name" ) ) );
         add( new ModelObjectPanel( "role-form", new Model<Role>( role ) ) );
-        add( new ResourceProfileLink( "profile-link",
+        add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {
                             public ResourceSpec getObject() {
                                 return ( ResourceSpec.with( role )) ;

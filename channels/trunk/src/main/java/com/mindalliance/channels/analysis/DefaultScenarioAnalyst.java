@@ -1,10 +1,16 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.analysis.profiling.Play;
 
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Default implementation of ScenarioAnalyst
@@ -116,4 +122,49 @@ public class DefaultScenarioAnalyst implements ScenarioAnalyst {
     public void setIssueDetectors( List<IssueDetector> issueDetectors ) {
         this.issueDetectors = issueDetectors;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> findAllIssuesFor( ResourceSpec resource ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        if ( !resource.isAnyActor() ) {
+            issues.addAll( listIssues( resource.getActor(), true ) );
+        }
+        if ( !resource.isAnyOrganization() ) {
+            issues.addAll( listIssues( resource.getOrganization(), true ) );
+        }
+        if ( !resource.isAnyRole() ) {
+            issues.addAll( listIssues( resource.getRole(), true ) );
+        }
+        if ( !resource.isAnyJurisdiction() ) {
+            issues.addAll( listIssues( resource.getJurisdiction(), true ) );
+        }
+        issues.addAll( findAllIssuesInPlays( resource ) );
+        return issues;
+    }
+
+    /**
+     * Find the issues on parts and flows for all plays of a resource
+     *
+     * @param resource a resource
+     * @return a list of issues
+     */
+    private List<Issue> findAllIssuesInPlays( ResourceSpec resource ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        List<Play> plays = Project.getProject().getDao().findAllPlays( resource );
+        Set<Part> parts = new HashSet<Part>();
+        for ( Play play : plays ) {
+            parts.add( play.getPart() );
+            Iterator<Issue> iterator = findIssues( play.getFlow(), true );
+            while ( iterator.hasNext() ) issues.add( iterator.next() );
+        }
+        for ( Part part : parts ) {
+            Iterator<Issue> iterator = findIssues( part, true );
+            while ( iterator.hasNext() ) issues.add( iterator.next() );
+        }
+        return issues;
+    }
+
+
 }
