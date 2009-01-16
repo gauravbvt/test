@@ -39,6 +39,7 @@ public class ModelObjectPanel extends Panel {
         moDetailsDiv.add(
                 new TextArea<String>( "description",                                      // NON-NLS
                         new PropertyModel<String>( mo, "description" ) ) );
+        moDetailsDiv.add( new AttachmentPanel( "attachments", mo ) );
 
     }
 
