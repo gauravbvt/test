@@ -314,6 +314,11 @@ html, #sc-details {
 .role #header {
     background: transparent url('images/masks.png') no-repeat 5px 2px;
 }
+.actor #header {
+    background: transparent url('images/actor.png') no-repeat 5px 2px;
+}.organization #header {
+    background: transparent url('images/organization.png') no-repeat 5px 2px;
+}
 #footer {
     border: 1px outset #6fafaf;
 }
