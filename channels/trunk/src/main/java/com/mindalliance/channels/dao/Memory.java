@@ -188,7 +188,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Role> roles() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -201,7 +201,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Actor> actors() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -213,7 +213,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Organization> organizations() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -225,7 +225,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Jurisdiction> jurisdictions() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -398,21 +398,24 @@ public final class Memory implements Dao {
                 }
             }
         }
-        return new ArrayList<Play>(plays);
+        return new ArrayList<Play>( plays );
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec ) {
+    public List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf ) {
         Set<ResourceSpec> contacts = new HashSet<ResourceSpec>();
-        contacts.addAll( this.findAllResourcesNarrowingOrEqualTo( resourceSpec ));
-        List<Play> plays = findAllPlays( resourceSpec );
-        for (Play play : plays) {
-            contacts.add(play.getPart().resourceSpec());
-            contacts.add(play.getOtherPart().resourceSpec());
+        if ( isSelf ) {
+            contacts.addAll( this.findAllResourcesNarrowingOrEqualTo( resourceSpec ) );
+        } else {
+            List<Play> plays = findAllPlays( resourceSpec );
+            for ( Play play : plays ) {
+                contacts.add( play.getPart().resourceSpec() );
+                contacts.add( play.getOtherPart().resourceSpec() );
+            }
         }
-        return new ArrayList<ResourceSpec>( contacts );  
+        return new ArrayList<ResourceSpec>( contacts );
     }
 
 

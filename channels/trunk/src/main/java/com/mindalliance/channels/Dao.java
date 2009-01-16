@@ -232,8 +232,9 @@ public interface Dao extends Serializable {
     /**
      * Find all contact of specified resources
      * @param resourceSpec a resource specification
+     * @param isSelf find resources specified by spec, or else who specified resources need to know
      * @return a list of ResourceSpec's
      */
-    List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec );
+    List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf );
 
 }

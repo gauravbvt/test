@@ -26,6 +26,7 @@ public class ResourceProfilePanel extends Panel {
     }
 
     private void init() {
+        add( new ContactInfoPanel( "contact-info", new Model<ResourceSpec>( resource ) ) );
         add( new ResourceIssuesTablePanel( "issues", new Model<ResourceSpec>( resource ) ) );
         add( new PlaybookPanel( "playbook", new Model<ResourceSpec>( resource ) ) );
         add( new DirectoryPanel( "directory", new Model<ResourceSpec>( resource ) ) );

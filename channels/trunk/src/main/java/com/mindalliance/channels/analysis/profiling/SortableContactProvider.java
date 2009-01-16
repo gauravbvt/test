@@ -25,13 +25,14 @@ import java.util.List;
  * Time: 1:16:32 PM
  */
 public class SortableContactProvider extends SortableDataProvider<ResourceSpec> {
+
     /**
      * Contacts
      */
     private List<ResourceSpec> contacts;
 
-    public SortableContactProvider( ResourceSpec resourceSpec ) {
-        contacts = Project.getProject().getDao().findAllContacts( resourceSpec );
+    public SortableContactProvider( ResourceSpec resourceSpec, boolean isSelf ) {
+        contacts = Project.getProject().getDao().findAllContacts( resourceSpec, isSelf );
         setSort( "name", true );
     }
 

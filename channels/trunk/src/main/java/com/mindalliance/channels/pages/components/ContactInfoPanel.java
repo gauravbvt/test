@@ -1,38 +1,38 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.analysis.profiling.SortableContactProvider;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import com.mindalliance.channels.pages.ProfileLink;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.AttributeModifier;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
- * A directory of resources specified resources may need to contact
+ * A directory of all resources specified
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jan 12, 2009
- * Time: 8:10:00 PM
+ * Date: Jan 16, 2009
+ * Time: 1:43:01 PM
  */
-public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
+public class ContactInfoPanel extends AbstractTablePanel<ResourceSpec> {
     /**
-     * AA resource specification
+     * A resource specification
      */
     private ResourceSpec resourceSpec;
 
-    public DirectoryPanel( String id, IModel<ResourceSpec> model ) {
+    public ContactInfoPanel( String id, IModel<ResourceSpec> model ) {
         super( id, model );
         setRenderBodyOnly( true );
         resourceSpec = model.getObject();
@@ -42,10 +42,14 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
-        columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
-        columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
-        columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
-        columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
+        if ( resourceSpec.isAnyActor() )
+            columns.add( makeLinkColumn( "Name", "actor", "actor.name", EMPTY ) );
+        if ( resourceSpec.isAnyRole() )
+            columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
+        if ( resourceSpec.isAnyOrganization() )
+            columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
+        if ( resourceSpec.isAnyJurisdiction() )
+            columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Channels" ),
                 "channelsString", "channelsString" ) );                           // NON-NLS
@@ -73,8 +77,9 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
                 }
             }
         } );
-        // table and providers of resources specified resources need to kwno how to contact
+        // table with provider of resources here specified
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
-                "directory", columns, new SortableContactProvider( resourceSpec, false ), getPageSize() ) );
+                "contactInfo", columns, new SortableContactProvider( resourceSpec, true ), getPageSize() ) );
     }
+
 }
