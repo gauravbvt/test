@@ -11,8 +11,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Location;
-import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
 
 import java.util.Map;
@@ -103,11 +102,11 @@ public class PartConverter implements Converter {
                         Organization.class );
                 part.setOrganization( organization );
             } else if ( nodeName.equals( "location" ) ) {
-                Location location = (Location) context.convertAnother( scenario, Location.class );
+                Place location = (Place) context.convertAnother( scenario, Place.class );
                 part.setLocation( location );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
-                Jurisdiction jurisdiction =
-                        (Jurisdiction) context.convertAnother( scenario, Jurisdiction.class );
+                Place jurisdiction =
+                        (Place) context.convertAnother( scenario, Place.class );
                 part.setJurisdiction( jurisdiction );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );

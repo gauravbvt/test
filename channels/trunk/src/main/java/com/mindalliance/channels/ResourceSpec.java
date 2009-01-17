@@ -42,7 +42,7 @@ public class ResourceSpec implements Serializable {
     /**
      * In jurisdiction
      */
-    private Jurisdiction jurisdiction;
+    private Place jurisdiction;
     /**
      * Channels used to reach actor
      */
@@ -73,8 +73,8 @@ public class ResourceSpec implements Serializable {
             resourceSpec.setOrganization( (Organization) entity );
         if ( entity instanceof Role )
             resourceSpec.setRole( (Role) entity );
-        if ( entity instanceof Jurisdiction )
-            resourceSpec.setJurisdiction( (Jurisdiction) entity );
+        if ( entity instanceof Place )
+            resourceSpec.setJurisdiction( (Place) entity );
         return resourceSpec;
     }
 
@@ -102,11 +102,11 @@ public class ResourceSpec implements Serializable {
         this.organization = organization;
     }
 
-    public Jurisdiction getJurisdiction() {
+    public Place getJurisdiction() {
         return jurisdiction;
     }
 
-    public void setJurisdiction( Jurisdiction jurisdiction ) {
+    public void setJurisdiction( Place jurisdiction ) {
         this.jurisdiction = jurisdiction;
     }
 
@@ -147,7 +147,7 @@ public class ResourceSpec implements Serializable {
         return actor == resourceSpec.getActor()
                 && role == resourceSpec.getRole()
                 && organization == resourceSpec.getOrganization()
-                && SemMatch.sameLocation( jurisdiction, resourceSpec.getJurisdiction() );
+                && SemMatch.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
     }
 
     /**

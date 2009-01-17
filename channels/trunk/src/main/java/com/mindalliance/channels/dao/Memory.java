@@ -5,7 +5,6 @@ import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.DuplicateKeyException;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Organization;
@@ -13,6 +12,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.analysis.profiling.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
@@ -180,8 +180,8 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public Jurisdiction findJurisdiction( long id ) throws NotFoundException {
-        return (Jurisdiction) find( id );
+    public Place findPlace( long id ) throws NotFoundException {
+        return (Place) find( id );
     }
 
     /**
@@ -226,10 +226,10 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     @SuppressWarnings( {"unchecked"} )
-    public Iterator<Jurisdiction> jurisdictions() {
+    public Iterator<Place> places() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
-                return obj instanceof Jurisdiction;
+                return obj instanceof Place;
             }
         } );
     }
@@ -289,18 +289,18 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public Jurisdiction findOrMakeJurisdiction( String name ) {
-        Jurisdiction jurisdiction = null;
-        Iterator<Jurisdiction> jurisdictions = jurisdictions();
-        while ( jurisdiction == null && jurisdictions.hasNext() ) {
-            Jurisdiction j = jurisdictions.next();
-            if ( SemMatch.same( j.getName(), name ) ) jurisdiction = j;
+    public Place findOrMakePlace( String name ) {
+        Place place = null;
+        Iterator<Place> places = places();
+        while ( place == null && places.hasNext() ) {
+            Place p = places.next();
+            if ( SemMatch.same( p.getName(), name ) ) place = p;
         }
-        if ( jurisdiction == null ) {
-            jurisdiction = new Jurisdiction( name );
-            idIndex.put( jurisdiction.getId(), jurisdiction );
+        if ( place == null ) {
+            place = new Place( name );
+            idIndex.put( place.getId(), place );
         }
-        return jurisdiction;
+        return place;
     }
 
     /**
@@ -327,8 +327,8 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public void removeJurisdiction( Jurisdiction jurisdiction ) {
-        idIndex.remove( jurisdiction.getId() );
+    public void removePlace( Place place ) {
+        idIndex.remove( place.getId() );
     }
 
     private ModelObject find( long id ) throws NotFoundException {

@@ -65,14 +65,14 @@ public class TestPart extends TestCase {
 
     public void testLocation() {
         assertNull( part.getLocation() );
-        final Location location = new Location( "Somewhere" );
+        final Place location = new Place( "Somewhere" );
         part.setLocation( location );
         assertSame( location, part.getLocation() );
     }
 
     public void testJurisdiction() {
         assertNull( part.getJurisdiction() );
-        final Jurisdiction jurisdiction = new Jurisdiction( "Somewhere" );
+        final Place jurisdiction = new Place( "Somewhere" );
         part.setJurisdiction( jurisdiction );
         assertSame( jurisdiction, part.getJurisdiction() );
     }

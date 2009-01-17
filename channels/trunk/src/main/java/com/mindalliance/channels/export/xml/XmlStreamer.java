@@ -7,8 +7,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Location;
-import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Organization;
 import com.thoughtworks.xstream.XStream;
 
 import java.io.InputStream;
@@ -48,16 +48,21 @@ public class XmlStreamer implements Importer, Exporter {
          * Configuration of xstream instance
          */
         private void configure() {
-            xstream.aliasType( "scenario", Scenario.class );
-            xstream.alias( "part", Part.class );
-            xstream.aliasType( "flow", Flow.class );
-            xstream.alias( "role", Role.class );
             xstream.alias( "actor", Actor.class );
-            xstream.alias( "location", Location.class );
-            xstream.alias( "jurisdiction", Jurisdiction.class );
+            xstream.aliasType( "flow", Flow.class );
+            xstream.alias( "jurisdiction", Place.class );
+            xstream.alias( "location", Place.class );
+            xstream.alias( "organization", Organization.class );
+            xstream.alias( "part", Part.class );
+            xstream.alias( "role", Role.class );
+            xstream.aliasType( "scenario", Scenario.class );
             xstream.registerConverter( new ScenarioConverter() );
             xstream.registerConverter( new PartConverter() );
             xstream.registerConverter( new FlowConverter() );
+            xstream.registerConverter( new ActorConverter() );
+            xstream.registerConverter( new RoleConverter() );
+            xstream.registerConverter( new OrganizationConverter() );
+            xstream.registerConverter( new PlaceConverter() );
         }
 
         /**

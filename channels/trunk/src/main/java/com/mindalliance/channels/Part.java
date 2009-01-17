@@ -42,12 +42,12 @@ public class Part extends Node {
     /**
      * The location (optional).
      */
-    private Location location;
+    private Place location;
 
     /**
      * The jurisdiction (optional).
      */
-    private Jurisdiction jurisdiction;
+    private Place jurisdiction;
 
     public Part() {
         adjustName();
@@ -95,19 +95,19 @@ public class Part extends Node {
         adjustName();
     }
 
-    public Jurisdiction getJurisdiction() {
+    public Place getJurisdiction() {
         return jurisdiction;
     }
 
-    public void setJurisdiction( Jurisdiction jurisdiction ) {
+    public void setJurisdiction( Place jurisdiction ) {
         this.jurisdiction = jurisdiction;
     }
 
-    public Location getLocation() {
+    public Place getLocation() {
         return location;
     }
 
-    public void setLocation( Location location ) {
+    public void setLocation( Place location ) {
         this.location = location;
     }
 

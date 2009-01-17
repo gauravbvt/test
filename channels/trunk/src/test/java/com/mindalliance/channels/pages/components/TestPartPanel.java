@@ -1,8 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Jurisdiction;
-import com.mindalliance.channels.Location;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Organization;
@@ -74,12 +73,12 @@ public class TestPartPanel extends TestCase {
     }
 
     public void testJurisdiction() {
-        part.setJurisdiction( new Jurisdiction() );
+        part.setJurisdiction( new Place() );
         final String s = "A";
         part.getJurisdiction().setName( s );
         assertSame( s, panel.getJurisdiction() );
 
-        part.setJurisdiction( new Jurisdiction( s ) );
+        part.setJurisdiction( new Place( s ) );
         assertSame( s, panel.getJurisdiction() );
 
         part.setJurisdiction( null );
@@ -105,12 +104,12 @@ public class TestPartPanel extends TestCase {
     }
 
     public void testLocation() {
-        part.setLocation( new Location() );
+        part.setLocation( new Place() );
         final String s = "A";
         part.getLocation().setName( s );
         assertSame( s, panel.getLocation() );
 
-        part.setLocation( new Location( s ) );
+        part.setLocation( new Place( s ) );
         assertSame( s, panel.getLocation() );
 
         part.setLocation( null );

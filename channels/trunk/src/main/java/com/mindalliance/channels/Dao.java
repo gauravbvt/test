@@ -182,36 +182,36 @@ public interface Dao extends Serializable {
     void removeOrganization( Organization organization );
 
     /**
-     * Iterator on all jurisdictions
+     * Iterator on all places
      *
-     * @return a jurisdiction iterator
+     * @return a place iterator
      */
-    Iterator<Jurisdiction> jurisdictions();
+    Iterator<Place> places();
 
 
     /**
-     * Find a jurisdiction given its id.
+     * Find a place given its id.
      *
      * @param id the id
-     * @return the corresponding jurisdiction
+     * @return the corresponding place
      * @throws NotFoundException when not found
      */
-    Jurisdiction findJurisdiction( long id ) throws NotFoundException;
+    Place findPlace( long id ) throws NotFoundException;
 
     /**
-     * Finds a jurisdiction named name. If none, creates it.
+     * Finds a place named name. If none, creates it.
      *
-     * @param name the jurisdiction's name
-     * @return a jurisdiction
+     * @param name the places's name
+     * @return a place
      */
-    Jurisdiction findOrMakeJurisdiction( String name );
+    Place findOrMakePlace( String name );
 
     /**
-     * Remove a jurisdiction
+     * Remove a place
      *
-     * @param jurisdiction jurisdiction to be removed
+     * @param place place to be removed
      */
-    void removeJurisdiction( Jurisdiction jurisdiction );
+    void removePlace( Place place );
 
     /**
      * Find all resources that equal or narrow given resource

@@ -1,8 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Jurisdiction;
-import com.mindalliance.channels.Location;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
@@ -159,7 +158,7 @@ public class PartPanel extends Panel {
      * @return the name of the jurisdiction, or the empty string if null
      */
     public String getJurisdiction() {
-        final Jurisdiction jurisdiction = getPart().getJurisdiction();
+        final Place jurisdiction = getPart().getJurisdiction();
         return jurisdiction == null ? EMPTY_STRING : jurisdiction.getName();
     }
 
@@ -169,7 +168,7 @@ public class PartPanel extends Panel {
      * @return the name of the location, or the empty string if null
      */
     public String getLocation() {
-        final Location location = getPart().getLocation();
+        final Place location = getPart().getLocation();
         return location == null ? EMPTY_STRING : location.getName();
     }
 
@@ -221,9 +220,9 @@ public class PartPanel extends Panel {
         if ( name == null || name.trim().isEmpty() )
             getPart().setJurisdiction( null );
         else {
-            final Jurisdiction jurisdiction = getPart().getJurisdiction();
+            final Place jurisdiction = getPart().getJurisdiction();
             if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
-                getPart().setJurisdiction( Jurisdiction.named( name ) );
+                getPart().setJurisdiction( Place.named( name ) );
         }
     }
 
@@ -236,9 +235,9 @@ public class PartPanel extends Panel {
         if ( name == null || name.trim().isEmpty() )
             getPart().setLocation( null );
         else {
-            final Location location = getPart().getLocation();
+            final Place location = getPart().getLocation();
             if ( location == null || !isSame( name, location.getName() ) )
-                getPart().setLocation( new Location( name ) );
+                getPart().setLocation( new Place( name ) );
         }
     }
 

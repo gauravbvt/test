@@ -15,8 +15,8 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Jurisdiction;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -98,7 +98,7 @@ public class ProfilePage extends WebPage {
         WebMarkupContainer jurisdictionRow = new WebMarkupContainer( "jurisdiction" );
         add( jurisdictionRow );
         ModelObjectLink jurLink = new ModelObjectLink( "juris-link",                      // NON-NLS
-                new PropertyModel<Jurisdiction>( resource, "jurisdiction" ) );
+                new PropertyModel<Place>( resource, "jurisdiction" ) );
         jurisdictionRow.add( jurLink );
         jurLink.add( new Label( "jurisdiction-name", new PropertyModel<String>( resource, "jurisdiction" ) ) );
         jurisdictionRow.setVisible( !resource.isAnyJurisdiction() );
@@ -128,7 +128,7 @@ public class ProfilePage extends WebPage {
                 resourceSpec.setOrganization( organization );
             }
             if ( params.containsKey( JURISDICTION_PARM ) ) {
-                Jurisdiction jurisdiction = dao.findJurisdiction( params.getLong( JURISDICTION_PARM ) );
+                Place jurisdiction = dao.findPlace( params.getLong( JURISDICTION_PARM ) );
                 resourceSpec.setJurisdiction( jurisdiction );
             }
             if ( resourceSpec.isEmpty() ) throw new NotFoundException();

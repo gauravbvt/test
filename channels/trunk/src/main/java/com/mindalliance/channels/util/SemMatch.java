@@ -1,6 +1,6 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.Jurisdiction;
+import com.mindalliance.channels.Place;
 
 /**
  * A matching utility
@@ -29,16 +29,16 @@ public class SemMatch {
     /**
      * Returns whether strings name the same locations
      *
-     * @param loc      -- a string
-     * @param otherLoc -- another string
+     * @param place      -- a string
+     * @param other -- another string
      * @return -- whether they are similar
      */
-    public static boolean sameLocation( Jurisdiction loc, Jurisdiction otherLoc ) {
-        if (loc == null && otherLoc == null)
+    public static boolean samePlace( Place place, Place other ) {
+        if (place == null && other == null)
             return true;
-        if (loc == null || otherLoc == null)
+        if (place == null || other == null)
             return false;
         // TODO - compare geofeatures
-        return same( loc.getName(), otherLoc.getName() );
+        return same( place.getName(), other.getName() );
     }
 }
