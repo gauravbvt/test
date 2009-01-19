@@ -340,13 +340,21 @@ input[type='text'], textarea, select, table.flow-details {
     border: 1px inset #a7c092;
 }
 
-#reqs h3, td.link.notify, td.link.answer {
+td.link.notify, td.link.answer {
     background: transparent url('images/arrow_right_blue.png') no-repeat;
     padding-left: 20px;
 }
-#outcomes h3, td.link.ask, td.link.receive {
+#reqs h3 span {
+    background: transparent url('images/arrow_left_blue.png') no-repeat 100% 0;
+    padding-right: 20px;
+}
+td.link.ask, td.link.receive {
     background: transparent url('images/arrow_left_blue.png') no-repeat;
     padding-left: 20px;
+}
+#outcomes h3 span {
+    background: transparent url('images/arrow_right_blue.png') no-repeat 100% 0;
+    padding-right: 20px;
 }
 
 th.wicket_orderDown a {

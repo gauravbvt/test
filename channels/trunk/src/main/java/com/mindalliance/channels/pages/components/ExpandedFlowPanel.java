@@ -196,7 +196,7 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
                     getFlow() );
         details.add(
                 new Label( "type",                                                        // NON-NLS
-                        new Model<String>( isOutcome() ? "Target" : "Source" ) ) );
+                        new Model<String>( isOutcome() ? "To" : "From" ) ) );
         final FormComponentLabel otherLabel =
                 new FormComponentLabel( "other-label", other );                           // NON-NLS
         otherLabel.add( details );
