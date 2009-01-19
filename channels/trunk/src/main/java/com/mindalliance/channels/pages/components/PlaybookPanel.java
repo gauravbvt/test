@@ -41,7 +41,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
         columns.add( makeLinkColumn( "Actor", "part.actor", "part.actor.name", EMPTY ) );
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
-        columns.add( makeColumn( "Info", "flow.name", "?" ) );
+        columns.add( makeColumn( "Info", "flow.name", null, "?", "flow.description" ) );
         // style class is one of: ask, notify, answer, receive
         columns.add( makeLinkColumn( "To/from", "otherPart", "otherPart.name", "@kind", EMPTY ) );
         columns.add( makeColumn( "Channel", "flow.channel", EMPTY ) );      // NON-NLS

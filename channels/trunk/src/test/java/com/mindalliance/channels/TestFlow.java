@@ -50,7 +50,7 @@ public class TestFlow extends TestCase {
 
     public void testGetTitle() {
         // just to make sure no NPE...
-        final String s = "somebody communicating something to somebody";
+        final String s = "somebody notifying somebody of something";
         assertEquals( s, flow.toString() );
 
         flow.setName( null );

@@ -71,7 +71,7 @@ public abstract class Flow extends ModelObject {
         if ( content == null || content.trim().isEmpty() )
             content = "something";
         return MessageFormat.format( isAskedFor() ? "{2} asking {1} about {0}"
-                                                  : "{1} communicating {0} to {2}",
+                                                  : "{1} notifying {2} of {0}",
 
             content, getShortName( getSource() ), getShortName( getTarget() ) );
     }
@@ -98,10 +98,10 @@ public abstract class Flow extends ModelObject {
     public String getRequirementTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
         return MessageFormat.format(
-                 noName       ? isAskedFor() ? "Questioning {1}, when needed"
-                                             : "Responding to {1}"
+                 noName       ? isAskedFor() ? "Obtaining something from {1}, when needed"
+                                             : "Notified of something by {1}"
                : isAskedFor() ? "Obtaining {0} from {1}, when needed"
-                              : "Receiving {0} from {1}",
+                              : "Notified of {0} by {1}",
                 getName(), getShortName( getSource() ) );
     }
 
@@ -112,9 +112,9 @@ public abstract class Flow extends ModelObject {
     public String getOutcomeTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
         return MessageFormat.format(
-                noName       ? isAskedFor() ? "Answering {1}, when asked"
-                                            : "Notifying {1}"
-              : isAskedFor() ? "Communicating {0} to {1}, when asked"
+                noName       ? isAskedFor() ? "Providing {1} with something, when asked"
+                                            : "Notifying {1} of something"
+              : isAskedFor() ? "Providing {1} with {0}, when asked"
                              : "Notifying {1} of {0}",
                 getName(), getShortName( getTarget() ) );
     }

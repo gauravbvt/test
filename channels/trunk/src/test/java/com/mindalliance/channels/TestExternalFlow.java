@@ -58,12 +58,12 @@ public class TestExternalFlow extends TestCase {
     public void testInitial() {
         final Flow f1 = s1p1.outcomes().next();
         assertFalse( f1.isInternal() );
-        assertEquals( "p1 communicating something to p3", f1.toString() );
+        assertEquals( "p1 notifying p3 of something", f1.toString() );
         assertTrue( s2.inputs().next().externalFlows().hasNext() );
 
         final Flow f2 = s1p2.requirements().next();
         assertFalse( f2.isInternal() );
-        assertEquals( "p3 communicating something to p2", f2.toString() );
+        assertEquals( "p3 notifying p2 of something", f2.toString() );
         assertTrue( s2.outputs().next().externalFlows().hasNext() );
     }
 

@@ -94,7 +94,7 @@ public class NoRedundancy extends AbstractIssueDetector {
         if ( part.getActor() != null && otherPart.getActor() != null ) {
             return SemMatch.same( part.getActor().getName(), otherPart.getActor().getName() );
         } else if ( part.getRole() != null && otherPart.getRole() != null ) {
-            return SemMatch.same( part.getRole().getName(), otherPart.getActor().getName() );
+            return SemMatch.same( part.getRole().getName(), otherPart.getRole().getName() );
         } else return false;
     }
 }

@@ -79,6 +79,24 @@ public abstract class AbstractTablePanel<T> extends Panel {
                                             final String labelProperty,
                                             final String style,
                                             final String defaultText ) {
+        return makeColumn( name, labelProperty, style, defaultText, null );
+    }
+
+    /**
+     * Defines a column containing styled text
+     *
+     * @param name          the column's name
+     * @param labelProperty a property path to the text to display in cell
+     * @param style         a property path to style class name
+     * @param defaultText   default text to show if all else fails
+     * @param titleProperty a property path to tooltip text
+     * @return a column
+     */
+    protected AbstractColumn<T> makeColumn( String name,
+                                            final String labelProperty,
+                                            final String style,
+                                            final String defaultText,
+                                            final String titleProperty ) {
         return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -91,6 +109,11 @@ public abstract class AbstractTablePanel<T> extends Panel {
                     String styleClass = findStyleClass( model.getObject(), style );
                     if ( styleClass != null )
                         cellItem.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
+                }
+                if ( titleProperty != null ) {
+                    String title = (String) evaluate( model.getObject(), titleProperty, null );
+                    if ( title != null )
+                        cellItem.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
                 }
             }
         };
@@ -115,6 +138,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
     /**
      * Defines a styled column containing links to ModelObjects
      * If a model object is an entity, the link is to its profile
+     *
      * @param name          the column's name
      * @param moProperty    a property path from row object to ModelObject-valued property
      * @param labelProperty a property path to the text to display in cell
