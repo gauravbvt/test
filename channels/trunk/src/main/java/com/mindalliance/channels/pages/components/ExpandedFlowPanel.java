@@ -278,7 +278,7 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
         label.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {      // NON-NLS
             @Override
             public String getObject() {
-                return getFlow().isAskedFor() ? "Source channel:" : "Target channel:";
+                return getFlow().isAskedFor() ? "Sender channel:" : "Receiver channel:";
             }
         } ) );
 
