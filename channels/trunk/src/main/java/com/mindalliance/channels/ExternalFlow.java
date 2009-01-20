@@ -167,8 +167,8 @@ public class ExternalFlow extends Flow {
     public String getChannel() {
         final Connector c = getConnector();
         final boolean connectorBased = c != null
-                                       && c.isInput()
-                                       && !getConnectorFlow().isAskedFor();
+                                       && ( c.isInput()
+                                            || getConnectorFlow().isAskedFor() );
         return connectorBased ? getConnectorFlow().getChannel() : super.getChannel();
     }
 
@@ -176,8 +176,8 @@ public class ExternalFlow extends Flow {
     public void setChannel( String channel ) {
         final Connector c = getConnector();
         final boolean connectorBased = c != null
-                                       && c.isInput()
-                                       && !getConnectorFlow().isAskedFor();
+                                       && ( c.isInput()
+                                            || getConnectorFlow().isAskedFor() );
         if ( connectorBased )
             getConnectorFlow().setChannel( channel );
         else

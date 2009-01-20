@@ -62,9 +62,13 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
         setOutcome( outcome );
 
         addHeader();
+        final TextField<String> nameField = new TextField<String>( "name" );              // NON-NLS
+        nameField.setEnabled( flow.isInternal() );
+        addLabeled( "name-label", nameField );                                            // NON-NLS
 
-        addLabeled( "name-label", new TextField<String>( "name" ) );                      // NON-NLS
-        addLabeled( "description-label", new TextArea<String>( "description" ) );         // NON-NLS
+        final TextArea<String> description = new TextArea<String>( "description" );       // NON-NLS
+        description.setEnabled( flow.isInternal() );
+        addLabeled( "description-label", description );                                   // NON-NLS
         addChecks();
 
         addOtherField();
@@ -97,8 +101,11 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
             }
         } );
 
+        askedFor.setEnabled( flow.isInternal() );
         add( askedFor );
-        add( new CheckBox( "critical" ) );                                                // NON-NLS
+        final CheckBox critical = new CheckBox( "critical" );                             // NON-NLS
+        critical.setEnabled( flow.isInternal() );
+        add( critical );
     }
 
     private void addHeader() {
@@ -270,6 +277,7 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
         channelRow.setOutputMarkupPlaceholderTag( true );
 
         final FormComponent<?> textField = new TextField<String>( "channel" );            // NON-NLS
+        textField.setEnabled( isChannelEditable( flow ) );
         final FormComponentLabel label =
                 new FormComponentLabel( "channel-label", textField );                     // NON-NLS
         channelRow.add( label );
@@ -292,6 +300,13 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
      * @return true if field should be visible
      */
     protected abstract boolean isChannelRelevant( Flow f );
+
+    /**
+     * Figure out if channel field is editable.
+     * @param f the flow being displayed
+     * @return true if field can be edited by the user on this side
+     */
+    protected abstract boolean isChannelEditable( Flow f );
 
     /**
      * Get list of potential source/targets for this flow.

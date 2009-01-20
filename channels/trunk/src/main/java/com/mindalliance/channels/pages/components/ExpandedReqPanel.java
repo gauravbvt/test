@@ -16,4 +16,10 @@ public class ExpandedReqPanel extends ExpandedFlowPanel {
     protected boolean isChannelRelevant( Flow f ) {
         return !( getOther().isConnector() && f.isAskedFor() && f.isInternal() );
     }
+
+    /** {@inheritDoc} */
+    @Override
+    protected boolean isChannelEditable( Flow f ) {
+        return f.isInternal() || !f.isAskedFor();
+    }
 }
