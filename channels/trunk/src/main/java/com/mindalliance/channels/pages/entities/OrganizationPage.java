@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.profiles;
+package com.mindalliance.channels.pages.entities;
 
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -43,6 +44,7 @@ public class OrganizationPage extends WebPage {
         final Organization organization = findOrganization( parameters );
         assert organization != null;
         add( new Label( "title", new Model<String>( "Actor: " + organization.getName() ) ) );
+        add( new Label( "header-title", new PropertyModel<String>( organization, "name" ) ) );
         add( new ModelObjectPanel( "organization-form", new Model<Organization>( organization ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {

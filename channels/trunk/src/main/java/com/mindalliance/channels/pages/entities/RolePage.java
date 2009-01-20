@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.profiles;
+package com.mindalliance.channels.pages.entities;
 
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;

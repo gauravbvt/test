@@ -43,8 +43,8 @@ public class OrphanedPart extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         if ( !part.requirements().hasNext() && !part.outcomes().hasNext() ) {
             Issue issue = new Issue( Issue.STRUCTURAL, part );
-            issue.setDescription( "Has no outcome or requirement." );
-            issue.setRemediation( "Add an outcome or requirement, or remove the part." );
+            issue.setDescription( "Does not produce or need information." );
+            issue.setRemediation( "Add sent or received information." );
             issues.add( issue );
         }
         return issues;

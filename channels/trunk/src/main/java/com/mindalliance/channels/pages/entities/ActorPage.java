@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.profiles;
+package com.mindalliance.channels.pages.entities;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Dao;
@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -43,6 +44,7 @@ public class ActorPage extends WebPage {
         final Actor actor = findActor( parameters );
         assert actor != null;
         add( new Label( "title", new Model<String>( "Actor: " + actor.getName() ) ) );
+        add( new Label( "header-title", new PropertyModel<String>( actor, "name" ) ) );
         add( new ModelObjectPanel( "actor-form", new Model<Actor>( actor ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {
