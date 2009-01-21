@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.analysis.profiling.SortableContactProvider;
+import com.mindalliance.channels.analysis.profiling.SortableResourceSpecProvider;
 import com.mindalliance.channels.pages.ProfileLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -79,7 +79,7 @@ public class ContactInfoPanel extends AbstractTablePanel<ResourceSpec> {
         } );
         // table with provider of resources here specified
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
-                "contactInfo", columns, new SortableContactProvider( resourceSpec, true ), getPageSize() ) );
+                "contactInfo", columns, new SortableResourceSpecProvider( resourceSpec, true ), getPageSize() ) );
     }
 
 }

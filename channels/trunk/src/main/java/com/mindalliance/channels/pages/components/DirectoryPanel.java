@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.ProfileLink;
-import com.mindalliance.channels.analysis.profiling.SortableContactProvider;
+import com.mindalliance.channels.analysis.profiling.SortableResourceSpecProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -75,6 +75,6 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
         } );
         // table and providers of resources specified resources need to kwno how to contact
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
-                "directory", columns, new SortableContactProvider( resourceSpec, false ), getPageSize() ) );
+                "directory", columns, new SortableResourceSpecProvider( resourceSpec, false ), getPageSize() ) );
     }
 }

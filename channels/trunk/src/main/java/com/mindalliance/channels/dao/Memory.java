@@ -309,6 +309,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void removeRole( Role role ) {
+        removeResourceSpec( ResourceSpec.with( role ) );
         idIndex.remove( role.getId() );
     }
 
@@ -316,6 +317,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void removeActor( Actor actor ) {
+        removeResourceSpec( ResourceSpec.with( actor ) );
         idIndex.remove( actor.getId() );
     }
 
@@ -323,6 +325,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void removeOrganization( Organization organization ) {
+        removeResourceSpec( ResourceSpec.with( organization ) );
         idIndex.remove( organization.getId() );
     }
 
@@ -344,43 +347,13 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
-        Set<ResourceSpec> set = new HashSet<ResourceSpec>();
-        Iterator<Scenario> allScenarios = scenarios();
-        // Look at transient resource specs in scenarios
-        while ( allScenarios.hasNext() ) {
-            Scenario scenario = allScenarios.next();
-            Iterator<Part> parts = scenario.parts();
-            // Looks for part resources that narrow or equal the given resourceSpec
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                ResourceSpec res = part.resourceSpec();
-                if ( res.narrowsOrEquals( resourceSpec ) ) {
-                    set.add( res );
-                    // Find all channels used to communicate with this part
-                    Iterator<Flow> flows = scenario.flows();
-                    while ( flows.hasNext() ) {
-                        Flow flow = flows.next();
-                        if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
-                            if ( flow.getTarget() == part && !flow.isAskedFor() ) {
-                                res.addChannel( flow.getChannel() );
-                            }
-                            if ( flow.getSource() == part && flow.isAskedFor() ) {
-                                res.addChannel( flow.getChannel() );
-                            }
-                        }
-                    }
-                }
-            }
+        List<ResourceSpec> list = new ArrayList<ResourceSpec>();
+        Iterator<ResourceSpec> allResourceSpecs = resourceSpecs();
+        while ( allResourceSpecs.hasNext() ) {
+            ResourceSpec spec = allResourceSpecs.next();
+            if ( spec.narrowsOrEquals( resourceSpec ) ) list.add( spec );
         }
-        // Look at permanent resource specs
-        Iterator<ResourceSpec> resourceSpecs = permanentResourceSpecs();
-        while ( resourceSpecs.hasNext() ) {
-            ResourceSpec spec = resourceSpecs.next();
-            if ( spec.narrowsOrEquals( resourceSpec ) ) {
-                set.add( spec );
-            }
-        }
-        return new ArrayList<ResourceSpec>( set );
+        return list;
     }
 
     /**
@@ -438,6 +411,48 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
+    public Iterator<ResourceSpec> resourceSpecs() {
+        Set<ResourceSpec> allResourceSpecs = new HashSet<ResourceSpec>();
+        // Permanent specs
+        allResourceSpecs.addAll( resourceSpecs );
+        // Transient specs from entities
+        Iterator<Actor> actors = actors();
+        while ( actors.hasNext() ) allResourceSpecs.add( ResourceSpec.with( actors.next() ) );
+        Iterator<Role> roles = roles();
+        while ( roles.hasNext() ) allResourceSpecs.add( ResourceSpec.with( roles.next() ) );
+        Iterator<Organization> orgs = organizations();
+        while ( orgs.hasNext() ) allResourceSpecs.add( ResourceSpec.with( orgs.next() ) );
+        // Transient specs from scenario parts
+        Iterator<Scenario> allScenarios = scenarios();
+        while ( allScenarios.hasNext() ) {
+            Scenario scenario = allScenarios.next();
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                ResourceSpec partResourceSpec = part.resourceSpec();
+                // Find all channels used to communicate with this part
+                Iterator<Flow> flows = scenario.flows();
+                while ( flows.hasNext() ) {
+                    Flow flow = flows.next();
+                    if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
+                        if ( flow.getTarget() == part && !flow.isAskedFor() ) {
+                            partResourceSpec.addChannel( flow.getChannel() );
+                        }
+                        if ( flow.getSource() == part && flow.isAskedFor() ) {
+                            partResourceSpec.addChannel( flow.getChannel() );
+                        }
+                    }
+                }
+                allResourceSpecs.add( partResourceSpec );
+            }
+        }
+
+        return allResourceSpecs.iterator();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void addResourceSpec( ResourceSpec resourceSpec ) {
         resourceSpecs.add( resourceSpec );
     }
@@ -445,8 +460,10 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public void removeResourceSpec( ResourceSpec resourceSpec ) {
-        resourceSpecs.remove( resourceSpec );
+    public void removeResourceSpec( ResourceSpec deletedResourceSpec ) {
+        // TODO - Remove all permanent specs equal or narrowing deletedResourceSpec 
+        // TODO- Cascade through all parts, reseting resource spec fields appropriately (?)
+        resourceSpecs.remove( deletedResourceSpec );
     }
 
 

@@ -48,7 +48,16 @@ public class ResourceSpec implements Serializable {
      */
     private List<String> channels = new ArrayList<String>();
 
+    private boolean markedForDeletion = false;
+
     public ResourceSpec() {
+    }
+
+    public ResourceSpec( ResourceSpec resourceSpec ) {
+        actor = resourceSpec.getActor();
+        role = resourceSpec.getRole();
+        organization = resourceSpec.getOrganization();
+        jurisdiction = resourceSpec.getJurisdiction();
     }
 
     public ResourceSpec( Part part ) {
@@ -364,5 +373,13 @@ public class ResourceSpec implements Serializable {
             List<ResourceSpec> others = dao.findAllResourcesNarrowingOrEqualTo( other );
             return !Collections.disjoint( resources, others );
         }
+    }
+
+    public boolean isMarkedForDeletion() {
+        return markedForDeletion;
+    }
+
+    public void setMarkedForDeletion( boolean delete ) {
+        markedForDeletion = delete;
     }
 }
