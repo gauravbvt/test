@@ -36,6 +36,8 @@ public final class Memory implements Dao {
      */
     private Set<Scenario> scenarios = new HashSet<Scenario>();
 
+    private Set<ResourceSpec> resourceSpecs = new HashSet<ResourceSpec>();
+
     /**
      * Scenarios, indexed by id.
      */
@@ -344,7 +346,7 @@ public final class Memory implements Dao {
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         Set<ResourceSpec> set = new HashSet<ResourceSpec>();
         Iterator<Scenario> allScenarios = scenarios();
-        // Todo look in role and organization definitions
+        // Look at transient resource specs in scenarios
         while ( allScenarios.hasNext() ) {
             Scenario scenario = allScenarios.next();
             Iterator<Part> parts = scenario.parts();
@@ -368,6 +370,14 @@ public final class Memory implements Dao {
                         }
                     }
                 }
+            }
+        }
+        // Look at permanent resource specs
+        Iterator<ResourceSpec> resourceSpecs = permanentResourceSpecs();
+        while ( resourceSpecs.hasNext() ) {
+            ResourceSpec spec = resourceSpecs.next();
+            if ( spec.narrowsOrEquals( resourceSpec ) ) {
+                set.add( spec );
             }
         }
         return new ArrayList<ResourceSpec>( set );
@@ -416,6 +426,27 @@ public final class Memory implements Dao {
             }
         }
         return new ArrayList<ResourceSpec>( contacts );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Iterator<ResourceSpec> permanentResourceSpecs() {
+        return resourceSpecs.iterator();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addResourceSpec( ResourceSpec resourceSpec ) {
+        resourceSpecs.add( resourceSpec );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeResourceSpec( ResourceSpec resourceSpec ) {
+        resourceSpecs.remove( resourceSpec );
     }
 
 

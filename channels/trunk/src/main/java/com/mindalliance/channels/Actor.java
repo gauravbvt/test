@@ -23,9 +23,10 @@ public class Actor extends ModelObject implements Entity {
      * Find or create an actor by name
      *
      * @param name String a given name
-     * @return a new or existing actor
+     * @return a new or existing actor, or null is name is null or empty
      */
     public static Actor named( String name ) {
+        if ( name == null || name.isEmpty() ) return null;
         Dao dao = Project.getProject().getDao();
         return dao.findOrMakeActor( name );
     }

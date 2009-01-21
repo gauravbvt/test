@@ -237,4 +237,22 @@ public interface Dao extends Serializable {
      */
     List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf );
 
+    /**
+     * Return iterator on all permanent resource specifications
+     * @return an iterator on resource specs
+     */
+    Iterator<ResourceSpec> permanentResourceSpecs();
+
+    /**
+     * Add a permanent resource specification
+     * @param resourceSpec a resource specification
+     */
+    void addResourceSpec( ResourceSpec resourceSpec );
+
+    /**
+     * Remove a permanent resource specification
+     * @param resourceSpec a resource specification
+     */
+    void removeResourceSpec( ResourceSpec resourceSpec );
+
 }

@@ -11,31 +11,9 @@
 </head>
 
 <body class="profile resource">
-<div id="header"><h1><span wicket:id="resource-name">[resource name]</span></h1></div>
-<div id="res-details">
-    <table summary="Resource definition">
-        <tr wicket:id="actor">
-          <th align="right"><label>Actor:</label></th>
-          <td><a wicket:id="actor-link" href="" title="Actor's name"><span wicket:id="actor-name">[actor name]</span></a></td>
-        </tr>
-
-        <tr wicket:id="role">
-          <th align="right"><label>Role:</label></th>
-          <td><a wicket:id="role-link" href="#" title="Role's name"><span wicket:id="role-name">[role name]</span></a></td>
-        </tr>
-
-        <tr wicket:id="organization">
-          <th align="right"><label>Organization:</label></th>
-          <td><a wicket:id="org-link" href="" title="Organization's name"><span wicket:id="organization-name">[organization name]</span></a></td>
-        </tr>
-
-        <tr wicket:id="jurisdiction">
-          <th align="right"><label>Jurisdiction:</label></th>
-          <td><a wicket:id="juris-link" href="" title="Jurisdiction's name"><span wicket:id="jurisdiction-name">[jurisdiction name]</span></a></td>
-        </tr>
-    </table>
-</div>
-<div id="profile" wicket:id="profile">[resource profile]</div>
+<div id="header"><h1><span wicket:id="resourceSpec-name">[resource name]</span></h1></div>
+<div id="res-details" wicket:id = "resourceSpec"></div>
+<div id="profile" wicket:id="profile">[resourceSpec profile]</div>
 <div id="footer">
     <hr>
     &copy; Copyright 2009 Mind-Alliance Inc. All Rights Reserved.

@@ -35,7 +35,7 @@ public class ProfileLink extends ExternalLink {
         );
     }
 
-    private static String linkFor( ResourceSpec resourceSpec ) {
+    public static String linkFor( ResourceSpec resourceSpec ) {
         if (resourceSpec.isEmpty()) return "#";
         StringBuilder sb = new StringBuilder();
         sb.append( "resource.html?" );

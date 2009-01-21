@@ -18,6 +18,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
+import com.mindalliance.channels.pages.components.ResourceSpecPanel;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ModelObjectLink;
 
@@ -71,38 +72,11 @@ public class ProfilePage extends WebPage {
     }   */
 
     private void init( PageParameters params ) throws NotFoundException {
-        ResourceSpec resource = makeResource( params );
-        add( new Label( "title", new Model<String>( "Profile: " + resource.getName() ) ) );
-        add( new Label( "resource-name", new Model<String>( resource.getName() ) ) );
-        WebMarkupContainer actorRow = new WebMarkupContainer( "actor" );
-        add( actorRow );
-        ModelObjectLink actorLink = new ModelObjectLink( "actor-link",                     // NON-NLS
-                new PropertyModel<Actor>( resource, "actor" ) );
-        actorRow.add( actorLink );
-        actorLink.add( new Label( "actor-name", new PropertyModel<String>( resource, "actor" ) ) );
-        actorRow.setVisible( !resource.isAnyActor() );
-        WebMarkupContainer roleRow = new WebMarkupContainer( "role" );
-        add( roleRow );
-        ModelObjectLink roleLink = new ModelObjectLink( "role-link",                      // NON-NLS
-                new PropertyModel<Role>( resource, "role" ) );
-        roleRow.add( roleLink );
-        roleLink.add( new Label( "role-name", new PropertyModel<String>( resource, "role" ) ) );
-        roleRow.setVisible( !resource.isAnyRole() );
-        WebMarkupContainer organizationRow = new WebMarkupContainer( "organization" );
-        add( organizationRow );
-        ModelObjectLink orgLink = new ModelObjectLink( "org-link",                        // NON-NLS
-                new PropertyModel<Organization>( resource, "organization" ) );
-        organizationRow.add( orgLink );
-        orgLink.add( new Label( "organization-name", new PropertyModel<String>( resource, "organization" ) ) );
-        organizationRow.setVisible( !resource.isAnyOrganization() );
-        WebMarkupContainer jurisdictionRow = new WebMarkupContainer( "jurisdiction" );
-        add( jurisdictionRow );
-        ModelObjectLink jurLink = new ModelObjectLink( "juris-link",                      // NON-NLS
-                new PropertyModel<Place>( resource, "jurisdiction" ) );
-        jurisdictionRow.add( jurLink );
-        jurLink.add( new Label( "jurisdiction-name", new PropertyModel<String>( resource, "jurisdiction" ) ) );
-        jurisdictionRow.setVisible( !resource.isAnyJurisdiction() );
-        add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resource ) ) );
+        ResourceSpec resourceSpec = makeResource( params );
+        add( new Label( "title", new Model<String>( "Profile: " + resourceSpec.getName() ) ) );
+        add( new Label( "resourceSpec-name", new Model<String>( resourceSpec.getName() ) ) );
+        add( new ResourceSpecPanel( "resourceSpec", new Model<ResourceSpec>( resourceSpec ) ) );
+        add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resourceSpec ) ) );
     }
 
     private ResourceSpec makeResource( PageParameters params ) throws NotFoundException {

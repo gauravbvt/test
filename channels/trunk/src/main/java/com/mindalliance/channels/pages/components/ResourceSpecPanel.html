@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <form wicket:id="resourceSpec-form">
+        <table summary="Resource definition">
+            <tr>
+                <th align="right"><a wicket:id="actor-link" href="" title="Actor's name"><label>Actor:</label></a></th>
+                <td><input width="40" wicket:id="actor-name" type="text"/></td>
+            </tr>
+
+            <tr>
+                <th align="right"><a wicket:id="role-link" href="#" title="Role's name"><label>Role:</label></a></th>
+                <td><input width="40" wicket:id="role-name" type="text"/></td>
+            </tr>
+
+            <tr>
+                <th align="right"><a wicket:id="org-link" href=""
+                                     title="Organization's name"><label>Organization:</label></a></th>
+                <td><input width="40" wicket:id="org-name" type="text"/></td>
+            </tr>
+
+            <tr>
+                <th align="right"><a wicket:id="jur-link" href=""
+                                     title="Jurisdiction's name"><label>Jurisdiction:</label></a></th>
+                <td><input width="40" wicket:id="jur-name" type="text"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Add"/></td>
+            </tr>
+        </table>
+    </form>
+</wicket:panel>
+</body>
+</html>

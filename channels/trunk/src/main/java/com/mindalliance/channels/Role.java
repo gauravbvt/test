@@ -23,9 +23,10 @@ public class Role extends ModelObject implements Entity {
      * Find or create a role by name
      *
      * @param name String a given name
-     * @return a new or existing role
+     * @return a new or existing role, or null is name is null or empty
      */
     public static Role named( String name ) {
+        if ( name == null || name.isEmpty() ) return null;
         Dao dao = Project.getProject().getDao();
         return dao.findOrMakeRole( name );
     }

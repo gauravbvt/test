@@ -46,7 +46,7 @@ public class ResourceSpec implements Serializable {
     /**
      * Channels used to reach actor
      */
-    private List<String> channels;
+    private List<String> channels = new ArrayList<String>();
 
     public ResourceSpec() {
     }
