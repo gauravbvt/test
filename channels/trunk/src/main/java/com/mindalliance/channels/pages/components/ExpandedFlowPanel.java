@@ -322,7 +322,9 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
         final Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             final Node n = nodes.next();
-            if ( !node.equals( n ) && ( other.equals( n ) || !n.isConnector() ) )
+            if ( !node.equals( n ) && (
+                    other.equals( n )
+                    || !n.isConnector() && !node.isConnectedTo( outcome, n ) ) )
                 result.add( n );
         }
 
@@ -332,8 +334,11 @@ public abstract class ExpandedFlowPanel extends Panel implements Deletable {
             final Scenario s = scenarios.next();
             if ( !scenario.equals( s ) ) {
                 final Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
-                while ( c.hasNext() )
-                    result.add( c.next() );
+                while ( c.hasNext() ) {
+                    final Connector connector = c.next();
+                    if ( other.equals( connector ) || !node.isConnectedTo( outcome, connector ) )
+                        result.add( connector );
+                }
             }
         }
         return new ArrayList<Node>( result );

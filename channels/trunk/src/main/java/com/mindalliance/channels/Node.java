@@ -214,4 +214,25 @@ public abstract class Node extends ModelObject {
         return getTitle();
     }
 
+    /**
+     * Test if this node is connected to another node.
+     * @param outcome test if node is an outcome, otherwise a requirement
+     * @param node the other node
+     * @return true if connected.
+     */
+    public boolean isConnectedTo( boolean outcome, Node node ) {
+        boolean result = false;
+        final Set<Flow> flows = outcome ? outcomes : requirements;
+        for ( Iterator<Flow> it = flows.iterator(); !result && it.hasNext(); ) {
+            final Flow f = it.next();
+            if ( outcome && f.getTarget().equals( node ) )
+                result = true;
+            else if ( !outcome && f.getSource().equals( node ) )
+                result = true;
+            else if ( !f.isInternal() && node.equals( ( (ExternalFlow) f ).getConnector() ) )
+                result = true;
+        }
+
+        return result;
+    }
 }
