@@ -9,13 +9,17 @@ import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.entities.ActorPage;
 import com.mindalliance.channels.pages.entities.OrganizationPage;
-import com.mindalliance.channels.pages.ProfilePage;
 import com.mindalliance.channels.pages.entities.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.value.ValueMap;
+
+import java.util.Map;
 
 /**
  * Application object for Channels.
@@ -77,6 +81,7 @@ public final class Project extends WebApplication {
 
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
+        mount( new QueryStringUrlCodingStrategy( "index.html", ResourceSpecsPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "node.html", ScenarioPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
@@ -183,4 +188,46 @@ public final class Project extends WebApplication {
         return (Project) get();
     }
 
+    //=========================================================================
+    private static class CodingStrategy extends MixedParamUrlCodingStrategy {
+
+        /** The suffix for the link. */
+        private String extension;
+
+        private CodingStrategy(
+                String mountPath, Class<?> bookmarkablePageClass, String[] parameterNames,
+                String extension ) {
+            super( mountPath, bookmarkablePageClass, parameterNames );
+            this.extension = extension;
+        }
+
+        /**
+         * Test if a path matches...
+         *
+         * @param path the path to match
+         * @return true if matches, false otherwise
+         */
+        @Override
+        public boolean matches( String path ) {
+            return path.endsWith( extension )
+                && super.matches( trimmed( path ) );
+        }
+
+        private String trimmed( String path ) {
+            return path.substring( 0, path.length() - extension.length() );
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void appendParameters( AppendingStringBuffer url, Map parameters ) {
+            super.appendParameters( url, parameters );
+            url.append( extension );
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected ValueMap decodeParameters( String urlFragment, Map urlParameters ) {
+            return super.decodeParameters( trimmed( urlFragment ), urlParameters );
+        }
+    }
 }
