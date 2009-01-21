@@ -9,6 +9,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.ResourceSpec;
 import com.thoughtworks.xstream.XStream;
 
 import java.io.InputStream;
@@ -55,6 +56,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.alias( "organization", Organization.class );
             xstream.alias( "part", Part.class );
             xstream.alias( "role", Role.class );
+            xstream.alias( "resource", ResourceSpec.class);
             xstream.aliasType( "scenario", Scenario.class );
             xstream.registerConverter( new ScenarioConverter() );
             xstream.registerConverter( new PartConverter() );
@@ -63,6 +65,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.registerConverter( new RoleConverter() );
             xstream.registerConverter( new OrganizationConverter() );
             xstream.registerConverter( new PlaceConverter() );
+            xstream.registerConverter( new ResourceSpecConverter() );
         }
 
         /**

@@ -7,6 +7,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Scenario;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -34,7 +35,9 @@ public class ModelObjectLink extends ExternalLink {
                 public String getObject() {
                     final ModelObject obj = mo.getObject();
                     final String result;
-                    if ( obj instanceof Role )
+                    if ( obj instanceof Scenario )
+                        result = linkFor( (Scenario) obj );
+                    else if ( obj instanceof Role )
                         result = linkFor( (Role) obj );
                     else if ( obj instanceof Part )
                         result = linkFor( (Part) obj );
@@ -55,6 +58,10 @@ public class ModelObjectLink extends ExternalLink {
                 }
             },
             s );
+    }
+
+    private static String linkFor( Scenario scenario ) {
+        return linkFor( scenario.getDefaultPart() );
     }
 
     private static String linkFor( Role role ) {
