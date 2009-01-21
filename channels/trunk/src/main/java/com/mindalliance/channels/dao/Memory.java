@@ -13,7 +13,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Place;
-import com.mindalliance.channels.analysis.profiling.Play;
+import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;

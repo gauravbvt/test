@@ -239,6 +239,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
     }
 
     private Object evaluate( Object bean, String path, Object defaultValue ) {
+        if (path == null || path.isEmpty()) return bean;
         Object value = defaultValue;
         try {
             value = PropertyUtils.getProperty( bean, path );

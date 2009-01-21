@@ -1,11 +1,16 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels;
 
-import com.mindalliance.channels.Flow;
+import java.io.Serializable;
 
 /**
- * A flow panel with a delete checkbox.
+ * Something that can be marked for deletion
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Jan 21, 2009
+ * Time: 1:38:43 PM
  */
-public interface Deletable {
+public interface Deletable extends Serializable {
 
     /**
      * True when underlying flow should be deleted.
@@ -19,8 +24,5 @@ public interface Deletable {
      */
     void setMarkedForDeletion( boolean delete );
 
-    /**
-     * @return the underlying flow
-     */
-    Flow getFlow();
+
 }

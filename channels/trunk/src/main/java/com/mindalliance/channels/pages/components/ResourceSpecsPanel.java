@@ -1,23 +1,21 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Deletable;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.pages.ProfileLink;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.AttributeModifier;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.analysis.profiling.SortableResourceSpecProvider;
-import com.mindalliance.channels.pages.ProfileLink;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -43,6 +41,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
         columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
+/*
         // view profile column
         columns.add( new AbstractColumn<ResourceSpec>( new Model<String>( "" ) ) {
             public void populateItem( Item<ICellPopulator<ResourceSpec>> cellItem,
@@ -63,17 +62,21 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( "link" ) ) );
             }
         } );
+*/
         // delete column
         columns.add( new AbstractColumn<ResourceSpec>( new Model<String>( "Delete" ) ) {
             public void populateItem( Item<ICellPopulator<ResourceSpec>> cellItem,
                                       final String id,
                                       final IModel<ResourceSpec> model ) {
-                cellItem.add( new CheckBox(id, new PropertyModel<Boolean>(model.getObject(), "markedForDeletion") ) );
+                cellItem.add( new DeletePanel( id, new Model<Deletable>( model.getObject() ) ) );
             }
         } );
         // table and providers of resources specified resources need to kwno how to contact
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
-                "resourceSpecs", columns, new SortableResourceSpecProvider( resourceSpecs ), getPageSize() ) );
+                "resourceSpecs",
+                columns,
+                new SortableBeanProvider<ResourceSpec>( resourceSpecs, "name" ),
+                getPageSize() ) );
 
     }
 }

@@ -17,7 +17,7 @@ import java.text.MessageFormat;
 /**
  * A collapsed flow.
  */
-public class CollapsedFlowPanel extends Panel implements Deletable {
+public class CollapsedFlowPanel extends Panel implements DeletableFlow {
 
     /** True when flow should be deleted. */
     private boolean markedForDeletion;

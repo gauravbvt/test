@@ -19,7 +19,7 @@ import java.util.Collections;
  * Date: Jan 8, 2009
  * Time: 8:26:05 PM
  */
-public class ResourceSpec implements Serializable {
+public class ResourceSpec implements Serializable, Deletable {
 
     /**
      * Used in calculating hashCode

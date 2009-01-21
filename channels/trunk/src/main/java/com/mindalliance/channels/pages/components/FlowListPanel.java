@@ -28,7 +28,7 @@ public class FlowListPanel extends Panel {
     private boolean outcomes;
 
     /** Panels of expanded flows. */
-    private List<Deletable> deletableFlows;
+    private List<DeletableFlow> deletableFlows;
 
     public FlowListPanel( String id, Node node, boolean outcomes, final Set<Long> expansions ) {
         super( id );
@@ -59,7 +59,7 @@ public class FlowListPanel extends Panel {
 
         final RepeatingView flowList = new RepeatingView( "flows" );                      // NON-NLS
         final Iterator<Flow> flows = outcomes ? node.outcomes() : node.requirements();
-        deletableFlows = new ArrayList<Deletable>();
+        deletableFlows = new ArrayList<DeletableFlow>();
         while ( flows.hasNext() ) {
             final Flow flow = flows.next();
             final long flowId = flow.getId();
@@ -110,7 +110,7 @@ public class FlowListPanel extends Panel {
      * @param expansions the component expansion list to modify on deletions
      */
     public void deleteSelectedFlows( Set<Long> expansions ) {
-        for ( Deletable p : deletableFlows )
+        for ( DeletableFlow p : deletableFlows )
             if ( p.isMarkedForDeletion() ) {
                 final Flow flow = p.getFlow();
                 expansions.remove( flow.getId() );

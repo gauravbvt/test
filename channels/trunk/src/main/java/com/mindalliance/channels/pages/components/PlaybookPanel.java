@@ -1,8 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.analysis.profiling.Play;
-import com.mindalliance.channels.analysis.profiling.SortablePlaysProvider;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.util.Play;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -52,7 +53,11 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Priority" ),
                 "criticality", "criticality" ) );                                 // NON-NLS
         // provider and table
+        List<Play> plays = Project.getProject().getDao().findAllPlays( player );
         add( new AjaxFallbackDefaultDataTable<Play>(
-                "playbook", columns, new SortablePlaysProvider( player ), getPageSize() ) );
+                "playbook",
+                columns,
+                new SortableBeanProvider<Play>( plays, "part.scenario.name" ),
+                getPageSize() ) );
     }
 }

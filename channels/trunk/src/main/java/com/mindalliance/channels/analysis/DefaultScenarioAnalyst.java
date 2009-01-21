@@ -3,8 +3,8 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.profiling.Play;
 
 import java.util.List;
 import java.util.Iterator;

@@ -40,7 +40,7 @@ import java.util.TreeSet;
 /**
  * Details of an expanded flow.
  */
-public abstract class ExpandedFlowPanel extends Panel implements Deletable {
+public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /** The flow edited by this panel. */
     private Flow flow;

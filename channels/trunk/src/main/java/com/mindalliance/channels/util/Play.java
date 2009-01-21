@@ -1,4 +1,4 @@
-package com.mindalliance.channels.analysis.profiling;
+package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;

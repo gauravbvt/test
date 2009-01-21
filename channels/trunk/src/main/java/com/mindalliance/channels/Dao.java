@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.profiling.Play;
+import com.mindalliance.channels.util.Play;
 
 import java.io.Serializable;
 import java.util.Iterator;
