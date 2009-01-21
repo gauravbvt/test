@@ -100,8 +100,19 @@ body.profile {
     margin-bottom: 5px;
 }
 
-#details, #directory, #playbook, #gaps, #res-details, #contact-info {
+div.section, div.form {
     margin: 5px auto;
+    position: relative;
+}
+div.section input[type='submit'] {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+div.form {
+    max-width: 34em;
+}
+div.section {
     max-width: 80em;
 }
 
@@ -268,6 +279,7 @@ ul.attach, ul.call-list {
     margin: 0;
     padding: 0 0 0 1em;
     list-style: outside;
+    position: relative;
 }
 
 span.suggest {
@@ -323,14 +335,14 @@ html, #sc-details {
     border: 1px outset #6fafaf;
 }
 
-#part, #directory, #playbook, #gaps, #res-details, #contact-info {
+#part, div.section {
     background: #f6f6f6;
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part, #graph, #directory, #playbook, #gaps, #res-details, #contact-info {
+#part, #graph, div.section {
     border: 1px inset #c3dede;
 }
 #sc-details {
@@ -366,7 +378,7 @@ th.wicket_orderUp a {
     padding-right: 16px;
 }
 
-#playbook th, #directory th, #gaps th, #contact-info th {
+div.section th {
     color: black;
     font-weight: bold;
     text-align: left;
@@ -377,8 +389,11 @@ th.wicket_orderUp a {
     vertical-align: top;
 }
 
-#res-details th, #res-details td {
+div.form th, div.form td {
     padding: 0 5px 0 0;
+}
+div.form th {
+    text-align: right;
 }
 
 .profile thead a, .profile thead a:link, .profile thead a:visited {
