@@ -309,7 +309,6 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void removeRole( Role role ) {
-        removeResourceSpec( ResourceSpec.with( role ) );
         idIndex.remove( role.getId() );
     }
 
@@ -317,7 +316,6 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void removeActor( Actor actor ) {
-        removeResourceSpec( ResourceSpec.with( actor ) );
         idIndex.remove( actor.getId() );
     }
 
@@ -325,7 +323,6 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void removeOrganization( Organization organization ) {
-        removeResourceSpec( ResourceSpec.with( organization ) );
         idIndex.remove( organization.getId() );
     }
 
@@ -460,10 +457,52 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public void removeResourceSpec( ResourceSpec deletedResourceSpec ) {
-        // TODO - Remove all permanent specs equal or narrowing deletedResourceSpec 
-        // TODO- Cascade through all parts, reseting resource spec fields appropriately (?)
-        resourceSpecs.remove( deletedResourceSpec );
+    public void removeResourceSpec( ResourceSpec resourceSpec ) {
+        //  Remove all permanent specs equal or narrowing resourceSpec
+        List<ResourceSpec> toDelete = new ArrayList<ResourceSpec>();
+        for ( ResourceSpec spec : resourceSpecs ) {
+            if ( spec.narrowsOrEquals( resourceSpec ) ) toDelete.add( spec );
+        }
+        for ( ResourceSpec spec : toDelete ) {
+            resourceSpecs.remove( spec );
+        }
+        //  Cascade delete operation to parts and entities
+        cascadeDeleteResourceSpecToParts( resourceSpec );
+        cascadeDeleteResourceSpecToEntities( resourceSpec );
+    }
+
+    /**
+     * Remove an entity if the resourceSpec to be deleted amounts to that entity
+     *
+     * @param resourceSpec a resource specification being deleted
+     */
+    private void cascadeDeleteResourceSpecToEntities( ResourceSpec resourceSpec ) {
+        if ( resourceSpec.isActorOnly() ) {
+            removeActor( resourceSpec.getActor() );
+        } else if ( resourceSpec.isRoleOnly() ) {
+            removeRole( resourceSpec.getRole() );
+        } else if ( resourceSpec.isOrganizationOnly() ) {
+            removeOrganization( resourceSpec.getOrganization() );
+        } else if ( resourceSpec.isJurisdictionOnly() ) {
+            removePlace( resourceSpec.getJurisdiction() );
+        }
+    }
+
+    /**
+     * Clear resource spec properties of the part to reflect a resource spec being deleted
+     *
+     * @param resourceSpec a resource specification being deleted
+     */
+    private void cascadeDeleteResourceSpecToParts( ResourceSpec resourceSpec ) {
+        Iterator<Scenario> allScenarios = scenarios();
+        while ( allScenarios.hasNext() ) {
+            Scenario scenario = allScenarios.next();
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                part.removeResourceSpec( resourceSpec );
+            }
+        }
     }
 
 

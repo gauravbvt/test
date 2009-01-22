@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.io.Serializable;
 
-import com.mindalliance.channels.util.PropertyComparator;
-
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -28,7 +26,7 @@ public class SortableBeanProvider<T extends Serializable> extends SortableDataPr
 
     public SortableBeanProvider( List<T> list, String sortProperty ) {
         this.list = list;
-        setSort( sortProperty, true );
+        setSort( sortProperty, false );
     }
 
     /**

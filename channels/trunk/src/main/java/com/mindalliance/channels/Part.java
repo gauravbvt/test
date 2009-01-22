@@ -48,6 +48,7 @@ public class Part extends Node {
      * The jurisdiction (optional).
      */
     private Place jurisdiction;
+    private ResourceSpec resourceSpec;
 
     public Part() {
         adjustName();
@@ -189,4 +190,20 @@ public class Part extends Node {
         return resourceSpec.intersects( this.resourceSpec() );
     }
 
+    /**
+     * Adapt definition to retracted resourceSpec, if applicable.
+     * @param resourceSpec a resourceSpec being retracted
+     */
+    public void removeResourceSpec( ResourceSpec resourceSpec ) {
+        ResourceSpec partResourceSpec = resourceSpec();
+        while ( partResourceSpec.narrowsOrEquals( resourceSpec )) {
+            Entity entity = partResourceSpec.mostSpecificEntity();
+            if (entity instanceof Actor) setActor(null);
+            else if (entity instanceof Role) setRole(null);
+            else if (entity instanceof Organization) setOrganization(null);
+            else if (entity instanceof Place) setJurisdiction(null);
+            else throw new IllegalArgumentException( "Can't unset entity " + entity);
+            partResourceSpec = resourceSpec();
+        }
+    }
 }

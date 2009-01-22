@@ -10,6 +10,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -41,28 +42,31 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
         columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
-/*
         // view profile column
         columns.add( new AbstractColumn<ResourceSpec>( new Model<String>( "" ) ) {
             public void populateItem( Item<ICellPopulator<ResourceSpec>> cellItem,
                                       final String id,
                                       final IModel<ResourceSpec> model ) {
-                cellItem.add( new ProfileLink( id,
-                        new AbstractReadOnlyModel<ResourceSpec>() {
-                            public ResourceSpec getObject() {
-                                return model.getObject();
+                final ResourceSpec resourceSpec = model.getObject();
+                if ( !resourceSpec.isEntityOnly() ) {
+                    cellItem.add( new ProfileLink( id,
+                            new AbstractReadOnlyModel<ResourceSpec>() {
+                                public ResourceSpec getObject() {
+                                    return resourceSpec;
+                                }
+                            },
+                            new AbstractReadOnlyModel<String>() {
+                                public String getObject() {
+                                    return "(view " + resourceSpec.toString() + ")";
+                                }
                             }
-                        },
-                        new AbstractReadOnlyModel<String>() {
-                            public String getObject() {
-                                return "(view " + model.getObject().toString() + ")";
-                            }
-                        }
-                ) );
-                cellItem.add( new AttributeModifier( "class", true, new Model<String>( "link" ) ) );
+                    ) );
+                    cellItem.add( new AttributeModifier( "class", true, new Model<String>( "link" ) ) );
+                } else {
+                    cellItem.add( new Label( id, new Model<String>( "" ) ) );
+                }
             }
         } );
-*/
         // delete column
         columns.add( new AbstractColumn<ResourceSpec>( new Model<String>( "Delete" ) ) {
             public void populateItem( Item<ICellPopulator<ResourceSpec>> cellItem,
@@ -75,7 +79,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
                 "resourceSpecs",
                 columns,
-                new SortableBeanProvider<ResourceSpec>( resourceSpecs, "name" ),
+                new SortableBeanProvider<ResourceSpec>( resourceSpecs, "role.name" ),
                 getPageSize() ) );
 
     }

@@ -194,7 +194,7 @@ public class ResourceSpec implements Serializable, Deletable {
         return !( part.getActor() == null
                 && part.getRole() == null
                 && part.getOrganization() == null
-                && part.getJurisdiction() == null);
+                && part.getJurisdiction() == null );
     }
 
     /**
@@ -381,5 +381,33 @@ public class ResourceSpec implements Serializable, Deletable {
 
     public void setMarkedForDeletion( boolean delete ) {
         markedForDeletion = delete;
+    }
+
+    /**
+     * Return most specific entity composing this resource specification
+     *
+     * @return an entity
+     */
+    public Entity mostSpecificEntity() {
+        Entity mostSpecific = null;
+        if ( actor != null ) mostSpecific = actor;
+        else if ( jurisdiction != null ) mostSpecific = jurisdiction;
+        else if ( role != null ) mostSpecific = role;
+        else if ( organization != null ) mostSpecific = organization;
+        return mostSpecific;
+    }
+
+    /**
+     * Whether the resource is defined by a single entity
+     *
+     * @return a boolean
+     */
+    public boolean isEntityOnly() {
+        int count = 0;
+        if (actor != null) count++;
+        if (role != null) count++;
+        if (organization != null) count++;
+        if (jurisdiction != null) count++;
+        return count == 1;
     }
 }

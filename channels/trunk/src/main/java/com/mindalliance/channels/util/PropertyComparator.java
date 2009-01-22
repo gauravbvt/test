@@ -1,7 +1,5 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.Scenario;
-
 import java.util.Comparator;
 import java.lang.reflect.InvocationTargetException;
 
@@ -25,8 +23,8 @@ public class PropertyComparator<T> implements Comparator<T> {
     }
 
     /**
-     * @param object      the first object to be compared.
-     * @param other the second object to be compared.
+     * @param object the first object to be compared.
+     * @param other  the second object to be compared.
      * @return a negative integer, zero, or a positive integer as the
      *         first argument is less than, equal to, or greater than the
      *         second.
@@ -34,24 +32,31 @@ public class PropertyComparator<T> implements Comparator<T> {
      *                            being compared by this comparator.
      */
     public int compare( T object, T other ) {
-        int comp = 0;
+        int comp;
+        String sortProperty = sortParam.getProperty();
+        String value = evaluatePropertyToString( object, sortProperty );
+        String otherValue = evaluatePropertyToString( other, sortProperty );
+        comp = value.compareTo( otherValue );
+        return sortParam.isAscending() ? comp * -1 : comp;
+    }
+
+    private String evaluatePropertyToString( T object, String propPath ) {
+        Object value;
         try {
-            String sortProperty = sortParam.getProperty();
-            Object value = PropertyUtils.getProperty( object, sortProperty );
-            Object otherValue = PropertyUtils.getProperty( other, sortProperty );
-            String stringValue = ( value == null ) ? "" : value.toString();
-            String otherStringValue = ( otherValue == null ) ? "" : otherValue.toString();
-            comp = stringValue.compareTo( otherStringValue );
+            value = PropertyUtils.getProperty( object, propPath );
         } catch ( NestedNullException e ) {
-            System.out.println( e );
+            value = null;
         } catch ( IllegalAccessException e ) {
             System.out.println( e );
+            value = null;
         } catch ( InvocationTargetException e ) {
             System.out.println( e );
+            value = null;
         } catch ( NoSuchMethodException e ) {
             System.out.println( e );
+            value = null;
         }
-        return sortParam.isAscending() ? comp : comp * -1;
+        return value == null ? "" : value.toString();
     }
 
 }

@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.PageParameters;
@@ -32,7 +34,7 @@ public class IndexPage extends WebPage {
         dao = Project.getProject().getDao();
         Iterator<ResourceSpec> allResourceSpecs = dao.resourceSpecs();
         // Take a local copy of all known resource specs
-        while ( allResourceSpecs.hasNext() ) resourceSpecs.add( new ResourceSpec(allResourceSpecs.next()) );
+        while ( allResourceSpecs.hasNext() ) resourceSpecs.add( new ResourceSpec( allResourceSpecs.next() ) );
         init();
     }
 
@@ -40,18 +42,19 @@ public class IndexPage extends WebPage {
         add( new Label( "title", "Index" ) );
         ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
         Iterator<Scenario> iterator = dao.scenarios();
-        while (iterator.hasNext()) scenarios.add(iterator.next());
-        add (new ScenariosPanel("all-scenarios", new Model<ArrayList<Scenario>>(scenarios)));
+        while ( iterator.hasNext() ) scenarios.add( iterator.next() );
+        add( new ScenariosPanel( "all-scenarios", new Model<ArrayList<Scenario>>( scenarios ) ) );
         Form form = new Form( "resourceSpecs-form" ) {
             protected void onSubmit() {
-                for (ResourceSpec spec: resourceSpecs) {
-                    if (spec.isMarkedForDeletion()) {
+                for ( ResourceSpec spec : resourceSpecs ) {
+                    if ( spec.isMarkedForDeletion() ) {
                         dao.removeResourceSpec( spec );
                     }
                 }
+                setResponsePage( new RedirectPage( "index.html" ) );
             }
         };
-        form.add( new ResourceSpecsPanel("all-resourceSpecs", new Model<ArrayList<ResourceSpec>>(resourceSpecs)));
+        form.add( new ResourceSpecsPanel( "all-resourceSpecs", new Model<ArrayList<ResourceSpec>>( resourceSpecs ) ) );
         add( form );
         add( new ResourceSpecPanel( "new-resourceSpec", new Model<ResourceSpec>( new ResourceSpec() ) ) );
     }
