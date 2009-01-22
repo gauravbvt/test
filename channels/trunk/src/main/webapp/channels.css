@@ -399,3 +399,7 @@ div.form th {
 .profile thead a, .profile thead a:link, .profile thead a:visited {
     color: black;
 }
+
+.italic {
+    font-style: italic;
+}

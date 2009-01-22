@@ -451,7 +451,8 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void addResourceSpec( ResourceSpec resourceSpec ) {
-        resourceSpecs.add( resourceSpec );
+        if (!resourceSpec.isEmpty() && !resourceSpec.isEntityOnly())
+            resourceSpecs.add( resourceSpec );
     }
 
     /**
@@ -469,6 +470,13 @@ public final class Memory implements Dao {
         //  Cascade delete operation to parts and entities
         cascadeDeleteResourceSpecToParts( resourceSpec );
         cascadeDeleteResourceSpecToEntities( resourceSpec );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isPermanent( ResourceSpec resourceSpec ) {
+        return resourceSpecs.contains( resourceSpec );
     }
 
     /**

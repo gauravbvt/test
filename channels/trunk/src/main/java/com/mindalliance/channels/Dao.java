@@ -251,6 +251,7 @@ public interface Dao extends Serializable {
 
     /**
      * Add a permanent resource specification
+     * if not empty or defined by only one entity (entities are permanent)
      * @param resourceSpec a resource specification
      */
     void addResourceSpec( ResourceSpec resourceSpec );
@@ -261,4 +262,10 @@ public interface Dao extends Serializable {
      */
     void removeResourceSpec( ResourceSpec resourceSpec );
 
+    /**
+     * Whether the resource spec exists independently of parts
+     * @param resourceSpec the resource spec
+     * @return a boolean
+     */
+    boolean isPermanent( ResourceSpec resourceSpec );
 }

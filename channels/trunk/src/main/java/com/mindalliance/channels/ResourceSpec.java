@@ -410,4 +410,29 @@ public class ResourceSpec implements Serializable, Deletable {
         if (jurisdiction != null) count++;
         return count == 1;
     }
+
+    /**
+     * Whether the resource spec is not solely implied by one or more parts
+     * @return a boolean
+     */
+    public boolean isPredefined() {
+        return isEntityOnly() || isPermanent();
+    }
+
+    /**
+     * Whether the resource spec exists independently of parts
+     * @return a boolean
+     */
+    public boolean isPermanent() {
+        return Project.getProject().getDao().isPermanent( this );
+    }
+
+    /**
+     * String describing the resource spec's origin
+     * @return either "a priori" or "from tasks"
+     */
+    public String getKind() {
+        return isPredefined() ? "added" : "from tasks";
+    }
+
 }
