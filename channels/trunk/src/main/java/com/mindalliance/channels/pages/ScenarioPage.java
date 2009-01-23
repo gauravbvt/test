@@ -1,29 +1,27 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.FlowListPanel;
+import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -36,9 +34,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.RefreshingView;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -61,34 +56,54 @@ import java.util.Set;
  */
 public final class ScenarioPage extends WebPage {
 
-    /** The 'scenario' parameter in the URL. */
+    /**
+     * The 'scenario' parameter in the URL.
+     */
     static final String SCENARIO_PARM = "scenario";                                       // NON-NLS
 
-    /** The 'part' parameter in the URL. */
+    /**
+     * The 'part' parameter in the URL.
+     */
     static final String NODE_PARM = "node";                                               // NON-NLS
 
-    /** The 'expand' parameter in the URL. */
-    static final String EXPAND_PARM = "expand";                                           // NON-NLS
+    /**
+     * The 'expand' parameter in the URL.
+     */
+    public static final String EXPAND_PARM = "expand";                                           // NON-NLS
 
-    /** Class logger. */
+    /**
+     * Class logger.
+     */
     private static final Logger LOG = LoggerFactory.getLogger( ScenarioPage.class );
 
-    /** Name property name... */
+    /**
+     * Name property name...
+     */
     private static final String NAME_PROPERTY = "name";                                   // NON-NLS
 
-    /** Description property name. */
+    /**
+     * Description property name.
+     */
     private static final String DESC_PROPERTY = "description";                            // NON-NLS
 
-    /** Specialty field name. */
+    /**
+     * Specialty field name.
+     */
     private static final String SPECIALTY_FIELD = "specialty";                            // NON-NLS
 
-    /** Id of components that are expanded. */
+    /**
+     * Id of components that are expanded.
+     */
     private Set<Long> expansions;
 
-    /** The current node. */
+    /**
+     * The current node.
+     */
     private Node node;
 
-    /** The big form. */
+    /**
+     * The big form.
+     */
     private ScenarioForm form;
 
     /**
@@ -120,6 +135,7 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Utility constructor for tests.
+     *
      * @param scenario a scenario
      */
     public ScenarioPage( Scenario scenario ) {
@@ -128,8 +144,9 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Utility constructor for tests.
+     *
      * @param scenario a scenario
-     * @param node a node in the scenario
+     * @param node     a node in the scenario
      */
     public ScenarioPage( Scenario scenario, Node node ) {
         final Set<Long> expanded = Collections.emptySet();
@@ -138,8 +155,9 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Utility constructor.
+     *
      * @param node the node to display
-     * @param id a section to expand
+     * @param id   a section to expand
      */
     public ScenarioPage( Node node, long id ) {
         final Set<Long> expanded = new HashSet<Long>();
@@ -165,7 +183,8 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Find scenario specified in parameters.
-     * @param dao the scenario container
+     *
+     * @param dao        the scenario container
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
@@ -183,7 +202,8 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Find node specified in parameters.
-     * @param scenario the scenario
+     *
+     * @param scenario   the scenario
      * @param parameters the page parameters
      * @return a node, or null if not found
      */
@@ -216,13 +236,14 @@ public final class ScenarioPage extends WebPage {
         }
         setResponsePage(
                 new RedirectPage( MessageFormat.format( "?scenario={0}&node={1}{2}",      // NON-NLS
-                                                        sid, nid, exps ) ) );
+                        sid, nid, exps ) ) );
     }
 
     /**
      * Return initialized parameters for given scenario and node.
+     *
      * @param scenario the scenario
-     * @param node the node, maybe null (in which case, would link to first node in scenario)
+     * @param node     the node, maybe null (in which case, would link to first node in scenario)
      * @param expanded components id that should be expanded
      * @return page parameters to use in links, etc.
      */
@@ -234,15 +255,16 @@ public final class ScenarioPage extends WebPage {
         if ( node != null ) {
             result.put( NODE_PARM, Long.toString( node.getId() ) );
             for ( long id : expanded )
-                result.add( EXPAND_PARM, Long.toString( id  ) );
+                result.add( EXPAND_PARM, Long.toString( id ) );
         }
         return result;
     }
 
     /**
      * Return initialized parameters for given scenario and node.
+     *
      * @param scenario the scenario
-     * @param node the node, maybe null (in which case, would link to first node in scenario)
+     * @param node     the node, maybe null (in which case, would link to first node in scenario)
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node ) {
@@ -252,9 +274,10 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Return initialized parameters for given scenario and node.
+     *
      * @param scenario the scenario
-     * @param node the node, maybe null (in which case, would link to first node in scenario)
-     * @param id the id to expand
+     * @param node     the node, maybe null (in which case, would link to first node in scenario)
+     * @param id       the id to expand
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node, long id ) {
@@ -279,6 +302,7 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Get the scenario manager from project via the application context.
+     *
      * @return the scenario DAO
      */
     private Dao getScenarioDao() {
@@ -295,6 +319,7 @@ public final class ScenarioPage extends WebPage {
 
     /**
      * Accessor to the flow graph, for ajax updates.
+     *
      * @return the component to add to ajax target
      */
     public MarkupContainer getGraph() {
@@ -307,10 +332,14 @@ public final class ScenarioPage extends WebPage {
      */
     private final class ScenarioForm extends Form<Scenario> {
 
-        /** The nodeDeleted property name. */
+        /**
+         * The nodeDeleted property name.
+         */
         private static final String NODE_DELETED_PROPERTY = "nodeDeleted";                // NON-NLS
 
-        /** The scenario import field. */
+        /**
+         * The scenario import field.
+         */
         private FileUploadField scenarioImport;
 
         /**
@@ -319,19 +348,29 @@ public final class ScenarioPage extends WebPage {
          */
         private Scenario target;
 
-        /** The delete scenario check box. */
+        /**
+         * The delete scenario check box.
+         */
         private DeleteBox deleteScenario;
 
-        /**  The requirement list. */
+        /**
+         * The requirement list.
+         */
         private FlowListPanel reqs;
 
-        /** The outcomes list. */
+        /**
+         * The outcomes list.
+         */
         private FlowListPanel outcomes;
 
-        /** True if current node will be deleted. */
+        /**
+         * True if current node will be deleted.
+         */
         private boolean nodeDeleted;
 
-        /** The graph section. */
+        /**
+         * The graph section.
+         */
         private MarkupContainer graph;
 
         //------------------------------
@@ -339,15 +378,15 @@ public final class ScenarioPage extends WebPage {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
             add( new Label( "node-title",                                                 // NON-NLS
-                            new PropertyModel<String>( node, "title" ) ) );               // NON-NLS
+                    new PropertyModel<String>( node, "title" ) ) );               // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
-                                       new PropertyModel<String>( node, DESC_PROPERTY ) ) );
+                    new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
-                               new PropertyModel<Boolean>( this, NODE_DELETED_PROPERTY ) ) );
+                    new PropertyModel<Boolean>( this, NODE_DELETED_PROPERTY ) ) );
             addGraph( scenario, node );
             final Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
-                  : new Label( SPECIALTY_FIELD, "" );
+                    : new Label( SPECIALTY_FIELD, "" );
             panel.setRenderBodyOnly( true );
             add( panel );
 
@@ -358,35 +397,7 @@ public final class ScenarioPage extends WebPage {
 
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
-            final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );     // NON-NLS
-            issuesList.add( new RefreshingView<DetectedIssue>( "issue" ) {                        // NON-NLS
-                @SuppressWarnings( { "unchecked" } )
-                @Override
-                protected Iterator<IModel<DetectedIssue>> getItemModels() {
-                    final Project project = (Project) getApplication();
-                    final Analyst analyst = project.getAnalyst();
-                    return new TransformIterator(
-                            analyst.findIssues( node, false ),
-                            new Transformer() {
-                                public Object transform( Object o ) {
-                                    return new Model<DetectedIssue>( (DetectedIssue) o );
-
-                                }
-                            } );
-                }
-
-                @Override
-                protected void populateItem( Item<DetectedIssue> item ) {
-                    final DetectedIssue issue = item.getModelObject();
-                    item.add( new Label( "message", issue.getDescription() ) );           // NON-NLS
-                    item.add( new Label( "suggest", issue.getRemediation() ) );           // NON-NLS
-                }
-            } );
-
-            final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-            issuesList.setVisible( analyst.hasIssues( node, false ) );
-            add( issuesList );
-
+            add( new IssuesPanel( "issues", new Model<ModelObject>( node ), expansions ) );
             addScenarioFields( scenario );
             reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
             add( reqs );
@@ -402,11 +413,11 @@ public final class ScenarioPage extends WebPage {
                 protected void onComponentTag( ComponentTag tag ) {
                     super.onComponentTag( tag );
                     tag.put( "src",                                                       // NON-NLS
-                             MessageFormat.format(
-                                 "scenario.png?scenario={0}&amp;node={1}&amp;time={2}",   // NON-NLS
-                                  scenario.getId(),
-                                  n.getId(),
-                                  System.currentTimeMillis() ) );
+                            MessageFormat.format(
+                                    "scenario.png?scenario={0}&amp;node={1}&amp;time={2}",   // NON-NLS
+                                    scenario.getId(),
+                                    n.getId(),
+                                    System.currentTimeMillis() ) );
                 }
 
                 @Override
@@ -433,14 +444,16 @@ public final class ScenarioPage extends WebPage {
         //------------------------------
         /**
          * Add scenario-related components.
+         *
          * @param scenario the underlying scenario
          */
         private void addScenarioFields( final Scenario scenario ) {
             addHeader( scenario );
             add( new Label( "sc-desc",                                                    // NON-NLS
-                            new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
+                    new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
 
             add( new Link( "add-part" ) {                                                 // NON-NLS
+
                 @Override
                 public void onClick() {
                     final Part newPart = scenario.createPart();
@@ -450,14 +463,14 @@ public final class ScenarioPage extends WebPage {
 
             if ( expansions.contains( scenario.getId() ) ) {
                 add( new BookmarkablePageLink<Scenario>(
-                    "sc-edit", ScenarioPage.class,                                        // NON-NLS
-                    getParameters( scenario, node ) ) );
+                        "sc-edit", ScenarioPage.class,                                        // NON-NLS
+                        getParameters( scenario, node ) ) );
 
                 add( new ScenarioEditPanel( "sc-editor", scenario ) );                    // NON-NLS
 
             } else {
                 add( new BookmarkablePageLink<Scenario>( "sc-edit", ScenarioPage.class,   // NON-NLS
-                    getParameters( scenario, node, scenario.getId() ) ) );
+                        getParameters( scenario, node, scenario.getId() ) ) );
                 add( new Label( "sc-editor" ) );                                          // NON-NLS
             }
 
@@ -526,7 +539,7 @@ public final class ScenarioPage extends WebPage {
                 String id, Scenario scenario ) {
 
             return new BookmarkablePageLink<Scenario>(
-                   id, ExportPage.class, getParameters( scenario, null ) );
+                    id, ExportPage.class, getParameters( scenario, null ) );
         }
 
         public void setTarget( Scenario target ) {
@@ -601,8 +614,8 @@ public final class ScenarioPage extends WebPage {
     }
 
     //==============================================================
-        /**
-         * A link that creates and link to a new scenario.
+    /**
+     * A link that creates and link to a new scenario.
      */
     private final class NewScenarioLink extends Link<Scenario> {
 
@@ -625,7 +638,9 @@ public final class ScenarioPage extends WebPage {
      */
     private static final class DeleteBox extends CheckBox {
 
-        /** The selection state of the checkbox. */
+        /**
+         * The selection state of the checkbox.
+         */
         private boolean selected;
 
         private DeleteBox( String id ) {

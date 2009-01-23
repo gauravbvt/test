@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.pages.Project;
 
@@ -36,14 +37,14 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public Iterator<DetectedIssue> findIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public Iterator<Issue> findIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
         return new IssueIterator( issueDetectors, modelObject, includingPropertySpecific );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Iterator<DetectedIssue> findIssues( ModelObject modelObject, String property ) {
+    public Iterator<Issue> findIssues( ModelObject modelObject, String property ) {
         return new IssueIterator( issueDetectors, modelObject, property );
     }
 
@@ -51,9 +52,9 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public List<DetectedIssue> listIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
-        Iterator<DetectedIssue> iterator = findIssues( modelObject, includingPropertySpecific );
+    public List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = findIssues( modelObject, includingPropertySpecific );
         while (iterator.hasNext()) issues.add( iterator.next() );
         return issues;
     }
@@ -61,9 +62,9 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public List<DetectedIssue> listIssues( ModelObject modelObject, String property ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
-        Iterator<DetectedIssue> iterator = findIssues( modelObject, property );
+    public List<Issue> listIssues( ModelObject modelObject, String property ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = findIssues( modelObject, property );
         while (iterator.hasNext()) issues.add( iterator.next() );
         return issues;
     }
@@ -86,7 +87,7 @@ public class DefaultAnalyst implements Analyst {
      * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, boolean includingPropertySpecific ) {
-        Iterator<DetectedIssue> issues = findIssues( modelObject, includingPropertySpecific );
+        Iterator<Issue> issues = findIssues( modelObject, includingPropertySpecific );
         return summarize( issues );
     }
 
@@ -94,7 +95,7 @@ public class DefaultAnalyst implements Analyst {
      * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, String property ) {
-        Iterator<DetectedIssue> issues = findIssues( modelObject, property );
+        Iterator<Issue> issues = findIssues( modelObject, property );
         return summarize( issues );
     }
 
@@ -104,10 +105,10 @@ public class DefaultAnalyst implements Analyst {
      * @param issues -- an iterator on issues
      * @return a string summarizing the issues
      */
-    private String summarize( Iterator<DetectedIssue> issues ) {
+    private String summarize( Iterator<Issue> issues ) {
         StringBuilder sb = new StringBuilder();
         while ( issues.hasNext() ) {
-            DetectedIssue issue = issues.next();
+            Issue issue = issues.next();
             sb.append( issue.getDescription() );
             if ( issues.hasNext() ) sb.append( DESCRIPTION_SEPARATOR );
         }
@@ -126,8 +127,8 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public List<DetectedIssue> findAllIssuesFor( ResourceSpec resource ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    public List<Issue> findAllIssuesFor( ResourceSpec resource ) {
+        List<Issue> issues = new ArrayList<Issue>();
         if ( !resource.isAnyActor() ) {
             issues.addAll( listIssues( resource.getActor(), true ) );
         }
@@ -150,17 +151,17 @@ public class DefaultAnalyst implements Analyst {
      * @param resource a resource
      * @return a list of issues
      */
-    private List<DetectedIssue> findAllIssuesInPlays( ResourceSpec resource ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    private List<Issue> findAllIssuesInPlays( ResourceSpec resource ) {
+        List<Issue> issues = new ArrayList<Issue>();
         List<Play> plays = Project.dao().findAllPlays( resource );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPart() );
-            Iterator<DetectedIssue> iterator = findIssues( play.getFlow(), true );
+            Iterator<Issue> iterator = findIssues( play.getFlow(), true );
             while ( iterator.hasNext() ) issues.add( iterator.next() );
         }
         for ( Part part : parts ) {
-            Iterator<DetectedIssue> iterator = findIssues( part, true );
+            Iterator<Issue> iterator = findIssues( part, true );
             while ( iterator.hasNext() ) issues.add( iterator.next() );
         }
         return issues;

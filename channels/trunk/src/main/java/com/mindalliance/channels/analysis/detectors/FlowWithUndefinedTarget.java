@@ -6,6 +6,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Issue;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+        List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node target = flow.getTarget();
         if ( target.isPart() && ( (Part) target ).isUndefined() ) {

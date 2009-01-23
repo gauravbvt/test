@@ -22,7 +22,7 @@ public class UserIssue extends ModelObject implements Issue, Deletable {
     /**
      * Remediation
      */
-    private String remediation;
+    private String remediation = "";
     /**
      * Name of user who created or last modified the issue
      */
@@ -39,6 +39,7 @@ public class UserIssue extends ModelObject implements Issue, Deletable {
     public UserIssue( ModelObject about ) {
         super();
         this.about = about;
+        setDescription("(No description)");
     }
 
     public ModelObject getAbout() {
@@ -73,10 +74,21 @@ public class UserIssue extends ModelObject implements Issue, Deletable {
         return "User";
     }
 
+    public String getName() {
+        return getLabel( MAX_LENGTH );
+    }
+
     /**
      * {@inheritDoc}
      */
-    public String getName() {
-        return StringUtils.abbreviate( getDescription()  + " [" + getReportedBy() + "]", MAX_LENGTH );
+    public String getLabel(int maxLength) {
+        return StringUtils.abbreviate( getDescription()  + " --" + getReportedBy(), maxLength );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDetected() {
+        return false;
     }
 }

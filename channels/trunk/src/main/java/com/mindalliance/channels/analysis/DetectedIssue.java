@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A problem uncovered about a model object.
@@ -109,6 +110,20 @@ public class DetectedIssue extends AnalysisObject implements Issue {
 
     public void setRemediation( String remediation ) {
         this.remediation = remediation;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getLabel(int maxLength) {
+        return StringUtils.abbreviate( getDescription(), maxLength );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDetected() {
+        return true;
     }
 
 }

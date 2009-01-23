@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
@@ -17,8 +18,11 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.PageParameters;
 
 import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Editor on the details of a scenario (name, description, etc).
@@ -35,33 +39,7 @@ public class ScenarioEditPanel extends Panel {
         final TextArea<String> desc = new TextArea<String>( "description" );              // NON-NLS
         add( new FormComponentLabel( "description-label", desc ) );                       // NON-NLS
         add( desc );
-
-        final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );         // NON-NLS
-        issuesList.add( new RefreshingView<DetectedIssue>( "issue" ) {                            // NON-NLS
-            @SuppressWarnings( { "unchecked" } )
-            @Override
-            protected Iterator<IModel<DetectedIssue>> getItemModels() {
-                final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-                return new TransformIterator(
-                        analyst.findIssues( scenario, true ),
-                        new Transformer() {
-                            public Object transform( Object o ) {
-                                return new Model<DetectedIssue>( (DetectedIssue) o );
-
-                            }
-                        } );
-            }
-
-            @Override
-            protected void populateItem( Item<DetectedIssue> item ) {
-                final DetectedIssue issue = item.getModelObject();
-                item.add( new Label( "message", issue.getDescription() ) );               // NON-NLS
-                item.add( new Label( "suggest", issue.getRemediation() ) );               // NON-NLS
-            }
-        } );
-
-        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        issuesList.setVisible( analyst.hasIssues( scenario, true ) );
-        add( issuesList );
+        Set<Long> expansions = new HashSet<Long>( );  // TODO - get expansion parameters
+        add (new IssuesPanel( "issues", new Model<ModelObject>(scenario), expansions));
     }
 }

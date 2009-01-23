@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Issue;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+        List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         String channel = flow.getChannel();
         if ( channel == null || channel.trim().isEmpty() ) {

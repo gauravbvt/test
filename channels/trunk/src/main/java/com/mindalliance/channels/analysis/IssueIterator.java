@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Issue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Date: Nov 26, 2008
  * Time: 4:06:56 PM
  */
-public class IssueIterator implements Iterator<DetectedIssue> {
+public class IssueIterator implements Iterator<Issue> {
 
     /**
      * The model object with potential issues
@@ -34,7 +35,7 @@ public class IssueIterator implements Iterator<DetectedIssue> {
     /**
      * The next issue
      */
-    private Iterator<DetectedIssue> currentIssues;
+    private Iterator<Issue> currentIssues;
 
     public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject, String property ) {
         this.detectors = detectors.iterator();
@@ -67,7 +68,7 @@ public class IssueIterator implements Iterator<DetectedIssue> {
      * @throws java.util.NoSuchElementException
      *          iteration has no more elements.
      */
-    public DetectedIssue next() {
+    public Issue next() {
         findCurrentIssue();
         return currentIssues.next();
     }
@@ -97,7 +98,7 @@ public class IssueIterator implements Iterator<DetectedIssue> {
         while ( !hasMoreIssues() && detectors.hasNext() ) {
             IssueDetector detector = detectors.next();
             if ( detectorApplies( detector ) ) {
-                List<DetectedIssue> detectedIssues = detector.detectIssues( modelObject );
+                List<Issue> detectedIssues = detector.detectIssues( modelObject );
                 if ( detectedIssues != null ) currentIssues = detectedIssues.iterator();
             }
         }

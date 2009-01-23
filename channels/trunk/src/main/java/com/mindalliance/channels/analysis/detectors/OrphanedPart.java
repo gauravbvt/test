@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Issue;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class OrphanedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+        List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.requirements().hasNext() && !part.outcomes().hasNext() ) {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );

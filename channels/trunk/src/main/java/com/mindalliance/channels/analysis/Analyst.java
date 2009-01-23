@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Issue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,7 @@ public interface Analyst {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return an iterator on issues detected
      */
-    Iterator<DetectedIssue> findIssues( ModelObject modelObject, boolean includingPropertySpecific );
+    Iterator<Issue> findIssues( ModelObject modelObject, boolean includingPropertySpecific );
 
     /**
      * Use all applicable issue detectors to find issues about a model object's property
@@ -37,7 +38,7 @@ public interface Analyst {
      * @param property    -- the name of a property of the model object
      * @return an iterator on issues detected
      */
-    Iterator<DetectedIssue> findIssues( ModelObject modelObject, String property );
+    Iterator<Issue> findIssues( ModelObject modelObject, String property );
 
     /**
       * Use all applicable issue detectors to find issues about a model object
@@ -46,7 +47,7 @@ public interface Analyst {
       * @param includingPropertySpecific -- all issues or only those that are not specific to a property
       * @return a list of issues detected
       */
-     List<DetectedIssue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
+     List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
 
      /**
       * Use all applicable issue detectors to find issues about a model object's property
@@ -55,7 +56,7 @@ public interface Analyst {
       * @param property    -- the name of a property of the model object
       * @return a list of issues detected
       */
-     List<DetectedIssue> listIssues( ModelObject modelObject, String property );
+     List<Issue> listIssues( ModelObject modelObject, String property );
 
     /**
      * Tests whether a model object has issues
@@ -100,6 +101,6 @@ public interface Analyst {
      * @param resource a resource
      * @return a list of issues
      */
-    List<DetectedIssue> findAllIssuesFor( ResourceSpec resource );
+    List<Issue> findAllIssuesFor( ResourceSpec resource );
 
 }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Issue;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface IssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    List<DetectedIssue> detectIssues( ModelObject modelObject );
+    List<Issue> detectIssues( ModelObject modelObject );
 
     /**
      * Tests whether the detector applies to the model object

@@ -40,5 +40,18 @@ public interface Issue extends Serializable {
      * @return a String
      */
     String getReportedBy();
+
+    /**
+     * Get a string of maximum length describing the issue
+     * @param maxLength maximum length
+     * @return a String
+     */
+    String getLabel(int maxLength);
+
+    /**
+     * Whether the issue is automatically detected (versus added by a user)
+     * @return a boolean
+     */
+    boolean isDetected();
     
 }

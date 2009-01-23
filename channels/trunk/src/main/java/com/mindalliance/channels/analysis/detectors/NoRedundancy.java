@@ -6,6 +6,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.util.SemMatch;
 
 import java.util.List;
@@ -45,8 +46,8 @@ public class NoRedundancy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+        List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
         // Find all critical sourced requirements of a part
         Iterator<Flow> criticalRequirements = new FilterIterator( part.requirements(),

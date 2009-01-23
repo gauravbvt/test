@@ -7,8 +7,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColu
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.DetectedIssue;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -41,11 +41,11 @@ public class ResourceIssuesTablePanel extends AbstractTablePanel {
                 new Model<String>("Type"), "type", "type"));
         columns.add( makeColumn("Remediation", "remediation", "remediation", EMPTY));
         // provider and table
-        List<DetectedIssue> issues = Project.analyst().findAllIssuesFor( resourceSpec );
-        add( new AjaxFallbackDefaultDataTable<DetectedIssue>(
+        List<Issue> issues = Project.analyst().findAllIssuesFor( resourceSpec );
+        add( new AjaxFallbackDefaultDataTable<Issue>(
                 "issues",
                 columns,
-                new SortableBeanProvider<DetectedIssue>( issues, "about.name" ),
+                new SortableBeanProvider<Issue>( issues, "about.name" ),
                 getPageSize() ) );
 
     }

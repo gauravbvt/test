@@ -522,9 +522,8 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> findAllIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public List<Issue> findAllUserIssues( ModelObject modelObject ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
-        foundIssues.addAll( Project.analyst().listIssues( modelObject, includingPropertySpecific ) );
         for ( UserIssue userIssue : userIssues ) {
             if ( userIssue.getAbout() == modelObject ) foundIssues.add( userIssue );
         }

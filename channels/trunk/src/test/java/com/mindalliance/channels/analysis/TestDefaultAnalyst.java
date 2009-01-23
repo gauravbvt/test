@@ -5,6 +5,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Issue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,7 +36,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     public void testFindAllIssues() {
         while ( scenarios.hasNext() ) {
             Scenario scenario = scenarios.next();
-            List<DetectedIssue> allIssues = new ArrayList<DetectedIssue>();
+            List<Issue> allIssues = new ArrayList<Issue>();
             collectIssues( scenario, allIssues );
             Iterator<Node> nodes = scenario.nodes();
             while ( nodes.hasNext() ) {
@@ -56,11 +57,11 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
         }
     }
 
-    private void collectIssues( ModelObject modelObject, List<DetectedIssue> collector ) {
-        Iterator<DetectedIssue> issues = analyst.findIssues( modelObject,
+    private void collectIssues( ModelObject modelObject, List<Issue> collector ) {
+        Iterator<Issue> issues = analyst.findIssues( modelObject,
                 Analyst.INCLUDE_PROPERTY_SPECIFIC );
         while ( issues.hasNext() ) {
-            DetectedIssue issue = issues.next();
+            Issue issue = issues.next();
             System.out.println( issue );
             collector.add( issue );
         }

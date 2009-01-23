@@ -18,6 +18,7 @@ import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
 import com.mindalliance.channels.analysis.detectors.OrphanedPart;
+import com.mindalliance.channels.analysis.detectors.FromUser;
 import com.mindalliance.channels.export.xml.XmlStreamer;
 
 import java.util.List;
@@ -44,8 +45,8 @@ public class AbstractChannelsTest extends TestCase {
         project.setUri( "mindalliance.com/channels/demo" );
         Dao dao = new Memory();
         project.setDao( dao );
-        project.setExporter(xmlStreamer);
-        project.setImporter(xmlStreamer);
+        project.setExporter( xmlStreamer );
+        project.setImporter( xmlStreamer );
         project.setGraphBuilder( new DefaultGraphBuilder() );
         // Set default scenario
         // project.getScenarioDao().addScenario(new FireScenario());
@@ -56,14 +57,15 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setTimeout( 5000 );
         DefaultFlowDiagram flowDiagram = new DefaultFlowDiagram();
         flowDiagram.setGraphRenderer( graphRenderer );
-        flowDiagram.setUrlFormat("?scenario={0}&amp;node={1}");
-        flowDiagram.setScenarioUrlFormat("?scenario={0}");
+        flowDiagram.setUrlFormat( "?scenario={0}&amp;node={1}" );
+        flowDiagram.setScenarioUrlFormat( "?scenario={0}" );
         flowDiagram.setImageDirectory( "src/site/resources/images" );
         project.setFlowDiagram( flowDiagram );
         // Set scenario analyst
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
+        detectors.add( new FromUser() );
         detectors.add( new FlowWithoutChannel() );
         detectors.add( new PartWithoutTask() );
         detectors.add( new PartWithoutRole() );

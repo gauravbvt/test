@@ -6,6 +6,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Issue;
 
 import java.util.List;
 import java.util.Iterator;
@@ -44,8 +45,8 @@ public class UnconnectedConnector extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
-        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+        List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         Iterator<Connector> unconnectedConnectors = new FilterIterator( scenario.nodes(),
                 new Predicate() {
