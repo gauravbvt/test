@@ -17,14 +17,14 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     /**
      * Cache of issues found by the detector.
      */
-    private SimpleCache<ModelObject,List<Issue>> cache =
-            new SimpleCache<ModelObject,List<Issue>>();
+    private SimpleCache<ModelObject,List<DetectedIssue>> cache =
+            new SimpleCache<ModelObject,List<DetectedIssue>>();
 
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
-        List<Issue> issues = cache.get( modelObject, modelObject.lastModified() );
+    public List<DetectedIssue> detectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = cache.get( modelObject, modelObject.lastModified() );
         if ( issues == null ) {
             issues = doDetectIssues( modelObject );
             cache.put( modelObject, issues  );
@@ -57,6 +57,6 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @param modelObject -- the model object being analyzed
      * @return -- a list of issues
      */
-    protected abstract List<Issue> doDetectIssues( ModelObject modelObject );
+    protected abstract List<DetectedIssue> doDetectIssues( ModelObject modelObject );
 
 }

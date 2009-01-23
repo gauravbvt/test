@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
@@ -53,8 +53,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Part part = (Part) modelObject;
         Scenario scenario = part.getScenario();
         Iterator<Node> nodes = getCutpoints( scenario );
@@ -72,7 +72,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         }
         // Found single points of failure?
         for ( Node node : actorNodes ) {
-            Issue issue = new Issue( Issue.STRUCTURAL, node );
+            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, node );
             issue.setDescription( "Single point of failure." );
             issue.setRemediation( "Delegate responsibilities or add redundancy." );
             issues.add( issue );

@@ -53,7 +53,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Priority" ),
                 "criticality", "criticality" ) );                                 // NON-NLS
         // provider and table
-        List<Play> plays = Project.getProject().getDao().findAllPlays( player );
+        List<Play> plays = Project.dao().findAllPlays( player );
         add( new AjaxFallbackDefaultDataTable<Play>(
                 "playbook",
                 columns,

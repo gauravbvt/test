@@ -28,6 +28,6 @@ public class ActorConverter extends EntityConverter {
      * {@inheritDoc}
      */
     Entity findOrMakeEntity( String name ) {
-        return Project.getProject().getDao().findOrMakeActor( name );
+        return Project.dao().findOrMakeActor( name );
     }
 }

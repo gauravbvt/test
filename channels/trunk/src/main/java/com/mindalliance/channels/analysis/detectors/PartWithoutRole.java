@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 
@@ -19,11 +19,11 @@ import java.util.ArrayList;
 public class PartWithoutRole extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Part part = (Part) modelObject;
         if ( part.getRole() == null ) {
-            Issue issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
+            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The role is missing." );
             issue.setRemediation( "Name a role." );
             issues.add( issue );

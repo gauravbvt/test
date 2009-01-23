@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 
@@ -18,11 +18,11 @@ import java.util.ArrayList;
  */
 public class PartWithoutTask extends AbstractIssueDetector {
     /** {@inheritDoc} */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
-            Issue issue = new Issue( Issue.DEFINITION, modelObject, getTestedProperty() );
+            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The task is missing," );
             issue.setRemediation( "Provide a task." );
             issues.add( issue );

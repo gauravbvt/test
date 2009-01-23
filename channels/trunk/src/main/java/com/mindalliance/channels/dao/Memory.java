@@ -13,6 +13,10 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
@@ -37,6 +41,8 @@ public final class Memory implements Dao {
     private Set<Scenario> scenarios = new HashSet<Scenario>();
 
     private Set<ResourceSpec> resourceSpecs = new HashSet<ResourceSpec>();
+
+    private List<UserIssue> userIssues = new ArrayList<UserIssue>();
 
     /**
      * Scenarios, indexed by id.
@@ -451,7 +457,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void addResourceSpec( ResourceSpec resourceSpec ) {
-        if (!resourceSpec.isEmpty() && !resourceSpec.isEntityOnly())
+        if ( !resourceSpec.isEmpty() && !resourceSpec.isEntityOnly() )
             resourceSpecs.add( resourceSpec );
     }
 
@@ -513,5 +519,29 @@ public final class Memory implements Dao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> findAllIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+        List<Issue> foundIssues = new ArrayList<Issue>();
+        foundIssues.addAll( Project.analyst().listIssues( modelObject, includingPropertySpecific ) );
+        for ( UserIssue userIssue : userIssues ) {
+            if ( userIssue.getAbout() == modelObject ) foundIssues.add( userIssue );
+        }
+        return foundIssues;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void addUserIssue( UserIssue userIssue ) {
+        userIssues.add( userIssue );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeUserIssue( UserIssue userIssue ) {
+        userIssues.remove( userIssue );
+    }
 }

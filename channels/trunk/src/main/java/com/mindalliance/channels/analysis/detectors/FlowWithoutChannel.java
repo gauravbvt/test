@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 
@@ -24,13 +24,13 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Flow flow = (Flow) modelObject;
         String channel = flow.getChannel();
         if ( channel == null || channel.trim().isEmpty() ) {
             if ( !( flow.getTarget().isConnector() && !flow.isAskedFor() ) ) {
-                Issue issue = new Issue( Issue.DEFINITION, modelObject, "channel" );
+                DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, "channel" );
                 issue.setDescription( "The channel is missing." );
                 issue.setRemediation( "Provide a channel." );
                 issues.add( issue );

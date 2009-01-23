@@ -63,7 +63,7 @@ public class OrganizationPage extends WebPage {
     private Organization findOrganization( PageParameters parameters ) throws NotFoundException {
         Organization organization = null;
         if ( parameters.containsKey( ID_PARM ) ) {
-            Dao dao = Project.getProject().getDao();
+            Dao dao = Project.dao();
             organization = dao.findOrganization( parameters.getLong( ID_PARM ) );
         }
         return organization;

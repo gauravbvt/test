@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 
@@ -38,11 +38,11 @@ public class OrphanedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    protected List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Part part = (Part) modelObject;
         if ( !part.requirements().hasNext() && !part.outcomes().hasNext() ) {
-            Issue issue = new Issue( Issue.STRUCTURAL, part );
+            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
             issue.setDescription( "Does not produce or need information." );
             issue.setRemediation( "Add sent or received information." );
             issues.add( issue );

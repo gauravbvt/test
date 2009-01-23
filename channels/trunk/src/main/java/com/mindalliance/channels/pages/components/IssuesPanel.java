@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.Item;
@@ -10,9 +11,10 @@ import org.apache.wicket.model.Model;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.commons.collections.Transformer;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.Issue;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 
 import java.util.Iterator;
 
@@ -36,6 +38,14 @@ public class IssuesPanel<T extends ModelObject> extends Panel {
     }
 
     private void init() {
+        Link newIssueLink = new Link("new-issue") {
+            public void onClick() {
+                UserIssue userIssue = new UserIssue( modelObject );
+                userIssue.setReportedBy( Project.getUserName() );
+                Project.dao().addUserIssue(userIssue);
+            }
+        };
+        add( newIssueLink );
         final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );     // NON-NLS
         issuesList.add( new RefreshingView<Issue>( "issue" ) {                        // NON-NLS
 
@@ -43,13 +53,12 @@ public class IssuesPanel<T extends ModelObject> extends Panel {
             @Override
             protected Iterator<IModel<Issue>> getItemModels() {
                 final Project project = (Project) getApplication();
-                final ScenarioAnalyst analyst = project.getScenarioAnalyst();
+                final Analyst analyst = project.getAnalyst();
                 return new TransformIterator(
                         analyst.findIssues( modelObject, false ),
                         new Transformer() {
                             public Object transform( Object o ) {
                                 return new Model<Issue>( (Issue) o );
-
                             }
                         } );
             }
@@ -57,12 +66,12 @@ public class IssuesPanel<T extends ModelObject> extends Panel {
             @Override
             protected void populateItem( Item<Issue> item ) {
                 final Issue issue = item.getModelObject();
-                item.add( new Label( "message", issue.getDescription() ) );           // NON-NLS
-                item.add( new Label( "suggest", issue.getRemediation() ) );           // NON-NLS
+                item.add( new Label( "description", issue.getDescription() ) );           // NON-NLS
+                item.add( new Label( "remediation", issue.getRemediation() ) );           // NON-NLS
             }
         } );
 
-        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         setVisible( analyst.hasIssues( modelObject, false ) );
         add( issuesList );
     }

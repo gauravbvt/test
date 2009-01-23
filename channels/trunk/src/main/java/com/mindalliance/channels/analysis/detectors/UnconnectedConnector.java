@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Connector;
@@ -44,8 +44,8 @@ public class UnconnectedConnector extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    protected List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Scenario scenario = (Scenario) modelObject;
         Iterator<Connector> unconnectedConnectors = new FilterIterator( scenario.nodes(),
                 new Predicate() {
@@ -56,7 +56,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         while ( unconnectedConnectors.hasNext() ) {
             Connector connector = unconnectedConnectors.next();
             String flowName = connector.getInnerFlow().getName();
-            Issue issue = new Issue( Issue.STRUCTURAL, scenario );
+            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, scenario );
             issue.setDescription( "Connection point -"
                     + flowName 
                     + "- is never used." );

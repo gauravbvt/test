@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -45,9 +45,9 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
         add( channel );
 
         // Add style mods from scenario analyst.
-        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         final String issue = analyst.getIssuesSummary(
-                flow, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
+                flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !issue.isEmpty() ) {
             label.add(
                 new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS

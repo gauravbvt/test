@@ -63,7 +63,7 @@ public class ActorPage extends WebPage {
     private Actor findActor( PageParameters parameters ) throws NotFoundException {
         Actor actor = null;
         if ( parameters.containsKey( ID_PARM ) ) {
-            Dao dao = Project.getProject().getDao();
+            Dao dao = Project.dao();
             actor = dao.findActor( parameters.getLong( ID_PARM ) );
         }
         return actor;

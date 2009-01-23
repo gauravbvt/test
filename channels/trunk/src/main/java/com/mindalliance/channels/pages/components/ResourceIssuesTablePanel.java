@@ -8,7 +8,7 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import com.mindalliance.channels.util.SortableBeanProvider;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -41,11 +41,11 @@ public class ResourceIssuesTablePanel extends AbstractTablePanel {
                 new Model<String>("Type"), "type", "type"));
         columns.add( makeColumn("Remediation", "remediation", "remediation", EMPTY));
         // provider and table
-        List<Issue> issues = Project.getProject().getScenarioAnalyst().findAllIssuesFor( resourceSpec );
-        add( new AjaxFallbackDefaultDataTable<Issue>(
+        List<DetectedIssue> issues = Project.analyst().findAllIssuesFor( resourceSpec );
+        add( new AjaxFallbackDefaultDataTable<DetectedIssue>(
                 "issues",
                 columns,
-                new SortableBeanProvider<Issue>( issues, "about.name" ),
+                new SortableBeanProvider<DetectedIssue>( issues, "about.name" ),
                 getPageSize() ) );
 
     }

@@ -81,7 +81,7 @@ public class ResourceSpecConverter implements Converter {
             reader.moveUp();
         }
         if ( !resourceSpec.isEmpty() ) {
-            Project.getProject().getDao().addResourceSpec( resourceSpec );
+            Project.dao().addResourceSpec( resourceSpec );
         }
         return resourceSpec;
     }

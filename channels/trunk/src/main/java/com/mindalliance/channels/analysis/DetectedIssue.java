@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Issue;
 
 /**
  * A problem uncovered about a model object.
@@ -10,7 +11,7 @@ import com.mindalliance.channels.ModelObject;
  * Date: Nov 26, 2008
  * Time: 9:30:12 AM
  */
-public class Issue extends AnalysisObject {
+public class DetectedIssue extends AnalysisObject implements Issue {
     /**
      * Type of issue having to do with the definition of a model object
      */
@@ -43,7 +44,7 @@ public class Issue extends AnalysisObject {
      * @param type  -- the type of issue
      * @param about -- the ModelObject the issue is about
      */
-    public Issue( String type, ModelObject about ) {
+    public DetectedIssue( String type, ModelObject about ) {
         super( about );
         this.type = type;
     }
@@ -55,7 +56,7 @@ public class Issue extends AnalysisObject {
      * @param about    -- the ModelObject the issue is about
      * @param property -- the problematic property
      */
-    public Issue( String type, ModelObject about, String property ) {
+    public DetectedIssue( String type, ModelObject about, String property ) {
         super( about, property );
         this.type = type;
     }
@@ -97,6 +98,13 @@ public class Issue extends AnalysisObject {
 
     public String getRemediation() {
         return remediation;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getReportedBy() {
+        return "Channels";
     }
 
     public void setRemediation( String remediation ) {

@@ -5,8 +5,8 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.Issue;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -359,31 +359,31 @@ public final class ScenarioPage extends WebPage {
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
             final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );     // NON-NLS
-            issuesList.add( new RefreshingView<Issue>( "issue" ) {                        // NON-NLS
+            issuesList.add( new RefreshingView<DetectedIssue>( "issue" ) {                        // NON-NLS
                 @SuppressWarnings( { "unchecked" } )
                 @Override
-                protected Iterator<IModel<Issue>> getItemModels() {
+                protected Iterator<IModel<DetectedIssue>> getItemModels() {
                     final Project project = (Project) getApplication();
-                    final ScenarioAnalyst analyst = project.getScenarioAnalyst();
+                    final Analyst analyst = project.getAnalyst();
                     return new TransformIterator(
                             analyst.findIssues( node, false ),
                             new Transformer() {
                                 public Object transform( Object o ) {
-                                    return new Model<Issue>( (Issue) o );
+                                    return new Model<DetectedIssue>( (DetectedIssue) o );
 
                                 }
                             } );
                 }
 
                 @Override
-                protected void populateItem( Item<Issue> item ) {
-                    final Issue issue = item.getModelObject();
+                protected void populateItem( Item<DetectedIssue> item ) {
+                    final DetectedIssue issue = item.getModelObject();
                     item.add( new Label( "message", issue.getDescription() ) );           // NON-NLS
                     item.add( new Label( "suggest", issue.getRemediation() ) );           // NON-NLS
                 }
             } );
 
-            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
             issuesList.setVisible( analyst.hasIssues( node, false ) );
             add( issuesList );
 
@@ -413,7 +413,7 @@ public final class ScenarioPage extends WebPage {
                 protected void onRender( MarkupStream markupStream ) {
                     super.onRender( markupStream );
                     try {
-                        final ScenarioAnalyst analyst = getProject().getScenarioAnalyst();
+                        final Analyst analyst = getProject().getAnalyst();
                         final FlowDiagram diagram = getProject().getFlowDiagram();
                         getResponse().write( diagram.getImageMap( scenario, analyst ) );
                     } catch ( DiagramException e ) {
@@ -481,9 +481,9 @@ public final class ScenarioPage extends WebPage {
                     new PropertyModel<String>( scenario, NAME_PROPERTY ) );
 
             // Add style mods from scenario analyst.
-            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
             final String issue = analyst.getIssuesSummary(
-                    scenario, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC );
+                    scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
             if ( !issue.isEmpty() ) {
                 header.add( new AttributeModifier(
                         "class", true, new Model<String>( "error" ) ) );                  // NON-NLS

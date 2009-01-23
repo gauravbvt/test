@@ -6,7 +6,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -80,11 +80,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     /**
      * Scenario analyst in context
      */
-    private ScenarioAnalyst analyst;
+    private Analyst analyst;
 
     public ScenarioMetaProvider( Scenario scenario, String outputFormat, String urlFormat,
                                  String scenarioUrlFormat, String imageDirectory,
-                                 ScenarioAnalyst analyst ) {
+                                 Analyst analyst ) {
         this.scenario = scenario;
         this.outputFormat = outputFormat;
         this.urlFormat = urlFormat;
@@ -248,10 +248,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             }
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
-            if ( analyst.hasIssues( vertex, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( analyst.hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( vertex,
-                        ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
+                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
             }
             return list;
         }
@@ -277,11 +277,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             if ( edge.isAll() ) {
                 list.add( new DOTAttribute( "headlabel", "(all)" ) );
             }
-            if ( analyst.hasIssues( edge, ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( analyst.hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( edge,
-                        ScenarioAnalyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
+                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
             }
             return list;
         }

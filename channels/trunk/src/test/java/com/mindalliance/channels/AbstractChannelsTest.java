@@ -6,7 +6,7 @@ import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DefaultGraphBuilder;
 import com.mindalliance.channels.graph.GraphvizRenderer;
 import com.mindalliance.channels.graph.DefaultFlowDiagram;
-import com.mindalliance.channels.analysis.DefaultScenarioAnalyst;
+import com.mindalliance.channels.analysis.DefaultAnalyst;
 import com.mindalliance.channels.analysis.IssueDetector;
 import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource;
@@ -14,7 +14,6 @@ import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
 import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
 import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
-import com.mindalliance.channels.analysis.detectors.SinglePointOfFailure;
 import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
@@ -63,7 +62,7 @@ public class AbstractChannelsTest extends TestCase {
         project.setFlowDiagram( flowDiagram );
         // Set scenario analyst
         // Initialize analyst
-        DefaultScenarioAnalyst analyst = new DefaultScenarioAnalyst();
+        DefaultAnalyst analyst = new DefaultAnalyst();
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
         detectors.add( new FlowWithoutChannel() );
         detectors.add( new PartWithoutTask() );
@@ -76,7 +75,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new NoRedundancy() );
         detectors.add( new PotentialDeadlock() );
         analyst.setIssueDetectors( detectors );
-        project.setScenarioAnalyst( analyst );
+        project.setAnalyst( analyst );
         tester = new WicketTester( project );
     }
 

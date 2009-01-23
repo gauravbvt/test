@@ -81,7 +81,7 @@ public class ProfilePage extends WebPage {
 
     private ResourceSpec makeResource( PageParameters params ) throws NotFoundException {
         ResourceSpec resourceSpec;
-        Dao dao = Project.getProject().getDao();
+        Dao dao = Project.dao();
         if ( params.containsKey( SCENARIO_PARM ) && params.containsKey( PART_PARM ) ) {
             Scenario scenario = dao.findScenario( params.getLong( SCENARIO_PARM ) );
             Node node = scenario.getNode( params.getLong( PART_PARM ) );

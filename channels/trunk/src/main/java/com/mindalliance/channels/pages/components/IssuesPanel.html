@@ -8,9 +8,12 @@
 <body>
 <wicket:panel>
     <div class="issues" wicket:id="issues">
+        <ul class="menu">
+            <li><a wicket:id="new-issue" href="#">New</a></li>
+        </ul>
         <ol>
-            <li wicket:id="issue"><span wicket:id="message" class="issue">Issue.</span><br/>
-                <span wicket:id="suggest" class="suggest">Suggestion.</span></li>
+            <li wicket:id="issue"><span wicket:id="description" class="issue">Issue.</span><br/>
+                <span wicket:id="remediation" class="suggest">Suggestion.</span></li>
         </ol>
     </div>
 </wicket:panel>

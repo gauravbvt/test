@@ -268,4 +268,24 @@ public interface Dao extends Serializable {
      * @return a boolean
      */
     boolean isPermanent( ResourceSpec resourceSpec );
+
+    /**
+     * Find all issues about a model object
+     * @param modelObject the model object
+     * @param includingPropertySpecific a boolean
+     * @return list of issues
+     */
+    List<Issue> findAllIssues( ModelObject modelObject, boolean includingPropertySpecific );
+
+    /**
+     * Add a user issue
+     * @param userIssue a user issue
+     */
+    void addUserIssue( UserIssue userIssue );
+
+    /**
+     * Remove a user issue
+     * @param userIssue a user issue
+     */
+    void removeUserIssue( UserIssue userIssue );
 }

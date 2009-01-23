@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
@@ -45,8 +45,8 @@ public class NoRedundancy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    protected List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         final Part part = (Part) modelObject;
         // Find all critical sourced requirements of a part
         Iterator<Flow> criticalRequirements = new FilterIterator( part.requirements(),
@@ -79,7 +79,7 @@ public class NoRedundancy extends AbstractIssueDetector {
                         }
                     } );
             if ( !alternates.hasNext() ) {
-                Issue issue = new Issue( Issue.STRUCTURAL, part );
+                DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
                 issue.setDescription( "Has a only one source of critical information -"
                         + name + "-" );
                 issue.setRemediation( "Add alternate source." );

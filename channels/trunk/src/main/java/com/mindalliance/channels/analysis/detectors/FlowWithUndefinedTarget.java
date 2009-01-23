@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
@@ -26,12 +26,12 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Flow flow = (Flow) modelObject;
         Node target = flow.getTarget();
         if ( target.isPart() && ( (Part) target ).isUndefined() ) {
-            Issue issue = new Issue( Issue.DEFINITION, modelObject, "target" );
+            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, "target" );
             issue.setDescription( "The target is not defined." );
             issue.setRemediation( "Name the actor, role or organization of the target." );
             issues.add( issue );

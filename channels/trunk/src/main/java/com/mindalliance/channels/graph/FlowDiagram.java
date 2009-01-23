@@ -2,7 +2,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 
 import java.io.OutputStream;
 
@@ -42,7 +42,7 @@ public interface FlowDiagram {
      */
     void getPNG( Scenario scenario,
                  Node selectedNode,
-                 ScenarioAnalyst analyst,
+                 Analyst analyst,
                  OutputStream png ) throws DiagramException;
 
     /**
@@ -57,7 +57,7 @@ public interface FlowDiagram {
      */
     void getSVG( Scenario scenario,
                  Node selectedNode,
-                 ScenarioAnalyst analyst,
+                 Analyst analyst,
                  OutputStream svg ) throws DiagramException;
 
     /**
@@ -69,6 +69,6 @@ public interface FlowDiagram {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    String getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException;
+    String getImageMap( Scenario scenario, Analyst analyst ) throws DiagramException;
 
 }

@@ -298,7 +298,7 @@ public class FlowConverter implements Converter {
             assert reader.getNodeName().equals( "connected-to" );
             String scenarioName = reader.getAttribute( "scenario" );
             try {
-                Scenario externalScenario = Project.getProject().getDao().
+                Scenario externalScenario = Project.dao().
                         findScenario( scenarioName );
                 String roleName = null;
                 String organizationName = null;
@@ -364,7 +364,7 @@ public class FlowConverter implements Converter {
                                                     final boolean isSource ) {
         List<Connector> connectors = new ArrayList<Connector>();
         try {
-            Scenario scenario = Project.getProject().getDao().findScenario( scenarioName );
+            Scenario scenario = Project.dao().findScenario( scenarioName );
             Iterator<Connector> iterator =
                     (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
                         public boolean evaluate( Object obj ) {

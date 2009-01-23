@@ -7,7 +7,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Entity;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProfileLink;
 import org.apache.wicket.AttributeModifier;
@@ -119,7 +119,7 @@ public class PartPanel extends Panel {
         final TextField<String> field = new TextField<String>( property );
 
         // Add style mods from scenario analyst.
-        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         final String issue = analyst.getIssuesSummary( getPart(), property );
         if ( !issue.isEmpty() ) {
             field.add(

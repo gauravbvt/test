@@ -75,7 +75,7 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
             }
         } );
         // table and providers of resources specified resources need to kwno how to contact
-        List<ResourceSpec> resourceSpecs = Project.getProject().getDao().findAllContacts( resourceSpec, false );
+        List<ResourceSpec> resourceSpecs = Project.dao().findAllContacts( resourceSpec, false );
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
                 "directory",
                 columns,

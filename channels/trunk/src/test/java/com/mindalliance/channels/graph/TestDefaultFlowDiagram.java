@@ -34,7 +34,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
             Node selectedNode = findSelected( scenario );
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                project.getFlowDiagram().getSVG( scenario, selectedNode, project.getScenarioAnalyst(), new BufferedOutputStream( baos ) );
+                project.getFlowDiagram().getSVG( scenario, selectedNode, project.getAnalyst(), new BufferedOutputStream( baos ) );
                 String svg = baos.toString();
                 assertFalse( svg.isEmpty() );
                 assertTrue( svg.startsWith( "<?xml" ) );
@@ -51,7 +51,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
             Node selectedNode = findSelected( scenario );
             try {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
-                project.getFlowDiagram().getPNG( scenario, selectedNode, project.getScenarioAnalyst(), fileOut );
+                project.getFlowDiagram().getPNG( scenario, selectedNode, project.getAnalyst(), fileOut );
                 fileOut.flush();
                 fileOut.close();
                 assertTrue( new File( "target/" + scenario.getName() + ".png" ).length() > 0 );
@@ -68,7 +68,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
         while ( scenarios.hasNext() ) {
             Scenario scenario = scenarios.next();
             try {
-                String map = project.getFlowDiagram().getImageMap( scenario, project.getScenarioAnalyst() );
+                String map = project.getFlowDiagram().getImageMap( scenario, project.getAnalyst() );
                 System.out.print(map);
                 assertFalse( map.isEmpty() );
                 assertTrue( map.startsWith( "<map" ) );

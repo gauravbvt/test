@@ -1,10 +1,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.FlowDiagram;
 import org.apache.wicket.PageParameters;
@@ -65,7 +64,7 @@ public class FlowPage extends WebPage {
                 setHeaders( (WebResponse) resp );
 
             getFlowDiagram().getPNG(
-                    scenario, node, getScenarioAnalyst(), getResponse().getOutputStream() );
+                    scenario, node, getAnalyst(), getResponse().getOutputStream() );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anuything else --> empty png
@@ -76,8 +75,8 @@ public class FlowPage extends WebPage {
         return ( (Project) getApplication() ).getFlowDiagram();
     }
 
-    private ScenarioAnalyst getScenarioAnalyst() {
-        return ( (Project) getApplication() ).getScenarioAnalyst();
+    private Analyst getAnalyst() {
+        return ( (Project) getApplication() ).getAnalyst();
     }
 
     private Dao getScenarioDao() {

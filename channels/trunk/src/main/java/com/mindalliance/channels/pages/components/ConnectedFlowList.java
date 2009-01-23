@@ -4,7 +4,7 @@ import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
@@ -93,7 +93,7 @@ public class ConnectedFlowList extends Panel {
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
 
-            final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
             final String issue = property == null ? analyst.getIssuesSummary( object, false )
                                                   : analyst.getIssuesSummary( object, property );
             if ( !issue.isEmpty() ) {

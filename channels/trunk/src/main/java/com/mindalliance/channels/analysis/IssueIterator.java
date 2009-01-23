@@ -13,7 +13,7 @@ import java.util.List;
  * Date: Nov 26, 2008
  * Time: 4:06:56 PM
  */
-public class IssueIterator implements Iterator<Issue> {
+public class IssueIterator implements Iterator<DetectedIssue> {
 
     /**
      * The model object with potential issues
@@ -34,7 +34,7 @@ public class IssueIterator implements Iterator<Issue> {
     /**
      * The next issue
      */
-    private Iterator<Issue> currentIssues;
+    private Iterator<DetectedIssue> currentIssues;
 
     public IssueIterator( List<IssueDetector> detectors, ModelObject modelObject, String property ) {
         this.detectors = detectors.iterator();
@@ -67,7 +67,7 @@ public class IssueIterator implements Iterator<Issue> {
      * @throws java.util.NoSuchElementException
      *          iteration has no more elements.
      */
-    public Issue next() {
+    public DetectedIssue next() {
         findCurrentIssue();
         return currentIssues.next();
     }
@@ -97,7 +97,7 @@ public class IssueIterator implements Iterator<Issue> {
         while ( !hasMoreIssues() && detectors.hasNext() ) {
             IssueDetector detector = detectors.next();
             if ( detectorApplies( detector ) ) {
-                List<Issue> detectedIssues = detector.detectIssues( modelObject );
+                List<DetectedIssue> detectedIssues = detector.detectIssues( modelObject );
                 if ( detectedIssues != null ) currentIssues = detectedIssues.iterator();
             }
         }

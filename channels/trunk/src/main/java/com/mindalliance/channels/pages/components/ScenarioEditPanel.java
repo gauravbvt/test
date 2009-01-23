@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.Issue;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
@@ -37,30 +37,30 @@ public class ScenarioEditPanel extends Panel {
         add( desc );
 
         final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );         // NON-NLS
-        issuesList.add( new RefreshingView<Issue>( "issue" ) {                            // NON-NLS
+        issuesList.add( new RefreshingView<DetectedIssue>( "issue" ) {                            // NON-NLS
             @SuppressWarnings( { "unchecked" } )
             @Override
-            protected Iterator<IModel<Issue>> getItemModels() {
-                final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+            protected Iterator<IModel<DetectedIssue>> getItemModels() {
+                final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
                 return new TransformIterator(
                         analyst.findIssues( scenario, true ),
                         new Transformer() {
                             public Object transform( Object o ) {
-                                return new Model<Issue>( (Issue) o );
+                                return new Model<DetectedIssue>( (DetectedIssue) o );
 
                             }
                         } );
             }
 
             @Override
-            protected void populateItem( Item<Issue> item ) {
-                final Issue issue = item.getModelObject();
+            protected void populateItem( Item<DetectedIssue> item ) {
+                final DetectedIssue issue = item.getModelObject();
                 item.add( new Label( "message", issue.getDescription() ) );               // NON-NLS
                 item.add( new Label( "suggest", issue.getRemediation() ) );               // NON-NLS
             }
         } );
 
-        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         issuesList.setVisible( analyst.hasIssues( scenario, true ) );
         add( issuesList );
     }

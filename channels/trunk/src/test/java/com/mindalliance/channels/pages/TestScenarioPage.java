@@ -1,11 +1,10 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -46,18 +45,18 @@ public class TestScenarioPage extends TestCase {
         project = new Project();
         project.setDao( dao );
         final FlowDiagram fd = createMock( FlowDiagram.class );
-        expect( fd.getImageMap( (Scenario) anyObject(), (ScenarioAnalyst) anyObject() ) )
+        expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( fd );
         project.setFlowDiagram( fd );
 
-        final ScenarioAnalyst sa = createNiceMock( ScenarioAnalyst.class );
+        final Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )
                 .andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
         replay( sa );
-        project.setScenarioAnalyst( sa );
+        project.setAnalyst( sa );
 
         scenario = project.getDao().getDefaultScenario();
         tester = new WicketTester( project );

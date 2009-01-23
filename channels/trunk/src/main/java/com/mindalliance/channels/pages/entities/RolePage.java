@@ -64,7 +64,7 @@ public class RolePage extends WebPage {
     private Role findRole( PageParameters parameters ) throws NotFoundException {
         Role role = null;
         if ( parameters.containsKey( ID_PARM ) ) {
-            Dao dao = Project.getProject().getDao();
+            Dao dao = Project.dao();
             role = dao.findRole( parameters.getLong( ID_PARM ) );
         }
         return role;

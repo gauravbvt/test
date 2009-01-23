@@ -31,7 +31,7 @@ public class IndexPage extends WebPage {
 
     public IndexPage( PageParameters parameters ) {
         super( parameters );
-        dao = Project.getProject().getDao();
+        dao = Project.dao();
         Iterator<ResourceSpec> allResourceSpecs = dao.resourceSpecs();
         // Take a local copy of all known resource specs
         while ( allResourceSpecs.hasNext() ) resourceSpecs.add( new ResourceSpec( allResourceSpecs.next() ) );

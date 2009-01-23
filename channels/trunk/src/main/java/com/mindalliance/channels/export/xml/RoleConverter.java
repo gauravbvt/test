@@ -28,6 +28,6 @@ public class RoleConverter extends EntityConverter {
      * {@inheritDoc}
      */
     Entity findOrMakeEntity( String name ) {
-        return Project.getProject().getDao().findOrMakeRole( name );
+        return Project.dao().findOrMakeRole( name );
     }
 }

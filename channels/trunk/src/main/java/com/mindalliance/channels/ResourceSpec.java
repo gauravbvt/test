@@ -368,7 +368,7 @@ public class ResourceSpec implements Serializable, Deletable {
             return true;
         } else {
             // Try expensive test
-            Dao dao = Project.getProject().getDao();
+            Dao dao = Project.dao();
             List<ResourceSpec> resources = dao.findAllResourcesNarrowingOrEqualTo( this );
             List<ResourceSpec> others = dao.findAllResourcesNarrowingOrEqualTo( other );
             return !Collections.disjoint( resources, others );
@@ -424,7 +424,7 @@ public class ResourceSpec implements Serializable, Deletable {
      * @return a boolean
      */
     public boolean isPermanent() {
-        return Project.getProject().getDao().isPermanent( this );
+        return Project.dao().isPermanent( this );
     }
 
     /**

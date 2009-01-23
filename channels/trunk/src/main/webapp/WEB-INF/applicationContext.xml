@@ -25,7 +25,7 @@
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
-        <property name="scenarioAnalyst" ref="scenarioAnalyst"/>
+        <property name="analyst" ref="analyst"/>
     </bean>
 
     <!-- Flow diagram -->
@@ -43,7 +43,7 @@
     </bean>
 
     <!-- Scenario analyst -->
-    <bean id="scenarioAnalyst" class="com.mindalliance.channels.analysis.DefaultScenarioAnalyst">
+    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutTask"/>

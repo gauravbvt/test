@@ -7,7 +7,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.AttributeModifier;
@@ -153,7 +153,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @param property the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
-        final ScenarioAnalyst analyst = ( (Project) getApplication() ).getScenarioAnalyst();
+        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         final String issue = property == null ?
                              analyst.getIssuesSummary( object, false ) :
                              analyst.getIssuesSummary( object, property );

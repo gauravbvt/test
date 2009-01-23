@@ -89,7 +89,7 @@ public class ScenarioConverter implements Converter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = new HashMap<String, Long>();
         context.put( "idMap", idMap );
-        Dao dao = Project.getProject().getDao();
+        Dao dao = Project.dao();
         Scenario scenario = dao.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );

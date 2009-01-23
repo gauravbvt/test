@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
@@ -62,9 +62,9 @@ public final class Project extends WebApplication {
     private Exporter exporter;
 
     /**
-     * Scenario analyst
+     * Analyst
      */
-    private ScenarioAnalyst scenarioAnalyst;
+    private Analyst analyst;
 
     /**
      * Default Constructor.
@@ -167,12 +167,12 @@ public final class Project extends WebApplication {
         this.importer = importer;
     }
 
-    public ScenarioAnalyst getScenarioAnalyst() {
-        return scenarioAnalyst;
+    public Analyst getAnalyst() {
+        return analyst;
     }
 
-    public void setScenarioAnalyst( ScenarioAnalyst scenarioAnalyst ) {
-        this.scenarioAnalyst = scenarioAnalyst;
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
     }
 
     /**
@@ -186,6 +186,22 @@ public final class Project extends WebApplication {
 
     public static Project getProject() {
         return (Project) get();
+    }
+
+    /**
+     * Get current project's dao
+     * @return a Dao
+     */
+    public static Dao dao() {
+        return getProject().getDao();
+    }
+
+    /**
+     * Get projects' current analyst
+     * @return an analyst
+     */
+    public static Analyst analyst() {
+        return getProject().getAnalyst();
     }
 
     //=========================================================================

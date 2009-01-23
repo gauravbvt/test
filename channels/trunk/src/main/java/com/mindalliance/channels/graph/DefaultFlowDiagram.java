@@ -4,7 +4,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.ScenarioAnalyst;
+import com.mindalliance.channels.analysis.Analyst;
 import org.jgrapht.Graph;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -80,7 +80,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public void getPNG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream pngOut ) throws DiagramException {
+    public void getPNG( Scenario scenario, Node selectedNode, Analyst analyst, OutputStream pngOut ) throws DiagramException {
         Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
@@ -97,7 +97,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public void getSVG( Scenario scenario, Node selectedNode, ScenarioAnalyst analyst, OutputStream svgOut ) throws DiagramException {
+    public void getSVG( Scenario scenario, Node selectedNode, Analyst analyst, OutputStream svgOut ) throws DiagramException {
         Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
@@ -114,7 +114,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
      * @throws com.mindalliance.channels.graph.DiagramException
      *          when diagram generation fails
      */
-    public String getImageMap( Scenario scenario, ScenarioAnalyst analyst ) throws DiagramException {
+    public String getImageMap( Scenario scenario, Analyst analyst ) throws DiagramException {
         Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         render( graph, IMAGE_MAP, scenario, analyst, new BufferedOutputStream( baos ) );
@@ -122,7 +122,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
     }
 
     private void render( Graph<Node, Flow> graph, String outputFormat,
-                         Scenario scenario, ScenarioAnalyst analyst, OutputStream output ) throws DiagramException {
+                         Scenario scenario, Analyst analyst, OutputStream output ) throws DiagramException {
         ScenarioMetaProvider metaProvider = new ScenarioMetaProvider( scenario, outputFormat, urlFormat, scenarioUrlFormat, imageDirectory, analyst );
         ScenarioDOTExporter dotExporter = new ScenarioDOTExporter(metaProvider);       
         graphRenderer.render( graph,

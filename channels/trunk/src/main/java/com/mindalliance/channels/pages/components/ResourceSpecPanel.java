@@ -64,7 +64,7 @@ public class ResourceSpecPanel extends Panel {
                 newResourceSpec.setJurisdiction( Place.named(
                         jurNameField.getDefaultModelObjectAsString().trim() ) );
                 if ( !newResourceSpec.isEmpty() ) {
-                    Project.getProject().getDao().addResourceSpec( newResourceSpec );
+                    Project.dao().addResourceSpec( newResourceSpec );
                     setResponsePage(
                             new RedirectPage( ProfileLink.linkFor( newResourceSpec ) ) );
                 } else {

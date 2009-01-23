@@ -6,7 +6,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.Issue;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.Project;
 import org.apache.commons.collections.Predicate;
@@ -41,8 +41,8 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>();
+    public List<DetectedIssue> doDetectIssues( ModelObject modelObject ) {
+        List<DetectedIssue> issues = new ArrayList<DetectedIssue>();
         Scenario scenario = (Scenario) modelObject;
         GraphBuilder graphBuilder = Project.graphBuilder();
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
@@ -75,7 +75,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = new Issue( Issue.STRUCTURAL, scenario );
+                        DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, scenario );
                         issue.setDescription( "Potential deadlock if any of "
                                 + getRequirementDescriptions( criticalRequirementsInCycle )
                                 + " fails." );
