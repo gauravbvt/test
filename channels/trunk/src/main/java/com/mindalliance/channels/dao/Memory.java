@@ -339,7 +339,13 @@ public final class Memory implements Dao {
         idIndex.remove( place.getId() );
     }
 
-    private ModelObject find( long id ) throws NotFoundException {
+    /**
+     * Find a model object given its id.
+     * @param id the id
+     * @return  the object
+     * @throws NotFoundException when not found
+     */
+    public ModelObject find( long id ) throws NotFoundException {
         final ModelObject result = idIndex.get( id );
         if ( result == null )
             throw new NotFoundException();

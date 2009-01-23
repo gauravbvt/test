@@ -38,18 +38,12 @@ body.profile {
     padding-bottom: 5px;
 }
 
-#part-header {
-}
-
-#part-header, #controls {
-}
-
-#part-content {
+div.section-content {
     position: absolute;
-    top: 2.5em;
+    top: 3em;
     bottom: 5px;
     left: 5px;
-    width: 32.3%;
+    right: 5px;
     overflow: auto;
 }
 
@@ -72,26 +66,36 @@ body.profile {
     overflow: auto;
 }
 
-#part-title {
+div.section-title {
     position: relative;
 }
 
-#reqs, #outcomes {
+#reqs, #outcomes, #part-header {
     position: absolute;
-    top: 5px;
-    bottom: 5px;
+    top: 0;
+    bottom: 0;
+}
+
+#part-header {
+    left: 0;
+    right: 66.66%;
+    margin-right: 4px;
 }
 
 #reqs {
     left: 33.33%;
+    right: 33.33%;
+    margin-right: 2px;
 }
 
 #outcomes {
     left: 66.66%;
+    right: 0;
+    margin-left: 2px;
 }
 
-#reqs, #outcomes, #part-header, #sc-details {
-    width: 32.5%;
+#sc-details {
+    width: 32%;
 }
 
 #header {
@@ -103,17 +107,12 @@ body.profile {
 div.section, div.form {
     margin: 5px auto;
     position: relative;
+    max-width: 80em;
 }
 div.section input[type='submit'] {
     position: absolute;
     bottom: 5px;
     right: 5px;
-}
-div.form {
-    max-width: 34em;
-}
-div.section {
-    max-width: 80em;
 }
 
 #footer {
@@ -132,8 +131,9 @@ div.section {
     font-size: 8pt;
 }
 
-input[type='text'], textarea, select, table.flow-details {
+input[type='text'], textarea, select, div.flow-details {
     padding-left: 0.3em;
+    margin: 0;
 }
 input[type='checkbox'], input[type='radio'] {
     padding: 0;
@@ -141,7 +141,7 @@ input[type='checkbox'], input[type='radio'] {
     vertical-align: middle;
 }
 input[type='text'], textarea {
-    width: 25em;
+    width: 99%;
 }
 
 .float {
@@ -174,7 +174,6 @@ span.error, li.error {
 }
 
 h1, h2, h3 {
-    font-family: Tahoma,Times New Roman,Times,serif;
     margin: 0 0 0.4em 0;
     padding-right: 4em;
 }
@@ -185,18 +184,42 @@ h1 {
     float: left;
 }
 h2, h3 {
-    padding-bottom: 1px;
     border-bottom: 1px solid #4d8222;
+    line-height: 20px;
+}
+h2 {
+    padding: 0 0 1px 0;
+    font-size: 1.4em;
+    white-space: nowrap;
+}
+h3 {
+    padding: 1px 0 0 0;
+    font-size: 1.1em;
 }
 
 body, ul.menu {
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.3em;
+    line-height: 1.5em;
 }
 
-table.flow-details {
-    padding: 0.3em;
-    margin: 0.4em 0;
+table {
+    border-collapse: collapse;
+}
+#part td {
+    width: 100%;
+    padding-right: 0;
+}
+#part table {
+    width: 98%;
+}
+
+tbody {
+}
+
+div.flow-details {
+    margin: 5px 0;
+    position: relative;
+    padding: 5px;
 }
 
 td, th, input, textarea, select {
@@ -205,6 +228,17 @@ td, th, input, textarea, select {
 
 th {
     white-space: nowrap;
+}
+td, th {
+    padding: 0 5px 2px 0;
+    vertical-align: baseline;
+}
+th.area {
+    vertical-align: top;
+    padding-top: 1px;
+}
+div.section td, div.section th {
+    padding-right: 2em;
 }
 
 ul.menu, div.caption {
@@ -218,40 +252,38 @@ ul.menu, div.caption {
 #controls {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 5em;
     padding: 5px;
 }
 
 #form-buttons {
     margin: 0;
-    text-align: left;
+    top: 5px;
+    right: 5px;
+    position: absolute;
 }
 
 ol {
-    margin: 0.8em 0;
-    padding: 0 0 0 2em;
+    margin: 0;
+    padding: 2px 0 0 1.5em;
 }
 
-#reqs div, #outcomes div {
-    position: absolute;
-    top: 2em;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
-}
 #reqs ol, #outcomes ol {
+    width: 95%;
 }
 #reqs ol > li, #outcomes ol > li {
     position: relative;
-    padding-right: 8em;
-    margin: 0;
+    margin: 0 0 0.6em 0;
+    line-height: 1.2em;
+}
+
+#reqs ol > li span, #outcomes ol > li span {
 }
 
 ul.menu {
     font-weight: normal;
     list-style: none;
-    margin: 0 0 1em 0;
+    margin: 0;
     padding: 0;
     display: inline;
     white-space: nowrap;
@@ -266,26 +298,43 @@ ul.menu li:before {
     content: " \2015  ";
   }
 
-#part-title ul.menu li:first-child:before,
-#reqs ul.menu li:first-child:before, #outcomes ul.menu li:first-child:before {
+#part ul.menu li:first-child:before {
     content: " ";
   }
+div.section-title ul.menu {
+    padding-left: 5px;
+    z-index: 1;
 
+    top: auto;
+    bottom: 2px;
+    margin: 0;
+}
+ul.attach ul.menu {
+    padding-top: 2px;
+}
 #header ul.menu {
     display: block;
     margin: 0;
-    padding-top: 1.5em;
+    padding-top: 1.7em;
     position: static;
 }
 
-h2 ul.menu, h3 ul.menu, li ul.menu {
+h2 ul.menu, h3 ul.menu {
     margin: 2px 5px 0 0;
+}
+ol > li > ul.menu {
+    margin: 1px 0 0 5px;
+    position: static;
+    float: right;
 }
 
 ul.attach, ul.call-list {
     margin: 0;
-    padding: 0 0 0 1em;
+    padding: 5px 0 0 1em;
     list-style: outside;
+    line-height: 1.5em;
+}
+ul.attach li {
     position: relative;
 }
 
@@ -324,7 +373,7 @@ h1 a, div.caption a {
 
 /** Backgrounds & borders */
 html, #sc-details {
-    background: #c3dede;
+    background: #C3D9FF;
 }
 
 #header {
@@ -342,37 +391,39 @@ html, #sc-details {
     border: 1px outset #6fafaf;
 }
 
-#part, div.section {
+#part-header, #reqs, #outcomes, div.section, div.section-title ul.menu {
     background: #f6f6f6;
+}
+#part-header, #reqs, #outcomes, div.section {
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part, #graph, div.section {
+#part-header, #reqs, #outcomes, #graph, div.section {
     border: 1px inset #c3dede;
 }
 #sc-details {
     border: 1px outset #c3dede;
 }
-input[type='text'], textarea, select, table.flow-details {
+input[type='text'], textarea, select, div.flow-details {
     border: 1px inset #a7c092;
 }
 
 td.link.notify, td.link.answer {
-    background: transparent url('images/arrow_right_blue.png') no-repeat;
+    background: transparent url('images/arrow_right_blue.png') no-repeat 0 50%;
     padding-left: 20px;
 }
 #reqs h3 span {
-    background: transparent url('images/arrow_left_blue.png') no-repeat 100% 0;
+    background: transparent url('images/arrow_left_blue.png') no-repeat 100% 50%;
     padding-right: 20px;
 }
 td.link.ask, td.link.receive {
-    background: transparent url('images/arrow_left_blue.png') no-repeat;
+    background: transparent url('images/arrow_left_blue.png') no-repeat 0 50%;
     padding-left: 20px;
 }
 #outcomes h3 span {
-    background: transparent url('images/arrow_right_blue.png') no-repeat 100% 0;
+    background: transparent url('images/arrow_right_blue.png') no-repeat 100% 50%;
     padding-right: 20px;
 }
 
@@ -391,14 +442,7 @@ div.section th {
     text-align: left;
     text-decoration: underline;
 }
-.profile th, .profile td {
-    padding-right: 2em;
-    vertical-align: top;
-}
 
-div.form th, div.form td {
-    padding: 0 5px 0 0;
-}
 div.form th {
     text-align: right;
 }
@@ -409,4 +453,64 @@ div.form th {
 
 .italic {
     font-style: italic;
+}
+
+li.doc_Document {
+    padding-left: 20px;
+    background: transparent url('images/document.png') no-repeat 0;
+}
+li.doc_MOU {
+    padding-left: 20px;
+    background: transparent url('images/handshake.png') no-repeat 0;
+}
+li.doc_PolicyMust {
+    padding-left: 20px;
+    background: transparent url('images/scroll_ok.png') no-repeat 0;
+}
+li.doc_PolicyCant {
+    padding-left: 20px;
+    background: transparent url('images/scroll_error.png') no-repeat 0;
+}
+li.doc_Issue {
+    padding-left: 20px;
+    background: transparent url('images/error.png') no-repeat 0;
+}
+
+.SI-FILES-STYLIZED label.attach-ctl, .SI-FILES-STYLIZED label.import-ctl {
+    overflow: hidden;
+    position: relative;
+    display: -moz-inline-box;
+    margin: 0;
+    padding: 0;
+}
+.SI-FILES-STYLIZED label.import-ctl input.file, .SI-FILES-STYLIZED label.attach-ctl input.file {
+    margin-left: -13em;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+}
+
+.SI-FILES-STYLIZED label span {
+    display: none;
+}
+.SI-FILES-STYLIZED label.attach-ctl {
+    width: 72px;
+    height: 16px;
+    background: transparent url('images/select.png') 0 0 no-repeat;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+.SI-FILES-STYLIZED label.import-ctl {
+    width: 53px;
+    height: 20px;
+    background: transparent url('images/import.png') no-repeat 0 100% ;
+}
+
+input[type='submit'] {
+    width: 53px;
+    height: 16px;
+    background: transparent url('images/submit.png') no-repeat 0 0;
+    border: none;
+    cursor: pointer;
+    text-indent: -1000px;
 }

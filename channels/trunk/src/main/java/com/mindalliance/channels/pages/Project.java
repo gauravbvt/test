@@ -97,7 +97,7 @@ public final class Project extends WebApplication {
     }
 
     /**
-     * @return the user name of the current user (or empty string for anonymous.
+     * @return the user name of the current user (or "Anonymous").
      */
     public static String getUserName() {
         String result = "Anonymous";

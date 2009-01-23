@@ -33,7 +33,7 @@
         </div>
         <div id="part">
             <div id="part-header">
-                <div id="part-title">
+                <div class="section-title">
                     <h2><span wicket:id="node-title">Node title</span></h2>
                     <ul class="menu">
                         <li><a wicket:id="profile" href="#">Profile</a></li>
@@ -41,11 +41,11 @@
                             Delete</label></li>
                     </ul>
                 </div>
-                <div id="part-content">
+                <div class="section-content">
                     <table summary="Node description">
                         <div wicket:id="specialty">(Specialty)</div>
                         <tr>
-                            <th align="right" valign="top"><label for="description">Description:</label>
+                            <th class="area" align="right" valign="top"><label for="description">Description:</label>
                             </th>
                             <td><textarea id="description" name="description" wicket:id="description"
                                           cols="40" rows="3">Description</textarea></td>
@@ -80,18 +80,30 @@
 
             <li><a wicket:id="sc-new" href="#">New scenario</a></li>
 
-            <li><label>Import scenario: <input type="file" wicket:id="sc-import" name="sc-import"
+            <li><label class="import-ctl"><span>Import: </span><input class="file" type="file" wicket:id="sc-import" name="sc-import"
                                                value="Upload"></label></li>
         </ul>
 
-        <p id="form-buttons"><input type="submit" value="submit"></p>
     </div>
+    <p id="form-buttons"><input type="submit" value="submit"></p>
 
     <div id="footer">
         <hr>
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br>
-            &copy; Copyright 2008 Mind-Alliance Inc. All Rights Reserved.</p>
+            &copy; Copyright 2009 Mind-Alliance Inc. All Rights Reserved.</p>
     </div>
 </form>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+
+SI.Files.htmlClass = 'SI-FILES-STYLIZED';
+SI.Files.fileClass = 'file';
+SI.Files.wrapClass = 'import-ctl';
+SI.Files.stylizeAll();
+
+SI.Files.wrapClass = 'attach-ctl';
+SI.Files.stylizeAll();
+// ]]>
+</script>
 </body>
 </html>

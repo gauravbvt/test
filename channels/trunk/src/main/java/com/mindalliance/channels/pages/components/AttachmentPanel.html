@@ -5,6 +5,13 @@
         xmlns:wicket="http://wicket.apache.org/"
         xml:lang="en"
         lang="en">
+
+<wicket:head>
+   <wicket:link>
+      <script src="si.files.js" type="text/javascript"></script>
+    </wicket:link>
+</wicket:head>
+
 <body>
 <table><tr>
 <wicket:panel>
@@ -20,7 +27,9 @@
                     </ul>
                 </li>
 
-                <li><label>Attach: <input type="file" wicket:id="upload" value="Upload"></label>
+                <li>Attach: <select wicket:id="type">
+                    <option>Document</option>
+                </select><label class="attach-ctl"><input class="file" type="file" wicket:id="upload" value="Upload"></label>
                 </li>
             </ul>
         </td>

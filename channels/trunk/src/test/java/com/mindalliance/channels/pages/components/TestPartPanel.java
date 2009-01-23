@@ -1,14 +1,15 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
@@ -43,6 +44,7 @@ public class TestPartPanel extends TestCase {
         super.setUp();
         project = new Project();
         project.setDao( new Memory() );
+        project.setAttachmentManager( new BitBucket() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
                 .andReturn( "" ).anyTimes();

@@ -1,7 +1,9 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.ModelObject;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 
+import java.net.URL;
 import java.util.Iterator;
 
 /**
@@ -17,18 +19,34 @@ public interface AttachmentManager {
     Iterator<Attachment> attachments( ModelObject object );
 
     /**
-     * Attach something to an object.
+     * Attach a file to an object.
      * @param object the object
-     * @param attachment the thing
+     * @param type the type of the attachment
+     * @param fileUpload the thing
      */
-    void attach( ModelObject object, Attachment attachment );
+    void attach( ModelObject object, Attachment.Type type, FileUpload fileUpload );
 
     /**
-     * Detach something from an object. Should ot complain if the attachment is not
+     * Attach an URL to an object.
+     * @param object the object
+     * @param type the type of the attachment
+     * @param url the URL
+     */
+    void attach( ModelObject object, Attachment.Type type, URL url );
+
+    /**
+     * Detach something from an object. Should not complain if the attachment is not
      * actually attached.
      * @param object the object
      * @param attachment the attachment
      */
     void detach( ModelObject object, Attachment attachment );
+
+
+    /**
+     * Detach all attachment from an object.
+     * @param object the object
+     */
+    void detachAll( ModelObject object );
 
 }

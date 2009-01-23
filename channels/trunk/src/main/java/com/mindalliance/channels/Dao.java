@@ -89,6 +89,14 @@ public interface Dao extends Serializable {
     Connector createConnector();
 
     /**
+     * Find a model object given its id.
+     * @param id the id
+     * @return  the object
+     * @throws NotFoundException when not found
+     */
+    ModelObject find( long id ) throws NotFoundException;
+
+    /**
      * Iterator on all roles
      *
      * @return a role iterator

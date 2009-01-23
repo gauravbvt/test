@@ -5,6 +5,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -44,6 +45,7 @@ public class TestScenarioPage extends TestCase {
         dao = new Memory();
         project = new Project();
         project.setDao( dao );
+        project.setAttachmentManager( new BitBucket() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
                 .andReturn( "" ).anyTimes();
