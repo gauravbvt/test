@@ -8,6 +8,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
@@ -23,6 +24,7 @@ import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Test behavoir of a part panel.
@@ -55,6 +57,8 @@ public class TestPartPanel extends TestCase {
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
+        expect( sa.findIssues( (ModelObject) anyObject(), anyBoolean() ))
+                .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
         replay( sa );
         project.setAnalyst( sa );
 

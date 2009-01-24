@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Date: Jan 23, 2009
  * Time: 11:48:27 AM
  */
-public interface Issue extends Serializable {
+public interface Issue extends Identifiable, Serializable {
     /**
      * The model object the issue is about
      * @return a ModelObject

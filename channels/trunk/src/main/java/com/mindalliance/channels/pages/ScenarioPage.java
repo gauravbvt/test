@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -54,7 +53,7 @@ import java.util.Set;
 /**
  * The scenario editor page.
  */
-public final class ScenarioPage extends WebPage {
+public final class ScenarioPage extends WebPage implements Submitter {
 
     /**
      * The 'scenario' parameter in the URL.
@@ -65,11 +64,6 @@ public final class ScenarioPage extends WebPage {
      * The 'part' parameter in the URL.
      */
     static final String NODE_PARM = "node";                                               // NON-NLS
-
-    /**
-     * The 'expand' parameter in the URL.
-     */
-    public static final String EXPAND_PARM = "expand";                                           // NON-NLS
 
     /**
      * Class logger.
@@ -106,6 +100,8 @@ public final class ScenarioPage extends WebPage {
      */
     private ScenarioForm form;
 
+    private Set<Submitable> submitables = new HashSet<Submitable>();
+
     /**
      * Used when page is called without parameters.
      * Redirect to default scenario, default node, all collapsed.
@@ -127,7 +123,7 @@ public final class ScenarioPage extends WebPage {
         else {
             final Node n = findNode( scenario, parameters );
             if ( n != null )
-                init( scenario, n, findExpansions( parameters ) );
+                init( scenario, n, Project.findExpansions( parameters ) );
             else
                 redirectTo( scenario );
         }
@@ -163,22 +159,6 @@ public final class ScenarioPage extends WebPage {
         final Set<Long> expanded = new HashSet<Long>();
         expanded.add( id );
         init( node.getScenario(), node, expanded );
-    }
-
-    private static Set<Long> findExpansions( PageParameters parameters ) {
-        final Set<Long> result = new HashSet<Long>( parameters.size() );
-        if ( parameters.containsKey( EXPAND_PARM ) ) {
-            final List<String> stringList =
-                    Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
-            for ( String id : stringList )
-                try {
-                    result.add( Long.valueOf( id ) );
-                } catch ( NumberFormatException ignored ) {
-                    LOG.warn( MessageFormat.format( "Invalid expansion parameter: {0}", id ) );
-                }
-        }
-
-        return result;
     }
 
     /**
@@ -255,7 +235,7 @@ public final class ScenarioPage extends WebPage {
         if ( node != null ) {
             result.put( NODE_PARM, Long.toString( node.getId() ) );
             for ( long id : expanded )
-                result.add( EXPAND_PARM, Long.toString( id ) );
+                result.add( Project.EXPAND_PARM, Long.toString( id ) );
         }
         return result;
     }
@@ -324,6 +304,13 @@ public final class ScenarioPage extends WebPage {
      */
     public MarkupContainer getGraph() {
         return form.getGraph();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void register( Submitable submitable ) {
+        submitables.add( submitable );
     }
 
     //==============================================================
@@ -397,7 +384,7 @@ public final class ScenarioPage extends WebPage {
 
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
-            add( new IssuesPanel( "issues", new Model<ModelObject>( node ), expansions ) );
+            add( new IssuesPanel( "issues", new Model<ModelObject>( node ), ScenarioPage.this.getPageParameters() ) );
             addScenarioFields( scenario );
             reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
             add( reqs );
@@ -466,7 +453,7 @@ public final class ScenarioPage extends WebPage {
                         "sc-edit", ScenarioPage.class,                                        // NON-NLS
                         getParameters( scenario, node ) ) );
 
-                add( new ScenarioEditPanel( "sc-editor", scenario ) );                    // NON-NLS
+                add( new ScenarioEditPanel( "sc-editor", scenario, ScenarioPage.this.getPageParameters() ) );                    // NON-NLS
 
             } else {
                 add( new BookmarkablePageLink<Scenario>( "sc-edit", ScenarioPage.class,   // NON-NLS
@@ -584,6 +571,10 @@ public final class ScenarioPage extends WebPage {
                 else
                     redirectTo( t );
             }
+            for (Submitable submitable : submitables) {
+                submitable.onSubmit( expansions );
+            }
+
         }
 
         private void importScenario() {

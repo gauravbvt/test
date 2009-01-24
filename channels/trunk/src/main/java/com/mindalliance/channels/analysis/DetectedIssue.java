@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
  * Time: 9:30:12 AM
  */
 public class DetectedIssue extends AnalysisObject implements Issue {
+
+    private static long NEGATIVE_COUNTER = -1;
     /**
      * Type of issue having to do with the definition of a model object
      */
@@ -126,4 +128,12 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return true;
     }
 
+    /**
+     * Get transient id (unique among detected issues)
+     *
+     * @return an id
+     */
+    public long getId() {
+        return NEGATIVE_COUNTER--;
+    }
 }

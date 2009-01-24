@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-public abstract class ModelObject implements Serializable, Comparable<ModelObject> {
+public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
 
     /** Cheap way of creating unique default ids. Overloaded by hibernate eventually. */
     private static long Counter = 1L ;

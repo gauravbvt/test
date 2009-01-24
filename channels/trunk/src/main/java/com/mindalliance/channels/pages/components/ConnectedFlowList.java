@@ -93,7 +93,7 @@ public class ConnectedFlowList extends Panel {
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
 
-            final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+            final Analyst analyst = Project.analyst();
             final String issue = property == null ? analyst.getIssuesSummary( object, false )
                                                   : analyst.getIssuesSummary( object, property );
             if ( !issue.isEmpty() ) {

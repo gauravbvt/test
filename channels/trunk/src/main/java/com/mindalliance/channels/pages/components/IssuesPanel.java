@@ -1,28 +1,25 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.RefreshingView;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.PageParameters;
-import org.apache.commons.collections.iterators.TransformIterator;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.lang.StringUtils;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.pages.Submitter;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ScenarioPage;
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.pages.Submitable;
+import org.apache.wicket.Component;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,28 +28,31 @@ import java.util.HashSet;
  * Date: Jan 8, 2009
  * Time: 10:34:20 AM
  */
-public class IssuesPanel extends Panel {
+public class IssuesPanel extends Panel implements Submitable {
+
     /**
      * Maximum length of string displayed
      */
-    private static int MAX_LENGTH = 80;
+    public static int MAX_LENGTH = 80;
 
     /**
      * The model object possibly with issues.
      */
     private ModelObject modelObject;
 
-    /** Panels of expanded user issues. */
-    private List<UserIssue> deletableIssues;
+    /**
+     * Panels of expanded user issues.
+     */
+    private List<DeletableIssue> deletableIssues;
 
-    public IssuesPanel( String id, IModel<ModelObject> model, final Set<Long> expansions ) {
+    public IssuesPanel( String id, IModel<ModelObject> model, PageParameters parameters ) {
         super( id, model );
         modelObject = model.getObject();
-        init(expansions);
+        init( parameters );
     }
 
-    private void init( final Set<Long> expansions ) {
-        final WebMarkupContainer issuesList = new WebMarkupContainer( "issues" );     // NON-NLS
+    private void init( PageParameters parameters ) {
+        final Set<Long> expansions = Project.findExpansions( parameters );
         Link<String> newIssueLink = new Link<String>( "new-issue", new Model<String>( "New" ) ) {
             public void onClick() {
                 UserIssue userIssue = new UserIssue( modelObject );
@@ -61,50 +61,74 @@ public class IssuesPanel extends Panel {
                 final Set<Long> newExpansions = new HashSet<Long>( expansions );
                 newExpansions.add( userIssue.getId() );
                 PageParameters params = getWebPage().getPageParameters();
-                params.add( ScenarioPage.EXPAND_PARM, Long.toString(userIssue.getId()) );
+                params.add( Project.EXPAND_PARM, Long.toString( userIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), params );
             }
         };
-        issuesList.add( newIssueLink );
-//        add( createIssuePanels, expansions );
+        add( newIssueLink );
+        add( createIssuePanels( expansions ) );
+        setVisible( Project.analyst().hasIssues( modelObject, false ) );
+    }
 
-        // TODO 
-        issuesList.add( new RefreshingView<Issue>( "issue" ) {                        // NON-NLS
-
-            @SuppressWarnings( {"unchecked"} )
-            @Override
-            protected Iterator<IModel<Issue>> getItemModels() {
-                final Project project = (Project) getApplication();
-                final Analyst analyst = project.getAnalyst();
-                return new TransformIterator(
-                        analyst.findIssues( modelObject, false ),
-                        new Transformer() {
-                            public Object transform( Object o ) {
-                                return new Model<Issue>( (Issue) o );
-                            }
-                        } );
-            }
-
-            @Override
-            protected void populateItem( Item<Issue> item ) {
-                final Issue issue = item.getModelObject();
-                String label;
-                String suggestion;
-                if (issue.isDetected()) {
-                   label = issue.getDescription();
-                    suggestion = issue.getRemediation();
+    public void onAfterRender() {
+        super.onAfterRender();
+        this.visitParents( WebPage.class, new IVisitor<Component>() {
+            // Register this panel to participate in onSubmit events with expansions
+/*        if (getWebPage() instanceof Expandable ) {
+            ((Expandable)getWebPage()).register( this );
+        }*/
+            public Object component( Component component ) {
+                if (component instanceof Submitter ) {
+                    ((Submitter)component).register( IssuesPanel.this );
+                    return component;
                 }
                 else {
-                   label = issue.getLabel( MAX_LENGTH );
-                    suggestion = StringUtils.abbreviate( issue.getRemediation(), MAX_LENGTH );
+                    return null;
                 }
-                item.add( new Label( "label", label ) );           // NON-NLS
-                item.add( new Label( "suggestion", suggestion ) );           // NON-NLS
             }
         } );
+    }
 
-        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        setVisible( analyst.hasIssues( modelObject, false ) );
-        add( issuesList );
+
+    private RepeatingView createIssuePanels( Set<Long> expansions ) {
+        final RepeatingView issuesList = new RepeatingView( "issues" );
+        Iterator<Issue> issues = Project.analyst().findIssues( modelObject, false );
+        deletableIssues = new ArrayList<DeletableIssue>();
+        while ( issues.hasNext() ) {
+            final Issue issue = issues.next();
+            final Panel issuePanel;
+            long id = issue.getId();
+            if ( expansions.contains( id ) ) {
+                ExpandedIssuePanel panel = new ExpandedIssuePanel( Long.toString(id), issue );
+                if (!issue.isDetected()) deletableIssues.add(panel);
+                issuePanel = panel;
+            } else {
+                CollapsedIssuePanel panel = new CollapsedIssuePanel( Long.toString(id), issue );
+                if (!issue.isDetected()) deletableIssues.add(panel);
+                issuePanel = panel;
+            }
+            issuesList.add( issuePanel );
+        }
+        return issuesList;
+    }
+
+    /**
+     * Delete issues that are marked for deletion.
+     * @param expansions the component expansion list to modify on deletions
+     */
+    public void deleteSelectedIssues( Set<Long> expansions ) {
+        for ( DeletableIssue panel : deletableIssues) {
+            if ( panel.isMarkedForDeletion() ) {
+                expansions.remove( panel.getIssue().getId() );
+                Project.dao().removeUserIssue( (UserIssue)panel.getIssue() );
+            }
+        }
+    }
+
+    /**
+     * React to submit event
+     */
+    public void onSubmit( Set<Long> expansions ) {
+        deleteSelectedIssues( expansions );
     }
 }

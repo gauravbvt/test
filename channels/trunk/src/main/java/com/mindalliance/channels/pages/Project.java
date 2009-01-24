@@ -18,14 +18,31 @@ import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.PageParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Arrays;
+import java.text.MessageFormat;
 
 /**
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
  */
 public final class Project extends WebApplication {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Project.class );
+    /**
+     * The 'expand' parameter in the URL.
+     */
+    public static final String EXPAND_PARM = "expand";                               // NON-NLS
 
     /**
      * The project's unique identifier
@@ -246,4 +263,22 @@ public final class Project extends WebApplication {
             return super.decodeParameters( trimmed( urlFragment ), urlParameters );
         }
     }
+
+    public static Set<Long> findExpansions( PageParameters parameters ) {
+        final Set<Long> result = new HashSet<Long>( parameters.size() );
+        if ( parameters.containsKey( Project.EXPAND_PARM ) ) {
+            final List<String> stringList =
+                    Arrays.asList( parameters.getStringArray( Project.EXPAND_PARM ) );
+            for ( String id : stringList )
+                try {
+                    result.add( Long.valueOf( id ) );
+                } catch ( NumberFormatException ignored ) {
+                    LOG.warn( MessageFormat.format( "Invalid expansion parameter: {0}", id ) );
+                }
+        }
+
+        return result;
+    }
+
+
 }

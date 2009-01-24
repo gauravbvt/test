@@ -4,6 +4,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Simple test using the WicketTester.
@@ -57,6 +59,8 @@ public class TestScenarioPage extends TestCase {
                 .andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
+        expect( sa.findIssues( (ModelObject) anyObject(), anyBoolean() ))
+                .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
         replay( sa );
         project.setAnalyst( sa );
 
@@ -133,12 +137,12 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.EXPAND_PARM, "bla" );
+        parms.put( Project.EXPAND_PARM, "bla" );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        parms.add( ScenarioPage.EXPAND_PARM, "burp" );
+        parms.add( Project.EXPAND_PARM, "burp" );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();

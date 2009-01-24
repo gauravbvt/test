@@ -81,8 +81,8 @@ public class NoRedundancy extends AbstractIssueDetector {
                     } );
             if ( !alternates.hasNext() ) {
                 DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
-                issue.setDescription( "Has a only one source of critical information -"
-                        + name + "-" );
+                issue.setDescription( "Has a only one source for critical \""
+                        + name + "\"" );
                 issue.setRemediation( "Add alternate source." );
                 issues.add( issue );
             }

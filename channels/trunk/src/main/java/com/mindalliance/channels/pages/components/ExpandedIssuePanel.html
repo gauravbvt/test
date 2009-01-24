@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+
+<ul class="menu">
+    <li><a wicket:id="hide" href="#">Hide</a></li>
+    <li><label><input wicket:id="delete" type="checkbox"> Delete</label></li>
+</ul>
+
+<div class="issue-details">
+    <table summary="Issue details">
+        <tr>
+            <th align="right"><label>Issue:</label></th>
+            <td><textarea wicket:id="description" cols="30" rows="3">SOmething's wrong</textarea></td>
+        </tr>
+        <tr>
+            <th class="area" align="right" valign="top"><label>Suggestion:</label></th>
+            <td><textarea wicket:id="remediation" cols="30" rows="3">Duck</textarea></td>
+        </tr>
+        <tr wicket:id="attachments">
+            <th align="right" valign="top">Attachments:</th>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+             <td colspan="2">Reported by <span wicket:id="reported-by"> Joe</span></td>
+         </tr>
+
+    </table>
+</div>
+</wicket:panel>
+</body>
+</html>
