@@ -21,10 +21,7 @@ public interface Attachment extends Serializable {
         PolicyCant( "Prohibiting policy" ),
 
         /** A document that allows whatever the attachment is attached to. */
-        MOU( "MOU" ),
-
-        /** A document describing problems with whatever the attachment is attached to. */
-        Issue( "Issue" );
+        MOU( "MOU" );
 
         //--------------------------------
         /** A description of the type that will hopefully make sense to the user. */

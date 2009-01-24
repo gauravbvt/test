@@ -471,10 +471,6 @@ li.doc_PolicyCant {
     padding-left: 20px;
     background: transparent url('images/scroll_error.png') no-repeat 0;
 }
-li.doc_Issue {
-    padding-left: 20px;
-    background: transparent url('images/error.png') no-repeat 0;
-}
 
 .SI-FILES-STYLIZED label.attach-ctl, .SI-FILES-STYLIZED label.import-ctl {
     overflow: hidden;

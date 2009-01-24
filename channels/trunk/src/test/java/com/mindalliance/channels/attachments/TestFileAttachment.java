@@ -41,7 +41,7 @@ public class TestFileAttachment extends TestCase {
     }
 
     public void testConstructor() throws NotFoundException {
-        final Attachment.Type type = Attachment.Type.Issue;
+        final Attachment.Type type = Attachment.Type.MOU;
         final String label = "a problem description.doc";
         final File f = new File( FileAttachment.createFileName( object, type, label ) );
 
