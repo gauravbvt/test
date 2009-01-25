@@ -19,6 +19,8 @@ import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -194,6 +196,7 @@ public final class Project extends WebApplication {
 
     /**
      * Gets the project's graph builder
+     *
      * @return a GraphBuilder
      */
     public static GraphBuilder graphBuilder() {
@@ -207,6 +210,7 @@ public final class Project extends WebApplication {
 
     /**
      * Get current project's dao
+     *
      * @return a Dao
      */
     public static Dao dao() {
@@ -215,6 +219,7 @@ public final class Project extends WebApplication {
 
     /**
      * Get projects' current analyst
+     *
      * @return an analyst
      */
     public static Analyst analyst() {
@@ -224,7 +229,9 @@ public final class Project extends WebApplication {
     //=========================================================================
     private static class CodingStrategy extends MixedParamUrlCodingStrategy {
 
-        /** The suffix for the link. */
+        /**
+         * The suffix for the link.
+         */
         private String extension;
 
         private CodingStrategy(
@@ -243,28 +250,38 @@ public final class Project extends WebApplication {
         @Override
         public boolean matches( String path ) {
             return path.endsWith( extension )
-                && super.matches( trimmed( path ) );
+                    && super.matches( trimmed( path ) );
         }
 
         private String trimmed( String path ) {
             return path.substring( 0, path.length() - extension.length() );
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void appendParameters( AppendingStringBuffer url, Map parameters ) {
             super.appendParameters( url, parameters );
             url.append( extension );
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected ValueMap decodeParameters( String urlFragment, Map urlParameters ) {
             return super.decodeParameters( trimmed( urlFragment ), urlParameters );
         }
     }
 
+    /**
+     * Find expansions in page parameters
+     * @param parameters  page parameters
+     * @return set of ids
+     */
     public static Set<Long> findExpansions( PageParameters parameters ) {
+        if (parameters == null) return new HashSet<Long>();
         final Set<Long> result = new HashSet<Long>( parameters.size() );
         if ( parameters.containsKey( Project.EXPAND_PARM ) ) {
             final List<String> stringList =
@@ -279,6 +296,11 @@ public final class Project extends WebApplication {
 
         return result;
     }
+
+/*    public static PageParameters findPageParameters( Component component ) {
+        WebPage page = component.findParent( WebPage.class );
+        return ( page == null ) ? new PageParameters() : page.getPageParameters();
+    }*/
 
 
 }

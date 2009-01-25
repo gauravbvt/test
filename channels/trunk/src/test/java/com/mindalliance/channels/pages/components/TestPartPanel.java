@@ -20,11 +20,13 @@ import junit.framework.TestCase;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.PageParameters;
 import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Test behavoir of a part panel.
@@ -63,6 +65,7 @@ public class TestPartPanel extends TestCase {
         project.setAnalyst( sa );
 
         tester = new WicketTester( project );
+        tester.setParametersForNextRequest( new HashMap<String,String[]>() );
 
         // Find first part in scenario
         scenario = project.getDao().getDefaultScenario();
@@ -247,7 +250,8 @@ public class TestPartPanel extends TestCase {
      * Test all fields in the form using page tester.
      */
     public void testForm() throws IOException {
-        tester.startPage( new ScenarioPage( scenario, part ) );
+        ScenarioPage page = new ScenarioPage( scenario, part );
+        tester.startPage( page );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 

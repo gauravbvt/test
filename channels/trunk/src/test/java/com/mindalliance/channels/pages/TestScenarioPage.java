@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Simple test using the WicketTester.
@@ -66,6 +67,7 @@ public class TestScenarioPage extends TestCase {
 
         scenario = project.getDao().getDefaultScenario();
         tester = new WicketTester( project );
+        tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }
 
     /** Workaround for wicket form tester bug re: file upload. File must be set
