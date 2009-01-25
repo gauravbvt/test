@@ -19,12 +19,15 @@ import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
 import com.mindalliance.channels.analysis.detectors.OrphanedPart;
 import com.mindalliance.channels.analysis.detectors.FromUser;
+import com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy;
 import com.mindalliance.channels.export.xml.XmlStreamer;
+import com.mindalliance.channels.attachments.FileBasedManager;
 
 import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.file.File;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -48,6 +51,14 @@ public class AbstractChannelsTest extends TestCase {
         project.setExporter( xmlStreamer );
         project.setImporter( xmlStreamer );
         project.setGraphBuilder( new DefaultGraphBuilder() );
+        FileBasedManager attachmentManager = new FileBasedManager();
+        /*  <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
+            <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
+            <property name="path" value="uploads"/>
+        </bean>*/
+        attachmentManager.setDirectory( new File( "target/channels-1.0-SNAPSHOT/uploads" ) );
+        attachmentManager.setPath( "uploads" );
+        project.setAttachmentManager( attachmentManager );
         // Set default scenario
         // project.getScenarioDao().addScenario(new FireScenario());
         // Set flow diagram
@@ -76,6 +87,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UnconnectedConnector() );
         detectors.add( new NoRedundancy() );
         detectors.add( new PotentialDeadlock() );
+        detectors.add( new FlowViolatesPolicy() );
         analyst.setIssueDetectors( detectors );
         project.setAnalyst( analyst );
         tester = new WicketTester( project );

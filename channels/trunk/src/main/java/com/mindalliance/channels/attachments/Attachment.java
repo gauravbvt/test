@@ -58,4 +58,10 @@ public interface Attachment extends Serializable {
      */
     Type getType();
 
+    /**
+     * Whether the attachment indicates a policy violation
+     * @return a boolean
+     */
+    boolean isPolicyViolation();
+
 }

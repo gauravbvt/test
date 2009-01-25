@@ -12,6 +12,23 @@ import java.io.Serializable;
  */
 public interface Issue extends Identifiable, Serializable {
     /**
+     * Type of issue having to do with the definition of a model object
+     */
+    public static final String DEFINITION = "Definition";
+    /**
+     * Type of having having to do with a flow of information
+     */
+    public static final String FLOW = "Flow";
+    /**
+     * Type of issue having to do with a scenario as a whole
+     */
+    public static final String STRUCTURAL = "Structural";
+    /**
+     * All possible types of issues
+     */
+    public static final String[] TYPES = new String[]{DEFINITION, FLOW, STRUCTURAL};
+
+    /**
      * The identifiable object the issue is about
      * @return a ModelObject
      */

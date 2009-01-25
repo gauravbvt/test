@@ -216,12 +216,20 @@ public final class Project extends WebApplication {
     }
 
     /**
-     * Get projects' current analyst
+     * Get current projects' analyst
      *
      * @return an analyst
      */
     public static Analyst analyst() {
         return getProject().getAnalyst();
+    }
+
+    /**
+     * Get project's attachment manager
+     * @return  an attachment manager
+     */
+    public static AttachmentManager attachmentManager() {
+        return getProject().getAttachmentManager();
     }
 
     //=========================================================================

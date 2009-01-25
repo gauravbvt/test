@@ -146,6 +146,13 @@ public class FileAttachment implements Attachment {
         return type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isPolicyViolation() {
+        return getType() == Type.PolicyCant;
+    }
+
     public final void setType( Type type ) {
         this.type = type;
     }

@@ -41,6 +41,13 @@ public class UrlAttachment implements Attachment {
         return type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isPolicyViolation() {
+        return getType() == Type.PolicyCant;
+    }
+
     public void setType( Type type ) {
         this.type = type;
     }

@@ -16,22 +16,6 @@ public class DetectedIssue extends AnalysisObject implements Issue {
 
     private static long NEGATIVE_COUNTER = -1;
     /**
-     * Type of issue having to do with the definition of a model object
-     */
-    public static final String DEFINITION = "Definition";
-    /**
-     * Type of having having to do with a flow of information
-     */
-    public static final String FLOW = "Flow";
-    /**
-     * Type of issue having to do with a scenario as a whole
-     */
-    public static final String STRUCTURAL = "Structural";
-    /**
-     * All possible types of issues
-     */
-    public static final String[] TYPES = new String[]{DEFINITION, FLOW, STRUCTURAL};
-    /**
      * Type of issue
      */
     private String type;
