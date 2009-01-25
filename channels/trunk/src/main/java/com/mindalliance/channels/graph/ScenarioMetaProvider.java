@@ -145,7 +145,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
                     label = label + "?";
                 }
-                return sanitizeLabel( label );
+                return sanitize( label );
             }
         };
     }
@@ -154,7 +154,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         return new VertexNameProvider<Node>() {
             public String getVertexName( Node node ) {
                 String label = getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
-                return sanitizeLabel( label );
+                return sanitize( label );
             }
         };
     }
@@ -167,7 +167,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         };
     }
 
-    private String sanitizeLabel( String label ) {
+    private String sanitize( String label ) {
         return label.replaceAll( "\"", "\\\\\"" );
     }
 
@@ -250,8 +250,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             if ( analyst.hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( vertex,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
+                list.add( new DOTAttribute( "tooltip", sanitize( analyst.getIssuesSummary( vertex,
+                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
         }
@@ -280,8 +280,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             if ( analyst.hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", analyst.getIssuesSummary( edge,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) );
+                list.add( new DOTAttribute( "tooltip", sanitize( analyst.getIssuesSummary( edge,
+                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
         }
